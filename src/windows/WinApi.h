@@ -1,0 +1,48 @@
+#pragma once
+#include "windows/WinApiInterface.h"
+
+namespace UKControllerPlugin {
+    namespace Windows {
+
+        /*
+            A concrete implementation of the WinApiInterface. Provides a wrapper
+            around certain WindowsFunctions such as opening dialog boxes and playing sounds.
+        */
+        class WinApi : public WinApiInterface
+        {
+            public:
+                explicit WinApi(std::string filesDirectory);
+                WinApi(HINSTANCE dllInstance, std::string filesDirectory, std::wstring filesDirectoryW);
+                bool CreateFolder(std::string folder);
+                bool DeleteGivenFile(std::string filename);
+                bool FileExists(std::string filename);
+                std::string GetFullPathToLocalFile(std::string relativePath) const;
+                std::wstring GetFullPathToLocalFile(std::wstring relativePath) const;
+                bool OpenDialog(int dialogId, DLGPROC callback = NULL, LPARAM params = NULL) const;
+                std::wstring FileOpenDialog(
+                    std::wstring title,
+                    UINT numFileTypes,
+                    const COMDLG_FILTERSPEC * fileTypes
+                ) const override;
+                void OpenGeneralSettingsDialog(UKControllerPlugin::Euroscope::UserSetting & setting) const;
+                void OpenMessageBox(LPCWSTR message, LPCWSTR title, int options);
+                void PlayWave(LPCTSTR sound);
+                std::string ReadFromFile(std::string filename, bool relativePath = true);
+                std::string ReadFromFile(std::wstring filename, bool relativePath = true);
+                void WriteToFile(std::string filename, std::string data, bool truncate);
+
+            private:
+                void CreateMissingDirectories(std::string endFile);
+                std::string ReadFileContents(std::ifstream file);
+
+                // DLL Instance for the plugin
+                HINSTANCE dllInstance;
+
+                // Working directory for file operations
+                const std::string filesDirectory;
+
+                // Working directory for file operations in widestring
+                const std::wstring filesDirectoryW;
+        };
+    }  // namespace Windows
+}  // namespace UKControllerPlugin

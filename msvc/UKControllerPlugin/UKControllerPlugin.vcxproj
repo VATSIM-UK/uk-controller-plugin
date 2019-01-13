@@ -1,0 +1,495 @@
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\resource\sound\beep.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\resource\resource.h" />
+    <ClInclude Include="..\..\src\airfield\Airfield.h" />
+    <ClInclude Include="..\..\src\airfield\AirfieldCollection.h" />
+    <ClInclude Include="..\..\src\airfield\AirfieldCollectionFactory.h" />
+    <ClInclude Include="..\..\src\airfield\AirfieldOwnershipManager.h" />
+    <ClInclude Include="..\..\src\airfield\AirfieldOwnershipModule.h" />
+    <ClInclude Include="..\..\src\airfield\ControllerAirfieldOwnershipHandler.h" />
+    <ClInclude Include="..\..\src\airfield\NormaliseSid.h" />
+    <ClInclude Include="..\..\src\api\ApiAuthChecker.h" />
+    <ClInclude Include="..\..\src\api\ApiException.h" />
+    <ClInclude Include="..\..\src\api\ApiHelper.h" />
+    <ClInclude Include="..\..\src\api\ApiInterface.h" />
+    <ClInclude Include="..\..\src\api\ApiNotAuthorisedException.h" />
+    <ClInclude Include="..\..\src\api\ApiNotFoundException.h" />
+    <ClInclude Include="..\..\src\api\ApiRequestBuilder.h" />
+    <ClInclude Include="..\..\src\api\ApiResponse.h" />
+    <ClInclude Include="..\..\src\api\ApiResponseFactory.h" />
+    <ClInclude Include="..\..\src\api\ApiResponseValidator.h" />
+    <ClInclude Include="..\..\src\api\RemoteFile.h" />
+    <ClInclude Include="..\..\src\api\RemoteFileManifest.h" />
+    <ClInclude Include="..\..\src\api\RemoteFileManifestFactory.h" />
+    <ClInclude Include="..\..\src\bootstrap\BootstrapWarningMessage.h" />
+    <ClInclude Include="..\..\src\bootstrap\CollectionBootstrap.h" />
+    <ClInclude Include="..\..\src\bootstrap\DuplicatePlugin.h" />
+    <ClInclude Include="..\..\src\bootstrap\EventHandlerCollectionBootstrap.h" />
+    <ClInclude Include="..\..\src\bootstrap\ExternalsBootstrap.h" />
+    <ClInclude Include="..\..\src\bootstrap\HelperBootstrap.h" />
+    <ClInclude Include="..\..\src\bootstrap\InitialisePlugin.h" />
+    <ClInclude Include="..\..\src\bootstrap\LocateApiSettings.h" />
+    <ClInclude Include="..\..\src\bootstrap\PersistenceContainer.h" />
+    <ClInclude Include="..\..\src\bootstrap\PostInit.h" />
+    <ClInclude Include="..\..\src\command\CommandHandlerCollection.h" />
+    <ClInclude Include="..\..\src\command\CommandHandlerInterface.h" />
+    <ClInclude Include="..\..\src\controller\ActiveCallsign.h" />
+    <ClInclude Include="..\..\src\controller\ActiveCallsignCollection.h" />
+    <ClInclude Include="..\..\src\controller\AirfieldOwnerQueryMessage.h" />
+    <ClInclude Include="..\..\src\controller\AirfieldsOwnedQueryMessage.h" />
+    <ClInclude Include="..\..\src\controller\ControllerPosition.h" />
+    <ClInclude Include="..\..\src\controller\ControllerPositionCollection.h" />
+    <ClInclude Include="..\..\src\controller\ControllerPositionCollectionFactory.h" />
+    <ClInclude Include="..\..\src\controller\ControllerPositionHierarchy.h" />
+    <ClInclude Include="..\..\src\controller\ControllerPositionHierarchyFactory.h" />
+    <ClInclude Include="..\..\src\controller\ControllerPositionParser.h" />
+    <ClInclude Include="..\..\src\controller\ControllerStatusEventHandlerCollection.h" />
+    <ClInclude Include="..\..\src\controller\ControllerStatusEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\countdown\CountdownModule.h" />
+    <ClInclude Include="..\..\src\countdown\CountdownRenderer.h" />
+    <ClInclude Include="..\..\src\countdown\CountdownTimer.h" />
+    <ClInclude Include="..\..\src\curl\CurlApi.h" />
+    <ClInclude Include="..\..\src\curl\CurlInterface.h" />
+    <ClInclude Include="..\..\src\curl\CurlRequest.h" />
+    <ClInclude Include="..\..\src\curl\CurlResponse.h" />
+    <ClInclude Include="..\..\src\curl\HttpException.h" />
+    <ClInclude Include="..\..\src\datablock\DisplayTime.h" />
+    <ClInclude Include="..\..\src\dependency\DependencyBootstrap.h" />
+    <ClInclude Include="..\..\src\dependency\DependencyCache.h" />
+    <ClInclude Include="..\..\src\dependency\DependencyCacheFactory.h" />
+    <ClInclude Include="..\..\src\dependency\LocalFileUpdater.h" />
+    <ClInclude Include="..\..\src\euroscope\AsrEventHandlerCollection.h" />
+    <ClInclude Include="..\..\src\euroscope\AsrEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\CallbackFunction.h" />
+    <ClInclude Include="..\..\src\euroscope\CompareFunctions.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroScopeCControllerInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroScopeCControllerWrapper.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroScopeCFlightPlanInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroScopeCFlightPlanWrapper.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetPositionDataInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetWrapper.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroscopeExtractedRouteInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroscopePluginLoopbackInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroScopeRadarLoopbackInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfiguration.h" />
+    <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.h" />
+    <ClInclude Include="..\..\src\euroscope\GeneralSettingsDialog.h" />
+    <ClInclude Include="..\..\src\euroscope\GeneralSettingsEntries.h" />
+    <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
+    <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
+    <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSettingProviderInterface.h" />
+    <ClInclude Include="..\..\src\flightplan\DeferredFlightplanEvent.h" />
+    <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.h" />
+    <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\flightplan\FlightplanStorageBootstrap.h" />
+    <ClInclude Include="..\..\src\flightplan\StoredFlightplan.h" />
+    <ClInclude Include="..\..\src\flightplan\StoredFlightplanCollection.h" />
+    <ClInclude Include="..\..\src\flightplan\StoredFlightplanEventHandler.h" />
+    <ClInclude Include="..\..\src\graphics\GdiGraphicsInterface.h" />
+    <ClInclude Include="..\..\src\graphics\GdiGraphicsWrapper.h" />
+    <ClInclude Include="..\..\src\graphics\GdiplusBrushes.h" />
+    <ClInclude Include="..\..\src\helper\HelperFunctions.h" />
+    <ClInclude Include="..\..\src\historytrail\AircraftHistoryTrail.h" />
+    <ClInclude Include="..\..\src\historytrail\HistoryTrailData.h" />
+    <ClInclude Include="..\..\src\historytrail\HistoryTrailDialog.h" />
+    <ClInclude Include="..\..\src\historytrail\HistoryTrailEventHandler.h" />
+    <ClInclude Include="..\..\src\historytrail\HistoryTrailModule.h" />
+    <ClInclude Include="..\..\src\historytrail\HistoryTrailRenderer.h" />
+    <ClInclude Include="..\..\src\historytrail\HistoryTrailRepository.h" />
+    <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
+    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
+    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
+    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGenerator.h" />
+    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.h" />
+    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeModule.h" />
+    <ClInclude Include="..\..\src\intention\AirfieldGroup.h" />
+    <ClInclude Include="..\..\src\intention\AmsterdamAirfieldGroup.h" />
+    <ClInclude Include="..\..\src\intention\BrusselsAirfieldGroup.h" />
+    <ClInclude Include="..\..\src\intention\DublinAirfieldGroup.h" />
+    <ClInclude Include="..\..\src\intention\HomeAirfieldGroup.h" />
+    <ClInclude Include="..\..\src\intention\IntentionCodeCache.h" />
+    <ClInclude Include="..\..\src\intention\IntentionCodeData.h" />
+    <ClInclude Include="..\..\src\intention\IntentionCodeEventHandler.h" />
+    <ClInclude Include="..\..\src\intention\IntentionCodeFactory.h" />
+    <ClInclude Include="..\..\src\intention\IntentionCodeGenerator.h" />
+    <ClInclude Include="..\..\src\intention\IntentionCodeModule.h" />
+    <ClInclude Include="..\..\src\intention\SectorExitPoint.h" />
+    <ClInclude Include="..\..\src\intention\SectorExitPointEtrat.h" />
+    <ClInclude Include="..\..\src\intention\SectorExitPointLelna.h" />
+    <ClInclude Include="..\..\src\intention\SectorExitPointShanwick.h" />
+    <ClInclude Include="..\..\src\intention\SectorExitPointVeule.h" />
+    <ClInclude Include="..\..\src\intention\SectorExitRepository.h" />
+    <ClInclude Include="..\..\src\intention\SectorExitRepositoryFactory.h" />
+    <ClInclude Include="..\..\src\intention\ShannonAirfieldGroup.h" />
+    <ClInclude Include="..\..\src\login\Login.h" />
+    <ClInclude Include="..\..\src\login\LoginModule.h" />
+    <ClInclude Include="..\..\src\log\LoggerBootstrap.h" />
+    <ClInclude Include="..\..\src\log\LoggerFunctions.h" />
+    <ClInclude Include="..\..\src\massevent\MassEvent.h" />
+    <ClInclude Include="..\..\src\message\MessageSerializableInterface.h" />
+    <ClInclude Include="..\..\src\message\UserMessager.h" />
+    <ClInclude Include="..\..\src\message\UserMessagerBootstrap.h" />
+    <ClInclude Include="..\..\src\metar\MetarEventHandlerCollection.h" />
+    <ClInclude Include="..\..\src\metar\MetarEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackManager.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackModule.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackRenderer.h" />
+    <ClInclude Include="..\..\src\minstack\TerminalControlArea.h" />
+    <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h" />
+    <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.h" />
+    <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.h" />
+    <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeEventHandler.h" />
+    <ClInclude Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.h" />
+    <ClInclude Include="..\..\src\offblock\EstimatedOffBlockTimeEventHandler.h" />
+    <ClInclude Include="..\..\src\plugin\FunctionCallEventHandler.h" />
+    <ClInclude Include="..\..\src\plugin\PopupMenuItem.h" />
+    <ClInclude Include="..\..\src\plugin\UKPlugin.h" />
+    <ClInclude Include="..\..\src\plugin\UkPluginBootstrap.h" />
+    <ClInclude Include="..\..\src\prenote\AbstractPrenote.h" />
+    <ClInclude Include="..\..\src\prenote\AirfieldPairingPrenote.h" />
+    <ClInclude Include="..\..\src\prenote\DeparturePrenote.h" />
+    <ClInclude Include="..\..\src\prenote\PrenoteEventHandler.h" />
+    <ClInclude Include="..\..\src\prenote\PrenoteFactory.h" />
+    <ClInclude Include="..\..\src\prenote\PrenoteMessage.h" />
+    <ClInclude Include="..\..\src\prenote\PrenoteModule.h" />
+    <ClInclude Include="..\..\src\prenote\PrenoteService.h" />
+    <ClInclude Include="..\..\src\prenote\PrenoteServiceFactory.h" />
+    <ClInclude Include="..\..\src\radarscreen\ConfigurableDisplayCollection.h" />
+    <ClInclude Include="..\..\src\radarscreen\ConfigurableDisplayInterface.h" />
+    <ClInclude Include="..\..\src\radarscreen\RadarRenderableCollection.h" />
+    <ClInclude Include="..\..\src\radarscreen\RadarRenderableInterface.h" />
+    <ClInclude Include="..\..\src\radarscreen\RadarScreenFactory.h" />
+    <ClInclude Include="..\..\src\radarscreen\ScreenControls.h" />
+    <ClInclude Include="..\..\src\radarscreen\ScreenControlsBootstrap.h" />
+    <ClInclude Include="..\..\src\radarscreen\UKRadarScreen.h" />
+    <ClInclude Include="..\..\src\setting\SettingRepository.h" />
+    <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
+    <ClInclude Include="..\..\src\setting\SettingValue.h" />
+    <ClInclude Include="..\..\src\squawk\SquawkAssignment.h" />
+    <ClInclude Include="..\..\src\squawk\SquawkEventHandler.h" />
+    <ClInclude Include="..\..\src\squawk\SquawkGenerator.h" />
+    <ClInclude Include="..\..\src\squawk\SquawkModule.h" />
+    <ClInclude Include="..\..\src\squawk\SquawkRequest.h" />
+    <ClInclude Include="..\..\src\squawk\SquawkValidator.h" />
+    <ClInclude Include="..\..\src\pch\stdafx.h" />
+    <ClInclude Include="..\..\src\tag\TagFunction.h" />
+    <ClInclude Include="..\..\src\tag\TagItemCollection.h" />
+    <ClInclude Include="..\..\src\tag\TagItemInterface.h" />
+    <ClInclude Include="..\..\src\task\TaskRunner.h" />
+    <ClInclude Include="..\..\src\task\TaskRunnerInterface.h" />
+    <ClInclude Include="..\..\src\timedevent\AbstractTimedEvent.h" />
+    <ClInclude Include="..\..\src\timedevent\DeferredEvent.h" />
+    <ClInclude Include="..\..\src\timedevent\DeferredEventBootstrap.h" />
+    <ClInclude Include="..\..\src\timedevent\TimedEventCollection.h" />
+    <ClInclude Include="..\..\src\update\PluginUpdateChecker.h" />
+    <ClInclude Include="..\..\src\update\PluginVersion.h" />
+    <ClInclude Include="..\..\src\wake\CreateWakeMappings.h" />
+    <ClInclude Include="..\..\src\wake\WakeCategoryEventHandler.h" />
+    <ClInclude Include="..\..\src\wake\WakeCategoryMapper.h" />
+    <ClInclude Include="..\..\src\wake\WakeModule.h" />
+    <ClInclude Include="..\..\src\windows\WinApi.h" />
+    <ClInclude Include="..\..\src\windows\WinApiInterface.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\airfield\Airfield.cpp" />
+    <ClCompile Include="..\..\src\airfield\AirfieldCollection.cpp" />
+    <ClCompile Include="..\..\src\airfield\AirfieldCollectionFactory.cpp" />
+    <ClCompile Include="..\..\src\airfield\AirfieldOwnershipManager.cpp" />
+    <ClCompile Include="..\..\src\airfield\AirfieldOwnershipModule.cpp" />
+    <ClCompile Include="..\..\src\airfield\ControllerAirfieldOwnershipHandler.cpp" />
+    <ClCompile Include="..\..\src\airfield\NormaliseSid.cpp" />
+    <ClCompile Include="..\..\src\api\ApiAuthChecker.cpp" />
+    <ClCompile Include="..\..\src\api\ApiHelper.cpp" />
+    <ClCompile Include="..\..\src\api\ApiRequestBuilder.cpp" />
+    <ClCompile Include="..\..\src\api\ApiResponse.cpp" />
+    <ClCompile Include="..\..\src\api\ApiResponseFactory.cpp" />
+    <ClCompile Include="..\..\src\api\ApiResponseValidator.cpp" />
+    <ClCompile Include="..\..\src\api\RemoteFileManifest.cpp" />
+    <ClCompile Include="..\..\src\api\RemoteFileManifestFactory.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\BootstrapWarningMessage.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\CollectionBootstrap.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\DllInterface.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\DuplicatePlugin.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\EventHandlerCollectionBootstrap.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\ExternalsBootstrap.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\HelperBootstrap.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\InitialisePlugin.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\LocateApiSettings.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\PostInit.cpp" />
+    <ClCompile Include="..\..\src\command\CommandHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\controller\ActiveCallsign.cpp" />
+    <ClCompile Include="..\..\src\controller\ActiveCallsignCollection.cpp" />
+    <ClCompile Include="..\..\src\controller\AirfieldOwnerQueryMessage.cpp" />
+    <ClCompile Include="..\..\src\controller\AirfieldsOwnedQueryMessage.cpp" />
+    <ClCompile Include="..\..\src\controller\ControllerPosition.cpp" />
+    <ClCompile Include="..\..\src\controller\ControllerPositionCollection.cpp" />
+    <ClCompile Include="..\..\src\controller\ControllerPositionCollectionFactory.cpp" />
+    <ClCompile Include="..\..\src\controller\ControllerPositionHierarchy.cpp" />
+    <ClCompile Include="..\..\src\controller\ControllerPositionHierarchyFactory.cpp" />
+    <ClCompile Include="..\..\src\controller\ControllerPositionParser.cpp" />
+    <ClCompile Include="..\..\src\controller\ControllerStatusEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\countdown\CountdownModule.cpp" />
+    <ClCompile Include="..\..\src\countdown\CountdownRenderer.cpp" />
+    <ClCompile Include="..\..\src\countdown\CountdownTimer.cpp" />
+    <ClCompile Include="..\..\src\curl\CurlApi.cpp" />
+    <ClCompile Include="..\..\src\curl\CurlRequest.cpp" />
+    <ClCompile Include="..\..\src\curl\CurlResponse.cpp" />
+    <ClCompile Include="..\..\src\datablock\DisplayTime.cpp" />
+    <ClCompile Include="..\..\src\dependency\DependencyBootstrap.cpp" />
+    <ClCompile Include="..\..\src\dependency\DependencyCache.cpp" />
+    <ClCompile Include="..\..\src\dependency\DependencyCacheFactory.cpp" />
+    <ClCompile Include="..\..\src\dependency\LocalFileUpdater.cpp" />
+    <ClCompile Include="..\..\src\euroscope\AsrEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\euroscope\CallbackFunction.cpp" />
+    <ClCompile Include="..\..\src\euroscope\CompareFunctions.cpp" />
+    <ClCompile Include="..\..\src\euroscope\EuroScopeCControllerWrapper.cpp" />
+    <ClCompile Include="..\..\src\euroscope\EuroScopeCFlightPlanWrapper.cpp" />
+    <ClCompile Include="..\..\src\euroscope\EuroScopeCRadarTargetWrapper.cpp" />
+    <ClCompile Include="..\..\src\euroscope\EuroscopeExtractedRouteInterface.cpp" />
+    <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfiguration.cpp" />
+    <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.cpp" />
+    <ClCompile Include="..\..\src\euroscope\GeneralSettingsDialog.cpp" />
+    <ClCompile Include="..\..\src\euroscope\GeneralSettingsEntries.cpp" />
+    <ClCompile Include="..\..\src\euroscope\PluginUserSettingBootstrap.cpp" />
+    <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />
+    <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />
+    <ClCompile Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\flightplan\FlightplanStorageBootstrap.cpp" />
+    <ClCompile Include="..\..\src\flightplan\StoredFlightplan.cpp" />
+    <ClCompile Include="..\..\src\flightplan\StoredFlightplanCollection.cpp" />
+    <ClCompile Include="..\..\src\flightplan\StoredFlightplanEventHandler.cpp" />
+    <ClCompile Include="..\..\src\graphics\GdiGraphicsWrapper.cpp" />
+    <ClCompile Include="..\..\src\helper\HelperFunctions.cpp" />
+    <ClCompile Include="..\..\src\historytrail\AircraftHistoryTrail.cpp" />
+    <ClCompile Include="..\..\src\historytrail\HistoryTrailDialog.cpp" />
+    <ClCompile Include="..\..\src\historytrail\HistoryTrailEventHandler.cpp" />
+    <ClCompile Include="..\..\src\historytrail\HistoryTrailModule.cpp" />
+    <ClCompile Include="..\..\src\historytrail\HistoryTrailRenderer.cpp" />
+    <ClCompile Include="..\..\src\historytrail\HistoryTrailRepository.cpp" />
+    <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp" />
+    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp" />
+    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp" />
+    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.cpp" />
+    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeModule.cpp" />
+    <ClCompile Include="..\..\src\intention\AirfieldGroup.cpp" />
+    <ClCompile Include="..\..\src\intention\AmsterdamAirfieldGroup.cpp" />
+    <ClCompile Include="..\..\src\intention\BrusselsAirfieldGroup.cpp" />
+    <ClCompile Include="..\..\src\intention\DublinAirfieldGroup.cpp" />
+    <ClCompile Include="..\..\src\intention\HomeAirfieldGroup.cpp" />
+    <ClCompile Include="..\..\src\intention\IntentionCodeCache.cpp" />
+    <ClCompile Include="..\..\src\intention\IntentionCodeEventHandler.cpp" />
+    <ClCompile Include="..\..\src\intention\IntentionCodeFactory.cpp" />
+    <ClCompile Include="..\..\src\intention\IntentionCodeGenerator.cpp" />
+    <ClCompile Include="..\..\src\intention\IntentionCodeModule.cpp" />
+    <ClCompile Include="..\..\src\intention\SectorExitPoint.cpp" />
+    <ClCompile Include="..\..\src\intention\SectorExitPointEtrat.cpp" />
+    <ClCompile Include="..\..\src\intention\SectorExitPointLelna.cpp" />
+    <ClCompile Include="..\..\src\intention\SectorExitPointShanwick.cpp" />
+    <ClCompile Include="..\..\src\intention\SectorExitPointVeule.cpp" />
+    <ClCompile Include="..\..\src\intention\SectorExitRepository.cpp" />
+    <ClCompile Include="..\..\src\intention\SectorExitRepositoryFactory.cpp" />
+    <ClCompile Include="..\..\src\intention\ShannonAirfieldGroup.cpp" />
+    <ClCompile Include="..\..\src\login\Login.cpp" />
+    <ClCompile Include="..\..\src\login\LoginModule.cpp" />
+    <ClCompile Include="..\..\src\log\LoggerBootstrap.cpp" />
+    <ClCompile Include="..\..\src\log\LoggerFunctions.cpp" />
+    <ClCompile Include="..\..\src\massevent\MassEvent.cpp" />
+    <ClCompile Include="..\..\src\message\UserMessager.cpp" />
+    <ClCompile Include="..\..\src\message\UserMessagerBootstrap.cpp" />
+    <ClCompile Include="..\..\src\metar\MetarEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\minstack\MinStackManager.cpp" />
+    <ClCompile Include="..\..\src\minstack\MinStackModule.cpp" />
+    <ClCompile Include="..\..\src\minstack\MinStackRenderer.cpp" />
+    <ClCompile Include="..\..\src\minstack\TerminalControlArea.cpp" />
+    <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
+    <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />
+    <ClCompile Include="..\..\src\offblock\EsimatedOffBlockTimeBootstrap.cpp" />
+    <ClCompile Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.cpp" />
+    <ClCompile Include="..\..\src\offblock\EstimatedDepartureTimeEventHandler.cpp" />
+    <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeEventHandler.cpp" />
+    <ClCompile Include="..\..\src\plugin\FunctionCallEventHandler.cpp" />
+    <ClCompile Include="..\..\src\plugin\UKPlugin.cpp" />
+    <ClCompile Include="..\..\src\plugin\UkPluginBootstrap.cpp" />
+    <ClCompile Include="..\..\src\prenote\AbstractPrenote.cpp" />
+    <ClCompile Include="..\..\src\prenote\AirfieldPairingPrenote.cpp" />
+    <ClCompile Include="..\..\src\prenote\DeparturePrenote.cpp" />
+    <ClCompile Include="..\..\src\prenote\PrenoteEventHandler.cpp" />
+    <ClCompile Include="..\..\src\prenote\PrenoteFactory.cpp" />
+    <ClCompile Include="..\..\src\prenote\PrenoteMessage.cpp" />
+    <ClCompile Include="..\..\src\prenote\PrenoteModule.cpp" />
+    <ClCompile Include="..\..\src\prenote\PrenoteService.cpp" />
+    <ClCompile Include="..\..\src\prenote\PrenoteServiceFactory.cpp" />
+    <ClCompile Include="..\..\src\radarscreen\ConfigurableDisplayCollection.cpp" />
+    <ClCompile Include="..\..\src\radarscreen\RadarRenderableCollection.cpp" />
+    <ClCompile Include="..\..\src\radarscreen\RadarScreenFactory.cpp" />
+    <ClCompile Include="..\..\src\radarscreen\ScreenControls.cpp" />
+    <ClCompile Include="..\..\src\radarscreen\ScreenControlsBootstrap.cpp" />
+    <ClCompile Include="..\..\src\radarscreen\UKRadarScreen.cpp" />
+    <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
+    <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
+    <ClCompile Include="..\..\src\squawk\SquawkAssignment.cpp" />
+    <ClCompile Include="..\..\src\squawk\SquawkEventHandler.cpp" />
+    <ClCompile Include="..\..\src\squawk\SquawkGenerator.cpp" />
+    <ClCompile Include="..\..\src\squawk\SquawkModule.cpp" />
+    <ClCompile Include="..\..\src\squawk\SquawkRequest.cpp" />
+    <ClCompile Include="..\..\src\squawk\SquawkValidator.cpp" />
+    <ClCompile Include="..\..\src\pch\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tag\TagFunction.cpp" />
+    <ClCompile Include="..\..\src\tag\TagItemCollection.cpp" />
+    <ClCompile Include="..\..\src\task\TaskRunner.cpp" />
+    <ClCompile Include="..\..\src\timedevent\DeferredEventBootstrap.cpp" />
+    <ClCompile Include="..\..\src\timedevent\TimedEventCollection.cpp" />
+    <ClCompile Include="..\..\src\update\PluginUpdateChecker.cpp" />
+    <ClCompile Include="..\..\src\update\PluginVersion.cpp" />
+    <ClCompile Include="..\..\src\wake\CreateWakeMappings.cpp" />
+    <ClCompile Include="..\..\src\wake\WakeCategoryEventHandler.cpp" />
+    <ClCompile Include="..\..\src\wake\WakeCategoryMapper.cpp" />
+    <ClCompile Include="..\..\src\wake\WakeModule.cpp" />
+    <ClCompile Include="..\..\src\windows\WinApi.cpp" />
+    <ClInclude Include="..\..\src\timedevent\DeferredEventHandler.h" />
+    <ClCompile Include="..\..\src\timedevent\DeferredEventHandler.cpp" />
+    <ClInclude Include="..\..\src\timedevent\DeferredEventRunnerInterface.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6F93F8C0-6773-4353-B7DD-B14DBD3F826B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>UKControllerPlugin</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CLRSupport>false</CLRSupport>
+    <SpectreMitigation>Spectre</SpectreMitigation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CLRSupport>false</CLRSupport>
+    <SpectreMitigation>Spectre</SpectreMitigation>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\plugin;</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include</IncludePath>
+    <IntDir>$(SolutionDir)..\obj\plugin\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\plugin;</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include</IncludePath>
+    <IntDir>$(SolutionDir)..\obj\plugin\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);CURL_STATICLIB;DISABLE_VERSION_CHECK</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <UndefinePreprocessorDefinitions />
+      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MinimalRebuild />
+      <ForcedIncludeFiles />
+      <EnablePREfast>false</EnablePREfast>
+      <ShowIncludes>false</ShowIncludes>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/Zm200 %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeaderFile>pch\stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories />
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+      <FullProgramDatabaseFile>false</FullProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);CURL_STATICLIB;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <UndefinePreprocessorDefinitions />
+      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ForcedIncludeFiles />
+      <AdditionalOptions>/Zm200 %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeaderFile>pch\stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries />
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_StartDate="2000/1/1" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

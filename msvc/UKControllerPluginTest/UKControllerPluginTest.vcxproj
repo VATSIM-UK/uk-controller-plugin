@@ -1,0 +1,376 @@
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UKControllerPlugin\UKControllerPlugin.vcxproj">
+      <Project>{6f93f8c0-6773-4353-b7dd-b14dbd3f826b}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp" />
+    <ClCompile Include="..\..\test\helper\InitTests.cpp" />
+    <ClCompile Include="..\..\test\helper\TestingFunctions.cpp" />
+    <ClCompile Include="..\..\test\pch\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\airfield\AirfieldTest.cpp" />
+    <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\ApiHelperTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\ApiRequestBuilderTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\ApiResponseFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\ApiResponseTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\ApiResponseValidatorTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\RemoteFileManifestFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\RemoteFileManifestTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\RemoteFileTest.cpp" />
+    <ClCompile Include="..\..\test\test\bootstrap\BootstrapWarningMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\bootstrap\CollectionBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\bootstrap\EventHandlerCollectionBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\bootstrap\ExternalsBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\command\CommandHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ActiveCallsignCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ActiveCallsignTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\AirfieldOwnerQueryMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipManagerTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\AirfieldsOwnedQueryMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ControllerAirfieldOwnershipHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ControllerPositionCollectionFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ControllerPositionCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ControllerPositionHierarchyFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ControllerPositionHierarchyTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ControllerPositionParserTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ControllerPositionTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ControllerStatusEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\countdown\CountdownModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\countdown\CountdownRendererTest.cpp" />
+    <ClCompile Include="..\..\test\test\countdown\CountdownTimerTest.cpp" />
+    <ClCompile Include="..\..\test\test\curl\CurlRequestTest.cpp" />
+    <ClCompile Include="..\..\test\test\curl\CurlResponseTest.cpp" />
+    <ClCompile Include="..\..\test\test\datablock\DisplayTimeTest.cpp" />
+    <ClCompile Include="..\..\test\test\dependency\DependencyBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\dependency\DependencyCacheFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\dependency\DependencyCacheTest.cpp" />
+    <ClCompile Include="..\..\test\test\dependency\LocalFileUpdaterTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\AsrEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\CallbackFunctionTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\CompareFunctionsTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\RadarTargetEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightplan\FlightplanStorageBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanTest.cpp" />
+    <ClCompile Include="..\..\test\test\helper\HelperBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\helper\HelperFunctionsTest.cpp" />
+    <ClCompile Include="..\..\test\test\historytrail\AircraftHistoryTrailTest.cpp" />
+    <ClCompile Include="..\..\test\test\historytrail\HistoryTrailEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\historytrail\HistoryTrailModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\historytrail\HistoryTrailRendererTest.cpp" />
+    <ClCompile Include="..\..\test\test\historytrail\HistoryTrailRepositoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\initialaltitude\CompareInitialAltitudesTest.cpp" />
+    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp" />
+    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeGeneratorFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeGeneratorTest.cpp" />
+    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\AmsterdamAirfieldGroupTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\BrusselsAirfieldGroupTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\DublinAirfieldGroupTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\HomeAirfieldGroupTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\IntentionCodeCacheTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\IntentionCodeEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\IntentionCodeGeneratorTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\IntentionCodeModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointEtratTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointLelnaTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointShanwickTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointVeuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\SectorExitRepositoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\ShannonAirfieldGroupTest.cpp" />
+    <ClCompile Include="..\..\test\test\login\LoginModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\login\LoginTest.cpp" />
+    <ClCompile Include="..\..\test\test\massevent\MassEventTest.cpp" />
+    <ClCompile Include="..\..\test\test\message\UserMessagerBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp" />
+    <ClCompile Include="..\..\test\test\message\UserSettingTest.cpp" />
+    <ClCompile Include="..\..\test\test\metar\MetarEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\minstack\MinStackManagerTest.cpp" />
+    <ClCompile Include="..\..\test\test\minstack\MinStackModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\minstack\MinStackRendererTest.cpp" />
+    <ClCompile Include="..\..\test\test\minstack\TerminalControlAreaTest.cpp" />
+    <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\offblock\EstimatedDepartureTimeBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\offblock\EstimatedDepartureTimeEventHanderTest.cpp" />
+    <ClCompile Include="..\..\test\test\offblock\EstimatedOffBlockTimeBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\offblock\EstimatedOffBlockTimeEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\plugin\FunctionCallEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\plugin\PopupMenuItemTest.cpp" />
+    <ClCompile Include="..\..\test\test\plugin\UkPluginBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\prenote\AbstractPrenoteTest.cpp" />
+    <ClCompile Include="..\..\test\test\prenote\AirfieldPairingPrenoteTest.cpp" />
+    <ClCompile Include="..\..\test\test\prenote\DeparturePrenoteTest.cpp" />
+    <ClCompile Include="..\..\test\test\prenote\PrenoteEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\prenote\PrenoteFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\prenote\PrenoteMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\prenote\PrenoteModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\prenote\PrenoteServiceFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\prenote\PrenoteServiceTest.cpp" />
+    <ClCompile Include="..\..\test\test\radarscreen\ConfigurableDisplayCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\radarscreen\RadarRenderableCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp" />
+    <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\squawk\SquawkAssignmentTest.cpp" />
+    <ClCompile Include="..\..\test\test\squawk\SquawkEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\squawk\SquawkGeneratorTest.cpp" />
+    <ClCompile Include="..\..\test\test\squawk\SquawkModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\squawk\SquawkRequestTest.cpp" />
+    <ClCompile Include="..\..\test\test\squawk\SquawkValidatorTest.cpp" />
+    <ClCompile Include="..\..\test\test\tag\TagFunctionTest.cpp" />
+    <ClCompile Include="..\..\test\test\tag\TagItemCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\task\TaskRunnerTest.cpp" />
+    <ClCompile Include="..\..\test\test\timedevent\DeferredEventBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\timedevent\DeferredEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\timedevent\TimedEventCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\update\PluginUpdateCheckerTest.cpp" />
+    <ClCompile Include="..\..\test\test\wake\CreateWakeMappingsTest.cpp" />
+    <ClCompile Include="..\..\test\test\wake\WakeCategoryEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\wake\WakeCategoryMapperTest.cpp" />
+    <ClCompile Include="..\..\test\test\wake\WakeModuleTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h" />
+    <ClInclude Include="..\..\test\helper\Matchers.h" />
+    <ClInclude Include="..\..\test\helper\TestEnvironment.h" />
+    <ClInclude Include="..\..\test\helper\TestingFunctions.h" />
+    <ClInclude Include="..\..\test\mock\MockAbstractTimedEvent.h" />
+    <ClInclude Include="..\..\test\mock\MockAirfieldGroup.h" />
+    <ClInclude Include="..\..\test\mock\MockApiInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockAsrEventHandlerInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockConfigurableDisplay.h" />
+    <ClInclude Include="..\..\test\mock\MockControllerStatusEventHandlerInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockCurlApi.h" />
+    <ClInclude Include="..\..\test\mock\MockDeferredEventRunner.h" />
+    <ClInclude Include="..\..\test\mock\MockDependencyLoader.h" />
+    <ClInclude Include="..\..\test\mock\MockEuroScopeCControllerInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockEuroScopeCFlightplanInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockEuroScopeCRadarTargetInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockEuroscopeExtractedRouteInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockEuroscopePluginLoopbackInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockEuroscopeRadarScreenLoopbackInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockFlightPlanEventHandlerInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockGraphicsInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockHistoryTrailDialog.h" />
+    <ClInclude Include="..\..\test\mock\MockHistoryTrailRepository.h" />
+    <ClInclude Include="..\..\test\mock\MockInitialAltitudeEventHandler.h" />
+    <ClInclude Include="..\..\test\mock\MockMinStack.h" />
+    <ClInclude Include="..\..\test\mock\MockRadarRendererableInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockRadarTargetEventHandlerInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockSquawkEventHandler.h" />
+    <ClInclude Include="..\..\test\mock\MockTaskRunnerInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockTerminalControlArea.h" />
+    <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockWinApi.h" />
+    <ClInclude Include="..\..\test\pch\pch.h" />
+    <ClCompile Include="..\..\test\test\bootstrap\LocateApiSettingsTest.cpp" />
+    <ClCompile Include="..\..\test\test\bootstrap\DuplicatePluginTest.cpp" />
+    <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3C70CD05-DD99-406E-85AF-2A966B9CC675}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>UKControllerPluginTest</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <SpectreMitigation>Spectre</SpectreMitigation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <SpectreMitigation>Spectre</SpectreMitigation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(SolutionDir)..\lib\test;$(SolutionDir)..\lib\plugin;</LibraryPath>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\obj\test\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\testing;$(SolutionDir)..\lib\plugin</LibraryPath>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\obj\test\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild />
+      <ForcedIncludeFiles />
+      <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Zm200 %(AdditionalOptions)</AdditionalOptions>
+      <EnablePREfast>false</EnablePREfast>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;gmock_debug.lib;gmock_main_debug.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile />
+      <AdditionalOptions>"$(SolutionDir)..\obj\plugin\$(Configuration)\*.obj"</AdditionalOptions>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);..\..\test\Matchers;..\..\test\MinStack;..\..\test\AirfieldGroup;..\..\test\ApiInterface;..\..\test\Countdown;..\..\test\Helper;..\..\test\HistoryTrail;..\..\test\Http;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ForcedIncludeFiles />
+      <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>-Zm120 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePluginDll.lib;gmock_release.lib;gmock_main_release.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
+      <AdditionalOptions>"$(SolutionDir)..\obj\plugin\$(Configuration)\*.obj"</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader />
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);..\..\test\Matchers;..\..\test\MinStack;..\..\test\AirfieldGroup;..\..\test\ApiInterface;..\..\test\Countdown;..\..\test\Helper;..\..\test\HistoryTrail;..\..\test\Http;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_StartDate="2000/1/1" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

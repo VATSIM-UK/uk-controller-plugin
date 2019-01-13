@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="HttpHelper.HttpRequestGetCorrectlyFormsUrlFromParams" /><Add Test="HttpHelper.HttpRequestGetReturnsResultOfCurlRequest" /><Add Test="HttpHelper.HttpRequestPostReturnsResultOfCurlRequest" /><Add Test="HttpHelper.HttpRequestPostPassesOnPostParamsToCurl" /><Add Test="HttpHelper.HttpRequestPostCorrectlyFormsUrlFromParams" /></Playlist>
