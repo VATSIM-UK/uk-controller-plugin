@@ -91,6 +91,7 @@
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailRendererTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailRepositoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\CompareHoldsTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldingDataTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\CompareInitialAltitudesTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp" />
