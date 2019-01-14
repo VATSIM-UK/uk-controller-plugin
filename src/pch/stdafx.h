@@ -1,5 +1,7 @@
 #pragma once
 #define _WIN32_WINNT 0x0603
+#define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
+
 // Needs to go here, because windows.
 #include "date/include/date/date.h"
 #include <afxwin.h>
