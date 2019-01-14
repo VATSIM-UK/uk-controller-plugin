@@ -112,6 +112,7 @@
     <ClInclude Include="..\..\src\historytrail\HistoryTrailModule.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailRenderer.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailRepository.h" />
+    <ClInclude Include="..\..\src\hold\HoldingData.h" />
     <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />

@@ -100,6 +100,9 @@
     <Filter Include="test\wake">
       <UniqueIdentifier>{8b8dee4d-be2d-4e83-941c-35146c600ea0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\hold">
+      <UniqueIdentifier>{d5e45187-7853-49f0-b2f3-fdeee1d265e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -520,6 +523,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp">
       <Filter>test\initialaltitude</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldingDataTest.cpp">
+      <Filter>test\hold</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

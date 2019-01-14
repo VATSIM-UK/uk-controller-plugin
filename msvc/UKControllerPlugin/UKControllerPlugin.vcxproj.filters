@@ -115,6 +115,9 @@
     <Filter Include="src\wake">
       <UniqueIdentifier>{33f04493-b7ed-43ec-a004-61ca98cb71e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\hold">
+      <UniqueIdentifier>{93c29766-c3d5-47e0-8cfd-5d71d115cd0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\Airfield.h">
@@ -698,6 +701,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h">
       <Filter>src\initialaltitude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldingData.h">
+      <Filter>src\hold</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
