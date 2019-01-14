@@ -711,6 +711,9 @@
     <ClInclude Include="..\..\src\hold\HoldingDataCollection.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\BuildHoldingData.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1198,6 +1201,9 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldingDataCollection.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\BuildHoldingData.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
