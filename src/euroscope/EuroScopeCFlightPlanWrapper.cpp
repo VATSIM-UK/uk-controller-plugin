@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
 
         std::string EuroScopeCFlightPlanWrapper::GetAircraftType(void) const
         {
-            return this->originalData.GetFlightPlanData().GetAircraftInfo();
+            return this->originalData.GetFlightPlanData().GetAircraftFPType();
         }
 
         const std::string EuroScopeCFlightPlanWrapper::GetCallsign(void) const
