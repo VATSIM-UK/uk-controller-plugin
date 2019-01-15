@@ -10,6 +10,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <Media Include="..\..\..\resource\sound\beep.wav" />
     <Media Include="..\..\resource\sound\beep.wav" />
   </ItemGroup>
   <ItemGroup>

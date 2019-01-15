@@ -10,11 +10,12 @@ namespace UKControllerPlugin {
             "Notify the user of required controller pre-notes";
 
         // SQUAWKS
-        const std::string squawkToggleSettingsKey = "autoAssignSquawks";
-        const std::string squawkToggleSettingsDescription = "Automatically assign squawks";
+        const std::string GeneralSettingsEntries::squawkToggleSettingsKey = "autoAssignSquawks";
+        const std::string GeneralSettingsEntries::squawkToggleSettingsDescription = "Automatically assign squawks";
 
         // Initial Altitudes
-        const std::string initialAltitudeToggleSettingsKey = "autoAssignInitialAltitudes";
-        const std::string initialAltitudeToggleSettingsDescription = "Automatically assign initial altitudes";
+        const std::string GeneralSettingsEntries::initialAltitudeToggleSettingsKey = "autoAssignInitialAltitudes";
+        const std::string GeneralSettingsEntries::initialAltitudeToggleSettingsDescription =
+            "Automatically assign initial altitudes";
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

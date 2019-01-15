@@ -42,6 +42,12 @@ namespace UKControllerPlugin {
                 // The checkbox for whether prenotes should be notfied to the user
                 CButton prenoteEnabledCheckbox;
 
+                // The checkbox for whether automatic squawk assignment should be done
+                CButton squawksEnabledCheckbox;
+
+                // The checkbox for whether automatic initial altitude assignment should be done
+                CButton initialAltitudeEnabledCheckbox;
+
                 // A place where user settings are retrieved and stored
                 UKControllerPlugin::Euroscope::UserSetting & userSettings;
         };
