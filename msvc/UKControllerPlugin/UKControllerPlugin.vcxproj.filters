@@ -702,6 +702,9 @@
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1185,6 +1188,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp">
       <Filter>src\initialaltitude</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp">
+      <Filter>src\euroscope</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

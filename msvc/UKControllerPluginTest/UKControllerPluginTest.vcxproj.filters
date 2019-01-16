@@ -521,6 +521,9 @@
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp">
       <Filter>test\initialaltitude</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp">
+      <Filter>test\euroscope</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -619,6 +622,9 @@
     </ClInclude>
     <ClInclude Include="..\..\test\helper\TestEnvironment.h">
       <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h">
+      <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
