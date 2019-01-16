@@ -94,6 +94,7 @@
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingProviderInterface.h" />
     <ClInclude Include="..\..\src\flightplan\DeferredFlightplanEvent.h" />
     <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.h" />
