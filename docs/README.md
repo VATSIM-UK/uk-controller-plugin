@@ -1,15 +1,16 @@
 [master_build_status]: https://ci.appveyor.com/api/projects/status/github/VATSIM-UK/uk-controller-plugin?svg=true&retina=true&branch=master
 [develop_build_status]: https://ci.appveyor.com/api/projects/status/github/VATSIM-UK/uk-controller-plugin?svg=true&retina=true&branch=develop
+[appveyor_project_link]: https://ci.appveyor.com/project/CalumTowers/uk-controller-plugin
 
 # uk-controller-plugin
 
 The VATSIM UK Controller Plugin for EuroCcope 3.2 only. This project works in cooperation with
 the Plugin API to offer useful functionality to controllers of UK positions on the VATSIM network.
 
-|      Check      |                            Provider                           |              Status             |
-|-----------------|---------------------------------------------------------------|---------------------------------|
-| Build (Master)  | [AppVeyor](https://ci.appveyor.com)                           | ![master_build_status]          |
-| Build (Develop) | [AppVeyor](https://ci.appveyor.com)                           | ![develop_build_status]       |
+|      Check      |                            Provider                                          |              Status             |
+|-----------------|------------------------------------------------------------------------------|---------------------------------|
+| Build (Master)  | [AppVeyor](https://ci.appveyor.com/project/CalumTowers/uk-controller-plugin) | ![master_build_status]          |
+| Build (Develop) | [AppVeyor](https://ci.appveyor.com/project/CalumTowers/uk-controller-plugin) | ![develop_build_status]         |
 
 ## Feature List
 
