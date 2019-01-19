@@ -27,16 +27,16 @@ namespace UKControllerPluginTest {
 
         TEST_F(UserSettingTest, HasEntryReturnsFalseIfKeyNotExists)
         {
-            ON_CALL(this->mockProvider, GetKey("testkey"))
-                .WillByDefault(Return(""));
+            ON_CALL(this->mockProvider, KeyExists("testkey"))
+                .WillByDefault(Return(false));
 
             EXPECT_FALSE(this->userSetting.HasEntry("testkey"));
         }
 
         TEST_F(UserSettingTest, HasEntryReturnsTrueIfKeyExists)
         {
-            ON_CALL(this->mockProvider, GetKey("testkey"))
-                .WillByDefault(Return("asdsadsad"));
+            ON_CALL(this->mockProvider, KeyExists("testkey"))
+                .WillByDefault(Return(true));
 
             EXPECT_TRUE(this->userSetting.HasEntry("testkey"));
         }

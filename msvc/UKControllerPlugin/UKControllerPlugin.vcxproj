@@ -90,6 +90,7 @@
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsDialog.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsEntries.h" />
+    <ClInclude Include="..\..\src\euroscope\LoadDefaultUserSettings.h" />
     <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
@@ -272,6 +273,7 @@
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsDialog.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsEntries.cpp" />
+    <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp" />
     <ClCompile Include="..\..\src\euroscope\PluginUserSettingBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />

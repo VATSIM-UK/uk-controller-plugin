@@ -64,7 +64,7 @@ namespace UKControllerPlugin {
         */
         bool UserSetting::HasEntry(std::string key)
         {
-            return this->ValidStringEntry(this->GetStringEntry(key));
+            return this->userSettingProvider.KeyExists(key);
         }
 
         /*

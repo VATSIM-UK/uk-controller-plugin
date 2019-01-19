@@ -705,6 +705,9 @@
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\LoadDefaultUserSettings.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1190,6 +1193,9 @@
       <Filter>src\initialaltitude</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp">
+      <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
   </ItemGroup>

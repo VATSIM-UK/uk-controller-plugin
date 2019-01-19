@@ -524,6 +524,9 @@
     <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp">
       <Filter>test\euroscope</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\euroscope\LoadDefaultUserSettingsTest.cpp">
+      <Filter>test\euroscope</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
