@@ -4,12 +4,14 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
 
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
@@ -23,6 +25,7 @@ namespace UKControllerPluginTest {
                 {
                     container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
                     container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
+                    container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
                 }
 
                 PersistenceContainer container;
@@ -39,6 +42,13 @@ namespace UKControllerPluginTest {
         {
             InitialAltitudeModule::BootstrapPlugin(this->dependency, this->container);
             EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
+        }
+
+        TEST_F(InitialAltitudeModuleTest, BootstrapPluginRegistersRecycleTagFunction)
+        {
+            InitialAltitudeModule::BootstrapPlugin(this->dependency, this->container);
+            EXPECT_EQ(1, container.pluginFunctionHandlers->CountTagFunctions());
+            EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9002));
         }
 
         TEST_F(InitialAltitudeModuleTest, BootstrapPluginRegistersUserSettingsEvents)
