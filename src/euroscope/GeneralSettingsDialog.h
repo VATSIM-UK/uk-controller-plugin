@@ -22,7 +22,7 @@ namespace UKControllerPlugin {
                     CWnd * parentWindow,
                     UKControllerPlugin::Euroscope::UserSetting & userSettings
                 );
-                GeneralSettingsDialog(void);
+                GeneralSettingsDialog(const GeneralSettingsDialog & newObject);
 
                 BOOL OnInitDialog(void);
                 void OnOK(void);

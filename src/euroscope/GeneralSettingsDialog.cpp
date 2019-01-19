@@ -17,6 +17,12 @@ namespace UKControllerPlugin {
 
         }
 
+        GeneralSettingsDialog::GeneralSettingsDialog(const GeneralSettingsDialog & newObject)
+            : CDialog(IDD_GENERAL_SETTINGS, newObject.m_pParentWnd), userSettings(newObject.userSettings)
+        {
+            
+        }
+
         BOOL GeneralSettingsDialog::OnInitDialog(void)
         {
             CDialog::OnInitDialog();
