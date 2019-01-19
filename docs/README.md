@@ -31,7 +31,7 @@ dynamically to the plugin.
 
 ### Compiling
 
-There are three build configurations available:
+There are two build configurations available:
 
 - Debug: Compile with all debugging symbols for development. Results in decreased performance and an inflated DLL
 - Release: Compile in release mode
