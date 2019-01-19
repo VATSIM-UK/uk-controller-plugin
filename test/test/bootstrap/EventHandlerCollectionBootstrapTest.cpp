@@ -63,6 +63,12 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, this->container.deferredHandlers->Count());
         }
 
+
+        TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginCreatesUserSettingAwareHandler)
+        {
+            EXPECT_EQ(0, this->container.userSettingHandlers->Count());
+        }
+
         TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginRegistersDeferredHandlersForTimedEvents)
         {
             EXPECT_EQ(1, this->container.timedHandler->CountHandlers());

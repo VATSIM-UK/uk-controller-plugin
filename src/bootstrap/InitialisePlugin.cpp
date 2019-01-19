@@ -137,6 +137,7 @@ namespace UKControllerPlugin {
         this->container = std::make_unique<PersistenceContainer>();
 
         // Do helpers.
+        EventHandlerCollectionBootstrap::BoostrapPlugin(*this->container);
         ExternalsBootstrap::Bootstrap(*this->container, this->m_hInstance);
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
@@ -170,7 +171,6 @@ namespace UKControllerPlugin {
         );
 
         // Boostrap all the modules at a plugin level
-        EventHandlerCollectionBootstrap::BoostrapPlugin(*this->container);
         CollectionBootstrap::BootstrapPlugin(*this->container, dependencyCache);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
 
