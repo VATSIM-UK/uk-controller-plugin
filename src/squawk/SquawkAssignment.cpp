@@ -41,7 +41,8 @@ namespace UKControllerPlugin {
         */
         bool SquawkAssignment::CircuitAssignmentNeeded(EuroScopeCFlightPlanInterface & flightplan) const
         {
-            return flightplan.IsVfr() && 
+            return flightplan.IsVfr() &&
+                !flightplan.HasAssignedSquawk() &&
                 std::regex_search(
                     flightplan.GetRawRouteString(),
                     std::regex("^(?:VFR )?CIRCUIT(?:S)?", std::regex::icase)

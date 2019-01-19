@@ -54,6 +54,7 @@ namespace UKControllerPlugin {
                 return false;
             }
 
+            LogInfo("Assigned circuit squawk to " + flightplan.GetCallsign());
             flightplan.SetSquawk("7010");
             return true;
         }

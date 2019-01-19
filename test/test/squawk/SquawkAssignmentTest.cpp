@@ -726,6 +726,23 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, IsVfr())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*this->mockFlightplan, GetRawRouteString())
+                .WillByDefault(Return("CIRCUITS"));
+
+            EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan));
+        }
+
+        TEST_F(SquawkAssignmentTest, CircuitAssignmentReturnsIfSquawkAlreadyAssigned)
+        {
+            ON_CALL(*this->mockFlightplan, IsVfr())
+                .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(true));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("CIRCUITS"));
 
@@ -736,6 +753,9 @@ namespace UKControllerPluginTest {
         {
             ON_CALL(*this->mockFlightplan, IsVfr())
                 .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(false));
 
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("CIRCUITS"));
@@ -748,6 +768,9 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, IsVfr())
                 .WillByDefault(Return(true));
 
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(false));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("CIRCUIT"));
 
@@ -758,6 +781,9 @@ namespace UKControllerPluginTest {
         {
             ON_CALL(*this->mockFlightplan, IsVfr())
                 .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(false));
 
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("VFR CIRCUIT"));
@@ -770,6 +796,9 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, IsVfr())
                 .WillByDefault(Return(true));
 
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(false));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("VFR CIRCUITS"));
 
@@ -781,6 +810,9 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, IsVfr())
                 .WillByDefault(Return(true));
 
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(false));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("vfr circuits"));
 
@@ -791,6 +823,9 @@ namespace UKControllerPluginTest {
         {
             ON_CALL(*this->mockFlightplan, IsVfr())
                 .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(false));
 
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("CHEW VALLEY FROME VFR CIRCUITS"));
