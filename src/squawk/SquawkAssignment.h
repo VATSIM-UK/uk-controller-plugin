@@ -34,6 +34,9 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
                     const bool disabled
                 );
+                bool CircuitAssignmentNeeded(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan
+                );
                 bool ForceAssignmentAllowed(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan
                 ) const;

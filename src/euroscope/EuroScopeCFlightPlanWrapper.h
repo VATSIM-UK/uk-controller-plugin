@@ -24,6 +24,7 @@ namespace UKControllerPlugin {
                 std::string GetGroundState(void) const;
                 std::string GetIcaoWakeCategory(void) const override;
                 const std::string GetOrigin(void) const;
+                std::string GetRawRouteString(void) const override;
                 const std::string GetSidName(void) const;
                 bool HasAssignedSquawk(void) const;
                 const bool HasControllerClearedAltitude(void) const;
@@ -32,6 +33,7 @@ namespace UKControllerPlugin {
                 const bool IsTracked(void) const;
                 const bool IsTrackedByUser(void) const;
                 bool IsValid(void) const;
+                bool IsVfr(void) const override;
                 void SetClearedAltitude(int cleared);
                 void SetSquawk(std::string squawk);
 
