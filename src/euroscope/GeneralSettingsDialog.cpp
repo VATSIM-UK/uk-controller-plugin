@@ -2,23 +2,31 @@
 #include "euroscope/GeneralSettingsDialog.h"
 #include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
+#include "euroscope/UserSettingAwareCollection.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
+using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 
 namespace UKControllerPlugin {
     namespace Euroscope {
 
         IMPLEMENT_DYNAMIC(GeneralSettingsDialog, CDialog)
 
-        GeneralSettingsDialog::GeneralSettingsDialog(CWnd * parentWindow, UserSetting & userSettings)
-            : CDialog(IDD_GENERAL_SETTINGS, parentWindow), userSettings(userSettings)
+        GeneralSettingsDialog::GeneralSettingsDialog(
+            CWnd * parentWindow,
+            UserSetting & userSettings,
+            const UserSettingAwareCollection & userSettingsHandlers
+        )
+            : CDialog(IDD_GENERAL_SETTINGS, parentWindow), userSettings(userSettings),
+            userSettingsHandlers(userSettingsHandlers)
         {
 
         }
 
         GeneralSettingsDialog::GeneralSettingsDialog(const GeneralSettingsDialog & newObject)
-            : CDialog(IDD_GENERAL_SETTINGS, newObject.m_pParentWnd), userSettings(newObject.userSettings)
+            : CDialog(IDD_GENERAL_SETTINGS, newObject.m_pParentWnd), userSettings(newObject.userSettings),
+            userSettingsHandlers(newObject.userSettingsHandlers)
         {
             
         }
@@ -70,6 +78,7 @@ namespace UKControllerPlugin {
                 this->squawksEnabledCheckbox.GetCheck()
             );
 
+            this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
             this->EndDialog(0);
         }
 

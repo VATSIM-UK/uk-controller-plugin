@@ -32,7 +32,11 @@ namespace UKControllerPlugin {
                     instance,
                     "ukcp",
                     L"ukcp",
-                    GeneralSettingsDialog(CWnd::FromHandle(GetActiveWindow()), *persistence.pluginUserSettingHandler)
+                    GeneralSettingsDialog(
+                        CWnd::FromHandle(GetActiveWindow()),
+                        *persistence.pluginUserSettingHandler,
+                        *persistence.userSettingHandlers
+                    )
                 )
             );
             persistence.brushes.reset(new GdiplusBrushes);

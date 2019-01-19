@@ -3,6 +3,7 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
         class UserSetting;
+        class UserSettingAwareCollection;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
@@ -20,7 +21,8 @@ namespace UKControllerPlugin {
 
                 GeneralSettingsDialog(
                     CWnd * parentWindow,
-                    UKControllerPlugin::Euroscope::UserSetting & userSettings
+                    UKControllerPlugin::Euroscope::UserSetting & userSettings,
+                    const UKControllerPlugin::Euroscope::UserSettingAwareCollection & userSettingsHandlers
                 );
                 GeneralSettingsDialog(const GeneralSettingsDialog & newObject);
 
@@ -50,6 +52,9 @@ namespace UKControllerPlugin {
 
                 // A place where user settings are retrieved and stored
                 UKControllerPlugin::Euroscope::UserSetting & userSettings;
+
+                // A set of handlers that want to know when user settings get updated
+                const UKControllerPlugin::Euroscope::UserSettingAwareCollection & userSettingsHandlers;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
