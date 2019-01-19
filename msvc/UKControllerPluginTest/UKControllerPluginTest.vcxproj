@@ -118,7 +118,7 @@
     <ClCompile Include="..\..\test\test\massevent\MassEventTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp" />
-    <ClCompile Include="..\..\test\test\message\UserSettingTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp" />
     <ClCompile Include="..\..\test\test\metar\MetarEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackModuleTest.cpp" />

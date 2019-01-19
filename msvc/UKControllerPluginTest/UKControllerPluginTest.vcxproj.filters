@@ -360,9 +360,6 @@
     <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp">
       <Filter>test\message</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\message\UserSettingTest.cpp">
-      <Filter>test\message</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\metar\MetarEventHandlerCollectionTest.cpp">
       <Filter>test\metar</Filter>
     </ClCompile>
@@ -522,6 +519,9 @@
       <Filter>test\initialaltitude</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp">
+      <Filter>test\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp">
       <Filter>test\euroscope</Filter>
     </ClCompile>
   </ItemGroup>
