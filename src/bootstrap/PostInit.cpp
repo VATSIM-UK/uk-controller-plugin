@@ -14,6 +14,7 @@ namespace UKControllerPlugin {
             container.tagHandler->RegisterAllItemsWithEuroscope(*container.plugin);
             container.pluginFunctionHandlers->RegisterTagFunctionsWithEuroscope(*container.plugin);
             container.plugin->PostInit();
+            container.userSettingHandlers->UserSettingsUpdateEvent(*container.pluginUserSettingHandler);
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

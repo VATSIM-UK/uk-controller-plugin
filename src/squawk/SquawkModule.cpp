@@ -52,6 +52,7 @@ namespace UKControllerPlugin {
             container.squawkEvents = handler;
             container.flightplanHandler->RegisterHandler(handler);
             container.timedHandler->RegisterEvent(handler, SquawkModule::trackedAircraftCheckFrequency);
+            container.userSettingHandlers->RegisterHandler(handler);
 
             TagFunction forceSquawkCallbackGeneral(
                 handler->squawkForceCallbackIdGeneral,
