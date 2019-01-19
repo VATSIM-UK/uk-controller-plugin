@@ -47,6 +47,22 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Returns true if a callback function exists
+        */
+        bool FunctionCallEventHandler::HasCallbackFunction(int id) const
+        {
+            return this->callbackFunctions.find(id) != this->callbackFunctions.cend();
+        }
+
+        /*
+            Returns true if a tag function exists
+        */
+        bool FunctionCallEventHandler::HasTagFunction(int id) const
+        {
+            return this->tagFunctions.find(id) != this->tagFunctions.cend();
+        }
+
+        /*
             Returns the next function ID.
         */
         int FunctionCallEventHandler::ReserveNextDynamicFunctionId(void)
