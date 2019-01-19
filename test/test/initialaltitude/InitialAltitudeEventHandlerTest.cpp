@@ -40,6 +40,7 @@ using ::testing::StrictMock;
 using ::testing::Return;
 using ::testing::NiceMock;
 using ::testing::Throw;
+using ::testing::_;
 
 namespace UKControllerPluginTest {
     namespace InitialAltitude {
@@ -438,35 +439,36 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, RecycleSetsInitialAltitude)
         {
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockplan(
-                new NiceMock<MockEuroScopeCFlightPlanInterface>
-            );
-
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
-                .WillByDefault(Return(mockplan));
-
-            ON_CALL(*mockplan, GetSidName())
+            ON_CALL(this->mockFlightPlan, GetSidName())
                 .WillByDefault(Return("ADMAG2X"));
 
-            ON_CALL(*mockplan, GetOrigin())
+            ON_CALL(this->mockFlightPlan, GetOrigin())
                 .WillByDefault(Return("EGKK"));
 
-            ON_CALL(*mockplan, GetCallsign())
+            ON_CALL(this->mockFlightPlan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
             
-            EXPECT_CALL(*mockplan, SetClearedAltitude(6000))
+            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
 
-            handler.RecycleInitialAltitude("BAW123");
+            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, RecycleHandlesMissingFlightplansGracefully)
+        TEST_F(InitialAltitudeEventHandlerTest, RecycleDoesNothingIfNoSidFound)
         {
+            ON_CALL(this->mockFlightPlan, GetSidName())
+                .WillByDefault(Return("ADMAG3X"));
 
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
-                .WillByDefault(Throw(std::invalid_argument("Test")));
+            ON_CALL(this->mockFlightPlan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
 
-            EXPECT_NO_THROW(handler.RecycleInitialAltitude("BAW123"));
+            ON_CALL(this->mockFlightPlan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_))
+                .Times(0);
+
+            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget);
         }
 
     }  // namespace InitialAltitude

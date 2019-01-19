@@ -60,7 +60,10 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     int dataType
                 ) override;
-                void RecycleInitialAltitude(std::string callsign);
+                void RecycleInitialAltitude(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                );
                 bool UserAutomaticAssignmentsAllowed(void) const;
                 void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
 

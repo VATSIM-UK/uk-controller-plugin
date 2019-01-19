@@ -111,24 +111,22 @@ namespace UKControllerPlugin {
         /*
             Reset the initial altitude for the given callsign.
         */
-        void InitialAltitudeEventHandler::RecycleInitialAltitude(std::string callsign)
-        {
-            try {
-                std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan = this->plugin.GetFlightplanForCallsign(
-                    callsign
-                );
-                std::string sidName = normalise.StripSidDeprecation(flightplan->GetSidName());
+        void InitialAltitudeEventHandler::RecycleInitialAltitude(
+            EuroScopeCFlightPlanInterface & flightplan,
+            EuroScopeCRadarTargetInterface & radarTarget
+        ) {
+            std::string sidName = normalise.StripSidDeprecation(flightplan.GetSidName());
 
-                if (!generator.HasSid(flightplan->GetOrigin(), sidName)) {
-                    return;
-                }
-                flightplan->SetClearedAltitude(
-                    this->generator.GetInitialAltitudeForDeparture(flightplan->GetOrigin(), sidName)
-                );
-                LogInfo("Recycled initial altitude for " + callsign + " (" + flightplan->GetOrigin() + ")");
-            } catch (std::invalid_argument) {
-
+            if (!generator.HasSid(flightplan.GetOrigin(), sidName)) {
+                return;
             }
+            flightplan.SetClearedAltitude(
+                this->generator.GetInitialAltitudeForDeparture(flightplan.GetOrigin(), sidName)
+            );
+            LogInfo(
+                "Recycled initial altitude for " + flightplan.GetCallsign() +
+                    " (" + flightplan.GetOrigin() + ", " + flightplan.GetSidName() + ")"
+            );
         }
 
         /*
