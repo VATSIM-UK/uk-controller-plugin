@@ -3,6 +3,7 @@
 #include "airfield/NormaliseSid.h"
 #include "initialaltitude/InitialAltitudeGenerator.h"
 #include "timedevent/DeferredEventHandler.h"
+#include "euroscope/UserSettingAwareInterface.h"
 
 // Forward declarations
 
@@ -35,7 +36,8 @@ namespace UKControllerPlugin {
         /*
             Class that responds to events related to initial altitudes.
         */
-        class InitialAltitudeEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface
+        class InitialAltitudeEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
+            public UKControllerPlugin::Euroscope::UserSettingAwareInterface
         {
             public:
                 InitialAltitudeEventHandler(
@@ -58,6 +60,8 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     int dataType
                 ) override;
+                bool UserAutomaticAssignmentsAllowed(void) const;
+                void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
 
                 // The maximum distance from the airfield that an aircraft can be untracked
                 // to be considered for an altitude update.
@@ -95,6 +99,10 @@ namespace UKControllerPlugin {
 
                 // So we can get flightplans after deferred events
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+
+                // Has the user enabled automatic assignments
+                bool userAutomaticAssignmentsAllowed = true;
+
         };
     }  // namespace InitialAltitude
 }  // namespace UKControllerPlugin

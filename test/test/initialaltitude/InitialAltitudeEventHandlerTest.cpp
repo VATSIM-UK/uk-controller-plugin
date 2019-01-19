@@ -13,6 +13,9 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "timedevent/DeferredEventHandler.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
+#include "mock/MockUserSettingProviderInterface.h"
+#include "euroscope/UserSetting.h"
+#include "euroscope/GeneralSettingsEntries.h"
 
 using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -28,6 +31,9 @@ using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Controller::Login;
 using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
 using ::testing::Test;
 using ::testing::StrictMock;
@@ -67,6 +73,58 @@ namespace UKControllerPluginTest {
                 InitialAltitudeEventHandler handler;
         };
 
+        TEST_F(InitialAltitudeEventHandlerTest, TestItDefaultsUserSettingToEnabled)
+        {
+            EXPECT_TRUE(this->handler.UserAutomaticAssignmentsAllowed());
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, TestItSetsEnabledFromUserSettings)
+        {
+            NiceMock<MockUserSettingProviderInterface> mockUserSettings;
+            UserSetting userSetting(mockUserSettings);
+
+            ON_CALL(mockUserSettings, GetKey(GeneralSettingsEntries::initialAltitudeToggleSettingsKey))
+                .WillByDefault(Return("0"));
+
+            this->handler.UserSettingsUpdated(userSetting);
+            EXPECT_FALSE(this->handler.UserAutomaticAssignmentsAllowed());
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, TestItDefaultsToEnabledIfNoSettingPresent)
+        {
+            NiceMock<MockUserSettingProviderInterface> mockUserSettings;
+            UserSetting userSetting(mockUserSettings);
+
+            ON_CALL(mockUserSettings, GetKey(GeneralSettingsEntries::initialAltitudeToggleSettingsKey))
+                .WillByDefault(Return("0"));
+
+            NiceMock<MockUserSettingProviderInterface> mockUserSettingsNoSetting;
+            UserSetting userSettingNoSetting(mockUserSettingsNoSetting);
+
+            ON_CALL(mockUserSettingsNoSetting, GetKey(GeneralSettingsEntries::initialAltitudeToggleSettingsKey))
+                .WillByDefault(Return(""));
+
+            this->handler.UserSettingsUpdated(userSetting);
+            EXPECT_FALSE(this->handler.UserAutomaticAssignmentsAllowed());
+            this->handler.UserSettingsUpdated(userSettingNoSetting);
+            EXPECT_TRUE(this->handler.UserAutomaticAssignmentsAllowed());
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNothingIfUserSettingDisabled)
+        {
+            NiceMock<MockUserSettingProviderInterface> mockUserSettings;
+            UserSetting userSetting(mockUserSettings);
+
+            ON_CALL(mockUserSettings, GetKey(GeneralSettingsEntries::initialAltitudeToggleSettingsKey))
+                .WillByDefault(Return("0"));
+
+            this->handler.UserSettingsUpdated(userSetting);
+
+            StrictMock<MockEuroScopeCFlightPlanInterface> mockFp;
+            StrictMock<MockEuroScopeCRadarTargetInterface> mockRt;
+            EXPECT_NO_THROW(this->handler.FlightPlanEvent(mockFp, mockRt));
+        }
+
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDefersIfNotLoggedInLongEnough)
         {
             login.SetLoginTime(std::chrono::system_clock::now() + std::chrono::minutes(15));
@@ -79,7 +137,6 @@ namespace UKControllerPluginTest {
             EXPECT_LE(seconds, 5);
             EXPECT_GT(seconds, 3);
         }
-
 
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTooFarFromOrigin)
         {

@@ -34,6 +34,7 @@ namespace UKControllerPlugin {
             );
 
             persistence.initialAltitudeEvents = initialAltitudeEventHandler;
+            persistence.userSettingHandlers->RegisterHandler(initialAltitudeEventHandler);
             persistence.flightplanHandler->RegisterHandler(initialAltitudeEventHandler);
         }
     }  // namespace InitialAltitude
