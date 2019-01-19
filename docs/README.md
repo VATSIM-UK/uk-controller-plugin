@@ -1,6 +1,5 @@
 [master_build_status]: https://ci.appveyor.com/api/projects/status/github/VATSIM-UK/uk-controller-plugin?svg=true&retina=true&branch=master
 [develop_build_status]: https://ci.appveyor.com/api/projects/status/github/VATSIM-UK/uk-controller-plugin?svg=true&retina=true&branch=develop
-[appveyor_project_link]: https://ci.appveyor.com/project/CalumTowers/uk-controller-plugin
 
 # uk-controller-plugin
 
