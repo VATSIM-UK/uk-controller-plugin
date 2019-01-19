@@ -39,6 +39,7 @@ using ::testing::Test;
 using ::testing::StrictMock;
 using ::testing::Return;
 using ::testing::NiceMock;
+using ::testing::Throw;
 
 namespace UKControllerPluginTest {
     namespace InitialAltitude {
@@ -433,6 +434,39 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(handler.assignmentMaxSpeed));
 
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, RecycleSetsInitialAltitude)
+        {
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockplan(
+                new NiceMock<MockEuroScopeCFlightPlanInterface>
+            );
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(mockplan));
+
+            ON_CALL(*mockplan, GetSidName())
+                .WillByDefault(Return("ADMAG2X"));
+
+            ON_CALL(*mockplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(*mockplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+            
+            EXPECT_CALL(*mockplan, SetClearedAltitude(6000))
+                .Times(1);
+
+            handler.RecycleInitialAltitude("BAW123");
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, RecycleHandlesMissingFlightplansGracefully)
+        {
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Throw(std::invalid_argument("Test")));
+
+            EXPECT_NO_THROW(handler.RecycleInitialAltitude("BAW123"));
         }
 
     }  // namespace InitialAltitude
