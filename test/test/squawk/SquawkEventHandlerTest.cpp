@@ -461,7 +461,7 @@ namespace UKControllerPluginTest {
             this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign(_))
                 .WillByDefault(Throw(std::exception("test")));
-            
+
             this->handler.UserSettingsUpdated(userSetting);
             EXPECT_NO_THROW(handler.TimedEventTrigger());
         }

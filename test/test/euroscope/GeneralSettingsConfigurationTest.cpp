@@ -46,7 +46,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemHasADescription)
         {
-            EXPECT_EQ(this->configuration.configMenuDescription, this->configuration.GetConfigurationMenuItem().firstValue);
+            EXPECT_EQ(
+                this->configuration.configMenuDescription,
+                this->configuration.GetConfigurationMenuItem().firstValue
+            );
         }
 
         TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemHasTheCorrectCallbackId)
@@ -59,7 +62,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemHasNoCheckbox)
         {
-            EXPECT_EQ(EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX, this->configuration.GetConfigurationMenuItem().checked);
+            EXPECT_EQ(
+                EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX,
+                this->configuration.GetConfigurationMenuItem().checked
+            );
         }
 
         TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemIsEnabled)

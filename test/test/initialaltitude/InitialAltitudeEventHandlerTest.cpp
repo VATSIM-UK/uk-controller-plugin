@@ -447,7 +447,7 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockFlightPlan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
-            
+
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
 

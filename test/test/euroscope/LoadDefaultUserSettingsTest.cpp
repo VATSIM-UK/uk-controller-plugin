@@ -116,5 +116,5 @@ namespace UKControllerPluginTest {
 
             LoadDefaultUserSettings(this->userSetting);
         }
-    }
-}
+    }  // namespace Euroscope
+}  // namespace UKControllerPluginTest

@@ -11,5 +11,5 @@ namespace UKControllerPluginTest {
             public:
                 MOCK_METHOD1(UserSettingsUpdated, void(UKControllerPlugin::Euroscope::UserSetting &));
         };
-    }  // namespace RadarScreen
+    }  // namespace Euroscope
 }  // namespace UKControllerPluginTest

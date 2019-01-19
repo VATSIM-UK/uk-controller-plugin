@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
                 );
 
                 // The function id for the recycle initial altitude function
-                const static int recycleFunctionId = 9002;
+                static const int recycleFunctionId = 9002;
         };
     }  // namespace InitialAltitude
 }  // namespace UKControllerPlugin
