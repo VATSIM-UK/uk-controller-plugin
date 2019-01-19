@@ -43,6 +43,22 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Assigns circuit squawks where appropriate.
+        */
+        bool SquawkGenerator::AssignCircuitSquawkForAircraft(
+            EuroScopeCFlightPlanInterface & flightplan,
+            EuroScopeCRadarTargetInterface & radarTarget
+        ) const
+        {
+            if (this->assignmentRules.disabled || !assignmentRules.CircuitAssignmentNeeded(flightplan)) {
+                return false;
+            }
+
+            flightplan.SetSquawk("7010");
+            return true;
+        }
+
+        /*
             Forces a squawk to be assigned for the given aircraft
         */
         bool SquawkGenerator::ForceGeneralSquawkForAircraft(
