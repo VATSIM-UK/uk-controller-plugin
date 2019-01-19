@@ -99,7 +99,7 @@ namespace UKControllerPluginTest {
             );
 
             handler.RegisterFunctionCall(function);
-            EXPECT_TRUE(handler.HasTagFunction(9002));
+            EXPECT_TRUE(handler.HasTagFunction(9000));
         }
 
         TEST(FunctionCallEventHandler, RegisterFunctionsWithEuroscopeRegistersTagFunctions)
