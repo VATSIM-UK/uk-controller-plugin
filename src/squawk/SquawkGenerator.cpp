@@ -50,7 +50,7 @@ namespace UKControllerPlugin {
             EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
-            if (this->assignmentRules.disabled || !assignmentRules.CircuitAssignmentNeeded(flightplan)) {
+            if (this->assignmentRules.disabled || !assignmentRules.CircuitAssignmentNeeded(flightplan, radarTarget)) {
                 return false;
             }
 

@@ -729,10 +729,13 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("CIRCUITS"));
 
-            EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan));
+            EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkAssignmentTest, CircuitAssignmentReturnsIfSquawkAlreadyAssigned)
@@ -743,10 +746,13 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(true));
 
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("CIRCUITS"));
 
-            EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan));
+            EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkAssignmentTest, CircuitAssignmentReturnsTrueOnCircuits)
@@ -757,10 +763,13 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("CIRCUITS"));
 
-            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan));
+            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkAssignmentTest, CircuitAssignmentReturnsTrueOnCircuit)
@@ -771,10 +780,13 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("CIRCUIT"));
 
-            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan));
+            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkAssignmentTest, CircuitAssignmentReturnsTrueOnVfrCircuit)
@@ -785,10 +797,13 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("VFR CIRCUIT"));
 
-            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan));
+            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkAssignmentTest, CircuitAssignmentReturnsTrueOnVfrCircuits)
@@ -799,10 +814,13 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("VFR CIRCUITS"));
 
-            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan));
+            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkAssignmentTest, CircuitAssignmentHandlesCaseInsensitive)
@@ -813,10 +831,13 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("vfr circuits"));
 
-            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan));
+            EXPECT_TRUE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkAssignmentTest, CircuitAssignmentDoesntAcceptCircuitsThatArentStartOfFlightplan)
@@ -827,10 +848,32 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("CHEW VALLEY FROME VFR CIRCUITS"));
 
-            EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan));
+            EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
+
+
+        TEST_F(SquawkAssignmentTest, CircuitAssignmentReturnsFalseIfDoesntMeetGeneralAssignmentRules)
+        {
+            ON_CALL(*this->mockFlightplan, IsVfr())
+                .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*this->mockFlightplan, GetRawRouteString())
+                .WillByDefault(Return("VFR CIRCUITS"));
+
+            EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
+        }
+
     }  // namespace Squawk
 }  // namespace UKControllerPluginTest

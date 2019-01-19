@@ -39,14 +39,18 @@ namespace UKControllerPlugin {
         /*
             Returns whether or not the aircraft is believed to be doing VFR circuits
         */
-        bool SquawkAssignment::CircuitAssignmentNeeded(EuroScopeCFlightPlanInterface & flightplan) const
+        bool SquawkAssignment::CircuitAssignmentNeeded(
+            EuroScopeCFlightPlanInterface & flightplan,
+            EuroScopeCRadarTargetInterface & radarTarget
+        ) const
         {
             return flightplan.IsVfr() &&
                 !flightplan.HasAssignedSquawk() &&
                 std::regex_search(
                     flightplan.GetRawRouteString(),
                     std::regex("^(?:VFR )?CIRCUIT(?:S)?", std::regex::icase)
-                );
+                ) &&
+                this->GeneralAssignmentNeeded(flightplan, radarTarget);
         }
 
         /*

@@ -764,6 +764,9 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, GetRawRouteString())
                 .WillByDefault(Return("VFR CIRCUIT"));
 
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             EXPECT_TRUE(
                 this->generator->AssignCircuitSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget)
             );

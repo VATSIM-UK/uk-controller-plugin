@@ -35,7 +35,8 @@ namespace UKControllerPlugin {
                     const bool disabled
                 );
                 bool CircuitAssignmentNeeded(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 ) const;
                 bool ForceAssignmentAllowed(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan
