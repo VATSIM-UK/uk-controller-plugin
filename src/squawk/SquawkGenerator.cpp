@@ -240,7 +240,7 @@ namespace UKControllerPlugin {
                 std::string squawk = this->api.GetAssignedSquawk(callsign);
                 this->plugin->GetFlightplanForCallsign(callsign)
                     ->SetSquawk(squawk);
-                LogInfo("Assigned squawk " + squawk + " to " + callsign);
+                LogInfo("Assigned existing squawk " + squawk + " to " + callsign);
                 return true;
             }
             catch (ApiNotFoundException exception) {
