@@ -11,6 +11,7 @@
 #include "timedevent/DeferredEventHandler.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "plugin/UKPlugin.h"
+#include "command/CommandHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Tag::TagItemCollection;
@@ -22,6 +23,7 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Command::CommandHandlerCollection;
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -40,6 +42,7 @@ namespace UKControllerPlugin {
             persistence.metarEventHandler.reset(new MetarEventHandlerCollection);
             persistence.deferredHandlers.reset(new DeferredEventHandler);
             persistence.userSettingHandlers.reset(new UserSettingAwareCollection);
+            persistence.commandHandlers.reset(new CommandHandlerCollection);
 
             persistence.timedHandler->RegisterEvent(persistence.deferredHandlers, 3);
         }

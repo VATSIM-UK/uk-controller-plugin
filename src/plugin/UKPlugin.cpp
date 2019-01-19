@@ -308,10 +308,6 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnNewMetarReceived(const char * sStation, const char * sFullMetar)
     {
-#ifdef _DEBUG
-        this->DisplayUserMessage("message", "UKCP", "New Metar", false, false, false, false, false);
-        this->DisplayUserMessage("message", "UKCP", sStation, false, false, false, false, false);
-#endif
         this->metarHandlers.NewMetarEvent(sStation, sFullMetar);
     }
 
