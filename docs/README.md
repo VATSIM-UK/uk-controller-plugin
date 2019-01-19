@@ -47,4 +47,4 @@ into the development environment.
 
 ### Contributing
 
-To contribute to the project, please have a look through our [Contributing Guide](CONTRIBUTING.md).
+To contribute to the project, please have a look at the [Contributing Guide](CONTRIBUTING.md).
