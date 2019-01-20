@@ -63,7 +63,7 @@ namespace UKControllerPlugin {
                 const int controlWidth;
 
                 // Title for the options
-                const std::string menuName = "UCKP Options";
+                const std::string menuName = "UKCP Options";
 
             private:
 
