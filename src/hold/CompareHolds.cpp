@@ -6,13 +6,13 @@ using UKControllerPlugin::Hold::HoldingData;
 
 namespace UKControllerPlugin {
     namespace Hold {
-        bool CompareHolds::operator()(const HoldingData & initial, std::string id) const
+        bool CompareHolds::operator()(const HoldingData & hold, std::string id) const
         {
-            return initial.identifier < id;
+            return hold.identifier < id;
         }
-        bool CompareHolds::operator()(std::string id, const HoldingData & initial) const
+        bool CompareHolds::operator()(std::string id, const HoldingData & hold) const
         {
-            return id < initial.identifier;
+            return id < hold.identifier;
         }
         bool CompareHolds::operator()(const HoldingData & a, const HoldingData & b) const
         {

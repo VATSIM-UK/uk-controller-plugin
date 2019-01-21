@@ -11,8 +11,8 @@ namespace UKControllerPlugin {
         {
             const std::string callsign;
             const std::string holdIdentifier;
-            unsigned int reportedAltitude;
-            unsigned int clearedAltitude;
+            int reportedAltitude;
+            int clearedAltitude;
         } HoldingAircraft;
 
     }  // namespace Hold
