@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
         {
             public:
                 ApiSquawkAllocationHandler(UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin);
-                void AddAllocationEvent(UKControllerPlugin::Squawk::ApiSquawkAllocation event);
+                void AddAllocationToQueue(UKControllerPlugin::Squawk::ApiSquawkAllocation event);
                 int Count(void);
                 // Inherited via AbstractTimedEvent
                 void TimedEventTrigger(void) override;

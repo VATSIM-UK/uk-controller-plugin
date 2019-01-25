@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
         /*
             Add a squawk event to the queue, but don't store duplicates
         */
-        void ApiSquawkAllocationHandler::AddAllocationEvent(ApiSquawkAllocation event)
+        void ApiSquawkAllocationHandler::AddAllocationToQueue(ApiSquawkAllocation event)
         {
             std::lock_guard<std::mutex> lock(this->queueGuard);
             this->eventQueue.insert(event);

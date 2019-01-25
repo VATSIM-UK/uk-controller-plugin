@@ -58,15 +58,15 @@ namespace UKControllerPluginTest {
         TEST_F(ApiSquawkAllocationHandlerTest, ItAddsAnEvent)
         {
             ApiSquawkAllocation event{ "BAW123", "0123" };
-            this->handler.AddAllocationEvent(event);
+            this->handler.AddAllocationToQueue(event);
             EXPECT_EQ(1, this->handler.Count());
         }
 
         TEST_F(ApiSquawkAllocationHandlerTest, ItDoesntAddDuplicateEvents)
         {
             ApiSquawkAllocation event{ "BAW123", "0123" };
-            this->handler.AddAllocationEvent(event);
-            this->handler.AddAllocationEvent(event);
+            this->handler.AddAllocationToQueue(event);
+            this->handler.AddAllocationToQueue(event);
             EXPECT_EQ(1, this->handler.Count());
         }
 
@@ -74,8 +74,8 @@ namespace UKControllerPluginTest {
         {
             ApiSquawkAllocation event1{ "BAW123", "0123" };
             ApiSquawkAllocation event2{ "EZY12AX", "5623" };
-            this->handler.AddAllocationEvent(event1);
-            this->handler.AddAllocationEvent(event2);
+            this->handler.AddAllocationToQueue(event1);
+            this->handler.AddAllocationToQueue(event2);
             EXPECT_CALL(*this->mockFlightplan1, SetSquawk("0123"))
                 .Times(1);
 
@@ -89,8 +89,8 @@ namespace UKControllerPluginTest {
         {
             ApiSquawkAllocation event1{ "BAW123", "0123" };
             ApiSquawkAllocation event2{ "EZY12AX", "5623" };
-            this->handler.AddAllocationEvent(event1);
-            this->handler.AddAllocationEvent(event2);
+            this->handler.AddAllocationToQueue(event1);
+            this->handler.AddAllocationToQueue(event2);
             this->handler.TimedEventTrigger();
             EXPECT_EQ(0, this->handler.Count());
         }
@@ -104,8 +104,8 @@ namespace UKControllerPluginTest {
         {
             ApiSquawkAllocation event1{ "XXXXX", "0123" };
             ApiSquawkAllocation event2{ "BAW123", "0123" };
-            this->handler.AddAllocationEvent(event1);
-            this->handler.AddAllocationEvent(event2);
+            this->handler.AddAllocationToQueue(event1);
+            this->handler.AddAllocationToQueue(event2);
 
             ON_CALL(this->mockPlugin, GetFlightplanForCallsign("XXXXX"))
                 .WillByDefault(Throw(std::invalid_argument("Test")));
