@@ -26,7 +26,7 @@ namespace UKControllerPluginModuleTest {
             EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
         }
 
-        TEST(SquawkModule, BootstrapPluginRegistersForTimedEvents)
+        TEST(SquawkModule, BootstrapPluginRegistersAllocationsForTimedEvents)
         {
             PersistenceContainer container;
             container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
@@ -34,7 +34,20 @@ namespace UKControllerPluginModuleTest {
             container.timedHandler.reset(new TimedEventCollection);
 
             SquawkModule::BootstrapPlugin(container, false, false);
-            EXPECT_EQ(1, container.timedHandler->CountHandlers());
+            EXPECT_EQ(
+                1,
+                container.timedHandler->CountHandlersForFrequency(SquawkModule::allocationCheckFrequency)
+            );
+        }
+
+        TEST(SquawkModule, BootstrapPluginRegistersEventHandlerForTimedEvents)
+        {
+            PersistenceContainer container;
+            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+            container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
+            container.timedHandler.reset(new TimedEventCollection);
+
+            SquawkModule::BootstrapPlugin(container, false, false);
             EXPECT_EQ(
                 1,
                 container.timedHandler->CountHandlersForFrequency(SquawkModule::trackedAircraftCheckFrequency)
