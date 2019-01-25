@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
         void ApiSquawkAllocationHandler::AddAllocationToQueue(ApiSquawkAllocation event)
         {
             std::lock_guard<std::mutex> lock(this->queueGuard);
-            this->eventQueue.insert(event);
+            this->allocationQueue.insert(event);
         }
 
         /*
@@ -32,7 +32,15 @@ namespace UKControllerPlugin {
         int ApiSquawkAllocationHandler::Count(void)
         {
             std::lock_guard<std::mutex> lock(this->queueGuard);
-            return this->eventQueue.size();
+            return this->allocationQueue.size();
+        }
+
+        /*
+            Returns the first allocation on the queue
+        */
+        UKControllerPlugin::Squawk::ApiSquawkAllocation ApiSquawkAllocationHandler::First(void) const
+        {
+            return this->allocationQueue.size() > 0 ? *this->allocationQueue.cbegin() : this->invalid;
         }
 
         /*
@@ -42,8 +50,8 @@ namespace UKControllerPlugin {
         {
             std::lock_guard<std::mutex> lock(this->queueGuard);
             for (
-                std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation>::iterator it = this->eventQueue.begin();
-                it != this->eventQueue.end();
+                std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation>::iterator it = this->allocationQueue.begin();
+                it != this->allocationQueue.end();
             ) {
                 try {
                     std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan =
@@ -56,7 +64,7 @@ namespace UKControllerPlugin {
                     LogInfo("Could not find flightplan for " + it->callsign + " when trying to assign squawk");
                 }
 
-                this->eventQueue.erase(it++);
+                this->allocationQueue.erase(it++);
             }
         }
     }  // namespace Squawk

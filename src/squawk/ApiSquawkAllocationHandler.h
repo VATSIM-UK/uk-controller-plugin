@@ -21,13 +21,16 @@ namespace UKControllerPlugin {
                 ApiSquawkAllocationHandler(UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin);
                 void AddAllocationToQueue(UKControllerPlugin::Squawk::ApiSquawkAllocation event);
                 int Count(void);
+                UKControllerPlugin::Squawk::ApiSquawkAllocation First(void) const;
                 // Inherited via AbstractTimedEvent
                 void TimedEventTrigger(void) override;
+
+                const UKControllerPlugin::Squawk::ApiSquawkAllocation invalid = { "______ INVALID _______", "9999" };
 
             private:
 
                 // A queue of squawk events to be processed
-                std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation> eventQueue;
+                std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation> allocationQueue;
                 
                 // A guard on the queue to allow it 
                 std::mutex queueGuard;

@@ -115,5 +115,19 @@ namespace UKControllerPluginTest {
 
             EXPECT_NO_THROW(this->handler.TimedEventTrigger());
         }
+
+        TEST_F(ApiSquawkAllocationHandlerTest, FirstReturnsFirstItem)
+        {
+            ApiSquawkAllocation event1{ "BAW123", "0123" };
+            ApiSquawkAllocation event2{ "EZY12AX", "5623" };
+            this->handler.AddAllocationToQueue(event1);
+            this->handler.AddAllocationToQueue(event2);
+            EXPECT_TRUE(event1 == this->handler.First());
+        }
+
+        TEST_F(ApiSquawkAllocationHandlerTest, FirstReturnsInvalidIfNoItems)
+        {
+            EXPECT_TRUE(this->handler.invalid == this->handler.First());
+        }
     }  // namespace Squawk
 }  // namespace UKControllerPluginTest
