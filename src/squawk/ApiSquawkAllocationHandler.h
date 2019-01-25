@@ -18,7 +18,9 @@ namespace UKControllerPlugin {
         class ApiSquawkAllocationHandler : public UKControllerPlugin::TimedEvent::AbstractTimedEvent
         {
             public:
-                ApiSquawkAllocationHandler(UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin);
+                explicit ApiSquawkAllocationHandler(
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
+                );
                 void AddAllocationToQueue(UKControllerPlugin::Squawk::ApiSquawkAllocation event);
                 int Count(void);
                 UKControllerPlugin::Squawk::ApiSquawkAllocation First(void) const;
@@ -31,8 +33,8 @@ namespace UKControllerPlugin {
 
                 // A queue of squawk events to be processed
                 std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation> allocationQueue;
-                
-                // A guard on the queue to allow it 
+
+                // A guard on the queue to allow it
                 std::mutex queueGuard;
 
                 // The plugin instance, to allow squawks to be set and flightplans to be retrieved

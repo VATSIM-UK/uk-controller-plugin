@@ -47,7 +47,7 @@ namespace UKControllerPlugin {
 #else
             logger->set_level(spdlog::level::info);
             logger->flush_on(spdlog::level::info);
-#endif // DEBUG
+#endif  // DEBUG
 
             SetLoggerInstance(logger);
             LogInfo("Log opened");

@@ -39,7 +39,7 @@ namespace UKControllerPlugin {
             const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans,
             const std::shared_ptr<ApiSquawkAllocationHandler> allocations
         )
-            : api(api), taskRunner(taskRunner), assignmentRules(assignmentRules), activeCallsigns(activeCallsigns), 
+            : api(api), taskRunner(taskRunner), assignmentRules(assignmentRules), activeCallsigns(activeCallsigns),
             storedFlightplans(storedFlightplans), allocations(allocations)
         {
         }
