@@ -16,6 +16,7 @@
 #include "controller/ActiveCallsign.h"
 #include "mock/MockApiInterface.h"
 #include "api/ApiNotFoundException.h"
+#include "squawk/ApiSquawkAllocation.h"
 
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -35,6 +36,7 @@ using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Api::ApiNotFoundException;
+using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
@@ -163,7 +165,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
-                .WillOnce(Return("1423"));
+                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
@@ -196,7 +198,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, CreateGeneralSquawkAssignment("BAW1252", "EGKK", "EGPF"))
                 .Times(1)
-                .WillOnce(Return("4521"));
+                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "4521" }));
 
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
@@ -236,7 +238,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, CreateGeneralSquawkAssignment("BAW1252", "EGKK", "EGPF"))
                 .Times(1)
-                .WillOnce(Return("1423"));
+                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
@@ -269,7 +271,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
-                .WillOnce(Return("1423"));
+                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
@@ -304,7 +306,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(2)
-                .WillRepeatedly(Return("1423"));
+                .WillRepeatedly(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
@@ -386,7 +388,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
-                .WillOnce(Return("1423"));
+                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
@@ -430,7 +432,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, CreateLocalSquawkAssignment("BAW1252", "EGKK", "I"))
                 .Times(1)
-                .WillOnce(Return("4521"));
+                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "4521" }));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
@@ -470,7 +472,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
-                .WillOnce(Return("1423"));
+                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
@@ -566,7 +568,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, CreateGeneralSquawkAssignment("BAW1252", "EGKK", "EGPF"))
                 .Times(1)
-                .WillOnce(Return("1423"));
+                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
@@ -612,7 +614,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, CreateLocalSquawkAssignment("BAW1252", "EGKK", "I"))
                 .Times(1)
-                .WillOnce(Return("1423"));
+                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));

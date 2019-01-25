@@ -23,6 +23,6 @@ namespace UKControllerPlugin {
             {
                 return this->callsign < compare.callsign;
             }
-        } ApiSquawkAllocationEvent;
+        } ApiSquawkAllocation;
     }  // namespace Squawk
 }  // namespace UKControllerPlugin

@@ -23,6 +23,7 @@
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "timedevent/DeferredEventHandler.h"
+#include "squawk/ApiSquawkAllocation.h"
 
 using UKControllerPlugin::Squawk::SquawkEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -48,6 +49,7 @@ using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Controller::Login;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::DeferredEventHandler;
+using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -144,7 +146,7 @@ namespace UKControllerPluginTest {
 
                     EXPECT_CALL(this->mockApi, GetAssignedSquawk("BAW1252"))
                         .Times(1)
-                        .WillOnce(Return("1423"));
+                        .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
                     ON_CALL(this->pluginLoopback, GetRadarTargetForCallsign("BAW1252"))
                         .WillByDefault(Return(this->mockRadarTarget));
@@ -181,7 +183,7 @@ namespace UKControllerPluginTest {
 
                     EXPECT_CALL(this->mockApi, GetAssignedSquawk("GATWF"))
                         .Times(1)
-                        .WillOnce(Return("7261"));
+                        .WillOnce(Return(ApiSquawkAllocation{ "GATWF", "7261" }));
 
                     ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("GATWF"))
                         .WillByDefault(Return(mockFlightplan));
@@ -318,7 +320,7 @@ namespace UKControllerPluginTest {
 
            EXPECT_CALL(this->mockApi, CreateGeneralSquawkAssignment("BAW1252", "EGKK", "EGPF"))
                .Times(1)
-               .WillOnce(Return("1423"));
+               .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
            this->handler.SquawkReycleGeneral(*this->mockFlightplan, *this->mockRadarTarget);
         }
@@ -348,7 +350,7 @@ namespace UKControllerPluginTest {
 
            EXPECT_CALL(this->mockApi, CreateLocalSquawkAssignment("GATWF", "EGKK", "V"))
                .Times(1)
-               .WillOnce(Return("7261"));
+               .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "7261" }));
 
            this->handler.SquawkRecycleLocal(*this->mockFlightplan, *this->mockRadarTarget);
         }

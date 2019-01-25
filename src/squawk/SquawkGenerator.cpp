@@ -12,6 +12,7 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "squawk/ApiSquawkAllocation.h"
 
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
@@ -25,6 +26,7 @@ using UKControllerPlugin::Squawk::SquawkAssignment;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 
 namespace UKControllerPlugin {
     namespace Squawk {
@@ -220,7 +222,7 @@ namespace UKControllerPlugin {
         {
             // Assign the squawk to our aircraft
             try {
-                std::string squawk = this->api.GetAssignedSquawk(callsign);
+                std::string squawk = this->api.GetAssignedSquawk(callsign).squawk;
                 this->plugin->GetFlightplanForCallsign(callsign)
                     ->SetSquawk(squawk);
                 LogInfo("Assigned squawk " + squawk + " to " + callsign);
@@ -252,7 +254,7 @@ namespace UKControllerPlugin {
         ) const {
             // Assign the squawk to our aircraft
             try {
-                std::string squawk = this->api.CreateGeneralSquawkAssignment(callsign, origin, destination);
+                std::string squawk = this->api.CreateGeneralSquawkAssignment(callsign, origin, destination).squawk;
                 this->plugin->GetFlightplanForCallsign(callsign)
                     ->SetSquawk(squawk);
                 LogInfo("Assigned squawk " + squawk + " to " + callsign);
@@ -280,7 +282,7 @@ namespace UKControllerPlugin {
             std::string flightRules
         ) const {
             try {
-                std::string squawk = this->api.CreateLocalSquawkAssignment(callsign, unit, flightRules);
+                std::string squawk = this->api.CreateLocalSquawkAssignment(callsign, unit, flightRules).squawk;
                 this->plugin->GetFlightplanForCallsign(callsign)
                     ->SetSquawk(squawk);
                 LogInfo("Assigned squawk " + squawk + " to " + callsign);
