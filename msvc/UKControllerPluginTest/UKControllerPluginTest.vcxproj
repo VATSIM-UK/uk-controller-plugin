@@ -147,7 +147,7 @@
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
-    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationEventTest.cpp" />
+    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\SquawkAssignmentTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\SquawkEventHandlerTest.cpp" />

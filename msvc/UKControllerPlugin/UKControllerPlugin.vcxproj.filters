@@ -699,10 +699,10 @@
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h">
       <Filter>src\initialaltitude</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationEvent.h">
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h">
       <Filter>src\squawk</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h">
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h">
       <Filter>src\squawk</Filter>
     </ClInclude>
   </ItemGroup>

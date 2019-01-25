@@ -1,5 +1,5 @@
 #pragma once
-#include "squawk/ApiSquawkAllocationEvent.h"
+#include "squawk/ApiSquawkAllocation.h"
 #include "timedevent/AbstractTimedEvent.h"
 
 namespace UKControllerPlugin {
@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
         {
             public:
                 ApiSquawkAllocationHandler(UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin);
-                void AddAllocationEvent(UKControllerPlugin::Squawk::ApiSquawkAllocationEvent event);
+                void AddAllocationEvent(UKControllerPlugin::Squawk::ApiSquawkAllocation event);
                 int Count(void);
                 // Inherited via AbstractTimedEvent
                 void TimedEventTrigger(void) override;
@@ -27,7 +27,7 @@ namespace UKControllerPlugin {
             private:
 
                 // A queue of squawk events to be processed
-                std::set<UKControllerPlugin::Squawk::ApiSquawkAllocationEvent> eventQueue;
+                std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation> eventQueue;
                 
                 // A guard on the queue to allow it 
                 std::mutex queueGuard;

@@ -4,7 +4,7 @@
 #include "squawk/ApiSquawkAllocationHandler.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 
-using UKControllerPlugin::Squawk::ApiSquawkAllocationEvent;
+using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 
@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
         /*
             Add a squawk event to the queue, but don't store duplicates
         */
-        void ApiSquawkAllocationHandler::AddAllocationEvent(ApiSquawkAllocationEvent event)
+        void ApiSquawkAllocationHandler::AddAllocationEvent(ApiSquawkAllocation event)
         {
             std::lock_guard<std::mutex> lock(this->queueGuard);
             this->eventQueue.insert(event);
@@ -42,7 +42,7 @@ namespace UKControllerPlugin {
         {
             std::lock_guard<std::mutex> lock(this->queueGuard);
             for (
-                std::set<UKControllerPlugin::Squawk::ApiSquawkAllocationEvent>::iterator it = this->eventQueue.begin();
+                std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation>::iterator it = this->eventQueue.begin();
                 it != this->eventQueue.end();
             ) {
                 try {

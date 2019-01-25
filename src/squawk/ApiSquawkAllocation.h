@@ -6,20 +6,20 @@ namespace UKControllerPlugin {
         /*
             Represents the allocation of a squawk by the Web API
         */
-        typedef struct ApiSquawkAllocationEvent {
+        typedef struct ApiSquawkAllocation {
             // The callsign the squawk was assigned to
             const std::string callsign;
 
             // The code that was assigned
             const std::string squawk;
 
-            bool operator== (const ApiSquawkAllocationEvent & compare) const
+            bool operator== (const ApiSquawkAllocation & compare) const
             {
                 return this->callsign == compare.callsign
                     && this->squawk == compare.squawk;
             }
 
-            bool operator< (const ApiSquawkAllocationEvent & compare) const
+            bool operator< (const ApiSquawkAllocation & compare) const
             {
                 return this->callsign < compare.callsign;
             }

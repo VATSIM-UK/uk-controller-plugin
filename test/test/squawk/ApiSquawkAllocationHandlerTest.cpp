@@ -1,11 +1,11 @@
 #pragma once
 #include "pch/pch.h"
-#include "squawk/ApiSquawkAllocationEvent.h"
+#include "squawk/ApiSquawkAllocation.h"
 #include "squawk/ApiSquawkAllocationHandler.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 
-using UKControllerPlugin::Squawk::ApiSquawkAllocationEvent;
+using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using UKControllerPlugin::Squawk::ApiSquawkAllocationHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -57,14 +57,14 @@ namespace UKControllerPluginTest {
 
         TEST_F(ApiSquawkAllocationHandlerTest, ItAddsAnEvent)
         {
-            ApiSquawkAllocationEvent event{ "BAW123", "0123" };
+            ApiSquawkAllocation event{ "BAW123", "0123" };
             this->handler.AddAllocationEvent(event);
             EXPECT_EQ(1, this->handler.Count());
         }
 
         TEST_F(ApiSquawkAllocationHandlerTest, ItDoesntAddDuplicateEvents)
         {
-            ApiSquawkAllocationEvent event{ "BAW123", "0123" };
+            ApiSquawkAllocation event{ "BAW123", "0123" };
             this->handler.AddAllocationEvent(event);
             this->handler.AddAllocationEvent(event);
             EXPECT_EQ(1, this->handler.Count());
@@ -72,8 +72,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(ApiSquawkAllocationHandlerTest, TimedEventAssignsAllSquawks)
         {
-            ApiSquawkAllocationEvent event1{ "BAW123", "0123" };
-            ApiSquawkAllocationEvent event2{ "EZY12AX", "5623" };
+            ApiSquawkAllocation event1{ "BAW123", "0123" };
+            ApiSquawkAllocation event2{ "EZY12AX", "5623" };
             this->handler.AddAllocationEvent(event1);
             this->handler.AddAllocationEvent(event2);
             EXPECT_CALL(*this->mockFlightplan1, SetSquawk("0123"))
@@ -87,8 +87,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(ApiSquawkAllocationHandlerTest, TimedEventTriggerRemovesTheEvents)
         {
-            ApiSquawkAllocationEvent event1{ "BAW123", "0123" };
-            ApiSquawkAllocationEvent event2{ "EZY12AX", "5623" };
+            ApiSquawkAllocation event1{ "BAW123", "0123" };
+            ApiSquawkAllocation event2{ "EZY12AX", "5623" };
             this->handler.AddAllocationEvent(event1);
             this->handler.AddAllocationEvent(event2);
             this->handler.TimedEventTrigger();
@@ -102,8 +102,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(ApiSquawkAllocationHandlerTest, TimedEventHandlerGracefullyHandlesMissingFlightplans)
         {
-            ApiSquawkAllocationEvent event1{ "XXXXX", "0123" };
-            ApiSquawkAllocationEvent event2{ "BAW123", "0123" };
+            ApiSquawkAllocation event1{ "XXXXX", "0123" };
+            ApiSquawkAllocation event2{ "BAW123", "0123" };
             this->handler.AddAllocationEvent(event1);
             this->handler.AddAllocationEvent(event2);
 

@@ -2,6 +2,7 @@
 #include "api/ApiResponse.h"
 #include "api/ApiRequestBuilder.h"
 #include "api/ApiInterface.h"
+#include "squawk/ApiSquawkAllocation.h"
 
 namespace UKControllerPlugin {
     namespace Curl {
