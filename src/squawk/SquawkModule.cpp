@@ -41,11 +41,11 @@ namespace UKControllerPlugin {
             container.squawkGenerator = std::make_unique<SquawkGenerator>(
                 *container.api,
                 container.taskRunner.get(),
-                container.plugin.get(),
                 *container.squawkAssignmentRules,
                 *container.activeCallsigns,
-                *container.flightplans
-                );
+                *container.flightplans,
+                allocations
+            );
 
             // The event handler
             std::shared_ptr<SquawkEventHandler> eventHandler(

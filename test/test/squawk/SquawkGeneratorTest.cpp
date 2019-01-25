@@ -17,6 +17,7 @@
 #include "mock/MockApiInterface.h"
 #include "api/ApiNotFoundException.h"
 #include "squawk/ApiSquawkAllocation.h"
+#include "squawk/ApiSquawkAllocationHandler.h"
 
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -37,6 +38,7 @@ using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
+using UKControllerPlugin::Squawk::ApiSquawkAllocationHandler;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
@@ -51,6 +53,7 @@ namespace UKControllerPluginTest {
             public:
                 void SetUp()
                 {
+                    this->squawkAllocationHandler = std::make_shared<ApiSquawkAllocationHandler>(this->pluginLoopback);
                     this->mockFlightplan = std::make_unique<NiceMock<MockEuroScopeCFlightPlanInterface>>();
                     this->mockRadarTarget = std::make_unique<NiceMock<MockEuroScopeCRadarTargetInterface>>();
                     this->airfieldOwnership = std::make_unique<AirfieldOwnershipManager>(
@@ -67,10 +70,10 @@ namespace UKControllerPluginTest {
                     this->generator = std::make_unique<SquawkGenerator>(
                         this->api,
                         &this->taskRunner,
-                        &this->pluginLoopback,
                         *this->assignmentRules,
                         this->activeCallsigns,
-                        this->flightplans
+                        this->flightplans,
+                        this->squawkAllocationHandler
                     );
 
                     this->controller = std::unique_ptr<ControllerPosition>(
@@ -98,6 +101,7 @@ namespace UKControllerPluginTest {
                 std::unique_ptr<SquawkAssignment> assignmentRules;
                 std::unique_ptr<AirfieldOwnershipManager> airfieldOwnership;
                 std::unique_ptr<ControllerPosition> controller;
+                std::shared_ptr<ApiSquawkAllocationHandler> squawkAllocationHandler;
                 AirfieldCollection airfields;
         };
 
@@ -115,10 +119,10 @@ namespace UKControllerPluginTest {
             SquawkGenerator newGenerator(
                 this->api,
                 &mockRunnerNoExecute,
-                &this->pluginLoopback,
                 *this->assignmentRules,
                 this->activeCallsigns,
-                this->flightplans
+                this->flightplans,
+                this->squawkAllocationHandler
             );
 
             ON_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
@@ -160,17 +164,15 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("1423"))
-                .Times(1);
+            ApiSquawkAllocation allocation{ "BAW1252", "1423" };
 
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
-                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
-
-            ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
-                .WillByDefault(Return(this->mockFlightplan));
+                .WillOnce(Return(allocation));
 
             this->generator->RequestGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget);
+            EXPECT_TRUE(allocation == this->squawkAllocationHandler->First());
+            EXPECT_EQ(1, this->squawkAllocationHandler->Count());
         }
 
         TEST_F(SquawkGeneratorTest, GeneralSquawkCreatesAssignmentIfNoneExists)
@@ -193,12 +195,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("4521"))
-                .Times(1);
-
+            ApiSquawkAllocation allocation{ "BAW1252", "4521" };
             EXPECT_CALL(this->api, CreateGeneralSquawkAssignment("BAW1252", "EGKK", "EGPF"))
                 .Times(1)
-                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "4521" }));
+                .WillOnce(Return(allocation));
 
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
@@ -208,6 +208,8 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(this->mockFlightplan));
 
             this->generator->RequestGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget);
+            EXPECT_TRUE(allocation == this->squawkAllocationHandler->First());
+            EXPECT_EQ(1, this->squawkAllocationHandler->Count());
         }
 
         TEST_F(SquawkGeneratorTest, GeneralSquawkForcesSquawkWhereNecessary)
@@ -230,20 +232,20 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, GetDestination())
                 .WillByDefault(Return("EGPF"));
 
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("1423"))
-                .Times(1);
-
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
+            ApiSquawkAllocation allocation{ "BAW1252", "1423" };
             EXPECT_CALL(this->api, CreateGeneralSquawkAssignment("BAW1252", "EGKK", "EGPF"))
                 .Times(1)
-                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
+                .WillOnce(Return(allocation));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
 
             this->generator->RequestGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget);
+            EXPECT_TRUE(allocation == this->squawkAllocationHandler->First());
+            EXPECT_EQ(1, this->squawkAllocationHandler->Count());
         }
 
         TEST_F(SquawkGeneratorTest, GeneralSquawkReturnsTrueOnAction)
@@ -266,9 +268,6 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("1423"))
-                .Times(1);
-
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
                 .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
@@ -281,54 +280,16 @@ namespace UKControllerPluginTest {
             );
         }
 
-        TEST_F(SquawkGeneratorTest, AnotherRequestCanBeMadeAfterFirstFinishes)
-        {
-            ON_CALL(*this->mockFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW1252"));
-
-            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
-                .WillByDefault(Return(true));
-
-            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
-                .WillByDefault(Return(false));
-
-            ON_CALL(*this->mockFlightplan, GetOrigin())
-                .WillByDefault(Return("EGKK"));
-
-            ON_CALL(*this->mockFlightplan, GetDestination())
-                .WillByDefault(Return("EGPF"));
-
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
-                .WillRepeatedly(Return());
-
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("1423"))
-                .Times(2);
-
-            EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
-                .Times(2)
-                .WillRepeatedly(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
-
-            ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
-                .WillByDefault(Return(this->mockFlightplan));
-
-            EXPECT_TRUE(
-                this->generator->RequestGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget)
-            );
-            EXPECT_TRUE(
-                this->generator->RequestGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget)
-            );
-        }
-
         TEST_F(SquawkGeneratorTest, LocalSquawkReturnsFalseOnNoActionRequestAlreadyHappening)
         {
             MockTaskRunnerInterface mockRunnerNoExecute(false);
             SquawkGenerator newGenerator(
                 this->api,
                 &mockRunnerNoExecute,
-                &this->pluginLoopback,
                 *this->assignmentRules,
                 this->activeCallsigns,
-                this->flightplans
+                this->flightplans,
+                this->squawkAllocationHandler
             );
 
             ON_CALL(*this->mockFlightplan, GetCallsign())
@@ -383,17 +344,18 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("1423"))
-                .Times(1);
 
+            ApiSquawkAllocation allocation{ "BAW1252", "1423" };
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
-                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
+                .WillOnce(Return(allocation));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
 
             this->generator->RequestLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget);
+            EXPECT_TRUE(allocation == this->squawkAllocationHandler->First());
+            EXPECT_EQ(1, this->squawkAllocationHandler->Count());
         }
 
         TEST_F(SquawkGeneratorTest, LocalSquawkCreatesAssignmentIfDoesntExist)
@@ -423,21 +385,21 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("4521"))
-                .Times(1);
-
+            ApiSquawkAllocation allocation{ "BAW1252", "4521" };
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
                 .WillOnce(Throw(ApiNotFoundException("Not Found")));
 
             EXPECT_CALL(this->api, CreateLocalSquawkAssignment("BAW1252", "EGKK", "I"))
                 .Times(1)
-                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "4521" }));
+                .WillOnce(Return(allocation));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
 
             this->generator->RequestLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget);
+            EXPECT_TRUE(allocation == this->squawkAllocationHandler->First());
+            EXPECT_EQ(1, this->squawkAllocationHandler->Count());
         }
 
         TEST_F(SquawkGeneratorTest, LocalSquawkReturnsTrueOnAction)
@@ -467,8 +429,6 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("1423"))
-                .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedSquawk("BAW1252"))
                 .Times(1)
@@ -563,17 +523,17 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("1423"))
-                .Times(1);
-
+            ApiSquawkAllocation allocation{ "BAW1252", "1423" };
             EXPECT_CALL(this->api, CreateGeneralSquawkAssignment("BAW1252", "EGKK", "EGPF"))
                 .Times(1)
-                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
+                .WillOnce(Return(allocation));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
 
             EXPECT_TRUE(this->generator->ForceGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
+            EXPECT_TRUE(allocation == this->squawkAllocationHandler->First());
+            EXPECT_EQ(1, this->squawkAllocationHandler->Count());
         }
 
         TEST_F(SquawkGeneratorTest, ForceLocalSquawkForAircraftReturnsFalseOnNoAction)
@@ -609,17 +569,17 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("1423"))
-                .Times(1);
-
+            ApiSquawkAllocation allocation{ "BAW1252", "1423" };
             EXPECT_CALL(this->api, CreateLocalSquawkAssignment("BAW1252", "EGKK", "I"))
                 .Times(1)
-                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
+                .WillOnce(Return(allocation));
 
             ON_CALL(this->pluginLoopback, GetFlightplanForCallsign("BAW1252"))
                 .WillByDefault(Return(this->mockFlightplan));
 
             EXPECT_TRUE(this->generator->ForceLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
+            EXPECT_TRUE(allocation == this->squawkAllocationHandler->First());
+            EXPECT_EQ(1, this->squawkAllocationHandler->Count());
         }
 
         TEST_F(SquawkGeneratorTest, ReassignPreviousSquawkStopsIfSquawksDisabled)
@@ -634,10 +594,10 @@ namespace UKControllerPluginTest {
             SquawkGenerator newGenerator(
                 this->api,
                 &this->taskRunner,
-                &this->pluginLoopback,
                 disabledRules,
                 this->activeCallsigns,
-                this->flightplans
+                this->flightplans,
+                this->squawkAllocationHandler
             );
 
             EXPECT_FALSE(newGenerator.ReassignPreviousSquawkToAircraft(*this->mockFlightplan, *this->mockRadarTarget));
@@ -655,10 +615,10 @@ namespace UKControllerPluginTest {
             SquawkGenerator newGenerator(
                 this->api,
                 &this->taskRunner,
-                &this->pluginLoopback,
                 disabledRules,
                 this->activeCallsigns,
-                this->flightplans
+                this->flightplans,
+                this->squawkAllocationHandler
             );
 
             EXPECT_FALSE(newGenerator.ForceGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
@@ -676,10 +636,10 @@ namespace UKControllerPluginTest {
             SquawkGenerator newGenerator(
                 this->api,
                 &this->taskRunner,
-                &this->pluginLoopback,
                 disabledRules,
                 this->activeCallsigns,
-                this->flightplans
+                this->flightplans,
+                this->squawkAllocationHandler
             );
 
             EXPECT_FALSE(newGenerator.ForceLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
@@ -697,10 +657,10 @@ namespace UKControllerPluginTest {
             SquawkGenerator newGenerator(
                 this->api,
                 &this->taskRunner,
-                &this->pluginLoopback,
                 disabledRules,
                 this->activeCallsigns,
-                this->flightplans
+                this->flightplans,
+                this->squawkAllocationHandler
             );
 
             EXPECT_FALSE(newGenerator.RequestGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
@@ -718,10 +678,10 @@ namespace UKControllerPluginTest {
             SquawkGenerator newGenerator(
                 this->api,
                 &this->taskRunner,
-                &this->pluginLoopback,
                 disabledRules,
                 this->activeCallsigns,
-                this->flightplans
+                this->flightplans,
+                this->squawkAllocationHandler
             );
 
             EXPECT_FALSE(newGenerator.RequestLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));

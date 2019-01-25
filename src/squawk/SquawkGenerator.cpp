@@ -11,14 +11,13 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
-#include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "squawk/ApiSquawkAllocation.h"
+#include "squawk/ApiSquawkAllocationHandler.h"
 
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
-using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
@@ -27,6 +26,7 @@ using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
+using UKControllerPlugin::Squawk::ApiSquawkAllocationHandler;
 
 namespace UKControllerPlugin {
     namespace Squawk {
@@ -34,13 +34,13 @@ namespace UKControllerPlugin {
         SquawkGenerator::SquawkGenerator(
             const ApiInterface & api,
             TaskRunnerInterface * const taskRunner,
-            const EuroscopePluginLoopbackInterface * const plugin,
             const UKControllerPlugin::Squawk::SquawkAssignment & assignmentRules,
             const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
-            const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans
+            const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans,
+            const std::shared_ptr<ApiSquawkAllocationHandler> allocations
         )
-            : api(api), taskRunner(taskRunner), plugin(plugin), assignmentRules(assignmentRules),
-            activeCallsigns(activeCallsigns), storedFlightplans(storedFlightplans)
+            : api(api), taskRunner(taskRunner), assignmentRules(assignmentRules), activeCallsigns(activeCallsigns), 
+            storedFlightplans(storedFlightplans), allocations(allocations)
         {
         }
 
@@ -59,7 +59,7 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            if (!this->StartSquawkUpdate(flightplan.GetCallsign())) {
+            if (!this->StartSquawkUpdate(flightplan)) {
                 return false;
             }
 
@@ -67,8 +67,6 @@ namespace UKControllerPlugin {
             std::string callsign = flightplan.GetCallsign();
             std::string origin = flightplan.GetOrigin();
             std::string destination = flightplan.GetDestination();
-
-            this->StartSquawkUpdate(callsign);
 
             this->taskRunner->QueueAsynchronousTask([this, callsign, origin, destination]() {
                 this->CreateGeneralSquawkAssignment(callsign, origin, destination);
@@ -92,7 +90,7 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            if (!this->StartSquawkUpdate(flightplan.GetCallsign())) {
+            if (!this->StartSquawkUpdate(flightplan)) {
                 return false;
             }
 
@@ -149,7 +147,7 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            if (!this->StartSquawkUpdate(flightplan.GetCallsign())) {
+            if (!this->StartSquawkUpdate(flightplan)) {
                 return false;
             }
 
@@ -193,7 +191,7 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            if (!this->StartSquawkUpdate(flightplan.GetCallsign())) {
+            if (!this->StartSquawkUpdate(flightplan)) {
                 return false;
             }
 
@@ -222,10 +220,9 @@ namespace UKControllerPlugin {
         {
             // Assign the squawk to our aircraft
             try {
-                std::string squawk = this->api.GetAssignedSquawk(callsign).squawk;
-                this->plugin->GetFlightplanForCallsign(callsign)
-                    ->SetSquawk(squawk);
-                LogInfo("Assigned squawk " + squawk + " to " + callsign);
+                ApiSquawkAllocation allocation = this->api.GetAssignedSquawk(callsign);
+                this->allocations->AddAllocationToQueue(allocation);
+                LogInfo("Found existing API squawk allocation of " + allocation.squawk + " for " + callsign);
                 return true;
             }
             catch (ApiNotFoundException exception) {
@@ -235,9 +232,6 @@ namespace UKControllerPlugin {
                 LogInfo(
                     "Error when searching for sqawk assignement, API threw exception: " + std::string(exception.what())
                 );
-                return false;
-            } catch (std::invalid_argument ia) {
-                LogInfo("Error when applying squawk assignement, flightplan not found by EuroScope");
                 return false;
             }
         }
@@ -254,19 +248,19 @@ namespace UKControllerPlugin {
         ) const {
             // Assign the squawk to our aircraft
             try {
-                std::string squawk = this->api.CreateGeneralSquawkAssignment(callsign, origin, destination).squawk;
-                this->plugin->GetFlightplanForCallsign(callsign)
-                    ->SetSquawk(squawk);
-                LogInfo("Assigned squawk " + squawk + " to " + callsign);
+                ApiSquawkAllocation allocation = this->api.CreateGeneralSquawkAssignment(
+                    callsign,
+                    origin,
+                    destination
+                );
+                this->allocations->AddAllocationToQueue(allocation);
+                LogInfo("API allocated general squawk " + allocation.squawk + " to " + callsign);
                 return true;
             } catch (ApiException exception) {
                 LogInfo(
                     "Error when create general squawk assignement, API threw exception: "
                         + std::string(exception.what())
                 );
-                return false;
-            } catch (std::invalid_argument ia) {
-                LogInfo("Error when applying squawk assignement, flightplan not found by EuroScope");
                 return false;
             }
         }
@@ -282,10 +276,9 @@ namespace UKControllerPlugin {
             std::string flightRules
         ) const {
             try {
-                std::string squawk = this->api.CreateLocalSquawkAssignment(callsign, unit, flightRules).squawk;
-                this->plugin->GetFlightplanForCallsign(callsign)
-                    ->SetSquawk(squawk);
-                LogInfo("Assigned squawk " + squawk + " to " + callsign);
+                ApiSquawkAllocation allocation = this->api.CreateLocalSquawkAssignment(callsign, unit, flightRules);
+                this->allocations->AddAllocationToQueue(allocation);
+                LogInfo("API allocated local squawk " + allocation.squawk + " to " + callsign);
                 return true;
             } catch (ApiException exception) {
                 LogInfo(
@@ -293,31 +286,21 @@ namespace UKControllerPlugin {
                         std::string(exception.what())
                 );
                 return false;
-            } catch (std::invalid_argument ia) {
-                LogInfo("Error when applying squawk assignement, flightplan not found by EuroScope");
-                return false;
             }
         }
-
 
         /*
             Places a request in progress to prevent duplicate requests
         */
-        bool SquawkGenerator::StartSquawkUpdate(std::string callsign)
+        bool SquawkGenerator::StartSquawkUpdate(EuroScopeCFlightPlanInterface & flightplan)
         {
             // Lock the requests queue and mark the request as in progress. Set a holding squawk.
-            if (!this->squawkRequests.Start(callsign)) {
+            if (!this->squawkRequests.Start(flightplan.GetCallsign())) {
                 return false;
             }
 
-            try {
-                this->plugin->GetFlightplanForCallsign(callsign)
-                    ->SetSquawk(this->PROCESS_SQUAWK);
-            }
-            catch (std::invalid_argument ia) {
-                return false;
-            }
 
+            flightplan.SetSquawk(this->PROCESS_SQUAWK);
             return true;
         }
 
