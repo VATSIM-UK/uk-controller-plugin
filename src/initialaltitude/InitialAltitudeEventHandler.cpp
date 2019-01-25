@@ -48,7 +48,7 @@ namespace UKControllerPlugin {
 
             // If we've not been logged in for long, wait a bit
             if (this->login.GetSecondsLoggedIn() < this->minimumLoginTimeBeforeAssignment) {
-                LogInfo(
+                LogDebug(
                     "Deferring initial altitude assignment for " + flightPlan.GetCallsign()
                 );
                 this->deferredEvents.DeferFor(
