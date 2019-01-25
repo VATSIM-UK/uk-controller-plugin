@@ -699,6 +699,12 @@
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h">
       <Filter>src\initialaltitude</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationEvent.h">
+      <Filter>src\squawk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h">
+      <Filter>src\squawk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1181,6 +1187,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp">
       <Filter>src\initialaltitude</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp">
+      <Filter>src\squawk</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

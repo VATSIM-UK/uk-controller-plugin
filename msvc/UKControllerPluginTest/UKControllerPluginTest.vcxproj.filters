@@ -521,6 +521,12 @@
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp">
       <Filter>test\initialaltitude</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationEventTest.cpp">
+      <Filter>test\squawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationHandlerTest.cpp">
+      <Filter>test\squawk</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
