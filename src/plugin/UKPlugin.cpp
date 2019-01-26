@@ -356,6 +356,10 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnRadarTargetPositionUpdate(EuroScopePlugIn::CRadarTarget radarTarget)
     {
+        if (!radarTarget.IsValid()) {
+            return;
+        }
+
         this->radarTargetEventHandler.RadarTargetEvent(EuroScopeCRadarTargetWrapper(radarTarget));
     }
 
