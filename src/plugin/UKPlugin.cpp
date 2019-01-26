@@ -143,11 +143,12 @@ namespace UKControllerPlugin {
             return;
         }
 
-        // Loop through all visible controllers
+        // Loop through all visible flightplans
         do {
-            if (!current.IsValid()) {
-                return;
+            if (!current.IsValid() || current.GetSimulated()) {
+                continue;
             }
+
             this->OnFlightPlanFlightPlanDataUpdate(current);
         } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
     }
@@ -243,7 +244,7 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanControllerAssignedDataUpdate(EuroScopePlugIn::CFlightPlan flightPlan, int dataType)
     {
-        if (!flightPlan.IsValid()) {
+        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
             return;
         }
 
@@ -259,7 +260,7 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanFlightPlanDataUpdate(EuroScopePlugIn::CFlightPlan flightPlan)
     {
-        if (!flightPlan.IsValid()) {
+        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
             return;
         }
 
@@ -275,7 +276,7 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanDisconnect(EuroScopePlugIn::CFlightPlan flightPlan)
     {
-        if (!flightPlan.IsValid()) {
+        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
             return;
         }
 
@@ -356,7 +357,7 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnRadarTargetPositionUpdate(EuroScopePlugIn::CRadarTarget radarTarget)
     {
-        if (!radarTarget.IsValid()) {
+        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
             return;
         }
 
