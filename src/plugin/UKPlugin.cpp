@@ -139,7 +139,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CFlightPlan current = this->FlightPlanSelectFirst();
 
         // If there's nobody online, stop.
-        if (strcmp(current.GetCallsign(), "") == 0) {
+        if (!current.IsValid() || strcmp(current.GetCallsign(), "") == 0) {
             return;
         }
 
@@ -248,9 +248,11 @@ namespace UKControllerPlugin {
             return;
         }
 
+        EuroScopeCFlightPlanWrapper flightplanWrapper(flightPlan);
+        EuroScopeCRadarTargetWrapper radarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign()));
         this->flightplanEventHandler.ControllerFlightPlanDataEvent(
-            EuroScopeCFlightPlanWrapper(flightPlan),
-            EuroScopeCRadarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign())),
+            flightplanWrapper,
+            radarTargetWrapper,
             dataType
         );
     }
@@ -264,9 +266,11 @@ namespace UKControllerPlugin {
             return;
         }
 
+        EuroScopeCFlightPlanWrapper flightplanWrapper(flightPlan);
+        EuroScopeCRadarTargetWrapper radarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign()));
         this->flightplanEventHandler.FlightPlanEvent(
-            EuroScopeCFlightPlanWrapper(flightPlan),
-            EuroScopeCRadarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign()))
+            flightplanWrapper,
+            radarTargetWrapper
         );
     }
 
@@ -280,8 +284,9 @@ namespace UKControllerPlugin {
             return;
         }
 
+        EuroScopeCFlightPlanWrapper flightplanWrapper(flightPlan);
         this->flightplanEventHandler.FlightPlanDisconnectEvent(
-            EuroScopeCFlightPlanWrapper(flightPlan)
+            flightplanWrapper
         );
     }
 
@@ -315,11 +320,13 @@ namespace UKControllerPlugin {
             return;
         }
 
+        EuroScopeCFlightPlanWrapper flightplanWrapper(FlightPlan);
+        EuroScopeCRadarTargetWrapper radarTargetWrapper(RadarTarget);
         this->tagEvents.TagItemUpdate(
             ItemCode,
             sItemString,
-            EuroScopeCFlightPlanWrapper(FlightPlan),
-            EuroScopeCRadarTargetWrapper(RadarTarget)
+            flightplanWrapper,
+            radarTargetWrapper
         );
     }
 
@@ -361,7 +368,8 @@ namespace UKControllerPlugin {
             return;
         }
 
-        this->radarTargetEventHandler.RadarTargetEvent(EuroScopeCRadarTargetWrapper(radarTarget));
+        EuroScopeCRadarTargetWrapper radarTargetWrapper(radarTarget);
+        this->radarTargetEventHandler.RadarTargetEvent(radarTargetWrapper);
     }
 
     /*

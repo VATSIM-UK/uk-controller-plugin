@@ -1,5 +1,6 @@
 #pragma once
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "euroscope/EuroScopeCFlightPlanWrapper.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -10,7 +11,7 @@ namespace UKControllerPlugin {
         class EuroScopeCFlightPlanWrapper : public UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface
         {
             public:
-                explicit EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan & originalData);
+                explicit EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan originalData);
                 std::string GetAircraftType(void) const override;
                 std::string GetAssignedSquawk(void) const;
                 const std::string GetCallsign(void) const;

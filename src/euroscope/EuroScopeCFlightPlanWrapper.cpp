@@ -5,7 +5,7 @@ using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
 namespace UKControllerPlugin {
     namespace Euroscope {
 
-        EuroScopeCFlightPlanWrapper::EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan & originalData)
+        EuroScopeCFlightPlanWrapper::EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan originalData)
         {
             this->originalData = originalData;
         }

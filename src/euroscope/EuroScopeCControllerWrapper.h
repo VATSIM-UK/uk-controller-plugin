@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
         class EuroScopeCControllerWrapper : public EuroScopeCControllerInterface
         {
             public:
-                EuroScopeCControllerWrapper(EuroScopePlugIn::CController & originalData, bool isCurrentUser);
+                EuroScopeCControllerWrapper(EuroScopePlugIn::CController originalData, bool isCurrentUser);
                 const std::string GetCallsign(void) const;
                 const std::string GetControllerName(void) const;
                 const double GetFrequency(void) const;
@@ -24,7 +24,7 @@ namespace UKControllerPlugin {
             private:
 
                 // The original data
-                EuroScopePlugIn::CController & originalData;
+                EuroScopePlugIn::CController originalData;
 
                 // Whether or not this controller is the current user
                 bool isCurrentUser;
