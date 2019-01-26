@@ -357,7 +357,7 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnRadarTargetPositionUpdate(EuroScopePlugIn::CRadarTarget radarTarget)
     {
-        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
+        if (!radarTarget.IsValid()) {
             return;
         }
 

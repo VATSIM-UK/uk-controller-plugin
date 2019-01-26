@@ -9,7 +9,7 @@ using UKControllerPlugin::HelperFunctions;
 namespace UKControllerPlugin {
     namespace Flightplan {
 
-        const std::string StoredFlightplan::noSquawkAllocated = "0000";
+        const std::string StoredFlightplan::noSquawkAllocated = "2200";
 
         StoredFlightplan::StoredFlightplan(
             const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & euroscopePlan
@@ -25,9 +25,7 @@ namespace UKControllerPlugin {
             );
 
             if (edt != (std::chrono::system_clock::time_point::max)()) {
-                this->expectedOffBlockTime = HelperFunctions::GetTimeFromNumberString(
-                    euroscopePlan.GetExpectedDepartureTime()
-                ) - std::chrono::minutes(15);
+                this->expectedOffBlockTime = edt - std::chrono::minutes(15);
             } else {
                 this->expectedOffBlockTime = edt;
             }
