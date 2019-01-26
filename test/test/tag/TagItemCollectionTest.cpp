@@ -68,13 +68,14 @@ namespace UKControllerPluginTest {
             collection.RegisterAllItemsWithEuroscope(mockPlugin);
         }
 
-        TEST(TagItemCollection, TagItemUpdateThrowsExceptionIfNotRegistered)
+        TEST(TagItemCollection, TagItemUpdateReturnsErrorIfNotRegistered)
         {
             TagItemCollection collection;
             StrictMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
             StrictMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
             char test[16];
-            EXPECT_THROW(collection.TagItemUpdate(1, test, mockFlightplan, mockRadarTarget), std::invalid_argument);
+            collection.TagItemUpdate(25421, test, mockFlightplan, mockRadarTarget);
+            EXPECT_EQ(0, collection.errorTagItemText.compare(test));
         }
 
         TEST(TagItemCollection, TagItemUpdateSetsInvalidIfDataTooLarge)
