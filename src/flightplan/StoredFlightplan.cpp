@@ -9,7 +9,7 @@ using UKControllerPlugin::HelperFunctions;
 namespace UKControllerPlugin {
     namespace Flightplan {
 
-        const std::string StoredFlightplan::noSquawkAllocated = "9999";
+        const std::string StoredFlightplan::noSquawkAllocated = "0000";
 
         StoredFlightplan::StoredFlightplan(
             const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & euroscopePlan

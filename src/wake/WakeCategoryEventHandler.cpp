@@ -54,7 +54,7 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightPlan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
-            if (!this->cache.count(flightPlan.GetCallsign())) {
+            if (this->cache.count(flightPlan.GetCallsign()) == 0) {
                 this->cache[flightPlan.GetCallsign()] = flightPlan.GetAircraftType()
                     + "/" + this->mapper.MapFlightplanToCategory(flightPlan);
             }
