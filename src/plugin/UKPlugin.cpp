@@ -145,6 +145,9 @@ namespace UKControllerPlugin {
 
         // Loop through all visible controllers
         do {
+            if (!current.IsValid()) {
+                return;
+            }
             this->OnFlightPlanFlightPlanDataUpdate(current);
         } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
     }
@@ -240,6 +243,10 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanControllerAssignedDataUpdate(EuroScopePlugIn::CFlightPlan flightPlan, int dataType)
     {
+        if (!flightPlan.IsValid()) {
+            return;
+        }
+
         this->flightplanEventHandler.ControllerFlightPlanDataEvent(
             EuroScopeCFlightPlanWrapper(flightPlan),
             EuroScopeCRadarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign())),
@@ -252,6 +259,10 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanFlightPlanDataUpdate(EuroScopePlugIn::CFlightPlan flightPlan)
     {
+        if (!flightPlan.IsValid()) {
+            return;
+        }
+
         this->flightplanEventHandler.FlightPlanEvent(
             EuroScopeCFlightPlanWrapper(flightPlan),
             EuroScopeCRadarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign()))
@@ -264,6 +275,10 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanDisconnect(EuroScopePlugIn::CFlightPlan flightPlan)
     {
+        if (!flightPlan.IsValid()) {
+            return;
+        }
+
         this->flightplanEventHandler.FlightPlanDisconnectEvent(
             EuroScopeCFlightPlanWrapper(flightPlan)
         );
@@ -295,6 +310,10 @@ namespace UKControllerPlugin {
         COLORREF * pRGB,
         double * pFontSize
     ) {
+        if (!FlightPlan.IsValid() || !RadarTarget.IsValid()) {
+            return;
+        }
+
         this->tagEvents.TagItemUpdate(
             ItemCode,
             sItemString,
