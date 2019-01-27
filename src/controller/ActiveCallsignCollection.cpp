@@ -129,7 +129,7 @@ namespace UKControllerPlugin {
                 controller.GetCallsign()
             );
 
-            if (callsign == this->activeCallsigns.cend()) {
+            if (callsign == this->activeCallsigns.end()) {
                 throw std::out_of_range("Callsign " + controller.GetCallsign() + " not active.");
             }
 

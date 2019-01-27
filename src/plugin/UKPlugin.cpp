@@ -117,17 +117,24 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::DoInitialControllerLoad(void)
     {
+        LogInfo("Initial controller load started");
         EuroScopePlugIn::CController current = this->ControllerSelectFirst();
 
         // If there's nobody online, stop.
         if (strcmp(current.GetCallsign(), "") == 0) {
+            LogInfo("Initial controller load complete, none found");
             return;
         }
 
         // Loop through all visible controllers
         do {
+            if (!current.IsValid()) {
+                continue;
+            }
+
             this->OnControllerPositionUpdate(current);
         } while (strcmp((current = this->ControllerSelectNext(current)).GetCallsign(), "") != 0);
+        LogInfo("Initial controller load complete");
     }
 
     /*
@@ -136,10 +143,12 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::DoInitialFlightplanLoad(void)
     {
+        LogInfo("Initial fightplan load started");
         EuroScopePlugIn::CFlightPlan current = this->FlightPlanSelectFirst();
 
         // If there's nobody online, stop.
         if (!current.IsValid() || strcmp(current.GetCallsign(), "") == 0) {
+            LogInfo("Initial fightplan load complete, none found");
             return;
         }
 
@@ -151,6 +160,7 @@ namespace UKControllerPlugin {
 
             this->OnFlightPlanFlightPlanDataUpdate(current);
         } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
+        LogInfo("Initial fightplan load complete");
     }
 
     /*
@@ -224,8 +234,13 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnControllerDisconnect(EuroScopePlugIn::CController Controller)
     {
+        if (!Controller.IsValid()) {
+            return;
+        }
+
+        EuroScopeCControllerWrapper wrapper(Controller, this->ControllerIsMe(Controller, this->ControllerMyself()));
         this->statusEventHandler.ControllerDisconnectEvent(
-            EuroScopeCControllerWrapper(Controller, this->ControllerIsMe(Controller, this->ControllerMyself()))
+            wrapper
         );
     }
 
@@ -234,8 +249,13 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnControllerPositionUpdate(EuroScopePlugIn::CController Controller)
     {
+        if (!Controller.IsValid()) {
+            return;
+        }
+
+        EuroScopeCControllerWrapper wrapper(Controller, this->ControllerIsMe(Controller, this->ControllerMyself()));
         this->statusEventHandler.ControllerUpdateEvent(
-            EuroScopeCControllerWrapper(Controller, this->ControllerIsMe(Controller, this->ControllerMyself()))
+            wrapper
         );
     }
 
