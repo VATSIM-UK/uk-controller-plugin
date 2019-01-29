@@ -17,6 +17,7 @@ namespace UKControllerPlugin {
         {
             public:
                 SectorExitPoint(std::string name, std::string intentionCode, unsigned int outDirection);
+                virtual ~SectorExitPoint() {};
                 virtual std::string GetIntentionCode(
                     UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route,
                     int foundPointIndex,
