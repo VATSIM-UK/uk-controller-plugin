@@ -207,9 +207,12 @@ namespace UKControllerPlugin {
             throw std::invalid_argument("Flightplan not found");
         }
 
-        return std::shared_ptr<EuroScopeCFlightPlanInterface>(new EuroScopeCFlightPlanWrapper(plan));
+        return std::make_shared<EuroScopeCFlightPlanWrapper>(plan);
     }
 
+    /*
+        Gets a flightplan for a given callsign.
+    */
     std::shared_ptr<EuroScopeCRadarTargetInterface> UKPlugin::GetRadarTargetForCallsign(std::string callsign) const
     {
         EuroScopePlugIn::CRadarTarget target = this->RadarTargetSelect(callsign.c_str());
@@ -218,7 +221,7 @@ namespace UKControllerPlugin {
             throw std::invalid_argument("Target not found");
         }
 
-        return std::shared_ptr<EuroScopeCRadarTargetInterface>(new EuroScopeCRadarTargetWrapper(target));
+        return std::make_shared<EuroScopeCRadarTargetWrapper>(target);
     }
 
     /*
