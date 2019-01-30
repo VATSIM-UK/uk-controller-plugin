@@ -86,7 +86,7 @@ namespace UKControllerPlugin {
         bool EuroScopeCFlightPlanWrapper::HasAssignedSquawk(void) const
         {
             std::string squawk = this->originalData.GetControllerAssignedData().GetSquawk();
-            return SquawkValidator::ValidSquawk(squawk),
+            return SquawkValidator::ValidSquawk(squawk) &&
                 squawk != "0200" &&
                 squawk != "2200" &&
                 squawk != "1200" &&
