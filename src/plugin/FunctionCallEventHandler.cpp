@@ -26,6 +26,7 @@ namespace UKControllerPlugin {
             if (functionId < this->firstFixedId) {
                 auto function = this->callbackFunctions.find(functionId);
                 if (function == this->callbackFunctions.cend()) {
+                    LogWarning("Invalid dynamic callback function " + std::to_string(functionId));
                     return;
                 }
 
@@ -33,6 +34,7 @@ namespace UKControllerPlugin {
             } else {
                 auto function = this->tagFunctions.find(functionId);
                 if (function == this->tagFunctions.cend()) {
+                    LogWarning("Invalid fixed callback function " + std::to_string(functionId));
                     return;
                 }
 
