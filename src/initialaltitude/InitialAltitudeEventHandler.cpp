@@ -74,7 +74,7 @@ namespace UKControllerPlugin {
             // Set the IA.
             LogInfo(
                 "Set initial altitude for " + flightPlan.GetCallsign() +
-                " (" + flightPlan.GetOrigin() +", " + flightPlan.GetSidName() + ")"
+                " (" + flightPlan.GetOrigin() + ", " + flightPlan.GetSidName() + ")"
             );
             flightPlan.SetClearedAltitude(
                 this->generator.GetInitialAltitudeForDeparture(flightPlan.GetOrigin(), sidName)
