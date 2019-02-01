@@ -13,6 +13,7 @@ namespace UKControllerPlugin {
             const std::string holdIdentifier;
             int reportedAltitude;
             int clearedAltitude;
+            std::chrono::system_clock::time_point entryTime;
         } HoldingAircraft;
 
     }  // namespace Hold

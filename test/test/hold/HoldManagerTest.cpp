@@ -124,10 +124,15 @@ namespace UKControllerPluginTest {
             auto hold = manager.GetAircraftInHold("WILLO");
             auto holdingData = hold.find("BAW123");
 
+            int64_t seconds = std::chrono::duration_cast<std::chrono::seconds> (
+                holdingData->entryTime - std::chrono::system_clock::now()
+            ).count();
+
             EXPECT_TRUE(holdingData->callsign == "BAW123");
             EXPECT_TRUE(holdingData->holdIdentifier == "WILLO");
             EXPECT_EQ(8000, holdingData->clearedAltitude);
             EXPECT_EQ(9000, holdingData->reportedAltitude);
+            EXPECT_LT(seconds, 2);
         }
 
     }  // namespace Hold

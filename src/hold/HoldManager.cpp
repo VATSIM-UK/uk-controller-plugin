@@ -53,7 +53,8 @@ namespace UKControllerPlugin {
                     flightplan.GetCallsign(),
                     hold,
                     radarTarget.GetFlightLevel(),
-                    flightplan.GetClearedAltitude()
+                    flightplan.GetClearedAltitude(),
+                    std::chrono::system_clock::now()
                 }
             );
         }
