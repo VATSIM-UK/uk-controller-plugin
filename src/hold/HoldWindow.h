@@ -12,12 +12,13 @@ namespace UKControllerPlugin {
             public:
 
                 HoldWindow(HWND euroscopeWindow, HINSTANCE dllInstance);
-
+                void DisplayWindow(void);
 
             private:
 
-                LRESULT CALLBACK _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+                LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+                void RegisterWindowClass(void);
 
                 // Handle to EuroScopes main window
                 const HWND euroscopeWindow;
@@ -29,7 +30,15 @@ namespace UKControllerPlugin {
                 HWND selfHandle;
 
                 // The window class object
-                WNDCLASSEX windowClass;
+                WNDCLASSEX windowClass = { 0 };
+
+                // Window class name
+                const LPCWSTR windowClassName = L"HoldWindowClass";
+
+                // Have we registered the window
+                bool windowRegistered = false;
         };
+
+        LRESULT CALLBACK WndProcTest(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
     }  // namespace Hold
 }  // namespace UKControllerPlugin
