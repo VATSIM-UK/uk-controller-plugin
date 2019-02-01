@@ -4,10 +4,12 @@
 #include "squawk/SquawkGenerator.h"
 #include "tag/TagFunction.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "squawk/ApiSquawkAllocationHandler.h"
 
 using UKControllerPlugin::Squawk::SquawkEventHandler;
 using UKControllerPlugin::Squawk::SquawkGenerator;
 using UKControllerPlugin::Tag::TagFunction;
+using UKControllerPlugin::Squawk::ApiSquawkAllocationHandler;
 
 namespace UKControllerPlugin {
     namespace Squawk {
@@ -20,25 +22,33 @@ namespace UKControllerPlugin {
             bool disabled,
             bool automaticAssignmentDisabled
         ) {
+            // API allocation handler
+            std::shared_ptr<ApiSquawkAllocationHandler> allocations = std::make_shared<ApiSquawkAllocationHandler>(
+                *container.plugin
+            );
+            container.timedHandler->RegisterEvent(allocations, SquawkModule::allocationCheckFrequency);
+
+            // Assignment rules and generator
             container.squawkAssignmentRules.reset(
                 new SquawkAssignment(
-                    *container.flightplans,
-                    *container.plugin,
-                    *container.airfieldOwnership,
-                    *container.activeCallsigns,
-                    disabled
-                )
+                *container.flightplans,
+                *container.plugin,
+                *container.airfieldOwnership,
+                *container.activeCallsigns,
+                disabled
+            )
             );
             container.squawkGenerator = std::make_unique<SquawkGenerator>(
                 *container.api,
                 container.taskRunner.get(),
-                container.plugin.get(),
                 *container.squawkAssignmentRules,
                 *container.activeCallsigns,
-                *container.flightplans
+                *container.flightplans,
+                allocations
             );
 
-            std::shared_ptr<SquawkEventHandler> handler(
+            // The event handler
+            std::shared_ptr<SquawkEventHandler> eventHandler(
                 new SquawkEventHandler(
                     *container.squawkGenerator,
                     *container.activeCallsigns,
@@ -49,17 +59,18 @@ namespace UKControllerPlugin {
                     automaticAssignmentDisabled
                 )
             );
-            container.squawkEvents = handler;
-            container.flightplanHandler->RegisterHandler(handler);
-            container.timedHandler->RegisterEvent(handler, SquawkModule::trackedAircraftCheckFrequency);
-            container.userSettingHandlers->RegisterHandler(handler);
+
+            container.squawkEvents = eventHandler;
+            container.flightplanHandler->RegisterHandler(eventHandler);
+            container.timedHandler->RegisterEvent(eventHandler, SquawkModule::trackedAircraftCheckFrequency);
+            container.userSettingHandlers->RegisterHandler(eventHandler);
 
             TagFunction forceSquawkCallbackGeneral(
-                handler->squawkForceCallbackIdGeneral,
+                eventHandler->squawkForceCallbackIdGeneral,
                 "Force Squawk Recycle (General)",
                 std::bind(
                     &SquawkEventHandler::SquawkReycleGeneral,
-                    *handler,
+                    *eventHandler,
                     std::placeholders::_1,
                     std::placeholders::_2
                 )
@@ -67,11 +78,11 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(forceSquawkCallbackGeneral);
 
             TagFunction forceSquawkCallbackLocal(
-                handler->squawkForceCallbackIdLocal,
+                eventHandler->squawkForceCallbackIdLocal,
                 "Force Squawk Recycle (Local)",
                 std::bind(
                     &SquawkEventHandler::SquawkRecycleLocal,
-                    *handler,
+                    *eventHandler,
                     std::placeholders::_1,
                     std::placeholders::_2
                 )

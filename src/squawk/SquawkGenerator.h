@@ -10,7 +10,6 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
-        class EuroscopePluginLoopbackInterface;
     }  // namespace Euroscope
     namespace Flightplan {
         class StoredFlightplanCollection;
@@ -20,6 +19,7 @@ namespace UKControllerPlugin {
     }  // namespace Controller
     namespace Squawk {
         class SquawkAssignment;
+        class ApiSquawkAllocationHandler;
     }  // namespace Squawk
 }  // namespace UKControllerPlugin
 
@@ -35,10 +35,10 @@ namespace UKControllerPlugin {
                 SquawkGenerator(
                     const UKControllerPlugin::Api::ApiInterface & api,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface * const taskRunner,
-                    const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface * const plugin,
                     const UKControllerPlugin::Squawk::SquawkAssignment & assignmentRules,
                     const UKControllerPlugin::Controller::ActiveCallsignCollection & callsigns,
-                    const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans
+                    const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans,
+                    const std::shared_ptr<UKControllerPlugin::Squawk::ApiSquawkAllocationHandler> allocations
                 );
                 bool AssignCircuitSquawkForAircraft(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
@@ -82,7 +82,7 @@ namespace UKControllerPlugin {
                     std::string flightRules
                 ) const;
                 void EndSquawkUpdate(std::string callsign);
-                bool StartSquawkUpdate(std::string callsign);
+                bool StartSquawkUpdate(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan);
 
                 // Callsigns of logged in controllers
                 const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns;
@@ -99,11 +99,11 @@ namespace UKControllerPlugin {
                 // Runs tasks asynchronously from the rest of the plugin
                 UKControllerPlugin::TaskManager::TaskRunnerInterface * const taskRunner;
 
-                // The main plugin, for loopbacks so squawks may be assigned.
-                const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface * const plugin;
-
                 // A class for thread-safe tracking of squawk requests
                 UKControllerPlugin::Squawk::SquawkRequest squawkRequests;
+
+                // Receives API squawk allocations, so that they may be assigned to flightplans on the main thread
+                const std::shared_ptr<UKControllerPlugin::Squawk::ApiSquawkAllocationHandler> allocations;
         };
     }  // namespace Squawk
 }  // namespace UKControllerPlugin

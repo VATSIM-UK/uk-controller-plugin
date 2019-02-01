@@ -69,7 +69,7 @@ namespace UKControllerPlugin {
             // to give EuroScope a chance to process controllers logged in / preexisting squawk assignments
             // We defer by the wait time to space out the subsequent events.
             if (this->login.GetSecondsLoggedIn() < this->minAutomaticAssignmentLoginTime) {
-                LogInfo(
+                LogDebug(
                     "Deferring squawk assignment for " + flightplan.GetCallsign() +
                     " as only recently logged in"
                 );

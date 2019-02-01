@@ -8,6 +8,11 @@ void LogCritical(std::string message)
     logger->critical(message);
 }
 
+void LogDebug(std::string message)
+{
+    logger->debug(message);
+}
+
 void LogError(std::string message)
 {
     logger->error(message);

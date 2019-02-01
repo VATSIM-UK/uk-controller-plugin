@@ -527,6 +527,12 @@
     <ClCompile Include="..\..\test\test\euroscope\LoadDefaultUserSettingsTest.cpp">
       <Filter>test\euroscope</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationHandlerTest.cpp">
+      <Filter>test\squawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp">
+      <Filter>test\squawk</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

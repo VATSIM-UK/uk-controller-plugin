@@ -9,6 +9,7 @@
 #include "api/ApiNotFoundException.h"
 #include "api/ApiNotAuthorisedException.h"
 #include "mock/MockWinApi.h"
+#include "squawk/ApiSquawkAllocation.h"
 
 using UKControllerPlugin::Api::ApiHelper;
 using UKControllerPlugin::Api::ApiResponse;
@@ -21,6 +22,7 @@ using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPluginTest::Windows::MockWinApi;
+using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -158,7 +160,7 @@ TEST_F(ApiHelperTest, FetchRemoteFileReturnsFileString)
     EXPECT_TRUE(responseJson.dump() == this->helper.FetchRemoteFile("http://test.com/averynicefile"));
 }
 
-TEST_F(ApiHelperTest, GetSquawkAssignmentReturnsSquawk)
+TEST_F(ApiHelperTest, GetSquawkAssignmentReturnsSquawkAllocation)
 {
     CurlResponse response("{\"squawk\": \"1234\"}", false, 200);
 
@@ -169,7 +171,9 @@ TEST_F(ApiHelperTest, GetSquawkAssignmentReturnsSquawk)
         .Times(1)
         .WillOnce(Return(response));
 
-    EXPECT_TRUE("1234" == this->helper.GetAssignedSquawk("BAW123"));
+    ApiSquawkAllocation allocation = this->helper.GetAssignedSquawk("BAW123");
+    EXPECT_TRUE("1234" == allocation.squawk);
+    EXPECT_TRUE("BAW123" == allocation.callsign);
 }
 
 TEST_F(ApiHelperTest, GetSquawkAssignmentThrowsExceptionSquawkNotAllowed)
@@ -219,7 +223,9 @@ TEST_F(ApiHelperTest, CreateGeneralSquawkAssignmentReturnsSquawk)
         .Times(1)
         .WillOnce(Return(response));
 
-    EXPECT_TRUE("1234" == this->helper.CreateGeneralSquawkAssignment("BAW123", "EGKK", "EGCC"));
+    ApiSquawkAllocation allocation = this->helper.CreateGeneralSquawkAssignment("BAW123", "EGKK", "EGCC");
+    EXPECT_TRUE("1234" == allocation.squawk);
+    EXPECT_TRUE("BAW123" == allocation.callsign);
 }
 
 TEST_F(ApiHelperTest, CreateGeneralThrowsExceptionIfSquawkNotAllowed)
@@ -304,7 +310,9 @@ TEST_F(ApiHelperTest, CreateLocalSquawkAssignmentReturnsSquawk)
         .Times(1)
         .WillOnce(Return(response));
 
-    EXPECT_TRUE("1234" == this->helper.CreateLocalSquawkAssignment("BAW123", "EGCC", "V"));
+    ApiSquawkAllocation allocation = this->helper.CreateLocalSquawkAssignment("BAW123", "EGCC", "V");
+    EXPECT_TRUE("1234" == allocation.squawk);
+    EXPECT_TRUE("BAW123" == allocation.callsign);
 }
 
 TEST_F(ApiHelperTest, CreateLocalSquawkThrowsExceptionIfSquawkNotAllowed)
