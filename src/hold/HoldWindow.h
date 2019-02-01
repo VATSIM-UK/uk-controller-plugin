@@ -37,8 +37,9 @@ namespace UKControllerPlugin {
 
                 // Have we registered the window
                 bool windowRegistered = false;
-        };
 
-        LRESULT CALLBACK WndProcTest(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+                // A prop for the hold window object so we can get at it
+                static const LPCWSTR objectProp;
+        };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

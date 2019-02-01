@@ -4,6 +4,8 @@
 namespace UKControllerPlugin {
     namespace Hold {
 
+        const LPCWSTR HoldWindow::objectProp = L"HoldWindowObject";
+
         HoldWindow::HoldWindow(HWND euroscopeWindow, HINSTANCE dllInstance)
             : euroscopeWindow(euroscopeWindow), dllInstance(dllInstance)
         {
@@ -25,7 +27,7 @@ namespace UKControllerPlugin {
                 L"UKCP Hold Manager",
                 WS_OVERLAPPEDWINDOW,
                 CW_USEDEFAULT, CW_USEDEFAULT, 500, 600,
-                NULL, NULL, this->dllInstance, NULL
+                NULL, NULL, this->dllInstance, this
             );
             DWORD err = GetLastError();
 
@@ -77,16 +79,19 @@ namespace UKControllerPlugin {
         */
         LRESULT CALLBACK HoldWindow::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
+            HANDLE objectProp = GetProp(hwnd, HoldWindow::objectProp);
+            if (!objectProp) {
+                SetProp(hwnd, HoldWindow::objectProp, (HANDLE) lParam);
+            }
+
             if (msg == WM_INITDIALOG) {
-                SetProp(hwnd, L"local_class", (HANDLE)lParam);
                 LogInfo("Hold manager window opened");
             } else if (msg == WM_NCDESTROY) {
-                RemoveProp(hwnd, L"local_class");
+                RemoveProp(hwnd, HoldWindow::objectProp);
                 LogInfo("Hold manager window closed");
             }
 
-            HoldWindow * pThis = (HoldWindow *) GetProp(hwnd, L"local_class");
-            
+            HoldWindow * pThis = (HoldWindow *) objectProp;
             return pThis ? pThis->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
         }
 
@@ -97,7 +102,7 @@ namespace UKControllerPlugin {
         {
             this->windowClass.cbSize = sizeof(this->windowClass);
             this->windowClass.style = 0;
-            this->windowClass.lpfnWndProc = WndProcTest;
+            this->windowClass.lpfnWndProc = WndProc;
             this->windowClass.cbClsExtra = 0;
             this->windowClass.cbWndExtra = 0;
             this->windowClass.hInstance = this->dllInstance;
