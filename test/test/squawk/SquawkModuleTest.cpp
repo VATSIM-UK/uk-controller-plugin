@@ -41,6 +41,7 @@ namespace UKControllerPluginModuleTest {
 
         TEST_F(SquawkModuleTest, BootstrapPluginRegistersForTimedEvents)
         {
+            SquawkModule::BootstrapPlugin(container, false, false);
             EXPECT_EQ(
                 1,
                 container.timedHandler->CountHandlersForFrequency(SquawkModule::allocationCheckFrequency)

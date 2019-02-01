@@ -699,10 +699,10 @@ namespace UKControllerPluginTest {
             SquawkGenerator newGenerator(
                 this->api,
                 &this->taskRunner,
-                &this->pluginLoopback,
                 disabledRules,
                 this->activeCallsigns,
-                this->flightplans
+                this->flightplans,
+                this->squawkAllocationHandler
             );
 
             EXPECT_FALSE(newGenerator.AssignCircuitSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
