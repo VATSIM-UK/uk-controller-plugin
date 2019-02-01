@@ -34,7 +34,6 @@ std::string EstimatedDepartureTimeEventHandler::GetTagItemData(
     if (!this->storedFlightplans.HasFlightplanForCallsign(flightPlan.GetCallsign())) {
         return this->noTime;
     }
-    std::string cs = flightPlan.GetCallsign();
 
     std::chrono::system_clock::time_point edt = this->storedFlightplans
         .GetFlightplanForCallsign(flightPlan.GetCallsign())

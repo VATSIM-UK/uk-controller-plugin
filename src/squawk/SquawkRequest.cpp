@@ -20,9 +20,7 @@ namespace UKControllerPlugin {
         void SquawkRequest::End(std::string callsign)
         {
             std::lock_guard<std::mutex> lock(this->requestlock);
-            if (this->requests.find(callsign) != this->requests.end()) {
-                this->requests.erase(callsign);
-            }
+            this->requests.erase(callsign);
         }
     }  // namespace Squawk
 }  // namespace UKControllerPlugin

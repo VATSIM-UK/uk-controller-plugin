@@ -381,5 +381,13 @@ namespace UKControllerPluginTest {
             this->service->CancelPrenote(this->mockFlightplan);
             this->service->SendPrenotes(this->mockFlightplan);
         }
+
+        TEST_F(PrenoteServiceTest, CancelPrenoteHandlesNonExistantPrenotes)
+        {
+            ON_CALL(this->mockFlightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            EXPECT_NO_THROW(this->service->CancelPrenote(this->mockFlightplan));
+        }
     }  // namespace Prenote
 }  // namespace UKControllerPluginTest

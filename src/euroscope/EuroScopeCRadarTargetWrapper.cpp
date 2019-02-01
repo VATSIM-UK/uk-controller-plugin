@@ -6,7 +6,7 @@ using EuroScopePlugIn::CRadarTarget;
 namespace UKControllerPlugin {
     namespace Euroscope {
 
-        EuroScopeCRadarTargetWrapper::EuroScopeCRadarTargetWrapper(EuroScopePlugIn::CRadarTarget & originalData)
+        EuroScopeCRadarTargetWrapper::EuroScopeCRadarTargetWrapper(EuroScopePlugIn::CRadarTarget originalData)
         {
             this->originalData = originalData;
         }

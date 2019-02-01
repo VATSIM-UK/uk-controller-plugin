@@ -120,5 +120,31 @@ namespace UKControllerPluginTest {
             handler.RegisterFunctionCall(function2);
             handler.RegisterTagFunctionsWithEuroscope(mockPlugin);
         }
+
+        TEST(FunctionCallEventHandler, FixedFunctionCallHandlesNonExistant)
+        {
+            FunctionCallEventHandler handler;
+            EXPECT_NO_THROW(
+                handler.CallFunction(
+                    9000,
+                    "some test",
+                    StrictMock<MockEuroScopeCFlightPlanInterface>(),
+                    StrictMock<MockEuroScopeCRadarTargetInterface>()
+                )
+            );
+        }
+
+        TEST(FunctionCallEventHandler, DynamicFunctionCallHandlesNonExistant)
+        {
+            FunctionCallEventHandler handler;
+            EXPECT_NO_THROW(
+                handler.CallFunction(
+                    5000,
+                    "some test",
+                    StrictMock<MockEuroScopeCFlightPlanInterface>(),
+                    StrictMock<MockEuroScopeCRadarTargetInterface>()
+                )
+            );
+        }
     }  // namespace Plugin
 }  // namespace UKControllerPluginTest

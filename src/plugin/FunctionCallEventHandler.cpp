@@ -24,9 +24,21 @@ namespace UKControllerPlugin {
         ) const {
 
             if (functionId < this->firstFixedId) {
-                this->callbackFunctions.find(functionId)->function(subject);
+                auto function = this->callbackFunctions.find(functionId);
+                if (function == this->callbackFunctions.cend()) {
+                    LogWarning("Invalid dynamic callback function " + std::to_string(functionId));
+                    return;
+                }
+
+                function->function(subject);
             } else {
-                this->tagFunctions.find(functionId)->function(flightplan, radarTarget);
+                auto function = this->tagFunctions.find(functionId);
+                if (function == this->tagFunctions.cend()) {
+                    LogWarning("Invalid fixed callback function " + std::to_string(functionId));
+                    return;
+                }
+
+                function->function(flightplan, radarTarget);
             }
         }
 
