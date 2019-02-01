@@ -1,6 +1,9 @@
 #pragma once
 #include "timedevent/AbstractTimedEvent.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
+#include "radarscreen/ConfigurableDisplayInterface.h"
+#include "command/CommandHandlerInterface.h"
+#include "hold/HoldWindow.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -19,13 +22,17 @@ namespace UKControllerPlugin {
             update of holding data.
         */
         class HoldEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-            public UKControllerPlugin::TimedEvent::AbstractTimedEvent
+            public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
+            public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
+            public UKControllerPlugin::Command::CommandHandlerInterface
         {
             public:
                 // Inherited via FlightPlanEventHandlerInterface
                 HoldEventHandler(
                     UKControllerPlugin::Hold::HoldManager & holdManager,
-                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
+                    UKControllerPlugin::Hold::HoldWindow holdManagerWindow,
+                    const int popupMenuItemId
                 );
                 void FlightPlanEvent(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
@@ -42,6 +49,22 @@ namespace UKControllerPlugin {
                 // Inherited via AbstractTimedEvent
                 void TimedEventTrigger(void) override;
 
+                // Inherited via ConfigurableDisplayInterface
+                void Configure(std::string subject) override;
+                UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
+
+                // Inherited via CommandHandlerInterface
+                bool ProcessCommand(std::string command) override;
+
+                // The id of this handlers popup menu item
+                const int popupMenuItemId;
+
+                // The command that toggles opening the hold manager
+                const std::string toggleCommand = ".ukcp hold";
+
+                // The description of the window item
+                const std::string menuItemDescription = "Hold Manager Window";
+
             private:
                 
                 // Gives access to the plugin
@@ -49,6 +72,9 @@ namespace UKControllerPlugin {
 
                 // Manages holds
                 UKControllerPlugin::Hold::HoldManager & holdManager;
+
+                // Displays the hold manager view
+                UKControllerPlugin::Hold::HoldWindow holdManagerWindow;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

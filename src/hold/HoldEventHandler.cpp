@@ -4,18 +4,27 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope//EuroScopeCRadarTargetInterface.h"
 #include "hold/HoldManager.h"
+#include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::TimedEvent::AbstractTimedEvent;
+using UKControllerPlugin::Hold::HoldWindow;
 using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Plugin::PopupMenuItem;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
-        HoldEventHandler::HoldEventHandler(HoldManager & holdManager, EuroscopePluginLoopbackInterface & plugin)
-            : holdManager(holdManager), plugin(plugin)
+        HoldEventHandler::HoldEventHandler(
+            HoldManager & holdManager,
+            EuroscopePluginLoopbackInterface & plugin,
+            HoldWindow holdManagerWindow,
+            const int popupMenuItemId
+        )
+            : holdManager(holdManager), plugin(plugin),
+            holdManagerWindow(holdManagerWindow), popupMenuItemId(popupMenuItemId)
         {
 
         }
@@ -48,6 +57,42 @@ namespace UKControllerPlugin {
         void HoldEventHandler::TimedEventTrigger(void)
         {
             this->holdManager.UpdateHoldingAircraft(this->plugin);
+        }
+
+        /*
+            Called when the popup menu item is selected. Open the hold manager window.
+        */
+        void HoldEventHandler::Configure(std::string subject)
+        {
+            this->holdManagerWindow.DisplayWindow();
+        }
+
+        /*
+            Return the item for the popup configuration menu.
+        */
+        UKControllerPlugin::Plugin::PopupMenuItem HoldEventHandler::GetConfigurationMenuItem(void) const
+        {
+            PopupMenuItem item;
+            item.callbackFunctionId = this->popupMenuItemId;
+            item.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            item.disabled = false;
+            item.firstValue = this->menuItemDescription;
+            item.secondValue = "";
+            item.fixedPosition = false;
+            return item;
+        }
+
+        /*
+            Process euroscope dot commands
+        */
+        bool HoldEventHandler::ProcessCommand(std::string command)
+        {
+            if (command != this->toggleCommand) {
+                return false;
+            }
+
+            this->holdManagerWindow.DisplayWindow();
+            return true;
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

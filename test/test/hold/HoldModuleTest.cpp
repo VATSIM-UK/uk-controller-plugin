@@ -8,16 +8,25 @@
 #include "message/UserMessager.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "bootstrap/BootstrapWarningMessage.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
+#include "command/CommandHandlerCollection.h"
+#include "mock/MockWinApi.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Hold::BootstrapPlugin;
+using UKControllerPlugin::Hold::BootstrapRadarScreen;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
+using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::Command::CommandHandlerCollection;
+using UKControllerPluginTest::Windows::MockWinApi;
 using ::testing::Test;
 using ::testing::NiceMock;
 
@@ -41,12 +50,16 @@ namespace UKControllerPluginTest {
 
                     container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     container.timedHandler.reset(new TimedEventCollection);
+                    container.commandHandlers.reset(new CommandHandlerCollection);
+                    container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
+                    container.windows.reset(new NiceMock<MockWinApi>);
                 }
 
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 PersistenceContainer container;
                 DependencyCache dependencies;
                 UserMessager messager;
+                ConfigurableDisplayCollection configurableDisplays;
         };
 
         TEST_F(HoldModuleTest, ItAddsToFlightplanHandler)
@@ -60,6 +73,12 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependencies, this->messager);
             EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
             EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(5));
+        }
+
+        TEST_F(HoldModuleTest, ItAddsToCommandHandlers)
+        {
+            BootstrapPlugin(this->container, this->dependencies, this->messager);
+            EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)
@@ -122,6 +141,20 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             BootstrapPlugin(this->container, newDependencies, this->messager);
+        }
+
+        TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
+        {
+            BootstrapPlugin(this->container, this->dependencies, this->messager);
+            BootstrapRadarScreen(*this->container.pluginFunctionHandlers, this->configurableDisplays);
+            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
+        }
+
+        TEST_F(HoldModuleTest, ItAddsToConfigurableDisplays)
+        {
+            BootstrapPlugin(this->container, this->dependencies, this->messager);
+            BootstrapRadarScreen(*this->container.pluginFunctionHandlers, this->configurableDisplays);
+            EXPECT_EQ(1, this->configurableDisplays.CountDisplays());
         }
     }  // namespace Wake
 }  // namespace UKControllerPluginTest

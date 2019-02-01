@@ -4,12 +4,16 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "hold/HoldWindow.h"
+#include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Hold::HoldEventHandler;
+using UKControllerPlugin::Hold::HoldWindow;
+using UKControllerPlugin::Plugin::PopupMenuItem;
 using ::testing::Return;
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -21,7 +25,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldEventHandlerTest(void)
-                    : handler(this->manager, this->mockPlugin)
+                    : handler(this->manager, this->mockPlugin, HoldWindow(NULL, NULL), 1)
                 {
                     manager.AddHold("WILLO");
 
@@ -82,6 +86,23 @@ namespace UKControllerPluginTest {
             manager.UpdateHoldingAircraft(this->mockPlugin);
             EXPECT_EQ(7000, manager.GetAircraftInHold("WILLO").find("BAW123")->clearedAltitude);
             EXPECT_EQ(8000, manager.GetAircraftInHold("WILLO").find("BAW123")->reportedAltitude);
+        }
+
+        TEST_F(HoldEventHandlerTest, ItCanBeConfiguredFromTheMenu)
+        {
+            PopupMenuItem expected;
+            expected.callbackFunctionId = this->handler.popupMenuItemId;
+            expected.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            expected.disabled = false;
+            expected.firstValue = this->handler.menuItemDescription;
+            expected.secondValue = "";
+            expected.fixedPosition = false;
+            EXPECT_TRUE(expected == this->handler.GetConfigurationMenuItem());
+        }
+
+        TEST_F(HoldEventHandlerTest, ItRejectsUnknownCommands)
+        {
+            EXPECT_FALSE(this->handler.ProcessCommand("NOPE"));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
