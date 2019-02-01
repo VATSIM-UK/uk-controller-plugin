@@ -11,9 +11,9 @@ namespace UKControllerPlugin {
         {
             const std::string callsign;
             const std::string holdIdentifier;
-            int reportedAltitude;
-            int clearedAltitude;
-            std::chrono::system_clock::time_point entryTime;
+            mutable int reportedAltitude;
+            mutable int clearedAltitude;
+            const std::chrono::system_clock::time_point entryTime;
         } HoldingAircraft;
 
     }  // namespace Hold

@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
         {
             public:
 
-            HoldManager(UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin);
+            HoldManager(void);
             void AddHold(std::string hold);
             void AddAircraftToHold(
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
@@ -37,11 +37,7 @@ namespace UKControllerPlugin {
 
             void RemoveAircraftFromAnyHold(std::string callsign);
             void RemoveHold(std::string hold);
-
-            private:
-
-                // Plugin for getting flightplans
-            UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+            void UpdateHoldingAircraft(UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin);
 
             // A map of holds to aircraft
             std::map<
