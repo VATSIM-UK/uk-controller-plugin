@@ -36,6 +36,8 @@
 #include "command/CommandHandlerCollection.h"
 #include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
+#include "hold/HoldManager.h"
+#include "hold/HoldingDataCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -82,6 +84,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkAssignment> squawkAssignmentRules;
             std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawkEvents;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkGenerator> squawkGenerator;
+            std::unique_ptr<UKControllerPlugin::Hold::HoldManager> holdManager;
 
             // Collections that are spawned multiple times.
             std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;
@@ -97,6 +100,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Airfield::AirfieldOwnershipManager> airfieldOwnership;
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
             std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
+            std::unique_ptr<UKControllerPlugin::Hold::HoldingDataCollection> holds;
 
         } PersistenceContainer;
     }  // namespace Bootstrap

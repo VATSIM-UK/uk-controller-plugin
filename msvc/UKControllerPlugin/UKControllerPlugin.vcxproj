@@ -120,6 +120,7 @@
     <ClInclude Include="..\..\src\hold\HoldingData.h" />
     <ClInclude Include="..\..\src\hold\HoldingDataCollection.h" />
     <ClInclude Include="..\..\src\hold\HoldManager.h" />
+    <ClInclude Include="..\..\src\hold\HoldModule.h" />
     <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
@@ -300,6 +301,7 @@
     <ClCompile Include="..\..\src\hold\HoldEventHandler.cpp" />
     <ClCompile Include="..\..\src\hold\HoldingDataCollection.cpp" />
     <ClCompile Include="..\..\src\hold\HoldManager.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldModule.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp" />

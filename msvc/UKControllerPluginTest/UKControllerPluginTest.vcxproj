@@ -98,6 +98,7 @@
     <ClCompile Include="..\..\test\test\hold\HoldingDataCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldingDataTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldManagerTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\HoldModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\CompareInitialAltitudesTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeEventHandlerTest.cpp" />

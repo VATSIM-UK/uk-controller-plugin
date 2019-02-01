@@ -30,6 +30,6 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Hold::HoldingAircraft & b
             ) const;
 
-        } CompareHolds;
+        } CompareHoldingAircraft;
     }  // namespace Hold
 }  // namespace UKControllerPlugin
