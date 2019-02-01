@@ -23,6 +23,9 @@
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "timedevent/DeferredEventHandler.h"
+#include "euroscope/UserSetting.h"
+#include "mock/MockUserSettingProviderInterface.h"
+#include "euroscope/GeneralSettingsEntries.h"
 
 using UKControllerPlugin::Squawk::SquawkEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -48,7 +51,11 @@ using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Controller::Login;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::DeferredEventHandler;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
+using ::testing::StrictMock;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
@@ -204,6 +211,61 @@ namespace UKControllerPluginTest {
                 AirfieldCollection airfields;
                 SquawkEventHandler handler;
         };
+
+        TEST_F(SquawkEventHandlerTest, ItDefaultsToUserSquawksOn)
+        {
+            EXPECT_TRUE(this->handler.UserAllowedSquawkAssignment());
+        }
+
+        TEST_F(SquawkEventHandlerTest, ItUpdatesBasedOnUserSettings)
+        {
+            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
+            UserSetting userSetting(userSettingProvider);
+
+            EXPECT_CALL(userSettingProvider, GetKey(GeneralSettingsEntries::squawkToggleSettingsKey))
+                .Times(1)
+                .WillOnce(Return("0"));
+
+            this->handler.UserSettingsUpdated(userSetting);
+            EXPECT_FALSE(this->handler.UserAllowedSquawkAssignment());
+        }
+
+        TEST_F(SquawkEventHandlerTest, ItDefaultsToTrueIfNoUserSetting)
+        {
+            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
+            UserSetting userSetting(userSettingProvider);
+
+            EXPECT_CALL(userSettingProvider, GetKey(GeneralSettingsEntries::squawkToggleSettingsKey))
+                .Times(1)
+                .WillOnce(Return("0"));
+
+            NiceMock<MockUserSettingProviderInterface> userSettingProviderNoValue;
+            EXPECT_CALL(userSettingProviderNoValue, GetKey(GeneralSettingsEntries::squawkToggleSettingsKey))
+                .Times(1)
+                .WillOnce(Return(""));
+
+            UserSetting userSettingNoValue(userSettingProviderNoValue);
+
+            this->handler.UserSettingsUpdated(userSetting);
+            this->handler.UserSettingsUpdated(userSettingNoValue);
+            EXPECT_TRUE(this->handler.UserAllowedSquawkAssignment());
+        }
+
+        TEST_F(SquawkEventHandlerTest, FlightplanEventDoesNothingIfUserToggleNotOn)
+        {
+            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
+            UserSetting userSetting(userSettingProvider);
+
+            EXPECT_CALL(userSettingProvider, GetKey(GeneralSettingsEntries::squawkToggleSettingsKey))
+                .Times(1)
+                .WillOnce(Return("0"));
+
+            this->handler.UserSettingsUpdated(userSetting);
+
+            StrictMock<MockEuroScopeCFlightPlanInterface> mockFp;
+            StrictMock<MockEuroScopeCRadarTargetInterface> mockRt;
+            EXPECT_NO_THROW(this->handler.FlightPlanEvent(mockFp, mockRt));
+        }
 
         TEST_F(SquawkEventHandlerTest, FlightplanEventDefersFor10SecondsIfNotLoggedInLongEnough)
         {
@@ -385,6 +447,23 @@ namespace UKControllerPluginTest {
                true
            );
            EXPECT_NO_THROW(handler.TimedEventTrigger());
+        }
+
+        TEST_F(SquawkEventHandlerTest, TimedEventTriggerDoesNothingIfUserToggleOff)
+        {
+            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
+            UserSetting userSetting(userSettingProvider);
+
+            EXPECT_CALL(userSettingProvider, GetKey(GeneralSettingsEntries::squawkToggleSettingsKey))
+                .Times(1)
+                .WillOnce(Return("0"));
+
+            this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
+            ON_CALL(this->pluginLoopback, GetFlightplanForCallsign(_))
+                .WillByDefault(Throw(std::exception("test")));
+
+            this->handler.UserSettingsUpdated(userSetting);
+            EXPECT_NO_THROW(handler.TimedEventTrigger());
         }
 
         TEST_F(SquawkEventHandlerTest, TimedEventTriggerDoesNothingIfFlightplanHasAssignedSquawk)

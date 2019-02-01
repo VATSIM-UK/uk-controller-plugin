@@ -1,5 +1,6 @@
 #pragma once
 #include "windows/WinApiInterface.h"
+#include "euroscope/GeneralSettingsDialog.h"
 
 namespace UKControllerPlugin {
     namespace Windows {
@@ -11,8 +12,12 @@ namespace UKControllerPlugin {
         class WinApi : public WinApiInterface
         {
             public:
-                explicit WinApi(std::string filesDirectory);
-                WinApi(HINSTANCE dllInstance, std::string filesDirectory, std::wstring filesDirectoryW);
+                WinApi(
+                    HINSTANCE dllInstance,
+                    std::string filesDirectory,
+                    std::wstring filesDirectoryW,
+                    UKControllerPlugin::Euroscope::GeneralSettingsDialog generalSettingsDialog
+                );
                 bool CreateFolder(std::string folder);
                 bool DeleteGivenFile(std::string filename);
                 bool FileExists(std::string filename);
@@ -24,7 +29,7 @@ namespace UKControllerPlugin {
                     UINT numFileTypes,
                     const COMDLG_FILTERSPEC * fileTypes
                 ) const override;
-                void OpenGeneralSettingsDialog(UKControllerPlugin::Euroscope::UserSetting & setting) const;
+                void OpenGeneralSettingsDialog();
                 void OpenMessageBox(LPCWSTR message, LPCWSTR title, int options);
                 void PlayWave(LPCTSTR sound);
                 std::string ReadFromFile(std::string filename, bool relativePath = true);
@@ -43,6 +48,9 @@ namespace UKControllerPlugin {
 
                 // Working directory for file operations in widestring
                 const std::wstring filesDirectoryW;
+
+                // General settings dialog
+                UKControllerPlugin::Euroscope::GeneralSettingsDialog generalSettingsDialog;
         };
     }  // namespace Windows
 }  // namespace UKControllerPlugin

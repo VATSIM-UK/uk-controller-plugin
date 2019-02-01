@@ -1,6 +1,7 @@
 #pragma once
 #include "timedevent/AbstractTimedEvent.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
+#include "euroscope/UserSettingAwareInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -32,7 +33,8 @@ namespace UKControllerPlugin {
     namespace Squawk {
 
         class SquawkEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-            public UKControllerPlugin::TimedEvent::AbstractTimedEvent
+            public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
+            public UKControllerPlugin::Euroscope::UserSettingAwareInterface
         {
             public:
                 SquawkEventHandler(
@@ -65,6 +67,8 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 ) const;
                 void TimedEventTrigger(void);
+                void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
+                bool UserAllowedSquawkAssignment(void) const;
 
                 // The callback function ID with euroscope for forcing squawk refresh (general squawk).
                 const int squawkForceCallbackIdGeneral = 9000;
@@ -97,6 +101,9 @@ namespace UKControllerPlugin {
 
                 // Used for knowing if we're logged in and for how long.
                 const UKControllerPlugin::Controller::Login & login;
+
+                // Whether or not the user has enabled automatic squawk assignment
+                bool userAutomaticAssignmentEnabled = true;
         };
     }  // namespace Squawk
 }  // namespace UKControllerPlugin

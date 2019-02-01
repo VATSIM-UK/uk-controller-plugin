@@ -9,6 +9,7 @@
 #include "login/Login.h"
 #include "flightplan/DeferredFlightplanEvent.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "euroscope/GeneralSettingsEntries.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -20,6 +21,7 @@ using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Controller::Login;
 using UKControllerPlugin::Flightplan::DeferredFlightPlanEvent;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
 namespace UKControllerPlugin {
     namespace InitialAltitude {
@@ -45,6 +47,9 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightPlan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
+            if (!this->userAutomaticAssignmentsAllowed) {
+                return;
+            }
 
             // If we've not been logged in for long, wait a bit
             if (this->login.GetSecondsLoggedIn() < this->minimumLoginTimeBeforeAssignment) {
@@ -104,6 +109,35 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Reset the initial altitude for the given callsign.
+        */
+        void InitialAltitudeEventHandler::RecycleInitialAltitude(
+            EuroScopeCFlightPlanInterface & flightplan,
+            EuroScopeCRadarTargetInterface & radarTarget
+        ) {
+            std::string sidName = normalise.StripSidDeprecation(flightplan.GetSidName());
+
+            if (!generator.HasSid(flightplan.GetOrigin(), sidName)) {
+                return;
+            }
+            flightplan.SetClearedAltitude(
+                this->generator.GetInitialAltitudeForDeparture(flightplan.GetOrigin(), sidName)
+            );
+            LogInfo(
+                "Recycled initial altitude for " + flightplan.GetCallsign() +
+                    " (" + flightplan.GetOrigin() + ", " + flightplan.GetSidName() + ")"
+            );
+        }
+
+        /*
+            Returns whether or not the user has allowed automatic assignments.
+        */
+        bool InitialAltitudeEventHandler::UserAutomaticAssignmentsAllowed(void) const
+        {
+            return this->userAutomaticAssignmentsAllowed;
+        }
+
+        /*
             Returns true if the aircraft meets the prerequisites for initial altitude assignment.
 
             To return true, must:
@@ -132,6 +166,19 @@ namespace UKControllerPlugin {
             }
 
             return true;
+        }
+
+        /*
+            Called when user settings get updated.
+        */
+        void InitialAltitudeEventHandler::UserSettingsUpdated(
+            UKControllerPlugin::Euroscope::UserSetting & userSettings
+        )
+        {
+            this->userAutomaticAssignmentsAllowed = userSettings.GetBooleanEntry(
+                GeneralSettingsEntries::initialAltitudeToggleSettingsKey,
+                true
+            );
         }
     }  // namespace InitialAltitude
 }  // namespace UKControllerPlugin

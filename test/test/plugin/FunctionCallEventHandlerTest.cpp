@@ -80,6 +80,28 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(output == "some test");
         }
 
+        TEST(FunctionCallEventHandler, HasCallbackFunctionReturnsTrueIfItExists)
+        {
+            FunctionCallEventHandler handler;
+            CallbackFunction function(5000, "Test Function", [](std::string input) {});
+
+            handler.RegisterFunctionCall(function);
+            EXPECT_TRUE(handler.HasCallbackFunction(5000));
+        }
+
+        TEST(FunctionCallEventHandler, HasTagFunctionFunctionReturnsTrueIfItExists)
+        {
+            FunctionCallEventHandler handler;
+            TagFunction function(
+                9000,
+                "Test Tag Function",
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &) {}
+            );
+
+            handler.RegisterFunctionCall(function);
+            EXPECT_TRUE(handler.HasTagFunction(9000));
+        }
+
         TEST(FunctionCallEventHandler, RegisterFunctionsWithEuroscopeRegistersTagFunctions)
         {
             FunctionCallEventHandler handler;

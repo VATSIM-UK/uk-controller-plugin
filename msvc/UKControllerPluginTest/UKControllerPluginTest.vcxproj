@@ -77,7 +77,9 @@
     <ClCompile Include="..\..\test\test\euroscope\CompareFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\LoadDefaultUserSettingsTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\RadarTargetEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightplanStorageBootstrapTest.cpp" />
@@ -117,7 +119,7 @@
     <ClCompile Include="..\..\test\test\massevent\MassEventTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp" />
-    <ClCompile Include="..\..\test\test\message\UserSettingTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp" />
     <ClCompile Include="..\..\test\test\metar\MetarEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackModuleTest.cpp" />
@@ -196,6 +198,7 @@
     <ClInclude Include="..\..\test\mock\MockSquawkEventHandler.h" />
     <ClInclude Include="..\..\test\mock\MockTaskRunnerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockTerminalControlArea.h" />
+    <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />

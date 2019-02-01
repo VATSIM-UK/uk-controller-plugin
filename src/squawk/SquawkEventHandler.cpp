@@ -11,6 +11,7 @@
 #include "login/Login.h"
 #include "timedevent/DeferredEventHandler.h"
 #include "flightplan/DeferredFlightplanEvent.h"
+#include "euroscope/GeneralSettingsEntries.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -25,6 +26,8 @@ using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Controller::Login;
 using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Flightplan::DeferredFlightPlanEvent;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
 namespace UKControllerPlugin {
     namespace Squawk {
@@ -58,7 +61,7 @@ namespace UKControllerPlugin {
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
 
-            if (this->automaticAssignmentDisabled) {
+            if (this->automaticAssignmentDisabled || !this->userAutomaticAssignmentEnabled) {
                 return;
             }
 
@@ -136,7 +139,11 @@ namespace UKControllerPlugin {
         */
         void SquawkEventHandler::TimedEventTrigger(void)
         {
-            if (!this->activeCallsigns.UserHasCallsign() || this->automaticAssignmentDisabled) {
+            if (
+                !this->activeCallsigns.UserHasCallsign() ||
+                this->automaticAssignmentDisabled ||
+                !this->userAutomaticAssignmentEnabled
+            ) {
                 return;
             }
 
@@ -165,6 +172,26 @@ namespace UKControllerPlugin {
                     continue;
                 }
             }
+        }
+
+        /*
+            User settings have been updated, check whether the user has selected to have
+            automatic squawk assignments.
+        */
+        void SquawkEventHandler::UserSettingsUpdated(UserSetting & userSettings)
+        {
+            this->userAutomaticAssignmentEnabled = userSettings.GetBooleanEntry(
+                GeneralSettingsEntries::squawkToggleSettingsKey,
+                true
+            );
+        }
+
+        /*
+            Returns whether or not the user has allowed squawk assignments
+        */
+        bool SquawkEventHandler::UserAllowedSquawkAssignment(void) const
+        {
+            return this->userAutomaticAssignmentEnabled;
         }
     }  // namespace Squawk
 }  // namespace UKControllerPlugin

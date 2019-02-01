@@ -31,8 +31,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Plugin::FunctionCallEventHandler & functionCalls,
                     UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays,
                     UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers,
-                    UKControllerPlugin::Euroscope::UserSetting & userSettings,
-                    const UKControllerPlugin::Windows::WinApiInterface & winApi
+                    UKControllerPlugin::Windows::WinApiInterface & winApi
                 );
         };
     }  // namespace Euroscope

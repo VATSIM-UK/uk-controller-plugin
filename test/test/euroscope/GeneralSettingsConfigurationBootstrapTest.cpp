@@ -46,7 +46,6 @@ namespace UKControllerPluginTest {
                 this->functionHandler,
                 this->configurableDisplays,
                 this->commandHandlers,
-                this->userSettings,
                 this->windowsApi
             );
 
@@ -59,7 +58,6 @@ namespace UKControllerPluginTest {
                 this->functionHandler,
                 this->configurableDisplays,
                 this->commandHandlers,
-                this->userSettings,
                 this->windowsApi
             );
 
@@ -72,7 +70,6 @@ namespace UKControllerPluginTest {
                 this->functionHandler,
                 this->configurableDisplays,
                 this->commandHandlers,
-                this->userSettings,
                 this->windowsApi
             );
 

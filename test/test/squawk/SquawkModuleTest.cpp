@@ -5,74 +5,73 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "timedevent/TimedEventCollection.h"
 #include "squawk/SquawkEventHandler.h"
+#include "euroscope/UserSettingAwareCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Squawk::SquawkModule;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
+using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using ::testing::Test;
 
 namespace UKControllerPluginModuleTest {
     namespace Squawk {
 
-        TEST(SquawkModule, BootstrapPluginRegistersForFlightplanEvents)
+        class SquawkModuleTest : public Test
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-            container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
-            container.timedHandler.reset(new TimedEventCollection);
+            public:
 
+                void SetUp()
+                {
+                    this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+                    this->container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
+                    this->container.timedHandler.reset(new TimedEventCollection);
+                    this->container.userSettingHandlers.reset(new UserSettingAwareCollection);
+                }
+
+                PersistenceContainer container;
+        };
+
+        TEST_F(SquawkModuleTest, BootstrapPluginRegistersForFlightplanEvents)
+        {
             SquawkModule::BootstrapPlugin(container, false, false);
-            EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
+            EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
         }
 
-        TEST(SquawkModule, BootstrapPluginRegistersForTimedEvents)
+        TEST_F(SquawkModuleTest, BootstrapPluginRegistersForTimedEvents)
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-            container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
-            container.timedHandler.reset(new TimedEventCollection);
-
             SquawkModule::BootstrapPlugin(container, false, false);
-            EXPECT_EQ(1, container.timedHandler->CountHandlers());
+            EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
             EXPECT_EQ(
                 1,
-                container.timedHandler->CountHandlersForFrequency(SquawkModule::trackedAircraftCheckFrequency)
+                this->container.timedHandler->CountHandlersForFrequency(SquawkModule::trackedAircraftCheckFrequency)
             );
         }
 
-        TEST(SquawkModule, BootstrapPluginRegistersFunctionCallbacks)
+        TEST_F(SquawkModuleTest, BootstrapPluginRegistersFunctionCallbacks)
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection());
-            container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
-            container.timedHandler.reset(new TimedEventCollection);
-
             SquawkModule::BootstrapPlugin(container, false, false);
-            EXPECT_EQ(2, container.pluginFunctionHandlers->CountTagFunctions());
-            EXPECT_EQ(0, container.pluginFunctionHandlers->CountCallbacks());
+            EXPECT_EQ(2, this->container.pluginFunctionHandlers->CountTagFunctions());
+            EXPECT_EQ(0, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
-        TEST(SquawkModule, BootstrapPluginDisablesSquawksWhereInstructed)
+        TEST_F(SquawkModuleTest, BootstrapPluginRegistersForUserSettingsEvents)
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection());
-            container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
-            container.timedHandler.reset(new TimedEventCollection);
+            SquawkModule::BootstrapPlugin(container, false, false);
+            EXPECT_EQ(1, this->container.userSettingHandlers->Count());
+        }
 
+        TEST_F(SquawkModuleTest, BootstrapPluginDisablesSquawksWhereInstructed)
+        {
             SquawkModule::BootstrapPlugin(container, true, false);
-            EXPECT_TRUE(container.squawkAssignmentRules->disabled);
+            EXPECT_TRUE(this->container.squawkAssignmentRules->disabled);
         }
 
-        TEST(SquawkModule, BootstrapPluginDisablesAutomaticGenerationWhereRequired)
+        TEST_F(SquawkModuleTest, BootstrapPluginDisablesAutomaticGenerationWhereRequired)
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection());
-            container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
-            container.timedHandler.reset(new TimedEventCollection);
-
             SquawkModule::BootstrapPlugin(container, false, true);
-            EXPECT_TRUE(container.squawkEvents->automaticAssignmentDisabled);
+            EXPECT_TRUE(this->container.squawkEvents->automaticAssignmentDisabled);
         }
     }  // namespace Squawk
 }  // namespace UKControllerPluginModuleTest

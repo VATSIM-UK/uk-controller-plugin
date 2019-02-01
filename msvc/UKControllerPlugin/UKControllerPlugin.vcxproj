@@ -10,6 +10,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <Media Include="..\..\..\resource\sound\beep.wav" />
     <Media Include="..\..\resource\sound\beep.wav" />
   </ItemGroup>
   <ItemGroup>
@@ -89,10 +90,13 @@
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsDialog.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsEntries.h" />
+    <ClInclude Include="..\..\src\euroscope\LoadDefaultUserSettings.h" />
     <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingProviderInterface.h" />
     <ClInclude Include="..\..\src\flightplan\DeferredFlightplanEvent.h" />
     <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.h" />
@@ -269,9 +273,11 @@
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsDialog.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsEntries.cpp" />
+    <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp" />
     <ClCompile Include="..\..\src\euroscope\PluginUserSettingBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />
+    <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightplanStorageBootstrap.cpp" />
