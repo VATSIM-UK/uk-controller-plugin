@@ -77,7 +77,8 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            this->generator.ReassignPreviousSquawkToAircraft(flightplan, radarTarget) ||
+            this->generator.AssignCircuitSquawkForAircraft(flightplan, radarTarget) ||
+                this->generator.ReassignPreviousSquawkToAircraft(flightplan, radarTarget) ||
                 this->generator.RequestLocalSquawkForAircraft(flightplan, radarTarget) ||
                 this->generator.RequestGeneralSquawkForAircraft(flightplan, radarTarget);
         }

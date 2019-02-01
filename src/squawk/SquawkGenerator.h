@@ -40,6 +40,10 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Controller::ActiveCallsignCollection & callsigns,
                     const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans
                 );
+                bool AssignCircuitSquawkForAircraft(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                ) const;
                 bool ForceGeneralSquawkForAircraft(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget

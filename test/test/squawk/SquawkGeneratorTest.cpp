@@ -724,5 +724,52 @@ namespace UKControllerPluginTest {
 
             EXPECT_FALSE(newGenerator.RequestLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
         }
+
+        TEST_F(SquawkGeneratorTest, AssignCircuitSquawkForAircraftStopsIfSquawksDisabled)
+        {
+            SquawkAssignment disabledRules(
+                this->flightplans,
+                this->pluginLoopback,
+                *this->airfieldOwnership,
+                this->activeCallsigns,
+                true
+            );
+            SquawkGenerator newGenerator(
+                this->api,
+                &this->taskRunner,
+                &this->pluginLoopback,
+                disabledRules,
+                this->activeCallsigns,
+                this->flightplans
+            );
+
+            EXPECT_FALSE(newGenerator.AssignCircuitSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
+        }
+
+        TEST_F(SquawkGeneratorTest, AssignCircuitSquawkStopsIfAssignmentNotRequired)
+        {
+            ON_CALL(*this->mockFlightplan, IsVfr())
+                .WillByDefault(Return(false));
+
+            EXPECT_FALSE(
+                this->generator->AssignCircuitSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget)
+            );
+        }
+
+        TEST_F(SquawkGeneratorTest, AssignCircuitSquawkAssignsIfRequired)
+        {
+            ON_CALL(*this->mockFlightplan, IsVfr())
+                .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockFlightplan, GetRawRouteString())
+                .WillByDefault(Return("VFR CIRCUIT"));
+
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
+            EXPECT_TRUE(
+                this->generator->AssignCircuitSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget)
+            );
+        }
     }  // namespace Squawk
 }  // namespace UKControllerPluginTest

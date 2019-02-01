@@ -75,6 +75,11 @@ namespace UKControllerPlugin {
             return this->originalData.GetFlightPlanData().GetOrigin();
         }
 
+        std::string EuroScopeCFlightPlanWrapper::GetRawRouteString(void) const
+        {
+            return this->originalData.GetFlightPlanData().GetRoute();
+        }
+
         const std::string EuroScopeCFlightPlanWrapper::GetSidName(void) const
         {
             return this->originalData.GetFlightPlanData().GetSidName();
@@ -146,6 +151,14 @@ namespace UKControllerPlugin {
         bool EuroScopeCFlightPlanWrapper::IsValid(void) const
         {
             return this->originalData.IsValid();
+        }
+
+        /*
+            Returns true if the flightplan is VFR
+        */
+        bool EuroScopeCFlightPlanWrapper::IsVfr(void) const
+        {
+            return strcmp(this->originalData.GetFlightPlanData().GetPlanType(), "V") == 0;
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

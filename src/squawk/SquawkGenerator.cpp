@@ -43,6 +43,23 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Assigns circuit squawks where appropriate.
+        */
+        bool SquawkGenerator::AssignCircuitSquawkForAircraft(
+            EuroScopeCFlightPlanInterface & flightplan,
+            EuroScopeCRadarTargetInterface & radarTarget
+        ) const
+        {
+            if (this->assignmentRules.disabled || !assignmentRules.CircuitAssignmentNeeded(flightplan, radarTarget)) {
+                return false;
+            }
+
+            LogInfo("Assigned circuit squawk to " + flightplan.GetCallsign());
+            flightplan.SetSquawk("7010");
+            return true;
+        }
+
+        /*
             Forces a squawk to be assigned for the given aircraft
         */
         bool SquawkGenerator::ForceGeneralSquawkForAircraft(
@@ -223,7 +240,7 @@ namespace UKControllerPlugin {
                 std::string squawk = this->api.GetAssignedSquawk(callsign);
                 this->plugin->GetFlightplanForCallsign(callsign)
                     ->SetSquawk(squawk);
-                LogInfo("Assigned squawk " + squawk + " to " + callsign);
+                LogInfo("Assigned existing squawk " + squawk + " to " + callsign);
                 return true;
             }
             catch (ApiNotFoundException exception) {
