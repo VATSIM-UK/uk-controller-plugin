@@ -115,6 +115,7 @@
     <ClInclude Include="..\..\src\hold\BuildHoldingData.h" />
     <ClInclude Include="..\..\src\hold\CompareHoldingAircraft.h" />
     <ClInclude Include="..\..\src\hold\CompareHolds.h" />
+    <ClInclude Include="..\..\src\hold\HoldEventHandler.h" />
     <ClInclude Include="..\..\src\hold\HoldingAircraft.h" />
     <ClInclude Include="..\..\src\hold\HoldingData.h" />
     <ClInclude Include="..\..\src\hold\HoldingDataCollection.h" />
@@ -296,6 +297,7 @@
     <ClCompile Include="..\..\src\hold\BuildHoldingData.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHoldingAircraft.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHolds.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldEventHandler.cpp" />
     <ClCompile Include="..\..\src\hold\HoldingDataCollection.cpp" />
     <ClCompile Include="..\..\src\hold\HoldManager.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp" />

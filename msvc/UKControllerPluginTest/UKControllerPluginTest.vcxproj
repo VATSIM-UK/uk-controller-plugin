@@ -94,6 +94,7 @@
     <ClCompile Include="..\..\test\test\hold\BuildHoldingDataTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldingAircraftTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldsTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\HoldEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldingDataCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldingDataTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldManagerTest.cpp" />
