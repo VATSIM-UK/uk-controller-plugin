@@ -29,13 +29,17 @@ namespace UKControllerPlugin {
                 CW_USEDEFAULT, CW_USEDEFAULT, 500, 600,
                 NULL, NULL, this->dllInstance, this
             );
-            DWORD err = GetLastError();
 
             if (!this->selfHandle) {
                 LogError("Unable to initialise the hold manager window");
             }
 
             ShowWindow(this->selfHandle, SW_SHOW);
+            MSG Msg;
+            while (GetMessage(&Msg, NULL, 0, 0) > 0) { 
+                TranslateMessage(&Msg);
+                DispatchMessage(&Msg);
+            }
         }
 
         /*
@@ -45,6 +49,12 @@ namespace UKControllerPlugin {
         {
             switch (msg)
             {
+                case WM_CREATE: {
+                    HWND holdView = CreateHoldView(hwnd);
+                    HWND staticItem = CreateStatic(hwnd);
+                    UpdateWindow(hwnd);
+                    return TRUE;
+                }
                 case WM_CLOSE:
                     DestroyWindow(hwnd);
                     break;
@@ -53,7 +63,7 @@ namespace UKControllerPlugin {
                 default:
                     return DefWindowProc(hwnd, msg, wParam, lParam);
             }
-            return 0;
+            return FALSE;
         }
 
         /*
@@ -63,11 +73,8 @@ namespace UKControllerPlugin {
         {
             HANDLE objectProp = GetProp(hwnd, HoldWindow::objectProp);
             if (!objectProp) {
-                SetProp(hwnd, HoldWindow::objectProp, (HANDLE) lParam);
-            }
-
-            if (msg == WM_INITDIALOG) {
                 LogInfo("Hold manager window opened");
+                SetProp(hwnd, HoldWindow::objectProp, (HANDLE) lParam);
             } else if (msg == WM_NCDESTROY) {
                 RemoveProp(hwnd, HoldWindow::objectProp);
                 LogInfo("Hold manager window closed");
@@ -102,6 +109,67 @@ namespace UKControllerPlugin {
             };
 
             this->windowRegistered = true;
+        }
+
+        HWND HoldWindow::CreateHoldView(HWND hwnd)
+        {
+            INITCOMMONCONTROLSEX icex;
+            icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+            icex.dwICC = ICC_LISTVIEW_CLASSES;
+
+            if (!InitCommonControlsEx(&icex)) {
+                LogError("Unable to initialise common controls");
+            }
+
+            RECT rcClient;
+            GetClientRect(hwnd, &rcClient);
+            HWND hWndListView = CreateWindow(
+                WC_LISTVIEW,
+                L"",
+                WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_EDITLABELS,
+                100, 100,
+                rcClient.right - rcClient.left - 200,
+                rcClient.bottom - rcClient.top - 200,
+                hwnd,
+                NULL,
+                (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
+                NULL
+            );
+
+            return hWndListView;
+        }
+
+        HWND HoldWindow::CreateButton(HWND hwnd)
+        {
+            return CreateWindow(
+                L"BUTTON",  // Predefined class; Unicode assumed 
+                L"OK",      // Button text 
+                WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+                10,         // x position 
+                10,         // y position 
+                100,        // Button width
+                100,        // Button height
+                hwnd,     // Parent window
+                NULL,       // No menu.
+                (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE),
+                NULL);      // Pointer not needed.
+        }
+
+        HWND HoldWindow::CreateStatic(HWND hwnd)
+        {
+            return CreateWindow(
+                L"STATIC",  // Predefined class; Unicode assumed 
+                L"TEST STATIC CODE",      // Button text 
+                WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+                200,         // x position 
+                200,         // y position 
+                100,        // Button width
+                100,        // Button height
+                hwnd,     // Parent window
+                NULL,       // No menu.
+                (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
+                NULL
+            );      // Pointer not needed.
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
