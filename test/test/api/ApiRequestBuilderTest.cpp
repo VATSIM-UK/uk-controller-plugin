@@ -105,5 +105,13 @@ namespace UKControllerPluginTest {
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildLocalSquawkAssignmentRequest("BAW123", "EGKK", "V"));
         }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsHoldDependencyDataRequests)
+        {
+            CurlRequest expectedRequest("http://testurl.com/hold", CurlRequest::METHOD_GET);
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            EXPECT_TRUE(expectedRequest == this->builder.BuildHoldDependencyRequest());
+        }
     }  // namespace Api
 }  // namespace UKControllerPluginTest

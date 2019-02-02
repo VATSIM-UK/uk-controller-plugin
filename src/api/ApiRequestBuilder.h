@@ -27,6 +27,7 @@ namespace UKControllerPlugin {
                     std::string origin,
                     std::string destination
                 ) const;
+                UKControllerPlugin::Curl::CurlRequest BuildHoldDependencyRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildRemoteFileRequest(std::string uri) const;
                 UKControllerPlugin::Curl::CurlRequest BuildVersionCheckRequest(std::string versionString) const;
                 std::string GetApiDomain(void) const;

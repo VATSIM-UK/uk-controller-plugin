@@ -122,6 +122,14 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Builds a request to download the hold data dependency
+        */
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildHoldDependencyRequest(void) const
+        {
+            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold", CurlRequest::METHOD_GET));
+        }
+
+        /*
             Returns the API Domain that the builder is using
         */
         std::string ApiRequestBuilder::GetApiDomain(void) const
