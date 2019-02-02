@@ -1,4 +1,5 @@
 #pragma once
+#include "hold/HoldDisplay.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -26,6 +27,9 @@ namespace UKControllerPlugin {
 
                 // Handle to the DLL, needed to register the window to the module
                 const HINSTANCE dllInstance;
+
+                // Set of holds to display
+                std::list<UKControllerPlugin::Hold::HoldDisplay> holdDisplays;
 
                 // Handle to the window instance
                 HWND selfHandle;

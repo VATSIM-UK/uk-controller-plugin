@@ -24,7 +24,7 @@ namespace UKControllerPlugin {
             const int popupMenuItemId
         )
             : holdManager(holdManager), plugin(plugin),
-            holdManagerWindow(holdManagerWindow), popupMenuItemId(popupMenuItemId)
+            holdManagerWindow(std::move(holdManagerWindow)), popupMenuItemId(popupMenuItemId)
         {
 
         }

@@ -54,9 +54,9 @@ namespace UKControllerPlugin {
                     //HWND holdView = CreateHoldView(hwnd, 10, 100);
                     //HWND staticItem = CreateStatic(hwnd);
                     //CreateHoldInformation(hwnd, 10, 10);
-                    CreateStaticHoldInformation(hwnd, 10, 10);
-                    CreateHoldList(hwnd, 10, 110);
+                    //CreateStaticHoldInformation(hwnd, 10, 10);
                     this->profileSelector = CreateProfileSelector(hwnd);
+                    this->holdDisplays.emplace_back(hwnd);
                     UpdateWindow(hwnd); 
                     return TRUE;
                 }

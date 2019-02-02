@@ -738,6 +738,9 @@
     <ClInclude Include="..\..\src\hold\HoldElementDimensions.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplay.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1247,6 +1250,9 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldDisplayFunctions.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplay.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
