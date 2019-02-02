@@ -28,7 +28,7 @@ namespace UKControllerPlugin {
                 L"UKCP Hold Manager",
                 WS_OVERLAPPEDWINDOW,
                 CW_USEDEFAULT, CW_USEDEFAULT, 500, 600,
-                NULL, NULL, this->dllInstance, this
+                NULL, NULL, this->dllInstance, (LPVOID) this
             );
 
             if (!this->selfHandle) {
@@ -54,8 +54,8 @@ namespace UKControllerPlugin {
                     //HWND holdView = CreateHoldView(hwnd, 10, 100);
                     //HWND staticItem = CreateStatic(hwnd);
                     //CreateHoldInformation(hwnd, 10, 10);
-                    HWND profileSelector = CreateProfileSelector(hwnd);
-                    UpdateWindow(hwnd);
+                    this->profileSelector = CreateProfileSelector(hwnd);
+                    BOOL test = UpdateWindow(hwnd);
                     return TRUE;
                 }
                 case WM_CLOSE:
@@ -63,6 +63,10 @@ namespace UKControllerPlugin {
                     break;
                 case WM_DESTROY:
                     break;
+                case WM_SIZE: {
+                    MoveProfileSelector(this->profileSelector, hwnd);
+                    return TRUE;
+                }
                 default:
                     return DefWindowProc(hwnd, msg, wParam, lParam);
             }
@@ -74,17 +78,21 @@ namespace UKControllerPlugin {
         */
         LRESULT CALLBACK HoldWindow::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
-            HANDLE objectProp = GetProp(hwnd, HoldWindow::objectProp);
-            if (!objectProp) {
+            if (msg == WM_CREATE) {
                 LogInfo("Hold manager window opened");
-                SetProp(hwnd, HoldWindow::objectProp, (HANDLE) lParam);
-            } else if (msg == WM_NCDESTROY) {
-                RemoveProp(hwnd, HoldWindow::objectProp);
+                SetWindowLongPtr(
+                    hwnd,
+                    GWLP_USERDATA,
+                    reinterpret_cast<LONG>(reinterpret_cast<CREATESTRUCT *>(lParam)->lpCreateParams)
+                );
+            } else if (msg == WM_DESTROY) {
+                SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
                 LogInfo("Hold manager window closed");
             }
 
-            HoldWindow * pThis = (HoldWindow *) objectProp;
-            return pThis ? pThis->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
+            HoldWindow * holdWindow = reinterpret_cast<HoldWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+            return holdWindow ? holdWindow->_WndProc(hwnd, msg, wParam, lParam) : 
+                DefWindowProc(hwnd, msg, wParam, lParam);
         }
 
         /*

@@ -71,5 +71,17 @@ namespace UKControllerPlugin {
             };
         }
 
+        /*
+            Moves the profile selector based on its parent
+        */
+        void MoveProfileSelector(HWND handle, HWND parent)
+        {
+            RECT parentArea;
+            GetClientRect(parent, &parentArea);
+            HoldElementDimensions dimensions = GetProfileSelectorDimensions(parentArea);
+            MoveWindow(handle, dimensions.topLeftX, dimensions.topLeftY, dimensions.width, dimensions.height, TRUE);
+            UpdateWindow(parent);
+        }
+
     }  // namespace Hold
 }  // namespace UKControllerPlugin

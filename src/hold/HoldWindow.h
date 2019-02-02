@@ -33,6 +33,9 @@ namespace UKControllerPlugin {
                 // Handle to the window instance
                 HWND selfHandle;
 
+                // Handle to the select profile dropdown
+                HWND profileSelector;
+
                 // The window class object
                 WNDCLASSEX windowClass = { 0 };
 
