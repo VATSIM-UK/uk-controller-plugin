@@ -1,5 +1,6 @@
 #include "pch/stdafx.h"
 #include "hold/HoldWindow.h"
+#include "hold/HoldDisplayFunctions.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -50,9 +51,10 @@ namespace UKControllerPlugin {
             switch (msg)
             {
                 case WM_CREATE: {
-                    HWND holdView = CreateHoldView(hwnd, 10, 100);
+                    //HWND holdView = CreateHoldView(hwnd, 10, 100);
                     //HWND staticItem = CreateStatic(hwnd);
-                    CreateHoldInformation(hwnd, 10, 10);
+                    //CreateHoldInformation(hwnd, 10, 10);
+                    HWND profileSelector = CreateProfileSelector(hwnd);
                     UpdateWindow(hwnd);
                     return TRUE;
                 }
