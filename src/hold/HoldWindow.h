@@ -19,9 +19,7 @@ namespace UKControllerPlugin {
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 void RegisterWindowClass(void);
-                HWND CreateHoldView(HWND hwnd, unsigned int x, unsigned int y);
                 HWND CreateButton(HWND hwnd);
-                HWND CreateStatic(HWND hwnd);
 
                 // Handle to EuroScopes main window
                 const HWND euroscopeWindow;

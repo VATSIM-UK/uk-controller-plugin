@@ -55,8 +55,9 @@ namespace UKControllerPlugin {
                     //HWND staticItem = CreateStatic(hwnd);
                     //CreateHoldInformation(hwnd, 10, 10);
                     CreateStaticHoldInformation(hwnd, 10, 10);
+                    CreateHoldList(hwnd, 10, 110);
                     this->profileSelector = CreateProfileSelector(hwnd);
-                    BOOL test = UpdateWindow(hwnd);
+                    UpdateWindow(hwnd); 
                     return TRUE;
                 }
                 case WM_CLOSE:
@@ -123,90 +124,6 @@ namespace UKControllerPlugin {
             this->windowRegistered = true;
         }
 
-        HWND HoldWindow::CreateHoldView(HWND hwnd, unsigned int x, unsigned int y)
-        {
-            INITCOMMONCONTROLSEX icex;
-            icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-            icex.dwICC = ICC_LISTVIEW_CLASSES;
-
-            if (!InitCommonControlsEx(&icex)) {
-                LogError("Unable to initialise common controls");
-            }
-
-            RECT rcClient;
-            GetClientRect(hwnd, &rcClient);
-            HWND hWndListView = CreateWindow(
-                WC_LISTVIEW,
-                L"",
-                WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_EDITLABELS,
-                x, y,
-                250,
-                250,
-                hwnd,
-                NULL,
-                (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
-                NULL
-            );
-
-            WCHAR szText[256];
-            LVCOLUMN lvc;
-            int iCol;
-            int colCount = 4;
-
-            // Initialize the LVCOLUMN structure.
-            // The mask specifies that the format, width, text,
-            // and subitem members of the structure are valid.
-            lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-
-            // Add the columns.
-            for (iCol = 0; iCol < colCount; iCol++)
-            {
-                lvc.iSubItem = iCol;
-                lvc.pszText = szText;
-                lvc.cx = iCol == 0 ? 100 : 50;               // Width of column in pixels.
-                lvc.fmt = LVCFMT_LEFT;
-
-                // Load the names of the column headings from the string resources.
-                LoadString(
-                    (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
-                    IDS_STRING_HOLD_CS + iCol,
-                    szText,
-                    sizeof(szText) / sizeof(szText[0])
-                );
-
-                // Insert the columns into the list view.
-                if (ListView_InsertColumn(hWndListView, iCol, &lvc) == -1) {
-                    return FALSE;
-                }
-            }
-
-            LVITEM lvI;
-            // Initialize LVITEM members that are common to all items.
-            lvI.pszText = L"Test"; // Sends an LVN_GETDISPINFO message.
-            lvI.mask = LVIF_TEXT | LVIF_STATE;
-            lvI.stateMask = 0;
-            lvI.state = 0;
-            lvI.iSubItem = 0; // MUST be zero
-
-            // Initialize LVITEM members that are different for each item.
-            for (int index = 0; index < colCount; index++)
-            {
-                lvI.iItem = index;
-
-                // Insert items into the list.
-                if (ListView_InsertItem(hWndListView, &lvI) == -1) {
-                    return FALSE;
-                }
-
-                ListView_SetItemText(hWndListView, index, 0, L"BAW1259");
-                ListView_SetItemText(hWndListView, index, 1, L"84");
-                ListView_SetItemText(hWndListView, index, 2, L"80");
-                ListView_SetItemText(hWndListView, index, 3, L"5");
-            }
-
-            return hWndListView;
-        }
-
         HWND HoldWindow::CreateButton(HWND hwnd)
         {
             return CreateWindow(
@@ -221,23 +138,6 @@ namespace UKControllerPlugin {
                 NULL,       // No menu.
                 (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE),
                 NULL);      // Pointer not needed.
-        }
-
-        HWND HoldWindow::CreateStatic(HWND hwnd)
-        {
-            return CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"TEST STATIC CODE",      // Button text 
-                WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
-                200,         // x position 
-                200,         // y position 
-                100,        // Button width
-                100,        // Button height
-                hwnd,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
-                NULL
-            );
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

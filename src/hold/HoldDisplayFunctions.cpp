@@ -86,7 +86,7 @@ namespace UKControllerPlugin {
         void CreateStaticHoldInformation(HWND parent, unsigned int topLeftX, unsigned int topLeftY)
         {
             const int height = 20;
-            const int width = 100;
+            const int width = 250;
 
             CreateWindow(
                 L"STATIC",  // Predefined class; Unicode assumed 
@@ -157,6 +157,89 @@ namespace UKControllerPlugin {
                 (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
                 NULL
             );
+        }
+
+        void CreateHoldList(HWND parent, unsigned int topLeftX, unsigned int topLeftY)
+        {
+            INITCOMMONCONTROLSEX icex;
+            icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+            icex.dwICC = ICC_LISTVIEW_CLASSES;
+
+            if (!InitCommonControlsEx(&icex)) {
+                LogError("Unable to initialise common controls");
+            }
+
+            RECT rcClient;
+            GetClientRect(parent, &rcClient);
+            HWND hWndListView = CreateWindow(
+                WC_LISTVIEW,
+                L"",
+                WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_EDITLABELS,
+                topLeftX,
+                topLeftY,
+                250,
+                250,
+                parent,
+                NULL,
+                (HINSTANCE) GetWindowLong(parent, GWL_HINSTANCE),
+                NULL
+            );
+
+            WCHAR szText[256];
+            LVCOLUMN lvc;
+            int iCol;
+            int colCount = 4;
+
+            // Initialize the LVCOLUMN structure.
+            // The mask specifies that the format, width, text,
+            // and subitem members of the structure are valid.
+            lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+
+            // Add the columns.
+            for (iCol = 0; iCol < colCount; iCol++)
+            {
+                lvc.iSubItem = iCol;
+                lvc.pszText = szText;
+                lvc.cx = iCol == 0 ? 100 : 50;               // Width of column in pixels.
+                lvc.fmt = LVCFMT_LEFT;
+
+                // Load the names of the column headings from the string resources.
+                LoadString(
+                    (HINSTANCE) GetWindowLong(parent, GWL_HINSTANCE),
+                    IDS_STRING_HOLD_CS + iCol,
+                    szText,
+                    sizeof(szText) / sizeof(szText[0])
+                );
+
+                // Insert the columns into the list view.
+                if (ListView_InsertColumn(hWndListView, iCol, &lvc) == -1) {
+                    return;
+                }
+            }
+
+            LVITEM lvI;
+            // Initialize LVITEM members that are common to all items.
+            lvI.pszText = L"Test"; // Sends an LVN_GETDISPINFO message.
+            lvI.mask = LVIF_TEXT | LVIF_STATE;
+            lvI.stateMask = 0;
+            lvI.state = 0;
+            lvI.iSubItem = 0; // MUST be zero
+
+            // Initialize LVITEM members that are different for each item.
+            for (int index = 0; index < colCount; index++)
+            {
+                lvI.iItem = index;
+
+                // Insert items into the list.
+                if (ListView_InsertItem(hWndListView, &lvI) == -1) {
+                    return;
+                }
+
+                ListView_SetItemText(hWndListView, index, 0, L"BAW1259");
+                ListView_SetItemText(hWndListView, index, 1, L"84");
+                ListView_SetItemText(hWndListView, index, 2, L"80");
+                ListView_SetItemText(hWndListView, index, 3, L"5");
+            }
         }
 
     }  // namespace Hold
