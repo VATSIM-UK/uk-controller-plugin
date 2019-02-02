@@ -45,6 +45,7 @@ namespace UKControllerPlugin {
                 std::string GetAssignedSquawk(std::string callsign) const override;
                 std::string GetApiDomain(void) const override;
                 std::string GetApiKey(void) const override;
+                nlohmann::json GetHoldDependency(void) const override;
                 int UpdateCheck(std::string version) const override;
 
                 // The HTTP status codes that may be returned by the API

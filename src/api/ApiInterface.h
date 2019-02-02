@@ -27,6 +27,7 @@ namespace UKControllerPlugin {
                 virtual std::string GetAssignedSquawk(std::string callsign) const = 0;
                 virtual std::string GetApiDomain(void) const = 0;
                 virtual std::string GetApiKey(void) const = 0;
+                virtual nlohmann::json GetHoldDependency(void) const = 0;
                 virtual int UpdateCheck(std::string version) const = 0;
 
                 // Codes returned after an update check

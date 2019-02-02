@@ -360,6 +360,22 @@ TEST_F(ApiHelperTest, DeleteSquawkAssignmentIsCalledCorrectly)
     EXPECT_NO_THROW(this->helper.DeleteSquawkAssignment("BAW123"));
 }
 
+TEST_F(ApiHelperTest, GetHoldDependencyReturnsJsonData)
+{
+    nlohmann::json data;
+    data["foo"] = "bar";
+    data["big"] = "small";
+
+    CurlResponse response(data.dump(), false, 200);
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold", CurlRequest::METHOD_GET));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(data, this->helper.GetHoldDependency());
+}
+
 TEST_F(ApiHelperTest, ItHasAUrlToSendTo)
 {
     EXPECT_TRUE(this->helper.GetApiDomain() == mockApiUrl);

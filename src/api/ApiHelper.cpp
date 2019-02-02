@@ -189,6 +189,14 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Returns the hold data dependency
+        */
+        nlohmann::json ApiHelper::GetHoldDependency(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildHoldDependencyRequest()).GetRawData();
+        }
+
+        /*
             Runs an update check.
         */
         int ApiHelper::UpdateCheck(std::string version) const

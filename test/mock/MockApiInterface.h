@@ -17,6 +17,7 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD1(GetAssignedSquawk, std::string(std::string));
                 MOCK_CONST_METHOD0(GetApiDomain, std::string(void));
                 MOCK_CONST_METHOD0(GetApiKey, std::string(void));
+                MOCK_CONST_METHOD0(GetHoldDependency, nlohmann::json(void));
                 MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
         };
     }  // namespace Api
