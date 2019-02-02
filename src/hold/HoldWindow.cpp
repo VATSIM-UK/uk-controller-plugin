@@ -54,6 +54,7 @@ namespace UKControllerPlugin {
                     //HWND holdView = CreateHoldView(hwnd, 10, 100);
                     //HWND staticItem = CreateStatic(hwnd);
                     //CreateHoldInformation(hwnd, 10, 10);
+                    CreateStaticHoldInformation(hwnd, 10, 10);
                     this->profileSelector = CreateProfileSelector(hwnd);
                     BOOL test = UpdateWindow(hwnd);
                     return TRUE;
@@ -235,67 +236,6 @@ namespace UKControllerPlugin {
                 hwnd,     // Parent window
                 NULL,       // No menu.
                 (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE),
-                NULL
-            );
-        }
-        void HoldWindow::CreateHoldInformation(HWND parent, unsigned int x, unsigned int y)
-        {
-            const int height = 20;
-            const int width = 100;
-
-            CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"TIMBA",      // Button text 
-                WS_VISIBLE | WS_CHILD,  // Styles 
-                x,         // x position 
-                y,         // y position 
-                width,        // Button width
-                height,        // Button height
-                parent,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
-                NULL
-            );
-
-            CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"Min: 7000",      // Button text 
-                WS_VISIBLE | WS_CHILD,  // Styles 
-                x,         // x position 
-                y + height,         // y position 
-                width,        // Button width
-                height,        // Button height
-                parent,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
-                NULL
-            );
-
-            CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"Max: 15000",      // Button text 
-                WS_VISIBLE | WS_CHILD,  // Styles 
-                x,         // x position 
-                y + (height * 2),         // y position 
-                width,        // Button width
-                height,        // Button height
-                parent,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
-                NULL
-            );
-
-            CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"Turn: Right",      // Button text 
-                WS_VISIBLE | WS_CHILD,  // Styles 
-                x,         // x position 
-                y + (height * 3),         // y position 
-                width,        // Button width
-                height,        // Button height
-                parent,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
                 NULL
             );
         }

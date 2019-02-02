@@ -9,5 +9,6 @@ namespace UKControllerPlugin {
         TCHAR * ConvertToTchar(int value);
         UKControllerPlugin::Hold::HoldElementDimensions GetProfileSelectorDimensions(RECT parent);
         void MoveProfileSelector(HWND handle, HWND parent);
+        void CreateStaticHoldInformation(HWND parent, unsigned int topLeftX, unsigned int topLeftY);
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -22,7 +22,6 @@ namespace UKControllerPlugin {
                 HWND CreateHoldView(HWND hwnd, unsigned int x, unsigned int y);
                 HWND CreateButton(HWND hwnd);
                 HWND CreateStatic(HWND hwnd);
-                void CreateHoldInformation(HWND parent, unsigned int x, unsigned int y);
 
                 // Handle to EuroScopes main window
                 const HWND euroscopeWindow;

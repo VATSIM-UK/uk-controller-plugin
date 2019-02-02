@@ -83,5 +83,81 @@ namespace UKControllerPlugin {
             UpdateWindow(parent);
         }
 
+        void CreateStaticHoldInformation(HWND parent, unsigned int topLeftX, unsigned int topLeftY)
+        {
+            const int height = 20;
+            const int width = 100;
+
+            CreateWindow(
+                L"STATIC",  // Predefined class; Unicode assumed 
+                L"TIMBA",      // Button text 
+                WS_VISIBLE | WS_CHILD,  // Styles 
+                topLeftX,         // x position 
+                topLeftY,         // y position 
+                width,        // Button width
+                height,        // Button height
+                parent,     // Parent window
+                NULL,       // No menu.
+                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
+                NULL
+            );
+
+            CreateWindow(
+                L"STATIC",  // Predefined class; Unicode assumed 
+                L"Inbound: 309",      // Button text 
+                WS_VISIBLE | WS_CHILD,  // Styles 
+                topLeftX,         // x position 
+                topLeftY + height,         // y position 
+                width,        // Button width
+                height,        // Button height
+                parent,     // Parent window
+                NULL,       // No menu.
+                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
+                NULL
+            );
+
+            CreateWindow(
+                L"STATIC",  // Predefined class; Unicode assumed 
+                L"Min: 7000",      // Button text 
+                WS_VISIBLE | WS_CHILD,  // Styles 
+                topLeftX,         // x position 
+                topLeftY + (height * 2),         // y position 
+                width,        // Button width
+                height,        // Button height
+                parent,     // Parent window
+                NULL,       // No menu.
+                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
+                NULL
+            );
+
+            CreateWindow(
+                L"STATIC",  // Predefined class; Unicode assumed 
+                L"Max: 15000",      // Button text 
+                WS_VISIBLE | WS_CHILD,  // Styles 
+                topLeftX,         // x position 
+                topLeftY + (height * 3),         // y position 
+                width,        // Button width
+                height,        // Button height
+                parent,     // Parent window
+                NULL,       // No menu.
+                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
+                NULL
+            );
+
+            CreateWindow(
+                L"STATIC",  // Predefined class; Unicode assumed 
+                L"Turn: Right",      // Button text 
+                WS_VISIBLE | WS_CHILD,  // Styles 
+                topLeftX,         // x position 
+                topLeftY + (height * 4),         // y position 
+                width,        // Button width
+                height,        // Button height
+                parent,     // Parent window
+                NULL,       // No menu.
+                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
+                NULL
+            );
+        }
+
     }  // namespace Hold
 }  // namespace UKControllerPlugin
