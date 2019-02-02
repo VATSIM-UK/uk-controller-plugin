@@ -84,7 +84,7 @@ namespace UKControllerPlugin {
             CallbackFunction openWindowCallback(
                 eventHandler->popupMenuItemId,
                 "Show Hold Manager",
-                std::bind(&HoldEventHandler::Configure, *eventHandler, std::placeholders::_1)
+                std::bind(&HoldEventHandler::Configure, eventHandler, std::placeholders::_1)
             );
             functionCalls.RegisterFunctionCall(openWindowCallback);
             configurableDisplay.RegisterDisplay(eventHandler);
