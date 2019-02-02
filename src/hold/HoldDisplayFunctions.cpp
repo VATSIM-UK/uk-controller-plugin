@@ -4,6 +4,13 @@
 namespace UKControllerPlugin {
     namespace Hold {
 
+        const int columnWidth = 210;
+        const int staticHeight = 20;
+        const int listHeight = 250;
+        const int groupHeight = 400;
+        const int groupGapX = 30;
+        const int groupGapY = 30;
+
         HWND CreateProfileSelector(HWND parent)
         {
             RECT parentArea;
@@ -83,83 +90,7 @@ namespace UKControllerPlugin {
             UpdateWindow(parent);
         }
 
-        void CreateStaticHoldInformation(HWND parent, unsigned int topLeftX, unsigned int topLeftY)
-        {
-            const int height = 20;
-            const int width = 250;
-
-            CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"TIMBA",      // Button text 
-                WS_VISIBLE | WS_CHILD,  // Styles 
-                topLeftX,         // x position 
-                topLeftY,         // y position 
-                width,        // Button width
-                height,        // Button height
-                parent,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
-                NULL
-            );
-
-            CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"Inbound: 309",      // Button text 
-                WS_VISIBLE | WS_CHILD,  // Styles 
-                topLeftX,         // x position 
-                topLeftY + height,         // y position 
-                width,        // Button width
-                height,        // Button height
-                parent,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
-                NULL
-            );
-
-            CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"Min: 7000",      // Button text 
-                WS_VISIBLE | WS_CHILD,  // Styles 
-                topLeftX,         // x position 
-                topLeftY + (height * 2),         // y position 
-                width,        // Button width
-                height,        // Button height
-                parent,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
-                NULL
-            );
-
-            CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"Max: 15000",      // Button text 
-                WS_VISIBLE | WS_CHILD,  // Styles 
-                topLeftX,         // x position 
-                topLeftY + (height * 3),         // y position 
-                width,        // Button width
-                height,        // Button height
-                parent,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
-                NULL
-            );
-
-            CreateWindow(
-                L"STATIC",  // Predefined class; Unicode assumed 
-                L"Turn: Right",      // Button text 
-                WS_VISIBLE | WS_CHILD,  // Styles 
-                topLeftX,         // x position 
-                topLeftY + (height * 4),         // y position 
-                width,        // Button width
-                height,        // Button height
-                parent,     // Parent window
-                NULL,       // No menu.
-                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
-                NULL
-            );
-        }
-
-        void CreateHoldList(HWND parent, unsigned int topLeftX, unsigned int topLeftY)
+        HWND CreateHoldList(HWND parent, UKControllerPlugin::Hold::HoldElementDimensions dimensions)
         {
             INITCOMMONCONTROLSEX icex;
             icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
@@ -175,10 +106,10 @@ namespace UKControllerPlugin {
                 WC_LISTVIEW,
                 L"",
                 WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_EDITLABELS,
-                topLeftX,
-                topLeftY,
-                250,
-                250,
+                dimensions.topLeftX,
+                dimensions.topLeftY,
+                dimensions.width,
+                dimensions.height,
                 parent,
                 NULL,
                 (HINSTANCE) GetWindowLong(parent, GWL_HINSTANCE),
@@ -213,9 +144,15 @@ namespace UKControllerPlugin {
 
                 // Insert the columns into the list view.
                 if (ListView_InsertColumn(hWndListView, iCol, &lvc) == -1) {
-                    return;
+                    return NULL;
                 }
             }
+
+            ListView_SetColumnWidth(hWndListView, 0, 75);
+            ListView_SetColumnWidth(hWndListView, 1, 45);
+            ListView_SetColumnWidth(hWndListView, 2, 45);
+            ListView_SetColumnWidth(hWndListView, 3, 45);
+            ListView_SetColumnWidth(hWndListView, 4, 0);
 
             LVITEM lvI;
             // Initialize LVITEM members that are common to all items.
@@ -232,15 +169,136 @@ namespace UKControllerPlugin {
 
                 // Insert items into the list.
                 if (ListView_InsertItem(hWndListView, &lvI) == -1) {
-                    return;
+                    return NULL;
                 }
 
                 ListView_SetItemText(hWndListView, index, 0, L"BAW1259");
-                ListView_SetItemText(hWndListView, index, 1, L"84");
-                ListView_SetItemText(hWndListView, index, 2, L"80");
+                ListView_SetItemText(hWndListView, index, 1, L"8435");
+                ListView_SetItemText(hWndListView, index, 2, L"8000");
                 ListView_SetItemText(hWndListView, index, 3, L"5");
             }
+
+            return hWndListView;
         }
 
+        /*
+            Creates a static line
+        */
+        HWND CreateStaticLine(HWND parent, HoldElementDimensions dimensions, LPCWSTR text)
+        {           
+            return CreateWindow(
+                L"STATIC",
+                text,
+                WS_VISIBLE | WS_CHILD,
+                dimensions.topLeftX,
+                dimensions.topLeftY,
+                dimensions.width,
+                dimensions.height,
+                parent,
+                NULL,
+                (HINSTANCE)GetWindowLong(parent, GWL_HINSTANCE),
+                NULL
+            );
+        }
+
+        /*
+            Returns the dimensions of the hold identifier static item, calculated
+            relative to the top of the group.
+        */
+        HoldElementDimensions GetHoldIdentifierDimensions(long groupX, long groupY)
+        {
+            return HoldElementDimensions{
+                groupX,
+                groupY,
+                columnWidth,
+                staticHeight
+            };
+        }
+
+        /*
+            Returns the dimensions of the hold inbound static item, calculated
+            relative to the top of the group.
+        */
+        HoldElementDimensions GetHoldInboundDimensions(long groupX, long groupY)
+        {
+            return HoldElementDimensions{
+                groupX,
+                groupY + staticHeight,
+                columnWidth,
+                staticHeight
+            };
+        }
+
+        /*
+            Returns the dimensions of the hold minimum static item, calculated
+            relative to the top of the group.
+        */
+        HoldElementDimensions GetHoldMinimumDimensions(long groupX, long groupY)
+        {
+            return HoldElementDimensions{
+                groupX,
+                groupY + (staticHeight * 2),
+                columnWidth,
+                staticHeight
+            };
+        }
+
+        /*
+            Returns the dimensions of the hold maximum static item, calculated
+            relative to the top of the group.
+        */
+        HoldElementDimensions GetHoldMaximumDimensions(long groupX, long groupY)
+        {
+            return HoldElementDimensions{
+                groupX,
+                groupY + (staticHeight * 3),
+                columnWidth,
+                staticHeight
+            };
+        }
+
+        /*
+            Returns the dimensions of the hold turn static item, calculated
+            relative to the top of the group.
+        */
+        HoldElementDimensions GetHoldTurnDimensions(long groupX, long groupY)
+        {
+            return HoldElementDimensions{
+                groupX,
+                groupY + (staticHeight * 4),
+                columnWidth,
+                staticHeight
+            };
+        }
+
+        /*
+            Returns the dimensions of the hold table, calculate relative to the top
+            of the group.
+        */
+        UKControllerPlugin::Hold::HoldElementDimensions GetHoldTableDimensions(long groupX, long groupY)
+        {
+            return HoldElementDimensions{
+                groupX,
+                groupY + (staticHeight * 5),
+                columnWidth,
+                listHeight
+            };
+        }
+
+        /*
+            Returns the X position of the hold, given the number of the hold in the list.
+        */
+        long GetHoldGroupX(int holdNumber)
+        {
+            return (((holdNumber % 3) * groupGapX) + (((holdNumber % 3) * columnWidth))) + 10;
+        }
+
+        /*
+            Returns the Y position of the hold, given the number of the hold in the list.
+        */
+        long GetHoldGroupY(int holdNumber)
+        {
+            return ((holdNumber / 3) * groupHeight) + 10;
+        }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
