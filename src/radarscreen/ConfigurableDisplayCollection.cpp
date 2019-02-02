@@ -19,7 +19,12 @@ namespace UKControllerPlugin {
         void ConfigurableDisplayCollection::RegisterDisplay(
             std::shared_ptr<UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface> radarScreen
         ) {
-            this->displays.insert(radarScreen);
+            if (std::find(this->displays.begin(), this->displays.end(), radarScreen) != this->displays.end()) {
+                LogWarning("Duplicate configurable display added");
+                return;
+            }
+
+            this->displays.push_back(radarScreen);
         }
     }  // namespace RadarScreen
 }  // namespace UKControllerPlugin
