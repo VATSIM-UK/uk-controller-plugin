@@ -15,8 +15,9 @@ namespace UKControllerPlugin {
                 HoldWindowManager(HWND euroscopeWindow, HINSTANCE dllInstance);
                 void AddWindow(void);
 
-            private:
 
+
+            private:
                 // Handle to EuroScopes main window
                 const HWND euroscopeWindow;
 

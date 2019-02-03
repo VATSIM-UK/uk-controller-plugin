@@ -8,6 +8,7 @@ namespace UKControllerPlugin {
         bool HoldDisplay::windowRegistered = false;
 
         HoldDisplay::HoldDisplay(HWND euroscopeWindow, HINSTANCE dllInstance)
+            : titleBarBrush(Gdiplus::Color(255, 0, 0)), backgroundBrush(CreateSolidBrush(RGB(0, 0, 0)))
         {
          
             if (!this->windowRegistered) {
@@ -18,9 +19,15 @@ namespace UKControllerPlugin {
                 WS_EX_TOPMOST,
                 windowClassName,
                 L"UKCP Hold Manager",
-                WS_OVERLAPPEDWINDOW,
-                CW_USEDEFAULT, CW_USEDEFAULT, 500, 600,
-                euroscopeWindow, NULL, dllInstance, (LPVOID)this
+                NULL,
+                CW_USEDEFAULT,
+                CW_USEDEFAULT,
+                500,
+                600,
+                euroscopeWindow,
+                NULL,
+                dllInstance,
+                (LPVOID) this
             );
 
             if (!this->selfHandle) {
@@ -28,6 +35,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            SetWindowLong(this->selfHandle, GWL_STYLE, 0);
             ShowWindow(this->selfHandle, 5);
         }
 
@@ -36,15 +44,32 @@ namespace UKControllerPlugin {
             if (this->selfHandle) {
                 DeleteObject(this->selfHandle);
             }
+
+            if (this->backgroundBrush) {
+                DeleteObject(this->backgroundBrush);
+            }
         }
 
-                /*
+        void HoldDisplay::PaintWindow(HDC hdc)
+        {
+            Gdiplus::Graphics graphics(hdc);
+            graphics.FillRectangle(&this->titleBarBrush, 0, 0, 200, 15);
+        }
+
+        /*
             The real callback used for the window messages
         */
         LRESULT HoldDisplay::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             switch (msg)
             {
+                case WM_PAINT: {
+                    PAINTSTRUCT ps;
+                    HDC hdc = BeginPaint(hwnd, &ps);
+                    this->PaintWindow(hdc);
+                    EndPaint(hwnd, &ps);
+                    return TRUE;
+                }
                 case WM_CLOSE:
                     DestroyWindow(hwnd);
                     break;
@@ -85,17 +110,11 @@ namespace UKControllerPlugin {
         void HoldDisplay::RegisterWindowClass(HINSTANCE dllInstance)
         {
             this->windowClass.cbSize = sizeof(this->windowClass);
-            this->windowClass.style = 0;
             this->windowClass.lpfnWndProc = WndProc;
-            this->windowClass.cbClsExtra = 0;
-            this->windowClass.cbWndExtra = 0;
             this->windowClass.hInstance = dllInstance;
-            this->windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
             this->windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-            this->windowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-            this->windowClass.lpszMenuName = NULL;
+            this->windowClass.hbrBackground = this->backgroundBrush;
             this->windowClass.lpszClassName = this->windowClassName;
-            this->windowClass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
 
             if (!RegisterClassEx(&this->windowClass)) {

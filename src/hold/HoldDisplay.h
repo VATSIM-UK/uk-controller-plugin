@@ -15,6 +15,7 @@ namespace UKControllerPlugin {
 
             private:
 
+                void PaintWindow(HDC hdc);
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -31,6 +32,10 @@ namespace UKControllerPlugin {
 
                 // Has the window class been registered with windows
                 static bool windowRegistered;
+
+                const Gdiplus::SolidBrush titleBarBrush;
+
+                const HBRUSH backgroundBrush;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin
