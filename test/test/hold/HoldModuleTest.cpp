@@ -11,14 +11,15 @@
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "command/CommandHandlerCollection.h"
 #include "mock/MockWinApi.h"
-#include "mock/MockApiInterface.h"
 #include "dependency/DependencyCache.h"
+#include "mock/MockApiInterface.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Hold::BootstrapPlugin;
 using UKControllerPlugin::Hold::BootstrapRadarScreen;
+using UKControllerPlugin::Hold::LoadDependencies;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -27,11 +28,12 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPluginTest::Api::MockApiInterface;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::_;
 
 namespace UKControllerPluginTest {
     namespace Wake {
@@ -59,7 +61,6 @@ namespace UKControllerPluginTest {
                     this->container.commandHandlers.reset(new CommandHandlerCollection);
                     this->container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
                     this->container.windows.reset(new NiceMock<MockWinApi>);
-                    this->container.api.reset(new NiceMock<MockApiInterface>);
                 }
 
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
@@ -67,6 +68,8 @@ namespace UKControllerPluginTest {
                 UserMessager messager;
                 ConfigurableDisplayCollection configurableDisplays;
                 DependencyCache loadedDependencies;
+                NiceMock<MockApiInterface> mockWebApi;
+                NiceMock<MockWinApi> mockWinApi;
         };
 
         TEST_F(HoldModuleTest, ItAddsToFlightplanHandler)
@@ -149,6 +152,30 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             BootstrapRadarScreen(*this->container.pluginFunctionHandlers, this->configurableDisplays);
             EXPECT_EQ(1, this->configurableDisplays.CountDisplays());
+        }
+
+        TEST_F(HoldModuleTest, ItUpdatesAndLoadsDependencies)
+        {
+            DependencyCache newDependencies;
+
+            nlohmann::json depData;
+            depData["foo"] = "bar";
+
+            ON_CALL(this->mockWebApi, GetHoldDependency())
+                .WillByDefault(Return(depData));
+
+            EXPECT_CALL(this->mockWinApi, WriteToFile("dependencies/holds.json", depData.dump(), true))
+                .Times(1);
+
+            ON_CALL(this->mockWinApi, FileExists("dependencies/holds.json"))
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->mockWinApi, ReadFromFileMock("dependencies/holds.json", true))
+                .WillByDefault(Return(depData.dump()));
+
+            LoadDependencies(&newDependencies, this->mockWebApi, this->mockWinApi);
+            EXPECT_EQ(1, newDependencies.JsonDependencyCount());
+            EXPECT_TRUE(depData == newDependencies.GetJsonDependency("holds.json"));
         }
     }  // namespace Wake
 }  // namespace UKControllerPluginTest

@@ -13,6 +13,9 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "euroscope/CallbackFunction.h"
 #include "hold/HoldDependency.h"
+#include "api/ApiHelper.h"
+#include "windows/WinApiInterface.h"
+#include "dependency/DependencyCache.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -26,27 +29,45 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Hold::UpdateHoldDependency;
 using UKControllerPlugin::Hold::GetLocalHoldData;
+using UKControllerPlugin::Api::ApiInterface;
+using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPlugin::Dependency::DependencyCache;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
-        const std::string dependencyFile = "arrival-holds.json";
+        // The file where the holds are stored locally
+        const std::string dependencyFile = "holds.json";
 
+        // How often holds should be updated
         const int timedEventFrequency = 5;
 
+        // The event handler
         std::shared_ptr<HoldEventHandler> eventHandler;
+
+        /*
+            Update and load the hold dependencies from the API
+        */
+        void LoadDependencies(
+            DependencyCache * const dependencies,
+            const ApiInterface & webApi, 
+            WinApiInterface & windowsApi
+        ) {
+            UpdateHoldDependency(webApi, windowsApi);
+            dependencies->AddJsonDependency(dependencyFile, GetLocalHoldData(windowsApi));
+        }
 
         /*
             Bootstrap the module into the plugin
         */
         void BootstrapPlugin(
+            const DependencyCache & dependencies,
             PersistenceContainer & container,
             UserMessager & userMessages
         ) {
             // Update local dependencies and build hold data
-            UpdateHoldDependency(*container.api, *container.windows);
             container.holds = std::make_unique<HoldingDataCollection>(
-                BuildHoldingData(GetLocalHoldData(*container.windows))
+                BuildHoldingData(dependencies.GetJsonDependency(dependencyFile))
             );
 
             container.holdManager.reset(new HoldManager);

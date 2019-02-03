@@ -14,6 +14,15 @@ namespace UKControllerPlugin {
     namespace Plugin {
         class FunctionCallEventHandler;
     }  // namespace Plugin
+    namespace Dependency {
+        class DependencyCache;
+    }  // namespace Dependency
+    namespace Api {
+        class ApiInterface;
+    }  // namespace Api
+    namespace Windows {
+        class WinApiInterface;
+    }  // namespace Windows
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -22,7 +31,14 @@ namespace UKControllerPlugin {
         extern const std::string dependencyFile;
         extern const int timedEventFrequency;
 
+        void LoadDependencies(
+            UKControllerPlugin::Dependency::DependencyCache * const dependencies,
+            const UKControllerPlugin::Api::ApiInterface & webApi,
+            UKControllerPlugin::Windows::WinApiInterface & windowsApi
+        );
+
         void BootstrapPlugin(
+            const UKControllerPlugin::Dependency::DependencyCache & dependencies,
             UKControllerPlugin::Bootstrap::PersistenceContainer & container,
             UKControllerPlugin::Message::UserMessager & userMessages
         );
