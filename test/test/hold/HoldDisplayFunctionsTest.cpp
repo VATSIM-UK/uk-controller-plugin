@@ -43,12 +43,12 @@ namespace UKControllerPluginTest {
 
         TEST(HoldDisplayFunctionsTest, ItCalculatesGroupXPosition1)
         {
-            EXPECT_EQ(250, UKControllerPlugin::Hold::GetHoldGroupX(1));
+            EXPECT_EQ(235, UKControllerPlugin::Hold::GetHoldGroupX(1));
         }
 
         TEST(HoldDisplayFunctionsTest, ItCalculatesGroupXPosition2)
         {
-            EXPECT_EQ(490, UKControllerPlugin::Hold::GetHoldGroupX(2));
+            EXPECT_EQ(460, UKControllerPlugin::Hold::GetHoldGroupX(2));
         }
 
         TEST(HoldDisplayFunctionsTest, ItCalculatesGroupXPosition3)
@@ -73,7 +73,7 @@ namespace UKControllerPluginTest {
 
         TEST(HoldDisplayFunctionsTest, ItCalculatesGroupYPosition3)
         {
-            EXPECT_EQ(410, UKControllerPlugin::Hold::GetHoldGroupY(3));
+            EXPECT_EQ(280, UKControllerPlugin::Hold::GetHoldGroupY(3));
         }
 
         TEST(HoldDisplayFunctionsTest, ItCalculatesIdentifierDimensions)
@@ -137,7 +137,7 @@ namespace UKControllerPluginTest {
                 10,
                 110,
                 210,
-                250
+                175
             };
             EXPECT_TRUE(expected == UKControllerPlugin::Hold::GetHoldTableDimensions(10, 10));
         }

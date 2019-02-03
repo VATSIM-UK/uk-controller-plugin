@@ -12,6 +12,7 @@
 #include "command/CommandHandlerCollection.h"
 #include "mock/MockWinApi.h"
 #include "mock/MockApiInterface.h"
+#include "dependency/DependencyCache.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -27,6 +28,7 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPlugin::Dependency::DependencyCache;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -50,7 +52,7 @@ namespace UKControllerPluginTest {
                         { "inbound_heading", 309 },
                         { "turn_direction", "right" }
                     };
-                    this->holdData = nlohmann::json::array({ hold });
+                    loadedDependencies.AddJsonDependency("holds.json", nlohmann::json::array({ hold }));
 
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     this->container.timedHandler.reset(new TimedEventCollection);
@@ -64,43 +66,43 @@ namespace UKControllerPluginTest {
                 PersistenceContainer container;
                 UserMessager messager;
                 ConfigurableDisplayCollection configurableDisplays;
-                nlohmann::json holdData;
+                DependencyCache loadedDependencies;
         };
 
         TEST_F(HoldModuleTest, ItAddsToFlightplanHandler)
         {
-            BootstrapPlugin(this->container, this->messager);
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
         }
 
         TEST_F(HoldModuleTest, ItAddsToTimedHandler)
         {
-            BootstrapPlugin(this->container, this->messager);
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
             EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(5));
         }
 
         TEST_F(HoldModuleTest, ItAddsToCommandHandlers)
         {
-            BootstrapPlugin(this->container, this->messager);
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)
         {
-            BootstrapPlugin(this->container, this->messager);
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             EXPECT_FALSE(this->container.holdManager->HasHold("TIMBA"));
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldDataCollection)
         {
-            BootstrapPlugin(this->container, this->messager);
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             EXPECT_EQ(1, this->container.holds->Count());
         }
 
         TEST_F(HoldModuleTest, ItLoadsHoldData)
         {
-            BootstrapPlugin(this->container, this->messager);
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             HoldingData expectedHold = {
                 1,
                 "TIMBA",
@@ -116,6 +118,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldModuleTest, ItReportsNoHoldsToTheUser)
         {
+            DependencyCache noDependencies;
             EXPECT_CALL(
                 this->mockPlugin,
                 ChatAreaMessage(
@@ -131,19 +134,19 @@ namespace UKControllerPluginTest {
             )
                 .Times(1);
 
-            BootstrapPlugin(this->container, this->messager);
+            BootstrapPlugin(noDependencies, this->container, this->messager);
         }
 
         TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
         {
-            BootstrapPlugin(this->container, this->messager);
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             BootstrapRadarScreen(*this->container.pluginFunctionHandlers, this->configurableDisplays);
             EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
         TEST_F(HoldModuleTest, ItAddsToConfigurableDisplays)
         {
-            BootstrapPlugin(this->container, this->messager);
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             BootstrapRadarScreen(*this->container.pluginFunctionHandlers, this->configurableDisplays);
             EXPECT_EQ(1, this->configurableDisplays.CountDisplays());
         }
