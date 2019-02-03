@@ -3,7 +3,7 @@
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "command/CommandHandlerInterface.h"
-#include "hold/HoldWindow.h"
+#include "hold/HoldWindowManager.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -31,7 +31,7 @@ namespace UKControllerPlugin {
                 HoldEventHandler(
                     UKControllerPlugin::Hold::HoldManager & holdManager,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    UKControllerPlugin::Hold::HoldWindow holdManagerWindow,
+                    UKControllerPlugin::Hold::HoldWindowManager holdManagerWindow,
                     const int popupMenuItemId
                 );
                 void FlightPlanEvent(
@@ -74,7 +74,7 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Hold::HoldManager & holdManager;
 
                 // Displays the hold manager view
-                UKControllerPlugin::Hold::HoldWindow holdManagerWindow;
+                UKControllerPlugin::Hold::HoldWindowManager holdManagerWindow;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

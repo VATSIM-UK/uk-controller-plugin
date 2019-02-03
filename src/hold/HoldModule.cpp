@@ -8,7 +8,7 @@
 #include "hold/HoldManager.h"
 #include "message/UserMessager.h"
 #include "bootstrap/BootstrapWarningMessage.h"
-#include "hold/HoldWindow.h"
+#include "hold/HoldWindowManager.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "euroscope/CallbackFunction.h"
@@ -23,7 +23,7 @@ using UKControllerPlugin::Hold::HoldingDataCollection;
 using UKControllerPlugin::Hold::HoldEventHandler;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
-using UKControllerPlugin::Hold::HoldWindow;
+using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
@@ -76,7 +76,7 @@ namespace UKControllerPlugin {
             eventHandler = std::make_shared<HoldEventHandler>(
                 *container.holdManager,
                 *container.plugin,
-                HoldWindow(GetActiveWindow(), container.windows->GetDllInstance()),
+                HoldWindowManager(GetActiveWindow(), container.windows->GetDllInstance()),
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 

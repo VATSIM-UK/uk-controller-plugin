@@ -1,4 +1,5 @@
 #pragma once
+#include "hold/HoldElementDimensions.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -9,34 +10,27 @@ namespace UKControllerPlugin {
         class HoldDisplay
         {
             public:
-                HoldDisplay(HWND parent, int holdNumber);
+                HoldDisplay(HWND euroscopeWindow, HINSTANCE dllInstance);
                 ~HoldDisplay();
 
             private:
 
-                // Handle to the control that displays the hold identifier
-                HWND identifierHandle;
+                LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+                static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-                // Handle to the control that displays the hold inbound heading
-                HWND inboundHeadingHandle;
+                // The window handle
+                HWND selfHandle;
 
-                // Handle to the control that displays the hold minimum altitude
-                HWND minimumAltitudeHandle;
+                void RegisterWindowClass(HINSTANCE dllInstance);
 
-                // Handle to the control that displays the hold maximum altitude
-                HWND maximumAltitudeHandle;
+                // Window class name
+                const LPCWSTR windowClassName = L"HoldDisplayClass";
 
-                // Handle to the control that displays the hold turn direction
-                HWND turnDirectionHandle;
+                // The window class object
+                WNDCLASSEX windowClass = { 0 };
 
-                // Hold table handle
-                HWND tableHandle;
-
-                // The handle to the static display font
-                HFONT staticDisplayFont;
-
-                // The properties of the static display font
-                LOGFONT staticFontProps = { 0 };
+                // Has the window class been registered with windows
+                static bool windowRegistered;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

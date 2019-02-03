@@ -5,94 +5,106 @@
 namespace UKControllerPlugin {
     namespace Hold {
 
-        HoldDisplay::HoldDisplay(HWND parent, int holdNumber)
+        bool HoldDisplay::windowRegistered = false;
+
+        HoldDisplay::HoldDisplay(HWND euroscopeWindow, HINSTANCE dllInstance)
         {
-            // Setup the font
-            this->staticFontProps.lfHeight = 16;
-            this->staticFontProps.lfWidth = 8;
-            this->staticFontProps.lfWeight = FW_MEDIUM;
-            this->staticFontProps.lfCharSet = DEFAULT_CHARSET;
-            this->staticFontProps.lfOutPrecision = OUT_DEFAULT_PRECIS;
-            this->staticFontProps.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-            this->staticFontProps.lfQuality = ANTIALIASED_QUALITY;
-            this->staticFontProps.lfPitchAndFamily = DEFAULT_QUALITY | FF_MODERN;
-            this->staticDisplayFont = CreateFontIndirect(&this->staticFontProps);
+         
+            if (!this->windowRegistered) {
+                RegisterWindowClass(dllInstance);
+            }
 
-            // Get the group position
-            const long groupX = GetHoldGroupX(holdNumber);
-            const long groupY = GetHoldGroupY(holdNumber);
-
-            // Create the static elements
-            this->identifierHandle = CreateStaticLine(
-                parent,
-                GetHoldIdentifierDimensions(groupX, groupY),
-                L"Identifier: TIMBA"
+            this->selfHandle = CreateWindowEx(
+                WS_EX_TOPMOST,
+                windowClassName,
+                L"UKCP Hold Manager",
+                WS_OVERLAPPEDWINDOW,
+                CW_USEDEFAULT, CW_USEDEFAULT, 500, 600,
+                euroscopeWindow, NULL, dllInstance, (LPVOID)this
             );
-            SendMessage(this->identifierHandle, WM_SETFONT, (WPARAM) this->staticDisplayFont, TRUE);
 
-            this->inboundHeadingHandle = CreateStaticLine(
-                parent,
-                GetHoldInboundDimensions(groupX, groupY),
-                L"Inbound: 309"
-            );
-            SendMessage(this->inboundHeadingHandle, WM_SETFONT, (WPARAM)this->staticDisplayFont, TRUE);
+            if (!this->selfHandle) {
+                LogError("Unable to create hold display");
+                return;
+            }
 
-            this->minimumAltitudeHandle = CreateStaticLine(
-                parent,
-                GetHoldMinimumDimensions(groupX, groupY),
-                L"Minimum: 7000"
-            );
-            SendMessage(this->minimumAltitudeHandle, WM_SETFONT, (WPARAM)this->staticDisplayFont, TRUE);
-
-            this->maximumAltitudeHandle = CreateStaticLine(
-                parent,
-                GetHoldMaximumDimensions(groupX, groupY),
-                L"Maximum: 15000"
-            );
-            SendMessage(this->maximumAltitudeHandle, WM_SETFONT, (WPARAM)this->staticDisplayFont, TRUE);
-
-            this->turnDirectionHandle = CreateStaticLine(
-                parent,
-                GetHoldTurnDimensions(groupX, groupY),
-                L"Turn: Right"
-            );
-            SendMessage(this->turnDirectionHandle, WM_SETFONT, (WPARAM)this->staticDisplayFont, TRUE);
-
-            this->tableHandle = CreateHoldList(
-                parent,
-                GetHoldTableDimensions(groupX, groupY)
-            );
+            ShowWindow(this->selfHandle, 5);
         }
 
         HoldDisplay::~HoldDisplay()
         {
-            if (this->identifierHandle) {
-                DestroyWindow(this->identifierHandle);
-            }
-
-            if (this->inboundHeadingHandle) {
-                DestroyWindow(this->inboundHeadingHandle);
-            }
-
-            if (this->minimumAltitudeHandle) {
-                DestroyWindow(this->minimumAltitudeHandle);
-            }
-
-            if (this->maximumAltitudeHandle) {
-                DestroyWindow(this->maximumAltitudeHandle);
-            }
-
-            if (this->turnDirectionHandle) {
-                DestroyWindow(this->turnDirectionHandle);
-            }
-
-            if (this->tableHandle) {
-                DestroyWindow(this->tableHandle);
-            }
-
-            if (this->staticDisplayFont) {
-                DeleteObject(this->staticDisplayFont);
+            if (this->selfHandle) {
+                DeleteObject(this->selfHandle);
             }
         }
+
+                /*
+            The real callback used for the window messages
+        */
+        LRESULT HoldDisplay::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+        {
+            switch (msg)
+            {
+                case WM_CLOSE:
+                    DestroyWindow(hwnd);
+                    break;
+                case WM_DESTROY:
+                    break;
+                default:
+                    return DefWindowProc(hwnd, msg, wParam, lParam);
+            }
+            return FALSE;
+        }
+
+        /*
+            The callback used for the window messages - has to be static because its inherently C
+        */
+        LRESULT CALLBACK HoldDisplay::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+        {
+            if (msg == WM_CREATE) {
+                LogInfo("Hold manager window opened");
+                SetWindowLongPtr(
+                    hwnd,
+                    GWLP_USERDATA,
+                    reinterpret_cast<LONG>(reinterpret_cast<CREATESTRUCT *>(lParam)->lpCreateParams)
+                );
+            }
+            else if (msg == WM_DESTROY) {
+                SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
+                LogInfo("Hold manager window closed");
+            }
+
+            HoldDisplay * holdDisplay = reinterpret_cast<HoldDisplay*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+            return holdDisplay ? holdDisplay->_WndProc(hwnd, msg, wParam, lParam) :
+                DefWindowProc(hwnd, msg, wParam, lParam);
+        }
+
+        /*
+            Register ourselves with windows as a window class
+        */
+        void HoldDisplay::RegisterWindowClass(HINSTANCE dllInstance)
+        {
+            this->windowClass.cbSize = sizeof(this->windowClass);
+            this->windowClass.style = 0;
+            this->windowClass.lpfnWndProc = WndProc;
+            this->windowClass.cbClsExtra = 0;
+            this->windowClass.cbWndExtra = 0;
+            this->windowClass.hInstance = dllInstance;
+            this->windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+            this->windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+            this->windowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+            this->windowClass.lpszMenuName = NULL;
+            this->windowClass.lpszClassName = this->windowClassName;
+            this->windowClass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+
+
+            if (!RegisterClassEx(&this->windowClass)) {
+                LogError("Unable to register hold display class");
+                return;
+            };
+
+            this->windowRegistered = true;
+        }
+
     }  // namespace Hold
 }  // namespace UKControllerPlugin

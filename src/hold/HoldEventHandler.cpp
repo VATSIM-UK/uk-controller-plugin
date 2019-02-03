@@ -10,7 +10,7 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::TimedEvent::AbstractTimedEvent;
-using UKControllerPlugin::Hold::HoldWindow;
+using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 
@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
         HoldEventHandler::HoldEventHandler(
             HoldManager & holdManager,
             EuroscopePluginLoopbackInterface & plugin,
-            HoldWindow holdManagerWindow,
+            HoldWindowManager holdManagerWindow,
             const int popupMenuItemId
         )
             : holdManager(holdManager), plugin(plugin),
@@ -64,7 +64,7 @@ namespace UKControllerPlugin {
         */
         void HoldEventHandler::Configure(std::string subject)
         {
-            this->holdManagerWindow.DisplayWindow();
+            this->holdManagerWindow.AddWindow();
         }
 
         /*
@@ -91,7 +91,7 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            this->holdManagerWindow.DisplayWindow();
+            this->holdManagerWindow.AddWindow();
             return true;
         }
     }  // namespace Hold
