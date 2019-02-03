@@ -61,5 +61,47 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(3, dependency.DependencyCount());
         }
 
+        TEST(DependencyCache, JsonDependenciesStartEmpty)
+        {
+            DependencyCache dependency;
+            EXPECT_EQ(0, dependency.JsonDependencyCount());
+        }
+
+        TEST(DependencyCache, JsonDependenciesAddsDependencies)
+        {
+            DependencyCache dependency;
+            nlohmann::json data;
+            data["foo"] = "bar";
+            dependency.AddJsonDependency("test", data);
+            EXPECT_EQ(1, dependency.JsonDependencyCount());
+            EXPECT_TRUE(dependency.HasJsonDependency("test"));
+        }
+
+        TEST(DependencyCache, JsonDependenciesDoesntAddDuplicates)
+        {
+            DependencyCache dependency;
+            nlohmann::json data;
+            data["foo"] = "bar";
+            dependency.AddJsonDependency("test", data);
+            dependency.AddJsonDependency("test", data);
+            EXPECT_EQ(1, dependency.JsonDependencyCount());
+            EXPECT_TRUE(dependency.HasJsonDependency("test"));
+        }
+
+        TEST(DependencyCache, ItReturnsJsonDependencies)
+        {
+            DependencyCache dependency;
+            nlohmann::json data;
+            data["foo"] = "bar";
+            dependency.AddJsonDependency("test", data);
+            EXPECT_EQ(data, dependency.GetJsonDependency("test"));
+        }
+
+        TEST(DependencyCache, ItReturnsEmptyJsonIfNotFound)
+        {
+            DependencyCache dependency;
+            EXPECT_EQ(nlohmann::json(), dependency.GetJsonDependency("test"));
+        }
+
     }  // namespace Dependency
 }  // namespace UKControllerPluginTest
