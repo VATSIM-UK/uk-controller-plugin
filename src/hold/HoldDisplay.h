@@ -31,6 +31,12 @@ namespace UKControllerPlugin {
 
                 // Hold table handle
                 HWND tableHandle;
+
+                // The handle to the static display font
+                HFONT staticDisplayFont;
+
+                // The properties of the static display font
+                LOGFONT staticFontProps = { 0 };
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

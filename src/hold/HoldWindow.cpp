@@ -10,7 +10,6 @@ namespace UKControllerPlugin {
         HoldWindow::HoldWindow(HWND euroscopeWindow, HINSTANCE dllInstance)
             : euroscopeWindow(euroscopeWindow), dllInstance(dllInstance)
         {
-
         }
 
         /*

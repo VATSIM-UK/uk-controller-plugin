@@ -12,6 +12,7 @@
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "euroscope/CallbackFunction.h"
+#include "hold/HoldDependency.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -23,6 +24,8 @@ using UKControllerPlugin::Hold::HoldWindow;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
+using UKControllerPlugin::Hold::UpdateHoldDependency;
+using UKControllerPlugin::Hold::GetLocalHoldData;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -38,21 +41,14 @@ namespace UKControllerPlugin {
         */
         void BootstrapPlugin(
             PersistenceContainer & container,
-            const DependencyCache & dependencies,
             UserMessager & userMessages
         ) {
-            nlohmann::json dependencyJson;
-            try {
-                if (dependencies.HasDependency(dependencyFile)) {
-                    dependencyJson = nlohmann::json::parse(dependencies.GetDependency(dependencyFile));
-                } else {
-                    LogWarning("Dependency file for holds not found");
-                }
-            } catch (nlohmann::json::exception) {
-                LogError("Unable to parse dependency file for holding data");
-            }
+            // Update local dependencies and build hold data
+            UpdateHoldDependency(*container.api, *container.windows);
+            container.holds = std::make_unique<HoldingDataCollection>(
+                BuildHoldingData(GetLocalHoldData(*container.windows))
+            );
 
-            container.holds = std::make_unique<HoldingDataCollection>(BuildHoldingData(dependencyJson));
             container.holdManager.reset(new HoldManager);
 
             // Create the event handler and register

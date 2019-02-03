@@ -196,7 +196,7 @@ namespace UKControllerPlugin {
             InitialAltitudeModule::BootstrapPlugin(dependencyCache, *this->container);
         }
 
-        UKControllerPlugin::Hold::BootstrapPlugin(*this->container, dependencyCache, *this->container->userMessager);
+        UKControllerPlugin::Hold::BootstrapPlugin(*this->container, *this->container->userMessager);
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(this->container->countdownTimer, *this->container->windows);

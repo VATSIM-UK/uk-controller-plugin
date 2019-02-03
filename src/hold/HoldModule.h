@@ -4,9 +4,6 @@ namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
     }  // namespace Bootstrap
-    namespace Dependency {
-        class DependencyCache;
-    }  // namespace Dependency
     namespace Message {
         class UserMessager;
     }  // namespace Message
@@ -27,7 +24,6 @@ namespace UKControllerPlugin {
 
         void BootstrapPlugin(
             UKControllerPlugin::Bootstrap::PersistenceContainer & container,
-            const UKControllerPlugin::Dependency::DependencyCache & dependencies,
             UKControllerPlugin::Message::UserMessager & userMessages
         );
 
