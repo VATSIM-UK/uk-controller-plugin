@@ -71,6 +71,7 @@
     <ClInclude Include="..\..\src\dependency\DependencyBootstrap.h" />
     <ClInclude Include="..\..\src\dependency\DependencyCache.h" />
     <ClInclude Include="..\..\src\dependency\DependencyCacheFactory.h" />
+    <ClInclude Include="..\..\src\dependency\LoadNewDependencies.h" />
     <ClInclude Include="..\..\src\dependency\LocalFileUpdater.h" />
     <ClInclude Include="..\..\src\euroscope\AsrEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\AsrEventHandlerInterface.h" />
@@ -272,6 +273,7 @@
     <ClCompile Include="..\..\src\dependency\DependencyBootstrap.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyCache.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyCacheFactory.cpp" />
+    <ClCompile Include="..\..\src\dependency\LoadNewDependencies.cpp" />
     <ClCompile Include="..\..\src\dependency\LocalFileUpdater.cpp" />
     <ClCompile Include="..\..\src\euroscope\AsrEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\CallbackFunction.cpp" />

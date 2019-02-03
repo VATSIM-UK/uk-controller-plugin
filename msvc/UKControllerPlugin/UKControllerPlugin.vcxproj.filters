@@ -744,6 +744,9 @@
     <ClInclude Include="..\..\src\hold\HoldDependency.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\dependency\LoadNewDependencies.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1260,6 +1263,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldDependency.cpp">
       <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\LoadNewDependencies.cpp">
+      <Filter>src\dependency</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

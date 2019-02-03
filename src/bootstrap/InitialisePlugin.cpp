@@ -33,6 +33,7 @@
 #include "offblock/EstimatedDepartureTimeBootstrap.h"
 #include "wake/WakeModule.h"
 #include "hold/HoldModule.h"
+#include "dependency/LoadNewDependencies.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -64,6 +65,7 @@ using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Bootstrap::DuplicatePlugin;
 using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
+using UKControllerPlugin::Dependency::LoadNewDependencies;
 
 namespace UKControllerPlugin {
 
@@ -169,6 +171,9 @@ namespace UKControllerPlugin {
             *this->container->windows,
             *this->container->curl
         );
+        
+        // Load all the "new" dependencies that don't come from a manifest.
+        LoadNewDependencies(*this->container, &dependencyCache);
 
         // Boostrap all the modules at a plugin level
         EventHandlerCollectionBootstrap::BoostrapPlugin(*this->container);
@@ -196,7 +201,7 @@ namespace UKControllerPlugin {
             InitialAltitudeModule::BootstrapPlugin(dependencyCache, *this->container);
         }
 
-        UKControllerPlugin::Hold::BootstrapPlugin(*this->container, *this->container->userMessager);
+        UKControllerPlugin::Hold::BootstrapPlugin(dependencyCache, *this->container, *this->container->userMessager);
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(this->container->countdownTimer, *this->container->windows);
