@@ -15,14 +15,14 @@ namespace UKControllerPlugin {
         */
         typedef struct CompareHolds
         {
-            using is_transparent = std::string;
+            using is_transparent = unsigned int;
 
             bool operator()(
                 const UKControllerPlugin::Hold::HoldingData & hold,
-                std::string id
+                unsigned int id
             ) const;
             bool operator()(
-                std::string id,
+                unsigned int,
                 const UKControllerPlugin::Hold::HoldingData & hold
             ) const;
             bool operator()(

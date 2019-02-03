@@ -40,12 +40,17 @@ namespace UKControllerPluginTest {
                     : messager(mockPlugin)
                 {
                     nlohmann::json data;
-                    data["TIMBA"] = {
-                        { "minimum", 7000 },
-                        { "maximum", 15000 },
-                        { "inbound", 309 },
-                        { "direction", "right" }
+                    nlohmann::json hold;
+                    hold = {
+                        { "id", 1 },
+                        { "fix", "TIMBA" },
+                        { "description", "TIMBA" },
+                        { "minimum_altitude", 7000 },
+                        { "maximum_altitude", 15000 },
+                        { "inbound_heading", 309 },
+                        { "turn_direction", "right" }
                     };
+                    data = nlohmann::json::array({ hold });
                     dependencies.AddDependency("arrival-holds.json", data.dump());
 
                     container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
@@ -97,6 +102,8 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->dependencies, this->messager);
             HoldingData expectedHold = {
+                1,
+                "TIMBA",
                 "TIMBA",
                 7000,
                 15000,
@@ -104,7 +111,7 @@ namespace UKControllerPluginTest {
                 HoldingData::TURN_DIRECTION_RIGHT
             };
 
-            EXPECT_TRUE(expectedHold == this->container.holds->Get("TIMBA"));
+            EXPECT_TRUE(expectedHold == this->container.holds->Get(1));
         }
 
         TEST_F(HoldModuleTest, ItGracefullyHandlesCorruptHoldData)

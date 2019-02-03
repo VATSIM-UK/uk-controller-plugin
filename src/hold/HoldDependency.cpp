@@ -42,6 +42,7 @@ namespace UKControllerPlugin {
         nlohmann::json GetLocalHoldData(WinApiInterface & winApi)
         {
             if (!winApi.FileExists(dependencyLocation)) {
+                LogError("Unable to read hold data from local storage, file doesnt exist");
                 return nlohmann::json::parse(defaultValue);
             }
 

@@ -9,7 +9,9 @@ namespace UKControllerPlugin {
         */
         typedef struct HoldingData
         {
-            const std::string identifier;
+            const unsigned int identifier;
+            const std::string fix;
+            const std::string description;
             const unsigned int minimum;
             const unsigned int maximum;
             const unsigned int inbound;

@@ -25,7 +25,7 @@ namespace UKControllerPlugin {
         /*
             Get a hold
         */
-        UKControllerPlugin::Hold::HoldingData HoldingDataCollection::Get(std::string identifier) const
+        UKControllerPlugin::Hold::HoldingData HoldingDataCollection::Get(unsigned int identifier) const
         {
             auto hold = this->holds.find(identifier);
             return hold != this->holds.end() ? *hold : this->notFound;

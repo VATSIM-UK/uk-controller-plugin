@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
             HoldingDataCollection collection;
 
             // If not object, nothing to do
-            if (!data.is_object()) {
+            if (!data.is_array()) {
                 LogWarning("Holding data is invalid");
                 return collection;
             }
@@ -22,16 +22,22 @@ namespace UKControllerPlugin {
                 if (CheckValid(*it)) {
                     collection.Add(
                         {
-                            it.key(),
-                            it->at("minimum"),
-                            it->at("maximum"),
-                            it->at("inbound"),
-                            it->at("direction") == "left" ?
+                            it->at("id"),
+                            it->at("fix"),
+                            it->at("description"),
+                            it->at("minimum_altitude"),
+                            it->at("maximum_altitude"),
+                            it->at("inbound_heading"),
+                            it->at("turn_direction") == "left" ?
                                 HoldingData::TURN_DIRECTION_LEFT : HoldingData::TURN_DIRECTION_RIGHT
                         }
                     );
                 } else {
-                    LogWarning("Invalid hold data for " + it.key());
+                    std::string holdId = "unknown";
+                    if (data.find("id") != data.end() && data.at("id").is_number_integer()) {
+                        holdId = data.at("id");
+                    }
+                    LogWarning("Invalid hold data for " + holdId);
                 }
             }
 
@@ -45,15 +51,19 @@ namespace UKControllerPlugin {
         bool CheckValid(nlohmann::json data)
         {
             return data.is_object() &&
-                data.find("minimum") != data.end() &&
-                data.at("minimum").is_number_integer() &&
-                data.find("maximum") != data.end() &&
-                data.at("maximum").is_number_integer() &&
-                data.find("inbound") != data.end() &&
-                data.at("inbound").is_number_integer() &&
-                data.find("direction") != data.end() &&
-                data.at("direction").is_string() &&
-                (data.at("direction") == "left" || data.at("direction") == "right");
+                data.find("id") != data.end() &&
+                data.at("id").is_number_integer() &&
+                data.find("description") != data.end() &&
+                data.at("description").is_string() &&
+                data.find("minimum_altitude") != data.end() &&
+                data.at("minimum_altitude").is_number_integer() &&
+                data.find("maximum_altitude") != data.end() &&
+                data.at("maximum_altitude").is_number_integer() &&
+                data.find("inbound_heading") != data.end() &&
+                data.at("inbound_heading").is_number_integer() &&
+                data.find("turn_direction") != data.end() &&
+                data.at("turn_direction").is_string() &&
+                (data.at("turn_direction") == "left" || data.at("turn_direction") == "right");
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

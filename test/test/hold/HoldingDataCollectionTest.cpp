@@ -12,8 +12,8 @@ namespace UKControllerPluginTest {
         class HoldingDataCollectionTest : public Test
         {
             public:
-                HoldingData hold1 = { "TIMBA", 7000, 15000, 309, 1 };
-                HoldingData hold2 = { "WILLO", 7000, 15000, 285, 0 };
+                HoldingData hold1 = { 1, "TIMBA", "TIMBA", 7000, 15000, 309, 1 };
+                HoldingData hold2 = { 2, "WILLO", "WILLO", 7000, 15000, 285, 0 };
                 HoldingDataCollection collection;
         };
 
@@ -38,14 +38,14 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldingDataCollectionTest, ItReturnsNotFoundIfHoldNotFound)
         {
-            collection.Add(hold1);;
-            EXPECT_EQ(collection.notFound, collection.Get("WILLO"));
+            collection.Add(hold1);
+            EXPECT_EQ(collection.notFound, collection.Get(2));
         }
 
         TEST_F(HoldingDataCollectionTest, TestItReturnsAHold)
         {
             collection.Add(hold1);;
-            EXPECT_EQ(hold1, collection.Get("TIMBA"));
+            EXPECT_EQ(hold1, collection.Get(1));
         }
 
     }  // namespace Hold

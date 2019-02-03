@@ -19,20 +19,23 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data;
             nlohmann::json hold1;
-            hold1["minimum"] = 7000;
-            hold1["maximum"] = 15000;
-            hold1["inbound"] = 309;
-            hold1["direction"] = "right";
+            hold1["id"] = 1;
+            hold1["description"] = "TIMBA";
+            hold1["fix"] = "TIMBA";
+            hold1["minimum_altitude"] = 7000;
+            hold1["maximum_altitude"] = 15000;
+            hold1["inbound_heading"] = 309;
+            hold1["turn_direction"] = "right";
             nlohmann::json hold2;
-            hold2["minimum"] = 7000;
-            hold2["maximum"] = 15000;
-            hold2["inbound"] = 285;
-            hold2["direction"] = "left";
+            hold2["id"] = 2;
+            hold2["description"] = "WILLO";
+            hold2["fix"] = "WILLO";
+            hold2["minimum_altitude"] = 7000;
+            hold2["maximum_altitude"] = 15000;
+            hold2["inbound_heading"] = 285;
+            hold2["turn_direction"] = "left";
 
-            data["TIMBA"] = hold1;
-            data["WILLO"] = hold2;
-
-
+            data = { hold1, hold2 };
             EXPECT_EQ(2, BuildHoldingData(data).Count());
         }
 
@@ -40,38 +43,60 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data;
             nlohmann::json hold;
-            hold["minimum"] = 7000;
-            hold["maximum"] = 15000;
-            hold["inbound"] = 309;
-            hold["direction"] = "right";
+            hold["id"] = 1;
+            hold["description"] = "TIMBA";
+            hold["fix"] = "TIMBA Description";
+            hold["minimum_altitude"] = 7000;
+            hold["maximum_altitude"] = 15000;
+            hold["inbound_heading"] = 309;
+            hold["turn_direction"] = "right";
 
-            data["TIMBA"] = hold;
+            data = nlohmann::json::array({ hold });
             
-            HoldingData expected = { "TIMBA", 7000, 15000, 309, HoldingData::TURN_DIRECTION_RIGHT };
+            HoldingData expected = {
+                1,
+                "TIMBA",
+                "TIMBA Description",
+                7000,
+                15000,
+                309,
+                HoldingData::TURN_DIRECTION_RIGHT
+            };
 
-            EXPECT_EQ(expected, BuildHoldingData(data).Get("TIMBA"));
+            EXPECT_EQ(expected, BuildHoldingData(data).Get(1));
         }
 
         TEST(BuildHoldingDataTest, ItAddsTheCorrectHoldingDataLeftTurn)
         {
             nlohmann::json data;
             nlohmann::json hold;
-            hold["minimum"] = 7000;
-            hold["maximum"] = 15000;
-            hold["inbound"] = 309;
-            hold["direction"] = "left";
+            hold["id"] = 1;
+            hold["description"] = "TIMBA";
+            hold["fix"] = "TIMBA Description";
+            hold["minimum_altitude"] = 7000;
+            hold["maximum_altitude"] = 15000;
+            hold["inbound_heading"] = 309;
+            hold["turn_direction"] = "left";
 
-            data["TIMBA"] = hold;
+            data = nlohmann::json::array({ hold });
 
-            HoldingData expected = { "TIMBA", 7000, 15000, 309, HoldingData::TURN_DIRECTION_LEFT };
+            HoldingData expected = {
+                1,
+                "TIMBA",
+                "TIMBA Description",
+                7000,
+                15000,
+                309,
+                HoldingData::TURN_DIRECTION_LEFT
+            };
 
-            EXPECT_EQ(expected, BuildHoldingData(data).Get("TIMBA"));
+            EXPECT_EQ(expected, BuildHoldingData(data).Get(1));
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddNonObjects)
         {
             nlohmann::json data;
-            data["TIMBA"] = "Test";
+            data = { "Test" };
 
             EXPECT_EQ(0, BuildHoldingData(data).Count());
         }
@@ -80,11 +105,14 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data;
             nlohmann::json hold;
-            hold["maximum"] = 15000;
-            hold["inbound"] = 309;
-            hold["direction"] = "left";
+            hold["id"] = 1;
+            hold["description"] = "TIMBA";
+            hold["fix"] = "TIMBA Description";
+            hold["maximum_altitude"] = 15000;
+            hold["inbound_heading"] = 309;
+            hold["turn_direction"] = "left";
 
-            data["TIMBA"] = hold;
+            data = { hold };
 
             EXPECT_EQ(0, BuildHoldingData(data).Count());
         }
@@ -93,11 +121,14 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data;
             nlohmann::json hold;
-            hold["minimum"] = 7000;
-            hold["inbound"] = 309;
-            hold["direction"] = "left";
+            hold["id"] = 1;
+            hold["description"] = "TIMBA";
+            hold["fix"] = "TIMBA Description";
+            hold["minimum_altitude"] = 7000;
+            hold["inbound_heading"] = 309;
+            hold["turn_direction"] = "left";
 
-            data["TIMBA"] = hold;
+            data = { hold };
 
             EXPECT_EQ(0, BuildHoldingData(data).Count());
         }
@@ -106,11 +137,14 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data;
             nlohmann::json hold;
-            hold["minimum"] = 7000;
-            hold["maximum"] = 15000;
-            hold["direction"] = "left";
+            hold["id"] = 1;
+            hold["description"] = "TIMBA";
+            hold["fix"] = "TIMBA Description";
+            hold["minimum_altitude"] = 7000;
+            hold["maximum_altitude"] = 15000;
+            hold["turn_direction"] = "left";
 
-            data["TIMBA"] = hold;
+            data = { hold };
 
             EXPECT_EQ(0, BuildHoldingData(data).Count());
         }
@@ -119,11 +153,14 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data;
             nlohmann::json hold;
-            hold["minimum"] = 7000;
-            hold["maximum"] = 15000;
-            hold["inbound"] = 309;
+            hold["id"] = 1;
+            hold["description"] = "TIMBA";
+            hold["fix"] = "TIMBA Description";
+            hold["minimum_altitude"] = 7000;
+            hold["maximum_altitude"] = 15000;
+            hold["inbound_heading"] = 309;
 
-            data["TIMBA"] = hold;
+            data = { hold };
 
             EXPECT_EQ(0, BuildHoldingData(data).Count());
         }
@@ -132,15 +169,65 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data;
             nlohmann::json hold;
-            hold["minimum"] = 7000;
-            hold["maximum"] = 15000;
-            hold["inbound"] = 309;
-            hold["direction"] = "up";
+            hold["id"] = 1;
+            hold["description"] = "TIMBA";
+            hold["fix"] = "TIMBA Description";
+            hold["minimum_altitude"] = 7000;
+            hold["maximum_altitude"] = 15000;
+            hold["inbound_heading"] = 309;
+            hold["turn_direction"] = "up";
 
-            data["TIMBA"] = hold;
+            data = { hold };
 
             EXPECT_EQ(0, BuildHoldingData(data).Count());
         }
 
+        TEST(BuildHoldingDataTest, ItDoesntAddWithMissingId)
+        {
+            nlohmann::json data;
+            nlohmann::json hold;
+            hold["description"] = "TIMBA";
+            hold["fix"] = "TIMBA Description";
+            hold["minimum_altitude"] = 7000;
+            hold["maximum_altitude"] = 15000;
+            hold["inbound_heading"] = 309;
+            hold["turn_direction"] = "right";
+
+            data = { hold };
+
+            EXPECT_EQ(0, BuildHoldingData(data).Count());
+        }
+
+        TEST(BuildHoldingDataTest, ItDoesntAddWithMissingFix)
+        {
+            nlohmann::json data;
+            nlohmann::json hold;
+            hold["id"] = 1;
+            hold["fix"] = "TIMBA Description";
+            hold["minimum_altitude"] = 7000;
+            hold["maximum_altitude"] = 15000;
+            hold["inbound_heading"] = 309;
+            hold["turn_direction"] = "right";
+
+            data = { hold };
+
+            EXPECT_EQ(0, BuildHoldingData(data).Count());
+        }
+
+        TEST(BuildHoldingDataTest, ItDoesntAddWithMissingDescription)
+        {
+            nlohmann::json data;
+            nlohmann::json hold;
+            hold["id"] = 1;
+            hold["description"] = "TIMBA";
+            hold["minimum_altitude"] = 7000;
+            hold["maximum_altitude"] = 15000;
+            hold["inbound_heading"] = 309;
+            hold["turn_direction"] = "right";
+
+            data = { hold };
+
+            EXPECT_EQ(0, BuildHoldingData(data).Count());
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
