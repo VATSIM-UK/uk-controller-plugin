@@ -5,7 +5,7 @@
 namespace UKControllerPlugin {
     namespace Hold {
 
-        HoldDisplay::HoldDisplay(HWND parent)
+        HoldDisplay::HoldDisplay(HWND parent, int holdNumber)
         {
             // Setup the font
             this->staticFontProps.lfHeight = 16;
@@ -19,8 +19,8 @@ namespace UKControllerPlugin {
             this->staticDisplayFont = CreateFontIndirect(&this->staticFontProps);
 
             // Get the group position
-            const long groupX = GetHoldGroupX(0);
-            const long groupY = GetHoldGroupY(0);
+            const long groupX = GetHoldGroupX(holdNumber);
+            const long groupY = GetHoldGroupY(holdNumber);
 
             // Create the static elements
             this->identifierHandle = CreateStaticLine(

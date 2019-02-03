@@ -9,7 +9,7 @@ namespace UKControllerPlugin {
         class HoldDisplay
         {
             public:
-                HoldDisplay(HWND parent);
+                HoldDisplay(HWND parent, int holdNumber);
                 ~HoldDisplay();
 
             private:

@@ -55,7 +55,10 @@ namespace UKControllerPlugin {
                     //CreateHoldInformation(hwnd, 10, 10);
                     //CreateStaticHoldInformation(hwnd, 10, 10);
                     this->profileSelector = CreateProfileSelector(hwnd);
-                    this->holdDisplays.emplace_back(hwnd);
+                    this->holdDisplays.emplace_back(hwnd, 0);
+                    this->holdDisplays.emplace_back(hwnd, 1);
+                    this->holdDisplays.emplace_back(hwnd, 2);
+                    this->holdDisplays.emplace_back(hwnd, 3);
                     UpdateWindow(hwnd); 
                     return TRUE;
                 }

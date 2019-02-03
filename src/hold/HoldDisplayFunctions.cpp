@@ -6,10 +6,10 @@ namespace UKControllerPlugin {
 
         const int columnWidth = 210;
         const int staticHeight = 20;
-        const int listHeight = 250;
-        const int groupHeight = 400;
-        const int groupGapX = 30;
-        const int groupGapY = 30;
+        const int listHeight = 175;
+        const int groupHeight = 260;
+        const int groupGapX = 15;
+        const int groupGapY = 10;
 
         HWND CreateProfileSelector(HWND parent)
         {
@@ -163,7 +163,7 @@ namespace UKControllerPlugin {
             lvI.iSubItem = 0; // MUST be zero
 
             // Initialize LVITEM members that are different for each item.
-            for (int index = 0; index < colCount; index++)
+            for (int index = 0; index < 10; index++)
             {
                 lvI.iItem = index;
 
@@ -298,7 +298,7 @@ namespace UKControllerPlugin {
         */
         long GetHoldGroupY(int holdNumber)
         {
-            return ((holdNumber / 3) * groupHeight) + 10;
+            return ((holdNumber / 3) * groupHeight) + ((holdNumber / 3) * groupGapY) + 10;
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
