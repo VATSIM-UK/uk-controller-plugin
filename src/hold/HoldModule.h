@@ -44,7 +44,6 @@ namespace UKControllerPlugin {
         );
 
         void BootstrapRadarScreen(
-            UKControllerPlugin::Plugin::FunctionCallEventHandler & functionCalls,
             UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplay
         );
 

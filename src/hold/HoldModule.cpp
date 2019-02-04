@@ -84,6 +84,13 @@ namespace UKControllerPlugin {
             container.timedHandler->RegisterEvent(eventHandler, timedEventFrequency);
             container.commandHandlers->RegisterHandler(eventHandler);
 
+            CallbackFunction openWindowCallback(
+                eventHandler->popupMenuItemId,
+                "Show Hold Manager",
+                std::bind(&HoldEventHandler::Configure, eventHandler, std::placeholders::_1)
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(openWindowCallback);
+
             // If there aren't any holds, tell the user this explicitly
             if (container.holds->Count() == 0) {
                 BootstrapWarningMessage warning("No holds were loaded for the hold manager");
@@ -95,15 +102,8 @@ namespace UKControllerPlugin {
             Register the handler to make it configurable from the menu
         */
         void BootstrapRadarScreen(
-            FunctionCallEventHandler & functionCalls,
             ConfigurableDisplayCollection & configurableDisplay
         ) {
-            CallbackFunction openWindowCallback(
-                eventHandler->popupMenuItemId,
-                "Show Hold Manager",
-                std::bind(&HoldEventHandler::Configure, eventHandler, std::placeholders::_1)
-            );
-            functionCalls.RegisterFunctionCall(openWindowCallback);
             configurableDisplay.RegisterDisplay(eventHandler);
         }
 

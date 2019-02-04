@@ -91,6 +91,12 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
         }
 
+        TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
+        {
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
+        }
+
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)
         {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
@@ -140,17 +146,10 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(noDependencies, this->container, this->messager);
         }
 
-        TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
-        {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
-            BootstrapRadarScreen(*this->container.pluginFunctionHandlers, this->configurableDisplays);
-            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
-        }
-
         TEST_F(HoldModuleTest, ItAddsToConfigurableDisplays)
         {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
-            BootstrapRadarScreen(*this->container.pluginFunctionHandlers, this->configurableDisplays);
+            BootstrapRadarScreen(this->configurableDisplays);
             EXPECT_EQ(1, this->configurableDisplays.CountDisplays());
         }
 
