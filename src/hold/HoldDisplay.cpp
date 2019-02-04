@@ -8,12 +8,21 @@ namespace UKControllerPlugin {
         bool HoldDisplay::windowRegistered = false;
 
         HoldDisplay::HoldDisplay(HWND euroscopeWindow, HINSTANCE dllInstance)
-            : titleBarBrush(Gdiplus::Color(255, 0, 0)), backgroundBrush(CreateSolidBrush(RGB(0, 0, 0)))
+            : titleBarBrush(Gdiplus::Color(255, 153, 153)), backgroundBrush(CreateSolidBrush(RGB(0, 0, 0))),
+            titleBarTextBrush(Gdiplus::Color(255, 255, 255)), fontFamily(L"EuroScope"),
+            font(&fontFamily, 12, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
+            stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
+            dataBrush(Gdiplus::Color(0, 176, 0)),
+            clearedLevelBrush(Gdiplus::Color(255, 128, 64)),
+            borderPen(Gdiplus::Color(255, 255, 255), 1.5f)
         {
          
             if (!this->windowRegistered) {
                 RegisterWindowClass(dllInstance);
             }
+
+            this->stringFormat.SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
+            this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
 
             this->selfHandle = CreateWindowEx(
                 WS_EX_TOPMOST,
@@ -22,8 +31,8 @@ namespace UKControllerPlugin {
                 NULL,
                 CW_USEDEFAULT,
                 CW_USEDEFAULT,
-                500,
-                600,
+                225,
+                250,
                 euroscopeWindow,
                 NULL,
                 dllInstance,
@@ -43,6 +52,7 @@ namespace UKControllerPlugin {
         {
             if (this->selfHandle) {
                 DeleteObject(this->selfHandle);
+                this->selfHandle = NULL;
             }
 
             if (this->backgroundBrush) {
@@ -53,7 +63,70 @@ namespace UKControllerPlugin {
         void HoldDisplay::PaintWindow(HDC hdc)
         {
             Gdiplus::Graphics graphics(hdc);
-            graphics.FillRectangle(&this->titleBarBrush, 0, 0, 200, 15);
+
+            // Title bar
+            graphics.FillRectangle(&this->titleBarBrush, this->titleArea);
+            graphics.DrawString(L"TIMBA", 5, &this->font, this->titleArea, &this->stringFormat, &this->titleBarTextBrush);
+            graphics.DrawLine(
+                &this->borderPen,
+                this->titleArea.X,
+                this->titleArea.Y + this->titleArea.Height,
+                this->titleArea.X + this->titleArea.Width,
+                this->titleArea.Y + this->titleArea.Height
+            );
+
+            // Hold display
+            Gdiplus::RectF numbersDisplay = {
+                0.0f,
+                this->dataStartHeight,
+                30.0f,
+                15.00f
+            };
+
+            Gdiplus::RectF callsignDisplay = {
+                35.0f,
+                this->dataStartHeight,
+                90.0f,
+                this->lineHeight
+            };
+
+            Gdiplus::RectF actualLevelDisplay = {
+                130.0f,
+                this->dataStartHeight,
+                30.0f,
+                this->lineHeight
+            };
+
+            Gdiplus::RectF clearedLevelDisplay = {
+                165.0f,
+                this->dataStartHeight,
+                30.0f,
+                this->lineHeight
+            };
+
+            for (int i = 0; i < 8; i++) {
+                graphics.DrawString(L"110", 3, &this->font, numbersDisplay, &this->stringFormat, &this->titleBarTextBrush);
+                graphics.DrawString(L"BAW123", 6, &this->font, callsignDisplay, &this->stringFormat, &this->dataBrush);
+                graphics.DrawString(L"083", 3, &this->font, actualLevelDisplay, &this->stringFormat, &this->dataBrush);
+                graphics.DrawString(L"080", 3, &this->font, clearedLevelDisplay, &this->stringFormat, &this->clearedLevelBrush);
+                
+
+                numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
+                callsignDisplay.Y = callsignDisplay.Y + this->lineHeight;
+                actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
+                clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
+            }
+
+            // Border around whole thing, draw this last
+            RECT windowRect;
+            GetClientRect(this->selfHandle, &windowRect);
+            graphics.DrawRectangle(
+                &this->borderPen,
+                windowRect.left,
+                windowRect.top,
+                windowRect.right - windowRect.left - 1,
+                windowRect.bottom - windowRect.top - 1
+            );
         }
 
         /*

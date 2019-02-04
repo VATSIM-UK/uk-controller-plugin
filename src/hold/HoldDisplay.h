@@ -33,9 +33,27 @@ namespace UKControllerPlugin {
                 // Has the window class been registered with windows
                 static bool windowRegistered;
 
+                // Brushes
+                const Gdiplus::SolidBrush titleBarTextBrush;
                 const Gdiplus::SolidBrush titleBarBrush;
-
+                const Gdiplus::SolidBrush dataBrush;
+                const Gdiplus::SolidBrush clearedLevelBrush;
+                const Gdiplus::Pen borderPen;
                 const HBRUSH backgroundBrush;
+
+                // Fonts
+                const Gdiplus::FontFamily fontFamily;
+                const Gdiplus::Font font;
+                Gdiplus::StringFormat stringFormat;
+
+                // Titlebar
+                const Gdiplus::RectF titleArea = { 0.0f, 0.0f, 225.0f, 15.0f };
+
+                // How high lines should be
+                const float lineHeight = 17.0f;
+
+                // Where to start drawing data
+                const float dataStartHeight = this->titleArea.Y + this->titleArea.Height + 3;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin
