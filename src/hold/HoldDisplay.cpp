@@ -120,7 +120,7 @@ namespace UKControllerPlugin {
 
                 graphics.DrawString(L"110", 3, &this->font, numbersDisplay, &this->stringFormat, &this->titleBarTextBrush);
                 graphics.DrawString(L"BAW123", 6, &this->font, callsignDisplay, &this->stringFormat, &this->dataBrush);
-                graphics.DrawString(L"083", 3, &this->font, actualLevelDisplay, &this->stringFormat, &this->dataBrush);
+                graphics.DrawString(GetLevelDisplayString(15230).c_str(), 3, &this->font, actualLevelDisplay, &this->stringFormat, &this->dataBrush);
                 graphics.DrawString(L"080", 3, &this->font, clearedLevelDisplay, &this->stringFormat, &this->clearedLevelBrush);
 
                 numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;

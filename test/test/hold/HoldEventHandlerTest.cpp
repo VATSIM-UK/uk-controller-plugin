@@ -4,7 +4,7 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "hold/HoldWindow.h"
+#include "hold/HoldWindowManager.h"
 #include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Hold::HoldManager;
@@ -12,7 +12,7 @@ using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Hold::HoldEventHandler;
-using UKControllerPlugin::Hold::HoldWindow;
+using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using ::testing::Return;
 using ::testing::NiceMock;
@@ -25,7 +25,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldEventHandlerTest(void)
-                    : handler(this->manager, this->mockPlugin, HoldWindow(NULL, NULL), 1)
+                    : handler(this->manager, this->mockPlugin, HoldWindowManager(NULL, NULL), 1)
                 {
                     manager.AddHold("WILLO");
 
