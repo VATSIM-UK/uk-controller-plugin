@@ -25,11 +25,10 @@ namespace UKControllerPlugin {
             this->stringFormat.SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
 
-            this->selfHandle = CreateWindowEx(
-                WS_EX_TOPMOST,
+            this->selfHandle = CreateWindow(
                 windowClassName,
                 L"UKCP Hold Manager",
-                NULL,
+                WS_VISIBLE,
                 CW_USEDEFAULT,
                 CW_USEDEFAULT,
                 this->windowWidth,
