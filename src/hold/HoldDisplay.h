@@ -38,6 +38,7 @@ namespace UKControllerPlugin {
                 const Gdiplus::SolidBrush titleBarBrush;
                 const Gdiplus::SolidBrush dataBrush;
                 const Gdiplus::SolidBrush clearedLevelBrush;
+                const Gdiplus::HatchBrush blockedLevelBrush;
                 const Gdiplus::Pen borderPen;
                 const HBRUSH backgroundBrush;
 

@@ -14,7 +14,8 @@ namespace UKControllerPlugin {
             stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
             dataBrush(Gdiplus::Color(0, 176, 0)),
             clearedLevelBrush(Gdiplus::Color(255, 128, 64)),
-            borderPen(Gdiplus::Color(255, 255, 255), 1.5f)
+            borderPen(Gdiplus::Color(255, 255, 255), 1.5f),
+            blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255))
         {
          
             if (!this->windowRegistered) {
@@ -63,6 +64,8 @@ namespace UKControllerPlugin {
         void HoldDisplay::PaintWindow(HDC hdc)
         {
             Gdiplus::Graphics graphics(hdc);
+            RECT windowRect;
+            GetClientRect(this->selfHandle, &windowRect);
 
             // Title bar
             graphics.FillRectangle(&this->titleBarBrush, this->titleArea);
@@ -105,11 +108,20 @@ namespace UKControllerPlugin {
             };
 
             for (int i = 0; i < 8; i++) {
+                if (i == 4) {
+                    graphics.FillRectangle(
+                        &this->blockedLevelBrush,
+                        (INT) windowRect.left,
+                        (INT) numbersDisplay.Y,
+                        (INT) windowRect.right - windowRect.left,
+                        (INT) this->lineHeight
+                    );
+                }
+
                 graphics.DrawString(L"110", 3, &this->font, numbersDisplay, &this->stringFormat, &this->titleBarTextBrush);
                 graphics.DrawString(L"BAW123", 6, &this->font, callsignDisplay, &this->stringFormat, &this->dataBrush);
                 graphics.DrawString(L"083", 3, &this->font, actualLevelDisplay, &this->stringFormat, &this->dataBrush);
                 graphics.DrawString(L"080", 3, &this->font, clearedLevelDisplay, &this->stringFormat, &this->clearedLevelBrush);
-                
 
                 numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
                 callsignDisplay.Y = callsignDisplay.Y + this->lineHeight;
@@ -118,8 +130,6 @@ namespace UKControllerPlugin {
             }
 
             // Border around whole thing, draw this last
-            RECT windowRect;
-            GetClientRect(this->selfHandle, &windowRect);
             graphics.DrawRectangle(
                 &this->borderPen,
                 windowRect.left,
