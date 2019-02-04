@@ -40,5 +40,55 @@ namespace UKControllerPluginTest {
             std::wstring expected = L"351";
             EXPECT_TRUE(expected == UKControllerPlugin::Hold::GetLevelDisplayString(35100));
         }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsTheNearestLevelWhenWellBelowNoClimb)
+        {
+            EXPECT_EQ(8000, UKControllerPlugin::Hold::GetOccupiedLevel(7501, 0));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsTheNearestLevelWhenSlightlyBelowNoClimb)
+        {
+            EXPECT_EQ(8000, UKControllerPlugin::Hold::GetOccupiedLevel(7898, 0));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsTheNearestLevelWhenSlightlyAboveNoClimb)
+        {
+            EXPECT_EQ(8000, UKControllerPlugin::Hold::GetOccupiedLevel(8213, 0));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsTheNearestLevelWhenWellAboveNoClimb)
+        {
+            EXPECT_EQ(8000, UKControllerPlugin::Hold::GetOccupiedLevel(8499, 0));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsNearestLevelWhenClimbingButNotBeyondThreshold)
+        {
+            EXPECT_EQ(8000, UKControllerPlugin::Hold::GetOccupiedLevel(8399, 301));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsNextLevelWhenClimbingBeyondThreshold)
+        {
+            EXPECT_EQ(9000, UKControllerPlugin::Hold::GetOccupiedLevel(8401, 301));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsNextLevelWhenClimbingOnThreshold)
+        {
+            EXPECT_EQ(9000, UKControllerPlugin::Hold::GetOccupiedLevel(8400, 301));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsNearestLevelWhenDescendingButNotBeyondThreshold)
+        {
+            EXPECT_EQ(8000, UKControllerPlugin::Hold::GetOccupiedLevel(7601, -301));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsNextLevelWhenDescendingOnThreshold)
+        {
+            EXPECT_EQ(7000, UKControllerPlugin::Hold::GetOccupiedLevel(7600, -301));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsNextLevelWhenDescendingBeyondThreshold)
+        {
+            EXPECT_EQ(7000, UKControllerPlugin::Hold::GetOccupiedLevel(7599, -301));
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

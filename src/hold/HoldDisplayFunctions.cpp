@@ -4,6 +4,20 @@
 namespace UKControllerPlugin {
     namespace Hold {
 
+        /* 
+            The minimum offset from a holding level that an aircraft must be
+            before it is considered to be going into the next level if climbing
+            or descending.
+        */
+        const unsigned int minimumLevelOffset = 400;
+
+        /*
+            The minimum vertical speed that an aircraft must have in order to be
+            considered to be climbing or descending.
+        */
+        const unsigned int minimumVerticalSpeed = 300;
+
+
         /*
             Converts a C++ string to TCHAR so that we can use it in displays.
         */
@@ -26,7 +40,7 @@ namespace UKControllerPlugin {
         /*
             Given an altitude, return its display value
         */
-        std::wstring GetLevelDisplayString(unsigned int altitude)
+        std::wstring GetLevelDisplayString(int altitude)
         {
             std::wstring altString = std::to_wstring(altitude);
             size_t stringLength = altString.size();
@@ -40,6 +54,26 @@ namespace UKControllerPlugin {
             }
 
             return altString.substr(0, 3);
+        }
+
+        /*
+            Returns the occupied level in the hold, based on altitude and vertical
+            speed
+        */
+        unsigned int GetOccupiedLevel(int altitude, int verticalSpeed)
+        {
+            const int nearestThousand = ((altitude + 500) / 1000) * 1000;
+            const int difference = altitude - nearestThousand;
+
+            if (std::abs(verticalSpeed) < minimumVerticalSpeed) {
+                return nearestThousand;
+            }
+
+            if (verticalSpeed < 0) {
+                return std::abs(difference) >= minimumLevelOffset ? nearestThousand - 1000 : nearestThousand;
+            } else {
+                return std::abs(difference) >= minimumLevelOffset ? nearestThousand + 1000 : nearestThousand;
+            }
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
