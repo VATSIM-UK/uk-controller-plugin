@@ -32,8 +32,8 @@ namespace UKControllerPlugin {
                 NULL,
                 CW_USEDEFAULT,
                 CW_USEDEFAULT,
-                225,
-                250,
+                this->windowWidth,
+                this->windowHeight,
                 euroscopeWindow,
                 NULL,
                 dllInstance,
@@ -146,6 +146,13 @@ namespace UKControllerPlugin {
         {
             switch (msg)
             {
+                case WM_NCHITTEST: {
+                    LRESULT hit = DefWindowProc(hwnd, msg, wParam, lParam);
+                    Gdiplus::REAL xpos = (Gdiplus::REAL) GET_X_LPARAM(lParam);
+                    Gdiplus::REAL ypos = (Gdiplus::REAL) GET_Y_LPARAM(lParam);
+                    if (hit == HTCLIENT) hit = HTCAPTION;
+                    return hit;
+                }
                 case WM_PAINT: {
                     PAINTSTRUCT ps;
                     HDC hdc = BeginPaint(hwnd, &ps);

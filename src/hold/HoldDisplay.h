@@ -55,6 +55,8 @@ namespace UKControllerPlugin {
 
                 // Where to start drawing data
                 const float dataStartHeight = this->titleArea.Y + this->titleArea.Height + 3;
+                const int windowWidth = 225;
+                const int windowHeight = 250;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin
