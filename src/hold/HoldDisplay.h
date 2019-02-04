@@ -40,6 +40,7 @@ namespace UKControllerPlugin {
                 const Gdiplus::SolidBrush clearedLevelBrush;
                 const Gdiplus::HatchBrush blockedLevelBrush;
                 const Gdiplus::Pen borderPen;
+                const Gdiplus::SolidBrush exitButtonBrush;
                 const HBRUSH backgroundBrush;
 
                 // Fonts
@@ -49,6 +50,7 @@ namespace UKControllerPlugin {
 
                 // Titlebar
                 const Gdiplus::RectF titleArea = { 0.0f, 0.0f, 225.0f, 15.0f };
+                const Gdiplus::RectF exitButtonArea = { 212.0f, 2.0f, 11.0f, 11.0f };
 
                 // How high lines should be
                 const float lineHeight = 17.0f;

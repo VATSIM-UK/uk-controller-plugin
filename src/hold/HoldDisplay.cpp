@@ -15,6 +15,7 @@ namespace UKControllerPlugin {
             dataBrush(Gdiplus::Color(0, 176, 0)),
             clearedLevelBrush(Gdiplus::Color(255, 128, 64)),
             borderPen(Gdiplus::Color(255, 255, 255), 1.5f),
+            exitButtonBrush(Gdiplus::Color(0, 0, 0)),
             blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255))
         {
          
@@ -76,6 +77,10 @@ namespace UKControllerPlugin {
                 this->titleArea.X + this->titleArea.Width,
                 this->titleArea.Y + this->titleArea.Height
             );
+
+            // Exit Button
+            graphics.FillRectangle(&this->exitButtonBrush, this->exitButtonArea);
+            graphics.DrawString(L"X", 1, &this->font, this->exitButtonArea, &this->stringFormat, &this->titleBarTextBrush);
 
             // Hold display
             Gdiplus::RectF numbersDisplay = {
