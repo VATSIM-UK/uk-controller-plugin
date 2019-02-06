@@ -37,7 +37,9 @@ namespace UKControllerPlugin {
 
 
             for (auto &thread : this->threads) {
-                thread.join();
+                if (thread.joinable()) {
+                    thread.join();
+                }
             }
             LogInfo("All TaskRunner threads shut down");
         }
