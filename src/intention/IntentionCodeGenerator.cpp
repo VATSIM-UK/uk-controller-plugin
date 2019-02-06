@@ -105,10 +105,14 @@ namespace UKControllerPlugin {
             // Look for a known sector exit fix
             int exitIndex = this->FindFirExitPoint(route);
             if (exitIndex != this->invalidExitPointIndex) {
+
+                if (!this->exitPoints.HasSectorExitPoint(route.GetPointName(exitIndex))) {
+                    LogError("Discovered invalid exit point " + std::string(route.GetPointName(exitIndex)));
+                }
+
                 return IntentionCodeData(
                     this->exitPoints.GetSectorExitPoint(
-                        route.GetPointName(exitIndex)).GetIntentionCode(route, exitIndex, cruiseLevel
-                    ),
+                        route.GetPointName(exitIndex)).GetIntentionCode(route, exitIndex, cruiseLevel),
                     true,
                     exitIndex
                 );
