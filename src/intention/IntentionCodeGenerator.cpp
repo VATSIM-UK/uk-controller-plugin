@@ -108,6 +108,12 @@ namespace UKControllerPlugin {
 
                 if (!this->exitPoints.HasSectorExitPoint(route.GetPointName(exitIndex))) {
                     LogError("Discovered invalid exit point " + std::string(route.GetPointName(exitIndex)));
+                    // Just return the ICAO code.
+                    return IntentionCodeData(
+                        destination,
+                        false,
+                        this->invalidExitPointIndex
+                    );
                 }
 
                 return IntentionCodeData(
