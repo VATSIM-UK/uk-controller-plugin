@@ -182,7 +182,7 @@ TEST_F(ApiHelperTest, FetchRemoteFileReturnsFileString)
 
 TEST_F(ApiHelperTest, GetSquawkAssignmentHandlesNonJsonResponse)
 {
-    CurlResponse response("\"Here is a string what definitely is not json object\"", false, 200);
+    CurlResponse response("<html>here is some html that means something went wrong</html>", false, 200);
 
     EXPECT_CALL(
         this->mockCurlApi,
