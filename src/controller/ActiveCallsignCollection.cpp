@@ -130,7 +130,8 @@ namespace UKControllerPlugin {
             );
 
             if (callsign == this->activeCallsigns.cend()) {
-                throw std::out_of_range("Callsign " + controller.GetCallsign() + " not active.");
+                LogError("Tried to remove inactive callsign " + controller.GetCallsign());
+                return;
             }
 
             // If they're the current user, mark inactive.
