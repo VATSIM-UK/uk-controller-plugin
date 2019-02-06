@@ -22,6 +22,7 @@ using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPlugin::Squawk::SquawkValidator;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Api::RemoteFileManifestFactory;
+using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -82,7 +83,7 @@ namespace UKControllerPlugin {
             return ApiResponseFactory::Create(response);
         }
 
-        std::string ApiHelper::ProcessSquawkResponse(const ApiResponse response, std::string callsign) const
+        ApiSquawkAllocation ApiHelper::ProcessSquawkResponse(const ApiResponse response, std::string callsign) const
         {
             nlohmann::json responseJson = response.GetRawData();
 
@@ -102,13 +103,13 @@ namespace UKControllerPlugin {
                 throw ApiException("Invalid squawk returned from API");
             }
 
-            return responseJson["squawk"];
+            return ApiSquawkAllocation{ callsign, responseJson["squawk"] };
         }
 
         /*
             Creates or updates a general squawk assignment (generates a new squawk for the aircraft).
         */
-        std::string ApiHelper::CreateGeneralSquawkAssignment(
+        ApiSquawkAllocation ApiHelper::CreateGeneralSquawkAssignment(
             std::string callsign,
             std::string origin,
             std::string destination
@@ -125,7 +126,7 @@ namespace UKControllerPlugin {
         /*
             Creates or updates a local squawk assignment (generates a new squawk for the aircraft).
         */
-        std::string ApiHelper::CreateLocalSquawkAssignment(
+        ApiSquawkAllocation ApiHelper::CreateLocalSquawkAssignment(
             std::string callsign,
             std::string unit,
             std::string flightRules
@@ -178,7 +179,7 @@ namespace UKControllerPlugin {
         /*
             Get any currently assigned squawk for the aircraft
         */
-        std::string ApiHelper::GetAssignedSquawk(std::string callsign) const
+        ApiSquawkAllocation ApiHelper::GetAssignedSquawk(std::string callsign) const
         {
             return this->ProcessSquawkResponse(
                 this->MakeApiRequest(

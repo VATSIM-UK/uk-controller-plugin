@@ -117,17 +117,24 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::DoInitialControllerLoad(void)
     {
+        LogInfo("Initial controller load started");
         EuroScopePlugIn::CController current = this->ControllerSelectFirst();
 
         // If there's nobody online, stop.
         if (strcmp(current.GetCallsign(), "") == 0) {
+            LogInfo("Initial controller load complete, none found");
             return;
         }
 
         // Loop through all visible controllers
         do {
+            if (!current.IsValid()) {
+                continue;
+            }
+
             this->OnControllerPositionUpdate(current);
         } while (strcmp((current = this->ControllerSelectNext(current)).GetCallsign(), "") != 0);
+        LogInfo("Initial controller load complete");
     }
 
     /*
@@ -136,17 +143,24 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::DoInitialFlightplanLoad(void)
     {
+        LogInfo("Initial fightplan load started");
         EuroScopePlugIn::CFlightPlan current = this->FlightPlanSelectFirst();
 
         // If there's nobody online, stop.
-        if (strcmp(current.GetCallsign(), "") == 0) {
+        if (!current.IsValid() || strcmp(current.GetCallsign(), "") == 0) {
+            LogInfo("Initial fightplan load complete, none found");
             return;
         }
 
-        // Loop through all visible controllers
+        // Loop through all visible flightplans
         do {
+            if (!current.IsValid() || current.GetSimulated()) {
+                continue;
+            }
+
             this->OnFlightPlanFlightPlanDataUpdate(current);
         } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
+        LogInfo("Initial fightplan load complete");
     }
 
     /*
@@ -193,9 +207,12 @@ namespace UKControllerPlugin {
             throw std::invalid_argument("Flightplan not found");
         }
 
-        return std::shared_ptr<EuroScopeCFlightPlanInterface>(new EuroScopeCFlightPlanWrapper(plan));
+        return std::make_shared<EuroScopeCFlightPlanWrapper>(plan);
     }
 
+    /*
+        Gets a flightplan for a given callsign.
+    */
     std::shared_ptr<EuroScopeCRadarTargetInterface> UKPlugin::GetRadarTargetForCallsign(std::string callsign) const
     {
         EuroScopePlugIn::CRadarTarget target = this->RadarTargetSelect(callsign.c_str());
@@ -204,7 +221,7 @@ namespace UKControllerPlugin {
             throw std::invalid_argument("Target not found");
         }
 
-        return std::shared_ptr<EuroScopeCRadarTargetInterface>(new EuroScopeCRadarTargetWrapper(target));
+        return std::make_shared<EuroScopeCRadarTargetWrapper>(target);
     }
 
     /*
@@ -220,8 +237,13 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnControllerDisconnect(EuroScopePlugIn::CController Controller)
     {
+        if (!Controller.IsValid()) {
+            return;
+        }
+
+        EuroScopeCControllerWrapper wrapper(Controller, this->ControllerIsMe(Controller, this->ControllerMyself()));
         this->statusEventHandler.ControllerDisconnectEvent(
-            EuroScopeCControllerWrapper(Controller, this->ControllerIsMe(Controller, this->ControllerMyself()))
+            wrapper
         );
     }
 
@@ -230,8 +252,13 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnControllerPositionUpdate(EuroScopePlugIn::CController Controller)
     {
+        if (!Controller.IsValid()) {
+            return;
+        }
+
+        EuroScopeCControllerWrapper wrapper(Controller, this->ControllerIsMe(Controller, this->ControllerMyself()));
         this->statusEventHandler.ControllerUpdateEvent(
-            EuroScopeCControllerWrapper(Controller, this->ControllerIsMe(Controller, this->ControllerMyself()))
+            wrapper
         );
     }
 
@@ -240,9 +267,15 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanControllerAssignedDataUpdate(EuroScopePlugIn::CFlightPlan flightPlan, int dataType)
     {
+        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
+            return;
+        }
+
+        EuroScopeCFlightPlanWrapper flightplanWrapper(flightPlan);
+        EuroScopeCRadarTargetWrapper radarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign()));
         this->flightplanEventHandler.ControllerFlightPlanDataEvent(
-            EuroScopeCFlightPlanWrapper(flightPlan),
-            EuroScopeCRadarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign())),
+            flightplanWrapper,
+            radarTargetWrapper,
             dataType
         );
     }
@@ -252,9 +285,15 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanFlightPlanDataUpdate(EuroScopePlugIn::CFlightPlan flightPlan)
     {
+        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
+            return;
+        }
+
+        EuroScopeCFlightPlanWrapper flightplanWrapper(flightPlan);
+        EuroScopeCRadarTargetWrapper radarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign()));
         this->flightplanEventHandler.FlightPlanEvent(
-            EuroScopeCFlightPlanWrapper(flightPlan),
-            EuroScopeCRadarTargetWrapper(this->RadarTargetSelect(flightPlan.GetCallsign()))
+            flightplanWrapper,
+            radarTargetWrapper
         );
     }
 
@@ -264,8 +303,13 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanDisconnect(EuroScopePlugIn::CFlightPlan flightPlan)
     {
+        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
+            return;
+        }
+
+        EuroScopeCFlightPlanWrapper flightplanWrapper(flightPlan);
         this->flightplanEventHandler.FlightPlanDisconnectEvent(
-            EuroScopeCFlightPlanWrapper(flightPlan)
+            flightplanWrapper
         );
     }
 
@@ -295,11 +339,17 @@ namespace UKControllerPlugin {
         COLORREF * pRGB,
         double * pFontSize
     ) {
+        if (!FlightPlan.IsValid() || !RadarTarget.IsValid()) {
+            return;
+        }
+
+        EuroScopeCFlightPlanWrapper flightplanWrapper(FlightPlan);
+        EuroScopeCRadarTargetWrapper radarTargetWrapper(RadarTarget);
         this->tagEvents.TagItemUpdate(
             ItemCode,
             sItemString,
-            EuroScopeCFlightPlanWrapper(FlightPlan),
-            EuroScopeCRadarTargetWrapper(RadarTarget)
+            flightplanWrapper,
+            radarTargetWrapper
         );
     }
 
@@ -308,10 +358,6 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnNewMetarReceived(const char * sStation, const char * sFullMetar)
     {
-#ifdef _DEBUG
-        this->DisplayUserMessage("message", "UKCP", "New Metar", false, false, false, false, false);
-        this->DisplayUserMessage("message", "UKCP", sStation, false, false, false, false, false);
-#endif
         this->metarHandlers.NewMetarEvent(sStation, sFullMetar);
     }
 
@@ -337,7 +383,12 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnRadarTargetPositionUpdate(EuroScopePlugIn::CRadarTarget radarTarget)
     {
-        this->radarTargetEventHandler.RadarTargetEvent(EuroScopeCRadarTargetWrapper(radarTarget));
+        if (!radarTarget.IsValid()) {
+            return;
+        }
+
+        EuroScopeCRadarTargetWrapper radarTargetWrapper(radarTarget);
+        this->radarTargetEventHandler.RadarTargetEvent(radarTargetWrapper);
     }
 
     /*

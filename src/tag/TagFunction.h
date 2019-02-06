@@ -11,8 +11,8 @@ namespace UKControllerPlugin {
     namespace Tag {
 
         /*
-        Represents a function that EuroScope will call through its
-        OnFunctionCall interface.
+            Represents a function that EuroScope will call through its
+            OnFunctionCall interface.
         */
         typedef struct TagFunction {
 

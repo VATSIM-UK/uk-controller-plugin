@@ -25,6 +25,16 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, collection.CountDisplays());
         }
 
+        TEST(ConfigurableDisplayCollection, DoesNotAddDuplicates)
+        {
+            ConfigurableDisplayCollection collection;
+            std::shared_ptr<MockConfigurableDisplay> testDisplay = std::make_shared<MockConfigurableDisplay>();
+            collection.RegisterDisplay(testDisplay);
+            EXPECT_EQ(1, collection.CountDisplays());
+            collection.RegisterDisplay(testDisplay);
+            EXPECT_EQ(1, collection.CountDisplays());
+        }
+
         TEST(ConfigurableDisplayCollection, IsIterable)
         {
             ConfigurableDisplayCollection collection;

@@ -65,12 +65,24 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE("B744/H" == handler.GetTagItemData(this->flightplan2, this->radarTarget));
         }
 
+        TEST_F(WakeCategoryEventHandlerTest, TestFlightplanEventHandlesNonExistantCacheItem)
+        {
+            WakeCategoryEventHandler handler(this->mapper);
+            handler.FlightPlanEvent(this->flightplan, this->radarTarget);
+        }
+
         TEST_F(WakeCategoryEventHandlerTest, TestFlightplanDisconnectsClearTheCache)
         {
             WakeCategoryEventHandler handler(this->mapper);
             EXPECT_TRUE("B733/LM" == handler.GetTagItemData(this->flightplan, this->radarTarget));
             handler.FlightPlanDisconnectEvent(this->flightplan);
             EXPECT_TRUE("B744/H" == handler.GetTagItemData(this->flightplan2, this->radarTarget));
+        }
+
+        TEST_F(WakeCategoryEventHandlerTest, TestFlightplanDisconnectEventHandlesNonExistantCacheItem)
+        {
+            WakeCategoryEventHandler handler(this->mapper);
+            handler.FlightPlanDisconnectEvent(this->flightplan);
         }
 
     }  // namespace Wake

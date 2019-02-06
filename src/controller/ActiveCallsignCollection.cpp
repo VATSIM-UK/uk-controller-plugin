@@ -129,7 +129,7 @@ namespace UKControllerPlugin {
                 controller.GetCallsign()
             );
 
-            if (callsign == this->activeCallsigns.cend()) {
+            if (callsign == this->activeCallsigns.end()) {
                 LogError("Tried to remove inactive callsign " + controller.GetCallsign());
                 return;
             }

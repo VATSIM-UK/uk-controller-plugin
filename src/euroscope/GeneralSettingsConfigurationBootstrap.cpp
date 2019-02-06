@@ -21,12 +21,10 @@ namespace UKControllerPlugin {
             FunctionCallEventHandler & functionHandler,
             ConfigurableDisplayCollection & configurableDisplays,
             CommandHandlerCollection & commandHandlers,
-            UserSetting & userSettings,
-            const WinApiInterface & winApi
+            WinApiInterface & winApi
         ) {
             int callbackFunctionId = functionHandler.ReserveNextDynamicFunctionId();
             std::shared_ptr<GeneralSettingsConfiguration> dialog = std::make_shared<GeneralSettingsConfiguration>(
-                userSettings,
                 winApi,
                 callbackFunctionId
             );

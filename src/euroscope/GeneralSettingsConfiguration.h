@@ -6,9 +6,6 @@ namespace UKControllerPlugin {
     namespace Windows {
         class WinApiInterface;
     }  // namespace Windows
-    namespace Euroscope {
-        class UserSetting;
-    }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -22,8 +19,7 @@ namespace UKControllerPlugin {
         {
             public:
                 GeneralSettingsConfiguration(
-                    UKControllerPlugin::Euroscope::UserSetting & userSettings,
-                    const UKControllerPlugin::Windows::WinApiInterface & winApi,
+                    UKControllerPlugin::Windows::WinApiInterface & winApi,
                     const int menuSelectedCallbackId
                 );
 
@@ -45,11 +41,8 @@ namespace UKControllerPlugin {
 
             private:
 
-                // A place that provides storage for user settings
-                UKControllerPlugin::Euroscope::UserSetting & userSettings;
-
                 // A link to the Windows API
-                const UKControllerPlugin::Windows::WinApiInterface & winApi;
+                UKControllerPlugin::Windows::WinApiInterface & winApi;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

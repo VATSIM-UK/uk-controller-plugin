@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
         */
         std::string WakeCategoryMapper::MapFlightplanToCategory(const EuroScopeCFlightPlanInterface & flightPlan) const
         {
-            return this->typeMap.count(flightPlan.GetAircraftType()) ?
+            return this->typeMap.count(flightPlan.GetAircraftType()) == 1 ?
                 this->typeMap.at(flightPlan.GetAircraftType()) :
                 flightPlan.GetIcaoWakeCategory();
         }
