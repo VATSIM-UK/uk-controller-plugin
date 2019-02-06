@@ -98,6 +98,28 @@ TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfServerError)
     EXPECT_THROW(this->helper.UpdateCheck("1.0.0"), ApiException);
 }
 
+TEST_F(ApiHelperTest, ItThrowsAnExceptionIfBadRequest)
+{
+    CurlResponse response("{\"version_disabled\": false, \"update_available\": false}", false, 401);
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/version/1.0.0/status", CurlRequest::METHOD_GET)))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.UpdateCheck("1.0.0"), ApiException);
+}
+
+TEST_F(ApiHelperTest, ItThrowsAnExceptionIfUnknownResponseCode)
+{
+    CurlResponse response("{\"version_disabled\": false, \"update_available\": false}", false, 666);
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/version/1.0.0/status", CurlRequest::METHOD_GET)))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.UpdateCheck("1.0.0"), ApiException);
+}
+
 TEST_F(ApiHelperTest, UpdateCheckReturnsOkIfVersionOk)
 {
     CurlResponse response("{\"version_disabled\": false, \"update_available\": false}", false, 200);
@@ -156,6 +178,20 @@ TEST_F(ApiHelperTest, FetchRemoteFileReturnsFileString)
         .WillOnce(Return(response));
 
     EXPECT_TRUE(responseJson.dump() == this->helper.FetchRemoteFile("http://test.com/averynicefile"));
+}
+
+TEST_F(ApiHelperTest, GetSquawkAssignmentHandlesNonJsonResponse)
+{
+    CurlResponse response("\"Here is a string what definitely is not json object\"", false, 200);
+
+    EXPECT_CALL(
+        this->mockCurlApi,
+        MakeCurlRequest(GetApiCurlRequest("/squawk-assignment/BAW123", CurlRequest::METHOD_GET))
+    )
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.GetAssignedSquawk("BAW123"), ApiException);
 }
 
 TEST_F(ApiHelperTest, GetSquawkAssignmentReturnsSquawk)
@@ -254,7 +290,6 @@ TEST_F(ApiHelperTest, CreateGeneralThrowsExceptionIfNoSquawkInResponse)
 
     CurlRequest r1 = GetApiRequestBuilder().BuildGeneralSquawkAssignmentRequest("BAW123", "EGKK", "EGCC");
     CurlRequest r2 = GetApiCurlRequest("/squawk-assignment/BAW123", CurlRequest::METHOD_PUT, requestBody);
-    bool eq = r1 == r2;
 
     EXPECT_CALL(
         this->mockCurlApi,
