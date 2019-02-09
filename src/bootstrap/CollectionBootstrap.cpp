@@ -34,8 +34,6 @@ namespace UKControllerPlugin {
                 new AirfieldOwnershipManager(*persistence.airfields, *persistence.activeCallsigns)
             );
             persistence.flightplans.reset(new StoredFlightplanCollection);
-            persistence.metarEventHandler.reset(new MetarEventHandlerCollection);
-            persistence.commandHandlers.reset(new CommandHandlerCollection);
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

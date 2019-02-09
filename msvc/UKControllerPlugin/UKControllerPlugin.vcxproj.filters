@@ -699,6 +699,21 @@
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h">
       <Filter>src\initialaltitude</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\LoadDefaultUserSettings.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h">
+      <Filter>src\squawk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h">
+      <Filter>src\squawk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -709,6 +724,7 @@
     <Media Include="..\..\resource\sound\beep.wav">
       <Filter>resource\sound</Filter>
     </Media>
+    <Media Include="..\..\..\resource\sound\beep.wav" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\airfield\Airfield.cpp">
@@ -1181,6 +1197,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp">
       <Filter>src\initialaltitude</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp">
+      <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp">
+      <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp">
+      <Filter>src\squawk</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

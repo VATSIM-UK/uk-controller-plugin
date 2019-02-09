@@ -113,7 +113,7 @@ namespace UKControllerPlugin {
                 // AA ASR settings
                 const std::string antialiasUserSettingKey = "HistoryTrailAntiAlias";
 
-                const std::string antialiasUserSettingDescription = "UCKP History Trail Antialias";
+                const std::string antialiasUserSettingDescription = "UKCP History Trail Antialias";
 
                 // Trail length ASR settings
                 const std::string trailLengthUserSettingKey = "HistoryTrailLength";

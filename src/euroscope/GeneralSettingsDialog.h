@@ -3,6 +3,7 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
         class UserSetting;
+        class UserSettingAwareCollection;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
@@ -20,9 +21,10 @@ namespace UKControllerPlugin {
 
                 GeneralSettingsDialog(
                     CWnd * parentWindow,
-                    UKControllerPlugin::Euroscope::UserSetting & userSettings
+                    UKControllerPlugin::Euroscope::UserSetting & userSettings,
+                    const UKControllerPlugin::Euroscope::UserSettingAwareCollection & userSettingsHandlers
                 );
-                GeneralSettingsDialog(void);
+                GeneralSettingsDialog(const GeneralSettingsDialog & newObject);
 
                 BOOL OnInitDialog(void);
                 void OnOK(void);
@@ -42,8 +44,17 @@ namespace UKControllerPlugin {
                 // The checkbox for whether prenotes should be notfied to the user
                 CButton prenoteEnabledCheckbox;
 
+                // The checkbox for whether automatic squawk assignment should be done
+                CButton squawksEnabledCheckbox;
+
+                // The checkbox for whether automatic initial altitude assignment should be done
+                CButton initialAltitudeEnabledCheckbox;
+
                 // A place where user settings are retrieved and stored
                 UKControllerPlugin::Euroscope::UserSetting & userSettings;
+
+                // A set of handlers that want to know when user settings get updated
+                const UKControllerPlugin::Euroscope::UserSettingAwareCollection & userSettingsHandlers;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

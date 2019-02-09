@@ -1,5 +1,6 @@
 #pragma once
 #include "api/RemoteFileManifest.h"
+#include "squawk/ApiSquawkAllocation.h"
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -10,12 +11,12 @@ namespace UKControllerPlugin {
         class ApiInterface
         {
             public:
-                virtual std::string CreateGeneralSquawkAssignment(
+                virtual UKControllerPlugin::Squawk::ApiSquawkAllocation CreateGeneralSquawkAssignment(
                     std::string callsign,
                     std::string origin,
                     std::string destination
                 ) const = 0;
-                virtual std::string CreateLocalSquawkAssignment(
+                virtual UKControllerPlugin::Squawk::ApiSquawkAllocation CreateLocalSquawkAssignment(
                     std::string callsign,
                     std::string unit,
                     std::string flightRules
@@ -24,7 +25,9 @@ namespace UKControllerPlugin {
                 virtual void DeleteSquawkAssignment(std::string callsign) const = 0;
                 virtual UKControllerPlugin::Api::RemoteFileManifest FetchDependencyManifest(void) const = 0;
                 virtual std::string FetchRemoteFile(std::string uri) const = 0;
-                virtual std::string GetAssignedSquawk(std::string callsign) const = 0;
+                virtual UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(
+                    std::string callsign
+                ) const = 0;
                 virtual std::string GetApiDomain(void) const = 0;
                 virtual std::string GetApiKey(void) const = 0;
                 virtual int UpdateCheck(std::string version) const = 0;

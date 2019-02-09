@@ -37,11 +37,18 @@ namespace UKControllerPlugin {
                 1024 * 1024,
                 3
             );
-            rotatingSink->set_level(spdlog::level::info);
 
             std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("rotating logger", rotatingSink);
             logger->set_pattern("%Y-%m-%d %T [%l] - %v");
+
+#ifdef DEBUG
+            logger->set_level(spdlog::level::trace);
+            logger->flush_on(spdlog::level::trace);
+#else
+            logger->set_level(spdlog::level::info);
             logger->flush_on(spdlog::level::info);
+#endif  // DEBUG
+
             SetLoggerInstance(logger);
             LogInfo("Log opened");
         }

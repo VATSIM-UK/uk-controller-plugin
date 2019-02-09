@@ -26,6 +26,7 @@ namespace UKControllerPlugin {
                 double GetFloatEntry(std::string key, float defaultValue = 0.0f);
                 int GetIntegerEntry(std::string key, int defaultValue = 0);
                 std::string GetStringEntry(std::string key, std::string defaultValue = "");
+                bool HasEntry(std::string key);
                 void Save(std::string name, std::string description, std::string data);
                 void Save(std::string name, std::string description, int data);
                 void Save(std::string name, std::string description, bool data);
