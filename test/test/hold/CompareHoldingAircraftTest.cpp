@@ -18,20 +18,20 @@ namespace UKControllerPluginTest {
 
         TEST_F(CompareHoldingAircraftTest, LessThanStringReturnsTrueIfLessThan)
         {
-            HoldingAircraft hold = { "BAW123", "TIMBA", 7000, 8000 };
+            HoldingAircraft hold = { "BAW123", std::chrono::system_clock::now() };
             EXPECT_TRUE(compare(hold, "BAW124"));
         }
 
         TEST_F(CompareHoldingAircraftTest, LessThanStructReturnsTrueIfLessThan)
         {
-            HoldingAircraft hold = { "BAW124", "TIMBA", 7000, 8000 };
+            HoldingAircraft hold = { "BAW124", std::chrono::system_clock::now() };
             EXPECT_TRUE(compare("BAW123", hold));
         }
 
         TEST_F(CompareHoldingAircraftTest, CompareReturnsTrueIfFirstLessThanLast)
         {
-            HoldingAircraft hold1 = { "BAW123", "TIMBA", 7000, 8000 };
-            HoldingAircraft hold2 = { "BAW124", "TIMBA", 7000, 8000 };
+            HoldingAircraft hold1 = { "BAW123", std::chrono::system_clock::now() };
+            HoldingAircraft hold2 = { "BAW124", std::chrono::system_clock::now() };
             EXPECT_TRUE(compare(hold1, hold2));
         }
     }  // namespace Hold

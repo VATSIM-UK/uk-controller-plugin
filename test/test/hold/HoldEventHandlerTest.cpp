@@ -79,15 +79,6 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(manager.AircraftIsInHold("WILLO", "BAW123"));
         }
 
-        TEST_F(HoldEventHandlerTest, TimedEventTriggersDataUpdate)
-        {
-            EXPECT_EQ(8000, manager.GetAircraftInHold("WILLO").find("BAW123")->clearedAltitude);
-            EXPECT_EQ(9000, manager.GetAircraftInHold("WILLO").find("BAW123")->reportedAltitude);
-            manager.UpdateHoldingAircraft(this->mockPlugin);
-            EXPECT_EQ(7000, manager.GetAircraftInHold("WILLO").find("BAW123")->clearedAltitude);
-            EXPECT_EQ(8000, manager.GetAircraftInHold("WILLO").find("BAW123")->reportedAltitude);
-        }
-
         TEST_F(HoldEventHandlerTest, ItCanBeConfiguredFromTheMenu)
         {
             PopupMenuItem expected;

@@ -1,10 +1,8 @@
 #include "pch/stdafx.h"
 #include "hold/HoldManager.h"
-#include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope//EuroScopeCRadarTargetInterface.h"
 
-using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 
@@ -50,9 +48,6 @@ namespace UKControllerPlugin {
             managedHold->second.insert(
                 {
                     flightplan.GetCallsign(),
-                    hold,
-                    radarTarget.GetFlightLevel(),
-                    flightplan.GetClearedAltitude(),
                     std::chrono::system_clock::now()
                 }
             );
@@ -125,41 +120,6 @@ namespace UKControllerPlugin {
         void HoldManager::RemoveHold(std::string hold)
         {
             this->holdData.erase(hold);
-        }
-
-        /*
-            Update every aircraftin the holds, namely its cleared level and its actual level
-        */
-        void HoldManager::UpdateHoldingAircraft(EuroscopePluginLoopbackInterface & plugin)
-        {
-            // Iterate the active holds
-            for (
-                std::map<std::string, std::set<HoldingAircraft, CompareHoldingAircraft>>::iterator itHold =
-                    this->holdData.begin();
-                itHold != this->holdData.end();
-                ++itHold
-            ) {
-
-                // Iterate the aircraft in the holds
-                for (
-                    std::set<HoldingAircraft, CompareHoldingAircraft>::iterator itAircraft = itHold->second.begin();
-                    itAircraft != itHold->second.end();
-                    ++itAircraft
-                ) {
-                    try {
-                        // Update the flightplan
-                        itAircraft->clearedAltitude = plugin.GetFlightplanForCallsign(
-                            itAircraft->callsign
-                        )->GetClearedAltitude();
-
-                        itAircraft->reportedAltitude = plugin.GetRadarTargetForCallsign(
-                            itAircraft->callsign
-                        )->GetFlightLevel();
-                    } catch (std::invalid_argument) {
-                        // Cant update, no FP.
-                    }
-                }
-            }
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
