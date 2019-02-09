@@ -37,7 +37,9 @@ namespace UKControllerPlugin {
 
 
             for (auto &thread : this->threads) {
-                thread.join();
+                if (thread.joinable()) {
+                    thread.join();
+                }
             }
             LogInfo("All TaskRunner threads shut down");
         }
@@ -110,8 +112,8 @@ namespace UKControllerPlugin {
                     // Do the task
                     currentTask();
                 }
-                catch (...) {
-                    // For the moment, if we hit an exception, just do nothing.
+                catch (std::exception exception) {
+                    LogError("Unhandled exception in task runner " + std::string(exception.what()));
                 }
             }
         }
@@ -154,8 +156,8 @@ namespace UKControllerPlugin {
                 try {
                     currentTask();
                 }
-                catch (...) {
-                    // For the moment, if we hit an exception, just do nothing.
+                catch (std::exception exception) {
+                    LogError("Unhandled exception in task runner " + std::string(exception.what()));
                 }
             }
         }

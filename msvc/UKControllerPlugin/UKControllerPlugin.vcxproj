@@ -91,10 +91,13 @@
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsDialog.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsEntries.h" />
+    <ClInclude Include="..\..\src\euroscope\LoadDefaultUserSettings.h" />
     <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingProviderInterface.h" />
     <ClInclude Include="..\..\src\flightplan\DeferredFlightplanEvent.h" />
     <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.h" />
@@ -197,6 +200,8 @@
     <ClInclude Include="..\..\src\setting\SettingRepository.h" />
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
     <ClInclude Include="..\..\src\setting\SettingValue.h" />
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h" />
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h" />
     <ClInclude Include="..\..\src\squawk\SquawkAssignment.h" />
     <ClInclude Include="..\..\src\squawk\SquawkEventHandler.h" />
     <ClInclude Include="..\..\src\squawk\SquawkGenerator.h" />
@@ -286,9 +291,11 @@
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsDialog.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsEntries.cpp" />
+    <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp" />
     <ClCompile Include="..\..\src\euroscope\PluginUserSettingBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />
+    <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightplanStorageBootstrap.cpp" />
@@ -375,6 +382,7 @@
     <ClCompile Include="..\..\src\radarscreen\UKRadarScreen.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
+    <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkAssignment.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkEventHandler.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkGenerator.cpp" />

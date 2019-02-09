@@ -1,18 +1,21 @@
 #include "pch/stdafx.h"
 #include "euroscope/EuroScopeCFlightPlanWrapper.h"
+#include "squawk/SquawkValidator.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
+using UKControllerPlugin::Squawk::SquawkValidator;
+
 namespace UKControllerPlugin {
     namespace Euroscope {
 
-        EuroScopeCFlightPlanWrapper::EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan & originalData)
+        EuroScopeCFlightPlanWrapper::EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan originalData)
         {
             this->originalData = originalData;
         }
 
         std::string EuroScopeCFlightPlanWrapper::GetAircraftType(void) const
         {
-            return this->originalData.GetFlightPlanData().GetAircraftInfo();
+            return this->originalData.GetFlightPlanData().GetAircraftFPType();
         }
 
         const std::string EuroScopeCFlightPlanWrapper::GetCallsign(void) const
@@ -75,6 +78,11 @@ namespace UKControllerPlugin {
             return this->originalData.GetFlightPlanData().GetOrigin();
         }
 
+        std::string EuroScopeCFlightPlanWrapper::GetRawRouteString(void) const
+        {
+            return this->originalData.GetFlightPlanData().GetRoute();
+        }
+
         const std::string EuroScopeCFlightPlanWrapper::GetSidName(void) const
         {
             return this->originalData.GetFlightPlanData().GetSidName();
@@ -83,13 +91,12 @@ namespace UKControllerPlugin {
         bool EuroScopeCFlightPlanWrapper::HasAssignedSquawk(void) const
         {
             std::string squawk = this->originalData.GetControllerAssignedData().GetSquawk();
-
-            return squawk != "0200" &&
+            return SquawkValidator::ValidSquawk(squawk) &&
+                squawk != "0200" &&
                 squawk != "2200" &&
                 squawk != "1200" &&
                 squawk != "2000" &&
-                squawk != "0000" &&
-                squawk != "";
+                squawk != "0000";
         }
 
         const bool EuroScopeCFlightPlanWrapper::HasControllerClearedAltitude(void) const
@@ -146,6 +153,14 @@ namespace UKControllerPlugin {
         bool EuroScopeCFlightPlanWrapper::IsValid(void) const
         {
             return this->originalData.IsValid();
+        }
+
+        /*
+            Returns true if the flightplan is VFR
+        */
+        bool EuroScopeCFlightPlanWrapper::IsVfr(void) const
+        {
+            return strcmp(this->originalData.GetFlightPlanData().GetPlanType(), "V") == 0;
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

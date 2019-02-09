@@ -38,6 +38,7 @@
 #include "login/Login.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldingDataCollection.h"
+#include "euroscope/UserSettingAwareCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -72,6 +73,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Euroscope::AsrEventHandlerCollection> asrEventHandlers;
             std::unique_ptr<UKControllerPlugin::Command::CommandHandlerCollection> commandHandlers;
             std::shared_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferredHandlers;
+            std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareCollection> userSettingHandlers;
 
             // The plugin
             std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;

@@ -27,14 +27,14 @@ class ConfigurableDisplayCollection
             std::shared_ptr<UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface> radarScreen
         );
 
-        typedef std::set<std::shared_ptr<UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface>> DisplaySet;
+        typedef std::list<std::shared_ptr<UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface>> DisplaySet;
         typedef DisplaySet::iterator iterator;
         typedef DisplaySet::const_iterator const_iterator;
         const_iterator cbegin() const { return displays.cbegin(); }  // namespace UKControllerPlugin
         const_iterator cend() const { return displays.cend(); }  // namespace Euroscope
 
     private:
-        std::set<std::shared_ptr<UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface>> displays;
+        std::list<std::shared_ptr<UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface>> displays;
 };
 
 }  // namespace RadarScreen

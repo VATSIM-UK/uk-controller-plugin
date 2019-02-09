@@ -10,63 +10,45 @@ using UKControllerPlugin::Bootstrap::CollectionBootstrap;
 using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
+using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace Bootstrap {
 
-        TEST(CollectionBootstrap, BootstrapPluginCreatesActiveCallsigns)
+        class CollectionBootstrapTest : public Test
         {
-            PersistenceContainer container;
-            container.timedHandler.reset(new TimedEventCollection);
-            DependencyCache dependency;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+            public:
+                void SetUp()
+                {
+                    container.timedHandler.reset(new TimedEventCollection);
+                    container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+                }
+                PersistenceContainer container;
+                DependencyCache dependency;
+        };
 
-            CollectionBootstrap::BootstrapPlugin(container, dependency);
+        TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesActiveCallsigns)
+        {
+            CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
             EXPECT_NO_THROW(container.activeCallsigns->Flush());
         }
 
-        TEST(CollectionBootstrap, BootstrapPluginCreatesAirfields)
+        TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesAirfields)
         {
-            PersistenceContainer container;
-            container.timedHandler.reset(new TimedEventCollection);
-            DependencyCache dependency;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-
-            CollectionBootstrap::BootstrapPlugin(container, dependency);
+            CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
             EXPECT_NO_THROW(container.airfields->GetSize());
         }
 
-        TEST(CollectionBootstrap, BootstrapPluginCreatesAirfieldOwnership)
+        TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesAirfieldOwnership)
         {
-            PersistenceContainer container;
-            container.timedHandler.reset(new TimedEventCollection);
-            DependencyCache dependency;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-
-            CollectionBootstrap::BootstrapPlugin(container, dependency);
+            CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
             EXPECT_NO_THROW(container.airfieldOwnership->Flush());
         }
 
-        TEST(CollectionBootstrap, BootstrapPluginCreatesFlightplans)
+        TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesFlightplans)
         {
-            PersistenceContainer container;
-            container.timedHandler.reset(new TimedEventCollection);
-            DependencyCache dependency;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-
-            CollectionBootstrap::BootstrapPlugin(container, dependency);
+            CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
             EXPECT_NO_THROW(container.flightplans->cend());
-        }
-
-        TEST(CollectionBootstrap, BootstrapPluginCreatesMetars)
-        {
-            PersistenceContainer container;
-            container.timedHandler.reset(new TimedEventCollection);
-            DependencyCache dependency;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-
-            CollectionBootstrap::BootstrapPlugin(container, dependency);
-            EXPECT_NO_THROW(container.metarEventHandler->CountHandlers());
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPluginTest

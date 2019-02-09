@@ -21,6 +21,13 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, parser.ParseFacilityFromCallsign(callsign).compare("EGKK"));
         }
 
+        TEST(ControllerPositionParser, ParseFacilityGracefullyHandlesNonCallsigns)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "GATWICK";
+            EXPECT_EQ(0, parser.ParseFacilityFromCallsign(callsign).compare("GATWICK"));
+        }
+
         TEST(ControllerPositionParser, ParseFacilityFromCallsignWorksForEdgeCase)
         {
             ControllerPositionParser parser;

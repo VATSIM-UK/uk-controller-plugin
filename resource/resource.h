@@ -31,6 +31,8 @@
 #define IDC_MIN_FILTER_TEXT             1019
 #define IDC_MIN_FILTER_SPIN             1020
 #define IDC_MIN_FILTER_LABEL            1021
+#define GS_DIALOG_IA_CHECK              1022
+#define GS_DIALOG_SQUAWK_CHECK          1023
 
 // Next default values for new objects
 // 
@@ -38,7 +40,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        109
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1022
+#define _APS_NEXT_CONTROL_VALUE         1024
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

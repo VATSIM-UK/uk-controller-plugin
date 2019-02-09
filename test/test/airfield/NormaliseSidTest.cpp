@@ -6,6 +6,13 @@ using UKControllerPlugin::Airfield::NormaliseSid;
 namespace UKControllerPluginTest {
     namespace Airfield {
 
+        TEST(SidParser, StripSidDeprecationHandlesEmptyString)
+        {
+            NormaliseSid normalise;
+            std::string expected = "";
+            ASSERT_EQ(0, expected.compare(normalise.StripSidDeprecation("")));
+        }
+
         TEST(SidParser, StripSidDeprecationRemovesDeprecationMarkerAtStart)
         {
             NormaliseSid normalise;

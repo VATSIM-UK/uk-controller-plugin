@@ -49,7 +49,6 @@ namespace UKControllerPlugin {
                 *persistence.pluginFunctionHandlers,
                 configurableDisplays,
                 commandHandlers,
-                *persistence.pluginUserSettingHandler,
                 *persistence.windows
             );
 

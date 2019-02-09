@@ -31,6 +31,8 @@ class FunctionCallEventHandler
         ) const;
         size_t CountCallbacks(void) const;
         size_t CountTagFunctions(void) const;
+        bool HasCallbackFunction(int id) const;
+        bool HasTagFunction(int id) const;
         int ReserveNextDynamicFunctionId(void);
         void RegisterFunctionCall(const UKControllerPlugin::Euroscope::CallbackFunction function);
         void RegisterFunctionCall(const UKControllerPlugin::Tag::TagFunction function);

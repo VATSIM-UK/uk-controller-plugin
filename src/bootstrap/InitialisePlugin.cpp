@@ -140,6 +140,12 @@ namespace UKControllerPlugin {
         this->container = std::make_unique<PersistenceContainer>();
 
         // Do helpers.
+        EventHandlerCollectionBootstrap::BoostrapPlugin(*this->container);
+
+        // Bootstrap the plugin itself
+        UkPluginBootstrap::BootstrapPlugin(*this->container);
+        PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
+
         ExternalsBootstrap::Bootstrap(*this->container, this->m_hInstance);
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
@@ -176,18 +182,13 @@ namespace UKControllerPlugin {
         LoadNewDependencies(*this->container, &dependencyCache);
 
         // Boostrap all the modules at a plugin level
-        EventHandlerCollectionBootstrap::BoostrapPlugin(*this->container);
         CollectionBootstrap::BootstrapPlugin(*this->container, dependencyCache);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
-
-        // Bootstrap the plugin
-        UkPluginBootstrap::BootstrapPlugin(*this->container);
 
         // Bootstrap helpers
         UKControllerPlugin::Wake::BootstrapPlugin(*this->container, dependencyCache);
         LoginModule::BootstrapPlugin(*this->container);
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
-        PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
         DeferredEventBootstrap(*this->container->timedHandler);
 
         // Bootstrap the modules

@@ -28,12 +28,12 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Windows::WinApiInterface & winApi
                 );
 
-                std::string CreateGeneralSquawkAssignment(
+                UKControllerPlugin::Squawk::ApiSquawkAllocation CreateGeneralSquawkAssignment(
                     std::string callsign,
                     std::string origin,
                     std::string destination
                 ) const override;
-                std::string CreateLocalSquawkAssignment(
+                UKControllerPlugin::Squawk::ApiSquawkAllocation CreateLocalSquawkAssignment(
                     std::string callsign,
                     std::string unit,
                     std::string flightRules
@@ -42,7 +42,7 @@ namespace UKControllerPlugin {
                 void DeleteSquawkAssignment(std::string callsign) const override;
                 UKControllerPlugin::Api::RemoteFileManifest FetchDependencyManifest(void) const override;
                 std::string FetchRemoteFile(std::string uri) const override;
-                std::string GetAssignedSquawk(std::string callsign) const override;
+                UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(std::string callsign) const override;
                 std::string GetApiDomain(void) const override;
                 std::string GetApiKey(void) const override;
                 nlohmann::json GetHoldDependency(void) const override;
@@ -66,7 +66,10 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Curl::CurlRequest request
                 ) const;
 
-                std::string ProcessSquawkResponse(const ApiResponse response, std::string callsign) const;
+                UKControllerPlugin::Squawk::ApiSquawkAllocation ProcessSquawkResponse(
+                    const ApiResponse response,
+                    std::string callsign
+                ) const;
 
                 // For doing things on the filesystem, if we really need to
                 UKControllerPlugin::Windows::WinApiInterface & winApi;
