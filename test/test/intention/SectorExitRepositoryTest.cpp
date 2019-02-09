@@ -38,12 +38,12 @@ namespace UKControllerPluginTest {
             // TRACA
             ASSERT_TRUE(repo->GetSectorExitPoint("TRACA").GetName().compare("TRACA") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("TRACA").GetIntentionCode(mockRoute, 0, 37000).compare("D2") == 0);
-            ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("TRACA").GetOutDirection());
+            ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("TRACA").GetOutDirection());
 
             // MOTOX
             ASSERT_TRUE(repo->GetSectorExitPoint("MOTOX").GetName().compare("MOTOX") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("MOTOX").GetIntentionCode(mockRoute, 0, 37000).compare("D3") == 0);
-            ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("MOTOX").GetOutDirection());
+            ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("MOTOX").GetOutDirection());
 
             // Clacton
 
@@ -67,7 +67,7 @@ namespace UKControllerPluginTest {
             // LONAM
             ASSERT_TRUE(repo->GetSectorExitPoint("LONAM").GetName().compare("LONAM") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("LONAM").GetIntentionCode(mockRoute, 0, 37000).compare("F") == 0);
-            ASSERT_EQ(repo->outEast || repo->outSouthEast, repo->GetSectorExitPoint("LONAM").GetOutDirection());
+            ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("LONAM").GetOutDirection());
 
             // TOPPA
             ASSERT_TRUE(repo->GetSectorExitPoint("TOPPA").GetName().compare("TOPPA") == 0);

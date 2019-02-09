@@ -23,6 +23,7 @@ namespace UKControllerPlugin {
                 virtual std::string GetFlightRules(void) const = 0;
                 virtual std::string GetGroundState(void) const = 0;
                 virtual const std::string GetOrigin(void) const = 0;
+                virtual std::string GetRawRouteString(void) const = 0;
                 virtual const std::string GetSidName(void) const = 0;
                 virtual std::string GetAssignedSquawk(void) const = 0;
                 virtual std::string GetAircraftType(void) const = 0;
@@ -36,6 +37,7 @@ namespace UKControllerPlugin {
                 virtual const bool IsTracked(void) const = 0;
                 virtual const bool IsTrackedByUser(void) const = 0;
                 virtual bool IsValid(void) const = 0;
+                virtual bool IsVfr(void) const = 0;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

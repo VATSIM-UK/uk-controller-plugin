@@ -1,117 +1,88 @@
 #include "pch/pch.h"
 #include "euroscope/GeneralSettingsConfiguration.h"
-#include "euroscope/UserSetting.h"
 #include "mock/MockWinApi.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Euroscope::GeneralSettingsConfiguration;
-using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using ::testing::NiceMock;
+using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace Euroscope {
 
-        TEST(GeneralSettingsConfiguration, ProcessCommandReturnsFalseOnIncorrectCommand)
+        class GeneralSettingsConfigurationTest : public Test
         {
-            NiceMock<MockWinApi> windowsApi;
-            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-            UserSetting userSetting(userSettingProvider);
+            public:
 
-            GeneralSettingsConfiguration configuration(userSetting, windowsApi, 1);
-            EXPECT_FALSE(configuration.ProcessCommand(".ukcp h"));
+                GeneralSettingsConfigurationTest()
+                    : configuration(this->winApi, 1)
+                {
+
+                }
+
+                NiceMock<MockWinApi> winApi;
+                GeneralSettingsConfiguration configuration;
+        };
+
+        TEST_F(GeneralSettingsConfigurationTest, ProcessCommandReturnsFalseOnIncorrectCommand)
+        {
+            EXPECT_FALSE(this->configuration.ProcessCommand(".ukcp h"));
         }
 
-        TEST(GeneralSettingsConfiguration, ProcessCommandOpensDialogOnSuccess)
+        TEST_F(GeneralSettingsConfigurationTest, ProcessCommandOpensDialogOnSuccess)
         {
-            NiceMock<MockWinApi> windowsApi;
-            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-            UserSetting userSetting(userSettingProvider);
-
-            EXPECT_CALL(windowsApi, OpenGeneralSettingsDialog)
+            EXPECT_CALL(this->winApi, OpenGeneralSettingsDialog)
                 .Times(1);
 
-            GeneralSettingsConfiguration configuration(userSetting, windowsApi, 1);
-            configuration.ProcessCommand(".ukcp g");
+            this->configuration.ProcessCommand(".ukcp g");
         }
 
-        TEST(GeneralSettingsConfiguration, ProcessCommandReturnsTrueOnSuccess)
+        TEST_F(GeneralSettingsConfigurationTest, ProcessCommandReturnsTrueOnSuccess)
         {
-            NiceMock<MockWinApi> windowsApi;
-            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-            UserSetting userSetting(userSettingProvider);
-
-            GeneralSettingsConfiguration configuration(userSetting, windowsApi, 1);
-            EXPECT_TRUE(configuration.ProcessCommand(".ukcp g"));
+            EXPECT_TRUE(this->configuration.ProcessCommand(".ukcp g"));
         }
 
-        TEST(GeneralSettingsConfiguration, GetPopupMenuItemHasADescription)
+        TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemHasADescription)
         {
-            NiceMock<MockWinApi> windowsApi;
-            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-            UserSetting userSetting(userSettingProvider);
-
-            GeneralSettingsConfiguration configuration(userSetting, windowsApi, 1);
-            EXPECT_EQ(configuration.configMenuDescription, configuration.GetConfigurationMenuItem().firstValue);
-        }
-
-        TEST(GeneralSettingsConfiguration, GetPopupMenuItemHasTheCorrectCallbackId)
-        {
-            NiceMock<MockWinApi> windowsApi;
-            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-            UserSetting userSetting(userSettingProvider);
-
-            GeneralSettingsConfiguration configuration(userSetting, windowsApi, 1);
             EXPECT_EQ(
-                configuration.menuSelectedCallbackId,
-                configuration.GetConfigurationMenuItem().callbackFunctionId
+                this->configuration.configMenuDescription,
+                this->configuration.GetConfigurationMenuItem().firstValue
             );
         }
 
-        TEST(GeneralSettingsConfiguration, GetPopupMenuItemHasNoCheckbox)
+        TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemHasTheCorrectCallbackId)
         {
-            NiceMock<MockWinApi> windowsApi;
-            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-            UserSetting userSetting(userSettingProvider);
-
-            GeneralSettingsConfiguration configuration(userSetting, windowsApi, 1);
-            EXPECT_EQ(EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX, configuration.GetConfigurationMenuItem().checked);
+            EXPECT_EQ(
+                this->configuration.menuSelectedCallbackId,
+                this->configuration.GetConfigurationMenuItem().callbackFunctionId
+            );
         }
 
-        TEST(GeneralSettingsConfiguration, GetPopupMenuItemIsEnabled)
+        TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemHasNoCheckbox)
         {
-            NiceMock<MockWinApi> windowsApi;
-            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-            UserSetting userSetting(userSettingProvider);
-
-            GeneralSettingsConfiguration configuration(userSetting, windowsApi, 1);
-            EXPECT_FALSE(configuration.GetConfigurationMenuItem().disabled);
+            EXPECT_EQ(
+                EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX,
+                this->configuration.GetConfigurationMenuItem().checked
+            );
         }
 
-        TEST(GeneralSettingsConfiguration, GetPopupMenuItemDoesNotHaveFixedPosition)
+        TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemIsEnabled)
         {
-            NiceMock<MockWinApi> windowsApi;
-            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-            UserSetting userSetting(userSettingProvider);
-
-            GeneralSettingsConfiguration configuration(userSetting, windowsApi, 1);
-            EXPECT_FALSE(configuration.GetConfigurationMenuItem().fixedPosition);
+            EXPECT_FALSE(this->configuration.GetConfigurationMenuItem().disabled);
         }
 
-        TEST(GeneralSettingsConfiguration, SelectingTheMenuItemOpensConfigurationDialog)
+        TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemDoesNotHaveFixedPosition)
         {
-            NiceMock<MockWinApi> windowsApi;
-            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-            UserSetting userSetting(userSettingProvider);
+            EXPECT_FALSE(this->configuration.GetConfigurationMenuItem().fixedPosition);
+        }
 
-            EXPECT_CALL(windowsApi, OpenGeneralSettingsDialog)
+        TEST_F(GeneralSettingsConfigurationTest, SelectingTheMenuItemOpensConfigurationDialog)
+        {
+            EXPECT_CALL(this->winApi, OpenGeneralSettingsDialog)
                 .Times(1);
-
-            GeneralSettingsConfiguration configuration(userSetting, windowsApi, 1);
-            configuration.Configure("test");
+            this->configuration.Configure("test");
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest

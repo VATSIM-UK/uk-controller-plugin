@@ -74,12 +74,12 @@ namespace UKControllerPlugin {
 
             // Trail type
             this->trailType.InsertString(this->trailTypeDiamond, L"Diamond");
-            this->trailType.InsertString(this->trailTypeDiamond, L"Square");
+            this->trailType.InsertString(this->trailTypeSquare, L"Square");
             this->trailType.InsertString(this->trailTypeCircle, L"Circle");
             if (
                 *this->data->type == this->trailTypeDiamond ||
                 *this->data->type == this->trailTypeCircle ||
-                *this->data->type == this->trailTypeCircle
+                *this->data->type == this->trailTypeSquare
             ) {
                 this->trailType.SetCurSel(*this->data->type);
             } else {

@@ -41,6 +41,9 @@ namespace UKControllerPlugin {
                 // The tag item string to use if the tag item is too long.
                 const std::string invalidTagItemText = "INVALID";
 
+                // The tag item string to use if the tag item requested is invalid
+                const std::string errorTagItemText = "ERROR";
+
             private:
                 // All registered tag items
                 std::map<int, std::shared_ptr<UKControllerPlugin::Tag::TagItemInterface>> tagItems;

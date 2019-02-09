@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
                 explicit AbstractPrenote(
                     std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy> controllers
                 );
-                ~AbstractPrenote();
+                virtual ~AbstractPrenote();
                 const UKControllerPlugin::Controller::ControllerPositionHierarchy & GetControllers(void) const;
                 virtual std::string GetSummaryString(void) const = 0;
                 virtual bool IsApplicable(

@@ -11,12 +11,19 @@ using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
 using UKControllerPlugin::HistoryTrail::HistoryTrailData;
+using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
 
 namespace UKControllerPlugin {
     namespace Windows {
 
-        WinApi::WinApi(HINSTANCE dllInstance, std::string filesDirectory, std::wstring filesDirectoryW)
-            : WinApiInterface(dllInstance), filesDirectory(filesDirectory), filesDirectoryW(filesDirectoryW)
+        WinApi::WinApi(
+            HINSTANCE dllInstance,
+            std::string filesDirectory,
+            std::wstring filesDirectoryW,
+            GeneralSettingsDialog generalSettingsDialog
+        )
+            : WinApiInterface(dllInstance), filesDirectory(filesDirectory), filesDirectoryW(filesDirectoryW),
+            generalSettingsDialog(generalSettingsDialog)
         {
             this->dllInstance = dllInstance;
         }
@@ -170,12 +177,11 @@ namespace UKControllerPlugin {
         /*
             Opens the general settings dialog with a specified handler for saving settings.
         */
-        void WinApi::OpenGeneralSettingsDialog(UKControllerPlugin::Euroscope::UserSetting & setting) const
+        void WinApi::OpenGeneralSettingsDialog()
         {
             // Required so we can hit the dialog resource.
             AFX_MANAGE_STATE(AfxGetStaticModuleState());
-            GeneralSettingsDialog dialog(CWnd::FromHandle(GetActiveWindow()), setting);
-            dialog.DoModal();
+            this->generalSettingsDialog.DoModal();
         }
 
         /*

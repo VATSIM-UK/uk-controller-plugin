@@ -1,7 +1,15 @@
+[master_build_status]: https://ci.appveyor.com/api/projects/status/github/VATSIM-UK/uk-controller-plugin?svg=true&retina=true&branch=master
+[develop_build_status]: https://ci.appveyor.com/api/projects/status/github/VATSIM-UK/uk-controller-plugin?svg=true&retina=true&branch=develop
+
 # uk-controller-plugin
 
-The VATSIM UK Controller Plugin for EuroCcope 3.2 only. This project works in cooperation with
+The VATSIM UK Controller Plugin for EuroScope 3.2 only. This project works in cooperation with
 the Plugin API to offer useful functionality to controllers of UK positions on the VATSIM network.
+
+|      Check      |                            Provider                                          |              Status             |
+|-----------------|------------------------------------------------------------------------------|---------------------------------|
+| Build (Master)  | [AppVeyor](https://ci.appveyor.com/project/CalumTowers/uk-controller-plugin) | ![master_build_status]          |
+| Build (Develop) | [AppVeyor](https://ci.appveyor.com/project/CalumTowers/uk-controller-plugin) | ![develop_build_status]         |
 
 ## Feature List
 
@@ -31,7 +39,7 @@ dynamically to the plugin.
 
 ### Compiling
 
-There are three build configurations available:
+There are two build configurations available:
 
 - Debug: Compile with all debugging symbols for development. Results in decreased performance and an inflated DLL
 - Release: Compile in release mode
@@ -47,4 +55,4 @@ into the development environment.
 
 ### Contributing
 
-To contribute to the project, please have a look through our [Contributing Guide](CONTRIBUTING.md).
+To contribute to the project, please have a look at the [Contributing Guide](CONTRIBUTING.md).

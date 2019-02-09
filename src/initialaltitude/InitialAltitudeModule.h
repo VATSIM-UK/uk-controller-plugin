@@ -28,6 +28,9 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Dependency::DependencyCache & dependency,
                     UKControllerPlugin::Bootstrap::PersistenceContainer & persistence
                 );
+
+                // The function id for the recycle initial altitude function
+                static const int recycleFunctionId = 9002;
         };
     }  // namespace InitialAltitude
 }  // namespace UKControllerPlugin

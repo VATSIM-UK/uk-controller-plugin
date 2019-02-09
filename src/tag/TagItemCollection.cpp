@@ -50,7 +50,9 @@ namespace UKControllerPlugin {
         ) const {
 
             if (this->tagItems.count(tagItemId) == 0) {
-                throw std::invalid_argument("Tag item unknown");
+                LogWarning("Invalid TAG item requested, id: " + std::to_string(tagItemId));
+                strcpy_s(itemData, 16, this->errorTagItemText.c_str());
+                return;
             }
 
             // Get the TAG data and check it's of a suitable length

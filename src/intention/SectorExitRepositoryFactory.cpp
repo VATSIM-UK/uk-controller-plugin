@@ -23,8 +23,16 @@ namespace UKControllerPlugin {
 
             // Dover
             points["KOK"] = std::make_unique<SectorExitPoint>("KOK", "D1", SectorExitPoint::outEast);
-            points["TRACA"] = std::make_unique<SectorExitPoint>("TRACA", "D2", SectorExitPoint::outEast);
-            points["MOTOX"] = std::make_unique<SectorExitPoint>("MOTOX", "D3", SectorExitPoint::outEast);
+            points["TRACA"] = std::make_unique<SectorExitPoint>(
+                "TRACA",
+                "D2",
+                SectorExitPoint::outEast | SectorExitPoint::outSouthEast
+            );
+            points["MOTOX"] = std::make_unique<SectorExitPoint>(
+                "MOTOX",
+                "D3",
+                SectorExitPoint::outEast | SectorExitPoint::outSouthEast
+            );
 
             // Clacton
             points["SOMVA"] = std::make_unique<SectorExitPoint>("SOMVA", "C1", SectorExitPoint::outEast);
@@ -35,7 +43,7 @@ namespace UKControllerPlugin {
             points["LONAM"] = std::make_unique<SectorExitPoint>(
                 "LONAM",
                 "F",
-                SectorExitPoint::outEast || SectorExitPoint::outSouthEast
+                SectorExitPoint::outEast | SectorExitPoint::outSouthEast
             );
             points["TOPPA"] = std::make_unique<SectorExitPoint>("TOPPA", "F", SectorExitPoint::outEast);
             points["ROKAN"] = std::make_unique<SectorExitPoint>("ROKAN", "F", SectorExitPoint::outEast);

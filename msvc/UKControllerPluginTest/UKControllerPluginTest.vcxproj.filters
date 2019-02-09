@@ -360,9 +360,6 @@
     <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp">
       <Filter>test\message</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\message\UserSettingTest.cpp">
-      <Filter>test\message</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\metar\MetarEventHandlerCollectionTest.cpp">
       <Filter>test\metar</Filter>
     </ClCompile>
@@ -521,6 +518,21 @@
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp">
       <Filter>test\initialaltitude</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp">
+      <Filter>test\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp">
+      <Filter>test\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\euroscope\LoadDefaultUserSettingsTest.cpp">
+      <Filter>test\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationHandlerTest.cpp">
+      <Filter>test\squawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp">
+      <Filter>test\squawk</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -619,6 +631,9 @@
     </ClInclude>
     <ClInclude Include="..\..\test\helper\TestEnvironment.h">
       <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h">
+      <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

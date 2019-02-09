@@ -80,6 +80,28 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(output == "some test");
         }
 
+        TEST(FunctionCallEventHandler, HasCallbackFunctionReturnsTrueIfItExists)
+        {
+            FunctionCallEventHandler handler;
+            CallbackFunction function(5000, "Test Function", [](std::string input) {});
+
+            handler.RegisterFunctionCall(function);
+            EXPECT_TRUE(handler.HasCallbackFunction(5000));
+        }
+
+        TEST(FunctionCallEventHandler, HasTagFunctionFunctionReturnsTrueIfItExists)
+        {
+            FunctionCallEventHandler handler;
+            TagFunction function(
+                9000,
+                "Test Tag Function",
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &) {}
+            );
+
+            handler.RegisterFunctionCall(function);
+            EXPECT_TRUE(handler.HasTagFunction(9000));
+        }
+
         TEST(FunctionCallEventHandler, RegisterFunctionsWithEuroscopeRegistersTagFunctions)
         {
             FunctionCallEventHandler handler;
@@ -97,6 +119,32 @@ namespace UKControllerPluginTest {
             handler.RegisterFunctionCall(function);
             handler.RegisterFunctionCall(function2);
             handler.RegisterTagFunctionsWithEuroscope(mockPlugin);
+        }
+
+        TEST(FunctionCallEventHandler, FixedFunctionCallHandlesNonExistant)
+        {
+            FunctionCallEventHandler handler;
+            EXPECT_NO_THROW(
+                handler.CallFunction(
+                    9000,
+                    "some test",
+                    StrictMock<MockEuroScopeCFlightPlanInterface>(),
+                    StrictMock<MockEuroScopeCRadarTargetInterface>()
+                )
+            );
+        }
+
+        TEST(FunctionCallEventHandler, DynamicFunctionCallHandlesNonExistant)
+        {
+            FunctionCallEventHandler handler;
+            EXPECT_NO_THROW(
+                handler.CallFunction(
+                    5000,
+                    "some test",
+                    StrictMock<MockEuroScopeCFlightPlanInterface>(),
+                    StrictMock<MockEuroScopeCRadarTargetInterface>()
+                )
+            );
         }
     }  // namespace Plugin
 }  // namespace UKControllerPluginTest
