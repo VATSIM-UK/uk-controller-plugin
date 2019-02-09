@@ -60,8 +60,24 @@ namespace UKControllerPlugin {
                 throw ApiNotAuthorisedException("The API returned 401 or 403");
             }
 
+            if (response.GetStatusCode() == this->STATUS_BAD_REQUEST) {
+                LogError("The API responed with bad request when calling " + std::string(request.GetUri()));
+                throw ApiException("The API returned 400");
+            }
+
             if (response.GetStatusCode() == this->STATUS_NOT_FOUND) {
                 throw ApiNotFoundException("The API returned 404 for " + std::string(request.GetUri()));
+            }
+
+            // These are the only codes the API should be sending on success
+            if (
+                response.GetStatusCode() != this->STATUS_CREATED &&
+                response.GetStatusCode() != this->STATUS_NO_CONTENT &&
+                response.GetStatusCode() != this->STATUS_OK &&
+                response.GetStatusCode() != this->STATUS_TEAPOT
+            ) {
+                LogError("Unknown API response occured, HTTP status was " + std::to_string(response.GetStatusCode()));
+                throw ApiException("Unknown response");
             }
 
             return ApiResponseFactory::Create(response);
@@ -71,7 +87,7 @@ namespace UKControllerPlugin {
         {
             nlohmann::json responseJson = response.GetRawData();
 
-            if (!responseJson["squawk"].is_string()) {
+            if (responseJson.count("squawk") != 1 || !responseJson["squawk"].is_string()) {
                 LogError("No squawk in API response for " + callsign);
                 throw ApiException("Invalid response returned from API");
             }

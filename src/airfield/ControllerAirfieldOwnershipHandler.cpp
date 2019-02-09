@@ -90,9 +90,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<ControllerPosition> pos;
             try {
                 this->SetupPosition(controller, this->controllers.FetchPositionByFacilityAndFrequency(
-                    parser.ParseFacilityFromCallsign(
-                        ControllerPositionParser().NormaliseCallsign(controller.GetCallsign())
-                    ),
+                    parser.ParseFacilityFromCallsign(controller.GetCallsign()),
                     controller.GetFrequency()
                 ));
             }

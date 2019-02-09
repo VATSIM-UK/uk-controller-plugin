@@ -159,7 +159,7 @@ namespace UKControllerPlugin {
             } else if (phase == this->afterLists) {
                 this->RenderGroup(this->afterListRenders, graphics, radarScreen);
             } else {
-                throw std::invalid_argument("Invalid rendering phase");
+                LogError("Invalid rendering phase " + std::to_string(phase));
             }
         }
 
@@ -185,7 +185,6 @@ namespace UKControllerPlugin {
         ) const
         {
             for (std::vector<int>::const_iterator it = group.cbegin(); it != group.cend(); ++it) {
-                int test = *it;
                 if (this->allRenderers.at(*it)->IsVisible()) {
                     this->allRenderers.at(*it)->Render(graphics, radarScreen);
                 }
