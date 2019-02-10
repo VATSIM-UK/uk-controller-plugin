@@ -708,9 +708,6 @@
     <ClInclude Include="..\..\src\hold\CompareHolds.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldingDataCollection.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\BuildHoldingData.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -761,6 +758,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h">
       <Filter>src\squawk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\ManagedHold.h">
+      <Filter>src\hold</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1249,9 +1249,6 @@
     <ClCompile Include="..\..\src\hold\CompareHolds.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldingDataCollection.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\hold\BuildHoldingData.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
@@ -1290,6 +1287,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp">
       <Filter>src\squawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\ManagedHold.cpp">
+      <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

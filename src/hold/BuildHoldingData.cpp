@@ -1,5 +1,7 @@
 #include "pch/stdafx.h"
 #include "hold/BuildHoldingData.h"
+#include "hold/ManagedHold.h"
+using UKControllerPlugin::Hold::HoldManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -7,21 +9,20 @@ namespace UKControllerPlugin {
         /*
             Convert JSON data into a collection of holds.
         */
-        UKControllerPlugin::Hold::HoldingDataCollection BuildHoldingData(nlohmann::json data)
+        std::unique_ptr<HoldManager> BuildHoldingData(nlohmann::json data)
         {
-            HoldingDataCollection collection;
+            std::unique_ptr<HoldManager> holdManager = std::make_unique<HoldManager>();
 
             // If not object, nothing to do
             if (!data.is_array()) {
                 LogWarning("Holding data is invalid");
-                return collection;
+                return holdManager;
             }
 
             // Check valid and add
             for (nlohmann::json::const_iterator it = data.cbegin(); it != data.cend(); ++it) {
                 if (CheckValid(*it)) {
-                    collection.Add(
-                        {
+                    UKControllerPlugin::Hold::HoldingData holdData = {
                             it->at("id"),
                             it->at("fix"),
                             it->at("description"),
@@ -30,19 +31,19 @@ namespace UKControllerPlugin {
                             it->at("inbound_heading"),
                             it->at("turn_direction") == "left" ?
                                 HoldingData::TURN_DIRECTION_LEFT : HoldingData::TURN_DIRECTION_RIGHT
-                        }
-                    );
+                    };
+                    holdManager->AddHold(ManagedHold(holdData));
                 } else {
-                    std::string holdId = "unknown";
+                    unsigned int holdId;
                     if (data.find("id") != data.end() && data.at("id").is_number_integer()) {
                         holdId = data.at("id");
                     }
-                    LogWarning("Invalid hold data for " + holdId);
+                    LogWarning("Invalid hold data for " + std::to_string(holdId));
                 }
             }
 
-            LogInfo("Added holding data for " + std::to_string(collection.Count()) + " holds");
-            return collection;
+            LogInfo("Added holding data for " + std::to_string(holdManager->CountHolds()) + " holds");
+            return holdManager;
         }
 
         /*

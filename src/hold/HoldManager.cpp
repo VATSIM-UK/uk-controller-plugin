@@ -15,19 +15,24 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Add a hold to the manager
+            Add a hold to the manager, doesnt add duplicates
         */
-        void HoldManager::AddHold(std::string hold)
+        void HoldManager::AddHold(UKControllerPlugin::Hold::ManagedHold hold)
         {
-            auto managedHold = this->holdData.find(hold);
-            if (managedHold != this->holdData.end()) {
+            auto existingHold = std::find_if(
+                this->holdData.begin(),
+                this->holdData.end(),
+                [&hold] (std::pair<unsigned int, const std::unique_ptr<ManagedHold> &> compare) -> bool {
+                    return hold.holdParameters == compare.second->holdParameters;
+                }
+            );
+             
+            if (existingHold != this->holdData.end()) {
+                LogWarning("Tried to add duplicate hold " + std::to_string(hold.holdParameters.identifier));
                 return;
             }
 
-            this->holdData[hold] = std::set<
-                UKControllerPlugin::Hold::HoldingAircraft,
-                UKControllerPlugin::Hold::CompareHoldingAircraft
-            >();
+            this->holdData[hold.holdParameters.identifier] = std::make_unique<ManagedHold>(hold);
         }
 
         /*
@@ -36,90 +41,60 @@ namespace UKControllerPlugin {
         void HoldManager::AddAircraftToHold(
             EuroScopeCFlightPlanInterface & flightplan,
             EuroScopeCRadarTargetInterface & radarTarget,
-            std::string hold
+            unsigned int holdId
         ) {
-            auto managedHold = this->holdData.find(hold);
+            auto managedHold = this->holdData.find(holdId);
             if (managedHold == this->holdData.end()) {
+                LogWarning("Tried to add aircraft to non existant hold " + std::to_string(holdId));
                 return;
             }
 
             this->RemoveAircraftFromAnyHold(flightplan.GetCallsign());
 
-            managedHold->second.insert(
+            managedHold->second->AddHoldingAircraft(
                 {
                     flightplan.GetCallsign(),
                     std::chrono::system_clock::now()
                 }
             );
+            this->holdingAircraft[flightplan.GetCallsign()] = managedHold->first;
         }
 
         /*
-            Returns true if an aircfraft is in a given hold
+            Count the number of holds
         */
-        bool HoldManager::AircraftIsInHold(std::string hold, std::string callsign) const
+        size_t HoldManager::CountHolds(void) const
         {
-            auto managedHold = this->holdData.find(hold);
-
-            return managedHold != this->holdData.cend() &&
-                managedHold->second.find(callsign) != managedHold->second.cend();
+            return this->holdData.size();
         }
 
         /*
-            Returns whether or not a hold is managed
+            Return one of the managed holds
         */
-        bool HoldManager::HasHold(std::string hold) const
+        UKControllerPlugin::Hold::ManagedHold * const HoldManager::GetManagedHold(unsigned int holdId) const
         {
-            return this->holdData.find(hold) != this->holdData.cend();
-        }
-
-        /*
-            Returns a set of aircraft for a given hold
-        */
-        std::set<UKControllerPlugin::Hold::HoldingAircraft, UKControllerPlugin::Hold::CompareHoldingAircraft>
-            HoldManager::GetAircraftInHold(std::string hold) const
-        {
-            auto managedHold = this->holdData.find(hold);
-
+            auto managedHold = this->holdData.find(holdId);
             if (managedHold == this->holdData.cend()) {
-                return std::set<
-                    UKControllerPlugin::Hold::HoldingAircraft,
-                    UKControllerPlugin::Hold::CompareHoldingAircraft
-                >();
+                LogWarning("Tried to access invalid hold " + std::to_string(holdId));
+                return nullptr;
             }
 
-            return managedHold->second;
+            return &(*managedHold->second);
         }
 
         /*
-            Remove aircarft from any holds
+            Remove aircarft from any holds that they are in
         */
         void HoldManager::RemoveAircraftFromAnyHold(std::string callsign)
         {
-            for (
-                std::map<
-                    std::string,
-                    std::set<
-                        UKControllerPlugin::Hold::HoldingAircraft,
-                        UKControllerPlugin::Hold::CompareHoldingAircraft
-                    >
-                >::iterator it = this->holdData.begin();
-                it != this->holdData.end();
-                ++it
-            ) {
-                auto holdingAircraft = it->second.find(callsign);
-                if (holdingAircraft != it->second.end()) {
-                    it->second.erase(holdingAircraft);
-                    return;
-                }
+            auto aircraft = this->holdingAircraft.find(callsign);
+            if (aircraft == this->holdingAircraft.cend()) {
+                LogWarning("Tried to remove " + callsign + " from holds, it isnt holding");
+                return;
             }
-        }
 
-        /*
-            Removes a hold
-        */
-        void HoldManager::RemoveHold(std::string hold)
-        {
-            this->holdData.erase(hold);
+            this->holdData[aircraft->second]->RemoveHoldingAircraft(aircraft->first);
+            this->holdingAircraft.erase(aircraft);
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

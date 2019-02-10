@@ -37,7 +37,6 @@
 #include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
 #include "hold/HoldManager.h"
-#include "hold/HoldingDataCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
 
 namespace UKControllerPlugin {
@@ -102,7 +101,6 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Airfield::AirfieldOwnershipManager> airfieldOwnership;
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
             std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
-            std::unique_ptr<UKControllerPlugin::Hold::HoldingDataCollection> holds;
 
         } PersistenceContainer;
     }  // namespace Bootstrap

@@ -3,11 +3,15 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "hold/ManagedHold.h"
+#include "hold/HoldingData.h"
 
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Hold::ManagedHold;
+using UKControllerPlugin::Hold::HoldingData;
 using ::testing::Return;
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -20,101 +24,79 @@ namespace UKControllerPluginTest {
             public:
                 HoldManagerTest(void)
                 {
-                    manager.AddHold("WILLO");
+                    manager.AddHold(hold1);
 
                     ON_CALL(mockFlightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
-
-                    ON_CALL(mockFlightplan, GetClearedAltitude())
-                        .WillByDefault(Return(8000));
-
-                    ON_CALL(mockRadarTarget, GetFlightLevel())
-                        .WillByDefault(Return(9000));
                 }
 
+                const UKControllerPlugin::Hold::HoldingData hold1 = { 1, "WILLO", "WILLO", 8000, 15000, 209, 0 };
                 NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 HoldManager manager;
         };
 
+
+        TEST_F(HoldManagerTest, ItStartsEmpty)
+        {
+            EXPECT_EQ(1, this->manager.CountHolds());
+        }
+
         TEST_F(HoldManagerTest, ItAddsAHold)
         {
-            manager.AddHold("TIMBA");
-            EXPECT_TRUE(manager.HasHold("TIMBA"));
+            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, 0 };
+            this->manager.AddHold(hold2);
+            EXPECT_EQ(2, this->manager.CountHolds());
         }
 
         TEST_F(HoldManagerTest, ItHandlesDuplicateHolds)
         {
-            manager.AddHold("TIMBA");
-            EXPECT_NO_THROW(manager.AddHold("TIMBA"));
+            this->manager.AddHold(hold1);
+            EXPECT_EQ(1, this->manager.CountHolds());
         }
 
         TEST_F(HoldManagerTest, ItAddsAircraftToHold)
         {
-            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, "WILLO");
-            EXPECT_TRUE(manager.AircraftIsInHold("WILLO", "BAW123"));
-        }
-
-        TEST_F(HoldManagerTest, ItHandlesAddingAircraftToTheSameHold)
-        {
-            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, "WILLO");
-            EXPECT_NO_THROW(manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, "WILLO"));
+            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
+            EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
+            EXPECT_TRUE(1, this->manager.GetManagedHold(1)->CountHoldingAircraft());
         }
 
         TEST_F(HoldManagerTest, AddingAircraftToOneHoldRemovesFromAnother)
         {
-            manager.AddHold("TIMBA");
-            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, "WILLO");
-            EXPECT_TRUE(manager.AircraftIsInHold("WILLO", "BAW123"));
-            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, "TIMBA");
-            EXPECT_FALSE(manager.AircraftIsInHold("WILLO", "BAW123"));
-            EXPECT_TRUE(manager.AircraftIsInHold("TIMBA", "BAW123"));
+            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, 0 };
+            this->manager.AddHold(hold2);
+            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
+            EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
+            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 2);
+            EXPECT_FALSE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
+            EXPECT_TRUE(this->manager.GetManagedHold(2)->HasAircraft("BAW123"));
         }
 
         TEST_F(HoldManagerTest, ItHandlesAddingToNonExistantHold)
         {
-            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, "BIG");
-            EXPECT_FALSE(manager.AircraftIsInHold("BIG", "BAW123"));
+            EXPECT_NO_THROW(this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 555));
         }
 
-        TEST_F(HoldManagerTest, ItRemovesAHold)
+        TEST_F(HoldManagerTest, GetHoldReturnsNullPointerIfDoesntExist)
         {
-            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, "WILLO");
-            manager.RemoveHold("WILLO");
-            EXPECT_FALSE(manager.HasHold("WILLO"));
-            EXPECT_FALSE(manager.AircraftIsInHold("WILLO", "BAW123"));
-        }
-
-        TEST_F(HoldManagerTest, ItHandlesRemovingNonExistantHolds)
-        {
-            EXPECT_NO_THROW(manager.RemoveHold("BIG"));
+            EXPECT_EQ(nullptr, this->manager.GetManagedHold(555));
         }
 
         TEST_F(HoldManagerTest, ItRemovesAnAircraftFromAnyHold)
         {
-            manager.AddHold("BIG");
-            manager.AddHold("LAM");
-            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, "LAM");
-            EXPECT_TRUE(manager.AircraftIsInHold("LAM", "BAW123"));
+            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, 0 };
+            this->manager.AddHold(hold2);
+            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
+            EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
             manager.RemoveAircraftFromAnyHold("BAW123");
-            EXPECT_FALSE(manager.AircraftIsInHold("LAM", "BAW123"));
+            EXPECT_FALSE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
         }
 
         TEST_F(HoldManagerTest, ItHandlesRemovingNonExistantAircraft)
         {
-            manager.RemoveAircraftFromAnyHold("BAW123");
-        }
-
-        TEST_F(HoldManagerTest, ItReturnsAnEmptySetIfNoAircraftInHold)
-        {
-            EXPECT_EQ(0, manager.GetAircraftInHold("WILLO").size());
-        }
-
-        TEST_F(HoldManagerTest, ItReturnsAircraftInAHold)
-        {
-            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, "WILLO");
-            EXPECT_EQ(1, manager.GetAircraftInHold("WILLO").count("BAW123"));
+            EXPECT_NO_THROW(manager.RemoveAircraftFromAnyHold("BAW123"));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

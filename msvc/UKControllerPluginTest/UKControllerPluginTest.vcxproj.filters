@@ -527,9 +527,6 @@
     <ClCompile Include="..\..\test\test\hold\CompareHoldsTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldingDataCollectionTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\hold\BuildHoldingDataTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
@@ -565,6 +562,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp">
       <Filter>test\squawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\ManagedHoldTest.cpp">
+      <Filter>test\hold</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,7 @@
 #include "mock/MockWinApi.h"
 #include "dependency/DependencyCache.h"
 #include "mock/MockApiInterface.h"
+#include "hold/ManagedHold.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -100,13 +101,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)
         {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
-            EXPECT_FALSE(this->container.holdManager->HasHold("TIMBA"));
-        }
-
-        TEST_F(HoldModuleTest, ItInitialisesHoldDataCollection)
-        {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
-            EXPECT_EQ(1, this->container.holds->Count());
+            EXPECT_EQ(1, this->container.holdManager->CountHolds());
         }
 
         TEST_F(HoldModuleTest, ItLoadsHoldData)
@@ -122,7 +117,7 @@ namespace UKControllerPluginTest {
                 HoldingData::TURN_DIRECTION_RIGHT
             };
 
-            EXPECT_TRUE(expectedHold == this->container.holds->Get(1));
+            EXPECT_TRUE(expectedHold == this->container.holdManager->GetManagedHold(1)->holdParameters);
         }
 
         TEST_F(HoldModuleTest, ItReportsNoHoldsToTheUser)

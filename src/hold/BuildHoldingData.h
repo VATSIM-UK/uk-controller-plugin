@@ -1,10 +1,10 @@
 #pragma once
-#include "HoldingDataCollection.h"
+#include "hold/HoldManager.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
 
-        UKControllerPlugin::Hold::HoldingDataCollection BuildHoldingData(nlohmann::json data);
+        std::unique_ptr<UKControllerPlugin::Hold::HoldManager> BuildHoldingData(nlohmann::json data);
         bool CheckValid(nlohmann::json data);
 
     }  // namespace Hold

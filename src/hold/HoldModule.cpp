@@ -3,7 +3,6 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyCache.h"
 #include "hold/BuildHoldingData.h"
-#include "hold/HoldingDataCollection.h"
 #include "hold/HoldEventHandler.h"
 #include "hold/HoldManager.h"
 #include "message/UserMessager.h"
@@ -19,7 +18,6 @@
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
-using UKControllerPlugin::Hold::HoldingDataCollection;
 using UKControllerPlugin::Hold::HoldEventHandler;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
@@ -66,11 +64,7 @@ namespace UKControllerPlugin {
             UserMessager & userMessages
         ) {
             // Update local dependencies and build hold data
-            container.holds = std::make_unique<HoldingDataCollection>(
-                BuildHoldingData(dependencies.GetJsonDependency(dependencyFile))
-            );
-
-            container.holdManager.reset(new HoldManager);
+            container.holdManager = BuildHoldingData(dependencies.GetJsonDependency(dependencyFile));
 
             // Create the event handler and register
             eventHandler = std::make_shared<HoldEventHandler>(
@@ -92,7 +86,7 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(openWindowCallback);
 
             // If there aren't any holds, tell the user this explicitly
-            if (container.holds->Count() == 0) {
+            if (container.holdManager->CountHolds() == 0) {
                 BootstrapWarningMessage warning("No holds were loaded for the hold manager");
                 userMessages.SendMessageToUser(warning);
             }

@@ -1,10 +1,12 @@
 #include "pch/pch.h"
 #include "hold/BuildHoldingData.h"
-#include "hold/HoldingDataCollection.h"
+#include "hold/HoldManager.h"
 #include "hold/HoldingData.h"
+#include "hold/ManagedHold.h"
 
 using UKControllerPlugin::Hold::BuildHoldingData;
 using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Hold::ManagedHold;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -12,7 +14,7 @@ namespace UKControllerPluginTest {
         TEST(BuildHoldingDataTest, ItReturnsEmptyIfDataNotObject)
         {
             nlohmann::json data = "[]"_json;
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItAddsHoldsWithData)
@@ -36,7 +38,7 @@ namespace UKControllerPluginTest {
             hold2["turn_direction"] = "left";
 
             data = { hold1, hold2 };
-            EXPECT_EQ(2, BuildHoldingData(data).Count());
+            EXPECT_EQ(2, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItAddsTheCorrectHoldingDataRightTurn)
@@ -53,7 +55,7 @@ namespace UKControllerPluginTest {
 
             data = nlohmann::json::array({ hold });
             
-            HoldingData expected = {
+            HoldingData expectedData = {
                 1,
                 "TIMBA",
                 "TIMBA Description",
@@ -62,8 +64,8 @@ namespace UKControllerPluginTest {
                 309,
                 HoldingData::TURN_DIRECTION_RIGHT
             };
-
-            EXPECT_EQ(expected, BuildHoldingData(data).Get(1));
+            ManagedHold expectedHold(expectedData);
+            EXPECT_EQ(expectedHold, *BuildHoldingData(data)->GetManagedHold(1));
         }
 
         TEST(BuildHoldingDataTest, ItAddsTheCorrectHoldingDataLeftTurn)
@@ -80,7 +82,7 @@ namespace UKControllerPluginTest {
 
             data = nlohmann::json::array({ hold });
 
-            HoldingData expected = {
+            HoldingData expectedData = {
                 1,
                 "TIMBA",
                 "TIMBA Description",
@@ -89,8 +91,8 @@ namespace UKControllerPluginTest {
                 309,
                 HoldingData::TURN_DIRECTION_LEFT
             };
-
-            EXPECT_EQ(expected, BuildHoldingData(data).Get(1));
+            ManagedHold expectedHold(expectedData);
+            EXPECT_EQ(expectedHold, *BuildHoldingData(data)->GetManagedHold(1));
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddNonObjects)
@@ -98,7 +100,7 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data = { "Test" };
 
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddWithMissingMinimum)
@@ -114,7 +116,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddWithMissingMaximum)
@@ -130,7 +132,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddWithMissingInbound)
@@ -146,7 +148,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddWithMissingDirection)
@@ -162,7 +164,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddWithIncorrectDirection)
@@ -179,7 +181,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddWithMissingId)
@@ -195,7 +197,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddWithMissingFix)
@@ -211,7 +213,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddWithMissingDescription)
@@ -227,7 +229,23 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, BuildHoldingData(data).Count());
+            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
+        }
+
+        TEST(BuildHoldingDataTest, TheHoldStartsempty)
+        {
+            nlohmann::json data;
+            nlohmann::json hold;
+            hold["id"] = 1;
+            hold["description"] = "TIMBA";
+            hold["fix"] = "TIMBA Description";
+            hold["minimum_altitude"] = 7000;
+            hold["maximum_altitude"] = 15000;
+            hold["inbound_heading"] = 309;
+            hold["turn_direction"] = "right";
+
+            data = nlohmann::json::array({ hold });
+            EXPECT_EQ(0, BuildHoldingData(data)->GetManagedHold(1)->CountHoldingAircraft());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

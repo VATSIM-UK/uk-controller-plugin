@@ -4,6 +4,7 @@
 #include "hold/HoldingAircraft.h"
 #include "hold/HoldingData.h"
 #include "hold/CompareHoldingAircraft.h"
+#include "hold/ManagedHold.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -23,29 +24,23 @@ namespace UKControllerPlugin {
             public:
 
                 HoldManager(void);
-                void AddHold(std::string hold);
+                void AddHold(UKControllerPlugin::Hold::ManagedHold hold);
                 void AddAircraftToHold(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
-                    std::string hold
+                    unsigned int holdId
                 );
-                bool AircraftIsInHold(std::string hold, std::string callsign) const;
-                bool HasHold(std::string hold) const;
-                std::set<UKControllerPlugin::Hold::HoldingAircraft, UKControllerPlugin::Hold::CompareHoldingAircraft>
-                    GetAircraftInHold(std::string hold) const;
-
+                size_t CountHolds(void) const;
+                UKControllerPlugin::Hold::ManagedHold * const GetManagedHold(unsigned int holdId) const;
                 void RemoveAircraftFromAnyHold(std::string callsign);
-                void RemoveHold(std::string hold);
 
             private:
-                // A map of holds to aircraft
-                std::map<
-                    std::string,
-                    std::set<
-                        UKControllerPlugin::Hold::HoldingAircraft,
-                        UKControllerPlugin::Hold::CompareHoldingAircraft
-                    >
-                > holdData;
+
+                // A map of aircraft callsign -> hold id
+                std::map<std::string, unsigned int> holdingAircraft;
+
+                // A map of hold id -> managed hold
+                std::map<unsigned int, std::unique_ptr<UKControllerPlugin::Hold::ManagedHold>> holdData;
         };
 
     }  // namespace Hold

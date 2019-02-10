@@ -1,6 +1,7 @@
 #pragma once
 #include "hold/HoldingAircraft.h"
 #include "hold/CompareHoldingAircraft.h"
+#include "hold/HoldingData.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -12,17 +13,13 @@ namespace UKControllerPlugin {
         class ManagedHold
         {
             public:
-                ManagedHold(
-                    const unsigned int identifier,
-                    const std::string fix,
-                    const std::string description,
-                    const unsigned int minimum,
-                    const unsigned int maximum,
-                    const unsigned int inbound,
-                    const unsigned int turnDirection
-                );
+                ManagedHold(const UKControllerPlugin::Hold::HoldingData holdData);
                 void AddHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft);
+                size_t CountHoldingAircraft(void) const;
+                bool HasAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft) const;
+                bool HasAircraft(std::string callsign) const;
                 void RemoveHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft);
+                void RemoveHoldingAircraft(std::string callsign);
                 bool operator== (const ManagedHold & compare) const;
 
 
@@ -37,28 +34,7 @@ namespace UKControllerPlugin {
 
 
                 // The ID of the hold from the web API
-                const unsigned int identifier;
-
-                // The fixed point that the hold centers around
-                const std::string fix;
-
-                // The description of the hold (usually the fix name, but not always)
-                const std::string description;
-
-                // The minimum possible altitude in the hold
-                const unsigned int minimum;
-
-                // The maximum possible altitude in the hold
-                const unsigned int maximum;
-
-                // The inbound heading for the hold
-                const unsigned int inbound;
-
-                // The turn direction at the fix
-                const unsigned int turnDirection;
-
-                static const unsigned int TURN_DIRECTION_LEFT = 0;
-                static const unsigned int TURN_DIRECTION_RIGHT = 1;
+                const UKControllerPlugin::Hold::HoldingData holdParameters;
 
             private:
 

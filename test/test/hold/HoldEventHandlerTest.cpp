@@ -6,7 +6,11 @@
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "hold/HoldWindowManager.h"
 #include "plugin/PopupMenuItem.h"
+#include "hold/ManagedHold.h"
+#include "hold/HoldingData.h"
 
+using UKControllerPlugin::Hold::ManagedHold;
+using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -27,7 +31,7 @@ namespace UKControllerPluginTest {
                 HoldEventHandlerTest(void)
                     : handler(this->manager, this->mockPlugin, HoldWindowManager(NULL, NULL), 1)
                 {
-                    manager.AddHold("WILLO");
+                    manager.AddHold(ManagedHold(holdData));
 
                     // Add a FP to the holds initially.
                     NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplanInitial;
@@ -42,7 +46,7 @@ namespace UKControllerPluginTest {
                     ON_CALL(mockRadarTargetInitial, GetFlightLevel())
                         .WillByDefault(Return(9000));
 
-                    manager.AddAircraftToHold(mockFlightplanInitial, mockRadarTargetInitial, "WILLO");
+                    manager.AddAircraftToHold(mockFlightplanInitial, mockRadarTargetInitial, 1);
 
 
                     this->mockFlightplan.reset(new NiceMock<MockEuroScopeCFlightPlanInterface>);
@@ -65,6 +69,7 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return(this->mockRadarTarget));
                 }
 
+                const UKControllerPlugin::Hold::HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, 0 };
                 std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplan;
                 std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
@@ -74,9 +79,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItRemovesAnAircraftFromTheHoldIfTheFlightplanDisconnects)
         {
-            EXPECT_TRUE(manager.AircraftIsInHold("WILLO", "BAW123"));
+            EXPECT_TRUE(manager.GetManagedHold(1)->HasAircraft("BAW123"));
             this->handler.FlightPlanDisconnectEvent(*this->mockFlightplan);
-            EXPECT_FALSE(manager.AircraftIsInHold("WILLO", "BAW123"));
+            EXPECT_FALSE(manager.GetManagedHold(1)->HasAircraft("BAW123"));
         }
 
         TEST_F(HoldEventHandlerTest, ItCanBeConfiguredFromTheMenu)
