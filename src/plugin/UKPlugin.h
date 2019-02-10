@@ -115,7 +115,7 @@ namespace UKControllerPlugin {
                 bool CanBeCreated
             );
             void OnRadarTargetPositionUpdate(EuroScopePlugIn::CRadarTarget radarTarget);
-            void OpenPopupList(RECT area, std::string title, int numColumns) override;
+            void TriggerPopupList(RECT area, std::string title, int numColumns) override;
             void PostInit(void);
             void RegisterTagFunction(int itemCode, std::string description) override;
             void RegisterTagItem(int itemCode, std::string description);

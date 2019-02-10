@@ -411,7 +411,7 @@ namespace UKControllerPlugin {
     /*
         Open a popup list
     */
-    void UKPlugin::OpenPopupList(RECT area, std::string title, int numColumns)
+    void UKPlugin::TriggerPopupList(RECT area, std::string title, int numColumns)
     {
         this->OpenPopupList(area, title.c_str(), numColumns);
     }

@@ -34,7 +34,7 @@ namespace UKControllerPlugin {
                     };
                     holdManager->AddHold(ManagedHold(holdData));
                 } else {
-                    unsigned int holdId;
+                    unsigned int holdId = 0;
                     if (data.find("id") != data.end() && data.at("id").is_number_integer()) {
                         holdId = data.at("id");
                     }

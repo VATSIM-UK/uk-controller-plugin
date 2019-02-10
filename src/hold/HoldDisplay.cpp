@@ -91,7 +91,15 @@ namespace UKControllerPlugin {
 
             // Title bar
             graphics.FillRectangle(&this->titleBarBrush, this->titleArea);
-            graphics.DrawString(L"TIMBA", 5, &this->font, this->titleArea, &this->stringFormat, &this->titleBarTextBrush);
+            std::wstring holdName = ConvertToTchar(this->managedHold.holdParameters.description);
+            graphics.DrawString(
+                holdName.c_str(),
+                holdName.length(),
+                &this->font,
+                this->titleArea,
+                &this->stringFormat,
+                &this->titleBarTextBrush
+            );
             graphics.DrawLine(
                 &this->borderPen,
                 this->titleArea.X,

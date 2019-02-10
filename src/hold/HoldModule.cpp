@@ -83,7 +83,7 @@ namespace UKControllerPlugin {
                 "Open Hold Selection Menu",
                 std::bind(
                     &HoldWindowManager::OpenHoldPopupMenu,
-                    *container.holdWindows,
+                    container.holdWindows.get(),
                     std::placeholders::_1,
                     std::placeholders::_2,
                     std::placeholders::_3,

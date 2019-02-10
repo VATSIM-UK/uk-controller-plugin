@@ -27,7 +27,7 @@ namespace UKControllerPluginTest {
                     GetRadarTargetForCallsign,
                     std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>(std::string)
                 );
-                MOCK_METHOD3(OpenPopupList, void(RECT area, std::string title, int numColumns));
+                MOCK_METHOD3(TriggerPopupList, void(RECT area, std::string title, int numColumns));
                 MOCK_METHOD2(RegisterTagFunction, void(int, std::string));
                 MOCK_METHOD2(RegisterTagItem, void(int, std::string));
                 MOCK_METHOD1(TriggerFlightplanUpdateForCallsign, void(std::string));

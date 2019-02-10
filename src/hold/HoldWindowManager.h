@@ -30,6 +30,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
                 );
                 void AddWindow(void);
+                size_t CountDisplays(void) const;
                 void OpenHoldPopupMenu(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface &,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface &,
@@ -40,7 +41,7 @@ namespace UKControllerPlugin {
             private:
 
                 // The id that has been assigned as a the callback id when a menu item is clicked
-                const unsigned int itemClickedFunctionId = 0;
+                const unsigned int itemClickedFunctionId = 666;
 
                 // The plugin
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;

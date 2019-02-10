@@ -32,6 +32,11 @@ namespace UKControllerPlugin {
             this->holdDisplays.emplace_back(euroscopeWindow, dllInstance, *this->holdManager.GetManagedHold(1));
         }
 
+        size_t HoldWindowManager::CountDisplays(void) const
+        {
+            return this->holdDisplays.size();
+        }
+
         /*
             Open up a popup menu displaying the available holds to add to
         */
@@ -50,12 +55,12 @@ namespace UKControllerPlugin {
                 mousePos.x,
                 mousePos.y,
                 mousePos.x + 300,
-                mousePos.y + 300
+                mousePos.y + 500
             };
 
-            this->plugin.OpenPopupList(
+            this->plugin.TriggerPopupList(
                 popupArea,
-                "Hold Selection For " + flightplan.GetCallsign(),
+                "Hold Selection",
                 1
             );
 
