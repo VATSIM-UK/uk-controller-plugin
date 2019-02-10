@@ -22,6 +22,7 @@ namespace UKControllerPluginTest {
                 {
                     this->mapper.AddTypeMapping("B733", "LM");
                     this->mapper.AddTypeMapping("B744", "H");
+                    this->mapper.AddTypeMapping("123456789012345678", "UM");
                     ON_CALL(this->flightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
                     ON_CALL(this->flightplan, GetAircraftType())
@@ -30,10 +31,15 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return("BAW123"));
                     ON_CALL(this->flightplan2, GetAircraftType())
                         .WillByDefault(Return("B744"));
+                    ON_CALL(this->flightplanLongType, GetCallsign())
+                        .WillByDefault(Return("BAW123"));
+                    ON_CALL(this->flightplanLongType, GetAircraftType())
+                        .WillByDefault(Return("123456789012345678"));
                 }
 
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplan2;
+                NiceMock<MockEuroScopeCFlightPlanInterface> flightplanLongType;
                 NiceMock< MockEuroScopeCRadarTargetInterface> radarTarget;
                 WakeCategoryMapper mapper;
         };
@@ -48,6 +54,12 @@ namespace UKControllerPluginTest {
         {
             WakeCategoryEventHandler handler(this->mapper);
             EXPECT_TRUE("B733/LM" == handler.GetTagItemData(this->flightplan, this->radarTarget));
+        }
+
+        TEST_F(WakeCategoryEventHandlerTest, TestItTrimsLongAircraftTypes)
+        {
+            WakeCategoryEventHandler handler(this->mapper);
+            EXPECT_TRUE("123456789012/UM" == handler.GetTagItemData(this->flightplanLongType, this->radarTarget));
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItCachesTheResponse)

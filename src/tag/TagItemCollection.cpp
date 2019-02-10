@@ -58,8 +58,9 @@ namespace UKControllerPlugin {
             // Get the TAG data and check it's of a suitable length
             std::string tagData = this->tagItems.at(tagItemId)->GetTagItemData(flightPlan, radarTarget);
 
-            if (tagData.size() > 16) {
-                tagData = this->invalidTagItemText;
+            // We only allow data of length maxlength - 1 because of null char on the end.
+            if (tagData.size() > this->maxItemSize - 1) {
+                tagData = this->invalidItemText;
             }
 
             // Copy into place
