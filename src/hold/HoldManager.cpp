@@ -32,7 +32,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            this->holdData[hold.holdParameters.identifier] = std::make_unique<ManagedHold>(hold);
+            this->holdData[hold.holdParameters.identifier] = std::make_unique<ManagedHold>(std::move(hold));
         }
 
         /*

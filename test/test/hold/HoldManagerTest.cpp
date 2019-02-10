@@ -60,7 +60,7 @@ namespace UKControllerPluginTest {
         {
             this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
             EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
-            EXPECT_TRUE(1, this->manager.GetManagedHold(1)->CountHoldingAircraft());
+            EXPECT_EQ(1, this->manager.GetManagedHold(1)->CountHoldingAircraft());
         }
 
         TEST_F(HoldManagerTest, AddingAircraftToOneHoldRemovesFromAnother)
