@@ -145,7 +145,7 @@ namespace UKControllerPlugin {
                 it != this->managedHold.cend();
                 ++it
             ) {
-                //unsigned int occuped = GetOccupiedLevel(this->f)
+                unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
             }
 
             // Border around whole thing, draw this last

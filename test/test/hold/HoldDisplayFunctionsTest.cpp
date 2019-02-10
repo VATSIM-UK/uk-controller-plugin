@@ -90,5 +90,20 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ(7000, UKControllerPlugin::Hold::GetOccupiedLevel(7599, -301));
         }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsRowToDisplayInHoldBasedOnAltitudeMax)
+        {
+            EXPECT_EQ(0, UKControllerPlugin::Hold::GetDisplayRow(15000, 15000));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsRowToDisplayInHoldBasedOnAltitudeNotMaxBoundary)
+        {
+            EXPECT_EQ(1, UKControllerPlugin::Hold::GetDisplayRow(15000, 14000));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsRowToDisplayInHoldBasedOnAltitudeNotMax)
+        {
+            EXPECT_EQ(2, UKControllerPlugin::Hold::GetDisplayRow(15000, 13000));
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

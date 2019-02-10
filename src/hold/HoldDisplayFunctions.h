@@ -11,5 +11,6 @@ namespace UKControllerPlugin {
         TCHAR * ConvertToTchar(int value);
         std::wstring GetLevelDisplayString(int altitude);
         unsigned int GetOccupiedLevel(int altitude, int verticalSpeed);
+        unsigned int GetDisplayRow(int holdMax, int occupiedLevel);
     }  // namespace Hold
 }  // namespace UKControllerPlugin

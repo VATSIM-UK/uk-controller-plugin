@@ -75,5 +75,14 @@ namespace UKControllerPlugin {
                 return std::abs(difference) >= minimumLevelOffset ? nearestThousand + 1000 : nearestThousand;
             }
         }
+
+        /*
+            Returns the row in the hold manager that an aircraft should be displayed in, given its
+            occupied level
+        */
+        unsigned int GetDisplayRow(int holdMax, int occupiedLevel)
+        {
+            return (holdMax - occupiedLevel) / 1000;
+        }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
