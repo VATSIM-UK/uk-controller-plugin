@@ -38,11 +38,14 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & pluginCore
                 ) const;
 
-                // The tag item string to use if the tag item is too long.
-                const std::string invalidTagItemText = "INVALID";
-
                 // The tag item string to use if the tag item requested is invalid
                 const std::string errorTagItemText = "ERROR";
+
+                // The tag item text is too long
+                const std::string invalidItemText = "INVALID";
+
+                // Max length we can have on TAG items, 15 characters + 1 null terminator
+                const size_t maxItemSize = 16;
 
             private:
                 // All registered tag items

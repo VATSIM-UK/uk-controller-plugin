@@ -33,7 +33,8 @@ namespace UKControllerPlugin {
 
             private:
 
-                void RemoveCacheEntry(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan);
+                // The maximum length we can have in a tag item
+                const size_t maxItemSize = 15;
 
                 // Cache any data
                 std::map<std::string, std::string> cache;
