@@ -68,7 +68,7 @@ namespace UKControllerPlugin {
         /*
             Lock the mutex on the aircraft list so that iteration may be performed
         */
-        void ManagedHold::LockAircraftList(void)
+        void ManagedHold::LockAircraftList(void) const
         {
             this->uniqueHoldLock.lock();
         }
@@ -99,7 +99,7 @@ namespace UKControllerPlugin {
         /*
             Unlock the aircraft list
         */
-        void ManagedHold::UnlockAircraftList(void)
+        void ManagedHold::UnlockAircraftList(void) const
         {
             if (!this->uniqueHoldLock.owns_lock()) {
                 return;

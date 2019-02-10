@@ -20,10 +20,10 @@ namespace UKControllerPlugin {
                 size_t CountHoldingAircraft(void) const;
                 bool HasAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft) const;
                 bool HasAircraft(std::string callsign) const;
-                void LockAircraftList(void);
+                void LockAircraftList(void) const;
                 void RemoveHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft);
                 void RemoveHoldingAircraft(std::string callsign);
-                void UnlockAircraftList(void);
+                void UnlockAircraftList(void) const;
                 void UpdateHoldingAircraft(std::string callsign, int clearedLevel, int reportedLevel);
                 bool operator== (const ManagedHold & compare) const;
 
@@ -41,10 +41,10 @@ namespace UKControllerPlugin {
             private:
                 
                 // A lock for the aircraft queue, locking is deferred.
-                std::unique_lock<std::mutex> uniqueHoldLock;
+                mutable std::unique_lock<std::mutex> uniqueHoldLock;
 
                 // A mutex to lock the holding queue
-                std::mutex holdLock;
+                mutable std::mutex holdLock;
 
                 // The aircraft in the hold
                 std::list<UKControllerPlugin::Hold::HoldingAircraft> holdingAircraft;
