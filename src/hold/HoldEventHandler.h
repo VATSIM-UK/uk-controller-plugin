@@ -31,7 +31,7 @@ namespace UKControllerPlugin {
                 HoldEventHandler(
                     UKControllerPlugin::Hold::HoldManager & holdManager,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    UKControllerPlugin::Hold::HoldWindowManager holdManagerWindow,
+                    UKControllerPlugin::Hold::HoldWindowManager & holdManagerWindow,
                     const int popupMenuItemId
                 );
                 void FlightPlanEvent(
@@ -74,7 +74,7 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Hold::HoldManager & holdManager;
 
                 // Displays the hold manager view
-                UKControllerPlugin::Hold::HoldWindowManager holdManagerWindow;
+                UKControllerPlugin::Hold::HoldWindowManager & holdManagerWindow;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

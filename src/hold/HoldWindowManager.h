@@ -7,6 +7,8 @@ namespace UKControllerPlugin {
     }  // namespace Hold
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
+        class EuroScopeCFlightPlanInterface;
+        class EuroScopeCRadarTargetInterface;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
@@ -28,9 +30,17 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
                 );
                 void AddWindow(void);
-                void OpenHoldPopupMenu();
+                void OpenHoldPopupMenu(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface &,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface &,
+                    std::string context,
+                    const POINT & mousePos
+                );
 
             private:
+
+                // The id that has been assigned as a the callback id when a menu item is clicked
+                const unsigned int itemClickedFunctionId = 0;
 
                 // The plugin
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;

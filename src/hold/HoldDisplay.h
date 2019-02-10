@@ -21,16 +21,17 @@ namespace UKControllerPlugin {
                     HINSTANCE dllInstance,
                     const UKControllerPlugin::Hold::ManagedHold & managedHold
                 );
+                HoldDisplay(const HoldDisplay & copy);
                 ~HoldDisplay();
+
+                // The hold this display is managing.
+                const UKControllerPlugin::Hold::ManagedHold & managedHold;
 
             private:
 
                 void PaintWindow(HDC hdc);
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-                // The hold this display is managing.
-                const UKControllerPlugin::Hold::ManagedHold & managedHold;
 
                 // The window handle
                 HWND selfHandle;

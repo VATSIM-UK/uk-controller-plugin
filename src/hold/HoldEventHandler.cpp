@@ -20,11 +20,11 @@ namespace UKControllerPlugin {
         HoldEventHandler::HoldEventHandler(
             HoldManager & holdManager,
             EuroscopePluginLoopbackInterface & plugin,
-            HoldWindowManager holdManagerWindow,
+            UKControllerPlugin::Hold::HoldWindowManager & holdManagerWindow,
             const int popupMenuItemId
         )
-            : holdManager(holdManager), plugin(plugin),
-            holdManagerWindow(std::move(holdManagerWindow)), popupMenuItemId(popupMenuItemId)
+            : holdManager(holdManager), plugin(plugin), holdManagerWindow(std::move(holdManagerWindow)),
+            popupMenuItemId(popupMenuItemId)
         {
 
         }

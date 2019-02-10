@@ -15,6 +15,7 @@
 #include "api/ApiHelper.h"
 #include "windows/WinApiInterface.h"
 #include "dependency/DependencyCache.h"
+#include "tag/TagFunction.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -30,9 +31,12 @@ using UKControllerPlugin::Hold::GetLocalHoldData;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Tag::TagFunction;
 
 namespace UKControllerPlugin {
     namespace Hold {
+
+        const unsigned int popupMenuTagItemId = 9003;
 
         // The file where the holds are stored locally
         const std::string dependencyFile = "holds.json";
@@ -67,15 +71,31 @@ namespace UKControllerPlugin {
             container.holdManager = BuildHoldingData(dependencies.GetJsonDependency(dependencyFile));
 
             // Create the event handler and register
+            container.holdWindows = std::make_unique<HoldWindowManager>(
+                GetActiveWindow(),
+                container.windows->GetDllInstance(),
+                *container.holdManager,
+                *container.plugin
+            );
+
+            TagFunction openHoldPopupMenu(
+                popupMenuTagItemId,
+                "Open Hold Selection Menu",
+                std::bind(
+                    &HoldWindowManager::OpenHoldPopupMenu,
+                    *container.holdWindows,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(openHoldPopupMenu);
+
             eventHandler = std::make_shared<HoldEventHandler>(
                 *container.holdManager,
                 *container.plugin,
-                HoldWindowManager(
-                    GetActiveWindow(),
-                    container.windows->GetDllInstance(),
-                    *container.holdManager,
-                    *container.plugin
-                ),
+                *container.holdWindows,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 

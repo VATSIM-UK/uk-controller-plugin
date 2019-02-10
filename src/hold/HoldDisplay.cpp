@@ -55,6 +55,22 @@ namespace UKControllerPlugin {
             ShowWindow(this->selfHandle, 5);
         }
 
+        HoldDisplay::HoldDisplay(const HoldDisplay & copy)
+            : managedHold(copy.managedHold),
+            titleBarBrush(Gdiplus::Color(255, 153, 153)),
+            backgroundBrush(CreateSolidBrush(RGB(0, 0, 0))),
+            titleBarTextBrush(Gdiplus::Color(255, 255, 255)), fontFamily(L"EuroScope"),
+            font(&fontFamily, 12, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
+            stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
+            dataBrush(Gdiplus::Color(0, 176, 0)),
+            clearedLevelBrush(Gdiplus::Color(255, 128, 64)),
+            borderPen(Gdiplus::Color(255, 255, 255), 1.5f),
+            exitButtonBrush(Gdiplus::Color(0, 0, 0)),
+            blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255))
+        {
+            this->selfHandle = copy.selfHandle;
+        }
+
         HoldDisplay::~HoldDisplay()
         {
             if (this->selfHandle) {

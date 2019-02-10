@@ -38,6 +38,7 @@
 #include "login/Login.h"
 #include "hold/HoldManager.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "hold/HoldWindowManager.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -86,6 +87,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawkEvents;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkGenerator> squawkGenerator;
             std::unique_ptr<UKControllerPlugin::Hold::HoldManager> holdManager;
+            std::unique_ptr<UKControllerPlugin::Hold::HoldWindowManager> holdWindows;
 
             // Collections that are spawned multiple times.
             std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;

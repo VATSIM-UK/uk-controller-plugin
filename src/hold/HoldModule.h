@@ -28,6 +28,7 @@ namespace UKControllerPlugin {
 namespace UKControllerPlugin {
     namespace Hold {
 
+        extern const unsigned int popupMenuTagItemId;
         extern const std::string dependencyFile;
         extern const int timedEventFrequency;
 
