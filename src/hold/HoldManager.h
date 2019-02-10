@@ -8,6 +8,7 @@
 
 namespace UKControllerPlugin {
     namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
     }  // namespace Euroscope
@@ -33,6 +34,9 @@ namespace UKControllerPlugin {
                 size_t CountHolds(void) const;
                 UKControllerPlugin::Hold::ManagedHold * const GetManagedHold(unsigned int holdId) const;
                 void RemoveAircraftFromAnyHold(std::string callsign);
+                void HoldManager::UpdateHoldingAircraft(
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
+                );
 
             private:
 

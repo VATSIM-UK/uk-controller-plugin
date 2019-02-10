@@ -24,14 +24,12 @@ namespace UKControllerPlugin {
                 void RemoveHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft);
                 void RemoveHoldingAircraft(std::string callsign);
                 void UnlockAircraftList(void);
+                void UpdateHoldingAircraft(std::string callsign, int clearedLevel, int reportedLevel);
                 bool operator== (const ManagedHold & compare) const;
 
 
                 // Public type definitions for a custom iterator over the class.
-                typedef std::set<
-                    UKControllerPlugin::Hold::HoldingAircraft,
-                    UKControllerPlugin::Hold::CompareHoldingAircraft
-                > ManagedHoldAircraft;
+                typedef std::list<UKControllerPlugin::Hold::HoldingAircraft> ManagedHoldAircraft;
                 typedef ManagedHoldAircraft::const_iterator const_iterator;
                 const_iterator cbegin(void) const { return this->holdingAircraft.cbegin(); }
                 const_iterator cend(void) const { return holdingAircraft.cend(); }
@@ -49,10 +47,7 @@ namespace UKControllerPlugin {
                 std::mutex holdLock;
 
                 // The aircraft in the hold
-                std::set<
-                    UKControllerPlugin::Hold::HoldingAircraft,
-                    UKControllerPlugin::Hold::CompareHoldingAircraft
-                > holdingAircraft;
+                std::list<UKControllerPlugin::Hold::HoldingAircraft> holdingAircraft;
         };
 
     }  // namespace Hold

@@ -100,5 +100,14 @@ namespace UKControllerPluginTest {
         {
             EXPECT_FALSE(this->handler.ProcessCommand("NOPE"));
         }
+
+        TEST_F(HoldEventHandlerTest, TimedEventTriggersDataUpdate)
+        {
+            EXPECT_EQ(8000, manager.GetManagedHold(1)->cbegin()->clearedLevel);
+            EXPECT_EQ(9000, manager.GetManagedHold(1)->cbegin()->reportedLevel);
+            manager.UpdateHoldingAircraft(this->mockPlugin);
+            EXPECT_EQ(7000, manager.GetManagedHold(1)->cbegin()->clearedLevel);
+            EXPECT_EQ(8000, manager.GetManagedHold(1)->cbegin()->reportedLevel);
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

@@ -33,7 +33,10 @@ namespace UKControllerPlugin {
         void ManagedHold::AddHoldingAircraft(HoldingAircraft aircraft)
         {
             std::lock_guard<std::mutex> aircraftListLock(this->holdLock);
-            this->holdingAircraft.insert(aircraft);
+            if (this->HasAircraft(aircraft)) {
+                return;
+            }
+            this->holdingAircraft.push_back(aircraft);
         }
 
         /*
@@ -49,7 +52,8 @@ namespace UKControllerPlugin {
         */
         bool ManagedHold::HasAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft) const
         {
-            return this->holdingAircraft.count(aircraft) != 0;
+            return std::find(this->holdingAircraft.cbegin(), this->holdingAircraft.cend(), aircraft) != 
+                this->holdingAircraft.cend();
         }
 
         /*
@@ -57,7 +61,8 @@ namespace UKControllerPlugin {
         */
         bool ManagedHold::HasAircraft(std::string callsign) const
         {
-            return this->holdingAircraft.count(callsign) != 0;
+            return std::find(this->holdingAircraft.cbegin(), this->holdingAircraft.cend(), callsign) !=
+                this->holdingAircraft.cend();
         }
 
         /*
@@ -74,7 +79,7 @@ namespace UKControllerPlugin {
         void ManagedHold::RemoveHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft)
         {
             std::lock_guard<std::mutex> aircraftListLock(this->holdLock);
-            this->holdingAircraft.erase(aircraft);
+            this->holdingAircraft.remove(aircraft);
         }
 
         /*
@@ -83,7 +88,7 @@ namespace UKControllerPlugin {
         void ManagedHold::RemoveHoldingAircraft(std::string callsign)
         {
             std::lock_guard<std::mutex> aircraftListLock(this->holdLock);
-            auto aircraft = this->holdingAircraft.find(callsign);
+            auto aircraft = std::find(this->holdingAircraft.cbegin(), this->holdingAircraft.cend(), callsign);
             if (aircraft == this->holdingAircraft.end()) {
                 return;
             }
@@ -100,6 +105,20 @@ namespace UKControllerPlugin {
                 return;
             }
             this->uniqueHoldLock.unlock();
+        }
+
+        /*
+            Updates an aircraft in the hold
+        */
+        void ManagedHold::UpdateHoldingAircraft(std::string callsign, int clearedLevel, int reportedLevel)
+        {
+            if (!this->HasAircraft(callsign)) {
+                return;
+            }
+
+            auto aircraft = std::find(this->holdingAircraft.begin(), this->holdingAircraft.end(), callsign);
+            aircraft->clearedLevel = clearedLevel;
+            aircraft->reportedLevel = reportedLevel;
         }
 
         /*

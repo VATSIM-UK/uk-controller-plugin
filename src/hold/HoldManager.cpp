@@ -1,10 +1,12 @@
 #include "pch/stdafx.h"
 #include "hold/HoldManager.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
-#include "euroscope//EuroScopeCRadarTargetInterface.h"
+#include "euroscope/EuroScopeCRadarTargetInterface.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -54,6 +56,8 @@ namespace UKControllerPlugin {
             managedHold->second->AddHoldingAircraft(
                 {
                     flightplan.GetCallsign(),
+                    flightplan.GetClearedAltitude(),
+                    radarTarget.GetFlightLevel(),
                     std::chrono::system_clock::now()
                 }
             );
@@ -95,6 +99,71 @@ namespace UKControllerPlugin {
 
             this->holdData[aircraft->second]->RemoveHoldingAircraft(aircraft->first);
             this->holdingAircraft.erase(aircraft);
+        }
+
+        /*
+            Update every aircraftin the holds, namely its cleared level and its actual level
+        */
+        void HoldManager::UpdateHoldingAircraft(EuroscopePluginLoopbackInterface & plugin)
+        {
+            //// Iterate the active holds	
+            //for (
+            //    std::map<unsigned int, std::unique_ptr<ManagedHold>>::iterator itHold =
+            //    this->holdData.begin();
+            //    itHold != this->holdData.end();
+            //    ++itHold
+            //    ) {
+
+            //    // Iterate the aircraft in the holds	
+            //    for (
+            //        std::set<HoldingAircraft, CompareHoldingAircraft>::iterator itAircraft = itHold->second.begin();
+            //        itAircraft != itHold->second.end();
+            //        ++itAircraft
+            //        ) {
+            //        try {
+            //            // Update the flightplan	
+            //            itAircraft->clearedAltitude = plugin.GetFlightplanForCallsign(
+            //                itAircraft->callsign
+            //            )->GetClearedAltitude();
+
+            //            itAircraft->reportedAltitude = plugin.GetRadarTargetForCallsign(
+            //                itAircraft->callsign
+            //            )->GetFlightLevel();
+            //        }
+            //        catch (std::invalid_argument) {
+            //         // Cant update, no FP.	
+            //        }
+            //    }
+            //}
+
+            // Iterate the holds
+            for (
+                std::map<unsigned int, std::unique_ptr<ManagedHold>>::const_iterator itHold = this->holdData.cbegin();
+                itHold != this->holdData.cend();
+                ++itHold
+            ) {
+                itHold->second->LockAircraftList();
+
+                // Iterate the aircraft in the holds
+                for (
+                    ManagedHold::ManagedHoldAircraft::const_iterator itAircraft = itHold->second->cbegin();
+                    itAircraft != itHold->second->cend();
+                    ++itAircraft
+                ) {
+                    // Update aircraft altitudes
+                    try {
+                        itHold->second->UpdateHoldingAircraft(
+                            itAircraft->callsign,
+                            plugin.GetFlightplanForCallsign(itAircraft->callsign)->GetClearedAltitude(),
+                            plugin.GetRadarTargetForCallsign(itAircraft->callsign)->GetFlightLevel()
+                        );
+                    }
+                    catch (std::invalid_argument) {
+                     // Cant update, no FP.
+                    }
+                }
+                itHold->second->UnlockAircraftList();
+            }
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

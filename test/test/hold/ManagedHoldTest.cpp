@@ -25,6 +25,8 @@ namespace UKControllerPluginTest {
                 UKControllerPlugin::Hold::ManagedHold hold;
                 const UKControllerPlugin::Hold::HoldingAircraft aircraft = {
                     "BAW123",
+                    1,
+                    1,
                     std::chrono::system_clock::now()
                 };
         };

@@ -5,6 +5,7 @@
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "hold/ManagedHold.h"
 #include "hold/HoldingData.h"
+#include "hold/HoldingAircraft.h"
 
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -12,6 +13,7 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Hold::ManagedHold;
 using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Hold::HoldingAircraft;
 using ::testing::Return;
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -28,6 +30,12 @@ namespace UKControllerPluginTest {
 
                     ON_CALL(mockFlightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
+
+                    ON_CALL(mockFlightplan, GetClearedAltitude())
+                        .WillByDefault(Return(8000));
+
+                    ON_CALL(mockRadarTarget, GetFlightLevel())
+                        .WillByDefault(Return(9000));
                 }
 
                 const UKControllerPlugin::Hold::HoldingData hold1 = { 1, "WILLO", "WILLO", 8000, 15000, 209, 0 };
@@ -61,6 +69,21 @@ namespace UKControllerPluginTest {
             this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
             EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
             EXPECT_EQ(1, this->manager.GetManagedHold(1)->CountHoldingAircraft());
+        }
+
+        TEST_F(HoldManagerTest, AddingAircraftToAHoldSetsData)
+        {
+            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
+            HoldingAircraft holding = *this->manager.GetManagedHold(1)->cbegin();
+
+            int64_t seconds = std::chrono::duration_cast<std::chrono::seconds> (
+                holding.entryTime - std::chrono::system_clock::now()
+            ).count();
+
+            EXPECT_TRUE(holding.callsign == "BAW123");
+            EXPECT_EQ(8000, holding.clearedLevel);
+            EXPECT_EQ(9000, holding.reportedLevel);
+            EXPECT_LT(seconds, 2);
         }
 
         TEST_F(HoldManagerTest, AddingAircraftToOneHoldRemovesFromAnother)
@@ -97,6 +120,39 @@ namespace UKControllerPluginTest {
         TEST_F(HoldManagerTest, ItHandlesRemovingNonExistantAircraft)
         {
             EXPECT_NO_THROW(manager.RemoveAircraftFromAnyHold("BAW123"));
+        }
+
+        TEST_F(HoldManagerTest, ItUpdatesHoldingAircraftData)
+        {
+            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> updatedmockFp(
+                new NiceMock<MockEuroScopeCFlightPlanInterface>
+            );
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> updatedmockRt(
+                new NiceMock<MockEuroScopeCRadarTargetInterface>
+            );
+
+            ON_CALL(*updatedmockFp, GetClearedAltitude())
+                .WillByDefault(Return(7000));
+
+            ON_CALL(*updatedmockRt, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(mockPlugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(updatedmockFp));
+
+            ON_CALL(mockPlugin, GetRadarTargetForCallsign("BAW123"))
+                .WillByDefault(Return(updatedmockRt));
+
+            manager.UpdateHoldingAircraft(this->mockPlugin);
+            EXPECT_EQ(7000, manager.GetManagedHold(1)->cbegin()->clearedLevel);
+            EXPECT_EQ(8000, manager.GetManagedHold(1)->cbegin()->reportedLevel);
+        }
+
+        TEST_F(HoldManagerTest, ItDoesNothingIfNoUpdatesRequired)
+        {
+            EXPECT_NO_THROW(manager.UpdateHoldingAircraft(this->mockPlugin));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
