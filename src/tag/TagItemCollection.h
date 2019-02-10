@@ -45,7 +45,7 @@ namespace UKControllerPlugin {
                 const std::string invalidItemText = "INVALID";
 
                 // Max length we can have on TAG items, 15 characters + 1 null terminator
-                const size_t maxItemLength = 16;
+                const size_t maxItemSize = 16;
 
             private:
                 // All registered tag items
