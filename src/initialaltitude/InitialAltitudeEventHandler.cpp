@@ -113,7 +113,9 @@ namespace UKControllerPlugin {
         */
         void InitialAltitudeEventHandler::RecycleInitialAltitude(
             EuroScopeCFlightPlanInterface & flightplan,
-            EuroScopeCRadarTargetInterface & radarTarget
+            EuroScopeCRadarTargetInterface & radarTarget,
+            std::string context,
+            const POINT & mousePos
         ) {
             std::string sidName = normalise.StripSidDeprecation(flightplan.GetSidName());
 

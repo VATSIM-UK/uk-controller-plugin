@@ -1,4 +1,5 @@
 #pragma once
+#include "plugin/PopupMenuItem.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -18,6 +19,7 @@ namespace Euroscope {
 class EuroscopePluginLoopbackInterface
 {
     public:
+        virtual void AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item) = 0;
         virtual void ChatAreaMessage(
             std::string handler,
             std::string sender,
@@ -36,6 +38,7 @@ class EuroscopePluginLoopbackInterface
         virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
             GetRadarTargetForCallsign(std::string callsign) const = 0;
 
+        virtual void OpenPopupList(RECT area, std::string title, int numColumns) = 0;
         virtual void TriggerFlightplanUpdateForCallsign(std::string callsign) = 0;
         virtual void RegisterTagFunction(int itemCode, std::string description) = 0;
         virtual void RegisterTagItem(int itemCode, std::string description) = 0;

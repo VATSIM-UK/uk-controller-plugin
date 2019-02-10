@@ -18,7 +18,12 @@ namespace UKControllerPlugin {
         TagFunction::TagFunction(
             int functionId,
             std::string description,
-            std::function<void(EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &)> function
+            std::function<void(
+                EuroScopeCFlightPlanInterface &,
+                EuroScopeCRadarTargetInterface &,
+                std::string,
+                const POINT & mousePos
+            )> function
         )
             : functionId(functionId), description(description), function(function)
         {

@@ -5,6 +5,9 @@ namespace UKControllerPlugin {
     namespace Hold {
         class HoldManager;
     }  // namespace Hold
+    namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
+    }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -21,16 +24,19 @@ namespace UKControllerPlugin {
                 HoldWindowManager(
                     HWND euroscopeWindow,
                     HINSTANCE dllInstance,
-                    const UKControllerPlugin::Hold::HoldManager & holdManager
+                    const UKControllerPlugin::Hold::HoldManager & holdManager,
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
                 );
                 void AddWindow(void);
-
-
+                void OpenHoldPopupMenu();
 
             private:
 
+                // The plugin
+                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+
                 // The hold manager
-            const UKControllerPlugin::Hold::HoldManager & holdManager;
+                const UKControllerPlugin::Hold::HoldManager & holdManager;
 
                 // Handle to EuroScopes main window
                 const HWND euroscopeWindow;

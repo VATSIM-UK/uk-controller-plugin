@@ -72,7 +72,9 @@ namespace UKControllerPlugin {
                     &SquawkEventHandler::SquawkReycleGeneral,
                     *eventHandler,
                     std::placeholders::_1,
-                    std::placeholders::_2
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
                 )
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(forceSquawkCallbackGeneral);
@@ -84,7 +86,9 @@ namespace UKControllerPlugin {
                     &SquawkEventHandler::SquawkRecycleLocal,
                     *eventHandler,
                     std::placeholders::_1,
-                    std::placeholders::_2
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
                 )
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(forceSquawkCallbackLocal);

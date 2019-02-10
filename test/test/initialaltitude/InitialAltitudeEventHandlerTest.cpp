@@ -451,7 +451,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
 
-            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget);
+            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
 
         TEST_F(InitialAltitudeEventHandlerTest, RecycleDoesNothingIfNoSidFound)
@@ -468,7 +468,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_))
                 .Times(0);
 
-            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget);
+            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
 
     }  // namespace InitialAltitude

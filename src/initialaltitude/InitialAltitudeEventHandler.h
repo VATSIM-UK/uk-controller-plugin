@@ -62,7 +62,9 @@ namespace UKControllerPlugin {
                 ) override;
                 void RecycleInitialAltitude(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
+                    std::string context,
+                    const POINT & mousePos
                 );
                 bool UserAutomaticAssignmentsAllowed(void) const;
                 void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;

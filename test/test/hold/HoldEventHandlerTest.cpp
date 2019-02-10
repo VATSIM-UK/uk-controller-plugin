@@ -29,7 +29,12 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldEventHandlerTest(void)
-                    : handler(this->manager, this->mockPlugin, HoldWindowManager(NULL, NULL), 1)
+                    : handler(
+                        this->manager,
+                        this->mockPlugin,
+                        HoldWindowManager(NULL, NULL, this->manager, this->mockPlugin),
+                        1
+                    )
                 {
                     manager.AddHold(ManagedHold(holdData));
 

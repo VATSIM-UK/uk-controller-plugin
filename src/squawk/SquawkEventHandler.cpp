@@ -116,7 +116,9 @@ namespace UKControllerPlugin {
         */
         void SquawkEventHandler::SquawkReycleGeneral(
             EuroScopeCFlightPlanInterface & flightplan,
-            EuroScopeCRadarTargetInterface & radarTarget
+            EuroScopeCRadarTargetInterface & radarTarget,
+            std::string context,
+            const POINT & mousePoss
         ) const {
             LogInfo("Forcing general squawk update for " + flightplan.GetCallsign());
             this->generator.ForceGeneralSquawkForAircraft(flightplan, radarTarget);
@@ -127,7 +129,9 @@ namespace UKControllerPlugin {
         */
         void SquawkEventHandler::SquawkRecycleLocal(
             EuroScopeCFlightPlanInterface & flightplan,
-            EuroScopeCRadarTargetInterface & radarTarget
+            EuroScopeCRadarTargetInterface & radarTarget,
+            std::string context,
+            const POINT & mousePos
         ) const {
             LogInfo("Forcing local squawk update for " + flightplan.GetCallsign());
             this->generator.ForceLocalSquawkForAircraft(flightplan, radarTarget);

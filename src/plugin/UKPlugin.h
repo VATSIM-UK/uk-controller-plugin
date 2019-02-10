@@ -69,6 +69,7 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Plugin::FunctionCallEventHandler & functionCallHandler,
                 const UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers
             );
+            void AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item) override;
             void ChatAreaMessage(
                 std::string handler,
                 std::string sender,
@@ -114,6 +115,7 @@ namespace UKControllerPlugin {
                 bool CanBeCreated
             );
             void OnRadarTargetPositionUpdate(EuroScopePlugIn::CRadarTarget radarTarget);
+            void OpenPopupList(RECT area, std::string title, int numColumns) override;
             void PostInit(void);
             void RegisterTagFunction(int itemCode, std::string description) override;
             void RegisterTagItem(int itemCode, std::string description);

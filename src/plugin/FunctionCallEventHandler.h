@@ -27,7 +27,8 @@ class FunctionCallEventHandler
             int functionId,
             std::string subject,
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
-            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
+            const POINT & mousePos
         ) const;
         size_t CountCallbacks(void) const;
         size_t CountTagFunctions(void) const;

@@ -54,7 +54,8 @@ namespace UKControllerPluginTest {
                 5000,
                 "some test",
                 StrictMock<MockEuroScopeCFlightPlanInterface>(),
-                StrictMock<MockEuroScopeCRadarTargetInterface>()
+                StrictMock<MockEuroScopeCRadarTargetInterface>(),
+                POINT()
             );
             EXPECT_TRUE(output == "some test");
         }
@@ -66,7 +67,10 @@ namespace UKControllerPluginTest {
             TagFunction function(
                 9000,
                 "Test Tag Function",
-                [&output](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &) {output = "some test"; }
+                [&output]
+                (EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {
+                    output = "some test"; 
+                }
             );
 
             handler.RegisterFunctionCall(function);
@@ -75,7 +79,8 @@ namespace UKControllerPluginTest {
                 9000,
                 "some test",
                 StrictMock<MockEuroScopeCFlightPlanInterface>(),
-                StrictMock<MockEuroScopeCRadarTargetInterface>()
+                StrictMock<MockEuroScopeCRadarTargetInterface>(),
+                POINT()
             );
             EXPECT_TRUE(output == "some test");
         }
@@ -95,7 +100,7 @@ namespace UKControllerPluginTest {
             TagFunction function(
                 9000,
                 "Test Tag Function",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             );
 
             handler.RegisterFunctionCall(function);
@@ -109,7 +114,7 @@ namespace UKControllerPluginTest {
             TagFunction function2(
                 9000,
                 "Test Tag Function",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             );
             StrictMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
 
@@ -129,7 +134,8 @@ namespace UKControllerPluginTest {
                     9000,
                     "some test",
                     StrictMock<MockEuroScopeCFlightPlanInterface>(),
-                    StrictMock<MockEuroScopeCRadarTargetInterface>()
+                    StrictMock<MockEuroScopeCRadarTargetInterface>(),
+                    POINT()
                 )
             );
         }
@@ -142,7 +148,8 @@ namespace UKControllerPluginTest {
                     5000,
                     "some test",
                     StrictMock<MockEuroScopeCFlightPlanInterface>(),
-                    StrictMock<MockEuroScopeCRadarTargetInterface>()
+                    StrictMock<MockEuroScopeCRadarTargetInterface>(),
+                    POINT()
                 )
             );
         }

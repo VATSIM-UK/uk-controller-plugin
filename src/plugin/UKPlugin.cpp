@@ -74,6 +74,22 @@ namespace UKControllerPlugin {
         );
     }
 
+    /*
+        Add an item to an already open popup list
+    */
+    void UKPlugin::AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item)
+    {
+        AddPopupListElement(
+            item.firstValue.c_str(),
+            item.secondValue.c_str(),
+            item.callbackFunctionId,
+            false,
+            item.checked,
+            item.disabled,
+            item.fixedPosition
+        );
+    }
+
     void UKPlugin::ChatAreaMessage(
         std::string handler,
         std::string sender,
@@ -322,7 +338,8 @@ namespace UKControllerPlugin {
             functionId,
             sItemString,
             EuroScopeCFlightPlanWrapper(this->FlightPlanSelectASEL()),
-            EuroScopeCRadarTargetWrapper(this->RadarTargetSelectASEL())
+            EuroScopeCRadarTargetWrapper(this->RadarTargetSelectASEL()),
+            Pt
         );
     }
 
@@ -389,6 +406,14 @@ namespace UKControllerPlugin {
 
         EuroScopeCRadarTargetWrapper radarTargetWrapper(radarTarget);
         this->radarTargetEventHandler.RadarTargetEvent(radarTargetWrapper);
+    }
+
+    /*
+        Open a popup list
+    */
+    void UKPlugin::OpenPopupList(RECT area, std::string title, int numColumns)
+    {
+        this->OpenPopupList(area, title.c_str(), numColumns);
     }
 
     /*
