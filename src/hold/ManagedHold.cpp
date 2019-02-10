@@ -110,8 +110,12 @@ namespace UKControllerPlugin {
         /*
             Updates an aircraft in the hold
         */
-        void ManagedHold::UpdateHoldingAircraft(std::string callsign, int clearedLevel, int reportedLevel)
-        {
+        void ManagedHold::UpdateHoldingAircraft(
+            std::string callsign,
+            int clearedLevel,
+            int reportedLevel,
+            int verticalSpeed
+        ) {
             if (!this->HasAircraft(callsign)) {
                 return;
             }
@@ -119,6 +123,7 @@ namespace UKControllerPlugin {
             auto aircraft = std::find(this->holdingAircraft.begin(), this->holdingAircraft.end(), callsign);
             aircraft->clearedLevel = clearedLevel;
             aircraft->reportedLevel = reportedLevel;
+            aircraft->verticalSpeed = verticalSpeed;
         }
 
         /*

@@ -27,6 +27,7 @@ namespace UKControllerPluginTest {
                     "BAW123",
                     1,
                     1,
+                    300,
                     std::chrono::system_clock::now()
                 };
         };
@@ -96,5 +97,24 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->hold.HasAircraft("BAW124"));
         }
 
+        TEST_F(ManagedHoldTest, ItCanUpdateHoldingAircraft)
+        {
+            this->hold.AddHoldingAircraft(aircraft);
+            std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+            HoldingAircraft expected = {
+                "BAW123",
+                10000,
+                9001,
+                350,
+                now
+            };
+            this->hold.UpdateHoldingAircraft("BAW123", 10000, 9001, 350);
+            EXPECT_EQ(expected, *this->hold.cbegin());
+        }
+
+        TEST_F(ManagedHoldTest, ItHandlesUpdatingNonExistantAircraft)
+        {
+            EXPECT_NO_THROW(this->hold.UpdateHoldingAircraft("BAW124", 10000, 9001, 350));
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

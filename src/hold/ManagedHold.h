@@ -24,7 +24,12 @@ namespace UKControllerPlugin {
                 void RemoveHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft);
                 void RemoveHoldingAircraft(std::string callsign);
                 void UnlockAircraftList(void) const;
-                void UpdateHoldingAircraft(std::string callsign, int clearedLevel, int reportedLevel);
+                void UpdateHoldingAircraft(
+                    std::string callsign,
+                    int clearedLevel,
+                    int reportedLevel,
+                    int verticalSpeed
+                );
                 bool operator== (const ManagedHold & compare) const;
 
 

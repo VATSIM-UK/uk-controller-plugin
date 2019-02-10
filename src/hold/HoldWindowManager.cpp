@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
 
         void HoldWindowManager::AddWindow(void)
         {
-            this->holdDisplays.emplace_back(euroscopeWindow, dllInstance);
+            //this->holdDisplays.emplace_back(euroscopeWindow, dllInstance);
         }
 
     }  // namespace Hold

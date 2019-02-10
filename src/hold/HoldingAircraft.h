@@ -12,6 +12,7 @@ namespace UKControllerPlugin {
             const std::string callsign;
             int clearedLevel;
             int reportedLevel;
+            int verticalSpeed;
             const std::chrono::system_clock::time_point entryTime;
 
             bool operator== (const HoldingAircraft & compare) const {

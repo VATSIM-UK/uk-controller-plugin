@@ -3,6 +3,12 @@
 
 namespace UKControllerPlugin {
     namespace Hold {
+        class ManagedHold;
+    }  // namespace Hold
+}  // namespace UKControllerPlugin
+
+namespace UKControllerPlugin {
+    namespace Hold {
 
         /*
             Manages the display of a single hold.
@@ -10,7 +16,11 @@ namespace UKControllerPlugin {
         class HoldDisplay
         {
             public:
-                HoldDisplay(HWND euroscopeWindow, HINSTANCE dllInstance);
+                HoldDisplay(
+                    HWND euroscopeWindow,
+                    HINSTANCE dllInstance,
+                    UKControllerPlugin::Hold::ManagedHold & managedHold
+                );
                 ~HoldDisplay();
 
             private:
@@ -18,6 +28,9 @@ namespace UKControllerPlugin {
                 void PaintWindow(HDC hdc);
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+                // The hold this display is managing.
+                UKControllerPlugin::Hold::ManagedHold & managedHold;
 
                 // The window handle
                 HWND selfHandle;

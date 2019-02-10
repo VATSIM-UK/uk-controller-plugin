@@ -36,6 +36,9 @@ namespace UKControllerPluginTest {
 
                     ON_CALL(mockRadarTarget, GetFlightLevel())
                         .WillByDefault(Return(9000));
+
+                    ON_CALL(mockRadarTarget, GetVerticalSpeed())
+                        .WillByDefault(Return(300));
                 }
 
                 const UKControllerPlugin::Hold::HoldingData hold1 = { 1, "WILLO", "WILLO", 8000, 15000, 209, 0 };
@@ -83,6 +86,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(holding.callsign == "BAW123");
             EXPECT_EQ(8000, holding.clearedLevel);
             EXPECT_EQ(9000, holding.reportedLevel);
+            EXPECT_EQ(300, holding.verticalSpeed);
             EXPECT_LT(seconds, 2);
         }
 
@@ -139,6 +143,9 @@ namespace UKControllerPluginTest {
             ON_CALL(*updatedmockRt, GetFlightLevel())
                 .WillByDefault(Return(8000));
 
+            ON_CALL(*updatedmockRt, GetVerticalSpeed())
+                .WillByDefault(Return(-250));
+
             ON_CALL(mockPlugin, GetFlightplanForCallsign("BAW123"))
                 .WillByDefault(Return(updatedmockFp));
 
@@ -148,6 +155,7 @@ namespace UKControllerPluginTest {
             manager.UpdateHoldingAircraft(this->mockPlugin);
             EXPECT_EQ(7000, manager.GetManagedHold(1)->cbegin()->clearedLevel);
             EXPECT_EQ(8000, manager.GetManagedHold(1)->cbegin()->reportedLevel);
+            EXPECT_EQ(-250, manager.GetManagedHold(1)->cbegin()->verticalSpeed);
         }
 
         TEST_F(HoldManagerTest, ItDoesNothingIfNoUpdatesRequired)

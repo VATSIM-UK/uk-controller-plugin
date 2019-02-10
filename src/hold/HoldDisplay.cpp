@@ -1,14 +1,20 @@
 #include "pch/stdafx.h"
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFunctions.h"
+#include "hold/ManagedHold.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
 
         bool HoldDisplay::windowRegistered = false;
 
-        HoldDisplay::HoldDisplay(HWND euroscopeWindow, HINSTANCE dllInstance)
-            : titleBarBrush(Gdiplus::Color(255, 153, 153)), backgroundBrush(CreateSolidBrush(RGB(0, 0, 0))),
+        HoldDisplay::HoldDisplay(
+            HWND euroscopeWindow,
+            HINSTANCE dllInstance,
+            ManagedHold & managedHold
+        )
+            : managedHold(managedHold),
+            titleBarBrush(Gdiplus::Color(255, 153, 153)), backgroundBrush(CreateSolidBrush(RGB(0, 0, 0))),
             titleBarTextBrush(Gdiplus::Color(255, 255, 255)), fontFamily(L"EuroScope"),
             font(&fontFamily, 12, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
             stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
@@ -111,26 +117,35 @@ namespace UKControllerPlugin {
                 this->lineHeight
             };
 
-            for (int i = 0; i < 8; i++) {
-                if (i == 4) {
-                    graphics.FillRectangle(
-                        &this->blockedLevelBrush,
-                        (INT) windowRect.left,
-                        (INT) numbersDisplay.Y,
-                        (INT) windowRect.right - windowRect.left,
-                        (INT) this->lineHeight
-                    );
-                }
+            //for (int i = 0; i < 8; i++) {
+            //    if (i == 4) {
+            //        graphics.FillRectangle(
+            //            &this->blockedLevelBrush,
+            //            (INT) windowRect.left,
+            //            (INT) numbersDisplay.Y,
+            //            (INT) windowRect.right - windowRect.left,
+            //            (INT) this->lineHeight
+            //        );
+            //    }
 
-                graphics.DrawString(L"110", 3, &this->font, numbersDisplay, &this->stringFormat, &this->titleBarTextBrush);
-                graphics.DrawString(L"BAW123", 6, &this->font, callsignDisplay, &this->stringFormat, &this->dataBrush);
-                graphics.DrawString(GetLevelDisplayString(15230).c_str(), 3, &this->font, actualLevelDisplay, &this->stringFormat, &this->dataBrush);
-                graphics.DrawString(L"080", 3, &this->font, clearedLevelDisplay, &this->stringFormat, &this->clearedLevelBrush);
+            //    graphics.DrawString(L"110", 3, &this->font, numbersDisplay, &this->stringFormat, &this->titleBarTextBrush);
+            //    graphics.DrawString(L"BAW123", 6, &this->font, callsignDisplay, &this->stringFormat, &this->dataBrush);
+            //    graphics.DrawString(GetLevelDisplayString(15230).c_str(), 3, &this->font, actualLevelDisplay, &this->stringFormat, &this->dataBrush);
+            //    graphics.DrawString(L"080", 3, &this->font, clearedLevelDisplay, &this->stringFormat, &this->clearedLevelBrush);
 
-                numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
-                callsignDisplay.Y = callsignDisplay.Y + this->lineHeight;
-                actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
-                clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
+            //    numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
+            //    callsignDisplay.Y = callsignDisplay.Y + this->lineHeight;
+            //    actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
+            //    clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
+            //}
+
+            // Loop the aircraft in the hold and render them
+            for (
+                ManagedHold::ManagedHoldAircraft::const_iterator it = this->managedHold.cbegin();
+                it != this->managedHold.cend();
+                ++it
+            ) {
+                //unsigned int occuped = GetOccupiedLevel(this->f)
             }
 
             // Border around whole thing, draw this last
