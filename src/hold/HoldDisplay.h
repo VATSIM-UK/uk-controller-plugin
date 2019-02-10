@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
                 HoldDisplay(
                     HWND euroscopeWindow,
                     HINSTANCE dllInstance,
-                    UKControllerPlugin::Hold::ManagedHold & managedHold
+                    const UKControllerPlugin::Hold::ManagedHold & managedHold
                 );
                 ~HoldDisplay();
 
@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
                 // The hold this display is managing.
-                UKControllerPlugin::Hold::ManagedHold & managedHold;
+                const UKControllerPlugin::Hold::ManagedHold & managedHold;
 
                 // The window handle
                 HWND selfHandle;

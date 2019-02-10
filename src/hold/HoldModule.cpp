@@ -70,7 +70,7 @@ namespace UKControllerPlugin {
             eventHandler = std::make_shared<HoldEventHandler>(
                 *container.holdManager,
                 *container.plugin,
-                HoldWindowManager(GetActiveWindow(), container.windows->GetDllInstance()),
+                HoldWindowManager(GetActiveWindow(), container.windows->GetDllInstance(), *container.holdManager),
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 

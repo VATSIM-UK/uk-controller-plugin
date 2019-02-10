@@ -3,6 +3,12 @@
 
 namespace UKControllerPlugin {
     namespace Hold {
+        class HoldManager;
+    }  // namespace Hold
+}  // namespace UKControllerPlugin
+
+namespace UKControllerPlugin {
+    namespace Hold {
 
         /*
             A class that encapsulates the procedures surrounding
@@ -12,12 +18,20 @@ namespace UKControllerPlugin {
         {
             public:
 
-                HoldWindowManager(HWND euroscopeWindow, HINSTANCE dllInstance);
+                HoldWindowManager(
+                    HWND euroscopeWindow,
+                    HINSTANCE dllInstance,
+                    const UKControllerPlugin::Hold::HoldManager & holdManager
+                );
                 void AddWindow(void);
 
 
 
             private:
+
+                // The hold manager
+            const UKControllerPlugin::Hold::HoldManager & holdManager;
+
                 // Handle to EuroScopes main window
                 const HWND euroscopeWindow;
 

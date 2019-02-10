@@ -11,7 +11,7 @@ namespace UKControllerPlugin {
         HoldDisplay::HoldDisplay(
             HWND euroscopeWindow,
             HINSTANCE dllInstance,
-            ManagedHold & managedHold
+            const ManagedHold & managedHold
         )
             : managedHold(managedHold),
             titleBarBrush(Gdiplus::Color(255, 153, 153)), backgroundBrush(CreateSolidBrush(RGB(0, 0, 0))),
@@ -117,35 +117,65 @@ namespace UKControllerPlugin {
                 this->lineHeight
             };
 
-            //for (int i = 0; i < 8; i++) {
-            //    if (i == 4) {
-            //        graphics.FillRectangle(
-            //            &this->blockedLevelBrush,
-            //            (INT) windowRect.left,
-            //            (INT) numbersDisplay.Y,
-            //            (INT) windowRect.right - windowRect.left,
-            //            (INT) this->lineHeight
-            //        );
-            //    }
-
-            //    graphics.DrawString(L"110", 3, &this->font, numbersDisplay, &this->stringFormat, &this->titleBarTextBrush);
-            //    graphics.DrawString(L"BAW123", 6, &this->font, callsignDisplay, &this->stringFormat, &this->dataBrush);
-            //    graphics.DrawString(GetLevelDisplayString(15230).c_str(), 3, &this->font, actualLevelDisplay, &this->stringFormat, &this->dataBrush);
-            //    graphics.DrawString(L"080", 3, &this->font, clearedLevelDisplay, &this->stringFormat, &this->clearedLevelBrush);
-
-            //    numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
-            //    callsignDisplay.Y = callsignDisplay.Y + this->lineHeight;
-            //    actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
-            //    clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
-            //}
+            // Render all the possible levels in the hold
+            for (
+                unsigned int i = this->managedHold.holdParameters.maximum;
+                i >= this->managedHold.holdParameters.minimum;
+                i -= 1000
+            ) {
+                graphics.DrawString(
+                    GetLevelDisplayString(i).c_str(),
+                    3,
+                    &this->font,
+                    numbersDisplay,
+                    &this->stringFormat,
+                    &this->titleBarTextBrush
+                );
+                numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
+            }
 
             // Loop the aircraft in the hold and render them
             for (
                 ManagedHold::ManagedHoldAircraft::const_iterator it = this->managedHold.cbegin();
                 it != this->managedHold.cend();
                 ++it
-            ) {
+            ) {                
+                // The callsign display
+                std::wstring callsign = ConvertToTchar(it->callsign);
+                graphics.DrawString(
+                    callsign.c_str(),
+                    callsign.length(),
+                    &this->font,
+                    callsignDisplay,
+                    &this->stringFormat,
+                    &this->dataBrush
+                );
+                
+                // Reported level
+                graphics.DrawString(
+                    GetLevelDisplayString(it->reportedLevel).c_str(),
+                    3,
+                    &this->font,
+                    actualLevelDisplay,
+                    &this->stringFormat,
+                    &this->dataBrush
+                );
+
+
+                // Cleared level
+                graphics.DrawString(
+                    GetLevelDisplayString(it->clearedLevel).c_str(),
+                    3,
+                    &this->font,
+                    actualLevelDisplay,
+                    &this->stringFormat,
+                    &this->dataBrush
+                );
+
                 unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
+                callsignDisplay.Y = this->dataStartHeight + (this->lineHeight * occupied);
+                actualLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * occupied);
+                clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
             }
 
             // Border around whole thing, draw this last
