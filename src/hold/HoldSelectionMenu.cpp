@@ -97,7 +97,7 @@ namespace UKControllerPlugin {
 
         void HoldSelectionMenu::MenuItemClicked(void)
         {
-
+            bool test = true;
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -33,18 +33,10 @@ namespace UKControllerPlugin {
                 );
                 size_t CountHolds(void) const;
                 UKControllerPlugin::Hold::ManagedHold * const GetManagedHold(unsigned int holdId) const;
-                void SetHoldManaged(unsigned int holdId);
-                void SetHoldUnmanaged(unsigned int holdId);
                 void RemoveAircraftFromAnyHold(std::string callsign);
                 void HoldManager::UpdateHoldingAircraft(
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
                 );
-
-                // Public type definitions for a custom iterator over the class.
-                typedef std::set<unsigned int> ManagedHolds;
-                typedef ManagedHolds::const_iterator const_iterator;
-                const_iterator cbegin(void) const { return activeHolds.cbegin(); }
-                const_iterator cend(void) const { return activeHolds.cend(); }
 
             private:
 
@@ -53,9 +45,6 @@ namespace UKControllerPlugin {
 
                 // A map of hold id -> managed hold
                 std::map<unsigned int, std::unique_ptr<UKControllerPlugin::Hold::ManagedHold>> holdData;
-
-                // The holds that we're actively managing
-                std::set<unsigned int> activeHolds;
         };
 
     }  // namespace Hold
