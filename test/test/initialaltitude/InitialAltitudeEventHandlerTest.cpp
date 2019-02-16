@@ -224,6 +224,21 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
+		TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfCruiseIsLessThanInitialAltitude)
+        {
+			EXPECT_CALL(mockFlightPlan, GetOrigin())
+				.Times(2)
+				.WillRepeatedly(Return("EGKK"));
+
+			EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
+				.Times(1)
+				.WillOnce(Return(3000));
+
+			handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
+        }
+
+
+
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfUserCallsignIsNotActive)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
