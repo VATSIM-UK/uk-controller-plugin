@@ -225,7 +225,7 @@ namespace UKControllerPluginTest {
         }
 
 		TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfCruiseIsLessThanInitialAltitude)
-        {
+		{
 			ON_CALL(mockFlightPlan, GetOrigin())
 				.WillByDefault(Return("EGKK"));
 
