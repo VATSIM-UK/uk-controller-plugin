@@ -16,6 +16,7 @@
 #include "windows/WinApiInterface.h"
 #include "dependency/DependencyCache.h"
 #include "tag/TagFunction.h"
+#include "hold/HoldSelectionMenu.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -32,6 +33,7 @@ using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::Tag::TagFunction;
+using UKControllerPlugin::Hold::HoldSelectionMenu;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -70,20 +72,20 @@ namespace UKControllerPlugin {
             // Update local dependencies and build hold data
             container.holdManager = BuildHoldingData(dependencies.GetJsonDependency(dependencyFile));
 
-            // Create the event handler and register
-            container.holdWindows = std::make_unique<HoldWindowManager>(
-                GetActiveWindow(),
-                container.windows->GetDllInstance(),
+            // Create the object to manage the popup menu
+            std::shared_ptr<HoldSelectionMenu> menu = std::make_shared<HoldSelectionMenu>(
                 *container.holdManager,
-                *container.plugin
+                *container.plugin,
+                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 
+            // TAG function to trigger the popup menu
             TagFunction openHoldPopupMenu(
                 popupMenuTagItemId,
                 "Open Hold Selection Menu",
                 std::bind(
-                    &HoldWindowManager::OpenHoldPopupMenu,
-                    container.holdWindows.get(),
+                    &HoldSelectionMenu::DisplayMenu,
+                    menu.get(),
                     std::placeholders::_1,
                     std::placeholders::_2,
                     std::placeholders::_3,
@@ -91,6 +93,26 @@ namespace UKControllerPlugin {
                 )
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(openHoldPopupMenu);
+
+            // Add the hold selection callback function for each hold in the collection
+            unsigned int i = 0;
+            while (i < container.holdManager->CountHolds()) {
+                CallbackFunction holdSelectionCallback(
+                    container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
+                    "Hold Selection",
+                    std::bind(&HoldEventHandler::Configure, eventHandler, std::placeholders::_1)
+                );
+                container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
+                i++;
+            }
+
+            // Create the event handler and register
+            container.holdWindows = std::make_unique<HoldWindowManager>(
+                GetActiveWindow(),
+                container.windows->GetDllInstance(),
+                *container.holdManager,
+                *container.plugin
+            );
 
             eventHandler = std::make_shared<HoldEventHandler>(
                 *container.holdManager,

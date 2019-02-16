@@ -55,7 +55,18 @@ namespace UKControllerPluginTest {
                         { "inbound_heading", 309 },
                         { "turn_direction", "right" }
                     };
-                    loadedDependencies.AddJsonDependency("holds.json", nlohmann::json::array({ hold }));
+
+                    nlohmann::json hold2;
+                    hold2 = {
+                        { "id", 2 },
+                        { "fix", "WILLO" },
+                        { "description", "WILLO" },
+                        { "minimum_altitude", 7000 },
+                        { "maximum_altitude", 15000 },
+                        { "inbound_heading", 309 },
+                        { "turn_direction", "right" }
+                    };
+                    loadedDependencies.AddJsonDependency("holds.json", nlohmann::json::array({ hold, hold2 }));
 
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     this->container.timedHandler.reset(new TimedEventCollection);
@@ -95,13 +106,13 @@ namespace UKControllerPluginTest {
         TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
         {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
-            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
+            EXPECT_EQ(3, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)
         {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
-            EXPECT_EQ(1, this->container.holdManager->CountHolds());
+            EXPECT_EQ(2, this->container.holdManager->CountHolds());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldDisplays)
