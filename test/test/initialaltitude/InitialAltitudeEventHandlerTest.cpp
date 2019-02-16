@@ -225,20 +225,20 @@ namespace UKControllerPluginTest {
         }
 
 		TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfCruiseIsLessThanInitialAltitude)
-		{
-			ON_CALL(mockFlightPlan, GetOrigin())
+        {
+            ON_CALL(mockFlightPlan, GetOrigin())
 				.WillByDefault(Return("EGKK"));
 
-			ON_CALL(mockFlightPlan, GetCruiseLevel())
-				.WillByDefault(Return(3000));
+            ON_CALL(mockFlightPlan, GetCruiseLevel())
+			    .WillByDefault(Return(3000));
 
-			ON_CALL(mockFlightPlan, GetSidName())
-				.WillByDefault(Return("ADMAG2X"));
+            ON_CALL(mockFlightPlan, GetSidName())
+                .WillByDefault(Return("ADMAG2X"));
+			
+            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(_))
+                .Times(0);
 
-			EXPECT_CALL(mockFlightPlan, SetClearedAltitude(_))
-				.Times(0);
-
-			handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
+            handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfUserCallsignIsNotActive)
