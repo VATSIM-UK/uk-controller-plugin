@@ -386,12 +386,16 @@ namespace UKControllerPluginTest {
                 .WillRepeatedly(Return("ADMAG2X"));
 
             EXPECT_CALL(mockFlightPlan, GetOrigin())
-                .Times(4)
+                .Times(5)
                 .WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(mockFlightPlan, GetCallsign())
                 .Times(1)
                 .WillOnce(Return("BAW123"));
+
+			EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
+				.Times(1)
+				.WillOnce(Return(6000));
 
             EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
@@ -437,12 +441,16 @@ namespace UKControllerPluginTest {
                 .WillRepeatedly(Return("#ADMAG2X"));
 
             EXPECT_CALL(mockFlightPlan, GetOrigin())
-                .Times(4)
+                .Times(5)
                 .WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(mockFlightPlan, GetCallsign())
                 .Times(1)
                 .WillOnce(Return("BAW123"));
+
+			EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
+				.Times(1)
+				.WillOnce(Return(6000));
 
             EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
