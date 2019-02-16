@@ -64,7 +64,7 @@ namespace UKControllerPlugin {
             CallbackFunction configureCallback(
                 configureFunctionId,
                 "Countdown Configure",
-                std::bind(&CountdownRenderer::Configure, renderer, std::placeholders::_1)
+                std::bind(&CountdownRenderer::Configure, renderer, std::placeholders::_1, std::placeholders::_2)
             );
             eventHandler.RegisterFunctionCall(configureCallback);
             configurableDisplays.RegisterDisplay(renderer);

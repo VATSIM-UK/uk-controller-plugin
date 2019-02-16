@@ -107,7 +107,7 @@ namespace UKControllerPlugin {
             The configuration function called if the menu item is selected. It toggles the
             visibility.
         */
-        void MinStackRenderer::Configure(std::string subject)
+        void MinStackRenderer::Configure(int functionId, std::string subject)
         {
             this->visible = !this->visible;
         }

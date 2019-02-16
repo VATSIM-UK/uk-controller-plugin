@@ -31,7 +31,12 @@ namespace UKControllerPlugin {
             CallbackFunction showDialogFunction(
                 callbackFunctionId,
                 "Open General Settings Dialog",
-                std::bind(&GeneralSettingsConfiguration::Configure, dialog, std::placeholders::_1)
+                std::bind(
+                    &GeneralSettingsConfiguration::Configure,
+                    dialog,
+                    std::placeholders::_1,
+                    std::placeholders::_2
+                )
             );
 
             functionHandler.RegisterFunctionCall(showDialogFunction);

@@ -162,29 +162,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_NO_THROW(manager.UpdateHoldingAircraft(this->mockPlugin));
         }
-
-        TEST_F(HoldManagerTest, ItAddsAManagedHold)
-        {
-            this->manager.SetHoldManaged(1);
-            EXPECT_EQ(1, *this->manager.cbegin());
-        }
-
-        TEST_F(HoldManagerTest, ItDoesntAddUnrecognisedManagedHold)
-        {
-            this->manager.SetHoldManaged(55);
-            EXPECT_EQ(this->manager.cend(), this->manager.cbegin());
-        }
-
-        TEST_F(HoldManagerTest, ItUnsetsManagedHold)
-        {
-            this->manager.SetHoldManaged(1);
-            this->manager.SetHoldUnmanaged(1);
-            EXPECT_EQ(this->manager.cend(), this->manager.cbegin());
-        }
-
-        TEST_F(HoldManagerTest, ItHandlesUnsettingNonExistantHoldsGracefully)
-        {
-            EXPECT_NO_THROW(this->manager.SetHoldUnmanaged(66));
-        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

@@ -27,7 +27,7 @@ namespace UKControllerPlugin {
                 bool ProcessCommand(std::string command) override;
 
                 // Inherited via ConfigurableDisplayInterface
-                void Configure(std::string subject) override;
+                void Configure(int functionId, std::string subject) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
 
                 // The description to display in the configuration popup menu.

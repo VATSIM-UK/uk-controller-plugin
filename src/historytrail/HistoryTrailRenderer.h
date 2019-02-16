@@ -49,7 +49,7 @@ namespace UKControllerPlugin {
                 );
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
                 void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
-                void Configure(std::string subject) override;
+                void Configure(int functionId, std::string subject) override;
                 int GetAlphaPerDot(void) const;
                 bool GetAntiAliasedTrails(void) const;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;

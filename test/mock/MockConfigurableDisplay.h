@@ -25,7 +25,7 @@ namespace UKControllerPluginTest {
 
             }
 
-            void Configure(std::string test) override
+            void Configure(int, std::string test) override
             {
                 this->configured++;
             }

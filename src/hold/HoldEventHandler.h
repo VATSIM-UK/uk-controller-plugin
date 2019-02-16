@@ -50,7 +50,7 @@ namespace UKControllerPlugin {
                 void TimedEventTrigger(void) override;
 
                 // Inherited via ConfigurableDisplayInterface
-                void Configure(std::string subject) override;
+                void Configure(int functionId, std::string subject) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
 
                 // Inherited via CommandHandlerInterface

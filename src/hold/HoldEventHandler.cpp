@@ -62,7 +62,7 @@ namespace UKControllerPlugin {
         /*
             Called when the popup menu item is selected. Open the hold manager window.
         */
-        void HoldEventHandler::Configure(std::string subject)
+        void HoldEventHandler::Configure(int functionId, std::string subject)
         {
             this->holdManagerWindow.AddWindow();
         }

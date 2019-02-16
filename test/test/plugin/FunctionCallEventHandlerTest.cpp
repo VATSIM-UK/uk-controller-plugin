@@ -35,8 +35,8 @@ namespace UKControllerPluginTest {
         TEST(FunctionCallEventHandler, RegisterFunctionCallThrowExceptionIfAlreadyRegistered)
         {
             FunctionCallEventHandler handler;
-            CallbackFunction function(5000, "Test Function", [](std::string) {});
-            CallbackFunction function2(5000, "Test Function", [](std::string) {});
+            CallbackFunction function(5000, "Test Function", [](int, std::string) {});
+            CallbackFunction function2(5000, "Test Function", [](int, std::string) {});
 
             EXPECT_NO_THROW(handler.RegisterFunctionCall(function));
             EXPECT_THROW(handler.RegisterFunctionCall(function2), std::invalid_argument);
@@ -46,7 +46,7 @@ namespace UKControllerPluginTest {
         {
             FunctionCallEventHandler handler;
             std::string output = "";
-            CallbackFunction function(5000, "Test Function", [&output](std::string input) {output = input; });
+            CallbackFunction function(5000, "Test Function", [&output](int, std::string input) {output = input; });
 
             handler.RegisterFunctionCall(function);
             EXPECT_EQ(1, handler.CountCallbacks());
@@ -88,7 +88,7 @@ namespace UKControllerPluginTest {
         TEST(FunctionCallEventHandler, HasCallbackFunctionReturnsTrueIfItExists)
         {
             FunctionCallEventHandler handler;
-            CallbackFunction function(5000, "Test Function", [](std::string input) {});
+            CallbackFunction function(5000, "Test Function", [](int, std::string input) {});
 
             handler.RegisterFunctionCall(function);
             EXPECT_TRUE(handler.HasCallbackFunction(5000));
@@ -110,7 +110,7 @@ namespace UKControllerPluginTest {
         TEST(FunctionCallEventHandler, RegisterFunctionsWithEuroscopeRegistersTagFunctions)
         {
             FunctionCallEventHandler handler;
-            CallbackFunction function(5000, "Test Function", [](std::string) {});
+            CallbackFunction function(5000, "Test Function", [](int, std::string) {});
             TagFunction function2(
                 9000,
                 "Test Tag Function",

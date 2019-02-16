@@ -95,7 +95,7 @@ namespace UKControllerPlugin {
             }
         }
 
-        void HoldSelectionMenu::MenuItemClicked(std::string context)
+        void HoldSelectionMenu::MenuItemClicked(int functionId, std::string context)
         {
             bool test = true;
         }

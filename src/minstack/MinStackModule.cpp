@@ -112,7 +112,7 @@ namespace UKControllerPlugin {
             CallbackFunction configureCallback(
                 configureFunctionId,
                 "Min Stack Configure",
-                std::bind(&MinStackRenderer::Configure, renderer, std::placeholders::_1)
+                std::bind(&MinStackRenderer::Configure, renderer, std::placeholders::_1, std::placeholders::_2)
             );
             eventHandler.RegisterFunctionCall(configureCallback);
             configurableDisplays.RegisterDisplay(renderer);

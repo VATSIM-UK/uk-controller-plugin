@@ -31,7 +31,7 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                function->function(subject);
+                function->function(functionId, subject);
             } else {
                 auto function = this->tagFunctions.find(functionId);
                 if (function == this->tagFunctions.cend()) {

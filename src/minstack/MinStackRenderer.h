@@ -48,7 +48,7 @@ namespace UKControllerPlugin {
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
                 void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const;
-                void Configure(std::string subject);
+                void Configure(int functionId, std::string subject);
                 RECT GetHideClickspotArea(void) const;
                 Gdiplus::Rect GetHideSpotRender(void) const;
                 RECT GetTopBarArea(void) const;

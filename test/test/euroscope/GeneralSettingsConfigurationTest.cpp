@@ -82,7 +82,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(this->winApi, OpenGeneralSettingsDialog)
                 .Times(1);
-            this->configuration.Configure("test");
+            this->configuration.Configure(0, "test");
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest

@@ -21,7 +21,7 @@ namespace UKControllerPlugin {
         /*
             When the user selects this in the configuration menu, we want to open the dialog box for configuration.
         */
-        void GeneralSettingsConfiguration::Configure(std::string subject)
+        void GeneralSettingsConfiguration::Configure(int functionId, std::string subject)
         {
             this->winApi.OpenGeneralSettingsDialog();
         }

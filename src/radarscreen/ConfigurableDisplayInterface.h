@@ -16,7 +16,7 @@ namespace UKControllerPlugin {
                     When this method is called, the module should provide some method of configuring it -
                     possibly a dialog box or a visibility toggle.
                 */
-                virtual void Configure(std::string subject) = 0;
+                virtual void Configure(int functionId, std::string subject) = 0;
 
                 /*
                     Returns a popup menu item for the configurable display. This is used to populate

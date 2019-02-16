@@ -4,14 +4,10 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
 
-        CallbackFunction::CallbackFunction()
-        {
-        }
-
         CallbackFunction::CallbackFunction(
             int functionId,
             std::string description,
-            std::function<void(std::string)> function
+            std::function<void(int, std::string)> function
         ) : functionId(functionId), description(description), function(function)
         {
 

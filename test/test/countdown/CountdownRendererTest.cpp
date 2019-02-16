@@ -370,9 +370,9 @@ namespace UKControllerPluginTest {
 
             renderer.SetVisible(false);
             EXPECT_FALSE(renderer.IsVisible());
-            renderer.Configure("test");
+            renderer.Configure(0, "test");
             EXPECT_TRUE(renderer.IsVisible());
-            renderer.Configure("test");
+            renderer.Configure(0, "test");
             EXPECT_FALSE(renderer.IsVisible());
         }
 

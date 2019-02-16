@@ -100,7 +100,12 @@ namespace UKControllerPlugin {
                 CallbackFunction holdSelectionCallback(
                     container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
                     "Hold Selection",
-                    std::bind(&HoldSelectionMenu::MenuItemClicked, container.holdSelectionMenu, std::placeholders::_1)
+                    std::bind(
+                        &HoldSelectionMenu::MenuItemClicked,
+                        container.holdSelectionMenu,
+                        std::placeholders::_1,
+                        std::placeholders::_2
+                    )
                 );
                 container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
                 i++;
@@ -130,7 +135,7 @@ namespace UKControllerPlugin {
             CallbackFunction openWindowCallback(
                 eventHandler->popupMenuItemId,
                 "Show Hold Manager",
-                std::bind(&HoldEventHandler::Configure, eventHandler, std::placeholders::_1)
+                std::bind(&HoldEventHandler::Configure, eventHandler, std::placeholders::_1, std::placeholders::_2)
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(openWindowCallback);
 
