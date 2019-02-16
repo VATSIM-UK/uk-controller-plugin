@@ -115,6 +115,12 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(2, this->container.holdManager->CountHolds());
         }
 
+        TEST_F(HoldModuleTest, ItInitialisesHoldSelectionMenu)
+        {
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            EXPECT_EQ(0, this->container.holdSelectionMenu->CountHolds());
+        }
+
         TEST_F(HoldModuleTest, ItInitialisesHoldDisplays)
         {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);

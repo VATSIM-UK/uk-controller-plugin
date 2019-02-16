@@ -73,7 +73,7 @@ namespace UKControllerPlugin {
             container.holdManager = BuildHoldingData(dependencies.GetJsonDependency(dependencyFile));
 
             // Create the object to manage the popup menu
-            std::shared_ptr<HoldSelectionMenu> menu = std::make_shared<HoldSelectionMenu>(
+            container.holdSelectionMenu = std::make_shared<HoldSelectionMenu>(
                 *container.holdManager,
                 *container.plugin,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
@@ -85,7 +85,7 @@ namespace UKControllerPlugin {
                 "Open Hold Selection Menu",
                 std::bind(
                     &HoldSelectionMenu::DisplayMenu,
-                    menu.get(),
+                    container.holdSelectionMenu.get(),
                     std::placeholders::_1,
                     std::placeholders::_2,
                     std::placeholders::_3,
@@ -100,11 +100,13 @@ namespace UKControllerPlugin {
                 CallbackFunction holdSelectionCallback(
                     container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
                     "Hold Selection",
-                    std::bind(&HoldEventHandler::Configure, eventHandler, std::placeholders::_1)
+                    std::bind(&HoldSelectionMenu::MenuItemClicked, container.holdSelectionMenu, std::placeholders::_1)
                 );
                 container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
                 i++;
             }
+            container.holdSelectionMenu->AddHoldToMenu(1);
+            container.holdSelectionMenu->AddHoldToMenu(2);
 
             // Create the event handler and register
             container.holdWindows = std::make_unique<HoldWindowManager>(

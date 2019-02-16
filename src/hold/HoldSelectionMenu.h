@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
                     std::string context,
                     const POINT & mousePos
                 );
-                void MenuItemClicked(void);
+                void MenuItemClicked(std::string context);
 
                 // The callback id of the first hold
                 const unsigned int callbackIdFirstHold;
