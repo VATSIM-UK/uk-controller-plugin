@@ -88,6 +88,26 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Mark a hold as managed
+        */
+        void HoldManager::SetHoldManaged(unsigned int holdId)
+        {
+            if (this->holdData.count(holdId) == 0) {
+                return;
+            }
+
+            this->activeHolds.insert(holdId);
+        }
+
+        /*
+            Mark a hold as unmanaged
+        */
+        void HoldManager::SetHoldUnmanaged(unsigned int holdId)
+        {
+            this->activeHolds.erase(holdId);
+        }
+
+        /*
             Remove aircarft from any holds that they are in
         */
         void HoldManager::RemoveAircraftFromAnyHold(std::string callsign)
