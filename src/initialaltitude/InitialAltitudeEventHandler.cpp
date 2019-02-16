@@ -76,10 +76,10 @@ namespace UKControllerPlugin {
                 return;
             }
 
-			// Doesn't assign an init altitude if cruise level is less than the initial altitude of the SID.
-			if (flightPlan.GetCruiseLevel() < generator.GetInitialAltitudeForDeparture(flightPlan.GetOrigin(), sidName)) {
-				return;
-			}
+            // Doesn't assign an init altitude if cruise level is less than the initial altitude of the SID.
+            if (flightPlan.GetCruiseLevel() < generator.GetInitialAltitudeForDeparture(flightPlan.GetOrigin(), sidName)) {
+	            return;
+            }
 
             // Set the IA.
             LogInfo(

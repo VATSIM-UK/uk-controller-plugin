@@ -448,9 +448,9 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return("BAW123"));
 
-			EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
-				.Times(1)
-				.WillOnce(Return(6000));
+            EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
+	            .Times(1)
+	            .WillOnce(Return(6000));
 
             EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
