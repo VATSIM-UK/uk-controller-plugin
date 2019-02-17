@@ -110,6 +110,14 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockPlugin, TriggerPopupList(RectEq(expectedArea), "Hold Selection For BAW123", 1))
                 .Times(1);
 
+            PopupMenuItem expectedItemCancel;
+            expectedItemCancel.firstValue = "--";
+            expectedItemCancel.secondValue = "";
+            expectedItemCancel.callbackFunctionId = 1;
+            expectedItemCancel.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            expectedItemCancel.disabled = false;
+            expectedItemCancel.fixedPosition = true;
+
             PopupMenuItem expectedItem1;
             expectedItem1.firstValue = "TIMBA";
             expectedItem1.secondValue = "";
@@ -130,6 +138,9 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             EXPECT_CALL(this->mockPlugin, AddItemToPopupList(PopupMenuItemEq(expectedItem2)))
+                .Times(1);
+
+            EXPECT_CALL(this->mockPlugin, AddItemToPopupList(PopupMenuItemEq(expectedItemCancel)))
                 .Times(1);
 
             this->holdSelectionMenu.DisplayMenu(

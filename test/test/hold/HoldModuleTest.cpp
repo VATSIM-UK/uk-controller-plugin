@@ -116,7 +116,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
         {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
-            EXPECT_EQ(3, this->container.pluginFunctionHandlers->CountCallbacks());
+            EXPECT_EQ(4, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)

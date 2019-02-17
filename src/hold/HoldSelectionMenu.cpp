@@ -93,6 +93,15 @@ namespace UKControllerPlugin {
 
                 this->plugin.AddItemToPopupList(menuItem);
             }
+
+            PopupMenuItem menuItemCancel;
+            menuItemCancel.firstValue = "--";
+            menuItemCancel.secondValue = "";
+            menuItemCancel.callbackFunctionId = this->callbackIdFirstHold;
+            menuItemCancel.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItemCancel.disabled = false;
+            menuItemCancel.fixedPosition = true;
+            this->plugin.AddItemToPopupList(menuItemCancel);
         }
 
         /*
@@ -108,6 +117,12 @@ namespace UKControllerPlugin {
 
             if (!fp || !rt) {
                 LogWarning("Tried to put a non existent flight into a hold");
+                return;
+            }
+
+            // If we click the first option, that's the cancel button
+            if (functionId == this->callbackIdFirstHold) {
+                this->holdManager.RemoveAircraftFromAnyHold(fp->GetCallsign());
                 return;
             }
 

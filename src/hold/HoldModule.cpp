@@ -77,10 +77,11 @@ namespace UKControllerPlugin {
             container.holdManager = BuildHoldingData(dependencies.GetJsonDependency(dependencyFile));
 
             // Create the object to manage the popup menu
+            int holdSelectionCancelId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             container.holdSelectionMenu = std::make_shared<HoldSelectionMenu>(
                 *container.holdManager,
                 *container.plugin,
-                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
+                holdSelectionCancelId
             );
 
             // TAG function to trigger the popup menu
@@ -98,7 +99,20 @@ namespace UKControllerPlugin {
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(openHoldPopupMenu);
 
-            // Add the hold selection callback function for each hold in the collection
+            // The selection cancel function takes the base id
+            CallbackFunction holdSelectionCancelCallback(
+                holdSelectionCancelId,
+                "Hold Selection Cancel",
+                std::bind(
+                    &HoldSelectionMenu::MenuItemClicked,
+                    container.holdSelectionMenu,
+                    std::placeholders::_1,
+                    std::placeholders::_2
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCancelCallback);
+
+            // Add the hold selection callback function for each hold in the collection so we can tell between them
             unsigned int i = 0;
             while (i < container.holdManager->CountHolds()) {
                 CallbackFunction holdSelectionCallback(
