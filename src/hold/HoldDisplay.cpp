@@ -92,25 +92,20 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            RECT updateArea = {
-                0,
-                15,
-                this->windowWidth,
-                this->windowHeight
-            };
-            InvalidateRect(this->selfHandle, &updateArea, TRUE);
+            InvalidateRgn(this->selfHandle, NULL, TRUE);
         }
 
         void HoldDisplay::PaintWindow(HDC hdc)
         {
-            Gdiplus::Graphics graphics(hdc);
-            RECT windowRect;
+            CRect windowRect;
             GetClientRect(this->selfHandle, &windowRect);
+            Gdiplus::Bitmap bmp(windowRect.Width(), windowRect.Height());
+            Gdiplus::Graphics * graphics = Gdiplus::Graphics::FromImage(&bmp);
 
             // Title bar
-            graphics.FillRectangle(&this->titleBarBrush, this->titleArea);
+            graphics->FillRectangle(&this->titleBarBrush, this->titleArea);
             std::wstring holdName = ConvertToTchar(this->managedHold.holdParameters.description);
-            graphics.DrawString(
+            graphics->DrawString(
                 holdName.c_str(),
                 holdName.length(),
                 &this->font,
@@ -118,7 +113,7 @@ namespace UKControllerPlugin {
                 &this->stringFormat,
                 &this->titleBarTextBrush
             );
-            graphics.DrawLine(
+            graphics->DrawLine(
                 &this->borderPen,
                 this->titleArea.X,
                 this->titleArea.Y + this->titleArea.Height,
@@ -127,8 +122,8 @@ namespace UKControllerPlugin {
             );
 
             // Exit Button
-            graphics.FillRectangle(&this->exitButtonBrush, this->exitButtonArea);
-            graphics.DrawString(L"X", 1, &this->font, this->exitButtonArea, &this->stringFormat, &this->titleBarTextBrush);
+            graphics->FillRectangle(&this->exitButtonBrush, this->exitButtonArea);
+            graphics->DrawString(L"X", 1, &this->font, this->exitButtonArea, &this->stringFormat, &this->titleBarTextBrush);
 
             // Hold display
             Gdiplus::RectF numbersDisplay = {
@@ -165,7 +160,7 @@ namespace UKControllerPlugin {
                 i >= this->managedHold.holdParameters.minimum;
                 i -= 1000
             ) {
-                graphics.DrawString(
+                graphics->DrawString(
                     GetLevelDisplayString(i).c_str(),
                     3,
                     &this->font,
@@ -191,7 +186,7 @@ namespace UKControllerPlugin {
 
                 // The callsign display
                 std::wstring callsign = ConvertToTchar(it->callsign);
-                graphics.DrawString(
+                graphics->DrawString(
                     callsign.c_str(),
                     callsign.length(),
                     &this->font,
@@ -201,7 +196,7 @@ namespace UKControllerPlugin {
                 );
                 
                 // Reported level
-                graphics.DrawString(
+                graphics->DrawString(
                     GetLevelDisplayString(it->reportedLevel).c_str(),
                     3,
                     &this->font,
@@ -212,7 +207,7 @@ namespace UKControllerPlugin {
 
 
                 // Cleared level
-                graphics.DrawString(
+                graphics->DrawString(
                     GetLevelDisplayString(it->clearedLevel).c_str(),
                     3,
                     &this->font,
@@ -223,13 +218,19 @@ namespace UKControllerPlugin {
             }
 
             // Border around whole thing, draw this last
-            graphics.DrawRectangle(
+            graphics->DrawRectangle(
                 &this->borderPen,
                 windowRect.left,
                 windowRect.top,
                 windowRect.right - windowRect.left - 1,
                 windowRect.bottom - windowRect.top - 1
             );
+
+            Gdiplus::Graphics screenGraphics(hdc);
+            screenGraphics.DrawImage(&bmp, 0, 0);
+
+            // Delete the bitmap graphics
+            delete graphics;
         }
 
         /*
