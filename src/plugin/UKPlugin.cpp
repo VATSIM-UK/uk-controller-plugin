@@ -241,6 +241,34 @@ namespace UKControllerPlugin {
     }
 
     /*
+        Returns the currently selected flightplan
+    */
+    std::shared_ptr<EuroScopeCFlightPlanInterface> UKPlugin::GetSelectedFlightplan() const
+    {
+        EuroScopePlugIn::CFlightPlan fp = this->FlightPlanSelectASEL();
+
+        if (!fp.IsValid()) {
+            return NULL;
+        }
+
+        return std::make_shared<EuroScopeCFlightPlanWrapper>(fp);
+    }
+
+    /*
+        Returns the currently selected radar target
+    */
+    std::shared_ptr<EuroScopeCRadarTargetInterface> UKPlugin::GetSelectedRadarTarget() const
+    {
+        EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelectASEL();
+
+        if (!rt.IsValid()) {
+            return NULL;
+        }
+
+        return std::make_shared<EuroScopeCRadarTargetWrapper>(rt);
+    }
+
+    /*
         The user has entered a dot command
     */
     bool UKPlugin::OnCompileCommand(const char * command)

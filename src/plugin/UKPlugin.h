@@ -88,6 +88,10 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface> GetRadarTargetForCallsign(
                 std::string callsign
             ) const;
+            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>
+                GetSelectedFlightplan()const override;
+            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+                GetSelectedRadarTarget() const override;
             bool OnCompileCommand ( const char * sCommandLine );
             void OnControllerDisconnect(EuroScopePlugIn::CController Controller);
             void OnControllerPositionUpdate(EuroScopePlugIn::CController Controller);

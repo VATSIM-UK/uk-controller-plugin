@@ -37,7 +37,10 @@ class EuroscopePluginLoopbackInterface
         ) const = 0;
         virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
             GetRadarTargetForCallsign(std::string callsign) const = 0;
-
+        virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>
+            GetSelectedFlightplan() const = 0;
+        virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+            GetSelectedRadarTarget() const = 0;
         virtual void TriggerPopupList(RECT area, std::string title, int numColumns) = 0;
         virtual void TriggerFlightplanUpdateForCallsign(std::string callsign) = 0;
         virtual void RegisterTagFunction(int itemCode, std::string description) = 0;
