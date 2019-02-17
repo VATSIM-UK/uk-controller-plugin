@@ -520,7 +520,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return("EGKK"));
 
             ON_CALL(*mockFlightplanReturn, GetCruiseLevel())
-	            .WillByDefault(Return(6000));
+                .WillByDefault(Return(6000));
 
             ON_CALL(*mockFlightplanReturn, GetCallsign())
                 .WillByDefault(Return("BAW123"));

@@ -227,14 +227,14 @@ namespace UKControllerPluginTest {
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfCruiseIsLessThanInitialAltitude)
         {
             ON_CALL(mockFlightPlan, GetOrigin())
-				.WillByDefault(Return("EGKK"));
+                .WillByDefault(Return("EGKK"));
 
             ON_CALL(mockFlightPlan, GetCruiseLevel())
-			    .WillByDefault(Return(3000));
+                .WillByDefault(Return(3000));
 
             ON_CALL(mockFlightPlan, GetSidName())
                 .WillByDefault(Return("ADMAG2X"));
-			
+
             EXPECT_CALL(mockFlightPlan, SetClearedAltitude(_))
                 .Times(0);
 
@@ -394,8 +394,8 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return("BAW123"));
 
             EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
-	            .Times(1)
-	            .WillOnce(Return(6000));
+                .Times(1)
+                .WillOnce(Return(6000));
 
             EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
@@ -449,8 +449,8 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return("BAW123"));
 
             EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
-	            .Times(1)
-	            .WillOnce(Return(6000));
+                .Times(1)
+                .WillOnce(Return(6000));
 
             EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
