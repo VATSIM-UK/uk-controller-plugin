@@ -57,6 +57,7 @@ namespace UKControllerPlugin {
         void HoldEventHandler::TimedEventTrigger(void)
         {
             this->holdManager.UpdateHoldingAircraft(this->plugin);
+            this->holdManagerWindow.RefreshWindows();
         }
 
         /*

@@ -31,12 +31,7 @@ namespace UKControllerPlugin {
                 );
                 void AddWindow(void);
                 size_t CountDisplays(void) const;
-                void OpenHoldPopupMenu(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface &,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface &,
-                    std::string context,
-                    const POINT & mousePos
-                );
+                void RefreshWindows(void) const;
 
             private:
 

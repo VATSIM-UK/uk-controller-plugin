@@ -95,9 +95,27 @@ namespace UKControllerPlugin {
             }
         }
 
+        /*
+            The menu item has been clicked, add the currently selected aircraft to the
+            selcted hold.
+        */
         void HoldSelectionMenu::MenuItemClicked(int functionId, std::string context)
         {
-            bool test = true;
+            // The hold ID is the number in sequence of the callback functions
+            int holdId = functionId - this->callbackIdFirstHold;
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
+            std::shared_ptr<EuroScopeCRadarTargetInterface> rt = this->plugin.GetSelectedRadarTarget();
+
+            if (!fp || !rt) {
+                LogWarning("Tried to put a non existent flight into a hold");
+                return;
+            }
+
+            this->holdManager.AddAircraftToHold(
+                *fp,
+                *rt,
+                holdId
+            );
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
