@@ -83,6 +83,24 @@ namespace UKControllerPlugin {
             }
         }
 
+        /*
+            Force the window to redraw
+        */
+        void HoldDisplay::Redraw(void) const
+        {
+            if (!this->selfHandle) {
+                return;
+            }
+
+            RECT updateArea = {
+                0,
+                15,
+                this->windowWidth,
+                this->windowHeight
+            };
+            InvalidateRect(this->selfHandle, &updateArea, TRUE);
+        }
+
         void HoldDisplay::PaintWindow(HDC hdc)
         {
             Gdiplus::Graphics graphics(hdc);
@@ -163,7 +181,14 @@ namespace UKControllerPlugin {
                 ManagedHold::ManagedHoldAircraft::const_iterator it = this->managedHold.cbegin();
                 it != this->managedHold.cend();
                 ++it
-            ) {                
+            ) {
+
+                unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
+                unsigned int displayRow = GetDisplayRow(this->managedHold.holdParameters.maximum, occupied);
+                callsignDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
+                actualLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
+                clearedLevelDisplay.Y = clearedLevelDisplay.Y + (this->lineHeight * displayRow);
+
                 // The callsign display
                 std::wstring callsign = ConvertToTchar(it->callsign);
                 graphics.DrawString(
@@ -191,15 +216,10 @@ namespace UKControllerPlugin {
                     GetLevelDisplayString(it->clearedLevel).c_str(),
                     3,
                     &this->font,
-                    actualLevelDisplay,
+                    clearedLevelDisplay,
                     &this->stringFormat,
-                    &this->dataBrush
+                    &this->clearedLevelBrush
                 );
-
-                unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
-                callsignDisplay.Y = this->dataStartHeight + (this->lineHeight * occupied);
-                actualLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * occupied);
-                clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
             }
 
             // Border around whole thing, draw this last

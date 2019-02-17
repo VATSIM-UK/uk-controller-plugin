@@ -23,6 +23,7 @@ namespace UKControllerPlugin {
                 );
                 HoldDisplay(const HoldDisplay & copy);
                 ~HoldDisplay();
+                void Redraw(void) const;
 
                 // The hold this display is managing.
                 const UKControllerPlugin::Hold::ManagedHold & managedHold;
