@@ -46,6 +46,15 @@ namespace UKControllerPlugin {
                 std::string GetApiDomain(void) const override;
                 std::string GetApiKey(void) const override;
                 nlohmann::json GetHoldDependency(void) const override;
+                nlohmann::json GetGenericHoldProfiles(void) const override;
+                nlohmann::json GetUserHoldProfiles(void) const override;
+                void DeleteUserHoldProfile(unsigned int profileId) const override;
+                void CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
+                void UpdateUserHoldProfile(
+                    unsigned int id,
+                    std::string name,
+                    std::set<unsigned int> holds
+                ) const override;
                 int UpdateCheck(std::string version) const override;
 
                 // The HTTP status codes that may be returned by the API

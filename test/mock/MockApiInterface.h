@@ -32,6 +32,14 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(GetApiDomain, std::string(void));
                 MOCK_CONST_METHOD0(GetApiKey, std::string(void));
                 MOCK_CONST_METHOD0(GetHoldDependency, nlohmann::json(void));
+                MOCK_CONST_METHOD0(GetGenericHoldProfiles, nlohmann::json(void));
+                MOCK_CONST_METHOD0(GetUserHoldProfiles, nlohmann::json(void));
+                MOCK_CONST_METHOD1(DeleteUserHoldProfile, void(unsigned int profileId));
+                MOCK_CONST_METHOD2(CreateUserHoldProfile, void(std::string name, std::set<unsigned int> holds));
+                MOCK_CONST_METHOD3(
+                    UpdateUserHoldProfile,
+                    void(unsigned int id, std::string name, std::set<unsigned int> holds)
+                );
                 MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
         };
     }  // namespace Api

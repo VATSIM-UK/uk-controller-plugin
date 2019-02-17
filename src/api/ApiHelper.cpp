@@ -214,6 +214,46 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Download the generic hold profiles JSON
+        */
+        nlohmann::json ApiHelper::GetGenericHoldProfiles(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildGenericHoldProfilesRequest()).GetRawData();
+        }
+
+        /*
+            Download the user hold profiles JSON
+        */
+        nlohmann::json ApiHelper::GetUserHoldProfiles(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildUserHoldProfilesRequest()).GetRawData();
+        }
+
+        /*
+            Delete the given user hold profile
+        */
+        void ApiHelper::DeleteUserHoldProfile(unsigned int profileId) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildDeleteUserHoldProfileRequest(profileId));
+        }
+
+        /*
+            Create a user hold profile
+        */
+        void ApiHelper::CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildCreateUserHoldProfileRequest(name, holds));
+        }
+
+        /*
+            Update a user hold profile
+        */
+        void ApiHelper::UpdateUserHoldProfile(unsigned int id, std::string name, std::set<unsigned int> holds) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildUpdateUserHoldProfileRequest(id, name, holds));
+        }
+
+        /*
             Runs an update check.
         */
         int ApiHelper::UpdateCheck(std::string version) const
