@@ -5,6 +5,7 @@
 #include "euroscope//EuroScopeCRadarTargetInterface.h"
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
+#include "hold/ManagedHold.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -13,6 +14,7 @@ using UKControllerPlugin::TimedEvent::AbstractTimedEvent;
 using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Hold::ManagedHold;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -94,6 +96,29 @@ namespace UKControllerPlugin {
 
             this->holdManagerWindow.AddWindow();
             return true;
+        }
+
+        /*
+            Return the description of the hold tag item
+        */
+        std::string HoldEventHandler::GetTagItemDescription(void) const
+        {
+            return "Selected Hold";
+        }
+
+        /*
+            Return the value of the hold tag item
+        */
+        std::string HoldEventHandler::GetTagItemData(
+            EuroScopeCFlightPlanInterface & flightPlan,
+            EuroScopeCRadarTargetInterface & radarTarget
+        ) {
+            ManagedHold * const hold = this->holdManager.GetAircraftHold(flightPlan.GetCallsign());
+            if (!hold) {
+                return this->noHold;
+            }
+
+            return "H" + hold->holdParameters.fix;
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -4,6 +4,7 @@
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "command/CommandHandlerInterface.h"
 #include "hold/HoldWindowManager.h"
+#include "tag/TagItemInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -24,7 +25,8 @@ namespace UKControllerPlugin {
         class HoldEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
             public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
             public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
-            public UKControllerPlugin::Command::CommandHandlerInterface
+            public UKControllerPlugin::Command::CommandHandlerInterface,
+            public UKControllerPlugin::Tag::TagItemInterface
         {
             public:
                 // Inherited via FlightPlanEventHandlerInterface
@@ -55,6 +57,17 @@ namespace UKControllerPlugin {
 
                 // Inherited via CommandHandlerInterface
                 bool ProcessCommand(std::string command) override;
+
+                // Inherited via TagItemInterface
+                std::string GetTagItemDescription(void) const override;
+                std::string GetTagItemData(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                ) override;
+
+
+                // The string to display when an aircraft is not holding
+                const std::string noHold = "NOHOLD";
 
                 // The id of this handlers popup menu item
                 const int popupMenuItemId;

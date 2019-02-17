@@ -162,5 +162,16 @@ namespace UKControllerPluginTest {
         {
             EXPECT_NO_THROW(manager.UpdateHoldingAircraft(this->mockPlugin));
         }
+
+        TEST_F(HoldManagerTest, ItGetsAHoldForAGivenAircraft)
+        {
+            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
+            EXPECT_TRUE(this->hold1 == this->manager.GetAircraftHold("BAW123")->holdParameters);
+        }
+
+        TEST_F(HoldManagerTest, ItReturnsNullIfAircraftDoesntHaveAHold)
+        {
+            EXPECT_EQ(NULL, this->manager.GetAircraftHold("BAW123"));
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

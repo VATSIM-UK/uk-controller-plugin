@@ -32,11 +32,16 @@ namespace UKControllerPlugin {
                     unsigned int holdId
                 );
                 size_t CountHolds(void) const;
+                UKControllerPlugin::Hold::ManagedHold * const GetAircraftHold(std::string callsign) const;
                 UKControllerPlugin::Hold::ManagedHold * const GetManagedHold(unsigned int holdId) const;
                 void RemoveAircraftFromAnyHold(std::string callsign);
                 void HoldManager::UpdateHoldingAircraft(
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
                 );
+
+
+                // The value returned when the aircraft is not holding
+                const unsigned int noAircraftHold = 9999999;
 
             private:
 

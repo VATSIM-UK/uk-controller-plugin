@@ -38,6 +38,10 @@ using UKControllerPlugin::Hold::HoldSelectionMenu;
 namespace UKControllerPlugin {
     namespace Hold {
 
+        // The id of the tag item for selected hold
+        const int selectedHoldTagItemId = 106;
+
+        // The id of the popup menu tag function
         const unsigned int popupMenuTagItemId = 9003;
 
         // The file where the holds are stored locally
@@ -131,6 +135,7 @@ namespace UKControllerPlugin {
             container.flightplanHandler->RegisterHandler(eventHandler);
             container.timedHandler->RegisterEvent(eventHandler, timedEventFrequency);
             container.commandHandlers->RegisterHandler(eventHandler);
+            container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
 
             CallbackFunction openWindowCallback(
                 eventHandler->popupMenuItemId,

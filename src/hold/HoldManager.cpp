@@ -3,6 +3,7 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "HoldManager.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -71,6 +72,18 @@ namespace UKControllerPlugin {
         size_t HoldManager::CountHolds(void) const
         {
             return this->holdData.size();
+        }
+
+        /*
+            Returns the hold that an aircraft is in
+        */
+        ManagedHold * const HoldManager::GetAircraftHold(std::string callsign) const
+        {
+            if (!this->holdingAircraft.count(callsign)) {
+                return NULL;
+            }
+
+            return this->holdData.at(this->holdingAircraft.at(callsign)).get();
         }
 
         /*

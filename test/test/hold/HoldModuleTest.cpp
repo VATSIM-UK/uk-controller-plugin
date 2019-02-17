@@ -14,6 +14,7 @@
 #include "dependency/DependencyCache.h"
 #include "mock/MockApiInterface.h"
 #include "hold/ManagedHold.h"
+#include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -31,6 +32,7 @@ using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPlugin::Tag::TagItemCollection;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -73,6 +75,8 @@ namespace UKControllerPluginTest {
                     this->container.commandHandlers.reset(new CommandHandlerCollection);
                     this->container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
                     this->container.windows.reset(new NiceMock<MockWinApi>);
+                    this->container.windows.reset(new NiceMock<MockWinApi>);
+                    this->container.tagHandler.reset(new TagItemCollection);
                 }
 
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
@@ -88,6 +92,12 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
+        }
+
+        TEST_F(HoldModuleTest, ItAddsToTagItemhandler)
+        {
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            EXPECT_EQ(1, this->container.tagHandler->CountHandlers());
         }
 
         TEST_F(HoldModuleTest, ItAddsToTimedHandler)

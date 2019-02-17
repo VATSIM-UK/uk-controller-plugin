@@ -51,7 +51,7 @@ namespace UKControllerPluginTest {
                     ON_CALL(mockRadarTargetInitial, GetFlightLevel())
                         .WillByDefault(Return(9000));
 
-                    manager.AddAircraftToHold(mockFlightplanInitial, mockRadarTargetInitial, 1);
+                    this->manager.AddAircraftToHold(mockFlightplanInitial, mockRadarTargetInitial, 1);
 
 
                     this->mockFlightplan.reset(new NiceMock<MockEuroScopeCFlightPlanInterface>);
@@ -84,9 +84,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItRemovesAnAircraftFromTheHoldIfTheFlightplanDisconnects)
         {
-            EXPECT_TRUE(manager.GetManagedHold(1)->HasAircraft("BAW123"));
+            EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
             this->handler.FlightPlanDisconnectEvent(*this->mockFlightplan);
-            EXPECT_FALSE(manager.GetManagedHold(1)->HasAircraft("BAW123"));
+            EXPECT_FALSE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
         }
 
         TEST_F(HoldEventHandlerTest, ItCanBeConfiguredFromTheMenu)
@@ -108,11 +108,29 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, TimedEventTriggersDataUpdate)
         {
-            EXPECT_EQ(8000, manager.GetManagedHold(1)->cbegin()->clearedLevel);
-            EXPECT_EQ(9000, manager.GetManagedHold(1)->cbegin()->reportedLevel);
-            manager.UpdateHoldingAircraft(this->mockPlugin);
-            EXPECT_EQ(7000, manager.GetManagedHold(1)->cbegin()->clearedLevel);
-            EXPECT_EQ(8000, manager.GetManagedHold(1)->cbegin()->reportedLevel);
+            EXPECT_EQ(8000, this->manager.GetManagedHold(1)->cbegin()->clearedLevel);
+            EXPECT_EQ(9000, this->manager.GetManagedHold(1)->cbegin()->reportedLevel);
+            this->manager.UpdateHoldingAircraft(this->mockPlugin);
+            EXPECT_EQ(7000, this->manager.GetManagedHold(1)->cbegin()->clearedLevel);
+            EXPECT_EQ(8000, this->manager.GetManagedHold(1)->cbegin()->reportedLevel);
+        }
+
+        TEST_F(HoldEventHandlerTest, ItHasATagItemDescription)
+        {
+            EXPECT_TRUE("Selected Hold" == this->handler.GetTagItemDescription());
+        }
+
+        TEST_F(HoldEventHandlerTest, ItReturnsTheSelectedHoldForAnAircraft)
+        {
+            EXPECT_TRUE("HTIMBA" == this->handler.GetTagItemData(*this->mockFlightplan, *this->mockRadarTarget));
+        }
+
+        TEST_F(HoldEventHandlerTest, ItReturnsNoHoldIfAircraftNotInHold)
+        {
+            this->manager.RemoveAircraftFromAnyHold("BAW123");
+            EXPECT_TRUE(
+                this->handler.noHold == this->handler.GetTagItemData(*this->mockFlightplan, *this->mockRadarTarget)
+            );
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
