@@ -9,7 +9,7 @@ namespace UKControllerPlugin {
             before it is considered to be going into the next level if climbing
             or descending.
         */
-        const unsigned int minimumLevelOffset = 400;
+        const int minimumLevelOffset = 400;
 
         /*
             The minimum vertical speed that an aircraft must have in order to be
@@ -70,9 +70,9 @@ namespace UKControllerPlugin {
             }
 
             if (verticalSpeed < 0) {
-                return std::abs(difference) >= minimumLevelOffset ? nearestThousand - 1000 : nearestThousand;
+                return difference <= (-minimumLevelOffset) ? nearestThousand - 1000 : nearestThousand;
             } else {
-                return std::abs(difference) >= minimumLevelOffset ? nearestThousand + 1000 : nearestThousand;
+                return difference >= minimumLevelOffset ? nearestThousand + 1000 : nearestThousand;
             }
         }
 

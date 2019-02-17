@@ -5,7 +5,7 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         extern const unsigned int minimumVerticalSpeed;
-        extern const unsigned int minimumLevelOffset;
+        extern const int minimumLevelOffset;
 
         TCHAR * ConvertToTchar(std::string string);
         TCHAR * ConvertToTchar(int value);
