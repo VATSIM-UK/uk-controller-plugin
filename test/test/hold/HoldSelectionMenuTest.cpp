@@ -31,16 +31,18 @@ namespace UKControllerPluginTest {
                 HoldSelectionMenuTest()
                     : holdSelectionMenu(this->holdManager, this->mockPlugin, 1)
                 {
+                    this->mockFlightplan.reset(new NiceMock<MockEuroScopeCFlightPlanInterface>);
+                    this->mockRadarTarget.reset(new NiceMock<MockEuroScopeCRadarTargetInterface>);
                     this->holdManager.AddHold(ManagedHold(this->holdData));
                     this->holdManager.AddHold(ManagedHold(this->holdData2));
                     this->holdManager.AddHold(ManagedHold(this->holdData3));
 
-                    ON_CALL(this->mockFlightplan, GetCallsign())
+                    ON_CALL(*this->mockFlightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
                 }
 
-                NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
-                NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+                std::shared_ptr <NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplan;
+                std::shared_ptr <NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 HoldManager holdManager;
                 HoldSelectionMenu holdSelectionMenu;
@@ -85,8 +87,8 @@ namespace UKControllerPluginTest {
                 .Times(0);
 
             this->holdSelectionMenu.DisplayMenu(
-                this->mockFlightplan,
-                this->mockRadarTarget,
+                *this->mockFlightplan,
+                *this->mockRadarTarget,
                 "test",
                 { 0, 0 }
             );
@@ -131,11 +133,68 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             this->holdSelectionMenu.DisplayMenu(
-                this->mockFlightplan,
-                this->mockRadarTarget,
+                *this->mockFlightplan,
+                *this->mockRadarTarget,
                 "test",
                 { 0, 0 }
             );
+        }
+
+        TEST_F(HoldSelectionMenuTest, SelectingAMenuItemAddsAircraftToCorrespondingHold)
+        {
+            this->holdSelectionMenu.AddHoldToMenu(1);
+            this->holdSelectionMenu.AddHoldToMenu(2);
+
+
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan())
+                .WillByDefault(Return(this->mockFlightplan));
+
+            ON_CALL(this->mockPlugin, GetSelectedRadarTarget())
+                .WillByDefault(Return(this->mockRadarTarget));
+
+            // Number 2 - that's hold 1 (base + id);
+            this->holdSelectionMenu.MenuItemClicked(2, "test");
+            EXPECT_TRUE(this->holdManager.GetManagedHold(1)->HasAircraft("BAW123"));
+            EXPECT_FALSE(this->holdManager.GetManagedHold(2)->HasAircraft("BAW123"));
+            EXPECT_FALSE(this->holdManager.GetManagedHold(3)->HasAircraft("BAW123"));
+        }
+
+        TEST_F(HoldSelectionMenuTest, SelectingAMenuItemDoesNothingIfFlightplanInvalid)
+        {
+            this->holdSelectionMenu.AddHoldToMenu(1);
+            this->holdSelectionMenu.AddHoldToMenu(2);
+
+
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan())
+                .WillByDefault(Return(std::shared_ptr<MockEuroScopeCFlightPlanInterface>(NULL)));
+
+            ON_CALL(this->mockPlugin, GetSelectedRadarTarget())
+                .WillByDefault(Return(this->mockRadarTarget));
+
+            // Number 2 - that's hold 1 (base + id);
+            this->holdSelectionMenu.MenuItemClicked(2, "test");
+            EXPECT_FALSE(this->holdManager.GetManagedHold(1)->HasAircraft("BAW123"));
+            EXPECT_FALSE(this->holdManager.GetManagedHold(2)->HasAircraft("BAW123"));
+            EXPECT_FALSE(this->holdManager.GetManagedHold(3)->HasAircraft("BAW123"));
+        }
+
+        TEST_F(HoldSelectionMenuTest, SelectingAMenuItemDoesNothingIfRadarTargetInvalid)
+        {
+            this->holdSelectionMenu.AddHoldToMenu(1);
+            this->holdSelectionMenu.AddHoldToMenu(2);
+
+
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan())
+                .WillByDefault(Return(this->mockFlightplan));
+
+            ON_CALL(this->mockPlugin, GetSelectedRadarTarget())
+                .WillByDefault(Return(std::shared_ptr<MockEuroScopeCRadarTargetInterface>(NULL)));
+
+            // Number 2 - that's hold 1 (base + id);
+            this->holdSelectionMenu.MenuItemClicked(2, "test");
+            EXPECT_FALSE(this->holdManager.GetManagedHold(1)->HasAircraft("BAW123"));
+            EXPECT_FALSE(this->holdManager.GetManagedHold(2)->HasAircraft("BAW123"));
+            EXPECT_FALSE(this->holdManager.GetManagedHold(3)->HasAircraft("BAW123"));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
