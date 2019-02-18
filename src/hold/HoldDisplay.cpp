@@ -154,6 +154,13 @@ namespace UKControllerPlugin {
                 this->lineHeight
             };
 
+            Gdiplus::RectF timeInHoldDisplay = {
+                200.0f,
+                this->dataStartHeight,
+                30.0f,
+                this->lineHeight
+            };
+
             // Render all the possible levels in the hold
             for (
                 unsigned int i = this->managedHold.holdParameters.maximum;
@@ -182,7 +189,8 @@ namespace UKControllerPlugin {
                 unsigned int displayRow = GetDisplayRow(this->managedHold.holdParameters.maximum, occupied);
                 callsignDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
                 actualLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
-                clearedLevelDisplay.Y = clearedLevelDisplay.Y + (this->lineHeight * displayRow);
+                clearedLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
+                timeInHoldDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
 
                 // The callsign display
                 std::wstring callsign = ConvertToTchar(it->callsign);
@@ -214,6 +222,17 @@ namespace UKControllerPlugin {
                     clearedLevelDisplay,
                     &this->stringFormat,
                     &this->clearedLevelBrush
+                );
+
+                // Time in hold
+                std::wstring timeString = GetTimeInHoldDisplayString(it->entryTime);
+                graphics->DrawString(
+                    timeString.c_str(),
+                    timeString.length(),
+                    &this->font,
+                    timeInHoldDisplay,
+                    &this->stringFormat,
+                    &this->dataBrush
                 );
             }
 

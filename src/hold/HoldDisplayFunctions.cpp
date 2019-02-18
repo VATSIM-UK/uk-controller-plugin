@@ -84,5 +84,17 @@ namespace UKControllerPlugin {
         {
             return (holdMax - occupiedLevel) / 1000;
         }
+
+        /*
+            Returns the time in the hold as minutes
+        */
+        std::wstring GetTimeInHoldDisplayString(const std::chrono::system_clock::time_point & entryTime)
+        {
+            int64_t minutes = std::chrono::duration_cast<std::chrono::minutes> (
+                std::chrono::system_clock::now() - entryTime
+            ).count();
+
+            return std::to_wstring(minutes) + L"m";
+        }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

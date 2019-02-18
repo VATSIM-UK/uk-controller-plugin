@@ -64,15 +64,15 @@ namespace UKControllerPlugin {
                 Gdiplus::StringFormat stringFormat;
 
                 // Titlebar
-                const Gdiplus::RectF titleArea = { 0.0f, 0.0f, 225.0f, 15.0f };
-                const Gdiplus::RectF exitButtonArea = { 212.0f, 2.0f, 11.0f, 11.0f };
+                const Gdiplus::RectF titleArea = { 0.0f, 0.0f, 235.0f, 15.0f };
+                const Gdiplus::RectF exitButtonArea = { 247.0f, 2.0f, 11.0f, 11.0f };
 
                 // How high lines should be
                 const float lineHeight = 17.0f;
 
                 // Where to start drawing data
                 const float dataStartHeight = this->titleArea.Y + this->titleArea.Height + 3;
-                const int windowWidth = 225;
+                const int windowWidth = 235;
                 const int windowHeight = 250;
         };
     }  // namespace Hold

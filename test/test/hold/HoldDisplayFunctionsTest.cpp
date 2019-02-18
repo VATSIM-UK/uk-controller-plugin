@@ -105,5 +105,26 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ(2, UKControllerPlugin::Hold::GetDisplayRow(15000, 13000));
         }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsTimeInHoldLessThan10Minutes)
+        {
+            std::chrono::system_clock::time_point testTime =
+                std::chrono::system_clock::now() - std::chrono::minutes(5);
+            EXPECT_TRUE(L"5m" == UKControllerPlugin::Hold::GetTimeInHoldDisplayString(testTime));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsTimeInHoldGreaterThan10Minutes)
+        {
+            std::chrono::system_clock::time_point testTime =
+                std::chrono::system_clock::now() - std::chrono::minutes(13);
+            EXPECT_TRUE(L"13m" == UKControllerPlugin::Hold::GetTimeInHoldDisplayString(testTime));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsTimeInHoldSeconds)
+        {
+            std::chrono::system_clock::time_point testTime =
+                std::chrono::system_clock::now() - std::chrono::seconds(13);
+            EXPECT_TRUE(L"0m" == UKControllerPlugin::Hold::GetTimeInHoldDisplayString(testTime));
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
