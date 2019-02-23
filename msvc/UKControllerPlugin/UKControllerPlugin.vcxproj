@@ -74,6 +74,10 @@
     <ClInclude Include="..\..\src\dependency\DependencyCacheFactory.h" />
     <ClInclude Include="..\..\src\dependency\LoadNewDependencies.h" />
     <ClInclude Include="..\..\src\dependency\LocalFileUpdater.h" />
+    <ClInclude Include="..\..\src\dialog\CompareDialogs.h" />
+    <ClInclude Include="..\..\src\dialog\DialogData.h" />
+    <ClInclude Include="..\..\src\dialog\DialogManager.h" />
+    <ClInclude Include="..\..\src\dialog\DialogProviderInterface.h" />
     <ClInclude Include="..\..\src\euroscope\AsrEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\AsrEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\euroscope\CallbackFunction.h" />
@@ -284,6 +288,8 @@
     <ClCompile Include="..\..\src\dependency\DependencyCacheFactory.cpp" />
     <ClCompile Include="..\..\src\dependency\LoadNewDependencies.cpp" />
     <ClCompile Include="..\..\src\dependency\LocalFileUpdater.cpp" />
+    <ClCompile Include="..\..\src\dialog\CompareDialogs.cpp" />
+    <ClCompile Include="..\..\src\dialog\DialogManager.cpp" />
     <ClCompile Include="..\..\src\euroscope\AsrEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\CallbackFunction.cpp" />
     <ClCompile Include="..\..\src\euroscope\CompareFunctions.cpp" />

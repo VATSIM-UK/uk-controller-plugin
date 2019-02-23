@@ -103,6 +103,9 @@
     <Filter Include="test\hold">
       <UniqueIdentifier>{d5e45187-7853-49f0-b2f3-fdeee1d265e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\dialog">
+      <UniqueIdentifier>{9c9e30c3-8415-4c15-8a92-488c9f36449f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -575,6 +578,15 @@
     <ClCompile Include="..\..\test\test\controller\TranslateFrequencyAbbreviationTest.cpp">
       <Filter>test\controller</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\dialog\CompareDialogsTest.cpp">
+      <Filter>test\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dialog\DialogDataTest.cpp">
+      <Filter>test\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp">
+      <Filter>test\dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -678,6 +690,9 @@
       <Filter>test\hold</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockDialogProvider.h">
       <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>

@@ -169,16 +169,6 @@ namespace UKControllerPlugin {
                     diag.DoModal();
                     return true;
                 }
-                case HOLD_SELECTOR_DIALOG: {
-                    DialogBoxParam(
-                        this->dllInstance,
-                        MAKEINTRESOURCE(HOLD_SELECTOR_DIALOG),
-                        GetActiveWindow(),
-                        (DLGPROC) &this->holdDialog.WndProc,
-                        (LPARAM) &this->holdDialog
-                    );
-                    return true;
-                }
                 default:
                     return false;
             }
@@ -281,6 +271,21 @@ namespace UKControllerPlugin {
             }
 
             return "";
+        }
+
+        /*
+            Open a dialog
+        */
+        void WinApi::OpenDialog(const UKControllerPlugin::Dialog::DialogData & dialog) const
+        {
+            AFX_MANAGE_STATE(AfxGetStaticModuleState());
+            DialogBoxParam(
+                this->dllInstance,
+                MAKEINTRESOURCE(dialog.dialogId),
+                GetActiveWindow(),
+                dialog.dialogProcedure,
+                dialog.dialogArgument
+            );
         }
     }  // namespace Windows
 }  // namespace UKControllerPlugin

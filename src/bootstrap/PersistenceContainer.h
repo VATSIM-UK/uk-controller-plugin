@@ -40,6 +40,7 @@
 #include "euroscope/UserSettingAwareCollection.h"
 #include "hold/HoldWindowManager.h"
 #include "hold/HoldSelectionMenu.h"
+#include "dialog/DialogManager.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -62,6 +63,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Message::UserMessager> userMessager;
             std::unique_ptr<UKControllerPlugin::Euroscope::UserSetting> pluginUserSettingHandler;
             std::shared_ptr<UKControllerPlugin::Controller::Login> login;
+            std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
 
             // Collections of event handlers
             std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;

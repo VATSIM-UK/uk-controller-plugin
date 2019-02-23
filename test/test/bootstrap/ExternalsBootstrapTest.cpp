@@ -45,6 +45,15 @@ namespace UKControllerPluginTest {
             );
         }
 
+        TEST_F(ExternalsBootstrapTest, BootstrapCreatesDialogManager)
+        {
+            PersistenceContainer container;
+            HINSTANCE dll = 0;
+            ExternalsBootstrap::Bootstrap(container, dll);
+
+            EXPECT_EQ(0, container.dialogManager->CountDialogs());
+        }
+
         TEST_F(ExternalsBootstrapTest, BootstrapCreatesBrushes)
         {
             PersistenceContainer container;

@@ -1,5 +1,6 @@
 #pragma once
 #include "windows/WinApiInterface.h"
+#include "dialog/DialogProviderInterface.h"
 #include "euroscope/GeneralSettingsDialog.h"
 #include "hold/HoldConfigurationDialog.h"
 
@@ -10,7 +11,7 @@ namespace UKControllerPlugin {
             A concrete implementation of the WinApiInterface. Provides a wrapper
             around certain WindowsFunctions such as opening dialog boxes and playing sounds.
         */
-        class WinApi : public WinApiInterface
+        class WinApi : public WinApiInterface, public UKControllerPlugin::Dialog::DialogProviderInterface
         {
             public:
                 WinApi(
@@ -37,6 +38,9 @@ namespace UKControllerPlugin {
                 std::string ReadFromFile(std::wstring filename, bool relativePath = true);
                 void WriteToFile(std::string filename, std::string data, bool truncate);
 
+                // Inherited via DialogProviderInterface
+                void OpenDialog(const UKControllerPlugin::Dialog::DialogData & dialog) const override;
+
             private:
                 void CreateMissingDirectories(std::string endFile);
                 std::string ReadFileContents(std::ifstream file);
@@ -52,9 +56,6 @@ namespace UKControllerPlugin {
 
                 // General settings dialog
                 UKControllerPlugin::Euroscope::GeneralSettingsDialog generalSettingsDialog;
-
-                // Hold dialog
-                UKControllerPlugin::Hold::HoldConfigurationDialog holdDialog;
         };
     }  // namespace Windows
 }  // namespace UKControllerPlugin
