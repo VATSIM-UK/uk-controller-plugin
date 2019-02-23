@@ -386,7 +386,7 @@ namespace UKControllerPluginTest {
                 .WillRepeatedly(Return("ADMAG2X"));
 
             EXPECT_CALL(mockFlightPlan, GetOrigin())
-                .Times(5)
+                .Times(4)
                 .WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(mockFlightPlan, GetCallsign())
@@ -441,7 +441,7 @@ namespace UKControllerPluginTest {
                 .WillRepeatedly(Return("#ADMAG2X"));
 
             EXPECT_CALL(mockFlightPlan, GetOrigin())
-                .Times(5)
+                .Times(4)
                 .WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(mockFlightPlan, GetCallsign())
