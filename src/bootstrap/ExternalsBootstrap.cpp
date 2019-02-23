@@ -43,7 +43,6 @@ namespace UKControllerPlugin {
             persistence.windows = std::move(winApi);
             persistence.brushes.reset(new GdiplusBrushes);
             persistence.graphics.reset(new GdiGraphicsWrapper);
-            persistence.dialogManager.reset(new DialogManager(*winApi));
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin
