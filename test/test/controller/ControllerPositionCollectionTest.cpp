@@ -111,5 +111,53 @@ namespace UKControllerPluginTest {
             collection.AddPosition(std::move(controller));
             EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("EGFF", 125.8514));
         }
+
+        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyWillWorkForEssex)
+        {
+            ControllerPositionCollection collection;
+            std::unique_ptr<ControllerPosition> controller(
+                new ControllerPosition("ESSEX_APP", 120.620, "APP", std::vector<std::string> {"EGSS, EGGW, EGSC"})
+            );
+
+            ControllerPosition * controllerRaw = controller.get();
+            collection.AddPosition(std::move(controller));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("ESSEX", 120.620));
+        }
+
+        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyWillWorkForThames)
+        {
+            ControllerPositionCollection collection;
+            std::unique_ptr<ControllerPosition> controller(
+                new ControllerPosition("THAMES", 132.700, "APP", std::vector<std::string> {"EGLC, EGKB"})
+            );
+
+            ControllerPosition * controllerRaw = controller.get();
+            collection.AddPosition(std::move(controller));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("THAMES", 132.700));
+        }
+
+        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyWillWorkForSolent)
+        {
+            ControllerPositionCollection collection;
+            std::unique_ptr<ControllerPosition> controller(
+                new ControllerPosition("SOLENT", 120.220, "APP", std::vector<std::string> {"EGLC, EGKB"})
+            );
+
+            ControllerPosition * controllerRaw = controller.get();
+            collection.AddPosition(std::move(controller));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("SOLENT", 120.220));
+        }
+
+        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyWillWorkForAbbreviations)
+        {
+            ControllerPositionCollection collection;
+            std::unique_ptr<ControllerPosition> controller(
+                new ControllerPosition("ESSEX_APP", 120.620, "APP", std::vector<std::string> {"EGSS, EGGW, EGSC"})
+            );
+
+            ControllerPosition * controllerRaw = controller.get();
+            collection.AddPosition(std::move(controller));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("ESX", 120.620));
+        }
     }  // namespace Controller
 }  // namespace UKControllerPluginTest

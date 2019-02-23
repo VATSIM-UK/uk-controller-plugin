@@ -1,6 +1,7 @@
 #include "pch/stdafx.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPosition.h"
+#include "controller/TranslateFrequencyAbbreviation.h"
 
 using UKControllerPlugin::Controller::ControllerPosition;
 
@@ -35,6 +36,9 @@ namespace UKControllerPlugin {
             std::string facility,
             double frequency
         ) const {
+
+            facility = TranslateFrequencyAbbreviation(facility);
+
             // If there's no chance of finding anything, save us the iteration.
             if (!this->IsPossibleAreaPosition(facility) && !this->IsPossibleAirfieldPosition(facility)) {
                 throw std::out_of_range("Position not found.");
@@ -70,7 +74,8 @@ namespace UKControllerPlugin {
         */
         bool ControllerPositionCollection::IsPossibleAirfieldPosition(std::string facility) const
         {
-            return facility.size() == 4 && facility.substr(0, 2) == "EG";
+            return facility == "ESSEX" || facility == "THAMES" || facility == "SOLENT" ||
+                facility.size() == 4 && facility.substr(0, 2) == "EG";
         }
 
         /*

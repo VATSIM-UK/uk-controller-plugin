@@ -533,6 +533,9 @@
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp">
       <Filter>test\squawk</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\controller\TranslateFrequencyAbbreviationTest.cpp">
+      <Filter>test\controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
