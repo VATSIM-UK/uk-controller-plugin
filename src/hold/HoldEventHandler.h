@@ -13,8 +13,8 @@ namespace UKControllerPlugin {
     namespace Hold {
         class HoldManager;
     }  // namespace Hold
-    namespace Windows {
-        class WinApiInterface;
+    namespace Dialog {
+        class DialogManager;
     }  // namespace Windows
 }  // namespace UKControllerPlugin
 
@@ -37,7 +37,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Hold::HoldManager & holdManager,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     UKControllerPlugin::Hold::HoldWindowManager & holdManagerWindow,
-                    const UKControllerPlugin::Windows::WinApiInterface & winApi,
+                    const UKControllerPlugin::Dialog::DialogManager & dialogManager,
                     const int popupMenuItemId
                 );
                 void FlightPlanEvent(
@@ -85,7 +85,7 @@ namespace UKControllerPlugin {
             private:
 
                 // To load dialogs
-                const UKControllerPlugin::Windows::WinApiInterface & winApi;
+                const UKControllerPlugin::Dialog::DialogManager & dialogManager;
                 
                 // Gives access to the plugin
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;

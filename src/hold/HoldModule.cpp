@@ -17,6 +17,8 @@
 #include "dependency/DependencyCache.h"
 #include "tag/TagFunction.h"
 #include "hold/HoldSelectionMenu.h"
+#include "hold/HoldConfigurationDialog.h"
+#include "dialog/DialogData.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -34,6 +36,8 @@ using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
+using UKControllerPlugin::Hold::HoldConfigurationDialog;
+using UKControllerPlugin::Dialog::DialogData;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -75,6 +79,20 @@ namespace UKControllerPlugin {
         ) {
             // Update local dependencies and build hold data
             container.holdManager = BuildHoldingData(dependencies.GetJsonDependency(dependencyFile));
+
+            // Create the hold dialog and add to the manager
+            std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(
+
+            );
+            container.dialogManager->AddDialog(
+                {
+                    HOLD_SELECTOR_DIALOG,
+                    "Hold Configuration",
+                    reinterpret_cast<DLGPROC>(dialog->WndProc),
+                    reinterpret_cast<LPARAM>(dialog.get()),
+                    dialog
+                }
+            );
 
             // Create the object to manage the popup menu
             int holdSelectionCancelId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
@@ -143,7 +161,7 @@ namespace UKControllerPlugin {
                 *container.holdManager,
                 *container.plugin,
                 *container.holdWindows,
-                *container.windows,
+                *container.dialogManager,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 

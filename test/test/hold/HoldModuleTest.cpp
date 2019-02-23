@@ -15,6 +15,8 @@
 #include "mock/MockApiInterface.h"
 #include "hold/ManagedHold.h"
 #include "tag/TagItemCollection.h"
+#include "dialog/DialogManager.h"
+#include "mock/MockDialogProvider.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -33,6 +35,8 @@ using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Tag::TagItemCollection;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
+using UKControllerPlugin::Dialog::DialogManager;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -77,6 +81,7 @@ namespace UKControllerPluginTest {
                     this->container.windows.reset(new NiceMock<MockWinApi>);
                     this->container.windows.reset(new NiceMock<MockWinApi>);
                     this->container.tagHandler.reset(new TagItemCollection);
+                    this->container.dialogManager.reset(new DialogManager(NiceMock<MockDialogProvider>()));
                 }
 
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
@@ -135,6 +140,13 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
             EXPECT_EQ(0, this->container.holdWindows->CountDisplays());
+        }
+
+        TEST_F(HoldModuleTest, ItRegistersHoldConfigurationDialog)
+        {
+            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            EXPECT_EQ(1, this->container.dialogManager->CountDialogs());
+            EXPECT_TRUE(this->container.dialogManager->HasDialog(HOLD_SELECTOR_DIALOG));
         }
 
         TEST_F(HoldModuleTest, ItLoadsHoldData)

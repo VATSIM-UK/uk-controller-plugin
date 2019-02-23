@@ -6,7 +6,7 @@
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
 #include "hold/ManagedHold.h"
-#include "windows/WinApiInterface.h"
+#include "dialog/DialogManager.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -16,7 +16,7 @@ using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Hold::ManagedHold;
-using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -25,11 +25,11 @@ namespace UKControllerPlugin {
             HoldManager & holdManager,
             EuroscopePluginLoopbackInterface & plugin,
             UKControllerPlugin::Hold::HoldWindowManager & holdManagerWindow,
-            const WinApiInterface & winApi,
+            const DialogManager & dialogManager,
             const int popupMenuItemId
         )
-            : holdManager(holdManager), plugin(plugin), holdManagerWindow(holdManagerWindow), winApi(winApi),
-            popupMenuItemId(popupMenuItemId)
+            : holdManager(holdManager), plugin(plugin), holdManagerWindow(holdManagerWindow),
+            dialogManager(dialogManager), popupMenuItemId(popupMenuItemId)
         {
 
         }
@@ -70,7 +70,7 @@ namespace UKControllerPlugin {
         */
         void HoldEventHandler::Configure(int functionId, std::string subject)
         {
-            this->winApi.OpenDialog(HOLD_SELECTOR_DIALOG, NULL, NULL);
+            this->dialogManager.OpenDialog(HOLD_SELECTOR_DIALOG);
         }
 
         /*
