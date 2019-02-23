@@ -118,6 +118,13 @@ namespace UKControllerPlugin {
     void UKPlugin::DoInitialControllerLoad(void)
     {
         LogInfo("Initial controller load started");
+
+        EuroScopePlugIn::CController me = this->ControllerMyself();
+        if (me.IsValid()) {
+            this->OnControllerPositionUpdate(me);
+            LogInfo("Loaded myself, on " + std::string(me.GetCallsign()));
+        }
+
         EuroScopePlugIn::CController current = this->ControllerSelectFirst();
 
         // If there's nobody online, stop.
