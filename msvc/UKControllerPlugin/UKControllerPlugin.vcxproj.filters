@@ -714,6 +714,9 @@
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h">
       <Filter>src\squawk</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\controller\TranslateFrequencyAbbreviation.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1206,6 +1209,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp">
       <Filter>src\squawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\controller\TranslateFrequencyAbbreviation.cpp">
+      <Filter>src\controller</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
