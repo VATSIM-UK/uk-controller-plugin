@@ -768,6 +768,9 @@
     <ClInclude Include="..\..\src\controller\TranslateFrequencyAbbreviation.h">
       <Filter>src\controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldConfigurationDialog.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1302,6 +1305,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\controller\TranslateFrequencyAbbreviation.cpp">
       <Filter>src\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldConfigurationDialog.cpp">
+      <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

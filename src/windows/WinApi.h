@@ -1,6 +1,7 @@
 #pragma once
 #include "windows/WinApiInterface.h"
 #include "euroscope/GeneralSettingsDialog.h"
+#include "hold/HoldConfigurationDialog.h"
 
 namespace UKControllerPlugin {
     namespace Windows {
@@ -51,6 +52,9 @@ namespace UKControllerPlugin {
 
                 // General settings dialog
                 UKControllerPlugin::Euroscope::GeneralSettingsDialog generalSettingsDialog;
+
+                // Hold dialog
+                UKControllerPlugin::Hold::HoldConfigurationDialog holdDialog;
         };
     }  // namespace Windows
 }  // namespace UKControllerPlugin

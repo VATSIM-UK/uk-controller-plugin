@@ -5,6 +5,7 @@
 #include "euroscope/GeneralSettingsDialog.h"
 #include "euroscope/UserSetting.h"
 #include "historytrail/HistoryTrailData.h"
+#include "hold/HoldConfigurationDialog.h"
 
 using UKControllerPlugin::HistoryTrail::HistoryTrailDialog;
 using UKControllerPlugin::HelperFunctions;
@@ -166,6 +167,16 @@ namespace UKControllerPlugin {
                         data
                     );
                     diag.DoModal();
+                    return true;
+                }
+                case HOLD_SELECTOR_DIALOG: {
+                    DialogBoxParam(
+                        this->dllInstance,
+                        MAKEINTRESOURCE(HOLD_SELECTOR_DIALOG),
+                        GetActiveWindow(),
+                        (DLGPROC) &this->holdDialog.WndProc,
+                        (LPARAM) &this->holdDialog
+                    );
                     return true;
                 }
                 default:

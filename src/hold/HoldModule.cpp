@@ -143,6 +143,7 @@ namespace UKControllerPlugin {
                 *container.holdManager,
                 *container.plugin,
                 *container.holdWindows,
+                *container.windows,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 
