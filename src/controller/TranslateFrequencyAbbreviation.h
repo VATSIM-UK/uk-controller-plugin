@@ -4,5 +4,5 @@ namespace UKControllerPlugin {
     namespace Controller {
 
         std::string TranslateFrequencyAbbreviation(std::string facility);
-    }  // namespace Controller 
+    }  // namespace Controller
 }  // namespace UKControllerPlugin

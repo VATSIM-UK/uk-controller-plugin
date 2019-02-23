@@ -19,5 +19,5 @@ namespace UKControllerPlugin {
         {
             return translations.count(facility) ? translations.at(facility) : facility;
         }
-    }  // namespace Controller 
+    }  // namespace Controller
 }  // namespace UKControllerPlugin

@@ -74,7 +74,7 @@ namespace UKControllerPlugin {
         */
         bool ControllerPositionCollection::IsPossibleAirfieldPosition(std::string facility) const
         {
-            return facility == "ESSEX" || facility == "THAMES" || facility == "SOLENT" || 
+            return facility == "ESSEX" || facility == "THAMES" || facility == "SOLENT" ||
                 facility.size() == 4 && facility.substr(0, 2) == "EG";
         }
 

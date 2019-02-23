@@ -5,7 +5,7 @@ using UKControllerPlugin::Controller::TranslateFrequencyAbbreviation;
 
 namespace UKControllerPluginTest {
     namespace Controller {
-        
+
         TEST(TranslateFrequencyAbbreviation, ItTranslatesEssexAbbreviation)
         {
             EXPECT_EQ("ESSEX", TranslateFrequencyAbbreviation("ESX"));
