@@ -602,6 +602,12 @@
     <ClCompile Include="..\..\test\test\hold\HoldManagerFactoryTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogFactoryTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

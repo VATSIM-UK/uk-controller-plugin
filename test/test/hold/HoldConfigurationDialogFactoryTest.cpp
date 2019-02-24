@@ -1,23 +1,21 @@
 #include "pch/pch.h"
-#include "hold/HoldManagerFactory.h"
-#include "hold/HoldManager.h"
+#include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldingData.h"
-#include "hold/ManagedHold.h"
+#include "hold/HoldConfigurationDialog.h"
 
-using UKControllerPlugin::Hold::CreateHoldManager;
+using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldingData;
-using UKControllerPlugin::Hold::ManagedHold;
 
 namespace UKControllerPluginTest {
     namespace Hold {
 
-        TEST(HoldManagerFactoryTest, ItReturnsEmptyIfDataNotObject)
+        TEST(HoldConfigurationDialogFactoryTest, ItReturnsEmptyIfDataNotObject)
         {
             nlohmann::json data = "[]"_json;
-            EXPECT_EQ(0, CreateHoldManager(data)->CountHolds());
+            EXPECT_EQ(0, CreateHoldConfigurationDialog(data)->CountHolds());
         }
 
-        TEST(HoldManagerFactoryTest, ItAddsHoldsWithData)
+        TEST(HoldConfigurationDialogFactoryTest, ItAddsHoldsWithData)
         {
             nlohmann::json data;
             nlohmann::json hold1;
@@ -38,18 +36,18 @@ namespace UKControllerPluginTest {
             hold2["turn_direction"] = "left";
 
             data = { hold1, hold2 };
-            EXPECT_EQ(2, CreateHoldManager(data)->CountHolds());
+            EXPECT_EQ(2, CreateHoldConfigurationDialog(data)->CountHolds());
         }
 
-        TEST(HoldManagerFactoryTest, ItDoesntAddNonObjects)
+        TEST(HoldConfigurationDialogFactoryTest, ItDoesntAddNonObjects)
         {
             nlohmann::json data;
             data = { "Test" };
 
-            EXPECT_EQ(0, CreateHoldManager(data)->CountHolds());
+            EXPECT_EQ(0, CreateHoldConfigurationDialog(data)->CountHolds());
         }
 
-        TEST(HoldManagerFactoryTest, ItDoesntAddInvalidData)
+        TEST(HoldConfigurationDialogFactoryTest, ItDoesntAddInvalidData)
         {
             nlohmann::json data;
             nlohmann::json hold;
@@ -62,23 +60,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, CreateHoldManager(data)->CountHolds());
-        }
-
-        TEST(HoldManagerFactoryTest, TheHoldStartsempty)
-        {
-            nlohmann::json data;
-            nlohmann::json hold;
-            hold["id"] = 1;
-            hold["description"] = "TIMBA";
-            hold["fix"] = "TIMBA Description";
-            hold["minimum_altitude"] = 7000;
-            hold["maximum_altitude"] = 15000;
-            hold["inbound_heading"] = 309;
-            hold["turn_direction"] = "right";
-
-            data = nlohmann::json::array({ hold });
-            EXPECT_EQ(0, CreateHoldManager(data)->GetManagedHold(1)->CountHoldingAircraft());
+            EXPECT_EQ(0, CreateHoldConfigurationDialog(data)->CountHolds());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

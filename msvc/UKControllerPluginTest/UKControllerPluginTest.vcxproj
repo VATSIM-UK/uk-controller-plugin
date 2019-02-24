@@ -101,6 +101,8 @@
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailRendererTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailRepositoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldManagerFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldingAircraftTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldsTest.cpp" />

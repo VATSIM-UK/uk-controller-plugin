@@ -9,6 +9,27 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Add a hold to the dialog.
+        */
+        bool HoldConfigurationDialog::AddHold(UKControllerPlugin::Hold::HoldingData hold)
+        {
+            if (!this->holds.insert(hold).second) {
+                LogWarning("Attempted to add duplicate hold to dialog " + std::to_string(hold.identifier));
+                return false;
+            }
+            
+            return true;
+        }
+
+        /*
+            Return the number of holds.
+        */
+        size_t HoldConfigurationDialog::CountHolds(void) const
+        {
+            return this->holds.size();
+        }
+
+        /*
             Private dialog procedure for the hold configuration dialog, should be used
             against a bound instance.
         */
