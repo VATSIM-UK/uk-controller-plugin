@@ -4,12 +4,14 @@
 #include "hold/HoldWindowManager.h"
 #include "hold/HoldManager.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
+#include "hold/HoldSelectionMenu.h"
 
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Hold::HoldSelectionMenu;
 using ::testing::Return;
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -21,14 +23,16 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldConfigurationDialogTest()
-                    : windowManager(NULL, NULL, holdmanager, mockPlugin), dialog(windowManager)
+                    : windowManager(NULL, NULL, holdManager, mockPlugin), selectionMenu(holdManager, mockPlugin, 1),
+                    dialog(windowManager, selectionMenu)
                 {
 
                 }
 
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-                HoldManager holdmanager;
+                HoldManager holdManager;
                 HoldWindowManager windowManager;
+                HoldSelectionMenu selectionMenu;
                 HoldConfigurationDialog dialog;
         };
 

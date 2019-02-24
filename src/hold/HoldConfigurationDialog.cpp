@@ -2,16 +2,22 @@
 #include "hold/HoldConfigurationDialog.h"
 #include "hold/HoldDisplayFunctions.h"
 #include "hold/HoldWindowManager.h"
+#include "hold/HoldSelectionMenu.h"
 
 using UKControllerPlugin::Hold::ConvertToTchar;
 using UKControllerPlugin::Hold::HoldWindowManager;
+using UKControllerPlugin::Hold::HoldSelectionMenu;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
-        HoldConfigurationDialog::HoldConfigurationDialog(HoldWindowManager & windowManager)
-            : windowManager(windowManager)
+        HoldConfigurationDialog::HoldConfigurationDialog(
+            HoldWindowManager & windowManager,
+            HoldSelectionMenu & holdSelectionMenu
+        )
+            : windowManager(windowManager), holdSelectionMenu(holdSelectionMenu)
         {
+
         }
 
         /*
@@ -97,7 +103,10 @@ namespace UKControllerPlugin {
                             );
                             std::set<HoldingData, CompareHoldsDescription>::iterator it = this->holds.cbegin();
                             std::advance(it, selectedIndex);
+
+                            // Create a hold window and add an item to the hold selection menu
                             this->windowManager.AddWindow(it->identifier);
+                            this->holdSelectionMenu.AddHoldToMenu(it->identifier);
                             return TRUE;
                         }
                     }

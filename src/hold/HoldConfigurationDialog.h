@@ -5,6 +5,7 @@
 namespace UKControllerPlugin {
     namespace Hold {
         class HoldWindowManager;
+        class HoldSelectionMenu;
     }  // namespace Hold
 } // namespace UKControllerPlugin
 
@@ -19,7 +20,10 @@ namespace UKControllerPlugin {
         class HoldConfigurationDialog
         {
             public:
-                HoldConfigurationDialog(UKControllerPlugin::Hold::HoldWindowManager & windowManager);
+                HoldConfigurationDialog(
+                    UKControllerPlugin::Hold::HoldWindowManager & windowManager,
+                    UKControllerPlugin::Hold::HoldSelectionMenu & holdSelectionMenu
+                );
                 bool AddHold(UKControllerPlugin::Hold::HoldingData hold);
                 size_t CountHolds(void) const;
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -27,6 +31,9 @@ namespace UKControllerPlugin {
             private:
 
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+                // Hold selection menu
+                UKControllerPlugin::Hold::HoldSelectionMenu & holdSelectionMenu;
 
                 // Manages hold windows
                 UKControllerPlugin::Hold::HoldWindowManager & windowManager;

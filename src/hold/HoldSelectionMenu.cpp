@@ -46,6 +46,9 @@ namespace UKControllerPlugin {
             this->menuHolds.erase(holdId);
         }
 
+        /*
+            Display the menu
+        */
         void HoldSelectionMenu::DisplayMenu(
             EuroScopeCFlightPlanInterface & flightplan,
             EuroScopeCRadarTargetInterface & radarTarget,
