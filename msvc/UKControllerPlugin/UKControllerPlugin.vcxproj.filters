@@ -741,9 +741,6 @@
     <ClInclude Include="..\..\src\hold\HoldDependency.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dependency\LoadNewDependencies.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldWindowManager.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -799,6 +796,9 @@
       <Filter>src\dependency</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\dependency\DependencyData.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyProviderFactory.h">
       <Filter>src\dependency</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1312,9 +1312,6 @@
     <ClCompile Include="..\..\src\hold\HoldDependency.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\dependency\LoadNewDependencies.cpp">
-      <Filter>src\dependency</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldWindowManager.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
@@ -1352,6 +1349,9 @@
       <Filter>src\dependency</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\dependency\LocalDependencyProvider.cpp">
+      <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\DependencyProviderFactory.cpp">
       <Filter>src\dependency</Filter>
     </ClCompile>
   </ItemGroup>

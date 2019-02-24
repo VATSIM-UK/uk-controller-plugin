@@ -23,7 +23,9 @@ namespace UKControllerPlugin {
 
                 nlohmann::json GetDependency(
                     const UKControllerPlugin::Dependency::DependencyData dependency
-                ) override;
+                ) const override;
+
+                std::string GetProviderType(void) const override;
 
             private:
                 

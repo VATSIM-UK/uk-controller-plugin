@@ -10,22 +10,22 @@ namespace UKControllerPlugin {
     namespace Dependency {
 
         // Holds
-        const DependencyData DependencyConfig::holds = {
-            "holds",
+        const DependencyData DependencyConfig::holds {
             "dependencies/holds.json",
-            "[]"_json
+            "holds",
+            "[]"
         };
 
-        const DependencyData DependencyConfig::genericHoldProfiles = {
-            "hold/profile",
+        const DependencyData DependencyConfig::genericHoldProfiles {
             "dependencies/generic-hold-profiles.json",
-            "[]"_json
+            "hold/profile",
+            "[]"
         };
 
-        const DependencyData DependencyConfig::userHoldProfiles = {
-            "hold/profile/user",
+        const DependencyData DependencyConfig::userHoldProfiles {
             "dependencies/user-hold-profiles.json",
-            "[]"_json
+            "hold/profile/user",
+            "[]"
         };
     }  // namespace Dependency
 }  // namespace UKControllerPlugin

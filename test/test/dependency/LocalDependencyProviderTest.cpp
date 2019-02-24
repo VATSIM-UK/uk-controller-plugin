@@ -27,6 +27,11 @@ namespace UKControllerPluginTest {
                 LocalDependencyProvider provider;
         };
 
+        TEST_F(LocalDependencyProviderTest, ItHasAProviderType)
+        {
+            EXPECT_EQ("LocalDependencyProvider", provider.GetProviderType());
+        }
+
         TEST_F(LocalDependencyProviderTest, ReturnsDefaultIfNoFileExists)
         {
             ON_CALL(this->mockWinApi, FileExists("localpath"))

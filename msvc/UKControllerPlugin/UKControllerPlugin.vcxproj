@@ -74,8 +74,8 @@
     <ClInclude Include="..\..\src\dependency\DependencyCache.h" />
     <ClInclude Include="..\..\src\dependency\DependencyCacheFactory.h" />
     <ClInclude Include="..\..\src\dependency\DependencyConfig.h" />
+    <ClInclude Include="..\..\src\dependency\DependencyProviderFactory.h" />
     <ClInclude Include="..\..\src\dependency\DependencyProviderInterface.h" />
-    <ClInclude Include="..\..\src\dependency\LoadNewDependencies.h" />
     <ClInclude Include="..\..\src\dependency\LocalDependencyProvider.h" />
     <ClInclude Include="..\..\src\dependency\LocalFileUpdater.h" />
     <ClInclude Include="..\..\src\dependency\DependencyData.h" />
@@ -293,7 +293,7 @@
     <ClCompile Include="..\..\src\dependency\DependencyCache.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyCacheFactory.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyConfig.cpp" />
-    <ClCompile Include="..\..\src\dependency\LoadNewDependencies.cpp" />
+    <ClCompile Include="..\..\src\dependency\DependencyProviderFactory.cpp" />
     <ClCompile Include="..\..\src\dependency\LocalDependencyProvider.cpp" />
     <ClCompile Include="..\..\src\dependency\LocalFileUpdater.cpp" />
     <ClCompile Include="..\..\src\dialog\CompareDialogs.cpp" />

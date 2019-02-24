@@ -16,7 +16,12 @@ namespace UKControllerPlugin {
                 */
                 virtual nlohmann::json GetDependency(
                     UKControllerPlugin::Dependency::DependencyData dependency
-                ) = 0;
+                ) const = 0;
+
+                /*
+                    Returns the type of provider
+                */
+                virtual std::string GetProviderType(void) const = 0;
         };
 
     }  // namespace Dependency

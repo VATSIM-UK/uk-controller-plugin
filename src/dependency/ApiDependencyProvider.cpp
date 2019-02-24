@@ -22,7 +22,8 @@ namespace UKControllerPlugin {
             Get the dependency from the API and save it to the local filesystem. Use the local filesystem
             if the download fails.
         */
-        nlohmann::json ApiDependencyProvider::GetDependency(const DependencyData dependency) {
+        nlohmann::json ApiDependencyProvider::GetDependency(const DependencyData dependency) const 
+        {
             if (!windowsApi.FileExists(dependency.localPath)) {
                 LogInfo("Local dependency does not exist, creating file " + dependency.localPath);
                 windowsApi.WriteToFile(dependency.localPath, dependency.defaultValue.dump(), true);
@@ -51,6 +52,14 @@ namespace UKControllerPlugin {
 
             LogInfo("Updated dependency " + dependency.localPath);
             return dependencyData;
+        }
+
+        /*
+            Return the provider type
+        */
+        std::string ApiDependencyProvider::GetProviderType(void) const
+        {
+            return "ApiDependencyProvider";
         }
     }  // namespace Dependency
 }  // namespace UKControllerPlugin

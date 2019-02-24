@@ -17,7 +17,8 @@ namespace UKControllerPlugin {
         /*
             Return a dependency from the local filesystem
         */
-        nlohmann::json LocalDependencyProvider::GetDependency(const DependencyData dependency) {
+        nlohmann::json LocalDependencyProvider::GetDependency(const DependencyData dependency) const
+        {
             if (!windowsApi.FileExists(dependency.localPath)) {
                 LogWarning("Local dependency file does not exist, loading default " + dependency.localPath);
                 return dependency.defaultValue;
@@ -29,6 +30,14 @@ namespace UKControllerPlugin {
                 LogInfo("Local dependency invalid, loading default " + dependency.localPath);
                 return dependency.defaultValue;
             }
+        }
+
+        /*
+            Return the provider type
+        */
+        std::string LocalDependencyProvider::GetProviderType(void) const
+        {
+            return "LocalDependencyProvider";
         }
     }  // namespace Dependency
 }  // namespace UKControllerPlugin
