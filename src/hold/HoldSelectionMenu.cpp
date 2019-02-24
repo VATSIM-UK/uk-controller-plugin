@@ -76,7 +76,7 @@ namespace UKControllerPlugin {
                 it != this->menuHolds.cend();
                 ++it
             ) {
-                ManagedHold * hold = this->holdManager.GetManagedHold(*it);
+                const ManagedHold * hold = this->holdManager.GetManagedHold(*it);
                 if (!hold) {
                     LogWarning("Tried to add invalid hold to hold selection: " + std::to_string(*it));
                     continue;

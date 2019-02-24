@@ -599,6 +599,9 @@
     <ClCompile Include="..\..\test\test\dependency\DependencyProviderFactoryTest.cpp">
       <Filter>test\dependency</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldingDataSerializerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -698,9 +701,6 @@
     <ClInclude Include="..\..\test\helper\TestEnvironment.h">
       <Filter>helper</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\test\hold\HoldElementDimensionsTest.h">
-      <Filter>test\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h">
       <Filter>mock</Filter>
     </ClInclude>
@@ -709,6 +709,9 @@
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockDependencyProvider.h">
       <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\test\hold\HoldElementDimensionsTest.cpp">
+      <Filter>test\hold</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

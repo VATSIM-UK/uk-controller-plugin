@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/stdafx.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -9,13 +8,13 @@ namespace UKControllerPlugin {
         */
         typedef struct HoldingData
         {
-            const unsigned int identifier;
-            const std::string fix;
-            const std::string description;
-            const unsigned int minimum;
-            const unsigned int maximum;
-            const unsigned int inbound;
-            const unsigned int turnDirection;
+            unsigned int identifier;
+            std::string fix;
+            std::string description;
+            unsigned int minimum;
+            unsigned int maximum;
+            unsigned int inbound;
+            std::string turnDirection;
 
             /*
                 Compare two holds
@@ -25,9 +24,8 @@ namespace UKControllerPlugin {
                 return this->identifier == compare.identifier;
             }
 
-            static const unsigned int TURN_DIRECTION_LEFT = 0;
-            static const unsigned int TURN_DIRECTION_RIGHT = 1;
+            static const std::string TURN_DIRECTION_LEFT;
+            static const std::string TURN_DIRECTION_RIGHT;
         } HoldingData;
-
     }  // namespace Hold
 }  // namespace UKControllerPlugin

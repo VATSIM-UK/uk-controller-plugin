@@ -801,6 +801,9 @@
     <ClInclude Include="..\..\src\dependency\DependencyProviderFactory.h">
       <Filter>src\dependency</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldingDataSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1353,6 +1356,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\dependency\DependencyProviderFactory.cpp">
       <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldingData.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldingDataSerializer.cpp">
+      <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

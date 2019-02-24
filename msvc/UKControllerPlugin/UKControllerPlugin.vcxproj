@@ -138,6 +138,7 @@
     <ClInclude Include="..\..\src\hold\HoldEventHandler.h" />
     <ClInclude Include="..\..\src\hold\HoldingAircraft.h" />
     <ClInclude Include="..\..\src\hold\HoldingData.h" />
+    <ClInclude Include="..\..\src\hold\HoldingDataSerializer.h" />
     <ClInclude Include="..\..\src\hold\HoldManager.h" />
     <ClInclude Include="..\..\src\hold\HoldModule.h" />
     <ClInclude Include="..\..\src\hold\HoldSelectionMenu.h" />
@@ -336,6 +337,8 @@
     <ClCompile Include="..\..\src\hold\HoldDisplay.cpp" />
     <ClCompile Include="..\..\src\hold\HoldDisplayFunctions.cpp" />
     <ClCompile Include="..\..\src\hold\HoldEventHandler.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldingData.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldingDataSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldManager.cpp" />
     <ClCompile Include="..\..\src\hold\HoldModule.cpp" />
     <ClCompile Include="..\..\src\hold\HoldSelectionMenu.cpp" />

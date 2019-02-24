@@ -21,7 +21,7 @@ namespace UKControllerPluginTest {
 
                 }
 
-                const UKControllerPlugin::Hold::HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, 0 };
+                const HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
                 UKControllerPlugin::Hold::ManagedHold hold;
                 const UKControllerPlugin::Hold::HoldingAircraft aircraft = {
                     "BAW123",
@@ -69,13 +69,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(ManagedHoldTest, EqualityReturnsTrueIfSameIdentifiers)
         {
-            ManagedHold hold2({ 1, "NOT TIMBA", "TIMBA", 8000, 15000, 209, 0 });
+            ManagedHold hold2({ 1, "NOT TIMBA", "TIMBA", 8000, 15000, 209, "left" });
             EXPECT_TRUE(this->hold == hold2);
         }
 
         TEST_F(ManagedHoldTest, EqualityReturnsFalseIfDifferentIdentifiers)
         {
-            ManagedHold hold2({ 2, "TIMBA", "TIMBA", 8000, 15000, 209, 0 });
+            ManagedHold hold2({ 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left" });
             EXPECT_FALSE(this->hold == hold2);
         }
 

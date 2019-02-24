@@ -41,7 +41,7 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return(300));
                 }
 
-                const UKControllerPlugin::Hold::HoldingData hold1 = { 1, "WILLO", "WILLO", 8000, 15000, 209, 0 };
+                const UKControllerPlugin::Hold::HoldingData hold1 = { 1, "WILLO", "WILLO", 8000, 15000, 209, "left" };
                 NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
@@ -56,7 +56,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, ItAddsAHold)
         {
-            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, 0 };
+            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
             this->manager.AddHold(hold2);
             EXPECT_EQ(2, this->manager.CountHolds());
         }
@@ -92,7 +92,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, AddingAircraftToOneHoldRemovesFromAnother)
         {
-            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, 0 };
+            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
             this->manager.AddHold(hold2);
             this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
             EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
@@ -113,7 +113,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, ItRemovesAnAircraftFromAnyHold)
         {
-            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, 0 };
+            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
             this->manager.AddHold(hold2);
             manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
             EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));

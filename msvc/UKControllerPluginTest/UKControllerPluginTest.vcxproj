@@ -108,6 +108,7 @@
     <ClCompile Include="..\..\test\test\hold\HoldDisplayFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldingAircraftTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\HoldingDataSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldingDataTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldModuleTest.cpp" />
@@ -229,7 +230,7 @@
     <ClCompile Include="..\..\test\test\bootstrap\LocateApiSettingsTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\DuplicatePluginTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp" />
-    <ClInclude Include="..\..\test\test\hold\HoldElementDimensionsTest.h" />
+    <ClInclude Include="..\..\test\test\hold\HoldElementDimensionsTest.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3C70CD05-DD99-406E-85AF-2A966B9CC675}</ProjectGuid>

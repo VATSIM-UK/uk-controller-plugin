@@ -89,7 +89,7 @@ namespace UKControllerPlugin {
         /*
             Return one of the managed holds
         */
-        UKControllerPlugin::Hold::ManagedHold * const HoldManager::GetManagedHold(unsigned int holdId) const
+        const UKControllerPlugin::Hold::ManagedHold * const HoldManager::GetManagedHold(unsigned int holdId) const
         {
             auto managedHold = this->holdData.find(holdId);
             if (managedHold == this->holdData.cend()) {

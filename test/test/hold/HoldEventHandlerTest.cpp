@@ -83,7 +83,7 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return(this->mockRadarTarget));
                 }
 
-                const UKControllerPlugin::Hold::HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, 0 };
+                const HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
                 std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplan;
                 std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;

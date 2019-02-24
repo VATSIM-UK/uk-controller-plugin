@@ -46,9 +46,9 @@ namespace UKControllerPluginTest {
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 HoldManager holdManager;
                 HoldSelectionMenu holdSelectionMenu;
-                HoldingData holdData = { 1, "TIMBA", "TIMBA", 7000, 15000, 309, 1 };
-                HoldingData holdData2 = { 2, "WILLO", "WILLO", 7000, 15000, 309, 1 };
-                HoldingData holdData3 = { 3, "MAY", "MAY", 7000, 15000, 309, 1 };
+                HoldingData holdData = { 1, "TIMBA", "TIMBA", 7000, 15000, 309, "left" };
+                HoldingData holdData2 = { 2, "WILLO", "WILLO", 7000, 15000, 309, "left" };
+                HoldingData holdData3 = { 3, "MAY", "MAY", 7000, 15000, 309, "left" };
         };
 
         TEST_F(HoldSelectionMenuTest, ItStartsWithNoHolds)
