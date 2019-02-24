@@ -1,5 +1,8 @@
 #include "pch/stdafx.h"
 #include "hold/HoldConfigurationDialog.h"
+#include "hold/HoldDisplayFunctions.h"
+
+using UKControllerPlugin::Hold::ConvertToTchar;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -36,6 +39,41 @@ namespace UKControllerPlugin {
         LRESULT HoldConfigurationDialog::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             switch (msg) {
+                // Initialise
+                case WM_INITDIALOG: {
+
+                    // Load the holds
+                    SendDlgItemMessage(
+                        hwnd,
+                        IDC_HOLD_SELECTOR,
+                        CB_SETMINVISIBLE,
+                        10,
+                        0
+                    );
+                    for (
+                        std::set<HoldingData>::const_iterator it = this->holds.cbegin();
+                        it != this->holds.cend();
+                        ++it
+                    ) {
+                        SendDlgItemMessage(
+                            hwnd,
+                            IDC_HOLD_SELECTOR,
+                            CB_ADDSTRING,
+                            0,
+                            reinterpret_cast<LPARAM>(ConvertToTchar(it->description))
+                        );
+                    }
+
+                    SendDlgItemMessage(
+                        hwnd,
+                        IDC_HOLD_SELECTOR,
+                        CB_SETCURSEL,
+                        0,
+                        0
+                    );
+
+                    return TRUE;
+                };
                 // Buttons pressed
                 case WM_COMMAND: {
                     switch (LOWORD(wParam)) {

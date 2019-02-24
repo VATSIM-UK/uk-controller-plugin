@@ -34,11 +34,12 @@
 #define IDC_MIN_FILTER_LABEL            1021
 #define GS_DIALOG_IA_CHECK              1022
 #define GS_DIALOG_SQUAWK_CHECK          1023
-#define IDC_HOLD_SELECT                 1024
+#define IDC_HOLD_PROFILE_SELECT         1024
 #define IDC_HOLD_PROFILE_SELECT_LABEL   1025
 #define IDC_HOLD_SELECT_LOAD            1026
 #define IDC_HOLD_SELECT_SAVE            1027
 #define IDC_COMBO3                      1030
+#define IDC_HOLD_SELECTOR               1030
 #define IDC_HOLD_OPEN                   1031
 #define IDC_BUTTON4                     1032
 #define HOLD_SELECTOR_OK                1033
