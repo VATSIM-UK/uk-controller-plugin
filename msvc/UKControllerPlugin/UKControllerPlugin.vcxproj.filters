@@ -735,9 +735,6 @@
     <ClInclude Include="..\..\src\hold\HoldDisplay.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldDependency.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldWindowManager.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -1310,9 +1307,6 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldDisplay.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldDependency.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldWindowManager.cpp">

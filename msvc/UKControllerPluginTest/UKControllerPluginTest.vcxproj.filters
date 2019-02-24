@@ -545,9 +545,6 @@
     <ClCompile Include="..\..\test\test\hold\HoldDisplayFunctionsTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldDependencyTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp">
       <Filter>test\euroscope</Filter>
     </ClCompile>
