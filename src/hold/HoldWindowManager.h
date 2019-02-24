@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Hold::HoldManager & holdManager,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
                 );
-                void AddWindow(void);
+                void AddWindow(unsigned int holdId);
                 size_t CountDisplays(void) const;
                 void RefreshWindows(void) const;
 

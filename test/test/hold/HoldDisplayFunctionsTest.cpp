@@ -1,8 +1,12 @@
 #include "pch/pch.h"
 #include "hold/HoldDisplayFunctions.h"
 #include "hold/HoldElementDimensions.h"
+#include "hold/HoldingData.h"
+#include "hold/CompareHolds.h"
 
 using UKControllerPlugin::Hold::HoldElementDimensions;
+using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Hold::CompareHolds;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -10,6 +14,11 @@ namespace UKControllerPluginTest {
         TEST(HoldDisplayFunctionsTest, ConvertToTcharConvertsString)
         {
             EXPECT_EQ(0, _tcscmp(L"thisisatest", UKControllerPlugin::Hold::ConvertToTchar("thisisatest")));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ConverFromTcharConvertsToString)
+        {
+            EXPECT_TRUE("thisisatest" == UKControllerPlugin::Hold::ConvertFromTchar(L"thisisatest"));
         }
 
         TEST(HoldDisplayFunctionsTest, ConvertToTcharConvertsInt)

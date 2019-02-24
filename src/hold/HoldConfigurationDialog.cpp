@@ -1,13 +1,16 @@
 #include "pch/stdafx.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "hold/HoldDisplayFunctions.h"
+#include "hold/HoldWindowManager.h"
 
 using UKControllerPlugin::Hold::ConvertToTchar;
+using UKControllerPlugin::Hold::HoldWindowManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
-        HoldConfigurationDialog::HoldConfigurationDialog()
+        HoldConfigurationDialog::HoldConfigurationDialog(HoldWindowManager & windowManager)
+            : windowManager(windowManager)
         {
         }
 
@@ -55,6 +58,7 @@ namespace UKControllerPlugin {
                         it != this->holds.cend();
                         ++it
                     ) {
+                        HoldingData data = *it;
                         SendDlgItemMessage(
                             hwnd,
                             IDC_HOLD_SELECTOR,
@@ -80,6 +84,20 @@ namespace UKControllerPlugin {
                         case HOLD_SELECTOR_OK: {
                             // OK clicked, close the window
                             EndDialog(hwnd, wParam);
+                            return TRUE;
+                        }
+                        case IDC_HOLD_OPEN: {
+                            // They want to open a hold
+                            int selectedIndex =  SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_SELECTOR,
+                                CB_GETCURSEL,
+                                0,
+                                0
+                            );
+                            std::set<HoldingData, CompareHoldsDescription>::iterator it = this->holds.cbegin();
+                            std::advance(it, selectedIndex);
+                            this->windowManager.AddWindow(it->identifier);
                             return TRUE;
                         }
                     }

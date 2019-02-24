@@ -27,9 +27,19 @@ namespace UKControllerPlugin {
 
         }
 
-        void HoldWindowManager::AddWindow(void)
+        /*
+            Add a window.
+        */
+        void HoldWindowManager::AddWindow(unsigned int holdId)
         {
-            this->holdDisplays.emplace_back(euroscopeWindow, dllInstance, *this->holdManager.GetManagedHold(1));
+            const ManagedHold * managedHold = this->holdManager.GetManagedHold(holdId);
+
+            if (!managedHold) {
+                LogError("Tried to open hold display for unknown hold " + std::to_string(holdId));
+                return;
+            }
+
+            this->holdDisplays.emplace_back(euroscopeWindow, dllInstance, *managedHold);
         }
 
         size_t HoldWindowManager::CountDisplays(void) const

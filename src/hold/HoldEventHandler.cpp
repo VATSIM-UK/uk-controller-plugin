@@ -97,7 +97,7 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            this->holdManagerWindow.AddWindow();
+            //this->holdManagerWindow.AddWindow();
             return true;
         }
 

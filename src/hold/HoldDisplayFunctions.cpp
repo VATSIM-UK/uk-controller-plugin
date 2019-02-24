@@ -17,6 +17,11 @@ namespace UKControllerPlugin {
         */
         const unsigned int minimumVerticalSpeed = 300;
 
+        /*
+            The value to return when a hold id cannot be found by searching.
+        */
+        const unsigned int holdIdNotFound = 0;
+
 
         /*
             Converts a C++ string to TCHAR so that we can use it in displays.
@@ -35,6 +40,15 @@ namespace UKControllerPlugin {
         TCHAR * ConvertToTchar(int value)
         {
             return ConvertToTchar(std::to_string(value));
+        }
+
+        /*
+            Convert from TCHAR to a standard string.
+        */
+        std::string ConvertFromTchar(TCHAR * string)
+        {
+            std::wstring wstring(string);
+            return std::string(wstring.cbegin(), wstring.cend());
         }
 
         /*

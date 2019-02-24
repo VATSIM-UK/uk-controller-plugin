@@ -1,6 +1,12 @@
 #pragma once
 #include "hold/HoldingData.h"
-#include "hold/CompareHolds.h"
+#include "hold/CompareHoldsDescription.h"
+
+namespace UKControllerPlugin {
+    namespace Hold {
+        class HoldWindowManager;
+    }  // namespace Hold
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -13,7 +19,7 @@ namespace UKControllerPlugin {
         class HoldConfigurationDialog
         {
             public:
-                HoldConfigurationDialog();
+                HoldConfigurationDialog(UKControllerPlugin::Hold::HoldWindowManager & windowManager);
                 bool AddHold(UKControllerPlugin::Hold::HoldingData hold);
                 size_t CountHolds(void) const;
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -22,8 +28,14 @@ namespace UKControllerPlugin {
 
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+                // Manages hold windows
+                UKControllerPlugin::Hold::HoldWindowManager & windowManager;
+
                 // The holds.
-                std::set<UKControllerPlugin::Hold::HoldingData, UKControllerPlugin::Hold::CompareHolds> holds;
+                std::set<
+                    UKControllerPlugin::Hold::HoldingData,
+                    UKControllerPlugin::Hold::CompareHoldsDescription
+                > holds;
         };
 
     }  // namespace Hold

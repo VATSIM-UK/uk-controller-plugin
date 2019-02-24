@@ -1,9 +1,15 @@
 #include "pch/pch.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "hold/HoldingData.h"
+#include "hold/HoldWindowManager.h"
+#include "hold/HoldManager.h"
+#include "mock/MockEuroscopePluginLoopbackInterface.h"
 
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Hold::HoldWindowManager;
+using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using ::testing::Return;
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -14,6 +20,15 @@ namespace UKControllerPluginTest {
         class HoldConfigurationDialogTest : public Test
         {
             public:
+                HoldConfigurationDialogTest()
+                    : windowManager(NULL, NULL, holdmanager, mockPlugin), dialog(windowManager)
+                {
+
+                }
+
+                NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+                HoldManager holdmanager;
+                HoldWindowManager windowManager;
                 HoldConfigurationDialog dialog;
         };
 

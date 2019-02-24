@@ -4,6 +4,7 @@
 #include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "hold/HoldingData.h"
+#include "hold/HoldWindowManager.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -11,9 +12,11 @@ namespace UKControllerPlugin {
         /*
             Create a hold configuration dialog from data
         */
-        std::shared_ptr<HoldConfigurationDialog> CreateHoldConfigurationDialog(nlohmann::json data)
-        {
-            std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>();
+        std::shared_ptr<HoldConfigurationDialog> CreateHoldConfigurationDialog(
+            nlohmann::json data,
+            HoldWindowManager & windowManager
+        ) {
+            std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(windowManager);
 
             // If not object, nothing to do
             if (!data.is_array()) {

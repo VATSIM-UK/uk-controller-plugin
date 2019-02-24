@@ -69,18 +69,6 @@ namespace UKControllerPlugin {
             nlohmann::json holdDependency = dependencyProvider.GetDependency(DependencyConfig::holds);
             container.holdManager = CreateHoldManager(holdDependency);
 
-            // Create the hold dialog and add to the manager
-            std::shared_ptr<HoldConfigurationDialog> dialog = CreateHoldConfigurationDialog(holdDependency);
-            container.dialogManager->AddDialog(
-                {
-                    HOLD_SELECTOR_DIALOG,
-                    "Hold Configuration",
-                    reinterpret_cast<DLGPROC>(dialog->WndProc),
-                    reinterpret_cast<LPARAM>(dialog.get()),
-                    dialog
-                }
-            );
-
             // Create the object to manage the popup menu
             int holdSelectionCancelId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             container.holdSelectionMenu = std::make_shared<HoldSelectionMenu>(
@@ -133,10 +121,8 @@ namespace UKControllerPlugin {
                 container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
                 i++;
             }
-            container.holdSelectionMenu->AddHoldToMenu(1);
-            container.holdSelectionMenu->AddHoldToMenu(2);
 
-            // Create the event handler and register
+            // Create the window manager
             container.holdWindows = std::make_unique<HoldWindowManager>(
                 GetActiveWindow(),
                 container.windows->GetDllInstance(),
@@ -144,6 +130,22 @@ namespace UKControllerPlugin {
                 *container.plugin
             );
 
+            // Create the hold dialog and add to the manager
+            std::shared_ptr<HoldConfigurationDialog> dialog = CreateHoldConfigurationDialog(
+                holdDependency,
+                *container.holdWindows
+            );
+            container.dialogManager->AddDialog(
+                {
+                    HOLD_SELECTOR_DIALOG,
+                    "Hold Configuration",
+                    reinterpret_cast<DLGPROC>(dialog->WndProc),
+                    reinterpret_cast<LPARAM>(dialog.get()),
+                    dialog
+                }
+            );
+
+            // Create the event handler and register
             eventHandler = std::make_shared<HoldEventHandler>(
                 *container.holdManager,
                 *container.plugin,
