@@ -587,6 +587,15 @@
     <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp">
       <Filter>test\dialog</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\LocalDependencyProviderTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\ApiDependencyProviderTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\DependencyDataTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

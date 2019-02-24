@@ -517,5 +517,20 @@ TEST_F(ApiHelperTest, ItHasAnApiKeyToUseForAuthentication)
     EXPECT_TRUE(this->helper.GetApiKey() == mockApiKey);
 }
 
+TEST_F(ApiHelperTest, GetDependencyReturnsJsonData)
+{
+    nlohmann::json data;
+    data["foo"] = "bar";
+    data["big"] = "small";
+
+    CurlResponse response(data.dump(), false, 200);
+    CurlRequest expectedRequest(GetApiCurlRequest("/dependency/somecoolthing", CurlRequest::METHOD_GET));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(data, this->helper.GetDependency({"local", "dependency/somecoolthing", "default"}));
+}
 }  // namespace Api
 }  // namespace UKControllerPluginTest

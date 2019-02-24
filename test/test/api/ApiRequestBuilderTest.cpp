@@ -1,9 +1,11 @@
 #include "pch/pch.h"
 #include "api/ApiRequestBuilder.h"
 #include "curl/CurlRequest.h"
+#include "dependency/DependencyData.h"
 
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::Dependency::DependencyData;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
@@ -170,6 +172,16 @@ namespace UKControllerPluginTest {
             ids.insert(1);
             ids.insert(2);
             EXPECT_TRUE(expectedRequest == this->builder.BuildUpdateUserHoldProfileRequest(1, "Test", ids));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsHoldDependencyRequests)
+        {
+            CurlRequest expectedRequest("http://testurl.com/dependency/somecoolthing", CurlRequest::METHOD_GET);
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+
+            DependencyData dependency = { "localpath", "dependency/somecoolthing", "default" };
+            EXPECT_TRUE(expectedRequest == this->builder.BuildDependencyRequest(dependency));
         }
     }  // namespace Api
 }  // namespace UKControllerPluginTest

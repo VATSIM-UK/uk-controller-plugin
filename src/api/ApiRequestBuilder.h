@@ -1,6 +1,6 @@
 #pragma once
-
 #include "curl/CurlRequest.h"
+#include "dependency/DependencyData.h"
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -15,6 +15,9 @@ namespace UKControllerPlugin {
                 ApiRequestBuilder(std::string apiDomain, std::string apiKey);
                 UKControllerPlugin::Curl::CurlRequest BuildAuthCheckRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildDependencyListRequest(void) const;
+                UKControllerPlugin::Curl::CurlRequest BuildDependencyRequest(
+                    UKControllerPlugin::Dependency::DependencyData dependency
+                ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildSquawkAssignmentCheckRequest(std::string callsign) const;
                 UKControllerPlugin::Curl::CurlRequest BuildSquawkAssignmentDeletionRequest(std::string callsign) const;
                 UKControllerPlugin::Curl::CurlRequest BuildLocalSquawkAssignmentRequest(

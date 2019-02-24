@@ -786,6 +786,21 @@
     <ClInclude Include="..\..\src\dialog\DialogProviderInterface.h">
       <Filter>src\dialog</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyProviderInterface.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\ApiDependencyProvider.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyConfig.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\LocalDependencyProvider.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyData.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1329,6 +1344,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\dialog\CompareDialogs.cpp">
       <Filter>src\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\ApiDependencyProvider.cpp">
+      <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\DependencyConfig.cpp">
+      <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\LocalDependencyProvider.cpp">
+      <Filter>src\dependency</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

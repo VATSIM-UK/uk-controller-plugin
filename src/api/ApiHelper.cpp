@@ -23,6 +23,7 @@ using UKControllerPlugin::Squawk::SquawkValidator;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Api::RemoteFileManifestFactory;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
+using UKControllerPlugin::Dependency::DependencyData;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -227,6 +228,14 @@ namespace UKControllerPlugin {
         nlohmann::json ApiHelper::GetUserHoldProfiles(void) const
         {
             return this->MakeApiRequest(this->requestBuilder.BuildUserHoldProfilesRequest()).GetRawData();
+        }
+
+        /*
+            Get a dependency from the API
+        */
+        nlohmann::json ApiHelper::GetDependency(DependencyData dependency) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildDependencyRequest(dependency)).GetRawData();
         }
 
         /*
