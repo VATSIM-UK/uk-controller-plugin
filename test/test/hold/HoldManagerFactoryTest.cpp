@@ -1,10 +1,10 @@
 #include "pch/pch.h"
-#include "hold/BuildHoldingData.h"
+#include "hold/HoldManagerFactory.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldingData.h"
 #include "hold/ManagedHold.h"
 
-using UKControllerPlugin::Hold::BuildHoldingData;
+using UKControllerPlugin::Hold::CreateHoldManager;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::ManagedHold;
 
@@ -14,7 +14,7 @@ namespace UKControllerPluginTest {
         TEST(BuildHoldingDataTest, ItReturnsEmptyIfDataNotObject)
         {
             nlohmann::json data = "[]"_json;
-            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
+            EXPECT_EQ(0, CreateHoldManager(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItAddsHoldsWithData)
@@ -38,7 +38,7 @@ namespace UKControllerPluginTest {
             hold2["turn_direction"] = "left";
 
             data = { hold1, hold2 };
-            EXPECT_EQ(2, BuildHoldingData(data)->CountHolds());
+            EXPECT_EQ(2, CreateHoldManager(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddNonObjects)
@@ -46,7 +46,7 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data = { "Test" };
 
-            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
+            EXPECT_EQ(0, CreateHoldManager(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, ItDoesntAddInvalidData)
@@ -62,7 +62,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, BuildHoldingData(data)->CountHolds());
+            EXPECT_EQ(0, CreateHoldManager(data)->CountHolds());
         }
 
         TEST(BuildHoldingDataTest, TheHoldStartsempty)
@@ -78,7 +78,7 @@ namespace UKControllerPluginTest {
             hold["turn_direction"] = "right";
 
             data = nlohmann::json::array({ hold });
-            EXPECT_EQ(0, BuildHoldingData(data)->GetManagedHold(1)->CountHoldingAircraft());
+            EXPECT_EQ(0, CreateHoldManager(data)->GetManagedHold(1)->CountHoldingAircraft());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

@@ -1,5 +1,5 @@
 #include "pch/stdafx.h"
-#include "hold/BuildHoldingData.h"
+#include "hold/HoldManagerFactory.h"
 #include "hold/ManagedHold.h"
 #include "hold/HoldingDataSerializer.h"
 using UKControllerPlugin::Hold::HoldManager;
@@ -8,9 +8,9 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         /*
-            Convert JSON data into a collection of holds.
+            Create a hold manager from JSON.
         */
-        std::unique_ptr<HoldManager> BuildHoldingData(nlohmann::json data)
+        std::unique_ptr<HoldManager> CreateHoldManager(nlohmann::json data)
         {
             std::unique_ptr<HoldManager> holdManager = std::make_unique<HoldManager>();
 
@@ -24,14 +24,14 @@ namespace UKControllerPlugin {
             for (nlohmann::json::const_iterator it = data.cbegin(); it != data.cend(); ++it) {
                 HoldingData data = it->get<HoldingData>();
                 if (data == holdSerializerInvalid) {
-                    LogWarning("Invalid hold data detected: " + it->dump());
+                    LogWarning("Invalid hold data detected when building hold manager: " + it->dump());
                     continue;
                 }
 
                 holdManager->AddHold(ManagedHold(data));
             }
 
-            LogInfo("Added holding data for " + std::to_string(holdManager->CountHolds()) + " holds");
+            LogInfo("Created Hold Manager with " + std::to_string(holdManager->CountHolds()) + " holds");
             return holdManager;
         }
     }  // namespace Hold

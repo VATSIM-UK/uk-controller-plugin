@@ -711,9 +711,6 @@
     <ClInclude Include="..\..\src\hold\CompareHolds.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\BuildHoldingData.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldingAircraft.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -802,6 +799,9 @@
       <Filter>src\dependency</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldingDataSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldManagerFactory.h">
       <Filter>src\hold</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1291,9 +1291,6 @@
     <ClCompile Include="..\..\src\hold\CompareHolds.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\BuildHoldingData.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldManager.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
@@ -1361,6 +1358,9 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldingDataSerializer.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldManagerFactory.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>

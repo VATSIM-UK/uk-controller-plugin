@@ -2,7 +2,7 @@
 #include "hold/HoldModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyCache.h"
-#include "hold/BuildHoldingData.h"
+#include "hold/HoldManagerFactory.h"
 #include "hold/HoldEventHandler.h"
 #include "hold/HoldManager.h"
 #include "message/UserMessager.h"
@@ -20,6 +20,7 @@
 #include "hold/HoldConfigurationDialog.h"
 #include "dialog/DialogData.h"
 #include "dependency/DependencyConfig.h"
+#include "hold/HoldManagerFactory.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -30,8 +31,6 @@ using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
-using UKControllerPlugin::Hold::UpdateHoldDependency;
-using UKControllerPlugin::Hold::GetLocalHoldData;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Dependency::DependencyProviderInterface;
@@ -40,6 +39,7 @@ using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Dependency::DependencyConfig;
+using UKControllerPlugin::Hold::CreateHoldManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -65,7 +65,7 @@ namespace UKControllerPlugin {
             UserMessager & userMessages
         ) {
             // Update local dependencies and build hold data
-            container.holdManager = BuildHoldingData(dependencyProvider.GetDependency(DependencyConfig::holds));
+            container.holdManager = CreateHoldManager(dependencyProvider.GetDependency(DependencyConfig::holds));
 
             // Create the hold dialog and add to the manager
             std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(

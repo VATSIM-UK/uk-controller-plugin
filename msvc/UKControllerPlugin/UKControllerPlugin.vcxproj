@@ -127,7 +127,7 @@
     <ClInclude Include="..\..\src\historytrail\HistoryTrailModule.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailRenderer.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailRepository.h" />
-    <ClInclude Include="..\..\src\hold\BuildHoldingData.h" />
+    <ClInclude Include="..\..\src\hold\HoldManagerFactory.h" />
     <ClInclude Include="..\..\src\hold\CompareHoldingAircraft.h" />
     <ClInclude Include="..\..\src\hold\CompareHolds.h" />
     <ClInclude Include="..\..\src\hold\HoldConfigurationDialog.h" />
@@ -329,7 +329,7 @@
     <ClCompile Include="..\..\src\historytrail\HistoryTrailModule.cpp" />
     <ClCompile Include="..\..\src\historytrail\HistoryTrailRenderer.cpp" />
     <ClCompile Include="..\..\src\historytrail\HistoryTrailRepository.cpp" />
-    <ClCompile Include="..\..\src\hold\BuildHoldingData.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldManagerFactory.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHoldingAircraft.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHolds.cpp" />
     <ClCompile Include="..\..\src\hold\HoldConfigurationDialog.cpp" />

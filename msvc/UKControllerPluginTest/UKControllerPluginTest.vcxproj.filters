@@ -530,9 +530,6 @@
     <ClCompile Include="..\..\test\test\hold\CompareHoldsTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\BuildHoldingDataTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\hold\CompareHoldingAircraftTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
@@ -600,6 +597,9 @@
       <Filter>test\dependency</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\hold\HoldingDataSerializerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldManagerFactoryTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
   </ItemGroup>
