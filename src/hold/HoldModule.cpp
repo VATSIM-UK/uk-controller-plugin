@@ -14,11 +14,12 @@
 #include "hold/HoldDependency.h"
 #include "api/ApiHelper.h"
 #include "windows/WinApiInterface.h"
-#include "dependency/DependencyCache.h"
+#include "dependency/DependencyProviderInterface.h"
 #include "tag/TagFunction.h"
 #include "hold/HoldSelectionMenu.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "dialog/DialogData.h"
+#include "dependency/DependencyConfig.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -33,11 +34,12 @@ using UKControllerPlugin::Hold::UpdateHoldDependency;
 using UKControllerPlugin::Hold::GetLocalHoldData;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Windows::WinApiInterface;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Dependency::DependencyProviderInterface;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPlugin::Dependency::DependencyConfig;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -48,9 +50,6 @@ namespace UKControllerPlugin {
         // The id of the popup menu tag function
         const unsigned int popupMenuTagItemId = 9003;
 
-        // The file where the holds are stored locally
-        const std::string dependencyFile = "holds.json";
-
         // How often holds should be updated
         const int timedEventFrequency = 5;
 
@@ -58,27 +57,15 @@ namespace UKControllerPlugin {
         std::shared_ptr<HoldEventHandler> eventHandler;
 
         /*
-            Update and load the hold dependencies from the API
-        */
-        void LoadDependencies(
-            DependencyCache * const dependencies,
-            const ApiInterface & webApi, 
-            WinApiInterface & windowsApi
-        ) {
-            UpdateHoldDependency(webApi, windowsApi);
-            dependencies->AddJsonDependency(dependencyFile, GetLocalHoldData(windowsApi));
-        }
-
-        /*
             Bootstrap the module into the plugin
         */
         void BootstrapPlugin(
-            const DependencyCache & dependencies,
+            const DependencyProviderInterface & dependencyProvider,
             PersistenceContainer & container,
             UserMessager & userMessages
         ) {
             // Update local dependencies and build hold data
-            container.holdManager = BuildHoldingData(dependencies.GetJsonDependency(dependencyFile));
+            container.holdManager = BuildHoldingData(dependencyProvider.GetDependency(DependencyConfig::holds));
 
             // Create the hold dialog and add to the manager
             std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(

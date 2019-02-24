@@ -33,7 +33,8 @@
 #include "offblock/EstimatedDepartureTimeBootstrap.h"
 #include "wake/WakeModule.h"
 #include "hold/HoldModule.h"
-#include "dependency/LoadNewDependencies.h"
+#include "dependency/DependencyProviderInterface.h"
+#include "dependency/DependencyProviderFactory.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -65,7 +66,8 @@ using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Bootstrap::DuplicatePlugin;
 using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
-using UKControllerPlugin::Dependency::LoadNewDependencies;
+using UKControllerPlugin::Dependency::DependencyProviderInterface;
+using UKControllerPlugin::Dependency::GetDependencyProvider;
 
 namespace UKControllerPlugin {
 
@@ -179,7 +181,12 @@ namespace UKControllerPlugin {
         );
         
         // Load all the "new" dependencies that don't come from a manifest.
-        LoadNewDependencies(*this->container, &dependencyCache);
+        std::unique_ptr<DependencyProviderInterface> dependencyProvider = GetDependencyProvider(
+            *container->api,
+            *container->windows,
+            apiAuthorised
+        );
+        LogInfo("Loading new dependencies with provider " + dependencyProvider->GetProviderType());
 
         // Boostrap all the modules at a plugin level
         CollectionBootstrap::BootstrapPlugin(*this->container, dependencyCache);
@@ -202,7 +209,11 @@ namespace UKControllerPlugin {
             InitialAltitudeModule::BootstrapPlugin(dependencyCache, *this->container);
         }
 
-        UKControllerPlugin::Hold::BootstrapPlugin(dependencyCache, *this->container, *this->container->userMessager);
+        UKControllerPlugin::Hold::BootstrapPlugin(
+            *dependencyProvider,
+            *this->container,
+            *this->container->userMessager
+        );
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(this->container->countdownTimer, *this->container->windows);

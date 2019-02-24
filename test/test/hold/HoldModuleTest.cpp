@@ -11,19 +11,19 @@
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "command/CommandHandlerCollection.h"
 #include "mock/MockWinApi.h"
-#include "dependency/DependencyCache.h"
 #include "mock/MockApiInterface.h"
 #include "hold/ManagedHold.h"
 #include "tag/TagItemCollection.h"
 #include "dialog/DialogManager.h"
 #include "mock/MockDialogProvider.h"
+#include "mock/MockDependencyProvider.h"
+#include "dependency/DependencyConfig.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Hold::BootstrapPlugin;
 using UKControllerPlugin::Hold::BootstrapRadarScreen;
-using UKControllerPlugin::Hold::LoadDependencies;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -32,18 +32,19 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPluginTest::Dependency::MockDependencyProvider;
+using UKControllerPlugin::Dependency::DependencyConfig;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::_;
 
 namespace UKControllerPluginTest {
-    namespace Wake {
+    namespace Hold {
 
         class HoldModuleTest : public Test
         {
@@ -72,7 +73,9 @@ namespace UKControllerPluginTest {
                         { "inbound_heading", 309 },
                         { "turn_direction", "right" }
                     };
-                    loadedDependencies.AddJsonDependency("holds.json", nlohmann::json::array({ hold, hold2 }));
+
+                    ON_CALL(this->mockDependencyProvider, GetDependency(DependencyConfig::holds))
+                        .WillByDefault(Return(nlohmann::json::array({ hold, hold2 })));
 
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     this->container.timedHandler.reset(new TimedEventCollection);
@@ -88,70 +91,70 @@ namespace UKControllerPluginTest {
                 PersistenceContainer container;
                 UserMessager messager;
                 ConfigurableDisplayCollection configurableDisplays;
-                DependencyCache loadedDependencies;
                 NiceMock<MockApiInterface> mockWebApi;
                 NiceMock<MockWinApi> mockWinApi;
+                NiceMock<MockDependencyProvider> mockDependencyProvider;
         };
 
         TEST_F(HoldModuleTest, ItAddsToFlightplanHandler)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
         }
 
         TEST_F(HoldModuleTest, ItAddsToTagItemhandler)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(1, this->container.tagHandler->CountHandlers());
         }
 
         TEST_F(HoldModuleTest, ItAddsToTimedHandler)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
             EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(5));
         }
 
         TEST_F(HoldModuleTest, ItAddsToCommandHandlers)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
         }
 
         TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(4, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(2, this->container.holdManager->CountHolds());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldSelectionMenu)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(0, this->container.holdSelectionMenu->CountHolds());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldDisplays)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(0, this->container.holdWindows->CountDisplays());
         }
 
         TEST_F(HoldModuleTest, ItRegistersHoldConfigurationDialog)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(1, this->container.dialogManager->CountDialogs());
             EXPECT_TRUE(this->container.dialogManager->HasDialog(HOLD_SELECTOR_DIALOG));
         }
 
         TEST_F(HoldModuleTest, ItLoadsHoldData)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             HoldingData expectedHold = {
                 1,
                 "TIMBA",
@@ -167,7 +170,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldModuleTest, ItReportsNoHoldsToTheUser)
         {
-            DependencyCache noDependencies;
+            NiceMock<MockDependencyProvider> providerNoHolds;
+            ON_CALL(providerNoHolds, GetDependency(DependencyConfig::holds))
+                .WillByDefault(Return(nlohmann::json::array({})));
+
             EXPECT_CALL(
                 this->mockPlugin,
                 ChatAreaMessage(
@@ -183,38 +189,14 @@ namespace UKControllerPluginTest {
             )
                 .Times(1);
 
-            BootstrapPlugin(noDependencies, this->container, this->messager);
+            BootstrapPlugin(providerNoHolds, this->container, this->messager);
         }
 
         TEST_F(HoldModuleTest, ItAddsToConfigurableDisplays)
         {
-            BootstrapPlugin(this->loadedDependencies, this->container, this->messager);
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             BootstrapRadarScreen(this->configurableDisplays);
             EXPECT_EQ(1, this->configurableDisplays.CountDisplays());
-        }
-
-        TEST_F(HoldModuleTest, ItUpdatesAndLoadsDependencies)
-        {
-            DependencyCache newDependencies;
-
-            nlohmann::json depData;
-            depData["foo"] = "bar";
-
-            ON_CALL(this->mockWebApi, GetHoldDependency())
-                .WillByDefault(Return(depData));
-
-            EXPECT_CALL(this->mockWinApi, WriteToFile("dependencies/holds.json", depData.dump(), true))
-                .Times(1);
-
-            ON_CALL(this->mockWinApi, FileExists("dependencies/holds.json"))
-                .WillByDefault(Return(true));
-
-            ON_CALL(this->mockWinApi, ReadFromFileMock("dependencies/holds.json", true))
-                .WillByDefault(Return(depData.dump()));
-
-            LoadDependencies(&newDependencies, this->mockWebApi, this->mockWinApi);
-            EXPECT_EQ(1, newDependencies.JsonDependencyCount());
-            EXPECT_TRUE(depData == newDependencies.GetJsonDependency("holds.json"));
         }
     }  // namespace Wake
 }  // namespace UKControllerPluginTest

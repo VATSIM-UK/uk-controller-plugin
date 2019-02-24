@@ -15,7 +15,7 @@ namespace UKControllerPlugin {
         class FunctionCallEventHandler;
     }  // namespace Plugin
     namespace Dependency {
-        class DependencyCache;
+        class DependencyProviderInterface;
     }  // namespace Dependency
     namespace Api {
         class ApiInterface;
@@ -30,17 +30,10 @@ namespace UKControllerPlugin {
 
         extern const int selectedHoldTagItemId;
         extern const unsigned int popupMenuTagItemId;
-        extern const std::string dependencyFile;
         extern const int timedEventFrequency;
 
-        void LoadDependencies(
-            UKControllerPlugin::Dependency::DependencyCache * const dependencies,
-            const UKControllerPlugin::Api::ApiInterface & webApi,
-            UKControllerPlugin::Windows::WinApiInterface & windowsApi
-        );
-
         void BootstrapPlugin(
-            const UKControllerPlugin::Dependency::DependencyCache & dependencies,
+            const UKControllerPlugin::Dependency::DependencyProviderInterface & dependencyProvider,
             UKControllerPlugin::Bootstrap::PersistenceContainer & container,
             UKControllerPlugin::Message::UserMessager & userMessages
         );
