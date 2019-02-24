@@ -134,7 +134,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldingDataSerializerTest, ReturnsJsonFromHoldingData)
         {
-            HoldingData json = {
+            HoldingData holdingData = {
                 1,
                 "TIMBA",
                 "TIMBA LOW",
@@ -144,7 +144,7 @@ namespace UKControllerPluginTest {
                 "right"
             };
 
-            EXPECT_EQ(this->testData, nlohmann::json(json));
+            EXPECT_EQ(this->testData, nlohmann::json(holdingData));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

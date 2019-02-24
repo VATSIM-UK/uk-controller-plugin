@@ -36,7 +36,6 @@ namespace UKControllerPluginTest {
                 HoldConfigurationDialog dialog;
         };
 
-
         TEST_F(HoldConfigurationDialogTest, ItStartsEmpty)
         {
             EXPECT_EQ(0, this->dialog.CountHolds());
