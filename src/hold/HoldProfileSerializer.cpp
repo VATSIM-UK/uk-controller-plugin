@@ -15,8 +15,7 @@ namespace UKControllerPlugin {
             json = nlohmann::json { 
                 {"id", holdProfile.id},
                 {"name", holdProfile.name},
-                {"holds", holdProfile.holds},
-                {"user_profile", holdProfile.isUserProfile}
+                {"holds", holdProfile.holds}
             };
         }
 
@@ -58,8 +57,6 @@ namespace UKControllerPlugin {
                 data.at("id").is_number_integer() &&
                 data.find("name") != data.end() &&
                 data.at("name").is_string() &&
-                data.find("user_profile") != data.end() &&
-                data.at("user_profile").is_boolean() &&
                 data.find("holds") != data.end() &&
                 data.at("holds").is_array() &&
                 HoldIdsValid(data.at("holds"));

@@ -11,8 +11,7 @@ namespace UKControllerPlugin {
 
             // Holds
             static const DependencyData holds;
-            static const DependencyData genericHoldProfiles;
-            static const DependencyData userHoldProfiles;
+            static const DependencyData holdProfiles;
 
         } DependencyConfig;
     }  // namespace Dependency

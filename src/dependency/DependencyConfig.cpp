@@ -16,15 +16,9 @@ namespace UKControllerPlugin {
             "[]"
         };
 
-        const DependencyData DependencyConfig::genericHoldProfiles {
-            "dependencies/generic-hold-profiles.json",
+        const DependencyData DependencyConfig::holdProfiles {
+            "dependencies/hold-profiles.json",
             "hold/profile",
-            "[]"
-        };
-
-        const DependencyData DependencyConfig::userHoldProfiles {
-            "dependencies/user-hold-profiles.json",
-            "hold/profile/user",
             "[]"
         };
     }  // namespace Dependency

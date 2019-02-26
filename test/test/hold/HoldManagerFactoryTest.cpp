@@ -11,9 +11,15 @@ using UKControllerPlugin::Hold::ManagedHold;
 namespace UKControllerPluginTest {
     namespace Hold {
 
-        TEST(HoldManagerFactoryTest, ItReturnsEmptyIfDataNotObject)
+        TEST(HoldManagerFactoryTest, ItReturnsEmptyIfDataEmpty)
         {
             nlohmann::json data = "[]"_json;
+            EXPECT_EQ(0, CreateHoldManager(data)->CountHolds());
+        }
+
+        TEST(HoldManagerFactoryTest, ItReturnsEmptyIfDataNotArray)
+        {
+            nlohmann::json data = nlohmann::json::object();
             EXPECT_EQ(0, CreateHoldManager(data)->CountHolds());
         }
 
@@ -65,7 +71,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, CreateHoldManager(data)->CountHolds());
         }
 
-        TEST(HoldManagerFactoryTest, TheHoldStartsempty)
+        TEST(HoldManagerFactoryTest, TheHoldStartsEmpty)
         {
             nlohmann::json data;
             nlohmann::json hold;
