@@ -18,14 +18,15 @@ namespace UKControllerPlugin {
             // The holds that should be loaded in the profile.
             std::set<unsigned int> holds;
 
+            // Whether or not the profile is a users personal profile.
+            bool isUserProfile;
 
             /*
-                Equality
+                Equality - because these are going into combo boxes, we want
+                to check for equality based on name and id.
             */
             bool operator==(const HoldProfile & compare) const {
-                return this->id == compare.id &&
-                    this->name == compare.name &&
-                    this->holds == compare.holds;
+                return this->name == compare.name || this->id == compare.id;
             }
         } HoldProfile;
 

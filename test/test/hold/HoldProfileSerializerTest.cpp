@@ -18,6 +18,7 @@ namespace UKControllerPluginTest {
                     testData = {
                         {"id", 1},
                         {"name", "Some Super Cool Hold Profile"},
+                        {"user_profile", true},
                         {"holds", {1, 2, 3}}
                     };
                 }
@@ -54,6 +55,18 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(ProfileJsonValid(testData));
         }
 
+        TEST_F(HoldProfileSerializerTest, ValidJsonReturnsFalseNoUserProfile)
+        {
+            this->testData.erase("user_profile");
+            EXPECT_FALSE(ProfileJsonValid(testData));
+        }
+
+        TEST_F(HoldProfileSerializerTest, ValidJsonReturnsFalseUserProfileNotBoolean)
+        {
+            this->testData["user_profile"] = 123;
+            EXPECT_FALSE(ProfileJsonValid(testData));
+        }
+
         TEST_F(HoldProfileSerializerTest, ValidJsonReturnsFalseNoHolds)
         {
             this->testData.erase("holds");
@@ -83,7 +96,8 @@ namespace UKControllerPluginTest {
             HoldProfile expected = {
                 1,
                 "Some Super Cool Hold Profile",
-                {1, 2, 3}
+                {1, 2, 3},
+                true
             };
             EXPECT_EQ(expected, this->testData.get<HoldProfile>());
         }
@@ -93,7 +107,8 @@ namespace UKControllerPluginTest {
             HoldProfile profile = {
                 1,
                 "Some Super Cool Hold Profile",
-                {1, 2, 3}
+                {1, 2, 3},
+                true
             };
 
             EXPECT_EQ(this->testData, nlohmann::json(profile));

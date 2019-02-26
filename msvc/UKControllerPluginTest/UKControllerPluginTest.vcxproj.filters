@@ -614,6 +614,12 @@
     <ClCompile Include="..\..\test\test\hold\HoldProfileTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldProfileManagerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\CompareHoldProfileNameTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
