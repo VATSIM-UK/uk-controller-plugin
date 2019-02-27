@@ -43,6 +43,7 @@ namespace UKControllerPlugin {
                 );
 
                 try {
+                    LogInfo("Trying local dependency file");
                     return nlohmann::json::parse(windowsApi.ReadFromFile(dependency.localPath));
                 } catch (nlohmann::json::exception) {
                     LogError("Local data corrupt, returning default");

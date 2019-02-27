@@ -5,11 +5,13 @@
 #include "hold/HoldManager.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "hold/HoldSelectionMenu.h"
+#include "hold/HoldProfileManager.h"
 
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using ::testing::Return;
@@ -24,7 +26,7 @@ namespace UKControllerPluginTest {
             public:
                 HoldConfigurationDialogTest()
                     : windowManager(NULL, NULL, holdManager, mockPlugin), selectionMenu(holdManager, mockPlugin, 1),
-                    dialog(windowManager, selectionMenu)
+                    dialog(windowManager, selectionMenu, holdProfileManager)
                 {
 
                 }
@@ -34,6 +36,7 @@ namespace UKControllerPluginTest {
                 HoldWindowManager windowManager;
                 HoldSelectionMenu selectionMenu;
                 HoldConfigurationDialog dialog;
+                HoldProfileManager holdProfileManager;
         };
 
         TEST_F(HoldConfigurationDialogTest, ItStartsEmpty)

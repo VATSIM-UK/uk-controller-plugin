@@ -140,7 +140,8 @@ namespace UKControllerPlugin {
             std::shared_ptr<HoldConfigurationDialog> dialog = CreateHoldConfigurationDialog(
                 holdDependency,
                 *container.holdWindows,
-                *container.holdSelectionMenu
+                *container.holdSelectionMenu,
+                *container.holdProfiles
             );
             container.dialogManager->AddDialog(
                 {

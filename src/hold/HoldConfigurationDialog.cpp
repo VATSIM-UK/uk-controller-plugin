@@ -3,19 +3,23 @@
 #include "hold/HoldDisplayFunctions.h"
 #include "hold/HoldWindowManager.h"
 #include "hold/HoldSelectionMenu.h"
+#include "hold/HoldProfileManager.h"
 
 using UKControllerPlugin::Hold::ConvertToTchar;
 using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
+using UKControllerPlugin::Hold::HoldProfileManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
         HoldConfigurationDialog::HoldConfigurationDialog(
             HoldWindowManager & windowManager,
-            HoldSelectionMenu & holdSelectionMenu
+            HoldSelectionMenu & holdSelectionMenu,
+            HoldProfileManager & holdProfileManager
         )
-            : windowManager(windowManager), holdSelectionMenu(holdSelectionMenu)
+            : windowManager(windowManager), holdSelectionMenu(holdSelectionMenu),
+            holdProfileManager(holdProfileManager)
         {
 
         }
@@ -77,6 +81,36 @@ namespace UKControllerPlugin {
                     SendDlgItemMessage(
                         hwnd,
                         IDC_HOLD_SELECTOR,
+                        CB_SETCURSEL,
+                        0,
+                        0
+                    );
+
+                    // Load the hold profiles
+                    SendDlgItemMessage(
+                        hwnd,
+                        IDC_HOLD_PROFILE_SELECT,
+                        CB_SETMINVISIBLE,
+                        10,
+                        0
+                    );
+                    for (
+                        HoldProfileManager::HoldProfiles::const_iterator it = this->holdProfileManager.cbegin();
+                        it != this->holdProfileManager.cend();
+                        ++it
+                    ) {
+                        SendDlgItemMessage(
+                            hwnd,
+                            IDC_HOLD_PROFILE_SELECT,
+                            CB_ADDSTRING,
+                            0,
+                            reinterpret_cast<LPARAM>(ConvertToTchar(it->name))
+                        );
+                    }
+
+                    SendDlgItemMessage(
+                        hwnd,
+                        IDC_HOLD_PROFILE_SELECT,
                         CB_SETCURSEL,
                         0,
                         0

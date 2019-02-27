@@ -3,6 +3,7 @@
 #include "hold/HoldingDataSerializer.h"
 #include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldConfigurationDialog.h"
+#include "hold/HoldProfileManager.h"
 #include "hold/HoldingData.h"
 #include "hold/HoldWindowManager.h"
 #include "hold/HoldSelectionMenu.h"
@@ -16,11 +17,13 @@ namespace UKControllerPlugin {
         std::shared_ptr<HoldConfigurationDialog> CreateHoldConfigurationDialog(
             nlohmann::json data,
             HoldWindowManager & windowManager,
-            HoldSelectionMenu & holdSelectionMenu
+            HoldSelectionMenu & holdSelectionMenu,
+            HoldProfileManager & holdProfileManager
         ) {
             std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(
                 windowManager,
-                holdSelectionMenu
+                holdSelectionMenu,
+                holdProfileManager
             );
 
             // If not object, nothing to do

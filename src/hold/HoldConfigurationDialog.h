@@ -6,6 +6,7 @@ namespace UKControllerPlugin {
     namespace Hold {
         class HoldWindowManager;
         class HoldSelectionMenu;
+        class HoldProfileManager;
     }  // namespace Hold
 } // namespace UKControllerPlugin
 
@@ -22,7 +23,8 @@ namespace UKControllerPlugin {
             public:
                 HoldConfigurationDialog(
                     UKControllerPlugin::Hold::HoldWindowManager & windowManager,
-                    UKControllerPlugin::Hold::HoldSelectionMenu & holdSelectionMenu
+                    UKControllerPlugin::Hold::HoldSelectionMenu & holdSelectionMenu,
+                    UKControllerPlugin::Hold::HoldProfileManager & holdProfileManager
                 );
                 bool AddHold(UKControllerPlugin::Hold::HoldingData hold);
                 size_t CountHolds(void) const;
@@ -31,6 +33,9 @@ namespace UKControllerPlugin {
             private:
 
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+                // Manages hold profiles
+                UKControllerPlugin::Hold::HoldProfileManager & holdProfileManager;
 
                 // Hold selection menu
                 UKControllerPlugin::Hold::HoldSelectionMenu & holdSelectionMenu;

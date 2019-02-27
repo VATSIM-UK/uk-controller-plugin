@@ -13,13 +13,13 @@ namespace UKControllerPlugin {
         const DependencyData DependencyConfig::holds {
             "dependencies/holds.json",
             "holds",
-            "[]"
+            "[]"_json
         };
 
         const DependencyData DependencyConfig::holdProfiles {
             "dependencies/hold-profiles.json",
             "hold/profile",
-            "[]"
+            "[]"_json
         };
     }  // namespace Dependency
 }  // namespace UKControllerPlugin

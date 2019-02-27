@@ -6,12 +6,14 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "hold/HoldWindowManager.h"
 #include "hold/HoldSelectionMenu.h"
+#include "hold/HoldProfileManager.h"
 
 using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using ::testing::Test;
@@ -34,12 +36,21 @@ namespace UKControllerPluginTest {
             HoldManager holdManager;
             HoldWindowManager windowManager;
             HoldSelectionMenu selectionMenu;
+            HoldProfileManager holdProfileManager;
         };
 
         TEST_F(HoldConfigurationDialogFactoryTest, ItReturnsEmptyIfDataNotObject)
         {
             nlohmann::json data = "[]"_json;
-            EXPECT_EQ(0, CreateHoldConfigurationDialog(data, this->windowManager, this->selectionMenu)->CountHolds());
+            size_t holdCount = CreateHoldConfigurationDialog(
+                data, this->windowManager,
+                this->selectionMenu,
+                this->holdProfileManager
+            )->CountHolds();
+            EXPECT_EQ(
+                0,
+                holdCount
+            );
         }
 
         TEST_F(HoldConfigurationDialogFactoryTest, ItAddsHoldsWithData)
@@ -63,7 +74,15 @@ namespace UKControllerPluginTest {
             hold2["turn_direction"] = "left";
 
             data = { hold1, hold2 };
-            EXPECT_EQ(2, CreateHoldConfigurationDialog(data, this->windowManager, this->selectionMenu)->CountHolds());
+            size_t holdCount = CreateHoldConfigurationDialog(
+                data, this->windowManager,
+                this->selectionMenu,
+                this->holdProfileManager
+            )->CountHolds();
+            EXPECT_EQ(
+                2,
+                holdCount
+            );
         }
 
         TEST_F(HoldConfigurationDialogFactoryTest, ItDoesntAddNonObjects)
@@ -71,7 +90,15 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data = { "Test" };
 
-            EXPECT_EQ(0, CreateHoldConfigurationDialog(data, this->windowManager, this->selectionMenu)->CountHolds());
+            size_t holdCount = CreateHoldConfigurationDialog(
+                data, this->windowManager,
+                this->selectionMenu,
+                this->holdProfileManager
+            )->CountHolds();
+            EXPECT_EQ(
+                0,
+                holdCount
+            );
         }
 
         TEST_F(HoldConfigurationDialogFactoryTest, ItDoesntAddInvalidData)
@@ -87,7 +114,15 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, CreateHoldConfigurationDialog(data, this->windowManager, this->selectionMenu)->CountHolds());
+            size_t holdCount = CreateHoldConfigurationDialog(
+                data, this->windowManager,
+                this->selectionMenu,
+                this->holdProfileManager
+            )->CountHolds();
+            EXPECT_EQ(
+                0,
+                holdCount
+            );
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
