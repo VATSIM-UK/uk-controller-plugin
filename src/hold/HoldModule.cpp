@@ -21,6 +21,7 @@
 #include "dependency/DependencyConfig.h"
 #include "hold/HoldManagerFactory.h"
 #include "hold/HoldConfigurationDialogFactory.h"
+#include "hold/HoldProfileManagerFactory.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -41,6 +42,7 @@ using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Dependency::DependencyConfig;
 using UKControllerPlugin::Hold::CreateHoldManager;
 using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
+using UKControllerPlugin::Hold::CreateHoldProfileManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -130,7 +132,11 @@ namespace UKControllerPlugin {
                 *container.plugin
             );
 
-            // Create the hold dialog and add to the manager
+            // Create the hold dialog and profile manager
+            container.holdProfiles = CreateHoldProfileManager(
+                dependencyProvider.GetDependency(DependencyConfig::holdProfiles)
+            );
+
             std::shared_ptr<HoldConfigurationDialog> dialog = CreateHoldConfigurationDialog(
                 holdDependency,
                 *container.holdWindows,

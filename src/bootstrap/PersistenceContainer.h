@@ -41,6 +41,7 @@
 #include "hold/HoldWindowManager.h"
 #include "hold/HoldSelectionMenu.h"
 #include "dialog/DialogManager.h"
+#include "hold/HoldProfileManager.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -91,6 +92,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkGenerator> squawkGenerator;
             std::unique_ptr<UKControllerPlugin::Hold::HoldManager> holdManager;
             std::unique_ptr<UKControllerPlugin::Hold::HoldWindowManager> holdWindows;
+            std::unique_ptr<UKControllerPlugin::Hold::HoldProfileManager> holdProfiles;
             std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
 
             // Collections that are spawned multiple times.

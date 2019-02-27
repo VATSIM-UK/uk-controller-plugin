@@ -31,6 +31,6 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Hold::HoldingData & b
             ) const;
 
-        } CompareHolds;
+        } CompareHoldsDescription;
     }  // namespace Hold
 }  // namespace UKControllerPlugin

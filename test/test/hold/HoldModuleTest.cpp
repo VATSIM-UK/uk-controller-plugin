@@ -74,8 +74,20 @@ namespace UKControllerPluginTest {
                         { "turn_direction", "right" }
                     };
 
+                    nlohmann::json profile1;
+                    profile1["id"] = 1;
+                    profile1["name"] = "Gatwick Director";
+                    profile1["holds"] = { 1, 2, 3 };
+                    nlohmann::json profile2;
+                    profile2["id"] = 2;
+                    profile2["name"] = "Heathrow Director";
+                    profile2["holds"] = { 1, 2, 3 };
+
                     ON_CALL(this->mockDependencyProvider, GetDependency(DependencyConfig::holds))
                         .WillByDefault(Return(nlohmann::json::array({ hold, hold2 })));
+
+                    ON_CALL(this->mockDependencyProvider, GetDependency(DependencyConfig::holdProfiles))
+                        .WillByDefault(Return(nlohmann::json::array({ profile1, profile2 })));
 
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     this->container.timedHandler.reset(new TimedEventCollection);
@@ -139,7 +151,13 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, this->container.holdSelectionMenu->CountHolds());
         }
 
-        TEST_F(HoldModuleTest, ItInitialisesHoldDisplays)
+        TEST_F(HoldModuleTest, ItInitialisesHoldProfileManager)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+            EXPECT_EQ(2, this->container.holdProfiles->CountProfiles());
+        }
+
+        TEST_F(HoldModuleTest, ItInitialises)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(0, this->container.holdWindows->CountDisplays());
