@@ -3,10 +3,12 @@
 #include "hold/HoldElementDimensions.h"
 #include "hold/HoldingData.h"
 #include "hold/CompareHolds.h"
+#include "hold/HoldProfile.h"
 
 using UKControllerPlugin::Hold::HoldElementDimensions;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::CompareHolds;
+using UKControllerPlugin::Hold::HoldProfile;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -134,6 +136,18 @@ namespace UKControllerPluginTest {
             std::chrono::system_clock::time_point testTime =
                 std::chrono::system_clock::now() - std::chrono::seconds(13);
             EXPECT_TRUE(L"0m" == UKControllerPlugin::Hold::GetTimeInHoldDisplayString(testTime));
+        }
+
+        TEST(HoldDisplayFunctionsTest, GetSelectedHoldProfileTextReturnsText)
+        {
+            HoldProfile profile{ 1, "Test Profile" };
+            EXPECT_EQ(
+                0,
+                _tcscmp(
+                    L"Selected Profile: Test Profile",
+                    UKControllerPlugin::Hold::GetSelectedHoldProfileText(profile)
+                )
+            );
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

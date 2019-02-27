@@ -6,6 +6,7 @@
 #include "hold/HoldProfileManager.h"
 
 using UKControllerPlugin::Hold::ConvertToTchar;
+using UKControllerPlugin::Hold::GetSelectedHoldProfileText;
 using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldProfileManager;
@@ -121,6 +122,32 @@ namespace UKControllerPlugin {
                 // Buttons pressed
                 case WM_COMMAND: {
                     switch (LOWORD(wParam)) {
+
+                        case IDC_HOLD_PROFILE_SELECT: {
+                            if (HIWORD(wParam) == CBN_SELCHANGE) {
+                                int selectedIndex = SendDlgItemMessage(
+                                    hwnd,
+                                    IDC_HOLD_PROFILE_SELECT,
+                                    CB_GETCURSEL,
+                                    0,
+                                    0
+                                );
+
+                                HoldProfileManager::HoldProfiles::const_iterator it = 
+                                    this->holdProfileManager.cbegin();
+                                std::advance(it, selectedIndex);
+
+                                SendDlgItemMessage(
+                                    hwnd,
+                                    IDC_HOLD_PROFILE_STATIC,
+                                    WM_SETTEXT,
+                                    NULL,
+                                    reinterpret_cast<LPARAM>(GetSelectedHoldProfileText(*it))
+                                );
+                                return TRUE;
+                            }
+                            return DefWindowProc(hwnd, msg, wParam, lParam);
+                        }
                         case HOLD_SELECTOR_OK: {
                             // OK clicked, close the window
                             EndDialog(hwnd, wParam);
