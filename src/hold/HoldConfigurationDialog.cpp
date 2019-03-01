@@ -125,6 +125,7 @@ namespace UKControllerPlugin {
 
                         case IDC_HOLD_PROFILE_SELECT: {
                             if (HIWORD(wParam) == CBN_SELCHANGE) {
+                                // Change the hold selection text
                                 int selectedIndex = SendDlgItemMessage(
                                     hwnd,
                                     IDC_HOLD_PROFILE_SELECT,
@@ -144,6 +145,42 @@ namespace UKControllerPlugin {
                                     NULL,
                                     reinterpret_cast<LPARAM>(GetSelectedHoldProfileText(*it))
                                 );
+
+                                // Put the holds from the selected profile in the list
+                                SendDlgItemMessage(
+                                    hwnd,
+                                    IDC_HOLD_LIST,
+                                    LB_RESETCONTENT,
+                                    NULL,
+                                    NULL
+                                );
+
+                                for (
+                                    std::set<unsigned int>::const_iterator holdIt = it->holds.cbegin();
+                                    holdIt != it->holds.cend();
+                                    ++holdIt
+                                ) {
+                                    auto hold = std::find_if(
+                                        this->holds.cbegin(),
+                                        this->holds.cend(),
+                                        [holdIt](const HoldingData & theHold) -> bool {
+                                            return *holdIt == theHold.identifier;
+                                        }
+                                    );
+
+                                    if (hold == this->holds.cend()) {
+                                        continue;
+                                    }
+
+                                    SendDlgItemMessage(
+                                        hwnd,
+                                        IDC_HOLD_LIST,
+                                        LB_INSERTSTRING,
+                                        NULL,
+                                        reinterpret_cast<LPARAM>(ConvertToTchar(hold->description))
+                                    );
+                                }
+
                                 return TRUE;
                             }
                             return DefWindowProc(hwnd, msg, wParam, lParam);
