@@ -190,9 +190,63 @@ namespace UKControllerPlugin {
                             EndDialog(hwnd, wParam);
                             return TRUE;
                         }
-                        case IDC_HOLD_OPEN: {
-                            // They want to open a hold
-                            int selectedIndex =  SendDlgItemMessage(
+                        case IDC_HOLD_ADD: {
+                            // Add a hold to the profile list
+                            const int selectedIndex = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_SELECTOR,
+                                CB_GETCURSEL,
+                                0,
+                                0
+                            );
+                            std::set<HoldingData, CompareHoldsDescription>::iterator it = this->holds.cbegin();
+                            std::advance(it, selectedIndex);
+
+                            const int foundString = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_LIST,
+                                LB_FINDSTRINGEXACT,
+                                NULL,
+                                reinterpret_cast<LPARAM>(ConvertToTchar(it->description))
+                            );
+
+                            if (foundString != LB_ERR) {
+                                return TRUE;
+                            }
+
+                            SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_LIST,
+                                LB_ADDSTRING,
+                                NULL,
+                                reinterpret_cast<LPARAM>(ConvertToTchar(it->description))
+                            );
+
+                            return TRUE;
+                        }
+
+                        case IDC_HOLD_REMOVE: {
+                            // Remove a hold from the profile list
+                            const int selectedIndex = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_SELECTOR,
+                                LB_GETCURSEL,
+                                0,
+                                0
+                            );
+
+                            SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_LIST,
+                                LB_DELETESTRING,
+                                selectedIndex,
+                                NULL
+                            );
+                            return TRUE;
+                        }
+                        case IDC_HOLD_SELECT_DISPLAY: {
+                            // They want to display the hold profile
+                            const int selectedIndex =  SendDlgItemMessage(
                                 hwnd,
                                 IDC_HOLD_SELECTOR,
                                 CB_GETCURSEL,
