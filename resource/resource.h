@@ -37,6 +37,7 @@
 #define IDC_HOLD_PROFILE_SELECT         1024
 #define IDC_HOLD_PROFILE_SELECT_LABEL   1025
 #define IDC_HOLD_SELECT_LOAD            1026
+#define IDC_HOLD_SELECT_DISPLAY         1026
 #define IDC_HOLD_SELECT_SAVE            1027
 #define IDC_COMBO3                      1030
 #define IDC_HOLD_SELECTOR               1030
@@ -48,6 +49,10 @@
 #define IDC_HOLD_REMOVE                 1035
 #define IDC_HOLD_LIST                   1036
 #define IDC_HOLD_PROFILE_STATIC         1037
+#define IDC_HOLD_SELECT_LABEL           1039
+#define IDC_HOLD_PROFILE_LABEL          1040
+#define IDC_HOLD_PROFILE_NEW            1041
+#define IDC_HOLD_PROFILE_DELETE         1042
 
 // Next default values for new objects
 // 
@@ -55,7 +60,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        111
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1038
+#define _APS_NEXT_CONTROL_VALUE         1043
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
