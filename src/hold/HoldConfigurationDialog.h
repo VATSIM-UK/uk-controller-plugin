@@ -48,6 +48,10 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Hold::HoldingData,
                     UKControllerPlugin::Hold::CompareHoldsDescription
                 > holds;
+
+
+                // The holds that have been selected
+                std::set<std::string> selectedHolds;
         };
 
     }  // namespace Hold

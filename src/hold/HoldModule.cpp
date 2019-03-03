@@ -134,7 +134,8 @@ namespace UKControllerPlugin {
 
             // Create the hold dialog and profile manager
             container.holdProfiles = CreateHoldProfileManager(
-                dependencyProvider.GetDependency(DependencyConfig::holdProfiles)
+                dependencyProvider.GetDependency(DependencyConfig::holdProfiles),
+                *container.api
             );
 
             std::shared_ptr<HoldConfigurationDialog> dialog = CreateHoldConfigurationDialog(

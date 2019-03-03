@@ -124,6 +124,7 @@ namespace UKControllerPlugin {
                     switch (LOWORD(wParam)) {
 
                         case IDC_HOLD_PROFILE_SELECT: {
+                            // We're selecting a new profile for holds
                             if (HIWORD(wParam) == CBN_SELCHANGE) {
                                 // Change the hold selection text
                                 int selectedIndex = SendDlgItemMessage(
@@ -155,6 +156,7 @@ namespace UKControllerPlugin {
                                     NULL
                                 );
 
+                                this->selectedHolds.clear();
                                 for (
                                     std::set<unsigned int>::const_iterator holdIt = it->holds.cbegin();
                                     holdIt != it->holds.cend();
@@ -172,6 +174,7 @@ namespace UKControllerPlugin {
                                         continue;
                                     }
 
+                                    this->selectedHolds.insert(hold->description);
                                     SendDlgItemMessage(
                                         hwnd,
                                         IDC_HOLD_LIST,
@@ -202,15 +205,7 @@ namespace UKControllerPlugin {
                             std::set<HoldingData, CompareHoldsDescription>::iterator it = this->holds.cbegin();
                             std::advance(it, selectedIndex);
 
-                            const int foundString = SendDlgItemMessage(
-                                hwnd,
-                                IDC_HOLD_LIST,
-                                LB_FINDSTRINGEXACT,
-                                NULL,
-                                reinterpret_cast<LPARAM>(ConvertToTchar(it->description))
-                            );
-
-                            if (foundString != LB_ERR) {
+                            if (!this->selectedHolds.insert(it->description).second) {
                                 return TRUE;
                             }
 
@@ -224,7 +219,6 @@ namespace UKControllerPlugin {
 
                             return TRUE;
                         }
-
                         case IDC_HOLD_REMOVE: {
                             // Remove a hold from the profile list
                             const int selectedIndex = SendDlgItemMessage(
@@ -242,6 +236,11 @@ namespace UKControllerPlugin {
                                 selectedIndex,
                                 NULL
                             );
+                            return TRUE;
+                        }
+                        case IDC_HOLD_PROFILE_NEW: {
+                            // Creating a new hold profile
+                            //std::string profileName =
                             return TRUE;
                         }
                         case IDC_HOLD_SELECT_DISPLAY: {

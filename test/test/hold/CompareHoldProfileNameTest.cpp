@@ -18,20 +18,20 @@ namespace UKControllerPluginTest {
 
         TEST_F(CompareHoldProfileNameTest, LessThanStringReturnsTrueIfLessThan)
         {
-            HoldProfile profile = { 1, "Test Name", {1,2}, true };
+            HoldProfile profile = { 1, "Test Name", {1,2} };
             EXPECT_TRUE(compare(profile, "Very Good Test Name"));
         }
 
         TEST_F(CompareHoldProfileNameTest, LessThanStructReturnsTrueIfLessThan)
         {
-            HoldProfile profile = { 1, "Very Good Test Name", {1,2}, true };
+            HoldProfile profile = { 1, "Very Good Test Name", {1,2} };
             EXPECT_TRUE(compare("Test Name", profile));
         }
 
         TEST_F(CompareHoldProfileNameTest, CompareReturnsTrueIfFirstLessThanLast)
         {
-            HoldProfile profile1 = { 1, "Test Name", {1,2}, true };
-            HoldProfile profile2 = { 1, "Very Good Test Name", {1,2}, true };
+            HoldProfile profile1 = { 1, "Test Name", {1,2} };
+            HoldProfile profile2 = { 1, "Very Good Test Name", {1,2} };
             EXPECT_TRUE(compare(profile1, profile2));
         }
     }  // namespace Hold

@@ -2,6 +2,7 @@
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFunctions.h"
 #include "hold/ManagedHold.h"
+#include <dwmapi.h>
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -52,7 +53,7 @@ namespace UKControllerPlugin {
             }
 
             SetWindowLong(this->selfHandle, GWL_STYLE, 0);
-            ShowWindow(this->selfHandle, 5);
+            ShowWindow(this->selfHandle, SW_SHOWNOACTIVATE);
         }
 
         HoldDisplay::HoldDisplay(const HoldDisplay & copy)
@@ -318,7 +319,6 @@ namespace UKControllerPlugin {
             this->windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
             this->windowClass.hbrBackground = this->backgroundBrush;
             this->windowClass.lpszClassName = this->windowClassName;
-
 
             if (!RegisterClassEx(&this->windowClass)) {
                 LogError("Unable to register hold display class");

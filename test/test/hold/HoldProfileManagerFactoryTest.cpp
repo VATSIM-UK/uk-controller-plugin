@@ -2,27 +2,37 @@
 #include "hold/HoldProfileManagerFactory.h"
 #include "hold/HoldProfileManager.h"
 #include "hold/HoldProfile.h"
+#include "mock/MockApiInterface.h"
 
 using UKControllerPlugin::Hold::CreateHoldProfileManager;
 using UKControllerPlugin::Hold::HoldProfile;
 using UKControllerPlugin::Hold::HoldProfileManager;
+using UKControllerPluginTest::Api::MockApiInterface;
+using ::testing::Test;
+using ::testing::NiceMock;
 
 namespace UKControllerPluginTest {
     namespace Hold {
 
-        TEST(HoldProfileManagerFactory, ItReturnsEmptyIfDataEmpty)
+        class HoldProfileManagerFactoryTest : public Test
+        {
+            public:
+                NiceMock<MockApiInterface> mockApi;
+        };
+
+        TEST_F(HoldProfileManagerFactoryTest, ItReturnsEmptyIfDataEmpty)
         {
             nlohmann::json data = "[]"_json;
-            EXPECT_EQ(0, CreateHoldProfileManager(data)->CountProfiles());
+            EXPECT_EQ(0, CreateHoldProfileManager(data, this->mockApi)->CountProfiles());
         }
 
-        TEST(HoldProfileManagerFactory, ItReturnsEmptyIfDataNotArray)
+        TEST_F(HoldProfileManagerFactoryTest, ItReturnsEmptyIfDataNotArray)
         {
             nlohmann::json data = nlohmann::json::object();
-            EXPECT_EQ(0, CreateHoldProfileManager(data)->CountProfiles());
+            EXPECT_EQ(0, CreateHoldProfileManager(data, this->mockApi)->CountProfiles());
         }
 
-        TEST(HoldProfileManagerFactory, ItAddsProfilesWithData)
+        TEST_F(HoldProfileManagerFactoryTest, ItAddsProfilesWithData)
         {
             nlohmann::json data;
             nlohmann::json profile1;
@@ -35,18 +45,18 @@ namespace UKControllerPluginTest {
             profile2["holds"] = { 1, 2, 3 };
 
             data = { profile1, profile2 };
-            EXPECT_EQ(2, CreateHoldProfileManager(data)->CountProfiles());
+            EXPECT_EQ(2, CreateHoldProfileManager(data, this->mockApi)->CountProfiles());
         }
 
-        TEST(HoldProfileManagerFactory, ItDoesntAddNonObjects)
+        TEST_F(HoldProfileManagerFactoryTest, ItDoesntAddNonObjects)
         {
             nlohmann::json data;
             data = { "Test" };
 
-            EXPECT_EQ(0, CreateHoldProfileManager(data)->CountProfiles());
+            EXPECT_EQ(0, CreateHoldProfileManager(data, this->mockApi)->CountProfiles());
         }
 
-        TEST(HoldProfileManagerFactory, ItDoesntAddInvalidData)
+        TEST_F(HoldProfileManagerFactoryTest, ItDoesntAddInvalidData)
         {
             nlohmann::json data;
             nlohmann::json profile;
@@ -56,7 +66,7 @@ namespace UKControllerPluginTest {
 
             data = { profile };
 
-            EXPECT_EQ(0, CreateHoldProfileManager(data)->CountProfiles());
+            EXPECT_EQ(0, CreateHoldProfileManager(data, this->mockApi)->CountProfiles());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

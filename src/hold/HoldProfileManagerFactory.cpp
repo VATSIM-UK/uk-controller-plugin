@@ -2,8 +2,10 @@
 #include "hold/HoldProfileManagerFactory.h"
 #include "hold/HoldProfile.h"
 #include "hold/HoldProfileSerializer.h"
+#include "api/ApiInterface.h"
 
 using UKControllerPlugin::Hold::HoldProfileManager;
+using UKControllerPlugin::Api::ApiInterface;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -11,9 +13,9 @@ namespace UKControllerPlugin {
         /*
             Create a hold profile manager from JSON.
         */
-        std::unique_ptr<HoldProfileManager> CreateHoldProfileManager(nlohmann::json data)
+        std::unique_ptr<HoldProfileManager> CreateHoldProfileManager(nlohmann::json data, const ApiInterface & api)
         {
-            std::unique_ptr<HoldProfileManager> profileManager = std::make_unique<HoldProfileManager>();
+            std::unique_ptr<HoldProfileManager> profileManager = std::make_unique<HoldProfileManager>(api);
 
             // If not object, nothing to do
             if (!data.is_array()) {

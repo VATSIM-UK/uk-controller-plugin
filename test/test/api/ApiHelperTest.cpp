@@ -470,8 +470,7 @@ TEST_F(ApiHelperTest, DeleteUserHoldProfileMakesRequest)
 TEST_F(ApiHelperTest, CreateUserHoldProfileMakesRequest)
 {
     nlohmann::json data;
-    data["foo"] = "bar";
-    data["big"] = "small";
+    data["id"] = 3;
 
     CurlResponse response(data.dump(), false, 200);
 
@@ -484,8 +483,46 @@ TEST_F(ApiHelperTest, CreateUserHoldProfileMakesRequest)
         .Times(1)
         .WillOnce(Return(response));
 
-    EXPECT_NO_THROW(this->helper.CreateUserHoldProfile("Test", { 1, 2 }));
+    EXPECT_EQ(3, this->helper.CreateUserHoldProfile("Test", { 1, 2 }));
 }
+
+TEST_F(ApiHelperTest, CreateUserHoldProfileThrowsExceptionIdNotANumber)
+{
+    nlohmann::json data;
+    data["id"] = "test";
+
+    CurlResponse response(data.dump(), false, 200);
+
+    nlohmann::json expectedBody;
+    expectedBody["name"] = "Test";
+    expectedBody["holds"] = { 1, 2 };
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/user", CurlRequest::METHOD_PUT, expectedBody));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.CreateUserHoldProfile("Test", { 1, 2 }), ApiException);
+}
+
+TEST_F(ApiHelperTest, CreateUserHoldProfileThrowsExceptionNoIdReturned)
+{
+    nlohmann::json data;
+
+    CurlResponse response(data.dump(), false, 200);
+
+    nlohmann::json expectedBody;
+    expectedBody["name"] = "Test";
+    expectedBody["holds"] = { 1, 2 };
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/user", CurlRequest::METHOD_PUT, expectedBody));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.CreateUserHoldProfile("Test", { 1, 2 }), ApiException);
+}
+
 
 TEST_F(ApiHelperTest, UpdateUserHoldProfileMakesRequest)
 {

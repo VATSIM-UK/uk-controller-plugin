@@ -3,6 +3,7 @@
 #include "api/ApiRequestBuilder.h"
 #include "api/ApiInterface.h"
 #include "dependency/DependencyData.h"
+#include "hold/HoldProfile.h"
 
 namespace UKControllerPlugin {
     namespace Curl {
@@ -53,7 +54,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Dependency::DependencyData dependency
                 ) const override;
                 void DeleteUserHoldProfile(unsigned int profileId) const override;
-                void CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
+                unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
                 void UpdateUserHoldProfile(
                     unsigned int id,
                     std::string name,

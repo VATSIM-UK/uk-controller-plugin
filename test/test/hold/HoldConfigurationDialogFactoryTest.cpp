@@ -7,6 +7,7 @@
 #include "hold/HoldWindowManager.h"
 #include "hold/HoldSelectionMenu.h"
 #include "hold/HoldProfileManager.h"
+#include "mock/MockApiInterface.h"
 
 using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
@@ -16,6 +17,7 @@ using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
+using UKControllerPluginTest::Api::MockApiInterface;
 using ::testing::Test;
 using ::testing::NiceMock;
 
@@ -26,7 +28,8 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldConfigurationDialogFactoryTest()
-                    : windowManager(NULL, NULL, holdManager, mockPlugin), selectionMenu(holdManager, mockPlugin, 1)
+                    : windowManager(NULL, NULL, holdManager, mockPlugin), selectionMenu(holdManager, mockPlugin, 1),
+                    holdProfileManager(NiceMock<MockApiInterface>())
                 {
 
                 }

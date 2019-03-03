@@ -249,9 +249,17 @@ namespace UKControllerPlugin {
         /*
             Create a user hold profile
         */
-        void ApiHelper::CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const
+        unsigned int ApiHelper::CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const
         {
-            this->MakeApiRequest(this->requestBuilder.BuildCreateUserHoldProfileRequest(name, holds));
+            nlohmann::json response = this->MakeApiRequest(
+                this->requestBuilder.BuildCreateUserHoldProfileRequest(name, holds)
+            ).GetRawData();
+
+            if (!response.count("id") || !response.at("id").is_number_integer()) {
+                throw ApiException("Invalid API response when creating a hold profile");
+            }
+
+            return response.at("id");
         }
 
         /*
