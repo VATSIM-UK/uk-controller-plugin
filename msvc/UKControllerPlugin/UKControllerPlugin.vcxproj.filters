@@ -822,6 +822,12 @@
     <ClInclude Include="..\..\src\hold\CompareHoldProfile.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\AbstractHoldLevelRestriction.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\BlockedHoldLevelRestriction.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1394,6 +1400,9 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\CompareHoldProfile.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestriction.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
