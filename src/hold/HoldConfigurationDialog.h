@@ -1,6 +1,6 @@
 #pragma once
 #include "hold/HoldingData.h"
-#include "hold/CompareHoldsDescription.h"
+#include "hold/CompareHolds.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -46,12 +46,16 @@ namespace UKControllerPlugin {
                 // The holds.
                 std::set<
                     UKControllerPlugin::Hold::HoldingData,
-                    UKControllerPlugin::Hold::CompareHoldsDescription
+                    UKControllerPlugin::Hold::CompareHolds
                 > holds;
 
 
                 // The holds that have been selected
-                std::set<std::string> selectedHolds;
+                std::set<unsigned int> selectedHolds;
+
+                // The hold profile currently selected
+                unsigned int selectedHoldProfile = -1;
+                unsigned int selectedHoldProfileIndex = -1;
         };
 
     }  // namespace Hold

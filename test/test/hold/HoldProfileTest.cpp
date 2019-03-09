@@ -13,10 +13,10 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(profile1 == profile2);
         }
 
-        TEST(HoldProfileTest, EqualityReturnsTrueSameName)
+        TEST(HoldProfileTest, EqualityReturnsTrueDifferentName)
         {
             HoldProfile profile1 = { 1, "test", {1, 2, 3} };
-            HoldProfile profile2 = { 2, "test", {1, 2, 3} };
+            HoldProfile profile2 = { 1, "test 2", {1, 2, 3} };
             EXPECT_TRUE(profile1 == profile2);
         }
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "hold/HoldProfile.h"
-#include "hold/CompareHoldProfileName.h"
+#include "hold/CompareHoldProfile.h"
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -21,15 +21,15 @@ namespace UKControllerPlugin {
                 explicit HoldProfileManager(const UKControllerPlugin::Api::ApiInterface & api);
                 bool AddProfile(UKControllerPlugin::Hold::HoldProfile profile);
                 size_t CountProfiles(void) const;
-                bool DeleteProfile(std::string name);
-                UKControllerPlugin::Hold::HoldProfile GetProfileByName(std::string name) const;
-                bool SaveNewProfile(std::string name, std::set<unsigned int> holds);
-                bool UpdateProfile(std::string oldName, std::string newName, std::set<unsigned int> holds);
+                bool DeleteProfile(unsigned int id);
+                UKControllerPlugin::Hold::HoldProfile GetProfile(unsigned int id) const;
+                int SaveNewProfile(std::string name, std::set<unsigned int> holds);
+                bool UpdateProfile(unsigned int id, std::string newName, std::set<unsigned int> holds);
 
                 // Public type definitions for a custom iterator over the class.
                 typedef std::set<
                     UKControllerPlugin::Hold::HoldProfile,
-                    UKControllerPlugin::Hold::CompareHoldProfileName
+                    UKControllerPlugin::Hold::CompareHoldProfile
                 > HoldProfiles;
                 typedef HoldProfiles::const_iterator const_iterator;
                 const_iterator cbegin(void) const { return profiles.cbegin(); }
@@ -37,6 +37,9 @@ namespace UKControllerPlugin {
 
                 // The invalid profile for returning when a profile does not exist
                 const UKControllerPlugin::Hold::HoldProfile invalidProfile = { 0, "INVALID", {} };
+
+                // The ID that gets returned if a new profile save doesnt work
+                const int invalidProfileNewId = -1;
 
             private:
 
@@ -46,7 +49,7 @@ namespace UKControllerPlugin {
                 // The hold profiles
                 std::set<
                     UKControllerPlugin::Hold::HoldProfile,
-                    UKControllerPlugin::Hold::CompareHoldProfileName
+                    UKControllerPlugin::Hold::CompareHoldProfile
                 > profiles;
         };
     }  // namespace Hold

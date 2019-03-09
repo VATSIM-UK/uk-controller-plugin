@@ -38,18 +38,18 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Delete a profile from the manager and the API.
+            Delete a profile from the manager and the API by id
         */
-        bool HoldProfileManager::DeleteProfile(std::string name)
+        bool HoldProfileManager::DeleteProfile(unsigned int id)
         {
-            auto existingProfile = this->profiles.find(name);
+            auto existingProfile = this->profiles.find(id);
             if (existingProfile == this->profiles.cend()) {
-                LogWarning("Tried to delete non existent profile " + name);
+                LogWarning("Tried to delete non existent profile " + std::to_string(id));
                 return false;
             }
 
             try {
-                this->api.DeleteUserHoldProfile(existingProfile->id);
+                this->api.DeleteUserHoldProfile(id);
             }
             catch (ApiException apiException) {
              // Didnt save to the API, stop
@@ -62,30 +62,26 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Get a profile by its name
+            Get a profile by its id
         */
-        HoldProfile HoldProfileManager::GetProfileByName(std::string name) const
+        UKControllerPlugin::Hold::HoldProfile HoldProfileManager::GetProfile(unsigned int id) const
         {
-            auto profile = this->profiles.find(name);
+            auto profile = this->profiles.find(id);
             return profile == this->profiles.cend() ? this->invalidProfile : *profile;
         }
 
         /*
             Save a new hold profile to the API and this manager.
         */
-        bool HoldProfileManager::SaveNewProfile(std::string name, std::set<unsigned int> holds)
+        int HoldProfileManager::SaveNewProfile(std::string name, std::set<unsigned int> holds)
         {
-            if (this->profiles.find(name) != this->profiles.cend()) {
-                return false;
-            }
-
             unsigned int profileId = 0;
             try {
                 profileId = this->api.CreateUserHoldProfile(name, holds);
             } catch (ApiException apiException) {
                 // Didnt save to the API, stop
                 LogError("Failed to create profile on the API");
-                return false;
+                return this->invalidProfileNewId;
             }
 
             this->AddProfile(
@@ -97,23 +93,22 @@ namespace UKControllerPlugin {
             );
 
             LogInfo("Saved new hold profile " + name);
-            return true;
+            return profileId;
         }
 
         /*
             Update a profile on the API and the manager.
         */
-        bool HoldProfileManager::UpdateProfile(std::string oldName, std::string newName, std::set<unsigned int> holds)
+        bool HoldProfileManager::UpdateProfile(unsigned int id, std::string newName, std::set<unsigned int> holds)
         {
-            auto existingProfile = this->profiles.find(oldName);
+            auto existingProfile = this->profiles.find(id);
             if (existingProfile == this->profiles.cend()) {
-                LogWarning("Tried to update non existent profile " + oldName);
+                LogWarning("Tried to update non existent profile " + std::to_string(id));
                 return false;
             }
 
-            unsigned int profileId = existingProfile->id;
             try {
-                this->api.UpdateUserHoldProfile(profileId, newName, holds);
+                this->api.UpdateUserHoldProfile(id, newName, holds);
             } catch (ApiException apiException) {
                 // Didnt save to the API, stop
                 LogError("Failed to update profile on the API " + newName);
@@ -123,7 +118,7 @@ namespace UKControllerPlugin {
             this->profiles.erase(existingProfile);
             this->AddProfile(
                 {
-                    profileId,
+                    id,
                     newName,
                     holds
                 }

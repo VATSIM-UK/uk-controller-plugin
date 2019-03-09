@@ -617,10 +617,10 @@
     <ClCompile Include="..\..\test\test\hold\HoldProfileManagerTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\CompareHoldProfileNameTest.cpp">
+    <ClCompile Include="..\..\test\test\hold\HoldProfileManagerFactoryTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldProfileManagerFactoryTest.cpp">
+    <ClCompile Include="..\..\test\test\hold\CompareHoldProfileTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
   </ItemGroup>

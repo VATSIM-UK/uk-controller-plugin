@@ -69,13 +69,19 @@ namespace UKControllerPlugin {
                         it != this->holds.cend();
                         ++it
                     ) {
-                        HoldingData data = *it;
-                        SendDlgItemMessage(
+                        int index = SendDlgItemMessage(
                             hwnd,
                             IDC_HOLD_SELECTOR,
                             CB_ADDSTRING,
                             0,
                             reinterpret_cast<LPARAM>(ConvertToTchar(it->description))
+                        );
+                        SendDlgItemMessage(
+                            hwnd,
+                            IDC_HOLD_SELECTOR,
+                            CB_SETITEMDATA,
+                            index,
+                            (LPARAM) it->identifier
                         );
                     }
 
@@ -100,12 +106,19 @@ namespace UKControllerPlugin {
                         it != this->holdProfileManager.cend();
                         ++it
                     ) {
-                        SendDlgItemMessage(
+                        int index = SendDlgItemMessage(
                             hwnd,
                             IDC_HOLD_PROFILE_SELECT,
                             CB_ADDSTRING,
-                            0,
+                            NULL,
                             reinterpret_cast<LPARAM>(ConvertToTchar(it->name))
+                        );
+                        SendDlgItemMessage(
+                            hwnd,
+                            IDC_HOLD_PROFILE_SELECT,
+                            CB_SETITEMDATA,
+                            index,
+                            (LPARAM)it->id
                         );
                     }
 
@@ -125,62 +138,61 @@ namespace UKControllerPlugin {
 
                         case IDC_HOLD_PROFILE_SELECT: {
                             // We're selecting a new profile for holds
-                            if (HIWORD(wParam) == CBN_SELCHANGE) {
+                            if (HIWORD(wParam) == CBN_CLOSEUP) {
                                 // Change the hold selection text
                                 int selectedIndex = SendDlgItemMessage(
                                     hwnd,
                                     IDC_HOLD_PROFILE_SELECT,
                                     CB_GETCURSEL,
-                                    0,
-                                    0
-                                );
-
-                                HoldProfileManager::HoldProfiles::const_iterator it = 
-                                    this->holdProfileManager.cbegin();
-                                std::advance(it, selectedIndex);
-
-                                SendDlgItemMessage(
-                                    hwnd,
-                                    IDC_HOLD_PROFILE_STATIC,
-                                    WM_SETTEXT,
                                     NULL,
-                                    reinterpret_cast<LPARAM>(GetSelectedHoldProfileText(*it))
+                                    NULL
                                 );
+                                int selectedProfileId = SendDlgItemMessage(
+                                    hwnd,
+                                    IDC_HOLD_PROFILE_SELECT,
+                                    CB_GETITEMDATA,
+                                    selectedIndex,
+                                    NULL
+                                );
+                                this->selectedHoldProfile = selectedProfileId;
+                                this->selectedHoldProfileIndex = selectedIndex;
 
                                 // Put the holds from the selected profile in the list
                                 SendDlgItemMessage(
                                     hwnd,
                                     IDC_HOLD_LIST,
                                     LB_RESETCONTENT,
-                                    NULL,
+                                    this->selectedHoldProfile,
                                     NULL
                                 );
 
                                 this->selectedHolds.clear();
+                                HoldProfile profile = this->holdProfileManager.GetProfile(this->selectedHoldProfile);
                                 for (
-                                    std::set<unsigned int>::const_iterator holdIt = it->holds.cbegin();
-                                    holdIt != it->holds.cend();
+                                    std::set<unsigned int>::const_iterator holdIt = profile.holds.cbegin();
+                                    holdIt != profile.holds.cend();
                                     ++holdIt
                                 ) {
-                                    auto hold = std::find_if(
-                                        this->holds.cbegin(),
-                                        this->holds.cend(),
-                                        [holdIt](const HoldingData & theHold) -> bool {
-                                            return *holdIt == theHold.identifier;
-                                        }
-                                    );
-
+                                    auto hold = this->holds.find(*holdIt);
                                     if (hold == this->holds.cend()) {
+                                        LogWarning("Profile contained invalid hold " + std::to_string(*holdIt));
                                         continue;
                                     }
 
-                                    this->selectedHolds.insert(hold->description);
-                                    SendDlgItemMessage(
+                                    this->selectedHolds.insert(*holdIt);
+                                    int index = SendDlgItemMessage(
                                         hwnd,
                                         IDC_HOLD_LIST,
                                         LB_INSERTSTRING,
                                         NULL,
                                         reinterpret_cast<LPARAM>(ConvertToTchar(hold->description))
+                                    );
+                                    SendDlgItemMessage(
+                                        hwnd,
+                                        IDC_HOLD_LIST,
+                                        LB_SETITEMDATA,
+                                        index,
+                                        (LPARAM) hold->identifier
                                     );
                                 }
 
@@ -194,7 +206,7 @@ namespace UKControllerPlugin {
                             return TRUE;
                         }
                         case IDC_HOLD_ADD: {
-                            // Add a hold to the profile list
+                            // Add a hold to the selection list
                             const int selectedIndex = SendDlgItemMessage(
                                 hwnd,
                                 IDC_HOLD_SELECTOR,
@@ -202,25 +214,42 @@ namespace UKControllerPlugin {
                                 0,
                                 0
                             );
-                            std::set<HoldingData, CompareHoldsDescription>::iterator it = this->holds.cbegin();
-                            std::advance(it, selectedIndex);
+                            const int selectedHoldId = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_SELECTOR,
+                                CB_GETITEMDATA,
+                                selectedIndex,
+                                0
+                            );
 
-                            if (!this->selectedHolds.insert(it->description).second) {
+                            auto hold = this->holds.find(selectedHoldId);
+                            if (hold == this->holds.cend()) {
+                                return TRUE;
+                            }
+                            
+                            if (!this->selectedHolds.insert(selectedHoldId).second) {
                                 return TRUE;
                             }
 
-                            SendDlgItemMessage(
+                            int insertedIndex = SendDlgItemMessage(
                                 hwnd,
                                 IDC_HOLD_LIST,
                                 LB_ADDSTRING,
                                 NULL,
-                                reinterpret_cast<LPARAM>(ConvertToTchar(it->description))
+                                reinterpret_cast<LPARAM>(ConvertToTchar(hold->description))
+                            );
+                            SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_LIST,
+                                LB_SETITEMDATA,
+                                insertedIndex,
+                                (LPARAM) selectedHoldId
                             );
 
                             return TRUE;
                         }
                         case IDC_HOLD_REMOVE: {
-                            // Remove a hold from the profile list
+                            // Remove a hold from the selection list
                             const int selectedIndex = SendDlgItemMessage(
                                 hwnd,
                                 IDC_HOLD_SELECTOR,
@@ -240,24 +269,170 @@ namespace UKControllerPlugin {
                         }
                         case IDC_HOLD_PROFILE_NEW: {
                             // Creating a new hold profile
-                            //std::string profileName =
+                            TCHAR buffer[255];
+
+                            // Get the text out of the profile box
+                            SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_PROFILE_SELECT,
+                                WM_GETTEXT,
+                                255,
+                                reinterpret_cast<LPARAM>(&buffer)
+                            );
+                            std::string profileName = ConvertFromTchar(buffer);
+
+                            // Get the holds.
+                            int itemCount = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_LIST,
+                                LB_GETCOUNT,
+                                NULL,
+                                NULL
+                            );
+                            std::set<unsigned int> holds;
+                            for (int i = 0; i < itemCount; i++) {
+                                int holdId = SendDlgItemMessage(
+                                    hwnd,
+                                    IDC_HOLD_LIST,
+                                    LB_GETITEMDATA,
+                                    i,
+                                    NULL
+                                );
+                                holds.insert(holdId);
+                            }
+
+                            if (holds.size() == 0) {
+                                return TRUE;
+                            }
+
+                            // Save the new profile and add to lists
+                            int profileId = this->holdProfileManager.SaveNewProfile(profileName, holds);
+                            if (profileId == this->holdProfileManager.invalidProfileNewId) {
+                                return TRUE;
+                            }
+
+                            int newProfileIndex = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_PROFILE_SELECT,
+                                CB_ADDSTRING,
+                                NULL,
+                                reinterpret_cast<LPARAM>(buffer)
+                            );
+                            SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_PROFILE_SELECT,
+                                CB_SETITEMDATA,
+                                newProfileIndex,
+                                (LPARAM) newProfileIndex
+                            );
+
+                            SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_PROFILE_SELECT,
+                                CB_SETCURSEL,
+                                newProfileIndex,
+                                NULL
+                            );
+                            this->selectedHoldProfile = profileId;
+                            this->selectedHoldProfileIndex = newProfileIndex;
+
+                            return TRUE;
+                        }
+                        case IDC_HOLD_PROFILE_UPDATE: {
+                            // They want to update an existing hold profile
+                            // Get the holds.
+                            int itemCount = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_LIST,
+                                LB_GETCOUNT,
+                                NULL,
+                                NULL
+                            );
+                            std::set<unsigned int> holds;
+                            for (int i = 0; i < itemCount; i++) {
+                                int holdId = SendDlgItemMessage(
+                                    hwnd,
+                                    IDC_HOLD_LIST,
+                                    LB_GETITEMDATA,
+                                    i,
+                                    NULL
+                                );
+                                holds.insert(holdId);
+                            }
+
+                            if (holds.size() == 0) {
+                                return TRUE;
+                            }
+
+                            // Get the new profile name
+                            TCHAR buffer[255];
+
+                            // Get the text out of the profile box
+                            SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_PROFILE_SELECT,
+                                WM_GETTEXT,
+                                255,
+                                reinterpret_cast<LPARAM>(&buffer)
+                            );
+                            std::string profileName = ConvertFromTchar(buffer);
+
+                            this->holdProfileManager.UpdateProfile(this->selectedHoldProfile, profileName, holds);
+
+
+                            return TRUE;
+                        }
+                        case IDC_HOLD_PROFILE_DELETE: {
+                            // They want to delete a hold profile
+                            const int selectedIndex = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_PROFILE_SELECT,
+                                CB_GETCURSEL,
+                                NULL,
+                                NULL
+                            );
+                            const int profileId = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_PROFILE_SELECT,
+                                CB_GETITEMDATA,
+                                selectedIndex,
+                                NULL
+                            );
+
+                            if (!this->holdProfileManager.DeleteProfile(profileId)) {
+                                return TRUE;
+                            }
+
+                            // Remove from the combobox
+                            SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_PROFILE_SELECT,
+                                CB_DELETESTRING,
+                                selectedIndex,
+                                NULL
+                            );
+
+                            this->selectedHoldProfile = -1;
+                            this->selectedHoldProfileIndex = -1;
                             return TRUE;
                         }
                         case IDC_HOLD_SELECT_DISPLAY: {
-                            // They want to display the hold profile
-                            const int selectedIndex =  SendDlgItemMessage(
-                                hwnd,
-                                IDC_HOLD_SELECTOR,
-                                CB_GETCURSEL,
-                                0,
-                                0
-                            );
-                            std::set<HoldingData, CompareHoldsDescription>::iterator it = this->holds.cbegin();
-                            std::advance(it, selectedIndex);
+                            // They want to display the hold configuration
 
-                            // Create a hold window and add an item to the hold selection menu
-                            this->windowManager.AddWindow(it->identifier);
-                            this->holdSelectionMenu.AddHoldToMenu(it->identifier);
+                            for (
+                                std::set<unsigned int>::const_iterator it = this->selectedHolds.cbegin();
+                                it != this->selectedHolds.cend();
+                                ++it
+                            ) {
+                                auto hold = this->holds.find(*it);
+                                if (hold == this->holds.cend()) {
+                                    LogWarning("Tried to load invalid hold " + *it);
+                                    continue;
+                                }
+
+                                this->windowManager.AddWindow(hold->identifier);
+                                this->holdSelectionMenu.AddHoldToMenu(hold->identifier);
+                            }
                             return TRUE;
                         }
                     }

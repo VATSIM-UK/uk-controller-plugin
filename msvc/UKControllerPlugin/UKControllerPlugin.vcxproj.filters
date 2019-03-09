@@ -816,10 +816,10 @@
     <ClInclude Include="..\..\src\hold\HoldProfileManager.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\CompareHoldProfileName.h">
+    <ClInclude Include="..\..\src\hold\HoldProfileManagerFactory.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfileManagerFactory.h">
+    <ClInclude Include="..\..\src\hold\CompareHoldProfile.h">
       <Filter>src\hold</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1390,10 +1390,10 @@
     <ClCompile Include="..\..\src\hold\HoldProfileManager.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\CompareHoldProfileName.cpp">
+    <ClCompile Include="..\..\src\hold\HoldProfileManagerFactory.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldProfileManagerFactory.cpp">
+    <ClCompile Include="..\..\src\hold\CompareHoldProfile.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>

@@ -13,16 +13,16 @@ namespace UKControllerPlugin {
             For comparing hold profiles by their 
             profile name so they can be ordered in structs.
         */
-        typedef struct CompareHoldProfileName
+        typedef struct CompareHoldProfile
         {
-            using is_transparent = std::string;
+            using is_transparent = int;
 
             bool operator()(
                 const UKControllerPlugin::Hold::HoldProfile & hold,
-                std::string name
+                unsigned int id
             ) const;
             bool operator()(
-                std::string name,
+                unsigned int id,
                 const UKControllerPlugin::Hold::HoldProfile & hold
             ) const;
             bool operator()(
@@ -30,6 +30,6 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Hold::HoldProfile & b
             ) const;
 
-        } CompareHolds;
+        } CompareHoldProfile;
     }  // namespace Hold
 }  // namespace UKControllerPlugin

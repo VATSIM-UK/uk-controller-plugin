@@ -39,6 +39,7 @@
 #define IDC_HOLD_SELECT_LOAD            1026
 #define IDC_HOLD_SELECT_DISPLAY         1026
 #define IDC_HOLD_SELECT_SAVE            1027
+#define IDC_HOLD_PROFILE_UPDATE         1027
 #define IDC_COMBO3                      1030
 #define IDC_HOLD_SELECTOR               1030
 #define IDC_HOLD_OPEN                   1031

@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
                 to check for equality based on name and id.
             */
             bool operator==(const HoldProfile & compare) const {
-                return this->name == compare.name || this->id == compare.id;
+                return this->id == compare.id;
             }
         } HoldProfile;
 

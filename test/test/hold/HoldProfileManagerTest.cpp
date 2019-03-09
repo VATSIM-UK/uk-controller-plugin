@@ -61,39 +61,32 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->manager.AddProfile(this->profile));
         }
 
-        TEST_F(HoldProfileManagerTest, GetProfileByNameReturnsInvalidNotFound)
+        TEST_F(HoldProfileManagerTest, GetProfileReturnsInvalidNotFound)
         {
             this->manager.AddProfile(this->profile);
-            EXPECT_TRUE(this->manager.invalidProfile == this->manager.GetProfileByName("Foo"));
+            EXPECT_TRUE(this->manager.invalidProfile == this->manager.GetProfile(3));
         }
 
-        TEST_F(HoldProfileManagerTest, GetProfileByNameReturnsProfileIfFound)
+        TEST_F(HoldProfileManagerTest, GetProfileReturnsProfileIfFound)
         {
             this->manager.AddProfile(this->profile);
-            EXPECT_TRUE(this->profile == this->manager.GetProfileByName("Test"));
+            EXPECT_TRUE(this->profile == this->manager.GetProfile(1));
         }
 
-        TEST_F(HoldProfileManagerTest, SavingNewProfileDoesntCreateDuplicates)
-        {
-            this->manager.AddProfile(this->profile);
-            EXPECT_FALSE(this->manager.SaveNewProfile("Test", { 1, 2 }));
-            EXPECT_EQ(1, this->manager.CountProfiles());
-        }
-
-        TEST_F(HoldProfileManagerTest, SavingNewProfileReturnsFalseOnApiException)
+        TEST_F(HoldProfileManagerTest, SavingNewProfileReturnsInvalidIdOnApiException)
         {
             ON_CALL(this->mockApi, CreateUserHoldProfile(_, _))
                 .WillByDefault(Throw(ApiException("Test")));
 
-            EXPECT_FALSE(this->manager.SaveNewProfile("Test", { 1, 2 }));
+            EXPECT_EQ(this->manager.invalidProfileNewId, this->manager.SaveNewProfile("Test", { 1, 2 }));
         }
 
-        TEST_F(HoldProfileManagerTest, SavingNewProfileReturnsTrueOnProfileCreation)
+        TEST_F(HoldProfileManagerTest, SavingNewProfileReturnsProrfileIdCreation)
         {
             ON_CALL(this->mockApi, CreateUserHoldProfile(_, _))
                 .WillByDefault(Return(2));
 
-            EXPECT_TRUE(this->manager.SaveNewProfile("Test", { 1, 2 }));
+            EXPECT_EQ(2, this->manager.SaveNewProfile("Test", { 1, 2 }));
         }
 
         TEST_F(HoldProfileManagerTest, SavingProfileToTheApiAddsItToManager)
@@ -106,12 +99,12 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(1, this->manager.CountProfiles());
             HoldProfile expectedProfile = { 2, "Test", {1, 2} };
-            EXPECT_TRUE(expectedProfile == this->manager.GetProfileByName("Test"));
+            EXPECT_TRUE(expectedProfile == this->manager.GetProfile(2));
         }
 
         TEST_F(HoldProfileManagerTest, UpdatingProfileDoesntUpdateNonExisting)
         {
-            EXPECT_FALSE(this->manager.UpdateProfile("Test", "Test 2", { 1, 2 }));
+            EXPECT_FALSE(this->manager.UpdateProfile(555, "Test 2", { 1, 2 }));
         }
 
         TEST_F(HoldProfileManagerTest, UpdatingProfileReturnsFalseOnApiException)
@@ -121,7 +114,7 @@ namespace UKControllerPluginTest {
                 .WillOnce(Throw(ApiException("Test")));
 
             this->manager.AddProfile(this->profile);
-            EXPECT_FALSE(this->manager.UpdateProfile("Test", "Test 2", { 1, 2 }));
+            EXPECT_FALSE(this->manager.UpdateProfile(1, "Test 2", { 1, 2 }));
         }
 
         TEST_F(HoldProfileManagerTest, UpdatingProfileReturnsTrueOnSuccess)
@@ -130,7 +123,7 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             this->manager.AddProfile(this->profile);
-            EXPECT_TRUE(this->manager.UpdateProfile("Test", "Test 2", { 1, 2 }));
+            EXPECT_TRUE(this->manager.UpdateProfile(1, "Test 2", { 1, 2 }));
         }
 
         TEST_F(HoldProfileManagerTest, UpdatingProfileUpdatesInApiAndManager)
@@ -141,15 +134,15 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(2));
 
 
-            this->manager.UpdateProfile("Test", "Test 2", { 1, 2, 3 });
+            this->manager.UpdateProfile(1, "Test 2", { 1, 2, 3 });
             EXPECT_EQ(1, this->manager.CountProfiles());
             HoldProfile expectedProfile = { 1, "Test 2", {1, 2, 3} };
-            EXPECT_TRUE(expectedProfile == this->manager.GetProfileByName("Test 2"));
+            EXPECT_TRUE(expectedProfile == this->manager.GetProfile(1));
         }
 
         TEST_F(HoldProfileManagerTest, DeletingProfileDoesntDeleteNonExisting)
         {
-            EXPECT_FALSE(this->manager.DeleteProfile("Test"));
+            EXPECT_FALSE(this->manager.DeleteProfile(555));
         }
 
         TEST_F(HoldProfileManagerTest, DeletingProfileDoesntDeleteOnApiException)
@@ -158,7 +151,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Throw(ApiException("Test")));
 
             this->manager.AddProfile(this->profile);
-            EXPECT_FALSE(this->manager.DeleteProfile("Test"));
+            EXPECT_FALSE(this->manager.DeleteProfile(1));
             EXPECT_EQ(1, this->manager.CountProfiles());
         }
 
@@ -168,7 +161,7 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             this->manager.AddProfile(this->profile);
-            this->manager.DeleteProfile("Test");
+            this->manager.DeleteProfile(1);
             EXPECT_EQ(0, this->manager.CountProfiles());
         }
 
@@ -178,7 +171,7 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             this->manager.AddProfile(this->profile);
-            EXPECT_TRUE(this->manager.DeleteProfile("Test"));
+            EXPECT_TRUE(this->manager.DeleteProfile(1));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
