@@ -15,6 +15,7 @@ namespace UKControllerPlugin {
 
 
                 // Inherited via AbstractHoldLevelRestriction
+                std::set<unsigned int> GetLevels(void) const;
                 bool LevelRestricted(unsigned int level) const override;
 
             private:

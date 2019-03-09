@@ -828,6 +828,9 @@
     <ClInclude Include="..\..\src\hold\BlockedHoldLevelRestriction.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\BlockedHoldLevelRestrictionSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1403,6 +1406,9 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestriction.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestrictionSerializer.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>

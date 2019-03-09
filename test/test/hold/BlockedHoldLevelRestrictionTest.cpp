@@ -29,5 +29,11 @@ namespace UKControllerPluginTest {
         {
             EXPECT_FALSE(this->restriction.LevelRestricted(8000));
         }
+
+        TEST_F(BlockedHoldLevelRestrictionTest, ItCanReturnBlockedLevels)
+        {
+            std::set<unsigned int> expected = { 7000, 13000 };
+            EXPECT_EQ(expected, this->restriction.GetLevels());
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

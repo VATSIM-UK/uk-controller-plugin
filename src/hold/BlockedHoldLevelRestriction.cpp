@@ -11,6 +11,14 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Get the levels in the restriction
+        */
+        std::set<unsigned int> BlockedHoldLevelRestriction::GetLevels(void) const
+        {
+            return this->blockedLevels;
+        }
+
+        /*
             The level is restricted if the blocked level matches it
         */
         bool BlockedHoldLevelRestriction::LevelRestricted(unsigned int level) const

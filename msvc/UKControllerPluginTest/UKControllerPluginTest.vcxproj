@@ -101,6 +101,7 @@
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailRendererTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailRepositoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldProfileTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldsDescriptionTest.cpp" />
