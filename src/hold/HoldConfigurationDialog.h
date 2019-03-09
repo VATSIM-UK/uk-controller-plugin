@@ -54,8 +54,8 @@ namespace UKControllerPlugin {
                 std::set<unsigned int> selectedHolds;
 
                 // The hold profile currently selected
-                unsigned int selectedHoldProfile = -1;
-                unsigned int selectedHoldProfileIndex = -1;
+                unsigned int selectedHoldProfile = 0;
+                int selectedHoldProfileIndex = 0;
         };
 
     }  // namespace Hold
