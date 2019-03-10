@@ -134,6 +134,43 @@ namespace UKControllerPlugin {
                 15.00f
             };
 
+            // Render all the possible levels in the hold
+            for (
+                unsigned int i = this->managedHold.GetHoldParameters().maximum;
+                i >= this->managedHold.GetHoldParameters().minimum;
+                i -= 1000
+            ) {
+                // Display the restriction hash if a level is restricted
+                const HoldingData & holdParameters = this->managedHold.GetHoldParameters();
+                for (
+                    std::set<std::unique_ptr<AbstractHoldLevelRestriction>>::const_iterator it
+                    = holdParameters.restrictions.cbegin();
+                    it != holdParameters.restrictions.cend();
+                    ++it
+                    ) {
+                    if ((*it)->LevelRestricted(i)) {
+                        graphics->FillRectangle(
+                            &this->blockedLevelBrush,
+                            (INT)windowRect.left,
+                            (INT)numbersDisplay.Y,
+                            (INT)windowRect.right - windowRect.left,
+                            (INT)this->lineHeight
+                        );
+                    }
+                }
+
+                graphics->DrawString(
+                    GetLevelDisplayString(i).c_str(),
+                    3,
+                    &this->font,
+                    numbersDisplay,
+                    &this->stringFormat,
+                    &this->titleBarTextBrush
+                );
+                numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
+            }
+
+
             Gdiplus::RectF callsignDisplay = {
                 35.0f,
                 this->dataStartHeight,
@@ -161,23 +198,6 @@ namespace UKControllerPlugin {
                 30.0f,
                 this->lineHeight
             };
-
-            // Render all the possible levels in the hold
-            for (
-                unsigned int i = this->managedHold.GetHoldParameters().maximum;
-                i >= this->managedHold.GetHoldParameters().minimum;
-                i -= 1000
-            ) {
-                graphics->DrawString(
-                    GetLevelDisplayString(i).c_str(),
-                    3,
-                    &this->font,
-                    numbersDisplay,
-                    &this->stringFormat,
-                    &this->titleBarTextBrush
-                );
-                numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
-            }
 
             // Loop the aircraft in the hold and render them
             for (
