@@ -67,6 +67,7 @@ namespace UKControllerPluginTest {
             hold1["maximum_altitude"] = 15000;
             hold1["inbound_heading"] = 309;
             hold1["turn_direction"] = "right";
+            hold1["restrictions"] = nlohmann::json::array();
             nlohmann::json hold2;
             hold2["id"] = 2;
             hold2["description"] = "WILLO";
@@ -75,6 +76,7 @@ namespace UKControllerPluginTest {
             hold2["maximum_altitude"] = 15000;
             hold2["inbound_heading"] = 285;
             hold2["turn_direction"] = "left";
+            hold2["restrictions"] = nlohmann::json::array();
 
             data = { hold1, hold2 };
             size_t holdCount = CreateHoldConfigurationDialog(

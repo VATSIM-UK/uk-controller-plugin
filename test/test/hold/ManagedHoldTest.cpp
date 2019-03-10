@@ -16,12 +16,12 @@ namespace UKControllerPluginTest {
             public:
 
                 ManagedHoldTest()
-                    : hold(holdData)
+                    : hold(std::move(holdData))
                 {
 
                 }
 
-                const HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
+                HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, "left", {} };
                 UKControllerPlugin::Hold::ManagedHold hold;
                 const UKControllerPlugin::Hold::HoldingAircraft aircraft = {
                     "BAW123",
@@ -39,7 +39,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ManagedHoldTest, ItSetsHoldParameters)
         {
-            EXPECT_EQ(this->holdData, this->hold.holdParameters);
+            EXPECT_EQ(this->holdData, this->hold.GetHoldParameters());
         }
 
         TEST_F(ManagedHoldTest, ItAddsHoldingAircraft)
@@ -115,6 +115,21 @@ namespace UKControllerPluginTest {
         TEST_F(ManagedHoldTest, ItHandlesUpdatingNonExistantAircraft)
         {
             EXPECT_NO_THROW(this->hold.UpdateHoldingAircraft("BAW124", 10000, 9001, 350));
+        }
+
+        TEST_F(ManagedHoldTest, ItReturnsHoldingParameters)
+        {
+            HoldingData expectedParams = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, "left", {} };
+            const HoldingData & actualParams = this->hold.GetHoldParameters();
+
+            EXPECT_EQ(expectedParams.identifier, actualParams.identifier);
+            EXPECT_EQ(expectedParams.fix, actualParams.fix);
+            EXPECT_EQ(expectedParams.description, actualParams.description);
+            EXPECT_EQ(expectedParams.minimum, actualParams.minimum);
+            EXPECT_EQ(expectedParams.maximum, actualParams.maximum);
+            EXPECT_EQ(expectedParams.inbound, actualParams.inbound);
+            EXPECT_EQ(expectedParams.turnDirection, actualParams.turnDirection);
+            EXPECT_EQ(expectedParams.restrictions, actualParams.restrictions);
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

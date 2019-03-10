@@ -13,10 +13,11 @@ namespace UKControllerPlugin {
         {
             if (!ValidateLevelRestrictionData(json)) {
                 restriction.reset(nullptr);
+                LogWarning("Invalid blocked hold level restriction");
                 return;
             }
 
-            restriction.reset(new BlockedHoldLevelRestriction(json.at("levels").array()));
+            restriction.reset(new BlockedHoldLevelRestriction(json.at("levels")));
         }
 
         /*

@@ -2,6 +2,7 @@
 #include "pch/stdafx.h"
 #include "hold/HoldingDataSerializer.h"
 #include "hold/HoldingData.h"
+#include "hold/HoldRestrictionSerializer.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -9,26 +10,11 @@ namespace UKControllerPlugin {
         const HoldingData holdSerializerInvalid = { 0, "INVALID" };
 
         /*
-            Convert HoldingData to JSON
-        */
-        void to_json(nlohmann::json & json, const HoldingData & holdingData) {
-            json = nlohmann::json { 
-                {"id", holdingData.identifier},
-                {"fix", holdingData.fix},
-                {"description", holdingData.description},
-                {"minimum_altitude", holdingData.minimum},
-                {"maximum_altitude", holdingData.maximum},
-                {"inbound_heading", holdingData.inbound},
-                {"turn_direction", holdingData.turnDirection},
-            };
-        }
-
-        /*
             Create HoldingData from JSON
         */
         void from_json(const nlohmann::json & json, HoldingData & holdingData) {
             if (!JsonValid(json)) {
-                holdingData = holdSerializerInvalid;
+                holdingData = { 0, "INVALID" };
                 return;
             }
 
@@ -39,6 +25,8 @@ namespace UKControllerPlugin {
             json.at("maximum_altitude").get_to(holdingData.maximum);
             json.at("inbound_heading").get_to(holdingData.inbound);
             json.at("turn_direction").get_to(holdingData.turnDirection);
+            holdingData.restrictions = json.at("restrictions")
+                .get<std::set<std::unique_ptr<AbstractHoldLevelRestriction>>>();
         }
 
         /*
@@ -61,7 +49,9 @@ namespace UKControllerPlugin {
                 data.at("inbound_heading").is_number_integer() &&
                 data.find("turn_direction") != data.end() &&
                 data.at("turn_direction").is_string() &&
-                (data.at("turn_direction") == "left" || data.at("turn_direction") == "right");
+                (data.at("turn_direction") == "left" || data.at("turn_direction") == "right") &&
+                data.find("restrictions") != data.end() &&
+                data.at("restrictions").is_array();
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -45,7 +45,7 @@ namespace UKControllerPluginTest {
                     )
                 {
                     this->dialogManager.AddDialog(this->dialogData);
-                    manager.AddHold(ManagedHold(holdData));
+                    manager.AddHold(ManagedHold(std::move(holdData)));
 
                     // Add a FP to the holds initially.
                     NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplanInitial;
@@ -83,7 +83,7 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return(this->mockRadarTarget));
                 }
 
-                const HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
+                HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, "left", {} };
                 std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplan;
                 std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;

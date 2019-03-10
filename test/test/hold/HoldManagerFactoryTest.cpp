@@ -34,6 +34,7 @@ namespace UKControllerPluginTest {
             hold1["maximum_altitude"] = 15000;
             hold1["inbound_heading"] = 309;
             hold1["turn_direction"] = "right";
+            hold1["restrictions"] = nlohmann::json::array();
             nlohmann::json hold2;
             hold2["id"] = 2;
             hold2["description"] = "WILLO";
@@ -42,6 +43,7 @@ namespace UKControllerPluginTest {
             hold2["maximum_altitude"] = 15000;
             hold2["inbound_heading"] = 285;
             hold2["turn_direction"] = "left";
+            hold2["restrictions"] = nlohmann::json::array();
 
             data = { hold1, hold2 };
             EXPECT_EQ(2, CreateHoldManager(data)->CountHolds());
@@ -82,6 +84,7 @@ namespace UKControllerPluginTest {
             hold["maximum_altitude"] = 15000;
             hold["inbound_heading"] = 309;
             hold["turn_direction"] = "right";
+            hold["restrictions"] = nlohmann::json::array();
 
             data = nlohmann::json::array({ hold });
             EXPECT_EQ(0, CreateHoldManager(data)->GetManagedHold(1)->CountHoldingAircraft());

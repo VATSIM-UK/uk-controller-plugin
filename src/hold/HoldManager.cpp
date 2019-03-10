@@ -26,16 +26,16 @@ namespace UKControllerPlugin {
                 this->holdData.begin(),
                 this->holdData.end(),
                 [&hold] (std::pair<unsigned int, const std::unique_ptr<ManagedHold> &> compare) -> bool {
-                    return hold.holdParameters == compare.second->holdParameters;
+                    return hold.GetHoldParameters() == compare.second->GetHoldParameters();
                 }
             );
              
             if (existingHold != this->holdData.end()) {
-                LogWarning("Tried to add duplicate hold " + std::to_string(hold.holdParameters.identifier));
+                LogWarning("Tried to add duplicate hold " + std::to_string(hold.GetHoldParameters().identifier));
                 return;
             }
 
-            this->holdData[hold.holdParameters.identifier] = std::make_unique<ManagedHold>(std::move(hold));
+            this->holdData[hold.GetHoldParameters().identifier] = std::make_unique<ManagedHold>(std::move(hold));
         }
 
         /*

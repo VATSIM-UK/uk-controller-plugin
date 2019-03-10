@@ -60,7 +60,8 @@ namespace UKControllerPluginTest {
                         { "minimum_altitude", 7000 },
                         { "maximum_altitude", 15000 },
                         { "inbound_heading", 309 },
-                        { "turn_direction", "right" }
+                        { "turn_direction", "right" },
+                        { "restrictions", nlohmann::json::array()}
                     };
 
                     nlohmann::json hold2;
@@ -71,7 +72,8 @@ namespace UKControllerPluginTest {
                         { "minimum_altitude", 7000 },
                         { "maximum_altitude", 15000 },
                         { "inbound_heading", 309 },
-                        { "turn_direction", "right" }
+                        { "turn_direction", "right" },
+                        { "restrictions", nlohmann::json::array()}
                     };
 
                     nlohmann::json profile1;
@@ -180,10 +182,11 @@ namespace UKControllerPluginTest {
                 7000,
                 15000,
                 309,
-                HoldingData::TURN_DIRECTION_RIGHT
+                HoldingData::TURN_DIRECTION_RIGHT,
+                {}
             };
 
-            EXPECT_TRUE(expectedHold == this->container.holdManager->GetManagedHold(1)->holdParameters);
+            EXPECT_TRUE(expectedHold == this->container.holdManager->GetManagedHold(1)->GetHoldParameters());
         }
 
         TEST_F(HoldModuleTest, ItReportsNoHoldsToTheUser)

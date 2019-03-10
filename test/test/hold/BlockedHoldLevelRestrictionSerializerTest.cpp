@@ -66,7 +66,7 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["levels"] = { 7000, 8000, 9000 };
 
-            std::set<unsigned int> expectedLevels;
+            std::set<unsigned int> expectedLevels = { 7000, 8000, 9000 };
             EXPECT_EQ(expectedLevels, data.get<std::unique_ptr<BlockedHoldLevelRestriction>>()->GetLevels());
         }
 

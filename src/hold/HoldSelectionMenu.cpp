@@ -87,7 +87,7 @@ namespace UKControllerPlugin {
 
                 // Use a "different" callback function for each hold, so we can easily determine which one is called
                 PopupMenuItem menuItem;
-                menuItem.firstValue = hold->holdParameters.description;
+                menuItem.firstValue = hold->GetHoldParameters().description;
                 menuItem.secondValue = "";
                 menuItem.callbackFunctionId = this->callbackIdFirstHold + *it;
                 menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;

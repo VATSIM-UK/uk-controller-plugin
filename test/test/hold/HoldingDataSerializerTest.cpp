@@ -15,6 +15,11 @@ namespace UKControllerPluginTest {
             public:
                 HoldingDataSerializerTest()
                 {
+                    nlohmann::json restriction = {
+                        {"type", "level-block"},
+                        {"levels", nlohmann::json::array({7000, 9000})}
+                    };
+
                     testData = {
                         {"id", 1},
                         {"fix", "TIMBA"},
@@ -22,7 +27,8 @@ namespace UKControllerPluginTest {
                         {"minimum_altitude", 7000},
                         {"maximum_altitude", 15000},
                         {"inbound_heading", 309},
-                        {"turn_direction", "right"}
+                        {"turn_direction", "right"},
+                        {"restrictions", nlohmann::json::array({restriction})}
                     };
                 }
 
@@ -112,6 +118,18 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(JsonValid(testData));
         }
 
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsFalseNoRestrictions)
+        {
+            this->testData.erase("restrictions");
+            EXPECT_FALSE(JsonValid(testData));
+        }
+
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsFalseRestrictionsNotArray)
+        {
+            this->testData["restrictions"] = "lol";
+            EXPECT_FALSE(JsonValid(testData));
+        }
+
         TEST_F(HoldingDataSerializerTest, ReturnsInvalidOnInvalidFromJson)
         {
             this->testData["turn_direction"] = "up";
@@ -120,31 +138,17 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldingDataSerializerTest, ReturnsHoldingDataFromJson)
         {
-            HoldingData expected = {
-                1,
-                "TIMBA",
-                "TIMBA LOW",
-                7000,
-                15000,
-                309,
-                "right"
-            };
-            EXPECT_EQ(expected, this->testData.get<HoldingData>());
-        }
-
-        TEST_F(HoldingDataSerializerTest, ReturnsJsonFromHoldingData)
-        {
-            HoldingData holdingData = {
-                1,
-                "TIMBA",
-                "TIMBA LOW",
-                7000,
-                15000,
-                309,
-                "right"
-            };
-
-            EXPECT_EQ(this->testData, nlohmann::json(holdingData));
+            HoldingData actual = this->testData.get<HoldingData>();
+            EXPECT_EQ(1, actual.identifier);
+            EXPECT_EQ("TIMBA", actual.fix);
+            EXPECT_EQ("TIMBA LOW", actual.description);
+            EXPECT_EQ(7000, actual.minimum);
+            EXPECT_EQ(15000, actual.maximum);
+            EXPECT_EQ(309, actual.inbound);
+            EXPECT_EQ("right", actual.turnDirection);
+            EXPECT_EQ(1, actual.restrictions.size());
+            EXPECT_TRUE((*actual.restrictions.cbegin())->LevelRestricted(7000));
+            EXPECT_TRUE((*actual.restrictions.cbegin())->LevelRestricted(9000));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

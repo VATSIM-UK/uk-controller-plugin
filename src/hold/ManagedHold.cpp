@@ -8,15 +8,25 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         ManagedHold::ManagedHold(HoldingData holdParameters)
-            : holdParameters(holdParameters), uniqueHoldLock(this->holdLock, std::defer_lock_t())
+            : holdParameters(std::move(holdParameters)), uniqueHoldLock(this->holdLock, std::defer_lock_t())
         {
 
         }
 
-        ManagedHold::ManagedHold(const ManagedHold & compare)
-            : holdParameters(compare.holdParameters), uniqueHoldLock(this->holdLock, std::defer_lock_t())
+        ManagedHold::ManagedHold(ManagedHold && compare)
+            : holdParameters(std::move(compare.holdParameters)), uniqueHoldLock(this->holdLock, std::defer_lock_t())
         {
             this->holdingAircraft = compare.holdingAircraft;
+        }
+
+        ManagedHold & ManagedHold::operator=(ManagedHold && original)
+        {
+            if (this != &original)
+            {
+                this->holdParameters = std::move(original.holdParameters);
+            }
+
+            return *this;
         }
 
         /*
@@ -45,6 +55,14 @@ namespace UKControllerPlugin {
         size_t ManagedHold::CountHoldingAircraft(void) const
         {
             return this->holdingAircraft.size();
+        }
+
+        /*
+            Get the parameters
+        */
+        const UKControllerPlugin::Hold::HoldingData & ManagedHold::GetHoldParameters(void) const
+        {
+            return this->holdParameters;
         }
 
         /*

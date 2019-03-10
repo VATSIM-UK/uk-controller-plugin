@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
         */
         bool HoldConfigurationDialog::AddHold(UKControllerPlugin::Hold::HoldingData hold)
         {
-            if (!this->holds.insert(hold).second) {
+            if (!this->holds.insert(std::move(hold)).second) {
                 LogWarning("Attempted to add duplicate hold to dialog " + std::to_string(hold.identifier));
                 return false;
             }

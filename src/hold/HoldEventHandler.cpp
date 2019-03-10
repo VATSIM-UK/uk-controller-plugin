@@ -121,7 +121,7 @@ namespace UKControllerPlugin {
                 return this->noHold;
             }
 
-            return "H" + hold->holdParameters.fix;
+            return "H" + hold->GetHoldParameters().fix;
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

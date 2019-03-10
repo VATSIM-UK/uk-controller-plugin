@@ -14,10 +14,14 @@ namespace UKControllerPlugin {
         {
             public:
                 ManagedHold(const UKControllerPlugin::Hold::HoldingData holdData);
-                ManagedHold(const ManagedHold & compare);
+                ManagedHold(ManagedHold const &) = delete;
+                ManagedHold &operator=(ManagedHold const &) = delete;
+                ManagedHold(ManagedHold && original);
+                ManagedHold &operator=(ManagedHold && original);
                 ~ManagedHold();
                 void AddHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft);
                 size_t CountHoldingAircraft(void) const;
+                const UKControllerPlugin::Hold::HoldingData & GetHoldParameters(void) const;
                 bool HasAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft) const;
                 bool HasAircraft(std::string callsign) const;
                 void LockAircraftList(void) const;
@@ -39,11 +43,10 @@ namespace UKControllerPlugin {
                 const_iterator cbegin(void) const { return this->holdingAircraft.cbegin(); }
                 const_iterator cend(void) const { return holdingAircraft.cend(); }
 
-
-                // The ID of the hold from the web API
-                const UKControllerPlugin::Hold::HoldingData holdParameters;
-
             private:
+
+                // The parameters of the hold
+                UKControllerPlugin::Hold::HoldingData holdParameters;
                 
                 // A lock for the aircraft queue, locking is deferred.
                 mutable std::unique_lock<std::mutex> uniqueHoldLock;

@@ -40,7 +40,7 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                dialog->AddHold(data);
+                dialog->AddHold(std::move(data));
             }
 
             LogInfo("Created Hold Manager with " + std::to_string(dialog->CountHolds()) + " holds");

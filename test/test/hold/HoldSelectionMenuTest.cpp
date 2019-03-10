@@ -33,9 +33,9 @@ namespace UKControllerPluginTest {
                 {
                     this->mockFlightplan.reset(new NiceMock<MockEuroScopeCFlightPlanInterface>);
                     this->mockRadarTarget.reset(new NiceMock<MockEuroScopeCRadarTargetInterface>);
-                    this->holdManager.AddHold(ManagedHold(this->holdData));
-                    this->holdManager.AddHold(ManagedHold(this->holdData2));
-                    this->holdManager.AddHold(ManagedHold(this->holdData3));
+                    this->holdManager.AddHold(ManagedHold(std::move(this->holdData)));
+                    this->holdManager.AddHold(ManagedHold(std::move(this->holdData2)));
+                    this->holdManager.AddHold(ManagedHold(std::move(this->holdData3)));
 
                     ON_CALL(*this->mockFlightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
@@ -46,9 +46,9 @@ namespace UKControllerPluginTest {
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 HoldManager holdManager;
                 HoldSelectionMenu holdSelectionMenu;
-                HoldingData holdData = { 1, "TIMBA", "TIMBA", 7000, 15000, 309, "left" };
-                HoldingData holdData2 = { 2, "WILLO", "WILLO", 7000, 15000, 309, "left" };
-                HoldingData holdData3 = { 3, "MAY", "MAY", 7000, 15000, 309, "left" };
+                HoldingData holdData = { 1, "TIMBA", "TIMBA", 7000, 15000, 309, "left", {} };
+                HoldingData holdData2 = { 2, "WILLO", "WILLO", 7000, 15000, 309, "left", {} };
+                HoldingData holdData3 = { 3, "MAY", "MAY", 7000, 15000, 309, "left", {} };
         };
 
         TEST_F(HoldSelectionMenuTest, ItStartsWithNoHolds)

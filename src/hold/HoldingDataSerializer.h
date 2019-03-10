@@ -8,11 +8,6 @@ namespace UKControllerPlugin {
         extern const HoldingData holdSerializerInvalid;
 
         /*
-            Convert HoldingData to JSON
-        */
-        void to_json(nlohmann::json & json, const HoldingData & holdingData);
-
-        /*
             Create HoldingData from JSON
         */
         void from_json(const nlohmann::json & json, HoldingData & holdingData);

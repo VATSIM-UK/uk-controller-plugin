@@ -28,7 +28,7 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                holdManager->AddHold(ManagedHold(data));
+                holdManager->AddHold(ManagedHold(std::move(data)));
             }
 
             LogInfo("Created Hold Manager with " + std::to_string(holdManager->CountHolds()) + " holds");

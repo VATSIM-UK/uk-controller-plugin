@@ -105,7 +105,7 @@ namespace UKControllerPlugin {
 
             // Title bar
             graphics->FillRectangle(&this->titleBarBrush, this->titleArea);
-            std::wstring holdName = ConvertToTchar(this->managedHold.holdParameters.description);
+            std::wstring holdName = ConvertToTchar(this->managedHold.GetHoldParameters().description);
             graphics->DrawString(
                 holdName.c_str(),
                 holdName.length(),
@@ -164,8 +164,8 @@ namespace UKControllerPlugin {
 
             // Render all the possible levels in the hold
             for (
-                unsigned int i = this->managedHold.holdParameters.maximum;
-                i >= this->managedHold.holdParameters.minimum;
+                unsigned int i = this->managedHold.GetHoldParameters().maximum;
+                i >= this->managedHold.GetHoldParameters().minimum;
                 i -= 1000
             ) {
                 graphics->DrawString(
@@ -187,7 +187,7 @@ namespace UKControllerPlugin {
             ) {
 
                 unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
-                unsigned int displayRow = GetDisplayRow(this->managedHold.holdParameters.maximum, occupied);
+                unsigned int displayRow = GetDisplayRow(this->managedHold.GetHoldParameters().maximum, occupied);
                 callsignDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
                 actualLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
                 clearedLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
