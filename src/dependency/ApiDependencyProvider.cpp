@@ -38,7 +38,7 @@ namespace UKControllerPlugin {
             }
             catch (ApiException exception) {
                 LogError(
-                    "ApiException when dependency data for " + dependency.localPath +
+                    "ApiException when downloading dependency data for " + dependency.localPath +
                         ": " + std::string(exception.what())
                 );
 

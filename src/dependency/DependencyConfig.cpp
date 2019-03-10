@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
         // Holds
         const DependencyData DependencyConfig::holds {
             "dependencies/holds.json",
-            "holds",
+            "hold",
             "[]"_json
         };
 
