@@ -141,19 +141,11 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Builds a request to download the generic hold profiles
-        */
-        CurlRequest ApiRequestBuilder::BuildGenericHoldProfilesRequest(void) const
-        {
-            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/profile", CurlRequest::METHOD_GET));
-        }
-
-        /*
             Builds a request to download all the users custom hold profiles
         */
         CurlRequest ApiRequestBuilder::BuildUserHoldProfilesRequest(void) const
         {
-            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/profile/user", CurlRequest::METHOD_GET));
+            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/profile", CurlRequest::METHOD_GET));
         }
 
         /*
@@ -162,7 +154,7 @@ namespace UKControllerPlugin {
         CurlRequest ApiRequestBuilder::BuildDeleteUserHoldProfileRequest(unsigned int id) const
         {
             return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/hold/profile/user/" + std::to_string(id), CurlRequest::METHOD_DELETE)
+                CurlRequest(apiDomain + "/hold/profile/" + std::to_string(id), CurlRequest::METHOD_DELETE)
             );
         }
 
@@ -177,7 +169,7 @@ namespace UKControllerPlugin {
             body["name"] = profileName;
             body["holds"] = holdIds;
 
-            CurlRequest request(apiDomain + "/hold/profile/user", CurlRequest::METHOD_PUT);
+            CurlRequest request(apiDomain + "/hold/profile", CurlRequest::METHOD_PUT);
             request.SetBody(body.dump());
 
             return this->AddCommonHeaders(request);
@@ -196,7 +188,7 @@ namespace UKControllerPlugin {
             body["holds"] = holdIds;
 
             CurlRequest request(
-                apiDomain + "/hold/profile/user/" + std::to_string(profileId),
+                apiDomain + "/hold/profile/" + std::to_string(profileId),
                 CurlRequest::METHOD_PUT
             );
             request.SetBody(body.dump());

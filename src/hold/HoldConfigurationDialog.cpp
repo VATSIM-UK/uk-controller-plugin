@@ -379,7 +379,7 @@ namespace UKControllerPlugin {
                                 IDC_HOLD_PROFILE_SELECT,
                                 CB_SETITEMDATA,
                                 newProfileIndex,
-                                (LPARAM) newProfileIndex
+                                (LPARAM) profileId
                             );
 
                             // Set the current selection to the new profile
@@ -522,7 +522,13 @@ namespace UKControllerPlugin {
                                 0,
                                 0
                             );
-                            this->selectedHoldProfile = 0;
+                            this->selectedHoldProfile = SendDlgItemMessage(
+                                hwnd,
+                                IDC_HOLD_PROFILE_SELECT,
+                                CB_GETITEMDATA,
+                                0,
+                                NULL
+                            );
                             this->selectedHoldProfileIndex = 0;
                             return TRUE;
                         }

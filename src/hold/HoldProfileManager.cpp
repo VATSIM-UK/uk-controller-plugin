@@ -80,7 +80,7 @@ namespace UKControllerPlugin {
                 profileId = this->api.CreateUserHoldProfile(name, holds);
             } catch (ApiException apiException) {
                 // Didnt save to the API, stop
-                LogError("Failed to create profile on the API");
+                LogError("Failed to create profile on the API " + std::string(apiException.what()));
                 return this->invalidProfileNewId;
             }
 

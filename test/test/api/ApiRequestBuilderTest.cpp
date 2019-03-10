@@ -116,17 +116,9 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedRequest == this->builder.BuildHoldDependencyRequest());
         }
 
-        TEST_F(ApiRequestBuilderTest, ItBuildsGenericHoldProfileDownloadRequests)
-        {
-            CurlRequest expectedRequest("http://testurl.com/hold/profile", CurlRequest::METHOD_GET);
-            expectedRequest.AddHeader("Authorization", "Bearer apikey");
-            expectedRequest.AddHeader("Accept", "application/json");
-            EXPECT_TRUE(expectedRequest == this->builder.BuildGenericHoldProfilesRequest());
-        }
-
         TEST_F(ApiRequestBuilderTest, ItBuildsUserHoldProfileDownloadRequests)
         {
-            CurlRequest expectedRequest("http://testurl.com/hold/profile/user", CurlRequest::METHOD_GET);
+            CurlRequest expectedRequest("http://testurl.com/hold/profile", CurlRequest::METHOD_GET);
             expectedRequest.AddHeader("Authorization", "Bearer apikey");
             expectedRequest.AddHeader("Accept", "application/json");
             EXPECT_TRUE(expectedRequest == this->builder.BuildUserHoldProfilesRequest());
@@ -134,7 +126,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ApiRequestBuilderTest, ItBuildsUserHoldProfileDeleteRequests)
         {
-            CurlRequest expectedRequest("http://testurl.com/hold/profile/user/1", CurlRequest::METHOD_DELETE);
+            CurlRequest expectedRequest("http://testurl.com/hold/profile/1", CurlRequest::METHOD_DELETE);
             expectedRequest.AddHeader("Authorization", "Bearer apikey");
             expectedRequest.AddHeader("Accept", "application/json");
             EXPECT_TRUE(expectedRequest == this->builder.BuildDeleteUserHoldProfileRequest(1));
@@ -146,7 +138,7 @@ namespace UKControllerPluginTest {
             expectedData["name"] = "Test";
             expectedData["holds"] = { 1, 2 };
 
-            CurlRequest expectedRequest("http://testurl.com/hold/profile/user", CurlRequest::METHOD_PUT);
+            CurlRequest expectedRequest("http://testurl.com/hold/profile", CurlRequest::METHOD_PUT);
             expectedRequest.SetBody(expectedData.dump());
             expectedRequest.AddHeader("Authorization", "Bearer apikey");
             expectedRequest.AddHeader("Accept", "application/json");
@@ -163,7 +155,7 @@ namespace UKControllerPluginTest {
             expectedData["name"] = "Test";
             expectedData["holds"] = { 1, 2 };
 
-            CurlRequest expectedRequest("http://testurl.com/hold/profile/user/1", CurlRequest::METHOD_PUT);
+            CurlRequest expectedRequest("http://testurl.com/hold/profile/1", CurlRequest::METHOD_PUT);
             expectedRequest.SetBody(expectedData.dump());
             expectedRequest.AddHeader("Authorization", "Bearer apikey");
             expectedRequest.AddHeader("Accept", "application/json");

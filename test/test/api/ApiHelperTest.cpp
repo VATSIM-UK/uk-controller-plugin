@@ -442,7 +442,7 @@ TEST_F(ApiHelperTest, GetUserHoldProfilesReturnsReturnsData)
     data["big"] = "small";
 
     CurlResponse response(data.dump(), false, 200);
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/user", CurlRequest::METHOD_GET));
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_GET));
 
     EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
         .Times(1)
@@ -458,7 +458,7 @@ TEST_F(ApiHelperTest, DeleteUserHoldProfileMakesRequest)
     data["big"] = "small";
 
     CurlResponse response(data.dump(), false, 200);
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/user/1", CurlRequest::METHOD_DELETE));
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/1", CurlRequest::METHOD_DELETE));
 
     EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
         .Times(1)
@@ -477,7 +477,7 @@ TEST_F(ApiHelperTest, CreateUserHoldProfileMakesRequest)
     nlohmann::json expectedBody;
     expectedBody["name"] = "Test";
     expectedBody["holds"] = { 1, 2 };
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/user", CurlRequest::METHOD_PUT, expectedBody));
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_PUT, expectedBody));
 
     EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
         .Times(1)
@@ -496,7 +496,7 @@ TEST_F(ApiHelperTest, CreateUserHoldProfileThrowsExceptionIdNotANumber)
     nlohmann::json expectedBody;
     expectedBody["name"] = "Test";
     expectedBody["holds"] = { 1, 2 };
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/user", CurlRequest::METHOD_PUT, expectedBody));
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_PUT, expectedBody));
 
     EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
         .Times(1)
@@ -514,7 +514,7 @@ TEST_F(ApiHelperTest, CreateUserHoldProfileThrowsExceptionNoIdReturned)
     nlohmann::json expectedBody;
     expectedBody["name"] = "Test";
     expectedBody["holds"] = { 1, 2 };
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/user", CurlRequest::METHOD_PUT, expectedBody));
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_PUT, expectedBody));
 
     EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
         .Times(1)
@@ -535,7 +535,7 @@ TEST_F(ApiHelperTest, UpdateUserHoldProfileMakesRequest)
     nlohmann::json expectedBody;
     expectedBody["name"] = "Test";
     expectedBody["holds"] = { 1, 2 };
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/user/1", CurlRequest::METHOD_PUT, expectedBody));
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/1", CurlRequest::METHOD_PUT, expectedBody));
 
     EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
         .Times(1)

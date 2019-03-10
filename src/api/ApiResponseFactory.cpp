@@ -16,7 +16,10 @@ namespace UKControllerPlugin {
 
             // Make sure we can parse the JSON
             try {
-                responseJson = nlohmann::json::parse(curl.GetResponse());
+                // If 204, we aren't expecting a body
+                if (curl.GetStatusCode() != 204L) {
+                    responseJson = nlohmann::json::parse(curl.GetResponse());
+                }
             } catch (nlohmann::json::exception) {
                 LogError("Error processing API response, JSON was invalid");
                 responseJson = "{}"_json;

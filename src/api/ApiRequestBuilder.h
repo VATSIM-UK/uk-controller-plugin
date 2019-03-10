@@ -31,7 +31,6 @@ namespace UKControllerPlugin {
                     std::string destination
                 ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildHoldDependencyRequest(void) const;
-                UKControllerPlugin::Curl::CurlRequest BuildGenericHoldProfilesRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildUserHoldProfilesRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildDeleteUserHoldProfileRequest(unsigned int id) const;
                 UKControllerPlugin::Curl::CurlRequest BuildCreateUserHoldProfileRequest(

@@ -219,7 +219,7 @@ namespace UKControllerPlugin {
         */
         nlohmann::json ApiHelper::GetGenericHoldProfiles(void) const
         {
-            return this->MakeApiRequest(this->requestBuilder.BuildGenericHoldProfilesRequest()).GetRawData();
+            return this->MakeApiRequest(this->requestBuilder.BuildUserHoldProfilesRequest()).GetRawData();
         }
 
         /*
