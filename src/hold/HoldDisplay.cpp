@@ -18,6 +18,7 @@ namespace UKControllerPlugin {
             titleBarBrush(Gdiplus::Color(255, 153, 153)), backgroundBrush(CreateSolidBrush(RGB(0, 0, 0))),
             titleBarTextBrush(Gdiplus::Color(255, 255, 255)), fontFamily(L"EuroScope"),
             font(&fontFamily, 12, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
+            plusFont(&fontFamily, 18, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
             stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
             dataBrush(Gdiplus::Color(0, 176, 0)),
             clearedLevelBrush(Gdiplus::Color(255, 128, 64)),
@@ -62,6 +63,7 @@ namespace UKControllerPlugin {
             backgroundBrush(CreateSolidBrush(RGB(0, 0, 0))),
             titleBarTextBrush(Gdiplus::Color(255, 255, 255)), fontFamily(L"EuroScope"),
             font(&fontFamily, 12, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
+            plusFont(&fontFamily, 16, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
             stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
             dataBrush(Gdiplus::Color(0, 176, 0)),
             clearedLevelBrush(Gdiplus::Color(255, 128, 64)),
@@ -96,6 +98,22 @@ namespace UKControllerPlugin {
             InvalidateRgn(this->selfHandle, NULL, TRUE);
         }
 
+        void HoldDisplay::DrawRoundRectangle(Gdiplus::Graphics * graphics, const Gdiplus::Pen * p, Gdiplus::Rect & rect, UINT8 radius)
+        {
+            Gdiplus::GraphicsPath path;
+            path.AddLine(rect.X + radius, rect.Y, rect.X + rect.Width - (radius * 2), rect.Y);
+            path.AddArc(rect.X + rect.Width - (radius * 2), rect.Y, radius * 2, radius * 2, 270, 90);
+            path.AddLine(rect.X + rect.Width, rect.Y + radius, rect.X + rect.Width, rect.Y + rect.Height - (radius * 2));
+            path.AddArc(rect.X + rect.Width - (radius * 2), rect.Y + rect.Height - (radius * 2), radius * 2,
+                radius * 2, 0, 90);
+            path.AddLine(rect.X + rect.Width - (radius * 2), rect.Y + rect.Height, rect.X + radius, rect.Y + rect.Height);
+            path.AddArc(rect.X, rect.Y + rect.Height - (radius * 2), radius * 2, radius * 2, 90, 90);
+            path.AddLine(rect.X, rect.Y + rect.Height - (radius * 2), rect.X, rect.Y + radius);
+            path.AddArc(rect.X, rect.Y, radius * 2, radius * 2, 180, 90);
+            path.CloseFigure();
+            graphics->DrawPath(&this->borderPen, &path);
+        }
+
         void HoldDisplay::PaintWindow(HDC hdc)
         {
             CRect windowRect;
@@ -125,6 +143,54 @@ namespace UKControllerPlugin {
             // Exit Button
             graphics->FillRectangle(&this->exitButtonBrush, this->exitButtonArea);
             graphics->DrawString(L"X", 1, &this->font, this->exitButtonArea, &this->stringFormat, &this->titleBarTextBrush);
+
+
+            // Action buttons
+            Gdiplus::Rect minusButtonRect = {
+                5,
+                (int) this->buttonStartHeight,
+                40,
+                40
+            };
+            Gdiplus::RectF minusButtonTextRect = {
+                5.0f,
+                this->buttonStartHeight,
+                40.0f,
+                40.0f
+            };
+            this->DrawRoundRectangle(graphics, &this->borderPen, minusButtonRect, 5);
+            graphics->DrawString(L"-", 1, &this->plusFont, minusButtonTextRect, &this->stringFormat, &this->titleBarTextBrush);
+
+            Gdiplus::Rect plusButtonRect = {
+                55,
+                (int)this->buttonStartHeight,
+                40,
+                40
+            };
+            Gdiplus::RectF plusButtonTextRect = {
+                55.0f,
+                this->buttonStartHeight,
+                40.0f,
+                40.0f
+            };
+            this->DrawRoundRectangle(graphics, &this->borderPen, plusButtonRect, 5);
+            graphics->DrawString(L"+", 1, &this->plusFont, plusButtonTextRect, &this->stringFormat, &this->titleBarTextBrush);
+
+
+            Gdiplus::Rect addButtonRect = {
+                190,
+                (int)this->buttonStartHeight,
+                40,
+                40
+            };
+            Gdiplus::RectF addButtonTextRect = {
+                190.0f,
+                this->buttonStartHeight,
+                40.0f,
+                40.0f
+            };
+            this->DrawRoundRectangle(graphics, &this->borderPen, addButtonRect, 5);
+            graphics->DrawString(L"ADD", 3, &this->font, addButtonTextRect, &this->stringFormat, &this->titleBarTextBrush);
 
             // Hold display
             Gdiplus::RectF numbersDisplay = {

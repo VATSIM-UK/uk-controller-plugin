@@ -30,6 +30,7 @@ namespace UKControllerPlugin {
 
             private:
 
+                void DrawRoundRectangle(Gdiplus::Graphics* g, const Gdiplus::Pen *p, Gdiplus::Rect & rect, UINT8 radius);
                 void PaintWindow(HDC hdc);
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -61,6 +62,7 @@ namespace UKControllerPlugin {
                 // Fonts
                 const Gdiplus::FontFamily fontFamily;
                 const Gdiplus::Font font;
+                const Gdiplus::Font plusFont;
                 Gdiplus::StringFormat stringFormat;
 
                 // Titlebar
@@ -71,9 +73,10 @@ namespace UKControllerPlugin {
                 const float lineHeight = 17.0f;
 
                 // Where to start drawing data
-                const float dataStartHeight = this->titleArea.Y + this->titleArea.Height + 3;
+                const float buttonStartHeight = this->titleArea.Y + this->titleArea.Height + 3;
+                const float dataStartHeight = this->buttonStartHeight + 50;
                 const int windowWidth = 235;
-                const int windowHeight = 250;
+                const int windowHeight = 500;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin
