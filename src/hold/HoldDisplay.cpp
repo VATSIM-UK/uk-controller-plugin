@@ -146,49 +146,12 @@ namespace UKControllerPlugin {
 
 
             // Action buttons
-            Gdiplus::Rect minusButtonRect = {
-                5,
-                (int) this->buttonStartHeight,
-                40,
-                40
-            };
-            Gdiplus::RectF minusButtonTextRect = {
-                5.0f,
-                this->buttonStartHeight,
-                40.0f,
-                40.0f
-            };
             this->DrawRoundRectangle(graphics, &this->borderPen, minusButtonRect, 5);
             graphics->DrawString(L"-", 1, &this->plusFont, minusButtonTextRect, &this->stringFormat, &this->titleBarTextBrush);
 
-            Gdiplus::Rect plusButtonRect = {
-                55,
-                (int)this->buttonStartHeight,
-                40,
-                40
-            };
-            Gdiplus::RectF plusButtonTextRect = {
-                55.0f,
-                this->buttonStartHeight,
-                40.0f,
-                40.0f
-            };
             this->DrawRoundRectangle(graphics, &this->borderPen, plusButtonRect, 5);
             graphics->DrawString(L"+", 1, &this->plusFont, plusButtonTextRect, &this->stringFormat, &this->titleBarTextBrush);
 
-
-            Gdiplus::Rect addButtonRect = {
-                190,
-                (int)this->buttonStartHeight,
-                40,
-                40
-            };
-            Gdiplus::RectF addButtonTextRect = {
-                190.0f,
-                this->buttonStartHeight,
-                40.0f,
-                40.0f
-            };
             this->DrawRoundRectangle(graphics, &this->borderPen, addButtonRect, 5);
             graphics->DrawString(L"ADD", 3, &this->font, addButtonTextRect, &this->stringFormat, &this->titleBarTextBrush);
 
@@ -201,11 +164,18 @@ namespace UKControllerPlugin {
             };
 
             // Render all the possible levels in the hold
+            unsigned int levelNumber = 0;
             for (
                 unsigned int i = this->managedHold.GetHoldParameters().maximum;
                 i >= this->managedHold.GetHoldParameters().minimum;
                 i -= 1000
             ) {
+                // Don't display the level if we're hiding it
+                if (levelNumber < this->numLevelsSkipped) {
+                    levelNumber++;
+                    continue;
+                }
+
                 // Display the restriction hash if a level is restricted
                 const HoldingData & holdParameters = this->managedHold.GetHoldParameters();
                 for (
@@ -233,10 +203,13 @@ namespace UKControllerPlugin {
                     &this->stringFormat,
                     &this->titleBarTextBrush
                 );
+
                 numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
+                levelNumber++;
             }
 
 
+            // Rects for rendering the actual data
             Gdiplus::RectF callsignDisplay = {
                 35.0f,
                 this->dataStartHeight,
@@ -271,9 +244,14 @@ namespace UKControllerPlugin {
                 it != this->managedHold.cend();
                 ++it
             ) {
-
                 unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
                 unsigned int displayRow = GetDisplayRow(this->managedHold.GetHoldParameters().maximum, occupied);
+
+                // Dont render any aircraft where a level is skipped
+                if (displayRow < this->numLevelsSkipped) {
+                    continue;
+                }
+
                 callsignDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
                 actualLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
                 clearedLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
@@ -348,10 +326,30 @@ namespace UKControllerPlugin {
             {
                 case WM_NCHITTEST: {
                     LRESULT hit = DefWindowProc(hwnd, msg, wParam, lParam);
+                    POINT mousePoint = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+                    ScreenToClient(this->selfHandle, &mousePoint);
                     Gdiplus::REAL xpos = (Gdiplus::REAL) GET_X_LPARAM(lParam);
                     Gdiplus::REAL ypos = (Gdiplus::REAL) GET_Y_LPARAM(lParam);
-                    if (hit == HTCLIENT) hit = HTCAPTION;
-                    return hit;
+
+                    return this->titleArea.Contains((Gdiplus::REAL) mousePoint.x, (Gdiplus::REAL) mousePoint.y) 
+                        ? HTCAPTION 
+                        : HTCLIENT;
+                }
+                case WM_LBUTTONUP: {
+                    POINT p;
+                    GetCursorPos(&p);
+                    ScreenToClient(hwnd, &p);
+
+                    if (this->plusButtonRect.Contains(p.x, p.y)) {
+                        if (numLevelsSkipped > 0) this->numLevelsSkipped--;
+                        InvalidateRgn(this->selfHandle, NULL, TRUE);
+                    } else if (this->minusButtonRect.Contains(p.x, p.y)) {
+                        const unsigned int maxLevelsSkippable = (this->managedHold.GetHoldParameters().maximum -
+                            this->managedHold.GetHoldParameters().minimum) / 1000;
+                        if (maxLevelsSkippable != this->numLevelsSkipped) numLevelsSkipped++;
+                        InvalidateRgn(this->selfHandle, NULL, TRUE);
+                    }
+                    return TRUE;
                 }
                 case WM_PAINT: {
                     PAINTSTRUCT ps;

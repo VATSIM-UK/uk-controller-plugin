@@ -77,6 +77,19 @@ namespace UKControllerPlugin {
                 const float dataStartHeight = this->buttonStartHeight + 50;
                 const int windowWidth = 235;
                 const int windowHeight = 500;
+
+                // Some more rects
+                Gdiplus::Rect minusButtonRect = {5, (int)this->buttonStartHeight, 40, 40};
+                Gdiplus::RectF minusButtonTextRect = {5.0f, this->buttonStartHeight, 40.0f, 40.0f};
+                Gdiplus::Rect plusButtonRect = {55, (int)this->buttonStartHeight, 40, 40};
+                Gdiplus::RectF plusButtonTextRect = {55.0f, this->buttonStartHeight, 40.0f, 40.0f};
+                Gdiplus::Rect addButtonRect = {190, (int)this->buttonStartHeight, 40, 40};
+                Gdiplus::RectF addButtonTextRect = {190.0f, this->buttonStartHeight, 40.0f, 40.0f};
+
+                /*
+                    How many levels to not draw
+                */
+                unsigned int numLevelsSkipped = 0;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin
