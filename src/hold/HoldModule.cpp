@@ -199,18 +199,29 @@ namespace UKControllerPlugin {
         ) {
             configurableDisplay.RegisterDisplay(eventHandler);
             
+            const int rendererId = radarRenderables.ReserveRendererIdentifier();
             std::shared_ptr<HoldRenderer> renderer = std::make_shared<HoldRenderer>(
                 *container.holdProfiles,
                 *container.holdManager,
-                *container.plugin
+                *container.plugin,
+                radarRenderables.ReserveScreenObjectIdentifier(rendererId),
+                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 
             radarRenderables.RegisterRenderer(
-                radarRenderables.ReserveRendererIdentifier(),
+                rendererId,
                 renderer,
                 radarRenderables.afterTags
             );
             asrEvents.RegisterHandler(renderer);
+            configurableDisplay.RegisterDisplay(renderer);
+
+            CallbackFunction renderToggleCallback(
+                renderer->toggleCallbackFunctionId,
+                "Toggle Hold Rendering",
+                std::bind(&HoldRenderer::Configure, renderer, std::placeholders::_1, std::placeholders::_2)
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(renderToggleCallback);
         }
 
     }  // namespace Hold

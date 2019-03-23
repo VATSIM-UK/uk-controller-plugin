@@ -70,7 +70,7 @@ namespace UKControllerPlugin {
         /*
             Doesn't move.
         */
-        void ScreenControls::Move(RECT position)
+        void ScreenControls::Move(RECT position, std::string objectDescription)
         {
 
         }

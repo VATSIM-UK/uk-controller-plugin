@@ -179,7 +179,7 @@ namespace UKControllerPlugin {
         RECT Area,
         bool Released
     ) {
-        this->renderers.MoveScreenObject(ObjectType, Area);
+        this->renderers.MoveScreenObject(ObjectType, sObjectId, Area);
         this->RequestRefresh();
     }
 

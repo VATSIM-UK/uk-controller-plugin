@@ -52,7 +52,7 @@ namespace UKControllerPlugin {
                 /*
                     Called when an object is moved.
                 */
-                virtual void Move(RECT position) = 0;
+                virtual void Move(RECT position, std::string objectDescription) = 0;
 
                 /*
                     Render to the screen and possibly add clickable spots.

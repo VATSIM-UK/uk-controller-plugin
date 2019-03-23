@@ -39,7 +39,6 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
                 );
 
-
                 // The value returned when the aircraft is not holding
                 const unsigned int noAircraftHold = 9999999;
 

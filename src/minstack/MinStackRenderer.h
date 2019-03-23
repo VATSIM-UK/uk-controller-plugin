@@ -59,7 +59,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 );
                 bool IsVisible(void) const;
-                void Move(RECT titleBarArea);
+                void Move(RECT titleBarArea, std::string objectDescription);
                 void Render(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen

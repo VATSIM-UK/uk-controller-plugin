@@ -67,7 +67,7 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) override;
-                void Move(RECT position) override;
+                void Move(RECT position, std::string objectDescription) override;
                 bool ProcessCommand(std::string command) override;
                 void RightClick(
                     int objectId,

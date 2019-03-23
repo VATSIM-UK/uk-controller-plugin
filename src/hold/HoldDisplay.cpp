@@ -3,10 +3,12 @@
 #include "hold/HoldDisplayFunctions.h"
 #include "hold/ManagedHold.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "euroscope/EuroScopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
+using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -35,43 +37,77 @@ namespace UKControllerPlugin {
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
         }
 
-        HoldDisplay::HoldDisplay(const HoldDisplay & copy)
-            : plugin(copy.plugin),
-            managedHold(copy.managedHold),
-            titleBarBrush(Gdiplus::Color(255, 153, 153)),
-            backgroundBrush(Gdiplus::Color(0, 0, 0)),
-            titleBarTextBrush(Gdiplus::Color(255, 255, 255)), fontFamily(L"EuroScope"),
-            font(&fontFamily, 12, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
-            plusFont(&fontFamily, 16, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
-            stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
-            dataBrush(Gdiplus::Color(0, 176, 0)),
-            clearedLevelBrush(Gdiplus::Color(255, 128, 64)),
-            borderPen(Gdiplus::Color(255, 255, 255), 1.5f),
-            exitButtonBrush(Gdiplus::Color(0, 0, 0)),
-            blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255))
+        /*
+            A button has been clicked
+        */
+        void HoldDisplay::ButtonClicked(std::string button)
         {
-
+            if (button == "plus") {
+                if (numLevelsSkipped > 0) this->numLevelsSkipped--;
+            } else if (button == "minus") {
+                const unsigned int maxLevelsSkippable = (this->managedHold.GetHoldParameters().maximum -
+                            this->managedHold.GetHoldParameters().minimum) / 1000;
+                if (maxLevelsSkippable != this->numLevelsSkipped) numLevelsSkipped++;
+            } else if (button == "add") {
+                // To be implemented
+            }
         }
 
+        /*
+            Move the display
+        */
         void HoldDisplay::Move(const POINT & pos)
         {
+            // General window pos
             this->windowPos = pos;
 
+            // Title bar
             this->titleArea.X = pos.x;
             this->titleArea.Y = pos.y;
 
+            this->titleRect = {
+                this->titleArea.X,
+                this->titleArea.Y,
+                this->titleArea.X + this->titleArea.Width,
+                this->titleArea.Y + this->titleArea.Height
+            };
+
+            // Minus button
             this->minusButtonRect.X = pos.x + 5;
             this->minusButtonRect.Y = pos.y + this->buttonStartHeight;
 
+            this->minusButtonClickRect = {
+                this->minusButtonRect.X,
+                this->minusButtonRect.Y,
+                this->minusButtonRect.X + this->minusButtonRect.Width,
+                this->minusButtonRect.Y + this->minusButtonRect.Height
+            };
+
+            // Plus button
             this->plusButtonRect.X = pos.x + 55;
             this->plusButtonRect.Y = pos.y + this->buttonStartHeight;
 
+            this->plusButtonClickRect = {
+                this->plusButtonRect.X,
+                this->plusButtonRect.Y,
+                this->plusButtonRect.X + this->plusButtonRect.Width,
+                this->plusButtonRect.Y + this->plusButtonRect.Height
+            };
+
+            // Add button
             this->addButtonRect.X = pos.x + 190;
             this->addButtonRect.Y = pos.y + this->buttonStartHeight;
+
+            this->addButtonClickRect = {
+                this->addButtonRect.X,
+                this->addButtonRect.Y,
+                this->addButtonRect.X + this->addButtonRect.Width,
+                this->addButtonRect.Y + this->addButtonRect.Height
+            };
         }
 
 
-        void HoldDisplay::DrawRoundRectangle(GdiGraphicsInterface & graphics, Gdiplus::Rect & rect, UINT8 radius)
+        void HoldDisplay::DrawRoundRectangle(GdiGraphicsInterface & graphics, const Gdiplus::Rect & rect, UINT8 radius) const
         {
             Gdiplus::GraphicsPath path;
             path.AddLine(rect.X + radius, rect.Y, rect.X + rect.Width - (radius * 2), rect.Y);
@@ -87,8 +123,11 @@ namespace UKControllerPlugin {
             graphics.DrawPath(path, this->borderPen);
         }
 
-        void HoldDisplay::PaintWindow(GdiGraphicsInterface & graphics)
-        {
+        void HoldDisplay::PaintWindow(
+            GdiGraphicsInterface & graphics,
+            EuroscopeRadarLoopbackInterface & radarScreen,
+            const int screenObjectId
+        ) const {
             // Paint a black background
             Gdiplus::Rect borderRect = {
                 this->windowPos.x,
@@ -99,6 +138,12 @@ namespace UKControllerPlugin {
             graphics.FillRect(borderRect, this->backgroundBrush);
 
             // Title bar
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                std::to_string(this->managedHold.GetHoldParameters().identifier),
+                this->titleRect,
+                true
+            );
             graphics.FillRect(this->titleArea, this->titleBarBrush);
             std::wstring holdName = ConvertToTchar(this->managedHold.GetHoldParameters().description);
             graphics.DrawString(
@@ -120,12 +165,30 @@ namespace UKControllerPlugin {
             // Action buttons
             this->DrawRoundRectangle(graphics, minusButtonRect, 5);
             graphics.DrawString(L"-", minusButtonRect, this->titleBarTextBrush);
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                std::to_string(this->managedHold.GetHoldParameters().identifier) + "/minus",
+                this->minusButtonClickRect,
+                false
+            );
 
             this->DrawRoundRectangle(graphics, plusButtonRect, 5);
             graphics.DrawString(L"+", plusButtonRect, this->titleBarTextBrush);
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                std::to_string(this->managedHold.GetHoldParameters().identifier) + "/plus",
+                this->plusButtonClickRect,
+                false
+            );
 
             this->DrawRoundRectangle(graphics, addButtonRect, 5);
             graphics.DrawString(L"ADD", addButtonRect, this->titleBarTextBrush);
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                std::to_string(this->managedHold.GetHoldParameters().identifier) + "/add",
+                this->addButtonClickRect,
+                false
+            );
 
             // Hold display
             Gdiplus::Rect numbersDisplay = {

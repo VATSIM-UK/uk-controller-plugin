@@ -227,7 +227,7 @@ namespace UKControllerPlugin {
         /*
             Move the position of the countdown module.
         */
-        void CountdownRenderer::Move(RECT position)
+        void CountdownRenderer::Move(RECT position, std::string objectDescription)
         {
             this->ShiftAllElements(position.left, position.top);
         }

@@ -271,7 +271,7 @@ namespace UKControllerPlugin {
         /*
             These don't get moved.
         */
-        void HistoryTrailRenderer::Move(RECT position)
+        void HistoryTrailRenderer::Move(RECT position, std::string objectDescription)
         {
 
         }

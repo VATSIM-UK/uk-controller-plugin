@@ -172,7 +172,7 @@ namespace UKControllerPlugin {
         /*
             Moves the topleft point of the MSL window.
         */
-        void MinStackRenderer::Move(RECT titleBarArea)
+        void MinStackRenderer::Move(RECT titleBarArea, std::string objectDescription)
         {
             this->topBarArea = titleBarArea;
             this->hideClickspotArea = {

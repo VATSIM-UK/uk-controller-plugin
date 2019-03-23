@@ -66,7 +66,7 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) override;
-                void Move(RECT position) override;
+                void Move(RECT position, std::string objectDescription) override;
                 void Render(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen

@@ -7,6 +7,7 @@ namespace UKControllerPlugin {
     }  // namespace Hold
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
+        class EuroscopeRadarLoopbackInterface;
     }  // namespace Euroscope
     namespace Windows {
         class GdiGraphicsInterface;
@@ -27,8 +28,13 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Hold::ManagedHold & managedHold
                 );
                 HoldDisplay(const HoldDisplay & copy);
+                void ButtonClicked(std::string button);
                 void Move(const POINT & pos);
-                void PaintWindow(UKControllerPlugin::Windows::GdiGraphicsInterface & graphics);
+                void PaintWindow(
+                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
+                    const int screenObjectId
+                ) const;
 
                 // The hold this display is managing.
                 const UKControllerPlugin::Hold::ManagedHold & managedHold;
@@ -37,9 +43,9 @@ namespace UKControllerPlugin {
 
                 void DrawRoundRectangle(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    Gdiplus::Rect & rect,
+                    const Gdiplus::Rect & rect,
                     UINT8 radius
-                );
+                ) const;
 
                 // The window handle
                 const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
@@ -62,6 +68,7 @@ namespace UKControllerPlugin {
 
                 // Titlebar
                 Gdiplus::Rect titleArea = { 0, 0, 235, 15 };
+                RECT titleRect = { 0, 0, 235, 15 };
                 Gdiplus::RectF exitButtonArea = { 247.0f, 2.0f, 11.0f, 11.0f };
 
                 // How high lines should be
@@ -75,11 +82,11 @@ namespace UKControllerPlugin {
 
                 // Some more rects
                 Gdiplus::Rect minusButtonRect = {5, (int)this->buttonStartHeight, 40, 40};
-                //Gdiplus::RectF minusButtonTextRect = {5.0f, this->buttonStartHeight, 40.0f, 40.0f};
+                RECT minusButtonClickRect = { 5, (int)this->buttonStartHeight, 40, 40 };
                 Gdiplus::Rect plusButtonRect = {55, (int)this->buttonStartHeight, 40, 40};
-                //Gdiplus::RectF plusButtonTextRect = {55.0f, this->buttonStartHeight, 40.0f, 40.0f};
+                RECT plusButtonClickRect = { 5, (int)this->buttonStartHeight, 40, 40 };
                 Gdiplus::Rect addButtonRect = {190, (int)this->buttonStartHeight, 40, 40};
-                //Gdiplus::RectF addButtonTextRect = {190.0f, this->buttonStartHeight, 40.0f, 40.0f};
+                RECT addButtonClickRect = { 5, (int)this->buttonStartHeight, 40, 40 };
 
                 POINT windowPos = { 0, 0 };
 
