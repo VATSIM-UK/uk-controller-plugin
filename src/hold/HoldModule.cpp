@@ -22,6 +22,8 @@
 #include "hold/HoldManagerFactory.h"
 #include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldProfileManagerFactory.h"
+#include "hold/HoldRenderer.h"
+#include "radarscreen/RadarRenderableCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -43,6 +45,10 @@ using UKControllerPlugin::Dependency::DependencyConfig;
 using UKControllerPlugin::Hold::CreateHoldManager;
 using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
 using UKControllerPlugin::Hold::CreateHoldProfileManager;
+using UKControllerPlugin::Hold::HoldRenderer;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -186,9 +192,25 @@ namespace UKControllerPlugin {
             Register the handler to make it configurable from the menu
         */
         void BootstrapRadarScreen(
-            ConfigurableDisplayCollection & configurableDisplay
+            ConfigurableDisplayCollection & configurableDisplay,
+            RadarRenderableCollection & radarRenderables,
+            AsrEventHandlerCollection & asrEvents,
+            const PersistenceContainer & container
         ) {
             configurableDisplay.RegisterDisplay(eventHandler);
+            
+            std::shared_ptr<HoldRenderer> renderer = std::make_shared<HoldRenderer>(
+                *container.holdProfiles,
+                *container.holdManager,
+                *container.plugin
+            );
+
+            radarRenderables.RegisterRenderer(
+                radarRenderables.ReserveRendererIdentifier(),
+                renderer,
+                radarRenderables.afterTags
+            );
+            asrEvents.RegisterHandler(renderer);
         }
 
     }  // namespace Hold

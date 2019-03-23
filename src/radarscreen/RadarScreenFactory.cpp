@@ -81,7 +81,12 @@ namespace UKControllerPlugin {
                 userSettingHandlers
             );
 
-            UKControllerPlugin::Hold::BootstrapRadarScreen(configurableDisplays);
+            UKControllerPlugin::Hold::BootstrapRadarScreen(
+                configurableDisplays,
+                renderers,
+                userSettingHandlers,
+                this->persistence
+            );
 
             // Last thing we do is ScreenControls
             ScreenControlsBootstrap::BootstrapRadarScreen(configurableDisplays, renderers, *persistence.brushes);

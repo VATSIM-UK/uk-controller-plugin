@@ -150,6 +150,7 @@
     <ClInclude Include="..\..\src\hold\HoldProfileManager.h" />
     <ClInclude Include="..\..\src\hold\HoldProfileManagerFactory.h" />
     <ClInclude Include="..\..\src\hold\HoldProfileSerializer.h" />
+    <ClInclude Include="..\..\src\hold\HoldRenderer.h" />
     <ClInclude Include="..\..\src\hold\HoldRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\hold\HoldSelectionMenu.h" />
     <ClInclude Include="..\..\src\hold\HoldWindowManager.h" />
@@ -358,6 +359,7 @@
     <ClCompile Include="..\..\src\hold\HoldProfileManager.cpp" />
     <ClCompile Include="..\..\src\hold\HoldProfileManagerFactory.cpp" />
     <ClCompile Include="..\..\src\hold\HoldProfileSerializer.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldRenderer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldRestrictionSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldSelectionMenu.cpp" />
     <ClCompile Include="..\..\src\hold\HoldWindowManager.cpp" />

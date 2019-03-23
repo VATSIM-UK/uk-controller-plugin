@@ -39,7 +39,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            this->holdDisplays.emplace_back(euroscopeWindow, dllInstance, *managedHold);
+            //this->holdDisplays.emplace_back(euroscopeWindow, dllInstance, *managedHold);
         }
 
         size_t HoldWindowManager::CountDisplays(void) const
@@ -57,7 +57,7 @@ namespace UKControllerPlugin {
                 it != this->holdDisplays.cend();
                 ++it
             ) {
-                it->Redraw();
+                //it->Redraw();
             }
         }
 

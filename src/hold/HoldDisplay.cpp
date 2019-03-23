@@ -2,21 +2,25 @@
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFunctions.h"
 #include "hold/ManagedHold.h"
-#include <dwmapi.h>
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "graphics/GdiGraphicsInterface.h"
+
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Windows::GdiGraphicsInterface;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
-        bool HoldDisplay::windowRegistered = false;
-
         HoldDisplay::HoldDisplay(
-            HWND euroscopeWindow,
-            HINSTANCE dllInstance,
+            const EuroscopePluginLoopbackInterface & plugin,
             const ManagedHold & managedHold
         )
-            : managedHold(managedHold),
-            titleBarBrush(Gdiplus::Color(255, 153, 153)), backgroundBrush(CreateSolidBrush(RGB(0, 0, 0))),
-            titleBarTextBrush(Gdiplus::Color(255, 255, 255)), fontFamily(L"EuroScope"),
+            : plugin(plugin),
+            managedHold(managedHold),
+            titleBarBrush(Gdiplus::Color(255, 153, 153)),
+            backgroundBrush(Gdiplus::Color(0, 0, 0)),
+            titleBarTextBrush(Gdiplus::Color(255, 255, 255)),
+            fontFamily(L"EuroScope"),
             font(&fontFamily, 12, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
             plusFont(&fontFamily, 18, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
             stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
@@ -26,41 +30,16 @@ namespace UKControllerPlugin {
             exitButtonBrush(Gdiplus::Color(0, 0, 0)),
             blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255))
         {
-         
-            if (!this->windowRegistered) {
-                RegisterWindowClass(dllInstance);
-            }
 
             this->stringFormat.SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
-
-            this->selfHandle = CreateWindow(
-                windowClassName,
-                L"UKCP Hold Manager",
-                WS_VISIBLE,
-                CW_USEDEFAULT,
-                CW_USEDEFAULT,
-                this->windowWidth,
-                this->windowHeight,
-                euroscopeWindow,
-                NULL,
-                dllInstance,
-                (LPVOID) this
-            );
-
-            if (!this->selfHandle) {
-                LogError("Unable to create hold display");
-                return;
-            }
-
-            SetWindowLong(this->selfHandle, GWL_STYLE, 0);
-            ShowWindow(this->selfHandle, SW_SHOWNOACTIVATE);
         }
 
         HoldDisplay::HoldDisplay(const HoldDisplay & copy)
-            : managedHold(copy.managedHold),
+            : plugin(copy.plugin),
+            managedHold(copy.managedHold),
             titleBarBrush(Gdiplus::Color(255, 153, 153)),
-            backgroundBrush(CreateSolidBrush(RGB(0, 0, 0))),
+            backgroundBrush(Gdiplus::Color(0, 0, 0)),
             titleBarTextBrush(Gdiplus::Color(255, 255, 255)), fontFamily(L"EuroScope"),
             font(&fontFamily, 12, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
             plusFont(&fontFamily, 16, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
@@ -71,34 +50,28 @@ namespace UKControllerPlugin {
             exitButtonBrush(Gdiplus::Color(0, 0, 0)),
             blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255))
         {
-            this->selfHandle = copy.selfHandle;
+
         }
 
-        HoldDisplay::~HoldDisplay()
+        void HoldDisplay::Move(const POINT & pos)
         {
-            if (this->selfHandle) {
-                DeleteObject(this->selfHandle);
-                this->selfHandle = NULL;
-            }
+            this->windowPos = pos;
 
-            if (this->backgroundBrush) {
-                DeleteObject(this->backgroundBrush);
-            }
+            this->titleArea.X = pos.x;
+            this->titleArea.Y = pos.y;
+
+            this->minusButtonRect.X = pos.x + 5;
+            this->minusButtonRect.Y = pos.y + this->buttonStartHeight;
+
+            this->plusButtonRect.X = pos.x + 55;
+            this->plusButtonRect.Y = pos.y + this->buttonStartHeight;
+
+            this->addButtonRect.X = pos.x + 190;
+            this->addButtonRect.Y = pos.y + this->buttonStartHeight;
         }
 
-        /*
-            Force the window to redraw
-        */
-        void HoldDisplay::Redraw(void) const
-        {
-            if (!this->selfHandle) {
-                return;
-            }
 
-            InvalidateRgn(this->selfHandle, NULL, TRUE);
-        }
-
-        void HoldDisplay::DrawRoundRectangle(Gdiplus::Graphics * graphics, const Gdiplus::Pen * p, Gdiplus::Rect & rect, UINT8 radius)
+        void HoldDisplay::DrawRoundRectangle(GdiGraphicsInterface & graphics, Gdiplus::Rect & rect, UINT8 radius)
         {
             Gdiplus::GraphicsPath path;
             path.AddLine(rect.X + radius, rect.Y, rect.X + rect.Width - (radius * 2), rect.Y);
@@ -111,56 +84,55 @@ namespace UKControllerPlugin {
             path.AddLine(rect.X, rect.Y + rect.Height - (radius * 2), rect.X, rect.Y + radius);
             path.AddArc(rect.X, rect.Y, radius * 2, radius * 2, 180, 90);
             path.CloseFigure();
-            graphics->DrawPath(&this->borderPen, &path);
+            graphics.DrawPath(path, this->borderPen);
         }
 
-        void HoldDisplay::PaintWindow(HDC hdc)
+        void HoldDisplay::PaintWindow(GdiGraphicsInterface & graphics)
         {
-            CRect windowRect;
-            GetClientRect(this->selfHandle, &windowRect);
-            Gdiplus::Bitmap bmp(windowRect.Width(), windowRect.Height());
-            Gdiplus::Graphics * graphics = Gdiplus::Graphics::FromImage(&bmp);
+            // Paint a black background
+            Gdiplus::Rect borderRect = {
+                this->windowPos.x,
+                this->windowPos.y,
+                windowWidth,
+                windowHeight
+            };
+            graphics.FillRect(borderRect, this->backgroundBrush);
 
             // Title bar
-            graphics->FillRectangle(&this->titleBarBrush, this->titleArea);
+            graphics.FillRect(this->titleArea, this->titleBarBrush);
             std::wstring holdName = ConvertToTchar(this->managedHold.GetHoldParameters().description);
-            graphics->DrawString(
-                holdName.c_str(),
-                holdName.length(),
-                &this->font,
+            graphics.DrawString(
+                ConvertToTchar(this->managedHold.GetHoldParameters().description),
                 this->titleArea,
-                &this->stringFormat,
-                &this->titleBarTextBrush
+                this->titleBarTextBrush
             );
-            graphics->DrawLine(
-                &this->borderPen,
-                this->titleArea.X,
-                this->titleArea.Y + this->titleArea.Height,
-                this->titleArea.X + this->titleArea.Width,
-                this->titleArea.Y + this->titleArea.Height
+            graphics.DrawLine(
+                this->borderPen,
+                { this->titleArea.X, this->titleArea.Y + this->titleArea.Height },
+                { this->titleArea.X + this->titleArea.Width, this->titleArea.Y + this->titleArea.Height }
             );
 
             // Exit Button
-            graphics->FillRectangle(&this->exitButtonBrush, this->exitButtonArea);
-            graphics->DrawString(L"X", 1, &this->font, this->exitButtonArea, &this->stringFormat, &this->titleBarTextBrush);
+            graphics.FillRect(this->exitButtonArea, this->exitButtonBrush);
+            graphics.DrawString(L"X", this->exitButtonArea, this->titleBarTextBrush);
 
 
             // Action buttons
-            this->DrawRoundRectangle(graphics, &this->borderPen, minusButtonRect, 5);
-            graphics->DrawString(L"-", 1, &this->plusFont, minusButtonTextRect, &this->stringFormat, &this->titleBarTextBrush);
+            this->DrawRoundRectangle(graphics, minusButtonRect, 5);
+            graphics.DrawString(L"-", minusButtonRect, this->titleBarTextBrush);
 
-            this->DrawRoundRectangle(graphics, &this->borderPen, plusButtonRect, 5);
-            graphics->DrawString(L"+", 1, &this->plusFont, plusButtonTextRect, &this->stringFormat, &this->titleBarTextBrush);
+            this->DrawRoundRectangle(graphics, plusButtonRect, 5);
+            graphics.DrawString(L"+", plusButtonRect, this->titleBarTextBrush);
 
-            this->DrawRoundRectangle(graphics, &this->borderPen, addButtonRect, 5);
-            graphics->DrawString(L"ADD", 3, &this->font, addButtonTextRect, &this->stringFormat, &this->titleBarTextBrush);
+            this->DrawRoundRectangle(graphics, addButtonRect, 5);
+            graphics.DrawString(L"ADD", addButtonRect, this->titleBarTextBrush);
 
             // Hold display
-            Gdiplus::RectF numbersDisplay = {
-                0.0f,
-                this->dataStartHeight,
-                30.0f,
-                15.00f
+            Gdiplus::Rect numbersDisplay = {
+                windowPos.x,
+                windowPos.y + this->dataStartHeight,
+                30,
+                15
             };
 
             // Render all the possible levels in the hold
@@ -185,23 +157,23 @@ namespace UKControllerPlugin {
                     ++it
                     ) {
                     if ((*it)->LevelRestricted(i)) {
-                        graphics->FillRectangle(
-                            &this->blockedLevelBrush,
-                            (INT)windowRect.left,
-                            (INT)numbersDisplay.Y,
-                            (INT)windowRect.right - windowRect.left,
-                            (INT)this->lineHeight
+                        Gdiplus::Rect restrictedRect = {
+                            0,
+                            numbersDisplay.Y,
+                            windowWidth,
+                            this->lineHeight
+                        };
+                        graphics.FillRect (
+                            restrictedRect,
+                            this->blockedLevelBrush
                         );
                     }
                 }
 
-                graphics->DrawString(
-                    GetLevelDisplayString(i).c_str(),
-                    3,
-                    &this->font,
+                graphics.DrawString(
+                    GetLevelDisplayString(i),
                     numbersDisplay,
-                    &this->stringFormat,
-                    &this->titleBarTextBrush
+                    this->titleBarTextBrush
                 );
 
                 numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
@@ -210,31 +182,31 @@ namespace UKControllerPlugin {
 
 
             // Rects for rendering the actual data
-            Gdiplus::RectF callsignDisplay = {
-                35.0f,
+            Gdiplus::Rect callsignDisplay = {
+                this->windowPos.x + 35,
                 this->dataStartHeight,
-                90.0f,
+                this->windowPos.y + 90,
                 this->lineHeight
             };
 
-            Gdiplus::RectF actualLevelDisplay = {
-                130.0f,
+            Gdiplus::Rect actualLevelDisplay = {
+                this->windowPos.x + 130,
                 this->dataStartHeight,
-                30.0f,
+                this->windowPos.y + 30,
                 this->lineHeight
             };
 
-            Gdiplus::RectF clearedLevelDisplay = {
-                165.0f,
+            Gdiplus::Rect clearedLevelDisplay = {
+                this->windowPos.x + 165,
                 this->dataStartHeight,
-                30.0f,
+                this->windowPos.y + 30,
                 this->lineHeight
             };
 
-            Gdiplus::RectF timeInHoldDisplay = {
-                200.0f,
+            Gdiplus::Rect timeInHoldDisplay = {
+                this->windowPos.x + 200,
                 this->dataStartHeight,
-                30.0f,
+                this->windowPos.y + 30,
                 this->lineHeight
             };
 
@@ -259,158 +231,93 @@ namespace UKControllerPlugin {
 
                 // The callsign display
                 std::wstring callsign = ConvertToTchar(it->callsign);
-                graphics->DrawString(
-                    callsign.c_str(),
-                    callsign.length(),
-                    &this->font,
+                graphics.DrawString(
+                    callsign,
                     callsignDisplay,
-                    &this->stringFormat,
-                    &this->dataBrush
+                    this->dataBrush
                 );
                 
                 // Reported level
-                graphics->DrawString(
-                    GetLevelDisplayString(it->reportedLevel).c_str(),
-                    3,
-                    &this->font,
+                graphics.DrawString(
+                    GetLevelDisplayString(it->reportedLevel),
                     actualLevelDisplay,
-                    &this->stringFormat,
-                    &this->dataBrush
+                    this->dataBrush
                 );
 
 
                 // Cleared level
-                graphics->DrawString(
-                    GetLevelDisplayString(it->clearedLevel).c_str(),
-                    3,
-                    &this->font,
+                graphics.DrawString(
+                    GetLevelDisplayString(it->clearedLevel),
                     clearedLevelDisplay,
-                    &this->stringFormat,
-                    &this->clearedLevelBrush
+                    this->clearedLevelBrush
                 );
 
                 // Time in hold
                 std::wstring timeString = GetTimeInHoldDisplayString(it->entryTime);
-                graphics->DrawString(
-                    timeString.c_str(),
-                    timeString.length(),
-                    &this->font,
+                graphics.DrawString(
+                    timeString,
                     timeInHoldDisplay,
-                    &this->stringFormat,
-                    &this->dataBrush
+                    this->dataBrush
                 );
             }
 
             // Border around whole thing, draw this last
-            graphics->DrawRectangle(
-                &this->borderPen,
-                windowRect.left,
-                windowRect.top,
-                windowRect.right - windowRect.left - 1,
-                windowRect.bottom - windowRect.top - 1
+            graphics.DrawRect(
+                borderRect,
+                this->borderPen
             );
-
-            Gdiplus::Graphics screenGraphics(hdc);
-            screenGraphics.DrawImage(&bmp, 0, 0);
-
-            // Delete the bitmap graphics
-            delete graphics;
         }
 
         /*
             The real callback used for the window messages
         */
-        LRESULT HoldDisplay::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-        {
-            switch (msg)
-            {
-                case WM_NCHITTEST: {
-                    LRESULT hit = DefWindowProc(hwnd, msg, wParam, lParam);
-                    POINT mousePoint = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-                    ScreenToClient(this->selfHandle, &mousePoint);
-                    Gdiplus::REAL xpos = (Gdiplus::REAL) GET_X_LPARAM(lParam);
-                    Gdiplus::REAL ypos = (Gdiplus::REAL) GET_Y_LPARAM(lParam);
+        //LRESULT HoldDisplay::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+        //{
+        //    switch (msg)
+        //    {
+        //        case WM_NCHITTEST: {
+        //            LRESULT hit = DefWindowProc(hwnd, msg, wParam, lParam);
+        //            POINT mousePoint = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+        //            ScreenToClient(this->selfHandle, &mousePoint);
+        //            Gdiplus::REAL xpos = (Gdiplus::REAL) GET_X_LPARAM(lParam);
+        //            Gdiplus::REAL ypos = (Gdiplus::REAL) GET_Y_LPARAM(lParam);
 
-                    return this->titleArea.Contains((Gdiplus::REAL) mousePoint.x, (Gdiplus::REAL) mousePoint.y) 
-                        ? HTCAPTION 
-                        : HTCLIENT;
-                }
-                case WM_LBUTTONUP: {
-                    POINT p;
-                    GetCursorPos(&p);
-                    ScreenToClient(hwnd, &p);
+        //            return this->titleArea.Contains((Gdiplus::REAL) mousePoint.x, (Gdiplus::REAL) mousePoint.y) 
+        //                ? HTCAPTION 
+        //                : HTCLIENT;
+        //        }
+        //        case WM_LBUTTONUP: {
+        //            POINT p;
+        //            GetCursorPos(&p);
+        //            ScreenToClient(hwnd, &p);
 
-                    if (this->plusButtonRect.Contains(p.x, p.y)) {
-                        if (numLevelsSkipped > 0) this->numLevelsSkipped--;
-                        InvalidateRgn(this->selfHandle, NULL, TRUE);
-                    } else if (this->minusButtonRect.Contains(p.x, p.y)) {
-                        const unsigned int maxLevelsSkippable = (this->managedHold.GetHoldParameters().maximum -
-                            this->managedHold.GetHoldParameters().minimum) / 1000;
-                        if (maxLevelsSkippable != this->numLevelsSkipped) numLevelsSkipped++;
-                        InvalidateRgn(this->selfHandle, NULL, TRUE);
-                    }
-                    return TRUE;
-                }
-                case WM_PAINT: {
-                    PAINTSTRUCT ps;
-                    HDC hdc = BeginPaint(hwnd, &ps);
-                    this->PaintWindow(hdc);
-                    EndPaint(hwnd, &ps);
-                    return TRUE;
-                }
-                case WM_CLOSE:
-                    DestroyWindow(hwnd);
-                    break;
-                case WM_DESTROY:
-                    break;
-                default:
-                    return DefWindowProc(hwnd, msg, wParam, lParam);
-            }
-            return FALSE;
-        }
-
-        /*
-            The callback used for the window messages - has to be static because its inherently C
-        */
-        LRESULT CALLBACK HoldDisplay::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-        {
-            if (msg == WM_CREATE) {
-                LogInfo("Hold manager window opened");
-                SetWindowLongPtr(
-                    hwnd,
-                    GWLP_USERDATA,
-                    reinterpret_cast<LONG>(reinterpret_cast<CREATESTRUCT *>(lParam)->lpCreateParams)
-                );
-            }
-            else if (msg == WM_DESTROY) {
-                SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
-                LogInfo("Hold manager window closed");
-            }
-
-            HoldDisplay * holdDisplay = reinterpret_cast<HoldDisplay*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-            return holdDisplay ? holdDisplay->_WndProc(hwnd, msg, wParam, lParam) :
-                DefWindowProc(hwnd, msg, wParam, lParam);
-        }
-
-        /*
-            Register ourselves with windows as a window class
-        */
-        void HoldDisplay::RegisterWindowClass(HINSTANCE dllInstance)
-        {
-            this->windowClass.cbSize = sizeof(this->windowClass);
-            this->windowClass.lpfnWndProc = WndProc;
-            this->windowClass.hInstance = dllInstance;
-            this->windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-            this->windowClass.hbrBackground = this->backgroundBrush;
-            this->windowClass.lpszClassName = this->windowClassName;
-
-            if (!RegisterClassEx(&this->windowClass)) {
-                LogError("Unable to register hold display class");
-                return;
-            };
-
-            this->windowRegistered = true;
-        }
-
+        //            if (this->plusButtonRect.Contains(p.x, p.y)) {
+        //                if (numLevelsSkipped > 0) this->numLevelsSkipped--;
+        //                InvalidateRgn(this->selfHandle, NULL, TRUE);
+        //            } else if (this->minusButtonRect.Contains(p.x, p.y)) {
+        //                const unsigned int maxLevelsSkippable = (this->managedHold.GetHoldParameters().maximum -
+        //                    this->managedHold.GetHoldParameters().minimum) / 1000;
+        //                if (maxLevelsSkippable != this->numLevelsSkipped) numLevelsSkipped++;
+        //                InvalidateRgn(this->selfHandle, NULL, TRUE);
+        //            }
+        //            return TRUE;
+        //        }
+        //        case WM_PAINT: {
+        //            PAINTSTRUCT ps;
+        //            HDC hdc = BeginPaint(hwnd, &ps);
+        //            this->PaintWindow(hdc);
+        //            EndPaint(hwnd, &ps);
+        //            return TRUE;
+        //        }
+        //        case WM_CLOSE:
+        //            DestroyWindow(hwnd);
+        //            break;
+        //        case WM_DESTROY:
+        //            break;
+        //        default:
+        //            return DefWindowProc(hwnd, msg, wParam, lParam);
+        //    }
+        //    return FALSE;
+        //}
     }  // namespace Hold
 }  // namespace UKControllerPlugin

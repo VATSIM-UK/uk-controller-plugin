@@ -23,6 +23,9 @@ namespace UKControllerPlugin {
     namespace Windows {
         class WinApiInterface;
     }  // namespace Windows
+    namespace Euroscope {
+        class AsrEventHandlerCollection;
+    }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -39,7 +42,10 @@ namespace UKControllerPlugin {
         );
 
         void BootstrapRadarScreen(
-            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplay
+            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplay,
+            UKControllerPlugin::RadarScreen::RadarRenderableCollection & radarRenderables,
+            UKControllerPlugin::Euroscope::AsrEventHandlerCollection & asrEvents,
+            const UKControllerPlugin::Bootstrap::PersistenceContainer & container
         );
 
     }  // namespace Hold
