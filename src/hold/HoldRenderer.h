@@ -45,6 +45,7 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) override;
+                void LoadProfile(unsigned int profileId);
                 void RightClick(
                     int objectId,
                     std::string objectDescription,
@@ -57,8 +58,11 @@ namespace UKControllerPlugin {
                 ) override;
 
                 // Inherited via ConfigurableDisplayInterface
-                void Configure(int functionId, std::string subject) override;
+                void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
+
+                // A profile ID to say that all holds should be unloaded
+                const unsigned int unloadAllProfileId = 0;
 
                 // The id of the callback function to use for the configuration menu item
                 const int toggleCallbackFunctionId;

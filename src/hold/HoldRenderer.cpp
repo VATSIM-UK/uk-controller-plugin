@@ -75,6 +75,13 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Load the given hold profile
+        */
+        void HoldRenderer::LoadProfile(unsigned int profileId)
+        {
+        }
+
+        /*
             For now, nothing accepts a right click
         */
         void HoldRenderer::RightClick(
@@ -126,7 +133,7 @@ namespace UKControllerPlugin {
         /*
             Toggle hold visibility
         */
-        void HoldRenderer::Configure(int functionId, std::string subject)
+        void HoldRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
             this->renderHolds = !this->renderHolds;
         }
