@@ -133,6 +133,7 @@
     <ClInclude Include="..\..\src\hold\CompareHoldProfile.h" />
     <ClInclude Include="..\..\src\hold\CompareHoldsDescription.h" />
     <ClInclude Include="..\..\src\hold\HoldConfigurationDialogFactory.h" />
+    <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h" />
     <ClInclude Include="..\..\src\hold\HoldManagerFactory.h" />
     <ClInclude Include="..\..\src\hold\CompareHoldingAircraft.h" />
     <ClInclude Include="..\..\src\hold\CompareHolds.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="..\..\src\hold\HoldProfile.h" />
     <ClInclude Include="..\..\src\hold\HoldProfileManager.h" />
     <ClInclude Include="..\..\src\hold\HoldProfileManagerFactory.h" />
+    <ClInclude Include="..\..\src\hold\HoldProfileSelector.h" />
     <ClInclude Include="..\..\src\hold\HoldProfileSerializer.h" />
     <ClInclude Include="..\..\src\hold\HoldRenderer.h" />
     <ClInclude Include="..\..\src\hold\HoldRestrictionSerializer.h" />
@@ -345,6 +347,7 @@
     <ClCompile Include="..\..\src\hold\CompareHoldProfile.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHoldsDescription.cpp" />
     <ClCompile Include="..\..\src\hold\HoldConfigurationDialogFactory.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp" />
     <ClCompile Include="..\..\src\hold\HoldManagerFactory.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHoldingAircraft.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHolds.cpp" />
@@ -358,6 +361,7 @@
     <ClCompile Include="..\..\src\hold\HoldModule.cpp" />
     <ClCompile Include="..\..\src\hold\HoldProfileManager.cpp" />
     <ClCompile Include="..\..\src\hold\HoldProfileManagerFactory.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldProfileSelector.cpp" />
     <ClCompile Include="..\..\src\hold\HoldProfileSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldRenderer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldRestrictionSerializer.cpp" />

@@ -50,7 +50,7 @@ namespace UKControllerPlugin {
                 );
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
                 void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
-                void Configure(int functionId, std::string subject) override;
+                void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
                 RECT GetCloseClickspotDisplayArea(void) const;
                 RECT GetNinetySecondDisplayArea(void) const;

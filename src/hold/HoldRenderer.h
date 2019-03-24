@@ -8,10 +8,8 @@ namespace UKControllerPlugin {
     namespace Hold {
         class HoldProfileManager;
         class HoldManager;
+        class HoldDisplayFactory;
     }  // namespace Hold
-    namespace Euroscope {
-        class EuroscopePluginLoopbackInterface;
-    }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -29,7 +27,7 @@ namespace UKControllerPlugin {
                 HoldRenderer(
                     const UKControllerPlugin::Hold::HoldProfileManager & profileManager,
                     const UKControllerPlugin::Hold::HoldManager & holdManager,
-                    const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
+                    const UKControllerPlugin::Hold::HoldDisplayFactory & displayFactory,
                     const int screenObjectId,
                     const int toggleCallbackFunctionId
                 );
@@ -87,11 +85,11 @@ namespace UKControllerPlugin {
                 // Manages the hold profiles
                 const UKControllerPlugin::Hold::HoldProfileManager & profileManager;
 
-                // Plugin
-                const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+                // Creates HoldDisplay objects for our consumption
+                const UKControllerPlugin::Hold::HoldDisplayFactory & displayFactory;
 
                 // The holds
-                std::list<UKControllerPlugin::Hold::HoldDisplay> holds;
+                std::list<std::unique_ptr<UKControllerPlugin::Hold::HoldDisplay>> holds;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

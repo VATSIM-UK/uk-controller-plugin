@@ -28,18 +28,23 @@ namespace UKControllerPlugin {
                 HoldDisplay(
                     const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     const UKControllerPlugin::Hold::ManagedHold & managedHold,
-                    UKControllerPlugin::Hold::HoldManager & holdManager,
-                    const unsigned int holdProfileId
+                    UKControllerPlugin::Hold::HoldManager & holdManager
                 );
                 void ButtonClicked(std::string button);
-                void LoadDataFromAsr(UKControllerPlugin::Euroscope::UserSetting & userSetting);
+                void LoadDataFromAsr(
+                    UKControllerPlugin::Euroscope::UserSetting & userSetting,
+                    unsigned int profileId
+                );
                 void Move(const POINT & pos);
                 void PaintWindow(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
                     const int screenObjectId
                 ) const;
-                void SaveDataToAsr(UKControllerPlugin::Euroscope::UserSetting & userSetting);
+                void SaveDataToAsr(
+                    UKControllerPlugin::Euroscope::UserSetting & userSetting,
+                    unsigned int profileId
+                ) const;
 
                 // The hold this display is managing.
                 const UKControllerPlugin::Hold::ManagedHold & managedHold;
@@ -57,9 +62,6 @@ namespace UKControllerPlugin {
 
                 // Reference to the plugin
                 const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
-
-                // The profile ID this hold belongs to
-                const unsigned int holdProfileId;
 
                 // Brushes
                 const Gdiplus::SolidBrush titleBarTextBrush;
@@ -99,7 +101,7 @@ namespace UKControllerPlugin {
                 Gdiplus::Rect addButtonRect = {190, (int)this->buttonStartHeight, 40, 40};
                 RECT addButtonClickRect = { 5, (int)this->buttonStartHeight, 40, 40 };
 
-                POINT windowPos = { 0, 0 };
+                POINT windowPos = { 100, 100 };
 
                 /*
                     How many levels to not draw

@@ -57,7 +57,7 @@ namespace UKControllerPlugin {
             Called when the configuration option is selected in the configuration menu. Toggle
             the visibility.
         */
-        void CountdownRenderer::Configure(int functionId, std::string subject)
+        void CountdownRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
             this->visible = !this->visible;
         }

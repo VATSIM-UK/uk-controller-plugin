@@ -1,5 +1,6 @@
 #pragma once
 #include "radarscreen/ConfigurableDisplayInterface.h"
+#include "euroscope/AsrEventHandlerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -17,7 +18,8 @@ namespace UKControllerPlugin {
         /*
             Represents a EuroScope popup menu that selects the hold profile that should be used.
         */
-        class HoldProfileSelector : UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface
+        class HoldProfileSelector : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
+            public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
         {
             public:
                 HoldProfileSelector(
@@ -32,7 +34,7 @@ namespace UKControllerPlugin {
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
 
-                void ItemSelected(int itemId, std::string itemText);
+                void ItemSelected(int itemId, std::string itemText, RECT screenObjectArea);
 
                 // What to display in the configuration menu
                 const std::string menuItemDescription = "Select Hold Profile";
@@ -46,10 +48,16 @@ namespace UKControllerPlugin {
                 // The string to put in the first column if no profile
                 const std::string noProfileFirstColumn = "";
 
+                // The ASR key for the selected hold profile
+                const std::string asrKey = "selectedHoldProfile";
+
+                // The ASR saving description for the selected hold profile
+                const std::string asrDescription = "Selected Hold Profile";
+
             private:
 
                 // The profile that has been selected
-                unsigned int selectedProfile = 0;
+                int selectedProfile = 0;
 
                 // Manages the hold profiles
                 const UKControllerPlugin::Hold::HoldProfileManager & profileManager;
@@ -59,6 +67,10 @@ namespace UKControllerPlugin {
 
                 // The renderer to which to send selection commands
                 UKControllerPlugin::Hold::HoldRenderer & renderer;
+
+                // Inherited via AsrEventHandlerInterface
+                virtual void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
+                virtual void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

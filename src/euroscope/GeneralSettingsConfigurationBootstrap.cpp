@@ -35,7 +35,8 @@ namespace UKControllerPlugin {
                     &GeneralSettingsConfiguration::Configure,
                     dialog,
                     std::placeholders::_1,
-                    std::placeholders::_2
+                    std::placeholders::_2,
+                    std::placeholders::_3
                 )
             );
 

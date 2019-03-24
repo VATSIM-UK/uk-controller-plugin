@@ -3,11 +3,13 @@
 #include "hold/HoldProfileManager.h"
 #include "hold/HoldRenderer.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "euroscope/UserSetting.h"
 
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Hold::HoldRenderer;
+using UKControllerPlugin::Euroscope::UserSetting;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -29,24 +31,26 @@ namespace UKControllerPlugin {
         */
         void HoldProfileSelector::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
-            RECT menuArea = {
-                screenObjectArea.left - 50,
-                screenObjectArea.top - 50,
-                screenObjectArea.left + 10,
-                screenObjectArea.top + 10
+            RECT area = {
+                100,
+                100,
+                400,
+                400
             };
-            this->plugin.TriggerPopupList(menuArea, "Select Hold Profile", 2);
+            this->plugin.TriggerPopupList(area, "Select Hold Profile", 2);
+            this->plugin.TriggerPopupList(area, "Select Hold Profile", 2);
 
             PopupMenuItem menuItem;
-            menuItem.firstValue = "";
+            menuItem.firstValue = "Test";
             menuItem.secondValue = "--";
             menuItem.callbackFunctionId = this->firstProfileCallbackId;
             menuItem.checked = this->selectedProfile == 0 ? true : false;
             menuItem.disabled = false;
-            menuItem.fixedPosition = false;
+            menuItem.fixedPosition = true;
 
             this->plugin.AddItemToPopupList(menuItem);
 
+            menuItem.fixedPosition = false;
             for (
                 HoldProfileManager::HoldProfiles::const_iterator it = this->profileManager.cbegin();
                 it != this->profileManager.cend();
@@ -55,6 +59,7 @@ namespace UKControllerPlugin {
                 menuItem.firstValue = std::to_string(it->id);
                 menuItem.secondValue = it->name;
                 menuItem.checked = this->selectedProfile == it->id ? true : false;
+                this->plugin.AddItemToPopupList(menuItem);
             }
         }
 
@@ -76,7 +81,7 @@ namespace UKControllerPlugin {
         /*
             An item has been selected from the menu, load that profile
         */
-        void HoldProfileSelector::ItemSelected(int itemId, std::string itemText)
+        void HoldProfileSelector::ItemSelected(int itemId, std::string itemText, RECT screenObjectArea)
         {
             if (itemText == this->noProfileFirstColumn) {
                 this->renderer.LoadProfile(this->renderer.unloadAllProfileId);
@@ -85,6 +90,26 @@ namespace UKControllerPlugin {
 
             this->renderer.LoadProfile(std::stoi(itemText));
             this->selectedProfile = std::stoi(itemText);
+        }
+
+        /*
+            Called when the ASR opens - load profile data
+        */
+        void HoldProfileSelector::AsrLoadedEvent(UserSetting & userSetting)
+        {
+            this->selectedProfile = userSetting.GetIntegerEntry(this->asrKey, 0);
+        }
+
+        /*
+            Called then ASR closes - save the last open profile
+        */
+        void HoldProfileSelector::AsrClosingEvent(UserSetting & userSetting)
+        {
+            userSetting.Save(
+                this->asrKey,
+                this->asrDescription,
+                this->selectedProfile
+            );
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

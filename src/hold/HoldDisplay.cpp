@@ -20,11 +20,9 @@ namespace UKControllerPlugin {
         HoldDisplay::HoldDisplay(
             const EuroscopePluginLoopbackInterface & plugin,
             const ManagedHold & managedHold,
-            HoldManager & holdManager,
-            const unsigned int holdProfileId
+            HoldManager & holdManager
         )
             : plugin(plugin),
-            holdProfileId(holdProfileId),
             holdManager(holdManager),
             managedHold(managedHold),
             titleBarBrush(Gdiplus::Color(255, 153, 153)),
@@ -46,6 +44,7 @@ namespace UKControllerPlugin {
             const int numLevels = ((this->managedHold.GetHoldParameters().maximum -
                 this->managedHold.GetHoldParameters().minimum) / 1000) + 1;
             this->windowHeight = this->dataStartHeight + (numLevels * this->lineHeight) + 15;
+            this->Move(this->windowPos);
         }
 
         /*
@@ -77,22 +76,22 @@ namespace UKControllerPlugin {
         /*
             Load data from an ASR
         */
-        void HoldDisplay::LoadDataFromAsr(UKControllerPlugin::Euroscope::UserSetting & userSetting)
+        void HoldDisplay::LoadDataFromAsr(UserSetting & userSetting, unsigned int holdProfileId)
         {
             this->numLevelsSkipped = userSetting.GetIntegerEntry(
-                "holdProfile" + std::to_string(this->holdProfileId) + "hold" +
+                "holdProfile" + std::to_string(holdProfileId) + "hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "LevelsSkipped"
             );
 
             this->Move(
                 {
                     this->numLevelsSkipped = userSetting.GetIntegerEntry(
-                        "holdProfile" + std::to_string(this->holdProfileId) + "hold" +
+                        "holdProfile" + std::to_string(holdProfileId) + "hold" +
                             std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionX",
                         100
                     ),
                     this->numLevelsSkipped = userSetting.GetIntegerEntry(
-                        "holdProfile" + std::to_string(this->holdProfileId) + "hold" +
+                        "holdProfile" + std::to_string(holdProfileId) + "hold" +
                             std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionY",
                         100
                     )
@@ -386,24 +385,24 @@ namespace UKControllerPlugin {
         /*
             Save display data to the ASR
         */
-        void HoldDisplay::SaveDataToAsr(UKControllerPlugin::Euroscope::UserSetting & userSetting)
+        void HoldDisplay::SaveDataToAsr(UserSetting & userSetting, unsigned int holdProfileId) const
         {
             userSetting.Save(
-                "holdProfile" + std::to_string(this->holdProfileId) + "hold" +
+                "holdProfile" + std::to_string(holdProfileId) + "hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "LevelsSkipped",
                 "Hold Profile " + this->managedHold.GetHoldParameters().description + " Number of Levels Skipped",
                 this->numLevelsSkipped
             );
 
             userSetting.Save(
-                "holdProfile" + std::to_string(this->holdProfileId) + "hold" +
+                "holdProfile" + std::to_string(holdProfileId) + "hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionX",
                 "Hold Profile " + this->managedHold.GetHoldParameters().description + " X Pos",
                 this->windowPos.x
             );
 
             userSetting.Save(
-                "holdProfile" + std::to_string(this->holdProfileId) + "hold" +
+                "holdProfile" + std::to_string(holdProfileId) + "hold" +
                 std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionY",
                 "Hold Profile " + this->managedHold.GetHoldParameters().description + " Y Pos",
                 this->windowPos.y

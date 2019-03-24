@@ -374,7 +374,8 @@ namespace UKControllerPlugin {
             sItemString,
             EuroScopeCFlightPlanWrapper(this->FlightPlanSelectASEL()),
             EuroScopeCRadarTargetWrapper(this->RadarTargetSelectASEL()),
-            Pt
+            Pt,
+            Area
         );
     }
 

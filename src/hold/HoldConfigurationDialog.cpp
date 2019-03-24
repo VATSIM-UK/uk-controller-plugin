@@ -176,6 +176,11 @@ namespace UKControllerPlugin {
 
                     return TRUE;
                 };
+                // Hold Window Closed
+                case WM_CLOSE: {
+                    EndDialog(hwnd, wParam);
+                    return TRUE;
+                }
                 // Buttons pressed
                 case WM_COMMAND: {
                     switch (LOWORD(wParam)) {

@@ -23,6 +23,7 @@
 #include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldProfileManagerFactory.h"
 #include "hold/HoldRenderer.h"
+#include "hold/HoldProfileSelector.h"
 #include "radarscreen/RadarRenderableCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -49,6 +50,7 @@ using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Hold::HoldProfileSelector;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -177,7 +179,13 @@ namespace UKControllerPlugin {
             CallbackFunction openWindowCallback(
                 eventHandler->popupMenuItemId,
                 "Show Hold Manager",
-                std::bind(&HoldEventHandler::Configure, eventHandler, std::placeholders::_1, std::placeholders::_2)
+                std::bind(
+                    &HoldEventHandler::Configure,
+                    eventHandler,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(openWindowCallback);
 
@@ -186,6 +194,9 @@ namespace UKControllerPlugin {
                 BootstrapWarningMessage warning("No holds were loaded for the hold manager");
                 userMessages.SendMessageToUser(warning);
             }
+
+            // Create the hold display factory
+            container.holdDisplayFactory.reset(new HoldDisplayFactory(*container.plugin, *container.holdManager));
         }
 
         /*
@@ -197,13 +208,15 @@ namespace UKControllerPlugin {
             AsrEventHandlerCollection & asrEvents,
             const PersistenceContainer & container
         ) {
+            // Event handler
             configurableDisplay.RegisterDisplay(eventHandler);
-            
+
+            // Renderer
             const int rendererId = radarRenderables.ReserveRendererIdentifier();
             std::shared_ptr<HoldRenderer> renderer = std::make_shared<HoldRenderer>(
                 *container.holdProfiles,
                 *container.holdManager,
-                *container.plugin,
+                *container.holdDisplayFactory,
                 radarRenderables.ReserveScreenObjectIdentifier(rendererId),
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
@@ -219,9 +232,52 @@ namespace UKControllerPlugin {
             CallbackFunction renderToggleCallback(
                 renderer->toggleCallbackFunctionId,
                 "Toggle Hold Rendering",
-                std::bind(&HoldRenderer::Configure, renderer, std::placeholders::_1, std::placeholders::_2)
+                std::bind(
+                    &HoldRenderer::Configure,
+                    renderer,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(renderToggleCallback);
+
+            // Profile selector
+            std::shared_ptr<HoldProfileSelector> selector = std::make_shared<HoldProfileSelector>(
+                *container.holdProfiles,
+                *container.plugin,
+                *renderer,
+                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
+                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
+            );
+            configurableDisplay.RegisterDisplay(selector);
+            asrEvents.RegisterHandler(selector);
+
+            CallbackFunction profileSelectionCallback(
+                selector->selectorMenuOpenCallbackId,
+                "Hold Profile Selection",
+                std::bind(
+                    &HoldProfileSelector::Configure,
+                    selector,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(profileSelectionCallback);
+
+            CallbackFunction profileSelectedCallback(
+                selector->firstProfileCallbackId,
+                "Hold Profile Selected",
+                std::bind(
+                &HoldProfileSelector::ItemSelected,
+                    selector,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(profileSelectedCallback);
         }
 
     }  // namespace Hold

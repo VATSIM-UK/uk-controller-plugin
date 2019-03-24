@@ -3,7 +3,7 @@
 #include "hold/HoldProfileManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplay.h"
-#include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "hold/HoldDisplayFactory.h"
 #include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
@@ -12,7 +12,7 @@ using UKControllerPlugin::Windows::GdiGraphicsInterface;
 using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldDisplay;
-using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Hold::HoldDisplayFactory;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::HelperFunctions;
 
@@ -22,12 +22,12 @@ namespace UKControllerPlugin {
         HoldRenderer::HoldRenderer(
             const HoldProfileManager & profileManager,
             const HoldManager & holdManager,
-            const EuroscopePluginLoopbackInterface & plugin,
+            const HoldDisplayFactory & displayFactory,
             const int screenObjectId,
             const int toggleCallbackFunctionId
         )
-            : profileManager(profileManager), holdManager(holdManager), plugin(plugin), screenObjectId(screenObjectId),
-            toggleCallbackFunctionId(toggleCallbackFunctionId)
+            : profileManager(profileManager), holdManager(holdManager), displayFactory(displayFactory),
+            screenObjectId(screenObjectId), toggleCallbackFunctionId(toggleCallbackFunctionId)
         {
 
         }
@@ -61,9 +61,9 @@ namespace UKControllerPlugin {
             auto display = std::find_if(
                 this->holds.begin(),
                 this->holds.end(),
-                [holdId](const HoldDisplay & hold) -> bool {
-                return hold.managedHold.GetHoldParameters().identifier == holdId;
-            }
+                [holdId](const std::unique_ptr<HoldDisplay> & hold) -> bool {
+                    return hold->managedHold.GetHoldParameters().identifier == holdId;
+                }
             );
 
             if (display == this->holds.cend()) {
@@ -71,7 +71,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            display->ButtonClicked(this->GetButtonNameFromObjectDescription(objectDescription));
+            (*display)->ButtonClicked(this->GetButtonNameFromObjectDescription(objectDescription));
         }
 
         /*
@@ -79,6 +79,26 @@ namespace UKControllerPlugin {
         */
         void HoldRenderer::LoadProfile(unsigned int profileId)
         {
+            HoldProfile selected = this->profileManager.GetProfile(profileId);
+            if (selected == this->profileManager.invalidProfile) {
+                LogWarning("Tried to load invalid hold profile");
+                return;
+            }
+
+            this->holds.clear();
+
+            for (std::set<unsigned int>::const_iterator holdIt = selected.holds.cbegin();
+                holdIt != selected.holds.cend();
+                ++holdIt
+            ) {
+                std::unique_ptr<HoldDisplay> display = this->displayFactory.Create(*holdIt);
+                if (display == nullptr) {
+                    LogWarning("Failed to create hold display for " + std::to_string(*holdIt));
+                    continue;
+                }
+
+                this->holds.push_back(std::move(display));
+            }
         }
 
         /*
@@ -101,8 +121,8 @@ namespace UKControllerPlugin {
             auto display = std::find_if(
                 this->holds.begin(),
                 this->holds.end(),
-                [holdId](const HoldDisplay & hold) -> bool {
-                    return hold.managedHold.GetHoldParameters().identifier == holdId;
+                [holdId](const std::unique_ptr<HoldDisplay> & hold) -> bool {
+                    return hold->managedHold.GetHoldParameters().identifier == holdId;
                 }
             );
 
@@ -111,7 +131,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            display->Move({ position.left, position.top });
+            (*display)->Move({ position.left, position.top });
         }
 
         /*
@@ -122,11 +142,11 @@ namespace UKControllerPlugin {
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
             for (
-                std::list<HoldDisplay>::const_iterator it = this->holds.cbegin();
+                std::list<std::unique_ptr<HoldDisplay>>::const_iterator it = this->holds.cbegin();
                 it != this->holds.cend();
                 ++it
             ) {
-                it->PaintWindow(graphics, radarScreen, this->screenObjectId);
+                (*it)->PaintWindow(graphics, radarScreen, this->screenObjectId);
             }
         }
 
