@@ -29,8 +29,7 @@ namespace UKControllerPlugin {
             : profileManager(profileManager), holdManager(holdManager), plugin(plugin), screenObjectId(screenObjectId),
             toggleCallbackFunctionId(toggleCallbackFunctionId)
         {
-            this->holds.emplace_back(this->plugin, *this->holdManager.GetManagedHold(1));
-            this->holds.begin()->Move({ 100, 100 });
+
         }
 
         void HoldRenderer::AsrLoadedEvent(UserSetting & userSetting)

@@ -4,10 +4,12 @@
 namespace UKControllerPlugin {
     namespace Hold {
         class ManagedHold;
+        class HoldManager;
     }  // namespace Hold
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
         class EuroscopeRadarLoopbackInterface;
+        class UserSetting;
     }  // namespace Euroscope
     namespace Windows {
         class GdiGraphicsInterface;
@@ -25,16 +27,19 @@ namespace UKControllerPlugin {
             public:
                 HoldDisplay(
                     const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    const UKControllerPlugin::Hold::ManagedHold & managedHold
+                    const UKControllerPlugin::Hold::ManagedHold & managedHold,
+                    UKControllerPlugin::Hold::HoldManager & holdManager,
+                    const unsigned int holdProfileId
                 );
-                HoldDisplay(const HoldDisplay & copy);
                 void ButtonClicked(std::string button);
+                void LoadDataFromAsr(UKControllerPlugin::Euroscope::UserSetting & userSetting);
                 void Move(const POINT & pos);
                 void PaintWindow(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
                     const int screenObjectId
                 ) const;
+                void SaveDataToAsr(UKControllerPlugin::Euroscope::UserSetting & userSetting);
 
                 // The hold this display is managing.
                 const UKControllerPlugin::Hold::ManagedHold & managedHold;
@@ -47,8 +52,14 @@ namespace UKControllerPlugin {
                     UINT8 radius
                 ) const;
 
-                // The window handle
+                // The hold manager
+                UKControllerPlugin::Hold::HoldManager & holdManager;
+
+                // Reference to the plugin
                 const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+
+                // The profile ID this hold belongs to
+                const unsigned int holdProfileId;
 
                 // Brushes
                 const Gdiplus::SolidBrush titleBarTextBrush;
@@ -77,8 +88,8 @@ namespace UKControllerPlugin {
                 // Where to start drawing data
                 const INT buttonStartHeight = this->titleArea.Y + this->titleArea.Height + 3;
                 const INT dataStartHeight = this->buttonStartHeight + 50;
-                const int windowWidth = 235;
-                const int windowHeight = 500;
+                int windowWidth = 235;
+                int windowHeight = 500;
 
                 // Some more rects
                 Gdiplus::Rect minusButtonRect = {5, (int)this->buttonStartHeight, 40, 40};
@@ -93,7 +104,7 @@ namespace UKControllerPlugin {
                 /*
                     How many levels to not draw
                 */
-                unsigned int numLevelsSkipped = 0;
+                int numLevelsSkipped = 0;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin
