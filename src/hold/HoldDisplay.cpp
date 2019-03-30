@@ -43,7 +43,8 @@ namespace UKControllerPlugin {
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             const int numLevels = ((this->managedHold.GetHoldParameters().maximum -
                 this->managedHold.GetHoldParameters().minimum) / 1000) + 1;
-            this->windowHeight = this->dataStartHeight + (numLevels * this->lineHeight) + 15;
+
+            this->windowHeight = this->dataStartOffset + (numLevels * this->lineHeight) + 15;
             this->Move(this->windowPos);
         }
 
@@ -53,14 +54,19 @@ namespace UKControllerPlugin {
         void HoldDisplay::ButtonClicked(std::string button)
         {
             if (button == "plus") {
-                if (numLevelsSkipped > 0) this->numLevelsSkipped--;
-                this->windowHeight = this->windowHeight + this->lineHeight;
+                if (numLevelsSkipped > 0) {
+                    this->numLevelsSkipped--;
+                    this->windowHeight = this->windowHeight + this->lineHeight;
+                }
             } else if (button == "minus") {
                 const unsigned int maxLevelsSkippable = (this->managedHold.GetHoldParameters().maximum -
                             this->managedHold.GetHoldParameters().minimum) / 1000;
-                if (maxLevelsSkippable != this->numLevelsSkipped) numLevelsSkipped++;
-                this->windowHeight = this->windowHeight - this->lineHeight;
-            } else if (button == "add") {
+                if (maxLevelsSkippable != this->numLevelsSkipped) {
+                    numLevelsSkipped++;
+                    this->windowHeight = this->windowHeight - this->lineHeight;
+                }
+            }
+            else if (button == "add") {
                 try {
                     this->holdManager.AddAircraftToHold(
                         *this->plugin.GetSelectedFlightplan(),
@@ -106,6 +112,7 @@ namespace UKControllerPlugin {
         {
             // General window pos
             this->windowPos = pos;
+            this->dataStartHeight = this->dataStartOffset + pos.y;
 
             // Title bar
             this->titleArea.X = pos.x;
@@ -120,7 +127,7 @@ namespace UKControllerPlugin {
 
             // Minus button
             this->minusButtonRect.X = pos.x + 5;
-            this->minusButtonRect.Y = pos.y + this->buttonStartHeight;
+            this->minusButtonRect.Y = this->buttonStartOffset + pos.y;
 
             this->minusButtonClickRect = {
                 this->minusButtonRect.X,
@@ -131,7 +138,7 @@ namespace UKControllerPlugin {
 
             // Plus button
             this->plusButtonRect.X = pos.x + 55;
-            this->plusButtonRect.Y = pos.y + this->buttonStartHeight;
+            this->plusButtonRect.Y = this->buttonStartOffset + pos.y;
 
             this->plusButtonClickRect = {
                 this->plusButtonRect.X,
@@ -142,7 +149,7 @@ namespace UKControllerPlugin {
 
             // Add button
             this->addButtonRect.X = pos.x + 190;
-            this->addButtonRect.Y = pos.y + this->buttonStartHeight;
+            this->addButtonRect.Y = this->buttonStartOffset + pos.y;
 
             this->addButtonClickRect = {
                 this->addButtonRect.X,
@@ -243,8 +250,8 @@ namespace UKControllerPlugin {
 
             // Hold display
             Gdiplus::Rect numbersDisplay = {
-                windowPos.x,
-                windowPos.y + this->dataStartHeight,
+                this->windowPos.x,
+                this->dataStartHeight,
                 30,
                 15
             };
@@ -299,28 +306,28 @@ namespace UKControllerPlugin {
             Gdiplus::Rect callsignDisplay = {
                 this->windowPos.x + 35,
                 this->dataStartHeight,
-                this->windowPos.y + 90,
+                90,
                 this->lineHeight
             };
 
             Gdiplus::Rect actualLevelDisplay = {
                 this->windowPos.x + 130,
                 this->dataStartHeight,
-                this->windowPos.y + 30,
+                30,
                 this->lineHeight
             };
 
             Gdiplus::Rect clearedLevelDisplay = {
                 this->windowPos.x + 165,
                 this->dataStartHeight,
-                this->windowPos.y + 30,
+                30,
                 this->lineHeight
             };
 
             Gdiplus::Rect timeInHoldDisplay = {
                 this->windowPos.x + 200,
                 this->dataStartHeight,
-                this->windowPos.y + 30,
+                30,
                 this->lineHeight
             };
 

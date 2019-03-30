@@ -87,19 +87,26 @@ namespace UKControllerPlugin {
                 // How high lines should be
                 const INT lineHeight = 17;
 
-                // Where to start drawing data
-                const INT buttonStartHeight = this->titleArea.Y + this->titleArea.Height + 3;
-                const INT dataStartHeight = this->buttonStartHeight + 50;
+                // The default offset for buttons
+                const INT buttonStartOffset = 18;
+
+                // The default offset for data
+                const INT dataStartOffset = 68;
+
+                // Where to start the data drawing.
+                INT dataStartHeight;
+
+
                 int windowWidth = 235;
                 int windowHeight = 500;
 
                 // Some more rects
-                Gdiplus::Rect minusButtonRect = {5, (int)this->buttonStartHeight, 40, 40};
-                RECT minusButtonClickRect = { 5, (int)this->buttonStartHeight, 40, 40 };
-                Gdiplus::Rect plusButtonRect = {55, (int)this->buttonStartHeight, 40, 40};
-                RECT plusButtonClickRect = { 5, (int)this->buttonStartHeight, 40, 40 };
-                Gdiplus::Rect addButtonRect = {190, (int)this->buttonStartHeight, 40, 40};
-                RECT addButtonClickRect = { 5, (int)this->buttonStartHeight, 40, 40 };
+                Gdiplus::Rect minusButtonRect = {5, (int)this->buttonStartOffset, 40, 40};
+                RECT minusButtonClickRect = { 5, (int)this->buttonStartOffset, 40, 40 };
+                Gdiplus::Rect plusButtonRect = {55, (int)this->buttonStartOffset, 40, 40};
+                RECT plusButtonClickRect = { 5, (int)this->buttonStartOffset, 40, 40 };
+                Gdiplus::Rect addButtonRect = {190, (int)this->buttonStartOffset, 40, 40};
+                RECT addButtonClickRect = { 5, (int)this->buttonStartOffset, 40, 40 };
 
                 POINT windowPos = { 100, 100 };
 
