@@ -1,5 +1,7 @@
 #include "pch/stdafx.h"
+#include "dialog/DialogData.h"
 #include "dialog/DialogManager.h"
+#include "dialog/DialogCallArgument.h"
 
 using UKControllerPlugin::Dialog::DialogProviderInterface;
 
@@ -44,7 +46,7 @@ namespace UKControllerPlugin {
         /*
             Open the given dialog
         */
-        void DialogManager::OpenDialog(unsigned int dialogId) const
+        void DialogManager::OpenDialog(unsigned int dialogId, LPARAM contextArgument) const
         {
             auto dialog = this->dialogs.find(dialogId);
             if (dialog == this->dialogs.cend()) {
@@ -52,8 +54,12 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            // Set the dialog arguments internally, so they stay in scope
             LogInfo("Opened dialog " + dialog->description);
-            this->dialogProvider.OpenDialog(*dialog);
+            DialogCallArgument arg = { dialog->dialogArgument, contextArgument };
+            this->dialogArgs[dialogId] = std::make_unique<DialogCallArgument>(arg);
+
+            this->dialogProvider.OpenDialog(*dialog, this->dialogArgs[dialogId].get());
         }
     }  // namespace Dialog
 }  // namespace UKControllerPlugin

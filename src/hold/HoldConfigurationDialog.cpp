@@ -4,12 +4,15 @@
 #include "hold/HoldWindowManager.h"
 #include "hold/HoldSelectionMenu.h"
 #include "hold/HoldProfileManager.h"
+#include "dialog/DialogCallArgument.h"
 
 using UKControllerPlugin::Hold::ConvertToTchar;
 using UKControllerPlugin::Hold::GetSelectedHoldProfileText;
 using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldProfileManager;
+using UKControllerPlugin::Dialog::DialogCallArgument;
+using UKControllerPlugin::Hold::HoldConfigurationMenuItem;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -55,6 +58,10 @@ namespace UKControllerPlugin {
             switch (msg) {
                 // Initialise
                 case WM_INITDIALOG: {
+
+                    this->configurationItem = reinterpret_cast<HoldConfigurationMenuItem *>(
+                        reinterpret_cast<DialogCallArgument *>(lParam)->contextArgument
+                    );
 
                     // Load the holds
                     SendDlgItemMessage(
@@ -481,6 +488,7 @@ namespace UKControllerPlugin {
                                 NULL
                             );
 
+                            this->configurationItem->SelectProfile(this->selectedHoldProfile);
                             return TRUE;
                         }
                         case IDC_HOLD_PROFILE_DELETE: {
@@ -551,6 +559,7 @@ namespace UKControllerPlugin {
                                     continue;
                                 }
 
+                                this->configurationItem->SelectProfile(this->selectedHoldProfile);
                                 this->windowManager.AddWindow(hold->identifier);
                                 this->holdSelectionMenu.AddHoldToMenu(hold->identifier);
                             }
@@ -572,7 +581,7 @@ namespace UKControllerPlugin {
                 SetWindowLongPtr(
                     hwnd,
                     GWLP_USERDATA,
-                    reinterpret_cast<LONG>(reinterpret_cast<HoldConfigurationDialog *>(lParam))
+                    reinterpret_cast<DialogCallArgument *>(lParam)->dialogArgument
                 );
             }
             else if (msg == WM_DESTROY) {

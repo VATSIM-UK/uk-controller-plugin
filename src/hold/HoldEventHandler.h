@@ -27,7 +27,6 @@ namespace UKControllerPlugin {
         */
         class HoldEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
             public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
-            public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
             public UKControllerPlugin::Command::CommandHandlerInterface,
             public UKControllerPlugin::Tag::TagItemInterface
         {
@@ -54,10 +53,6 @@ namespace UKControllerPlugin {
 
                 // Inherited via AbstractTimedEvent
                 void TimedEventTrigger(void) override;
-
-                // Inherited via ConfigurableDisplayInterface
-                void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
-                UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
 
                 // Inherited via CommandHandlerInterface
                 bool ProcessCommand(std::string command) override;

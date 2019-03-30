@@ -80,6 +80,7 @@
     <ClInclude Include="..\..\src\dependency\LocalFileUpdater.h" />
     <ClInclude Include="..\..\src\dependency\DependencyData.h" />
     <ClInclude Include="..\..\src\dialog\CompareDialogs.h" />
+    <ClInclude Include="..\..\src\dialog\DialogCallArgument.h" />
     <ClInclude Include="..\..\src\dialog\DialogData.h" />
     <ClInclude Include="..\..\src\dialog\DialogManager.h" />
     <ClInclude Include="..\..\src\dialog\DialogProviderInterface.h" />
@@ -150,7 +151,7 @@
     <ClInclude Include="..\..\src\hold\HoldProfile.h" />
     <ClInclude Include="..\..\src\hold\HoldProfileManager.h" />
     <ClInclude Include="..\..\src\hold\HoldProfileManagerFactory.h" />
-    <ClInclude Include="..\..\src\hold\HoldProfileSelector.h" />
+    <ClInclude Include="..\..\src\hold\HoldConfigurationMenuItem.h" />
     <ClInclude Include="..\..\src\hold\HoldProfileSerializer.h" />
     <ClInclude Include="..\..\src\hold\HoldRenderer.h" />
     <ClInclude Include="..\..\src\hold\HoldRestrictionSerializer.h" />
@@ -361,7 +362,7 @@
     <ClCompile Include="..\..\src\hold\HoldModule.cpp" />
     <ClCompile Include="..\..\src\hold\HoldProfileManager.cpp" />
     <ClCompile Include="..\..\src\hold\HoldProfileManagerFactory.cpp" />
-    <ClCompile Include="..\..\src\hold\HoldProfileSelector.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldConfigurationMenuItem.cpp" />
     <ClCompile Include="..\..\src\hold\HoldProfileSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldRenderer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldRestrictionSerializer.cpp" />

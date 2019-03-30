@@ -1,5 +1,6 @@
 #pragma once
 #include "dialog/DialogProviderInterface.h"
+#include "dialog/DialogCallArgument.h"
 #include "dialog/CompareDialogs.h"
 
 namespace UKControllerPlugin {
@@ -15,7 +16,7 @@ namespace UKControllerPlugin {
                 bool AddDialog(UKControllerPlugin::Dialog::DialogData data);
                 size_t CountDialogs(void) const;
                 bool HasDialog(unsigned int dialogId) const;
-                void OpenDialog(unsigned int dialogId) const;
+                void OpenDialog(unsigned int dialogId, LPARAM contextArgument) const;
 
             private:
                 
@@ -24,6 +25,12 @@ namespace UKControllerPlugin {
 
                 // All the dialogs
                 std::set<UKControllerPlugin::Dialog::DialogData, UKControllerPlugin::Dialog::CompareDialogs> dialogs;
+
+                // Map to store pointers to dialog args, so that they remain in scope whilst dialogs are open
+                mutable std::map<
+                    unsigned int,
+                    std::unique_ptr<UKControllerPlugin::Dialog::DialogCallArgument>
+                > dialogArgs;
         };
     }  // namespace Dialog
 }  // namespace UKControllerPlugin

@@ -23,7 +23,7 @@
 #include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldProfileManagerFactory.h"
 #include "hold/HoldRenderer.h"
-#include "hold/HoldProfileSelector.h"
+#include "hold/HoldConfigurationMenuItem.h"
 #include "radarscreen/RadarRenderableCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -50,7 +50,7 @@ using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Hold::HoldProfileSelector;
+using UKControllerPlugin::Hold::HoldConfigurationMenuItem;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -176,19 +176,6 @@ namespace UKControllerPlugin {
             container.commandHandlers->RegisterHandler(eventHandler);
             container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
 
-            CallbackFunction openWindowCallback(
-                eventHandler->popupMenuItemId,
-                "Show Hold Manager",
-                std::bind(
-                    &HoldEventHandler::Configure,
-                    eventHandler,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(openWindowCallback);
-
             // If there aren't any holds, tell the user this explicitly
             if (container.holdManager->CountHolds() == 0) {
                 BootstrapWarningMessage warning("No holds were loaded for the hold manager");
@@ -208,9 +195,6 @@ namespace UKControllerPlugin {
             AsrEventHandlerCollection & asrEvents,
             const PersistenceContainer & container
         ) {
-            // Event handler
-            configurableDisplay.RegisterDisplay(eventHandler);
-
             // Renderer
             const int rendererId = radarRenderables.ReserveRendererIdentifier();
             std::shared_ptr<HoldRenderer> renderer = std::make_shared<HoldRenderer>(
@@ -243,42 +227,26 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(renderToggleCallback);
 
             // Profile selector
-            std::shared_ptr<HoldProfileSelector> selector = std::make_shared<HoldProfileSelector>(
+            std::shared_ptr<HoldConfigurationMenuItem> selector = std::make_shared<HoldConfigurationMenuItem>(
+                *container.dialogManager,
                 *container.holdProfiles,
-                *container.plugin,
                 *renderer,
-                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
             configurableDisplay.RegisterDisplay(selector);
-            asrEvents.RegisterHandler(selector);
 
-            CallbackFunction profileSelectionCallback(
+            CallbackFunction openWindowCallback(
                 selector->selectorMenuOpenCallbackId,
-                "Hold Profile Selection",
+                "Open Hold Manager Dialog",
                 std::bind(
-                    &HoldProfileSelector::Configure,
+                &HoldConfigurationMenuItem::Configure,
                     selector,
                     std::placeholders::_1,
                     std::placeholders::_2,
                     std::placeholders::_3
                 )
             );
-            container.pluginFunctionHandlers->RegisterFunctionCall(profileSelectionCallback);
-
-            CallbackFunction profileSelectedCallback(
-                selector->firstProfileCallbackId,
-                "Hold Profile Selected",
-                std::bind(
-                &HoldProfileSelector::ItemSelected,
-                    selector,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(profileSelectedCallback);
+            container.pluginFunctionHandlers->RegisterFunctionCall(openWindowCallback);
         }
-
     }  // namespace Hold
 }  // namespace UKControllerPlugin

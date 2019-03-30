@@ -13,6 +13,8 @@ using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
 using UKControllerPlugin::HistoryTrail::HistoryTrailData;
 using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
+using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPlugin::Dialog::DialogCallArgument;
 
 namespace UKControllerPlugin {
     namespace Windows {
@@ -276,7 +278,7 @@ namespace UKControllerPlugin {
         /*
             Open a dialog
         */
-        void WinApi::OpenDialog(const UKControllerPlugin::Dialog::DialogData & dialog) const
+        void WinApi::OpenDialog(const DialogData & dialog, const DialogCallArgument * argument) const
         {
             AFX_MANAGE_STATE(AfxGetStaticModuleState());
             DialogBoxParam(
@@ -284,7 +286,7 @@ namespace UKControllerPlugin {
                 MAKEINTRESOURCE(dialog.dialogId),
                 GetActiveWindow(),
                 dialog.dialogProcedure,
-                dialog.dialogArgument
+                reinterpret_cast<LPARAM>(argument)
             );
         }
     }  // namespace Windows

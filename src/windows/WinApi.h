@@ -39,7 +39,10 @@ namespace UKControllerPlugin {
                 void WriteToFile(std::string filename, std::string data, bool truncate);
 
                 // Inherited via DialogProviderInterface
-                void OpenDialog(const UKControllerPlugin::Dialog::DialogData & dialog) const override;
+                void OpenDialog(
+                    const UKControllerPlugin::Dialog::DialogData & dialog,
+                    const UKControllerPlugin::Dialog::DialogCallArgument * argument
+                ) const override;
 
             private:
                 void CreateMissingDirectories(std::string endFile);

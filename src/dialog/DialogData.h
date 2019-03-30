@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
             // The procedure to run when running the dialog. This should be a function pointer.
             const DLGPROC dialogProcedure;
 
-            // The argument to pass to the dialog on WM_INITDIALOG
+            // The argument to pass to the dialog on WM_INITDIALOG along with the context argument
             const LPARAM dialogArgument;
 
             /*

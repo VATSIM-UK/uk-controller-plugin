@@ -1,6 +1,7 @@
 #pragma once
 #include "hold/HoldingData.h"
 #include "hold/CompareHolds.h"
+#include "hold/HoldConfigurationMenuItem.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -33,6 +34,9 @@ namespace UKControllerPlugin {
             private:
 
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+                // The ES menu item that triggered this dialog - it should be notified when changes occur
+                UKControllerPlugin::Hold::HoldConfigurationMenuItem * configurationItem;
 
                 // Manages hold profiles
                 UKControllerPlugin::Hold::HoldProfileManager & holdProfileManager;

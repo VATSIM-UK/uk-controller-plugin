@@ -837,10 +837,13 @@
     <ClInclude Include="..\..\src\hold\HoldRenderer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfileSelector.h">
+    <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h">
+    <ClInclude Include="..\..\src\dialog\DialogCallArgument.h">
+      <Filter>src\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldConfigurationMenuItem.h">
       <Filter>src\hold</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1429,10 +1432,10 @@
     <ClCompile Include="..\..\src\hold\HoldRenderer.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldProfileSelector.cpp">
+    <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp">
+    <ClCompile Include="..\..\src\hold\HoldConfigurationMenuItem.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>

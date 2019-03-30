@@ -66,29 +66,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Called when the popup menu item is selected. Open the hold manager window.
-        */
-        void HoldEventHandler::Configure(int functionId, std::string subject, RECT screenObjectArea)
-        {
-            this->dialogManager.OpenDialog(HOLD_SELECTOR_DIALOG);
-        }
-
-        /*
-            Return the item for the popup configuration menu.
-        */
-        UKControllerPlugin::Plugin::PopupMenuItem HoldEventHandler::GetConfigurationMenuItem(void) const
-        {
-            PopupMenuItem item;
-            item.callbackFunctionId = this->popupMenuItemId;
-            item.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-            item.disabled = false;
-            item.firstValue = this->menuItemDescription;
-            item.secondValue = "";
-            item.fixedPosition = false;
-            return item;
-        }
-
-        /*
             Process euroscope dot commands
         */
         bool HoldEventHandler::ProcessCommand(std::string command)

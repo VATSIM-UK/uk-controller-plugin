@@ -1,5 +1,6 @@
 #pragma once
 #include "dialog/DialogData.h"
+#include "dialog/DialogCallArgument.h"
 
 namespace UKControllerPlugin {
     namespace Dialog {
@@ -15,7 +16,10 @@ namespace UKControllerPlugin {
                 /*
                     Open the given dialog
                 */
-                virtual void OpenDialog(const UKControllerPlugin::Dialog::DialogData & dialog) const = 0;
+                virtual void OpenDialog(
+                    const UKControllerPlugin::Dialog::DialogData & dialog,
+                    const UKControllerPlugin::Dialog::DialogCallArgument * argument
+                ) const = 0;
         };
 
     }  // namespace Dialog
