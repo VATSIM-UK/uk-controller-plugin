@@ -846,6 +846,9 @@
     <ClInclude Include="..\..\src\hold\HoldConfigurationMenuItem.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplayManager.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1436,6 +1439,9 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldConfigurationMenuItem.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplayManager.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>

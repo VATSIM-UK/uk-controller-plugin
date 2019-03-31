@@ -40,6 +40,5 @@ namespace Bootstrap {
         // Load the settings into the repo
         settings.AddSettingsFromJsonFile("api-settings.json");
     }
-
 }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

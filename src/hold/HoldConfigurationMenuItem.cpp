@@ -1,13 +1,14 @@
 #include "pch/stdafx.h"
 #include "hold/HoldConfigurationMenuItem.h"
-#include "hold/HoldProfileManager.h"
+#include "hold/HoldSelectionMenu.h"
 #include "hold/HoldRenderer.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "dialog/DialogManager.h"
+#include "hold/HoldDisplayManager.h"
 
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Hold::HoldProfileManager;
+using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::Euroscope::UserSetting;
@@ -17,12 +18,11 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         HoldConfigurationMenuItem::HoldConfigurationMenuItem(
-            const DialogManager & dialogManager,
-            const HoldProfileManager & profileManager, 
-            HoldRenderer & renderer,
+            const UKControllerPlugin::Dialog::DialogManager & dialogManager,
+            const std::shared_ptr<HoldDisplayManager> displayManager,
             const unsigned int selectorMenuOpenCallbackId
-        ) : profileManager(profileManager), selectorMenuOpenCallbackId(selectorMenuOpenCallbackId),
-            renderer(renderer), dialogManager(dialogManager)
+        ) : displayManager(displayManager), selectorMenuOpenCallbackId(selectorMenuOpenCallbackId),
+            dialogManager(dialogManager)
         {
 
         }
@@ -56,7 +56,7 @@ namespace UKControllerPlugin {
         */
         void HoldConfigurationMenuItem::SelectProfile(unsigned int profileId)
         {
-            this->renderer.LoadProfile(profileId);
+            this->displayManager->LoadProfile(profileId);
         }
 
         /*
@@ -65,7 +65,7 @@ namespace UKControllerPlugin {
         */
         void HoldConfigurationMenuItem::InvalidateProfile(unsigned int profileId)
         {
-            this->renderer.LoadProfile(profileId);
+            this->displayManager->LoadProfile(profileId);
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

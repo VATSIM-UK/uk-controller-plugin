@@ -21,58 +21,13 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         HoldRenderer::HoldRenderer(
-            const HoldProfileManager & profileManager,
-            const HoldManager & holdManager,
-            const HoldDisplayFactory & displayFactory,
+            const std::shared_ptr<const HoldDisplayManager> displays,
             const int screenObjectId,
             const int toggleCallbackFunctionId
         )
-            : profileManager(profileManager), holdManager(holdManager), displayFactory(displayFactory),
-            screenObjectId(screenObjectId), toggleCallbackFunctionId(toggleCallbackFunctionId)
+            : displays(displays), screenObjectId(screenObjectId), toggleCallbackFunctionId(toggleCallbackFunctionId)
         {
 
-        }
-
-        /*
-            ASR opening, load the profile
-        */
-        void HoldRenderer::AsrLoadedEvent(UserSetting & userSetting)
-        {
-            this->userSetting = &userSetting;
-            this->profileId = this->userSetting->GetUnsignedIntegerEntry(
-                this->selectedProfileAsrKey,
-                0
-            );
-
-            if (this->profileId == 0) {
-                return;
-            }
-
-            // Load the profile
-            this->LoadProfile(this->profileId);
-        }
-
-        /*
-            ASR closing, save all the data for the currently open holds
-        */
-        void HoldRenderer::AsrClosingEvent(UserSetting & userSetting)
-        {
-            this->userSetting->Save(
-                this->selectedProfileAsrKey,
-                this->selectedProfileAsrDescription,
-                this->profileId
-            );
-            for (
-                std::list<std::unique_ptr<HoldDisplay>>::const_iterator it = this->holds.cbegin();
-                it != this->holds.cend();
-                ++it
-            ) {
-                HoldProfile profile = this->profileManager.GetProfile(this->profileId);
-                if (profile == this->profileManager.invalidProfile) {
-                    return;
-                }
-                (*it)->SaveDataToAsr(*this->userSetting, this->profileId, profile.name);
-            }
         }
 
         /*
@@ -93,48 +48,19 @@ namespace UKControllerPlugin {
         ) {
             int holdId = this->GetHoldIdFromObjectDescription(objectDescription);
             auto display = std::find_if(
-                this->holds.begin(),
-                this->holds.end(),
+                this->displays->cbegin(),
+                this->displays->cend(),
                 [holdId](const std::unique_ptr<HoldDisplay> & hold) -> bool {
                     return hold->managedHold.GetHoldParameters().identifier == holdId;
                 }
             );
 
-            if (display == this->holds.cend()) {
+            if (display == this->displays->cend()) {
                 LogWarning("Tried to move invalid hold display");
                 return;
             }
 
             (*display)->ButtonClicked(this->GetButtonNameFromObjectDescription(objectDescription));
-        }
-
-        /*
-            Load the given hold profile
-        */
-        void HoldRenderer::LoadProfile(unsigned int profileId)
-        {
-            this->profileId = profileId;
-            HoldProfile selected = this->profileManager.GetProfile(profileId);
-            if (selected == this->profileManager.invalidProfile) {
-                LogWarning("Tried to load invalid hold profile");
-                return;
-            }
-
-            this->holds.clear();
-
-            for (std::set<unsigned int>::const_iterator holdIt = selected.holds.cbegin();
-                holdIt != selected.holds.cend();
-                ++holdIt
-            ) {
-                std::unique_ptr<HoldDisplay> display = this->displayFactory.Create(*holdIt);
-                if (display == nullptr) {
-                    LogWarning("Failed to create hold display for " + std::to_string(*holdIt));
-                    continue;
-                }
-
-                display->LoadDataFromAsr(*this->userSetting, this->profileId);
-                this->holds.push_back(std::move(display));
-            }
         }
 
         /*
@@ -155,14 +81,14 @@ namespace UKControllerPlugin {
         {
             int holdId = this->GetHoldIdFromObjectDescription(objectDescription);
             auto display = std::find_if(
-                this->holds.begin(),
-                this->holds.end(),
+                this->displays->cbegin(),
+                this->displays->cend(),
                 [holdId](const std::unique_ptr<HoldDisplay> & hold) -> bool {
                     return hold->managedHold.GetHoldParameters().identifier == holdId;
                 }
             );
 
-            if (display == this->holds.cend()) {
+            if (display == this->displays->cend()) {
                 LogWarning("Tried to move invalid hold display");
                 return;
             }
@@ -178,8 +104,8 @@ namespace UKControllerPlugin {
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
             for (
-                std::list<std::unique_ptr<HoldDisplay>>::const_iterator it = this->holds.cbegin();
-                it != this->holds.cend();
+                HoldDisplayManager::const_iterator it = this->displays->cbegin();
+                it != this->displays->cend();
                 ++it
             ) {
                 (*it)->PaintWindow(graphics, radarScreen, this->screenObjectId);

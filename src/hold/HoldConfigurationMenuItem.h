@@ -4,8 +4,8 @@
 
 namespace UKControllerPlugin {
     namespace Hold {
-        class HoldProfileManager;
         class HoldRenderer;
+        class HoldDisplayManager;
     }  // namespace Hold
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
@@ -26,8 +26,7 @@ namespace UKControllerPlugin {
             public:
                 HoldConfigurationMenuItem(
                     const UKControllerPlugin::Dialog::DialogManager & dialogManager,
-                    const UKControllerPlugin::Hold::HoldProfileManager & profileManager,
-                    UKControllerPlugin::Hold::HoldRenderer & renderer,
+                    const std::shared_ptr<UKControllerPlugin::Hold::HoldDisplayManager> displayManager,
                     unsigned int selectorMenuOpenCallbackId
                 );
 
@@ -46,11 +45,8 @@ namespace UKControllerPlugin {
 
             private:
 
-                // Manages the hold profiles
-                const UKControllerPlugin::Hold::HoldProfileManager & profileManager;
-
-                // The renderer to which to send selection commands
-                UKControllerPlugin::Hold::HoldRenderer & renderer;
+                // The display manager for this ASR
+                const std::shared_ptr<UKControllerPlugin::Hold::HoldDisplayManager> displayManager;
 
                 // Manages dialogs
                 const UKControllerPlugin::Dialog::DialogManager & dialogManager;

@@ -1,15 +1,11 @@
 #include "pch/stdafx.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "hold/HoldDisplayFunctions.h"
-#include "hold/HoldWindowManager.h"
-#include "hold/HoldSelectionMenu.h"
 #include "hold/HoldProfileManager.h"
 #include "dialog/DialogCallArgument.h"
 
 using UKControllerPlugin::Hold::ConvertToTchar;
 using UKControllerPlugin::Hold::GetSelectedHoldProfileText;
-using UKControllerPlugin::Hold::HoldWindowManager;
-using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Hold::HoldConfigurationMenuItem;
@@ -18,12 +14,9 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         HoldConfigurationDialog::HoldConfigurationDialog(
-            HoldWindowManager & windowManager,
-            HoldSelectionMenu & holdSelectionMenu,
             HoldProfileManager & holdProfileManager
         )
-            : windowManager(windowManager), holdSelectionMenu(holdSelectionMenu),
-            holdProfileManager(holdProfileManager)
+            : holdProfileManager(holdProfileManager)
         {
 
         }
@@ -560,8 +553,6 @@ namespace UKControllerPlugin {
                                 }
 
                                 this->configurationItem->SelectProfile(this->selectedHoldProfile);
-                                this->windowManager.AddWindow(hold->identifier);
-                                this->holdSelectionMenu.AddHoldToMenu(hold->identifier);
                             }
                             return TRUE;
                         }

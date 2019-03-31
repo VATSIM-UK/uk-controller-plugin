@@ -16,13 +16,9 @@ namespace UKControllerPlugin {
         */
         std::shared_ptr<HoldConfigurationDialog> CreateHoldConfigurationDialog(
             nlohmann::json data,
-            HoldWindowManager & windowManager,
-            HoldSelectionMenu & holdSelectionMenu,
             HoldProfileManager & holdProfileManager
         ) {
             std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(
-                windowManager,
-                holdSelectionMenu,
                 holdProfileManager
             );
 

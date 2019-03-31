@@ -25,6 +25,7 @@
 #include "hold/HoldRenderer.h"
 #include "hold/HoldConfigurationMenuItem.h"
 #include "radarscreen/RadarRenderableCollection.h"
+#include "hold/HoldDisplayManager.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -83,6 +84,7 @@ namespace UKControllerPlugin {
             int holdSelectionCancelId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             container.holdSelectionMenu = std::make_shared<HoldSelectionMenu>(
                 *container.holdManager,
+                *container.holdProfiles,
                 *container.plugin,
                 holdSelectionCancelId
             );
@@ -148,8 +150,6 @@ namespace UKControllerPlugin {
 
             std::shared_ptr<HoldConfigurationDialog> dialog = CreateHoldConfigurationDialog(
                 holdDependency,
-                *container.holdWindows,
-                *container.holdSelectionMenu,
                 *container.holdProfiles
             );
             container.dialogManager->AddDialog(
@@ -195,12 +195,19 @@ namespace UKControllerPlugin {
             AsrEventHandlerCollection & asrEvents,
             const PersistenceContainer & container
         ) {
+            // Display manager
+            std::shared_ptr<HoldDisplayManager> displayManager = std::make_shared<HoldDisplayManager>(
+                *container.holdProfiles,
+                *container.holdManager,
+                *container.holdDisplayFactory
+            );
+            asrEvents.RegisterHandler(displayManager);
+            container.holdSelectionMenu->AddDisplayManager(displayManager);
+
             // Renderer
             const int rendererId = radarRenderables.ReserveRendererIdentifier();
             std::shared_ptr<HoldRenderer> renderer = std::make_shared<HoldRenderer>(
-                *container.holdProfiles,
-                *container.holdManager,
-                *container.holdDisplayFactory,
+                displayManager,
                 radarRenderables.ReserveScreenObjectIdentifier(rendererId),
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
@@ -210,7 +217,6 @@ namespace UKControllerPlugin {
                 renderer,
                 radarRenderables.afterTags
             );
-            asrEvents.RegisterHandler(renderer);
             configurableDisplay.RegisterDisplay(renderer);
 
             CallbackFunction renderToggleCallback(
@@ -229,8 +235,7 @@ namespace UKControllerPlugin {
             // Profile selector
             std::shared_ptr<HoldConfigurationMenuItem> selector = std::make_shared<HoldConfigurationMenuItem>(
                 *container.dialogManager,
-                *container.holdProfiles,
-                *renderer,
+                displayManager,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
             configurableDisplay.RegisterDisplay(selector);

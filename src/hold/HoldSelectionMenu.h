@@ -8,6 +8,8 @@ namespace UKControllerPlugin {
     }  // namespace Euroscope
     namespace Hold {
         class HoldManager;
+        class HoldProfileManager;
+        class HoldDisplayManager;
     }  // namespace Hold
 }  // namespace UKControllerPlugin
 
@@ -18,12 +20,13 @@ namespace UKControllerPlugin {
             public:
                 HoldSelectionMenu(
                     UKControllerPlugin::Hold::HoldManager & holdManager,
+                    UKControllerPlugin::Hold::HoldProfileManager & profileManager,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     unsigned int callbackIdFirstHold
                 );
-                void AddHoldToMenu(unsigned int holdId);
-                size_t CountHolds(void) const;
-                void RemoveHoldFromMenu(unsigned int holdId);
+                void AddDisplayManager(
+                    const std::shared_ptr<const UKControllerPlugin::Hold::HoldDisplayManager> manager
+                );
                 void DisplayMenu(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
@@ -36,12 +39,15 @@ namespace UKControllerPlugin {
                 const unsigned int callbackIdFirstHold;
 
             private:
+                
+                // A set of all the open ASR's display managers.
+                std::set<std::shared_ptr<const UKControllerPlugin::Hold::HoldDisplayManager>> displays;
+
+                // Manages hold profiles
+                UKControllerPlugin::Hold::HoldProfileManager & profileManager;
 
                 // The hold manager
                 UKControllerPlugin::Hold::HoldManager & holdManager;
-                
-                // The holds to include in the menu
-                std::set<unsigned int> menuHolds;
                 
                 // The plugin, used to display menus
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;

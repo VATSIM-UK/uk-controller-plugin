@@ -6,11 +6,14 @@
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
 #include "hold/ManagedHold.h"
+#include "hold/HoldProfileManager.h"
+#include "hold/HoldDisplayManager.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Hold::ManagedHold;
 
@@ -18,33 +21,21 @@ namespace UKControllerPlugin {
     namespace Hold {
         HoldSelectionMenu::HoldSelectionMenu(
             HoldManager & holdManager,
+            HoldProfileManager & profileManager,
             EuroscopePluginLoopbackInterface & plugin,
             unsigned int callbackIdFirstHold
-        )
-            : holdManager(holdManager), plugin(plugin), callbackIdFirstHold(callbackIdFirstHold)
+        ) : holdManager(holdManager), profileManager(profileManager),
+            plugin(plugin), callbackIdFirstHold(callbackIdFirstHold)
         {
         }
 
         /*
-            Adds the given hold to the menu
+            Add a display manager to the set so its holds can be used in the list
         */
-        void HoldSelectionMenu::AddHoldToMenu(unsigned int holdId)
+        void HoldSelectionMenu::AddDisplayManager(const std::shared_ptr<const HoldDisplayManager> manager)
         {
-            this->menuHolds.insert(holdId);
-        }
-
-        size_t HoldSelectionMenu::CountHolds(void) const
-        {
-            return this->menuHolds.size();
-        }
-
-        /*
-            Remove the given hold from the menu
-        */
-        void HoldSelectionMenu::RemoveHoldFromMenu(unsigned int holdId)
-        {
-            this->menuHolds.erase(holdId);
-        }
+            this->displays.insert(manager);
+        }        
 
         /*
             Display the menu
@@ -55,10 +46,6 @@ namespace UKControllerPlugin {
             std::string context,
             const POINT & mousePos
         ) {
-            if (this->menuHolds.size() == 0) {
-                return;
-            }
-
             // Create the list in place
             RECT popupArea = {
                 mousePos.x,
@@ -73,30 +60,38 @@ namespace UKControllerPlugin {
                 1
             );
 
-            // Add items to the list
+            // Use a "different" callback function for each hold, so we can easily determine which one is called
+            PopupMenuItem menuItem;
+            menuItem.secondValue = "";
+            menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItem.disabled = false;
+            menuItem.fixedPosition = false;
+
+            // Iterate through the profiles
+            std::set<unsigned int> addedHolds;
             for (
-                std::set<unsigned int>::const_iterator it = this->menuHolds.cbegin();
-                it != this->menuHolds.cend();
+                std::set<std::shared_ptr<const HoldDisplayManager>>::const_iterator it = this->displays.cbegin();
+                it != this->displays.cend();
                 ++it
             ) {
-                const ManagedHold * hold = this->holdManager.GetManagedHold(*it);
-                if (!hold) {
-                    LogWarning("Tried to add invalid hold to hold selection: " + std::to_string(*it));
-                    continue;
+                // Add holds to the list with no duplicates
+                for (
+                    HoldDisplayManager::const_iterator holdIt = (*it)->cbegin();
+                    holdIt != (*it)->cend();
+                    ++holdIt
+                ) {
+                    if (!addedHolds.insert((*holdIt)->managedHold.GetHoldParameters().identifier).second) {
+                        continue;
+                    }
+
+                    menuItem.firstValue = (*holdIt)->managedHold.GetHoldParameters().description;
+                    menuItem.callbackFunctionId = this->callbackIdFirstHold +
+                        (*holdIt)->managedHold.GetHoldParameters().identifier;
+                    this->plugin.AddItemToPopupList(menuItem);
                 }
-
-                // Use a "different" callback function for each hold, so we can easily determine which one is called
-                PopupMenuItem menuItem;
-                menuItem.firstValue = hold->GetHoldParameters().description;
-                menuItem.secondValue = "";
-                menuItem.callbackFunctionId = this->callbackIdFirstHold + *it;
-                menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-                menuItem.disabled = false;
-                menuItem.fixedPosition = false;
-
-                this->plugin.AddItemToPopupList(menuItem);
             }
 
+            // Add the cancel menu item.
             PopupMenuItem menuItemCancel;
             menuItemCancel.firstValue = "--";
             menuItemCancel.secondValue = "";
