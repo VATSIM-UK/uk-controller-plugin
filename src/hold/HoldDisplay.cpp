@@ -44,7 +44,7 @@ namespace UKControllerPlugin {
             const int numLevels = ((this->managedHold.GetHoldParameters().maximum -
                 this->managedHold.GetHoldParameters().minimum) / 1000) + 1;
 
-            this->windowHeight = this->dataStartOffset + (numLevels * this->lineHeight) + 15;
+            this->windowHeight = this->dataStartOffset + (numLevels * this->lineHeight);
             this->Move(this->windowPos);
         }
 
@@ -397,6 +397,19 @@ namespace UKControllerPlugin {
                     this->dataBrush
                 );
             }
+
+            // Line sectioning off the bottom level.
+            unsigned int bottomLevelLineHeight = this->dataStartHeight + 
+                (this->lineHeight * (this->managedHold.GetNumberOfLevels() - this->numLevelsSkipped - 1)) - 2;
+
+            Gdiplus::GraphicsPath path;
+            path.AddLine(
+                this->windowPos.x,
+                bottomLevelLineHeight,
+                this->windowPos.x + this->windowWidth,
+                bottomLevelLineHeight
+            );
+            graphics.DrawPath(path, this->borderPen);
 
             // Border around whole thing, draw this last
             graphics.DrawRect(
