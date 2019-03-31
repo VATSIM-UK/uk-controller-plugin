@@ -80,23 +80,39 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Return the position of the window
+        */
+        POINT HoldDisplay::GetDisplayPos(void) const
+        {
+            return this->windowPos;
+        }
+
+        /*
+            Return the number of levels skipped on the display
+        */
+        unsigned int HoldDisplay::GetLevelsSkipped(void) const
+        {
+            return this->numLevelsSkipped;
+        }
+
+        /*
             Load data from an ASR
         */
         void HoldDisplay::LoadDataFromAsr(UserSetting & userSetting, unsigned int holdProfileId)
         {
-            this->numLevelsSkipped = userSetting.GetIntegerEntry(
+            this->numLevelsSkipped = userSetting.GetUnsignedIntegerEntry(
                 "holdProfile" + std::to_string(holdProfileId) + "hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "LevelsSkipped"
             );
 
             this->Move(
                 {
-                    this->numLevelsSkipped = userSetting.GetIntegerEntry(
+                    userSetting.GetIntegerEntry(
                         "holdProfile" + std::to_string(holdProfileId) + "hold" +
                             std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionX",
                         100
                     ),
-                    this->numLevelsSkipped = userSetting.GetIntegerEntry(
+                    userSetting.GetIntegerEntry(
                         "holdProfile" + std::to_string(holdProfileId) + "hold" +
                             std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionY",
                         100
@@ -257,7 +273,7 @@ namespace UKControllerPlugin {
             };
 
             // Render all the possible levels in the hold
-            int levelNumber = 0;
+            unsigned int levelNumber = 0;
             for (
                 unsigned int i = this->managedHold.GetHoldParameters().maximum;
                 i >= this->managedHold.GetHoldParameters().minimum;
@@ -337,18 +353,18 @@ namespace UKControllerPlugin {
                 it != this->managedHold.cend();
                 ++it
             ) {
-                int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
-                int displayRow = GetDisplayRow(this->managedHold.GetHoldParameters().maximum, occupied);
+                unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
+                unsigned int displayRow = GetDisplayRow(this->managedHold.GetHoldParameters().maximum, occupied);
 
                 // Dont render any aircraft where a level is skipped
                 if (displayRow < this->numLevelsSkipped) {
                     continue;
                 }
 
-                callsignDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
-                actualLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
-                clearedLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
-                timeInHoldDisplay.Y = this->dataStartHeight + (this->lineHeight * displayRow);
+                callsignDisplay.Y = this->dataStartHeight + (this->lineHeight * (displayRow - this->numLevelsSkipped));
+                actualLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * (displayRow - this->numLevelsSkipped));
+                clearedLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * (displayRow - this->numLevelsSkipped));
+                timeInHoldDisplay.Y = this->dataStartHeight + (this->lineHeight * (displayRow - this->numLevelsSkipped));
 
                 // The callsign display
                 std::wstring callsign = ConvertToTchar(it->callsign);
@@ -392,26 +408,26 @@ namespace UKControllerPlugin {
         /*
             Save display data to the ASR
         */
-        void HoldDisplay::SaveDataToAsr(UserSetting & userSetting, unsigned int holdProfileId) const
+        void HoldDisplay::SaveDataToAsr(UserSetting & userSetting, unsigned int holdProfileId, std::string profileName) const
         {
             userSetting.Save(
                 "holdProfile" + std::to_string(holdProfileId) + "hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "LevelsSkipped",
-                "Hold Profile " + this->managedHold.GetHoldParameters().description + " Number of Levels Skipped",
+                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") Levels Skipped",
                 this->numLevelsSkipped
             );
 
             userSetting.Save(
                 "holdProfile" + std::to_string(holdProfileId) + "hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionX",
-                "Hold Profile " + this->managedHold.GetHoldParameters().description + " X Pos",
+                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") X Pos",
                 this->windowPos.x
             );
 
             userSetting.Save(
                 "holdProfile" + std::to_string(holdProfileId) + "hold" +
                 std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionY",
-                "Hold Profile " + this->managedHold.GetHoldParameters().description + " Y Pos",
+                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") Y Pos",
                 this->windowPos.y
             );
         }

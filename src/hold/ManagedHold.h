@@ -22,6 +22,7 @@ namespace UKControllerPlugin {
                 void AddHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft);
                 size_t CountHoldingAircraft(void) const;
                 const UKControllerPlugin::Hold::HoldingData & GetHoldParameters(void) const;
+                unsigned int GetNumberOfLevels(void) const;
                 bool HasAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft) const;
                 bool HasAircraft(std::string callsign) const;
                 void LockAircraftList(void) const;

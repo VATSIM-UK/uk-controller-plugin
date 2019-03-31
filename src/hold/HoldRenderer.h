@@ -71,10 +71,19 @@ namespace UKControllerPlugin {
                 // The description to show in our menu item
                 const std::string menuItemDescription = "Show Managed Holds";
 
+                // The key in the ASR for the selected hold profile
+                const std::string selectedProfileAsrKey = "selectedHoldProfile";
+
+                // The description for the ASR item
+                const std::string selectedProfileAsrDescription = "Selected Hold Profile";
+
             private:
 
                 int GetHoldIdFromObjectDescription(std::string objectDescription) const;
                 std::string GetButtonNameFromObjectDescription(std::string objectDescription) const;
+
+                // The selected profile id
+                unsigned int profileId = 0;
 
                 // Should the renderer render the holds?
                 bool renderHolds = true;
@@ -90,6 +99,9 @@ namespace UKControllerPlugin {
 
                 // The holds
                 std::list<std::unique_ptr<UKControllerPlugin::Hold::HoldDisplay>> holds;
+
+                // Access to user settings;
+                UKControllerPlugin::Euroscope::UserSetting * userSetting;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

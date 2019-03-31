@@ -31,6 +31,8 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Hold::HoldManager & holdManager
                 );
                 void ButtonClicked(std::string button);
+                POINT GetDisplayPos(void) const;
+                unsigned int GetLevelsSkipped(void) const;
                 void LoadDataFromAsr(
                     UKControllerPlugin::Euroscope::UserSetting & userSetting,
                     unsigned int profileId
@@ -43,7 +45,8 @@ namespace UKControllerPlugin {
                 ) const;
                 void SaveDataToAsr(
                     UKControllerPlugin::Euroscope::UserSetting & userSetting,
-                    unsigned int profileId
+                    unsigned int profileId,
+                    std::string profileName
                 ) const;
 
                 // The hold this display is managing.
@@ -113,7 +116,7 @@ namespace UKControllerPlugin {
                 /*
                     How many levels to not draw
                 */
-                int numLevelsSkipped = 0;
+                unsigned int numLevelsSkipped = 0;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

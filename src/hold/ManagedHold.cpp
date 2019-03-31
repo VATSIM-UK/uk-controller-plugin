@@ -66,6 +66,14 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Return the number of levels in the hold for use
+        */
+        unsigned int ManagedHold::GetNumberOfLevels(void) const
+        {
+            return ((this->holdParameters.maximum - this->holdParameters.minimum) / 1000) + 1;
+        }
+
+        /*
             Is the aircraft in the hold. Locking not required here as access is safe.
         */
         bool ManagedHold::HasAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft) const

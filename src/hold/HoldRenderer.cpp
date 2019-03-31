@@ -5,6 +5,7 @@
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFactory.h"
 #include "helper/HelperFunctions.h"
+#include "euroscope/UserSetting.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
@@ -32,13 +33,46 @@ namespace UKControllerPlugin {
 
         }
 
+        /*
+            ASR opening, load the profile
+        */
         void HoldRenderer::AsrLoadedEvent(UserSetting & userSetting)
         {
+            this->userSetting = &userSetting;
+            this->profileId = this->userSetting->GetUnsignedIntegerEntry(
+                this->selectedProfileAsrKey,
+                0
+            );
 
+            if (this->profileId == 0) {
+                return;
+            }
+
+            // Load the profile
+            this->LoadProfile(this->profileId);
         }
 
+        /*
+            ASR closing, save all the data for the currently open holds
+        */
         void HoldRenderer::AsrClosingEvent(UserSetting & userSetting)
         {
+            this->userSetting->Save(
+                this->selectedProfileAsrKey,
+                this->selectedProfileAsrDescription,
+                this->profileId
+            );
+            for (
+                std::list<std::unique_ptr<HoldDisplay>>::const_iterator it = this->holds.cbegin();
+                it != this->holds.cend();
+                ++it
+            ) {
+                HoldProfile profile = this->profileManager.GetProfile(this->profileId);
+                if (profile == this->profileManager.invalidProfile) {
+                    return;
+                }
+                (*it)->SaveDataToAsr(*this->userSetting, this->profileId, profile.name);
+            }
         }
 
         /*
@@ -79,6 +113,7 @@ namespace UKControllerPlugin {
         */
         void HoldRenderer::LoadProfile(unsigned int profileId)
         {
+            this->profileId = profileId;
             HoldProfile selected = this->profileManager.GetProfile(profileId);
             if (selected == this->profileManager.invalidProfile) {
                 LogWarning("Tried to load invalid hold profile");
@@ -97,6 +132,7 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
+                display->LoadDataFromAsr(*this->userSetting, this->profileId);
                 this->holds.push_back(std::move(display));
             }
         }

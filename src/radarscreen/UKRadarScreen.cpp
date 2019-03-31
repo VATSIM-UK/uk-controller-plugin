@@ -126,8 +126,7 @@ namespace UKControllerPlugin {
 
     void UKRadarScreen::OnAsrContentToBeSaved(void)
     {
-        UserSetting userSetting(*this);
-        this->userSettingEventHandler.AsrClosingEvent(userSetting);
+        this->userSettingEventHandler.AsrClosingEvent(*this->userSettingProvider);
     }
 
     /*
@@ -136,8 +135,8 @@ namespace UKControllerPlugin {
     */
     void UKRadarScreen::OnAsrContentLoaded(bool loaded)
     {
-        UserSetting userSetting(*this);
-        this->userSettingEventHandler.AsrLoadedEvent(userSetting);
+        this->userSettingProvider = std::make_unique<UserSetting>(*this);
+        this->userSettingEventHandler.AsrLoadedEvent(*this->userSettingProvider);
         this->asrContentLoaded = true;
     }
 
