@@ -107,9 +107,11 @@ namespace UKControllerPlugin {
                 Gdiplus::Rect minusButtonRect = {5, (int)this->buttonStartOffset, 40, 40};
                 RECT minusButtonClickRect = { 5, (int)this->buttonStartOffset, 40, 40 };
                 Gdiplus::Rect plusButtonRect = {55, (int)this->buttonStartOffset, 40, 40};
-                RECT plusButtonClickRect = { 5, (int)this->buttonStartOffset, 40, 40 };
+                RECT plusButtonClickRect = { 55, (int)this->buttonStartOffset, 40, 40 };
+                Gdiplus::Rect allButtonRect = { 105, (int)this->buttonStartOffset, 40, 40 };
+                RECT allButtonClickRect = { 105, (int)this->buttonStartOffset, 40, 40 };
                 Gdiplus::Rect addButtonRect = {190, (int)this->buttonStartOffset, 40, 40};
-                RECT addButtonClickRect = { 5, (int)this->buttonStartOffset, 40, 40 };
+                RECT addButtonClickRect = { 190, (int)this->buttonStartOffset, 40, 40 };
 
                 POINT windowPos = { 100, 100 };
 

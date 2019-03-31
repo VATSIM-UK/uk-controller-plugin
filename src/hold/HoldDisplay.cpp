@@ -41,10 +41,8 @@ namespace UKControllerPlugin {
 
             this->stringFormat.SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
-            const int numLevels = ((this->managedHold.GetHoldParameters().maximum -
-                this->managedHold.GetHoldParameters().minimum) / 1000) + 1;
 
-            this->windowHeight = this->dataStartOffset + (numLevels * this->lineHeight);
+            this->windowHeight = this->dataStartOffset + (this->managedHold.GetNumberOfLevels() * this->lineHeight);
             this->Move(this->windowPos);
         }
 
@@ -65,6 +63,11 @@ namespace UKControllerPlugin {
                     numLevelsSkipped++;
                     this->windowHeight = this->windowHeight - this->lineHeight;
                 }
+            } else if (button == "allLevels") {
+                this->windowHeight = this->dataStartOffset + (
+                    this->managedHold.GetNumberOfLevels() * this->lineHeight
+                );
+                this->numLevelsSkipped = 0;
             }
             else if (button == "add") {
                 try {
@@ -161,6 +164,17 @@ namespace UKControllerPlugin {
                 this->plusButtonRect.Y,
                 this->plusButtonRect.X + this->plusButtonRect.Width,
                 this->plusButtonRect.Y + this->plusButtonRect.Height
+            };
+
+            // Show all levels button
+            this->allButtonRect.X = pos.x + 105;
+            this->allButtonRect.Y = this->buttonStartOffset + pos.y;
+
+            this->allButtonClickRect = {
+                this->allButtonRect.X,
+                this->allButtonRect.Y,
+                this->allButtonRect.X + this->allButtonRect.Width,
+                this->allButtonRect.Y + this->allButtonRect.Height
             };
 
             // Add button
@@ -261,6 +275,15 @@ namespace UKControllerPlugin {
                 screenObjectId,
                 std::to_string(this->managedHold.GetHoldParameters().identifier) + "/add",
                 this->addButtonClickRect,
+                false
+            );
+
+            this->DrawRoundRectangle(graphics, allButtonRect, 5);
+            graphics.DrawString(L"ALL", allButtonRect, this->titleBarTextBrush);
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                std::to_string(this->managedHold.GetHoldParameters().identifier) + "/allLevels",
+                this->allButtonClickRect,
                 false
             );
 
