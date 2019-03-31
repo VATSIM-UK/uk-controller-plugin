@@ -56,7 +56,7 @@ namespace UKControllerPlugin {
 
             this->plugin.TriggerPopupList(
                 popupArea,
-                "Hold Selection For " + flightplan.GetCallsign(),
+                "Hold",
                 1
             );
 
