@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+﻿#include "pch/stdafx.h"
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFunctions.h"
 #include "hold/ManagedHold.h"
@@ -68,8 +68,7 @@ namespace UKControllerPlugin {
                     this->managedHold.GetNumberOfLevels() * this->lineHeight
                 );
                 this->numLevelsSkipped = 0;
-            }
-            else if (button == "add") {
+            } else if (button == "add") {
                 try {
                     this->holdManager.AddAircraftToHold(
                         *this->plugin.GetSelectedFlightplan(),
@@ -79,7 +78,10 @@ namespace UKControllerPlugin {
                 } catch (std::invalid_argument) {
                     // Nothing to do
                 }
+            } else if (button == "minimise") {
+                this->minimised = !this->minimised;
             }
+
         }
 
         /*
@@ -104,19 +106,26 @@ namespace UKControllerPlugin {
         void HoldDisplay::LoadDataFromAsr(UserSetting & userSetting, unsigned int holdProfileId)
         {
             this->numLevelsSkipped = userSetting.GetUnsignedIntegerEntry(
-                "holdProfile" + std::to_string(holdProfileId) + "hold" +
-                    std::to_string(this->managedHold.GetHoldParameters().identifier) + "LevelsSkipped"
+                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
+                    std::to_string(this->managedHold.GetHoldParameters().identifier) + "LevelsSkipped",
+                0
+            );
+
+            this->minimised = userSetting.GetBooleanEntry(
+                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
+                    std::to_string(this->managedHold.GetHoldParameters().identifier) + "Minimised",
+                false
             );
 
             this->Move(
                 {
                     userSetting.GetIntegerEntry(
-                        "holdProfile" + std::to_string(holdProfileId) + "hold" +
+                        "holdProfile" + std::to_string(holdProfileId) + "Hold" +
                             std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionX",
                         100
                     ),
                     userSetting.GetIntegerEntry(
-                        "holdProfile" + std::to_string(holdProfileId) + "hold" +
+                        "holdProfile" + std::to_string(holdProfileId) + "Hold" +
                             std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionY",
                         100
                     )
@@ -142,6 +151,17 @@ namespace UKControllerPlugin {
                 this->titleArea.Y,
                 this->titleArea.X + this->titleArea.Width,
                 this->titleArea.Y + this->titleArea.Height
+            };
+
+            // Minimise Button
+            this->minimiseButtonArea.X = pos.x + 5;
+            this->minimiseButtonArea.Y = this->titleArea.Y + 2;
+
+            this->minimiseClickRect = {
+                this->minimiseButtonArea.X,
+                this->minimiseButtonArea.Y,
+                this->minimiseButtonArea.X + this->minimiseButtonArea.Width,
+                this->minimiseButtonArea.Y + this->minimiseButtonArea.Height
             };
 
             // Minus button
@@ -178,7 +198,7 @@ namespace UKControllerPlugin {
             };
 
             // Add button
-            this->addButtonRect.X = pos.x + 190;
+            this->addButtonRect.X = pos.x + 155;
             this->addButtonRect.Y = this->buttonStartOffset + pos.y;
 
             this->addButtonClickRect = {
@@ -216,14 +236,18 @@ namespace UKControllerPlugin {
             EuroscopeRadarLoopbackInterface & radarScreen,
             const int screenObjectId
         ) const {
-            // Paint a black background
+
             Gdiplus::Rect borderRect = {
                 this->windowPos.x,
                 this->windowPos.y,
                 windowWidth,
                 windowHeight
             };
-            graphics.FillRect(borderRect, this->backgroundBrush);
+
+            // Paint a black background
+            if (!this->minimised) {
+                graphics.FillRect(borderRect, this->backgroundBrush);
+            }
 
             // Title bar
             radarScreen.RegisterScreenObject(
@@ -233,6 +257,8 @@ namespace UKControllerPlugin {
                 true
             );
             graphics.FillRect(this->titleArea, this->titleBarBrush);
+            graphics.DrawRect(this->titleArea, this->borderPen);
+
             std::wstring holdName = ConvertToTchar(this->managedHold.GetHoldParameters().description);
             graphics.DrawString(
                 ConvertToTchar(this->managedHold.GetHoldParameters().description),
@@ -245,10 +271,20 @@ namespace UKControllerPlugin {
                 { this->titleArea.X + this->titleArea.Width, this->titleArea.Y + this->titleArea.Height }
             );
 
-            // Exit Button
-            graphics.FillRect(this->exitButtonArea, this->exitButtonBrush);
-            graphics.DrawString(L"X", this->exitButtonArea, this->titleBarTextBrush);
+            // Minimise Button
+            graphics.DrawRect(this->minimiseButtonArea, this->borderPen);
+            graphics.DrawString(this->minimised ? L"\u25B2" : L"\u25BC", this->minimiseButtonArea, this->titleBarTextBrush);
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                std::to_string(this->managedHold.GetHoldParameters().identifier) + "/minimise",
+                this->minimiseClickRect,
+                false
+            );
 
+            // If minimised, don't carry on drawing
+            if (this->minimised) {
+                return;
+            }
 
             // Action buttons
             this->DrawRoundRectangle(graphics, minusButtonRect, 5);
@@ -345,26 +381,26 @@ namespace UKControllerPlugin {
             Gdiplus::Rect callsignDisplay = {
                 this->windowPos.x + 35,
                 this->dataStartHeight,
-                90,
+                60,
                 this->lineHeight
             };
 
             Gdiplus::Rect actualLevelDisplay = {
-                this->windowPos.x + 130,
+                this->windowPos.x + 100,
                 this->dataStartHeight,
                 30,
                 this->lineHeight
             };
 
             Gdiplus::Rect clearedLevelDisplay = {
-                this->windowPos.x + 165,
+                this->windowPos.x + 135,
                 this->dataStartHeight,
                 30,
                 this->lineHeight
             };
 
             Gdiplus::Rect timeInHoldDisplay = {
-                this->windowPos.x + 200,
+                this->windowPos.x + 170,
                 this->dataStartHeight,
                 30,
                 this->lineHeight
@@ -447,21 +483,28 @@ namespace UKControllerPlugin {
         void HoldDisplay::SaveDataToAsr(UserSetting & userSetting, unsigned int holdProfileId, std::string profileName) const
         {
             userSetting.Save(
-                "holdProfile" + std::to_string(holdProfileId) + "hold" +
+                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "LevelsSkipped",
                 "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") Levels Skipped",
                 this->numLevelsSkipped
             );
 
             userSetting.Save(
-                "holdProfile" + std::to_string(holdProfileId) + "hold" +
+                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
+                std::to_string(this->managedHold.GetHoldParameters().identifier) + "Minimised",
+                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") Minimised",
+                this->minimised
+            );
+
+            userSetting.Save(
+                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionX",
                 "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") X Pos",
                 this->windowPos.x
             );
 
             userSetting.Save(
-                "holdProfile" + std::to_string(holdProfileId) + "hold" +
+                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
                 std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionY",
                 "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") Y Pos",
                 this->windowPos.y

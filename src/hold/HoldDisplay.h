@@ -83,8 +83,10 @@ namespace UKControllerPlugin {
                 Gdiplus::StringFormat stringFormat;
 
                 // Titlebar
-                Gdiplus::Rect titleArea = { 0, 0, 235, 15 };
-                RECT titleRect = { 0, 0, 235, 15 };
+                Gdiplus::Rect titleArea = { 0, 0, 200, 15 };
+                RECT titleRect = { 0, 0, 200, 15 };
+                Gdiplus::Rect minimiseButtonArea = { 0, 0, 11, 11 };
+                RECT minimiseClickRect;
                 Gdiplus::RectF exitButtonArea = { 247.0f, 2.0f, 11.0f, 11.0f };
 
                 // How high lines should be
@@ -99,8 +101,11 @@ namespace UKControllerPlugin {
                 // Where to start the data drawing.
                 INT dataStartHeight;
 
+                // Is the window minimised
+                bool minimised = false;
 
-                int windowWidth = 235;
+
+                int windowWidth = 200;
                 int windowHeight = 500;
 
                 // Some more rects
