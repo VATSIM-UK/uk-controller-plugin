@@ -17,14 +17,18 @@ namespace UKControllerPluginTest {
         {
             public:
                 DialogManagerTest()
-                    : manager(mockProvider)
+                    : manager(mockProvider), mockProvider(testDialog, testDialogArg, testContextArg)
                 {
 
                 }
 
+
                 DialogData testDialog = { 1, "TEST", NULL, NULL, NULL };
-                NiceMock<MockDialogProvider> mockProvider;
+                MockDialogProvider<std::string, std::string> mockProvider;
                 DialogManager manager;
+
+                std::string testDialogArg = "testd";
+                std::string testContextArg = "testc";
         };
 
         TEST_F(DialogManagerTest, ItStartsEmpty)
@@ -60,20 +64,15 @@ namespace UKControllerPluginTest {
 
         TEST_F(DialogManagerTest, DoesntTryToOpenNonExistantDialogs)
         {
-            EXPECT_CALL(this->mockProvider, OpenDialog(_))
-                .Times(0);
-
             this->manager.AddDialog(testDialog);
-            this->manager.OpenDialog(555);
+            this->manager.OpenDialog(555, reinterpret_cast<LPARAM>(&this->testContextArg));
+            EXPECT_EQ(0, this->mockProvider.callCount);
         }
 
         TEST_F(DialogManagerTest, OpensDialogsWithProvider)
         {
-            EXPECT_CALL(this->mockProvider, OpenDialog(this->testDialog))
-                .Times(1);
-
-            this->manager.AddDialog(testDialog);
-            this->manager.OpenDialog(1);
+            this->manager.OpenDialog(1, reinterpret_cast<LPARAM>(&this->testContextArg));
+            EXPECT_EQ(0, this->mockProvider.callCount);
         }
     }  // namespace Dialog
 }  // namespace UKControllerPluginTest

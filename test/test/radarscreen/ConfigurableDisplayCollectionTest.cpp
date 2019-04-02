@@ -48,7 +48,7 @@ namespace UKControllerPluginTest {
                 it != collection.cend();
                 ++it
             ) {
-                (*it)->Configure(0, "test");
+                (*it)->Configure(0, "test", {});
                 EXPECT_EQ(2, (*it)->GetConfigurationMenuItem().checked);
             }
 

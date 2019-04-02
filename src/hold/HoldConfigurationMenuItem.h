@@ -1,6 +1,7 @@
 #pragma once
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "euroscope/AsrEventHandlerInterface.h"
+#include "command/CommandHandlerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -21,7 +22,8 @@ namespace UKControllerPlugin {
         /*
             Represents a EuroScope popup menu that selects the hold profile that should be used.
         */
-        class HoldConfigurationMenuItem : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface
+        class HoldConfigurationMenuItem : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
+            public UKControllerPlugin::Command::CommandHandlerInterface
         {
             public:
                 HoldConfigurationMenuItem(
@@ -34,6 +36,9 @@ namespace UKControllerPlugin {
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
 
+                // Inherited via CommandHandlerInterface
+                bool ProcessCommand(std::string command) override;
+
                 void InvalidateProfile(unsigned int profileId);
                 void SelectProfile(unsigned int profileId);
 
@@ -42,6 +47,9 @@ namespace UKControllerPlugin {
 
                 // The callback function id for the menu being opened
                 const unsigned int selectorMenuOpenCallbackId;
+                
+                // The command that can be used to trigger the dialog
+                const std::string openDialogCommand = ".ukcp hold";
 
             private:
 

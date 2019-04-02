@@ -18,6 +18,7 @@
 #include "mock/MockDialogProvider.h"
 #include "mock/MockDependencyProvider.h"
 #include "dependency/DependencyConfig.h"
+#include "dialog/DialogData.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -38,6 +39,7 @@ using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPluginTest::Dependency::MockDependencyProvider;
 using UKControllerPlugin::Dependency::DependencyConfig;
+using UKControllerPlugin::Dialog::DialogData;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -98,7 +100,9 @@ namespace UKControllerPluginTest {
                     this->container.windows.reset(new NiceMock<MockWinApi>);
                     this->container.windows.reset(new NiceMock<MockWinApi>);
                     this->container.tagHandler.reset(new TagItemCollection);
-                    this->container.dialogManager.reset(new DialogManager(NiceMock<MockDialogProvider>()));
+                    this->container.dialogManager.reset(
+                        new DialogManager(MockDialogProvider<std::string, std::string>({}, "test", "test"))
+                    );
                 }
 
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
@@ -129,28 +133,16 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(5));
         }
 
-        TEST_F(HoldModuleTest, ItAddsToCommandHandlers)
-        {
-            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
-        }
-
         TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(4, this->container.pluginFunctionHandlers->CountCallbacks());
+            EXPECT_EQ(3, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(2, this->container.holdManager->CountHolds());
-        }
-
-        TEST_F(HoldModuleTest, ItInitialisesHoldSelectionMenu)
-        {
-            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(0, this->container.holdSelectionMenu->CountHolds());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldProfileManager)
@@ -211,13 +203,6 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             BootstrapPlugin(providerNoHolds, this->container, this->messager);
-        }
-
-        TEST_F(HoldModuleTest, ItAddsToConfigurableDisplays)
-        {
-            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            BootstrapRadarScreen(this->configurableDisplays);
-            EXPECT_EQ(1, this->configurableDisplays.CountDisplays());
         }
     }  // namespace Wake
 }  // namespace UKControllerPluginTest

@@ -13,9 +13,6 @@ namespace UKControllerPlugin {
     namespace Hold {
         class HoldManager;
     }  // namespace Hold
-    namespace Dialog {
-        class DialogManager;
-    }  // namespace Windows
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -27,7 +24,6 @@ namespace UKControllerPlugin {
         */
         class HoldEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
             public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
-            public UKControllerPlugin::Command::CommandHandlerInterface,
             public UKControllerPlugin::Tag::TagItemInterface
         {
             public:
@@ -36,7 +32,6 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Hold::HoldManager & holdManager,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     UKControllerPlugin::Hold::HoldWindowManager & holdManagerWindow,
-                    const UKControllerPlugin::Dialog::DialogManager & dialogManager,
                     const int popupMenuItemId
                 );
                 void FlightPlanEvent(
@@ -54,9 +49,6 @@ namespace UKControllerPlugin {
                 // Inherited via AbstractTimedEvent
                 void TimedEventTrigger(void) override;
 
-                // Inherited via CommandHandlerInterface
-                bool ProcessCommand(std::string command) override;
-
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(void) const override;
                 std::string GetTagItemData(
@@ -71,16 +63,7 @@ namespace UKControllerPlugin {
                 // The id of this handlers popup menu item
                 const int popupMenuItemId;
 
-                // The command that toggles opening the hold manager
-                const std::string toggleCommand = ".ukcp hold";
-
-                // The description of the window item
-                const std::string menuItemDescription = "Hold Manager Window";
-
             private:
-
-                // To load dialogs
-                const UKControllerPlugin::Dialog::DialogManager & dialogManager;
                 
                 // Gives access to the plugin
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;

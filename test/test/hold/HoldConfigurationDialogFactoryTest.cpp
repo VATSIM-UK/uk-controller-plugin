@@ -2,21 +2,13 @@
 #include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldingData.h"
 #include "hold/HoldConfigurationDialog.h"
-#include "hold/HoldManager.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "hold/HoldWindowManager.h"
-#include "hold/HoldSelectionMenu.h"
 #include "hold/HoldProfileManager.h"
 #include "mock/MockApiInterface.h"
 
 using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldingData;
-using UKControllerPlugin::Hold::HoldWindowManager;
-using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldProfileManager;
-using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPluginTest::Api::MockApiInterface;
 using ::testing::Test;
 using ::testing::NiceMock;
@@ -28,17 +20,11 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldConfigurationDialogFactoryTest()
-                    : windowManager(NULL, NULL, holdManager, mockPlugin), selectionMenu(holdManager, mockPlugin, 1),
-                    holdProfileManager(NiceMock<MockApiInterface>())
+                    : holdProfileManager(NiceMock<MockApiInterface>())
                 {
 
                 }
 
-
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-            HoldManager holdManager;
-            HoldWindowManager windowManager;
-            HoldSelectionMenu selectionMenu;
             HoldProfileManager holdProfileManager;
         };
 
@@ -46,8 +32,7 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = "[]"_json;
             size_t holdCount = CreateHoldConfigurationDialog(
-                data, this->windowManager,
-                this->selectionMenu,
+                data,
                 this->holdProfileManager
             )->CountHolds();
             EXPECT_EQ(
@@ -80,8 +65,7 @@ namespace UKControllerPluginTest {
 
             data = { hold1, hold2 };
             size_t holdCount = CreateHoldConfigurationDialog(
-                data, this->windowManager,
-                this->selectionMenu,
+                data,
                 this->holdProfileManager
             )->CountHolds();
             EXPECT_EQ(
@@ -96,8 +80,7 @@ namespace UKControllerPluginTest {
             data = { "Test" };
 
             size_t holdCount = CreateHoldConfigurationDialog(
-                data, this->windowManager,
-                this->selectionMenu,
+                data,
                 this->holdProfileManager
             )->CountHolds();
             EXPECT_EQ(
@@ -120,8 +103,7 @@ namespace UKControllerPluginTest {
             data = { hold };
 
             size_t holdCount = CreateHoldConfigurationDialog(
-                data, this->windowManager,
-                this->selectionMenu,
+                data,
                 this->holdProfileManager
             )->CountHolds();
             EXPECT_EQ(

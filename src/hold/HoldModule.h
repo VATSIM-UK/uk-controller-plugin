@@ -26,6 +26,9 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class AsrEventHandlerCollection;
     }  // namespace Euroscope
+    namespace Command {
+        class CommandHandlerCollection;
+    }  // namespace Command
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -45,6 +48,7 @@ namespace UKControllerPlugin {
             UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplay,
             UKControllerPlugin::RadarScreen::RadarRenderableCollection & radarRenderables,
             UKControllerPlugin::Euroscope::AsrEventHandlerCollection & asrEvents,
+            UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers,
             const UKControllerPlugin::Bootstrap::PersistenceContainer & container
         );
 

@@ -8,6 +8,9 @@ namespace UKControllerPluginTest {
         class MockGraphicsInterface : public UKControllerPlugin::Windows::GdiGraphicsInterface
         {
             public:
+
+                MOCK_METHOD3(DrawLine, void(const Gdiplus::Pen &, const Gdiplus::Point &, const Gdiplus::Point &));
+                MOCK_METHOD2(DrawPath, void(const Gdiplus::GraphicsPath &, const Gdiplus::Pen &));
                 MOCK_METHOD2(DrawRect, void(const Gdiplus::RectF &, const Gdiplus::Pen &));
                 MOCK_METHOD2(DrawRect, void(const Gdiplus::Rect &, const Gdiplus::Pen &));
                 MOCK_METHOD2(DrawRect, void(const RECT &, const Gdiplus::Pen &));

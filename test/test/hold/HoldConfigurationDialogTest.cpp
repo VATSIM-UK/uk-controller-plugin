@@ -1,20 +1,12 @@
 #include "pch/pch.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "hold/HoldingData.h"
-#include "hold/HoldWindowManager.h"
-#include "hold/HoldManager.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "hold/HoldSelectionMenu.h"
 #include "hold/HoldProfileManager.h"
 #include "mock/MockApiInterface.h"
 
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldingData;
-using UKControllerPlugin::Hold::HoldWindowManager;
-using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldProfileManager;
-using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPluginTest::Api::MockApiInterface;
 using ::testing::Return;
 using ::testing::NiceMock;
@@ -27,18 +19,13 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldConfigurationDialogTest()
-                    : windowManager(NULL, NULL, holdManager, mockPlugin), selectionMenu(holdManager, mockPlugin, 1),
-                    dialog(windowManager, selectionMenu, holdProfileManager), holdProfileManager(mockApi)
+                    : dialog(holdProfileManager), holdProfileManager(mockApi)
                 {
 
                 }
 
                 NiceMock<MockApiInterface> mockApi;
-                NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 HoldProfileManager holdProfileManager;
-                HoldManager holdManager;
-                HoldWindowManager windowManager;
-                HoldSelectionMenu selectionMenu;
                 HoldConfigurationDialog dialog;
         };
 

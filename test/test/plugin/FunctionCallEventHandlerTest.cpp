@@ -35,8 +35,8 @@ namespace UKControllerPluginTest {
         TEST(FunctionCallEventHandler, RegisterFunctionCallThrowExceptionIfAlreadyRegistered)
         {
             FunctionCallEventHandler handler;
-            CallbackFunction function(5000, "Test Function", [](int, std::string) {});
-            CallbackFunction function2(5000, "Test Function", [](int, std::string) {});
+            CallbackFunction function(5000, "Test Function", [](int, std::string, RECT) {});
+            CallbackFunction function2(5000, "Test Function", [](int, std::string, RECT) {});
 
             EXPECT_NO_THROW(handler.RegisterFunctionCall(function));
             EXPECT_THROW(handler.RegisterFunctionCall(function2), std::invalid_argument);
@@ -46,7 +46,11 @@ namespace UKControllerPluginTest {
         {
             FunctionCallEventHandler handler;
             std::string output = "";
-            CallbackFunction function(5000, "Test Function", [&output](int, std::string input) {output = input; });
+            CallbackFunction function(
+                5000,
+                "Test Function",
+                [&output](int, std::string input, RECT) {output = input; }
+            );
 
             handler.RegisterFunctionCall(function);
             EXPECT_EQ(1, handler.CountCallbacks());
@@ -55,7 +59,8 @@ namespace UKControllerPluginTest {
                 "some test",
                 StrictMock<MockEuroScopeCFlightPlanInterface>(),
                 StrictMock<MockEuroScopeCRadarTargetInterface>(),
-                POINT()
+                POINT(),
+                RECT()
             );
             EXPECT_TRUE(output == "some test");
         }
@@ -80,7 +85,8 @@ namespace UKControllerPluginTest {
                 "some test",
                 StrictMock<MockEuroScopeCFlightPlanInterface>(),
                 StrictMock<MockEuroScopeCRadarTargetInterface>(),
-                POINT()
+                POINT(),
+                RECT()
             );
             EXPECT_TRUE(output == "some test");
         }
@@ -88,7 +94,7 @@ namespace UKControllerPluginTest {
         TEST(FunctionCallEventHandler, HasCallbackFunctionReturnsTrueIfItExists)
         {
             FunctionCallEventHandler handler;
-            CallbackFunction function(5000, "Test Function", [](int, std::string input) {});
+            CallbackFunction function(5000, "Test Function", [](int, std::string input, RECT) {});
 
             handler.RegisterFunctionCall(function);
             EXPECT_TRUE(handler.HasCallbackFunction(5000));
@@ -110,7 +116,7 @@ namespace UKControllerPluginTest {
         TEST(FunctionCallEventHandler, RegisterFunctionsWithEuroscopeRegistersTagFunctions)
         {
             FunctionCallEventHandler handler;
-            CallbackFunction function(5000, "Test Function", [](int, std::string) {});
+            CallbackFunction function(5000, "Test Function", [](int, std::string, RECT) {});
             TagFunction function2(
                 9000,
                 "Test Tag Function",
@@ -135,7 +141,8 @@ namespace UKControllerPluginTest {
                     "some test",
                     StrictMock<MockEuroScopeCFlightPlanInterface>(),
                     StrictMock<MockEuroScopeCRadarTargetInterface>(),
-                    POINT()
+                    POINT(),
+                    RECT()
                 )
             );
         }
@@ -149,7 +156,8 @@ namespace UKControllerPluginTest {
                     "some test",
                     StrictMock<MockEuroScopeCFlightPlanInterface>(),
                     StrictMock<MockEuroScopeCRadarTargetInterface>(),
-                    POINT()
+                    POINT(),
+                    RECT()
                 )
             );
         }

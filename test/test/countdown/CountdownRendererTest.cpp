@@ -244,7 +244,7 @@ namespace UKControllerPluginTest {
             GdiplusBrushes brushes;
             CountdownRenderer renderer(timer, 1, 2, 3, 4, brushes);
 
-            renderer.Move({ 150, 120, 150 + renderer.timeDisplayWidth, 120 + renderer.rowHeight });
+            renderer.Move({ 150, 120, 150 + renderer.timeDisplayWidth, 120 + renderer.rowHeight }, "");
 
             RECT expectedTimeDisplay = { 150, 120, 150 + renderer.timeDisplayWidth, 120 + renderer.rowHeight };
             EXPECT_TRUE(RectsEqual(expectedTimeDisplay, renderer.GetTimeDisplayArea()));
@@ -357,7 +357,7 @@ namespace UKControllerPluginTest {
 
             // Prepare the renderer
             renderer.SetVisible(false);
-            renderer.Move({ 150, 120, 150 + renderer.timeDisplayWidth, 120 + renderer.rowHeight });
+            renderer.Move({ 150, 120, 150 + renderer.timeDisplayWidth, 120 + renderer.rowHeight }, "");
             renderer.AsrClosingEvent(UserSetting(mockUserSettingProvider));
         }
 
@@ -370,9 +370,9 @@ namespace UKControllerPluginTest {
 
             renderer.SetVisible(false);
             EXPECT_FALSE(renderer.IsVisible());
-            renderer.Configure(0, "test");
+            renderer.Configure(0, "test", {});
             EXPECT_TRUE(renderer.IsVisible());
-            renderer.Configure(0, "test");
+            renderer.Configure(0, "test", {});
             EXPECT_FALSE(renderer.IsVisible());
         }
 

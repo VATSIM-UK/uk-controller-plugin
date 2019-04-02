@@ -265,7 +265,7 @@ namespace UKControllerPluginTest {
 
             // Set the values
             renderer.SetVisible(true);
-            renderer.Move({ 100, 50, 150, 100 });
+            renderer.Move({ 100, 50, 150, 100 }, "");
 
 
             // Expect the ASR to provider to be called appropriately.
@@ -316,9 +316,9 @@ namespace UKControllerPluginTest {
 
             renderer.SetVisible(true);
             EXPECT_TRUE(renderer.IsVisible());
-            renderer.Configure(0, "test");
+            renderer.Configure(0, "test", {});
             EXPECT_FALSE(renderer.IsVisible());
-            renderer.Configure(0, "test");
+            renderer.Configure(0, "test", {});
             EXPECT_TRUE(renderer.IsVisible());
         }
 
@@ -373,7 +373,7 @@ namespace UKControllerPluginTest {
             Gdiplus::Rect expectedRender = { 150, 50, renderer.leftColumnWidth, renderer.rowHeight };
             RECT expectedArea = { 150, 50, 200, 25 };
 
-            renderer.Move(expectedArea);
+            renderer.Move(expectedArea, "");
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetTopBarArea()));
             EXPECT_TRUE(expectedRender.Equals(renderer.GetTopBarRender()));
         }

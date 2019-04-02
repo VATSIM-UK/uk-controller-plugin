@@ -6,7 +6,6 @@
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
 #include "hold/ManagedHold.h"
-#include "dialog/DialogManager.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -16,7 +15,6 @@ using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Hold::ManagedHold;
-using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -25,11 +23,10 @@ namespace UKControllerPlugin {
             HoldManager & holdManager,
             EuroscopePluginLoopbackInterface & plugin,
             UKControllerPlugin::Hold::HoldWindowManager & holdManagerWindow,
-            const DialogManager & dialogManager,
             const int popupMenuItemId
         )
             : holdManager(holdManager), plugin(plugin), holdManagerWindow(holdManagerWindow),
-            dialogManager(dialogManager), popupMenuItemId(popupMenuItemId)
+            popupMenuItemId(popupMenuItemId)
         {
 
         }
@@ -63,19 +60,6 @@ namespace UKControllerPlugin {
         {
             this->holdManager.UpdateHoldingAircraft(this->plugin);
             this->holdManagerWindow.RefreshWindows();
-        }
-
-        /*
-            Process euroscope dot commands
-        */
-        bool HoldEventHandler::ProcessCommand(std::string command)
-        {
-            if (command != this->toggleCommand) {
-                return false;
-            }
-
-            //this->holdManagerWindow.AddWindow();
-            return true;
         }
 
         /*

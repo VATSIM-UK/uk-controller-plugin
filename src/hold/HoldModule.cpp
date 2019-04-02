@@ -26,6 +26,7 @@
 #include "hold/HoldConfigurationMenuItem.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "hold/HoldDisplayManager.h"
+#include "command/CommandHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -52,6 +53,7 @@ using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Hold::HoldConfigurationMenuItem;
+using UKControllerPlugin::Command::CommandHandlerCollection;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -167,13 +169,11 @@ namespace UKControllerPlugin {
                 *container.holdManager,
                 *container.plugin,
                 *container.holdWindows,
-                *container.dialogManager,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 
             container.flightplanHandler->RegisterHandler(eventHandler);
             container.timedHandler->RegisterEvent(eventHandler, timedEventFrequency);
-            container.commandHandlers->RegisterHandler(eventHandler);
             container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
 
             // If there aren't any holds, tell the user this explicitly
@@ -193,6 +193,7 @@ namespace UKControllerPlugin {
             ConfigurableDisplayCollection & configurableDisplay,
             RadarRenderableCollection & radarRenderables,
             AsrEventHandlerCollection & asrEvents,
+            CommandHandlerCollection & commandHandlers,
             const PersistenceContainer & container
         ) {
             // Display manager
@@ -239,6 +240,7 @@ namespace UKControllerPlugin {
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
             configurableDisplay.RegisterDisplay(selector);
+            commandHandlers.RegisterHandler(selector);
 
             CallbackFunction openWindowCallback(
                 selector->selectorMenuOpenCallbackId,

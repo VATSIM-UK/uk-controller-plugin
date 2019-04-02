@@ -215,10 +215,10 @@ namespace UKControllerPluginTest {
             // One fake screen object, to prove we don't call the wrong one
             collection.ReserveScreenObjectIdentifier(2);
 
-            EXPECT_CALL(*renderer1, Move(RectEq(pos)))
+            EXPECT_CALL(*renderer1, Move(RectEq(pos), ""))
                 .Times(1);
 
-            collection.MoveScreenObject(screenObjectId, pos);
+            collection.MoveScreenObject(screenObjectId, {}, pos);
         }
 
         TEST(RadarRenderableCollection, RenderCallsCorrectRendererInitialPhase)

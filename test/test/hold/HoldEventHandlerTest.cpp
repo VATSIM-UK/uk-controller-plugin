@@ -8,9 +8,6 @@
 #include "plugin/PopupMenuItem.h"
 #include "hold/ManagedHold.h"
 #include "hold/HoldingData.h"
-#include "dialog/DialogManager.h"
-#include "mock/MockDialogProvider.h"
-#include "dialog/DialogData.h"
 
 using UKControllerPlugin::Hold::ManagedHold;
 using UKControllerPlugin::Hold::HoldingData;
@@ -21,9 +18,6 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Hold::HoldEventHandler;
 using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPluginTest::Dialog::MockDialogProvider;
-using UKControllerPlugin::Dialog::DialogData;
 using ::testing::Return;
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -35,16 +29,13 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldEventHandlerTest(void)
-                    : dialogManager(this->mockDialogProvider),
-                    handler(
+                    : handler(
                         this->manager,
                         this->mockPlugin,
                         HoldWindowManager(NULL, NULL, this->manager, this->mockPlugin),
-                        this->dialogManager,
                         1
                     )
                 {
-                    this->dialogManager.AddDialog(this->dialogData);
                     manager.AddHold(ManagedHold(std::move(holdData)));
 
                     // Add a FP to the holds initially.
@@ -87,9 +78,6 @@ namespace UKControllerPluginTest {
                 std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplan;
                 std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-                NiceMock<MockDialogProvider> mockDialogProvider;
-                DialogData dialogData = { HOLD_SELECTOR_DIALOG, "Test", NULL, NULL, NULL };
-                DialogManager dialogManager;
                 HoldManager manager;
                 HoldEventHandler handler;
         };
@@ -99,23 +87,6 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
             this->handler.FlightPlanDisconnectEvent(*this->mockFlightplan);
             EXPECT_FALSE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
-        }
-
-        TEST_F(HoldEventHandlerTest, ItCanBeConfiguredFromTheMenu)
-        {
-            PopupMenuItem expected;
-            expected.callbackFunctionId = this->handler.popupMenuItemId;
-            expected.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-            expected.disabled = false;
-            expected.firstValue = this->handler.menuItemDescription;
-            expected.secondValue = "";
-            expected.fixedPosition = false;
-            EXPECT_TRUE(expected == this->handler.GetConfigurationMenuItem());
-        }
-
-        TEST_F(HoldEventHandlerTest, ItRejectsUnknownCommands)
-        {
-            EXPECT_FALSE(this->handler.ProcessCommand("NOPE"));
         }
 
         TEST_F(HoldEventHandlerTest, TimedEventTriggersDataUpdate)
@@ -143,14 +114,6 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(
                 this->handler.noHold == this->handler.GetTagItemData(*this->mockFlightplan, *this->mockRadarTarget)
             );
-        }
-
-        TEST_F(HoldEventHandlerTest, ClickingConfigurationOpenOpensConfigurationDialog)
-        {
-            EXPECT_CALL(this->mockDialogProvider, OpenDialog(this->dialogData))
-                .Times(1);
-
-            this->handler.Configure(0, "Test");
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

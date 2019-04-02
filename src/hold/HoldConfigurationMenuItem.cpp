@@ -60,6 +60,19 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Process the dot command
+        */
+        bool HoldConfigurationMenuItem::ProcessCommand(std::string command)
+        {
+            if (command == this->openDialogCommand) {
+                this->Configure(-1, "", {});
+                return true;
+            }
+
+            return false;
+        }
+
+        /*
             A hold profile has become invalidated, make sure that the renderer
             re-loads it.
         */

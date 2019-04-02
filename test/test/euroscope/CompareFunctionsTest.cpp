@@ -16,22 +16,22 @@ namespace UKControllerPluginTest {
         TEST(CompareFunctions, OperatorReturnsTrueIfCallbackLessThanId)
         {
             CompareFunctions compare;
-            CallbackFunction function = { 1, "test", [](int, std::string) {} };
+            CallbackFunction function = { 1, "test", [](int, std::string, RECT) {} };
             EXPECT_TRUE(compare(function, 2));
         }
 
         TEST(CompareFunctions, OperatorReturnsTrueIfIdLessThanCallback)
         {
             CompareFunctions compare;
-            CallbackFunction function = { 1, "test", [](int, std::string) {} };
+            CallbackFunction function = { 1, "test", [](int, std::string, RECT) {} };
             EXPECT_TRUE(compare(0, function));
         }
 
         TEST(CompareFunctions, OperatorReturnsTrueIfFirstCallbackLessThanSecond)
         {
             CompareFunctions compare;
-            CallbackFunction function1 = { 1, "test", [](int, std::string) {} };
-            CallbackFunction function2 = { 2, "test", [](int, std::string) {} };
+            CallbackFunction function1 = { 1, "test", [](int, std::string, RECT) {} };
+            CallbackFunction function2 = { 2, "test", [](int, std::string, RECT) {} };
             EXPECT_TRUE(compare(function1, function2));
         }
 

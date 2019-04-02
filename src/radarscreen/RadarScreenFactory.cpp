@@ -85,6 +85,7 @@ namespace UKControllerPlugin {
                 configurableDisplays,
                 renderers,
                 userSettingHandlers,
+                commandHandlers,
                 this->persistence
             );
 

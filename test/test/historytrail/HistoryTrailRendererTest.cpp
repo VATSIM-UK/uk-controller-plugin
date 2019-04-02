@@ -480,7 +480,7 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             renderer.AsrLoadedEvent(userSetting);
-            renderer.Configure(0, "test");
+            renderer.Configure(0, "test", {});
         }
 
         TEST_F(HistoryTrailRendererTest, GetConfigurationMenuItemSetsRightValues)
