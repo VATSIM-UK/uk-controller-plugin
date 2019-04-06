@@ -153,6 +153,38 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(42, userSetting.GetIntegerEntry("testkey", 42));
         }
 
+        TEST_F(UserSettingTest, GetUnsignedIntegerEntryReturnsIntegerIfExistsAndIsValid)
+        {
+            ON_CALL(this->mockProvider, GetKey("testkey"))
+                .WillByDefault(Return("123"));
+
+            EXPECT_EQ(123, userSetting.GetUnsignedIntegerEntry("testkey"));
+        }
+
+        TEST_F(UserSettingTest, GetUnsignedIntegerEntryReturnsZeroIfInvalid)
+        {
+            ON_CALL(this->mockProvider, GetKey("testkey"))
+                .WillByDefault(Return("12,3"));
+
+            EXPECT_EQ(0, userSetting.GetUnsignedIntegerEntry("testkey"));
+        }
+
+        TEST_F(UserSettingTest, GetUnsignedIntegerEntryProvidedDefaultIfInvalid)
+        {
+            ON_CALL(this->mockProvider, GetKey("testkey"))
+                .WillByDefault(Return("12,3"));
+
+            EXPECT_EQ(42, userSetting.GetUnsignedIntegerEntry("testkey", 42));
+        }
+
+        TEST_F(UserSettingTest, GetUnsignedIntegerEntryReturnsDefaultOnNegativeNumbers)
+        {
+            ON_CALL(this->mockProvider, GetKey("testkey"))
+                .WillByDefault(Return("-65"));
+
+            EXPECT_EQ(66, userSetting.GetUnsignedIntegerEntry("testkey", 66));
+        }
+
         TEST_F(UserSettingTest, GetStringEntryReturnsStringIfExists)
         {
             ON_CALL(this->mockProvider, GetKey("testkey"))
