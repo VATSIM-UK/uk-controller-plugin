@@ -101,7 +101,7 @@ namespace UKControllerPluginTest {
                     this->container.windows.reset(new NiceMock<MockWinApi>);
                     this->container.tagHandler.reset(new TagItemCollection);
                     this->container.dialogManager.reset(
-                        new DialogManager(MockDialogProvider<std::string, std::string>({}, "test", "test"))
+                        new DialogManager(NiceMock<MockDialogProvider>())
                     );
                 }
 

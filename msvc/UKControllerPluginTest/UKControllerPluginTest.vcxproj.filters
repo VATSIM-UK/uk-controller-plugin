@@ -632,6 +632,12 @@
     <ClCompile Include="..\..\test\test\hold\HoldRestrictionSerializerTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldConfigurationMenuItemTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldDisplayFactoryTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
