@@ -7,7 +7,6 @@
 #include "hold/HoldManager.h"
 #include "message/UserMessager.h"
 #include "bootstrap/BootstrapWarningMessage.h"
-#include "hold/HoldWindowManager.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "euroscope/CallbackFunction.h"
@@ -33,7 +32,6 @@ using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::Hold::HoldEventHandler;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
-using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
@@ -136,14 +134,6 @@ namespace UKControllerPlugin {
                 i++;
             }
 
-            // Create the window manager
-            container.holdWindows = std::make_unique<HoldWindowManager>(
-                GetActiveWindow(),
-                container.windows->GetDllInstance(),
-                *container.holdManager,
-                *container.plugin
-            );
-
             // Create the hold dialog and profile manager
             container.holdProfiles = CreateHoldProfileManager(
                 dependencyProvider.GetDependency(DependencyConfig::holdProfiles),
@@ -168,7 +158,6 @@ namespace UKControllerPlugin {
             eventHandler = std::make_shared<HoldEventHandler>(
                 *container.holdManager,
                 *container.plugin,
-                *container.holdWindows,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 

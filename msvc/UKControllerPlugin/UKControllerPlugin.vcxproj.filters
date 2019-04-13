@@ -735,9 +735,6 @@
     <ClInclude Include="..\..\src\hold\HoldDisplay.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldWindowManager.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
@@ -1352,9 +1349,6 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldDisplay.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldWindowManager.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp">

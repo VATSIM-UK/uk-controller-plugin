@@ -151,12 +151,6 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(2, this->container.holdProfiles->CountProfiles());
         }
 
-        TEST_F(HoldModuleTest, ItInitialises)
-        {
-            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(0, this->container.holdWindows->CountDisplays());
-        }
-
         TEST_F(HoldModuleTest, ItRegistersHoldConfigurationDialog)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);

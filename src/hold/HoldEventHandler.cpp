@@ -11,7 +11,6 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::TimedEvent::AbstractTimedEvent;
-using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Hold::ManagedHold;
@@ -22,11 +21,9 @@ namespace UKControllerPlugin {
         HoldEventHandler::HoldEventHandler(
             HoldManager & holdManager,
             EuroscopePluginLoopbackInterface & plugin,
-            UKControllerPlugin::Hold::HoldWindowManager & holdManagerWindow,
             const int popupMenuItemId
         )
-            : holdManager(holdManager), plugin(plugin), holdManagerWindow(holdManagerWindow),
-            popupMenuItemId(popupMenuItemId)
+            : holdManager(holdManager), plugin(plugin), popupMenuItemId(popupMenuItemId)
         {
 
         }
@@ -59,7 +56,6 @@ namespace UKControllerPlugin {
         void HoldEventHandler::TimedEventTrigger(void)
         {
             this->holdManager.UpdateHoldingAircraft(this->plugin);
-            this->holdManagerWindow.RefreshWindows();
         }
 
         /*

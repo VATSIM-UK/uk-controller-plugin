@@ -38,7 +38,6 @@
 #include "login/Login.h"
 #include "hold/HoldManager.h"
 #include "euroscope/UserSettingAwareCollection.h"
-#include "hold/HoldWindowManager.h"
 #include "hold/HoldSelectionMenu.h"
 #include "dialog/DialogManager.h"
 #include "hold/HoldProfileManager.h"
@@ -92,7 +91,6 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawkEvents;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkGenerator> squawkGenerator;
             std::unique_ptr<UKControllerPlugin::Hold::HoldManager> holdManager;
-            std::unique_ptr<UKControllerPlugin::Hold::HoldWindowManager> holdWindows;
             std::unique_ptr<UKControllerPlugin::Hold::HoldProfileManager> holdProfiles;
             std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
             std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;

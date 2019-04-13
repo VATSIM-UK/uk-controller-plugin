@@ -4,7 +4,6 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "hold/HoldWindowManager.h"
 #include "plugin/PopupMenuItem.h"
 #include "hold/ManagedHold.h"
 #include "hold/HoldingData.h"
@@ -16,7 +15,6 @@ using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Hold::HoldEventHandler;
-using UKControllerPlugin::Hold::HoldWindowManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using ::testing::Return;
 using ::testing::NiceMock;
@@ -32,7 +30,6 @@ namespace UKControllerPluginTest {
                     : handler(
                         this->manager,
                         this->mockPlugin,
-                        HoldWindowManager(NULL, NULL, this->manager, this->mockPlugin),
                         1
                     )
                 {
