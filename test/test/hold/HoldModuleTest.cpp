@@ -19,6 +19,8 @@
 #include "mock/MockDependencyProvider.h"
 #include "dependency/DependencyConfig.h"
 #include "dialog/DialogData.h"
+#include "radarscreen/RadarRenderableCollection.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -32,6 +34,8 @@ using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Command::CommandHandlerCollection;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Tag::TagItemCollection;
@@ -100,15 +104,17 @@ namespace UKControllerPluginTest {
                     this->container.windows.reset(new NiceMock<MockWinApi>);
                     this->container.windows.reset(new NiceMock<MockWinApi>);
                     this->container.tagHandler.reset(new TagItemCollection);
-                    this->container.dialogManager.reset(
-                        new DialogManager(NiceMock<MockDialogProvider>())
-                    );
+                    this->container.dialogManager.reset(new DialogManager(this->mockDialogProvider));
                 }
 
+                NiceMock<MockDialogProvider> mockDialogProvider;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 PersistenceContainer container;
                 UserMessager messager;
+                CommandHandlerCollection radarScreenCommands;
                 ConfigurableDisplayCollection configurableDisplays;
+                RadarRenderableCollection radarRenderables;
+                AsrEventHandlerCollection asrEvents;
                 NiceMock<MockApiInterface> mockWebApi;
                 NiceMock<MockWinApi> mockWinApi;
                 NiceMock<MockDependencyProvider> mockDependencyProvider;
@@ -139,6 +145,12 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(3, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
+        TEST_F(HoldModuleTest, ItAddsHoldSelectionCallback)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9003));
+        }
+
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
@@ -149,6 +161,12 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(2, this->container.holdProfiles->CountProfiles());
+        }
+
+        TEST_F(HoldModuleTest, ItInitialisesHoldDisplayFactory)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+            EXPECT_TRUE(this->container.holdDisplayFactory);
         }
 
         TEST_F(HoldModuleTest, ItRegistersHoldConfigurationDialog)
@@ -197,6 +215,99 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             BootstrapPlugin(providerNoHolds, this->container, this->messager);
+        }
+
+        TEST_F(HoldModuleTest, RadarScreenRegistersForAsrEvents)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            BootstrapRadarScreen(
+                this->configurableDisplays,
+                this->radarRenderables,
+                this->asrEvents,
+                this->radarScreenCommands,
+                this->container
+            );
+
+            EXPECT_EQ(1, this->asrEvents.CountHandlers());
+        }
+
+        TEST_F(HoldModuleTest, RadarScreenRegistersDisplayManager)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            BootstrapRadarScreen(
+                this->configurableDisplays,
+                this->radarRenderables,
+                this->asrEvents,
+                this->radarScreenCommands,
+                this->container
+            );
+
+            EXPECT_EQ(1, this->container.holdSelectionMenu->CountDisplayManagers());
+        }
+
+        TEST_F(HoldModuleTest, RadarScreenRegistersRadarRenderable)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            BootstrapRadarScreen(
+                this->configurableDisplays,
+                this->radarRenderables,
+                this->asrEvents,
+                this->radarScreenCommands,
+                this->container
+            );
+
+            EXPECT_EQ(1, this->radarRenderables.CountRenderers());
+            EXPECT_EQ(1, this->radarRenderables.CountRenderersInPhase(this->radarRenderables.afterTags));
+        }
+
+        TEST_F(HoldModuleTest, RadarScreenRegistersMenuConfigurationItems)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            BootstrapRadarScreen(
+                this->configurableDisplays,
+                this->radarRenderables,
+                this->asrEvents,
+                this->radarScreenCommands,
+                this->container
+            );
+
+            EXPECT_EQ(2, this->configurableDisplays.CountDisplays());
+        }
+
+        TEST_F(HoldModuleTest, RadarScreenRegistersCallbacksWithPluginFunctions)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            size_t countBefore = this->container.pluginFunctionHandlers->CountCallbacks();
+            BootstrapRadarScreen(
+                this->configurableDisplays,
+                this->radarRenderables,
+                this->asrEvents,
+                this->radarScreenCommands,
+                this->container
+            );
+
+            EXPECT_EQ(countBefore + 2, this->container.pluginFunctionHandlers->CountCallbacks());
+        }
+
+        TEST_F(HoldModuleTest, RadarScreenRegistersRadarScreenCommandHandler)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            BootstrapRadarScreen(
+                this->configurableDisplays,
+                this->radarRenderables,
+                this->asrEvents,
+                this->radarScreenCommands,
+                this->container
+            );
+
+            EXPECT_EQ(1, this->radarScreenCommands.CountHandlers());
+            EXPECT_TRUE(this->radarScreenCommands.ProcessCommand(".ukcp hold"));
         }
     }  // namespace Wake
 }  // namespace UKControllerPluginTest

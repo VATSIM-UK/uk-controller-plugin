@@ -51,6 +51,11 @@ namespace UKControllerPluginTest {
                 //HoldingData holdData3 = { 3, "MAY", "MAY", 7000, 15000, 309, "left", {} };
         };
 
+        TEST_F(HoldSelectionMenuTest, DISABLED_ItStartsWithNoDisplayManagers)
+        {
+            //EXPECT_EQ(0, this->holdSelectionMenu.CountDisplayManagers());
+        }
+
         TEST_F(HoldSelectionMenuTest, DISABLED_ItStartsWithNoHolds)
         {
             //EXPECT_EQ(0, this->holdSelectionMenu.CountHolds());

@@ -35,7 +35,15 @@ namespace UKControllerPlugin {
         void HoldSelectionMenu::AddDisplayManager(const std::shared_ptr<const HoldDisplayManager> manager)
         {
             this->displays.insert(manager);
-        }        
+        }
+
+        /*
+            Return the number of hold display managers.
+        */
+        size_t HoldSelectionMenu::CountDisplayManagers(void) const
+        {
+            return this->displays.size();
+        }
 
         /*
             Display the menu

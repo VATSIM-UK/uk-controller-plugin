@@ -27,6 +27,7 @@ namespace UKControllerPlugin {
                 void AddDisplayManager(
                     const std::shared_ptr<const UKControllerPlugin::Hold::HoldDisplayManager> manager
                 );
+                size_t CountDisplayManagers(void) const;
                 void DisplayMenu(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
