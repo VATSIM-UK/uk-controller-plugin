@@ -48,12 +48,6 @@ namespace UKControllerPlugin {
 
                 // The parameters of the hold
                 UKControllerPlugin::Hold::HoldingData holdParameters;
-                
-                // A lock for the aircraft queue, locking is deferred.
-                mutable std::unique_lock<std::mutex> uniqueHoldLock;
-
-                // A mutex to lock the holding queue
-                mutable std::mutex holdLock;
 
                 // The aircraft in the hold
                 std::list<UKControllerPlugin::Hold::HoldingAircraft> holdingAircraft;

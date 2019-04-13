@@ -8,13 +8,13 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         ManagedHold::ManagedHold(HoldingData holdParameters)
-            : holdParameters(std::move(holdParameters)), uniqueHoldLock(this->holdLock, std::defer_lock_t())
+            : holdParameters(std::move(holdParameters))
         {
 
         }
 
         ManagedHold::ManagedHold(ManagedHold && compare)
-            : holdParameters(std::move(compare.holdParameters)), uniqueHoldLock(this->holdLock, std::defer_lock_t())
+            : holdParameters(std::move(compare.holdParameters))
         {
             this->holdingAircraft = compare.holdingAircraft;
         }
@@ -29,20 +29,17 @@ namespace UKControllerPlugin {
             return *this;
         }
 
-        /*
-            Don't destroy until we know that the mutex is free
-        */
         ManagedHold::~ManagedHold()
         {
-            std::lock_guard<std::mutex> aircraftListLock(this->holdLock);
+
         }
+
 
         /*
             Remove any current holding aircraft information from the hold and add the updated information.
         */
         void ManagedHold::AddHoldingAircraft(HoldingAircraft aircraft)
         {
-            std::lock_guard<std::mutex> aircraftListLock(this->holdLock);
             if (this->HasAircraft(aircraft)) {
                 return;
             }
@@ -92,19 +89,10 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Lock the mutex on the aircraft list so that iteration may be performed
-        */
-        void ManagedHold::LockAircraftList(void) const
-        {
-            this->uniqueHoldLock.lock();
-        }
-
-        /*
             Remove an aircraft from the hold.
         */
         void ManagedHold::RemoveHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft)
         {
-            std::lock_guard<std::mutex> aircraftListLock(this->holdLock);
             this->holdingAircraft.remove(aircraft);
         }
 
@@ -113,24 +101,12 @@ namespace UKControllerPlugin {
         */
         void ManagedHold::RemoveHoldingAircraft(std::string callsign)
         {
-            std::lock_guard<std::mutex> aircraftListLock(this->holdLock);
             auto aircraft = std::find(this->holdingAircraft.cbegin(), this->holdingAircraft.cend(), callsign);
             if (aircraft == this->holdingAircraft.end()) {
                 return;
             }
 
             this->holdingAircraft.erase(aircraft);
-        }
-
-        /*
-            Unlock the aircraft list
-        */
-        void ManagedHold::UnlockAircraftList(void) const
-        {
-            if (!this->uniqueHoldLock.owns_lock()) {
-                return;
-            }
-            this->uniqueHoldLock.unlock();
         }
 
         /*

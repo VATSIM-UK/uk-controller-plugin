@@ -126,7 +126,6 @@ namespace UKControllerPlugin {
                 itHold != this->holdData.cend();
                 ++itHold
             ) {
-                itHold->second->LockAircraftList();
 
                 // Iterate the aircraft in the holds
                 for (
@@ -150,7 +149,6 @@ namespace UKControllerPlugin {
                      // Cant update, no FP.
                     }
                 }
-                itHold->second->UnlockAircraftList();
             }
         }
     }  // namespace Hold
