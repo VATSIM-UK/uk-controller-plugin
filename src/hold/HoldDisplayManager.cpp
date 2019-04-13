@@ -20,6 +20,14 @@ namespace UKControllerPlugin {
 
         }
 
+        /*
+            Return 
+        */
+        size_t HoldDisplayManager::CountDisplays(void) const
+        {
+            return this->displays.size();
+        }
+
         void HoldDisplayManager::AsrLoadedEvent(UserSetting & userSetting)
         {
             this->userSetting = &userSetting;
@@ -80,7 +88,6 @@ namespace UKControllerPlugin {
         */
         void HoldDisplayManager::LoadProfile(unsigned int profileId)
         {
-            this->profileId = profileId;
             HoldProfile selected = this->profileManager.GetProfile(profileId);
             if (selected == this->profileManager.invalidProfile) {
                 LogWarning("Tried to load invalid hold profile");
@@ -91,6 +98,8 @@ namespace UKControllerPlugin {
             this->SaveDisplaysToAsr();
             this->displays.clear();
 
+            // Setup new profile
+            this->profileId = profileId;
             for (std::set<unsigned int>::const_iterator holdIt = selected.holds.cbegin();
                 holdIt != selected.holds.cend();
                 ++holdIt

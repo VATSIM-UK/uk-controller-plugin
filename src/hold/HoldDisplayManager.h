@@ -26,6 +26,7 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Hold::HoldManager & holdManager,
                     const UKControllerPlugin::Hold::HoldDisplayFactory & displayFactory
                 );
+                size_t CountDisplays(void) const;
                 unsigned int GetCurrentProfile(void) const;
                 void LoadProfile(unsigned int profileId);
 

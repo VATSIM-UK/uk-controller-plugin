@@ -5,6 +5,7 @@
 #include "dialog/DialogData.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
+#include "hold/HoldProfile.h"
 #include "hold/HoldProfileManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "mock/MockApiInterface.h"
@@ -17,6 +18,7 @@ using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Hold::HoldDisplayManager;
 using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Hold::HoldProfile;
 using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
 using UKControllerPluginTest::Api::MockApiInterface;
@@ -38,6 +40,7 @@ namespace UKControllerPluginTest {
                     displayManager(new HoldDisplayManager(holdProfileManager, holdManager, displayFactory))
                 {
                     this->dialogManager.AddDialog(this->dialogData);
+                    this->holdProfileManager.AddProfile({ 55, "Test Profile", {} });
                 }
 
                 DialogData dialogData = { HOLD_SELECTOR_DIALOG, "", NULL, NULL, NULL };
