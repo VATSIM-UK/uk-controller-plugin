@@ -12,17 +12,6 @@ namespace UKControllerPluginTest {
 
         class ExternalsBootstrapTest : public ::testing::Test {
 
-            void SetUp() {
-                Gdiplus::GdiplusStartupInput gdiStartup;
-                Gdiplus::GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
-            }
-
-            void TearDown() {
-                Gdiplus::GdiplusShutdown(this->gdiPlusToken);
-            }
-
-            // Gdi plus token
-            ULONG_PTR gdiPlusToken;
         };
 
         TEST_F(ExternalsBootstrapTest, BootstrapCreatesCurlApi)

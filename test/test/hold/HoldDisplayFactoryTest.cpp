@@ -29,26 +29,12 @@ namespace UKControllerPluginTest {
                     this->holdManager.AddHold(std::move(managedHold));
                 }
 
-                static void SetUpTestSuite()
-                {
-                    Gdiplus::GdiplusStartupInput gdiStartup;
-                    Gdiplus::GdiplusStartup(&HoldDisplayFactoryTest::gdiPlusToken, &gdiStartup, NULL);
-                }
-
-                static void TearDownTestSuite()
-                {
-                    Gdiplus::GdiplusShutdown(HoldDisplayFactoryTest::gdiPlusToken);
-                }
-
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 HoldManager holdManager;
                 HoldDisplayFactory factory;
                 HoldingData holdData = {1, "TIMBA", "TIMBA TEST", 7000, 15000, 360, "left", {}};
                 ManagedHold managedHold;
-                static ULONG_PTR gdiPlusToken;
         };
-
-        ULONG_PTR HoldDisplayFactoryTest::gdiPlusToken = NULL;
 
         TEST_F(HoldDisplayFactoryTest, ItReturnsNullPointerIfHoldNotFound)
         {
