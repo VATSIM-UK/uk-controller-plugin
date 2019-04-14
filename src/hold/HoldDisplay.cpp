@@ -43,6 +43,7 @@ namespace UKControllerPlugin {
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
 
             this->windowHeight = this->dataStartOffset + (this->managedHold.GetNumberOfLevels() * this->lineHeight);
+            this->maxWindowHeight = this->dataStartOffset + (this->managedHold.GetNumberOfLevels() * this->lineHeight);
             this->Move(this->windowPos);
         }
 
@@ -80,6 +81,8 @@ namespace UKControllerPlugin {
                 }
             } else if (button == "minimise") {
                 this->minimised = !this->minimised;
+            } else if (button == "information") {
+                this->showHoldInformation = !this->showHoldInformation;
             }
 
         }
@@ -164,6 +167,17 @@ namespace UKControllerPlugin {
                 this->minimiseButtonArea.Y + this->minimiseButtonArea.Height
             };
 
+            // Information Button
+            this->informationButtonArea.X = minimiseButtonArea.X + minimiseButtonArea.Width + 5;
+            this->informationButtonArea.Y = this->titleArea.Y + 2;
+
+            this->informationClickRect = {
+                this->informationButtonArea.X,
+                this->informationButtonArea.Y,
+                this->informationButtonArea.X + this->informationButtonArea.Width,
+                this->informationButtonArea.Y + this->informationButtonArea.Height
+            };
+
             // Minus button
             this->minusButtonRect.X = pos.x + 5;
             this->minusButtonRect.Y = this->buttonStartOffset + pos.y;
@@ -231,23 +245,82 @@ namespace UKControllerPlugin {
             graphics.DrawPath(path, this->borderPen);
         }
 
-        void HoldDisplay::PaintWindow(
+        /*
+            Render textual data about the hold itself.
+        */
+        void HoldDisplay::RenderHoldInformation(
             GdiGraphicsInterface & graphics,
             EuroscopeRadarLoopbackInterface & radarScreen,
             const int screenObjectId
         ) const {
-
+            // Black background and white border
             Gdiplus::Rect borderRect = {
-                this->windowPos.x,
-                this->windowPos.y,
-                windowWidth,
-                windowHeight
+               this->windowPos.x,
+               this->windowPos.y,
+               this->windowWidth,
+               this->maxWindowHeight
             };
 
-            // Paint a black background
-            if (!this->minimised) {
-                graphics.FillRect(borderRect, this->backgroundBrush);
-            }
+            graphics.FillRect(borderRect, this->backgroundBrush);
+            graphics.DrawRect(
+                borderRect,
+                this->borderPen
+            );
+
+            // Render the title bar
+            this->RenderTitleBar(graphics, radarScreen, screenObjectId);
+
+            // Render the data
+            Gdiplus::Rect dataRect = {
+                this->windowPos.x,
+                this->dataStartHeight,
+                this->windowWidth,
+                this->lineHeight
+            };
+
+            graphics.DrawString(
+                std::wstring(L"Fix: ") + ConvertToTchar(this->managedHold.GetHoldParameters().fix),
+                dataRect,
+                this->dataBrush
+            );
+
+            dataRect.Y = dataRect.Y + this->lineHeight + 5;
+            graphics.DrawString(
+                std::wstring(L"Inbound: ") + ConvertToTchar(this->managedHold.GetHoldParameters().inbound),
+                dataRect,
+                this->dataBrush
+            );
+
+            dataRect.Y = dataRect.Y + this->lineHeight + 5;
+            graphics.DrawString(
+                std::wstring(L"Turn: ") + ConvertToTchar(this->managedHold.GetHoldParameters().turnDirection),
+                dataRect,
+                this->dataBrush
+            );
+
+            dataRect.Y = dataRect.Y + this->lineHeight + 5;
+            graphics.DrawString(
+                std::wstring(L"Maximum: ") + ConvertToTchar(this->managedHold.GetHoldParameters().maximum),
+                dataRect,
+                this->dataBrush
+            );
+
+            dataRect.Y = dataRect.Y + this->lineHeight + 5;
+            graphics.DrawString(
+                std::wstring(L"Minimum: ") + ConvertToTchar(this->managedHold.GetHoldParameters().minimum),
+                dataRect,
+                this->dataBrush
+            );
+        }
+
+        /*
+            Draw the title bar for the hold display
+        */
+        void HoldDisplay::RenderTitleBar(
+            GdiGraphicsInterface & graphics,
+            EuroscopeRadarLoopbackInterface & radarScreen,
+            const int screenObjectId
+        ) const {
 
             // Title bar
             radarScreen.RegisterScreenObject(
@@ -281,10 +354,38 @@ namespace UKControllerPlugin {
                 false
             );
 
-            // If minimised, don't carry on drawing
-            if (this->minimised) {
-                return;
-            }
+            // Information button
+            graphics.DrawRect(this->informationButtonArea, this->borderPen);
+            graphics.DrawString(L"i", this->informationButtonArea, this->titleBarTextBrush);
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                std::to_string(this->managedHold.GetHoldParameters().identifier) + "/information",
+                this->informationClickRect,
+                false
+            );
+        }
+
+        /*
+            Render the managed hold data - positions of aircraft in the hold etc
+        */
+        void HoldDisplay::RenderManagedHoldDisplay(
+            GdiGraphicsInterface & graphics,
+            EuroscopeRadarLoopbackInterface & radarScreen,
+            const int screenObjectId
+        ) const {
+
+            Gdiplus::Rect borderRect = {
+               this->windowPos.x,
+               this->windowPos.y,
+               this->windowWidth,
+               this->windowHeight
+            };
+
+            // Black background
+            graphics.FillRect(borderRect, this->backgroundBrush);
+
+            // Render the title bar
+            this->RenderTitleBar(graphics, radarScreen, screenObjectId);
 
             // Action buttons
             this->DrawRoundRectangle(graphics, minusButtonRect, 5);
@@ -337,8 +438,8 @@ namespace UKControllerPlugin {
                 unsigned int i = this->managedHold.GetHoldParameters().maximum;
                 i >= this->managedHold.GetHoldParameters().minimum;
                 i -= 1000
-            ) {
-                // Don't display the level if we're hiding it
+                ) {
+                    // Don't display the level if we're hiding it
                 if (levelNumber < this->numLevelsSkipped) {
                     levelNumber++;
                     continue;
@@ -348,7 +449,7 @@ namespace UKControllerPlugin {
                 const HoldingData & holdParameters = this->managedHold.GetHoldParameters();
                 for (
                     std::set<std::unique_ptr<AbstractHoldLevelRestriction>>::const_iterator it
-                        = holdParameters.restrictions.cbegin();
+                    = holdParameters.restrictions.cbegin();
                     it != holdParameters.restrictions.cend();
                     ++it
                     ) {
@@ -359,7 +460,7 @@ namespace UKControllerPlugin {
                             windowWidth,
                             this->lineHeight
                         };
-                        graphics.FillRect (
+                        graphics.FillRect(
                             restrictedRect,
                             this->blockedLevelBrush
                         );
@@ -411,7 +512,7 @@ namespace UKControllerPlugin {
                 ManagedHold::ManagedHoldAircraft::const_iterator it = this->managedHold.cbegin();
                 it != this->managedHold.cend();
                 ++it
-            ) {
+                ) {
                 unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
                 unsigned int displayRow = GetDisplayRow(this->managedHold.GetHoldParameters().maximum, occupied);
 
@@ -432,7 +533,7 @@ namespace UKControllerPlugin {
                     callsignDisplay,
                     this->dataBrush
                 );
-                
+
                 // Reported level
                 graphics.DrawString(
                     GetLevelDisplayString(it->reportedLevel),
@@ -458,7 +559,7 @@ namespace UKControllerPlugin {
             }
 
             // Line sectioning off the bottom level.
-            unsigned int bottomLevelLineHeight = this->dataStartHeight + 
+            unsigned int bottomLevelLineHeight = this->dataStartHeight +
                 (this->lineHeight * (this->managedHold.GetNumberOfLevels() - this->numLevelsSkipped - 1)) - 2;
 
             Gdiplus::GraphicsPath path;
@@ -475,6 +576,24 @@ namespace UKControllerPlugin {
                 borderRect,
                 this->borderPen
             );
+        }
+
+        void HoldDisplay::PaintWindow(
+            GdiGraphicsInterface & graphics,
+            EuroscopeRadarLoopbackInterface & radarScreen,
+            const int screenObjectId
+        ) const {
+
+            // Minimised, just render the title bar.
+            if (this->minimised) {
+                this->RenderTitleBar(graphics, radarScreen, screenObjectId);
+                return;
+            }
+
+            // Render the correct view.
+            this->showHoldInformation
+                ? this->RenderHoldInformation(graphics, radarScreen, screenObjectId)
+                : this->RenderManagedHoldDisplay(graphics, radarScreen, screenObjectId);
         }
 
         /*

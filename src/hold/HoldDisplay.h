@@ -60,6 +60,22 @@ namespace UKControllerPlugin {
                     UINT8 radius
                 ) const;
 
+                void RenderHoldInformation(
+                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
+                    const int screenObjectId
+                ) const;
+                void RenderTitleBar(
+                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
+                    const int screenObjectId
+                ) const;
+                void RenderManagedHoldDisplay(
+                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
+                    const int screenObjectId
+                ) const;
+
                 // The hold manager
                 UKControllerPlugin::Hold::HoldManager & holdManager;
 
@@ -87,7 +103,8 @@ namespace UKControllerPlugin {
                 RECT titleRect = { 0, 0, 200, 15 };
                 Gdiplus::Rect minimiseButtonArea = { 0, 0, 11, 11 };
                 RECT minimiseClickRect;
-                Gdiplus::RectF exitButtonArea = { 247.0f, 2.0f, 11.0f, 11.0f };
+                Gdiplus::Rect informationButtonArea = { 21, 0, 11, 11 };
+                RECT informationClickRect;
 
                 // How high lines should be
                 const INT lineHeight = 17;
@@ -104,9 +121,20 @@ namespace UKControllerPlugin {
                 // Is the window minimised
                 bool minimised = false;
 
-
+                // The window width
                 int windowWidth = 200;
+
+                // The window height
                 int windowHeight = 500;
+                
+                // The maximum possible window height based on the number of levels in the hold
+                int maxWindowHeight = 500;
+
+                // How many levels to not draw
+                unsigned int numLevelsSkipped = 0;
+
+                // Should we display the information about the hold
+                bool showHoldInformation = false;
 
                 // Some more rects
                 Gdiplus::Rect minusButtonRect = {5, (int)this->buttonStartOffset, 40, 40};
@@ -119,11 +147,6 @@ namespace UKControllerPlugin {
                 RECT addButtonClickRect = { 190, (int)this->buttonStartOffset, 40, 40 };
 
                 POINT windowPos = { 100, 100 };
-
-                /*
-                    How many levels to not draw
-                */
-                unsigned int numLevelsSkipped = 0;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin
