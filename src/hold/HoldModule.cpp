@@ -208,6 +208,7 @@ namespace UKControllerPlugin {
                 radarRenderables.afterTags
             );
             configurableDisplay.RegisterDisplay(renderer);
+            asrEvents.RegisterHandler(renderer);
 
             CallbackFunction renderToggleCallback(
                 renderer->toggleCallbackFunctionId,

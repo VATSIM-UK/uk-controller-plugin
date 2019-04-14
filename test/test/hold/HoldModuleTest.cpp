@@ -229,7 +229,7 @@ namespace UKControllerPluginTest {
                 this->container
             );
 
-            EXPECT_EQ(1, this->asrEvents.CountHandlers());
+            EXPECT_EQ(2, this->asrEvents.CountHandlers());
         }
 
         TEST_F(HoldModuleTest, RadarScreenRegistersDisplayManager)
