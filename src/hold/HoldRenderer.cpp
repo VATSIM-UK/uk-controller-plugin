@@ -16,6 +16,7 @@ using UKControllerPlugin::Hold::HoldDisplay;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Euroscope::UserSetting;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -28,6 +29,29 @@ namespace UKControllerPlugin {
             : displays(displays), screenObjectId(screenObjectId), toggleCallbackFunctionId(toggleCallbackFunctionId)
         {
 
+        }
+
+        /*
+            Load user settings from the ASR - whether to render the hold displays.
+        */
+        void HoldRenderer::AsrLoadedEvent(UserSetting & userSetting)
+        {
+            this->renderHolds = userSetting.GetBooleanEntry(
+                this->asrVisibleKey,
+                true
+            );
+        }
+
+        /*
+            Save user settings to the ASR - whether to render the hold displays.
+        */
+        void HoldRenderer::AsrClosingEvent(UserSetting & userSetting)
+        {
+            userSetting.Save(
+                this->asrVisibleKey,
+                this->asrVisibleDescription,
+                this->renderHolds
+            );
         }
 
         /*
@@ -56,7 +80,7 @@ namespace UKControllerPlugin {
             );
 
             if (display == this->displays->cend()) {
-                LogWarning("Tried to move invalid hold display");
+                LogWarning("Tried to interact with invalid hold display");
                 return;
             }
 
@@ -110,6 +134,14 @@ namespace UKControllerPlugin {
             ) {
                 (*it)->PaintWindow(graphics, radarScreen, this->screenObjectId);
             }
+        }
+
+        /*
+            Set whether or not holds should be rendered.
+        */
+        void HoldRenderer::SetVisible(bool visible)
+        {
+            this->renderHolds = visible;
         }
 
         /*

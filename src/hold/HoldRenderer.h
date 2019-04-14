@@ -1,6 +1,7 @@
 #pragma once
 #include "radarscreen/RadarRenderableInterface.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
+#include "euroscope/AsrEventHandlerInterface.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldDisplay.h"
 
@@ -12,6 +13,7 @@ namespace UKControllerPlugin {
         */
         class HoldRenderer :
             public UKControllerPlugin::RadarScreen::RadarRenderableInterface,
+            public UKControllerPlugin::Euroscope::AsrEventHandlerInterface,
             public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface
         {
             public:
@@ -39,10 +41,15 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) override;
+                void SetVisible(bool visible);
 
                 // Inherited via ConfigurableDisplayInterface
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
+
+                // Inherited via AsrEventHandlerInterface
+                void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
+                void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
 
                 // The id of the callback function to use for the configuration menu item
                 const int toggleCallbackFunctionId;
@@ -52,6 +59,12 @@ namespace UKControllerPlugin {
 
                 // The description to show in our menu item
                 const std::string menuItemDescription = "Show Managed Holds";
+
+                // The ASR key for whether or not the hold displays should be visible
+                const std::string asrVisibleKey = "holdDisplayVisibility";
+
+                // The ASR description for whether or not the hold displays should be visible
+                const std::string asrVisibleDescription = "Managed Hold Display Visibility";
 
             private:
 

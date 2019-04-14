@@ -28,6 +28,7 @@ namespace UKControllerPlugin {
                 );
                 size_t CountDisplays(void) const;
                 unsigned int GetCurrentProfile(void) const;
+                const UKControllerPlugin::Hold::HoldDisplay & GetDisplay(unsigned int holdId) const;
                 void LoadProfile(unsigned int profileId);
 
                 // Inherited via AsrEventHandlerInterface
@@ -39,7 +40,6 @@ namespace UKControllerPlugin {
                 typedef HoldDisplays::const_iterator const_iterator;
                 const_iterator cbegin() const { return displays.cbegin(); }
                 const_iterator cend() const { return displays.cend(); }
-
 
                 // The profile id if no profile has been selected
                 const unsigned int noProfileSelectedId = 0;

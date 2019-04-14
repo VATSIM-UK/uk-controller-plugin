@@ -21,13 +21,16 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Return 
+            Return the number of displays
         */
         size_t HoldDisplayManager::CountDisplays(void) const
         {
             return this->displays.size();
         }
 
+        /*
+            Load data from the ASR
+        */
         void HoldDisplayManager::AsrLoadedEvent(UserSetting & userSetting)
         {
             this->userSetting = &userSetting;
@@ -44,6 +47,9 @@ namespace UKControllerPlugin {
             this->LoadProfile(this->profileId);
         }
 
+        /*
+            Save data to the ASR
+        */
         void HoldDisplayManager::AsrClosingEvent(UserSetting & userSetting)
         {
             // Save the selected profile
@@ -81,6 +87,22 @@ namespace UKControllerPlugin {
         unsigned int HoldDisplayManager::GetCurrentProfile(void) const
         {
             return this->profileId;
+        }
+
+        /*
+            Return a display by hold ID, mainly for testing
+        */
+        const UKControllerPlugin::Hold::HoldDisplay & HoldDisplayManager::GetDisplay(unsigned int holdId) const
+        {
+            auto display = std::find_if(
+                this->displays.cbegin(),
+                this->displays.cend(),
+                [holdId](const std::unique_ptr<HoldDisplay> & display) -> bool {
+                    return display->managedHold.GetHoldParameters().identifier == holdId;
+                }
+            );
+
+            return **display;
         }
 
         /*

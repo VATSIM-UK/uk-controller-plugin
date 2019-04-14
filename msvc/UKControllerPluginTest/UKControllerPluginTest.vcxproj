@@ -124,6 +124,7 @@
     <ClCompile Include="..\..\test\test\hold\HoldProfileManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldProfileSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldProfileTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\HoldRendererTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldRestrictionSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldSelectionMenuTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\ManagedHoldTest.cpp" />
