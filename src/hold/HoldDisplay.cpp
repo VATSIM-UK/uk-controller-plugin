@@ -36,7 +36,10 @@ namespace UKControllerPlugin {
             clearedLevelBrush(Gdiplus::Color(255, 128, 64)),
             borderPen(Gdiplus::Color(255, 255, 255), 1.5f),
             exitButtonBrush(Gdiplus::Color(0, 0, 0)),
-            blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255))
+            blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255)),
+            maxLevelsSkippable(
+                (managedHold.GetHoldParameters().maximum - managedHold.GetHoldParameters().minimum) / 1000
+            )
         {
 
             this->stringFormat.SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
@@ -55,14 +58,12 @@ namespace UKControllerPlugin {
             if (button == "plus") {
                 if (numLevelsSkipped > 0) {
                     this->numLevelsSkipped--;
-                    this->windowHeight = this->windowHeight + this->lineHeight;
+                    this->windowHeight += this->lineHeight;
                 }
             } else if (button == "minus") {
-                const unsigned int maxLevelsSkippable = (this->managedHold.GetHoldParameters().maximum -
-                            this->managedHold.GetHoldParameters().minimum) / 1000;
-                if (maxLevelsSkippable != this->numLevelsSkipped) {
+                if (this->maxLevelsSkippable != this->numLevelsSkipped) {
                     numLevelsSkipped++;
-                    this->windowHeight = this->windowHeight - this->lineHeight;
+                    this->windowHeight -= this->lineHeight;
                 }
             } else if (button == "allLevels") {
                 this->windowHeight = this->dataStartOffset + (
@@ -84,7 +85,14 @@ namespace UKControllerPlugin {
             } else if (button == "information") {
                 this->showHoldInformation = !this->showHoldInformation;
             }
+        }
 
+        /*
+            Get the data start height
+        */
+        INT HoldDisplay::GetDataStartHeight(void) const
+        {
+            return this->dataStartHeight;
         }
 
         /*
@@ -96,11 +104,147 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Return the renderable area for the title bar
+        */
+        Gdiplus::Rect HoldDisplay::GetTitleArea(void) const
+        {
+            return this->titleArea;
+        }
+
+        /*
+            Return the click area for the title bar
+        */
+        RECT HoldDisplay::GetTitleClickArea(void) const
+        {
+            return this->titleRect;
+        }
+
+        /*
+            Get renderable area for the minimise button
+        */
+        Gdiplus::Rect HoldDisplay::GetMinimiseArea(void) const
+        {
+            return this->minimiseButtonArea;
+        }
+
+        /*
+            Get clickable area for the minimise button
+        */
+        RECT HoldDisplay::GetMinimiseClickArea(void) const
+        {
+            return this->minimiseClickRect;
+        }
+
+        /*
+            Return the renderable area for the information button
+        */
+        Gdiplus::Rect HoldDisplay::GetInformationArea(void) const
+        {
+            return this->informationButtonArea;
+        }
+
+        /*
+            Return the clickable area for the information button
+        */
+        RECT HoldDisplay::GetInformationClickArea(void) const
+        {
+            return this->informationClickRect;
+        }
+
+        /*
+            Return the renderable area for the plus button
+        */
+        Gdiplus::Rect HoldDisplay::GetPlusArea(void) const
+        {
+            return this->plusButtonRect;
+        }
+
+        /*
+            Return the clickable area for the plus button
+        */
+        RECT HoldDisplay::GetPlusClickArea(void) const
+        {
+            return this->plusButtonClickRect;
+        }
+
+        /*
+            Return the renderable area for the minus button
+        */
+        Gdiplus::Rect HoldDisplay::GetMinusArea(void) const
+        {
+            return this->minusButtonRect;
+        }
+
+        /*
+            Return the clickable area for the minus button
+        */
+        RECT HoldDisplay::GetMinusClickArea(void) const
+        {
+            return this->minusButtonClickRect;
+        }
+
+        /*
+            Return the renderable area for the all levels button
+        */
+        Gdiplus::Rect HoldDisplay::GetAllArea(void) const
+        {
+            return this->allButtonRect;
+        }
+
+        /*
+            Return the clickable area for the all levels button
+        */
+        RECT HoldDisplay::GetAllClickArea(void) const
+        {
+            return this->allButtonClickRect;
+        }
+
+        /*
+            Return the renderable area for the add button
+        */
+        Gdiplus::Rect HoldDisplay::GetAddArea(void) const
+        {
+            return this->addButtonRect;
+        }
+
+        /*
+            Return the clickable area for the add button
+        */
+        RECT HoldDisplay::GetAddClickArea(void) const
+        {
+            return this->addButtonClickRect;
+        }
+
+        /*
             Return the number of levels skipped on the display
         */
         unsigned int HoldDisplay::GetLevelsSkipped(void) const
         {
             return this->numLevelsSkipped;
+        }
+
+        /*
+            Return the height of the window
+        */
+        int HoldDisplay::GetWindowHeight(void) const
+        {
+            return this->windowHeight;
+        }
+
+        /*
+            Return whether or not the display is minimised.
+        */
+        bool HoldDisplay::IsMinimised(void) const
+        {
+            return this->minimised;
+        }
+
+        /*
+            Return whether or not the display is in informtion mode
+        */
+        bool HoldDisplay::IsInInformationMode(void) const
+        {
+            return this->showHoldInformation;
         }
 
         /*
@@ -113,6 +257,9 @@ namespace UKControllerPlugin {
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "LevelsSkipped",
                 0
             );
+
+            this->windowHeight = this->dataStartOffset + 
+                ((this->managedHold.GetNumberOfLevels() - this->numLevelsSkipped) * this->lineHeight);
 
             this->minimised = userSetting.GetBooleanEntry(
                 "holdProfile" + std::to_string(holdProfileId) + "Hold" +

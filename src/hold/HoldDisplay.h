@@ -31,8 +31,26 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Hold::HoldManager & holdManager
                 );
                 void ButtonClicked(std::string button);
+                INT GetDataStartHeight(void) const;
                 POINT GetDisplayPos(void) const;
+                Gdiplus::Rect GetTitleArea(void) const;
+                RECT GetTitleClickArea(void) const;
+                Gdiplus::Rect GetMinimiseArea(void) const;
+                RECT GetMinimiseClickArea(void) const;
+                Gdiplus::Rect GetInformationArea(void) const;
+                RECT GetInformationClickArea(void) const;
+                Gdiplus::Rect GetPlusArea(void) const;
+                RECT GetPlusClickArea(void) const;
+                Gdiplus::Rect GetMinusArea(void) const;
+                RECT GetMinusClickArea(void) const;
+                Gdiplus::Rect GetAllArea(void) const;
+                RECT GetAllClickArea(void) const;
+                Gdiplus::Rect GetAddArea(void) const;
+                RECT GetAddClickArea(void) const;
                 unsigned int GetLevelsSkipped(void) const;
+                int GetWindowHeight(void) const;
+                bool IsInInformationMode(void) const;
+                bool IsMinimised(void) const;
                 void LoadDataFromAsr(
                     UKControllerPlugin::Euroscope::UserSetting & userSetting,
                     unsigned int profileId
@@ -51,6 +69,18 @@ namespace UKControllerPlugin {
 
                 // The hold this display is managing.
                 const UKControllerPlugin::Hold::ManagedHold & managedHold;
+
+                // Max levels skippable
+                const unsigned int maxLevelsSkippable;
+
+                // How high lines should be
+                const INT lineHeight = 17;
+
+                // The default offset for buttons
+                const INT buttonStartOffset = 18;
+
+                // The default offset for data
+                const INT dataStartOffset = 68;
 
             private:
 
@@ -105,15 +135,6 @@ namespace UKControllerPlugin {
                 RECT minimiseClickRect;
                 Gdiplus::Rect informationButtonArea = { 21, 0, 11, 11 };
                 RECT informationClickRect;
-
-                // How high lines should be
-                const INT lineHeight = 17;
-
-                // The default offset for buttons
-                const INT buttonStartOffset = 18;
-
-                // The default offset for data
-                const INT dataStartOffset = 68;
 
                 // Where to start the data drawing.
                 INT dataStartHeight;
