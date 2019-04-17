@@ -8,7 +8,7 @@ namespace UKControllerPlugin {
             A message to be used when the QNH
             changes at an airfield.
         */
-        class PressureChangeMessage : UKControllerPlugin::Message::MessageSerializableInterface
+        class PressureChangeMessage : public UKControllerPlugin::Message::MessageSerializableInterface
         {
             public:
                 PressureChangeMessage(std::string station, std::string qnhBefore, std::string qnhAfter);

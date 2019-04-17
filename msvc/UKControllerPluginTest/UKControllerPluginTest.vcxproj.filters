@@ -542,6 +542,9 @@
     <ClCompile Include="..\..\test\test\metar\PressureChangeMessageTest.cpp">
       <Filter>test\metar</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\metar\PressureMonitorTest.cpp">
+      <Filter>test\metar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

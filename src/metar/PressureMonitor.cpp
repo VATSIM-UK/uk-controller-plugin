@@ -1,9 +1,11 @@
 #include "pch/stdafx.h"
 #include "metar/PressureMonitor.h"
 #include "metar/MetarParsingFunctions.h"
+#include "metar/PressureChangeMessage.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Message::UserMessager;
+using UKControllerPlugin::Metar::PressureChangeMessage;
 
 namespace UKControllerPlugin {
     namespace Metar {
@@ -44,6 +46,8 @@ namespace UKControllerPlugin {
 
             if (this->pluginUserSettings.GetBooleanEntry(this->userSettingKey, false)) {
                // Send message
+                PressureChangeMessage message(station, this->qnhs.at(station), newQnh);
+                this->userMessager.SendMessageToUser(message);
             }
 
             this->qnhs[station] = newQnh;
