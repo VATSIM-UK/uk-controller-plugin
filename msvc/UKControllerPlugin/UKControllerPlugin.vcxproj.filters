@@ -723,6 +723,9 @@
     <ClInclude Include="..\..\src\metar\MetarParsingFunctions.h">
       <Filter>src\metar</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\metar\PressureChangeMessage.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1223,6 +1226,9 @@
       <Filter>src\metar</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\metar\MetarParsingFunctions.cpp">
+      <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\PressureChangeMessage.cpp">
       <Filter>src\metar</Filter>
     </ClCompile>
   </ItemGroup>
