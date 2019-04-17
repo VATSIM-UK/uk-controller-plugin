@@ -13,8 +13,8 @@ namespace UKControllerPlugin {
     namespace Metar {
 
 
-        PressureMonitor::PressureMonitor(UserSetting & pluginUserSettings, UserMessager & userMessager)
-            : pluginUserSettings(pluginUserSettings), userMessager(userMessager)
+        PressureMonitor::PressureMonitor(UserMessager & userMessager)
+            : userMessager(userMessager)
         {
 
         }
@@ -25,6 +25,22 @@ namespace UKControllerPlugin {
         std::string PressureMonitor::GetStoredQnh(std::string station) const
         {
             return this->qnhs.count(station) ? this->qnhs.at(station) : this->qnhNotStored;
+        }
+
+        /*
+            Are notifications enabled
+        */
+        bool PressureMonitor::NotificationsEnabled(void) const
+        {
+            return this->notificationsEnabled;
+        }
+
+        /*
+            Turn notifications on or off
+        */
+        void PressureMonitor::SetNotficationsEnabled(bool enabled)
+        {
+            this->notificationsEnabled = enabled;
         }
 
         /*
@@ -46,15 +62,24 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            if (
-                this->pluginUserSettings.GetBooleanEntry(GeneralSettingsEntries::pressureMonitorSendMessageKey, false)
-            ) {
+            if (this->notificationsEnabled) {
                // Send message
                 PressureChangeMessage message(station, this->qnhs.at(station), newQnh);
                 this->userMessager.SendMessageToUser(message);
             }
 
             this->qnhs[station] = newQnh;
+        }
+
+        /*
+            User settings have been updated, update local variables from them.
+        */
+        void PressureMonitor::UserSettingsUpdated(UserSetting & userSettings)
+        {
+            this->notificationsEnabled = userSettings.GetBooleanEntry(
+                GeneralSettingsEntries::pressureMonitorSendMessageKey,
+                false
+            );
         }
     }  // namespace Metar
 }  // namespace UKControllerPlugin

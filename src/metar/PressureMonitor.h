@@ -2,6 +2,7 @@
 #include "metar/MetarEventHandlerInterface.h"
 #include "euroscope/UserSetting.h"
 #include "message/UserMessager.h"
+#include "euroscope/UserSettingAwareInterface.h"
 
 namespace UKControllerPlugin {
     namespace Metar {
@@ -10,28 +11,34 @@ namespace UKControllerPlugin {
             Monitors changing QNHs as reported by EuroScope
             and notifies the user if the QNH has changed.
         */
-        class PressureMonitor : public MetarEventHandlerInterface
+        class PressureMonitor : public UKControllerPlugin::Metar::MetarEventHandlerInterface,
+            public UKControllerPlugin::Euroscope::UserSettingAwareInterface
         {
             public:
 
-                PressureMonitor(
-                    UKControllerPlugin::Euroscope::UserSetting & pluginUserSettings,
+                explicit PressureMonitor(
                     UKControllerPlugin::Message::UserMessager & userMessager
                 );
                 std::string GetStoredQnh(std::string station) const;
+                bool NotificationsEnabled(void) const;
+                void SetNotficationsEnabled(bool enabled);
+
                 // Inherited via MetarEventHandlerInterface
                 void NewMetar(std::string station, std::string metar) override;
+
+                // Inherited via UserSettingAwareInterface
+                void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
 
                 // String to return if no QNHn is stored
                 const std::string qnhNotStored = "NONE";
 
             private:
                 
+                // Whether or not to send notifications.
+                bool notificationsEnabled = false;
+                
                 // A map of airfield -> last recorded QNH.
                 std::map<std::string, std::string> qnhs;
-
-                // A place for retrieving and saving user settings
-                UKControllerPlugin::Euroscope::UserSetting & pluginUserSettings;
                 
                 // Interface with ES for sending messages to the user about pressure changes.
                 UKControllerPlugin::Message::UserMessager & userMessager;

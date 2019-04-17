@@ -24,7 +24,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 PressureMonitorTest()
-                    : userSetting(mockUserSettingProvider), messager(mockPlugin), monitor(userSetting, messager)
+                    : userSetting(mockUserSettingProvider), messager(mockPlugin), monitor(messager)
                 {
 
                 }
@@ -34,6 +34,19 @@ namespace UKControllerPluginTest {
                 UserSetting userSetting;
                 PressureMonitor monitor;
         };
+
+        TEST_F(PressureMonitorTest, NotificationsDefaultToOff)
+        {
+            EXPECT_FALSE(this->monitor.NotificationsEnabled());
+        }
+
+        TEST_F(PressureMonitorTest, NotificationsCanBeTurnedOnAndOff)
+        {
+            this->monitor.SetNotficationsEnabled(true);
+            EXPECT_TRUE(this->monitor.NotificationsEnabled());
+            this->monitor.SetNotficationsEnabled(false);
+            EXPECT_FALSE(this->monitor.NotificationsEnabled());
+        }
 
         TEST_F(PressureMonitorTest, ItDoesNothingIfNoQnhInMetar)
         {
@@ -49,6 +62,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(PressureMonitorTest, ItDoesntSendUpdateMessageOnFirstTimeQnh)
         {
+            this->monitor.SetNotficationsEnabled(true);
+
             EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
                 .Times(0);
 
@@ -67,8 +82,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
                 .Times(0);
 
-            ON_CALL(this->mockUserSettingProvider, GetKey(GeneralSettingsEntries::pressureMonitorSendMessageKey))
-                .WillByDefault(Return("1"));
+            this->monitor.SetNotficationsEnabled(true);
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
@@ -82,8 +96,7 @@ namespace UKControllerPluginTest {
             )
                 .Times(1);
 
-            ON_CALL(this->mockUserSettingProvider, GetKey(GeneralSettingsEntries::pressureMonitorSendMessageKey))
-                .WillByDefault(Return("1"));
+            this->monitor.SetNotficationsEnabled(true);
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1012 SCT002");
@@ -93,9 +106,6 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
                 .Times(0);
-
-            ON_CALL(this->mockUserSettingProvider, GetKey(GeneralSettingsEntries::pressureMonitorSendMessageKey))
-                .WillByDefault(Return("0"));
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1012 SCT002");
@@ -109,6 +119,26 @@ namespace UKControllerPluginTest {
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1012 SCT002");
             EXPECT_EQ("1012", this->monitor.GetStoredQnh("EGKK"));
+        }
+
+        TEST_F(PressureMonitorTest, ItUpdatesFromUserSettings)
+        {
+            ON_CALL(this->mockUserSettingProvider, GetKey(GeneralSettingsEntries::pressureMonitorSendMessageKey))
+                .WillByDefault(Return("1"));
+
+            this->monitor.UserSettingsUpdated(this->userSetting);
+            EXPECT_TRUE(this->monitor.NotificationsEnabled());
+        }
+
+        TEST_F(PressureMonitorTest, ItDefaultsToOffIfNoUserSetting)
+        {
+
+            ON_CALL(this->mockUserSettingProvider, GetKey(GeneralSettingsEntries::pressureMonitorSendMessageKey))
+                .WillByDefault(Return(""));
+
+            this->monitor.SetNotficationsEnabled(true);
+            this->monitor.UserSettingsUpdated(this->userSetting);
+            EXPECT_FALSE(this->monitor.NotificationsEnabled());
         }
     }  // namespace Metar
 }  // namespace UKControllerPluginTest

@@ -13,12 +13,10 @@ namespace UKControllerPlugin {
         */
         void PressureMonitorBootstrap(const PersistenceContainer & container)
         {
-            container.metarEventHandler->RegisterHandler(
-                    std::make_shared<PressureMonitor>(
-                    *container.pluginUserSettingHandler,
-                    *container.userMessager
-                )
-            );
+            std::shared_ptr<PressureMonitor> handler(new PressureMonitor(*container.userMessager));
+
+            container.metarEventHandler->RegisterHandler(handler);
+            container.userSettingHandlers->RegisterHandler(handler);
         }
     }  // namespace Metar
 }  // namespace UKControllerPlugin
