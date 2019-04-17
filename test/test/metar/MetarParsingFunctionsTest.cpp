@@ -31,5 +31,10 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ("0987", GetQnhString("EGKK 05010KT Q0987 Q1010SCT010"));
         }
+
+        TEST(MetarParsingFunctionsTest, GetQnhStringHandlesQnhAtEndOfMetar)
+        {
+            EXPECT_EQ("0987", GetQnhString("EGKK 05010KT Q0987"));
+        }
     }  // namespace Metar
 }  // namespace UKControllerPluginTest

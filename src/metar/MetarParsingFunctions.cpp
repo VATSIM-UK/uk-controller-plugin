@@ -11,7 +11,7 @@ namespace UKControllerPlugin {
         */
         std::string GetQnhString(std::string metar)
         {
-            std::regex qnhPattern(" Q([0-9]{4}) ");
+            std::regex qnhPattern(" Q([0-9]{4})( |$)");
             std::smatch qnhMatch;
 
             if (!std::regex_search(metar, qnhMatch, qnhPattern)) {
