@@ -91,7 +91,7 @@ namespace UKControllerPluginTest {
         TEST_F(PressureMonitorTest, ItSendsUpdateMessageOnNewQnh)
         {
             EXPECT_CALL(
-                this->mockPlugin, 
+                this->mockPlugin,
                 ChatAreaMessage(_, _, "New QNH at EGKK, Was: 1011, Now: 1012" , _, _, _, _, _)
             )
                 .Times(1);

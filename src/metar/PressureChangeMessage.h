@@ -24,7 +24,7 @@ namespace UKControllerPlugin {
                 bool MessageRequiresConfirm(void) const override;
 
             private:
-                
+
                 // The previous QNH stored
                 const std::string qnhBefore;
 

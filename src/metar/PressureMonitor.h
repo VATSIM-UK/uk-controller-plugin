@@ -33,13 +33,13 @@ namespace UKControllerPlugin {
                 const std::string qnhNotStored = "NONE";
 
             private:
-                
+
                 // Whether or not to send notifications.
                 bool notificationsEnabled = false;
-                
+
                 // A map of airfield -> last recorded QNH.
                 std::map<std::string, std::string> qnhs;
-                
+
                 // Interface with ES for sending messages to the user about pressure changes.
                 UKControllerPlugin::Message::UserMessager & userMessager;
         };

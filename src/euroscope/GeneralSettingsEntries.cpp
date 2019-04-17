@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
 
         // PRESSURE MONITOR
         const std::string GeneralSettingsEntries::pressureMonitorSendMessageKey = "notifyPressureChanges";
-        const std::string GeneralSettingsEntries::pressureMonitorSendMessageDescription = 
+        const std::string GeneralSettingsEntries::pressureMonitorSendMessageDescription =
             "Notify On Pressure Changes At Airports";
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
