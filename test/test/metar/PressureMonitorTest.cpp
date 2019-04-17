@@ -4,9 +4,11 @@
 #include "mock/MockUserSettingProviderInterface.h"
 #include "message/UserMessager.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
+#include "euroscope/GeneralSettingsEntries.h"
 
 using UKControllerPlugin::Metar::PressureMonitor;
 using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
@@ -65,7 +67,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
                 .Times(0);
 
-            ON_CALL(this->mockUserSettingProvider, GetKey(this->monitor.userSettingKey))
+            ON_CALL(this->mockUserSettingProvider, GetKey(GeneralSettingsEntries::pressureMonitorSendMessageKey))
                 .WillByDefault(Return("1"));
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
@@ -80,7 +82,7 @@ namespace UKControllerPluginTest {
             )
                 .Times(1);
 
-            ON_CALL(this->mockUserSettingProvider, GetKey(this->monitor.userSettingKey))
+            ON_CALL(this->mockUserSettingProvider, GetKey(GeneralSettingsEntries::pressureMonitorSendMessageKey))
                 .WillByDefault(Return("1"));
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
@@ -92,7 +94,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
                 .Times(0);
 
-            ON_CALL(this->mockUserSettingProvider, GetKey(this->monitor.userSettingKey))
+            ON_CALL(this->mockUserSettingProvider, GetKey(GeneralSettingsEntries::pressureMonitorSendMessageKey))
                 .WillByDefault(Return("0"));
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
@@ -101,7 +103,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PressureMonitorTest, ItStoresUpdatedQnh)
         {
-            ON_CALL(this->mockUserSettingProvider, GetKey(this->monitor.userSettingKey))
+            ON_CALL(this->mockUserSettingProvider, GetKey(GeneralSettingsEntries::pressureMonitorSendMessageKey))
                 .WillByDefault(Return("0"));
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");

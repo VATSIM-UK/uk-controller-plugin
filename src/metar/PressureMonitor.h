@@ -25,13 +25,6 @@ namespace UKControllerPlugin {
                 // String to return if no QNHn is stored
                 const std::string qnhNotStored = "NONE";
 
-                // The user setting key to use to determine whether or not a notifcation should be sent
-                const std::string userSettingKey = "notifyPressureChanges";
-
-
-                // The user setting description
-                const std::string userSettingDescription = "Notify On Pressure Changes At Airports";
-
             private:
                 
                 // A map of airfield -> last recorded QNH.

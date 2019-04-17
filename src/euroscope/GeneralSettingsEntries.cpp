@@ -17,5 +17,10 @@ namespace UKControllerPlugin {
         const std::string GeneralSettingsEntries::initialAltitudeToggleSettingsKey = "autoAssignInitialAltitudes";
         const std::string GeneralSettingsEntries::initialAltitudeToggleSettingsDescription =
             "Automatically assign initial altitudes";
+
+        // PRESSURE MONITOR
+        const std::string GeneralSettingsEntries::pressureMonitorSendMessageKey = "notifyPressureChanges";
+        const std::string GeneralSettingsEntries::pressureMonitorSendMessageDescription = 
+            "Notify On Pressure Changes At Airports";
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
