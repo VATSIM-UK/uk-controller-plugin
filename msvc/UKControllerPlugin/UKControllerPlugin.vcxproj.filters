@@ -717,6 +717,12 @@
     <ClInclude Include="..\..\src\controller\TranslateFrequencyAbbreviation.h">
       <Filter>src\controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\metar\PressureMonitor.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\metar\MetarParsingFunctions.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1212,6 +1218,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\controller\TranslateFrequencyAbbreviation.cpp">
       <Filter>src\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\PressureMonitor.cpp">
+      <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\MetarParsingFunctions.cpp">
+      <Filter>src\metar</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
