@@ -26,7 +26,7 @@ namespace UKControllerPluginTest {
             public:
                 HoldManagerTest(void)
                 {
-                    manager.AddHold(std::move(hold1));
+                    manager.AddHold(ManagedHold(std::move(hold1)));
 
                     ON_CALL(mockFlightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
@@ -57,14 +57,14 @@ namespace UKControllerPluginTest {
         TEST_F(HoldManagerTest, ItAddsAHold)
         {
             HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left", {} };
-            this->manager.AddHold(std::move(hold2));
+            this->manager.AddHold(ManagedHold(std::move(hold2)));
             EXPECT_EQ(2, this->manager.CountHolds());
         }
 
         TEST_F(HoldManagerTest, ItHandlesDuplicateHolds)
         {
             HoldingData duplicate = { 1, "WILLO", "WILLO", 8000, 15000, 209, "left", {} };
-            this->manager.AddHold(std::move(duplicate));
+            this->manager.AddHold(ManagedHold(std::move(duplicate)));
             EXPECT_EQ(1, this->manager.CountHolds());
         }
 
@@ -94,7 +94,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldManagerTest, AddingAircraftToOneHoldRemovesFromAnother)
         {
             HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
-            this->manager.AddHold(std::move(hold2));
+            this->manager.AddHold(ManagedHold(std::move(hold2)));
             this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
             EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
             this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 2);
@@ -115,7 +115,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldManagerTest, ItRemovesAnAircraftFromAnyHold)
         {
             HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
-            this->manager.AddHold(std::move(hold2));
+            this->manager.AddHold(ManagedHold(std::move(hold2)));
             manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
             EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
             manager.RemoveAircraftFromAnyHold("BAW123");
