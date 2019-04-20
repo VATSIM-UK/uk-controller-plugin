@@ -75,7 +75,7 @@ namespace UKControllerPlugin {
         */
         bool ManagedHold::HasAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft) const
         {
-            return std::find(this->holdingAircraft.cbegin(), this->holdingAircraft.cend(), aircraft) != 
+            return std::find(this->holdingAircraft.cbegin(), this->holdingAircraft.cend(), aircraft) !=
                 this->holdingAircraft.cend();
         }
 

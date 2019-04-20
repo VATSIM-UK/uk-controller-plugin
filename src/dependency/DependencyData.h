@@ -22,7 +22,7 @@ namespace UKControllerPlugin {
                 return this->localPath == compare.localPath &&
                     this->remotePath == compare.remotePath &&
                     this->defaultValue == compare.defaultValue;
-            };
+            }
         } DependencyData;
 
     }  // namespace Dependency

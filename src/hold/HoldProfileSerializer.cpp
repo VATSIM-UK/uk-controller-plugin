@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
             Convert HoldProfile to JSON
         */
         void to_json(nlohmann::json & json, const HoldProfile & holdProfile) {
-            json = nlohmann::json { 
+            json = nlohmann::json {
                 {"id", holdProfile.id},
                 {"name", holdProfile.name},
                 {"holds", holdProfile.holds}

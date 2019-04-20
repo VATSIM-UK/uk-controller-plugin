@@ -62,7 +62,7 @@ namespace UKControllerPlugin {
                 const int popupMenuItemId;
 
             private:
-                
+
                 // Gives access to the plugin
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
 

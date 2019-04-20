@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
         class ManagedHold
         {
             public:
-                ManagedHold(const UKControllerPlugin::Hold::HoldingData holdData);
+                explicit ManagedHold(const UKControllerPlugin::Hold::HoldingData holdData);
                 ManagedHold(ManagedHold const &) = delete;
                 ManagedHold &operator=(ManagedHold const &) = delete;
                 ManagedHold(ManagedHold && original);
@@ -25,10 +25,8 @@ namespace UKControllerPlugin {
                 unsigned int GetNumberOfLevels(void) const;
                 bool HasAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft) const;
                 bool HasAircraft(std::string callsign) const;
-                void LockAircraftList(void) const;
                 void RemoveHoldingAircraft(UKControllerPlugin::Hold::HoldingAircraft aircraft);
                 void RemoveHoldingAircraft(std::string callsign);
-                void UnlockAircraftList(void) const;
                 void UpdateHoldingAircraft(
                     std::string callsign,
                     int clearedLevel,

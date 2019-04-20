@@ -18,7 +18,6 @@
 #include "hold/HoldConfigurationDialog.h"
 #include "dialog/DialogData.h"
 #include "dependency/DependencyConfig.h"
-#include "hold/HoldManagerFactory.h"
 #include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldProfileManagerFactory.h"
 #include "hold/HoldRenderer.h"

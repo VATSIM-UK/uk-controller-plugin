@@ -1,5 +1,4 @@
 #pragma once
-#include "hold/HoldElementDimensions.h"
 #include "hold/HoldingData.h"
 #include "hold/HoldProfile.h"
 

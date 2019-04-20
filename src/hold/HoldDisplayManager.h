@@ -53,13 +53,13 @@ namespace UKControllerPlugin {
             private:
 
                 void SaveDisplaysToAsr(void) const;
-                
+
                 // Manages profiles
                 const UKControllerPlugin::Hold::HoldProfileManager & profileManager;
 
                 // Manages holds
                 const UKControllerPlugin::Hold::HoldManager & holdManager;
-                
+
                 // Creates displays
                 const UKControllerPlugin::Hold::HoldDisplayFactory & displayFactory;
 

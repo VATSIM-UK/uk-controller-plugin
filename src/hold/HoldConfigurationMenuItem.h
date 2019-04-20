@@ -47,7 +47,7 @@ namespace UKControllerPlugin {
 
                 // The callback function id for the menu being opened
                 const unsigned int selectorMenuOpenCallbackId;
-                
+
                 // The command that can be used to trigger the dialog
                 const std::string openDialogCommand = ".ukcp hold";
 

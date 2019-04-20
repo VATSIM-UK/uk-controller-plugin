@@ -28,7 +28,7 @@ namespace UKControllerPlugin {
                 std::string GetProviderType(void) const override;
 
             private:
-                
+
                 // For retrieving files on the filesystem
                 UKControllerPlugin::Windows::WinApiInterface & windowsApi;
         };

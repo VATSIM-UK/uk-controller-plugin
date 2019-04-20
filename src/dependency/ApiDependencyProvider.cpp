@@ -22,14 +22,13 @@ namespace UKControllerPlugin {
             Get the dependency from the API and save it to the local filesystem. Use the local filesystem
             if the download fails.
         */
-        nlohmann::json ApiDependencyProvider::GetDependency(const DependencyData dependency) const 
+        nlohmann::json ApiDependencyProvider::GetDependency(const DependencyData dependency) const
         {
             if (!windowsApi.FileExists(dependency.localPath)) {
                 LogInfo("Local dependency does not exist, creating file " + dependency.localPath);
                 windowsApi.WriteToFile(dependency.localPath, dependency.defaultValue.dump(), true);
             }
 
-           
             nlohmann::json dependencyData;
 
             try {

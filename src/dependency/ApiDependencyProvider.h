@@ -7,9 +7,8 @@ namespace UKControllerPlugin {
     }  // namespace Api
     namespace Windows {
         class WinApiInterface;
-    }  // namespace Api
+    }  // namespace Windows
 }  // namespace UKControllerPlugin
-
 
 namespace UKControllerPlugin {
     namespace Dependency {
@@ -33,7 +32,7 @@ namespace UKControllerPlugin {
                 std::string GetProviderType(void) const override;
 
             private:
-                
+
                 // Provides interactions with the web api
                 const UKControllerPlugin::Api::ApiInterface & webApi;
 

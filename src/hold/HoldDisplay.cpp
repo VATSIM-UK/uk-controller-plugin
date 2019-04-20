@@ -258,7 +258,7 @@ namespace UKControllerPlugin {
                 0
             );
 
-            this->windowHeight = this->dataStartOffset + 
+            this->windowHeight = this->dataStartOffset +
                 ((this->managedHold.GetNumberOfLevels() - this->numLevelsSkipped) * this->lineHeight);
 
             this->minimised = userSetting.GetBooleanEntry(
@@ -381,10 +381,20 @@ namespace UKControllerPlugin {
             Gdiplus::GraphicsPath path;
             path.AddLine(rect.X + radius, rect.Y, rect.X + rect.Width - (radius * 2), rect.Y);
             path.AddArc(rect.X + rect.Width - (radius * 2), rect.Y, radius * 2, radius * 2, 270, 90);
-            path.AddLine(rect.X + rect.Width, rect.Y + radius, rect.X + rect.Width, rect.Y + rect.Height - (radius * 2));
+            path.AddLine(
+                rect.X + rect.Width,
+                rect.Y + radius,
+                rect.X + rect.Width,
+                rect.Y + rect.Height - (radius * 2)
+            );
             path.AddArc(rect.X + rect.Width - (radius * 2), rect.Y + rect.Height - (radius * 2), radius * 2,
                 radius * 2, 0, 90);
-            path.AddLine(rect.X + rect.Width - (radius * 2), rect.Y + rect.Height, rect.X + radius, rect.Y + rect.Height);
+            path.AddLine(
+                rect.X + rect.Width - (radius * 2),
+                rect.Y + rect.Height,
+                rect.X + radius,
+                rect.Y + rect.Height
+            );
             path.AddArc(rect.X, rect.Y + rect.Height - (radius * 2), radius * 2, radius * 2, 90, 90);
             path.AddLine(rect.X, rect.Y + rect.Height - (radius * 2), rect.X, rect.Y + radius);
             path.AddArc(rect.X, rect.Y, radius * 2, radius * 2, 180, 90);
@@ -493,7 +503,11 @@ namespace UKControllerPlugin {
 
             // Minimise Button
             graphics.DrawRect(this->minimiseButtonArea, this->borderPen);
-            graphics.DrawString(this->minimised ? L"\u25B2" : L"\u25BC", this->minimiseButtonArea, this->titleBarTextBrush);
+            graphics.DrawString(
+                this->minimised ? L"\u25B2" : L"\u25BC",
+                this->minimiseButtonArea,
+                this->titleBarTextBrush
+            );
             radarScreen.RegisterScreenObject(
                 screenObjectId,
                 std::to_string(this->managedHold.GetHoldParameters().identifier) + "/minimise",
@@ -668,10 +682,14 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                callsignDisplay.Y = this->dataStartHeight + (this->lineHeight * (displayRow - this->numLevelsSkipped));
-                actualLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * (displayRow - this->numLevelsSkipped));
-                clearedLevelDisplay.Y = this->dataStartHeight + (this->lineHeight * (displayRow - this->numLevelsSkipped));
-                timeInHoldDisplay.Y = this->dataStartHeight + (this->lineHeight * (displayRow - this->numLevelsSkipped));
+                callsignDisplay.Y = this->dataStartHeight +
+                    (this->lineHeight * (displayRow - this->numLevelsSkipped));
+                actualLevelDisplay.Y = this->dataStartHeight +
+                    (this->lineHeight * (displayRow - this->numLevelsSkipped));
+                clearedLevelDisplay.Y = this->dataStartHeight +
+                    (this->lineHeight * (displayRow - this->numLevelsSkipped));
+                timeInHoldDisplay.Y = this->dataStartHeight +
+                    (this->lineHeight * (displayRow - this->numLevelsSkipped));
 
                 // The callsign display
                 std::wstring callsign = ConvertToTchar(it->callsign);
@@ -746,33 +764,40 @@ namespace UKControllerPlugin {
         /*
             Save display data to the ASR
         */
-        void HoldDisplay::SaveDataToAsr(UserSetting & userSetting, unsigned int holdProfileId, std::string profileName) const
-        {
+        void HoldDisplay::SaveDataToAsr(
+            UserSetting & userSetting,
+            unsigned int holdProfileId,
+            std::string profileName
+        ) const {
             userSetting.Save(
                 "holdProfile" + std::to_string(holdProfileId) + "Hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "LevelsSkipped",
-                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") Levels Skipped",
+                "Hold Profile (" + profileName + " - "+ this->managedHold.GetHoldParameters().description
+                    + ") Levels Skipped",
                 this->numLevelsSkipped
             );
 
             userSetting.Save(
                 "holdProfile" + std::to_string(holdProfileId) + "Hold" +
                 std::to_string(this->managedHold.GetHoldParameters().identifier) + "Minimised",
-                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") Minimised",
+                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
+                    + ") Minimised",
                 this->minimised
             );
 
             userSetting.Save(
                 "holdProfile" + std::to_string(holdProfileId) + "Hold" +
                     std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionX",
-                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") X Pos",
+                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
+                    + ") X Pos",
                 this->windowPos.x
             );
 
             userSetting.Save(
                 "holdProfile" + std::to_string(holdProfileId) + "Hold" +
                 std::to_string(this->managedHold.GetHoldParameters().identifier) + "PositionY",
-                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description + ") Y Pos",
+                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
+                    + ") Y Pos",
                 this->windowPos.y
             );
         }

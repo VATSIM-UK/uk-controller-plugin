@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
                 LogWarning("Attempted to add duplicate hold to dialog " + std::to_string(hold.identifier));
                 return false;
             }
-            
+
             return true;
         }
 
@@ -613,7 +613,7 @@ namespace UKControllerPlugin {
             }
             return DefWindowProc(hwnd, msg, wParam, lParam);
         }
-        
+
         /*
             Public dialog procedure for the hold configuration dialog.
         */
@@ -626,8 +626,7 @@ namespace UKControllerPlugin {
                     GWLP_USERDATA,
                     reinterpret_cast<DialogCallArgument *>(lParam)->dialogArgument
                 );
-            }
-            else if (msg == WM_DESTROY) {
+            } else if (msg == WM_DESTROY) {
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
                 LogInfo("Hold configuration dialog closed");
             }
@@ -638,4 +637,4 @@ namespace UKControllerPlugin {
             return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : DefWindowProc(hwnd, msg, wParam, lParam);
         }
     }  // namespace Hold
-} // namespace UKControllerPlugin
+}  // namespace UKControllerPlugin

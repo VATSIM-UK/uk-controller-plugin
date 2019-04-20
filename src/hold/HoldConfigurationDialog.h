@@ -7,7 +7,7 @@ namespace UKControllerPlugin {
     namespace Hold {
         class HoldProfileManager;
     }  // namespace Hold
-} // namespace UKControllerPlugin
+}  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -61,4 +61,4 @@ namespace UKControllerPlugin {
         };
 
     }  // namespace Hold
-} // namespace UKControllerPlugin
+}  // namespace UKControllerPlugin

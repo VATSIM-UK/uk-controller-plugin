@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
             ) const = 0;
             HINSTANCE GetDllInstance(void) const {
                 return this->dllInstance;
-            };
+            }
             virtual std::string GetFullPathToLocalFile(std::string relativePath) const = 0;
             virtual bool OpenDialog(int dialogId, DLGPROC callback = NULL, LPARAM params = NULL) const = 0;
             virtual void OpenGeneralSettingsDialog() = 0;

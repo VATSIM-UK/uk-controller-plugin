@@ -1,5 +1,4 @@
 #pragma once
-#include "hold/HoldElementDimensions.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -147,7 +146,7 @@ namespace UKControllerPlugin {
 
                 // The window height
                 int windowHeight = 500;
-                
+
                 // The maximum possible window height based on the number of levels in the hold
                 int maxWindowHeight = 500;
 
@@ -158,14 +157,14 @@ namespace UKControllerPlugin {
                 bool showHoldInformation = false;
 
                 // Some more rects
-                Gdiplus::Rect minusButtonRect = {5, (int)this->buttonStartOffset, 40, 40};
-                RECT minusButtonClickRect = { 5, (int)this->buttonStartOffset, 40, 40 };
-                Gdiplus::Rect plusButtonRect = {55, (int)this->buttonStartOffset, 40, 40};
-                RECT plusButtonClickRect = { 55, (int)this->buttonStartOffset, 40, 40 };
-                Gdiplus::Rect allButtonRect = { 105, (int)this->buttonStartOffset, 40, 40 };
-                RECT allButtonClickRect = { 105, (int)this->buttonStartOffset, 40, 40 };
-                Gdiplus::Rect addButtonRect = {190, (int)this->buttonStartOffset, 40, 40};
-                RECT addButtonClickRect = { 190, (int)this->buttonStartOffset, 40, 40 };
+                Gdiplus::Rect minusButtonRect = {5, this->buttonStartOffset, 40, 40};
+                RECT minusButtonClickRect = { 5, this->buttonStartOffset, 40, 40 };
+                Gdiplus::Rect plusButtonRect = {55, this->buttonStartOffset, 40, 40};
+                RECT plusButtonClickRect = { 55, this->buttonStartOffset, 40, 40 };
+                Gdiplus::Rect allButtonRect = { 105, this->buttonStartOffset, 40, 40 };
+                RECT allButtonClickRect = { 105, this->buttonStartOffset, 40, 40 };
+                Gdiplus::Rect addButtonRect = {190, this->buttonStartOffset, 40, 40};
+                RECT addButtonClickRect = { 190, this->buttonStartOffset, 40, 40 };
 
                 POINT windowPos = { 100, 100 };
         };

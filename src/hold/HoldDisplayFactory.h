@@ -7,7 +7,7 @@ namespace UKControllerPlugin {
     }  // namespace Hold
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
-    } // namespace Euroscope
+    }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
 
                 // The plugin instance
                 const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
-               
+
                 // The hold manager
                 UKControllerPlugin::Hold::HoldManager & holdManager;
         };

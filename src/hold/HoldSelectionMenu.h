@@ -40,7 +40,7 @@ namespace UKControllerPlugin {
                 const unsigned int callbackIdFirstHold;
 
             private:
-                
+
                 // A set of all the open ASR's display managers.
                 std::set<std::shared_ptr<const UKControllerPlugin::Hold::HoldDisplayManager>> displays;
 
@@ -49,7 +49,7 @@ namespace UKControllerPlugin {
 
                 // The hold manager
                 UKControllerPlugin::Hold::HoldManager & holdManager;
-                
+
                 // The plugin, used to display menus
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
         };

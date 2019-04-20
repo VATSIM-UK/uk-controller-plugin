@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
                     return hold.GetHoldParameters() == compare.second->GetHoldParameters();
                 }
             );
-             
+
             if (existingHold != this->holdData.end()) {
                 LogWarning("Tried to add duplicate hold " + std::to_string(hold.GetHoldParameters().identifier));
                 return;

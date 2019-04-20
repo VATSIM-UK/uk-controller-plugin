@@ -179,7 +179,7 @@ namespace UKControllerPlugin {
             *this->container->windows,
             *this->container->curl
         );
-        
+
         // Load all the "new" dependencies that don't come from a manifest.
         std::unique_ptr<DependencyProviderInterface> dependencyProvider = GetDependencyProvider(
             *container->api,

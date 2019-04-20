@@ -12,14 +12,14 @@ namespace UKControllerPlugin {
         class DialogManager
         {
             public:
-                DialogManager(const UKControllerPlugin::Dialog::DialogProviderInterface & dialogProvider);
+                explicit DialogManager(const UKControllerPlugin::Dialog::DialogProviderInterface & dialogProvider);
                 bool AddDialog(UKControllerPlugin::Dialog::DialogData data);
                 size_t CountDialogs(void) const;
                 bool HasDialog(unsigned int dialogId) const;
                 void OpenDialog(unsigned int dialogId, LPARAM contextArgument) const;
 
             private:
-                
+
                 // A class that provides the actual function calls to create the dialog
                 const UKControllerPlugin::Dialog::DialogProviderInterface & dialogProvider;
 

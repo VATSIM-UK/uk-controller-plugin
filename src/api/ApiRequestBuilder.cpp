@@ -42,7 +42,7 @@ namespace UKControllerPlugin {
                 CurlRequest(apiDomain + "/dependency", CurlRequest::METHOD_GET)
             );
         }
-        
+
         /*
             Download a dependency from the API
         */

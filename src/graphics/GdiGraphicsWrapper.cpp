@@ -92,8 +92,11 @@ namespace UKControllerPlugin {
         /*
             Draw a line between two points
         */
-        void GdiGraphicsWrapper::DrawLine(const Gdiplus::Pen & pen, const Gdiplus::Point & start, const Gdiplus::Point & end)
-        {
+        void GdiGraphicsWrapper::DrawLine(
+            const Gdiplus::Pen & pen,
+            const Gdiplus::Point & start,
+            const Gdiplus::Point & end
+        ) {
             this->api->DrawLine(&pen, start, end);
         }
 
