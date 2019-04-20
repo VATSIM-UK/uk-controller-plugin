@@ -5,7 +5,6 @@
 #include "hold/HoldConfigurationDialog.h"
 #include "hold/HoldProfileManager.h"
 #include "hold/HoldingData.h"
-#include "hold/HoldWindowManager.h"
 #include "hold/HoldSelectionMenu.h"
 
 namespace UKControllerPlugin {
