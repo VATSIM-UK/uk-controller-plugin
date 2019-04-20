@@ -755,8 +755,5 @@
     <ClInclude Include="..\..\test\mock\MockDependencyProvider.h">
       <Filter>mock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\test\hold\HoldElementDimensionsTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

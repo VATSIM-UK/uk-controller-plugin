@@ -729,9 +729,6 @@
     <ClInclude Include="..\..\src\hold\HoldDisplayFunctions.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldElementDimensions.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldDisplay.h">
       <Filter>src\hold</Filter>
     </ClInclude>
