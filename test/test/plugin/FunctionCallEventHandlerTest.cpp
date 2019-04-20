@@ -74,7 +74,7 @@ namespace UKControllerPluginTest {
                 "Test Tag Function",
                 [&output]
                 (EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {
-                    output = "some test"; 
+                    output = "some test";
                 }
             );
 

@@ -5,7 +5,7 @@ using UKControllerPlugin::Dependency::DependencyData;
 
 namespace UKControllerPluginTest {
     namespace Dependency {
-        
+
         TEST(DependencyDataTest, EqualityReturnsTrueIfEqual)
         {
             DependencyData dependency1 = { "local", "remote", nlohmann::json("flubadubdub") };

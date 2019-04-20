@@ -33,7 +33,8 @@ namespace UKControllerPluginTest {
             public:
                 HoldDisplayManagerTest()
                     : displayFactory(mockPlugin, holdManager), holdProfileManager(mockApi),
-                    displayManager(holdProfileManager, holdManager, displayFactory), userSetting(mockUserSettingProvider)
+                    displayManager(holdProfileManager, holdManager, displayFactory),
+                    userSetting(mockUserSettingProvider)
                 {
                     this->holdProfileManager.AddProfile({ 1, "Test Profile", {1} });
                     this->holdProfileManager.AddProfile({ 2, "Test Profile 2", {1} });

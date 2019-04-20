@@ -107,4 +107,4 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(55, this->displayManager->GetCurrentProfile());
         }
     }  // namespace Hold
-}  // namespace UKControllerPlugin
+}  // namespace UKControllerPluginTest

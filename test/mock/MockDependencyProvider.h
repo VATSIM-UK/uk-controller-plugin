@@ -1,14 +1,15 @@
+#pragma once
 #include "pch/pch.h"
 #include "dependency/DependencyProviderInterface.h"
 #include "dependency/DependencyData.h"
 
 namespace UKControllerPluginTest {
     namespace Dependency {
-        
+
         class MockDependencyProvider : public UKControllerPlugin::Dependency::DependencyProviderInterface
         {
             public:
-                std::string GetProviderType(void) const override 
+                std::string GetProviderType(void) const override
                 {
                     return "MockDependencyProvider";
                 }

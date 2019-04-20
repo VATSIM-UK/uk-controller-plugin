@@ -107,7 +107,7 @@ namespace UKControllerPluginTest {
         {
             POINT expectedDisplay1 = { 212, 323 };
             POINT expectedDisplay2 = { 100, 100 };
-            
+
             this->renderer.Move({ 212, 323, 600, 600 }, "1");
             EXPECT_EQ(expectedDisplay1.x, this->displayManager->GetDisplay(1).GetDisplayPos().x);
             EXPECT_EQ(expectedDisplay1.y, this->displayManager->GetDisplay(1).GetDisplayPos().y);

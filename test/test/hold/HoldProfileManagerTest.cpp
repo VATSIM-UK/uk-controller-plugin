@@ -91,7 +91,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldProfileManagerTest, SavingProfileToTheApiAddsItToManager)
         {
-            std::set<unsigned int> expectedHolds = { 1,2 };
+            std::set<unsigned int> expectedHolds = { 1, 2 };
             ON_CALL(this->mockApi, CreateUserHoldProfile("Test", expectedHolds))
                 .WillByDefault(Return(2));
 

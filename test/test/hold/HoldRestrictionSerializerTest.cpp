@@ -82,11 +82,11 @@ namespace UKControllerPluginTest {
             };
             nlohmann::json restrictions = nlohmann::json::array({ data });
 
-            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> actual = 
+            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> actual =
                 restrictions.get<std::set<std::unique_ptr<AbstractHoldLevelRestriction>>>();
             EXPECT_EQ(1, actual.size());
-            
-            BlockedHoldLevelRestriction * actualCast = 
+
+            BlockedHoldLevelRestriction * actualCast =
                 dynamic_cast<BlockedHoldLevelRestriction *>(actual.cbegin()->get());
 
             std::set<unsigned int> expectedLevels = { 10000, 13000 };

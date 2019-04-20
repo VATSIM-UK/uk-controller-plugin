@@ -1,11 +1,9 @@
 #include "pch/pch.h"
 #include "hold/HoldDisplayFunctions.h"
-#include "hold/HoldElementDimensions.h"
 #include "hold/HoldingData.h"
 #include "hold/CompareHolds.h"
 #include "hold/HoldProfile.h"
 
-using UKControllerPlugin::Hold::HoldElementDimensions;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::CompareHolds;
 using UKControllerPlugin::Hold::HoldProfile;

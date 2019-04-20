@@ -115,4 +115,4 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(apiData, provider.GetDependency(dependency));
         }
     }  // namespace Dependency
-}  // namespace UKControllerPlugin
+}  // namespace UKControllerPluginTest

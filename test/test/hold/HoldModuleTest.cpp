@@ -309,5 +309,5 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->radarScreenCommands.CountHandlers());
             EXPECT_TRUE(this->radarScreenCommands.ProcessCommand(".ukcp hold"));
         }
-    }  // namespace Wake
+    }  // namespace Hold
 }  // namespace UKControllerPluginTest

@@ -5,7 +5,7 @@ using UKControllerPlugin::Hold::HoldProfile;
 
 namespace UKControllerPluginTest {
     namespace Hold {
-        
+
         TEST(HoldProfileTest, EqualityReturnsTrueIfIdentical)
         {
             HoldProfile profile1 = { 1, "test", {1, 2, 3} };

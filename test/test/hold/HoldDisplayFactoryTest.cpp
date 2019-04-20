@@ -23,7 +23,7 @@ namespace UKControllerPluginTest {
             public:
 
                 HoldDisplayFactoryTest()
-                    : factory(mockPlugin, holdManager), 
+                    : factory(mockPlugin, holdManager),
                     managedHold({ 1, "TIMBA", "TIMBA TEST", 7000, 15000, 360, "left", {} })
                 {
                     this->holdManager.AddHold(std::move(managedHold));
