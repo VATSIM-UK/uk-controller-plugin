@@ -28,15 +28,14 @@ namespace UKControllerPlugin {
             // Required so we can hit the dialog resource.
             AFX_MANAGE_STATE(AfxGetStaticModuleState());
             persistence.curl.reset(new CurlApi());
-            CWnd * test = CWnd::FromHandle(GetActiveWindow());
             std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(
                 instance,
                 "ukcp",
                 L"ukcp",
                 GeneralSettingsDialog(
-                CWnd::FromHandle(GetActiveWindow()),
-                *persistence.pluginUserSettingHandler,
-                *persistence.userSettingHandlers
+                    CWnd::FromHandle(GetActiveWindow()),
+                    *persistence.pluginUserSettingHandler,
+                    *persistence.userSettingHandlers
                 )
             );
             persistence.dialogManager.reset(new DialogManager(*winApi));
