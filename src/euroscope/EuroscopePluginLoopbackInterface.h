@@ -29,7 +29,7 @@ class EuroscopePluginLoopbackInterface
             bool flash,
             bool confirm
         ) = 0;
-        virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> GetMyControllerObject(
+        virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> GetUserControllerObject(
             void
         ) const = 0;
         virtual int GetEuroscopeConnectionStatus(void) const = 0;

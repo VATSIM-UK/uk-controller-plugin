@@ -19,7 +19,7 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(GetEuroscopeConnectionStatus, int(void));
                 MOCK_CONST_METHOD1(GetDistanceFromUserVisibilityCentre, double(EuroScopePlugIn::CPosition position));
                 MOCK_CONST_METHOD0(
-                    GetMyControllerObject,
+                    GetUserControllerObject,
                     std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface>(void)
                 );
                 MOCK_CONST_METHOD1(

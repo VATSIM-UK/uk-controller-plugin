@@ -209,7 +209,7 @@ namespace UKControllerPlugin {
     /*
         Return the controller object related to the user that is logged in.
     */
-    std::shared_ptr<EuroScopeCControllerInterface> UKPlugin::GetMyControllerObject(void) const
+    std::shared_ptr<EuroScopeCControllerInterface> UKPlugin::GetUserControllerObject(void) const
     {
         EuroScopePlugIn::CController me = this->ControllerMyself();
 

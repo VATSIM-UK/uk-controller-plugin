@@ -81,7 +81,7 @@ namespace UKControllerPlugin {
             ) override;
             double GetDistanceFromUserVisibilityCentre(EuroScopePlugIn::CPosition position) const;
             int GetEuroscopeConnectionStatus(void) const;
-            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> GetMyControllerObject(
+            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> GetUserControllerObject(
                 void
             ) const override;
             std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> GetFlightplanForCallsign(

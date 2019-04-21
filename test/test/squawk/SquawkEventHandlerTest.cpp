@@ -28,6 +28,7 @@
 #include "euroscope/GeneralSettingsEntries.h"
 #include "squawk/ApiSquawkAllocation.h"
 #include "squawk/ApiSquawkAllocationHandler.h"
+#include "mock/MockEuroScopeCControllerInterface.h"
 
 using UKControllerPlugin::Squawk::SquawkEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -37,6 +38,7 @@ using UKControllerPlugin::Curl::CurlResponse;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -110,6 +112,10 @@ namespace UKControllerPluginTest {
                 {
                     this->mockFlightplan.reset(new NiceMock<MockEuroScopeCFlightPlanInterface>);
                     this->mockRadarTarget.reset(new NiceMock<MockEuroScopeCRadarTargetInterface>);
+                    this->mockSelfController.reset(new NiceMock<MockEuroScopeCControllerInterface>);
+
+                    ON_CALL(*this->mockSelfController, IsVatsimRecognisedController())
+                        .WillByDefault(Return(true));
 
                     this->airfields.AddAirfield(std::unique_ptr<Airfield>(new Airfield("EGKK", { "EGKK_APP" })));
                     this->activeCallsigns.AddUserCallsign(
@@ -214,6 +220,7 @@ namespace UKControllerPluginTest {
                 NiceMock<MockEuroscopePluginLoopbackInterface> pluginLoopback;
                 std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplan;
                 std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
+                std::shared_ptr<NiceMock<MockEuroScopeCControllerInterface>> mockSelfController;
                 std::shared_ptr<ApiSquawkAllocationHandler> apiSquawkAllocations;
                 NiceMock<MockApiInterface> mockApi;
                 NiceMock<MockWinApi> mockWinApi;
@@ -378,6 +385,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkEventHandlerTest, SquawkReycleGeneralForcesSquawkReset)
         {
+           ON_CALL(this->pluginLoopback, GetUserControllerObject())
+               .WillByDefault(Return(this->mockSelfController));
+
            ON_CALL(*mockFlightplan, GetCallsign())
                .WillByDefault(Return("BAW1252"));
 
@@ -403,6 +413,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkEventHandlerTest, SquawkReycleLocalForcesSquawkReset)
         {
+           ON_CALL(this->pluginLoopback, GetUserControllerObject())
+               .WillByDefault(Return(this->mockSelfController));
+
            ON_CALL(*mockFlightplan, GetCallsign())
                .WillByDefault(Return("GATWF"));
 
