@@ -5,6 +5,7 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "euroscope/EuroScopeCRadarTargetWrapper.h"
 #include "euroscope/EuroScopeCFlightPlanWrapper.h"
+#include "euroscope/EuroScopeCControllerWrapper.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "euroscope/EuroScopeCControllerWrapper.h"
 #include "timedevent/TimedEventCollection.h"
@@ -18,6 +19,8 @@ using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetWrapper;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanWrapper;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerWrapper;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 using UKControllerPlugin::Euroscope::RadarTargetEventHandlerCollection;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
@@ -201,6 +204,20 @@ namespace UKControllerPlugin {
     int UKPlugin::GetEuroscopeConnectionStatus(void) const
     {
         return this->GetConnectionType();
+    }
+
+    /*
+        Return the controller object related to the user that is logged in.
+    */
+    std::shared_ptr<EuroScopeCControllerInterface> UKPlugin::GetMyControllerObject(void) const
+    {
+        EuroScopePlugIn::CController me = this->ControllerMyself();
+
+        if (!me.IsValid()) {
+            return nullptr;
+        }
+
+        return std::make_shared<EuroScopeCControllerWrapper>(me, true);
     }
 
     /*
