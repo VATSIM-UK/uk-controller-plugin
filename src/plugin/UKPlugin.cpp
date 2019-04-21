@@ -7,7 +7,6 @@
 #include "euroscope/EuroScopeCFlightPlanWrapper.h"
 #include "euroscope/EuroScopeCControllerWrapper.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
-#include "euroscope/EuroScopeCControllerWrapper.h"
 #include "timedevent/TimedEventCollection.h"
 #include "tag/TagItemCollection.h"
 #include "metar/MetarEventHandlerCollection.h"

@@ -63,7 +63,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<EuroScopeCControllerInterface> myController =
                 this->plugin.GetUserControllerObject();
 
-            return myController != nullptr && myController->IsVatsimRecognisedController() 
+            return myController != nullptr && myController->IsVatsimRecognisedController()
                 && (flightplan.IsTrackedByUser() || !flightplan.IsTracked());
         }
 
