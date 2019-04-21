@@ -11,6 +11,7 @@ namespace UKControllerPlugin {
         {
             public:
                 virtual ~EuroScopeCControllerInterface(void) {}
+                virtual bool IsVatsimRecognisedController(void) const = 0;
                 virtual const std::string GetCallsign(void) const = 0;
                 virtual const double GetFrequency(void) const = 0;
                 virtual const std::string GetControllerName(void) const = 0;
