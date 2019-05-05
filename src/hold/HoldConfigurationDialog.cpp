@@ -384,7 +384,7 @@ namespace UKControllerPlugin {
         void HoldConfigurationDialog::SelectProfile(HWND hwnd, WPARAM wParam)
         {
             // If it's not the item changing, nothing to do.
-            if (HIWORD(wParam) != CBN_SELCHANGE) {
+            if (HIWORD(wParam) != LBN_SELCHANGE) {
                 return;
             }
 
