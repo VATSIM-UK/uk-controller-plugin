@@ -92,43 +92,26 @@ namespace UKControllerPlugin {
             );
 
             // Load the hold profiles into the profile selector
-            SendDlgItemMessage(
-                hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_SETMINVISIBLE,
-                10,
-                0
-            );
-            SendDlgItemMessage(
-                hwnd,
-                IDC_HOLD_SELECTOR,
-                CB_LIMITTEXT,
-                255,
-                NULL
-            );
-
-            // No profiles to add
             if (this->holdProfileManager.CountProfiles() == 0) {
                 return;
             }
 
-            // If a profile is currently selected, add the holds to the menu
             for (
                 HoldProfileManager::HoldProfiles::const_iterator it = this->holdProfileManager.cbegin();
                 it != this->holdProfileManager.cend();
                 ++it
-                ) {
+            ) {
                 int index = SendDlgItemMessage(
                     hwnd,
-                    IDC_HOLD_PROFILE_SELECT,
-                    CB_ADDSTRING,
+                    IDC_HOLD_PROFILE_LIST,
+                    LB_ADDSTRING,
                     NULL,
                     reinterpret_cast<LPARAM>(ConvertToTchar(it->name))
                 );
                 SendDlgItemMessage(
                     hwnd,
-                    IDC_HOLD_PROFILE_SELECT,
-                    CB_SETITEMDATA,
+                    IDC_HOLD_PROFILE_LIST,
+                    LB_SETITEMDATA,
                     index,
                     (LPARAM)it->id
                 );
@@ -140,7 +123,7 @@ namespace UKControllerPlugin {
                 std::set<unsigned int>::const_iterator holdIt = profile.holds.cbegin();
                 holdIt != profile.holds.cend();
                 ++holdIt
-                ) {
+            ) {
                 auto hold = this->holds.find(*holdIt);
                 if (hold == this->holds.cend()) {
                     LogWarning("Profile contained invalid hold " + std::to_string(*holdIt));
@@ -164,10 +147,11 @@ namespace UKControllerPlugin {
                 );
             }
 
+            // Set the edit box to have the hold profile text
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_SETCURSEL,
+                IDC_HOLD_PROFILE_NAME_EDIT,
+                LB_SETCURSEL,
                 0,
                 0
             );
@@ -267,7 +251,7 @@ namespace UKControllerPlugin {
             // Get the text out of the profile box
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
+                IDC_HOLD_PROFILE_NAME_EDIT,
                 WM_GETTEXT,
                 255,
                 reinterpret_cast<LPARAM>(&buffer)
@@ -306,15 +290,15 @@ namespace UKControllerPlugin {
 
             int newProfileIndex = SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_ADDSTRING,
+                IDC_HOLD_PROFILE_LIST,
+                LB_ADDSTRING,
                 NULL,
                 reinterpret_cast<LPARAM>(buffer)
             );
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_SETITEMDATA,
+                IDC_HOLD_PROFILE_LIST,
+                LB_SETITEMDATA,
                 newProfileIndex,
                 (LPARAM)profileId
             );
@@ -322,8 +306,8 @@ namespace UKControllerPlugin {
             // Set the current selection to the new profile
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_SETCURSEL,
+                IDC_HOLD_PROFILE_LIST,
+                LB_SETCURSEL,
                 newProfileIndex,
                 NULL
             );
@@ -339,21 +323,21 @@ namespace UKControllerPlugin {
             // They want to delete a hold profile
             const int selectedIndex = SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_GETCURSEL,
+                IDC_HOLD_PROFILE_LIST,
+                LB_GETCURSEL,
                 NULL,
                 NULL
             );
 
             // Cant delete an invalid entry
-            if (selectedIndex == CB_ERR) {
+            if (selectedIndex == LB_ERR) {
                 return;
             }
 
             const int profileId = SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_GETITEMDATA,
+                IDC_HOLD_PROFILE_LIST,
+                LB_GETITEMDATA,
                 selectedIndex,
                 NULL
             );
@@ -362,30 +346,16 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // Remove from the combobox
+            // Remove from the combobox and reset selection
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_DELETESTRING,
+                IDC_HOLD_PROFILE_LIST,
+                LB_DELETESTRING,
                 selectedIndex,
                 NULL
             );
 
-            // Reposition the selection
-            SendDlgItemMessage(
-                hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_SETCURSEL,
-                0,
-                0
-            );
-            this->selectedHoldProfile = SendDlgItemMessage(
-                hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_GETITEMDATA,
-                0,
-                NULL
-            );
+            this->selectedHoldProfile = 0;
             this->selectedHoldProfileIndex = 0;
         }
 
@@ -411,15 +381,15 @@ namespace UKControllerPlugin {
             // Change the profile selection index
             int selectedIndex = SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_GETCURSEL,
+                IDC_HOLD_PROFILE_LIST,
+                LB_GETCURSEL,
                 NULL,
                 NULL
             );
             int selectedProfileId = SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_GETITEMDATA,
+                IDC_HOLD_PROFILE_LIST,
+                LB_GETITEMDATA,
                 selectedIndex,
                 NULL
             );
@@ -473,7 +443,7 @@ namespace UKControllerPlugin {
         {
             // They want to update an existing hold profile - don't let them if last selected was not
             // a real profile
-            if (this->selectedHoldProfileIndex == CB_ERR) {
+            if (this->selectedHoldProfileIndex == LB_ERR) {
                 return;
             }
 
@@ -507,7 +477,7 @@ namespace UKControllerPlugin {
             // Get the text out of the profile box
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
+                IDC_HOLD_PROFILE_NAME_EDIT,
                 WM_GETTEXT,
                 255,
                 reinterpret_cast<LPARAM>(&buffer)
@@ -524,29 +494,29 @@ namespace UKControllerPlugin {
             // Update the dialog by deleting the string, then re-adding it
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_DELETESTRING,
+                IDC_HOLD_PROFILE_LIST,
+                LB_DELETESTRING,
                 this->selectedHoldProfileIndex,
                 NULL
             );
             this->selectedHoldProfileIndex = SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_ADDSTRING,
+                IDC_HOLD_PROFILE_LIST,
+                LB_ADDSTRING,
                 NULL,
                 reinterpret_cast<LPARAM>(buffer)
             );
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_SETITEMDATA,
+                IDC_HOLD_PROFILE_LIST,
+                LB_SETITEMDATA,
                 this->selectedHoldProfileIndex,
                 this->selectedHoldProfile
             );
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_SELECT,
-                CB_SETCURSEL,
+                IDC_HOLD_PROFILE_LIST,
+                LB_SETCURSEL,
                 this->selectedHoldProfileIndex,
                 NULL
             );
@@ -575,7 +545,7 @@ namespace UKControllerPlugin {
                 // Buttons pressed
                 case WM_COMMAND: {
                     switch (LOWORD(wParam)) {
-                        case IDC_HOLD_PROFILE_SELECT: {
+                        case IDC_HOLD_PROFILE_LIST: {
                             this->SelectProfile(hwnd, wParam);
                             return TRUE;
                         }
