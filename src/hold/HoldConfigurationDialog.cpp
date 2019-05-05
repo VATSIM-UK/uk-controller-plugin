@@ -245,31 +245,12 @@ namespace UKControllerPlugin {
             std::string profileName = ConvertFromTchar(buffer);
 
             // Get the holds.
-            int itemCount = SendDlgItemMessage(
-                hwnd,
-                IDC_HOLD_LIST,
-                LB_GETCOUNT,
-                NULL,
-                NULL
-            );
-            std::set<unsigned int> holds;
-            for (int i = 0; i < itemCount; i++) {
-                int holdId = SendDlgItemMessage(
-                    hwnd,
-                    IDC_HOLD_LIST,
-                    LB_GETITEMDATA,
-                    i,
-                    NULL
-                );
-                holds.insert(holdId);
-            }
-
-            if (holds.size() == 0) {
+            if (this->selectedHolds.size() == 0) {
                 return;
             }
 
             // Save the new profile and add to lists
-            int profileId = this->holdProfileManager.SaveNewProfile(profileName, holds);
+            int profileId = this->holdProfileManager.SaveNewProfile(profileName, this->selectedHolds);
             if (profileId == this->holdProfileManager.invalidProfileNewId) {
                 return;
             }
@@ -407,7 +388,7 @@ namespace UKControllerPlugin {
                 std::set<unsigned int>::const_iterator holdIt = profile.holds.cbegin();
                 holdIt != profile.holds.cend();
                 ++holdIt
-                ) {
+            ) {
                 auto hold = this->holds.find(*holdIt);
                 if (hold == this->holds.cend()) {
                     LogWarning("Profile contained invalid hold " + std::to_string(*holdIt));
@@ -446,33 +427,13 @@ namespace UKControllerPlugin {
         */
         void HoldConfigurationDialog::UpdateHoldProfile(HWND hwnd)
         {
-            // They want to update an existing hold profile - don't let them if last selected was not
-            // a real profile
-            if (this->selectedHoldProfileIndex == LB_ERR) {
+            // If no hold profile selected, stop
+            if (this->selectedHoldProfileIndex == LB_ERR || this->selectedHoldProfileIndex == 0) {
                 return;
             }
 
-            // Get the holds.
-            int itemCount = SendDlgItemMessage(
-                hwnd,
-                IDC_HOLD_LIST,
-                LB_GETCOUNT,
-                NULL,
-                NULL
-            );
-            std::set<unsigned int> holds;
-            for (int i = 0; i < itemCount; i++) {
-                int holdId = SendDlgItemMessage(
-                    hwnd,
-                    IDC_HOLD_LIST,
-                    LB_GETITEMDATA,
-                    i,
-                    NULL
-                );
-                holds.insert(holdId);
-            }
-
-            if (holds.size() == 0) {
+            // No holds selected
+            if (this->selectedHolds.size() == 0) {
                 return;
             }
 
@@ -491,7 +452,7 @@ namespace UKControllerPlugin {
 
             // Update the profile in the manager and API
             if (
-                !this->holdProfileManager.UpdateProfile(this->selectedHoldProfile, profileName, holds)
+                !this->holdProfileManager.UpdateProfile(this->selectedHoldProfile, profileName, this->selectedHolds)
             ) {
                 return;
             }
