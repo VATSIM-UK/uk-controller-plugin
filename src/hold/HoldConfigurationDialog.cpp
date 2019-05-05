@@ -155,6 +155,13 @@ namespace UKControllerPlugin {
                 0,
                 0
             );
+            SendDlgItemMessage(
+                hwnd,
+                IDC_HOLD_PROFILE_NAME_EDIT,
+                EM_SETLIMITTEXT,
+                255,
+                0
+            );
             this->selectedHoldProfile = this->holdProfileManager.cbegin()->id;
         }
 
@@ -444,6 +451,15 @@ namespace UKControllerPlugin {
                     (LPARAM)hold->identifier
                 );
             }
+
+            // Put the hold profile name in the name edit box
+            SendDlgItemMessage(
+                hwnd,
+                IDC_HOLD_PROFILE_NAME_EDIT,
+                WM_SETTEXT,
+                NULL,
+                reinterpret_cast<LPARAM>(ConvertToTchar(profile.name))
+            );
         }
 
         /*
