@@ -166,7 +166,7 @@ namespace UKControllerPlugin {
         {
             const int selectedIndex = SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_SELECTOR,
+                IDC_HOLD_LIST,
                 LB_GETCURSEL,
                 0,
                 0
@@ -177,6 +177,14 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            const int selectedHoldId = SendDlgItemMessage(
+                hwnd,
+                IDC_HOLD_LIST,
+                LB_GETITEMDATA,
+                selectedIndex,
+                0
+            );
+
             SendDlgItemMessage(
                 hwnd,
                 IDC_HOLD_LIST,
@@ -184,6 +192,8 @@ namespace UKControllerPlugin {
                 selectedIndex,
                 NULL
             );
+
+            this->selectedHolds.erase(selectedHoldId);
         }
 
         /*
