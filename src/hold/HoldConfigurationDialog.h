@@ -33,6 +33,7 @@ namespace UKControllerPlugin {
                 void AddHoldToSelectedList(HWND hwnd);
                 void CreateNewHoldProfile(HWND hwnd);
                 void DeleteHoldProfile(HWND hwnd);
+                void DestroyDialog(HWND hwnd);
                 void DisplaySelectedProfile();
                 void InitDialog(HWND hwnd, LPARAM lParam);
                 void RemoveHoldFromSelectedList(HWND hwnd);

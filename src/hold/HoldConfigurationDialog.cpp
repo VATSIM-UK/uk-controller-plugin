@@ -117,40 +117,10 @@ namespace UKControllerPlugin {
                 );
             }
 
-            // Load the holds into the profile list to get a starting point
-            HoldProfile profile = *this->holdProfileManager.cbegin();
-            for (
-                std::set<unsigned int>::const_iterator holdIt = profile.holds.cbegin();
-                holdIt != profile.holds.cend();
-                ++holdIt
-            ) {
-                auto hold = this->holds.find(*holdIt);
-                if (hold == this->holds.cend()) {
-                    LogWarning("Profile contained invalid hold " + std::to_string(*holdIt));
-                    continue;
-                }
-
-                this->selectedHolds.insert(*holdIt);
-                int index = SendDlgItemMessage(
-                    hwnd,
-                    IDC_HOLD_LIST,
-                    LB_INSERTSTRING,
-                    NULL,
-                    reinterpret_cast<LPARAM>(ConvertToTchar(hold->description))
-                );
-                SendDlgItemMessage(
-                    hwnd,
-                    IDC_HOLD_LIST,
-                    LB_SETITEMDATA,
-                    index,
-                    (LPARAM)hold->identifier
-                );
-            }
-
-            // Set the edit box to have the hold profile text
+            // Set the first hold in the list to be automatically selected and text limit on edit control
             SendDlgItemMessage(
                 hwnd,
-                IDC_HOLD_PROFILE_NAME_EDIT,
+                IDC_HOLD_SELECTOR,
                 LB_SETCURSEL,
                 0,
                 0
@@ -162,7 +132,6 @@ namespace UKControllerPlugin {
                 255,
                 0
             );
-            this->selectedHoldProfile = this->holdProfileManager.cbegin()->id;
         }
 
         /*
@@ -377,6 +346,16 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Destroy the dialog - clean up
+        */
+        void HoldConfigurationDialog::DestroyDialog(HWND hwnd)
+        {
+            this->selectedHolds.clear();
+            this->selectedHoldProfile = 0;
+            this->selectedHoldProfileIndex = 0;
+        }
+
+        /*
             Tell the radar screen that triggered this dialog to open the selected hold
             profile of holds.
         */
@@ -565,6 +544,7 @@ namespace UKControllerPlugin {
                 };
                 // Hold Window Closed
                 case WM_CLOSE: {
+                    this->DestroyDialog(hwnd);
                     EndDialog(hwnd, wParam);
                     return TRUE;
                 }
@@ -577,6 +557,7 @@ namespace UKControllerPlugin {
                         }
                         case HOLD_SELECTOR_OK: {
                             // OK clicked, close the window
+                            this->DestroyDialog(hwnd);
                             EndDialog(hwnd, wParam);
                             return TRUE;
                         }
