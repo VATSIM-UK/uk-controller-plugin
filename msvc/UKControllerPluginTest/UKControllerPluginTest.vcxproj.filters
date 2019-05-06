@@ -536,6 +536,18 @@
     <ClCompile Include="..\..\test\test\controller\TranslateFrequencyAbbreviationTest.cpp">
       <Filter>test\controller</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\metar\MetarParsingFunctionsTest.cpp">
+      <Filter>test\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\metar\PressureChangeMessageTest.cpp">
+      <Filter>test\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\metar\PressureMonitorTest.cpp">
+      <Filter>test\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\metar\PressureMonitorBootstrapTest.cpp">
+      <Filter>test\metar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
