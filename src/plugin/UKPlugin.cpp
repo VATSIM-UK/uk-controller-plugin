@@ -362,7 +362,7 @@ namespace UKControllerPlugin {
         COLORREF * pRGB,
         double * pFontSize
     ) {
-        if (!FlightPlan.IsValid() || !RadarTarget.IsValid()) {
+        if (!FlightPlan.IsValid()) {
             return;
         }
 
