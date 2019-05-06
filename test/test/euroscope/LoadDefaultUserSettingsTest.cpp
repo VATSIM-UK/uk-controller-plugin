@@ -116,5 +116,27 @@ namespace UKControllerPluginTest {
 
             LoadDefaultUserSettings(this->userSetting);
         }
+
+        TEST_F(LoadDefaultUserSettingsTest, ItSetsDefaultValueForPressureNotifications)
+        {
+            this->SetExpectation(
+                GeneralSettingsEntries::pressureMonitorSendMessageKey,
+                GeneralSettingsEntries::pressureMonitorSendMessageDescription,
+                "1"
+            );
+
+            LoadDefaultUserSettings(this->userSetting);
+        }
+
+        TEST_F(LoadDefaultUserSettingsTest, ItDoesntSetPressureNotificationsIfSettingExists)
+        {
+            this->SetExpectationNoLoad(
+                GeneralSettingsEntries::pressureMonitorSendMessageKey,
+                GeneralSettingsEntries::pressureMonitorSendMessageDescription,
+                "0"
+            );
+
+            LoadDefaultUserSettings(this->userSetting);
+        }
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest

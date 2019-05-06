@@ -41,6 +41,18 @@ namespace UKControllerPlugin {
                     true
                 );
             }
+
+            // Pressure change notifications
+            if (!userSetting.HasEntry(GeneralSettingsEntries::pressureMonitorSendMessageKey)) {
+                LogInfo(
+                    "Loading default value for setting " + GeneralSettingsEntries::pressureMonitorSendMessageKey
+                );
+                userSetting.Save(
+                    GeneralSettingsEntries::pressureMonitorSendMessageKey,
+                    GeneralSettingsEntries::pressureMonitorSendMessageDescription,
+                    true
+                );
+            }
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
