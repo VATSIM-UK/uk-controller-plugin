@@ -7,11 +7,13 @@
 #include "controller/ActiveCallsign.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
+#include "euroscope/EuroScopeCControllerInterface.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "flightplan/StoredFlightplanCollection.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
@@ -58,7 +60,11 @@ namespace UKControllerPlugin {
         */
         bool SquawkAssignment::ForceAssignmentAllowed(EuroScopeCFlightPlanInterface & flightplan) const
         {
-            return this->activeCallsigns.UserHasCallsign() && (flightplan.IsTrackedByUser() || !flightplan.IsTracked());
+            std::shared_ptr<EuroScopeCControllerInterface> myController =
+                this->plugin.GetUserControllerObject();
+
+            return myController != nullptr && myController->IsVatsimRecognisedController()
+                && (flightplan.IsTrackedByUser() || !flightplan.IsTracked());
         }
 
         /*

@@ -19,6 +19,10 @@ namespace UKControllerPluginTest {
                 MOCK_METHOD1(AddItemToPopupList, void(const UKControllerPlugin::Plugin::PopupMenuItem item));
                 MOCK_CONST_METHOD0(GetEuroscopeConnectionStatus, int(void));
                 MOCK_CONST_METHOD1(GetDistanceFromUserVisibilityCentre, double(EuroScopePlugIn::CPosition position));
+                MOCK_CONST_METHOD0(
+                    GetUserControllerObject,
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface>(void)
+                );
                 MOCK_CONST_METHOD1(
                     GetFlightplanForCallsign,
                     std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>(std::string)

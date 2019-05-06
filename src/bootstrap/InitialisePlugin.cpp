@@ -35,6 +35,7 @@
 #include "hold/HoldModule.h"
 #include "dependency/DependencyProviderInterface.h"
 #include "dependency/DependencyProviderFactory.h"
+#include "metar/PressureMonitorBootstrap.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -240,6 +241,9 @@ namespace UKControllerPlugin {
         ActualOffBlockTimeBootstrap::BootstrapPlugin(*this->container);
         EstimatedOffBlockTimeBootstrap::BootstrapPlugin(*this->container);
         EstimatedDepartureTimeBootstrap::BootstrapPlugin(*this->container);
+
+        // Pressure monitor
+        UKControllerPlugin::Metar::PressureMonitorBootstrap(*this->container);
 
         // Do post-init and final setup, which involves running tasks that need to happen on load.
         PostInit::Process(*this->container);

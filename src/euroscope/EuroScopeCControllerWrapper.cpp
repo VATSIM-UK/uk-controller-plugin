@@ -13,6 +13,11 @@ namespace UKControllerPlugin {
             this->isCurrentUser = isCurrentUser;
         }
 
+        bool EuroScopeCControllerWrapper::IsVatsimRecognisedController(void) const
+        {
+            return this->originalData.IsController();
+        }
+
         const std::string EuroScopeCControllerWrapper::GetCallsign(void) const
         {
             return this->originalData.GetCallsign();

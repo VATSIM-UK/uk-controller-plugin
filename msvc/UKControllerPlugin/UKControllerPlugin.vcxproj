@@ -192,6 +192,10 @@
     <ClInclude Include="..\..\src\message\UserMessagerBootstrap.h" />
     <ClInclude Include="..\..\src\metar\MetarEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\metar\MetarEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\metar\MetarParsingFunctions.h" />
+    <ClInclude Include="..\..\src\metar\PressureChangeMessage.h" />
+    <ClInclude Include="..\..\src\metar\PressureMonitor.h" />
+    <ClInclude Include="..\..\src\metar\PressureMonitorBootstrap.h" />
     <ClInclude Include="..\..\src\minstack\MinStackManager.h" />
     <ClInclude Include="..\..\src\minstack\MinStackModule.h" />
     <ClInclude Include="..\..\src\minstack\MinStackRenderer.h" />
@@ -399,6 +403,10 @@
     <ClCompile Include="..\..\src\message\UserMessager.cpp" />
     <ClCompile Include="..\..\src\message\UserMessagerBootstrap.cpp" />
     <ClCompile Include="..\..\src\metar\MetarEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\metar\MetarParsingFunctions.cpp" />
+    <ClCompile Include="..\..\src\metar\PressureChangeMessage.cpp" />
+    <ClCompile Include="..\..\src\metar\PressureMonitor.cpp" />
+    <ClCompile Include="..\..\src\metar\PressureMonitorBootstrap.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackManager.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackModule.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackRenderer.cpp" />

@@ -58,6 +58,8 @@
 #define IDC_HOLD_PROFILE_NEW            1041
 #define IDC_HOLD_PROFILE_DELETE         1042
 #define HOLD_PROFILE_NAME_STATIC        1044
+#define GS_QNH_CHANGE_CHECK             1024
+#define GS_DIALOG_QNH_CHECK             1024
 
 // Next default values for new objects
 // 

@@ -157,6 +157,10 @@
     <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp" />
     <ClCompile Include="..\..\test\test\metar\MetarEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\metar\MetarParsingFunctionsTest.cpp" />
+    <ClCompile Include="..\..\test\test\metar\PressureChangeMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\metar\PressureMonitorBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\metar\PressureMonitorTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackRendererTest.cpp" />

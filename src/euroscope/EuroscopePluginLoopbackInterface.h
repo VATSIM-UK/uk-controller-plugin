@@ -5,6 +5,7 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
+        class EuroScopeCControllerInterface;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
@@ -30,6 +31,9 @@ class EuroscopePluginLoopbackInterface
             bool flash,
             bool confirm
         ) = 0;
+        virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> GetUserControllerObject(
+            void
+        ) const = 0;
         virtual int GetEuroscopeConnectionStatus(void) const = 0;
         virtual double GetDistanceFromUserVisibilityCentre(EuroScopePlugIn::CPosition position) const = 0;
         virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> GetFlightplanForCallsign(

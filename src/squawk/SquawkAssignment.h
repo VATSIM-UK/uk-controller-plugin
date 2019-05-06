@@ -66,7 +66,7 @@ namespace UKControllerPlugin {
 
                 // For untracked aircraft, the maximum distance from the origin for which squawks will
                 // be assigned - limits to being at the right airport
-                const double untrackedMaxAssignmentDistanceFromOrigin = 3.0;
+                const double untrackedMaxAssignmentDistanceFromOrigin = 7.0;
 
                 // For tracked aircraft, the maximum distance from the controllers airfield for
                 // which to use a local squawk.
