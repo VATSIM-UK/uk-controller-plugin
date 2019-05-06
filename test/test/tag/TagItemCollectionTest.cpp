@@ -68,16 +68,17 @@ namespace UKControllerPluginTest {
             collection.RegisterAllItemsWithEuroscope(mockPlugin);
         }
 
-        TEST(TagItemCollection, TagItemUpdateThrowsExceptionIfNotRegistered)
+        TEST(TagItemCollection, TagItemUpdateReturnsErrorIfNotRegistered)
         {
             TagItemCollection collection;
             StrictMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
             StrictMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
             char test[16];
-            EXPECT_THROW(collection.TagItemUpdate(1, test, mockFlightplan, mockRadarTarget), std::invalid_argument);
+            collection.TagItemUpdate(25421, test, mockFlightplan, mockRadarTarget);
+            EXPECT_EQ(0, collection.errorTagItemText.compare(test));
         }
 
-        TEST(TagItemCollection, TagItemUpdateSetsInvalidIfDataTooLarge)
+        TEST(TagItemCollection, TagItemUpdateDisplaysInvalidIfTooLarge)
         {
             TagItemCollection collection;
             StrictMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
@@ -86,7 +87,7 @@ namespace UKControllerPluginTest {
             collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "thisdataistoolongforthetagitem"));
             collection.TagItemUpdate(1, test, mockFlightplan, mockRadarTarget);
 
-            EXPECT_EQ(0, collection.invalidTagItemText.compare(test));
+            EXPECT_EQ(0, collection.invalidItemText.compare(test));
         }
 
         TEST(TagItemCollection, TagItemUpdateSetsTagItemData)
@@ -99,6 +100,18 @@ namespace UKControllerPluginTest {
             collection.TagItemUpdate(1, test, mockFlightplan, mockRadarTarget);
 
             EXPECT_EQ(0, strcmp("testdata", test));
+        }
+
+        TEST(TagItemCollection, TagItemUpdateSetsTagItemDataMaxLength)
+        {
+            TagItemCollection collection;
+            StrictMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+            StrictMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
+            char test[16];
+            collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "123456789012345"));
+            collection.TagItemUpdate(1, test, mockFlightplan, mockRadarTarget);
+
+            EXPECT_EQ(0, strcmp("123456789012345", test));
         }
 
         TEST(TagItemCollection, StartsEmpty)

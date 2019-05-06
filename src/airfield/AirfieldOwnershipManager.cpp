@@ -118,8 +118,8 @@ namespace UKControllerPlugin {
                 }
 
                 // Only log when positions have changed hands
-                bool needsLog = this->ownershipMap.count(icao) > 0 &&
-                    this->ownershipMap.at(icao)->GetCallsign() ==
+                bool needsLog = this->ownershipMap.count(icao) == 0 ||
+                    this->ownershipMap.at(icao)->GetCallsign() !=
                     this->activeCallsigns.GetLeadCallsignForPosition(*it).GetCallsign();
 
                 this->ownershipMap[icao] = std::make_unique<ActiveCallsign>(

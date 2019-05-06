@@ -23,6 +23,7 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(GetGroundState, std::string(void));
                 MOCK_CONST_METHOD0(GetIcaoWakeCategory, std::string(void));
                 MOCK_CONST_METHOD0(GetOrigin, const std::string(void));
+                MOCK_CONST_METHOD0(GetRawRouteString, std::string(void));
                 MOCK_CONST_METHOD0(GetSidName, const std::string(void));
                 MOCK_CONST_METHOD0(GetAssignedSquawk, std::string(void));
                 MOCK_CONST_METHOD0(HasControllerClearedAltitude, const bool(void));
@@ -32,6 +33,7 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(IsTracked, const bool(void));
                 MOCK_CONST_METHOD0(IsTrackedByUser, const bool(void));
                 MOCK_CONST_METHOD0(IsValid, bool(void));
+                MOCK_CONST_METHOD0(IsVfr, bool(void));
                 MOCK_METHOD1(SetClearedAltitude, void(int));
                 MOCK_METHOD1(SetSquawk, void(std::string));
         };

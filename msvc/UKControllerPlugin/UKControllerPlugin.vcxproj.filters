@@ -699,6 +699,36 @@
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h">
       <Filter>src\initialaltitude</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\LoadDefaultUserSettings.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h">
+      <Filter>src\squawk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h">
+      <Filter>src\squawk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\controller\TranslateFrequencyAbbreviation.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\metar\PressureMonitor.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\metar\MetarParsingFunctions.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\metar\PressureChangeMessage.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\metar\PressureMonitorBootstrap.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -709,6 +739,7 @@
     <Media Include="..\..\resource\sound\beep.wav">
       <Filter>resource\sound</Filter>
     </Media>
+    <Media Include="..\..\..\resource\sound\beep.wav" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\airfield\Airfield.cpp">
@@ -1181,6 +1212,30 @@
     </ClCompile>
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp">
       <Filter>src\initialaltitude</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp">
+      <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp">
+      <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp">
+      <Filter>src\squawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\controller\TranslateFrequencyAbbreviation.cpp">
+      <Filter>src\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\PressureMonitor.cpp">
+      <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\MetarParsingFunctions.cpp">
+      <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\PressureChangeMessage.cpp">
+      <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\PressureMonitorBootstrap.cpp">
+      <Filter>src\metar</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

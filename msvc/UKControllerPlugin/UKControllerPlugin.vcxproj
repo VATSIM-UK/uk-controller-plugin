@@ -10,6 +10,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <Media Include="..\..\..\resource\sound\beep.wav" />
     <Media Include="..\..\resource\sound\beep.wav" />
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +59,7 @@
     <ClInclude Include="..\..\src\controller\ControllerPositionParser.h" />
     <ClInclude Include="..\..\src\controller\ControllerStatusEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\controller\ControllerStatusEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\controller\TranslateFrequencyAbbreviation.h" />
     <ClInclude Include="..\..\src\countdown\CountdownModule.h" />
     <ClInclude Include="..\..\src\countdown\CountdownRenderer.h" />
     <ClInclude Include="..\..\src\countdown\CountdownTimer.h" />
@@ -89,10 +91,13 @@
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsDialog.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsEntries.h" />
+    <ClInclude Include="..\..\src\euroscope\LoadDefaultUserSettings.h" />
     <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingProviderInterface.h" />
     <ClInclude Include="..\..\src\flightplan\DeferredFlightplanEvent.h" />
     <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.h" />
@@ -147,6 +152,10 @@
     <ClInclude Include="..\..\src\message\UserMessagerBootstrap.h" />
     <ClInclude Include="..\..\src\metar\MetarEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\metar\MetarEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\metar\MetarParsingFunctions.h" />
+    <ClInclude Include="..\..\src\metar\PressureChangeMessage.h" />
+    <ClInclude Include="..\..\src\metar\PressureMonitor.h" />
+    <ClInclude Include="..\..\src\metar\PressureMonitorBootstrap.h" />
     <ClInclude Include="..\..\src\minstack\MinStackManager.h" />
     <ClInclude Include="..\..\src\minstack\MinStackModule.h" />
     <ClInclude Include="..\..\src\minstack\MinStackRenderer.h" />
@@ -181,6 +190,8 @@
     <ClInclude Include="..\..\src\setting\SettingRepository.h" />
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
     <ClInclude Include="..\..\src\setting\SettingValue.h" />
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h" />
+    <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h" />
     <ClInclude Include="..\..\src\squawk\SquawkAssignment.h" />
     <ClInclude Include="..\..\src\squawk\SquawkEventHandler.h" />
     <ClInclude Include="..\..\src\squawk\SquawkGenerator.h" />
@@ -247,6 +258,7 @@
     <ClCompile Include="..\..\src\controller\ControllerPositionHierarchyFactory.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerPositionParser.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerStatusEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\controller\TranslateFrequencyAbbreviation.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownModule.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownRenderer.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownTimer.cpp" />
@@ -269,9 +281,11 @@
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsDialog.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsEntries.cpp" />
+    <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp" />
     <ClCompile Include="..\..\src\euroscope\PluginUserSettingBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />
+    <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightplanStorageBootstrap.cpp" />
@@ -317,6 +331,10 @@
     <ClCompile Include="..\..\src\message\UserMessager.cpp" />
     <ClCompile Include="..\..\src\message\UserMessagerBootstrap.cpp" />
     <ClCompile Include="..\..\src\metar\MetarEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\metar\MetarParsingFunctions.cpp" />
+    <ClCompile Include="..\..\src\metar\PressureChangeMessage.cpp" />
+    <ClCompile Include="..\..\src\metar\PressureMonitor.cpp" />
+    <ClCompile Include="..\..\src\metar\PressureMonitorBootstrap.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackManager.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackModule.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackRenderer.cpp" />
@@ -347,6 +365,7 @@
     <ClCompile Include="..\..\src\radarscreen\UKRadarScreen.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
+    <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkAssignment.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkEventHandler.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkGenerator.cpp" />

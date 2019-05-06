@@ -60,6 +60,14 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Returns true if there is some entry of some form for a given key.
+        */
+        bool UserSetting::HasEntry(std::string key)
+        {
+            return this->userSettingProvider.KeyExists(key);
+        }
+
+        /*
             Returns true if a key exists and its value is a boolean.
         */
         bool UserSetting::ValidBooleanEntry(std::string value)

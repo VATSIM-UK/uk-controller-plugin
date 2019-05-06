@@ -22,6 +22,7 @@ using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPlugin::Squawk::SquawkValidator;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Api::RemoteFileManifestFactory;
+using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -59,18 +60,34 @@ namespace UKControllerPlugin {
                 throw ApiNotAuthorisedException("The API returned 401 or 403");
             }
 
+            if (response.GetStatusCode() == this->STATUS_BAD_REQUEST) {
+                LogError("The API responed with bad request when calling " + std::string(request.GetUri()));
+                throw ApiException("The API returned 400");
+            }
+
             if (response.GetStatusCode() == this->STATUS_NOT_FOUND) {
                 throw ApiNotFoundException("The API returned 404 for " + std::string(request.GetUri()));
+            }
+
+            // These are the only codes the API should be sending on success
+            if (
+                response.GetStatusCode() != this->STATUS_CREATED &&
+                response.GetStatusCode() != this->STATUS_NO_CONTENT &&
+                response.GetStatusCode() != this->STATUS_OK &&
+                response.GetStatusCode() != this->STATUS_TEAPOT
+            ) {
+                LogError("Unknown API response occured, HTTP status was " + std::to_string(response.GetStatusCode()));
+                throw ApiException("Unknown response");
             }
 
             return ApiResponseFactory::Create(response);
         }
 
-        std::string ApiHelper::ProcessSquawkResponse(const ApiResponse response, std::string callsign) const
+        ApiSquawkAllocation ApiHelper::ProcessSquawkResponse(const ApiResponse response, std::string callsign) const
         {
             nlohmann::json responseJson = response.GetRawData();
 
-            if (!responseJson["squawk"].is_string()) {
+            if (responseJson.count("squawk") != 1 || !responseJson["squawk"].is_string()) {
                 LogError("No squawk in API response for " + callsign);
                 throw ApiException("Invalid response returned from API");
             }
@@ -86,13 +103,13 @@ namespace UKControllerPlugin {
                 throw ApiException("Invalid squawk returned from API");
             }
 
-            return responseJson["squawk"];
+            return ApiSquawkAllocation{ callsign, responseJson["squawk"] };
         }
 
         /*
             Creates or updates a general squawk assignment (generates a new squawk for the aircraft).
         */
-        std::string ApiHelper::CreateGeneralSquawkAssignment(
+        ApiSquawkAllocation ApiHelper::CreateGeneralSquawkAssignment(
             std::string callsign,
             std::string origin,
             std::string destination
@@ -109,7 +126,7 @@ namespace UKControllerPlugin {
         /*
             Creates or updates a local squawk assignment (generates a new squawk for the aircraft).
         */
-        std::string ApiHelper::CreateLocalSquawkAssignment(
+        ApiSquawkAllocation ApiHelper::CreateLocalSquawkAssignment(
             std::string callsign,
             std::string unit,
             std::string flightRules
@@ -162,7 +179,7 @@ namespace UKControllerPlugin {
         /*
             Get any currently assigned squawk for the aircraft
         */
-        std::string ApiHelper::GetAssignedSquawk(std::string callsign) const
+        ApiSquawkAllocation ApiHelper::GetAssignedSquawk(std::string callsign) const
         {
             return this->ProcessSquawkResponse(
                 this->MakeApiRequest(

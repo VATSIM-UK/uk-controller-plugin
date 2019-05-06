@@ -62,6 +62,7 @@
     <ClCompile Include="..\..\test\test\controller\ControllerPositionParserTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerPositionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerStatusEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\TranslateFrequencyAbbreviationTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\CountdownModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\CountdownRendererTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\CountdownTimerTest.cpp" />
@@ -77,7 +78,9 @@
     <ClCompile Include="..\..\test\test\euroscope\CompareFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\LoadDefaultUserSettingsTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\RadarTargetEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightplanStorageBootstrapTest.cpp" />
@@ -117,8 +120,12 @@
     <ClCompile Include="..\..\test\test\massevent\MassEventTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp" />
-    <ClCompile Include="..\..\test\test\message\UserSettingTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp" />
     <ClCompile Include="..\..\test\test\metar\MetarEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\metar\MetarParsingFunctionsTest.cpp" />
+    <ClCompile Include="..\..\test\test\metar\PressureChangeMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\metar\PressureMonitorBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\metar\PressureMonitorTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackRendererTest.cpp" />
@@ -147,6 +154,8 @@
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp" />
+    <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\SquawkAssignmentTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\SquawkEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\SquawkGeneratorTest.cpp" />
@@ -196,6 +205,7 @@
     <ClInclude Include="..\..\test\mock\MockSquawkEventHandler.h" />
     <ClInclude Include="..\..\test\mock\MockTaskRunnerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockTerminalControlArea.h" />
+    <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />

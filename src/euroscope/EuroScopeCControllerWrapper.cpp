@@ -5,7 +5,7 @@ namespace UKControllerPlugin {
     namespace Euroscope {
 
         EuroScopeCControllerWrapper::EuroScopeCControllerWrapper(
-            EuroScopePlugIn::CController & originalData,
+            EuroScopePlugIn::CController originalData,
             bool isCurrentUser
         )
             : originalData(originalData)

@@ -54,9 +54,19 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightPlan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
-            if (!this->cache.count(flightPlan.GetCallsign())) {
-                this->cache[flightPlan.GetCallsign()] = flightPlan.GetAircraftType()
+            if (this->cache.count(flightPlan.GetCallsign()) == 0) {
+                std::string tagString = flightPlan.GetAircraftType()
                     + "/" + this->mapper.MapFlightplanToCategory(flightPlan);
+
+                // 15 characters is the max for tag functions, trim the aircraft type accordingly
+                if (tagString.size() > this->maxItemSize) {
+                    const unsigned int charactersToTrim = tagString.size() - this->maxItemSize;
+                    const std::string aircraftType = flightPlan.GetAircraftType();
+                    tagString = aircraftType.substr(0, aircraftType.size() - charactersToTrim) + "/"
+                        + this->mapper.MapFlightplanToCategory(flightPlan);
+                }
+
+                this->cache[flightPlan.GetCallsign()] = tagString;
             }
 
             return this->cache.at(flightPlan.GetCallsign());
