@@ -6,6 +6,7 @@
 #include "flightplan/StoredFlightplanCollection.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "mock/MockEuroScopeCControllerInterface.h"
 #include "airfield/AirfieldCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ActiveCallsign.h"
@@ -21,6 +22,7 @@ using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ActiveCallsign;
@@ -56,6 +58,9 @@ namespace UKControllerPluginTest {
                     this->mockRadarTarget = std::shared_ptr<MockEuroScopeCRadarTargetInterface>(
                         new NiceMock<MockEuroScopeCRadarTargetInterface>
                     );
+                    this->mockSelfController = std::shared_ptr<MockEuroScopeCControllerInterface>(
+                        new NiceMock<MockEuroScopeCControllerInterface>
+                    );
 
                     this->airfields.AddAirfield(std::unique_ptr<Airfield>(new Airfield("EGKK", { "EGKK_APP" })));
                     this->activeCallsigns.AddUserCallsign(
@@ -73,12 +78,16 @@ namespace UKControllerPluginTest {
                         )
                     );
                     this->airfieldOwnership.RefreshOwner("EGKK");
+
+                    ON_CALL(*this->mockSelfController, IsVatsimRecognisedController())
+                        .WillByDefault(Return(true));
                 }
 
                 NiceMock<MockCurlApi> mockCurl;
                 NiceMock<MockEuroscopePluginLoopbackInterface> pluginLoopback;
                 std::shared_ptr<MockEuroScopeCFlightPlanInterface> mockFlightplan;
                 std::shared_ptr<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+                std::shared_ptr<MockEuroScopeCControllerInterface> mockSelfController;
                 StoredFlightplanCollection plans;
                 ActiveCallsignCollection activeCallsigns;
                 AirfieldOwnershipManager airfieldOwnership;
@@ -88,34 +97,50 @@ namespace UKControllerPluginTest {
                 SquawkAssignment assignment;
         };
 
-        TEST_F(SquawkAssignmentTest, ForceAssignmentAllowedReturnsTrueIfUserActiveAndTrackingFlightplan)
+        TEST_F(SquawkAssignmentTest, ForceAssignmentAllowedReturnsTrueIfUserRecognisedAndTrackingFlightplan)
         {
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(this->mockSelfController));
+
             ON_CALL(*this->mockFlightplan, IsTrackedByUser())
                 .WillByDefault(Return(true));
+
             EXPECT_TRUE(this->assignment.ForceAssignmentAllowed(*this->mockFlightplan));
         }
 
         TEST_F(SquawkAssignmentTest, ForceAssignmentAllowedReturnsTrueIfUserActiveAndFlightplanNotTracked)
         {
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(this->mockSelfController));
+
             ON_CALL(*this->mockFlightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
+
             ON_CALL(*this->mockFlightplan, IsTracked())
                 .WillByDefault(Return(false));
+
             EXPECT_TRUE(this->assignment.ForceAssignmentAllowed(*this->mockFlightplan));
         }
 
         TEST_F(SquawkAssignmentTest, ForceAssignmentAllowedReturnsFalseIfFlightplanTrackedByAnotherUser)
         {
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(this->mockSelfController));
+
             ON_CALL(*this->mockFlightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
+
             ON_CALL(*this->mockFlightplan, IsTracked())
                 .WillByDefault(Return(true));
+
             EXPECT_FALSE(this->assignment.ForceAssignmentAllowed(*this->mockFlightplan));
         }
 
         TEST_F(SquawkAssignmentTest, ForceAssignmentAllowedReturnsFalseIfUserNotActive)
         {
-            this->activeCallsigns.Flush();
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(nullptr));
+
             EXPECT_FALSE(this->assignment.ForceAssignmentAllowed(*this->mockFlightplan));
         }
 

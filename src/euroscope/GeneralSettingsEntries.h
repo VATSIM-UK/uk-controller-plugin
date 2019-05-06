@@ -19,6 +19,10 @@ namespace UKControllerPlugin {
             // Initial Altitudes
             static const std::string initialAltitudeToggleSettingsKey;
             static const std::string initialAltitudeToggleSettingsDescription;
+
+            // PRESSURE MONITOR
+            static const std::string pressureMonitorSendMessageKey;
+            static const std::string pressureMonitorSendMessageDescription;
         } GeneralSettingsEntries;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

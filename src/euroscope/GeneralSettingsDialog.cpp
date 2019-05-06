@@ -49,6 +49,11 @@ namespace UKControllerPlugin {
                 this->userSettings.GetBooleanEntry(GeneralSettingsEntries::squawkToggleSettingsKey)
             );
 
+            // Qnh Changes
+            this->qnhNotificationsCheckbox.SetCheck(
+                this->userSettings.GetBooleanEntry(GeneralSettingsEntries::pressureMonitorSendMessageKey)
+            );
+
             return TRUE;
         }
 
@@ -77,6 +82,13 @@ namespace UKControllerPlugin {
                 this->squawksEnabledCheckbox.GetCheck()
             );
 
+            // Pressure monitor
+            this->userSettings.Save(
+                GeneralSettingsEntries::pressureMonitorSendMessageKey,
+                GeneralSettingsEntries::pressureMonitorSendMessageDescription,
+                this->qnhNotificationsCheckbox.GetCheck()
+            );
+
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
             this->EndDialog(0);
         }
@@ -87,6 +99,7 @@ namespace UKControllerPlugin {
             DDX_Control(pDX, GS_DIALOG_PRENOTE_CHECK, this->prenoteEnabledCheckbox);
             DDX_Control(pDX, GS_DIALOG_IA_CHECK, this->initialAltitudeEnabledCheckbox);
             DDX_Control(pDX, GS_DIALOG_SQUAWK_CHECK, this->squawksEnabledCheckbox);
+            DDX_Control(pDX, GS_DIALOG_QNH_CHECK, this->qnhNotificationsCheckbox);
         }
 
         BEGIN_MESSAGE_MAP(GeneralSettingsDialog, CDialog)

@@ -15,6 +15,7 @@ namespace UKControllerPlugin {
         {
             public:
                 EuroScopeCControllerWrapper(EuroScopePlugIn::CController originalData, bool isCurrentUser);
+                bool IsVatsimRecognisedController(void) const override;
                 const std::string GetCallsign(void) const;
                 const std::string GetControllerName(void) const;
                 const double GetFrequency(void) const;

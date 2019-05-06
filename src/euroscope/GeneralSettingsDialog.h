@@ -50,6 +50,9 @@ namespace UKControllerPlugin {
                 // The checkbox for whether automatic initial altitude assignment should be done
                 CButton initialAltitudeEnabledCheckbox;
 
+                // The checkbox for whether notifications should be sent on QNH changes.
+                CButton qnhNotificationsCheckbox;
+
                 // A place where user settings are retrieved and stored
                 UKControllerPlugin::Euroscope::UserSetting & userSettings;
 
