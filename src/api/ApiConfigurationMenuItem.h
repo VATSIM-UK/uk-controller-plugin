@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
         class ApiConfigurationMenuItem : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface
         {
             public:
-                
+
                 ApiConfigurationMenuItem(
                     UKControllerPlugin::Windows::WinApiInterface & winApi,
                     unsigned int menuCallbackId
@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
 
                 // The id of the callback function for when the menu item is clicked
                 const unsigned int menuCallbackId;
-                
+
                 // The windows API
                 UKControllerPlugin::Windows::WinApiInterface & winApi;
         };

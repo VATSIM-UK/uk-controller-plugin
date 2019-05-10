@@ -20,7 +20,7 @@ namespace UKControllerPluginTest {
         class HelperBootstrapTest : public Test
         {
             public:
-                
+
                 void SetUp(void)
                 {
                     this->mockWinApi = std::make_unique<NiceMock<MockWinApi>>();

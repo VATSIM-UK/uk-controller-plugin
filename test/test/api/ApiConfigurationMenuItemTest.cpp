@@ -16,7 +16,7 @@ namespace UKControllerPluginTest {
         class ApiConfigurationMenuItemTest : public Test
         {
             public:
-                
+
                 ApiConfigurationMenuItemTest()
                     : menuItem(mockWindows, 55)
                 {
