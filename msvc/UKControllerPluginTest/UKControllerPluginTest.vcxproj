@@ -35,6 +35,7 @@
     <ClCompile Include="..\..\test\test\airfield\AirfieldTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp" />
+    <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiHelperTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiRequestBuilderTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiResponseFactoryTest.cpp" />
@@ -47,6 +48,7 @@
     <ClCompile Include="..\..\test\test\bootstrap\CollectionBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\EventHandlerCollectionBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\ExternalsBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\bootstrap\HelperBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\command\CommandHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignTest.cpp" />
@@ -87,7 +89,6 @@
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanTest.cpp" />
-    <ClCompile Include="..\..\test\test\helper\HelperBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\helper\HelperFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\AircraftHistoryTrailTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailEventHandlerTest.cpp" />
