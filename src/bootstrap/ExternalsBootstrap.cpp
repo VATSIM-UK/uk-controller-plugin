@@ -47,6 +47,7 @@ namespace UKControllerPlugin {
             );
             persistence.brushes.reset(new GdiplusBrushes);
             persistence.graphics.reset(new GdiGraphicsWrapper);
+            persistence.windows->WriteToFile("test/test.json", "test", true);
         }
 
         /*
@@ -66,7 +67,10 @@ namespace UKControllerPlugin {
             HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
 
 
-            return std::wstring(myDocumentsPath) + L"/EuroScope/ukcp";
+            std::wstring widePath(myDocumentsPath);
+            std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
+
+            return widePath + L"/EuroScope/ukcp";
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

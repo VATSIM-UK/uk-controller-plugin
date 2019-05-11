@@ -70,6 +70,7 @@ namespace UKControllerPluginTest {
             TCHAR myDocumentsPath[MAX_PATH];
             HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
             std::wstring expected = myDocumentsPath + std::wstring(L"/EuroScope/ukcp");
+            std::replace(expected.begin(), expected.end(), L'\\', L'/');
 
             EXPECT_EQ(expected, ExternalsBootstrap::GetPluginFileRootWide());
         }
@@ -79,6 +80,7 @@ namespace UKControllerPluginTest {
             TCHAR myDocumentsPath[MAX_PATH];
             HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
             std::wstring widePath(myDocumentsPath);
+            std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
 
             std::string expected = std::string(widePath.cbegin(), widePath.cend()) + "/EuroScope/ukcp";
 
