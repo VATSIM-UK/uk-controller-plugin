@@ -8,6 +8,7 @@ using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using ::testing::Test;
 using ::testing::NiceMock;
+using ::testing::Return;
 using ::testing::_;
 
 namespace UKControllerPluginTest {
@@ -41,17 +42,16 @@ namespace UKControllerPluginTest {
 
         TEST_F(ApiConfigurationMenuItemTest, ConfigureStartsTheKeyReplacementProcedure)
         {
-            EXPECT_CALL(this->mockWindows, OpenMessageBox(_, _, _));
-
             EXPECT_CALL(
                 this->mockWindows,
                 OpenMessageBox(
-                    L"Settings file has been replaced. Please restart EuroScope for the changes to take effect.",
+                    L"Please select the key file to use, this will overwrite your previous key.",
                     L"UKCP Message",
-                    MB_OK | MB_ICONINFORMATION
+                    MB_OKCANCEL | MB_ICONINFORMATION
                 )
             )
-                .Times(1);
+                .Times(1)
+                .WillOnce(Return(IDCANCEL));
 
             this->menuItem.Configure("Test");
         }

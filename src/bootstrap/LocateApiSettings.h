@@ -18,7 +18,7 @@ namespace Bootstrap {
         UKControllerPlugin::Setting::SettingRepository & settings
     );
 
-    void ReplaceApiSettings(UKControllerPlugin::Windows::WinApiInterface & winApi);
+    bool ReplaceApiSettings(UKControllerPlugin::Windows::WinApiInterface & winApi);
     void UserRequestedKeyUpdate(UKControllerPlugin::Windows::WinApiInterface & winApi);
 
 }  // namespace Bootstrap

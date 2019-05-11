@@ -12,31 +12,49 @@ namespace Bootstrap {
     void LocateApiSettings(WinApiInterface & winApi, SettingRepository & settings)
     {
         if (settings.HasSetting("api-url") && settings.HasSetting("api-key")) {
+            LogInfo("Api configuration has been loaded");
             return;
         }
 
+        LogInfo("First time key update");
         winApi.OpenMessageBox(
             L"No valid user API configuration found, please select the file to use",
             L"UKCP Message",
             MB_OK | MB_ICONINFORMATION
         );
 
-        ReplaceApiSettings(winApi);
+        if (!ReplaceApiSettings(winApi)) {
+            LogInfo("First time key update cancelled.");
+            return;
+        }
 
         // Load the settings into the repo
         settings.AddSettingsFromJsonFile("api-settings.json");
+        LogInfo("Loaded new user API settings into repository");
     }
 
     /*
         Replace the WinApi settings
     */
-    void ReplaceApiSettings(WinApiInterface & winApi)
+    bool ReplaceApiSettings(WinApiInterface & winApi)
     {
         // Select the file to get settings from
         COMDLG_FILTERSPEC fileTypes[] =
         {
             { L"JSON", L"*.json" },
         };
+
+        std::wstring filePath = winApi.FileOpenDialog(
+            L"Select API Settings File",
+            1,
+            fileTypes
+        );
+
+        if (filePath == L"") {
+            LogInfo("User did not select a valid key file");
+            return false;
+        }
+
         std::string apiSettings = winApi.ReadFromFile(
             winApi.FileOpenDialog(
                 L"Select API Settings File",
@@ -48,6 +66,8 @@ namespace Bootstrap {
 
         // Write the selected file to disk
         winApi.WriteToFile("settings/api-settings.json", apiSettings, true);
+        LogInfo("Updated user key file");
+        return true;
     }
 
     /*
@@ -55,12 +75,27 @@ namespace Bootstrap {
     */
     void UserRequestedKeyUpdate(WinApiInterface & winApi)
     {
-        winApi.OpenMessageBox(
-            L"Please select the settings file to use as your new key",
+        // Confirm that they understand the consequences
+        LogInfo("User requested API keyfile update");
+        const int retVal = winApi.OpenMessageBox(
+            L"Please select the key file to use, this will overwrite your previous key.",
             L"UKCP Message",
-            MB_OK | MB_ICONINFORMATION
+            MB_OKCANCEL | MB_ICONINFORMATION
         );
-        ReplaceApiSettings(winApi);
+
+
+        if (retVal != IDOK) {
+            LogInfo("User cancelled key file update");
+            return;
+        }
+
+        // Do the replacement procedure.
+
+        if (!ReplaceApiSettings(winApi)) {
+            LogInfo("User requested key update cancelled");
+            return;
+        }
+
         winApi.OpenMessageBox(
             L"Settings file has been replaced. Please restart EuroScope for the changes to take effect.",
             L"UKCP Message",
