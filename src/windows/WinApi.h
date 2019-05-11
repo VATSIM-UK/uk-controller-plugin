@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
                     const COMDLG_FILTERSPEC * fileTypes
                 ) const override;
                 void OpenGeneralSettingsDialog();
-                void OpenMessageBox(LPCWSTR message, LPCWSTR title, int options);
+                int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) override;
                 void PlayWave(LPCTSTR sound);
                 std::string ReadFromFile(std::string filename, bool relativePath = true);
                 std::string ReadFromFile(std::wstring filename, bool relativePath = true);

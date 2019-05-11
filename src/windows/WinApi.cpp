@@ -141,9 +141,9 @@ namespace UKControllerPlugin {
         /*
             Opens a Windows message box.
         */
-        void WinApi::OpenMessageBox(LPCWSTR message, LPCWSTR title, int options)
+        int WinApi::OpenMessageBox(LPCWSTR message, LPCWSTR title, int options)
         {
-            MessageBox(GetActiveWindow(), message, title, options);
+            return MessageBox(GetActiveWindow(), message, title, options);
         }
 
         /*
