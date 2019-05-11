@@ -55,14 +55,7 @@ namespace Bootstrap {
             return false;
         }
 
-        std::string apiSettings = winApi.ReadFromFile(
-            winApi.FileOpenDialog(
-                L"Select API Settings File",
-                1,
-                fileTypes
-            ),
-            false
-        );
+        std::string apiSettings = winApi.ReadFromFile(filePath, false);
 
         // Write the selected file to disk
         winApi.WriteToFile("settings/api-settings.json", apiSettings, true);
