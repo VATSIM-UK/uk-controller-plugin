@@ -58,6 +58,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "gtest/gtest-message.h"
@@ -79,7 +80,6 @@
 // Stringifies its argument.
 #define GTEST_STRINGIFY_(name) #name
 
-class ProtocolMessage;
 namespace proto2 { class Message; }
 
 namespace testing {
@@ -108,35 +108,20 @@ GTEST_API_ extern const char kStackTraceMarker[];
 
 // An IgnoredValue object can be implicitly constructed from ANY value.
 class IgnoredValue {
+  struct Sink {};
  public:
   // This constructor template allows any value to be implicitly
   // converted to IgnoredValue.  The object has no data member and
   // doesn't try to remember anything about the argument.  We
   // deliberately omit the 'explicit' keyword in order to allow the
   // conversion to be implicit.
-  template <typename T>
+  // Disable the conversion if T already has a magical conversion operator.
+  // Otherwise we get ambiguity.
+  template <typename T,
+            typename std::enable_if<!std::is_convertible<T, Sink>::value,
+                                    int>::type = 0>
   IgnoredValue(const T& /* ignored */) {}  // NOLINT(runtime/explicit)
 };
-
-// Two overloaded helpers for checking at compile time whether an
-// expression is a null pointer literal (i.e. NULL or any 0-valued
-// compile-time integral constant).  These helpers have no
-// implementations, as we only need their signatures.
-//
-// Given IsNullLiteralHelper(x), the compiler will pick the first
-// version if x can be implicitly converted to Secret*, and pick the
-// second version otherwise.  Since Secret is a secret and incomplete
-// type, the only expression a user can write that has type Secret* is
-// a null pointer literal.  Therefore, we know that x is a null
-// pointer literal if and only if the first version is picked by the
-// compiler.
-std::true_type IsNullLiteralHelper(Secret*);
-std::false_type IsNullLiteralHelper(IgnoredValue);
-
-// A compile-time bool constant that is true if and only if x is a null pointer
-// literal (i.e. nullptr, NULL or any 0-valued compile-time integral constant).
-#define GTEST_IS_NULL_LITERAL_(x) \
-  decltype(::testing::internal::IsNullLiteralHelper(x))::value
 
 // Appends the user-supplied message to the Google-Test-generated message.
 GTEST_API_ std::string AppendUserMessage(
@@ -521,7 +506,8 @@ struct SuiteApiResolver : T {
   using Test =
       typename std::conditional<sizeof(T) != 0, ::testing::Test, void>::type;
 
-  static SetUpTearDownSuiteFuncType GetSetUpCaseOrSuite() {
+  static SetUpTearDownSuiteFuncType GetSetUpCaseOrSuite(const char* filename,
+                                                        int line_num) {
     SetUpTearDownSuiteFuncType test_case_fp =
         GetNotDefaultOrNull(&T::SetUpTestCase, &Test::SetUpTestCase);
     SetUpTearDownSuiteFuncType test_suite_fp =
@@ -529,12 +515,14 @@ struct SuiteApiResolver : T {
 
     GTEST_CHECK_(!test_case_fp || !test_suite_fp)
         << "Test can not provide both SetUpTestSuite and SetUpTestCase, please "
-           "make sure there is only one present ";
+           "make sure there is only one present at "
+        << filename << ":" << line_num;
 
     return test_case_fp != nullptr ? test_case_fp : test_suite_fp;
   }
 
-  static SetUpTearDownSuiteFuncType GetTearDownCaseOrSuite() {
+  static SetUpTearDownSuiteFuncType GetTearDownCaseOrSuite(const char* filename,
+                                                           int line_num) {
     SetUpTearDownSuiteFuncType test_case_fp =
         GetNotDefaultOrNull(&T::TearDownTestCase, &Test::TearDownTestCase);
     SetUpTearDownSuiteFuncType test_suite_fp =
@@ -542,7 +530,8 @@ struct SuiteApiResolver : T {
 
     GTEST_CHECK_(!test_case_fp || !test_suite_fp)
         << "Test can not provide both TearDownTestSuite and TearDownTestCase,"
-           " please make sure there is only one present ";
+           " please make sure there is only one present at"
+        << filename << ":" << line_num;
 
     return test_case_fp != nullptr ? test_case_fp : test_suite_fp;
   }
@@ -715,14 +704,16 @@ class TypeParameterizedTest {
     // list.
     MakeAndRegisterTestInfo(
         (std::string(prefix) + (prefix[0] == '\0' ? "" : "/") + case_name +
-         "/" + type_names[index])
+         "/" + type_names[static_cast<size_t>(index)])
             .c_str(),
         StripTrailingSpaces(GetPrefixUntilComma(test_names)).c_str(),
         GetTypeName<Type>().c_str(),
         nullptr,  // No value parameter.
         code_location, GetTypeId<FixtureClass>(),
-        SuiteApiResolver<TestClass>::GetSetUpCaseOrSuite(),
-        SuiteApiResolver<TestClass>::GetTearDownCaseOrSuite(),
+        SuiteApiResolver<TestClass>::GetSetUpCaseOrSuite(
+            code_location.file.c_str(), code_location.line),
+        SuiteApiResolver<TestClass>::GetTearDownCaseOrSuite(
+            code_location.file.c_str(), code_location.line),
         new TestFactoryImpl<TestClass>);
 
     // Next, recurses (at compile time) with the tail of the type list.
@@ -903,62 +894,12 @@ struct RemoveConst<const T[N]> {
 #define GTEST_REMOVE_REFERENCE_AND_CONST_(T) \
     GTEST_REMOVE_CONST_(GTEST_REMOVE_REFERENCE_(T))
 
-// ImplicitlyConvertible<From, To>::value is a compile-time bool
-// constant that's true iff type From can be implicitly converted to
-// type To.
-template <typename From, typename To>
-class ImplicitlyConvertible {
- private:
-  // We need the following helper functions only for their types.
-  // They have no implementations.
-
-  // MakeFrom() is an expression whose type is From.  We cannot simply
-  // use From(), as the type From may not have a public default
-  // constructor.
-  static typename AddReference<From>::type MakeFrom();
-
-  // These two functions are overloaded.  Given an expression
-  // Helper(x), the compiler will pick the first version if x can be
-  // implicitly converted to type To; otherwise it will pick the
-  // second version.
-  //
-  // The first version returns a value of size 1, and the second
-  // version returns a value of size 2.  Therefore, by checking the
-  // size of Helper(x), which can be done at compile time, we can tell
-  // which version of Helper() is used, and hence whether x can be
-  // implicitly converted to type To.
-  static char Helper(To);
-  static char (&Helper(...))[2];  // NOLINT
-
-  // We have to put the 'public' section after the 'private' section,
-  // or MSVC refuses to compile the code.
- public:
-#if defined(__BORLANDC__)
-  // C++Builder cannot use member overload resolution during template
-  // instantiation.  The simplest workaround is to use its C++0x type traits
-  // functions (C++Builder 2009 and above only).
-  static const bool value = __is_convertible(From, To);
-#else
-  // MSVC warns about implicitly converting from double to int for
-  // possible loss of data, so we need to temporarily disable the
-  // warning.
-  GTEST_DISABLE_MSC_WARNINGS_PUSH_(4244)
-  static const bool value =
-      sizeof(Helper(ImplicitlyConvertible::MakeFrom())) == 1;
-  GTEST_DISABLE_MSC_WARNINGS_POP_()
-#endif  // __BORLANDC__
-};
-template <typename From, typename To>
-const bool ImplicitlyConvertible<From, To>::value;
-
 // IsAProtocolMessage<T>::value is a compile-time bool constant that's
-// true iff T is type ProtocolMessage, proto2::Message, or a subclass
-// of those.
+// true iff T is type proto2::Message or a subclass of it.
 template <typename T>
 struct IsAProtocolMessage
     : public bool_constant<
-  ImplicitlyConvertible<const T*, const ::ProtocolMessage*>::value ||
-  ImplicitlyConvertible<const T*, const ::proto2::Message*>::value> {
+  std::is_convertible<const T*, const ::proto2::Message*>::value> {
 };
 
 // When the compiler sees expression IsContainerTest<C>(0), if C is an
@@ -1313,6 +1254,33 @@ class FlatTuple
   }
 };
 
+// Utility functions to be called with static_assert to induce deprecation
+// warnings.
+GTEST_INTERNAL_DEPRECATED(
+    "INSTANTIATE_TEST_CASE_P is deprecated, please use "
+    "INSTANTIATE_TEST_SUITE_P")
+constexpr bool InstantiateTestCase_P_IsDeprecated() { return true; }
+
+GTEST_INTERNAL_DEPRECATED(
+    "TYPED_TEST_CASE_P is deprecated, please use "
+    "TYPED_TEST_SUITE_P")
+constexpr bool TypedTestCase_P_IsDeprecated() { return true; }
+
+GTEST_INTERNAL_DEPRECATED(
+    "TYPED_TEST_CASE is deprecated, please use "
+    "TYPED_TEST_SUITE")
+constexpr bool TypedTestCaseIsDeprecated() { return true; }
+
+GTEST_INTERNAL_DEPRECATED(
+    "REGISTER_TYPED_TEST_CASE_P is deprecated, please use "
+    "REGISTER_TYPED_TEST_SUITE_P")
+constexpr bool RegisterTypedTestCase_P_IsDeprecated() { return true; }
+
+GTEST_INTERNAL_DEPRECATED(
+    "INSTANTIATE_TYPED_TEST_CASE_P is deprecated, please use "
+    "INSTANTIATE_TYPED_TEST_SUITE_P")
+constexpr bool InstantiateTypedTestCase_P_IsDeprecated() { return true; }
+
 }  // namespace internal
 }  // namespace testing
 
@@ -1450,26 +1418,11 @@ class FlatTuple
           #test_suite_name, #test_name, nullptr, nullptr,                     \
           ::testing::internal::CodeLocation(__FILE__, __LINE__), (parent_id), \
           ::testing::internal::SuiteApiResolver<                              \
-              parent_class>::GetSetUpCaseOrSuite(),                           \
+              parent_class>::GetSetUpCaseOrSuite(__FILE__, __LINE__),         \
           ::testing::internal::SuiteApiResolver<                              \
-              parent_class>::GetTearDownCaseOrSuite(),                        \
+              parent_class>::GetTearDownCaseOrSuite(__FILE__, __LINE__),      \
           new ::testing::internal::TestFactoryImpl<GTEST_TEST_CLASS_NAME_(    \
               test_suite_name, test_name)>);                                  \
   void GTEST_TEST_CLASS_NAME_(test_suite_name, test_name)::TestBody()
 
-// Internal Macro to mark an API deprecated, for googletest usage only
-// Usage: class GTEST_INTERNAL_DEPRECATED(message) MyClass or
-// GTEST_INTERNAL_DEPRECATED(message) <return_type> myFunction(); Every usage of
-// a deprecated entity will trigger a warning when compiled with
-// `-Wdeprecated-declarations` option (clang, gcc, any __GNUC__ compiler).
-// For msvc /W3 option will need to be used
-// Note that for 'other' compilers this macro evaluates to nothing to prevent
-// compilations errors.
-#if defined(_MSC_VER)
-#define GTEST_INTERNAL_DEPRECATED(message) __declspec(deprecated(message))
-#elif defined(__GNUC__)
-#define GTEST_INTERNAL_DEPRECATED(message) __attribute__((deprecated(message)))
-#else
-#define GTEST_INTERNAL_DEPRECATED(message)
-#endif
 #endif  // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_

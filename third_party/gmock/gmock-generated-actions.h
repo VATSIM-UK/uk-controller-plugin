@@ -50,308 +50,6 @@
 namespace testing {
 namespace internal {
 
-// InvokeHelper<F> knows how to unpack an N-tuple and invoke an N-ary
-// function, method, or callback with the unpacked values, where F is
-// a function type that takes N arguments.
-template <typename Result, typename ArgumentTuple>
-class InvokeHelper;
-
-template <typename R>
-class InvokeHelper<R, ::std::tuple<> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<>&) {
-           return function();
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<>&) {
-           return (obj_ptr->*method_ptr)();
-  }
-
-  template <typename CallbackType>
-  static R InvokeCallback(CallbackType* callback,
-                          const ::std::tuple<>&) {
-           return callback->Run();
-  }
-};
-
-template <typename R, typename A1>
-class InvokeHelper<R, ::std::tuple<A1> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1>& args) {
-           return function(std::get<0>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args));
-  }
-
-  template <typename CallbackType>
-  static R InvokeCallback(CallbackType* callback,
-                          const ::std::tuple<A1>& args) {
-           return callback->Run(std::get<0>(args));
-  }
-};
-
-template <typename R, typename A1, typename A2>
-class InvokeHelper<R, ::std::tuple<A1, A2> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1, A2>& args) {
-           return function(std::get<0>(args), std::get<1>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1, A2>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args), std::get<1>(args));
-  }
-
-  template <typename CallbackType>
-  static R InvokeCallback(CallbackType* callback,
-                          const ::std::tuple<A1, A2>& args) {
-           return callback->Run(std::get<0>(args), std::get<1>(args));
-  }
-};
-
-template <typename R, typename A1, typename A2, typename A3>
-class InvokeHelper<R, ::std::tuple<A1, A2, A3> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1, A2, A3>& args) {
-           return function(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1, A2, A3>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args));
-  }
-
-  template <typename CallbackType>
-  static R InvokeCallback(CallbackType* callback,
-                          const ::std::tuple<A1, A2, A3>& args) {
-           return callback->Run(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args));
-  }
-};
-
-template <typename R, typename A1, typename A2, typename A3, typename A4>
-class InvokeHelper<R, ::std::tuple<A1, A2, A3, A4> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1, A2, A3, A4>& args) {
-           return function(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1, A2, A3, A4>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args));
-  }
-
-  template <typename CallbackType>
-  static R InvokeCallback(CallbackType* callback,
-                          const ::std::tuple<A1, A2, A3, A4>& args) {
-           return callback->Run(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args));
-  }
-};
-
-template <typename R, typename A1, typename A2, typename A3, typename A4,
-    typename A5>
-class InvokeHelper<R, ::std::tuple<A1, A2, A3, A4, A5> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1, A2, A3, A4,
-      A5>& args) {
-           return function(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1, A2, A3, A4, A5>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args));
-  }
-
-  template <typename CallbackType>
-  static R InvokeCallback(CallbackType* callback,
-                          const ::std::tuple<A1, A2, A3, A4, A5>& args) {
-           return callback->Run(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args));
-  }
-};
-
-template <typename R, typename A1, typename A2, typename A3, typename A4,
-    typename A5, typename A6>
-class InvokeHelper<R, ::std::tuple<A1, A2, A3, A4, A5, A6> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1, A2, A3, A4, A5,
-      A6>& args) {
-           return function(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1, A2, A3, A4, A5, A6>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args));
-  }
-
-  // There is no InvokeCallback() for 6-tuples
-};
-
-template <typename R, typename A1, typename A2, typename A3, typename A4,
-    typename A5, typename A6, typename A7>
-class InvokeHelper<R, ::std::tuple<A1, A2, A3, A4, A5, A6, A7> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1, A2, A3, A4, A5, A6,
-      A7>& args) {
-           return function(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args), std::get<6>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1, A2, A3, A4, A5, A6, A7>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args), std::get<6>(args));
-  }
-
-  // There is no InvokeCallback() for 7-tuples
-};
-
-template <typename R, typename A1, typename A2, typename A3, typename A4,
-    typename A5, typename A6, typename A7, typename A8>
-class InvokeHelper<R, ::std::tuple<A1, A2, A3, A4, A5, A6, A7, A8> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1, A2, A3, A4, A5, A6,
-      A7, A8>& args) {
-           return function(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args), std::get<6>(args), std::get<7>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1, A2, A3, A4, A5, A6, A7,
-                            A8>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args), std::get<6>(args), std::get<7>(args));
-  }
-
-  // There is no InvokeCallback() for 8-tuples
-};
-
-template <typename R, typename A1, typename A2, typename A3, typename A4,
-    typename A5, typename A6, typename A7, typename A8, typename A9>
-class InvokeHelper<R, ::std::tuple<A1, A2, A3, A4, A5, A6, A7, A8, A9> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1, A2, A3, A4, A5, A6,
-      A7, A8, A9>& args) {
-           return function(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args), std::get<6>(args), std::get<7>(args),
-               std::get<8>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1, A2, A3, A4, A5, A6, A7, A8,
-                            A9>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args), std::get<6>(args), std::get<7>(args),
-               std::get<8>(args));
-  }
-
-  // There is no InvokeCallback() for 9-tuples
-};
-
-template <typename R, typename A1, typename A2, typename A3, typename A4,
-    typename A5, typename A6, typename A7, typename A8, typename A9,
-    typename A10>
-class InvokeHelper<R, ::std::tuple<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10> > {
- public:
-  template <typename Function>
-  static R Invoke(Function function, const ::std::tuple<A1, A2, A3, A4, A5, A6,
-      A7, A8, A9, A10>& args) {
-           return function(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args), std::get<6>(args), std::get<7>(args),
-               std::get<8>(args), std::get<9>(args));
-  }
-
-  template <class Class, typename MethodPtr>
-  static R InvokeMethod(Class* obj_ptr,
-                        MethodPtr method_ptr,
-                        const ::std::tuple<A1, A2, A3, A4, A5, A6, A7, A8, A9,
-                            A10>& args) {
-           return (obj_ptr->*method_ptr)(std::get<0>(args), std::get<1>(args),
-               std::get<2>(args), std::get<3>(args), std::get<4>(args),
-               std::get<5>(args), std::get<6>(args), std::get<7>(args),
-               std::get<8>(args), std::get<9>(args));
-  }
-
-  // There is no InvokeCallback() for 10-tuples
-};
-
-// Implements the Invoke(callback) action.
-template <typename CallbackType>
-class InvokeCallbackAction {
- public:
-  // The c'tor takes ownership of the callback.
-  explicit InvokeCallbackAction(CallbackType* callback)
-      : callback_(callback) {
-    callback->CheckIsRepeatable();  // Makes sure the callback is permanent.
-  }
-
-  // This type conversion operator template allows Invoke(callback) to
-  // be used wherever the callback's type is compatible with that of
-  // the mock function, i.e. if the mock function's arguments can be
-  // implicitly converted to the callback's arguments and the
-  // callback's result can be implicitly converted to the mock
-  // function's result.
-  template <typename Result, typename ArgumentTuple>
-  Result Perform(const ArgumentTuple& args) const {
-    return InvokeHelper<Result, ArgumentTuple>::InvokeCallback(
-        callback_.get(), args);
-  }
- private:
-  const std::shared_ptr<CallbackType> callback_;
-};
-
 // A macro from the ACTION* family (defined later in this file)
 // defines an action that can be used in a mock function.  Typically,
 // these actions only care about a subset of the arguments of the mock
@@ -575,16 +273,16 @@ class ActionHelper {
 // An internal macro needed for implementing ACTION*().
 #define GMOCK_ACTION_ARG_TYPES_AND_NAMES_UNUSED_\
     const args_type& args GTEST_ATTRIBUTE_UNUSED_, \
-    arg0_type arg0 GTEST_ATTRIBUTE_UNUSED_, \
-    arg1_type arg1 GTEST_ATTRIBUTE_UNUSED_, \
-    arg2_type arg2 GTEST_ATTRIBUTE_UNUSED_, \
-    arg3_type arg3 GTEST_ATTRIBUTE_UNUSED_, \
-    arg4_type arg4 GTEST_ATTRIBUTE_UNUSED_, \
-    arg5_type arg5 GTEST_ATTRIBUTE_UNUSED_, \
-    arg6_type arg6 GTEST_ATTRIBUTE_UNUSED_, \
-    arg7_type arg7 GTEST_ATTRIBUTE_UNUSED_, \
-    arg8_type arg8 GTEST_ATTRIBUTE_UNUSED_, \
-    arg9_type arg9 GTEST_ATTRIBUTE_UNUSED_
+    const arg0_type& arg0 GTEST_ATTRIBUTE_UNUSED_, \
+    const arg1_type& arg1 GTEST_ATTRIBUTE_UNUSED_, \
+    const arg2_type& arg2 GTEST_ATTRIBUTE_UNUSED_, \
+    const arg3_type& arg3 GTEST_ATTRIBUTE_UNUSED_, \
+    const arg4_type& arg4 GTEST_ATTRIBUTE_UNUSED_, \
+    const arg5_type& arg5 GTEST_ATTRIBUTE_UNUSED_, \
+    const arg6_type& arg6 GTEST_ATTRIBUTE_UNUSED_, \
+    const arg7_type& arg7 GTEST_ATTRIBUTE_UNUSED_, \
+    const arg8_type& arg8 GTEST_ATTRIBUTE_UNUSED_, \
+    const arg9_type& arg9 GTEST_ATTRIBUTE_UNUSED_
 
 // Sometimes you want to give an action explicit template parameters
 // that cannot be inferred from its value parameters.  ACTION() and
@@ -974,10 +672,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       GMOCK_INTERNAL_DEFN_##value_params\
      private:\
       GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
@@ -1035,10 +735,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
      private:\
       GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
@@ -1083,10 +785,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
      private:\
       GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
@@ -1137,10 +841,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
       p1##_type p1;\
      private:\
@@ -1196,10 +902,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
       p1##_type p1;\
       p2##_type p2;\
@@ -1262,10 +970,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
       p1##_type p1;\
       p2##_type p2;\
@@ -1337,10 +1047,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
       p1##_type p1;\
       p2##_type p2;\
@@ -1416,10 +1128,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
       p1##_type p1;\
       p2##_type p2;\
@@ -1501,10 +1215,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
       p1##_type p1;\
       p2##_type p2;\
@@ -1595,10 +1311,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
       p1##_type p1;\
       p2##_type p2;\
@@ -1695,10 +1413,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
       p1##_type p1;\
       p2##_type p2;\
@@ -1802,10 +1522,12 @@ class ActionHelper {
           typename arg3_type, typename arg4_type, typename arg5_type, \
           typename arg6_type, typename arg7_type, typename arg8_type, \
           typename arg9_type>\
-      return_type gmock_PerformImpl(const args_type& args, arg0_type arg0, \
-          arg1_type arg1, arg2_type arg2, arg3_type arg3, arg4_type arg4, \
-          arg5_type arg5, arg6_type arg6, arg7_type arg7, arg8_type arg8, \
-          arg9_type arg9) const;\
+      return_type gmock_PerformImpl(const args_type& args, \
+          const arg0_type& arg0, const arg1_type& arg1, \
+          const arg2_type& arg2, const arg3_type& arg3, \
+          const arg4_type& arg4, const arg5_type& arg5, \
+          const arg6_type& arg6, const arg7_type& arg7, \
+          const arg8_type& arg8, const arg9_type& arg9) const;\
       p0##_type p0;\
       p1##_type p1;\
       p2##_type p2;\
