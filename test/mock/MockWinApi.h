@@ -18,7 +18,7 @@ namespace UKControllerPluginTest {
             );
             MOCK_CONST_METHOD3(OpenDialog, bool (int, DLGPROC, LPARAM));
             MOCK_METHOD0(OpenGeneralSettingsDialog, void(void));
-            MOCK_METHOD3(OpenMessageBox, void(LPCWSTR, LPCWSTR, int));
+            MOCK_METHOD3(OpenMessageBox, int(LPCWSTR, LPCWSTR, int));
             MOCK_METHOD1(PlayWave, void(LPCTSTR));
             MOCK_METHOD3(WriteToFile, void(std::string, std::string, bool));
             MOCK_METHOD2(ReadFromFileMock, std::string(std::string, bool));

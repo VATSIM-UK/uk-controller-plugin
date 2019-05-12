@@ -29,8 +29,9 @@ namespace UKControllerPluginTest {
             HINSTANCE dll = 0;
             ExternalsBootstrap::Bootstrap(container, dll);
 
-            EXPECT_TRUE(
-                container.windows->GetFullPathToLocalFile("testfile.json") == "ukcp/testfile.json"
+            EXPECT_EQ(
+                container.windows->GetFullPathToLocalFile("testfile.json"),
+                ExternalsBootstrap::GetPluginFileRoot() + "/testfile.json"
             );
         }
 
@@ -60,6 +61,28 @@ namespace UKControllerPluginTest {
 
             HDC handle;
             EXPECT_NO_THROW(container.graphics->SetDeviceHandle(handle));
+        }
+
+        TEST_F(ExternalsBootstrapTest, GetPluginFileRootWideReturnsMyDocumentsEuroscopeFolder)
+        {
+            TCHAR myDocumentsPath[MAX_PATH];
+            HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
+            std::wstring expected = myDocumentsPath + std::wstring(L"/EuroScope/ukcp");
+            std::replace(expected.begin(), expected.end(), L'\\', L'/');
+
+            EXPECT_EQ(expected, ExternalsBootstrap::GetPluginFileRootWide());
+        }
+
+        TEST_F(ExternalsBootstrapTest, GetPluginFileRootReturnsMyDocumentsEuroscopeFolder)
+        {
+            TCHAR myDocumentsPath[MAX_PATH];
+            HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
+            std::wstring widePath(myDocumentsPath);
+            std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
+
+            std::string expected = std::string(widePath.cbegin(), widePath.cend()) + "/EuroScope/ukcp";
+
+            EXPECT_EQ(expected, ExternalsBootstrap::GetPluginFileRoot());
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPluginTest

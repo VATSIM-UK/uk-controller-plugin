@@ -23,6 +23,7 @@
     <ClInclude Include="..\..\src\airfield\ControllerAirfieldOwnershipHandler.h" />
     <ClInclude Include="..\..\src\airfield\NormaliseSid.h" />
     <ClInclude Include="..\..\src\api\ApiAuthChecker.h" />
+    <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h" />
     <ClInclude Include="..\..\src\api\ApiException.h" />
     <ClInclude Include="..\..\src\api\ApiHelper.h" />
     <ClInclude Include="..\..\src\api\ApiInterface.h" />
@@ -269,6 +270,7 @@
     <ClCompile Include="..\..\src\airfield\ControllerAirfieldOwnershipHandler.cpp" />
     <ClCompile Include="..\..\src\airfield\NormaliseSid.cpp" />
     <ClCompile Include="..\..\src\api\ApiAuthChecker.cpp" />
+    <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp" />
     <ClCompile Include="..\..\src\api\ApiHelper.cpp" />
     <ClCompile Include="..\..\src\api\ApiRequestBuilder.cpp" />
     <ClCompile Include="..\..\src\api\ApiResponse.cpp" />

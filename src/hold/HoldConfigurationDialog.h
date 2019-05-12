@@ -52,7 +52,6 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Hold::CompareHolds
                 > holds;
 
-
                 // The holds that have been selected
                 std::set<unsigned int> selectedHolds;
 

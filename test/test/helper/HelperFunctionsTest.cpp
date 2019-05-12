@@ -290,4 +290,20 @@ namespace UKControllerPluginTest {
             (std::chrono::system_clock::time_point::max)()
         );
     }
+
+    TEST(HelperFunctions, ItConvertsRegularStringToWide)
+    {
+        EXPECT_EQ(
+            HelperFunctions::ConvertToWideString("somestring"),
+            std::wstring(L"somestring")
+        );
+    }
+
+    TEST(HelperFunctions, ItConvertsWideStringToRegular)
+    {
+        EXPECT_EQ(
+            HelperFunctions::ConvertToRegularString(L"somestring"),
+            std::string("somestring")
+        );
+    }
 }  // namespace UKControllerPluginTest
