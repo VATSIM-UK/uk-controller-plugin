@@ -610,13 +610,13 @@ namespace UKControllerPlugin {
                 const HoldingData & holdParameters = this->managedHold.GetHoldParameters();
                 for (
                     std::set<std::unique_ptr<AbstractHoldLevelRestriction>>::const_iterator it
-                    = holdParameters.restrictions.cbegin();
+                        = holdParameters.restrictions.cbegin();
                     it != holdParameters.restrictions.cend();
                     ++it
-                    ) {
+                ) {
                     if ((*it)->LevelRestricted(i)) {
                         Gdiplus::Rect restrictedRect = {
-                            0,
+                            this->windowPos.x,
                             numbersDisplay.Y,
                             windowWidth,
                             this->lineHeight
