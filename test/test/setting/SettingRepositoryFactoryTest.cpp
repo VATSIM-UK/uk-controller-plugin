@@ -24,8 +24,8 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return("{\"api-key\": \"testkey\"}"));
 
-            SettingRepository repo = SettingRepositoryFactory::Create(mockWinApi);
-            EXPECT_TRUE("testkey" == repo.GetSetting("api-key"));
+            std::unique_ptr<SettingRepository> repo = SettingRepositoryFactory::Create(mockWinApi);
+            EXPECT_TRUE("testkey" == repo->GetSetting("api-key"));
         }
     }  // namespace Setting
 }  // namespace UKControllerPluginTest

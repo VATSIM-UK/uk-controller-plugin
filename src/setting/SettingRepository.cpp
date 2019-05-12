@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
         /*
             Read a JSON file and creates settings from it.
         */
-        void SettingRepository::AddSettingsFromJsonFile(std::string relativePath)
+        void SettingRepository::AddSettingsFromJsonFile(std::string relativePath, bool overwrite)
         {
             // If the file doesn't exist locally, there's no point.
             if (!this->winApi.FileExists(this->settingFolder + "/" + relativePath)) {
@@ -47,7 +47,7 @@ namespace UKControllerPlugin {
 
             // Process each setting in the file
             for (nlohmann::json::iterator it = settingsJson.begin(); it != settingsJson.end(); ++it) {
-                if (this->settings.count(it.key()) > 0) {
+                if (this->settings.count(it.key()) > 0 && !overwrite) {
                     LogWarning(
                         "Duplicate setting for " + it.key() + " in " + relativePath + " has been ignored"
                     );
