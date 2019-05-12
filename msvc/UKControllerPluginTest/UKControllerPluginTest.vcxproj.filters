@@ -267,9 +267,6 @@
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanTest.cpp">
       <Filter>test\flightplan</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\helper\HelperBootstrapTest.cpp">
-      <Filter>test\helper</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\helper\HelperFunctionsTest.cpp">
       <Filter>test\helper</Filter>
     </ClCompile>
@@ -547,6 +544,12 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\metar\PressureMonitorBootstrapTest.cpp">
       <Filter>test\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\bootstrap\HelperBootstrapTest.cpp">
+      <Filter>test\bootstrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp">
+      <Filter>test\api</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

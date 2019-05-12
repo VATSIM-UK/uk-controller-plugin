@@ -183,4 +183,20 @@ namespace UKControllerPlugin {
 
         return tokens;
     }
+
+    /*
+        Convert a standard string to wide.
+    */
+    std::wstring HelperFunctions::ConvertToWideString(std::string string)
+    {
+        return std::wstring(string.cbegin(), string.cend());
+    }
+
+    /*
+        Convert a widestring to regular
+    */
+    std::string HelperFunctions::ConvertToRegularString(std::wstring wstring)
+    {
+        return std::string(wstring.cbegin(), wstring.cend());
+    }
 }  // namespace UKControllerPlugin

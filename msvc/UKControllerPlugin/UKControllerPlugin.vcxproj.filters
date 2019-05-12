@@ -729,6 +729,9 @@
     <ClInclude Include="..\..\src\metar\PressureMonitorBootstrap.h">
       <Filter>src\metar</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h">
+      <Filter>src\api</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1236,6 +1239,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\metar\PressureMonitorBootstrap.cpp">
       <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp">
+      <Filter>src\api</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

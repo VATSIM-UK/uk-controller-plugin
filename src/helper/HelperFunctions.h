@@ -18,5 +18,7 @@ namespace UKControllerPlugin {
             static bool IsFloat(std::string string);
             static std::string StripQuotesFromJsonString(std::string string);
             static std::vector<std::string> TokeniseString(const char delimiter, std::string original);
+            static std::wstring ConvertToWideString(std::string string);
+            static std::string ConvertToRegularString(std::wstring wstring);
     };
 }  // namespace UKControllerPlugin
