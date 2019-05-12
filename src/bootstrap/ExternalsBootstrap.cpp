@@ -63,7 +63,6 @@ namespace UKControllerPlugin {
             TCHAR myDocumentsPath[MAX_PATH];
             HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
 
-
             std::wstring widePath(myDocumentsPath);
             std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
 
