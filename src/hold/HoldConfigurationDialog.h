@@ -57,7 +57,7 @@ namespace UKControllerPlugin {
 
                 // The hold profile currently selected
                 unsigned int selectedHoldProfile = 0;
-                int selectedHoldProfileIndex = 0;
+                int selectedHoldProfileIndex = LB_ERR;
         };
 
     }  // namespace Hold
