@@ -45,7 +45,6 @@ namespace UKControllerPlugin {
             );
             persistence.brushes.reset(new GdiplusBrushes);
             persistence.graphics.reset(new GdiGraphicsWrapper);
-            persistence.windows->WriteToFile("test/test.json", "test", true);
         }
 
         /*
