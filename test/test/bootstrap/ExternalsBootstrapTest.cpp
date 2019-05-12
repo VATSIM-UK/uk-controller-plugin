@@ -2,10 +2,12 @@
 #include "bootstrap/ExternalsBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "curl/CurlRequest.h"
+#include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Bootstrap::ExternalsBootstrap;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::HelperFunctions;
 
 namespace UKControllerPluginTest {
     namespace Bootstrap {
@@ -80,7 +82,7 @@ namespace UKControllerPluginTest {
             std::wstring widePath(myDocumentsPath);
             std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
 
-            std::string expected = std::string(widePath.cbegin(), widePath.cend()) + "/EuroScope/ukcp";
+            std::string expected = HelperFunctions::ConvertToRegularString(widePath) + "/EuroScope/ukcp";
 
             EXPECT_EQ(expected, ExternalsBootstrap::GetPluginFileRoot());
         }
