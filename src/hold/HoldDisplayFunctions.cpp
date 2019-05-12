@@ -26,18 +26,16 @@ namespace UKControllerPlugin {
         /*
             Converts a C++ string to TCHAR so that we can use it in displays.
         */
-        TCHAR * ConvertToTchar(std::string string)
+        std::wstring ConvertToTchar(std::string string)
         {
-            TCHAR * param = new TCHAR[string.size() + 1];
-            param[string.size()] = 0;
-            std::copy(string.begin(), string.end(), param);
-            return param;
+            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+            return converter.from_bytes(string);
         }
 
         /*
             Convert an integer to string then to TCHAR
         */
-        TCHAR * ConvertToTchar(int value)
+        std::wstring ConvertToTchar(int value)
         {
             return ConvertToTchar(std::to_string(value));
         }
@@ -47,8 +45,8 @@ namespace UKControllerPlugin {
         */
         std::string ConvertFromTchar(TCHAR * string)
         {
-            std::wstring wstring(string);
-            return std::string(wstring.cbegin(), wstring.cend());
+            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+            return converter.to_bytes(string);
         }
 
         /*
@@ -114,7 +112,7 @@ namespace UKControllerPlugin {
         /*
             Get the hold profile static text
         */
-        TCHAR * GetSelectedHoldProfileText(const HoldProfile & profile)
+        std::wstring GetSelectedHoldProfileText(const HoldProfile & profile)
         {
             return ConvertToTchar("Selected Profile: " + profile.name);
         }
