@@ -1,6 +1,8 @@
 #pragma once
 #include "windows/WinApiInterface.h"
+#include "dialog/DialogProviderInterface.h"
 #include "euroscope/GeneralSettingsDialog.h"
+#include "hold/HoldConfigurationDialog.h"
 
 namespace UKControllerPlugin {
     namespace Windows {
@@ -9,7 +11,7 @@ namespace UKControllerPlugin {
             A concrete implementation of the WinApiInterface. Provides a wrapper
             around certain WindowsFunctions such as opening dialog boxes and playing sounds.
         */
-        class WinApi : public WinApiInterface
+        class WinApi : public WinApiInterface, public UKControllerPlugin::Dialog::DialogProviderInterface
         {
             public:
                 WinApi(
@@ -30,11 +32,17 @@ namespace UKControllerPlugin {
                     const COMDLG_FILTERSPEC * fileTypes
                 ) const override;
                 void OpenGeneralSettingsDialog();
-                void OpenMessageBox(LPCWSTR message, LPCWSTR title, int options);
+                int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) override;
                 void PlayWave(LPCTSTR sound);
                 std::string ReadFromFile(std::string filename, bool relativePath = true);
                 std::string ReadFromFile(std::wstring filename, bool relativePath = true);
                 void WriteToFile(std::string filename, std::string data, bool truncate);
+
+                // Inherited via DialogProviderInterface
+                void OpenDialog(
+                    const UKControllerPlugin::Dialog::DialogData & dialog,
+                    const UKControllerPlugin::Dialog::DialogCallArgument * argument
+                ) const override;
 
             private:
                 void CreateMissingDirectories(std::string endFile);

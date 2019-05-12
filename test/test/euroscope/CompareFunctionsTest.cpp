@@ -16,22 +16,22 @@ namespace UKControllerPluginTest {
         TEST(CompareFunctions, OperatorReturnsTrueIfCallbackLessThanId)
         {
             CompareFunctions compare;
-            CallbackFunction function = { 1, "test", [](std::string) {} };
+            CallbackFunction function = { 1, "test", [](int, std::string, RECT) {} };
             EXPECT_TRUE(compare(function, 2));
         }
 
         TEST(CompareFunctions, OperatorReturnsTrueIfIdLessThanCallback)
         {
             CompareFunctions compare;
-            CallbackFunction function = { 1, "test", [](std::string) {} };
+            CallbackFunction function = { 1, "test", [](int, std::string, RECT) {} };
             EXPECT_TRUE(compare(0, function));
         }
 
         TEST(CompareFunctions, OperatorReturnsTrueIfFirstCallbackLessThanSecond)
         {
             CompareFunctions compare;
-            CallbackFunction function1 = { 1, "test", [](std::string) {} };
-            CallbackFunction function2 = { 2, "test", [](std::string) {} };
+            CallbackFunction function1 = { 1, "test", [](int, std::string, RECT) {} };
+            CallbackFunction function2 = { 2, "test", [](int, std::string, RECT) {} };
             EXPECT_TRUE(compare(function1, function2));
         }
 
@@ -41,7 +41,7 @@ namespace UKControllerPluginTest {
             TagFunction function = {
                 1,
                 "test",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             };
             EXPECT_TRUE(compare(function, 2));
         }
@@ -52,7 +52,7 @@ namespace UKControllerPluginTest {
             TagFunction function = {
                 1,
                 "test",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             };
             EXPECT_TRUE(compare(0, function));
         }
@@ -63,12 +63,12 @@ namespace UKControllerPluginTest {
             TagFunction function1 = {
                 1,
                 "test",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             };
             TagFunction function2 = {
                 2,
                 "test",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             };
             EXPECT_TRUE(compare(function1, function2));
         }

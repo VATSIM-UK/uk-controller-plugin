@@ -18,7 +18,7 @@ namespace UKControllerPluginTest {
                     RightClick,
                     void(int, std::string, UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface &)
                 );
-                MOCK_METHOD1(Move, void(RECT));
+                MOCK_METHOD2(Move, void(RECT, std::string));
                 MOCK_METHOD2(
                     Render,
                     void(

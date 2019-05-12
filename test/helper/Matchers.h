@@ -23,6 +23,13 @@ MATCHER_P(RectEq, rect, "")
         arg.right == rect.right;
 }
 
+// Matches Two RECTS
+MATCHER_P(PointEq, point, "")
+{
+    return arg.x == point.x &&
+        arg.y == point.y;
+}
+
 MATCHER_P(PopupMenuItemEq, item, "")
 {
     return arg.firstValue == item.firstValue &&

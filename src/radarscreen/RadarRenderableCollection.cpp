@@ -79,9 +79,9 @@ namespace UKControllerPlugin {
         /*
             Moves the given screen object.
         */
-        void RadarRenderableCollection::MoveScreenObject(int objectId, RECT position) const
+        void RadarRenderableCollection::MoveScreenObject(int objectId, std::string objectDes, RECT position) const
         {
-            this->allRenderers.at(this->screenObjectMap.at(objectId))->Move(position);
+            this->allRenderers.at(this->screenObjectMap.at(objectId))->Move(position, objectDes);
         }
 
         /*

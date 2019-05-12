@@ -12,17 +12,6 @@ namespace UKControllerPluginTest {
 
         class ExternalsBootstrapTest : public ::testing::Test {
 
-            void SetUp() {
-                Gdiplus::GdiplusStartupInput gdiStartup;
-                Gdiplus::GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
-            }
-
-            void TearDown() {
-                Gdiplus::GdiplusShutdown(this->gdiPlusToken);
-            }
-
-            // Gdi plus token
-            ULONG_PTR gdiPlusToken;
         };
 
         TEST_F(ExternalsBootstrapTest, BootstrapCreatesCurlApi)
@@ -40,9 +29,19 @@ namespace UKControllerPluginTest {
             HINSTANCE dll = 0;
             ExternalsBootstrap::Bootstrap(container, dll);
 
-            EXPECT_TRUE(
-                container.windows->GetFullPathToLocalFile("testfile.json") == "ukcp/testfile.json"
+            EXPECT_EQ(
+                container.windows->GetFullPathToLocalFile("testfile.json"),
+                ExternalsBootstrap::GetPluginFileRoot() + "/testfile.json"
             );
+        }
+
+        TEST_F(ExternalsBootstrapTest, BootstrapCreatesDialogManager)
+        {
+            PersistenceContainer container;
+            HINSTANCE dll = 0;
+            ExternalsBootstrap::Bootstrap(container, dll);
+
+            EXPECT_EQ(0, container.dialogManager->CountDialogs());
         }
 
         TEST_F(ExternalsBootstrapTest, BootstrapCreatesBrushes)
@@ -62,6 +61,28 @@ namespace UKControllerPluginTest {
 
             HDC handle;
             EXPECT_NO_THROW(container.graphics->SetDeviceHandle(handle));
+        }
+
+        TEST_F(ExternalsBootstrapTest, GetPluginFileRootWideReturnsMyDocumentsEuroscopeFolder)
+        {
+            TCHAR myDocumentsPath[MAX_PATH];
+            HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
+            std::wstring expected = myDocumentsPath + std::wstring(L"/EuroScope/ukcp");
+            std::replace(expected.begin(), expected.end(), L'\\', L'/');
+
+            EXPECT_EQ(expected, ExternalsBootstrap::GetPluginFileRootWide());
+        }
+
+        TEST_F(ExternalsBootstrapTest, GetPluginFileRootReturnsMyDocumentsEuroscopeFolder)
+        {
+            TCHAR myDocumentsPath[MAX_PATH];
+            HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
+            std::wstring widePath(myDocumentsPath);
+            std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
+
+            std::string expected = std::string(widePath.cbegin(), widePath.cend()) + "/EuroScope/ukcp";
+
+            EXPECT_EQ(expected, ExternalsBootstrap::GetPluginFileRoot());
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPluginTest

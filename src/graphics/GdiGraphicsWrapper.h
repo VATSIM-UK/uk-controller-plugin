@@ -24,6 +24,12 @@ namespace UKControllerPlugin {
                 void DrawCircle(const Gdiplus::RectF & area, const Gdiplus::Pen & pen) override;
                 void DrawCircle(const Gdiplus::Rect & area, const Gdiplus::Pen & pen) override;
                 void DrawDiamond(const Gdiplus::RectF & area, const Gdiplus::Pen & pen) override;
+                void DrawLine(
+                    const Gdiplus::Pen & pen,
+                    const Gdiplus::Point & start,
+                    const Gdiplus::Point & end
+                ) override;
+                void DrawPath(const Gdiplus::GraphicsPath & path, const Gdiplus::Pen & pen) override;
                 void DrawString(std::wstring text, const Gdiplus::RectF & area, const Gdiplus::Brush & brush) override;
                 void DrawString(std::wstring text, const Gdiplus::Rect & area, const Gdiplus::Brush & brush) override;
                 void DrawString(std::wstring text, const RECT & area, const Gdiplus::Brush & brush) override;

@@ -20,7 +20,9 @@ namespace UKControllerPlugin {
             int functionId,
             std::string subject,
             EuroScopeCFlightPlanInterface &flightplan,
-            EuroScopeCRadarTargetInterface & radarTarget
+            EuroScopeCRadarTargetInterface & radarTarget,
+            const POINT & mousePos,
+            const RECT & area
         ) const {
 
             if (functionId < this->firstFixedId) {
@@ -30,7 +32,7 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                function->function(subject);
+                function->function(functionId, subject, area);
             } else {
                 auto function = this->tagFunctions.find(functionId);
                 if (function == this->tagFunctions.cend()) {
@@ -38,7 +40,7 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                function->function(flightplan, radarTarget);
+                function->function(flightplan, radarTarget, subject, mousePos);
             }
         }
 

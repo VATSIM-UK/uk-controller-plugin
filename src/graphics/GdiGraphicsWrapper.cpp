@@ -90,6 +90,22 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Draw a line between two points
+        */
+        void GdiGraphicsWrapper::DrawLine(
+            const Gdiplus::Pen & pen,
+            const Gdiplus::Point & start,
+            const Gdiplus::Point & end
+        ) {
+            this->api->DrawLine(&pen, start, end);
+        }
+
+        void GdiGraphicsWrapper::DrawPath(const Gdiplus::GraphicsPath & path, const Gdiplus::Pen & pen)
+        {
+            this->api->DrawPath(&pen, &path);
+        }
+
+        /*
             Draw a string to the screen in a bounding box.
         */
         void GdiGraphicsWrapper::DrawString(

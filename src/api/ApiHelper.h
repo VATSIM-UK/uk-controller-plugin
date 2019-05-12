@@ -2,6 +2,8 @@
 #include "api/ApiResponse.h"
 #include "api/ApiRequestBuilder.h"
 #include "api/ApiInterface.h"
+#include "dependency/DependencyData.h"
+#include "hold/HoldProfile.h"
 
 namespace UKControllerPlugin {
     namespace Curl {
@@ -24,7 +26,7 @@ namespace UKControllerPlugin {
             public:
                 ApiHelper(
                     UKControllerPlugin::Curl::CurlInterface & curlApi,
-                    const UKControllerPlugin::Api::ApiRequestBuilder requestBuilder,
+                    UKControllerPlugin::Api::ApiRequestBuilder requestBuilder,
                     UKControllerPlugin::Windows::WinApiInterface & winApi
                 );
 
@@ -45,7 +47,22 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(std::string callsign) const override;
                 std::string GetApiDomain(void) const override;
                 std::string GetApiKey(void) const override;
+                nlohmann::json GetHoldDependency(void) const override;
+                nlohmann::json GetGenericHoldProfiles(void) const override;
+                nlohmann::json GetUserHoldProfiles(void) const override;
+                nlohmann::json GetDependency(
+                    UKControllerPlugin::Dependency::DependencyData dependency
+                ) const override;
+                void DeleteUserHoldProfile(unsigned int profileId) const override;
+                unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
+                void UpdateUserHoldProfile(
+                    unsigned int id,
+                    std::string name,
+                    std::set<unsigned int> holds
+                ) const override;
                 int UpdateCheck(std::string version) const override;
+                void SetApiKey(std::string key) override;
+                void SetApiDomain(std::string domain) override;
 
                 // The HTTP status codes that may be returned by the API
                 static const uint64_t STATUS_OK = 200L;
@@ -74,7 +91,7 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Windows::WinApiInterface & winApi;
 
                 // The API request builder, that builds our CurlRequests
-                const UKControllerPlugin::Api::ApiRequestBuilder requestBuilder;
+                UKControllerPlugin::Api::ApiRequestBuilder requestBuilder;
 
                 // An interface to the Curl library.
                 UKControllerPlugin::Curl::CurlInterface & curlApi;

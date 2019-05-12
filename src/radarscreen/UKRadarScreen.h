@@ -4,6 +4,7 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "command/CommandHandlerCollection.h"
+#include "euroscope/UserSetting.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
@@ -75,6 +76,9 @@ namespace UKControllerPlugin {
             void ToogleMenu(RECT area, std::string title, int numColumns) override;
 
         private:
+
+            // Wrapper around the ASR to provide access to user settings
+            std::unique_ptr<UKControllerPlugin::Euroscope::UserSetting> userSettingProvider;
 
             // Wrapper around the Gdiplus Graphics library
             UKControllerPlugin::Windows::GdiGraphicsInterface & graphics;

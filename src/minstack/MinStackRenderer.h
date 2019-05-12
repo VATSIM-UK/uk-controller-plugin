@@ -48,7 +48,7 @@ namespace UKControllerPlugin {
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
                 void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const;
-                void Configure(std::string subject);
+                void Configure(int functionId, std::string subject, RECT screenObjectArea);
                 RECT GetHideClickspotArea(void) const;
                 Gdiplus::Rect GetHideSpotRender(void) const;
                 RECT GetTopBarArea(void) const;
@@ -59,7 +59,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 );
                 bool IsVisible(void) const;
-                void Move(RECT titleBarArea);
+                void Move(RECT titleBarArea, std::string objectDescription);
                 void Render(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen

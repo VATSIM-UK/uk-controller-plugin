@@ -5,8 +5,8 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "euroscope/EuroScopeCRadarTargetWrapper.h"
 #include "euroscope/EuroScopeCFlightPlanWrapper.h"
-#include "controller/ControllerStatusEventHandlerCollection.h"
 #include "euroscope/EuroScopeCControllerWrapper.h"
+#include "controller/ControllerStatusEventHandlerCollection.h"
 #include "timedevent/TimedEventCollection.h"
 #include "tag/TagItemCollection.h"
 #include "metar/MetarEventHandlerCollection.h"
@@ -18,6 +18,8 @@ using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetWrapper;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanWrapper;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerWrapper;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 using UKControllerPlugin::Euroscope::RadarTargetEventHandlerCollection;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
@@ -71,6 +73,22 @@ namespace UKControllerPlugin {
             false,
             false,
             false
+        );
+    }
+
+    /*
+        Add an item to an already open popup list
+    */
+    void UKPlugin::AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item)
+    {
+        AddPopupListElement(
+            item.firstValue.c_str(),
+            item.secondValue.c_str(),
+            item.callbackFunctionId,
+            false,
+            item.checked,
+            item.disabled,
+            item.fixedPosition
         );
     }
 
@@ -204,6 +222,20 @@ namespace UKControllerPlugin {
     }
 
     /*
+        Return the controller object related to the user that is logged in.
+    */
+    std::shared_ptr<EuroScopeCControllerInterface> UKPlugin::GetUserControllerObject(void) const
+    {
+        EuroScopePlugIn::CController me = this->ControllerMyself();
+
+        if (!me.IsValid()) {
+            return nullptr;
+        }
+
+        return std::make_shared<EuroScopeCControllerWrapper>(me, true);
+    }
+
+    /*
         Gets a flightplan for a given callsign.
     */
     std::shared_ptr<EuroScopeCFlightPlanInterface> UKPlugin::GetFlightplanForCallsign(std::string callsign) const
@@ -229,6 +261,34 @@ namespace UKControllerPlugin {
         }
 
         return std::make_shared<EuroScopeCRadarTargetWrapper>(target);
+    }
+
+    /*
+        Returns the currently selected flightplan
+    */
+    std::shared_ptr<EuroScopeCFlightPlanInterface> UKPlugin::GetSelectedFlightplan() const
+    {
+        EuroScopePlugIn::CFlightPlan fp = this->FlightPlanSelectASEL();
+
+        if (!fp.IsValid()) {
+            return NULL;
+        }
+
+        return std::make_shared<EuroScopeCFlightPlanWrapper>(fp);
+    }
+
+    /*
+        Returns the currently selected radar target
+    */
+    std::shared_ptr<EuroScopeCRadarTargetInterface> UKPlugin::GetSelectedRadarTarget() const
+    {
+        EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelectASEL();
+
+        if (!rt.IsValid()) {
+            return NULL;
+        }
+
+        return std::make_shared<EuroScopeCRadarTargetWrapper>(rt);
     }
 
     /*
@@ -329,7 +389,9 @@ namespace UKControllerPlugin {
             functionId,
             sItemString,
             EuroScopeCFlightPlanWrapper(this->FlightPlanSelectASEL()),
-            EuroScopeCRadarTargetWrapper(this->RadarTargetSelectASEL())
+            EuroScopeCRadarTargetWrapper(this->RadarTargetSelectASEL()),
+            Pt,
+            Area
         );
     }
 
@@ -346,7 +408,7 @@ namespace UKControllerPlugin {
         COLORREF * pRGB,
         double * pFontSize
     ) {
-        if (!FlightPlan.IsValid() || !RadarTarget.IsValid()) {
+        if (!FlightPlan.IsValid()) {
             return;
         }
 
@@ -396,6 +458,14 @@ namespace UKControllerPlugin {
 
         EuroScopeCRadarTargetWrapper radarTargetWrapper(radarTarget);
         this->radarTargetEventHandler.RadarTargetEvent(radarTargetWrapper);
+    }
+
+    /*
+        Open a popup list
+    */
+    void UKPlugin::TriggerPopupList(RECT area, std::string title, int numColumns)
+    {
+        this->OpenPopupList(area, title.c_str(), numColumns);
     }
 
     /*

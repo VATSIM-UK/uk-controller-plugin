@@ -69,6 +69,7 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Plugin::FunctionCallEventHandler & functionCallHandler,
                 const UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers
             );
+            void AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item) override;
             void ChatAreaMessage(
                 std::string handler,
                 std::string sender,
@@ -81,12 +82,19 @@ namespace UKControllerPlugin {
             ) override;
             double GetDistanceFromUserVisibilityCentre(EuroScopePlugIn::CPosition position) const;
             int GetEuroscopeConnectionStatus(void) const;
+            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> GetUserControllerObject(
+                void
+            ) const override;
             std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> GetFlightplanForCallsign(
                 std::string callsign
             ) const;
             std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface> GetRadarTargetForCallsign(
                 std::string callsign
             ) const;
+            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>
+                GetSelectedFlightplan()const override;
+            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+                GetSelectedRadarTarget() const override;
             bool OnCompileCommand ( const char * sCommandLine );
             void OnControllerDisconnect(EuroScopePlugIn::CController Controller);
             void OnControllerPositionUpdate(EuroScopePlugIn::CController Controller);
@@ -114,6 +122,7 @@ namespace UKControllerPlugin {
                 bool CanBeCreated
             );
             void OnRadarTargetPositionUpdate(EuroScopePlugIn::CRadarTarget radarTarget);
+            void TriggerPopupList(RECT area, std::string title, int numColumns) override;
             void PostInit(void);
             void RegisterTagFunction(int itemCode, std::string description) override;
             void RegisterTagItem(int itemCode, std::string description);

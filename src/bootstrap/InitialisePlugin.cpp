@@ -32,6 +32,10 @@
 #include "timedevent/DeferredEventBootstrap.h"
 #include "offblock/EstimatedDepartureTimeBootstrap.h"
 #include "wake/WakeModule.h"
+#include "hold/HoldModule.h"
+#include "dependency/DependencyProviderInterface.h"
+#include "dependency/DependencyProviderFactory.h"
+#include "metar/PressureMonitorBootstrap.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -63,6 +67,8 @@ using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Bootstrap::DuplicatePlugin;
 using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
+using UKControllerPlugin::Dependency::DependencyProviderInterface;
+using UKControllerPlugin::Dependency::GetDependencyProvider;
 
 namespace UKControllerPlugin {
 
@@ -152,7 +158,8 @@ namespace UKControllerPlugin {
         // If we're not allowed to use the API because we've been banned or something... It's no go.
         bool apiAuthorised = ApiAuthChecker::IsAuthorised(
             *this->container->api,
-            *this->container->windows
+            *this->container->windows,
+            *this->container->settingsRepository
         );
 
         // Check for updates, but only if the API is either authorised
@@ -175,6 +182,14 @@ namespace UKControllerPlugin {
             *this->container->curl
         );
 
+        // Load all the "new" dependencies that don't come from a manifest.
+        std::unique_ptr<DependencyProviderInterface> dependencyProvider = GetDependencyProvider(
+            *container->api,
+            *container->windows,
+            apiAuthorised
+        );
+        LogInfo("Loading new dependencies with provider " + dependencyProvider->GetProviderType());
+
         // Boostrap all the modules at a plugin level
         CollectionBootstrap::BootstrapPlugin(*this->container, dependencyCache);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
@@ -196,6 +211,11 @@ namespace UKControllerPlugin {
             InitialAltitudeModule::BootstrapPlugin(dependencyCache, *this->container);
         }
 
+        UKControllerPlugin::Hold::BootstrapPlugin(
+            *dependencyProvider,
+            *this->container,
+            *this->container->userMessager
+        );
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(this->container->countdownTimer, *this->container->windows);
@@ -222,6 +242,9 @@ namespace UKControllerPlugin {
         ActualOffBlockTimeBootstrap::BootstrapPlugin(*this->container);
         EstimatedOffBlockTimeBootstrap::BootstrapPlugin(*this->container);
         EstimatedDepartureTimeBootstrap::BootstrapPlugin(*this->container);
+
+        // Pressure monitor
+        UKControllerPlugin::Metar::PressureMonitorBootstrap(*this->container);
 
         // Do post-init and final setup, which involves running tasks that need to happen on load.
         PostInit::Process(*this->container);

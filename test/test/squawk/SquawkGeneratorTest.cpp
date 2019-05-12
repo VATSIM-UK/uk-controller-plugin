@@ -3,6 +3,7 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "mock/MockEuroScopeCControllerInterface.h"
 #include "mock/MockCurlApi.h"
 #include "api/ApiInterface.h"
 #include "mock/MockTaskRunnerInterface.h"
@@ -26,6 +27,7 @@ using UKControllerPluginTest::Curl::MockCurlApi;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -54,8 +56,9 @@ namespace UKControllerPluginTest {
                 void SetUp()
                 {
                     this->squawkAllocationHandler = std::make_shared<ApiSquawkAllocationHandler>(this->pluginLoopback);
-                    this->mockFlightplan = std::make_unique<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-                    this->mockRadarTarget = std::make_unique<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+                    this->mockFlightplan = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+                    this->mockRadarTarget = std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+                    this->mockSelfController = std::make_shared<NiceMock<MockEuroScopeCControllerInterface>>();
                     this->airfieldOwnership = std::make_unique<AirfieldOwnershipManager>(
                         this->airfields,
                         this->activeCallsigns
@@ -87,6 +90,9 @@ namespace UKControllerPluginTest {
                         )
                     );
                     this->airfieldOwnership->RefreshOwner("EGKK");
+
+                    ON_CALL(*this->mockSelfController, IsVatsimRecognisedController())
+                        .WillByDefault(Return(true));
                 }
 
                 NiceMock<MockCurlApi> mockCurl;
@@ -95,6 +101,7 @@ namespace UKControllerPluginTest {
                 MockTaskRunnerInterface taskRunner;
                 std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplan;
                 std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
+                std::shared_ptr<NiceMock<MockEuroScopeCControllerInterface>> mockSelfController;
                 NiceMock<MockEuroscopePluginLoopbackInterface> pluginLoopback;
                 StoredFlightplanCollection flightplans;
                 ActiveCallsignCollection activeCallsigns;
@@ -499,12 +506,17 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkGeneratorTest, ForceGeneralSquawkForAircraftReturnsFalseOnNoAction)
         {
-            this->activeCallsigns.Flush();
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(nullptr));
+
             EXPECT_FALSE(this->generator->ForceGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkGeneratorTest, ForceGeneralSquawkForAircraftAssignsSquawk)
         {
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(this->mockSelfController));
+
             ON_CALL(*this->mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW1252"));
 
@@ -538,12 +550,17 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkGeneratorTest, ForceLocalSquawkForAircraftReturnsFalseOnNoAction)
         {
-            this->activeCallsigns.Flush();
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(nullptr));
+
             EXPECT_FALSE(this->generator->ForceLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkGeneratorTest, ForceLocalSquawkAssignsSquawks)
         {
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(this->mockSelfController));
+
             ON_CALL(*this->mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW1252"));
 

@@ -11,6 +11,8 @@
 #include "radarscreen/ScreenControlsBootstrap.h"
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
+#include "hold/HoldModule.h"
+#include "bootstrap/HelperBootstrap.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -21,6 +23,7 @@ using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::RadarScreen::ScreenControlsBootstrap;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
+using UKControllerPlugin::Bootstrap::HelperBootstrap;
 
 namespace UKControllerPlugin {
     namespace RadarScreen {
@@ -42,8 +45,12 @@ namespace UKControllerPlugin {
             ConfigurableDisplayCollection configurableDisplays;
             CommandHandlerCollection commandHandlers;
 
-
             // Run bootstrap
+            HelperBootstrap::BootstrapApiConfigurationItem(
+                persistence,
+                configurableDisplays
+            );
+
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
                 *persistence.pluginFunctionHandlers,
                 configurableDisplays,
@@ -78,6 +85,14 @@ namespace UKControllerPlugin {
                 configurableDisplays,
                 *persistence.brushes,
                 userSettingHandlers
+            );
+
+            UKControllerPlugin::Hold::BootstrapRadarScreen(
+                configurableDisplays,
+                renderers,
+                userSettingHandlers,
+                commandHandlers,
+                this->persistence
             );
 
             // Last thing we do is ScreenControls

@@ -20,12 +20,12 @@ namespace UKControllerPluginTest {
             TagFunction first = {
                 1,
                 "test",
-                [](EuroScopeCFlightPlanInterface & fp, EuroScopeCRadarTargetInterface & rt) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             };
             TagFunction second = {
                 1,
                 "test2",
-                [](EuroScopeCFlightPlanInterface & fp, EuroScopeCRadarTargetInterface & rt) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             };
             EXPECT_TRUE(first == second);
         }
@@ -35,12 +35,12 @@ namespace UKControllerPluginTest {
             TagFunction first = {
                 1,
                 "test",
-                [](EuroScopeCFlightPlanInterface & fp, EuroScopeCRadarTargetInterface & rt) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             };
             TagFunction second = {
                 2,
                 "test2",
-                [](EuroScopeCFlightPlanInterface & fp, EuroScopeCRadarTargetInterface & rt) {}
+                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
             };
             EXPECT_FALSE(first == second);
         }
@@ -51,7 +51,8 @@ namespace UKControllerPluginTest {
             TagFunction first = {
                 1,
                 "test",
-                [&testCount](EuroScopeCFlightPlanInterface & fp, EuroScopeCRadarTargetInterface & rt) {testCount++; }
+                [&testCount]
+                (EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {testCount++; }
             };
             TagFunction second = first;
 
@@ -60,9 +61,9 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(first.functionId, second.functionId);
             EXPECT_TRUE(first.description == second.description);
-            first.function(mockFlightplan, mockRadarTarget);
+            first.function(mockFlightplan, mockRadarTarget, "", POINT());
             EXPECT_EQ(1, testCount);
-            second.function(mockFlightplan, mockRadarTarget);
+            second.function(mockFlightplan, mockRadarTarget, "", POINT());
             EXPECT_EQ(2, testCount);
         }
     }  // namespace Function

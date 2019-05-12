@@ -18,7 +18,7 @@ namespace UKControllerPlugin {
         class SettingRepositoryFactory
         {
             public:
-                static UKControllerPlugin::Setting::SettingRepository Create(
+                static std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> Create(
                     UKControllerPlugin::Windows::WinApiInterface & winApi
                 );
         };

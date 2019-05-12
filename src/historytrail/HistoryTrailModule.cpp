@@ -66,7 +66,13 @@ namespace UKControllerPlugin {
             CallbackFunction configureCallback(
                 toggleCallbackFunction,
                 "History Trail Configure",
-                std::bind(&HistoryTrailRenderer::Configure, renderer, std::placeholders::_1)
+                std::bind(
+                    &HistoryTrailRenderer::Configure,
+                    renderer,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
             );
             eventHandler.RegisterFunctionCall(configureCallback);
             configurableDisplays.RegisterDisplay(renderer);

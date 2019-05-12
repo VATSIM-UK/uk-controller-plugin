@@ -115,6 +115,12 @@
     <Filter Include="src\wake">
       <UniqueIdentifier>{33f04493-b7ed-43ec-a004-61ca98cb71e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\hold">
+      <UniqueIdentifier>{93c29766-c3d5-47e0-8cfd-5d71d115cd0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\dialog">
+      <UniqueIdentifier>{e0f95056-2640-4e39-bc95-a21844516f05}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\Airfield.h">
@@ -699,6 +705,33 @@
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h">
       <Filter>src\initialaltitude</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldingData.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\CompareHolds.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldingAircraft.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldManager.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\CompareHoldingAircraft.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldEventHandler.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldModule.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplayFunctions.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplay.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
@@ -714,8 +747,116 @@
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h">
       <Filter>src\squawk</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\ManagedHold.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldSelectionMenu.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\controller\TranslateFrequencyAbbreviation.h">
       <Filter>src\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldConfigurationDialog.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dialog\DialogManager.h">
+      <Filter>src\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dialog\DialogData.h">
+      <Filter>src\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dialog\CompareDialogs.h">
+      <Filter>src\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dialog\DialogProviderInterface.h">
+      <Filter>src\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyProviderInterface.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\ApiDependencyProvider.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyConfig.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\LocalDependencyProvider.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyData.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyProviderFactory.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldingDataSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldManagerFactory.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldConfigurationDialogFactory.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\CompareHoldsDescription.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldProfileSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldProfile.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldProfileManager.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldProfileManagerFactory.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\CompareHoldProfile.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\AbstractHoldLevelRestriction.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\BlockedHoldLevelRestriction.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\BlockedHoldLevelRestrictionSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldRestrictionSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldRenderer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dialog\DialogCallArgument.h">
+      <Filter>src\dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldConfigurationMenuItem.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplayManager.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\metar\PressureMonitor.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\metar\MetarParsingFunctions.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\metar\PressureChangeMessage.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\metar\PressureMonitorBootstrap.h">
+      <Filter>src\metar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h">
+      <Filter>src\api</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1201,6 +1342,27 @@
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp">
       <Filter>src\initialaltitude</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\hold\CompareHolds.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldManager.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\CompareHoldingAircraft.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldEventHandler.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldModule.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplayFunctions.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplay.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
@@ -1210,8 +1372,98 @@
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp">
       <Filter>src\squawk</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\hold\ManagedHold.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldSelectionMenu.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\controller\TranslateFrequencyAbbreviation.cpp">
       <Filter>src\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldConfigurationDialog.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dialog\DialogManager.cpp">
+      <Filter>src\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dialog\CompareDialogs.cpp">
+      <Filter>src\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\ApiDependencyProvider.cpp">
+      <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\DependencyConfig.cpp">
+      <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\LocalDependencyProvider.cpp">
+      <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\DependencyProviderFactory.cpp">
+      <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldingData.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldingDataSerializer.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldManagerFactory.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldConfigurationDialogFactory.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\CompareHoldsDescription.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldProfileSerializer.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldProfileManager.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldProfileManagerFactory.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\CompareHoldProfile.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestriction.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestrictionSerializer.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldRestrictionSerializer.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldRenderer.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldConfigurationMenuItem.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplayManager.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\PressureMonitor.cpp">
+      <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\MetarParsingFunctions.cpp">
+      <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\PressureChangeMessage.cpp">
+      <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\metar\PressureMonitorBootstrap.cpp">
+      <Filter>src\metar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp">
+      <Filter>src\api</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

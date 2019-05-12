@@ -31,7 +31,21 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD1(GetAssignedSquawk, UKControllerPlugin::Squawk::ApiSquawkAllocation(std::string));
                 MOCK_CONST_METHOD0(GetApiDomain, std::string(void));
                 MOCK_CONST_METHOD0(GetApiKey, std::string(void));
+                MOCK_CONST_METHOD0(GetHoldDependency, nlohmann::json(void));
+                MOCK_CONST_METHOD0(GetGenericHoldProfiles, nlohmann::json(void));
+                MOCK_CONST_METHOD0(GetUserHoldProfiles, nlohmann::json(void));
+                MOCK_CONST_METHOD1(GetDependency, nlohmann::json(UKControllerPlugin::Dependency::DependencyData));
+                MOCK_CONST_METHOD1(DeleteUserHoldProfile, void(unsigned int profileId));
+                MOCK_CONST_METHOD2(
+                    CreateUserHoldProfile, unsigned int(std::string name, std::set<unsigned int> holds)
+                );
+                MOCK_CONST_METHOD3(
+                    UpdateUserHoldProfile,
+                    void(unsigned int id, std::string name, std::set<unsigned int> holds)
+                );
                 MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
+                MOCK_METHOD1(SetApiDomain, void(std::string));
+                MOCK_METHOD1(SetApiKey, void(std::string));
         };
     }  // namespace Api
 }  // namespace UKControllerPluginTest

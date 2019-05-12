@@ -1,9 +1,11 @@
 #pragma once
+#include "plugin/PopupMenuItem.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
+        class EuroScopeCControllerInterface;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
@@ -18,6 +20,7 @@ namespace Euroscope {
 class EuroscopePluginLoopbackInterface
 {
     public:
+        virtual void AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item) = 0;
         virtual void ChatAreaMessage(
             std::string handler,
             std::string sender,
@@ -28,6 +31,9 @@ class EuroscopePluginLoopbackInterface
             bool flash,
             bool confirm
         ) = 0;
+        virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> GetUserControllerObject(
+            void
+        ) const = 0;
         virtual int GetEuroscopeConnectionStatus(void) const = 0;
         virtual double GetDistanceFromUserVisibilityCentre(EuroScopePlugIn::CPosition position) const = 0;
         virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> GetFlightplanForCallsign(
@@ -35,7 +41,11 @@ class EuroscopePluginLoopbackInterface
         ) const = 0;
         virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
             GetRadarTargetForCallsign(std::string callsign) const = 0;
-
+        virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>
+            GetSelectedFlightplan() const = 0;
+        virtual std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+            GetSelectedRadarTarget() const = 0;
+        virtual void TriggerPopupList(RECT area, std::string title, int numColumns) = 0;
         virtual void TriggerFlightplanUpdateForCallsign(std::string callsign) = 0;
         virtual void RegisterTagFunction(int itemCode, std::string description) = 0;
         virtual void RegisterTagItem(int itemCode, std::string description) = 0;

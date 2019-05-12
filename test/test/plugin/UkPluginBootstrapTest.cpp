@@ -5,7 +5,7 @@
 using UKControllerPlugin::Bootstrap::UkPluginBootstrap;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
-namespace UKcontrollPluginCoreTest {
+namespace UKControllerPluginTest {
     namespace Bootstrap {
 
         TEST(UkPluginBootstrap, BootstrapPluginCreatesPlugin)
@@ -16,4 +16,4 @@ namespace UKcontrollPluginCoreTest {
             EXPECT_NO_THROW(container.plugin->GetPlugInName());
         }
     }  // namespace Bootstrap
-}  // namespace UKcontrollPluginCoreTest
+}  // namespace UKControllerPluginTest
