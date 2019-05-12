@@ -42,6 +42,7 @@
 #include "dialog/DialogManager.h"
 #include "hold/HoldProfileManager.h"
 #include "hold/HoldDisplayFactory.h"
+#include "setting/SettingRepository.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -65,6 +66,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Euroscope::UserSetting> pluginUserSettingHandler;
             std::shared_ptr<UKControllerPlugin::Controller::Login> login;
             std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
+            std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;
 
             // Collections of event handlers
             std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;

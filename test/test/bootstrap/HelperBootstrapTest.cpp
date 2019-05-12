@@ -47,6 +47,21 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE("testurl" == this->container.api->GetApiDomain());
         }
 
+        TEST_F(HelperBootstrapTest, BootstrapCreatesSettingsRepository)
+        {
+            EXPECT_CALL(*this->mockWinApi, FileExists("settings/api-settings.json"))
+                .Times(1)
+                .WillOnce(Return(true));
+
+            EXPECT_CALL(*this->mockWinApi, ReadFromFileMock("settings/api-settings.json", true))
+                .Times(1)
+                .WillOnce(Return("{\"api-url\": \"testurl\", \"api-key\": \"testkey\"}"));
+            this->container.windows = std::move(this->mockWinApi);
+
+            HelperBootstrap::Bootstrap(container);
+            EXPECT_NO_THROW(this->container.settingsRepository->GetSetting("foo"));
+        }
+
         TEST_F(HelperBootstrapTest, BootstrapCreatesTaskRunner)
         {
             EXPECT_CALL(*this->mockWinApi, FileExists("settings/api-settings.json"))
