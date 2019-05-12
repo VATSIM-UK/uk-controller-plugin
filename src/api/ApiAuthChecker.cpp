@@ -24,18 +24,25 @@ namespace UKControllerPlugin {
                 }
                 return true;
             } catch (ApiNotAuthorisedException notAuth) {
+                std::wstring message;
+                message += L"Unable to authenticate with the API. Core functionality will be disabled.\r\n\r\n";
+                message += L"Please go to https://vatsim.uk/ukcp to download your personal access token and use the ";
+                message += L"\"Replace Personal API Configuration\" option in the plugin menu to install it.";
                 windows.OpenMessageBox(
-                    L"API authorisation failed. The vast majority of functionality will be disabled.",
-                    L"UKCP Warning",
+                    message.c_str(),
+                    L"UKCP API Authentication Warning",
                     MB_OK | MB_ICONWARNING
                 );
                 LogCritical("API authorisation failed: " + std::string(notAuth.what()));
                 return false;
             } catch (ApiException api) {
                 // Something weird is going on.
+                std::wstring message;
+                message += L"Unable to access the API. Core functionality will be disabled. \r\n\r\n";
+                message += L"If the problem persists, please contact the VATSIM UK Web Services Department.";
                 windows.OpenMessageBox(
-                    L"Issues detected with the API, remote functionality is disabled.",
-                    L"UKCP Warning",
+                    message.c_str(),
+                    L"UKCP API Availability Warning",
                     MB_OK | MB_ICONWARNING
                 );
                 LogCritical(
