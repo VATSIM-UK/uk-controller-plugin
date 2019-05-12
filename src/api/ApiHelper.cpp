@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
 
         ApiHelper::ApiHelper(
             CurlInterface & curlApi,
-            const UKControllerPlugin::Api::ApiRequestBuilder requestBuilder,
+            ApiRequestBuilder requestBuilder,
             WinApiInterface & winApi
         ) : curlApi(curlApi), requestBuilder(requestBuilder), winApi(winApi)
         {
@@ -288,6 +288,22 @@ namespace UKControllerPlugin {
             }
 
             return this->UPDATE_UP_TO_DATE;
+        }
+
+        /*
+            Set api key on the request builder
+        */
+        void ApiHelper::SetApiKey(std::string key)
+        {
+            this->requestBuilder.SetApiKey(key);
+        }
+
+        /*
+            Set api domain on the request builder
+        */
+        void ApiHelper::SetApiDomain(std::string domain)
+        {
+            this->requestBuilder.SetApiDomain(domain);
         }
     }  // namespace Api
 }  // namespace UKControllerPlugin

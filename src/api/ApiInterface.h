@@ -45,6 +45,8 @@ namespace UKControllerPlugin {
                     std::set<unsigned int> holds
                 ) const = 0;
                 virtual int UpdateCheck(std::string version) const = 0;
+                virtual void SetApiKey(std::string key) = 0;
+                virtual void SetApiDomain(std::string domain) = 0;
 
                 // Codes returned after an update check
                 static const int UPDATE_UP_TO_DATE = 0;

@@ -554,6 +554,18 @@ TEST_F(ApiHelperTest, ItHasAnApiKeyToUseForAuthentication)
     EXPECT_TRUE(this->helper.GetApiKey() == mockApiKey);
 }
 
+TEST_F(ApiHelperTest, ItCanUpdateTheUrl)
+{
+    this->helper.SetApiDomain("https://nottheurl");
+    EXPECT_TRUE(this->helper.GetApiDomain() == "https://nottheurl");
+}
+
+TEST_F(ApiHelperTest, ItCanUpdateTheKey)
+{
+    this->helper.SetApiKey("notthekey");
+    EXPECT_TRUE(this->helper.GetApiKey() == "notthekey");
+}
+
 TEST_F(ApiHelperTest, GetDependencyReturnsJsonData)
 {
     nlohmann::json data;
