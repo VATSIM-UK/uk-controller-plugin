@@ -1,6 +1,6 @@
 #pragma once
-
 #include "curl/CurlRequest.h"
+#include "dependency/DependencyData.h"
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -15,6 +15,9 @@ namespace UKControllerPlugin {
                 ApiRequestBuilder(std::string apiDomain, std::string apiKey);
                 UKControllerPlugin::Curl::CurlRequest BuildAuthCheckRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildDependencyListRequest(void) const;
+                UKControllerPlugin::Curl::CurlRequest BuildDependencyRequest(
+                    UKControllerPlugin::Dependency::DependencyData dependency
+                ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildSquawkAssignmentCheckRequest(std::string callsign) const;
                 UKControllerPlugin::Curl::CurlRequest BuildSquawkAssignmentDeletionRequest(std::string callsign) const;
                 UKControllerPlugin::Curl::CurlRequest BuildLocalSquawkAssignmentRequest(
@@ -26,6 +29,18 @@ namespace UKControllerPlugin {
                     std::string callsign,
                     std::string origin,
                     std::string destination
+                ) const;
+                UKControllerPlugin::Curl::CurlRequest BuildHoldDependencyRequest(void) const;
+                UKControllerPlugin::Curl::CurlRequest BuildUserHoldProfilesRequest(void) const;
+                UKControllerPlugin::Curl::CurlRequest BuildDeleteUserHoldProfileRequest(unsigned int id) const;
+                UKControllerPlugin::Curl::CurlRequest BuildCreateUserHoldProfileRequest(
+                    std::string profileName,
+                    std::set<unsigned int> holdIds
+                ) const;
+                UKControllerPlugin::Curl::CurlRequest BuildUpdateUserHoldProfileRequest(
+                    unsigned int profileId,
+                    std::string profileName,
+                    std::set<unsigned int> holdIds
                 ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildRemoteFileRequest(std::string uri) const;
                 UKControllerPlugin::Curl::CurlRequest BuildVersionCheckRequest(std::string versionString) const;

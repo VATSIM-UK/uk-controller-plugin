@@ -17,7 +17,7 @@ namespace UKControllerPlugin {
             /*
                 Compares two PopupMenuItems for equality
             */
-            bool operator==(const PopupMenuItem & compare)
+            bool operator==(const PopupMenuItem & compare) const
             {
                 return this->firstValue == compare.firstValue &&
                     this->secondValue == compare.secondValue &&

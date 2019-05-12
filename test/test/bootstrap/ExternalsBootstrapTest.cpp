@@ -12,17 +12,6 @@ namespace UKControllerPluginTest {
 
         class ExternalsBootstrapTest : public ::testing::Test {
 
-            void SetUp() {
-                Gdiplus::GdiplusStartupInput gdiStartup;
-                Gdiplus::GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
-            }
-
-            void TearDown() {
-                Gdiplus::GdiplusShutdown(this->gdiPlusToken);
-            }
-
-            // Gdi plus token
-            ULONG_PTR gdiPlusToken;
         };
 
         TEST_F(ExternalsBootstrapTest, BootstrapCreatesCurlApi)
@@ -44,6 +33,15 @@ namespace UKControllerPluginTest {
                 container.windows->GetFullPathToLocalFile("testfile.json"),
                 ExternalsBootstrap::GetPluginFileRoot() + "/testfile.json"
             );
+        }
+
+        TEST_F(ExternalsBootstrapTest, BootstrapCreatesDialogManager)
+        {
+            PersistenceContainer container;
+            HINSTANCE dll = 0;
+            ExternalsBootstrap::Bootstrap(container, dll);
+
+            EXPECT_EQ(0, container.dialogManager->CountDialogs());
         }
 
         TEST_F(ExternalsBootstrapTest, BootstrapCreatesBrushes)

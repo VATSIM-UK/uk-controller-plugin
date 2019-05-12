@@ -23,6 +23,7 @@ using UKControllerPlugin::Squawk::SquawkValidator;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Api::RemoteFileManifestFactory;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
+using UKControllerPlugin::Dependency::DependencyData;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -203,6 +204,70 @@ namespace UKControllerPlugin {
         std::string ApiHelper::GetApiKey(void) const
         {
             return this->requestBuilder.GetApiKey();
+        }
+
+        /*
+            Returns the hold data dependency
+        */
+        nlohmann::json ApiHelper::GetHoldDependency(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildHoldDependencyRequest()).GetRawData();
+        }
+
+        /*
+            Download the generic hold profiles JSON
+        */
+        nlohmann::json ApiHelper::GetGenericHoldProfiles(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildUserHoldProfilesRequest()).GetRawData();
+        }
+
+        /*
+            Download the user hold profiles JSON
+        */
+        nlohmann::json ApiHelper::GetUserHoldProfiles(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildUserHoldProfilesRequest()).GetRawData();
+        }
+
+        /*
+            Get a dependency from the API
+        */
+        nlohmann::json ApiHelper::GetDependency(DependencyData dependency) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildDependencyRequest(dependency)).GetRawData();
+        }
+
+        /*
+            Delete the given user hold profile
+        */
+        void ApiHelper::DeleteUserHoldProfile(unsigned int profileId) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildDeleteUserHoldProfileRequest(profileId));
+        }
+
+        /*
+            Create a user hold profile
+        */
+        unsigned int ApiHelper::CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const
+        {
+            nlohmann::json response = this->MakeApiRequest(
+                this->requestBuilder.BuildCreateUserHoldProfileRequest(name, holds)
+            ).GetRawData();
+
+            if (!response.count("id") || !response.at("id").is_number_integer()) {
+                throw ApiException("Invalid API response when creating a hold profile");
+            }
+
+            return response.at("id");
+        }
+
+        /*
+            Update a user hold profile
+        */
+        void ApiHelper::UpdateUserHoldProfile(unsigned int id, std::string name, std::set<unsigned int> holds) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildUpdateUserHoldProfileRequest(id, name, holds));
         }
 
         /*

@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
 
         }
 
-        void ApiConfigurationMenuItem::Configure(std::string subject)
+        void ApiConfigurationMenuItem::Configure(int functionId, std::string subject, RECT area)
         {
             UKControllerPlugin::Bootstrap::UserRequestedKeyUpdate(this->winApi);
         }

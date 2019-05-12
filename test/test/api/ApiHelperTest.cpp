@@ -403,6 +403,147 @@ TEST_F(ApiHelperTest, DeleteSquawkAssignmentIsCalledCorrectly)
     EXPECT_NO_THROW(this->helper.DeleteSquawkAssignment("BAW123"));
 }
 
+TEST_F(ApiHelperTest, GetHoldDependencyReturnsJsonData)
+{
+    nlohmann::json data;
+    data["foo"] = "bar";
+    data["big"] = "small";
+
+    CurlResponse response(data.dump(), false, 200);
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold", CurlRequest::METHOD_GET));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(data, this->helper.GetHoldDependency());
+}
+
+TEST_F(ApiHelperTest, GetGenericHoldProfilesReturnsReturnsData)
+{
+    nlohmann::json data;
+    data["foo"] = "bar";
+    data["big"] = "small";
+
+    CurlResponse response(data.dump(), false, 200);
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_GET));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(data, this->helper.GetGenericHoldProfiles());
+}
+
+TEST_F(ApiHelperTest, GetUserHoldProfilesReturnsReturnsData)
+{
+    nlohmann::json data;
+    data["foo"] = "bar";
+    data["big"] = "small";
+
+    CurlResponse response(data.dump(), false, 200);
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_GET));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(data, this->helper.GetUserHoldProfiles());
+}
+
+TEST_F(ApiHelperTest, DeleteUserHoldProfileMakesRequest)
+{
+    nlohmann::json data;
+    data["foo"] = "bar";
+    data["big"] = "small";
+
+    CurlResponse response(data.dump(), false, 200);
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/1", CurlRequest::METHOD_DELETE));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.DeleteUserHoldProfile(1));
+}
+
+TEST_F(ApiHelperTest, CreateUserHoldProfileMakesRequest)
+{
+    nlohmann::json data;
+    data["id"] = 3;
+
+    CurlResponse response(data.dump(), false, 200);
+
+    nlohmann::json expectedBody;
+    expectedBody["name"] = "Test";
+    expectedBody["holds"] = { 1, 2 };
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_PUT, expectedBody));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(3, this->helper.CreateUserHoldProfile("Test", { 1, 2 }));
+}
+
+TEST_F(ApiHelperTest, CreateUserHoldProfileThrowsExceptionIdNotANumber)
+{
+    nlohmann::json data;
+    data["id"] = "test";
+
+    CurlResponse response(data.dump(), false, 200);
+
+    nlohmann::json expectedBody;
+    expectedBody["name"] = "Test";
+    expectedBody["holds"] = { 1, 2 };
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_PUT, expectedBody));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.CreateUserHoldProfile("Test", { 1, 2 }), ApiException);
+}
+
+TEST_F(ApiHelperTest, CreateUserHoldProfileThrowsExceptionNoIdReturned)
+{
+    nlohmann::json data;
+
+    CurlResponse response(data.dump(), false, 200);
+
+    nlohmann::json expectedBody;
+    expectedBody["name"] = "Test";
+    expectedBody["holds"] = { 1, 2 };
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_PUT, expectedBody));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.CreateUserHoldProfile("Test", { 1, 2 }), ApiException);
+}
+
+
+TEST_F(ApiHelperTest, UpdateUserHoldProfileMakesRequest)
+{
+    nlohmann::json data;
+    data["foo"] = "bar";
+    data["big"] = "small";
+
+    CurlResponse response(data.dump(), false, 200);
+
+    nlohmann::json expectedBody;
+    expectedBody["name"] = "Test";
+    expectedBody["holds"] = { 1, 2 };
+    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/1", CurlRequest::METHOD_PUT, expectedBody));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.UpdateUserHoldProfile(1, "Test", { 1, 2 }));
+}
+
 TEST_F(ApiHelperTest, ItHasAUrlToSendTo)
 {
     EXPECT_TRUE(this->helper.GetApiDomain() == mockApiUrl);
@@ -413,5 +554,20 @@ TEST_F(ApiHelperTest, ItHasAnApiKeyToUseForAuthentication)
     EXPECT_TRUE(this->helper.GetApiKey() == mockApiKey);
 }
 
+TEST_F(ApiHelperTest, GetDependencyReturnsJsonData)
+{
+    nlohmann::json data;
+    data["foo"] = "bar";
+    data["big"] = "small";
+
+    CurlResponse response(data.dump(), false, 200);
+    CurlRequest expectedRequest(GetApiCurlRequest("/dependency/somecoolthing", CurlRequest::METHOD_GET));
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(data, this->helper.GetDependency({"local", "dependency/somecoolthing", "default"}));
+}
 }  // namespace Api
 }  // namespace UKControllerPluginTest

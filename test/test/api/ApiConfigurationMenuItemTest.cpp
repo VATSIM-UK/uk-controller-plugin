@@ -53,7 +53,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(IDCANCEL));
 
-            this->menuItem.Configure("Test");
+            this->menuItem.Configure(55, "Test", {});
         }
     }  // namespace Api
 }  // namespace UKControllerPluginTest

@@ -12,6 +12,7 @@ namespace UKControllerPlugin {
                 int GetFlightLevel(void) const;
                 const EuroScopePlugIn::CPosition GetPosition(void) const;
                 const int GetGroundSpeed(void) const;
+                int GetVerticalSpeed(void) const override;
             private:
                 // The original object from EuroScope
                 EuroScopePlugIn::CRadarTarget originalData;

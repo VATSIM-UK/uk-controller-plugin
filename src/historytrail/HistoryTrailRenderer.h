@@ -49,7 +49,7 @@ namespace UKControllerPlugin {
                 );
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
                 void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
-                void Configure(std::string subject) override;
+                void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 int GetAlphaPerDot(void) const;
                 bool GetAntiAliasedTrails(void) const;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
@@ -67,7 +67,7 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) override;
-                void Move(RECT position) override;
+                void Move(RECT position, std::string objectDescription) override;
                 bool ProcessCommand(std::string command) override;
                 void RightClick(
                     int objectId,

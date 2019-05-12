@@ -59,7 +59,9 @@ namespace UKControllerPlugin {
                 std::bind(
                     &ApiConfigurationMenuItem::Configure,
                     menuItem,
-                    std::placeholders::_1
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
                 )
             );
 

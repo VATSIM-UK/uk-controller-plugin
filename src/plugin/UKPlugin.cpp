@@ -76,6 +76,22 @@ namespace UKControllerPlugin {
         );
     }
 
+    /*
+        Add an item to an already open popup list
+    */
+    void UKPlugin::AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item)
+    {
+        AddPopupListElement(
+            item.firstValue.c_str(),
+            item.secondValue.c_str(),
+            item.callbackFunctionId,
+            false,
+            item.checked,
+            item.disabled,
+            item.fixedPosition
+        );
+    }
+
     void UKPlugin::ChatAreaMessage(
         std::string handler,
         std::string sender,
@@ -248,6 +264,34 @@ namespace UKControllerPlugin {
     }
 
     /*
+        Returns the currently selected flightplan
+    */
+    std::shared_ptr<EuroScopeCFlightPlanInterface> UKPlugin::GetSelectedFlightplan() const
+    {
+        EuroScopePlugIn::CFlightPlan fp = this->FlightPlanSelectASEL();
+
+        if (!fp.IsValid()) {
+            return NULL;
+        }
+
+        return std::make_shared<EuroScopeCFlightPlanWrapper>(fp);
+    }
+
+    /*
+        Returns the currently selected radar target
+    */
+    std::shared_ptr<EuroScopeCRadarTargetInterface> UKPlugin::GetSelectedRadarTarget() const
+    {
+        EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelectASEL();
+
+        if (!rt.IsValid()) {
+            return NULL;
+        }
+
+        return std::make_shared<EuroScopeCRadarTargetWrapper>(rt);
+    }
+
+    /*
         The user has entered a dot command
     */
     bool UKPlugin::OnCompileCommand(const char * command)
@@ -345,7 +389,9 @@ namespace UKControllerPlugin {
             functionId,
             sItemString,
             EuroScopeCFlightPlanWrapper(this->FlightPlanSelectASEL()),
-            EuroScopeCRadarTargetWrapper(this->RadarTargetSelectASEL())
+            EuroScopeCRadarTargetWrapper(this->RadarTargetSelectASEL()),
+            Pt,
+            Area
         );
     }
 
@@ -412,6 +458,14 @@ namespace UKControllerPlugin {
 
         EuroScopeCRadarTargetWrapper radarTargetWrapper(radarTarget);
         this->radarTargetEventHandler.RadarTargetEvent(radarTargetWrapper);
+    }
+
+    /*
+        Open a popup list
+    */
+    void UKPlugin::TriggerPopupList(RECT area, std::string title, int numColumns)
+    {
+        this->OpenPopupList(area, title.c_str(), numColumns);
     }
 
     /*

@@ -100,6 +100,12 @@
     <Filter Include="test\wake">
       <UniqueIdentifier>{8b8dee4d-be2d-4e83-941c-35146c600ea0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\hold">
+      <UniqueIdentifier>{d5e45187-7853-49f0-b2f3-fdeee1d265e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\dialog">
+      <UniqueIdentifier>{9c9e30c3-8415-4c15-8a92-488c9f36449f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -515,6 +521,27 @@
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp">
       <Filter>test\initialaltitude</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldingDataTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\CompareHoldsTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\CompareHoldingAircraftTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldManagerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldEventHandlerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldModuleTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldDisplayFunctionsTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp">
       <Filter>test\euroscope</Filter>
     </ClCompile>
@@ -530,8 +557,92 @@
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp">
       <Filter>test\squawk</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\ManagedHoldTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldingAircraftTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldSelectionMenuTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\test\test\controller\TranslateFrequencyAbbreviationTest.cpp">
       <Filter>test\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dialog\CompareDialogsTest.cpp">
+      <Filter>test\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dialog\DialogDataTest.cpp">
+      <Filter>test\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp">
+      <Filter>test\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\LocalDependencyProviderTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\ApiDependencyProviderTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\DependencyDataTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\DependencyProviderFactoryTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldingDataSerializerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldManagerFactoryTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogFactoryTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\CompareHoldsDescriptionTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldProfileSerializerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldProfileTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldProfileManagerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldProfileManagerFactoryTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\CompareHoldProfileTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionSerializerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldRestrictionSerializerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldConfigurationMenuItemTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldDisplayFactoryTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldDisplayManagerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldRendererTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\HoldDisplayTest.cpp">
+      <Filter>test\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\metar\MetarParsingFunctionsTest.cpp">
       <Filter>test\metar</Filter>
@@ -651,6 +762,12 @@
       <Filter>helper</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockDialogProvider.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockDependencyProvider.h">
       <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>

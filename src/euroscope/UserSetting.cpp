@@ -41,6 +41,12 @@ namespace UKControllerPlugin {
             return this->ValidFloatEntry(value) ? std::stod(value) : defaultValue;
         }
 
+        unsigned int UserSetting::GetUnsignedIntegerEntry(std::string key, unsigned int defaultValue)
+        {
+            std::string value = this->userSettingProvider.GetKey(key);
+            return this->ValidIntegerEntry(value) ? std::stoul(value) : defaultValue;
+        }
+
         /*
             Returns an integer value for the given ASR key. 0 if the key isn't a integer.
         */
@@ -108,6 +114,14 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Returns true if a key exists and its value is an unsigned integer
+        */
+        bool UserSetting::ValidUnsignedIntegerEntry(std::string value)
+        {
+            return HelperFunctions::IsAnInteger(value);
+        }
+
+        /*
             Save string data to the ASR.
         */
         void UserSetting::Save(std::string name, std::string description, std::string data)
@@ -119,6 +133,14 @@ namespace UKControllerPlugin {
             Save int data to the ASR.
         */
         void UserSetting::Save(std::string name, std::string description, int data)
+        {
+            this->userSettingProvider.SetKey(name, description, std::to_string(data));
+        }
+
+        /*
+            Save unsigned int data to the ASR
+        */
+        void UserSetting::Save(std::string name, std::string description, unsigned int data)
         {
             this->userSettingProvider.SetKey(name, description, std::to_string(data));
         }

@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
                 );
 
                 // Inherited via ConfigurableDisplayInterface
-                void Configure(std::string subject) override;
+                void Configure(int functionId, std::string subject, RECT area) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
 
                 // The item description

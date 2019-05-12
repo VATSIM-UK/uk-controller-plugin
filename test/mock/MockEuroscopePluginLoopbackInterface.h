@@ -16,6 +16,7 @@ namespace UKControllerPluginTest {
             public UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface
         {
             public:
+                MOCK_METHOD1(AddItemToPopupList, void(const UKControllerPlugin::Plugin::PopupMenuItem item));
                 MOCK_CONST_METHOD0(GetEuroscopeConnectionStatus, int(void));
                 MOCK_CONST_METHOD1(GetDistanceFromUserVisibilityCentre, double(EuroScopePlugIn::CPosition position));
                 MOCK_CONST_METHOD0(
@@ -30,6 +31,15 @@ namespace UKControllerPluginTest {
                     GetRadarTargetForCallsign,
                     std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>(std::string)
                 );
+                MOCK_CONST_METHOD0(
+                    GetSelectedFlightplan,
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>()
+                );
+                MOCK_CONST_METHOD0(
+                    GetSelectedRadarTarget,
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>()
+                );
+                MOCK_METHOD3(TriggerPopupList, void(RECT area, std::string title, int numColumns));
                 MOCK_METHOD2(RegisterTagFunction, void(int, std::string));
                 MOCK_METHOD2(RegisterTagItem, void(int, std::string));
                 MOCK_METHOD1(TriggerFlightplanUpdateForCallsign, void(std::string));

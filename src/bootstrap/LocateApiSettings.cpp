@@ -93,6 +93,5 @@ namespace Bootstrap {
             MB_OK | MB_ICONINFORMATION
         );
     }
-
 }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

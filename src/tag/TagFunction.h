@@ -22,8 +22,10 @@ namespace UKControllerPlugin {
                 std::string description,
                 std::function<void(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface &,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface
-                &)> function
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface &,
+                    std::string context,
+                    const POINT & mousePos
+                )> function
             );
             void operator=(const UKControllerPlugin::Tag::TagFunction & copy);
             bool operator==(const TagFunction & compare) const;
@@ -32,7 +34,9 @@ namespace UKControllerPlugin {
             std::string description;
             std::function<void(
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface &,
-                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface &
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface &,
+                std::string context,
+                const POINT & mousePos
             )> function;
         } TagFunction;
     }  // namespace Tag

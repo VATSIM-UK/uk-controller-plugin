@@ -34,5 +34,10 @@ namespace UKControllerPlugin {
         {
             return this->originalData.GetGS();
         }
+
+        int EuroScopeCRadarTargetWrapper::GetVerticalSpeed(void) const
+        {
+            return this->originalData.GetVerticalSpeed();
+        }
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

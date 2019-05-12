@@ -7,6 +7,7 @@
 #include "graphics/GdiGraphicsWrapper.h"
 #include "bootstrap/LocateApiSettings.h"
 #include "euroscope/GeneralSettingsDialog.h"
+#include "dialog/DialogManager.h"
 #include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Curl::CurlApi;
@@ -15,6 +16,7 @@ using UKControllerPlugin::Windows::WinApi;
 using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Windows::GdiGraphicsWrapper;
 using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::HelperFunctions;
 
 namespace UKControllerPlugin {
@@ -29,20 +31,19 @@ namespace UKControllerPlugin {
             AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
             persistence.curl.reset(new CurlApi());
-
             // All files should be relative to Documents/EuroScope
-            persistence.windows.reset(
-                new WinApi(
-                    instance,
-                    ExternalsBootstrap::GetPluginFileRoot(),
-                    ExternalsBootstrap::GetPluginFileRootWide(),
-                    GeneralSettingsDialog(
-                        CWnd::FromHandle(GetActiveWindow()),
-                        *persistence.pluginUserSettingHandler,
-                        *persistence.userSettingHandlers
-                    )
+            std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(
+                instance,
+                ExternalsBootstrap::GetPluginFileRoot(),
+                ExternalsBootstrap::GetPluginFileRootWide(),
+                GeneralSettingsDialog(
+                    CWnd::FromHandle(GetActiveWindow()),
+                    *persistence.pluginUserSettingHandler,
+                    *persistence.userSettingHandlers
                 )
             );
+            persistence.dialogManager.reset(new DialogManager(*winApi));
+            persistence.windows = std::move(winApi);
             persistence.brushes.reset(new GdiplusBrushes);
             persistence.graphics.reset(new GdiGraphicsWrapper);
         }

@@ -11,6 +11,7 @@
 #include "radarscreen/ScreenControlsBootstrap.h"
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
+#include "hold/HoldModule.h"
 #include "bootstrap/HelperBootstrap.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -84,6 +85,14 @@ namespace UKControllerPlugin {
                 configurableDisplays,
                 *persistence.brushes,
                 userSettingHandlers
+            );
+
+            UKControllerPlugin::Hold::BootstrapRadarScreen(
+                configurableDisplays,
+                renderers,
+                userSettingHandlers,
+                commandHandlers,
+                this->persistence
             );
 
             // Last thing we do is ScreenControls

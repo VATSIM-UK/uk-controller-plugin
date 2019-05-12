@@ -70,10 +70,21 @@
     <ClInclude Include="..\..\src\curl\CurlResponse.h" />
     <ClInclude Include="..\..\src\curl\HttpException.h" />
     <ClInclude Include="..\..\src\datablock\DisplayTime.h" />
+    <ClInclude Include="..\..\src\dependency\ApiDependencyProvider.h" />
     <ClInclude Include="..\..\src\dependency\DependencyBootstrap.h" />
     <ClInclude Include="..\..\src\dependency\DependencyCache.h" />
     <ClInclude Include="..\..\src\dependency\DependencyCacheFactory.h" />
+    <ClInclude Include="..\..\src\dependency\DependencyConfig.h" />
+    <ClInclude Include="..\..\src\dependency\DependencyProviderFactory.h" />
+    <ClInclude Include="..\..\src\dependency\DependencyProviderInterface.h" />
+    <ClInclude Include="..\..\src\dependency\LocalDependencyProvider.h" />
     <ClInclude Include="..\..\src\dependency\LocalFileUpdater.h" />
+    <ClInclude Include="..\..\src\dependency\DependencyData.h" />
+    <ClInclude Include="..\..\src\dialog\CompareDialogs.h" />
+    <ClInclude Include="..\..\src\dialog\DialogCallArgument.h" />
+    <ClInclude Include="..\..\src\dialog\DialogData.h" />
+    <ClInclude Include="..\..\src\dialog\DialogManager.h" />
+    <ClInclude Include="..\..\src\dialog\DialogProviderInterface.h" />
     <ClInclude Include="..\..\src\euroscope\AsrEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\AsrEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\euroscope\CallbackFunction.h" />
@@ -118,6 +129,35 @@
     <ClInclude Include="..\..\src\historytrail\HistoryTrailModule.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailRenderer.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailRepository.h" />
+    <ClInclude Include="..\..\src\hold\AbstractHoldLevelRestriction.h" />
+    <ClInclude Include="..\..\src\hold\BlockedHoldLevelRestriction.h" />
+    <ClInclude Include="..\..\src\hold\BlockedHoldLevelRestrictionSerializer.h" />
+    <ClInclude Include="..\..\src\hold\CompareHoldProfile.h" />
+    <ClInclude Include="..\..\src\hold\CompareHoldsDescription.h" />
+    <ClInclude Include="..\..\src\hold\HoldConfigurationDialogFactory.h" />
+    <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h" />
+    <ClInclude Include="..\..\src\hold\HoldDisplayManager.h" />
+    <ClInclude Include="..\..\src\hold\HoldManagerFactory.h" />
+    <ClInclude Include="..\..\src\hold\CompareHoldingAircraft.h" />
+    <ClInclude Include="..\..\src\hold\CompareHolds.h" />
+    <ClInclude Include="..\..\src\hold\HoldConfigurationDialog.h" />
+    <ClInclude Include="..\..\src\hold\HoldDisplay.h" />
+    <ClInclude Include="..\..\src\hold\HoldDisplayFunctions.h" />
+    <ClInclude Include="..\..\src\hold\HoldEventHandler.h" />
+    <ClInclude Include="..\..\src\hold\HoldingAircraft.h" />
+    <ClInclude Include="..\..\src\hold\HoldingData.h" />
+    <ClInclude Include="..\..\src\hold\HoldingDataSerializer.h" />
+    <ClInclude Include="..\..\src\hold\HoldManager.h" />
+    <ClInclude Include="..\..\src\hold\HoldModule.h" />
+    <ClInclude Include="..\..\src\hold\HoldProfile.h" />
+    <ClInclude Include="..\..\src\hold\HoldProfileManager.h" />
+    <ClInclude Include="..\..\src\hold\HoldProfileManagerFactory.h" />
+    <ClInclude Include="..\..\src\hold\HoldConfigurationMenuItem.h" />
+    <ClInclude Include="..\..\src\hold\HoldProfileSerializer.h" />
+    <ClInclude Include="..\..\src\hold\HoldRenderer.h" />
+    <ClInclude Include="..\..\src\hold\HoldRestrictionSerializer.h" />
+    <ClInclude Include="..\..\src\hold\HoldSelectionMenu.h" />
+    <ClInclude Include="..\..\src\hold\ManagedHold.h" />
     <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
@@ -268,10 +308,16 @@
     <ClCompile Include="..\..\src\curl\CurlRequest.cpp" />
     <ClCompile Include="..\..\src\curl\CurlResponse.cpp" />
     <ClCompile Include="..\..\src\datablock\DisplayTime.cpp" />
+    <ClCompile Include="..\..\src\dependency\ApiDependencyProvider.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyBootstrap.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyCache.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyCacheFactory.cpp" />
+    <ClCompile Include="..\..\src\dependency\DependencyConfig.cpp" />
+    <ClCompile Include="..\..\src\dependency\DependencyProviderFactory.cpp" />
+    <ClCompile Include="..\..\src\dependency\LocalDependencyProvider.cpp" />
     <ClCompile Include="..\..\src\dependency\LocalFileUpdater.cpp" />
+    <ClCompile Include="..\..\src\dialog\CompareDialogs.cpp" />
+    <ClCompile Include="..\..\src\dialog\DialogManager.cpp" />
     <ClCompile Include="..\..\src\euroscope\AsrEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\CallbackFunction.cpp" />
     <ClCompile Include="..\..\src\euroscope\CompareFunctions.cpp" />
@@ -302,6 +348,32 @@
     <ClCompile Include="..\..\src\historytrail\HistoryTrailModule.cpp" />
     <ClCompile Include="..\..\src\historytrail\HistoryTrailRenderer.cpp" />
     <ClCompile Include="..\..\src\historytrail\HistoryTrailRepository.cpp" />
+    <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestriction.cpp" />
+    <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestrictionSerializer.cpp" />
+    <ClCompile Include="..\..\src\hold\CompareHoldProfile.cpp" />
+    <ClCompile Include="..\..\src\hold\CompareHoldsDescription.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldConfigurationDialogFactory.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldDisplayManager.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldManagerFactory.cpp" />
+    <ClCompile Include="..\..\src\hold\CompareHoldingAircraft.cpp" />
+    <ClCompile Include="..\..\src\hold\CompareHolds.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldConfigurationDialog.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldDisplay.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldDisplayFunctions.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldEventHandler.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldingData.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldingDataSerializer.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldManager.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldModule.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldProfileManager.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldProfileManagerFactory.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldConfigurationMenuItem.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldProfileSerializer.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldRenderer.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldRestrictionSerializer.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldSelectionMenu.cpp" />
+    <ClCompile Include="..\..\src\hold\ManagedHold.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp" />
@@ -470,7 +542,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;</AdditionalDependencies>
       <AdditionalLibraryDirectories />
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
@@ -500,7 +572,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;</AdditionalDependencies>
       <IgnoreAllDefaultLibraries />
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>

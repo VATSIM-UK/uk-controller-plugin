@@ -407,7 +407,7 @@ namespace UKControllerPluginTest {
                .Times(1)
                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "1423" }));
 
-           this->handler.SquawkReycleGeneral(*this->mockFlightplan, *this->mockRadarTarget);
+           this->handler.SquawkReycleGeneral(*this->mockFlightplan, *this->mockRadarTarget, "", POINT());
            this->AssertGeneralAssignment();
         }
 
@@ -438,7 +438,7 @@ namespace UKControllerPluginTest {
                .Times(1)
                .WillOnce(Return(ApiSquawkAllocation{ "BAW1252", "7261" }));
 
-           this->handler.SquawkRecycleLocal(*this->mockFlightplan, *this->mockRadarTarget);
+           this->handler.SquawkRecycleLocal(*this->mockFlightplan, *this->mockRadarTarget, "", POINT());
            this->AssertLocalAssignment();
         }
 

@@ -114,7 +114,7 @@ namespace UKControllerPlugin {
         /*
             Called when the configuration menu item is selected. Create dialog.
         */
-        void HistoryTrailRenderer::Configure(std::string subject)
+        void HistoryTrailRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
             COLORREF newColour = RGB(
                 this->startColour->GetRed(),
@@ -271,7 +271,7 @@ namespace UKControllerPlugin {
         /*
             These don't get moved.
         */
-        void HistoryTrailRenderer::Move(RECT position)
+        void HistoryTrailRenderer::Move(RECT position, std::string objectDescription)
         {
 
         }
@@ -282,7 +282,7 @@ namespace UKControllerPlugin {
         bool HistoryTrailRenderer::ProcessCommand(std::string command)
         {
             if (command == this->dotCommand) {
-                this->Configure(command);
+                this->Configure(0, command, {});
                 return true;
             }
 

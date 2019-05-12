@@ -1,9 +1,11 @@
 #include "pch/pch.h"
 #include "api/ApiRequestBuilder.h"
 #include "curl/CurlRequest.h"
+#include "dependency/DependencyData.h"
 
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::Dependency::DependencyData;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
@@ -104,6 +106,74 @@ namespace UKControllerPluginTest {
             expectedRequest.SetBody(expectedBodyJson.dump());
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildLocalSquawkAssignmentRequest("BAW123", "EGKK", "V"));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsHoldDependencyDataRequests)
+        {
+            CurlRequest expectedRequest("http://testurl.com/hold", CurlRequest::METHOD_GET);
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            EXPECT_TRUE(expectedRequest == this->builder.BuildHoldDependencyRequest());
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsUserHoldProfileDownloadRequests)
+        {
+            CurlRequest expectedRequest("http://testurl.com/hold/profile", CurlRequest::METHOD_GET);
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            EXPECT_TRUE(expectedRequest == this->builder.BuildUserHoldProfilesRequest());
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsUserHoldProfileDeleteRequests)
+        {
+            CurlRequest expectedRequest("http://testurl.com/hold/profile/1", CurlRequest::METHOD_DELETE);
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            EXPECT_TRUE(expectedRequest == this->builder.BuildDeleteUserHoldProfileRequest(1));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsUserHoldProfileCreateRequests)
+        {
+            nlohmann::json expectedData;
+            expectedData["name"] = "Test";
+            expectedData["holds"] = { 1, 2 };
+
+            CurlRequest expectedRequest("http://testurl.com/hold/profile", CurlRequest::METHOD_PUT);
+            expectedRequest.SetBody(expectedData.dump());
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+
+            std::set<unsigned int> ids;
+            ids.insert(1);
+            ids.insert(2);
+            EXPECT_TRUE(expectedRequest == this->builder.BuildCreateUserHoldProfileRequest("Test", ids));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsUserHoldProfileUpdateRequests)
+        {
+            nlohmann::json expectedData;
+            expectedData["name"] = "Test";
+            expectedData["holds"] = { 1, 2 };
+
+            CurlRequest expectedRequest("http://testurl.com/hold/profile/1", CurlRequest::METHOD_PUT);
+            expectedRequest.SetBody(expectedData.dump());
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+
+            std::set<unsigned int> ids;
+            ids.insert(1);
+            ids.insert(2);
+            EXPECT_TRUE(expectedRequest == this->builder.BuildUpdateUserHoldProfileRequest(1, "Test", ids));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsHoldDependencyRequests)
+        {
+            CurlRequest expectedRequest("http://testurl.com/dependency/somecoolthing", CurlRequest::METHOD_GET);
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+
+            DependencyData dependency = { "localpath", "dependency/somecoolthing", "default" };
+            EXPECT_TRUE(expectedRequest == this->builder.BuildDependencyRequest(dependency));
         }
     }  // namespace Api
 }  // namespace UKControllerPluginTest

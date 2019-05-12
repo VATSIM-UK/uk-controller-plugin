@@ -2,6 +2,8 @@
 #include "api/ApiResponse.h"
 #include "api/ApiRequestBuilder.h"
 #include "api/ApiInterface.h"
+#include "dependency/DependencyData.h"
+#include "hold/HoldProfile.h"
 
 namespace UKControllerPlugin {
     namespace Curl {
@@ -45,6 +47,19 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(std::string callsign) const override;
                 std::string GetApiDomain(void) const override;
                 std::string GetApiKey(void) const override;
+                nlohmann::json GetHoldDependency(void) const override;
+                nlohmann::json GetGenericHoldProfiles(void) const override;
+                nlohmann::json GetUserHoldProfiles(void) const override;
+                nlohmann::json GetDependency(
+                    UKControllerPlugin::Dependency::DependencyData dependency
+                ) const override;
+                void DeleteUserHoldProfile(unsigned int profileId) const override;
+                unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
+                void UpdateUserHoldProfile(
+                    unsigned int id,
+                    std::string name,
+                    std::set<unsigned int> holds
+                ) const override;
                 int UpdateCheck(std::string version) const override;
 
                 // The HTTP status codes that may be returned by the API

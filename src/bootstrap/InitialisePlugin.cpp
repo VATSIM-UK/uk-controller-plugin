@@ -32,6 +32,9 @@
 #include "timedevent/DeferredEventBootstrap.h"
 #include "offblock/EstimatedDepartureTimeBootstrap.h"
 #include "wake/WakeModule.h"
+#include "hold/HoldModule.h"
+#include "dependency/DependencyProviderInterface.h"
+#include "dependency/DependencyProviderFactory.h"
 #include "metar/PressureMonitorBootstrap.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
@@ -64,6 +67,8 @@ using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Bootstrap::DuplicatePlugin;
 using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
+using UKControllerPlugin::Dependency::DependencyProviderInterface;
+using UKControllerPlugin::Dependency::GetDependencyProvider;
 
 namespace UKControllerPlugin {
 
@@ -176,6 +181,14 @@ namespace UKControllerPlugin {
             *this->container->curl
         );
 
+        // Load all the "new" dependencies that don't come from a manifest.
+        std::unique_ptr<DependencyProviderInterface> dependencyProvider = GetDependencyProvider(
+            *container->api,
+            *container->windows,
+            apiAuthorised
+        );
+        LogInfo("Loading new dependencies with provider " + dependencyProvider->GetProviderType());
+
         // Boostrap all the modules at a plugin level
         CollectionBootstrap::BootstrapPlugin(*this->container, dependencyCache);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
@@ -197,6 +210,11 @@ namespace UKControllerPlugin {
             InitialAltitudeModule::BootstrapPlugin(dependencyCache, *this->container);
         }
 
+        UKControllerPlugin::Hold::BootstrapPlugin(
+            *dependencyProvider,
+            *this->container,
+            *this->container->userMessager
+        );
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(this->container->countdownTimer, *this->container->windows);

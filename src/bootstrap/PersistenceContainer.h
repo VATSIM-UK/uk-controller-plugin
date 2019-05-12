@@ -1,7 +1,7 @@
 #pragma once
 #include "curl/CurlInterface.h"
 #include "windows/WinApiInterface.h"
-#include "api/ApiHelper.h"
+#include "api/ApiInterface.h"
 #include "task/TaskRunner.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "airfield/AirfieldCollection.h"
@@ -36,7 +36,12 @@
 #include "command/CommandHandlerCollection.h"
 #include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
+#include "hold/HoldManager.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "hold/HoldSelectionMenu.h"
+#include "dialog/DialogManager.h"
+#include "hold/HoldProfileManager.h"
+#include "hold/HoldDisplayFactory.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -52,13 +57,14 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
 
             // The helpers and collections
-            std::unique_ptr<UKControllerPlugin::Api::ApiHelper> api;
+            std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
             std::unique_ptr<UKControllerPlugin::TaskManager::TaskRunner> taskRunner;
             std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
             std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> flightplans;
             std::unique_ptr<UKControllerPlugin::Message::UserMessager> userMessager;
             std::unique_ptr<UKControllerPlugin::Euroscope::UserSetting> pluginUserSettingHandler;
             std::shared_ptr<UKControllerPlugin::Controller::Login> login;
+            std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
 
             // Collections of event handlers
             std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;
@@ -84,6 +90,10 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkAssignment> squawkAssignmentRules;
             std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawkEvents;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkGenerator> squawkGenerator;
+            std::unique_ptr<UKControllerPlugin::Hold::HoldManager> holdManager;
+            std::unique_ptr<UKControllerPlugin::Hold::HoldProfileManager> holdProfiles;
+            std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
+            std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
 
             // Collections that are spawned multiple times.
             std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;

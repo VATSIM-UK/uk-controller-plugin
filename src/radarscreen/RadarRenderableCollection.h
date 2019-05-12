@@ -36,7 +36,7 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) const;
-                void MoveScreenObject(int objectId, RECT position) const;
+                void MoveScreenObject(int objectId, std::string objectDescription, RECT position) const;
                 void RegisterRenderer(
                     int rendererId,
                     std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableInterface> renderer,

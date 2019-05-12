@@ -60,11 +60,15 @@ namespace UKControllerPlugin {
                 ) override;
                 void SquawkReycleGeneral(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
+                    std::string context,
+                    const POINT & mousePos
                 ) const;
                 void SquawkRecycleLocal(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
+                    std::string context,
+                    const POINT & mousePos
                 ) const;
                 void TimedEventTrigger(void);
                 void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
