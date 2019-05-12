@@ -76,14 +76,12 @@ namespace Bootstrap {
             MB_OKCANCEL | MB_ICONINFORMATION
         );
 
-
         if (retVal != IDOK) {
             LogInfo("User cancelled key file update");
             return;
         }
 
         // Do the replacement procedure.
-
         if (!ReplaceApiSettings(winApi)) {
             LogInfo("User requested key update cancelled");
             return;
