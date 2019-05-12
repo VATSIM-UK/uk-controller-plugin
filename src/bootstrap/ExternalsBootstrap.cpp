@@ -31,8 +31,6 @@ namespace UKControllerPlugin {
             persistence.curl.reset(new CurlApi());
 
             // All files should be relative to Documents/EuroScope
-            TCHAR my_documents[MAX_PATH];
-            HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
             persistence.windows.reset(
                 new WinApi(
                     instance,
