@@ -84,6 +84,27 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(baseAircraft == compare);
         }
 
+        TEST_F(HoldingAircraftTest, AssignmentOperatorSetsFields)
+        {
+            HoldingAircraft compare = {
+                "BAW125",
+                8000,
+                9000,
+                500,
+                std::chrono::system_clock::now() + std::chrono::minutes(15)
+            };
+
+            std::chrono::system_clock::time_point timeBefore = baseAircraft.entryTime;
+
+            baseAircraft = compare;
+
+            EXPECT_EQ("BAW123", baseAircraft.callsign);
+            EXPECT_EQ(8000, baseAircraft.clearedLevel);
+            EXPECT_EQ(9000, baseAircraft.reportedLevel);
+            EXPECT_EQ(500, baseAircraft.verticalSpeed);
+            EXPECT_EQ(timeBefore, baseAircraft.entryTime);
+        }
+
         TEST_F(HoldingAircraftTest, EqualityOperatorStringReturnsFalseDifferentCallsign)
         {
             EXPECT_FALSE(baseAircraft == "BAW124");

@@ -15,6 +15,13 @@ namespace UKControllerPlugin {
             int verticalSpeed;
             const std::chrono::system_clock::time_point entryTime;
 
+            void operator=(const HoldingAircraft & newItem)
+            {
+                this->clearedLevel = newItem.clearedLevel;
+                this->reportedLevel = newItem.reportedLevel;
+                this->verticalSpeed = newItem.verticalSpeed;
+            }
+
             bool operator== (const HoldingAircraft & compare) const {
                 return this->callsign == compare.callsign;
             }
