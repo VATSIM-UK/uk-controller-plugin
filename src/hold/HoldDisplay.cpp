@@ -415,7 +415,7 @@ namespace UKControllerPlugin {
                this->windowPos.x,
                this->windowPos.y,
                this->windowWidth,
-               this->maxWindowHeight
+               this->informationDisplayWindowHeight
             };
 
             graphics.FillRect(borderRect, this->backgroundBrush);
