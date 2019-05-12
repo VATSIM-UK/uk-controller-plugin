@@ -37,6 +37,9 @@ namespace UKControllerPlugin {
             borderPen(Gdiplus::Color(255, 255, 255), 1.5f),
             exitButtonBrush(Gdiplus::Color(0, 0, 0)),
             blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255)),
+            dataStartHeight(0),
+            informationClickRect({}),
+            minimiseClickRect({}),
             maxLevelsSkippable(
                 (managedHold.GetHoldParameters().maximum - managedHold.GetHoldParameters().minimum) / 1000
             )

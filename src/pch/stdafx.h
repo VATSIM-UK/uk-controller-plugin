@@ -3,8 +3,11 @@
 #define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 
-// Needs to go here, because windows.
+// Needs to go here, because windows - ignore some warnings that we cant fix
+#pragma warning( push )
+#pragma warning( disable : 26495 26451)
 #include "date/include/date/date.h"
+#pragma warning( pop ) 
 #include <afxwin.h>
 
 // Custom headers
