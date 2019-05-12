@@ -44,8 +44,7 @@ clone_depth: 5                      # clone entire repository history if not def
 
 environment:
   matrix:
-    - compiler: msvc-15-seh
-      generator: "Visual Studio 2019 Preview"
+    - generator: "Visual Studio 2019 Preview"
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019 Preview
       enabled_on_pr: yes
 
