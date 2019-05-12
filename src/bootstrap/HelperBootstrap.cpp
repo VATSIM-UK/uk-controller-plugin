@@ -28,12 +28,15 @@ namespace UKControllerPlugin {
         */
         void HelperBootstrap::Bootstrap(PersistenceContainer & persistence)
         {
-            SettingRepository settings = SettingRepositoryFactory::Create(*persistence.windows);
+            persistence.settingsRepository = SettingRepositoryFactory::Create(*persistence.windows);
 
             // Prompt for a settings file, if one isn't there.
-            UKControllerPlugin::Bootstrap::LocateApiSettings(*persistence.windows, settings);
+            UKControllerPlugin::Bootstrap::LocateApiSettings(*persistence.windows, *persistence.settingsRepository);
 
-            ApiRequestBuilder requestBuilder(settings.GetSetting("api-url"), settings.GetSetting("api-key"));
+            ApiRequestBuilder requestBuilder(
+                persistence.settingsRepository->GetSetting("api-url"),
+                persistence.settingsRepository->GetSetting("api-key")
+            );
             persistence.api.reset(
                 new ApiHelper(*persistence.curl, requestBuilder, *persistence.windows)
             );

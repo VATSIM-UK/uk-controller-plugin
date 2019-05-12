@@ -26,7 +26,7 @@ namespace UKControllerPlugin {
             public:
                 ApiHelper(
                     UKControllerPlugin::Curl::CurlInterface & curlApi,
-                    const UKControllerPlugin::Api::ApiRequestBuilder requestBuilder,
+                    UKControllerPlugin::Api::ApiRequestBuilder requestBuilder,
                     UKControllerPlugin::Windows::WinApiInterface & winApi
                 );
 
@@ -61,6 +61,8 @@ namespace UKControllerPlugin {
                     std::set<unsigned int> holds
                 ) const override;
                 int UpdateCheck(std::string version) const override;
+                void SetApiKey(std::string key) override;
+                void SetApiDomain(std::string domain) override;
 
                 // The HTTP status codes that may be returned by the API
                 static const uint64_t STATUS_OK = 200L;
@@ -89,7 +91,7 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Windows::WinApiInterface & winApi;
 
                 // The API request builder, that builds our CurlRequests
-                const UKControllerPlugin::Api::ApiRequestBuilder requestBuilder;
+                UKControllerPlugin::Api::ApiRequestBuilder requestBuilder;
 
                 // An interface to the Curl library.
                 UKControllerPlugin::Curl::CurlInterface & curlApi;

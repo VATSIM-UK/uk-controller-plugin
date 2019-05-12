@@ -323,7 +323,7 @@ namespace UKControllerPlugin {
             );
 
             this->selectedHoldProfile = 0;
-            this->selectedHoldProfileIndex = 0;
+            this->selectedHoldProfileIndex = LB_ERR;
         }
 
         /*
@@ -333,7 +333,7 @@ namespace UKControllerPlugin {
         {
             this->selectedHolds.clear();
             this->selectedHoldProfile = 0;
-            this->selectedHoldProfileIndex = 0;
+            this->selectedHoldProfileIndex = LB_ERR;
         }
 
         /*
@@ -428,7 +428,7 @@ namespace UKControllerPlugin {
         void HoldConfigurationDialog::UpdateHoldProfile(HWND hwnd)
         {
             // If no hold profile selected, stop
-            if (this->selectedHoldProfileIndex == LB_ERR || this->selectedHoldProfileIndex == 0) {
+            if (this->selectedHoldProfileIndex == LB_ERR) {
                 return;
             }
 

@@ -2,13 +2,19 @@
 #include "api/ApiAuthChecker.h"
 #include "api/ApiInterface.h"
 #include "api/ApiResponse.h"
+#include "api/ApiRequestBuilder.h"
 #include "windows/WinApiInterface.h"
 #include "api/ApiNotAuthorisedException.h"
+#include "bootstrap/LocateApiSettings.h"
+#include "setting/SettingRepository.h"
 
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiResponse;
+using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
+using UKControllerPlugin::Bootstrap::UserRequestedKeyUpdateNoPrompts;
+using UKControllerPlugin::Setting::SettingRepository;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -16,26 +22,47 @@ namespace UKControllerPlugin {
         /*
             Returns true if the the plugin is authenticated with the API, that is, the API is a teapot.
         */
-        bool ApiAuthChecker::IsAuthorised(const ApiInterface & api, WinApiInterface & windows)
-        {
+        bool ApiAuthChecker::IsAuthorised(
+            ApiInterface & api,
+            WinApiInterface & windows,
+            SettingRepository & settings
+        ) {
             try {
                 if (api.CheckApiAuthorisation()) {
                     LogInfo("Successfully authenticated with the Web API");
                 }
                 return true;
             } catch (ApiNotAuthorisedException notAuth) {
-                windows.OpenMessageBox(
-                    L"API authorisation failed. The vast majority of functionality will be disabled.",
-                    L"UKCP Warning",
-                    MB_OK | MB_ICONWARNING
+                std::wstring message;
+                message += L"Unable to authenticate with the API. Core functionality will be disabled.\r\n\r\n";
+                message += L"Please go to https://vatsim.uk/ukcp to download your personal access token. \r\n";
+                message += L"Once you have done this, please click OK and use the next dialog to install the key.";
+                int messageResponse = windows.OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP API Authentication Warning",
+                    MB_OKCANCEL | MB_ICONWARNING
                 );
                 LogCritical("API authorisation failed: " + std::string(notAuth.what()));
-                return false;
+
+                if (messageResponse == IDCANCEL) {
+                    LogInfo("User elected not to replace API key");
+                    return false;
+                }
+
+                // Give them the chance to load their keys again
+                UserRequestedKeyUpdateNoPrompts(windows, settings);
+                api.SetApiDomain(settings.GetSetting("api-url"));
+                api.SetApiKey(settings.GetSetting("api-key"));
+
+                return ApiAuthChecker::IsAuthorised(api, windows, settings);
             } catch (ApiException api) {
                 // Something weird is going on.
+                std::wstring message;
+                message += L"Unable to access the API. Core functionality will be disabled. \r\n\r\n";
+                message += L"If the problem persists, please contact the VATSIM UK Web Services Department.";
                 windows.OpenMessageBox(
-                    L"Issues detected with the API, remote functionality is disabled.",
-                    L"UKCP Warning",
+                    message.c_str(),
+                    L"UKCP API Availability Warning",
                     MB_OK | MB_ICONWARNING
                 );
                 LogCritical(

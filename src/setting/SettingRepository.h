@@ -21,7 +21,7 @@ namespace UKControllerPlugin {
         {
             public:
                 explicit SettingRepository(UKControllerPlugin::Windows::WinApiInterface & winApi);
-                void AddSettingsFromJsonFile(std::string relativePath);
+                void AddSettingsFromJsonFile(std::string relativePath, bool overwrite = false);
                 void AddSettingValue(UKControllerPlugin::Setting::SettingValue setting);
                 size_t SettingsCount(void) const;
                 std::string GetSetting(std::string setting) const;

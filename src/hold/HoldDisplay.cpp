@@ -415,7 +415,7 @@ namespace UKControllerPlugin {
                this->windowPos.x,
                this->windowPos.y,
                this->windowWidth,
-               this->maxWindowHeight
+               this->informationDisplayWindowHeight
             };
 
             graphics.FillRect(borderRect, this->backgroundBrush);
@@ -610,13 +610,13 @@ namespace UKControllerPlugin {
                 const HoldingData & holdParameters = this->managedHold.GetHoldParameters();
                 for (
                     std::set<std::unique_ptr<AbstractHoldLevelRestriction>>::const_iterator it
-                    = holdParameters.restrictions.cbegin();
+                        = holdParameters.restrictions.cbegin();
                     it != holdParameters.restrictions.cend();
                     ++it
-                    ) {
+                ) {
                     if ((*it)->LevelRestricted(i)) {
                         Gdiplus::Rect restrictedRect = {
-                            0,
+                            this->windowPos.x,
                             numbersDisplay.Y,
                             windowWidth,
                             this->lineHeight
@@ -679,6 +679,14 @@ namespace UKControllerPlugin {
 
                 // Dont render any aircraft where a level is skipped
                 if (displayRow < this->numLevelsSkipped) {
+                    continue;
+                }
+
+                // Dont render any aircraft that are outside the confines of the hold.
+                if (
+                    occupied > this->managedHold.GetHoldParameters().maximum ||
+                    occupied < this->managedHold.GetHoldParameters().minimum
+                ) {
                     continue;
                 }
 

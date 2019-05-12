@@ -32,6 +32,19 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE("apikey" == this->builder.GetApiKey());
         }
 
+        TEST_F(ApiRequestBuilderTest, ApiDomainCanBeUpdated)
+        {
+            this->builder.SetApiDomain("http://nottesturl.com");
+            EXPECT_TRUE("http://nottesturl.com" == this->builder.GetApiDomain());
+        }
+
+
+        TEST_F(ApiRequestBuilderTest, ApiKeyCanBeUpdated)
+        {
+            this->builder.SetApiKey("notapikey");
+            EXPECT_TRUE("notapikey" == this->builder.GetApiKey());
+        }
+
         TEST_F(ApiRequestBuilderTest, ItBuildsAuthCheckRequests)
         {
             CurlRequest expectedRequest("http://testurl.com/", CurlRequest::METHOD_GET);

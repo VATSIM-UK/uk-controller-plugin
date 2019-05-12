@@ -172,6 +172,14 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(repo.GetSetting("test1") == "notTestValue1");
         }
 
+        TEST(SettingRepository, UpdateSettingDoesNothingIfSettingDoesNotExist)
+        {
+            StrictMock<MockWinApi> winApiMock;
+            SettingRepository repo(winApiMock);
+            repo.UpdateSetting("test1", "notTestValue1");
+            EXPECT_FALSE(repo.HasSetting("test2"));
+        }
+
         TEST(SettingRepository, WriteSettingsToFileHandlesSingleFile)
         {
             StrictMock<MockWinApi> winApiMock;

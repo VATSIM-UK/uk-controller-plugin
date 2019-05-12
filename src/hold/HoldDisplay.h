@@ -150,6 +150,9 @@ namespace UKControllerPlugin {
                 // The maximum possible window height based on the number of levels in the hold
                 int maxWindowHeight = 500;
 
+                // The height of the window to use when doing the information display
+                const int informationDisplayWindowHeight = 225;
+
                 // How many levels to not draw
                 unsigned int numLevelsSkipped = 0;
 

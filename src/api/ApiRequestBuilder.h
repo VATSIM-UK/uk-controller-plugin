@@ -46,6 +46,8 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Curl::CurlRequest BuildVersionCheckRequest(std::string versionString) const;
                 std::string GetApiDomain(void) const;
                 std::string GetApiKey(void) const;
+                void SetApiDomain(std::string domain);
+                void SetApiKey(std::string key);
 
                 // The type string to send in the payload if we want a general squawk
                 const std::string generalSquawkAssignmentType = "general";
@@ -60,10 +62,10 @@ namespace UKControllerPlugin {
                 ) const;
 
                 // The base URL of the API
-                const std::string apiDomain;
+                std::string apiDomain;
 
                 // Our API key
-                const std::string apiKey;
+                std::string apiKey;
         };
     }  // namespace Api
 }  // namespace UKControllerPlugin

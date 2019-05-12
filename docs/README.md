@@ -29,6 +29,8 @@ dynamically to the plugin.
 - Actual off-block times
 - Estimated departure times
 - UK Wake Categories
+- QNH change notifications
+- Hold Manager
 
 ## Setting Up The Project Locally
 

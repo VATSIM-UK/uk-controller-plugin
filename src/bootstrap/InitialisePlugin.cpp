@@ -158,7 +158,8 @@ namespace UKControllerPlugin {
         // If we're not allowed to use the API because we've been banned or something... It's no go.
         bool apiAuthorised = ApiAuthChecker::IsAuthorised(
             *this->container->api,
-            *this->container->windows
+            *this->container->windows,
+            *this->container->settingsRepository
         );
 
         // Check for updates, but only if the API is either authorised

@@ -44,6 +44,8 @@ namespace UKControllerPluginTest {
                     void(unsigned int id, std::string name, std::set<unsigned int> holds)
                 );
                 MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
+                MOCK_METHOD1(SetApiDomain, void(std::string));
+                MOCK_METHOD1(SetApiKey, void(std::string));
         };
     }  // namespace Api
 }  // namespace UKControllerPluginTest

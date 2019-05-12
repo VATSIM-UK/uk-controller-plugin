@@ -29,8 +29,23 @@ namespace Bootstrap {
         }
 
         // Load the settings into the repo
-        settings.AddSettingsFromJsonFile("api-settings.json");
+        settings.AddSettingsFromJsonFile("api-settings.json", true);
         LogInfo("Loaded new user API settings into repository");
+    }
+
+    /*
+        Update the user key file with no prompts - for when Auth fails and we prompt them to reenter.
+    */
+    bool UserRequestedKeyUpdateNoPrompts(WinApiInterface & winApi, SettingRepository & settings)
+    {
+        if (!ReplaceApiSettings(winApi)) {
+            LogInfo("Failed auth update cancelled");
+            return false;
+        }
+
+        settings.AddSettingsFromJsonFile("api-settings.json", true);
+        LogInfo("Loaded new user API settings into repository");
+        return true;
     }
 
     /*
