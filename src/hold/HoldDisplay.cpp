@@ -682,6 +682,14 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
+                // Dont render any aircraft that are outside the confines of the hold.
+                if (
+                    occupied > this->managedHold.GetHoldParameters().maximum ||
+                    occupied < this->managedHold.GetHoldParameters().minimum
+                ) {
+                    continue;
+                }
+
                 callsignDisplay.Y = this->dataStartHeight +
                     (this->lineHeight * (displayRow - this->numLevelsSkipped));
                 actualLevelDisplay.Y = this->dataStartHeight +
