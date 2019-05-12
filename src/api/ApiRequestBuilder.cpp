@@ -211,5 +211,21 @@ namespace UKControllerPlugin {
         {
             return this->apiKey;
         }
+
+        /*
+            Set the API key
+        */
+        void ApiRequestBuilder::SetApiDomain(std::string domain)
+        {
+            this->apiDomain = domain;
+        }
+
+        /*
+            Set the API domain
+        */
+        void ApiRequestBuilder::SetApiKey(std::string key)
+        {
+            this->apiKey = key;
+        }
     }  // namespace Api
 }  // namespace UKControllerPlugin
