@@ -18,6 +18,10 @@ namespace Bootstrap {
         UKControllerPlugin::Setting::SettingRepository & settings
     );
 
+    bool UserRequestedKeyUpdateNoPrompts(
+        UKControllerPlugin::Windows::WinApiInterface & winApi,
+        UKControllerPlugin::Setting::SettingRepository & settings
+    );
     bool ReplaceApiSettings(UKControllerPlugin::Windows::WinApiInterface & winApi);
     void UserRequestedKeyUpdate(UKControllerPlugin::Windows::WinApiInterface & winApi);
 

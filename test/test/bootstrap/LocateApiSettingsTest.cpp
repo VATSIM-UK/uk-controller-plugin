@@ -2,6 +2,7 @@
 #include "bootstrap/LocateApiSettings.h"
 #include "mock/MockWinApi.h"
 #include "setting/SettingRepository.h"
+#include "setting/SettingValue.h"
 #include "helper/Matchers.h"
 
 using testing::NiceMock;
@@ -10,9 +11,11 @@ using testing::Test;
 using testing::_;
 using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPlugin::Setting::SettingRepository;
+using UKControllerPlugin::Setting::SettingValue;
 using UKControllerPlugin::Bootstrap::LocateApiSettings;
 using UKControllerPlugin::Bootstrap::ReplaceApiSettings;
 using UKControllerPlugin::Bootstrap::UserRequestedKeyUpdate;
+using UKControllerPlugin::Bootstrap::UserRequestedKeyUpdateNoPrompts;
 
 namespace UKControllerPluginTest {
 namespace Bootstrap {
@@ -26,8 +29,8 @@ namespace Bootstrap {
 
             }
 
-            SettingRepository settings;
             NiceMock<MockWinApi> mockWindows;
+            SettingRepository settings;
     };
 
     TEST_F(LocateApiSettingsTest, LocateApiSettingsDoesNothingIfSettingsPresent)
@@ -215,6 +218,108 @@ namespace Bootstrap {
             .WillOnce(Return(IDCANCEL));
 
         UserRequestedKeyUpdate(this->mockWindows);
+    }
+
+    TEST_F(LocateApiSettingsTest, UserRequestedKeyUpdateNoPromptsPromptsForFileLoadsAndSavesSettingsToDisk)
+    {
+        ON_CALL(this->mockWindows, FileOpenDialog(_, _, _))
+            .WillByDefault(Return(L"testfile.json"));
+
+        ON_CALL(
+            this->mockWindows,
+            OpenMessageBox(
+            L"Please select the key file to use, this will overwrite your previous key.",
+            L"UKCP Message",
+            MB_OKCANCEL | MB_ICONINFORMATION
+        )
+        )
+            .WillByDefault(Return(IDOK));
+
+        nlohmann::json testJson;
+        testJson["api-url"] = "testurl";
+        testJson["api-key"] = "testkey";
+
+        EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"testfile.json"), false))
+            .Times(1)
+            .WillOnce(Return(testJson.dump()));
+
+        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
+            .WillByDefault(Return(testJson.dump()));
+
+        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+            .WillByDefault(Return(true));
+
+        EXPECT_CALL(this->mockWindows, WriteToFile("settings/api-settings.json", testJson.dump(), true))
+            .Times(1);
+
+        UserRequestedKeyUpdateNoPrompts(this->mockWindows, this->settings);
+    }
+
+    TEST_F(LocateApiSettingsTest, UserRequestedKeyUpdateNoPromptsUpdatesSettingsRepo)
+    {
+        ON_CALL(this->mockWindows, FileOpenDialog(_, _, _))
+            .WillByDefault(Return(L"testfile.json"));
+
+        nlohmann::json testJson;
+        testJson["api-url"] = "testurl2";
+        testJson["api-key"] = "testkey2";
+
+        EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"testfile.json"), false))
+            .Times(1)
+            .WillOnce(Return(testJson.dump()));
+
+        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
+            .WillByDefault(Return(testJson.dump()));
+
+        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+            .WillByDefault(Return(true));
+
+        UserRequestedKeyUpdateNoPrompts(this->mockWindows, this->settings);
+
+        EXPECT_EQ("testurl2", this->settings.GetSetting("api-url"));
+        EXPECT_EQ("testkey2", this->settings.GetSetting("api-key"));
+    }
+
+    TEST_F(LocateApiSettingsTest, UserRequestedKeyUpdateNoPromptsOverwritesSettingsRepo)
+    {
+        ON_CALL(this->mockWindows, FileOpenDialog(_, _, _))
+            .WillByDefault(Return(L"testfile.json"));
+
+        nlohmann::json testJson;
+        testJson["api-url"] = "testurl2";
+        testJson["api-key"] = "testkey2";
+
+        EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"testfile.json"), false))
+            .Times(1)
+            .WillOnce(Return(testJson.dump()));
+
+        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
+            .WillByDefault(Return(testJson.dump()));
+
+        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+            .WillByDefault(Return(true));
+
+        // Set settings
+        SettingValue apiKeySetting{"api-key", "testkey"};
+        SettingValue apiUrlSetting{"api-url", "testurl"};
+        this->settings.AddSettingValue(apiKeySetting);
+        this->settings.AddSettingValue(apiUrlSetting);
+
+        UserRequestedKeyUpdateNoPrompts(this->mockWindows, this->settings);
+
+        EXPECT_EQ("testurl2", this->settings.GetSetting("api-url"));
+        EXPECT_EQ("testkey2", this->settings.GetSetting("api-key"));
+    }
+
+    TEST_F(LocateApiSettingsTest, UserRequestedKeyUpdateNoPromptsDoesNothingOnUserCancel)
+    {
+        ON_CALL(this->mockWindows, FileOpenDialog(_, _, _))
+            .WillByDefault(Return(L""));
+
+        UserRequestedKeyUpdateNoPrompts(this->mockWindows, this->settings);
+
+        EXPECT_FALSE(this->settings.HasSetting("api-url"));
+        EXPECT_FALSE(this->settings.HasSetting("api-key"));
     }
 }  // namespace Bootstrap
 }  // namespace UKControllerPluginTest
