@@ -47,13 +47,11 @@ namespace UKControllerPlugin {
             const PersistenceContainer & persistence,
             ConfigurableDisplayCollection & configurableDisplays
         ) {
-
             unsigned int callbackId = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             std::shared_ptr<ApiConfigurationMenuItem> menuItem = std::make_shared<ApiConfigurationMenuItem>(
                 *persistence.windows,
                 callbackId
             );
-
 
             CallbackFunction menuItemSelectedCallback(
                 callbackId,
