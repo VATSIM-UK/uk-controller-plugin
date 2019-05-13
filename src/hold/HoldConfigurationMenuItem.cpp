@@ -78,6 +78,10 @@ namespace UKControllerPlugin {
         */
         void HoldConfigurationMenuItem::InvalidateProfile(unsigned int profileId)
         {
+            if (profileId != this->displayManager->GetCurrentProfile()) {
+                return;
+            }
+
             this->displayManager->LoadProfile(profileId);
         }
     }  // namespace Hold
