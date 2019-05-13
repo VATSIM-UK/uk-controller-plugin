@@ -21,6 +21,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::GeneralSettingsDialog generalSettingsDialog
                 );
                 bool CreateFolder(std::string folder);
+                bool CreateLocalFolderRecursive(std::string folder) override;
                 bool DeleteGivenFile(std::string filename);
                 bool FileExists(std::string filename);
                 std::string GetFullPathToLocalFile(std::string relativePath) const;
