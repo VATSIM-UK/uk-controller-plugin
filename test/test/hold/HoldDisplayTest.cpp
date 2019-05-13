@@ -312,6 +312,19 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->holdManager.GetAircraftHold("BAW123")->GetHoldParameters().identifier == 2);
         }
 
+        TEST_F(HoldDisplayTest, ClickingAddDoesNothingIfNoAircraftSelected)
+        {
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan())
+                .WillByDefault(Return(nullptr));
+
+            ON_CALL(this->mockPlugin, GetSelectedRadarTarget())
+                .WillByDefault(Return(nullptr));
+
+            this->display.ButtonClicked("add");
+
+            EXPECT_EQ(0, this->holdManager.GetManagedHold(2)->CountHoldingAircraft());
+        }
+
         TEST_F(HoldDisplayTest, MoveSetsWindowPos)
         {
             POINT newPos = { 300, 300 };
