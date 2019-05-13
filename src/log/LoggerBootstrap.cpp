@@ -22,12 +22,13 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            if (!persistence.windows->CreateFolder("ukcp")) {
-                throw std::runtime_error("Couldn't create the plugin files directory.");
-            }
-
             // Create us a logger, for now we log everything that happens.
-            if (!persistence.windows->CreateFolder(persistence.windows->GetFullPathToLocalFile("logs"))) {
+            if (!persistence.windows->CreateLocalFolderRecursive("logs")) {
+                persistence.windows->OpenMessageBox(
+                    L"Unable to create the logs folder, please contact the VATSIM UK Web Department.",
+                    L"UKCP Error",
+                    MB_OK | MB_ICONSTOP
+                );
                 throw std::runtime_error("Could not create the logs folder.");
             }
 

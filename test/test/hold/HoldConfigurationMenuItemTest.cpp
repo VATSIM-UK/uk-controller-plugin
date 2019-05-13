@@ -103,8 +103,15 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldConfigurationMenuItemTest, InvalidateProfileSetsDisplayManagerProfile)
         {
+            this->displayManager->LoadProfile(55);
             this->menuItem.InvalidateProfile(55);
             EXPECT_EQ(55, this->displayManager->GetCurrentProfile());
+        }
+
+        TEST_F(HoldConfigurationMenuItemTest, InvalidateProfileDoesntSetDisplayManagerProfileIfNotCurrent)
+        {
+            this->menuItem.InvalidateProfile(55);
+            EXPECT_EQ(0, this->displayManager->GetCurrentProfile());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

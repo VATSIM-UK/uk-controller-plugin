@@ -488,7 +488,7 @@ namespace UKControllerPlugin {
             );
 
             // Tell the instance that prompted this dialog to open that something has changed.
-            this->configurationItem->SelectProfile(this->selectedHoldProfile);
+            this->configurationItem->InvalidateProfile(this->selectedHoldProfile);
         }
 
         /*

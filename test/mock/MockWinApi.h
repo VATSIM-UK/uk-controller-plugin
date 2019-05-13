@@ -25,6 +25,7 @@ namespace UKControllerPluginTest {
             MOCK_METHOD2(ReadFromFileMock, std::string(std::wstring, bool));
             MOCK_METHOD1(FileExists, bool(std::string ));
             MOCK_METHOD1(CreateFolder, bool(std::string folder));
+            MOCK_METHOD1(CreateLocalFolderRecursive, bool(std::string folder));
             MOCK_METHOD1(DeleteGivenFile, bool(std::string filename));
             MOCK_CONST_METHOD1(GetFullPathToLocalFile, std::string(std::string));
 
