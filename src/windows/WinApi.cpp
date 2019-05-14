@@ -42,6 +42,26 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Create a folder from the root, recursively
+        */
+        bool WinApi::CreateLocalFolderRecursive(std::string folder)
+        {
+            std::vector<std::string> tokens = HelperFunctions::TokeniseString(
+                '/',
+                this->GetFullPathToLocalFile(folder)
+            );
+            std::string currentPath;
+            for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
+                if (!this->CreateFolder(currentPath + *it)) {
+                    return false;
+                }
+                currentPath += *it + "/";
+            }
+
+            return true;
+        }
+
+        /*
             Deletes a file from the filesystem.
         */
         bool WinApi::DeleteGivenFile(std::string filename)
