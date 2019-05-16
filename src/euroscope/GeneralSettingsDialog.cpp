@@ -103,8 +103,7 @@ namespace UKControllerPlugin {
                     GWLP_USERDATA,
                     reinterpret_cast<DialogCallArgument *>(lParam)->dialogArgument
                 );
-            }
-            else if (msg == WM_DESTROY) {
+            } else if (msg == WM_DESTROY) {
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
                 LogInfo("General settings dialog closed");
             }

@@ -5,7 +5,7 @@
 namespace UKControllerPlugin {
     namespace Dialog {
         class DialogManager;
-    }  // namespace Windows
+    }  // namespace Dialog
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
