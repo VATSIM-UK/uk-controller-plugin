@@ -13,45 +13,25 @@ namespace UKControllerPlugin {
         /*
             An ATL dialog for the plugins general settings.
         */
-        class GeneralSettingsDialog : public CDialog
+        class GeneralSettingsDialog
         {
-            DECLARE_DYNAMIC(GeneralSettingsDialog)
-
             public:
 
                 GeneralSettingsDialog(
-                    CWnd * parentWindow,
                     UKControllerPlugin::Euroscope::UserSetting & userSettings,
                     const UKControllerPlugin::Euroscope::UserSettingAwareCollection & userSettingsHandlers
                 );
                 GeneralSettingsDialog(const GeneralSettingsDialog & newObject);
 
-                BOOL OnInitDialog(void);
-                void OnOK(void);
-
-                // Dialog Data
-                #ifdef AFX_DESIGN_TIME
-                enum { IDD = IDD_GENERAL_SETTINGS };  // namespace Euroscope
-                #endif
-
-            protected:
-                DECLARE_MESSAGE_MAP()
+                static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             private:
 
-                void DoDataExchange(CDataExchange* pDX);
-
-                // The checkbox for whether prenotes should be notfied to the user
-                CButton prenoteEnabledCheckbox;
-
-                // The checkbox for whether automatic squawk assignment should be done
-                CButton squawksEnabledCheckbox;
-
-                // The checkbox for whether automatic initial altitude assignment should be done
-                CButton initialAltitudeEnabledCheckbox;
-
-                // The checkbox for whether notifications should be sent on QNH changes.
-                CButton qnhNotificationsCheckbox;
+                LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+                bool GetCheckboxStateFromSettings(std::string setting);
+                bool GetSettingFromCheckboxState(HWND hwnd, int checkboxId);
+                LRESULT InitDialog(HWND hwnd);
+                void DestroyDialog(HWND hwnd);
 
                 // A place where user settings are retrieved and stored
                 UKControllerPlugin::Euroscope::UserSetting & userSettings;

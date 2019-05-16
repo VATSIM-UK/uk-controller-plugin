@@ -35,12 +35,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(
                 instance,
                 ExternalsBootstrap::GetPluginFileRoot(),
-                ExternalsBootstrap::GetPluginFileRootWide(),
-                GeneralSettingsDialog(
-                    CWnd::FromHandle(GetActiveWindow()),
-                    *persistence.pluginUserSettingHandler,
-                    *persistence.userSettingHandlers
-                )
+                ExternalsBootstrap::GetPluginFileRootWide()
             );
             persistence.dialogManager.reset(new DialogManager(*winApi));
             persistence.windows = std::move(winApi);

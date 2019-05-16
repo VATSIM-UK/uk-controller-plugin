@@ -3,8 +3,8 @@
 #include "command/CommandHandlerInterface.h"
 
 namespace UKControllerPlugin {
-    namespace Windows {
-        class WinApiInterface;
+    namespace Dialog {
+        class DialogManager;
     }  // namespace Windows
 }  // namespace UKControllerPlugin
 
@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
         {
             public:
                 GeneralSettingsConfiguration(
-                    UKControllerPlugin::Windows::WinApiInterface & winApi,
+                    const UKControllerPlugin::Dialog::DialogManager & dialogManager,
                     const int menuSelectedCallbackId
                 );
 
@@ -41,8 +41,8 @@ namespace UKControllerPlugin {
 
             private:
 
-                // A link to the Windows API
-                UKControllerPlugin::Windows::WinApiInterface & winApi;
+                // Manages dialogs
+                const UKControllerPlugin::Dialog::DialogManager & dialogManager;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

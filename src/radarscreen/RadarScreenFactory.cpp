@@ -55,7 +55,7 @@ namespace UKControllerPlugin {
                 *persistence.pluginFunctionHandlers,
                 configurableDisplays,
                 commandHandlers,
-                *persistence.windows
+                *persistence.dialogManager
             );
 
             HistoryTrailModule::BootstrapRadarScreen(

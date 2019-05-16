@@ -22,11 +22,9 @@ namespace UKControllerPlugin {
         WinApi::WinApi(
             HINSTANCE dllInstance,
             std::string filesDirectory,
-            std::wstring filesDirectoryW,
-            GeneralSettingsDialog generalSettingsDialog
+            std::wstring filesDirectoryW
         )
-            : WinApiInterface(dllInstance), filesDirectory(filesDirectory), filesDirectoryW(filesDirectoryW),
-            generalSettingsDialog(generalSettingsDialog)
+            : WinApiInterface(dllInstance), filesDirectory(filesDirectory), filesDirectoryW(filesDirectoryW)
         {
             this->dllInstance = dllInstance;
         }
@@ -195,16 +193,6 @@ namespace UKControllerPlugin {
                     return false;
             }
 
-        }
-
-        /*
-            Opens the general settings dialog with a specified handler for saving settings.
-        */
-        void WinApi::OpenGeneralSettingsDialog()
-        {
-            // Required so we can hit the dialog resource.
-            AFX_MANAGE_STATE(AfxGetStaticModuleState());
-            this->generalSettingsDialog.DoModal();
         }
 
         /*

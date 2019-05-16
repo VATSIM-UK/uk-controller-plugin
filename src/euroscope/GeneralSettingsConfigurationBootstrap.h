@@ -13,9 +13,9 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class UserSetting;
     }  // namespace Euroscope
-    namespace Windows {
-        class WinApiInterface;
-    }  // namespace Windows
+    namespace Dialog {
+        class DialogManager;
+    }  // namespace Dialog
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -31,7 +31,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Plugin::FunctionCallEventHandler & functionCalls,
                     UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays,
                     UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers,
-                    UKControllerPlugin::Windows::WinApiInterface & winApi
+                    const UKControllerPlugin::Dialog::DialogManager & dialogManager
                 );
         };
     }  // namespace Euroscope

@@ -3,14 +3,14 @@
 #include "euroscope/GeneralSettingsConfiguration.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
-#include "windows/WinApiInterface.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/CallbackFunction.h"
 #include "command/CommandHandlerCollection.h"
 
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 
@@ -21,11 +21,11 @@ namespace UKControllerPlugin {
             FunctionCallEventHandler & functionHandler,
             ConfigurableDisplayCollection & configurableDisplays,
             CommandHandlerCollection & commandHandlers,
-            WinApiInterface & winApi
+            const DialogManager & dialogManager
         ) {
             int callbackFunctionId = functionHandler.ReserveNextDynamicFunctionId();
             std::shared_ptr<GeneralSettingsConfiguration> dialog = std::make_shared<GeneralSettingsConfiguration>(
-                winApi,
+                dialogManager,
                 callbackFunctionId
             );
             CallbackFunction showDialogFunction(
