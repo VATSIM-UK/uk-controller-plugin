@@ -4,18 +4,44 @@
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "dialog/DialogManager.h"
+#include "dialog/DialogData.h"
 #include "euroscope/CallbackFunction.h"
 #include "command/CommandHandlerCollection.h"
+#include "euroscope/GeneralSettingsDialog.h"
+#include "euroscope/UserSettingAwareCollection.h"
 
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Euroscope::CallbackFunction;
+using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
 using UKControllerPlugin::Command::CommandHandlerCollection;
+using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 
 namespace UKControllerPlugin {
     namespace Euroscope {
+
+        void GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
+            DialogManager & dialogManager,
+            UserSetting & userSettings,
+            UserSettingAwareCollection & userSettingsHandlers
+        ) {
+            std::shared_ptr<GeneralSettingsDialog> dialog = std::make_shared<GeneralSettingsDialog>(
+                userSettings,
+                userSettingsHandlers
+            );
+            dialogManager.AddDialog(
+                {
+                    IDD_GENERAL_SETTINGS,
+                    "General Settings",
+                    reinterpret_cast<DLGPROC>(dialog->WndProc),
+                    reinterpret_cast<LPARAM>(dialog.get()),
+                    dialog
+                }
+            );
+        }
 
         void GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
             FunctionCallEventHandler & functionHandler,

@@ -1,13 +1,18 @@
 #include "pch/pch.h"
 #include "euroscope/GeneralSettingsConfiguration.h"
-#include "mock/MockWinApi.h"
+#include "mock/MockDialogProvider.h"
 #include "plugin/PopupMenuItem.h"
+#include "dialog/DialogManager.h"
+#include "dialog/DialogData.h"
 
 using UKControllerPlugin::Euroscope::GeneralSettingsConfiguration;
-using UKControllerPluginTest::Windows::MockWinApi;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Dialog::DialogData;
 using ::testing::NiceMock;
 using ::testing::Test;
+using ::testing::_;
 
 namespace UKControllerPluginTest {
     namespace Euroscope {
@@ -17,12 +22,14 @@ namespace UKControllerPluginTest {
             public:
 
                 GeneralSettingsConfigurationTest()
-                    : configuration(this->winApi, 1)
+                    : configuration(this->dialogManager, 1), dialogManager(dialogProvider)
                 {
-
+                    this->dialogManager.AddDialog(generalSettingsData);
                 }
 
-                NiceMock<MockWinApi> winApi;
+                DialogData generalSettingsData = { IDD_GENERAL_SETTINGS, "Test" };
+                NiceMock<MockDialogProvider> dialogProvider;
+                DialogManager dialogManager;
                 GeneralSettingsConfiguration configuration;
         };
 
@@ -33,7 +40,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(GeneralSettingsConfigurationTest, ProcessCommandOpensDialogOnSuccess)
         {
-            EXPECT_CALL(this->winApi, OpenGeneralSettingsDialog)
+            EXPECT_CALL(this->dialogProvider, OpenDialog(this->generalSettingsData, _))
                 .Times(1);
 
             this->configuration.ProcessCommand(".ukcp g");
@@ -80,8 +87,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(GeneralSettingsConfigurationTest, SelectingTheMenuItemOpensConfigurationDialog)
         {
-            EXPECT_CALL(this->winApi, OpenGeneralSettingsDialog)
+            EXPECT_CALL(this->dialogProvider, OpenDialog(this->generalSettingsData, _))
                 .Times(1);
+
             this->configuration.Configure(0, "test", {});
         }
     }  // namespace Euroscope
