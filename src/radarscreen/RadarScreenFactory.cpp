@@ -62,7 +62,7 @@ namespace UKControllerPlugin {
                 *persistence.pluginFunctionHandlers,
                 *persistence.historyTrails,
                 renderers,
-                *persistence.windows,
+                *persistence.dialogManager,
                 configurableDisplays,
                 userSettingHandlers,
                 commandHandlers,

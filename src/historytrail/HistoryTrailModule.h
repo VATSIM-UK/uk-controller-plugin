@@ -21,9 +21,9 @@ namespace UKControllerPlugin {
         class HistoryTrailRenderer;
         class HistoryTrailRepository;
     }  // namespace HistoryTrail
-    namespace Windows {
-        class WinApiInterface;
-    }  // namespace Windows
+    namespace Dialog {
+        class DialogManager;
+    }  // namespace Dialog
 }  // namespace UKControllerPlugin
 
 // END
@@ -43,7 +43,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Plugin::FunctionCallEventHandler & eventHandler,
                     const UKControllerPlugin::HistoryTrail::HistoryTrailRepository & trailRepo,
                     UKControllerPlugin::RadarScreen::RadarRenderableCollection & radarRender,
-                    UKControllerPlugin::Windows::WinApiInterface & windows,
+                    const UKControllerPlugin::Dialog::DialogManager & dialogManager,
                     UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays,
                     UKControllerPlugin::Euroscope::AsrEventHandlerCollection & asrHandlers,
                     UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers,

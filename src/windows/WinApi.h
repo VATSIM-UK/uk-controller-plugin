@@ -24,7 +24,6 @@ namespace UKControllerPlugin {
                 bool FileExists(std::string filename);
                 std::string GetFullPathToLocalFile(std::string relativePath) const;
                 std::wstring GetFullPathToLocalFile(std::wstring relativePath) const;
-                bool OpenDialog(int dialogId, DLGPROC callback = NULL, LPARAM params = NULL) const;
                 std::wstring FileOpenDialog(
                     std::wstring title,
                     UINT numFileTypes,

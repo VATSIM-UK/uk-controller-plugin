@@ -1,125 +1,352 @@
 #include "pch/stdafx.h"
 #include "historytrail/HistoryTrailDialog.h"
 #include "historytrail/HistoryTrailData.h"
+#include "dialog/DialogCallArgument.h"
+
+using UKControllerPlugin::Dialog::DialogCallArgument;
 
 namespace UKControllerPlugin {
     namespace HistoryTrail {
 
-        IMPLEMENT_DYNAMIC(HistoryTrailDialog, CDialog)
-
-            HistoryTrailDialog::HistoryTrailDialog(CWnd* pParent, HistoryTrailData * trailData)
-            : CDialog(IDD_HISTORY_TRAIL, pParent)
+        /*
+            Public procedure for the window
+        */
+        LRESULT HistoryTrailDialog::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
-            this->data = trailData;
-        }
+            if (msg == WM_INITDIALOG) {
+                LogInfo("History trail dialog opened");
+                SetWindowLongPtr(
+                    hwnd,
+                    GWLP_USERDATA,
+                    reinterpret_cast<DialogCallArgument *>(lParam)->dialogArgument
+                );
+            }
+            else if (msg == WM_DESTROY) {
+                SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
+                LogInfo("History trail dialog closed");
+            }
 
-        HistoryTrailDialog::HistoryTrailDialog()
-        {
-
-        }
-
-        HistoryTrailDialog::~HistoryTrailDialog()
-        {
-
+            HistoryTrailDialog * dialog = reinterpret_cast<HistoryTrailDialog *>(
+                GetWindowLongPtr(hwnd, GWLP_USERDATA)
+                );
+            return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : DefWindowProc(hwnd, msg, wParam, lParam);
         }
 
         /*
-            Microsoft function to set up the control variables.
+            Internal procedure for the window that can reference the class
         */
-        void HistoryTrailDialog::DoDataExchange(CDataExchange* pDX)
+        LRESULT HistoryTrailDialog::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
-            CDialog::DoDataExchange(pDX);
-            DDX_Control(pDX, IDC_CHECK_DEGRADING, this->degradingCheck);
-            DDX_Control(pDX, IDC_CHECK_FADING, this->fadingCheck);
-            DDX_Control(pDX, IDC_CHECK_AA, this->antiAliasCheck);
-            DDX_Control(pDX, IDC_TRAIL_LENGTH, this->trailLength);
-            DDX_Control(pDX, IDC_TRAIL_TYPE, this->trailType);
-            DDX_Control(pDX, IDC_TRAIL_COLOUR, this->trailColour);
-            DDX_Control(pDX, IDC_SPIN_LENGTH, this->lengthSpinner);
-            DDX_Control(pDX, IDC_DOT_SIZE, this->trailDotSize);
-            DDX_Control(pDX, IDC_DOT_SIZE_SPIN, this->dotSizeSpinner);
-            DDX_Control(pDX, IDC_MIN_FILTER_SPIN, this->minAltitudeSpinner);
-            DDX_Control(pDX, IDC_MIN_FILTER_TEXT, this->minAltitudeFilter);
-            DDX_Control(pDX, IDC_MAX_FILTER_SPIN, this->maxAltitudeSpinner);
-            DDX_Control(pDX, IDC_MAX_FILTER_TEXT, this->maxAltitudeFilter);
+            switch (msg) {
+                // Initialise
+                case WM_INITDIALOG: {
+                    this->InitDialog(hwnd, lParam);
+                    return TRUE;
+                };
+                // Window Closed
+                case WM_CLOSE: {
+                    this->TidyUpDialog();
+                    EndDialog(hwnd, wParam);
+                    return TRUE;
+                }
+                // Drawing
+                case WM_DRAWITEM: {
+                    LPDRAWITEMSTRUCT drawItem = reinterpret_cast<LPDRAWITEMSTRUCT>(lParam);
+                    if (drawItem->CtlID == IDC_TRAIL_COLOUR) {
+                        this->DrawColourButton(drawItem);
+                        return TRUE;
+                    }
+                    break;
+                }
+                // Buttons pressed
+                case WM_COMMAND: {
+                    switch (LOWORD(wParam)) {
+                        case IDCANCEL: {
+                            this->TidyUpDialog();
+                            EndDialog(hwnd, wParam);
+                            return TRUE;
+                        }
+                        case IDOK: {
+                            // OK clicked, close the window
+                            this->OnOk(hwnd);
+                            this->TidyUpDialog();
+                            EndDialog(hwnd, wParam);
+                            return TRUE;
+                        }
+                        case IDC_TRAIL_COLOUR: {
+                            this->ChoseTrailColour(hwnd);
+                            return TRUE;
+                        }
+                    }
+                }
+            }
+
+            return DefWindowProc(hwnd, msg, wParam, lParam);
         }
 
         /*
             Put the data into the fields.
         */
-        BOOL HistoryTrailDialog::OnInitDialog(void)
+        void HistoryTrailDialog::InitDialog(HWND hwnd, LPARAM lParam)
         {
-            CDialog::OnInitDialog();
+            this->data = reinterpret_cast<HistoryTrailData *>(
+                reinterpret_cast<DialogCallArgument *>(lParam)->contextArgument
+            );
 
             // Checkboxes
-            this->antiAliasCheck.SetCheck((*this->data->antiAlias) ? BST_CHECKED : BST_UNCHECKED);
-            this->fadingCheck.SetCheck((*this->data->fade) ? BST_CHECKED : BST_UNCHECKED);
-            this->degradingCheck.SetCheck((*this->data->degrade) ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(
+                hwnd,
+                IDC_CHECK_AA,
+                *this->data->antiAlias ? BST_CHECKED : BST_UNCHECKED
+            );
+
+            CheckDlgButton(
+                hwnd,
+                IDC_CHECK_FADING,
+                *this->data->fade ? BST_CHECKED : BST_UNCHECKED
+            );
+
+            CheckDlgButton(
+                hwnd,
+                IDC_CHECK_DEGRADING,
+                *this->data->degrade ? BST_CHECKED : BST_UNCHECKED
+            );
 
             // Trail length
-            this->lengthSpinner.SetRange(this->minTrailLength, this->maxTrailLength);
-            this->lengthSpinner.SetPos(
-                *this->data->length <= this->maxTrailLength && this->minTrailLength > 0
+            SendDlgItemMessage(
+                hwnd,
+                IDC_SPIN_LENGTH,
+                UDM_SETRANGE,
+                this->minTrailLength,
+                this->maxTrailLength
+            );
+            SendDlgItemMessage(
+                hwnd,
+                IDC_SPIN_LENGTH,
+                UDM_SETPOS,
+                NULL,
+                this->ValueInRange(*this->data->length, this->minTrailLength, this->maxTrailLength)
                     ? *this->data->length
                     : this->defaultTrailLength
             );
 
             // Dot size
-            this->dotSizeSpinner.SetRange(this->minDotSize, this->maxDotSize);
-            this->dotSizeSpinner.SetPos(
-                *this->data->dotSize <= this->maxDotSize && this->minDotSize > 0
+            SendDlgItemMessage(
+                hwnd,
+                IDC_DOT_SIZE_SPIN,
+                UDM_SETRANGE,
+                this->minDotSize,
+                this->maxDotSize
+            );
+            SendDlgItemMessage(
+                hwnd,
+                IDC_DOT_SIZE_SPIN,
+                UDM_SETPOS,
+                NULL,
+                this->ValueInRange(*this->data->dotSize, this->minDotSize, this->maxDotSize)
                     ? *this->data->dotSize
                     : this->defaultDotSize
-                );
+            );\
 
-            // Trail type
-            this->trailType.InsertString(this->trailTypeDiamond, L"Diamond");
-            this->trailType.InsertString(this->trailTypeSquare, L"Square");
-            this->trailType.InsertString(this->trailTypeCircle, L"Circle");
+            // Trail type - diamond
+            SendDlgItemMessage(
+                hwnd,
+                IDC_TRAIL_TYPE,
+                CB_INSERTSTRING,
+                this->trailTypeDiamond,
+                reinterpret_cast<LPARAM>(L"Diamond")
+            );
+
+            // Trail type - square
+            SendDlgItemMessage(
+                hwnd,
+                IDC_TRAIL_TYPE,
+                CB_INSERTSTRING,
+                this->trailTypeSquare,
+                reinterpret_cast<LPARAM>(L"Square")
+            );
+
+            // Trail type - circle
+            SendDlgItemMessage(
+                hwnd,
+                IDC_TRAIL_TYPE,
+                CB_INSERTSTRING,
+                this->trailTypeCircle,
+                reinterpret_cast<LPARAM>(L"Circle")
+            );
+
+            // Set trail type position
             if (
                 *this->data->type == this->trailTypeDiamond ||
                 *this->data->type == this->trailTypeCircle ||
                 *this->data->type == this->trailTypeSquare
             ) {
-                this->trailType.SetCurSel(*this->data->type);
-            } else {
-                this->trailType.SetCurSel(0);
+                SendDlgItemMessage(
+                    hwnd,
+                    IDC_TRAIL_TYPE,
+                    CB_SETCURSEL,
+                    *this->data->type,
+                    NULL
+                );
+            }
+            else {
+                SendDlgItemMessage(
+                    hwnd,
+                    IDC_TRAIL_TYPE,
+                    CB_SETCURSEL,
+                    this->trailTypeDiamond,
+                    NULL
+                );
             }
 
-            // Colour
-            this->trailColour.SetColor(*this->data->colour);
 
             // Max altitude
-            this->maxAltitudeSpinner.SetRange32(this->minAltitudeValue, this->maxAltitudeValue);
-            this->maxAltitudeSpinner.SetPos32(*this->data->maxAltitude);
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MAX_FILTER_SPIN,
+                UDM_SETRANGE32,
+                this->minAltitudeValue,
+                this->maxAltitudeValue
+            );
+
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MAX_FILTER_SPIN,
+                UDM_SETPOS32,
+                NULL,
+                this->ValueInRange(*this->data->maxAltitude, this->minAltitudeValue, this->maxAltitudeValue)
+                    ? *this->data->maxAltitude
+                    : this->maxAltitudeValue
+            );
 
             // Min altitude
-            this->minAltitudeSpinner.SetRange32(this->minAltitudeValue, this->maxAltitudeValue);
-            this->minAltitudeSpinner.SetPos32(*this->data->minAltitude);
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MIN_FILTER_SPIN,
+                UDM_SETRANGE32,
+                this->minAltitudeValue,
+                this->maxAltitudeValue
+            );
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MIN_FILTER_SPIN,
+                UDM_SETPOS32,
+                NULL,
+                this->ValueInRange(*this->data->minAltitude, this->minAltitudeValue, this->maxAltitudeValue)
+                    ? *this->data->minAltitude
+                    : this->minAltitudeValue
+            );
 
-            return TRUE;
+            // Colour
+            this->colourSelectorBrush = CreateSolidBrush(*this->data->colour);
         }
 
         /*
             Called when the Save button is pressed. We save data to the provided
             data structure, so whoever called us can get the new data items back.
         */
-        void HistoryTrailDialog::OnOK(void)
+        void HistoryTrailDialog::OnOk(HWND hwnd)
         {
-            *this->data->antiAlias = this->antiAliasCheck.GetCheck() == BST_CHECKED;
-            *this->data->fade = this->fadingCheck.GetCheck() == BST_CHECKED;
-            *this->data->degrade = this->degradingCheck.GetCheck() == BST_CHECKED;
-            *this->data->length = this->lengthSpinner.GetPos();
-            *this->data->dotSize = this->dotSizeSpinner.GetPos();
-            *this->data->type = this->trailType.GetCurSel();
-            *this->data->colour = this->trailColour.GetColor();
-            *this->data->maxAltitude = this->maxAltitudeSpinner.GetPos32();
-            *this->data->minAltitude = this->minAltitudeSpinner.GetPos32();
+            LogInfo("History trail dialog saved");
 
-            this->EndDialog(0);
+            // Checkboxes
+            *this->data->antiAlias = IsDlgButtonChecked(hwnd, IDC_CHECK_AA) == BST_CHECKED;
+            *this->data->fade = IsDlgButtonChecked(hwnd, IDC_CHECK_FADING) == BST_CHECKED;
+            *this->data->degrade = IsDlgButtonChecked(hwnd, IDC_CHECK_DEGRADING) == BST_CHECKED;
+
+            // Length
+            *this->data->length = SendDlgItemMessage(
+                hwnd,
+                IDC_SPIN_LENGTH,
+                UDM_GETPOS,
+                NULL,
+                NULL
+            );
+
+            // Dot size
+            *this->data->dotSize = SendDlgItemMessage(
+                hwnd,
+                IDC_DOT_SIZE_SPIN,
+                UDM_GETPOS,
+                NULL,
+                NULL
+            );
+
+            // Type
+            *this->data->type = SendDlgItemMessage(
+                hwnd,
+                IDC_TRAIL_TYPE,
+                CB_GETCURSEL,
+                NULL,
+                NULL
+            );
+
+            // Min and max altitude
+            *this->data->maxAltitude = SendDlgItemMessage(
+                hwnd,
+                IDC_MAX_FILTER_SPIN,
+                UDM_GETPOS32,
+                NULL,
+                NULL
+            );
+            *this->data->minAltitude = SendDlgItemMessage(
+                hwnd,
+                IDC_MIN_FILTER_SPIN,
+                UDM_GETPOS32,
+                NULL,
+                NULL
+            );
         }
 
-        BEGIN_MESSAGE_MAP(HistoryTrailDialog, CDialog)
-        END_MESSAGE_MAP()
+        /*
+            Choose the trail colour
+        */
+        void HistoryTrailDialog::ChoseTrailColour(HWND hwnd)
+        {
+            this->colourStruct.hwndOwner = hwnd;
+            this->colourStruct.rgbResult = *this->data->colour;
+
+            if (ChooseColor(&this->colourStruct) == TRUE) {
+                *this->data->colour = this->colourStruct.rgbResult;
+
+                // Delete the old brush and create a new one
+                DeleteObject(this->colourSelectorBrush);
+                this->colourSelectorBrush = CreateSolidBrush(*this->data->colour);
+
+                // Force redraw of colour picker putton
+                HWND buttonHwnd = GetDlgItem(hwnd, IDC_TRAIL_COLOUR);
+                RECT buttonRect = {};
+                GetWindowRect(buttonHwnd, &buttonRect);
+                InvalidateRect(hwnd, &buttonRect, 0);
+            }
+        }
+
+        /*
+            Draw the colour button
+        */
+        void HistoryTrailDialog::DrawColourButton(LPDRAWITEMSTRUCT drawItem)
+        {
+            FillRect(
+                drawItem->hDC,
+                &drawItem->rcItem,
+                this->colourSelectorBrush
+            );
+        }
+
+        /*
+            Returns true if value is in a certain range
+        */
+        bool HistoryTrailDialog::ValueInRange(int value, int min, int max)
+        {
+            return value >= min && value <= max;
+        }
+
+        /*
+            Delete the brush to tidy up after the dialog
+        */
+        void HistoryTrailDialog::TidyUpDialog(void)
+        {
+            DeleteObject(this->colourSelectorBrush);
+        }
     }  // namespace HistoryTrail
 }  // namespace UKControllerPlugin

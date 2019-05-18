@@ -13,15 +13,10 @@ namespace UKControllerPlugin {
             It takes a pointer to a structure that in turn takes pointers to data - allowing
             it to change variables as required when it closes.
         */
-        class HistoryTrailDialog : public CDialog
+        class HistoryTrailDialog
         {
-            DECLARE_DYNAMIC(HistoryTrailDialog)
-
         public:
-            HistoryTrailDialog(CWnd* pParent, HistoryTrailData * trailData);
-            virtual ~HistoryTrailDialog();
-            BOOL OnInitDialog();
-            void OnOK(void);
+            static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             // Maximum renderable trail length
             const int maxTrailLength = 50;
@@ -56,59 +51,37 @@ namespace UKControllerPlugin {
             // Circle trail type
             const int trailTypeCircle = 2;
 
-            // Dialog Data
-#ifdef AFX_DESIGN_TIME
-            enum { IDD = IDD_DIALOG1 };  // namespace HistoryTrail
-#endif
-
-        protected:
-            HistoryTrailDialog(void);
-            virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-            DECLARE_MESSAGE_MAP()
-
         private:
+            LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+            void InitDialog(HWND hwnd, LPARAM lParam);
+            void OnOk(HWND hwnd);
+            void ChoseTrailColour(HWND hwnd);
+            void DrawColourButton(LPDRAWITEMSTRUCT drawItem);
+            bool ValueInRange(int value, int min, int max);
+            void TidyUpDialog(void);
+
             // Data to set up the dialog and return on close
             HistoryTrailData * data;
 
-            // Checkbox for degrading trails
-            CButton degradingCheck;
+            // Stores colour data
+            CHOOSECOLOR colourStruct{
+                sizeof(CHOOSECOLOR),
+                NULL,
+                NULL,
+                RGB(255, 255, 255),
+                this->customTrailColours,
+                CC_RGBINIT | CC_FULLOPEN,
+                NULL,
+                NULL,
+                NULL
+            };
 
-            // Checkbox for fading trails
-            CButton fadingCheck;
+            // Stores any custom trail colours
+            COLORREF customTrailColours[16];
 
-            // Checkbox for anti-aliased trails
-            CButton antiAliasCheck;
-
-            // The actual box for trail length
-            CEdit trailLength;
-
-            // The spinner that controls the trail length box
-            CSpinButtonCtrl lengthSpinner;
-
-            // Box for the trail dot size.
-            CEdit trailDotSize;
-
-            // Spinner to control dot size.
-            CSpinButtonCtrl dotSizeSpinner;
-
-            // The trail type drop down
-            CComboBox trailType;
-
-            // The trail colour picker
-            CMFCColorButton trailColour;
-
-            // Edit box for minimum altitude filter
-            CEdit minAltitudeFilter;
-
-            // Spinner for minimum altitude
-            CSpinButtonCtrl minAltitudeSpinner;
-
-            // Edit box for the maximum altitude filter
-            CEdit maxAltitudeFilter;
-
-            // Spinner for maximum altitude
-            CSpinButtonCtrl maxAltitudeSpinner;
+            // Brush for drawing the colour selector
+            HBRUSH colourSelectorBrush;
         };
     }  // namespace HistoryTrail
 }  // namespace UKControllerPlugin

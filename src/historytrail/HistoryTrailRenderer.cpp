@@ -6,7 +6,7 @@
 #include "historytrail/AircraftHistoryTrail.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "historytrail/HistoryTrailData.h"
-#include "windows/WinApiInterface.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 
@@ -16,7 +16,7 @@ using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
 using UKControllerPlugin::HistoryTrail::HistoryTrailData;
-using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 
@@ -26,10 +26,11 @@ namespace UKControllerPlugin {
         HistoryTrailRenderer::HistoryTrailRenderer(
             const HistoryTrailRepository & trails,
             EuroscopePluginLoopbackInterface & plugin,
-            WinApiInterface & winApi,
+            const DialogManager & dialogManager,
             int toggleCallbackFunctionId
         )
-            : trails(trails), winApi(winApi), toggleCallbackFunctionId(toggleCallbackFunctionId), plugin(plugin)
+            : trails(trails), dialogManager(dialogManager),
+            toggleCallbackFunctionId(toggleCallbackFunctionId), plugin(plugin)
         {
             this->pen = std::make_unique<Gdiplus::Pen>(Gdiplus::Color(255, 255, 255, 255));
         }
@@ -133,7 +134,8 @@ namespace UKControllerPlugin {
             data.maxAltitude = &this->maximumDisplayAltitude;
             data.minAltitude = &this->minimumDisplayAltitude;
 
-            this->winApi.OpenDialog(this->configurationDialogId, NULL, (LPARAM) &data);
+
+            this->dialogManager.OpenDialog(IDD_HISTORY_TRAIL, reinterpret_cast<LPARAM>(&data));
 
             this->historyTrailDotSizeFloat = static_cast<float>(this->historyTrailDotSize);
             this->startColour->SetFromCOLORREF(newColour);
