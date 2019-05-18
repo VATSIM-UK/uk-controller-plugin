@@ -134,7 +134,7 @@ namespace UKControllerPlugin {
         After we've done the main DLL loading part, it's safe to do things like starting threads.
         So we initialise all the core plugin elements here and return the plugin instance.
     */
-    void InitialisePlugin::PostInit(void)
+    void InitialisePlugin::PostInit(HINSTANCE dllInstance)
     {
         // Start GdiPlus
         Gdiplus::GdiplusStartupInput gdiStartup;
@@ -151,7 +151,7 @@ namespace UKControllerPlugin {
         UkPluginBootstrap::BootstrapPlugin(*this->container);
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
-        ExternalsBootstrap::Bootstrap(*this->container, this->m_hInstance);
+        ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
         // API

@@ -27,9 +27,6 @@ namespace UKControllerPlugin {
         */
         void ExternalsBootstrap::Bootstrap(PersistenceContainer & persistence, HINSTANCE instance)
         {
-            // Required so we can hit the dialog resource.
-            AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
             persistence.curl.reset(new CurlApi());
             // All files should be relative to Documents/EuroScope
             std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(

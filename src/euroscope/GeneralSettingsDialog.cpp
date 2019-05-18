@@ -125,9 +125,8 @@ namespace UKControllerPlugin {
                     this->InitDialog(hwnd);
                     return TRUE;
                 };
-                // Hold Window Closed
+                // Window Closed
                 case WM_CLOSE: {
-                    this->DestroyDialog(hwnd);
                     EndDialog(hwnd, wParam);
                     return TRUE;
                 }
@@ -163,7 +162,7 @@ namespace UKControllerPlugin {
         */
         bool GeneralSettingsDialog::GetSettingFromCheckboxState(HWND hwnd, int checkboxId)
         {
-            return IsDlgButtonChecked(hwnd, checkboxId) == BST_CHECKED ? true : false;;
+            return IsDlgButtonChecked(hwnd, checkboxId) == BST_CHECKED;
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

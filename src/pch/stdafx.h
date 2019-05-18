@@ -2,11 +2,9 @@
 #define _WIN32_WINNT 0x0603
 #define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
 
-// Needs to go here, because windows.
-#include "date/include/date/date.h"
-#include <afxwin.h>
-
 // Custom headers
+#include "date/include/date/date.h"
+#include <Windows.h>
 #include "../../resource/resource.h"
 #include "json/json.hpp"
 #include "spdlog/include/spdlog/logger.h"
@@ -16,8 +14,8 @@
 #include "euroscope/EuroScopePlugIn.h"
 
 // Standard headers
-#include <afxspinbuttonctrl.h>
-#include <afxcolorbutton.h>
+#include <CommCtrl.h>
+#include <shtypes.h>
 #include <cctype>
 #include <ctime>
 #include <string>
@@ -26,7 +24,6 @@
 #include <vector>
 #include <iterator>
 #include <sstream>
-#include <afxbutton.h>
 #include <queue>
 #include <gdiplus.h>
 #include <windowsx.h>
@@ -41,3 +38,5 @@
 #include <type_traits>
 #include <gdipluspixelformats.h>
 #include <unordered_set>
+#include <Shobjidl.h>
+#include <Shlobj.h>
