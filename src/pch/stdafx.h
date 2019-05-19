@@ -22,6 +22,7 @@
 #include <cctype>
 #include <ctime>
 #include <string>
+#include <tchar.h>
 #include <map>
 #include <mutex>
 #include <vector>

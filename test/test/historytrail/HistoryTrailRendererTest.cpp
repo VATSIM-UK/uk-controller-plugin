@@ -2,7 +2,9 @@
 #include "historytrail/HistoryTrailRenderer.h"
 #include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
-#include "mock/MockWinApi.h"
+#include "mock/MockDialogProvider.h"
+#include "dialog/DialogManager.h"
+#include "dialog/DialogData.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "plugin/PopupMenuItem.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
@@ -10,7 +12,9 @@
 using UKControllerPlugin::HistoryTrail::HistoryTrailRenderer;
 using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
 using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPluginTest::Windows::MockWinApi;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -28,17 +32,20 @@ namespace UKControllerPluginTest {
             public:
 
                 HistoryTrailRendererTest(void)
-                    : userSetting(mockUserSettingProvider), renderer(repo, mockPlugin, mockWindows, 1)
+                    : userSetting(mockUserSettingProvider), renderer(repo, mockPlugin, dialogManager, 1),
+                    dialogManager(mockDialogProvider)
                 {
-
+                    this->dialogManager.AddDialog(historyTrailDialogData);
                 }
 
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-            HistoryTrailRepository repo;
-            NiceMock<MockWinApi> mockWindows;
-            NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
-            UserSetting userSetting;
-            HistoryTrailRenderer renderer;
+                DialogData historyTrailDialogData = { IDD_HISTORY_TRAIL, "Test" };
+                NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+                HistoryTrailRepository repo;
+                NiceMock<MockDialogProvider> mockDialogProvider;
+                DialogManager dialogManager;
+                NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+                UserSetting userSetting;
+                HistoryTrailRenderer renderer;
         };
 
         TEST_F(HistoryTrailRendererTest, AsrLoadedEventSetsDefaultVisibilityIfNoSetting)
@@ -476,7 +483,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockWindows, OpenDialog(102, _, _))
+            EXPECT_CALL(mockDialogProvider, OpenDialog(this->historyTrailDialogData, _))
                 .Times(1);
 
             renderer.AsrLoadedEvent(userSetting);
@@ -499,7 +506,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockWindows, OpenDialog(102, _, _))
+            EXPECT_CALL(mockDialogProvider, OpenDialog(this->historyTrailDialogData, _))
                 .Times(1);
 
             renderer.AsrLoadedEvent(userSetting);
