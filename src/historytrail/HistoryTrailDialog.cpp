@@ -27,7 +27,7 @@ namespace UKControllerPlugin {
 
             HistoryTrailDialog * dialog = reinterpret_cast<HistoryTrailDialog *>(
                 GetWindowLongPtr(hwnd, GWLP_USERDATA)
-                );
+            );
             return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : DefWindowProc(hwnd, msg, wParam, lParam);
         }
 
