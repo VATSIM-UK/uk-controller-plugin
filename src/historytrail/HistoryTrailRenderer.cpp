@@ -134,7 +134,6 @@ namespace UKControllerPlugin {
             data.maxAltitude = &this->maximumDisplayAltitude;
             data.minAltitude = &this->minimumDisplayAltitude;
 
-
             this->dialogManager.OpenDialog(IDD_HISTORY_TRAIL, reinterpret_cast<LPARAM>(&data));
 
             this->historyTrailDotSizeFloat = static_cast<float>(this->historyTrailDotSize);

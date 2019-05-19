@@ -28,7 +28,7 @@ namespace UKControllerPlugin {
             HistoryTrailDialog * dialog = reinterpret_cast<HistoryTrailDialog *>(
                 GetWindowLongPtr(hwnd, GWLP_USERDATA)
             );
-            return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : DefWindowProc(hwnd, msg, wParam, lParam);
+            return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
         }
 
         /*
@@ -80,7 +80,7 @@ namespace UKControllerPlugin {
                 }
             }
 
-            return DefWindowProc(hwnd, msg, wParam, lParam);
+            return FALSE;
         }
 
         /*
@@ -315,6 +315,17 @@ namespace UKControllerPlugin {
                 HWND buttonHwnd = GetDlgItem(hwnd, IDC_TRAIL_COLOUR);
                 RECT buttonRect = {};
                 GetWindowRect(buttonHwnd, &buttonRect);
+                POINT clientRectTopLeft = { buttonRect.left, buttonRect.top };
+                POINT clientRectBottomRight = { buttonRect.right, buttonRect.bottom };
+                ScreenToClient(hwnd, &clientRectTopLeft);
+                ScreenToClient(hwnd, &clientRectBottomRight);
+
+                buttonRect = {
+                    clientRectTopLeft.x,
+                    clientRectTopLeft.y,
+                    clientRectBottomRight.x,
+                    clientRectBottomRight.y
+                };
                 InvalidateRect(hwnd, &buttonRect, 0);
             }
         }
