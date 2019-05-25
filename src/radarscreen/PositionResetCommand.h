@@ -11,7 +11,9 @@ namespace UKControllerPlugin {
         class PositionResetCommand : public UKControllerPlugin::Command::CommandHandlerInterface
         {
             public:
-                PositionResetCommand(const UKControllerPlugin::RadarScreen::RadarRenderableCollection & renderables);
+                explicit PositionResetCommand(
+                    const UKControllerPlugin::RadarScreen::RadarRenderableCollection & renderables
+                );
 
                 // Inherited via CommandHandlerInterface
                 bool ProcessCommand(std::string command) override;
@@ -20,7 +22,7 @@ namespace UKControllerPlugin {
                 const std::string resetCommand = ".ukcp resetvisuals";
 
             private:
-                
+
                 // Radar renderables
                 const UKControllerPlugin::RadarScreen::RadarRenderableCollection & renderables;
         };

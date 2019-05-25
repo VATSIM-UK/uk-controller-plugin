@@ -345,7 +345,7 @@ namespace UKControllerPlugin {
         {
             this->visible = visible;
         }
-        
+
         /*
             Reset the position of the renderer
         */

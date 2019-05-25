@@ -45,7 +45,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(*this->mockRenderable, ResetPosition())
                 .Times(1);
-            
+
             this->command.ProcessCommand(this->command.resetCommand);
         }
     }  // namespace RadarScreen
