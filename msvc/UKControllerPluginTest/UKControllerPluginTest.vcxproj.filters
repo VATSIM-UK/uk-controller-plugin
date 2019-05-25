@@ -668,7 +668,7 @@
     <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp">
       <Filter>test\log</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\countdown\TimerConfigTest.cpp">
+    <ClCompile Include="..\..\test\test\countdown\TimerConfigurationTest.cpp">
       <Filter>test\countdown</Filter>
     </ClCompile>
   </ItemGroup>

@@ -858,6 +858,12 @@
     <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h">
       <Filter>src\api</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\countdown\TimerConfigurationManager.h">
+      <Filter>src\countdown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\countdown\TimerConfiguration.h">
+      <Filter>src\countdown</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1464,6 +1470,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp">
       <Filter>src\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\countdown\TimerConfigurationManager.cpp">
+      <Filter>src\countdown</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

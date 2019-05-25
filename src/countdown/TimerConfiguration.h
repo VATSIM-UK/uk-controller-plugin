@@ -7,7 +7,7 @@ namespace UKControllerPlugin {
             A struct representing the configuration of a particular countdown
             timer.
         */
-        typedef struct TimerConfig 
+        typedef struct TimerConfiguration
         {
             // The id of the timer
             const unsigned int timerId;
@@ -18,15 +18,15 @@ namespace UKControllerPlugin {
             // How long the timer should last for
             const unsigned int timerDuration;
 
-            bool operator==(const TimerConfig & compare) const
+            bool operator==(const TimerConfiguration & compare) const
             {
                 return this->timerId == compare.timerId;
             }
 
-            bool operator<(const TimerConfig & compare) const
+            bool operator<(const TimerConfiguration & compare) const
             {
                 return this->timerId < compare.timerId;
             }
-        } TimeConfig;
+        } TimerConfiguration;
     }  // namespace Countdown
 }  // namespace UKControllerPlugin
