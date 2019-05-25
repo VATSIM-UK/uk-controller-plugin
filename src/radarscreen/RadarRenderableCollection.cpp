@@ -190,5 +190,20 @@ namespace UKControllerPlugin {
                 }
             }
         }
+
+        /*
+            Process the command and see if its the reset visuals command.
+        */
+        void RadarRenderableCollection::ResetPosition(void) const
+        {
+            for (
+                std::map<int, std::shared_ptr<RadarRenderableInterface>>::const_iterator it
+                    = this->allRenderers.cbegin();
+                it != this->allRenderers.cend();
+                ++it
+            ) {
+                it->second->ResetPosition();
+            }
+        }
     }  // namespace RadarScreen
 }  // namespace UKControllerPlugin
