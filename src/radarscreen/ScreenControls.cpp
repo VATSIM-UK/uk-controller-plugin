@@ -109,5 +109,12 @@ namespace UKControllerPlugin {
                 false
             );
         }
+        
+        /*
+            This is always the bottom left of the screen, dont move.
+        */
+        void ScreenControls::ResetPosition(void)
+        {
+        }
     }  // namespace RadarScreen
 }  // namespace UKControllerPlugin

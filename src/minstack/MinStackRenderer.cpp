@@ -345,6 +345,16 @@ namespace UKControllerPlugin {
         {
             this->visible = visible;
         }
-
+        
+        /*
+            Reset the position of the renderer
+        */
+        void MinStackRenderer::ResetPosition(void)
+        {
+            this->Move(
+                { 100, 100, 100 + this->leftColumnWidth, 100 + this->rowHeight },
+                ""
+            );
+        }
     }  // namespace MinStack
 }  // namespace UKControllerPlugin
