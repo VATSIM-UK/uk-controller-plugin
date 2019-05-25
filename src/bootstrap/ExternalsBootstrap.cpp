@@ -13,6 +13,7 @@
 using UKControllerPlugin::Curl::CurlApi;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Windows::WinApi;
+using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Windows::GdiGraphicsWrapper;
 using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
@@ -53,13 +54,48 @@ namespace UKControllerPlugin {
         */
         std::wstring ExternalsBootstrap::GetPluginFileRootWide(void)
         {
+            return ExternalsBootstrap::GetMyDocumentsPath() + L"/EuroScope/ukcp";
+        }
+
+        /*
+            Create the required folder hierarchy for UKCP.
+        */
+        void ExternalsBootstrap::SetupUkcpFolderRoot(WinApiInterface & winApi)
+        {
+            std::string documentsPath = HelperFunctions::ConvertToRegularString(
+                ExternalsBootstrap::GetMyDocumentsPath()
+            );
+
+            if (!winApi.CreateFolder(documentsPath + "/EuroScope")) {
+                winApi.OpenMessageBox(
+                    L"Unable to find EuroScope documents folder, please contact the VATUK Web Department.",
+                    L"UKCP Fatal Error",
+                    MB_OK | MB_ICONSTOP
+                );
+                throw std::runtime_error("Unable to create EuroScope folder");
+            }
+
+            if (!winApi.CreateFolder(documentsPath + "/EuroScope/ukcp")) {
+                winApi.OpenMessageBox(
+                    L"Unable to create ukcp file root, please contact the VATUK Web Department.",
+                    L"UKCP Fatal Error",
+                    MB_OK | MB_ICONSTOP
+                );
+                throw std::runtime_error("Unable to create ukcp root folder");
+            }
+        }
+
+        /*
+            Get the My Documents path
+        */
+        std::wstring ExternalsBootstrap::GetMyDocumentsPath(void)
+        {
             TCHAR myDocumentsPath[MAX_PATH];
             HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
 
             std::wstring widePath(myDocumentsPath);
             std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
-
-            return widePath + L"/EuroScope/ukcp";
+            return widePath;
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

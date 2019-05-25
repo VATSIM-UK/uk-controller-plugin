@@ -40,15 +40,17 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Create a folder from the root, recursively
+            Create a folder from the UK file root, recursively
         */
         bool WinApi::CreateLocalFolderRecursive(std::string folder)
         {
             std::vector<std::string> tokens = HelperFunctions::TokeniseString(
                 '/',
-                this->GetFullPathToLocalFile(folder)
+                folder
             );
-            std::string currentPath;
+
+            // Start from the UKCP root
+            std::string currentPath = this->filesDirectory + "/";
             for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
                 if (!this->CreateFolder(currentPath + *it)) {
                     return false;
