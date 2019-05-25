@@ -17,7 +17,7 @@ namespace UKControllerPlugin {
         ) : userSettings(userSettings), userSettingHandlers(userSettingHandlers)
         {
         }
-        
+
         /*
             Public facing window procedure
         */

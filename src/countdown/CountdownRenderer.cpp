@@ -86,7 +86,7 @@ namespace UKControllerPlugin {
             }
 
             TimerConfiguration config = this->configManager.GetTimer(std::stoi(timerMatches[1]));
-            
+
             if (config == this->configManager.invalidTimer) {
                 LogWarning("No valid timer config found");
                 return;
