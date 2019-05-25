@@ -27,20 +27,12 @@ namespace UKControllerPlugin {
         */
         void ExternalsBootstrap::Bootstrap(PersistenceContainer & persistence, HINSTANCE instance)
         {
-            // Required so we can hit the dialog resource.
-            AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
             persistence.curl.reset(new CurlApi());
             // All files should be relative to Documents/EuroScope
             std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(
                 instance,
                 ExternalsBootstrap::GetPluginFileRoot(),
-                ExternalsBootstrap::GetPluginFileRootWide(),
-                GeneralSettingsDialog(
-                    CWnd::FromHandle(GetActiveWindow()),
-                    *persistence.pluginUserSettingHandler,
-                    *persistence.userSettingHandlers
-                )
+                ExternalsBootstrap::GetPluginFileRootWide()
             );
             persistence.dialogManager.reset(new DialogManager(*winApi));
             persistence.windows = std::move(winApi);

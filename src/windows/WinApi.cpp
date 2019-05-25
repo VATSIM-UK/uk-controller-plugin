@@ -22,11 +22,9 @@ namespace UKControllerPlugin {
         WinApi::WinApi(
             HINSTANCE dllInstance,
             std::string filesDirectory,
-            std::wstring filesDirectoryW,
-            GeneralSettingsDialog generalSettingsDialog
+            std::wstring filesDirectoryW
         )
-            : WinApiInterface(dllInstance), filesDirectory(filesDirectory), filesDirectoryW(filesDirectoryW),
-            generalSettingsDialog(generalSettingsDialog)
+            : WinApiInterface(dllInstance), filesDirectory(filesDirectory), filesDirectoryW(filesDirectoryW)
         {
             this->dllInstance = dllInstance;
         }
@@ -170,44 +168,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Opens the specified dialog box. Converts the parameters to
-            the required structure. By the time DoModal has returned,
-            the values from the dialog box have been been set into the
-            original structure passed to the constructor.
-        */
-        bool WinApi::OpenDialog(int dialogId, DLGPROC callback, LPARAM params) const
-        {
-            // Required so we can hit the dialog resource.
-            AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-            switch (dialogId) {
-                case IDD_HISTORY_TRAIL: {
-                    LogInfo("History Trail dialog opened");
-                    HistoryTrailData * data = reinterpret_cast<HistoryTrailData *>(params);
-                    HistoryTrailDialog diag(
-                        NULL,
-                        data
-                    );
-                    diag.DoModal();
-                    return true;
-                }
-                default:
-                    return false;
-            }
-
-        }
-
-        /*
-            Opens the general settings dialog with a specified handler for saving settings.
-        */
-        void WinApi::OpenGeneralSettingsDialog()
-        {
-            // Required so we can hit the dialog resource.
-            AFX_MANAGE_STATE(AfxGetStaticModuleState());
-            this->generalSettingsDialog.DoModal();
-        }
-
-        /*
             Plays a wave sound file that is stored in the DLL resources.
         */
         void WinApi::PlayWave(LPCTSTR sound)
@@ -300,7 +260,6 @@ namespace UKControllerPlugin {
         */
         void WinApi::OpenDialog(const DialogData & dialog, const DialogCallArgument * argument) const
         {
-            AFX_MANAGE_STATE(AfxGetStaticModuleState());
             DialogBoxParam(
                 this->dllInstance,
                 MAKEINTRESOURCE(dialog.dialogId),

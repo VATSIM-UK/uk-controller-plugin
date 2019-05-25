@@ -1,12 +1,11 @@
 #pragma once
 #define _WIN32_WINNT 0x0603
 #define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
-
-// Needs to go here, because windows.
-#include "date/include/date/date.h"
-#include <afxwin.h>
+#define _SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING
+#define NOMINMAX 1
 
 // Custom headers
+#include "date/include/date/date.h"
 #include "../../resource/resource.h"
 #include "json/json.hpp"
 #include "spdlog/include/spdlog/logger.h"
@@ -16,23 +15,25 @@
 #include "euroscope/EuroScopePlugIn.h"
 
 // Standard headers
-#include <afxspinbuttonctrl.h>
-#include <afxcolorbutton.h>
+#include <algorithm>
+#include <CommCtrl.h>
+#include <CommDlg.h>
+#include <shtypes.h>
 #include <cctype>
 #include <ctime>
 #include <string>
+#include <tchar.h>
 #include <map>
 #include <mutex>
 #include <vector>
 #include <iterator>
 #include <sstream>
-#include <afxbutton.h>
 #include <queue>
-#include <gdiplus.h>
-#include <windowsx.h>
 #include <set>
 #include <fstream>
 #include <mmsystem.h>
+#include <minmax.h>
+#include <gdiplus.h>
 #include <gdiplusgraphics.h>
 #include <gdiplustypes.h>
 #include <gdiplusenums.h>
@@ -41,3 +42,6 @@
 #include <type_traits>
 #include <gdipluspixelformats.h>
 #include <unordered_set>
+#include <Shobjidl.h>
+#include <Shlobj.h>
+#include <Windows.h>

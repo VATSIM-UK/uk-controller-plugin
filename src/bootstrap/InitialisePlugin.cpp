@@ -36,6 +36,7 @@
 #include "dependency/DependencyProviderInterface.h"
 #include "dependency/DependencyProviderFactory.h"
 #include "metar/PressureMonitorBootstrap.h"
+#include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -69,6 +70,7 @@ using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
 using UKControllerPlugin::Dependency::DependencyProviderInterface;
 using UKControllerPlugin::Dependency::GetDependencyProvider;
+using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 
 namespace UKControllerPlugin {
 
@@ -132,7 +134,7 @@ namespace UKControllerPlugin {
         After we've done the main DLL loading part, it's safe to do things like starting threads.
         So we initialise all the core plugin elements here and return the plugin instance.
     */
-    void InitialisePlugin::PostInit(void)
+    void InitialisePlugin::PostInit(HINSTANCE dllInstance)
     {
         // Start GdiPlus
         Gdiplus::GdiplusStartupInput gdiStartup;
@@ -149,7 +151,7 @@ namespace UKControllerPlugin {
         UkPluginBootstrap::BootstrapPlugin(*this->container);
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
-        ExternalsBootstrap::Bootstrap(*this->container, this->m_hInstance);
+        ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
         // API
@@ -199,6 +201,13 @@ namespace UKControllerPlugin {
         LoginModule::BootstrapPlugin(*this->container);
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
         DeferredEventBootstrap(*this->container->timedHandler);
+
+        // General settings config bootstrap
+        GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
+            *this->container->dialogManager,
+            *this->container->pluginUserSettingHandler,
+            *this->container->userSettingHandlers
+        );
 
         // Bootstrap the modules
 

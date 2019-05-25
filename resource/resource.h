@@ -56,6 +56,7 @@
 #define IDC_HOLD_PROFILE_NEW            1041
 #define IDC_HOLD_PROFILE_DELETE         1042
 #define HOLD_PROFILE_NAME_STATIC        1044
+#define IDC_BUTTON2                     1046
 
 // Next default values for new objects
 // 
@@ -63,7 +64,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        111
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_CONTROL_VALUE         1047
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

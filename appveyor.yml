@@ -61,7 +61,6 @@ configuration: Release
 
 install:
   - pip install cpplint
-  - ps: .\ci\install-mfc.ps1
 
 # Build settings, not to be confused with "before_build" and "after_build".
 # "project" is relative to the original build directory and not influenced by directory changes in "before_build".
