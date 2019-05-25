@@ -1,9 +1,9 @@
 #include "pch/stdafx.h"
 #include "euroscope/GeneralSettingsConfiguration.h"
-#include "windows/WinApiInterface.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/GeneralSettingsDialog.h"
 
-using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
 
@@ -11,9 +11,9 @@ namespace UKControllerPlugin {
     namespace Euroscope {
 
         GeneralSettingsConfiguration::GeneralSettingsConfiguration(
-            WinApiInterface & winApi,
+            const DialogManager & dialogManager,
             const int menuSelectedCallbackId
-        ) : winApi(winApi), menuSelectedCallbackId(menuSelectedCallbackId)
+        ) : dialogManager(dialogManager), menuSelectedCallbackId(menuSelectedCallbackId)
         {
 
         }
@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
         */
         void GeneralSettingsConfiguration::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
-            this->winApi.OpenGeneralSettingsDialog();
+            this->dialogManager.OpenDialog(this->dialogId, NULL);
         }
 
         /*
@@ -50,7 +50,7 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            this->winApi.OpenGeneralSettingsDialog();
+            this->dialogManager.OpenDialog(this->dialogId, NULL);
             return true;
         }
     }  // namespace Euroscope

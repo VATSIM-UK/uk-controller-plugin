@@ -6,17 +6,22 @@
 #include "euroscope/UserSetting.h"
 #include "mock/MockWinApi.h"
 #include "mock/MockUserSettingProviderInterface.h"
+#include "dialog/DialogManager.h"
+#include "mock/MockDialogProvider.h"
+#include "euroscope/UserSettingAwareCollection.h"
 
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPluginTest::Windows::MockWinApi;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
+using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 
 using ::testing::Test;
-using ::testing::StrictMock;
+using ::testing::NiceMock;
 
 namespace UKControllerPluginTest {
     namespace Euroscope {
@@ -26,7 +31,7 @@ namespace UKControllerPluginTest {
             public:
 
                 GeneralSettingsConfigurationBootstrapTest () :
-                    userSettings(mockUserSettingProvider)
+                    userSettings(mockUserSettingProvider), dialogManager(mockDialogProvider)
                 {
 
                 }
@@ -34,11 +39,12 @@ namespace UKControllerPluginTest {
                 FunctionCallEventHandler functionHandler;
                 ConfigurableDisplayCollection configurableDisplays;
                 CommandHandlerCollection commandHandlers;
+                UserSettingAwareCollection userSettingCollection;
                 UserSetting userSettings;
-                StrictMock<MockWinApi> windowsApi;
-                StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+                NiceMock<MockDialogProvider> mockDialogProvider;
+                NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+                DialogManager dialogManager;
         };
-
 
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapRadarScreenRegistersConfigurationCallback)
         {
@@ -46,7 +52,7 @@ namespace UKControllerPluginTest {
                 this->functionHandler,
                 this->configurableDisplays,
                 this->commandHandlers,
-                this->windowsApi
+                this->dialogManager
             );
 
             EXPECT_EQ(1, this->functionHandler.CountCallbacks());
@@ -58,7 +64,7 @@ namespace UKControllerPluginTest {
                 this->functionHandler,
                 this->configurableDisplays,
                 this->commandHandlers,
-                this->windowsApi
+                this->dialogManager
             );
 
             EXPECT_EQ(1, this->configurableDisplays.CountDisplays());
@@ -70,10 +76,22 @@ namespace UKControllerPluginTest {
                 this->functionHandler,
                 this->configurableDisplays,
                 this->commandHandlers,
-                this->windowsApi
+                this->dialogManager
             );
 
             EXPECT_EQ(1, this->commandHandlers.CountHandlers());
+        }
+
+        TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapPluginAddsDialogToDialogManager)
+        {
+            GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
+                this->dialogManager,
+                this->userSettings,
+                this->userSettingCollection
+            );
+
+            EXPECT_EQ(1, this->dialogManager.CountDialogs());
+            EXPECT_TRUE(this->dialogManager.HasDialog(IDD_GENERAL_SETTINGS));
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest

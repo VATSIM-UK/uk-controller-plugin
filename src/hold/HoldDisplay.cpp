@@ -5,12 +5,16 @@
 #include "hold/HoldManager.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeRadarLoopbackInterface.h"
+#include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "euroscope/UserSetting.h"
 
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Euroscope::UserSetting;
 
@@ -74,15 +78,22 @@ namespace UKControllerPlugin {
                 );
                 this->numLevelsSkipped = 0;
             } else if (button == "add") {
-                try {
-                    this->holdManager.AddAircraftToHold(
-                        *this->plugin.GetSelectedFlightplan(),
-                        *this->plugin.GetSelectedRadarTarget(),
-                        this->managedHold.GetHoldParameters().identifier
+                std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
+                std::shared_ptr<EuroScopeCRadarTargetInterface> rt = this->plugin.GetSelectedRadarTarget();
+
+                if (!fp || !rt) {
+                    LogWarning(
+                        "Tried to add aircraft to hold " + this->managedHold.GetHoldParameters().description +
+                        " but none selected"
                     );
-                } catch (std::invalid_argument) {
-                    // Nothing to do
+                    return;
                 }
+
+                this->holdManager.AddAircraftToHold(
+                    *fp,
+                    *rt,
+                    this->managedHold.GetHoldParameters().identifier
+                );
             } else if (button == "minimise") {
                 this->minimised = !this->minimised;
             } else if (button == "information") {

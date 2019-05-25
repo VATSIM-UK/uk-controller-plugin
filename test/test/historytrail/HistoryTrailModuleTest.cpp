@@ -6,7 +6,8 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "radarscreen/RadarRenderableCollection.h"
-#include "mock/MockWinApi.h"
+#include "mock/MockDialogProvider.h"
+#include "dialog/DialogManager.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "command/CommandHandlerCollection.h"
@@ -19,215 +20,173 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
-using UKControllerPluginTest::Windows::MockWinApi;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 
-using ::testing::StrictMock;
 using ::testing::NiceMock;
+using ::testing::Test;
+
 
 namespace UKControllerPluginTest {
     namespace HistoryTrail {
 
-        TEST(HistoryTrailModule, BootstrapPluginSetsUpTrailRepository)
+        class HistoryTrailModuleTest : public Test
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-            container.radarTargetHandler.reset(new RadarTargetEventHandlerCollection);
+            public:
 
-            HistoryTrailModule::BootstrapPlugin(container);
-            EXPECT_FALSE(container.historyTrails->HasAircraft("BAW123"));
+                HistoryTrailModuleTest()
+                    : dialogManager(mockProvider)
+                {
+                    container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+                    container.radarTargetHandler.reset(new RadarTargetEventHandlerCollection);
+                    container.dialogManager.reset(new DialogManager(this->mockProvider));
+                }
+
+
+                PersistenceContainer container;
+                FunctionCallEventHandler functionCalls;
+                HistoryTrailRepository trails;
+                RadarRenderableCollection renderables;
+                NiceMock<MockDialogProvider> mockProvider;
+                DialogManager dialogManager;
+                ConfigurableDisplayCollection configurables;
+                AsrEventHandlerCollection userSettingEvents;
+                CommandHandlerCollection commands;
+                NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+        };
+
+        TEST_F(HistoryTrailModuleTest, BootstrapPluginSetsUpTrailRepository)
+        {
+            HistoryTrailModule::BootstrapPlugin(this->container);
+            EXPECT_FALSE(this->container.historyTrails->HasAircraft("BAW123"));
         }
 
-        TEST(HistoryTrailModule, BootstrapPluginAddsToRadarTargetHandlers)
+        TEST_F(HistoryTrailModuleTest, BootstrapPluginAddsToRadarTargetHandlers)
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-            container.radarTargetHandler.reset(new RadarTargetEventHandlerCollection);
-
-            HistoryTrailModule::BootstrapPlugin(container);
-            EXPECT_EQ(1, container.radarTargetHandler->CountHandlers());
+            HistoryTrailModule::BootstrapPlugin(this->container);
+            EXPECT_EQ(1, this->container.radarTargetHandler->CountHandlers());
         }
 
-        TEST(HistoryTrailModule, BootstrapPluginAddsToFlightplanHandlers)
+        TEST_F(HistoryTrailModuleTest, BootstrapPluginAddsToFlightplanHandlers)
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-            container.radarTargetHandler.reset(new RadarTargetEventHandlerCollection);
-
-            HistoryTrailModule::BootstrapPlugin(container);
-            EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
+            HistoryTrailModule::BootstrapPlugin(this->container);
+            EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
         }
 
-        TEST(HistoryTrailModule, BootstrapRadarScreenAddsToFunctionHandlers)
+        TEST_F(HistoryTrailModuleTest, BootstrapPluginCreatesDialog)
         {
-            FunctionCallEventHandler functionCalls;
-            HistoryTrailRepository trails;
-            RadarRenderableCollection renderables;
-            StrictMock<MockWinApi> windows;
-            ConfigurableDisplayCollection configurables;
-            AsrEventHandlerCollection userSettingEvents;
-            CommandHandlerCollection commands;
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+            HistoryTrailModule::BootstrapPlugin(this->container);
+            EXPECT_EQ(1, this->container.dialogManager->CountDialogs());
+            EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_HISTORY_TRAIL));
+        }
 
+        TEST_F(HistoryTrailModuleTest, BootstrapRadarScreenAddsToFunctionHandlers)
+        {
             HistoryTrailModule::BootstrapRadarScreen(
-                functionCalls,
-                trails,
-                renderables,
-                windows,
-                configurables,
-                userSettingEvents,
-                commands,
-                mockPlugin
+                this->functionCalls,
+                this->trails,
+                this->renderables,
+                this->dialogManager,
+                this->configurables,
+                this->userSettingEvents,
+                this->commands,
+                this->mockPlugin
             );
-            EXPECT_EQ(1, functionCalls.CountCallbacks());
+            EXPECT_EQ(1, this->functionCalls.CountCallbacks());
         }
 
-        TEST(HistoryTrailModule, BootstrapRadarScreenAddsToRenderables)
+        TEST_F(HistoryTrailModuleTest, BootstrapRadarScreenAddsToRenderables)
         {
-            FunctionCallEventHandler functionCalls;
-            HistoryTrailRepository trails;
-            RadarRenderableCollection renderables;
-            StrictMock<MockWinApi> windows;
-            ConfigurableDisplayCollection configurables;
-            AsrEventHandlerCollection userSettingEvents;
-            CommandHandlerCollection commands;
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-
             HistoryTrailModule::BootstrapRadarScreen(
-                functionCalls,
-                trails,
-                renderables,
-                windows,
-                configurables,
-                userSettingEvents,
-                commands,
-                mockPlugin
+                this->functionCalls,
+                this->trails,
+                this->renderables,
+                this->dialogManager,
+                this->configurables,
+                this->userSettingEvents,
+                this->commands,
+                this->mockPlugin
             );
-            EXPECT_EQ(1, renderables.CountRenderers());
+            EXPECT_EQ(1, this->renderables.CountRenderers());
         }
 
-        TEST(HistoryTrailModule, BootstrapRadarScreenAddsToRenderablesInBeforeTagsPhase)
+        TEST_F(HistoryTrailModuleTest, BootstrapRadarScreenAddsToRenderablesInBeforeTagsPhase)
         {
-            FunctionCallEventHandler functionCalls;
-            HistoryTrailRepository trails;
-            RadarRenderableCollection renderables;
-            StrictMock<MockWinApi> windows;
-            ConfigurableDisplayCollection configurables;
-            AsrEventHandlerCollection userSettingEvents;
-            CommandHandlerCollection commands;
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-
-
             HistoryTrailModule::BootstrapRadarScreen(
-                functionCalls,
-                trails,
-                renderables,
-                windows,
-                configurables,
-                userSettingEvents,
-                commands,
-                mockPlugin
+                this->functionCalls,
+                this->trails,
+                this->renderables,
+                this->dialogManager,
+                this->configurables,
+                this->userSettingEvents,
+                this->commands,
+                this->mockPlugin
             );
-            EXPECT_EQ(1, renderables.CountRenderersInPhase(renderables.beforeTags));
+            EXPECT_EQ(1, this->renderables.CountRenderersInPhase(renderables.beforeTags));
         }
 
-        TEST(HistoryTrailModule, BootstrapRadarScreenRegistersNoScreenObjects)
+        TEST_F(HistoryTrailModuleTest, BootstrapRadarScreenRegistersNoScreenObjects)
         {
-            FunctionCallEventHandler functionCalls;
-            HistoryTrailRepository trails;
-            RadarRenderableCollection renderables;
-            StrictMock<MockWinApi> windows;
-            ConfigurableDisplayCollection configurables;
-            AsrEventHandlerCollection userSettingEvents;
-            CommandHandlerCollection commands;
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-
             HistoryTrailModule::BootstrapRadarScreen(
-                functionCalls,
-                trails,
-                renderables,
-                windows,
-                configurables,
-                userSettingEvents,
-                commands,
-                mockPlugin
+                this->functionCalls,
+                this->trails,
+                this->renderables,
+                this->dialogManager,
+                this->configurables,
+                this->userSettingEvents,
+                this->commands,
+                this->mockPlugin
             );
-            EXPECT_EQ(0, renderables.CountScreenObjects());
+            EXPECT_EQ(0, this->renderables.CountScreenObjects());
         }
 
-        TEST(HistoryTrailModule, BootstrapRadarScreenAddsToConfigurables)
+        TEST_F(HistoryTrailModuleTest, BootstrapRadarScreenAddsToConfigurables)
         {
-            FunctionCallEventHandler functionCalls;
-            HistoryTrailRepository trails;
-            RadarRenderableCollection renderables;
-            StrictMock<MockWinApi> windows;
-            ConfigurableDisplayCollection configurables;
-            AsrEventHandlerCollection userSettingEvents;
-            CommandHandlerCollection commands;
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-
             HistoryTrailModule::BootstrapRadarScreen(
-                functionCalls,
-                trails,
-                renderables,
-                windows,
-                configurables,
-                userSettingEvents,
-                commands,
-                mockPlugin
+                this->functionCalls,
+                this->trails,
+                this->renderables,
+                this->dialogManager,
+                this->configurables,
+                this->userSettingEvents,
+                this->commands,
+                this->mockPlugin
             );
-            EXPECT_EQ(1, configurables.CountDisplays());
+            EXPECT_EQ(1, this->configurables.CountDisplays());
         }
 
-        TEST(HistoryTrailModule, BootstrapRadarScreenAddsToUserSettingEvents)
+        TEST_F(HistoryTrailModuleTest, BootstrapRadarScreenAddsToUserSettingEvents)
         {
-            FunctionCallEventHandler functionCalls;
-            HistoryTrailRepository trails;
-            RadarRenderableCollection renderables;
-            StrictMock<MockWinApi> windows;
-            ConfigurableDisplayCollection configurables;
-            AsrEventHandlerCollection userSettingEvents;
-            CommandHandlerCollection commands;
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-
             HistoryTrailModule::BootstrapRadarScreen(
-                functionCalls,
-                trails,
-                renderables,
-                windows,
-                configurables,
-                userSettingEvents,
-                commands,
-                mockPlugin
+                this->functionCalls,
+                this->trails,
+                this->renderables,
+                this->dialogManager,
+                this->configurables,
+                this->userSettingEvents,
+                this->commands,
+                this->mockPlugin
             );
-            EXPECT_EQ(1, userSettingEvents.CountHandlers());
+            EXPECT_EQ(1, this->userSettingEvents.CountHandlers());
         }
 
-        TEST(HistoryTrailModule, BootstrapRadarScreenAddsToCommands)
+        TEST_F(HistoryTrailModuleTest, BootstrapRadarScreenAddsToCommands)
         {
-            FunctionCallEventHandler functionCalls;
-            HistoryTrailRepository trails;
-            RadarRenderableCollection renderables;
-            StrictMock<MockWinApi> windows;
-            ConfigurableDisplayCollection configurables;
-            AsrEventHandlerCollection userSettingEvents;
-            CommandHandlerCollection commands;
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-
             HistoryTrailModule::BootstrapRadarScreen(
-                functionCalls,
-                trails,
-                renderables,
-                windows,
-                configurables,
-                userSettingEvents,
-                commands,
-                mockPlugin
+                this->functionCalls,
+                this->trails,
+                this->renderables,
+                this->dialogManager,
+                this->configurables,
+                this->userSettingEvents,
+                this->commands,
+                this->mockPlugin
             );
-            EXPECT_EQ(1, commands.CountHandlers());
+            EXPECT_EQ(1, this->commands.CountHandlers());
         }
     }  // namespace HistoryTrail
 }  // namespace UKControllerPluginTest

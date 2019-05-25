@@ -7,11 +7,7 @@
 #define IDD_HISTORY_TRAIL               102
 #define IDD_DIALOG2                     106
 #define IDD_GENERAL_SETTINGS            106
-#define IDS_STRING_HOLD_CS              108
-#define IDS_STRING_HOLD_CLD             109
 #define HOLD_SELECTOR_DIALOG            109
-#define IDS_STRING_HOLD_ACT             110
-#define IDS_STRING_HOLD_TIME            111
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -37,6 +33,8 @@
 #define GS_DIALOG_IA_CHECK              1022
 #define GS_DIALOG_SQUAWK_CHECK          1023
 #define IDC_HOLD_PROFILE_SELECT         1024
+#define GS_QNH_CHANGE_CHECK             1024
+#define GS_DIALOG_QNH_CHECK             1024
 #define IDC_HOLD_PROFILE_SELECT_LABEL   1025
 #define IDC_HOLD_SELECT_LOAD            1026
 #define IDC_HOLD_SELECT_DISPLAY         1026
@@ -58,8 +56,7 @@
 #define IDC_HOLD_PROFILE_NEW            1041
 #define IDC_HOLD_PROFILE_DELETE         1042
 #define HOLD_PROFILE_NAME_STATIC        1044
-#define GS_QNH_CHANGE_CHECK             1024
-#define GS_DIALOG_QNH_CHECK             1024
+#define IDC_BUTTON2                     1046
 
 // Next default values for new objects
 // 
@@ -67,7 +64,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        111
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_CONTROL_VALUE         1047
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -106,6 +106,9 @@
     <Filter Include="test\dialog">
       <UniqueIdentifier>{9c9e30c3-8415-4c15-8a92-488c9f36449f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\log">
+      <UniqueIdentifier>{93ae7490-c342-4194-8991-248b16db9733}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -661,6 +664,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp">
       <Filter>test\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp">
+      <Filter>test\log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

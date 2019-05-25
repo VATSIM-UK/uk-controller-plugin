@@ -18,11 +18,11 @@ namespace UKControllerPlugin {
         the various modules, to fetch resources and check for updates when the plugin
         starts.
     */
-    class InitialisePlugin : public CWinApp
+    class InitialisePlugin
     {
         public:
             EuroScopePlugIn::CPlugIn * GetPlugin(void);
-            void PostInit(void);
+            void PostInit(HINSTANCE dllInstance);
             void EuroScopeCleanup(void);
 
         private:

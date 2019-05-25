@@ -18,8 +18,10 @@ namespace UKControllerPlugin {
     namespace Windows {
         class GdiGraphicsInterface;
         struct GdiplusBrushes;
-        class WinApiInterface;
     }  // namespace Windows
+    namespace Dialog {
+        class DialogManager;
+    }  // namespace Dialog
 }  // namespace UKControllerPlugin
 
 namespace Gdiplus {
@@ -44,7 +46,7 @@ namespace UKControllerPlugin {
                 HistoryTrailRenderer(
                     const UKControllerPlugin::HistoryTrail::HistoryTrailRepository & trails,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    UKControllerPlugin::Windows::WinApiInterface & winApi,
+                    const UKControllerPlugin::Dialog::DialogManager & dialogManager,
                     int toggleCallbackFunctionId
                 );
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
@@ -163,8 +165,8 @@ namespace UKControllerPlugin {
                     const Gdiplus::RectF & area
                 );
 
-                // The windows API
-                UKControllerPlugin::Windows::WinApiInterface & winApi;
+                // Handles dialogs
+                const UKControllerPlugin::Dialog::DialogManager & dialogManager;
 
                 // The plugin, so we can check altitudes
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
