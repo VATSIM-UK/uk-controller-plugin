@@ -144,5 +144,38 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(timer2.timerEnabled);
             EXPECT_EQ(60, timer2.timerDuration);
         }
+
+        TEST_F(TimerConfigurationManagerTest, ItStartsAtConfigVersion0)
+        {
+            EXPECT_EQ(0, this->manager.GetConfigVersion());
+        }
+
+        TEST_F(TimerConfigurationManagerTest, AddingATimerIncreasesConfigVersion)
+        {
+            this->manager.AddTimer(config1);
+            EXPECT_EQ(1, this->manager.GetConfigVersion());
+        }
+
+        TEST_F(TimerConfigurationManagerTest, UpdatingFromSettingsIncreasesConfigVersion)
+        {
+            this->manager.AddTimer(config1);
+            this->manager.AddTimer(config2);
+
+            ON_CALL(this->mockUserSettingProvider, GetKey(GetTimerEnabledKey(this->config1)))
+                .WillByDefault(Return("1"));
+
+            ON_CALL(this->mockUserSettingProvider, GetKey(GetTimerDurationKey(this->config1)))
+                .WillByDefault(Return("120"));
+
+            ON_CALL(this->mockUserSettingProvider, GetKey(GetTimerEnabledKey(this->config2)))
+                .WillByDefault(Return(""));
+
+            ON_CALL(this->mockUserSettingProvider, GetKey(GetTimerDurationKey(this->config2)))
+                .WillByDefault(Return(""));
+
+            this->manager.UserSettingsUpdated(this->userSettings);
+
+            EXPECT_EQ(3, this->manager.GetConfigVersion());
+        }
     }  // namespace Countdown
 }  // namespace UKControllerPluginTest

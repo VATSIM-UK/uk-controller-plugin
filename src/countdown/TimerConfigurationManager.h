@@ -24,6 +24,7 @@ namespace UKControllerPlugin {
                 void AddTimer(UKControllerPlugin::Countdown::TimerConfiguration timer);
                 size_t CountEnabledTimers(void) const;
                 size_t CountTimers(void) const;
+                unsigned int GetConfigVersion(void) const;
                 UKControllerPlugin::Countdown::TimerConfiguration GetTimer(int timerId) const;
 
                 typedef std::set<UKControllerPlugin::Countdown::TimerConfiguration> AllTimers;
@@ -38,8 +39,10 @@ namespace UKControllerPlugin {
                 // Inherited via UserSettingAwareInterface
                 void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
 
+                // The menu item description
                 const std::string menuItemDescription = "Configure Countdown Timer";
 
+                // The callback function id
                 const unsigned int menuCallbackFunctionId;
 
                 // The invalid timer
@@ -52,6 +55,9 @@ namespace UKControllerPlugin {
 
                 // Contains all the timers
                 std::set<UKControllerPlugin::Countdown::TimerConfiguration> timers;
+
+                // The version of the configuration
+                unsigned int configVersion = 0;
         };
     }  // namespace Countdown
 }  // namespace UKControllerPlugin

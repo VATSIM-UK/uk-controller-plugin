@@ -25,6 +25,7 @@ namespace UKControllerPlugin {
         {
             this->timers.erase(timer);
             this->timers.insert(timer);
+            this->configVersion++;
         }
 
         /*
@@ -52,6 +53,14 @@ namespace UKControllerPlugin {
         size_t TimerConfigurationManager::CountTimers(void) const
         {
             return this->timers.size();
+        }
+
+        /*
+            Returns whether the config has been updated since the given time
+        */
+        unsigned int TimerConfigurationManager::GetConfigVersion(void) const
+        {
+            return this->configVersion;
         }
 
         /*
@@ -111,6 +120,8 @@ namespace UKControllerPlugin {
                 it = this->timers.erase(it);
                 this->timers.insert(config);
             }
+
+            this->configVersion++;
         }
     }  // namespace Countdown
 }  // namespace UKControllerPlugin
