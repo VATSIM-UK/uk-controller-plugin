@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
     namespace Countdown {
         class CountdownTimer;
         class TimerConfigurationManager;
-    }  // namespace CountdownTimer
+    }  // namespace Countdown
 }  // namespace UKControllerPlugin
 // END
 

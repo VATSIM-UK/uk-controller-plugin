@@ -46,7 +46,7 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Countdown::TimerConfiguration invalidTimer = { 0, false, 0 };
 
             private:
-                
+
                 // Lets you open dialogs
                 const UKControllerPlugin::Dialog::DialogManager & dialogManager;
 

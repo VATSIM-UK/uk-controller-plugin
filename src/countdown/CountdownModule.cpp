@@ -9,7 +9,6 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "euroscope/CallbackFunction.h"
 #include "countdown/TimerConfigurationDialog.h"
 #include "countdown/TimerConfiguration.h"
 #include "euroscope/UserSetting.h"
