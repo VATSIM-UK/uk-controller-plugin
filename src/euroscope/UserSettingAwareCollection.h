@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
                 void RegisterHandler(
                     std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareInterface> handler
                 );
-                void UserSettingsUpdateEvent(UKControllerPlugin::Euroscope::UserSetting & asrStore) const;
+                void UserSettingsUpdateEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) const;
 
             private:
                 std::set<std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareInterface>> allHandlers;

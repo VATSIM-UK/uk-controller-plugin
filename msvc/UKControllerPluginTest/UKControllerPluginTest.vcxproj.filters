@@ -674,6 +674,9 @@
     <ClCompile Include="..\..\test\test\countdown\TimerConfigurationManagerTest.cpp">
       <Filter>test\countdown</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\countdown\GlobalCountdownSettingsFunctionsTest.cpp">
+      <Filter>test\countdown</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

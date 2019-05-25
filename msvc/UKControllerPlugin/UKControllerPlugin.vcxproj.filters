@@ -867,6 +867,9 @@
     <ClInclude Include="..\..\src\countdown\TimerConfigurationDialog.h">
       <Filter>src\countdown</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\countdown\GlobalCountdownSettingFunctions.h">
+      <Filter>src\countdown</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">

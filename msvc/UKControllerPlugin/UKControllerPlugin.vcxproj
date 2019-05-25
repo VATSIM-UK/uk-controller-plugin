@@ -64,6 +64,7 @@
     <ClInclude Include="..\..\src\countdown\CountdownModule.h" />
     <ClInclude Include="..\..\src\countdown\CountdownRenderer.h" />
     <ClInclude Include="..\..\src\countdown\CountdownTimer.h" />
+    <ClInclude Include="..\..\src\countdown\GlobalCountdownSettingFunctions.h" />
     <ClInclude Include="..\..\src\countdown\TimerConfiguration.h" />
     <ClInclude Include="..\..\src\countdown\TimerConfigurationDialog.h" />
     <ClInclude Include="..\..\src\countdown\TimerConfigurationManager.h" />
