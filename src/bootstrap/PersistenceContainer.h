@@ -43,6 +43,7 @@
 #include "hold/HoldProfileManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "setting/SettingRepository.h"
+#include "countdown/TimerConfigurationManager.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -88,6 +89,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler> initialAltitudeEvents;
             std::unique_ptr<UKControllerPlugin::HistoryTrail::HistoryTrailRepository> historyTrails;
             std::shared_ptr<UKControllerPlugin::Countdown::CountdownTimer> countdownTimer;
+            std::shared_ptr<UKControllerPlugin::Countdown::TimerConfigurationManager> timerConfigurationManager;
             std::shared_ptr<UKControllerPlugin::MinStack::MinStackManager> minStack;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkAssignment> squawkAssignmentRules;
             std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawkEvents;

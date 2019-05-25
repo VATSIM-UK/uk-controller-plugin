@@ -8,6 +8,8 @@
 #include "graphics/GdiplusBrushes.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
+#include "bootstrap/PersistenceContainer.h"
+#include "euroscope/CallbackFunction.h"
 
 using UKControllerPlugin::Countdown::CountdownRenderer;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -17,6 +19,8 @@ using UKControllerPlugin::Countdown::CountdownTimer;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Euroscope::CallbackFunction;
 
 namespace UKControllerPlugin {
     namespace Countdown {
@@ -24,12 +28,31 @@ namespace UKControllerPlugin {
         /*
             Bootstraps the core parts of the module.
         */
-        void CountdownModule::BootstrapPlugin(
-            std::shared_ptr<CountdownTimer> & countdownTimer,
-            UKControllerPlugin::Windows::WinApiInterface & windows
-        )
+        void CountdownModule::BootstrapPlugin(PersistenceContainer & container)
         {
-            countdownTimer.reset(new CountdownTimer(windows));
+            container.countdownTimer = std::make_shared<CountdownTimer>(*container.windows);
+
+            // Create timer manager and register callback
+            unsigned int functionId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+            container.timerConfigurationManager = std::make_shared<TimerConfigurationManager>(
+                *container.pluginUserSettingHandler,
+                *container.dialogManager,
+                functionId
+            );
+
+            CallbackFunction configureCallback(
+                functionId,
+                "Countdown Timer Configure",
+                std::bind(
+                    &TimerConfigurationManager::Configure,
+                    container.timerConfigurationManager,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+
+            container.pluginFunctionHandlers->RegisterFunctionCall(configureCallback);
         }
 
         /*
@@ -38,13 +61,12 @@ namespace UKControllerPlugin {
         void CountdownModule::BootstrapRadarScreen(
             FunctionCallEventHandler & eventHandler,
             CountdownTimer & countdown,
+            const std::shared_ptr<TimerConfigurationManager> configManager,
             RadarRenderableCollection & radarRender,
             ConfigurableDisplayCollection & configurableDisplays,
             const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
             AsrEventHandlerCollection & userSettingHandlers
-        )
-        {
-
+        ) {
             // Create the renderer and get the ids for screen objects
             int rendererId = radarRender.ReserveRendererIdentifier();
             int configureFunctionId = eventHandler.ReserveNextDynamicFunctionId();
@@ -75,6 +97,9 @@ namespace UKControllerPlugin {
             eventHandler.RegisterFunctionCall(configureCallback);
             configurableDisplays.RegisterDisplay(renderer);
             userSettingHandlers.RegisterHandler(renderer);
+
+            // Add the configuration manager to configurable displays
+            configurableDisplays.RegisterDisplay(configManager);
         }
     }  // namespace Countdown
 }  // namespace UKControllerPlugin
