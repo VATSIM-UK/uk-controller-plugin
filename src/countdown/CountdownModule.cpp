@@ -11,6 +11,7 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/CallbackFunction.h"
 #include "countdown/TimerConfigurationDialog.h"
+#include "countdown/TimerConfiguration.h"
 
 using UKControllerPlugin::Countdown::CountdownRenderer;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -55,9 +56,15 @@ namespace UKControllerPlugin {
 
             container.pluginFunctionHandlers->RegisterFunctionCall(configureCallback);
 
-            std::shared_ptr<TimerConfigurationDialog> dialog = std::make_shared<TimerConfigurationDialog>();
+            // Add five timer placeholders to the manager
+            container.timerConfigurationManager->AddTimer({ 1, false, 60 });
+            container.timerConfigurationManager->AddTimer({ 2, false, 60 });
+            container.timerConfigurationManager->AddTimer({ 3, false, 60 });
+            container.timerConfigurationManager->AddTimer({ 4, false, 60 });
+            container.timerConfigurationManager->AddTimer({ 5, false, 60 });
 
             // Create the configuration dialog
+            std::shared_ptr<TimerConfigurationDialog> dialog = std::make_shared<TimerConfigurationDialog>();
             container.dialogManager->AddDialog(
                 {
                     IDD_TIMER_CONFIGURATION,

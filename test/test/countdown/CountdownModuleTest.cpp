@@ -69,7 +69,13 @@ namespace UKControllerPluginTest {
         TEST_F(CountdownModuleTest, BootstrapPluginCreatesTimerConfigurationManager)
         {
             CountdownModule::BootstrapPlugin(this->container);
-            EXPECT_EQ(0, this->container.timerConfigurationManager->CountTimers());
+            EXPECT_NO_THROW(this->container.timerConfigurationManager->CountTimers());
+        }
+
+        TEST_F(CountdownModuleTest, BootstrapPluginAddsTimerConfigsToTimer)
+        {
+            CountdownModule::BootstrapPlugin(this->container);
+            EXPECT_EQ(5, this->container.timerConfigurationManager->CountTimers());
         }
 
         TEST_F(CountdownModuleTest, BootstrapPluginAddsCallbackFunctionForConfiguration)
