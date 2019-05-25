@@ -145,15 +145,15 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(60, timer2.timerDuration);
         }
 
-        TEST_F(TimerConfigurationManagerTest, ItStartsAtConfigVersion0)
+        TEST_F(TimerConfigurationManagerTest, ItStartsAtConfigVersion1)
         {
-            EXPECT_EQ(0, this->manager.GetConfigVersion());
+            EXPECT_EQ(1, this->manager.GetConfigVersion());
         }
 
         TEST_F(TimerConfigurationManagerTest, AddingATimerIncreasesConfigVersion)
         {
             this->manager.AddTimer(config1);
-            EXPECT_EQ(1, this->manager.GetConfigVersion());
+            EXPECT_EQ(2, this->manager.GetConfigVersion());
         }
 
         TEST_F(TimerConfigurationManagerTest, UpdatingFromSettingsIncreasesConfigVersion)
@@ -175,7 +175,7 @@ namespace UKControllerPluginTest {
 
             this->manager.UserSettingsUpdated(this->userSettings);
 
-            EXPECT_EQ(3, this->manager.GetConfigVersion());
+            EXPECT_EQ(4, this->manager.GetConfigVersion());
         }
     }  // namespace Countdown
 }  // namespace UKControllerPluginTest

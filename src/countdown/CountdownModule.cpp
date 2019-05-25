@@ -112,6 +112,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<CountdownRenderer> renderer(
                 new CountdownRenderer(
                     countdown,
+                    *configManager,
                     radarRender.ReserveScreenObjectIdentifier(rendererId),
                     radarRender.ReserveScreenObjectIdentifier(rendererId),
                     radarRender.ReserveScreenObjectIdentifier(rendererId),

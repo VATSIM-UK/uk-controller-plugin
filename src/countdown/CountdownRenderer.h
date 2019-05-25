@@ -8,6 +8,7 @@
 namespace UKControllerPlugin {
     namespace Countdown {
         class CountdownTimer;
+        class TimerConfigurationManager;
     }  // namespace Countdown
 }  // namespace UKControllerPlugin
 
@@ -42,6 +43,7 @@ namespace UKControllerPlugin {
             public:
                 CountdownRenderer(
                     UKControllerPlugin::Countdown::CountdownTimer & countdownModule,
+                    const UKControllerPlugin::Countdown::TimerConfigurationManager & configManager,
                     int functionsClickspotId,
                     int timeDisplayClickspotId,
                     int closeClickspotId,
@@ -52,14 +54,10 @@ namespace UKControllerPlugin {
                 void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
-                RECT GetCloseClickspotDisplayArea(void) const;
-                RECT GetNinetySecondDisplayArea(void) const;
-                RECT GetOneMinuteDisplayArea(void) const;
+                RECT GetTimerButtonArea(unsigned int configId) const;
                 RECT GetResetDisplayArea(void) const;
-                RECT GetThirtySecondDisplayArea(void) const;
-                RECT GetThreeMinuteDisplayArea(void) const;
+                RECT GetCloseClickspotDisplayArea(void) const;
                 RECT GetTimeDisplayArea(void) const;
-                RECT GetTwoMinuteDisplayArea(void) const;
                 bool IsVisible(void) const override;
                 void LeftClick(
                     int objectId,
@@ -102,9 +100,6 @@ namespace UKControllerPlugin {
                 // The height of each row
                 const int rowHeight = 20;
 
-                // The width of the time display
-                const int timeDisplayWidth = 150;
-
                 // The width of each button
                 const int buttonWidth = 30;
 
@@ -143,23 +138,11 @@ namespace UKControllerPlugin {
                 // The area for displaying the close clickspot
                 RECT closeClickspotDisplayArea;
 
-                // The area for displaying the thirty second clickspot
-                RECT thirtySecondDisplayArea;
-
-                // The area for displaying the one minute button
-                RECT oneMinuteDisplayArea;
-
-                // The area for displaying the ninety second clickspot
-                RECT ninetysecondDisplayArea;
-
-                // The area for displaying the two minute button
-                RECT twoMinuteDisplayArea;
-
-                // The area for displaying the three minute button
-                RECT threeMinuteDisplayArea;
-
                 // The area for displaying the reset button
                 RECT resetDisplayArea;
+
+                // The display areas of each timer configuration
+                std::map<unsigned int, RECT> timerButtonAreas;
 
                 // Whether or not the module should be visible on the screen.
                 bool visible;
@@ -169,6 +152,12 @@ namespace UKControllerPlugin {
 
                 // A set of brushes to use for rendering.
                 const UKControllerPlugin::Windows::GdiplusBrushes & brushes;
+
+                // Handles the timer configurations
+                const UKControllerPlugin::Countdown::TimerConfigurationManager & configManager;
+
+                // The last version of the config
+                unsigned int lastConfigVersion = 0;
         };
     }  // namespace Countdown
 }  // namespace UKControllerPlugin

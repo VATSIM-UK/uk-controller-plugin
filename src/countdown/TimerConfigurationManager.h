@@ -57,7 +57,7 @@ namespace UKControllerPlugin {
                 std::set<UKControllerPlugin::Countdown::TimerConfiguration> timers;
 
                 // The version of the configuration
-                unsigned int configVersion = 0;
+                unsigned int configVersion = 1;
         };
     }  // namespace Countdown
 }  // namespace UKControllerPlugin
