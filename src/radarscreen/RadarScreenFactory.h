@@ -1,4 +1,5 @@
 #pragma once
+#include "radarscreen/RadarRenderableCollection.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
@@ -22,7 +23,13 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::UKRadarScreen * Create(void) const;
 
             private:
+                
+                // Container of all the things
                 const UKControllerPlugin::Bootstrap::PersistenceContainer & persistence;
+
+                // Stores the renderables
+                mutable std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> 
+                    renderableCollections;
         };
     }  // namespace RadarScreen
 }  // namespace UKControllerPlugin
