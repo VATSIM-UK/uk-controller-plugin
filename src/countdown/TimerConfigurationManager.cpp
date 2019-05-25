@@ -75,7 +75,7 @@ namespace UKControllerPlugin {
         */
         void TimerConfigurationManager::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
-            this->dialogManager.OpenDialog(IDD_TIMER_CONFIGURATION, reinterpret_cast<LPARAM>(this));
+            this->dialogManager.OpenDialog(IDD_TIMER_CONFIGURATION, NULL);
         }
 
         /*

@@ -79,7 +79,10 @@ namespace UKControllerPlugin {
             container.timerConfigurationManager->AddTimer({ 5, false, 60 });
 
             // Create the configuration dialog
-            std::shared_ptr<TimerConfigurationDialog> dialog = std::make_shared<TimerConfigurationDialog>();
+            std::shared_ptr<TimerConfigurationDialog> dialog = std::make_shared<TimerConfigurationDialog>(
+                *container.pluginUserSettingHandler,
+                *container.userSettingHandlers
+            );
             container.dialogManager->AddDialog(
                 {
                     IDD_TIMER_CONFIGURATION,
