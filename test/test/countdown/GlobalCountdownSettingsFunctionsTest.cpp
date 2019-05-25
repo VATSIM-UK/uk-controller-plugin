@@ -26,10 +26,26 @@ namespace UKControllerPluginTest {
             );
         }
 
+        TEST_F(GlobalCountdownSettingFunctionsTest, ItReturnsEnabledKeyUnsignedInteger)
+        {
+            EXPECT_EQ(
+                GetTimerEnabledKey(123),
+                "timer123Enabled"
+            );
+        }
+
         TEST_F(GlobalCountdownSettingFunctionsTest, ItReturnsEnabledDescription)
         {
             EXPECT_EQ(
                 GetTimerEnabledDescription(config),
+                "Countdown Timer #123 Enabled"
+            );
+        }
+
+        TEST_F(GlobalCountdownSettingFunctionsTest, ItReturnsEnabledDescriptionUnsignedInteger)
+        {
+            EXPECT_EQ(
+                GetTimerEnabledDescription(123),
                 "Countdown Timer #123 Enabled"
             );
         }
@@ -42,10 +58,26 @@ namespace UKControllerPluginTest {
             );
         }
 
+        TEST_F(GlobalCountdownSettingFunctionsTest, ItReturnsDurationKeyUnsignedInteger)
+        {
+            EXPECT_EQ(
+                GetTimerDurationKey(123),
+                "timer123Duration"
+            );
+        }
+
         TEST_F(GlobalCountdownSettingFunctionsTest, ItReturnsDurationDescription)
         {
             EXPECT_EQ(
                 GetTimerDurationDescription(config),
+                "Countdown Timer #123 Duration"
+            );
+        }
+
+        TEST_F(GlobalCountdownSettingFunctionsTest, ItReturnsDurationDescriptionUnsignedInteger)
+        {
+            EXPECT_EQ(
+                GetTimerDurationDescription(123),
                 "Countdown Timer #123 Duration"
             );
         }

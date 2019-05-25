@@ -308,6 +308,7 @@
     <ClCompile Include="..\..\src\countdown\CountdownModule.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownRenderer.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownTimer.cpp" />
+    <ClCompile Include="..\..\src\countdown\GlobalCountdownSettingFunctions.cpp" />
     <ClCompile Include="..\..\src\countdown\TimerConfigurationDialog.cpp" />
     <ClCompile Include="..\..\src\countdown\TimerConfigurationManager.cpp" />
     <ClCompile Include="..\..\src\curl\CurlApi.cpp" />

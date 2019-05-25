@@ -1483,5 +1483,8 @@
     <ClCompile Include="..\..\src\countdown\TimerConfigurationDialog.cpp">
       <Filter>src\countdown</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\countdown\GlobalCountdownSettingFunctions.cpp">
+      <Filter>src\countdown</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 #include "pch/stdafx.h"
 #include "countdown/TimerConfigurationManager.h"
+#include "countdown/GlobalCountdownSettingFunctions.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Dialog::DialogManager;
@@ -9,12 +10,10 @@ namespace UKControllerPlugin {
     namespace Countdown {
 
         TimerConfigurationManager::TimerConfigurationManager(
-            UserSetting & settingProvider,
             const DialogManager & dialogManager,
             const unsigned int menuCallbackFunctionId
         )
-            : settingProvider(settingProvider), dialogManager(dialogManager),
-            menuCallbackFunctionId(menuCallbackFunctionId)
+            : dialogManager(dialogManager), menuCallbackFunctionId(menuCallbackFunctionId)
         {
 
         }
@@ -92,6 +91,26 @@ namespace UKControllerPlugin {
             returnVal.disabled = false;
             returnVal.fixedPosition = false;
             return returnVal;
+        }
+
+        /*
+            Update each of the timers based on the user settings
+        */
+        void TimerConfigurationManager::UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings)
+        {
+            for (
+                std::set<TimerConfiguration>::iterator it = this->timers.begin();
+                it != this->timers.end();
+            ) {
+                TimerConfiguration config = {
+                    it->timerId,
+                    userSettings.GetBooleanEntry(GetTimerEnabledKey(*it), false),
+                    userSettings.GetUnsignedIntegerEntry(GetTimerDurationKey(*it), 60)
+                };
+
+                it = this->timers.erase(it);
+                this->timers.insert(config);
+            }
         }
     }  // namespace Countdown
 }  // namespace UKControllerPlugin

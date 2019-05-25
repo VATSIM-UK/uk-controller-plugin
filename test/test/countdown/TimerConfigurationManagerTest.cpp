@@ -7,7 +7,12 @@
 #include "euroscope/UserSetting.h"
 #include "plugin/PopupMenuitem.h"
 #include "dialog/DialogData.h"
+#include "countdown/GlobalCountdownSettingFunctions.h"
 
+using UKControllerPlugin::Countdown::GetTimerDurationKey;
+using UKControllerPlugin::Countdown::GetTimerDurationDescription;
+using UKControllerPlugin::Countdown::GetTimerEnabledKey;
+using UKControllerPlugin::Countdown::GetTimerEnabledDescription;
 using UKControllerPlugin::Countdown::TimerConfiguration;
 using UKControllerPlugin::Countdown::TimerConfigurationManager;
 using UKControllerPlugin::Dialog::DialogManager;
@@ -18,6 +23,7 @@ using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Dialog::DialogData;
 using testing::Test;
 using testing::NiceMock;
+using testing::Return;
 using testing::_;
 
 namespace UKControllerPluginTest {
@@ -28,7 +34,7 @@ namespace UKControllerPluginTest {
             public:
                 TimerConfigurationManagerTest()
                     : dialogManager(mockDialogProvider), userSettings(mockUserSettingProvider),
-                    manager(userSettings, dialogManager, 1)
+                    manager(dialogManager, 1)
                 {
                     this->dialogManager.AddDialog(configurationDialog);
                 }
@@ -107,6 +113,36 @@ namespace UKControllerPluginTest {
 
 
             this->manager.Configure(1, "", {});
+        }
+
+        TEST_F(TimerConfigurationManagerTest, ItUpdatesConfigsFromUserSettings)
+        {
+            this->manager.AddTimer(config1);
+            this->manager.AddTimer(config2);
+
+            ON_CALL(this->mockUserSettingProvider, GetKey(GetTimerEnabledKey(this->config1)))
+                .WillByDefault(Return("1"));
+
+            ON_CALL(this->mockUserSettingProvider, GetKey(GetTimerDurationKey(this->config1)))
+                .WillByDefault(Return("120"));
+
+            ON_CALL(this->mockUserSettingProvider, GetKey(GetTimerEnabledKey(this->config2)))
+                .WillByDefault(Return(""));
+
+            ON_CALL(this->mockUserSettingProvider, GetKey(GetTimerDurationKey(this->config2)))
+                .WillByDefault(Return(""));
+
+            this->manager.UserSettingsUpdated(this->userSettings);
+
+            TimerConfiguration timer1 = this->manager.GetTimer(1);
+            EXPECT_EQ(1, timer1.timerId);
+            EXPECT_TRUE(timer1.timerEnabled);
+            EXPECT_EQ(120, timer1.timerDuration);
+
+            TimerConfiguration timer2 = this->manager.GetTimer(2);
+            EXPECT_EQ(2, timer2.timerId);
+            EXPECT_FALSE(timer2.timerEnabled);
+            EXPECT_EQ(60, timer2.timerDuration);
         }
     }  // namespace Countdown
 }  // namespace UKControllerPluginTest

@@ -3,6 +3,7 @@
 #include "countdown/TimerConfiguration.h"
 #include "dialog/DialogManager.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
+#include "euroscope/UserSettingAwareInterface.h"
 
 namespace UKControllerPlugin {
     namespace Countdown {
@@ -11,12 +12,12 @@ namespace UKControllerPlugin {
             A class for managing timer configurations
             and providing useful functions for querying them.
         */
-        class TimerConfigurationManager : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface
+        class TimerConfigurationManager : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
+            public UKControllerPlugin::Euroscope::UserSettingAwareInterface
         {
             public:
 
                 TimerConfigurationManager(
-                    UKControllerPlugin::Euroscope::UserSetting & settingProvider,
                     const UKControllerPlugin::Dialog::DialogManager & dialogManager,
                     const unsigned int menuCallbackFunctionId
                 );
@@ -34,6 +35,9 @@ namespace UKControllerPlugin {
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
 
+                // Inherited via UserSettingAwareInterface
+                void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
+
                 const std::string menuItemDescription = "Configure Countdown Timer";
 
                 const unsigned int menuCallbackFunctionId;
@@ -42,9 +46,6 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Countdown::TimerConfiguration invalidTimer = { 0, false, 0 };
 
             private:
-                
-                // Allows timer settings to be saved
-                UKControllerPlugin::Euroscope::UserSetting & settingProvider;
                 
                 // Lets you open dialogs
                 const UKControllerPlugin::Dialog::DialogManager & dialogManager;

@@ -12,8 +12,14 @@
 #include "euroscope/CallbackFunction.h"
 #include "countdown/TimerConfigurationDialog.h"
 #include "countdown/TimerConfiguration.h"
+#include "euroscope/UserSetting.h"
+#include "countdown/GlobalCountdownSettingFunctions.h"
 
 using UKControllerPlugin::Countdown::CountdownRenderer;
+using UKControllerPlugin::Countdown::GetTimerDurationKey;
+using UKControllerPlugin::Countdown::GetTimerDurationDescription;
+using UKControllerPlugin::Countdown::GetTimerEnabledKey;
+using UKControllerPlugin::Countdown::GetTimerEnabledDescription;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Windows::GdiplusBrushes;
@@ -23,9 +29,19 @@ using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Euroscope::CallbackFunction;
+using UKControllerPlugin::Euroscope::UserSetting;
 
 namespace UKControllerPlugin {
     namespace Countdown {
+
+        // The default timer configuration
+        const std::set<TimerConfiguration> CountdownModule::defaultConfigs = {
+            {1, true, 30},
+            {2, true, 60},
+            {3, true, 90},
+            {4, true, 120},
+            {5, true, 180}
+        };
 
         /*
             Bootstraps the core parts of the module.
@@ -37,7 +53,6 @@ namespace UKControllerPlugin {
             // Create timer manager and register callback
             unsigned int functionId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             container.timerConfigurationManager = std::make_shared<TimerConfigurationManager>(
-                *container.pluginUserSettingHandler,
                 *container.dialogManager,
                 functionId
             );
@@ -55,6 +70,7 @@ namespace UKControllerPlugin {
             );
 
             container.pluginFunctionHandlers->RegisterFunctionCall(configureCallback);
+            container.userSettingHandlers->RegisterHandler(container.timerConfigurationManager);
 
             // Add five timer placeholders to the manager
             container.timerConfigurationManager->AddTimer({ 1, false, 60 });
@@ -121,6 +137,35 @@ namespace UKControllerPlugin {
 
             // Add the configuration manager to configurable displays
             configurableDisplays.RegisterDisplay(configManager);
+        }
+
+        /*
+            Save the default user settings so they're in place if not already set
+        */
+        void CountdownModule::LoadDefaultUserSettings(UserSetting & userSetting)
+        {
+            for (
+                std::set<TimerConfiguration>::const_iterator it = CountdownModule::defaultConfigs.cbegin();
+                it != CountdownModule::defaultConfigs.cend();
+                ++it
+            ) {
+                if (!userSetting.HasEntry(GetTimerEnabledKey(it->timerId))) {
+
+                    // Duration
+                    userSetting.Save(
+                        GetTimerDurationKey(it->timerId),
+                        GetTimerDurationDescription(it->timerId),
+                        it->timerDuration
+                    );
+
+                    // Enabled
+                    userSetting.Save(
+                        GetTimerEnabledKey(it->timerId),
+                        GetTimerEnabledDescription(it->timerId),
+                        it->timerEnabled
+                    );
+                }
+            }
         }
     }  // namespace Countdown
 }  // namespace UKControllerPlugin

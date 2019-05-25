@@ -1,4 +1,5 @@
 #pragma once
+#include "countdown/TimerConfiguration.h"
 
 // Forward declare
 namespace UKControllerPlugin {
@@ -11,6 +12,7 @@ namespace UKControllerPlugin {
     }  // namespace RadarScreen
     namespace Euroscope {
         class AsrEventHandlerCollection;
+        class UserSetting;
     }  // namespace Euroscope
     namespace Windows {
         struct GdiplusBrushes;
@@ -46,6 +48,11 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
                     UKControllerPlugin::Euroscope::AsrEventHandlerCollection & userSettingHandler
                 );
+
+                static void LoadDefaultUserSettings(UKControllerPlugin::Euroscope::UserSetting & userSetting);
+
+            private:
+                static const std::set<UKControllerPlugin::Countdown::TimerConfiguration> defaultConfigs;
         };
     }  // namespace Countdown
 }  // namespace UKControllerPlugin
