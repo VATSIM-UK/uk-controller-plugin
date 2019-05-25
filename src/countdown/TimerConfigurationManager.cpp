@@ -1,0 +1,97 @@
+#include "pch/stdafx.h"
+#include "countdown/TimerConfigurationManager.h"
+
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Plugin::PopupMenuItem;
+
+namespace UKControllerPlugin {
+    namespace Countdown {
+
+        TimerConfigurationManager::TimerConfigurationManager(
+            UserSetting & settingProvider,
+            const DialogManager & dialogManager,
+            const unsigned int menuCallbackFunctionId
+        )
+            : settingProvider(settingProvider), dialogManager(dialogManager),
+            menuCallbackFunctionId(menuCallbackFunctionId)
+        {
+
+        }
+
+        /*
+            Replaces the specified timer
+        */
+        void TimerConfigurationManager::AddTimer(TimerConfiguration timer)
+        {
+            this->timers.erase(timer);
+            this->timers.insert(timer);
+        }
+
+        /*
+            Returns the number of enabled timers
+        */
+        size_t TimerConfigurationManager::CountEnabledTimers(void) const
+        {
+            size_t numberEnabled = 0;
+            for (
+                std::set<TimerConfiguration>::const_iterator it = this->timers.cbegin();
+                it != this->timers.cend();
+                ++it
+            ) {
+                if (it->timerEnabled) {
+                    numberEnabled++;
+                }
+            }
+
+            return numberEnabled;
+        }
+
+        /*
+            Returns number of timers
+        */
+        size_t TimerConfigurationManager::CountTimers(void) const
+        {
+            return this->timers.size();
+        }
+
+        /*
+            Returns the given timer
+        */
+        TimerConfiguration TimerConfigurationManager::GetTimer(int timerId) const
+        {
+            auto timer = std::find_if(
+                this->timers.cbegin(),
+                this->timers.cend(),
+                [timerId](const TimerConfiguration & storedTimer) -> bool {
+                    return timerId == storedTimer.timerId;
+                }
+            );
+
+            return timer != this->timers.cend() ? *timer : this->invalidTimer;
+        }
+
+        /*
+            Run the configuration routine - open the configuration dialog
+        */
+        void TimerConfigurationManager::Configure(int functionId, std::string subject, RECT screenObjectArea)
+        {
+            this->dialogManager.OpenDialog(IDD_TIMER_CONFIGURATION, reinterpret_cast<LPARAM>(this));
+        }
+
+        /*
+            Return the menu item we want to display
+        */
+        PopupMenuItem TimerConfigurationManager::GetConfigurationMenuItem(void) const
+        {
+            PopupMenuItem returnVal;
+            returnVal.firstValue = this->menuItemDescription;
+            returnVal.secondValue = "";
+            returnVal.callbackFunctionId = this->menuCallbackFunctionId;
+            returnVal.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            returnVal.disabled = false;
+            returnVal.fixedPosition = false;
+            return returnVal;
+        }
+    }  // namespace Countdown
+}  // namespace UKControllerPlugin
