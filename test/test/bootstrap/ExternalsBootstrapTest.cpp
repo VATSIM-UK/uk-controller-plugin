@@ -119,7 +119,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(false));
 
 
-            EXPECT_THROW(ExternalsBootstrap::SetupUkcpFolderRoot(this->winApiMock),std::runtime_error);
+            EXPECT_THROW(ExternalsBootstrap::SetupUkcpFolderRoot(this->winApiMock), std::runtime_error);
         }
 
         TEST_F(ExternalsBootstrapTest, SetupUkcpFolderRootThrowsExceptionOnFailedCreatingUkcpFolder)

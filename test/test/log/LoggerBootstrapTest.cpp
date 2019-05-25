@@ -30,7 +30,7 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*mockWindows, CreateLocalFolderRecursive)
                 .WillByDefault(Return(false));
-            
+
             EXPECT_CALL(*mockWindows, OpenMessageBox(StrEq(expected.c_str()), _, _))
                 .Times(1);
 
