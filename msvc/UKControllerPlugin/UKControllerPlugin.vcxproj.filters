@@ -864,6 +864,9 @@
     <ClInclude Include="..\..\src\countdown\TimerConfiguration.h">
       <Filter>src\countdown</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\countdown\TimerConfigurationDialog.h">
+      <Filter>src\countdown</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1472,6 +1475,9 @@
       <Filter>src\api</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\countdown\TimerConfigurationManager.cpp">
+      <Filter>src\countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\countdown\TimerConfigurationDialog.cpp">
       <Filter>src\countdown</Filter>
     </ClCompile>
   </ItemGroup>

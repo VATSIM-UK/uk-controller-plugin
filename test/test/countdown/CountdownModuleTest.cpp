@@ -42,6 +42,7 @@ namespace UKControllerPluginTest {
                     dialogManager(dialogProvider), userSetting(userSettingProvider)
                 {
                     container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
+                    container.dialogManager = std::make_unique<DialogManager>(dialogProvider);
                 }
 
                 NiceMock<MockDialogProvider> dialogProvider;
@@ -76,6 +77,13 @@ namespace UKControllerPluginTest {
             CountdownModule::BootstrapPlugin(this->container);
             EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
+        }
+
+        TEST_F(CountdownModuleTest, BootstrapPluginAddsDialog)
+        {
+            CountdownModule::BootstrapPlugin(this->container);
+            EXPECT_EQ(1, this->container.dialogManager->CountDialogs());
+            EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_TIMER_CONFIGURATION));
         }
 
         TEST_F(CountdownModuleTest, BootstrapRadarScreenAddsToRendererCollection)
