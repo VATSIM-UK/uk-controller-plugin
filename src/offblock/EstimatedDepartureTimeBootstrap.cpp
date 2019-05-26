@@ -17,7 +17,8 @@ namespace UKControllerPlugin {
         {
             std::shared_ptr<EstimatedDepartureTimeEventHandler> handler =
                 std::make_shared<EstimatedDepartureTimeEventHandler>(
-                    *container.flightplans
+                    *container.flightplans,
+                    *container.timeFormatting
                 );
 
             container.flightplanHandler->RegisterHandler(handler);
