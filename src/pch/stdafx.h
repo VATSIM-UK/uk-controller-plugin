@@ -27,6 +27,7 @@
 #include <map>
 #include <mutex>
 #include <vector>
+#include <KnownFolders.h>
 #include <iterator>
 #include <sstream>
 #include <queue>

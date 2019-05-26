@@ -81,11 +81,12 @@ namespace UKControllerPlugin {
         */
         std::wstring ExternalsBootstrap::GetMyDocumentsPath(void)
         {
-            TCHAR myDocumentsPath[MAX_PATH];
-            HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, myDocumentsPath);
+            TCHAR * myDocumentsPath = 0;
+            HRESULT result = SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_SIMPLE_IDLIST, NULL, &myDocumentsPath);
 
             std::wstring widePath(myDocumentsPath);
             std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
+            CoTaskMemFree(myDocumentsPath);
             return widePath;
         }
     }  // namespace Bootstrap
