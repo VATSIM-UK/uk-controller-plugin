@@ -17,8 +17,8 @@ namespace UKControllerPlugin {
                 std::string FromTimePoint(std::chrono::system_clock::time_point tp) const;
                 inline std::string GetUnknownTimeFormat(void) const
                 {
-                    return this->useBlankTimeForUnknown 
-                        ? this->unknownTimeFormatBlank 
+                    return this->useBlankTimeForUnknown
+                        ? this->unknownTimeFormatBlank
                         : this->unknownTimeFormatDefault;
                 };
 
@@ -35,7 +35,7 @@ namespace UKControllerPlugin {
                 const std::string unknownTimeFormatBlank = "";
 
             private:
-               
+
                 // Whether or not blank times should be used for unknown times.
                 bool useBlankTimeForUnknown = false;
         };

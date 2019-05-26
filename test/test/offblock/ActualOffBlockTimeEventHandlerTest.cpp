@@ -11,7 +11,6 @@
 #include "controller/ControllerPosition.h"
 #include "airfield/AirfieldCollection.h"
 #include "airfield/Airfield.h"
-#include "datablock/DisplayTime.h"
 
 using UKControllerPlugin::Datablock::ActualOffBlockTimeEventHandler;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;

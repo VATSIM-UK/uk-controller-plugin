@@ -78,7 +78,7 @@ namespace UKControllerPlugin {
             )
                 .GetActualOffBlockTime();
 
-            return offBlock == (std::chrono::system_clock::time_point::max)() 
+            return offBlock == (std::chrono::system_clock::time_point::max)()
                 ? this->displayTime.GetUnknownTimeFormat()
                 : this->displayTime.FromTimePoint(offBlock);
         }
