@@ -668,6 +668,9 @@
     <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp">
       <Filter>test\log</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\datablock\DatablockBootstrapTest.cpp">
+      <Filter>test\datablock</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

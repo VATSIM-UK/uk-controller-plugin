@@ -69,6 +69,7 @@
     <ClInclude Include="..\..\src\curl\CurlRequest.h" />
     <ClInclude Include="..\..\src\curl\CurlResponse.h" />
     <ClInclude Include="..\..\src\curl\HttpException.h" />
+    <ClInclude Include="..\..\src\datablock\DatablockBoostrap.h" />
     <ClInclude Include="..\..\src\datablock\DisplayTime.h" />
     <ClInclude Include="..\..\src\dependency\ApiDependencyProvider.h" />
     <ClInclude Include="..\..\src\dependency\DependencyBootstrap.h" />
@@ -307,6 +308,7 @@
     <ClCompile Include="..\..\src\curl\CurlApi.cpp" />
     <ClCompile Include="..\..\src\curl\CurlRequest.cpp" />
     <ClCompile Include="..\..\src\curl\CurlResponse.cpp" />
+    <ClCompile Include="..\..\src\datablock\DatablockBoostrap.cpp" />
     <ClCompile Include="..\..\src\datablock\DisplayTime.cpp" />
     <ClCompile Include="..\..\src\dependency\ApiDependencyProvider.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyBootstrap.cpp" />
@@ -415,7 +417,7 @@
     <ClCompile Include="..\..\src\minstack\TerminalControlArea.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />
-    <ClCompile Include="..\..\src\offblock\EsimatedOffBlockTimeBootstrap.cpp" />
+    <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedDepartureTimeEventHandler.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeEventHandler.cpp" />
