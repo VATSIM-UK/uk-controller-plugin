@@ -19,6 +19,7 @@
 #include <CommCtrl.h>
 #include <CommDlg.h>
 #include <shtypes.h>
+#include <filesystem>
 #include <cctype>
 #include <ctime>
 #include <string>

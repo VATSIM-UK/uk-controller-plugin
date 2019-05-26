@@ -137,14 +137,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ExternalsBootstrapTest, SetupUkcpFolderRootCreatesFolders)
         {
-            std::string expected1 = this->GetMyDocumentsPathNarrow() + "/EuroScope";
-            std::string expected2 = this->GetMyDocumentsPathNarrow() + "/EuroScope/ukcp";
-
-            EXPECT_CALL(this->winApiMock, CreateFolder(expected1))
-                .Times(1)
-                .WillOnce(Return(true));
-
-            EXPECT_CALL(this->winApiMock, CreateFolder(expected2))
+            EXPECT_CALL(this->winApiMock, CreateFolderRecursive(this->GetMyDocumentsPathNarrow() + "/EuroScope/ukcp"))
                 .Times(1)
                 .WillOnce(Return(true));
 

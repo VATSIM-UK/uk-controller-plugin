@@ -66,22 +66,13 @@ namespace UKControllerPlugin {
                 ExternalsBootstrap::GetMyDocumentsPath()
             );
 
-            if (!winApi.CreateFolder(documentsPath + "/EuroScope")) {
+            if (!winApi.CreateFolderRecursive(documentsPath + "/EuroScope/ukcp")) {
                 winApi.OpenMessageBox(
-                    L"Unable to find EuroScope documents folder, please contact the VATUK Web Department.",
+                    L"Unable to create the UKCP root folder, please contact the VATUK Web Department.",
                     L"UKCP Fatal Error",
                     MB_OK | MB_ICONSTOP
                 );
-                throw std::runtime_error("Unable to create EuroScope folder");
-            }
-
-            if (!winApi.CreateFolder(documentsPath + "/EuroScope/ukcp")) {
-                winApi.OpenMessageBox(
-                    L"Unable to create ukcp file root, please contact the VATUK Web Department.",
-                    L"UKCP Fatal Error",
-                    MB_OK | MB_ICONSTOP
-                );
-                throw std::runtime_error("Unable to create ukcp root folder");
+                throw std::runtime_error("Unable to create UKCP Root");
             }
         }
 
