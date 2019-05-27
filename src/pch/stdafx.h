@@ -5,6 +5,7 @@
 #define NOMINMAX 1
 
 // Custom headers
+#include <boost/beast.hpp>
 #include "date/include/date/date.h"
 #include "../../resource/resource.h"
 #include "json/json.hpp"
