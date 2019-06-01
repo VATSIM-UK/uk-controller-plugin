@@ -858,6 +858,9 @@
     <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h">
       <Filter>src\api</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\radarscreen\PositionResetCommand.h">
+      <Filter>src\radarscreen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1464,6 +1467,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp">
       <Filter>src\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp">
+      <Filter>src\radarscreen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

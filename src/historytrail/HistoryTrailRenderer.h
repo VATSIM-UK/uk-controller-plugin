@@ -80,6 +80,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) override;
+                void ResetPosition(void) override;
 
                 // The function ID for the toggle callback
                 const int toggleCallbackFunctionId;

@@ -9,6 +9,7 @@
 #include "historytrail/HistoryTrailModule.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/ScreenControlsBootstrap.h"
+#include "radarscreen/PositionResetCommand.h"
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "hold/HoldModule.h"
@@ -40,7 +41,8 @@ namespace UKControllerPlugin {
         UKControllerPlugin::UKRadarScreen * RadarScreenFactory::Create(void) const
         {
             // Create the collections
-            RadarRenderableCollection renderers;
+            this->renderableCollections.push_back(std::make_shared<RadarRenderableCollection>());
+            RadarRenderableCollection & renderers = *renderableCollections.back();
             AsrEventHandlerCollection userSettingHandlers;
             ConfigurableDisplayCollection configurableDisplays;
             CommandHandlerCollection commandHandlers;
@@ -93,6 +95,11 @@ namespace UKControllerPlugin {
                 userSettingHandlers,
                 commandHandlers,
                 this->persistence
+            );
+
+            // Register command for position resets
+            this->persistence.commandHandlers->RegisterHandler(
+                std::make_shared<PositionResetCommand>(renderers)
             );
 
             // Last thing we do is ScreenControls

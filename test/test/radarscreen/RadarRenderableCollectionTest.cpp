@@ -367,5 +367,31 @@ namespace UKControllerPluginTest {
 
             collection.Render(collection.initialPhase, mockGraphics, mockRadarScreen);
         }
+
+        TEST(RadarRenderableCollection, ResetPositionResetsPositionOfAllRenderers)
+        {
+            RadarRenderableCollection collection;
+            std::shared_ptr<StrictMock<MockRadarRenderableInterface>> renderer1 =
+                std::make_shared<StrictMock<MockRadarRenderableInterface>>();
+            std::shared_ptr<StrictMock<MockRadarRenderableInterface>> renderer2 =
+                std::make_shared<StrictMock<MockRadarRenderableInterface>>();
+            std::shared_ptr<StrictMock<MockRadarRenderableInterface>> renderer3 =
+                std::make_shared<StrictMock<MockRadarRenderableInterface>>();
+
+            collection.RegisterRenderer(collection.ReserveRendererIdentifier(), renderer1, collection.initialPhase);
+            collection.RegisterRenderer(collection.ReserveRendererIdentifier(), renderer2, collection.beforeTags);
+            collection.RegisterRenderer(collection.ReserveRendererIdentifier(), renderer3, collection.afterTags);
+
+            EXPECT_CALL(*renderer1, ResetPosition())
+                .Times(1);
+
+            EXPECT_CALL(*renderer2, ResetPosition())
+                .Times(1);
+
+            EXPECT_CALL(*renderer3, ResetPosition())
+                .Times(1);
+
+            collection.ResetPosition();
+        }
     }  // namespace RadarScreen
 }  // namespace UKControllerPluginTest

@@ -77,6 +77,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) override;
                 void SetVisible(bool visible);
+                void ResetPosition(void) override;
 
                 // The clickspot id for the number buttons and the reset button
                 const int functionsClickspotId;
