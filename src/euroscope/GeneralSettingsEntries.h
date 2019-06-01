@@ -23,6 +23,10 @@ namespace UKControllerPlugin {
             // PRESSURE MONITOR
             static const std::string pressureMonitorSendMessageKey;
             static const std::string pressureMonitorSendMessageDescription;
+
+            // TIME FORMAT
+            static const std::string unknownTimeFormatBlankKey;
+            static const std::string unknownTimeFormatBlankDescription;
         } GeneralSettingsEntries;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

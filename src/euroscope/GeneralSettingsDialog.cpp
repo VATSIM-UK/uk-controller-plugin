@@ -53,6 +53,12 @@ namespace UKControllerPlugin {
                 this->GetCheckboxStateFromSettings(GeneralSettingsEntries::pressureMonitorSendMessageKey)
             );
 
+            CheckDlgButton(
+                hwnd,
+                GS_TIME_FORMAT_CHECK,
+                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::unknownTimeFormatBlankKey)
+            );
+
             return TRUE;
         }
 
@@ -86,6 +92,13 @@ namespace UKControllerPlugin {
                 GeneralSettingsEntries::pressureMonitorSendMessageKey,
                 GeneralSettingsEntries::pressureMonitorSendMessageDescription,
                 this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_QNH_CHECK)
+            );
+
+            // Time format
+            this->userSettings.Save(
+                GeneralSettingsEntries::unknownTimeFormatBlankKey,
+                GeneralSettingsEntries::unknownTimeFormatBlankDescription,
+                this->GetSettingFromCheckboxState(hwnd, GS_TIME_FORMAT_CHECK)
             );
 
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);

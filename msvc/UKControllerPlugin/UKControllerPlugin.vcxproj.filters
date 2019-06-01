@@ -858,6 +858,9 @@
     <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h">
       <Filter>src\api</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\datablock\DatablockBoostrap.h">
+      <Filter>src\datablock</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\radarscreen\PositionResetCommand.h">
       <Filter>src\radarscreen</Filter>
     </ClInclude>
@@ -1294,9 +1297,6 @@
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\offblock\EsimatedOffBlockTimeBootstrap.cpp">
-      <Filter>src\offblock</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\bootstrap\LocateApiSettings.cpp">
       <Filter>src\bootstrap</Filter>
     </ClCompile>
@@ -1467,6 +1467,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp">
       <Filter>src\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datablock\DatablockBoostrap.cpp">
+      <Filter>src\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp">
+      <Filter>src\offblock</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp">
       <Filter>src\radarscreen</Filter>
