@@ -5,6 +5,7 @@
 #include "graphics/GdiplusBrushes.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "countdown/CountdownTimer.h"
+#include "countdown/TimerConfigurationManager.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Plugin::PopupMenuItem;
@@ -16,6 +17,7 @@ namespace UKControllerPlugin {
 
         CountdownRenderer::CountdownRenderer(
             CountdownTimer & countdownModule,
+            const TimerConfigurationManager & configManager,
             int functionsClickspotId,
             int timeDisplayClickspotId,
             int closeClickspotId,
@@ -24,7 +26,7 @@ namespace UKControllerPlugin {
         )
             : countdownModule(countdownModule), functionsClickspotId(functionsClickspotId),
             timeDisplayClickspotId(timeDisplayClickspotId), closeClickspotId(closeClickspotId),
-            toggleCallbackFunctionId(toogleCallbackFunctionId), brushes(brushes)
+            toggleCallbackFunctionId(toogleCallbackFunctionId), brushes(brushes), configManager(configManager)
         {
         }
 
@@ -67,19 +69,30 @@ namespace UKControllerPlugin {
         */
         void CountdownRenderer::FunctionButtonClick(std::string function, EuroscopeRadarLoopbackInterface & radarScreen)
         {
-            if (function == "0.5") {
-                this->countdownModule.StartTimer(30);
-            } else if (function == "1") {
-                this->countdownModule.StartTimer(60);
-            } else if (function == "1.5") {
-                this->countdownModule.StartTimer(90);
-            } else if (function == "2") {
-                this->countdownModule.StartTimer(120);
-            } else if (function == "3") {
-                this->countdownModule.StartTimer(180);
-            } else if (function == "R") {
+            // Reset timer
+            if (function == "R") {
                 this->countdownModule.ResetTimer(false);
+                return;
             }
+
+            // Timer is clicked, get time
+            std::regex timerRegex("timer([0-9])Toggle");
+            std::smatch timerMatches;
+            std::regex_search(function, timerMatches, timerRegex);
+
+            if (timerMatches.size() == 0) {
+                LogWarning("Invalid timer toggle clicked");
+                return;
+            }
+
+            TimerConfiguration config = this->configManager.GetTimer(std::stoi(timerMatches[1]));
+
+            if (config == this->configManager.invalidTimer) {
+                LogWarning("No valid timer config found");
+                return;
+            }
+
+            this->countdownModule.StartTimer(config.timerDuration);
         }
 
         /*
@@ -97,28 +110,9 @@ namespace UKControllerPlugin {
             return returnVal;
         }
 
-        /*
-            Returns the display area of the close clickspot
-        */
-        RECT CountdownRenderer::GetCloseClickspotDisplayArea(void) const
+        RECT CountdownRenderer::GetTimerButtonArea(unsigned int configId) const
         {
-            return this->closeClickspotDisplayArea;
-        }
-
-        /*
-            Returns the display area of the ninety second clickspot
-        */
-        RECT CountdownRenderer::GetNinetySecondDisplayArea(void) const
-        {
-            return this->ninetysecondDisplayArea;
-        }
-
-        /*
-            Returns the display area of one minute clickspot
-        */
-        RECT CountdownRenderer::GetOneMinuteDisplayArea(void) const
-        {
-            return this->oneMinuteDisplayArea;
+            return this->timerButtonAreas.count(configId) ? this->timerButtonAreas.at(configId) : RECT {};
         }
 
         /*
@@ -130,19 +124,11 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Returns the display area of the thirty second clickspot
+            Return the display area of the close clickspot
         */
-        RECT CountdownRenderer::GetThirtySecondDisplayArea(void) const
+        RECT CountdownRenderer::GetCloseClickspotDisplayArea(void) const
         {
-            return this->thirtySecondDisplayArea;
-        }
-
-        /*
-            Returns the display area of the three minute clickspot
-        */
-        RECT CountdownRenderer::GetThreeMinuteDisplayArea(void) const
-        {
-            return this->threeMinuteDisplayArea;
+            return this->closeClickspotDisplayArea;
         }
 
         /*
@@ -151,14 +137,6 @@ namespace UKControllerPlugin {
         RECT CountdownRenderer::GetTimeDisplayArea(void) const
         {
             return this->timeDisplayArea;
-        }
-
-        /*
-            Returns the display are of the two minute clickspot
-        */
-        RECT CountdownRenderer::GetTwoMinuteDisplayArea(void) const
-        {
-            return this->twoMinuteDisplayArea;
         }
 
         /*
@@ -187,7 +165,6 @@ namespace UKControllerPlugin {
         */
         const Gdiplus::Brush & CountdownRenderer::GetTimeColour(int secondsRemaining)
         {
-
             // Colour the text depending on how long is left, if we get 0, that means timer is up.
             if (secondsRemaining == 0) {
                 return *this->brushes.whiteBrush;
@@ -237,6 +214,12 @@ namespace UKControllerPlugin {
         */
         void CountdownRenderer::Render(GdiGraphicsInterface & graphics, EuroscopeRadarLoopbackInterface & radarScreen)
         {
+            // Update the current display information from config if out of date
+            if (this->lastConfigVersion < this->configManager.GetConfigVersion()) {
+                this->ShiftAllElements(this->timeDisplayArea.left, this->timeDisplayArea.top);
+                this->lastConfigVersion = this->configManager.GetConfigVersion();
+            }
+
             this->RenderTimeDisplay(graphics, radarScreen);
             this->RenderButtons(graphics, radarScreen);
         }
@@ -248,41 +231,52 @@ namespace UKControllerPlugin {
             GdiGraphicsInterface & graphics,
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
+            // Render the buttons
+            int renderedButtons = 0;
+            for (
+                TimerConfigurationManager::const_iterator it = this->configManager.cbegin();
+                it != this->configManager.cend();
+                ++it
+            ) {
+                // Dont account for timer if not enabled
+                if (!it->timerEnabled) {
+                    continue;
+                }
+
+                graphics.FillRect(this->timerButtonAreas[it->timerId], *this->brushes.euroscopeBackgroundBrush);
+                graphics.DrawRect(this->timerButtonAreas[it->timerId], *this->brushes.blackPen);
+                graphics.DrawString(
+                    std::to_wstring(it->timerDuration),
+                    this->timerButtonAreas[it->timerId],
+                    *this->brushes.whiteBrush
+                );
+                radarScreen.RegisterScreenObject(
+                    this->functionsClickspotId,
+                    "timer" + std::to_string(it->timerId) + "Toggle",
+                    this->timerButtonAreas[it->timerId],
+                    false
+                );
+
+                renderedButtons++;
+            }
+
+            // Fill in gaps where not enough buttons
+            if (renderedButtons < 2) {
+                RECT spaceToFill = {
+                    this->timeDisplayArea.left + (this->buttonWidth * renderedButtons),
+                    this->timeDisplayArea.bottom,
+                    this->timeDisplayArea.right,
+                    this->timeDisplayArea.bottom + this->rowHeight
+                };
+                graphics.FillRect(spaceToFill, *this->brushes.euroscopeBackgroundBrush);
+                graphics.DrawRect(spaceToFill, *this->brushes.blackPen);
+            }
+
             // The close clickspot
             graphics.FillRect(this->closeClickspotDisplayArea, *this->brushes.euroscopeBackgroundBrush);
             graphics.DrawRect(this->closeClickspotDisplayArea, *this->brushes.blackPen);
             graphics.DrawString(L"X", this->closeClickspotDisplayArea, *this->brushes.whiteBrush);
             radarScreen.RegisterScreenObject(this->closeClickspotId, "", this->closeClickspotDisplayArea, false);
-
-            // The thirty second button
-            graphics.FillRect(this->thirtySecondDisplayArea, *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawRect(this->thirtySecondDisplayArea, *this->brushes.blackPen);
-            graphics.DrawString(L"0.5", this->thirtySecondDisplayArea, *this->brushes.whiteBrush);
-            radarScreen.RegisterScreenObject(this->functionsClickspotId, "0.5", this->thirtySecondDisplayArea, false);
-
-            // The 1 minute button
-            graphics.FillRect(this->oneMinuteDisplayArea, *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawRect(this->oneMinuteDisplayArea, *this->brushes.blackPen);
-            graphics.DrawString(L"1", this->oneMinuteDisplayArea, *this->brushes.whiteBrush);
-            radarScreen.RegisterScreenObject(this->functionsClickspotId, "1", this->oneMinuteDisplayArea, false);
-
-            // The ninety second button
-            graphics.FillRect(this->ninetysecondDisplayArea, *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawRect(this->ninetysecondDisplayArea, *this->brushes.blackPen);
-            graphics.DrawString(L"1.5", this->ninetysecondDisplayArea, *this->brushes.whiteBrush);
-            radarScreen.RegisterScreenObject(this->functionsClickspotId, "1.5", this->ninetysecondDisplayArea, false);
-
-            // The 2 minute button
-            graphics.FillRect(this->twoMinuteDisplayArea, *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawRect(this->twoMinuteDisplayArea, *this->brushes.blackPen);
-            graphics.DrawString(L"2", this->twoMinuteDisplayArea, *this->brushes.whiteBrush);
-            radarScreen.RegisterScreenObject(this->functionsClickspotId, "2", this->twoMinuteDisplayArea, false);
-
-            // The 3 minute button
-            graphics.FillRect(this->threeMinuteDisplayArea, *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawRect(this->threeMinuteDisplayArea, *this->brushes.blackPen);
-            graphics.DrawString(L"3", this->threeMinuteDisplayArea, *this->brushes.whiteBrush);
-            radarScreen.RegisterScreenObject(this->functionsClickspotId, "3", this->threeMinuteDisplayArea, false);
 
             // The reset button.
             graphics.FillRect(this->resetDisplayArea, *this->brushes.euroscopeBackgroundBrush);
@@ -351,9 +345,38 @@ namespace UKControllerPlugin {
             this->timeDisplayArea.left = topLeftX;
             this->timeDisplayArea.top = topLeftY;
             this->timeDisplayArea.bottom = this->timeDisplayArea.top + this->rowHeight;
-            this->timeDisplayArea.right = this->timeDisplayArea.left + this->timeDisplayWidth;
 
-            // The function buttons
+            // If not enough timer buttons are enabled, force the time window width to the size of 2 buttons
+            // else, make it the length of the number of enabled buttons
+            if (this->configManager.CountEnabledTimers() < 2) {
+                this->timeDisplayArea.right = this->timeDisplayArea.left + (2 * this->buttonWidth);
+            } else {
+                this->timeDisplayArea.right = this->timeDisplayArea.left +
+                    (this->buttonWidth * (this->configManager.CountEnabledTimers()));
+            }
+
+            // Iterate the config and work out display areas for the visible timer buttons
+            int numberOfVisibleButtons = 0;
+            for (
+                TimerConfigurationManager::const_iterator it = this->configManager.cbegin();
+                it != this->configManager.cend();
+                ++it
+            ) {
+                // Dont account for timer if not enabled
+                if (!it->timerEnabled) {
+                    continue;
+                }
+
+                this->timerButtonAreas[it->timerId] = {
+                    this->timeDisplayArea.left + (numberOfVisibleButtons * this->buttonWidth),
+                    this->timeDisplayArea.bottom,
+                    this->timeDisplayArea.left + (numberOfVisibleButtons * this->buttonWidth) + this->buttonWidth,
+                    this->timeDisplayArea.bottom + this->rowHeight
+                };
+                numberOfVisibleButtons++;
+            }
+
+            // Close button
             this->closeClickspotDisplayArea = {
                 this->timeDisplayArea.right,
                 this->timeDisplayArea.top,
@@ -361,46 +384,12 @@ namespace UKControllerPlugin {
                 this->timeDisplayArea.bottom
             };
 
-            this->thirtySecondDisplayArea = {
-                this->timeDisplayArea.left,
-                this->timeDisplayArea.bottom,
-                this->timeDisplayArea.left + this->buttonWidth,
-                this->timeDisplayArea.bottom + this->rowHeight
-            };
-
-            this->oneMinuteDisplayArea = {
-                this->thirtySecondDisplayArea.right,
-                this->thirtySecondDisplayArea.top,
-                this->thirtySecondDisplayArea.right + this->buttonWidth,
-                this->thirtySecondDisplayArea.bottom
-            };
-
-            this->ninetysecondDisplayArea = {
-                this->oneMinuteDisplayArea.right,
-                this->oneMinuteDisplayArea.top,
-                this->oneMinuteDisplayArea.right + this->buttonWidth,
-                this->oneMinuteDisplayArea.bottom
-            };
-
-            this->twoMinuteDisplayArea = {
-                this->ninetysecondDisplayArea.right,
-                this->ninetysecondDisplayArea.top,
-                this->ninetysecondDisplayArea.right + this->buttonWidth,
-                this->ninetysecondDisplayArea.bottom
-            };
-
-            this->threeMinuteDisplayArea = {
-                this->twoMinuteDisplayArea.right,
-                this->twoMinuteDisplayArea.top,
-                this->twoMinuteDisplayArea.right + this->buttonWidth,
-                this->twoMinuteDisplayArea.bottom
-            };
-
+            // Reset button
             this->resetDisplayArea = {
-                this->threeMinuteDisplayArea.right,
-                this->threeMinuteDisplayArea.top,
-                this->threeMinuteDisplayArea.right + this->buttonWidth,
-                this->threeMinuteDisplayArea.bottom
+                this->timeDisplayArea.right,
+                this->timeDisplayArea.bottom,
+                this->timeDisplayArea.right + this->buttonWidth,
+                this->timeDisplayArea.bottom + this->rowHeight
             };
         }
     }  // namespace Countdown

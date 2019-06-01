@@ -232,7 +232,7 @@ namespace UKControllerPlugin {
         );
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
-        CountdownModule::BootstrapPlugin(this->container->countdownTimer, *this->container->windows);
+        CountdownModule::BootstrapPlugin(*this->container);
         MinStackModule::BootstrapPlugin(
             this->container->minStack,
             *this->container->metarEventHandler,

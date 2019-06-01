@@ -83,6 +83,7 @@ namespace UKControllerPlugin {
             CountdownModule::BootstrapRadarScreen(
                 *persistence.pluginFunctionHandlers,
                 *persistence.countdownTimer,
+                persistence.timerConfigurationManager,
                 renderers,
                 configurableDisplays,
                 *persistence.brushes,

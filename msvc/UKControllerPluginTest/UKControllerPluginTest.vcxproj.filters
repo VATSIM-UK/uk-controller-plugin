@@ -668,6 +668,15 @@
     <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp">
       <Filter>test\log</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\countdown\TimerConfigurationTest.cpp">
+      <Filter>test\countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\countdown\TimerConfigurationManagerTest.cpp">
+      <Filter>test\countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\countdown\GlobalCountdownSettingsFunctionsTest.cpp">
+      <Filter>test\countdown</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\test\test\datablock\DatablockBootstrapTest.cpp">
       <Filter>test\datablock</Filter>
     </ClCompile>
