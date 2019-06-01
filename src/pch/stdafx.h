@@ -19,6 +19,7 @@
 #include <CommCtrl.h>
 #include <CommDlg.h>
 #include <shtypes.h>
+#include <experimental/filesystem>
 #include <cctype>
 #include <ctime>
 #include <string>
@@ -26,6 +27,7 @@
 #include <map>
 #include <mutex>
 #include <vector>
+#include <KnownFolders.h>
 #include <iterator>
 #include <sstream>
 #include <queue>

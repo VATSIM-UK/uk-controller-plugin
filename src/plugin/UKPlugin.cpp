@@ -64,16 +64,6 @@ namespace UKControllerPlugin {
         functionCallHandler(functionCallHandler),
         commandHandlers(commandHandlers)
     {
-        this->DisplayUserMessage(
-            "message",
-            "UKCP",
-            "UK Controller Plugin Loaded Successfully",
-            false,
-            false,
-            false,
-            false,
-            false
-        );
     }
 
     /*
