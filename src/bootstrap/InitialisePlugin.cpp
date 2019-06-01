@@ -156,6 +156,15 @@ namespace UKControllerPlugin {
 
         // API
         HelperBootstrap::Bootstrap(*this->container);
+        boost::asio::io_context ioContext;
+        this->container->websocketConnection = std::make_unique<UKControllerPlugin::Websocket::WebsocketConnection>(
+            ioContext,
+            "ukcp.devapp",
+            "6001"
+        );
+        while (!this->container->websocketConnection->IsConnected()) {
+            ioContext.run();
+        }
 
         // If we're not allowed to use the API because we've been banned or something... It's no go.
         bool apiAuthorised = ApiAuthChecker::IsAuthorised(

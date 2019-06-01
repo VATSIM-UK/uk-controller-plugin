@@ -121,6 +121,9 @@
     <Filter Include="src\dialog">
       <UniqueIdentifier>{e0f95056-2640-4e39-bc95-a21844516f05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\websocket">
+      <UniqueIdentifier>{a390fff4-5510-4260-9be4-51f0438acefa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\Airfield.h">
@@ -858,6 +861,15 @@
     <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h">
       <Filter>src\api</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketMessage.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketConnection.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1464,6 +1476,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp">
       <Filter>src\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp">
+      <Filter>src\websocket</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
