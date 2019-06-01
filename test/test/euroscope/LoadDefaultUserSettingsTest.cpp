@@ -138,5 +138,27 @@ namespace UKControllerPluginTest {
 
             LoadDefaultUserSettings(this->userSetting);
         }
+
+        TEST_F(LoadDefaultUserSettingsTest, ItSetsDefaultValueForTimeFormat)
+        {
+            this->SetExpectation(
+                GeneralSettingsEntries::unknownTimeFormatBlankKey,
+                GeneralSettingsEntries::unknownTimeFormatBlankDescription,
+                "0"
+            );
+
+            LoadDefaultUserSettings(this->userSetting);
+        }
+
+        TEST_F(LoadDefaultUserSettingsTest, ItDoesntSetTimeFormatIfSettingExists)
+        {
+            this->SetExpectationNoLoad(
+                GeneralSettingsEntries::unknownTimeFormatBlankKey,
+                GeneralSettingsEntries::unknownTimeFormatBlankDescription,
+                "0"
+            );
+
+            LoadDefaultUserSettings(this->userSetting);
+        }
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest

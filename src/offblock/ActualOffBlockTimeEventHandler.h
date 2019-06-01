@@ -26,7 +26,7 @@ namespace UKControllerPlugin {
             public:
                 ActualOffBlockTimeEventHandler(
                     const UKControllerPlugin::Flightplan::StoredFlightplanCollection & flightplans,
-                    const UKControllerPlugin::Datablock::DisplayTime displayTime
+                    const UKControllerPlugin::Datablock::DisplayTime & displayTime
                 );
 
                 // Inherited via FlightPlanEventHandlerInterface
@@ -49,15 +49,13 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 ) override;
 
-                const std::string defaultTime = "--:--";
-
             private:
 
                 // Stored flightplans
                 const UKControllerPlugin::Flightplan::StoredFlightplanCollection & flightplans;
 
                 // Converts times to display format.
-                const UKControllerPlugin::Datablock::DisplayTime displayTime;
+                const UKControllerPlugin::Datablock::DisplayTime & displayTime;
 
         };
     }  // namespace Datablock

@@ -44,6 +44,7 @@
 #include "hold/HoldDisplayFactory.h"
 #include "setting/SettingRepository.h"
 #include "countdown/TimerConfigurationManager.h"
+#include "datablock/DisplayTime.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -68,6 +69,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Controller::Login> login;
             std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
             std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;
+            std::shared_ptr<UKControllerPlugin::Datablock::DisplayTime> timeFormatting;
 
             // Collections of event handlers
             std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;

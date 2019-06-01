@@ -3,8 +3,11 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/LoadDefaultUserSettings.h"
 #include "countdown/CountdownModule.h"
+#include "update/PluginVersion.h"
 
+using UKControllerPlugin::Plugin::PluginVersion;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+
 namespace UKControllerPlugin {
     namespace Bootstrap {
 
@@ -21,6 +24,19 @@ namespace UKControllerPlugin {
                 *container.pluginUserSettingHandler
             );
             container.userSettingHandlers->UserSettingsUpdateEvent(*container.pluginUserSettingHandler);
+
+            std::string versionMessage = "UK Controller Plugin Loaded Successfully: Version " +
+                std::string(PluginVersion::version);
+            container.plugin->DisplayUserMessage(
+                "message",
+                "UKCP",
+                versionMessage.c_str(),
+                false,
+                false,
+                false,
+                false,
+                false
+            );
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

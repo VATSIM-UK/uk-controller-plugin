@@ -76,6 +76,8 @@
 #define TIMER3_LABEL                    1056
 #define TIMER4_LABEL                    1057
 #define TIMER5_LABEL                    1058
+#define IDC_TIME_FORMAT_CHECK           1048
+#define GS_TIME_FORMAT_CHECK            1049
 
 // Next default values for new objects
 // 

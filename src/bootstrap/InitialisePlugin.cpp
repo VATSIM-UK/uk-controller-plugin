@@ -37,6 +37,7 @@
 #include "dependency/DependencyProviderFactory.h"
 #include "metar/PressureMonitorBootstrap.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
+#include "datablock/DatablockBoostrap.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -152,10 +153,14 @@ namespace UKControllerPlugin {
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
         ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
+        ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
         // API
         HelperBootstrap::Bootstrap(*this->container);
+
+        // Datetime
+        UKControllerPlugin::Datablock::BootstrapPlugin(*this->container);
 
         // If we're not allowed to use the API because we've been banned or something... It's no go.
         bool apiAuthorised = ApiAuthChecker::IsAuthorised(
