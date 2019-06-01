@@ -5,6 +5,9 @@ namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
     }  // namespace Bootstrap
+    namespace Windows {
+        class WinApiInterface;
+    }  // namespace Windows
 }  // namespace UKControllerPlugin
 // END
 
@@ -26,6 +29,10 @@ namespace UKControllerPlugin {
 
                 static std::string GetPluginFileRoot(void);
                 static std::wstring GetPluginFileRootWide(void);
+                static void SetupUkcpFolderRoot(UKControllerPlugin::Windows::WinApiInterface & winApi);
+
+            private:
+                static std::wstring GetMyDocumentsPath(void);
         };
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

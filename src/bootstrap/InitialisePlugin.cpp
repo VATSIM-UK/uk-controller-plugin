@@ -153,6 +153,7 @@ namespace UKControllerPlugin {
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
         ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
+        ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
         // API

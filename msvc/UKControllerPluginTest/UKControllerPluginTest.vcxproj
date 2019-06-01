@@ -187,6 +187,7 @@
     <ClCompile Include="..\..\test\test\prenote\PrenoteServiceFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\prenote\PrenoteServiceTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ConfigurableDisplayCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\radarscreen\PositionResetCommandTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\RadarRenderableCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp" />

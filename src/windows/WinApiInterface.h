@@ -20,6 +20,7 @@ namespace UKControllerPlugin {
             };
             virtual ~WinApiInterface(void) {}  // namespace Windows
             virtual bool CreateFolder(std::string folder) = 0;
+            virtual bool CreateFolderRecursive(std::string folder) = 0;
             virtual bool CreateLocalFolderRecursive(std::string folder) = 0;
             virtual bool DeleteGivenFile(std::string filename) = 0;
             virtual bool FileExists(std::string filename) = 0;

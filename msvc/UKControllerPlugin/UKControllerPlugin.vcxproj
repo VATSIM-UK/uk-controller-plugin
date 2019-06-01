@@ -223,6 +223,7 @@
     <ClInclude Include="..\..\src\prenote\PrenoteServiceFactory.h" />
     <ClInclude Include="..\..\src\radarscreen\ConfigurableDisplayCollection.h" />
     <ClInclude Include="..\..\src\radarscreen\ConfigurableDisplayInterface.h" />
+    <ClInclude Include="..\..\src\radarscreen\PositionResetCommand.h" />
     <ClInclude Include="..\..\src\radarscreen\RadarRenderableCollection.h" />
     <ClInclude Include="..\..\src\radarscreen\RadarRenderableInterface.h" />
     <ClInclude Include="..\..\src\radarscreen\RadarScreenFactory.h" />
@@ -434,6 +435,7 @@
     <ClCompile Include="..\..\src\prenote\PrenoteService.cpp" />
     <ClCompile Include="..\..\src\prenote\PrenoteServiceFactory.cpp" />
     <ClCompile Include="..\..\src\radarscreen\ConfigurableDisplayCollection.cpp" />
+    <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp" />
     <ClCompile Include="..\..\src\radarscreen\RadarRenderableCollection.cpp" />
     <ClCompile Include="..\..\src\radarscreen\RadarScreenFactory.cpp" />
     <ClCompile Include="..\..\src\radarscreen\ScreenControls.cpp" />

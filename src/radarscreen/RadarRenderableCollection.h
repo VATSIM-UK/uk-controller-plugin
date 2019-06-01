@@ -54,6 +54,7 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) const;
+                void ResetPosition(void) const;
 
                 // Constant dictating that rendering should take place in the initial bitmap
                 const int initialPhase = 0;

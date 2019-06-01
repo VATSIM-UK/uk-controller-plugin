@@ -861,6 +861,9 @@
     <ClInclude Include="..\..\src\datablock\DatablockBoostrap.h">
       <Filter>src\datablock</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\radarscreen\PositionResetCommand.h">
+      <Filter>src\radarscreen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1470,6 +1473,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp">
       <Filter>src\offblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp">
+      <Filter>src\radarscreen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

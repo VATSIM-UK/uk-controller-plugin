@@ -334,6 +334,14 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Reset the positon of the display
+        */
+        void CountdownRenderer::ResetPosition(void)
+        {
+            this->Move({ 100, 100, 100, 100 }, "");
+        }
+
+        /*
             Moves all the elements of the display.
         */
         void CountdownRenderer::ShiftAllElements(int topLeftX, int topLeftY)
