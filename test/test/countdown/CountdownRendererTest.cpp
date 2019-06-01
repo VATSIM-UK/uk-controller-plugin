@@ -407,13 +407,8 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, timer.GetSecondsRemaining());
         }
 
-        TEST(CountdownRenderer, ResetPositionSetsPosition)
+        TEST_F(CountdownRendererTest, ResetPositionSetsPosition)
         {
-            StrictMock<MockWinApi> mockWindows;
-            CountdownTimer timer(mockWindows);
-            GdiplusBrushes brushes;
-            CountdownRenderer renderer(timer, 1, 2, 3, 4, brushes);
-
             renderer.ResetPosition();
             EXPECT_EQ(100, renderer.GetTimeDisplayArea().left);
             EXPECT_EQ(100, renderer.GetTimeDisplayArea().top);
