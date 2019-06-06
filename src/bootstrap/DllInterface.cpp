@@ -4,16 +4,28 @@
 // The one true app to rule them all...
 UKControllerPlugin::InitialisePlugin thePluginApp;
 
+HINSTANCE dllInstance;
+
+/*
+    The DLL entry point
+*/
+BOOL WINAPI DllMain(
+    HINSTANCE hinstance,
+    DWORD dwReason,
+    LPVOID lpvReserved
+) {
+    dllInstance = hinstance;
+    return TRUE;
+}
+
 /*
     Called by Euroscope when the plugin is loaded, either on startup (if previously loaded and saved
     in settings) or when manually loaded by the user.
 */
 void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** ppPlugInInstance)
 {
-    AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
     // Give ES the plugin instance and run the post initialisation method.
-    thePluginApp.PostInit();
+    thePluginApp.PostInit(dllInstance);
     *ppPlugInInstance = thePluginApp.GetPlugin();
 }
 
@@ -23,6 +35,5 @@ void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** ppPlu
 */
 void __declspec(dllexport) EuroScopePlugInExit(void)
 {
-    AFX_MANAGE_STATE(AfxGetStaticModuleState());
     thePluginApp.EuroScopeCleanup();
 }

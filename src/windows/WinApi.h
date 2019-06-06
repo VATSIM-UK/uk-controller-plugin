@@ -1,7 +1,6 @@
 #pragma once
 #include "windows/WinApiInterface.h"
 #include "dialog/DialogProviderInterface.h"
-#include "euroscope/GeneralSettingsDialog.h"
 #include "hold/HoldConfigurationDialog.h"
 
 namespace UKControllerPlugin {
@@ -17,22 +16,20 @@ namespace UKControllerPlugin {
                 WinApi(
                     HINSTANCE dllInstance,
                     std::string filesDirectory,
-                    std::wstring filesDirectoryW,
-                    UKControllerPlugin::Euroscope::GeneralSettingsDialog generalSettingsDialog
+                    std::wstring filesDirectoryW
                 );
                 bool CreateFolder(std::string folder);
+                bool CreateFolderRecursive(std::string folder) override;
                 bool CreateLocalFolderRecursive(std::string folder) override;
                 bool DeleteGivenFile(std::string filename);
                 bool FileExists(std::string filename);
                 std::string GetFullPathToLocalFile(std::string relativePath) const;
                 std::wstring GetFullPathToLocalFile(std::wstring relativePath) const;
-                bool OpenDialog(int dialogId, DLGPROC callback = NULL, LPARAM params = NULL) const;
                 std::wstring FileOpenDialog(
                     std::wstring title,
                     UINT numFileTypes,
                     const COMDLG_FILTERSPEC * fileTypes
                 ) const override;
-                void OpenGeneralSettingsDialog();
                 int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) override;
                 void PlayWave(LPCTSTR sound);
                 std::string ReadFromFile(std::string filename, bool relativePath = true);
@@ -57,9 +54,6 @@ namespace UKControllerPlugin {
 
                 // Working directory for file operations in widestring
                 const std::wstring filesDirectoryW;
-
-                // General settings dialog
-                UKControllerPlugin::Euroscope::GeneralSettingsDialog generalSettingsDialog;
         };
     }  // namespace Windows
 }  // namespace UKControllerPlugin

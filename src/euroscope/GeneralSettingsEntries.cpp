@@ -22,5 +22,9 @@ namespace UKControllerPlugin {
         const std::string GeneralSettingsEntries::pressureMonitorSendMessageKey = "notifyPressureChanges";
         const std::string GeneralSettingsEntries::pressureMonitorSendMessageDescription =
             "Notify On Pressure Changes At Airports";
+
+        // TIME FORMAT
+        const std::string GeneralSettingsEntries::unknownTimeFormatBlankKey = "useBlankForUnknownTimes";
+        const std::string GeneralSettingsEntries::unknownTimeFormatBlankDescription = "Display Unknown Times As Blank";
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

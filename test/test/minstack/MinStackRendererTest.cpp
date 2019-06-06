@@ -390,5 +390,18 @@ namespace UKControllerPluginTest {
             renderer.RightClick(renderer.hideClickspotId, "", mockRadarScreen);
             EXPECT_FALSE(renderer.IsVisible());
         }
+
+        TEST(MinStackRenderer, ResetPositionResetsPosition)
+        {
+            MinStackManager manager;
+            GdiplusBrushes brushes;
+            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
+            StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
+
+
+            renderer.ResetPosition();
+            EXPECT_EQ(100, renderer.GetTopBarArea().left);
+            EXPECT_EQ(100, renderer.GetTopBarArea().top);
+        }
     }  // namespace MinStack
 }  // namespace UKControllerPluginTest

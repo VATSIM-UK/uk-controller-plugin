@@ -39,7 +39,7 @@ namespace UKControllerPlugin {
         public:
             UKRadarScreen(
                 const UKControllerPlugin::Euroscope::AsrEventHandlerCollection userSettingEventHandler,
-                const UKControllerPlugin::RadarScreen::RadarRenderableCollection renderers,
+                const UKControllerPlugin::RadarScreen::RadarRenderableCollection & renderers,
                 const UKControllerPlugin::Command::CommandHandlerCollection commandHandlers,
                 UKControllerPlugin::Windows::GdiGraphicsInterface & graphics
             );
@@ -87,7 +87,7 @@ namespace UKControllerPlugin {
             const UKControllerPlugin::Euroscope::AsrEventHandlerCollection userSettingEventHandler;
 
             // All the things that render things to the screen
-            const UKControllerPlugin::RadarScreen::RadarRenderableCollection renderers;
+            const UKControllerPlugin::RadarScreen::RadarRenderableCollection & renderers;
 
             // Processes Euroscope dot commands
             const UKControllerPlugin::Command::CommandHandlerCollection commandHandlers;

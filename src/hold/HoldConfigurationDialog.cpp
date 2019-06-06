@@ -549,7 +549,7 @@ namespace UKControllerPlugin {
                     }
                 }
             }
-            return DefWindowProc(hwnd, msg, wParam, lParam);
+            return FALSE;
         }
 
         /*
@@ -572,7 +572,7 @@ namespace UKControllerPlugin {
             HoldConfigurationDialog * dialog = reinterpret_cast<HoldConfigurationDialog*>(
                 GetWindowLongPtr(hwnd, GWLP_USERDATA)
             );
-            return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : DefWindowProc(hwnd, msg, wParam, lParam);
+            return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -145,6 +145,20 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Reset the position of each hold display
+        */
+        void HoldRenderer::ResetPosition(void)
+        {
+            for (
+                HoldDisplayManager::const_iterator it = this->displays->cbegin();
+                it != this->displays->cend();
+                ++it
+            ) {
+                (*it)->Move({ 100, 100 });
+            }
+        }
+
+        /*
             Toggle hold visibility
         */
         void HoldRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)

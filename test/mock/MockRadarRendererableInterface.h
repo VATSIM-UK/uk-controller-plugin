@@ -26,6 +26,7 @@ namespace UKControllerPluginTest {
                         UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface &
                     )
                 );
+                MOCK_METHOD0(ResetPosition, void(void));
         };
     }  // namespace RadarScreen
 }  // namespace UKControllerPluginTest

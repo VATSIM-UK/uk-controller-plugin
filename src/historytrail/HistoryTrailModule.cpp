@@ -3,12 +3,13 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "historytrail/HistoryTrailEventHandler.h"
+#include "historytrail/HistoryTrailDialog.h"
 #include "euroscope/RadarTargetEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "historytrail/HistoryTrailRenderer.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/RadarRenderableCollection.h"
-#include "windows/WinApiInterface.h"
+#include "dialog/DialogManager.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "command/CommandHandlerCollection.h"
@@ -21,7 +22,7 @@ using UKControllerPlugin::HistoryTrail::HistoryTrailEventHandler;
 using UKControllerPlugin::HistoryTrail::HistoryTrailRenderer;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
-using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
@@ -37,11 +38,25 @@ namespace UKControllerPlugin {
         void HistoryTrailModule::BootstrapPlugin(PersistenceContainer & persistence)
         {
             persistence.historyTrails.reset(new HistoryTrailRepository);
+
+            // Handler
             std::shared_ptr<HistoryTrailEventHandler> trailHandler(
                 new HistoryTrailEventHandler(*persistence.historyTrails)
             );
             persistence.radarTargetHandler->RegisterHandler(trailHandler);
             persistence.flightplanHandler->RegisterHandler(trailHandler);
+
+            // Dialog
+            std::shared_ptr<HistoryTrailDialog> dialog = std::make_shared<HistoryTrailDialog>();
+            persistence.dialogManager->AddDialog(
+                {
+                    IDD_HISTORY_TRAIL,
+                    "History Trails",
+                    reinterpret_cast<DLGPROC>(dialog->WndProc),
+                    reinterpret_cast<LPARAM>(dialog.get()),
+                    dialog
+                }
+            );
         }
 
         /*
@@ -51,7 +66,7 @@ namespace UKControllerPlugin {
             FunctionCallEventHandler & eventHandler,
             const HistoryTrailRepository & trailRepo,
             RadarRenderableCollection & radarRender,
-            WinApiInterface & windows,
+            const DialogManager & dialogManager,
             ConfigurableDisplayCollection & configurableDisplays,
             AsrEventHandlerCollection & userSettingHandlers,
             CommandHandlerCollection & commandHandlers,
@@ -59,7 +74,7 @@ namespace UKControllerPlugin {
         ) {
             int toggleCallbackFunction = eventHandler.ReserveNextDynamicFunctionId();
             std::shared_ptr<HistoryTrailRenderer> renderer(
-                new HistoryTrailRenderer(trailRepo, plugin, windows, toggleCallbackFunction)
+                new HistoryTrailRenderer(trailRepo, plugin, dialogManager, toggleCallbackFunction)
             );
 
             radarRender.RegisterRenderer(radarRender.ReserveRendererIdentifier(), renderer, radarRender.beforeTags);

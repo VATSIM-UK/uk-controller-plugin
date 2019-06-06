@@ -21,7 +21,8 @@ class EstimatedDepartureTimeEventHandler : public UKControllerPlugin::Tag::TagIt
 {
     public:
         EstimatedDepartureTimeEventHandler(
-            const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans
+            const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans,
+            const UKControllerPlugin::Datablock::DisplayTime & displayTime
         );
         void FlightPlanEvent(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
@@ -39,16 +40,13 @@ class EstimatedDepartureTimeEventHandler : public UKControllerPlugin::Tag::TagIt
             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
         ) override;
 
-        // Value to return for tags when there is no EOBT
-        const std::string noTime = "--:--";
-
     private:
 
         // Stored flightplans
         const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans;
 
-        // Class for converting timestamps to display times
-        const UKControllerPlugin::Datablock::DisplayTime displayTime;
+        // Class for converting timestamps to display times and getting the blank time format
+        const UKControllerPlugin::Datablock::DisplayTime & displayTime;
 };
 }  // namespace Datablock
 }  // namespace UKControllerPlugin

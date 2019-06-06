@@ -24,6 +24,10 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Bootstrap::PersistenceContainer & persistence,
                     bool nullLogger
                 );
+
+            private:
+
+                static void CreateNullLogger(void);
         };
     }  // namespace Log
 }  // namespace UKControllerPlugin

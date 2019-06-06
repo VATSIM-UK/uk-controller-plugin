@@ -22,11 +22,9 @@ namespace UKControllerPlugin {
         WinApi::WinApi(
             HINSTANCE dllInstance,
             std::string filesDirectory,
-            std::wstring filesDirectoryW,
-            GeneralSettingsDialog generalSettingsDialog
+            std::wstring filesDirectoryW
         )
-            : WinApiInterface(dllInstance), filesDirectory(filesDirectory), filesDirectoryW(filesDirectoryW),
-            generalSettingsDialog(generalSettingsDialog)
+            : WinApiInterface(dllInstance), filesDirectory(filesDirectory), filesDirectoryW(filesDirectoryW)
         {
             this->dllInstance = dllInstance;
         }
@@ -36,29 +34,38 @@ namespace UKControllerPlugin {
         */
         bool WinApi::CreateFolder(std::string folder)
         {
-            std::wstring folderWide(folder.length(), L' ');
-            std::copy(folder.begin(), folder.end(), folderWide.begin());
-            return (CreateDirectory(folderWide.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError()) ? true : false;
+            try {
+                std::experimental::filesystem::create_directory(folder);
+                return true;
+            } catch (std::experimental::filesystem::filesystem_error) {
+                return false;
+            }
         }
 
         /*
-            Create a folder from the root, recursively
+            Creates a folder and all those before it.
+        */
+        bool WinApi::CreateFolderRecursive(std::string folder)
+        {
+            try {
+                std::experimental::filesystem::create_directories(folder);
+                return true;
+            } catch (std::experimental::filesystem::filesystem_error) {
+                return false;
+            }
+        }
+
+        /*
+            Create a folder from the UK file root, recursively.
         */
         bool WinApi::CreateLocalFolderRecursive(std::string folder)
         {
-            std::vector<std::string> tokens = HelperFunctions::TokeniseString(
-                '/',
-                this->GetFullPathToLocalFile(folder)
-            );
-            std::string currentPath;
-            for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
-                if (!this->CreateFolder(currentPath + *it)) {
-                    return false;
-                }
-                currentPath += *it + "/";
+            try {
+                std::experimental::filesystem::create_directories(this->filesDirectory + "/" + folder);
+                return true;
+            } catch (std::experimental::filesystem::filesystem_error) {
+                return false;
             }
-
-            return true;
         }
 
         /*
@@ -77,19 +84,11 @@ namespace UKControllerPlugin {
         */
         bool WinApi::FileExists(std::string filename)
         {
-            std::string newFilename = this->GetFullPathToLocalFile(filename);
-            std::wstring filenameWide(newFilename.length(), L' ');
-            std::copy(newFilename.begin(), newFilename.end(), filenameWide.begin());
-
-            WIN32_FIND_DATA findData;
-            HANDLE hFind = FindFirstFile(filenameWide.c_str(), &findData);
-
-            if (hFind == INVALID_HANDLE_VALUE) {
+            try {
+                return std::experimental::filesystem::exists(this->GetFullPathToLocalFile(filename));
+            } catch (std::experimental::filesystem::filesystem_error) {
                 return false;
             }
-
-            FindClose(hFind);
-            return true;
         }
 
         /*
@@ -170,44 +169,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Opens the specified dialog box. Converts the parameters to
-            the required structure. By the time DoModal has returned,
-            the values from the dialog box have been been set into the
-            original structure passed to the constructor.
-        */
-        bool WinApi::OpenDialog(int dialogId, DLGPROC callback, LPARAM params) const
-        {
-            // Required so we can hit the dialog resource.
-            AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-            switch (dialogId) {
-                case IDD_HISTORY_TRAIL: {
-                    LogInfo("History Trail dialog opened");
-                    HistoryTrailData * data = reinterpret_cast<HistoryTrailData *>(params);
-                    HistoryTrailDialog diag(
-                        NULL,
-                        data
-                    );
-                    diag.DoModal();
-                    return true;
-                }
-                default:
-                    return false;
-            }
-
-        }
-
-        /*
-            Opens the general settings dialog with a specified handler for saving settings.
-        */
-        void WinApi::OpenGeneralSettingsDialog()
-        {
-            // Required so we can hit the dialog resource.
-            AFX_MANAGE_STATE(AfxGetStaticModuleState());
-            this->generalSettingsDialog.DoModal();
-        }
-
-        /*
             Plays a wave sound file that is stored in the DLL resources.
         */
         void WinApi::PlayWave(LPCTSTR sound)
@@ -238,16 +199,10 @@ namespace UKControllerPlugin {
         */
         void WinApi::CreateMissingDirectories(std::string endFile)
         {
-            std::vector<std::string> tokens = HelperFunctions::TokeniseString('/', endFile);
-            std::string currentPath;
-            for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
-                // We don't want to include the last item, as that's the file.
-                if (*it == tokens.back()) {
-                    break;
-                }
-
-                this->CreateFolder(currentPath + *it);
-                currentPath += *it + "/";
+            try {
+                std::experimental::filesystem::create_directories(endFile.substr(0, endFile.find_last_of('/')));
+            } catch (std::experimental::filesystem::filesystem_error) {
+                // Do nothing
             }
         }
 
@@ -300,7 +255,6 @@ namespace UKControllerPlugin {
         */
         void WinApi::OpenDialog(const DialogData & dialog, const DialogCallArgument * argument) const
         {
-            AFX_MANAGE_STATE(AfxGetStaticModuleState());
             DialogBoxParam(
                 this->dllInstance,
                 MAKEINTRESOURCE(dialog.dialogId),

@@ -1,5 +1,10 @@
 #include "pch/stdafx.h"
 #include "datablock/DisplayTime.h"
+#include "euroscope/UserSetting.h"
+#include "euroscope/GeneralSettingsEntries.h"
+
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
 namespace UKControllerPlugin {
     namespace Datablock {
@@ -28,6 +33,17 @@ namespace UKControllerPlugin {
         std::string DisplayTime::FromTimePoint(std::chrono::system_clock::time_point tp) const
         {
             return date::format(this->timeFormat, tp);
+        }
+
+        /*
+            Handle the fact that user settings have been updated
+        */
+        void DisplayTime::UserSettingsUpdated(UserSetting & userSettings)
+        {
+            this->useBlankTimeForUnknown = userSettings.GetBooleanEntry(
+                GeneralSettingsEntries::unknownTimeFormatBlankKey,
+                false
+            );
         }
     }  // namespace Datablock
 }  // namespace UKControllerPlugin

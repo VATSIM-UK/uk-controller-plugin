@@ -17,7 +17,8 @@ namespace UKControllerPlugin {
         {
             std::shared_ptr<EstimatedOffBlockTimeEventHandler> handler =
                 std::make_shared<EstimatedOffBlockTimeEventHandler>(
-                    *container.flightplans
+                    *container.flightplans,
+                    *container.timeFormatting
                 );
 
             container.tagHandler->RegisterTagItem(EstimatedOffBlockTimeBootstrap::tagItemId, handler);

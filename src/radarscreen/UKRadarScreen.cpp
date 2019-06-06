@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
 
     UKRadarScreen::UKRadarScreen(
         const UKControllerPlugin::Euroscope::AsrEventHandlerCollection userSettingEventHandler,
-        const UKControllerPlugin::RadarScreen::RadarRenderableCollection renderers,
+        const UKControllerPlugin::RadarScreen::RadarRenderableCollection & renderers,
         const UKControllerPlugin::Command::CommandHandlerCollection commandHandlers,
         UKControllerPlugin::Windows::GdiGraphicsInterface & graphics
     )
