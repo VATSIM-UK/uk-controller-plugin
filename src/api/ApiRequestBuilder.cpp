@@ -73,6 +73,24 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Build a request to auhtorise a websocket connection to a channel.
+        */
+        CurlRequest ApiRequestBuilder::BuildWebsocketChannelAuthRequest(
+            std::string socketId,
+            std::string channel
+        ) const {
+            CurlRequest request(apiDomain + "/broadcasting/auth", CurlRequest::METHOD_POST);
+            
+            nlohmann::json body;
+            body["socket_id"] = socketId;
+            body["channel_name"] = channel;
+
+            request.SetBody(body.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
+        /*
             Builds a request to check whether or not the given aircraft has been assigned a squawk.
         */
         CurlRequest ApiRequestBuilder::BuildSquawkAssignmentCheckRequest(std::string callsign) const

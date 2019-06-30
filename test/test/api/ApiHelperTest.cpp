@@ -581,5 +581,89 @@ TEST_F(ApiHelperTest, GetDependencyReturnsJsonData)
 
     EXPECT_EQ(data, this->helper.GetDependency({"local", "dependency/somecoolthing", "default"}));
 }
+
+TEST_F(ApiHelperTest, AuthoriseWebsocketChannelReturnsTheAuthCode)
+{
+    nlohmann::json responseData;
+    responseData["auth"] = "someauthcode";
+
+    CurlResponse response(responseData.dump(), false, 200);
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/broadcasting/auth",
+            CurlRequest::METHOD_POST,
+            { {"socket_id", "somesocket"}, {"channel_name", "somechannel"} }
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ("someauthcode", this->helper.AuthoriseWebsocketChannel("somesocket", "somechannel"));
+}
+
+TEST_F(ApiHelperTest, AuthoriseWebsocketChannelThrowsExceptionIfAuthCodeMissing)
+{
+    nlohmann::json responseData;
+
+    CurlResponse response(responseData.dump(), false, 200);
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/broadcasting/auth",
+            CurlRequest::METHOD_POST,
+            { {"socket_id", "somesocket"}, {"channel_name", "somechannel"} }
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.AuthoriseWebsocketChannel("somesocket", "somechannel"), ApiException);
+}
+
+TEST_F(ApiHelperTest, AuthoriseWebsocketChannelThrowsExceptionIfAuthCodeNotString)
+{
+    nlohmann::json responseData;
+    responseData["auth"] = 12345;
+
+    CurlResponse response(responseData.dump(), false, 200);
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/broadcasting/auth",
+            CurlRequest::METHOD_POST,
+            { {"socket_id", "somesocket"}, {"channel_name", "somechannel"} }
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.AuthoriseWebsocketChannel("somesocket", "somechannel"), ApiException);
+}
+
+
+TEST_F(ApiHelperTest, AuthoriseWebsocketChannelThrowsExceptionIfNotAuthorised)
+{
+    nlohmann::json responseData;
+    responseData["auth"] = "someauthcode";
+
+    CurlResponse response(responseData.dump(), false, 403);
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/broadcasting/auth",
+            CurlRequest::METHOD_POST,
+            { {"socket_id", "somesocket"}, {"channel_name", "somechannel"} }
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.AuthoriseWebsocketChannel("somesocket", "somechannel"), ApiNotAuthorisedException);
+}
 }  // namespace Api
 }  // namespace UKControllerPluginTest

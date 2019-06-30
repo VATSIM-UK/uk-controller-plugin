@@ -188,5 +188,21 @@ namespace UKControllerPluginTest {
             DependencyData dependency = { "localpath", "dependency/somecoolthing", "default" };
             EXPECT_TRUE(expectedRequest == this->builder.BuildDependencyRequest(dependency));
         }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsAWebsocketChannelAuthRequest)
+        {
+            CurlRequest expectedRequest("http://testurl.com/broadcasting/auth", CurlRequest::METHOD_POST);
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+
+            nlohmann::json expectedData;
+            expectedData["socket_id"] = "somesocket";
+            expectedData["channel_name"] = "somelovelychannel";
+            expectedRequest.SetBody(expectedData.dump());
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildWebsocketChannelAuthRequest("somesocket", "somelovelychannel")
+            );
+        }
     }  // namespace Api
 }  // namespace UKControllerPluginTest
