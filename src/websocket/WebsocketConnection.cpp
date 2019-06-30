@@ -5,6 +5,8 @@
 namespace UKControllerPlugin {
     namespace Websocket {
 
+        boost::beast::flat_buffer buffer_;
+
         /*
             Start connection to the websocket by resolving the host
         */
@@ -49,7 +51,7 @@ namespace UKControllerPlugin {
             // Perform the websocket handshake
             this->websocket.async_handshake(
                 this->host,
-                "/",
+                "/app/ukcpwebsocket",
                 std::bind(
                     &WebsocketConnection::HandshakeHandler,
                     this,
@@ -63,10 +65,14 @@ namespace UKControllerPlugin {
         {
             if (ec) {
                 LogError("Unable to handshake on the websocket");
-                //return;
+                std::string test = ec.message();
+                return;
             }
 
-            this->message = "subscribe minstack-updates";
+            nlohmann::json data;
+            data["event"] = "pusher:subscribe";
+            data["data"]["channel"] = "test-channel";
+            this->message = data.dump();
             this->websocket.async_write(
                 boost::asio::buffer(this->message),
                 std::bind(
@@ -81,8 +87,9 @@ namespace UKControllerPlugin {
 
         void WebsocketConnection::MessageSentHandler(boost::system::error_code ec, std::size_t bytes_transferred)
         {
-            if (!ec) {
+            if (ec) {
                 LogError("Failed to send message to websocket");
+                std::string test = ec.message();
                 return;
             }
 
@@ -99,6 +106,7 @@ namespace UKControllerPlugin {
         ) {
             if (ec) {
                 LogError("Unable to resolve websocket");
+                std::string err = ec.message();
                 return;
             }
 
