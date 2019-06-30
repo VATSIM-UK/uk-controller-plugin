@@ -64,11 +64,16 @@
     <ClInclude Include="..\..\src\countdown\CountdownModule.h" />
     <ClInclude Include="..\..\src\countdown\CountdownRenderer.h" />
     <ClInclude Include="..\..\src\countdown\CountdownTimer.h" />
+    <ClInclude Include="..\..\src\countdown\GlobalCountdownSettingFunctions.h" />
+    <ClInclude Include="..\..\src\countdown\TimerConfiguration.h" />
+    <ClInclude Include="..\..\src\countdown\TimerConfigurationDialog.h" />
+    <ClInclude Include="..\..\src\countdown\TimerConfigurationManager.h" />
     <ClInclude Include="..\..\src\curl\CurlApi.h" />
     <ClInclude Include="..\..\src\curl\CurlInterface.h" />
     <ClInclude Include="..\..\src\curl\CurlRequest.h" />
     <ClInclude Include="..\..\src\curl\CurlResponse.h" />
     <ClInclude Include="..\..\src\curl\HttpException.h" />
+    <ClInclude Include="..\..\src\datablock\DatablockBoostrap.h" />
     <ClInclude Include="..\..\src\datablock\DisplayTime.h" />
     <ClInclude Include="..\..\src\dependency\ApiDependencyProvider.h" />
     <ClInclude Include="..\..\src\dependency\DependencyBootstrap.h" />
@@ -222,6 +227,7 @@
     <ClInclude Include="..\..\src\prenote\PrenoteServiceFactory.h" />
     <ClInclude Include="..\..\src\radarscreen\ConfigurableDisplayCollection.h" />
     <ClInclude Include="..\..\src\radarscreen\ConfigurableDisplayInterface.h" />
+    <ClInclude Include="..\..\src\radarscreen\PositionResetCommand.h" />
     <ClInclude Include="..\..\src\radarscreen\RadarRenderableCollection.h" />
     <ClInclude Include="..\..\src\radarscreen\RadarRenderableInterface.h" />
     <ClInclude Include="..\..\src\radarscreen\RadarScreenFactory.h" />
@@ -307,9 +313,13 @@
     <ClCompile Include="..\..\src\countdown\CountdownModule.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownRenderer.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownTimer.cpp" />
+    <ClCompile Include="..\..\src\countdown\GlobalCountdownSettingFunctions.cpp" />
+    <ClCompile Include="..\..\src\countdown\TimerConfigurationDialog.cpp" />
+    <ClCompile Include="..\..\src\countdown\TimerConfigurationManager.cpp" />
     <ClCompile Include="..\..\src\curl\CurlApi.cpp" />
     <ClCompile Include="..\..\src\curl\CurlRequest.cpp" />
     <ClCompile Include="..\..\src\curl\CurlResponse.cpp" />
+    <ClCompile Include="..\..\src\datablock\DatablockBoostrap.cpp" />
     <ClCompile Include="..\..\src\datablock\DisplayTime.cpp" />
     <ClCompile Include="..\..\src\dependency\ApiDependencyProvider.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyBootstrap.cpp" />
@@ -418,7 +428,7 @@
     <ClCompile Include="..\..\src\minstack\TerminalControlArea.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />
-    <ClCompile Include="..\..\src\offblock\EsimatedOffBlockTimeBootstrap.cpp" />
+    <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedDepartureTimeEventHandler.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeEventHandler.cpp" />
@@ -435,6 +445,7 @@
     <ClCompile Include="..\..\src\prenote\PrenoteService.cpp" />
     <ClCompile Include="..\..\src\prenote\PrenoteServiceFactory.cpp" />
     <ClCompile Include="..\..\src\radarscreen\ConfigurableDisplayCollection.cpp" />
+    <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp" />
     <ClCompile Include="..\..\src\radarscreen\RadarRenderableCollection.cpp" />
     <ClCompile Include="..\..\src\radarscreen\RadarScreenFactory.cpp" />
     <ClCompile Include="..\..\src\radarscreen\ScreenControls.cpp" />

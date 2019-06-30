@@ -19,6 +19,7 @@ namespace UKControllerPlugin {
                     std::wstring filesDirectoryW
                 );
                 bool CreateFolder(std::string folder);
+                bool CreateFolderRecursive(std::string folder) override;
                 bool CreateLocalFolderRecursive(std::string folder) override;
                 bool DeleteGivenFile(std::string filename);
                 bool FileExists(std::string filename);

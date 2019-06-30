@@ -61,6 +61,11 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) = 0;
+
+                /*
+                    Reset the position of the object to default
+                */
+                virtual void ResetPosition() = 0;
         };
     }  // namespace RadarScreen
 }  // namespace UKControllerPlugin

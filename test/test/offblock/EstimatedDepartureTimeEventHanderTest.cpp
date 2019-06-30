@@ -5,6 +5,7 @@
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/StoredFlightplan.h"
 #include "helper/HelperFunctions.h"
+#include "datablock/DisplayTime.h"
 
 using ::testing::Test;
 using ::testing::Return;
@@ -15,6 +16,7 @@ using UKControllerPlugin::Datablock::EstimatedDepartureTimeEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Datablock::DisplayTime;
 
 namespace UKControllerPluginTest {
 namespace Datablock {
@@ -23,7 +25,7 @@ class EstimatedDepartureTimeEventHandlerTest : public Test
 {
     public:
         EstimatedDepartureTimeEventHandlerTest()
-            : handler(this->flightplans)
+            : handler(this->flightplans, timeFormat)
         {
             ON_CALL(this->mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
@@ -32,6 +34,7 @@ class EstimatedDepartureTimeEventHandlerTest : public Test
                 .WillByDefault(Return("1900"));
         }
 
+        DisplayTime timeFormat;
         EstimatedDepartureTimeEventHandler handler;
         StoredFlightplanCollection flightplans;
         NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
@@ -66,14 +69,20 @@ TEST_F(EstimatedDepartureTimeEventHandlerTest, TestItUpdatesEdtFromFlightplan)
 
 TEST_F(EstimatedDepartureTimeEventHandlerTest, TestItReturnsEmptyOnNoStoredPlan)
 {
-    EXPECT_TRUE(this->handler.noTime == this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
+    EXPECT_EQ(
+        this->timeFormat.GetUnknownTimeFormat(),
+        this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
+    );
 }
 
 TEST_F(EstimatedDepartureTimeEventHandlerTest, TestItReturnsEmptyOnNoEdt)
 {
     StoredFlightplan storedPlan(this->mockFlightplan);
     this->flightplans.UpdatePlan(storedPlan);
-    EXPECT_TRUE(this->handler.noTime == this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
+    EXPECT_EQ(
+        this->timeFormat.GetUnknownTimeFormat(),
+        this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
+    );
 }
 
 TEST_F(EstimatedDepartureTimeEventHandlerTest, TestItReturnsEdt)

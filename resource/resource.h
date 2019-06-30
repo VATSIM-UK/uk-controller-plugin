@@ -8,6 +8,7 @@
 #define IDD_DIALOG2                     106
 #define IDD_GENERAL_SETTINGS            106
 #define HOLD_SELECTOR_DIALOG            109
+#define IDD_TIMER_CONFIGURATION         111
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -20,9 +21,14 @@
 #define IDC_DOT_SIZE_SPIN               1013
 #define IDC_CHECK1                      1013
 #define GS_DIALOG_PRENOTE_CHECK         1013
+#define TIMER1_ENABLED_CHECK            1013
+#define TIMER2_ENABLED_CHECK            1014
 #define IDC_MFCBUTTON1                  1015
+#define TIMER3_ENABLED_CHECK            1015
 #define IDC_MAX_FILTER_TEXT             1016
+#define TIMER4_ENABLED_CHECK            1016
 #define IDC_MAX_FILTER_SPIN             1017
+#define TIMER5_ENABLED_CHECK            1017
 #define IDC_FILTER_MAX_LABEL            1018
 #define IDC_MAX_FILTER_LABEL            1018
 #define HOLD_PROFILE_NAME_EDIT          1018
@@ -57,14 +63,29 @@
 #define IDC_HOLD_PROFILE_DELETE         1042
 #define HOLD_PROFILE_NAME_STATIC        1044
 #define IDC_BUTTON2                     1046
+#define TIMER1_EDIT_DURATION            1047
+#define TIMER2_EDIT_DURATION            1048
+#define TIMER3_EDIT_DURATION            1049
+#define TIMER4_EDIT_DURATION            1050
+#define TIMER5_EDIT_VALUE               1051
+#define TIMER5_EDIT_DURATION            1051
+#define TIMER1_LABEL                    1052
+#define TIMER_CONFIG_ENABLED_LABEL      1053
+#define TIMER_CONFIG_DURATION_LABEL     1054
+#define TIMER2_LABEL                    1055
+#define TIMER3_LABEL                    1056
+#define TIMER4_LABEL                    1057
+#define TIMER5_LABEL                    1058
+#define IDC_TIME_FORMAT_CHECK           1048
+#define GS_TIME_FORMAT_CHECK            1049
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        111
+#define _APS_NEXT_RESOURCE_VALUE        113
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1047
+#define _APS_NEXT_CONTROL_VALUE         1059
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

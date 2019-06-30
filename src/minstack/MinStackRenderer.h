@@ -70,6 +70,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 );
                 void SetVisible(bool visible);
+                void ResetPosition(void) override;
 
                 // The EuroScope ID for the close button.
                 const int hideClickspotId;

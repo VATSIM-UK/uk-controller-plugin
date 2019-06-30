@@ -11,13 +11,15 @@ using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Datablock::DisplayTime;
 
 namespace UKControllerPlugin {
 namespace Datablock {
 
 EstimatedDepartureTimeEventHandler::EstimatedDepartureTimeEventHandler(
-    const StoredFlightplanCollection & storedFlightplans
-) : storedFlightplans(storedFlightplans), displayTime()
+    const StoredFlightplanCollection & storedFlightplans,
+    const DisplayTime & displayTime
+) : storedFlightplans(storedFlightplans), displayTime(displayTime)
 {
 
 }
@@ -32,7 +34,7 @@ std::string EstimatedDepartureTimeEventHandler::GetTagItemData(
     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
 ) {
     if (!this->storedFlightplans.HasFlightplanForCallsign(flightPlan.GetCallsign())) {
-        return this->noTime;
+        return this->displayTime.GetUnknownTimeFormat();
     }
 
     std::chrono::system_clock::time_point edt = this->storedFlightplans
@@ -41,7 +43,7 @@ std::string EstimatedDepartureTimeEventHandler::GetTagItemData(
 
     // If no valid EOBT, nothing to do
     if (edt == (std::chrono::system_clock::time_point::max)()) {
-        return this->noTime;
+        return this->displayTime.GetUnknownTimeFormat();
     }
 
     return this->displayTime.FromTimePoint(edt);
