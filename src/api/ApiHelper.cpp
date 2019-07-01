@@ -153,7 +153,7 @@ namespace UKControllerPlugin {
                 throw ApiException("Authorsation response missing valid token");
             }
 
-            return std::string();
+            return response.at("auth");
         }
 
         /*
