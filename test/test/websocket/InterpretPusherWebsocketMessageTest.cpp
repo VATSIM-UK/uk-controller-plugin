@@ -1,8 +1,8 @@
 #include "pch/pch.h"
 #include "websocket/InterpretPusherWebsocketMessage.h"
-#include "websocket/WebsocketMessage.h"
+#include "websocket/InboundWebsocketMessage.h"
 
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Websocket::InboundWebsocketMessage;
 
 TEST(InterpretPusherMessageTest, ItReturnsInvalidIfJsonInvalid)
 {
@@ -34,7 +34,7 @@ TEST(InterpretPusherMessageTest, ItHandlesMissingChannel)
     message["event"] = "test-event";
     message["data"] = { {"test", "lol"} };
 
-    WebsocketMessage expectedMessage = {
+    InboundWebsocketMessage expectedMessage = {
         "test-event",
         "none",
         { {"test", "lol"} },
@@ -51,7 +51,7 @@ TEST(InterpretPusherMessageTest, ItHandlesNonStringChannel)
     message["channel"] = 1;
     message["data"] = { {"test", "lol"} };
 
-    WebsocketMessage expectedMessage = {
+    InboundWebsocketMessage expectedMessage = {
         "test-event",
         "none",
         { {"test", "lol"} },
@@ -67,7 +67,7 @@ TEST(InterpretPusherMessageTest, ItHandlesMissingData)
     message["event"] = "test-event";
     message["channel"] = "test-channel";
 
-    WebsocketMessage expectedMessage = {
+    InboundWebsocketMessage expectedMessage = {
         "test-event",
         "test-channel",
         {},
@@ -84,7 +84,7 @@ TEST(InterpretPusherMessageTest, ItHandlesNonObjectData)
     message["channel"] = "test-channel";
     message["data"] = { 1, 2, 3 };
 
-    WebsocketMessage expectedMessage = {
+    InboundWebsocketMessage expectedMessage = {
         "test-event",
         "test-channel",
         {},
@@ -101,7 +101,7 @@ TEST(InterpretPusherMessageTest, ItDetectsProtocolMessages)
     message["channel"] = "test-channel";
     message["data"] = { {"test", "lol"} };
 
-    WebsocketMessage expectedMessage = {
+    InboundWebsocketMessage expectedMessage = {
         "pusher:test",
         "test-channel",
         { {"test", "lol"} },

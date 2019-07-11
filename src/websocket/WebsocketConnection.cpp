@@ -16,6 +16,7 @@ namespace UKControllerPlugin {
         )
             : tcpResolver(ioContext), websocket(ioContext), host(host), port(port)
         {
+            this->connectionInProgress = true;
             this->websocketThread = std::thread(std::bind(&WebsocketConnection::Loop, this));
             this->tcpResolver.async_resolve(
                 host,
@@ -41,7 +42,7 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Handle connections to the websocket.
+            Called when we try to connect to the websocket
         */
         void WebsocketConnection::ConnectHandler(boost::system::error_code ec)
         {
@@ -64,6 +65,9 @@ namespace UKControllerPlugin {
             LogInfo("Successfully connected to the websocket");
         }
 
+        /*
+            Called after connection to the websocket to negotiate a protocol upgrade
+        */
         void WebsocketConnection::HandshakeHandler(boost::system::error_code ec)
         {
             if (ec) {
@@ -73,47 +77,61 @@ namespace UKControllerPlugin {
             }
 
             this->connected = true;
-            nlohmann::json data;
-            data["event"] = "pusher:subscribe";
-            data["data"]["channel"] = "test-channel";
-            this->message = data.dump();
-            this->websocket.async_write(
-                boost::asio::buffer(this->message),
-                std::bind(
-                    &WebsocketConnection::MessageSentHandler,
-                    this,
-                    std::placeholders::_1,
-                    std::placeholders::_2
-                )
-            );
             LogInfo("Websocket handshake successful");
         }
 
+        /*
+            Loop that runs to send any outgoing messages and read
+            any incoming message
+        */
         void WebsocketConnection::Loop(void)
         {
             while (this->threadsRunning) {
 
                 this->ioContext.run();
 
-                if (!this->connected || this->asyncReadInProgress) {
+                if (!this->connected) {
                     continue;
                 }
 
-                this->asyncReadInProgress = true;
-                this->websocket.async_read(
-                    this->incomingBuffer,
-                    std::bind(
-                        &WebsocketConnection::ReadHandler,
-                        this,
-                        std::placeholders::_1,
-                        std::placeholders::_2
-                    )
-                );
+                // Process an inbound message if we can
+                if (!this->asyncReadInProgress) {
+                    this->asyncReadInProgress = true;
+                    this->websocket.async_read(
+                        this->incomingBuffer,
+                        std::bind(
+                            &WebsocketConnection::ReadHandler,
+                            this,
+                            std::placeholders::_1,
+                            std::placeholders::_2
+                        )
+                    );
+                }
+
+                // Process an outbound message if we can
+                if (!this->asyncWriteInProgress && !this->outboundMessages.empty()) {
+                    std::lock_guard<std::mutex> lock(this->outboundMessageQueueGuard);
+                    this->asyncWriteInProgress = true;
+                    this->websocket.async_write(
+                        boost::asio::buffer(this->outboundMessages.front()),
+                        std::bind(
+                            &WebsocketConnection::MessageSentHandler,
+                            this,
+                            std::placeholders::_1,
+                            std::placeholders::_2
+                        )
+                    );
+                    this->outboundMessages.pop();
+                }
             }
         }
 
+        /*
+            Called when a message has been sent by the websocket.
+        */
         void WebsocketConnection::MessageSentHandler(boost::system::error_code ec, std::size_t bytes_transferred)
         {
+            this->asyncWriteInProgress = true;
             if (ec) {
                 LogWarning("Websocket: message sending error");
                 this->ProcessErrorCode(ec);
@@ -121,6 +139,9 @@ namespace UKControllerPlugin {
             }
         }
 
+        /*
+            Called when a message is received. Add it to the inbound message queue.
+        */
         void WebsocketConnection::ReadHandler(boost::beast::error_code ec, std::size_t bytes_transferred)
         {
             if (ec) {
@@ -135,6 +156,8 @@ namespace UKControllerPlugin {
             }
 
             LogDebug("Incoming websocket message: " + boost::beast::buffers_to_string(this->incomingBuffer.data()));
+            std::lock_guard<std::mutex> lock(this->inboundMessageQueueGuard);
+            this->inboundMessages.push(boost::beast::buffers_to_string(this->incomingBuffer.data()));
             this->incomingBuffer.consume(bytes_transferred);
             this->asyncReadInProgress = false;
         }
@@ -169,16 +192,32 @@ namespace UKControllerPlugin {
             return this->connected;
         }
 
+        /*
+            Add a message to the outbound queue
+        */
         bool WebsocketConnection::WriteMessage(std::string message)
         {
-            return false;
+            std::lock_guard<std::mutex> lock(this->inboundMessageQueueGuard);
+            this->outboundMessages.push(message);
         }
 
-        UKControllerPlugin::Websocket::WebsocketMessage WebsocketConnection::GetNextMessage(void)
+        /*
+            Returns the next message on the queue
+        */
+        std::string WebsocketConnection::GetNextMessage(void)
         {
-            return {};
+            std::lock_guard<std::mutex> lock(this->inboundMessageQueueGuard);
+            if (this->inboundMessages.empty()) {
+                return this->noMessage;
+            }
+            std::string message = this->inboundMessages.front();
+            this->inboundMessages.pop();
+            return message;
         }
 
+        /*
+            Processes an error code from the websocket.
+        */
         void WebsocketConnection::ProcessErrorCode(boost::system::error_code ec)
         {
             // Handle disconnection
@@ -189,11 +228,6 @@ namespace UKControllerPlugin {
             }
 
             LogWarning("Error code from websocket: " + std::to_string(ec.value()) + " (" + ec.message() + ")");
-        }
-
-        void WebsocketConnection::TimedEventTrigger(void)
-        {
-
         }
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

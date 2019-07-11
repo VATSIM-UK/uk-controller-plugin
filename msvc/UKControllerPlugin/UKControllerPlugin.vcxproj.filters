@@ -1513,8 +1513,10 @@
     <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp">
       <Filter>src\radarscreen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp" />
     <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
   </ItemGroup>

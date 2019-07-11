@@ -1,6 +1,6 @@
 #pragma once
 #include "websocket/WebsocketConnectionInterface.h"
-#include "timedevent/AbstractTimedEvent.h"
+#include "websocket/InboundWebsocketMessage.h"
 
 namespace UKControllerPlugin {
     namespace Websocket {
@@ -9,8 +9,7 @@ namespace UKControllerPlugin {
             Class that handles all of UKCPs connections to the
             APIs websocket.
         */
-        class WebsocketConnection : public UKControllerPlugin::Websocket::WebsocketConnectionInterface,
-            public UKControllerPlugin::TimedEvent::AbstractTimedEvent
+        class WebsocketConnection : public UKControllerPlugin::Websocket::WebsocketConnectionInterface
         {
             public:
                 WebsocketConnection(
@@ -18,6 +17,17 @@ namespace UKControllerPlugin {
                     std::string port
                 );
                 ~WebsocketConnection(void);
+
+                bool IsConnected(void) const;
+
+                // Inherited via WebsocketConnectionInterface
+                bool WriteMessage(std::string message) override;
+                std::string GetNextMessage(void) override;
+
+                // Returned when there are no messages in the queue to be processed
+                const std::string noMessage = "";
+
+            private:
 
                 void ConnectHandler(boost::system::error_code ec);
                 void HandshakeHandler(boost::system::error_code ec);
@@ -28,17 +38,8 @@ namespace UKControllerPlugin {
                     boost::system::error_code ec,
                     boost::asio::ip::tcp::resolver::results_type results
                 );
-                bool IsConnected(void) const;
-
-                // Inherited via WebsocketConnectionInterface
-                bool WriteMessage(std::string message) override;
-                UKControllerPlugin::Websocket::WebsocketMessage GetNextMessage(void) override;
-
-            private:
 
                 void ProcessErrorCode(boost::system::error_code ec);
-
-                std::string message;
 
                 // The websocket host
                 const std::string host;
@@ -61,6 +62,19 @@ namespace UKControllerPlugin {
                 // The thread we're using to run the websocket.
                 std::thread websocketThread;
 
+                // Messages that are yet to be processed by the rest of the plugin
+                std::queue<std::string> inboundMessages;
+
+                // Protects the inbound messages queue
+                std::mutex inboundMessageQueueGuard;
+
+
+                // Messages that are to be sent
+                std::queue<std::string> outboundMessages;
+
+                // Protects the outbound messages queue
+                std::mutex outboundMessageQueueGuard;
+
                 // Are we connected
                 bool connected = false;
 
@@ -70,8 +84,8 @@ namespace UKControllerPlugin {
                 // Is an async read in progress?
                 bool asyncReadInProgress = false;
 
-                // Inherited via AbstractTimedEvent
-                virtual void TimedEventTrigger(void) override;
+                // Is an async write in progress?
+                bool asyncWriteInProgress = false;
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

@@ -5,7 +5,10 @@ namespace UKControllerPlugin {
     namespace Websocket {
 
 
-        typedef struct WebsocketMessage
+        /*
+            Represents a websocket message coming into the plugin
+        */
+        typedef struct InboundWebsocketMessage
         {
             // The channel that the message came in from
             const std::string channel;
@@ -19,12 +22,12 @@ namespace UKControllerPlugin {
             // Is the message to do with the protocol and should therefore not be processed outside the connection
             const bool protocolMessage;
 
-            bool operator==(const WebsocketMessage & compare) const {
+            bool operator==(const InboundWebsocketMessage & compare) const {
                 return this->channel == compare.channel &&
                     this->event == compare.event &&
                     this->data == compare.data &&
                     this->protocolMessage == compare.protocolMessage;
             }
-        } WebsocketMessage;
+        } InboundWebsocketMessage;
     }  // namespace Websocket
 }  // namespace UKControllerPlugin
