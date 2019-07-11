@@ -40,7 +40,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("rotating logger", rotatingSink);
             logger->set_pattern("%Y-%m-%d %T [%l] - %v");
 
-#ifdef DEBUG
+#ifdef _DEBUG
             logger->set_level(spdlog::level::trace);
             logger->flush_on(spdlog::level::trace);
 #else
