@@ -158,15 +158,10 @@ namespace UKControllerPlugin {
 
         // API
         HelperBootstrap::Bootstrap(*this->container);
-        boost::asio::io_context ioContext;
         this->container->websocketConnection = std::make_unique<UKControllerPlugin::Websocket::WebsocketConnection>(
-            ioContext,
             "ukcp.devapp",
             "6001"
         );
-        while (!this->container->websocketConnection->IsConnected()) {
-            ioContext.run();
-        }
 
         // Datetime
         UKControllerPlugin::Datablock::BootstrapPlugin(*this->container);

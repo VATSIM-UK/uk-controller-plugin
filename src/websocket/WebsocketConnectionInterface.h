@@ -7,7 +7,8 @@ namespace UKControllerPlugin {
 
         /*
             Class that represents a websocket connection
-            to the web API.
+            to the web API. The web API operates a read-only
+            websocket connection.
         */
         class WebsocketConnectionInterface
         {
