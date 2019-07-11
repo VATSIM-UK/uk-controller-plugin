@@ -10,8 +10,21 @@ namespace UKControllerPlugin {
             // The channel that the message came in from
             const std::string channel;
 
-            // The content of the message
-            const std::string content;
+            // The event associated with the message
+            const std::string event;
+
+            // The data associated with the message
+            const nlohmann::json data;
+
+            // Is the message to do with the protocol and should therefore not be processed outside the connection
+            const bool protocolMessage;
+
+            bool operator==(const WebsocketMessage & compare) const {
+                return this->channel == compare.channel &&
+                    this->event == compare.event &&
+                    this->data == compare.data &&
+                    this->protocolMessage == compare.protocolMessage;
+            }
         } WebsocketMessage;
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

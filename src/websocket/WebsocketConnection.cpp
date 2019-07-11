@@ -134,9 +134,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            auto data = this->incomingBuffer.data();
-            std::string testString = boost::beast::buffers_to_string(data);
-            LogDebug("Incoming websocket message: " + testString);
+            LogDebug("Incoming websocket message: " + boost::beast::buffers_to_string(this->incomingBuffer.data()));
             this->incomingBuffer.consume(bytes_transferred);
             this->asyncReadInProgress = false;
         }
@@ -178,7 +176,7 @@ namespace UKControllerPlugin {
 
         UKControllerPlugin::Websocket::WebsocketMessage WebsocketConnection::GetNextMessage(void)
         {
-            return UKControllerPlugin::Websocket::WebsocketMessage();
+            return {};
         }
 
         void WebsocketConnection::ProcessErrorCode(boost::system::error_code ec)

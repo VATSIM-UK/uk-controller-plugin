@@ -109,6 +109,9 @@
     <Filter Include="test\log">
       <UniqueIdentifier>{93ae7490-c342-4194-8991-248b16db9733}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\websocket">
+      <UniqueIdentifier>{40896d78-9aef-49a7-a041-e9c79d8e4150}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -682,6 +685,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\radarscreen\PositionResetCommandTest.cpp">
       <Filter>test\radarscreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\InterpretPusherWebsocketMessageTest.cpp">
+      <Filter>test\websocket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

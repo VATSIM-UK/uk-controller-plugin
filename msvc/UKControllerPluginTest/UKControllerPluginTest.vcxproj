@@ -207,6 +207,7 @@
     <ClCompile Include="..\..\test\test\wake\WakeCategoryEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryMapperTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\InterpretPusherWebsocketMessageTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h" />

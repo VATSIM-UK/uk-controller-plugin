@@ -888,6 +888,9 @@
     <ClInclude Include="..\..\src\radarscreen\PositionResetCommand.h">
       <Filter>src\radarscreen</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1509,6 +1512,10 @@
     </ClCompile>
     <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp">
       <Filter>src\radarscreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp" />
+    <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp">
+      <Filter>src\websocket</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
