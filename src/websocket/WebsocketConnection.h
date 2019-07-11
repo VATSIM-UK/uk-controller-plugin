@@ -36,6 +36,8 @@ namespace UKControllerPlugin {
 
             private:
 
+                void ProcessErrorCode(boost::system::error_code ec);
+
                 std::string message;
 
                 // The websocket host

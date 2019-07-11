@@ -46,7 +46,8 @@ namespace UKControllerPlugin {
         void WebsocketConnection::ConnectHandler(boost::system::error_code ec)
         {
             if (ec) {
-                LogError("Unable to connect to the websocket");
+                LogWarning("Websocket: connection error");
+                this->ProcessErrorCode(ec);
                 return;
             }
             
@@ -66,11 +67,12 @@ namespace UKControllerPlugin {
         void WebsocketConnection::HandshakeHandler(boost::system::error_code ec)
         {
             if (ec) {
-                LogError("Unable to handshake on the websocket");
-                std::string test = ec.message();
+                LogWarning("Websocket: handshake error");
+                this->ProcessErrorCode(ec);
                 return;
             }
 
+            this->connected = true;
             nlohmann::json data;
             data["event"] = "pusher:subscribe";
             data["data"]["channel"] = "test-channel";
@@ -113,34 +115,30 @@ namespace UKControllerPlugin {
         void WebsocketConnection::MessageSentHandler(boost::system::error_code ec, std::size_t bytes_transferred)
         {
             if (ec) {
-                LogError("Failed to send message to websocket: " + ec.message());
+                LogWarning("Websocket: message sending error");
+                this->ProcessErrorCode(ec);
                 return;
             }
-
-            this->connected = true;
-            LogInfo("Message sent");
         }
 
         void WebsocketConnection::ReadHandler(boost::beast::error_code ec, std::size_t bytes_transferred)
         {
-            this->asyncReadInProgress = false;
-
             if (ec) {
-                LogError("Error reading from the websocket: " + ec.message());
+                this->ProcessErrorCode(ec);
+                this->asyncReadInProgress = false;
                 return;
             }
 
             if (bytes_transferred == 0) {
+                this->asyncReadInProgress = false;
                 return;
             }
 
             auto data = this->incomingBuffer.data();
-            if (this->incomingBuffer.size() == 0) {
-                return;
-            }
-
             std::string testString = boost::beast::buffers_to_string(data);
+            LogDebug("Incoming websocket message: " + testString);
             this->incomingBuffer.consume(bytes_transferred);
+            this->asyncReadInProgress = false;
         }
 
         /*
@@ -151,8 +149,8 @@ namespace UKControllerPlugin {
             boost::asio::ip::tcp::resolver::results_type results
         ) {
             if (ec) {
-                LogError("Unable to resolve websocket");
-                std::string err = ec.message();
+                LogWarning("Websocket: resolve error");
+                this->ProcessErrorCode(ec);
                 return;
             }
 
@@ -181,6 +179,18 @@ namespace UKControllerPlugin {
         UKControllerPlugin::Websocket::WebsocketMessage WebsocketConnection::GetNextMessage(void)
         {
             return UKControllerPlugin::Websocket::WebsocketMessage();
+        }
+
+        void WebsocketConnection::ProcessErrorCode(boost::system::error_code ec)
+        {
+            // Handle disconnection
+            if (ec == boost::asio::error::eof || ec == boost::asio::error::connection_reset) {
+                this->connected = false;
+                LogWarning("Disconnected from websocket: " + ec.message());
+                return;
+            }
+
+            LogWarning("Error code from websocket: " + std::to_string(ec.value()) + " (" + ec.message() + ")");
         }
 
         void WebsocketConnection::TimedEventTrigger(void)
