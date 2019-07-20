@@ -1,6 +1,5 @@
 #pragma once
 #include "websocket/WebsocketConnectionInterface.h"
-#include "websocket/InboundWebsocketMessage.h"
 
 namespace UKControllerPlugin {
     namespace Websocket {
@@ -21,7 +20,7 @@ namespace UKControllerPlugin {
                 bool IsConnected(void) const;
 
                 // Inherited via WebsocketConnectionInterface
-                bool WriteMessage(std::string message) override;
+                void WriteMessage(std::string message) override;
                 std::string GetNextMessage(void) override;
 
                 // Returned when there are no messages in the queue to be processed

@@ -864,12 +864,6 @@
     <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketMessage.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketConnection.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\countdown\TimerConfigurationManager.h">
       <Filter>src\countdown</Filter>
     </ClInclude>
@@ -889,6 +883,21 @@
       <Filter>src\radarscreen</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketConnection.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherWebsocketProtocolHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketMessage.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorInterface.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorCollection.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1517,6 +1526,12 @@
       <Filter>src\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherWebsocketProtocolHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
   </ItemGroup>

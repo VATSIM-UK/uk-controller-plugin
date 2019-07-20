@@ -689,6 +689,12 @@
     <ClCompile Include="..\..\test\test\websocket\InterpretPusherWebsocketMessageTest.cpp">
       <Filter>test\websocket</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\WebsocketEventProcessorCollectionTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\mock\MockWebsocketEventProcessor.h">
+      <Filter>mock</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

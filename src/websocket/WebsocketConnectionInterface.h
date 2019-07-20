@@ -1,6 +1,5 @@
 #pragma once
 #include "pch/stdafx.h"
-#include "websocket/InboundWebsocketMessage.h"
 
 namespace UKControllerPlugin {
     namespace Websocket {
@@ -14,7 +13,7 @@ namespace UKControllerPlugin {
         {
             public:
 
-                virtual bool WriteMessage(std::string message) = 0;
+                virtual void WriteMessage(std::string message) = 0;
                 virtual std::string GetNextMessage(void) = 0;
         };
     }  // namespace Websocket

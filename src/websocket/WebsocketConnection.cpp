@@ -16,7 +16,6 @@ namespace UKControllerPlugin {
         )
             : tcpResolver(ioContext), websocket(ioContext), host(host), port(port)
         {
-            this->connectionInProgress = true;
             this->websocketThread = std::thread(std::bind(&WebsocketConnection::Loop, this));
             this->tcpResolver.async_resolve(
                 host,
@@ -195,7 +194,7 @@ namespace UKControllerPlugin {
         /*
             Add a message to the outbound queue
         */
-        bool WebsocketConnection::WriteMessage(std::string message)
+        void WebsocketConnection::WriteMessage(std::string message)
         {
             std::lock_guard<std::mutex> lock(this->inboundMessageQueueGuard);
             this->outboundMessages.push(message);
