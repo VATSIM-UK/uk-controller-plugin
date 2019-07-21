@@ -1,6 +1,7 @@
 #pragma once
 #include "timedevent/AbstractTimedEvent.h"
 #include "websocket/WebsocketConnection.h"
+#include "websocket/WebsocketEventProcessorCollection.h"
 #include "api/ApiInterface.h"
 #include "task/TaskRunnerInterface.h"
 
@@ -17,10 +18,16 @@ namespace UKControllerPlugin {
                 PusherWebsocketProtocolHandler(
                     UKControllerPlugin::Websocket::WebsocketConnectionInterface & websocket,
                     const UKControllerPlugin::Api::ApiInterface & api,
-                    UKControllerPlugin::TaskManager::TaskRunnerInterface & taskRunner
+                    UKControllerPlugin::TaskManager::TaskRunnerInterface & taskRunner,
+                    UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & processors
                 );
 
+                // Inherited via AbstractTimedEvent
+                virtual void TimedEventTrigger(void) override;
+
             private:
+
+                void HandleProtocolMessage(UKControllerPlugin::Websocket::WebsocketMessage & message);
 
                 // The websocket itself
                 UKControllerPlugin::Websocket::WebsocketConnectionInterface & websocket;
@@ -31,8 +38,8 @@ namespace UKControllerPlugin {
                 // Runs tasks off the main ES thread
                 UKControllerPlugin::TaskManager::TaskRunnerInterface & taskRunner;
 
-                // Inherited via AbstractTimedEvent
-                virtual void TimedEventTrigger(void) override;
+                // Process websocket events
+                UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & processors;
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

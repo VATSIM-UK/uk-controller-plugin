@@ -23,9 +23,6 @@ namespace UKControllerPlugin {
                 void WriteMessage(std::string message) override;
                 std::string GetNextMessage(void) override;
 
-                // Returned when there are no messages in the queue to be processed
-                const std::string noMessage = "";
-
             private:
 
                 void ConnectHandler(boost::system::error_code ec);

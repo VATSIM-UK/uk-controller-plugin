@@ -803,5 +803,8 @@
     <ClInclude Include="..\..\test\mock\MockDependencyProvider.h">
       <Filter>mock</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockWebsocketProtocolProcessor.h">
+      <Filter>mock</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

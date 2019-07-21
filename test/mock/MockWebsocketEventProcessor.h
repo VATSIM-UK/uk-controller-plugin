@@ -4,7 +4,7 @@
 
 namespace UKControllerPluginTest {
     namespace Websocket {
-        class MockWebsockerEventProcessor : public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
+        class MockWebsocketEventProcessor : public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
         {
             public:
                 MOCK_METHOD1(ProcessWebsocketMessage, void(const UKControllerPlugin::Websocket::WebsocketMessage &));

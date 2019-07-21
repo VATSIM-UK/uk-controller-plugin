@@ -900,6 +900,9 @@
     <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorCollection.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketProtocolProcessorInterface.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">

@@ -15,6 +15,9 @@ namespace UKControllerPlugin {
 
                 virtual void WriteMessage(std::string message) = 0;
                 virtual std::string GetNextMessage(void) = 0;
+
+                // Returned when there are no messages in the queue to be processed
+                const std::string noMessage = "";
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

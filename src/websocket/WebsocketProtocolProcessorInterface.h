@@ -5,24 +5,24 @@ namespace UKControllerPlugin {
     namespace Websocket {
 
         /*
-            An interface to be implemented by classes that
-            want to process websocket messages.
+            An interface to be implemented by classes that handle
+            the websocket protocol.
         */
-        class WebsocketEventProcessorInterface
+        class WebsocketProtocolProcessorInterface
         {
             public:
                 
                 /*
                     Process a message
                 */
-                virtual void ProcessWebsocketMessage(
+                virtual void ProcessProtocolMessage(
                     const UKControllerPlugin::Websocket::WebsocketMessage & message
                 ) = 0;
 
                 /*
-                    Return the channels that we want to subscribe to with this processor
+                    Return the events we want the processor to process.
                 */
-                virtual std::set<std::string> GetSubscriptions(void) const = 0;
+                virtual std::set<std::string> GetEventSubscriptions(void) const = 0;
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin
