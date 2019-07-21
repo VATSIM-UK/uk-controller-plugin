@@ -69,7 +69,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(WebsocketEventProcessorCollectionTest, ItSendsMessagesToRegisteredProcessors)
         {
-            const WebsocketMessage message = {"channel1", "event1"};
+            const WebsocketMessage message = { "event1", "channel1" };
             std::set<std::string> channels = { "channel1", "channel2" };
 
             ON_CALL(*this->eventProcessor, GetSubscriptions)
@@ -122,7 +122,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(WebsocketEventProcessorCollectionTest, ItSendsMessagesToRegisteredProtocolProcessors)
         {
-            const WebsocketMessage message = { "test", "event1" };
+            const WebsocketMessage message = { "event1", "test" };
             std::set<std::string> events = { "event1", "event2" };
 
             ON_CALL(*this->protocolProcessor, GetEventSubscriptions)

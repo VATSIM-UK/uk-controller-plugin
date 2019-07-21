@@ -209,6 +209,7 @@
     <ClCompile Include="..\..\test\test\wake\WakeCategoryMapperTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\websocket\InterpretPusherWebsocketMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\PusherWebsocketProtocolHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\websocket\WebsocketEventProcessorCollectionTest.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +247,7 @@
     <ClInclude Include="..\..\test\mock\MockTerminalControlArea.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h" />
     <ClInclude Include="..\..\test\mock\MockWebsocketProtocolProcessor.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />

@@ -10,11 +10,11 @@ namespace UKControllerPlugin {
         */
         typedef struct WebsocketMessage
         {
-            // The channel that the message came in from
-            const std::string channel;
-
             // The event associated with the message
             const std::string event;
+
+            // The channel that the message came in from
+            const std::string channel;
 
             // The data associated with the message
             const nlohmann::json data;

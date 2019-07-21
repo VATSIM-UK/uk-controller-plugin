@@ -17,8 +17,6 @@ namespace UKControllerPlugin {
             public:
                 PusherWebsocketProtocolHandler(
                     UKControllerPlugin::Websocket::WebsocketConnectionInterface & websocket,
-                    const UKControllerPlugin::Api::ApiInterface & api,
-                    UKControllerPlugin::TaskManager::TaskRunnerInterface & taskRunner,
                     UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & processors
                 );
 
@@ -27,16 +25,8 @@ namespace UKControllerPlugin {
 
             private:
 
-                void HandleProtocolMessage(UKControllerPlugin::Websocket::WebsocketMessage & message);
-
                 // The websocket itself
                 UKControllerPlugin::Websocket::WebsocketConnectionInterface & websocket;
-
-                // The web API
-                const UKControllerPlugin::Api::ApiInterface & api;
-
-                // Runs tasks off the main ES thread
-                UKControllerPlugin::TaskManager::TaskRunnerInterface & taskRunner;
 
                 // Process websocket events
                 UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & processors;
