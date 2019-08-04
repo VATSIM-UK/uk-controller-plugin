@@ -1,4 +1,4 @@
-    #include "pch/stdafx.h"
+#include "pch/stdafx.h"
 #include "websocket/PusherWebsocketProtocolHandler.h"
 #include "websocket/InterpretPusherWebsocketMessage.h"
 
@@ -32,11 +32,7 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                if (translatedMessage.protocolMessage) {
-                    this->processors.ProcessProtocolEvent(translatedMessage);
-                } else {
-                    this->processors.ProcessEvent(translatedMessage);
-                }
+                this->processors.ProcessEvent(translatedMessage);
             }
         }
     }  // namespace Websocket

@@ -1,5 +1,6 @@
 #pragma once
 #include "websocket/WebsocketMessage.h"
+#include "websocket/WebsocketSubscription.h"
 
 namespace UKControllerPlugin {
     namespace Websocket {
@@ -22,7 +23,7 @@ namespace UKControllerPlugin {
                 /*
                     Return the channels that we want to subscribe to with this processor
                 */
-                virtual std::set<std::string> GetSubscriptions(void) const = 0;
+                virtual std::set<WebsocketSubscription> GetSubscriptions(void) const = 0;
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

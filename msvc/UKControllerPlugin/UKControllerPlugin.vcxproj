@@ -268,7 +268,7 @@
     <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorInterface.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketMessage.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketProtocolProcessorInterface.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h" />
     <ClInclude Include="..\..\src\windows\WinApi.h" />
     <ClInclude Include="..\..\src\windows\WinApiInterface.h" />
   </ItemGroup>
@@ -484,6 +484,7 @@
     <ClCompile Include="..\..\src\websocket\PusherWebsocketProtocolHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp" />
     <ClCompile Include="..\..\src\windows\WinApi.cpp" />
     <ClInclude Include="..\..\src\timedevent\DeferredEventHandler.h" />
     <ClCompile Include="..\..\src\timedevent\DeferredEventHandler.cpp" />

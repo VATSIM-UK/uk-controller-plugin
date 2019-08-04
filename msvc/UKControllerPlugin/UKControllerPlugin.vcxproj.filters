@@ -900,7 +900,7 @@
     <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorCollection.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketProtocolProcessorInterface.h">
+    <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1535,6 +1535,9 @@
       <Filter>src\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
   </ItemGroup>

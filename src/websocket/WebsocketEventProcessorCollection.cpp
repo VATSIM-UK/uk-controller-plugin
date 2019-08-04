@@ -1,5 +1,6 @@
 #include "pch/stdafx.h"
-#include "WebsocketEventProcessorCollection.h"
+#include "websocket/WebsocketEventProcessorCollection.h"
+#include "websocket/WebsocketSubscription.h"
 
 namespace UKControllerPlugin {
     namespace Websocket {
@@ -11,28 +12,26 @@ namespace UKControllerPlugin {
         void WebsocketEventProcessorCollection::AddProcessor(
             std::shared_ptr<WebsocketEventProcessorInterface> processor
         ) {
-            std::set<std::string> events = processor->GetSubscriptions();
+            std::set<WebsocketSubscription> events = processor->GetSubscriptions();
 
-            for (std::set<std::string>::const_iterator it = events.cbegin(); it != events.cend(); ++it) {
-                if (!this->channelMap[*it].insert(processor).second) {
-                    LogWarning("Attemped to add processor for duplicate event: " + *it);
+
+            for (std::set<WebsocketSubscription>::const_iterator it = events.cbegin(); it != events.cend(); ++it) {
+
+                if (it->IsChannelSubscription()) {
+                    if (!this->channelMap[it->subTarget].insert(processor).second) {
+                        LogWarning("Attemped to add processor for duplicate channel: " + it->subTarget);
+                    }
+
+                    continue;
+                } else if (it->IsEventSubscription()) {
+                    if (!this->eventMap[it->subTarget].insert(processor).second) {
+                        LogWarning("Attemped to add processor for duplicate event: " + it->subTarget);
+                    }
+
+                    continue;
                 }
-            }
-        }
 
-        /*
-            Add a processor to the collection that handles protocol messages and
-            register it for the events it listens for.
-        */
-        void WebsocketEventProcessorCollection::AddProtocolProcessor(
-            std::shared_ptr<WebsocketProtocolProcessorInterface> processor
-        ) {
-            std::set<std::string> events = processor->GetEventSubscriptions();
-
-            for (std::set<std::string>::const_iterator it = events.cbegin(); it != events.cend(); ++it) {
-                if (!this->protocolEventMap[*it].insert(processor).second) {
-                    LogWarning("Attemped to add processor for duplicate protocol event: " + *it);
-                }
+                LogWarning("Unknown subscription type " + it->subType);
             }
         }
 
@@ -41,15 +40,15 @@ namespace UKControllerPlugin {
             return this->channelMap.count(event) ? this->channelMap.at(event).size() : 0;
         }
 
-        size_t WebsocketEventProcessorCollection::CountProcessorsForProtocolEvent(std::string event) const
+        size_t WebsocketEventProcessorCollection::CountProcessorsForEvent(std::string event) const
         {
-            return this->protocolEventMap.count(event) ? this->protocolEventMap.at(event).size() : 0;
+            return this->eventMap.count(event) ? this->eventMap.at(event).size() : 0;
         }
 
         /*
             Get all the channel subscriptions for the channel listeners
         */
-        std::set<std::string> WebsocketEventProcessorCollection::GetAllSubscriptions(void) const
+        std::set<std::string> WebsocketEventProcessorCollection::GetChannelSubscriptions(void) const
         {
             std::set<std::string> subscriptions;
 
@@ -66,40 +65,45 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Pass on the event to interested listeners
+            Pass on the event to interested event processors. Only call event prccessor once.
         */
         void WebsocketEventProcessorCollection::ProcessEvent(const WebsocketMessage & message) const
         {
-            if (!this->channelMap.count(message.channel)) {
-                return;
-            }
+            std::set<std::shared_ptr<WebsocketEventProcessorInterface>> calledProcessors;
 
-            for (
-                std::set<std::shared_ptr<WebsocketEventProcessorInterface>>::const_iterator it
+
+            // Send the event to those listening on its channel
+            if (this->channelMap.count(message.channel)) {
+                for (
+                    std::set<std::shared_ptr<WebsocketEventProcessorInterface>>::const_iterator it
                     = this->channelMap.at(message.channel).cbegin();
-                it != this->channelMap.at(message.channel).cend();
-                ++it
-            ) {
-                (*it)->ProcessWebsocketMessage(message);
-            }
-        }
+                    it != this->channelMap.at(message.channel).cend();
+                    ++it
+                ) {
+                    if (calledProcessors.count(*it)) {
+                        continue;
+                    }
 
-        /*
-            Process protocol events
-        */
-        void WebsocketEventProcessorCollection::ProcessProtocolEvent(const WebsocketMessage & message) const
-        {
-            if (!this->protocolEventMap.count(message.event)) {
-                return;
+                    calledProcessors.insert(*it);
+                    (*it)->ProcessWebsocketMessage(message);
+                }
             }
 
-            for (
-                std::set<std::shared_ptr<WebsocketProtocolProcessorInterface>>::const_iterator it
-                    = this->protocolEventMap.at(message.event).cbegin();
-                it != this->protocolEventMap.at(message.event).cend();
-                ++it
-            ) {
-                (*it)->ProcessProtocolMessage(message);
+            // Send the event to those that are listening specifically for it
+            if (this->eventMap.count(message.event)) {
+                for (
+                    std::set<std::shared_ptr<WebsocketEventProcessorInterface>>::const_iterator it
+                    = this->eventMap.at(message.event).cbegin();
+                    it != this->eventMap.at(message.event).cend();
+                    ++it
+                ) {
+                    if (calledProcessors.count(*it)) {
+                        continue;
+                    }
+
+                    calledProcessors.insert(*it);
+                    (*it)->ProcessWebsocketMessage(message);
+                }
             }
         }
     }  // namespace Websocket

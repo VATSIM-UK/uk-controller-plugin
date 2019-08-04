@@ -2,14 +2,14 @@
 #include "websocket/PusherWebsocketProtocolHandler.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "mock/MockWebsocketEventProcessor.h"
-#include "mock/MockWebsocketProtocolProcessor.h"
 #include "mock/MockWebsocketConnection.h"
+#include "websocket/WebsocketSubscription.h"
 
 using UKControllerPlugin::Websocket::PusherWebsocketProtocolHandler;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using UKControllerPluginTest::Websocket::MockWebsocketConnection;
 using UKControllerPluginTest::Websocket::MockWebsocketEventProcessor;
-using UKControllerPluginTest::Websocket::MockWebsocketProtocolProcessor;
+using UKControllerPlugin::Websocket::WebsocketSubscription;
 using ::testing::Test;
 using ::testing::Return;
 using ::testing::NiceMock;
@@ -26,26 +26,21 @@ namespace UKControllerPluginTest {
                     : handler(this->websocket, this->processorCollection)
                 {
                     mockEventProcessor.reset(new NiceMock<MockWebsocketEventProcessor>);
-                    mockProtocolProcessor.reset(new NiceMock<MockWebsocketProtocolProcessor>);
+
+                    std::set<WebsocketSubscription> channelSubs = { subChannel1, subChannel2 };
 
                     ON_CALL(*this->mockEventProcessor, GetSubscriptions())
-                        .WillByDefault(Return(this->channelSubs));
-
-                    ON_CALL(*this->mockProtocolProcessor, GetEventSubscriptions())
-                        .WillByDefault(Return(this->protocolSubs));
+                        .WillByDefault(Return(channelSubs));
 
                     this->processorCollection.AddProcessor(this->mockEventProcessor);
-                    this->processorCollection.AddProtocolProcessor(this->mockProtocolProcessor);
                 }
 
                 NiceMock<MockWebsocketConnection> websocket;
                 WebsocketEventProcessorCollection processorCollection;
 
                 std::shared_ptr<NiceMock<MockWebsocketEventProcessor>> mockEventProcessor;
-                std::set<std::string> channelSubs = { "channel1", "channel2" };
-
-                std::shared_ptr<NiceMock<MockWebsocketProtocolProcessor>> mockProtocolProcessor;
-                std::set<std::string> protocolSubs = { "pusher:test" };
+                WebsocketSubscription subChannel1 = { WebsocketSubscription::SUB_TYPE_CHANNEL, "channel1" };
+                WebsocketSubscription subChannel2 = { WebsocketSubscription::SUB_TYPE_CHANNEL, "channel2" };
 
                 PusherWebsocketProtocolHandler handler;
         };
@@ -53,9 +48,6 @@ namespace UKControllerPluginTest {
         TEST_F(PusherWebsocketProtocolHandlerTest, ItDoesNothingOnNoMessage)
         {
             EXPECT_CALL(*this->mockEventProcessor, ProcessWebsocketMessage(_))
-                .Times(0);
-
-            EXPECT_CALL(*this->mockProtocolProcessor, ProcessProtocolMessage(_))
                 .Times(0);
 
             ON_CALL(this->websocket, GetNextMessage)
@@ -69,9 +61,6 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockEventProcessor, ProcessWebsocketMessage(_))
                 .Times(0);
 
-            EXPECT_CALL(*this->mockProtocolProcessor, ProcessProtocolMessage(_))
-                .Times(0);
-
             EXPECT_CALL(this->websocket, GetNextMessage)
                 .Times(2)
                 .WillOnce(Return("{]"))
@@ -80,36 +69,14 @@ namespace UKControllerPluginTest {
             this->handler.TimedEventTrigger();
         }
 
-        TEST_F(PusherWebsocketProtocolHandlerTest, ItHandlesChannelMessages)
+        TEST_F(PusherWebsocketProtocolHandlerTest, ItHandlesMessages)
         {
             EXPECT_CALL(*this->mockEventProcessor, ProcessWebsocketMessage(_))
                 .Times(1);
-
-            EXPECT_CALL(*this->mockProtocolProcessor, ProcessProtocolMessage(_))
-                .Times(0);
 
             nlohmann::json eventMessage;
             eventMessage["channel"] = "channel1";
             eventMessage["event"] = "test-event";
-
-            EXPECT_CALL(this->websocket, GetNextMessage)
-                .Times(2)
-                .WillOnce(Return(eventMessage.dump()))
-                .WillOnce(Return(this->websocket.noMessage));
-
-            this->handler.TimedEventTrigger();
-        }
-
-        TEST_F(PusherWebsocketProtocolHandlerTest, ItHandlesProtocolMessages)
-        {
-            EXPECT_CALL(*this->mockEventProcessor, ProcessWebsocketMessage(_))
-                .Times(0);
-
-            EXPECT_CALL(*this->mockProtocolProcessor, ProcessProtocolMessage(_))
-                .Times(1);
-
-            nlohmann::json eventMessage;
-            eventMessage["event"] = "pusher:test";
 
             EXPECT_CALL(this->websocket, GetNextMessage)
                 .Times(2)

@@ -248,7 +248,6 @@
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h" />
     <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h" />
-    <ClInclude Include="..\..\test\mock\MockWebsocketProtocolProcessor.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />
     <ClCompile Include="..\..\test\test\bootstrap\LocateApiSettingsTest.cpp" />
