@@ -903,6 +903,9 @@
     <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherPingEventHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1538,6 +1541,9 @@
       <Filter>src\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherPingEventHandler.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
   </ItemGroup>

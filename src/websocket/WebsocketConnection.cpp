@@ -120,6 +120,7 @@ namespace UKControllerPlugin {
                             std::placeholders::_2
                         )
                     );
+                    LogDebug("Sending websocket message: " + this->outboundMessages.front());
                     this->outboundMessages.pop();
                 }
             }
