@@ -1,4 +1,3 @@
-#pragma once
 #include "pch/stdafx.h"
 #include "websocket/PusherPingEventHandler.h"
 
