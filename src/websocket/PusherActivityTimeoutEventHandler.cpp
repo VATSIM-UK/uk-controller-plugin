@@ -16,11 +16,11 @@ namespace UKControllerPlugin {
         void PusherActivityTimeoutEventHandler::ProcessWebsocketMessage(const WebsocketMessage & message)
         {
             if (message.event == "pusher:pong") {
-                this->pongTimeout = (std::chrono::system_clock::time_point::max)();
+                this->pongTimeout = (std::chrono::system_clock::time_point::min)();
             } else if (message.event == "pusher:connection_established") {
                 std::chrono::seconds serverPingInterval(message.data["activity_timeout"].get<int>());
 
-                this->selectedPingInterval = serverPingInterval > this->defaultPingInterval 
+                this->selectedPingInterval = serverPingInterval < this->defaultPingInterval 
                     ? serverPingInterval 
                     : this->defaultPingInterval;
             }

@@ -39,7 +39,7 @@ namespace UKControllerPlugin {
                 // Talking to the websocket
                 UKControllerPlugin::Websocket::WebsocketConnectionInterface & websocket;
 
-                std::chrono::system_clock::time_point pongTimeout = (std::chrono::system_clock::time_point::max)();
+                std::chrono::system_clock::time_point pongTimeout = (std::chrono::system_clock::time_point::min)();
 
                 std::chrono::seconds selectedPingInterval;
         };
