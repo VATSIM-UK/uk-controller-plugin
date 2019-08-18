@@ -20,6 +20,9 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::TaskManager::TaskRunnerInterface & taskRunner
                 );
 
+                bool ChannelIsPrivate(std::string channelName) const;
+                std::string GetCachedAuthCode(std::string channelName) const;
+
                 const std::map<std::string, std::string> & GetCachedChannelAuthCodes(void) const;
 
                 // Inherited via WebsocketEventProcessorInterface

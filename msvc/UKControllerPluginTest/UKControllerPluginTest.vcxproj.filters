@@ -707,6 +707,9 @@
     <ClCompile Include="..\..\test\test\websocket\PusherActivityTimeoutEventHandlerTest.cpp">
       <Filter>test\websocket</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\PusherConnectionChannelSubscriptionEventHandlerTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
