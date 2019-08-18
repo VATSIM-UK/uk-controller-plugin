@@ -32,12 +32,10 @@ namespace UKControllerPlugin {
         void PusherConnectionChannelSubscriptionEventHandler::ProcessWebsocketMessage(const WebsocketMessage & message)
         {
             std::string socketId = message.data["socket_id"].get<std::string>();
+            std::set<std::string> channelSubs = this->processors.GetChannelSubscriptions();
 
-            for (
-                std::set<std::string>::const_iterator it = this->processors.GetChannelSubscriptions().cbegin();
-                it != this->processors.GetChannelSubscriptions().cend();
-                ++it
-            ) {
+
+            for (std::set<std::string>::const_iterator it = channelSubs.cbegin(); it != channelSubs.cend(); ++it) {
                 std::string channel = *it;
                 this->taskRunner.QueueAsynchronousTask(
                     [this, socketId, channel](void) {
