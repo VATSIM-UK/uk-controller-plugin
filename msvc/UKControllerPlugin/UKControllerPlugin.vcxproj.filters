@@ -906,6 +906,15 @@
     <ClInclude Include="..\..\src\websocket\PusherPingEventHandler.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1544,6 +1553,15 @@
       <Filter>src\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\PusherPingEventHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
   </ItemGroup>

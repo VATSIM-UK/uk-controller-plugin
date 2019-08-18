@@ -22,9 +22,12 @@ namespace UKControllerPlugin {
                 // Inherited via WebsocketConnectionInterface
                 void WriteMessage(std::string message) override;
                 std::string GetNextMessage(void) override;
+                std::chrono::seconds GetTimeSinceLastActivity(void) const override;
+                void ForceDisconnect(void) const;
 
             private:
 
+                void CloseHandler(boost::system::error_code ec);
                 void ConnectHandler(boost::system::error_code ec);
                 void HandshakeHandler(boost::system::error_code ec);
                 void Loop(void);
@@ -64,7 +67,6 @@ namespace UKControllerPlugin {
                 // Protects the inbound messages queue
                 std::mutex inboundMessageQueueGuard;
 
-
                 // Messages that are to be sent
                 std::queue<std::string> outboundMessages;
 
@@ -82,6 +84,9 @@ namespace UKControllerPlugin {
 
                 // Is an async write in progress?
                 bool asyncWriteInProgress = false;
+
+                // The last time something happened
+                std::chrono::system_clock::time_point lastActivityTime;
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

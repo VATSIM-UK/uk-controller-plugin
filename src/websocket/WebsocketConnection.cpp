@@ -40,6 +40,16 @@ namespace UKControllerPlugin {
             LogInfo("Disconnected from websocket");
         }
 
+        void WebsocketConnection::CloseHandler(boost::system::error_code ec)
+        {
+            if (ec) {
+                this->ProcessErrorCode(ec);
+                return;
+            }
+
+            LogInfo("Force closed websocket connection");
+        }
+
         /*
             Called when we try to connect to the websocket
         */
@@ -131,12 +141,14 @@ namespace UKControllerPlugin {
         */
         void WebsocketConnection::MessageSentHandler(boost::system::error_code ec, std::size_t bytes_transferred)
         {
-            this->asyncWriteInProgress = true;
+            this->asyncWriteInProgress = false;
             if (ec) {
                 LogWarning("Websocket: message sending error");
                 this->ProcessErrorCode(ec);
                 return;
             }
+
+            this->lastActivityTime = std::chrono::system_clock::now();
         }
 
         /*
@@ -160,6 +172,7 @@ namespace UKControllerPlugin {
             this->inboundMessages.push(boost::beast::buffers_to_string(this->incomingBuffer.data()));
             this->incomingBuffer.consume(bytes_transferred);
             this->asyncReadInProgress = false;
+            this->lastActivityTime = std::chrono::system_clock::now();
         }
 
         /*
@@ -213,6 +226,29 @@ namespace UKControllerPlugin {
             std::string message = this->inboundMessages.front();
             this->inboundMessages.pop();
             return message;
+        }
+
+        /*
+            Get the time since last activity
+        */
+        std::chrono::seconds WebsocketConnection::GetTimeSinceLastActivity(void) const
+        {
+            return std::chrono::duration_cast<std::chrono::seconds>(
+                std::chrono::system_clock::now() - this->lastActivityTime
+            );
+        }
+
+        /*
+            Force the websocket to disconnect
+        */
+        void WebsocketConnection::ForceDisconnect(void) const
+        {
+            LogInfo("Forcing disconnect from websocket");
+            boost::system::error_code ec;
+            this->websocket.close(
+                boost::beast::websocket::close_code::normal,
+                ec
+            );
         }
 
         /*

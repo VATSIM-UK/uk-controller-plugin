@@ -262,6 +262,9 @@
     <ClInclude Include="..\..\src\wake\WakeCategoryMapper.h" />
     <ClInclude Include="..\..\src\wake\WakeModule.h" />
     <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h" />
+    <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h" />
+    <ClInclude Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.h" />
+    <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h" />
     <ClInclude Include="..\..\src\websocket\PusherPingEventHandler.h" />
     <ClInclude Include="..\..\src\websocket\PusherWebsocketProtocolHandler.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorCollection.h" />
@@ -482,6 +485,9 @@
     <ClCompile Include="..\..\src\wake\WakeCategoryMapper.cpp" />
     <ClCompile Include="..\..\src\wake\WakeModule.cpp" />
     <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp" />
+    <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherPingEventHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherWebsocketProtocolHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp" />
