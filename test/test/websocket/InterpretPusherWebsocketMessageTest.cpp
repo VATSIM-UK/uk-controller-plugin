@@ -32,7 +32,7 @@ TEST(InterpretPusherMessageTest, ItHandlesMissingChannel)
 {
     nlohmann::json message;
     message["event"] = "test-event";
-    message["data"] = { {"test", "lol"} };
+    message["data"] = nlohmann::json({ {"test", "lol"} }).dump();
 
     WebsocketMessage expectedMessage = {
         "test-event",
@@ -49,7 +49,7 @@ TEST(InterpretPusherMessageTest, ItHandlesNonStringChannel)
     nlohmann::json message;
     message["event"] = "test-event";
     message["channel"] = 1;
-    message["data"] = { {"test", "lol"} };
+    message["data"] = nlohmann::json({ {"test", "lol"} }).dump();
 
     WebsocketMessage expectedMessage = {
         "test-event",
@@ -82,7 +82,7 @@ TEST(InterpretPusherMessageTest, ItHandlesNonObjectData)
     nlohmann::json message;
     message["event"] = "test-event";
     message["channel"] = "test-channel";
-    message["data"] = { 1, 2, 3 };
+    message["data"] = nlohmann::json({ 1, 2, 3 }).dump();
 
     WebsocketMessage expectedMessage = {
         "test-event",
@@ -99,7 +99,7 @@ TEST(InterpretPusherMessageTest, ItDetectsProtocolMessages)
     nlohmann::json message;
     message["event"] = "pusher:test";
     message["channel"] = "test-channel";
-    message["data"] = { {"test", "lol"} };
+    message["data"] = nlohmann::json({ {"test", "lol"} }).dump();
 
     WebsocketMessage expectedMessage = {
         "pusher:test",

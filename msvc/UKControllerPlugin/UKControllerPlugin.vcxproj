@@ -267,6 +267,7 @@
     <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h" />
     <ClInclude Include="..\..\src\websocket\PusherPingEventHandler.h" />
     <ClInclude Include="..\..\src\websocket\PusherWebsocketProtocolHandler.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketBootstrap.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorCollection.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketConnection.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h" />
@@ -490,6 +491,7 @@
     <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherPingEventHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherWebsocketProtocolHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp" />

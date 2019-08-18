@@ -915,6 +915,9 @@
     <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketBootstrap.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1562,6 +1565,9 @@
       <Filter>src\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
   </ItemGroup>
