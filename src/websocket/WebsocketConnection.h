@@ -23,7 +23,10 @@ namespace UKControllerPlugin {
                 void WriteMessage(std::string message) override;
                 std::string GetNextMessage(void) override;
                 std::chrono::seconds GetTimeSinceLastActivity(void) const override;
-                void ForceDisconnect(void) const;
+                void ForceDisconnect(void) override;
+
+                // How often to attempt a reconnect if the server goes away
+                const std::chrono::seconds reconnectAttemptInterval;
 
             private:
 
@@ -76,6 +79,9 @@ namespace UKControllerPlugin {
                 // Are we connected
                 bool connected = false;
 
+                // Are we trying to connect at the moment?
+                bool connectionInProgress;
+
                 // Threads are running
                 bool threadsRunning = true;
 
@@ -87,6 +93,10 @@ namespace UKControllerPlugin {
 
                 // The last time something happened
                 std::chrono::system_clock::time_point lastActivityTime;
+
+                // The next time to try reconnecting
+                std::chrono::system_clock::time_point nextReconnectAttempt = 
+                    (std::chrono::system_clock::time_point::min)();
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

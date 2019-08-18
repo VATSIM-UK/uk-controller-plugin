@@ -14,9 +14,10 @@ namespace UKControllerPlugin {
             std::string host,
             std::string port
         )
-            : tcpResolver(ioContext), websocket(ioContext), host(host), port(port)
+            : tcpResolver(ioContext), websocket(ioContext), host(host), port(port), reconnectAttemptInterval(10)
         {
             this->websocketThread = std::thread(std::bind(&WebsocketConnection::Loop, this));
+            this->connectionInProgress = true;
             this->tcpResolver.async_resolve(
                 host,
                 port,
@@ -57,6 +58,7 @@ namespace UKControllerPlugin {
         {
             if (ec) {
                 LogWarning("Websocket: connection error");
+                this->connectionInProgress = false;
                 this->ProcessErrorCode(ec);
                 return;
             }
@@ -81,11 +83,14 @@ namespace UKControllerPlugin {
         {
             if (ec) {
                 LogWarning("Websocket: handshake error");
+                this->connectionInProgress = false;
                 this->ProcessErrorCode(ec);
                 return;
             }
 
             this->connected = true;
+            this->connectionInProgress = false;
+            this->lastActivityTime = std::chrono::system_clock::now();
             LogInfo("Websocket handshake successful");
         }
 
@@ -99,7 +104,23 @@ namespace UKControllerPlugin {
 
                 this->ioContext.run();
 
+                // If not connected, try and connect
                 if (!this->connected) {
+                    if (!this->connectionInProgress && std::chrono::system_clock::now() > this->nextReconnectAttempt) {
+                        this->nextReconnectAttempt = std::chrono::system_clock::now() + this->reconnectAttemptInterval;
+                        this->connectionInProgress = true;
+                        this->tcpResolver.async_resolve(
+                            host,
+                            port,
+                            std::bind(
+                                &WebsocketConnection::ResolveHandler,
+                                this,
+                                std::placeholders::_1,
+                                std::placeholders::_2
+                            )
+                        );
+                    }
+
                     continue;
                 }
 
@@ -184,6 +205,7 @@ namespace UKControllerPlugin {
         ) {
             if (ec) {
                 LogWarning("Websocket: resolve error");
+                this->connectionInProgress = false;
                 this->ProcessErrorCode(ec);
                 return;
             }
@@ -211,6 +233,9 @@ namespace UKControllerPlugin {
         void WebsocketConnection::WriteMessage(std::string message)
         {
             std::lock_guard<std::mutex> lock(this->inboundMessageQueueGuard);
+            if (!this->connected) {
+                return;
+            }
             this->outboundMessages.push(message);
         }
 
@@ -241,14 +266,14 @@ namespace UKControllerPlugin {
         /*
             Force the websocket to disconnect
         */
-        void WebsocketConnection::ForceDisconnect(void) const
+        void WebsocketConnection::ForceDisconnect(void)
         {
             LogInfo("Forcing disconnect from websocket");
             boost::system::error_code ec;
-            this->websocket.close(
-                boost::beast::websocket::close_code::normal,
-                ec
-            );
+            //this->websocket.close(
+            //    boost::beast::websocket::close_code::normal,
+            //    ec
+            //);
         }
 
         /*
@@ -259,6 +284,7 @@ namespace UKControllerPlugin {
             // Handle disconnection
             if (ec == boost::asio::error::eof || ec == boost::asio::error::connection_reset) {
                 this->connected = false;
+                this->connectionInProgress = false;
                 LogWarning("Disconnected from websocket: " + ec.message());
                 return;
             }
