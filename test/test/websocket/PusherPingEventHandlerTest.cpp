@@ -1,8 +1,10 @@
 #include "pch/pch.h"
 #include "websocket/PusherPingEventHandler.h"
+#include "websocket/WebsocketSubscription.h"
 #include "mock/MockWebsocketConnection.h"
 
 using UKControllerPlugin::Websocket::PusherPingEventHandler;
+using UKControllerPlugin::Websocket::WebsocketSubscription;
 using testing::Test;
 using testing::NiceMock;
 
@@ -23,6 +25,18 @@ namespace UKControllerPluginTest {
                 PusherPingEventHandler handler;
         };
 
+        TEST_F(PusherPingEventHandlerTest, ItReturnsSubscriptions)
+        {
+            std::set<WebsocketSubscription> expected = {
+                {
+                    WebsocketSubscription::SUB_TYPE_EVENT,
+                    "pusher:ping"
+                }
+            };
+
+            EXPECT_EQ(expected, this->handler.GetSubscriptions());
+        }
+
         TEST_F(PusherPingEventHandlerTest, ItRespondsToPingWithPong)
         {
             nlohmann::json expectedJson;
@@ -33,6 +47,5 @@ namespace UKControllerPluginTest {
 
             this->handler.ProcessWebsocketMessage({});
         }
-
     }  // namespace Websocket
 }  // namespace UKControllerPluginTest

@@ -8,7 +8,10 @@ namespace UKControllerPlugin {
 
         void PusherErrorEventHandler::ProcessWebsocketMessage(const WebsocketMessage & message)
         {
-            LogError("Websocket error, message: " + message.data["message"].get<std::string>());
+            std::string messageString = message.data.count("message") 
+                ? message.data["message"].get<std::string>() 
+                : "None provided.";
+            LogError("Websocket error, message: " + messageString);
         }
 
         /*

@@ -209,6 +209,8 @@
     <ClCompile Include="..\..\test\test\wake\WakeCategoryMapperTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\websocket\InterpretPusherWebsocketMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\PusherActivityTimeoutEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\PusherErrorEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\websocket\PusherPingEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\websocket\PusherWebsocketProtocolHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\websocket\WebsocketEventProcessorCollectionTest.cpp" />

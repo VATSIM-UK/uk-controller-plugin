@@ -10,6 +10,21 @@ namespace UKControllerPlugin {
 
         }
 
+        std::chrono::seconds PusherActivityTimeoutEventHandler::GetPingInterval(void) const
+        {
+            return this->selectedPingInterval;
+        }
+
+        std::chrono::system_clock::time_point PusherActivityTimeoutEventHandler::GetPongTimeout(void) const
+        {
+            return this->pongTimeout;
+        }
+
+        void PusherActivityTimeoutEventHandler::SetPongTimeout(std::chrono::system_clock::time_point time)
+        {
+            this->pongTimeout = time;
+        }
+
         /*
             Handles messages from the websocket
         */
