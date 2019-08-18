@@ -38,6 +38,7 @@
 #include "metar/PressureMonitorBootstrap.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "datablock/DatablockBoostrap.h"
+#include "websocket/WebsocketBootstrap.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -156,12 +157,9 @@ namespace UKControllerPlugin {
         ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
-        // API
+        // API + Websocket
         HelperBootstrap::Bootstrap(*this->container);
-        this->container->websocketConnection = std::make_unique<UKControllerPlugin::Websocket::WebsocketConnection>(
-            "ukcp.devapp",
-            "6001"
-        );
+        UKControllerPlugin::Websocket::BootstrapPlugin(*this->container);
 
         // Datetime
         UKControllerPlugin::Datablock::BootstrapPlugin(*this->container);

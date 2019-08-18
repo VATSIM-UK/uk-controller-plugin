@@ -46,6 +46,8 @@
 #include "websocket/WebsocketConnection.h"
 #include "countdown/TimerConfigurationManager.h"
 #include "datablock/DisplayTime.h"
+#include "websocket/WebsocketConnectionInterface.h"
+#include "websocket/WebsocketEventProcessorCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -117,6 +119,10 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Airfield::AirfieldOwnershipManager> airfieldOwnership;
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
             std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
+
+            // Websocket
+            std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnectionInterface> websocket;
+            std::shared_ptr<UKControllerPlugin::Websocket::WebsocketEventProcessorCollection> websocketProcessors;
 
         } PersistenceContainer;
     }  // namespace Bootstrap
