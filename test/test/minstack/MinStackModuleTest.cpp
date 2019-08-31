@@ -12,6 +12,7 @@
 #include "graphics/GdiplusBrushes.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "curl/CurlRequest.h"
+#include "websocket/WebsocketEventProcessorCollection.h"
 
 using UKControllerPlugin::MinStack::MinStackModule;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
@@ -26,234 +27,243 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using ::testing::StrictMock;
 using ::testing::Return;
 using ::testing::_;
+using ::testing::Test;
 
 namespace UKControllerModulesTest {
     namespace MinStack {
 
-        TEST(MinStackModule, BootstrapPluginCreatesTheManager)
+        class MinStackModuleTest : public Test
         {
-            StrictMock<MockCurlApi> mockCurl;
-            MockTaskRunnerInterface mockRunner;
-            MetarEventHandlerCollection metarEvents;
-            std::shared_ptr<MinStackManager> manager;
+            public:
 
-            EXPECT_CALL(mockCurl, MakeCurlRequest(_))
+                // For the plugin tests
+                StrictMock<MockCurlApi> mockCurl;
+                MockTaskRunnerInterface mockRunner;
+                MetarEventHandlerCollection metarEvents;
+                WebsocketEventProcessorCollection websockets;
+                std::shared_ptr<MinStackManager> manager;
+
+                // For the radar screen tests
+                FunctionCallEventHandler functionHandlers;
+                MinStackManager managerObject;
+                RadarRenderableCollection radarRenderables;
+                ConfigurableDisplayCollection configruables;
+                GdiplusBrushes brushes;
+                AsrEventHandlerCollection userSettingHandlers;
+        };
+
+        TEST_F(MinStackModuleTest, BootstrapPluginCreatesTheManager)
+        {
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(_))
                 .Times(4)
                 .WillRepeatedly(Return(CurlResponse("BKN002, Q1010", false, 200L)));
 
-            MinStackModule::BootstrapPlugin(manager, metarEvents, mockRunner, mockCurl);
+            MinStackModule::BootstrapPlugin(
+                this->manager,
+                this->metarEvents,
+                this->mockRunner,
+                this->mockCurl,
+                this->websockets
+            );
             EXPECT_NO_THROW(manager->HasTerminalControlArea("TESTTMA"));
         }
 
-        TEST(MinStackModule, BootstrapPluginRegistersManagerForMetarEvents)
+        TEST_F(MinStackModuleTest, BootstrapPluginRegistersManagerForMetarEvents)
         {
-            StrictMock<MockCurlApi> mockCurl;
-            MockTaskRunnerInterface mockRunner;
-            MetarEventHandlerCollection metarEvents;
-            std::shared_ptr<MinStackManager> manager;
-
-            EXPECT_CALL(mockCurl, MakeCurlRequest(_))
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(_))
                 .Times(4)
                 .WillRepeatedly(Return(CurlResponse("BKN002, Q1010", false, 200L)));
 
-            MinStackModule::BootstrapPlugin(manager, metarEvents, mockRunner, mockCurl);
+            MinStackModule::BootstrapPlugin(
+                this->manager,
+                this->metarEvents,
+                this->mockRunner,
+                this->mockCurl,
+                this->websockets
+            );
             EXPECT_EQ(1, metarEvents.CountHandlers());
         }
 
-        TEST(MinStackModule, BootstrapPluginAddsLondonTmaAndGetsMinStack)
+        TEST_F(MinStackModuleTest, BootstrapPluginRegistersManagerForWebsocketEvents)
         {
-            StrictMock<MockCurlApi> mockCurl;
-            MockTaskRunnerInterface mockRunner;
-            MetarEventHandlerCollection metarEvents;
-            std::shared_ptr<MinStackManager> manager;
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(_))
+                .Times(4)
+                .WillRepeatedly(Return(CurlResponse("BKN002, Q1010", false, 200L)));
 
-            EXPECT_CALL(mockCurl, MakeCurlRequest(_))
+            MinStackModule::BootstrapPlugin(
+                this->manager,
+                this->metarEvents,
+                this->mockRunner,
+                this->mockCurl,
+                this->websockets
+            );
+            EXPECT_EQ(1, websockets.CountProcessorsForChannel("private-minstack-updates"));
+        }
+
+        TEST_F(MinStackModuleTest, BootstrapPluginAddsLondonTmaAndGetsMinStack)
+        {
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(_))
                 .Times(3)
                 .WillRepeatedly(Return(CurlResponse("BKN002, Q1010", false, 200L)));
 
             EXPECT_CALL(
-                    mockCurl,
+                    this->mockCurl,
                     MakeCurlRequest(CurlRequest(MinStackModule::metarUrl + "EGLL", CurlRequest::METHOD_GET))
                 )
                 .Times(1)
                 .WillOnce(Return(CurlResponse("BKN002, Q1013", false, 200L)));
 
-            MinStackModule::BootstrapPlugin(manager, metarEvents, mockRunner, mockCurl);
+            MinStackModule::BootstrapPlugin(
+                this->manager,
+                this->metarEvents,
+                this->mockRunner,
+                this->mockCurl,
+                this->websockets
+            );
             EXPECT_TRUE(manager->HasTerminalControlArea("LTMA"));
             EXPECT_EQ(70, manager->GetAllTmas()[0]->GetCurrentMinStackInt());
         }
 
-        TEST(MinStackModule, BootstrapPluginAddsManchesterTmaAndGetsMinStack)
+        TEST_F(MinStackModuleTest, BootstrapPluginAddsManchesterTmaAndGetsMinStack)
         {
-            StrictMock<MockCurlApi> mockCurl;
-            MockTaskRunnerInterface mockRunner;
-            MetarEventHandlerCollection metarEvents;
-            std::shared_ptr<MinStackManager> manager;
-
-            EXPECT_CALL(mockCurl, MakeCurlRequest(_))
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(_))
                 .Times(3)
                 .WillRepeatedly(Return(CurlResponse("BKN002, Q1010", false, 200L)));
 
             EXPECT_CALL(
-                    mockCurl,
+                    this->mockCurl,
                     MakeCurlRequest(CurlRequest(MinStackModule::metarUrl + "EGCC", CurlRequest::METHOD_GET))
                 )
                 .Times(1)
                 .WillOnce(Return(CurlResponse("BKN002, Q1013", false, 200L)));
 
-            MinStackModule::BootstrapPlugin(manager, metarEvents, mockRunner, mockCurl);
+            MinStackModule::BootstrapPlugin(
+                this->manager,
+                this->metarEvents,
+                this->mockRunner,
+                this->mockCurl,
+                this->websockets
+            );
             EXPECT_TRUE(manager->HasTerminalControlArea("MTMA"));
             EXPECT_EQ(60, manager->GetAllTmas()[1]->GetCurrentMinStackInt());
         }
 
-        TEST(MinStackModule, BootstrapPluginAddsScottishTmaAndGetsMinStack)
+        TEST_F(MinStackModuleTest, BootstrapPluginAddsScottishTmaAndGetsMinStack)
         {
-            StrictMock<MockCurlApi> mockCurl;
-            MockTaskRunnerInterface mockRunner;
-            MetarEventHandlerCollection metarEvents;
-            std::shared_ptr<MinStackManager> manager;
-
-            EXPECT_CALL(mockCurl, MakeCurlRequest(_))
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(_))
                 .Times(3)
                 .WillRepeatedly(Return(CurlResponse("BKN002, Q1010", false, 200L)));
 
             EXPECT_CALL(
-                    mockCurl,
+                    this->mockCurl,
                     MakeCurlRequest(CurlRequest(MinStackModule::metarUrl + "EGPF", CurlRequest::METHOD_GET))
                 )
                 .Times(1)
                 .WillOnce(Return(CurlResponse("BKN002, Q1013", false, 200L)));
 
             // QNH 1013 is "low pressure" in STMA
-            MinStackModule::BootstrapPlugin(manager, metarEvents, mockRunner, mockCurl);
+            MinStackModule::BootstrapPlugin(
+                this->manager,
+                this->metarEvents,
+                this->mockRunner,
+                this->mockCurl,
+                this->websockets
+            );
             EXPECT_TRUE(manager->HasTerminalControlArea("STMA"));
             EXPECT_EQ(80, manager->GetAllTmas()[2]->GetCurrentMinStackInt());
         }
 
-        TEST(MinStackModule, BootstrapPluginAddsChannelIslandsControlZoneAndGetsMinStack)
+        TEST_F(MinStackModuleTest, BootstrapPluginAddsChannelIslandsControlZoneAndGetsMinStack)
         {
-            StrictMock<MockCurlApi> mockCurl;
-            MockTaskRunnerInterface mockRunner;
-            MetarEventHandlerCollection metarEvents;
-            std::shared_ptr<MinStackManager> manager;
-
-            EXPECT_CALL(mockCurl, MakeCurlRequest(_))
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(_))
                 .Times(3)
                 .WillRepeatedly(Return(CurlResponse("BKN002, Q1010", false, 200L)));
 
             EXPECT_CALL(
-                    mockCurl,
+                    this->mockCurl,
                     MakeCurlRequest(CurlRequest(MinStackModule::metarUrl + "EGJJ", CurlRequest::METHOD_GET))
                 )
                 .Times(1)
                 .WillOnce(Return(CurlResponse("BKN002, Q1013", false, 200L)));
 
-            MinStackModule::BootstrapPlugin(manager, metarEvents, mockRunner, mockCurl);
+            MinStackModule::BootstrapPlugin(
+                this->manager,
+                this->metarEvents,
+                this->mockRunner,
+                this->mockCurl,
+                this->websockets
+            );
             EXPECT_TRUE(manager->HasTerminalControlArea("CICZ"));
             EXPECT_EQ(60, manager->GetAllTmas()[3]->GetCurrentMinStackInt());
         }
 
-        TEST(MinStackModule, BootstrapRadarScreenAddsToFunctionEvents)
+        TEST_F(MinStackModuleTest, BootstrapRadarScreenAddsToFunctionEvents)
         {
-            FunctionCallEventHandler functionHandlers;
-            MinStackManager manager;
-            RadarRenderableCollection radarRenderables;
-            ConfigurableDisplayCollection configruables;
-            GdiplusBrushes brushes;
-            AsrEventHandlerCollection userSettingHandlers;
-
             MinStackModule::BootstrapRadarScreen(
-                functionHandlers,
-                manager,
-                radarRenderables,
-                configruables,
-                brushes,
-                userSettingHandlers
+                this->functionHandlers,
+                this->managerObject,
+                this->radarRenderables,
+                this->configruables,
+                this->brushes,
+                this->userSettingHandlers
             );
             EXPECT_EQ(1, functionHandlers.CountCallbacks());
             EXPECT_EQ(0, functionHandlers.CountTagFunctions());
         }
 
-        TEST(MinStackModule, BootstrapRadarScreenAddsToRadarRenderablesInBeforeTagsPhase)
+        TEST_F(MinStackModuleTest, BootstrapRadarScreenAddsToRadarRenderablesInBeforeTagsPhase)
         {
-            FunctionCallEventHandler functionHandlers;
-            MinStackManager manager;
-            RadarRenderableCollection radarRenderables;
-            ConfigurableDisplayCollection configruables;
-            GdiplusBrushes brushes;
-            AsrEventHandlerCollection userSettingHandlers;
-
             MinStackModule::BootstrapRadarScreen(
-                functionHandlers,
-                manager,
-                radarRenderables,
-                configruables,
-                brushes,
-                userSettingHandlers
+                this->functionHandlers,
+                this->managerObject,
+                this->radarRenderables,
+                this->configruables,
+                this->brushes,
+                this->userSettingHandlers
             );
             EXPECT_EQ(1, radarRenderables.CountRenderers());
             EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.beforeTags));
         }
 
-        TEST(MinStackModule, BootstrapRadarScreenRegistersScreenObjects)
+        TEST_F(MinStackModuleTest, BootstrapRadarScreenRegistersScreenObjects)
         {
-            FunctionCallEventHandler functionHandlers;
-            MinStackManager manager;
-            RadarRenderableCollection radarRenderables;
-            ConfigurableDisplayCollection configruables;
-            GdiplusBrushes brushes;
-            AsrEventHandlerCollection userSettingHandlers;
-
             MinStackModule::BootstrapRadarScreen(
-                functionHandlers,
-                manager,
-                radarRenderables,
-                configruables,
-                brushes,
-                userSettingHandlers
+                this->functionHandlers,
+                this->managerObject,
+                this->radarRenderables,
+                this->configruables,
+                this->brushes,
+                this->userSettingHandlers
             );
             EXPECT_EQ(3, radarRenderables.CountScreenObjects());
         }
 
-        TEST(MinStackModule, BootstrapRadarScreenAddsToConfigurableDisplays)
+        TEST_F(MinStackModuleTest, BootstrapRadarScreenAddsToConfigurableDisplays)
         {
-            FunctionCallEventHandler functionHandlers;
-            MinStackManager manager;
-            RadarRenderableCollection radarRenderables;
-            ConfigurableDisplayCollection configruables;
-            GdiplusBrushes brushes;
-            AsrEventHandlerCollection userSettingHandlers;
-
             MinStackModule::BootstrapRadarScreen(
-                functionHandlers,
-                manager,
-                radarRenderables,
-                configruables,
-                brushes,
-                userSettingHandlers
+                this->functionHandlers,
+                this->managerObject,
+                this->radarRenderables,
+                this->configruables,
+                this->brushes,
+                this->userSettingHandlers
             );
             EXPECT_EQ(1, configruables.CountDisplays());
         }
 
-        TEST(MinStackModule, BootstrapRadarScreenAddsToUserSettingEvents)
+        TEST_F(MinStackModuleTest, BootstrapRadarScreenAddsToUserSettingEvents)
         {
-            FunctionCallEventHandler functionHandlers;
-            MinStackManager manager;
-            RadarRenderableCollection radarRenderables;
-            ConfigurableDisplayCollection configruables;
-            GdiplusBrushes brushes;
-            AsrEventHandlerCollection userSettingHandlers;
-
             MinStackModule::BootstrapRadarScreen(
-                functionHandlers,
-                manager,
-                radarRenderables,
-                configruables,
-                brushes,
-                userSettingHandlers
+                this->functionHandlers,
+                this->managerObject,
+                this->radarRenderables,
+                this->configruables,
+                this->brushes,
+                this->userSettingHandlers
             );
             EXPECT_EQ(1, userSettingHandlers.CountHandlers());
         }

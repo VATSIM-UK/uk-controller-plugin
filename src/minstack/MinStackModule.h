@@ -27,6 +27,9 @@ namespace UKControllerPlugin {
     namespace Curl {
         class CurlInterface;
     }  // namespace Curl
+    namespace Websocket {
+        class WebsocketEventProcessorCollection;
+    }  // namespace Websocket
 }  // namespace UKControllerPlugin
 // END
 
@@ -44,7 +47,8 @@ namespace UKControllerPlugin {
                     std::shared_ptr<MinStackManager> & msl,
                     UKControllerPlugin::Metar::MetarEventHandlerCollection & metarEvents,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface & taskManager,
-                    UKControllerPlugin::Curl::CurlInterface & curl
+                    UKControllerPlugin::Curl::CurlInterface & curl,
+                    UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors
                 );
                 static void BootstrapRadarScreen(
                     UKControllerPlugin::Plugin::FunctionCallEventHandler & eventHandler,

@@ -14,6 +14,7 @@
 #include "metar/MetarEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "curl/CurlRequest.h"
+#include "websocket/WebsocketEventProcessorCollection.h"
 
 using UKControllerPlugin::MinStack::MinStackRenderer;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -29,6 +30,7 @@ using UKControllerPlugin::Curl::CurlResponse;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 
 namespace UKControllerPlugin {
     namespace MinStack {
@@ -42,10 +44,12 @@ namespace UKControllerPlugin {
             std::shared_ptr<MinStackManager> & msl,
             MetarEventHandlerCollection & metarEvents,
             TaskRunnerInterface & taskManager,
-            CurlInterface & curl
+            CurlInterface & curl,
+            UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors
         ) {
             msl.reset(new MinStackManager);
             metarEvents.RegisterHandler(msl);
+            websocketProcessors.AddProcessor(msl);
             std::vector<std::shared_ptr<TerminalControlArea>> list = {
                 std::shared_ptr<TerminalControlArea>(new TerminalControlArea(L"LTMA", "LTMA", 6000, "EGLL", true)),
                 std::shared_ptr<TerminalControlArea>(new TerminalControlArea(L"MTMA", "MTMA", 5000, "EGCC", true)),
