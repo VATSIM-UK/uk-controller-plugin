@@ -37,6 +37,7 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::MinStack::MinStackLevel & GetMinStackLevel(std::string key) const;
                 std::string GetMslKeyAirfield(std::string airfield) const;
                 std::string GetMslKeyTma(std::string tma) const;
+                std::string GetNameFromKey(std::string key) const;
                 bool HasTerminalControlArea(std::string tma);
                 virtual bool IsConcernedAirfield(std::string airfield);
                 void MinStackClicked(const char* airfield);

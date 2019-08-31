@@ -97,6 +97,14 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Get the name part of the key
+        */
+        std::string MinStackManager::GetNameFromKey(std::string key) const
+        {
+            return key.substr(key.find('.') + 1);
+        }
+
+        /*
             Returns a pointer to the TMA that is related to the given airfield
         */
         std::shared_ptr<TerminalControlArea> MinStackManager::GetTerminalControlAreaForAirfield(std::string airfield)

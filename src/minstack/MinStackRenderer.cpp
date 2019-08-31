@@ -269,8 +269,9 @@ namespace UKControllerPlugin {
                 // Draw the TMA title and rectangles
                 graphics.FillRect(tma, *this->brushes.greyBrush);
                 graphics.DrawRect(tma, *this->brushes.blackPen);
+
                 graphics.DrawString(
-                    HelperFunctions::ConvertToWideString(mslData.name),
+                    HelperFunctions::ConvertToWideString(this->minStackModule.GetNameFromKey(*it)),
                     tma,
                     mslData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
                 );
