@@ -9,6 +9,7 @@ namespace UKControllerPlugin {
     class HelperFunctions
     {
         public:
+
             static COLORREF GetColourFromSettingString(std::string setting);
             static std::string GetColourString(COLORREF color);
             static std::chrono::system_clock::time_point GetTimeFromNumberString(std::string numberString);
@@ -20,5 +21,6 @@ namespace UKControllerPlugin {
             static std::vector<std::string> TokeniseString(const char delimiter, std::string original);
             static std::wstring ConvertToWideString(std::string string);
             static std::string ConvertToRegularString(std::wstring wstring);
+            static std::string VectorToDelimetedString(std::vector<std::string> vector, std::string delimiter);
     };
 }  // namespace UKControllerPlugin

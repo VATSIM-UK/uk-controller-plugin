@@ -27,6 +27,10 @@ namespace UKControllerPlugin {
                 unsigned int GetUnsignedIntegerEntry(std::string key, unsigned int defaultValue = 0);
                 int GetIntegerEntry(std::string key, int defaultValue = 0);
                 std::string GetStringEntry(std::string key, std::string defaultValue = "");
+                std::vector<std::string> GetStringListEntry(
+                    std::string key,
+                    std::vector<std::string> defaultValue = {}
+                );
                 bool HasEntry(std::string key);
                 void Save(std::string name, std::string description, std::string data);
                 void Save(std::string name, std::string description, int data);
@@ -34,6 +38,7 @@ namespace UKControllerPlugin {
                 void Save(std::string name, std::string description, bool data);
                 void Save(std::string name, std::string description, double data);
                 void Save(std::string name, std::string description, COLORREF data);
+                void Save(std::string name, std::string description, std::vector<std::string> data);
 
             private:
                 bool ValidBooleanEntry(std::string value);

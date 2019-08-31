@@ -15,14 +15,14 @@ namespace UKControllerPluginTest {
         {
             public:
 
-                UserSettingTest()
-                    : userSetting(mockProvider)
-                {
+            UserSettingTest()
+                : userSetting(mockProvider)
+            {
 
-                }
+            }
 
-                NiceMock<MockUserSettingProviderInterface> mockProvider;
-                UserSetting userSetting;
+            NiceMock<MockUserSettingProviderInterface> mockProvider;
+            UserSetting userSetting;
         };
 
         TEST_F(UserSettingTest, HasEntryReturnsFalseIfKeyNotExists)
@@ -209,6 +209,24 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE("defaultValue" == userSetting.GetStringEntry("testkey", "defaultValue"));
         }
 
+        TEST_F(UserSettingTest, GetStringListEntryReturnsDefaultIfNoValue)
+        {
+            ON_CALL(this->mockProvider, GetKey("testkey"))
+                .WillByDefault(Return(""));
+
+            std::vector<std::string> expected = { "a", "b", "c" };
+            EXPECT_EQ(expected, this->userSetting.GetStringListEntry("testkey", expected));
+        }
+
+        TEST_F(UserSettingTest, GetStringListEntryReturnsValues)
+        {
+            ON_CALL(this->mockProvider, GetKey("testkey"))
+                .WillByDefault(Return("a;b;c"));
+
+            std::vector<std::string> expected = { "a", "b", "c" };
+            EXPECT_EQ(expected, this->userSetting.GetStringListEntry("testkey", {}));
+        }
+
         TEST_F(UserSettingTest, SaveStringSendsAppropriateData)
         {
             EXPECT_CALL(this->mockProvider, SetKey("testkey", "testdescription", "testvalue"))
@@ -255,6 +273,16 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             EXPECT_NO_THROW(this->userSetting.Save("testkey", "testdescription", RGB(111, 222, 123)));
+        }
+
+        TEST_F(UserSettingTest, SaveStringVectorSendsAppropriateData)
+        {
+            EXPECT_CALL(this->mockProvider, SetKey("testkey", "testdescription", "a;b;c"))
+                .Times(1);
+
+            EXPECT_NO_THROW(
+                this->userSetting.Save("testkey", "testdescription", std::vector<std::string>({"a", "b", "c"}))
+            );
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest
