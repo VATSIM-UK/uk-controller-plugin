@@ -20,6 +20,7 @@ namespace UKControllerPlugin {
         {
             request.AddHeader("Authorization", "Bearer " + this->apiKey);
             request.AddHeader("Accept", "application/json");
+            request.AddHeader("Content-Type", "application/json");
             return request;
         }
 
