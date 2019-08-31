@@ -42,6 +42,23 @@ namespace UKControllerPlugin {
             this->visible = userSetting.GetBooleanEntry(this->visibleUserSettingKey, true);
             this->topBarArea.left = userSetting.GetIntegerEntry(this->xPositionUserSettingKey, 100);
             this->topBarArea.top = userSetting.GetIntegerEntry(this->yPositionUserSettingKey, 100);
+            std::vector<std::string> selectedMinStacks = userSetting.GetStringListEntry(
+                this->selectedMinStackUserSettingKey,
+                {
+                    this->minStackModule.GetMslKeyTma("LTMA"),
+                    this->minStackModule.GetMslKeyTma("MTMA"),
+                    this->minStackModule.GetMslKeyTma("STMA")
+                }
+            );
+
+            for (
+                std::vector<std::string>::const_iterator it = selectedMinStacks.cbegin();
+                it != selectedMinStacks.cend();
+                ++it
+            ) {
+                this->selectedMinStacks.insert(*it);
+            }
+
             this->topBarArea.right = this->topBarArea.left + this->leftColumnWidth;
             this->topBarArea.bottom = this->topBarArea.top + this->rowHeight;
 
@@ -85,6 +102,21 @@ namespace UKControllerPlugin {
                 this->yPositionUserSettingKey,
                 this->yPositionUserSettingDescription,
                 this->topBarArea.top
+            );
+
+            std::vector<std::string> selectedMinStacks;
+            for (
+                std::set<std::string>::const_iterator it = this->selectedMinStacks.cbegin();
+                it != this->selectedMinStacks.cend();
+                ++it
+            ) {
+                selectedMinStacks.push_back(*it);
+            }
+
+            userSetting.Save(
+                this->selectedMinStackUserSettingKey,
+                this->selectedMinStackUserSettingDescription,
+                selectedMinStacks
             );
         }
 
@@ -155,10 +187,11 @@ namespace UKControllerPlugin {
             // Hiding the module
             if (objectId == this->hideClickspotId) {
                 this->visible = false;
+                return;
             }
 
             // It was the MSL that was clicked
-            this->minStackModule.MinStackClicked(objectDescription.c_str());
+            this->minStackModule.AcknowledgeMsl(objectDescription);
         }
 
         /*
@@ -211,8 +244,6 @@ namespace UKControllerPlugin {
             GdiGraphicsInterface & graphics,
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
-            std::vector<std::shared_ptr<const TerminalControlArea>> tmaList = this->minStackModule.GetAllTmas();
-
             // Loop through each of the TMAs
             Gdiplus::Rect tma = {
                 this->topBarArea.left,
@@ -229,32 +260,37 @@ namespace UKControllerPlugin {
 
             int roundNumber = 0;
             for (
-                std::vector<std::shared_ptr<const TerminalControlArea>>::iterator it = tmaList.begin();
-                it != tmaList.end();
+                std::set<std::string>::const_iterator it = this->selectedMinStacks.begin();
+                it != selectedMinStacks.end();
                 ++it
             ) {
+                const MinStackLevel & mslData = this->minStackModule.GetMinStackLevel(*it);
+
                 // Draw the TMA title and rectangles
                 graphics.FillRect(tma, *this->brushes.greyBrush);
                 graphics.DrawRect(tma, *this->brushes.blackPen);
                 graphics.DrawString(
-                    (*it)->GetName(),
+                    HelperFunctions::ConvertToWideString(mslData.name),
                     tma,
-                    ((*it)->MinStackAcknowledged()) ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
+                    mslData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
                 );
 
                 // Draw the MSL itself and associated rectangles
                 graphics.FillRect(msl, *this->brushes.greyBrush);
                 graphics.DrawRect(msl, *this->brushes.blackPen);
+
+                std::string mslString = mslData == this->minStackModule.invalidMsl ? "-" : std::to_string(mslData.msl).substr(0, 2);
+
                 graphics.DrawString(
-                    (*it)->GetCurrentMinStackDisplay(),
+                    HelperFunctions::ConvertToWideString(mslString),
                     msl,
-                    ((*it)->MinStackAcknowledged()) ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
+                    mslData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
                 );
 
                 // Add the clickable area.
                 radarScreen.RegisterScreenObject(
                     this->mslClickspotId,
-                    (*it)->GetCharName(),
+                    *it,
                     {
                         tma.X,
                         tma.Y,
@@ -336,6 +372,11 @@ namespace UKControllerPlugin {
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
             this->LeftClick(objectId, objectDescription, radarScreen);
+        }
+
+        void MinStackRenderer::SetSelectedMinStacks(std::set<std::string> selectedMinStacks)
+        {
+            this->selectedMinStacks = selectedMinStacks;
         }
 
         /*

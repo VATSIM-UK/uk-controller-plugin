@@ -69,6 +69,7 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 );
+                void SetSelectedMinStacks(std::set<std::string> selectedMinStacks);
                 void SetVisible(bool visible);
                 void ResetPosition(void) override;
 
@@ -92,6 +93,12 @@ namespace UKControllerPlugin {
 
                 // The ASR key for whether or not to display the module
                 const std::string visibleUserSettingKey = "DisplayMinStack";
+
+                // The ASR key for saving the selected the selected minimum stack levels
+                const std::string selectedMinStackUserSettingKey = "SelectedMinStack";
+
+                // The description when saving the selected minimum stack levels
+                const std::string selectedMinStackUserSettingDescription = "Selected Minimum Stack Levels To Display";
 
                 // The description when saving the visibility ASR setting
                 const std::string visibleUserSettingDescription = "Minimum Stack Level Visibility";
@@ -147,6 +154,9 @@ namespace UKControllerPlugin {
 
                 // Brushes
                 const UKControllerPlugin::Windows::GdiplusBrushes & brushes;
+
+                // The min stacks we've got selected for display
+                std::set<std::string> selectedMinStacks;
 
                 // The module to render data for
                 UKControllerPlugin::MinStack::MinStackManager & minStackModule;

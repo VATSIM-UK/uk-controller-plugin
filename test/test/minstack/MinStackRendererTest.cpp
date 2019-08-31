@@ -266,6 +266,7 @@ namespace UKControllerPluginTest {
             // Set the values
             renderer.SetVisible(true);
             renderer.Move({ 100, 50, 150, 100 }, "");
+            renderer.SetSelectedMinStacks({ "bar", "baz", "foo" });
 
 
             // Expect the ASR to provider to be called appropriately.
@@ -285,6 +286,16 @@ namespace UKControllerPluginTest {
                     mockUserSettingProvider,
                     SetKey(renderer.yPositionUserSettingKey, renderer.yPositionUserSettingDescription, "50")
                 )
+                .Times(1);
+
+            EXPECT_CALL(
+                mockUserSettingProvider,
+                SetKey(
+                    renderer.selectedMinStackUserSettingKey,
+                    renderer.selectedMinStackUserSettingDescription,
+                    "bar;baz;foo"
+                )
+            )
                 .Times(1);
 
             renderer.AsrClosingEvent(UserSetting(mockUserSettingProvider));
@@ -337,31 +348,16 @@ namespace UKControllerPluginTest {
 
         TEST(MinStackRenderer, ClickingTheMinStackMarksItAsAcknowledged)
         {
-            std::shared_ptr<TerminalControlArea> tma1 = std::make_shared<TerminalControlArea>(
-                L"LTMA",
-                "LTMA",
-                6000,
-                "EGLL",
-                true
-            );
-            std::shared_ptr<TerminalControlArea> tma2 = std::make_shared<TerminalControlArea>(
-                L"STMA",
-                "STMA",
-                6000,
-                "EGPF",
-                false
-            );
             MinStackManager manager;
-            manager.AddTerminalControlArea(tma1);
-            manager.AddTerminalControlArea(tma2);
+            manager.AddMsl("tma.LTMA", "tma", "LTMA", 7000);
 
             GdiplusBrushes brushes;
             MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
 
-            EXPECT_FALSE(tma1->MinStackAcknowledged());
-            renderer.LeftClick(renderer.mslClickspotId, "LTMA", mockRadarScreen);
-            EXPECT_TRUE(tma1->MinStackAcknowledged());
+            EXPECT_FALSE(manager.GetMinStackLevel("tma.LTMA").IsAcknowledged());
+            renderer.LeftClick(renderer.mslClickspotId, "tma.LTMA", mockRadarScreen);
+            EXPECT_TRUE(manager.GetMinStackLevel("tma.LTMA").IsAcknowledged());
         }
 
         TEST(MinStackRenderer, MoveShiftsTheTopBar)
