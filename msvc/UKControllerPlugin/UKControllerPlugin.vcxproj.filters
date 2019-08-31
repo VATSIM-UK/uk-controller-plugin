@@ -918,6 +918,9 @@
     <ClInclude Include="..\..\src\websocket\WebsocketBootstrap.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\minstack\MinStackLevel.h">
+      <Filter>src\minstack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
