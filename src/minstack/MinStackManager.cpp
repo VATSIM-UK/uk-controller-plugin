@@ -6,9 +6,36 @@
 
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Websocket::WebsocketMessage;
 
 namespace UKControllerPlugin {
     namespace MinStack {
+
+        void MinStackManager::AcknowledgeMsl(std::string key)
+        {
+            if (!this->mslMap.count(key)) {
+                return;
+            }
+
+            this->mslMap.at(key).Acknowledge();
+        }
+
+        /*
+            Add a MSL with the specified key
+        */
+        void MinStackManager::AddMsl(std::string key, std::string type, std::string name, unsigned int msl)
+        {
+            if (this->mslMap.count(key)) {
+                return;
+            }
+
+            this->mslMap[key] = {
+                type,
+                name,
+                msl
+            };
+        }
 
         /*
             Adds a TMA to the list of TMAs.
@@ -25,6 +52,23 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Get all keys for MSLs
+        */
+        std::set<std::string> MinStackManager::GetAllMslKeys(void) const
+        {
+            std::set<std::string> keys;
+            for (
+                std::map<std::string, MinStackLevel>::const_iterator it = this->mslMap.cbegin();
+                it != this->mslMap.cend();
+                ++it
+            ) {
+                keys.insert(it->first);
+            }
+
+            return keys;
+        }
+
+        /*
             Returns a vector of pointers to the constant versions of the TMAs.
         */
         std::vector<std::shared_ptr<const TerminalControlArea>> MinStackManager::GetAllTmas(void)
@@ -32,6 +76,25 @@ namespace UKControllerPlugin {
             return this->tmaRenderingList;
         }
 
+        /*
+            Get the selected minstack level
+        */
+        const MinStackLevel & MinStackManager::GetMinStackLevel(std::string key) const
+        {
+            return this->mslMap.count(key)
+                ? this->mslMap.at(key)
+                : this->invalidMsl;
+        }
+
+        std::string MinStackManager::GetMslKeyAirfield(std::string airfield) const
+        {
+            return "airfield." + airfield;
+        }
+
+        std::string MinStackManager::GetMslKeyTma(std::string tma) const
+        {
+            return "tma." + tma;
+        }
 
         /*
             Returns a pointer to the TMA that is related to the given airfield
@@ -49,6 +112,52 @@ namespace UKControllerPlugin {
             }
 
             return NULL;
+        }
+
+        /*
+            We've received some new MSLs from the web API, update them locally
+        */
+        void MinStackManager::ProcessWebsocketMessage(const WebsocketMessage & message)
+        {
+            if (message.event != "App\\Events\\MinStacksUpdatedEvent") {
+                return;
+            }
+
+            // Update the airfield MSLs
+            for (
+                nlohmann::json::const_iterator airfieldIt = message.data["airfield"].cbegin();
+                airfieldIt != message.data["airfield"].cend();
+                ++airfieldIt
+            ) {
+                this->mslMap[this->GetMslKeyAirfield(airfieldIt.key())] = {
+                    "airfield",
+                    airfieldIt.key(),
+                    airfieldIt.value().get<unsigned int>()
+                };
+            }
+
+            // Update the TMA MSLs
+            for (
+                nlohmann::json::const_iterator tmaIt = message.data["tma"].cbegin();
+                tmaIt != message.data["tma"].cend();
+                ++tmaIt
+            ) {
+                this->mslMap[this->GetMslKeyTma(tmaIt.key())] = {
+                    "tma",
+                    tmaIt.key(),
+                    tmaIt.value().get<unsigned int>()
+                };
+            }
+        }
+
+        std::set<WebsocketSubscription> MinStackManager::GetSubscriptions(void) const
+        {
+            return {
+                {
+                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    "private-minstack-updates"
+                }
+            };
         }
 
         /*
@@ -124,6 +233,19 @@ namespace UKControllerPlugin {
             }
 
             return 0;
+        }
+
+        /*
+            Set the MSL for the given key
+        */
+        void MinStackManager::SetMinStackLevel(std::string key, unsigned int msl)
+        {
+            if (!this->mslMap.count(key)) {
+                return;
+            }
+
+            this->mslMap.at(key).msl = msl;
+            this->mslMap.at(key).updatedAt = std::chrono::system_clock::now();
         }
 
         /*
