@@ -3,6 +3,7 @@
 #include "radarscreen/RadarRenderableInterface.h"
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "plugin/PopupMenuItem.h"
+#include "minstack/MinStackRendererConfiguration.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
@@ -49,6 +50,7 @@ namespace UKControllerPlugin {
                 void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const;
                 void Configure(int functionId, std::string subject, RECT screenObjectArea);
+                UKControllerPlugin::MinStack::MinStackRendererConfiguration & GetConfig(void);
                 RECT GetHideClickspotArea(void) const;
                 Gdiplus::Rect GetHideSpotRender(void) const;
                 RECT GetTopBarArea(void) const;
@@ -69,7 +71,6 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 );
-                void SetSelectedMinStacks(std::set<std::string> selectedMinStacks);
                 void SetVisible(bool visible);
                 void ResetPosition(void) override;
 
@@ -155,8 +156,8 @@ namespace UKControllerPlugin {
                 // Brushes
                 const UKControllerPlugin::Windows::GdiplusBrushes & brushes;
 
-                // The min stacks we've got selected for display
-                std::set<std::string> selectedMinStacks;
+                // The configuration for the renderer
+                UKControllerPlugin::MinStack::MinStackRendererConfiguration config;
 
                 // The module to render data for
                 UKControllerPlugin::MinStack::MinStackManager & minStackModule;

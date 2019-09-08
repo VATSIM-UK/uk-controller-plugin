@@ -205,7 +205,9 @@
     <ClInclude Include="..\..\src\minstack\MinStackLevel.h" />
     <ClInclude Include="..\..\src\minstack\MinStackManager.h" />
     <ClInclude Include="..\..\src\minstack\MinStackModule.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackRenderedItem.h" />
     <ClInclude Include="..\..\src\minstack\MinStackRenderer.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackRendererConfiguration.h" />
     <ClInclude Include="..\..\src\minstack\TerminalControlArea.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.h" />
@@ -436,6 +438,7 @@
     <ClCompile Include="..\..\src\minstack\MinStackManager.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackModule.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackRenderer.cpp" />
+    <ClCompile Include="..\..\src\minstack\MinStackRendererConfiguration.cpp" />
     <ClCompile Include="..\..\src\minstack\TerminalControlArea.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />

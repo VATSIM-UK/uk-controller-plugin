@@ -8,6 +8,7 @@
 #include "plugin/PopupMenuItem.h"
 #include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "minstack/TerminalControlArea.h"
+#include "minstack/MinStackRendererConfiguration.h"
 
 using UKControllerPlugin::MinStack::MinStackRenderer;
 using UKControllerPlugin::MinStack::MinStackManager;
@@ -17,6 +18,7 @@ using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
 using UKControllerPlugin::MinStack::TerminalControlArea;
+using UKControllerPlugin::MinStack::MinStackRendererConfiguration;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::_;
@@ -266,8 +268,11 @@ namespace UKControllerPluginTest {
             // Set the values
             renderer.SetVisible(true);
             renderer.Move({ 100, 50, 150, 100 }, "");
-            renderer.SetSelectedMinStacks({ "bar", "baz", "foo" });
 
+            MinStackRendererConfiguration & config = renderer.GetConfig();
+            config.AddItem({ 1, "bar" });
+            config.AddItem({ 2, "baz" });
+            config.AddItem({ 3, "foo" });
 
             // Expect the ASR to provider to be called appropriately.
             EXPECT_CALL(

@@ -51,12 +51,18 @@ namespace UKControllerPlugin {
                 }
             );
 
+            unsigned int order = 0;
             for (
                 std::vector<std::string>::const_iterator it = selectedMinStacks.cbegin();
                 it != selectedMinStacks.cend();
                 ++it
             ) {
-                this->selectedMinStacks.insert(*it);
+                this->config.AddItem(
+                    {
+                        order++,
+                        *it
+                    }
+                );
             }
 
             this->topBarArea.right = this->topBarArea.left + this->leftColumnWidth;
@@ -106,11 +112,11 @@ namespace UKControllerPlugin {
 
             std::vector<std::string> selectedMinStacks;
             for (
-                std::set<std::string>::const_iterator it = this->selectedMinStacks.cbegin();
-                it != this->selectedMinStacks.cend();
+                MinStackRendererConfiguration::const_iterator it = this->config.cbegin();
+                it != this->config.cend();
                 ++it
             ) {
-                selectedMinStacks.push_back(*it);
+                selectedMinStacks.push_back(it->key);
             }
 
             userSetting.Save(
@@ -142,6 +148,11 @@ namespace UKControllerPlugin {
         void MinStackRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
             this->visible = !this->visible;
+        }
+
+        MinStackRendererConfiguration & MinStackRenderer::GetConfig(void)
+        {
+            return this->config;
         }
 
         /*
@@ -260,18 +271,18 @@ namespace UKControllerPlugin {
 
             int roundNumber = 0;
             for (
-                std::set<std::string>::const_iterator it = this->selectedMinStacks.begin();
-                it != selectedMinStacks.end();
+                MinStackRendererConfiguration::const_iterator it = this->config.cbegin();
+                it != this->config.cend();
                 ++it
             ) {
-                const MinStackLevel & mslData = this->minStackModule.GetMinStackLevel(*it);
+                const MinStackLevel & mslData = this->minStackModule.GetMinStackLevel(it->key);
 
                 // Draw the TMA title and rectangles
                 graphics.FillRect(tma, *this->brushes.greyBrush);
                 graphics.DrawRect(tma, *this->brushes.blackPen);
 
                 graphics.DrawString(
-                    HelperFunctions::ConvertToWideString(this->minStackModule.GetNameFromKey(*it)),
+                    HelperFunctions::ConvertToWideString(this->minStackModule.GetNameFromKey(it->key)),
                     tma,
                     mslData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
                 );
@@ -291,7 +302,7 @@ namespace UKControllerPlugin {
                 // Add the clickable area.
                 radarScreen.RegisterScreenObject(
                     this->mslClickspotId,
-                    *it,
+                    it->key,
                     {
                         tma.X,
                         tma.Y,
@@ -373,11 +384,6 @@ namespace UKControllerPlugin {
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
             this->LeftClick(objectId, objectDescription, radarScreen);
-        }
-
-        void MinStackRenderer::SetSelectedMinStacks(std::set<std::string> selectedMinStacks)
-        {
-            this->selectedMinStacks = selectedMinStacks;
         }
 
         /*

@@ -921,6 +921,12 @@
     <ClInclude Include="..\..\src\minstack\MinStackLevel.h">
       <Filter>src\minstack</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\minstack\MinStackRenderedItem.h">
+      <Filter>src\minstack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\minstack\MinStackRendererConfiguration.h">
+      <Filter>src\minstack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1572,6 +1578,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp">
       <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\minstack\MinStackRendererConfiguration.cpp">
+      <Filter>src\minstack</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
