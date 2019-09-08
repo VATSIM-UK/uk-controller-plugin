@@ -1,4 +1,5 @@
 #pragma once
+#include "api/ApiInterface.h"
 
 // Forward declare
 namespace UKControllerPlugin {
@@ -47,7 +48,7 @@ namespace UKControllerPlugin {
                     std::shared_ptr<MinStackManager> & msl,
                     UKControllerPlugin::Metar::MetarEventHandlerCollection & metarEvents,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface & taskManager,
-                    UKControllerPlugin::Curl::CurlInterface & curl,
+                    UKControllerPlugin::Api::ApiInterface & api,
                     UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors
                 );
                 static void BootstrapRadarScreen(
@@ -58,9 +59,6 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
                     UKControllerPlugin::Euroscope::AsrEventHandlerCollection & userSettingHandlers
                 );
-
-                // The URL to get METARs from.
-                static const std::string metarUrl;
         };
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

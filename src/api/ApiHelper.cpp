@@ -247,6 +247,14 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Request all the min stack levels
+        */
+        nlohmann::json ApiHelper::GetMinStackLevels(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildMinStackLevelRequest()).GetRawData();
+        }
+
+        /*
             Get a dependency from the API
         */
         nlohmann::json ApiHelper::GetDependency(DependencyData dependency) const

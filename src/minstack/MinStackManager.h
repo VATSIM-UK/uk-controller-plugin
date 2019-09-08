@@ -45,6 +45,7 @@ namespace UKControllerPlugin {
                 int ProcessMetar(std::string metar);
                 void SetMinStackLevel(std::string key, unsigned int msl);
                 void RemoveTerminalControlArea(std::string tma);
+                void UpdateAllMsls(nlohmann::json mslData);
 
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage & message) override;

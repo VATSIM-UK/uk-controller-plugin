@@ -74,7 +74,7 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Build a request to auhtorise a websocket connection to a channel.
+            Build a request to authorise a websocket connection to a channel.
         */
         CurlRequest ApiRequestBuilder::BuildWebsocketChannelAuthRequest(
             std::string socketId,
@@ -89,6 +89,14 @@ namespace UKControllerPlugin {
             request.SetBody(body.dump());
 
             return this->AddCommonHeaders(request);
+        }
+
+        /*
+            Builds a request for getting minimum stack levels.
+        */
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildMinStackLevelRequest(void) const
+        {
+            return this->AddCommonHeaders(CurlRequest(apiDomain + "/msl", CurlRequest::METHOD_GET));
         }
 
         /*

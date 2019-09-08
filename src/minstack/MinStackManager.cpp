@@ -131,31 +131,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // Update the airfield MSLs
-            for (
-                nlohmann::json::const_iterator airfieldIt = message.data["airfield"].cbegin();
-                airfieldIt != message.data["airfield"].cend();
-                ++airfieldIt
-            ) {
-                this->mslMap[this->GetMslKeyAirfield(airfieldIt.key())] = {
-                    "airfield",
-                    airfieldIt.key(),
-                    airfieldIt.value().get<unsigned int>()
-                };
-            }
-
-            // Update the TMA MSLs
-            for (
-                nlohmann::json::const_iterator tmaIt = message.data["tma"].cbegin();
-                tmaIt != message.data["tma"].cend();
-                ++tmaIt
-            ) {
-                this->mslMap[this->GetMslKeyTma(tmaIt.key())] = {
-                    "tma",
-                    tmaIt.key(),
-                    tmaIt.value().get<unsigned int>()
-                };
-            }
+            this->UpdateAllMsls(message.data);
         }
 
         std::set<WebsocketSubscription> MinStackManager::GetSubscriptions(void) const
@@ -266,6 +242,39 @@ namespace UKControllerPlugin {
             }
 
             this->tmaList.erase(tmaList.find(tma));
+        }
+
+        void MinStackManager::UpdateAllMsls(nlohmann::json mslData)
+        {
+            // Update the airfield MSLs
+            if (mslData.count("airfield")) {
+                for (
+                    nlohmann::json::const_iterator airfieldIt = mslData["airfield"].cbegin();
+                    airfieldIt != mslData["airfield"].cend();
+                    ++airfieldIt
+                    ) {
+                    this->mslMap[this->GetMslKeyAirfield(airfieldIt.key())] = {
+                        "airfield",
+                        airfieldIt.key(),
+                        airfieldIt.value().get<unsigned int>()
+                    };
+                }
+            }
+
+            // Update the TMA MSLs
+            if (mslData.count("tma")) {
+                for (
+                    nlohmann::json::const_iterator tmaIt = mslData["tma"].cbegin();
+                    tmaIt != mslData["tma"].cend();
+                    ++tmaIt
+                ) {
+                    this->mslMap[this->GetMslKeyTma(tmaIt.key())] = {
+                        "tma",
+                        tmaIt.key(),
+                        tmaIt.value().get<unsigned int>()
+                    };
+                }
+            }
         }
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

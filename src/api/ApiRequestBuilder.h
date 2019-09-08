@@ -48,6 +48,7 @@ namespace UKControllerPlugin {
                     std::string socketId,
                     std::string channel
                 ) const;
+                UKControllerPlugin::Curl::CurlRequest BuildMinStackLevelRequest(void) const;
                 std::string GetApiDomain(void) const;
                 std::string GetApiKey(void) const;
                 void SetApiDomain(std::string domain);

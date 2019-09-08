@@ -35,6 +35,7 @@ namespace UKControllerPlugin {
                 virtual nlohmann::json GetHoldDependency(void) const = 0;
                 virtual nlohmann::json GetGenericHoldProfiles(void) const = 0;
                 virtual nlohmann::json GetUserHoldProfiles(void) const = 0;
+                virtual nlohmann::json GetMinStackLevels(void) const = 0;
                 virtual nlohmann::json GetDependency(
                     UKControllerPlugin::Dependency::DependencyData dependency
                 ) const = 0;

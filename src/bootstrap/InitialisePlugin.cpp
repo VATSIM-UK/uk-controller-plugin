@@ -239,7 +239,7 @@ namespace UKControllerPlugin {
             this->container->minStack,
             *this->container->metarEventHandler,
             *this->container->taskRunner,
-            *this->container->curl,
+            *this->container->api,
             *this->container->websocketProcessors
         );
 

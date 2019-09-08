@@ -665,5 +665,25 @@ TEST_F(ApiHelperTest, AuthoriseWebsocketChannelThrowsExceptionIfNotAuthorised)
 
     EXPECT_THROW(this->helper.AuthoriseWebsocketChannel("somesocket", "somechannel"), ApiNotAuthorisedException);
 }
+
+TEST_F(ApiHelperTest, GetMinStackLevelsReturnsMinStackData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/msl",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetMinStackLevels());
+}
 }  // namespace Api
 }  // namespace UKControllerPluginTest
