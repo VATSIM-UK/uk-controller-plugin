@@ -1,5 +1,6 @@
 #pragma once
 #include "api/ApiInterface.h"
+#include "dialog/DialogManager.h"
 
 // Forward declare
 namespace UKControllerPlugin {
@@ -49,7 +50,8 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Metar::MetarEventHandlerCollection & metarEvents,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface & taskManager,
                     UKControllerPlugin::Api::ApiInterface & api,
-                    UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors
+                    UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors,
+                    UKControllerPlugin::Dialog::DialogManager & dialogManager
                 );
                 static void BootstrapRadarScreen(
                     UKControllerPlugin::Plugin::FunctionCallEventHandler & eventHandler,
@@ -57,7 +59,8 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::RadarScreen::RadarRenderableCollection & radarRender,
                     UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays,
                     const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
-                    UKControllerPlugin::Euroscope::AsrEventHandlerCollection & userSettingHandlers
+                    UKControllerPlugin::Euroscope::AsrEventHandlerCollection & userSettingHandlers,
+                    const UKControllerPlugin::Dialog::DialogManager & dialogManager
                 );
         };
     }  // namespace MinStack

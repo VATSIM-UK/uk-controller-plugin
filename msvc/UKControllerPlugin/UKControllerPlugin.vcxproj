@@ -202,6 +202,7 @@
     <ClInclude Include="..\..\src\metar\PressureChangeMessage.h" />
     <ClInclude Include="..\..\src\metar\PressureMonitor.h" />
     <ClInclude Include="..\..\src\metar\PressureMonitorBootstrap.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackConfigurationDialog.h" />
     <ClInclude Include="..\..\src\minstack\MinStackLevel.h" />
     <ClInclude Include="..\..\src\minstack\MinStackManager.h" />
     <ClInclude Include="..\..\src\minstack\MinStackModule.h" />
@@ -435,6 +436,7 @@
     <ClCompile Include="..\..\src\metar\PressureChangeMessage.cpp" />
     <ClCompile Include="..\..\src\metar\PressureMonitor.cpp" />
     <ClCompile Include="..\..\src\metar\PressureMonitorBootstrap.cpp" />
+    <ClCompile Include="..\..\src\minstack\MinStackConfigurationDialog.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackManager.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackModule.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackRenderer.cpp" />

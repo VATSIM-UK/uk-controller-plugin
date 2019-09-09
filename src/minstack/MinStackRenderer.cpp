@@ -15,6 +15,7 @@ using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
 using UKControllerPlugin::Windows::GdiplusBrushes;
+using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace MinStack {
@@ -25,11 +26,12 @@ namespace UKControllerPlugin {
             int menuBarClickspotId,
             int mslClickspotId,
             int toggleCallbackFunctionId,
-            const GdiplusBrushes & brushes
+            const GdiplusBrushes & brushes,
+            const UKControllerPlugin::Dialog::DialogManager & dialogManager
         )
             : minStackModule(minStackModule), hideClickspotId(closeClickspotId), menuBarClickspotId(menuBarClickspotId),
             mslClickspotId(mslClickspotId), leftColumnWidth(75), rowHeight(20), hideClickspotWidth(25),
-            toggleCallbackFunctionId(toggleCallbackFunctionId), brushes(brushes)
+            toggleCallbackFunctionId(toggleCallbackFunctionId), brushes(brushes), dialogManager(dialogManager)
         {
 
         }
@@ -147,7 +149,11 @@ namespace UKControllerPlugin {
         */
         void MinStackRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
-            this->visible = !this->visible;
+            this->dialogManager.OpenDialog(
+                IDD_MINSTACK,
+                reinterpret_cast<LPARAM>(&this->config)
+            );
+            //this->visible = !this->visible;
         }
 
         MinStackRendererConfiguration & MinStackRenderer::GetConfig(void)

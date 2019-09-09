@@ -240,7 +240,8 @@ namespace UKControllerPlugin {
             *this->container->metarEventHandler,
             *this->container->taskRunner,
             *this->container->api,
-            *this->container->websocketProcessors
+            *this->container->websocketProcessors,
+            *this->container->dialogManager
         );
 
         // Due to flightplan modifications and API interactions, only enable the squawk module

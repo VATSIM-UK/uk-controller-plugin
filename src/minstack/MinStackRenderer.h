@@ -4,6 +4,7 @@
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "plugin/PopupMenuItem.h"
 #include "minstack/MinStackRendererConfiguration.h"
+#include "dialog/DialogManager.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
@@ -44,7 +45,8 @@ namespace UKControllerPlugin {
                     int menuBarClickspotId,
                     int mslClickspotId,
                     int toggleCallbackFunctionId,
-                    const UKControllerPlugin::Windows::GdiplusBrushes & brushes
+                    const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
+                    const UKControllerPlugin::Dialog::DialogManager & dialogManager
                 );
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
                 void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
@@ -161,6 +163,9 @@ namespace UKControllerPlugin {
 
                 // The module to render data for
                 UKControllerPlugin::MinStack::MinStackManager & minStackModule;
+
+                // Spawns the configuration dialog
+                const UKControllerPlugin::Dialog::DialogManager & dialogManager;
         };
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

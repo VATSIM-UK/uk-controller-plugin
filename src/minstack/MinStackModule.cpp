@@ -13,6 +13,7 @@
 #include "euroscope/CallbackFunction.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "api/ApiException.h"
+#include "minstack/MinStackConfigurationDialog.h"
 
 using UKControllerPlugin::MinStack::MinStackRenderer;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -28,6 +29,7 @@ using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace MinStack {
@@ -40,11 +42,24 @@ namespace UKControllerPlugin {
             MetarEventHandlerCollection & metarEvents,
             TaskRunnerInterface & taskManager,
             ApiInterface & api,
-            UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors
+            WebsocketEventProcessorCollection & websocketProcessors,
+            DialogManager & dialogManager
         ) {
             msl.reset(new MinStackManager);
             metarEvents.RegisterHandler(msl);
             websocketProcessors.AddProcessor(msl);
+
+            // Create the dialog for configuration
+            std::shared_ptr<MinStackConfigurationDialog> dialog = std::make_shared<MinStackConfigurationDialog>(*msl);
+            dialogManager.AddDialog(
+                {
+                    IDD_MINSTACK,
+                    "Minimum Stack Levels",
+                    reinterpret_cast<DLGPROC>(dialog->WndProc),
+                    reinterpret_cast<LPARAM>(dialog.get()),
+                    dialog
+                }
+            );
 
             // Get all the minstacks up front
             taskManager.QueueAsynchronousTask([& api, msl]() {
@@ -68,7 +83,8 @@ namespace UKControllerPlugin {
             RadarRenderableCollection & radarRender,
             ConfigurableDisplayCollection & configurableDisplays,
             const GdiplusBrushes & brushes,
-            AsrEventHandlerCollection & userSettingHandlers
+            AsrEventHandlerCollection & userSettingHandlers,
+            const DialogManager & dialogManager
         )
         {
             // Create the renderer and get the ids for screen objects
@@ -81,7 +97,8 @@ namespace UKControllerPlugin {
                     radarRender.ReserveScreenObjectIdentifier(rendererId),
                     radarRender.ReserveScreenObjectIdentifier(rendererId),
                     configureFunctionId,
-                    brushes
+                    brushes,
+                    dialogManager
                 )
             );
 

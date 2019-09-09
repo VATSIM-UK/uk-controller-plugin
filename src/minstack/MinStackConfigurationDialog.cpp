@@ -1,10 +1,12 @@
 #include "pch/stdafx.h"
 #include "minstack/MinStackConfigurationDialog.h"
 #include "dialog/DialogCallArgument.h"
+#include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::MinStack::MinStackRendererConfiguration;
 using UKControllerPlugin::MinStack::MinStackManager;
+using UKControllerPlugin::HelperFunctions;
 
 namespace UKControllerPlugin {
     namespace MinStack {
@@ -49,7 +51,7 @@ namespace UKControllerPlugin {
                     this->InitDialog(hwnd, lParam);
                     return TRUE;
                 };
-                // Hold Window Closed
+                // Dialog Closed
                 case WM_CLOSE: {
                     EndDialog(hwnd, wParam);
                     return TRUE;
@@ -78,7 +80,31 @@ namespace UKControllerPlugin {
         */
         void MinStackConfigurationDialog::InitDialog(HWND hwnd, LPARAM lParam)
         {
+            this->config = reinterpret_cast<MinStackRendererConfiguration *>(
+                reinterpret_cast<DialogCallArgument *>(lParam)->contextArgument
+            );
 
+            for (
+                MinStackRendererConfiguration::const_iterator it = this->config->cbegin();
+                it != this->config->cend();
+                ++it
+            ) {
+                HRESULT itemIndex = SendDlgItemMessage(
+                    hwnd,
+                    IDC_MINSTACK_SELECT,
+                    CB_ADDSTRING,
+                    NULL,
+                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(it->key).c_str())
+                );
+
+                SendDlgItemMessage(
+                    hwnd,
+                    IDC_MINSTACK_SELECT,
+                    CB_SETITEMDATA,
+                    itemIndex,
+                    reinterpret_cast<LPARAM>(it->key.c_str())
+                );
+            }
         }
 
         /*
@@ -87,6 +113,17 @@ namespace UKControllerPlugin {
         void MinStackConfigurationDialog::SaveDialog(HWND hwnd)
         {
             
+        }
+
+        /*
+            Transform each MSL key to how it should be displayed
+        */
+        std::wstring MinStackConfigurationDialog::GetListEntryForKey(std::string mslKey)
+        {
+            std::string facility = mslKey.substr(0, 3) == "tma" ? "TMA" : "Airfield";
+            std::string identifier = facility == "TMA" ? mslKey.substr(4) : mslKey.substr(9);
+
+            return HelperFunctions::ConvertToWideString(facility + " - " + identifier);
         }
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

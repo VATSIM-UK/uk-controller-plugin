@@ -18,9 +18,10 @@ namespace UKControllerPlugin {
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 void InitDialog(HWND hwnd, LPARAM lParam);
                 void SaveDialog(HWND hwnd);
+                std::wstring GetListEntryForKey(std::string mslKey);
 
                 // The renderer configuration this relates to
-                UKControllerPlugin::MinStack::MinStackRendererConfiguration * const config = nullptr;
+                UKControllerPlugin::MinStack::MinStackRendererConfiguration * config = nullptr;
 
                 // Manages MSLs
                 const UKControllerPlugin::MinStack::MinStackManager & manager;

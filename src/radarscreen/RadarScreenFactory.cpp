@@ -77,7 +77,8 @@ namespace UKControllerPlugin {
                 renderers,
                 configurableDisplays,
                 *persistence.brushes,
-                userSettingHandlers
+                userSettingHandlers,
+                *persistence.dialogManager
             );
 
             CountdownModule::BootstrapRadarScreen(
