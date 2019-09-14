@@ -37,7 +37,15 @@ namespace UKControllerPlugin {
         {
             this->threadsRunning = false;
             this->websocketThread.join();
-            this->websocket.close(boost::beast::websocket::close_code::normal);
+
+            if (this->connected) {
+                this->websocket.close(boost::beast::websocket::close_code::normal);
+            }
+
+            while (this->connected) {
+                continue;
+            }
+
             LogInfo("Disconnected from websocket");
         }
 
