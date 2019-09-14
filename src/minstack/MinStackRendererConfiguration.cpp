@@ -17,6 +17,19 @@ namespace UKControllerPlugin {
             return this->items.size();
         }
 
+        MinStackRenderedItem MinStackRendererConfiguration::GetItem(std::string key) const
+        {
+            auto item = std::find_if(
+                this->items.begin(),
+                this->items.end(),
+                [key](const MinStackRenderedItem & item) -> bool {
+                    return item.key == key;
+                }
+            );
+
+            return item == this->items.cend() ? this->invalidItem : *item;
+        }
+
         void MinStackRendererConfiguration::RemoveItem(const MinStackRenderedItem item)
         {
             this->items.erase(item);

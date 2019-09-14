@@ -67,5 +67,19 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(this->item1, *it++);
             EXPECT_EQ(this->item2, *it);
         }
+
+        TEST_F(MinStackRendererConfigurationTest, ItReturnsInvalidItem)
+        {
+            this->configuration.AddItem(this->item1);
+            this->configuration.AddItem(this->item2);
+            EXPECT_EQ(this->configuration.invalidItem, this->configuration.GetItem("foo"));
+        }
+
+        TEST_F(MinStackRendererConfigurationTest, ItReturnsItemsByKey)
+        {
+            this->configuration.AddItem(this->item1);
+            this->configuration.AddItem(this->item2);
+            EXPECT_EQ(this->item1, this->configuration.GetItem("tma.LTMA"));
+        }
     }  // namespace MinStack
 }  // namespace UKControllerPluginTest
