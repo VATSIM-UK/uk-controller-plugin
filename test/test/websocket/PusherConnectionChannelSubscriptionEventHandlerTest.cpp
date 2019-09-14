@@ -166,35 +166,5 @@ namespace UKControllerPluginTest {
 
             this->handler.ProcessWebsocketMessage(message);
         }
-
-        TEST_F(PusherConnectionChannelSubscriptionEventHandlerTest, ItCachesChannelAuthCodesForReuse)
-        {
-            std::set<WebsocketSubscription> subs = {
-                {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
-                    "private-minstack-updates"
-                }
-            };
-
-            ON_CALL(*this->mockProcessor, GetSubscriptions())
-                .WillByDefault(Return(subs));
-
-            this->processors.AddProcessor(this->mockProcessor);
-
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "none",
-                nlohmann::json({{"socket_id", "abc"}}),
-                true
-            };
-
-            EXPECT_CALL(this->mockApi, AuthoriseWebsocketChannel("abc", "private-minstack-updates"))
-                .Times(1)
-                .WillOnce(Return("def"));
-
-            this->handler.ProcessWebsocketMessage(message);
-
-            EXPECT_EQ("def", this->handler.GetCachedAuthCode("private-minstack-updates"));
-        }
     }  // namespace Websocket
 }  // namespace UKControllerPluginTest

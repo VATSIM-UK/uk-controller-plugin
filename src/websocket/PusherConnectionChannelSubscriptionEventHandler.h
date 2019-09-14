@@ -21,9 +21,6 @@ namespace UKControllerPlugin {
                 );
 
                 bool ChannelIsPrivate(std::string channelName) const;
-                std::string GetCachedAuthCode(std::string channelName) const;
-
-                const std::map<std::string, std::string> & GetCachedChannelAuthCodes(void) const;
 
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage & message) override;
@@ -42,9 +39,6 @@ namespace UKControllerPlugin {
 
                 // For running async tasks
                 UKControllerPlugin::TaskManager::TaskRunnerInterface & taskRunner;
-
-                // Map of channel authorisation codes, so that they may be reused.
-                std::map<std::string, std::string> channelAuthCodes;
         };
     }  // namespace UKControllerPlugin
 }  // namespace Websocket

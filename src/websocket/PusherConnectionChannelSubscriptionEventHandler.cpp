@@ -27,17 +27,6 @@ namespace UKControllerPlugin {
             return channelName.substr(0, 8) == "private-";
         }
 
-        std::string PusherConnectionChannelSubscriptionEventHandler::GetCachedAuthCode(std::string channelName) const
-        {
-            return this->channelAuthCodes.count(channelName) ? this->channelAuthCodes.at(channelName) : "";
-        }
-
-        const std::map<std::string, std::string>& 
-            PusherConnectionChannelSubscriptionEventHandler::GetCachedChannelAuthCodes(void) const
-        {
-            return this->channelAuthCodes;
-        }
-
         /*
             For each channel that needs to be joined, join it!
         */
@@ -64,28 +53,23 @@ namespace UKControllerPlugin {
                         if (this->ChannelIsPrivate(channel)) {
                             std::string authCode;
                             // Auth codes shouldn't change so reuse the old ones if we can
-                            if (this->channelAuthCodes.count(channel)) {
-                                authCode = this->channelAuthCodes[channel];
-                            }
-                            else {
-                                try {
-                                    authCode = this->api.AuthoriseWebsocketChannel(socketId, channel);
-                                    this->channelAuthCodes[channel] = authCode;
-                                } catch (ApiNotAuthorisedException) {
-                                    LogError(
-                                        "Unable to get auth code for channel " + channel + ". Not authorised."
+                            try {
+                                authCode = this->api.AuthoriseWebsocketChannel(socketId, channel);
+                            } catch (ApiNotAuthorisedException) {
+                                LogError(
+                                    "Unable to get auth code for channel " + channel + ". Not authorised."
 
-                                    );
-                                    return;
-                                }
-                                catch (ApiException exception) {
-                                    LogError(
-                                        "Unable to get auth code for channel " + channel
-                                        + ": api responded with " + exception.what()
-                                    );
-                                    return;
-                                }
+                                );
+                                return;
                             }
+                            catch (ApiException exception) {
+                                LogError(
+                                    "Unable to get auth code for channel " + channel
+                                    + ": api responded with " + exception.what()
+                                );
+                                return;
+                            }
+     
 
                             subscriptionData["data"].push_back({ "auth", authCode });
                         }
