@@ -16,6 +16,7 @@ namespace UKControllerPlugin {
 
             private:
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+                void AddEntryToList(HWND hwnd, LPARAM lParam);
                 void InitDialog(HWND hwnd, LPARAM lParam);
                 void SaveDialog(HWND hwnd);
                 std::wstring GetListEntryForKey(std::string mslKey);
@@ -25,6 +26,9 @@ namespace UKControllerPlugin {
 
                 // Manages MSLs
                 const UKControllerPlugin::MinStack::MinStackManager & manager;
+
+                // The keys currently active for MSL whilst the dialog is open
+                std::set<std::string> activeMslKeys;
         };
     }  // namespace MinStack
 }  // namespace UKControllerPlugin
