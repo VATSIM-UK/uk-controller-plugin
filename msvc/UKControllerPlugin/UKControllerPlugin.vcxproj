@@ -163,6 +163,7 @@
     <ClInclude Include="..\..\src\hold\HoldRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\hold\HoldSelectionMenu.h" />
     <ClInclude Include="..\..\src\hold\ManagedHold.h" />
+    <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h" />
     <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
@@ -400,6 +401,7 @@
     <ClCompile Include="..\..\src\hold\HoldRestrictionSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldSelectionMenu.cpp" />
     <ClCompile Include="..\..\src\hold\ManagedHold.cpp" />
+    <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestriction.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp" />

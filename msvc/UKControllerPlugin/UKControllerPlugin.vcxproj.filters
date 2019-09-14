@@ -927,6 +927,9 @@
     <ClInclude Include="..\..\src\minstack\MinStackConfigurationDialog.h">
       <Filter>src\minstack</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1581,6 +1584,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\minstack\MinStackConfigurationDialog.cpp">
       <Filter>src\minstack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestriction.cpp">
+      <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
