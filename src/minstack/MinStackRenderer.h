@@ -73,8 +73,8 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 );
-                void SetVisible(bool visible);
                 void ResetPosition(void) override;
+                void SetVisible(bool visible);
 
                 // The EuroScope ID for the close button.
                 const int hideClickspotId;
@@ -119,7 +119,7 @@ namespace UKControllerPlugin {
                 const std::string yPositionUserSettingDescription = "Minimum Stack Level Y Position";
 
                 // The MSL module menu text
-                const std::string menuItemDescription = "Display Minimum Stack Levels";
+                const std::string menuItemDescription = "Configure Minimum Stack Levels";
 
                 // The callback function ID for the toggle function
                 const int toggleCallbackFunctionId;
@@ -151,9 +151,6 @@ namespace UKControllerPlugin {
 
                 // The rectangle to render for the hide clickspot
                 Gdiplus::Rect hideSpotRender;
-
-                // Whether or not the window should be visible on screen.
-                bool visible = false;
 
                 // Brushes
                 const UKControllerPlugin::Windows::GdiplusBrushes & brushes;

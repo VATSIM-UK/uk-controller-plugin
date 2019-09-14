@@ -23,6 +23,7 @@
 #define IDC_CHECK1                      1013
 #define GS_DIALOG_PRENOTE_CHECK         1013
 #define TIMER1_ENABLED_CHECK            1013
+#define IDC_MINSTACK_DISPLAY_CHECK      1013
 #define TIMER2_ENABLED_CHECK            1014
 #define IDC_MFCBUTTON1                  1015
 #define TIMER3_ENABLED_CHECK            1015

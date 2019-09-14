@@ -41,7 +41,7 @@ namespace UKControllerPlugin {
         */
         void MinStackRenderer::AsrLoadedEvent(UserSetting & userSetting)
         {
-            this->visible = userSetting.GetBooleanEntry(this->visibleUserSettingKey, true);
+            this->config.SetShouldRender(userSetting.GetBooleanEntry(this->visibleUserSettingKey, true));
             this->topBarArea.left = userSetting.GetIntegerEntry(this->xPositionUserSettingKey, 100);
             this->topBarArea.top = userSetting.GetIntegerEntry(this->yPositionUserSettingKey, 100);
             std::vector<std::string> selectedMinStacks = userSetting.GetStringListEntry(
@@ -99,7 +99,7 @@ namespace UKControllerPlugin {
             userSetting.Save(
                 this->visibleUserSettingKey,
                 this->visibleUserSettingDescription,
-                this->visible
+                this->config.ShouldRender()
             );
             userSetting.Save(
                 this->xPositionUserSettingKey,
@@ -137,7 +137,7 @@ namespace UKControllerPlugin {
             returnVal.firstValue = this->menuItemDescription;
             returnVal.secondValue = "";
             returnVal.callbackFunctionId = this->toggleCallbackFunctionId;
-            returnVal.checked = this->visible;
+            returnVal.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             returnVal.disabled = false;
             returnVal.fixedPosition = false;
             return returnVal;
@@ -203,7 +203,7 @@ namespace UKControllerPlugin {
         ) {
             // Hiding the module
             if (objectId == this->hideClickspotId) {
-                this->visible = false;
+                this->config.SetShouldRender(false);
                 return;
             }
 
@@ -216,7 +216,7 @@ namespace UKControllerPlugin {
         */
         bool MinStackRenderer::IsVisible(void) const
         {
-            return this->visible;
+            return this->config.ShouldRender();
         }
 
         /*
@@ -393,14 +393,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Sets the visibility of the renderer.
-        */
-        void MinStackRenderer::SetVisible(bool visible)
-        {
-            this->visible = visible;
-        }
-
-        /*
             Reset the position of the renderer
         */
         void MinStackRenderer::ResetPosition(void)
@@ -409,6 +401,11 @@ namespace UKControllerPlugin {
                 { 100, 100, 100 + this->leftColumnWidth, 100 + this->rowHeight },
                 ""
             );
+        }
+
+        void MinStackRenderer::SetVisible(bool visible)
+        {
+            this->config.SetShouldRender(visible);
         }
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

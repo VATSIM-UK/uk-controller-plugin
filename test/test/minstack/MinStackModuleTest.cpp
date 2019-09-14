@@ -13,6 +13,8 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "curl/CurlRequest.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
+#include "mock/MockDialogProvider.h"
+#include "dialog/DialogProviderInterface.h"
 
 using UKControllerPlugin::MinStack::MinStackModule;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
@@ -28,26 +30,35 @@ using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
-using ::testing::StrictMock;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
+using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::_;
 using ::testing::Test;
 
-namespace UKControllerModulesTest {
+namespace UKControllerPluginTest {
     namespace MinStack {
 
         class MinStackModuleTest : public Test
         {
             public:
 
+                MinStackModuleTest()
+                    : dialogManager(dialogProvider)
+                {
+
+                }
                 // For the plugin tests
-                StrictMock<MockApiInterface> mockApi;
+                NiceMock<MockApiInterface> mockApi;
                 MockTaskRunnerInterface mockRunner;
                 MetarEventHandlerCollection metarEvents;
                 WebsocketEventProcessorCollection websockets;
                 std::shared_ptr<MinStackManager> manager;
 
                 // For the radar screen tests
+                NiceMock<MockDialogProvider> dialogProvider;
+                DialogManager dialogManager;
                 FunctionCallEventHandler functionHandlers;
                 MinStackManager managerObject;
                 RadarRenderableCollection radarRenderables;
@@ -74,7 +85,8 @@ namespace UKControllerModulesTest {
                 this->metarEvents,
                 this->mockRunner,
                 this->mockApi,
-                this->websockets
+                this->websockets,
+                this->dialogManager
             );
             EXPECT_NO_THROW(manager->HasTerminalControlArea("TESTTMA"));
         }
@@ -97,7 +109,8 @@ namespace UKControllerModulesTest {
                 this->metarEvents,
                 this->mockRunner,
                 this->mockApi,
-                this->websockets
+                this->websockets,
+                this->dialogManager
             );
             EXPECT_EQ(1, metarEvents.CountHandlers());
         }
@@ -120,9 +133,35 @@ namespace UKControllerModulesTest {
                 this->metarEvents,
                 this->mockRunner,
                 this->mockApi,
-                this->websockets
+                this->websockets,
+                this->dialogManager
             );
             EXPECT_EQ(1, websockets.CountProcessorsForChannel("private-minstack-updates"));
+        }
+
+        TEST_F(MinStackModuleTest, BootstrapPluginRegistersDialog)
+        {
+            nlohmann::json mslData;
+            mslData["airfield"] = {
+                {"EGLL", 8000}
+            };
+            mslData["tma"] = {
+                {"LTMA", 7000}
+            };
+            EXPECT_CALL(this->mockApi, GetMinStackLevels())
+                .Times(1)
+                .WillRepeatedly(Return(mslData));
+
+            MinStackModule::BootstrapPlugin(
+                this->manager,
+                this->metarEvents,
+                this->mockRunner,
+                this->mockApi,
+                this->websockets,
+                this->dialogManager
+            );
+            EXPECT_EQ(1, dialogManager.CountDialogs());
+            EXPECT_EQ(1, dialogManager.HasDialog(IDD_MINSTACK));
         }
 
         TEST_F(MinStackModuleTest, BootstrapRadarScreenAddsToFunctionEvents)
@@ -133,7 +172,8 @@ namespace UKControllerModulesTest {
                 this->radarRenderables,
                 this->configruables,
                 this->brushes,
-                this->userSettingHandlers
+                this->userSettingHandlers,
+                this->dialogManager
             );
             EXPECT_EQ(1, functionHandlers.CountCallbacks());
             EXPECT_EQ(0, functionHandlers.CountTagFunctions());
@@ -147,7 +187,8 @@ namespace UKControllerModulesTest {
                 this->radarRenderables,
                 this->configruables,
                 this->brushes,
-                this->userSettingHandlers
+                this->userSettingHandlers,
+                this->dialogManager
             );
             EXPECT_EQ(1, radarRenderables.CountRenderers());
             EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.beforeTags));
@@ -161,7 +202,8 @@ namespace UKControllerModulesTest {
                 this->radarRenderables,
                 this->configruables,
                 this->brushes,
-                this->userSettingHandlers
+                this->userSettingHandlers,
+                this->dialogManager
             );
             EXPECT_EQ(3, radarRenderables.CountScreenObjects());
         }
@@ -174,7 +216,8 @@ namespace UKControllerModulesTest {
                 this->radarRenderables,
                 this->configruables,
                 this->brushes,
-                this->userSettingHandlers
+                this->userSettingHandlers,
+                this->dialogManager
             );
             EXPECT_EQ(1, configruables.CountDisplays());
         }
@@ -187,7 +230,8 @@ namespace UKControllerModulesTest {
                 this->radarRenderables,
                 this->configruables,
                 this->brushes,
-                this->userSettingHandlers
+                this->userSettingHandlers,
+                this->dialogManager
             );
             EXPECT_EQ(1, userSettingHandlers.CountHandlers());
         }

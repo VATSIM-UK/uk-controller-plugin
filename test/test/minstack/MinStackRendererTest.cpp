@@ -9,6 +9,8 @@
 #include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "minstack/TerminalControlArea.h"
 #include "minstack/MinStackRendererConfiguration.h"
+#include "dialog/DialogManager.h"
+#include "mock/MockDialogProvider.h"
 
 using UKControllerPlugin::MinStack::MinStackRenderer;
 using UKControllerPlugin::MinStack::MinStackManager;
@@ -19,21 +21,38 @@ using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
 using UKControllerPlugin::MinStack::TerminalControlArea;
 using UKControllerPlugin::MinStack::MinStackRendererConfiguration;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::_;
-using ::testing::StrictMock;
+using testing::Test;
 
 namespace UKControllerPluginTest {
     namespace MinStack {
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsDefaultVisibilityIfNoSetting)
+        class MinStackRendererTest : public Test
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+            public:
+                MinStackRendererTest()
+                    : dialogManager(mockDialogProvider), renderer(manager, 1, 2, 3, 4, brushes, dialogManager)
+                {
+                    this->dialogManager.AddDialog(this->minStackDialogData);
+                }
 
+                DialogData minStackDialogData = { IDD_MINSTACK, "Test" };
+                MinStackManager manager;
+                GdiplusBrushes brushes;
+                NiceMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
+                NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+                NiceMock<MockDialogProvider> mockDialogProvider;
+                DialogManager dialogManager;
+                MinStackRenderer renderer;
+        };
+
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultVisibilityIfNoSetting)
+        {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -45,12 +64,8 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(renderer.IsVisible());
         }
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsDefaultTopBarPositionIfNoSettings)
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultTopBarPositionIfNoSettings)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -67,12 +82,8 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetTopBarArea()));
         }
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsDefaultTopBarRenderIfNoSettings)
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultTopBarRenderIfNoSettings)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -89,12 +100,8 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedArea.Equals(renderer.GetTopBarRender()));
         }
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsDefaultHideSpotPositionIfNoSettings)
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultHideSpotPositionIfNoSettings)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -116,12 +123,8 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetHideClickspotArea()));
         }
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsDefaultHideSpotRenderIfNoSettings)
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultHideSpotRenderIfNoSettings)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -142,13 +145,8 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedArea.Equals(renderer.GetHideSpotRender()));
         }
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsVisibilityFromSettings)
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsVisibilityFromSettings)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
-
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -160,12 +158,8 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(renderer.IsVisible());
         }
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsDefaultTopBarPositionFromSettings)
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultTopBarPositionFromSettings)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -182,12 +176,8 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetTopBarArea()));
         }
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsDefaultTopBarRenderFromSettings)
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultTopBarRenderFromSettings)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -204,12 +194,8 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedArea.Equals(renderer.GetTopBarRender()));
         }
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsDefaultHideSpotPositionFromSettings)
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultHideSpotPositionFromSettings)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -231,12 +217,8 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetHideClickspotArea()));
         }
 
-        TEST(MinStackRenderer, UserSettingContentLoadedSetsDefaultHideSpotRenderFromSettings)
+        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultHideSpotRenderFromSettings)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
@@ -258,13 +240,8 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedArea.Equals(renderer.GetHideSpotRender()));
         }
 
-        TEST(MinStackRenderer, AsrClosingEventSavesAllValues)
+        TEST_F(MinStackRendererTest, AsrClosingEventSavesAllValues)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockUserSettingProviderInterface> mockUserSettingProvider;
-
             // Set the values
             renderer.SetVisible(true);
             renderer.Move({ 100, 50, 150, 100 }, "");
@@ -306,12 +283,8 @@ namespace UKControllerPluginTest {
             renderer.AsrClosingEvent(UserSetting(mockUserSettingProvider));
         }
 
-        TEST(MinStackRenderer, GetConfigurationMenuItemReturnsCorrectValues)
+        TEST_F(MinStackRendererTest, GetConfigurationMenuItemReturnsCorrectValues)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-
             // Set the values
             renderer.SetVisible(true);
             PopupMenuItem item = renderer.GetConfigurationMenuItem();
@@ -324,53 +297,36 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(item.fixedPosition);
         }
 
-        TEST(MinStackRenderer, SelectingMenuItemTogglesVisibility)
+        TEST_F(MinStackRendererTest, SelectingMenuItemOpensDialog)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-
             renderer.SetVisible(true);
-            EXPECT_TRUE(renderer.IsVisible());
+
+            EXPECT_CALL(mockDialogProvider, OpenDialog(this->minStackDialogData, _))
+                .Times(1);
+
             renderer.Configure(0, "test", {});
-            EXPECT_FALSE(renderer.IsVisible());
-            renderer.Configure(0, "test", {});
-            EXPECT_TRUE(renderer.IsVisible());
         }
 
-        TEST(MinStackRenderer, ClickingTheCloseClickspotMakesItInvisible)
+        TEST_F(MinStackRendererTest, ClickingTheCloseClickspotMakesItInvisible)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
             renderer.SetVisible(true);
-            StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
 
             EXPECT_TRUE(renderer.IsVisible());
             renderer.LeftClick(renderer.hideClickspotId, "", mockRadarScreen);
             EXPECT_FALSE(renderer.IsVisible());
         }
 
-        TEST(MinStackRenderer, ClickingTheMinStackMarksItAsAcknowledged)
+        TEST_F(MinStackRendererTest, ClickingTheMinStackMarksItAsAcknowledged)
         {
-            MinStackManager manager;
             manager.AddMsl("tma.LTMA", "tma", "LTMA", 7000);
-
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
 
             EXPECT_FALSE(manager.GetMinStackLevel("tma.LTMA").IsAcknowledged());
             renderer.LeftClick(renderer.mslClickspotId, "tma.LTMA", mockRadarScreen);
             EXPECT_TRUE(manager.GetMinStackLevel("tma.LTMA").IsAcknowledged());
         }
 
-        TEST(MinStackRenderer, MoveShiftsTheTopBar)
+        TEST_F(MinStackRendererTest, MoveShiftsTheTopBar)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-
             Gdiplus::Rect expectedRender = { 150, 50, renderer.leftColumnWidth, renderer.rowHeight };
             RECT expectedArea = { 150, 50, 200, 25 };
 
@@ -379,27 +335,17 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedRender.Equals(renderer.GetTopBarRender()));
         }
 
-        TEST(MinStackRenderer, RightClicksBehaveTheSameAsLeftClicks)
+        TEST_F(MinStackRendererTest, RightClicksBehaveTheSameAsLeftClicks)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
             renderer.SetVisible(true);
-            StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
 
             EXPECT_TRUE(renderer.IsVisible());
             renderer.RightClick(renderer.hideClickspotId, "", mockRadarScreen);
             EXPECT_FALSE(renderer.IsVisible());
         }
 
-        TEST(MinStackRenderer, ResetPositionResetsPosition)
+        TEST_F(MinStackRendererTest, ResetPositionResetsPosition)
         {
-            MinStackManager manager;
-            GdiplusBrushes brushes;
-            MinStackRenderer renderer(manager, 1, 2, 3, 4, brushes);
-            StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
-
-
             renderer.ResetPosition();
             EXPECT_EQ(100, renderer.GetTopBarArea().left);
             EXPECT_EQ(100, renderer.GetTopBarArea().top);

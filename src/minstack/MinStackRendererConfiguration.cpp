@@ -54,5 +54,15 @@ namespace UKControllerPlugin {
         {
             this->items.clear();
         }
+
+        void MinStackRendererConfiguration::SetShouldRender(bool shouldRender)
+        {
+            this->shouldRender = shouldRender;
+        }
+
+        bool MinStackRendererConfiguration::ShouldRender(void) const
+        {
+            return this->shouldRender;
+        }
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

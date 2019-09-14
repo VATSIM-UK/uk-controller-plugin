@@ -18,6 +18,8 @@ namespace UKControllerPlugin {
                 void RemoveItem(const UKControllerPlugin::MinStack::MinStackRenderedItem item);
                 void RemoveItem(unsigned int index);
                 void Reset(void);
+                void SetShouldRender(bool shouldRender);
+                bool ShouldRender(void) const;
 
                 // Public type definitions for a custom iterator over the class.
                 typedef std::set<UKControllerPlugin::MinStack::MinStackRenderedItem> MinStackRenderedItems;
@@ -29,7 +31,11 @@ namespace UKControllerPlugin {
 
             private:
 
+                // The items to render
                 std::set<UKControllerPlugin::MinStack::MinStackRenderedItem> items;
+
+                // Should the MinStacks be rendered?
+                bool shouldRender = true;
         };
 
     }  // namespace MinStack

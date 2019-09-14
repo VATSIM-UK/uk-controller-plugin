@@ -246,6 +246,13 @@ namespace UKControllerPlugin {
                 reinterpret_cast<DialogCallArgument *>(lParam)->contextArgument
             );
 
+            // Set the display checkbox
+            CheckDlgButton(
+                hwnd,
+                IDC_MINSTACK_DISPLAY_CHECK,
+                this->config->ShouldRender() ? BST_CHECKED : BST_UNCHECKED
+            );
+
             // Add the selected MSLs to the existing list
             this->activeMslKeys = this->manager.GetAllMslKeys();
             for (
@@ -493,6 +500,10 @@ namespace UKControllerPlugin {
         */
         void MinStackConfigurationDialog::SaveDialog(HWND hwnd)
         {
+            // Set display from check checkbox
+            this->config->SetShouldRender(IsDlgButtonChecked(hwnd, IDC_MINSTACK_DISPLAY_CHECK) == BST_CHECKED);
+
+            // Check how many items are in the minstack list
             unsigned int itemCount = SendDlgItemMessage(
                 hwnd,
                 IDC_MINSTACK_LIST,
