@@ -16,8 +16,9 @@ namespace UKControllerPlugin {
 
             private:
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-                void AddEntryToList(HWND hwnd, LPARAM lParam);
+                void AddEntryToActiveList(HWND hwnd, LPARAM lParam);
                 void InitDialog(HWND hwnd, LPARAM lParam);
+                void RemoveEntryFromActiveList(HWND hwnd, LPARAM lParam);
                 void SaveDialog(HWND hwnd);
                 std::wstring GetListEntryForKey(std::string mslKey);
 

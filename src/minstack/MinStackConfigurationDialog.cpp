@@ -69,7 +69,11 @@ namespace UKControllerPlugin {
                             return TRUE;
                         }
                         case IDC_MINSTACK_ADD: {
-                            this->AddEntryToList(hwnd, wParam);
+                            this->AddEntryToActiveList(hwnd, wParam);
+                            return TRUE;
+                        }
+                        case IDC_MINSTACK_DELETE: {
+                            this->RemoveEntryFromActiveList(hwnd, wParam);
                             return TRUE;
                         }
                     }
@@ -82,7 +86,7 @@ namespace UKControllerPlugin {
         /*
             Take an item from the selection and add it to the active list
         */
-        void MinStackConfigurationDialog::AddEntryToList(HWND hwnd, LPARAM lParam)
+        void MinStackConfigurationDialog::AddEntryToActiveList(HWND hwnd, LPARAM lParam)
         {
             LPARAM selectedMinstackIndex = SendDlgItemMessage(
                 hwnd,
@@ -171,17 +175,24 @@ namespace UKControllerPlugin {
             );
 
             // Add the selected MSLs to the existing list
+            this->activeMslKeys = this->manager.GetAllMslKeys();
             for (
                 MinStackRendererConfiguration::const_iterator it = this->config->cbegin();
                 it != this->config->cend();
                 ++it
             ) {
+                auto mslKey = this->activeMslKeys.find(it->key);
+                if (mslKey == this->activeMslKeys.cend()) {
+                    LogWarning("Unable to add Active MSL to list, not active: " + *mslKey);
+                    continue;
+                }
+
                 unsigned int itemIndex = SendDlgItemMessage(
                     hwnd,
                     IDC_MINSTACK_LIST,
                     LB_ADDSTRING,
                     NULL,
-                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(it->key).c_str())
+                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(*mslKey).c_str())
                 );
 
                 SendDlgItemMessage(
@@ -189,12 +200,11 @@ namespace UKControllerPlugin {
                     IDC_MINSTACK_LIST,
                     LB_SETITEMDATA,
                     itemIndex,
-                    reinterpret_cast<LPARAM>(it->key.c_str())
+                    reinterpret_cast<LPARAM>((*mslKey).c_str())
                 );
             }
 
             // Add all non-active keys to the dropdown
-            this->activeMslKeys = this->manager.GetAllMslKeys();
             for (
                 std::set<std::string>::const_iterator it = this->activeMslKeys.cbegin();
                 it != this->activeMslKeys.cend();
@@ -220,6 +230,79 @@ namespace UKControllerPlugin {
                     reinterpret_cast<LPARAM>(it->c_str())
                 );
             }
+        }
+
+        /*
+            Remove entry from the active list
+        */
+        void MinStackConfigurationDialog::RemoveEntryFromActiveList(HWND hwnd, LPARAM lParam)
+        {
+            LPARAM selectedMinstackIndex = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETCURSEL,
+                NULL,
+                NULL
+            );
+
+            // None selected, stop
+            if (selectedMinstackIndex == LB_ERR) {
+                return;
+            }
+
+            // Get the selected item data
+            TCHAR bufferDisplayString[250];
+            HRESULT mslDisplayString = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETTEXT,
+                selectedMinstackIndex,
+                reinterpret_cast<LPARAM>(bufferDisplayString)
+            );
+
+            LPARAM mslKeyData = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETITEMDATA,
+                selectedMinstackIndex,
+                NULL
+            );
+
+            if (mslDisplayString == LB_ERR || mslKeyData == LB_ERR) {
+                LogError("Failed to get MSL data from active list");
+                return;
+            }
+
+            // Insert into the selection list
+            LPARAM insertedStringPosition = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_SELECT,
+                CB_ADDSTRING,
+                NULL,
+                reinterpret_cast<LPARAM>(bufferDisplayString)
+            );
+
+            if (insertedStringPosition == LB_ERR) {
+                LogError("Failed to insert MSL into selection list");
+                return;
+            }
+
+            LPARAM insertedData = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_SELECT,
+                CB_SETITEMDATA,
+                insertedStringPosition,
+                mslKeyData
+            );
+
+            // Remove from previous list
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_DELETESTRING,
+                selectedMinstackIndex,
+                NULL
+            );
         }
 
         /*
