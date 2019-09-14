@@ -84,6 +84,7 @@ namespace UKControllerPlugin {
                 reinterpret_cast<DialogCallArgument *>(lParam)->contextArgument
             );
 
+            // Add the selected MSLs to the existing list
             for (
                 MinStackRendererConfiguration::const_iterator it = this->config->cbegin();
                 it != this->config->cend();
@@ -91,18 +92,46 @@ namespace UKControllerPlugin {
             ) {
                 HRESULT itemIndex = SendDlgItemMessage(
                     hwnd,
-                    IDC_MINSTACK_SELECT,
-                    CB_ADDSTRING,
+                    IDC_MINSTACK_LIST,
+                    LB_ADDSTRING,
                     NULL,
                     reinterpret_cast<LPARAM>(this->GetListEntryForKey(it->key).c_str())
                 );
 
                 SendDlgItemMessage(
                     hwnd,
-                    IDC_MINSTACK_SELECT,
-                    CB_SETITEMDATA,
+                    IDC_MINSTACK_LIST,
+                    LB_SETITEMDATA,
                     itemIndex,
                     reinterpret_cast<LPARAM>(it->key.c_str())
+                );
+            }
+
+            // Add all non-active keys to the dropdown
+            std::set<std::string> mslKeys = this->manager.GetAllMslKeys();
+            for (
+                std::set<std::string>::const_iterator it = mslKeys.cbegin();
+                it != mslKeys.cend();
+                ++it
+            ) {
+                if (this->config->GetItem(*it) != this->config->invalidItem) {
+                    continue;
+                }
+
+                HRESULT itemIndex = SendDlgItemMessage(
+                    hwnd,
+                    IDC_MINSTACK_SELECT,
+                    CB_ADDSTRING,
+                    NULL,
+                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(*it).c_str())
+                );
+
+                SendDlgItemMessage(
+                    hwnd,
+                    IDC_MINSTACK_LIST,
+                    CB_SETITEMDATA,
+                    itemIndex,
+                    reinterpret_cast<LPARAM>(it->c_str())
                 );
             }
         }

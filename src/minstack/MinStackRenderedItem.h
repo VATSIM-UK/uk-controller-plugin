@@ -22,6 +22,11 @@ namespace UKControllerPlugin {
                 return this->order == compare.order
                     && this->key == compare.key;
             }
+
+            bool operator!=(const MinStackRenderedItem & compare) const
+            {
+                return !(*this == compare);
+            }
         } MinStackRenderedItem;
     }  // namespace MinStack
 }  // namespace UKControllerPlugin
