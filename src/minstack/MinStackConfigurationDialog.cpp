@@ -90,7 +90,7 @@ namespace UKControllerPlugin {
                 it != this->config->cend();
                 ++it
             ) {
-                HRESULT itemIndex = SendDlgItemMessage(
+                unsigned int itemIndex = SendDlgItemMessage(
                     hwnd,
                     IDC_MINSTACK_LIST,
                     LB_ADDSTRING,
@@ -128,7 +128,7 @@ namespace UKControllerPlugin {
 
                 SendDlgItemMessage(
                     hwnd,
-                    IDC_MINSTACK_LIST,
+                    IDC_MINSTACK_SELECT,
                     CB_SETITEMDATA,
                     itemIndex,
                     reinterpret_cast<LPARAM>(it->c_str())
@@ -141,7 +141,46 @@ namespace UKControllerPlugin {
         */
         void MinStackConfigurationDialog::SaveDialog(HWND hwnd)
         {
-            
+            unsigned int itemCount = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETCOUNT,
+                NULL,
+                NULL
+            );
+
+            if (itemCount == LB_ERR) {
+                LogError("Unable to count items in MinStack list");
+                return;
+            }
+
+            // Update the config from the list
+            std::set<MinStackRenderedItem> newConfig;
+            for (unsigned int i = 0; i < itemCount; i++) {
+                LPARAM mslKey = SendDlgItemMessage(
+                    hwnd,
+                    IDC_MINSTACK_LIST,
+                    LB_GETITEMDATA,
+                    i,
+                    NULL
+                );
+
+                newConfig.insert(
+                    {
+                        i,
+                        reinterpret_cast<const char *>(mslKey),
+                    }
+                );
+            }
+
+           this->config->Reset();
+           for (
+               std::set<MinStackRenderedItem>::const_iterator it = newConfig.cbegin();
+               it != newConfig.cend();
+               ++it
+            ) {
+               this->config->AddItem(*it);
+           }
         }
 
         /*

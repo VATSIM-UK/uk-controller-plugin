@@ -25,7 +25,7 @@ namespace UKControllerPlugin {
                 const_iterator cbegin(void) const { return this->items.cbegin(); }
                 const_iterator cend(void) const { return this->items.cend(); }
 
-                const UKControllerPlugin::MinStack::MinStackRenderedItem invalidItem = { 0, "" };
+                const UKControllerPlugin::MinStack::MinStackRenderedItem invalidItem = { UINT_MAX, "" };
 
             private:
 
