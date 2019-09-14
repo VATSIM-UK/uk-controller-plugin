@@ -7,7 +7,6 @@
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "graphics/GdiplusBrushes.h"
 #include "euroscope/AsrEventHandlerCollection.h"
-#include "minstack/TerminalControlArea.h"
 #include "task/TaskRunnerInterface.h"
 #include "metar/MetarEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
@@ -22,7 +21,6 @@ using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
-using UKControllerPlugin::MinStack::TerminalControlArea;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
@@ -39,14 +37,12 @@ namespace UKControllerPlugin {
         */
         void MinStackModule::BootstrapPlugin(
             std::shared_ptr<MinStackManager> & msl,
-            MetarEventHandlerCollection & metarEvents,
             TaskRunnerInterface & taskManager,
             ApiInterface & api,
             WebsocketEventProcessorCollection & websocketProcessors,
             DialogManager & dialogManager
         ) {
             msl.reset(new MinStackManager);
-            metarEvents.RegisterHandler(msl);
             websocketProcessors.AddProcessor(msl);
 
             // Create the dialog for configuration

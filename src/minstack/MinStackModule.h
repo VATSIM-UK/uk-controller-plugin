@@ -7,9 +7,6 @@ namespace UKControllerPlugin {
     namespace Plugin {
         class FunctionCallEventHandler;
     }  // namespace Plugin
-    namespace Metar {
-        class MetarEventHandlerCollection;
-    }  // namespace Metar
     namespace RadarScreen {
         class RadarRenderableCollection;
         class ConfigurableDisplayCollection;
@@ -47,7 +44,6 @@ namespace UKControllerPlugin {
             public:
                 static void BootstrapPlugin(
                     std::shared_ptr<MinStackManager> & msl,
-                    UKControllerPlugin::Metar::MetarEventHandlerCollection & metarEvents,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface & taskManager,
                     UKControllerPlugin::Api::ApiInterface & api,
                     UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors,

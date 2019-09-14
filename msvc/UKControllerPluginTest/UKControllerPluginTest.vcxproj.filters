@@ -381,9 +381,6 @@
     <ClCompile Include="..\..\test\test\minstack\MinStackRendererTest.cpp">
       <Filter>test\minstack</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\minstack\TerminalControlAreaTest.cpp">
-      <Filter>test\minstack</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeBootstrapTest.cpp">
       <Filter>test\offblock</Filter>
     </ClCompile>
@@ -794,9 +791,6 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockTaskRunnerInterface.h">
-      <Filter>mock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockTerminalControlArea.h">
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h">

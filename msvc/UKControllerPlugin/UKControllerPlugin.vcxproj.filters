@@ -507,9 +507,6 @@
     <ClInclude Include="..\..\src\minstack\MinStackRenderer.h">
       <Filter>src\minstack</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\minstack\TerminalControlArea.h">
-      <Filter>src\minstack</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h">
       <Filter>src\offblock</Filter>
     </ClInclude>
@@ -1250,9 +1247,6 @@
       <Filter>src\minstack</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\minstack\MinStackRenderer.cpp">
-      <Filter>src\minstack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\minstack\TerminalControlArea.cpp">
       <Filter>src\minstack</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp">

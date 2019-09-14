@@ -2,10 +2,8 @@
 #include "minstack/MinStackModule.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "mock/MockApiInterface.h"
-#include "metar/MetarEventHandlerCollection.h"
 #include "minstack/MinStackManager.h"
 #include "curl/CurlResponse.h"
-#include "minstack/TerminalControlArea.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
@@ -17,12 +15,10 @@
 #include "dialog/DialogProviderInterface.h"
 
 using UKControllerPlugin::MinStack::MinStackModule;
-using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::Curl::CurlResponse;
-using UKControllerPlugin::MinStack::TerminalControlArea;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
@@ -52,7 +48,6 @@ namespace UKControllerPluginTest {
                 // For the plugin tests
                 NiceMock<MockApiInterface> mockApi;
                 MockTaskRunnerInterface mockRunner;
-                MetarEventHandlerCollection metarEvents;
                 WebsocketEventProcessorCollection websockets;
                 std::shared_ptr<MinStackManager> manager;
 
@@ -82,37 +77,12 @@ namespace UKControllerPluginTest {
 
             MinStackModule::BootstrapPlugin(
                 this->manager,
-                this->metarEvents,
                 this->mockRunner,
                 this->mockApi,
                 this->websockets,
                 this->dialogManager
             );
-            EXPECT_NO_THROW(manager->HasTerminalControlArea("TESTTMA"));
-        }
-
-        TEST_F(MinStackModuleTest, BootstrapPluginRegistersManagerForMetarEvents)
-        {
-            nlohmann::json mslData;
-            mslData["airfield"] = {
-                {"EGLL", 8000}
-            };
-            mslData["tma"] = {
-                {"LTMA", 7000}
-            };
-            EXPECT_CALL(this->mockApi, GetMinStackLevels())
-                .Times(1)
-                .WillRepeatedly(Return(mslData));
-
-            MinStackModule::BootstrapPlugin(
-                this->manager,
-                this->metarEvents,
-                this->mockRunner,
-                this->mockApi,
-                this->websockets,
-                this->dialogManager
-            );
-            EXPECT_EQ(1, metarEvents.CountHandlers());
+            EXPECT_NO_THROW(manager->GetMslKeyTma("LTMA"));
         }
 
         TEST_F(MinStackModuleTest, BootstrapPluginRegistersManagerForWebsocketEvents)
@@ -130,7 +100,6 @@ namespace UKControllerPluginTest {
 
             MinStackModule::BootstrapPlugin(
                 this->manager,
-                this->metarEvents,
                 this->mockRunner,
                 this->mockApi,
                 this->websockets,
@@ -154,7 +123,6 @@ namespace UKControllerPluginTest {
 
             MinStackModule::BootstrapPlugin(
                 this->manager,
-                this->metarEvents,
                 this->mockRunner,
                 this->mockApi,
                 this->websockets,

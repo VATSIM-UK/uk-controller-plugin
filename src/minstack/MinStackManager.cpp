@@ -1,6 +1,5 @@
 #include "pch/stdafx.h"
 #include "minstack/MinStackManager.h"
-#include "minstack/TerminalControlArea.h"
 #include "helper/HelperFunctions.h"
 #include "task/TaskRunner.h"
 
@@ -38,20 +37,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Adds a TMA to the list of TMAs.
-        */
-        void MinStackManager::AddTerminalControlArea(std::shared_ptr<TerminalControlArea> tma)
-        {
-            // Add it to the list
-            if (this->HasTerminalControlArea(tma->GetCharName())) {
-                return;
-            }
-
-            this->tmaList[tma->GetCharName()] = tma;
-            this->tmaRenderingList.push_back(tma);
-        }
-
-        /*
             Get all keys for MSLs
         */
         std::set<std::string> MinStackManager::GetAllMslKeys(void) const
@@ -66,14 +51,6 @@ namespace UKControllerPlugin {
             }
 
             return keys;
-        }
-
-        /*
-            Returns a vector of pointers to the constant versions of the TMAs.
-        */
-        std::vector<std::shared_ptr<const TerminalControlArea>> MinStackManager::GetAllTmas(void)
-        {
-            return this->tmaRenderingList;
         }
 
         /*
@@ -105,24 +82,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Returns a pointer to the TMA that is related to the given airfield
-        */
-        std::shared_ptr<TerminalControlArea> MinStackManager::GetTerminalControlAreaForAirfield(std::string airfield)
-        {
-            for (
-                std::map<std::string, std::shared_ptr<TerminalControlArea>>::iterator it = this->tmaList.begin();
-                it != this->tmaList.end();
-                ++it
-            ) {
-                if (it->second->GetCalculationAirfield().compare(airfield) == 0) {
-                    return it->second;
-                }
-            }
-
-            return NULL;
-        }
-
-        /*
             We've received some new MSLs from the web API, update them locally
         */
         void MinStackManager::ProcessWebsocketMessage(const WebsocketMessage & message)
@@ -142,62 +101,6 @@ namespace UKControllerPlugin {
                     "private-minstack-updates"
                 }
             };
-        }
-
-        /*
-            Returns true if the TMA is known to the class.
-        */
-        bool MinStackManager::HasTerminalControlArea(std::string tma)
-        {
-            return this->tmaList.count(tma) == 1;
-        }
-
-        /*
-            Returns true if one of the TMAs managed by this
-            class has it's MSL determined by the given airfield.
-        */
-        bool MinStackManager::IsConcernedAirfield(std::string airfield)
-        {
-            for (
-                std::map<std::string, std::shared_ptr<TerminalControlArea>>::iterator it = this->tmaList.begin();
-                it != this->tmaList.end();
-                ++it
-            ) {
-                if (it->second->GetCalculationAirfield().compare(airfield) == 0) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /*
-            The user has clicked to acknowledge one of the
-            minimum stack levels, set the TMA to acknowledged.
-        */
-        void MinStackManager::MinStackClicked(const char* tma)
-        {
-            if (!this->HasTerminalControlArea(tma)) {
-                return;
-            }
-
-            this->tmaList.at(tma)->AcknowledgeMinStack();
-        }
-
-        /*
-            A new QNH has been detected, so we check the TMA exists
-            then set the new MSL.
-        */
-        void MinStackManager::NewMetar(std::string station, std::string metar)
-        {
-            if (!this->IsConcernedAirfield(station)) {
-                return;
-            }
-
-            int qnh = this->ProcessMetar(metar);
-            if (qnh) {
-                GetTerminalControlAreaForAirfield(station)->SetMinStack(qnh);
-            }
         }
 
         /*
@@ -230,18 +133,6 @@ namespace UKControllerPlugin {
 
             this->mslMap.at(key).msl = msl;
             this->mslMap.at(key).updatedAt = std::chrono::system_clock::now();
-        }
-
-        /*
-            Removes a given TMA from the MinStack module.
-        */
-        void MinStackManager::RemoveTerminalControlArea(std::string tma)
-        {
-            if (this->HasTerminalControlArea(tma)) {
-                return;
-            }
-
-            this->tmaList.erase(tmaList.find(tma));
         }
 
         void MinStackManager::UpdateAllMsls(nlohmann::json mslData)

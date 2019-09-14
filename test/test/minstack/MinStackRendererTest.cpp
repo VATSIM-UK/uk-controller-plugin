@@ -7,7 +7,6 @@
 #include "helper/TestingFunctions.h"
 #include "plugin/PopupMenuItem.h"
 #include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-#include "minstack/TerminalControlArea.h"
 #include "minstack/MinStackRendererConfiguration.h"
 #include "dialog/DialogManager.h"
 #include "mock/MockDialogProvider.h"
@@ -19,7 +18,6 @@ using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
-using UKControllerPlugin::MinStack::TerminalControlArea;
 using UKControllerPlugin::MinStack::MinStackRendererConfiguration;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Dialog::DialogData;

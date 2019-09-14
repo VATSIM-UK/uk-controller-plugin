@@ -237,7 +237,6 @@ namespace UKControllerPlugin {
         CountdownModule::BootstrapPlugin(*this->container);
         MinStackModule::BootstrapPlugin(
             this->container->minStack,
-            *this->container->metarEventHandler,
             *this->container->taskRunner,
             *this->container->api,
             *this->container->websocketProcessors,
