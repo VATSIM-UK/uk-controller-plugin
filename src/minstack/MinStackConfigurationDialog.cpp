@@ -76,6 +76,14 @@ namespace UKControllerPlugin {
                             this->RemoveEntryFromActiveList(hwnd, wParam);
                             return TRUE;
                         }
+                        case IDC_MINSTACK_DOWN: {
+                            this->SwapElements(hwnd, lParam, false);
+                            return TRUE;
+                        }
+                        case IDC_MINSTACK_UP: {
+                            this->SwapElements(hwnd, lParam, true);
+                            return TRUE;
+                        }
                     }
                 }
             }
@@ -166,6 +174,70 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Swap two items in the list box, the second item should be AFTER the first in
+            the order.
+        */
+        void MinStackConfigurationDialog::DoElementSwap(
+            HWND hwnd,
+            unsigned int firstItemIndex,
+            LPARAM firstItemString,
+            LPARAM firstItemData,
+            unsigned int secondItemIndex,
+            LPARAM secondItemString,
+            LPARAM secondItemData
+        ) {
+            // Delete the items
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_DELETESTRING,
+                secondItemIndex,
+                NULL
+            );
+
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_DELETESTRING,
+                firstItemIndex,
+                NULL
+            );
+
+            // Put them back, in the other order
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_INSERTSTRING,
+                firstItemIndex,
+                secondItemString
+            );
+
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_SETITEMDATA,
+                firstItemIndex,
+                secondItemData
+            );
+
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_INSERTSTRING,
+                secondItemIndex,
+                firstItemString
+            );
+
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_SETITEMDATA,
+                secondItemIndex,
+                firstItemData
+            );
+        }
+
+        /*
             Initialise the controls from config
         */
         void MinStackConfigurationDialog::InitDialog(HWND hwnd, LPARAM lParam)
@@ -230,6 +302,117 @@ namespace UKControllerPlugin {
                     reinterpret_cast<LPARAM>(it->c_str())
                 );
             }
+        }
+
+        /*
+            Swap two elements
+        */
+        void MinStackConfigurationDialog::SwapElements(HWND hwnd, LPARAM lParam, bool swapUp)
+        {
+            LPARAM selectedMinstackIndex = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETCURSEL,
+                NULL,
+                NULL
+            );
+
+            LPARAM itemCount = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETCOUNT,
+                NULL,
+                NULL
+            );
+
+            // None selected, or at the extemities
+            if (
+                selectedMinstackIndex == LB_ERR ||
+-                itemCount == LB_ERR ||
+                this->IsLastElement(selectedMinstackIndex, itemCount, swapUp)
+            ) {
+                return;
+            }
+
+            unsigned int swapItemIndex = swapUp ? selectedMinstackIndex - 1 : selectedMinstackIndex + 1;
+
+            // Get the selected item data
+            TCHAR bufferDisplayStringOriginal[250];
+            HRESULT mslDisplayStringOriginal = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETTEXT,
+                selectedMinstackIndex,
+                reinterpret_cast<LPARAM>(bufferDisplayStringOriginal)
+            );
+
+            LPARAM mslKeyDataOriginal = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETITEMDATA,
+                selectedMinstackIndex,
+                NULL
+            );
+
+            if (mslDisplayStringOriginal == LB_ERR || mslKeyDataOriginal == LB_ERR) {
+                LogError("Failed to get original item data for swap");
+                return;
+            }
+
+            // Get the swap item data
+            TCHAR bufferDisplayStringSwap[250];
+            HRESULT mslDisplayStringSwap = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETTEXT,
+                swapItemIndex,
+                reinterpret_cast<LPARAM>(bufferDisplayStringSwap)
+            );
+
+            LPARAM mslKeyDataSwap = SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_GETITEMDATA,
+                swapItemIndex,
+                NULL
+            );
+
+            if (mslDisplayStringSwap == LB_ERR || mslKeyDataSwap == LB_ERR) {
+                LogError("Failed to get original item data for swap");
+                return;
+            }
+
+            // Do the Swap
+            if (swapUp) {
+                this->DoElementSwap(
+                    hwnd,
+                    swapItemIndex,
+                    reinterpret_cast<LPARAM>(bufferDisplayStringSwap),
+                    mslKeyDataSwap,
+                    selectedMinstackIndex,
+                    reinterpret_cast<LPARAM>(bufferDisplayStringOriginal),
+                    mslKeyDataOriginal
+                );
+            } else {
+                this->DoElementSwap(
+                    hwnd,
+                    selectedMinstackIndex,
+                    reinterpret_cast<LPARAM>(bufferDisplayStringOriginal),
+                    mslKeyDataOriginal,
+                    swapItemIndex,
+                    reinterpret_cast<LPARAM>(bufferDisplayStringSwap),
+                    mslKeyDataSwap
+                );
+            }
+
+            // Select the new item index
+            SendDlgItemMessage(
+                hwnd,
+                IDC_MINSTACK_LIST,
+                LB_SETCURSEL,
+                swapItemIndex,
+                NULL
+            );
         }
 
         /*
@@ -361,6 +544,14 @@ namespace UKControllerPlugin {
             std::string identifier = facility == "TMA" ? mslKey.substr(4) : mslKey.substr(9);
 
             return HelperFunctions::ConvertToWideString(facility + " - " + identifier);
+        }
+
+        /*
+            Is the selected element the last in the list?
+        */
+        bool MinStackConfigurationDialog::IsLastElement(unsigned int selectedIndex, unsigned int itemCount, bool swapUp)
+        {
+            return swapUp ? selectedIndex == 0 : selectedIndex == itemCount - 1;
         }
     }  // namespace MinStack
 }  // namespace UKControllerPlugin
