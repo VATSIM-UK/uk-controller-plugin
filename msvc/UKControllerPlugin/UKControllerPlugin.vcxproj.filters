@@ -933,6 +933,9 @@
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\airfield\Runway.h">
+      <Filter>src\airfield</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1593,6 +1596,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.cpp">
       <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\airfield\Runway.cpp">
+      <Filter>src\airfield</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

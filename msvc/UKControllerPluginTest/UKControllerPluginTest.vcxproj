@@ -27,6 +27,7 @@
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\AirfieldTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp" />
+    <ClCompile Include="..\..\test\test\airfield\RunwayTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiHelperTest.cpp" />
