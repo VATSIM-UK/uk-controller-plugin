@@ -930,6 +930,9 @@
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1586,6 +1589,9 @@
       <Filter>src\minstack</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestriction.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>

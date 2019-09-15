@@ -227,11 +227,6 @@ namespace UKControllerPlugin {
             InitialAltitudeModule::BootstrapPlugin(dependencyCache, *this->container);
         }
 
-        UKControllerPlugin::Hold::BootstrapPlugin(
-            *dependencyProvider,
-            *this->container,
-            *this->container->userMessager
-        );
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(*this->container);
@@ -241,6 +236,11 @@ namespace UKControllerPlugin {
             *this->container->api,
             *this->container->websocketProcessors,
             *this->container->dialogManager
+        );
+        UKControllerPlugin::Hold::BootstrapPlugin(
+            *dependencyProvider,
+            *this->container,
+            *this->container->userMessager
         );
 
         // Due to flightplan modifications and API interactions, only enable the squawk module
