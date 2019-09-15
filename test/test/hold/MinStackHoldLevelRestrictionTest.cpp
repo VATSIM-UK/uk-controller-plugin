@@ -13,7 +13,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 MinStackHoldLevelRestrictionTest()
-                    : restriction("EGLL", 1000, manager)
+                    : restriction("EGLL", 2000, 8000, manager)
                 {
                     manager.AddMsl("airfield.EGLL", "airfield", "Heathrow", 7000);
                 }
@@ -24,22 +24,28 @@ namespace UKControllerPluginTest {
 
         TEST_F(MinStackHoldLevelRestrictionTest, IsLevelRestrictedReturnsTrueIfLevelBelowMinimum)
         {
-            EXPECT_TRUE(this->restriction.LevelRestricted(7000));
+            EXPECT_TRUE(this->restriction.LevelRestricted(8000));
         }
 
         TEST_F(MinStackHoldLevelRestrictionTest, IsLevelRestrictedReturnsFalseIfLevelAtMinimum)
         {
-            EXPECT_FALSE(this->restriction.LevelRestricted(8000));
+            EXPECT_FALSE(this->restriction.LevelRestricted(9000));
         }
 
         TEST_F(MinStackHoldLevelRestrictionTest, IsLevelRestrictedReturnsFalseIfLevelAboveMinimum)
         {
-            EXPECT_FALSE(this->restriction.LevelRestricted(9000));
+            EXPECT_FALSE(this->restriction.LevelRestricted(10000));
+        }
+
+        TEST_F(MinStackHoldLevelRestrictionTest, IsLevelRestrictedReturnsTrueIfBelowOverride)
+        {
+            MinStackHoldLevelRestriction restriction2("EGKK", 1000, 9000, manager);
+            EXPECT_TRUE(restriction2.LevelRestricted(8000));
         }
 
         TEST_F(MinStackHoldLevelRestrictionTest, IsLevelRestrictedReturnsFalseNoMsl)
         {
-            MinStackHoldLevelRestriction restriction2("EGKK", 1000, manager);
+            MinStackHoldLevelRestriction restriction2("EGKK", 1000, 7000, manager);
             EXPECT_FALSE(restriction2.LevelRestricted(8000));
         }
     }  // namespace Hold

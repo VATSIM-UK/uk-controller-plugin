@@ -12,9 +12,10 @@ namespace UKControllerPlugin {
         MinStackHoldLevelRestriction::MinStackHoldLevelRestriction(
             std::string minStackSubjectAirfield,
             unsigned int minStackOffset,
+            unsigned int override,
             const MinStackManager & minStackLevels
         )
-            : minStackLevels(minStackLevels), minStackOffset(minStackOffset),
+            : minStackLevels(minStackLevels), minStackOffset(minStackOffset), override(override),
             minStackKey(this->minStackLevels.GetMslKeyAirfield(minStackSubjectAirfield))
         {
 
@@ -22,6 +23,10 @@ namespace UKControllerPlugin {
 
         bool MinStackHoldLevelRestriction::LevelRestricted(unsigned int level) const
         {
+            if (level < override) {
+                return false;
+            }
+
             const MinStackLevel & msl = this->minStackLevels.GetMinStackLevel(this->minStackKey);
 
             if (msl == this->minStackLevels.invalidMsl) {
