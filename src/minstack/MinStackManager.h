@@ -1,5 +1,4 @@
 #pragma once
-#include "metar/MetarEventHandlerInterface.h"
 #include "websocket/WebsocketEventProcessorInterface.h"
 #include "minstack/MinStackLevel.h"
 
