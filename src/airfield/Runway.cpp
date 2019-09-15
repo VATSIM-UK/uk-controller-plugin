@@ -5,8 +5,13 @@
 namespace UKControllerPlugin {
     namespace Airfield {
 
-        Runway::Runway(std::string sectorfileIdentifier, std::string identifier, unsigned int heading)
-            : sectorfileIdentifier(sectorfileIdentifier), identifier(identifier), heading(heading)
+        Runway::Runway(
+            std::string sectorfileIdentifier,
+            std::string airfield,
+            std::string identifier,
+            unsigned int heading
+        )
+            : sectorfileIdentifier(sectorfileIdentifier), airfield(airfield), identifier(identifier), heading(heading)
         {
 
         }

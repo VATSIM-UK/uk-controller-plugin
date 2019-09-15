@@ -12,6 +12,7 @@ namespace UKControllerPlugin {
 
                 Runway(
                     std::string sectorfileIdentifier,
+                    std::string airfield,
                     std::string identifier,
                     unsigned int heading
                 );
@@ -24,6 +25,9 @@ namespace UKControllerPlugin {
 
                 // The runway identifier in the sector file
                 const std::string sectorfileIdentifier;
+
+                // The airfield associated with the runway
+                const std::string airfield;
 
                 // The regular identifier used for the runway
                 const std::string identifier;
