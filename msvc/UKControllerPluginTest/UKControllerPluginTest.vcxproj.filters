@@ -713,6 +713,9 @@
     <ClCompile Include="..\..\test\test\hold\MinStackHoldLevelRestrictionTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\MinStackHoldLevelRestrictionSerializerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

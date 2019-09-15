@@ -23,8 +23,8 @@ namespace UKControllerPlugin {
 
         bool MinStackHoldLevelRestriction::LevelRestricted(unsigned int level) const
         {
-            if (level < override) {
-                return false;
+            if (level < this->override) {
+                return true;
             }
 
             const MinStackLevel & msl = this->minStackLevels.GetMinStackLevel(this->minStackKey);

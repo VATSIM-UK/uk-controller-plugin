@@ -10,7 +10,7 @@ using testing::Test;
 namespace UKControllerPluginTest {
     namespace Hold {
 
-        class MinStackHoldLevelRestrictionSerializerTest
+        class MinStackHoldLevelRestrictionSerializerTest : public Test
         {
             public:
                 PersistenceContainer container;
@@ -98,7 +98,7 @@ namespace UKControllerPluginTest {
                 { "override", 8000 }
             };
 
-            EXPECT_FALSE(RestrictionJsonValid(json));
+            EXPECT_TRUE(RestrictionJsonValid(json));
         }
 
         TEST_F(MinStackHoldLevelRestrictionSerializerTest, ItReturnsNullPtrOnInvalidJson)

@@ -4,6 +4,8 @@
 #include "hold/HoldingData.h"
 #include "hold/HoldRestrictionSerializer.h"
 
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+
 namespace UKControllerPlugin {
     namespace Hold {
 
@@ -12,7 +14,10 @@ namespace UKControllerPlugin {
         /*
             Create HoldingData from JSON
         */
-        void from_json(const nlohmann::json & json, HoldingData & holdingData) {
+        void from_json(
+            const nlohmann::json & json,
+            HoldingData & holdingData
+        ) {
             if (!JsonValid(json)) {
                 holdingData = { 0, "INVALID" };
                 return;
@@ -25,13 +30,24 @@ namespace UKControllerPlugin {
             json.at("maximum_altitude").get_to(holdingData.maximum);
             json.at("inbound_heading").get_to(holdingData.inbound);
             json.at("turn_direction").get_to(holdingData.turnDirection);
-            holdingData.restrictions = json.at("restrictions")
-                .get<std::set<std::unique_ptr<AbstractHoldLevelRestriction>>>();
         }
 
-        /*
-            Returns true if the holding data is valid
-        */
+        void from_json_with_restrictions(
+            const nlohmann::json & json,
+            HoldingData & holdingData,
+            const PersistenceContainer & container
+        ) {
+            from_json(json, holdingData);
+
+            if (holdingData == holdSerializerInvalid) {
+                return;
+            }
+
+            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> restrictions;
+            hold_restriction_from_json(json.at("restrictions"), std::move(restrictions), container);
+            holdingData.restrictions = std::move(restrictions);
+        }
+
         bool JsonValid(const nlohmann::json & data)
         {
             return data.is_object() &&

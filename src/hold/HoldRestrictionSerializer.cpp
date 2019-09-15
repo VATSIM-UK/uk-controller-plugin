@@ -2,6 +2,10 @@
 #include "hold/HoldRestrictionSerializer.h"
 #include "hold/BlockedHoldLevelRestrictionSerializer.h"
 #include "hold/BlockedHoldLevelRestriction.h"
+#include "hold/MinStackHoldLevelRestriction.h"
+#include "hold/MinStackHoldLevelRestrictionSerializer.h"
+
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -10,9 +14,10 @@ namespace UKControllerPlugin {
 
         const std::string minimumLevelRestriction = "minimum-level";
 
-        void from_json(
+        void hold_restriction_from_json(
             const nlohmann::json & json,
-            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> & restrictions
+            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> & restrictions,
+            const PersistenceContainer & container
         ) {
             for (nlohmann::json::const_iterator it = json.cbegin(); it != json.cend(); ++it) {
                 if (!ValidRestrictionData(*it)) {
@@ -26,7 +31,7 @@ namespace UKControllerPlugin {
 
                 // Not yet implemented
                 if (it->at("type") == minimumLevelRestriction) {
-                    continue;
+                    restriction = MinStackRestrictionFromJson(*it, container);
                 }
 
                 if (!restriction) {

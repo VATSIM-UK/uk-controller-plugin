@@ -77,7 +77,7 @@ namespace UKControllerPlugin {
         ) {
             // Update local dependencies and build hold data
             nlohmann::json holdDependency = dependencyProvider.GetDependency(DependencyConfig::holds);
-            container.holdManager = CreateHoldManager(holdDependency);
+            container.holdManager = CreateHoldManager(holdDependency, container);
 
             // Create the object to manage the popup menu
             int holdSelectionCancelId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
