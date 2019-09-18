@@ -13,6 +13,7 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "update/PluginVersion.h"
 #include "command/CommandHandlerCollection.h"
+#include "euroscope/EuroscopeSectorFileElementWrapper.h"
 
 using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPlugin::Windows::WinApiInterface;
@@ -33,6 +34,8 @@ using UKControllerPlugin::RadarScreen::RadarScreenFactory;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PluginVersion;
 using UKControllerPlugin::Command::CommandHandlerCollection;
+using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
+using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementWrapper;
 
 namespace UKControllerPlugin {
 
@@ -125,6 +128,29 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::DoInitialControllerLoad(void)
     {
+        EuroScopePlugIn::CSectorElement element = this->SectorFileElementSelectFirst(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY);
+        EuroScopePlugIn::CSectorElement first = this->SectorFileElementSelectFirst(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY);;
+
+        do {
+            if (!element.IsValid()) {
+                break;
+            }
+
+            std::string name = element.GetName();
+            std::string airport = element.GetAirportName();
+            std::string runwayName1 = element.GetRunwayName(0);
+            std::string runwayName2 = element.GetRunwayName(1);
+            std::string componentName1 = element.GetComponentName(0);
+            std::string componentName2 = element.GetComponentName(1);
+            unsigned int heading1 = element.GetRunwayHeading(0);
+            unsigned int heading2 = element.GetRunwayHeading(1);
+            bool activeForDepartures1 = element.IsElementActive(true, 0);
+            bool activeForDepartures2 = element.IsElementActive(true, 1);
+            bool activeForArrivals1 = element.IsElementActive(false, 0);
+            bool activeForArrivals2 = element.IsElementActive(false, 1);
+            element = this->SectorFileElementSelectNext(element, EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY);
+        } while (element.GetName() != first.GetName());
+
         LogInfo("Initial controller load started");
 
         EuroScopePlugIn::CController me = this->ControllerMyself();
@@ -176,6 +202,27 @@ namespace UKControllerPlugin {
             this->OnFlightPlanFlightPlanDataUpdate(current);
         } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
         LogInfo("Initial fightplan load complete");
+    }
+
+    /*
+        Get all the sector file elements by type
+    */
+    std::set<std::unique_ptr<EuroscopeSectorFileElementInterface>> UKPlugin::GetAllElementsByType(int type)
+    {
+        EuroScopePlugIn::CSectorElement first = this->SectorFileElementSelectFirst(type);
+        EuroScopePlugIn::CSectorElement selected = first;
+
+        std::set<std::unique_ptr<EuroscopeSectorFileElementInterface>> elements;
+
+        while (true) {
+            if (!selected.IsValid()) {
+                break;
+            }
+
+            elements.insert(std::make_unique<EuroscopeSectorFileElementWrapper>(selected));
+        }
+
+        return std::move(elements);
     }
 
     /*

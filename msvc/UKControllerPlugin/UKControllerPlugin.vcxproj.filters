@@ -936,6 +936,15 @@
     <ClInclude Include="..\..\src\airfield\Runway.h">
       <Filter>src\airfield</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\SectorFileProviderInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1599,6 +1608,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\airfield\Runway.cpp">
       <Filter>src\airfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.cpp">
+      <Filter>src\euroscope</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

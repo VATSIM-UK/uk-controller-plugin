@@ -102,9 +102,11 @@
     <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetPositionDataInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetWrapper.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroscopeExtractedRouteInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroscopePluginLoopbackInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroScopeRadarLoopbackInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfiguration.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsDialog.h" />
@@ -113,6 +115,7 @@
     <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\SectorFileProviderInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
@@ -355,6 +358,7 @@
     <ClCompile Include="..\..\src\euroscope\EuroScopeCFlightPlanWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\EuroScopeCRadarTargetWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\EuroscopeExtractedRouteInterface.cpp" />
+    <ClCompile Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfiguration.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsDialog.cpp" />

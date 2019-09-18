@@ -2,6 +2,7 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/UserSettingProviderInterface.h"
 #include "radarscreen/RadarScreenFactory.h"
+#include "euroscope/SectorFileProviderInterface.h"
 
 // Forward Declarations
 namespace UKControllerPlugin {
@@ -55,7 +56,8 @@ namespace UKControllerPlugin {
     */
     class UKPlugin : public EuroScopePlugIn::CPlugIn,
         public UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface,
-        public UKControllerPlugin::Euroscope::UserSettingProviderInterface
+        public UKControllerPlugin::Euroscope::UserSettingProviderInterface,
+        public UKControllerPlugin::Euroscope::SectorFileProviderInterface
     {
         public:
             UKPlugin(
@@ -133,6 +135,10 @@ namespace UKControllerPlugin {
             bool KeyExists(std::string key) override;
             void SetKey(std::string key, std::string description, std::string value) override;
 
+                // Inherited via SectorFileProviderInterface
+            virtual std::set<std::unique_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>> 
+                GetAllElementsByType(int type) override;
+
         private:
 
             bool ControllerIsMe(EuroScopePlugIn::CController controller, EuroScopePlugIn::CController me);
@@ -168,5 +174,5 @@ namespace UKControllerPlugin {
 
             // Whether or not we've initialised the plugin.
             bool initialised = false;
-    };  // namespace Windows
+};  // namespace Windows
 }  // namespace UKControllerPlugin
