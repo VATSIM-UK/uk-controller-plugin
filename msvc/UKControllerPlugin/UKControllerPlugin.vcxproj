@@ -115,6 +115,7 @@
     <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\SectorFileAwareInterface.h" />
     <ClInclude Include="..\..\src\euroscope\SectorFileProviderInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />

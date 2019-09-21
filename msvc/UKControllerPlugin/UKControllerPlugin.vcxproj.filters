@@ -945,6 +945,9 @@
     <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\SectorFileAwareInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
