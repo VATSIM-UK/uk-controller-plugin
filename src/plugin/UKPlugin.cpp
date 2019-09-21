@@ -207,19 +207,19 @@ namespace UKControllerPlugin {
     /*
         Get all the sector file elements by type
     */
-    std::set<std::unique_ptr<EuroscopeSectorFileElementInterface>> UKPlugin::GetAllElementsByType(int type)
+    std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> UKPlugin::GetAllElementsByType(int type)
     {
         EuroScopePlugIn::CSectorElement first = this->SectorFileElementSelectFirst(type);
         EuroScopePlugIn::CSectorElement selected = first;
 
-        std::set<std::unique_ptr<EuroscopeSectorFileElementInterface>> elements;
+        std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> elements;
 
         while (true) {
             if (!selected.IsValid()) {
                 break;
             }
 
-            elements.insert(std::make_unique<EuroscopeSectorFileElementWrapper>(selected));
+            elements.insert(std::make_shared<EuroscopeSectorFileElementWrapper>(selected));
         }
 
         return std::move(elements);
