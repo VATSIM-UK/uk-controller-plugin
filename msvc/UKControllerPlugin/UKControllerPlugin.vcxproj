@@ -118,6 +118,7 @@
     <ClInclude Include="..\..\src\euroscope\SectorFileAwareCollection.h" />
     <ClInclude Include="..\..\src\euroscope\SectorFileAwareInterface.h" />
     <ClInclude Include="..\..\src\euroscope\SectorFileProviderInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\UserSectorFileTracker.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
@@ -369,6 +370,7 @@
     <ClCompile Include="..\..\src\euroscope\PluginUserSettingBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\SectorFileAwareCollection.cpp" />
+    <ClCompile Include="..\..\src\euroscope\UserSectorFileTracker.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />

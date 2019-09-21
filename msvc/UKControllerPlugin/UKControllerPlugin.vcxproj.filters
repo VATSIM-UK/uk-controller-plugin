@@ -951,6 +951,9 @@
     <ClInclude Include="..\..\src\euroscope\SectorFileAwareCollection.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\UserSectorFileTracker.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1619,6 +1622,9 @@
       <Filter>src\euroscope</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\SectorFileAwareCollection.cpp">
+      <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\UserSectorFileTracker.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
   </ItemGroup>
