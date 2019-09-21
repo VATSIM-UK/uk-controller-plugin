@@ -225,6 +225,11 @@ namespace UKControllerPlugin {
         return std::move(elements);
     }
 
+    std::string UKPlugin::GetSectorFileName(void)
+    {
+        return this->ControllerMyself().GetSectorFileName();
+    }
+
     /*
         Gets a given key from user settings.
     */

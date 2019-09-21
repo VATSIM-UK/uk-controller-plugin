@@ -14,6 +14,7 @@ namespace UKControllerPlugin {
                 virtual std::set<std::unique_ptr<EuroscopeSectorFileElementInterface>> GetAllElementsByType(
                     int type
                 ) = 0;
+                virtual std::string GetSectorFileName(void) = 0;
         };
     }  // naemspace Euroscope
 }  // namespace UKControllerPlugin

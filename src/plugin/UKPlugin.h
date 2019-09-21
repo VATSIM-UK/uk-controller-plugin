@@ -135,9 +135,10 @@ namespace UKControllerPlugin {
             bool KeyExists(std::string key) override;
             void SetKey(std::string key, std::string description, std::string value) override;
 
-                // Inherited via SectorFileProviderInterface
-            virtual std::set<std::unique_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>> 
+            // Inherited via SectorFileProviderInterface
+            std::set<std::unique_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>> 
                 GetAllElementsByType(int type) override;
+            std::string GetSectorFileName(void) override;
 
         private:
 

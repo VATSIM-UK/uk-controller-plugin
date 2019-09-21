@@ -11,6 +11,7 @@ namespace UKControllerPlugin {
             : originalData(originalData)
         {
         }
+
         std::string EuroscopeSectorFileElementWrapper::Airport(void) const
         {
             return this->originalData.GetAirportName();
