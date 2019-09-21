@@ -17,7 +17,6 @@ namespace UKControllerPlugin {
                     std::string airfield
                 ) const;
                 void ReplaceRunway(std::unique_ptr<UKControllerPlugin::Airfield::Runway> runway);
-                size_t GetSize(void) const;
 
 
                 const UKControllerPlugin::Airfield::Runway invalidRunway = { "", "", "", 371 };
