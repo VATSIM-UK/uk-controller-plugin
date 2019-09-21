@@ -18,6 +18,8 @@
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp" />
     <ClCompile Include="..\..\test\helper\InitTests.cpp" />
     <ClCompile Include="..\..\test\helper\TestingFunctions.cpp" />
+    <ClCompile Include="..\..\test\mock\MockSectorFileAwareInterface.h" />
+    <ClCompile Include="..\..\test\mock\MockSectorFileProviderInterface.h" />
     <ClCompile Include="..\..\test\mock\MockWebsocketEventProcessor.h" />
     <ClCompile Include="..\..\test\pch\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -87,6 +89,7 @@
     <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\LoadDefaultUserSettingsTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\RadarTargetEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\SectorFileAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
@@ -241,6 +244,7 @@
     <ClInclude Include="..\..\test\mock\MockEuroscopeExtractedRouteInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopePluginLoopbackInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopeRadarScreenLoopbackInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockEuroscopeSectorFileElementInterface.h" />
     <ClInclude Include="..\..\test\mock\MockFlightPlanEventHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockGraphicsInterface.h" />
     <ClInclude Include="..\..\test\mock\MockHistoryTrailDialog.h" />

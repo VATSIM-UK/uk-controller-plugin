@@ -719,6 +719,15 @@
     <ClCompile Include="..\..\test\test\airfield\RunwayTest.cpp">
       <Filter>test\airfield</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\euroscope\SectorFileAwareCollectionTest.cpp">
+      <Filter>test\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\mock\MockSectorFileAwareInterface.h">
+      <Filter>mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\mock\MockSectorFileProviderInterface.h">
+      <Filter>mock</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -825,6 +834,9 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockEuroscopeSectorFileElementInterface.h">
       <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>
