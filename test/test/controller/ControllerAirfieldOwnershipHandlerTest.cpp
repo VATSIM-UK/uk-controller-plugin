@@ -326,6 +326,10 @@ namespace UKControllerPluginTest {
         {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
+            EXPECT_CALL(euroscopeMock, IsVatsimRecognisedController())
+                .Times(1)
+                .WillOnce(Return(true));
+
             EXPECT_CALL(euroscopeMock, GetCallsign())
                 .Times(4)
                 .WillRepeatedly(Return("EGKK_TWR"));
@@ -343,6 +347,10 @@ namespace UKControllerPluginTest {
         TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventAddsActiveCallsign)
         {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
+
+            EXPECT_CALL(euroscopeMock, IsVatsimRecognisedController())
+                .Times(1)
+                .WillOnce(Return(true));
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
                 .Times(4)
@@ -373,6 +381,10 @@ namespace UKControllerPluginTest {
         {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
+            EXPECT_CALL(euroscopeMock, IsVatsimRecognisedController())
+                .Times(1)
+                .WillOnce(Return(true));
+
             EXPECT_CALL(euroscopeMock, GetCallsign())
                 .Times(4)
                 .WillRepeatedly(Return("EGKK_DEL"));
@@ -400,6 +412,10 @@ namespace UKControllerPluginTest {
         TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventUpdatesTopDownMultiple)
         {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
+
+            EXPECT_CALL(euroscopeMock, IsVatsimRecognisedController())
+                .Times(1)
+                .WillOnce(Return(true));
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
                 .Times(4)
@@ -434,6 +450,10 @@ namespace UKControllerPluginTest {
         {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
+            EXPECT_CALL(euroscopeMock, IsVatsimRecognisedController())
+                .Times(1)
+                .WillOnce(Return(true));
+
             EXPECT_CALL(euroscopeMock, GetCallsign())
                 .Times(4)
                 .WillRepeatedly(Return("EGKK_1-DEL"));
@@ -465,6 +485,7 @@ namespace UKControllerPluginTest {
             // Do some dummy flightplan setups.
             NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
             NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
+
             ON_CALL(mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -479,6 +500,10 @@ namespace UKControllerPluginTest {
 
             // Create the controller mock
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
+
+            EXPECT_CALL(euroscopeMock, IsVatsimRecognisedController())
+                .Times(1)
+                .WillOnce(Return(true));
 
             ON_CALL(euroscopeMock, GetCallsign())
                 .WillByDefault(Return("EGKK_DEL"));

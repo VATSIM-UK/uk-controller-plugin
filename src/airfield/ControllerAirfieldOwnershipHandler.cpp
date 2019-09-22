@@ -69,6 +69,11 @@ namespace UKControllerPlugin {
             bool callsignActive = this->activeCallsigns.CallsignActive(controller.GetCallsign());
             bool frequencyActive = controller.HasActiveFrequency();
 
+            // If the controller isn't vatsim recognised as a controller, then they don't count.
+            if (!controller.IsVatsimRecognisedController()) {
+                return;
+            }
+
             // If it's already an active callsign with an active frequency, do nothing.
             if (callsignActive && frequencyActive) {
                 return;
