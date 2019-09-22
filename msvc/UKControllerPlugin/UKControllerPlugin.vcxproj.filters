@@ -954,6 +954,9 @@
     <ClInclude Include="..\..\src\euroscope\UserSectorFileTracker.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\airfield\RunwayCollection.h">
+      <Filter>src\airfield</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1626,6 +1629,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\UserSectorFileTracker.cpp">
       <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\airfield\RunwayCollection.cpp">
+      <Filter>src\airfield</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
