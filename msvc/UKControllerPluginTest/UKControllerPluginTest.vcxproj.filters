@@ -737,6 +737,9 @@
     <ClCompile Include="..\..\test\test\sectorfile\UserSectorFileTrackerTest.cpp">
       <Filter>test\sectorfile</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp">
+      <Filter>test\sectorfile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

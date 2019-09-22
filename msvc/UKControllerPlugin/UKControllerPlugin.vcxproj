@@ -247,6 +247,7 @@
     <ClInclude Include="..\..\src\sectorfile\SectorFileAwareInterface.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h" />
+    <ClInclude Include="..\..\src\sectorfile\SectorFileRunwayUpdater.h" />
     <ClInclude Include="..\..\src\sectorfile\UserSectorFileTracker.h" />
     <ClInclude Include="..\..\src\setting\SettingRepository.h" />
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
@@ -483,6 +484,7 @@
     <ClCompile Include="..\..\src\radarscreen\UKRadarScreen.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileAwareCollection.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\SectorFileRunwayUpdater.cpp" />
     <ClCompile Include="..\..\src\sectorfile\UserSectorFileTracker.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />

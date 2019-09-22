@@ -963,6 +963,9 @@
     <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h">
       <Filter>src\sectorfile</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\SectorFileRunwayUpdater.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1640,6 +1643,9 @@
       <Filter>src\sectorfile</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sectorfile\SectorFileAwareCollection.cpp">
+      <Filter>src\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sectorfile\SectorFileRunwayUpdater.cpp">
       <Filter>src\sectorfile</Filter>
     </ClCompile>
   </ItemGroup>

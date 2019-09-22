@@ -194,6 +194,7 @@
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileAwareCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\UserSectorFileTrackerTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
