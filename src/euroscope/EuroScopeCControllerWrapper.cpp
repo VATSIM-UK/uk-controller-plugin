@@ -15,7 +15,8 @@ namespace UKControllerPlugin {
 
         bool EuroScopeCControllerWrapper::IsVatsimRecognisedController(void) const
         {
-            return this->originalData.IsController();
+            return this->originalData.IsController() &&
+                std::string(this->originalData.GetCallsign()).at(0) != '*';
         }
 
         const std::string EuroScopeCControllerWrapper::GetCallsign(void) const
