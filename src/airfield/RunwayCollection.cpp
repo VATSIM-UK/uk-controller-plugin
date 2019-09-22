@@ -9,32 +9,31 @@ namespace UKControllerPlugin {
         /*
             Adds a runway to the collection
         */
-        void RunwayCollection::AddRunway(std::unique_ptr<UKControllerPlugin::Airfield::Runway> runway)
+        void RunwayCollection::AddRunway(std::shared_ptr<UKControllerPlugin::Airfield::Runway> runway)
         {
-            this->runways[runway->airfield].insert(std::move(runway));
+            if (this->runways.count(runway->sectorfileIdentifier)) {
+                LogWarning("Attempted to add duplicate runway: " + runway->sectorfileIdentifier);
+                return;
+            }
+
+            this->runways[runway->sectorfileIdentifier] = runway;
+            this->airfieldMap[runway->airfield].insert(runway);
         }
 
-        /*
-            Get all the runways for an airfield
-        */
-        std::set<UKControllerPlugin::Airfield::Runway> RunwayCollection::GetAllForAirfield(std::string airfield) const
+        size_t RunwayCollection::Count(void) const
         {
-            if (!this->runways.count(airfield)) {
-                return {};
-            }
+            return this->runways.size();
+        }
 
-            std::set<Runway> returnRunways;
-            std::set<std::unique_ptr<Runway>> storedRunways = this->runways.at(airfield);
+        size_t RunwayCollection::CountForAirfield(std::string airfield) const
+        { 
+            return this->airfieldMap.count(airfield) ? this->airfieldMap.at(airfield).size() : 0;
+        }
 
-            for (
-                std::set<std::unique_ptr<Runway>>::const_iterator it = storedRunways.cbegin();
-                it != storedRunways.cend();
-                ++it
-            ) {
-                returnRunways.insert(**it);
-            }
-
-            return returnRunways;
+        void RunwayCollection::Clear(void)
+        {
+            this->runways.clear();
+            this->airfieldMap.clear();
         }
 
         /*
@@ -42,16 +41,16 @@ namespace UKControllerPlugin {
         */
         const Runway & RunwayCollection::FetchByIdentifierAndAirfield(std::string identifier, std::string airfield) const
         {
-            if (!this->runways.count(airfield)) {
+            if (!this->airfieldMap.count(airfield)) {
                 return this->invalidRunway;
             }
 
-            std::set<std::unique_ptr<Runway>> airfieldRunways = this->runways.at(airfield);
+            std::set<std::shared_ptr<Runway>> airfieldRunways = this->airfieldMap.at(airfield);
 
             auto runway = std::find_if(
                 airfieldRunways.cbegin(),
                 airfieldRunways.cend(),
-                [identifier](const std::unique_ptr<Runway> & runway) -> bool {
+                [identifier](const std::shared_ptr<Runway> & runway) -> bool {
                     return identifier == runway->identifier;
                 }
             );
@@ -60,27 +59,11 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Replace a runway
+            Fetch the runway in a form that may be updated - e.g.
         */
-        void RunwayCollection::ReplaceRunway(std::unique_ptr<UKControllerPlugin::Airfield::Runway> runway)
+        const std::shared_ptr<Runway> RunwayCollection::FetchBySectorFileIdentifier(std::string identifier)
         {
-            if (this->runways.count(runway->airfield)) {
-                std::set<std::unique_ptr<Runway>> airfieldRunways = this->runways.at(runway->airfield);
-                std::string identifier = runway->identifier;
-                auto existingRunway = std::find_if(
-                    airfieldRunways.cbegin(),
-                    airfieldRunways.cend(),
-                    [identifier](const std::unique_ptr<Runway> & runway) -> bool {
-                        return identifier == runway->identifier;
-                    }
-                );
-
-                if (existingRunway != airfieldRunways.cend()) {
-                    this->runways.at(runway->airfield).erase(existingRunway);
-                }
-            }
-
-            this->runways[runway->airfield].insert(std::move(runway));
+            return this->runways.count(identifier) ? this->runways.at(identifier) : nullptr;
         }
     }  // namespace Airfield
 }  // namespace UKControllerPlugin

@@ -731,6 +731,9 @@
     <ClCompile Include="..\..\test\test\euroscope\UserSectorFileTrackerTest.cpp">
       <Filter>test\euroscope</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\airfield\RunwayCollectionTest.cpp">
+      <Filter>test\airfield</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

@@ -10,20 +10,27 @@ namespace UKControllerPlugin {
         class RunwayCollection
         {
             public:
-                void AddRunway(std::unique_ptr<UKControllerPlugin::Airfield::Runway> runway);
-                std::set<UKControllerPlugin::Airfield::Runway> GetAllForAirfield(std::string airfield) const;
+                void AddRunway(std::shared_ptr<UKControllerPlugin::Airfield::Runway> runway);
+                size_t Count(void) const;
+                size_t CountForAirfield(std::string airfield) const;
+                void Clear(void);
                 const UKControllerPlugin::Airfield::Runway & FetchByIdentifierAndAirfield(
                     std::string identifier,
                     std::string airfield
                 ) const;
-                void ReplaceRunway(std::unique_ptr<UKControllerPlugin::Airfield::Runway> runway);
+                const std::shared_ptr<UKControllerPlugin::Airfield::Runway> FetchBySectorFileIdentifier(
+                    std::string identifier
+                );
 
 
                 const UKControllerPlugin::Airfield::Runway invalidRunway = { "", "", "", 371 };
             private:
 
-                // A map of ICAO code to runways
-                std::map<std::string, std::set<std::unique_ptr<UKControllerPlugin::Airfield::Runway>>> runways;
+                // A map of sector file identifier to runways
+                std::map<std::string, std::shared_ptr <UKControllerPlugin::Airfield::Runway>> runways;
+
+                // A map of airfield to runways
+                std::map<std::string, std::set<std::shared_ptr<UKControllerPlugin::Airfield::Runway>>> airfieldMap;
         };
     }  // namespace Airfield
 }  // namespace UKControllerPlugin

@@ -22,6 +22,8 @@ namespace UKControllerPlugin {
                 bool ActiveForArrivals(void) const;
                 void SetActiveForDepartures(bool active);
                 void SetActiveForArrivals(bool active);
+                bool operator<(const UKControllerPlugin::Airfield::Runway & compare) const;
+                bool operator==(const UKControllerPlugin::Airfield::Runway & compare) const;
 
                 // The runway identifier in the sector file
                 const std::string sectorfileIdentifier;

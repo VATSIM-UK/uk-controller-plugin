@@ -43,5 +43,15 @@ namespace UKControllerPlugin {
         {
             this->activeForArrivals = active;
         }
+
+        bool Runway::operator<(const UKControllerPlugin::Airfield::Runway & compare) const
+        {
+            return this->sectorfileIdentifier < compare.sectorfileIdentifier;
+        }
+
+        bool Runway::operator==(const UKControllerPlugin::Airfield::Runway & compare) const
+        {
+            return this->sectorfileIdentifier == compare.sectorfileIdentifier;
+        }
     }  // namespace Airfield
 }  // namespace UKControllerPlugin
