@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
                 );
 
 
-                const UKControllerPlugin::Airfield::Runway invalidRunway = { "", "", "", 371 };
+                const UKControllerPlugin::Airfield::Runway invalidRunway = { "", "", "", 371, false, false};
             private:
 
                 // A map of sector file identifier to runways

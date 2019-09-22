@@ -9,9 +9,12 @@ namespace UKControllerPlugin {
             std::string sectorfileIdentifier,
             std::string airfield,
             std::string identifier,
-            unsigned int heading
+            unsigned int heading,
+            bool activeForDepartures,
+            bool activeForArrivals
         )
-            : sectorfileIdentifier(sectorfileIdentifier), airfield(airfield), identifier(identifier), heading(heading)
+            : sectorfileIdentifier(sectorfileIdentifier), airfield(airfield), identifier(identifier), heading(heading),
+            activeForDepartures(activeForDepartures), activeForArrivals(activeForArrivals)
         {
 
         }

@@ -1,6 +1,7 @@
 #pragma once
 #include "sectorfile/SectorFileAwareInterface.h"
 #include "airfield/RunwayCollection.h"
+#include "euroscope/EuroscopeSectorFileElementInterface.h"
 
 namespace UKControllerPlugin {
     namespace SectorFile {

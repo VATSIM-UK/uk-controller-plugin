@@ -128,29 +128,6 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::DoInitialControllerLoad(void)
     {
-        EuroScopePlugIn::CSectorElement element = this->SectorFileElementSelectFirst(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY);
-        EuroScopePlugIn::CSectorElement first = this->SectorFileElementSelectFirst(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY);;
-
-        do {
-            if (!element.IsValid()) {
-                break;
-            }
-
-            std::string name = element.GetName();
-            std::string airport = element.GetAirportName();
-            std::string runwayName1 = element.GetRunwayName(0);
-            std::string runwayName2 = element.GetRunwayName(1);
-            std::string componentName1 = element.GetComponentName(0);
-            std::string componentName2 = element.GetComponentName(1);
-            unsigned int heading1 = element.GetRunwayHeading(0);
-            unsigned int heading2 = element.GetRunwayHeading(1);
-            bool activeForDepartures1 = element.IsElementActive(true, 0);
-            bool activeForDepartures2 = element.IsElementActive(true, 1);
-            bool activeForArrivals1 = element.IsElementActive(false, 0);
-            bool activeForArrivals2 = element.IsElementActive(false, 1);
-            element = this->SectorFileElementSelectNext(element, EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY);
-        } while (element.GetName() != first.GetName());
-
         LogInfo("Initial controller load started");
 
         EuroScopePlugIn::CController me = this->ControllerMyself();

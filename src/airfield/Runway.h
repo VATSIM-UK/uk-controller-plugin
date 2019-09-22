@@ -14,7 +14,9 @@ namespace UKControllerPlugin {
                     std::string sectorfileIdentifier,
                     std::string airfield,
                     std::string identifier,
-                    unsigned int heading
+                    unsigned int heading,
+                    bool activeForDepartures,
+                    bool activeForArraivals
                 );
 
                 bool Active(void) const;

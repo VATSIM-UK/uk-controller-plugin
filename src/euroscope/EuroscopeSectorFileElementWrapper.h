@@ -21,6 +21,8 @@ namespace UKControllerPlugin {
                 virtual bool Runway1ActiveForArrivals(void) override;
                 virtual bool Runway2ActiveForDepartures(void) override;
                 virtual bool Runway2ActiveForArrivals(void) override;
+                virtual std::string Runway1ComponentName(void) override;
+                virtual std::string Runway2ComponentName(void) override;
                 virtual int Runway1Heading(void) override;
                 virtual int Runway2Heading(void) override;
                 virtual std::string Runway1Identifier(void) const override;
