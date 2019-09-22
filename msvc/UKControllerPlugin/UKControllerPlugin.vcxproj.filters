@@ -124,6 +124,9 @@
     <Filter Include="src\websocket">
       <UniqueIdentifier>{a390fff4-5510-4260-9be4-51f0438acefa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\sectorfile">
+      <UniqueIdentifier>{61c300dc-1834-4381-b018-2c7380756930}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\Airfield.h">
@@ -936,26 +939,29 @@
     <ClInclude Include="..\..\src\airfield\Runway.h">
       <Filter>src\airfield</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\euroscope\SectorFileProviderInterface.h">
-      <Filter>src\euroscope</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementInterface.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\euroscope\SectorFileAwareInterface.h">
-      <Filter>src\euroscope</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\euroscope\SectorFileAwareCollection.h">
-      <Filter>src\euroscope</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\euroscope\UserSectorFileTracker.h">
-      <Filter>src\euroscope</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\airfield\RunwayCollection.h">
       <Filter>src\airfield</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\UserSectorFileTracker.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\SectorFileAwareCollection.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\SectorFileAwareInterface.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h">
+      <Filter>src\sectorfile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1624,14 +1630,17 @@
     <ClCompile Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\euroscope\SectorFileAwareCollection.cpp">
-      <Filter>src\euroscope</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\euroscope\UserSectorFileTracker.cpp">
-      <Filter>src\euroscope</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\airfield\RunwayCollection.cpp">
       <Filter>src\airfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp">
+      <Filter>src\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sectorfile\UserSectorFileTracker.cpp">
+      <Filter>src\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sectorfile\SectorFileAwareCollection.cpp">
+      <Filter>src\sectorfile</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

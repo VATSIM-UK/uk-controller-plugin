@@ -3,7 +3,7 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "tag/TagItemCollection.h"
 #include "euroscope/RadarTargetEventHandlerCollection.h"
-#include "euroscope/SectorFileAwareCollection.h"
+#include "sectorfile/SectorFileAwareCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "timedevent/TimedEventCollection.h"
@@ -25,7 +25,7 @@ using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
-using UKControllerPlugin::Euroscope::SectorFileAwareCollection;
+using UKControllerPlugin::SectorFile::SectorFileAwareCollection;
 
 namespace UKControllerPlugin {
     namespace Bootstrap {

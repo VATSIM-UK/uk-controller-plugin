@@ -1,11 +1,11 @@
 #pragma once
 #include "pch/stdafx.h"
-#include "euroscope/SectorFileAwareInterface.h"
-#include "euroscope/SectorFileProviderInterface.h"
+#include "sectorfile/SectorFileAwareInterface.h"
+#include "sectorfile/SectorFileProviderInterface.h"
 #include "SectorFileAwareCollection.h"
 
 namespace UKControllerPlugin {
-    namespace Euroscope {
+    namespace SectorFile {
 
         void SectorFileAwareCollection::AddHandler(std::shared_ptr<SectorFileAwareInterface> handler)
         {

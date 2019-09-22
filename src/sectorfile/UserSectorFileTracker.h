@@ -1,17 +1,17 @@
 #pragma once
-#include "euroscope/SectorFileProviderInterface.h"
-#include "euroscope/SectorFileAwareCollection.h"
+#include "sectorfile/SectorFileProviderInterface.h"
+#include "sectorfile/SectorFileAwareCollection.h"
 #include "timedevent/AbstractTimedEvent.h"
 
 namespace UKControllerPlugin {
-    namespace Euroscope {
+    namespace SectorFile {
 
         class UserSectorFileTracker : public UKControllerPlugin::TimedEvent::AbstractTimedEvent
         {
             public:
                 UserSectorFileTracker(
-                    UKControllerPlugin::Euroscope::SectorFileProviderInterface & provider,
-                    const UKControllerPlugin::Euroscope::SectorFileAwareCollection & handlers
+                    UKControllerPlugin::SectorFile::SectorFileProviderInterface & provider,
+                    const UKControllerPlugin::SectorFile::SectorFileAwareCollection & handlers
                 );
                 std::string LoadedSectorFile(void) const;
 
@@ -22,10 +22,10 @@ namespace UKControllerPlugin {
             private:
                 
                 // Provides the sector file
-                UKControllerPlugin::Euroscope::SectorFileProviderInterface & provider;
+                UKControllerPlugin::SectorFile::SectorFileProviderInterface & provider;
 
                 // Instances that want to know if the users sector file changes
-                const UKControllerPlugin::Euroscope::SectorFileAwareCollection & handlers;
+                const UKControllerPlugin::SectorFile::SectorFileAwareCollection & handlers;
 
                 // The currently loaded sectorfile
                 std::string loadedSectorFile = "";

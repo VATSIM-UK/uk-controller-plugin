@@ -2,7 +2,7 @@
 #include "euroscope/EuroscopeSectorFileElementInterface.h"
 
 namespace UKControllerPlugin {
-    namespace Euroscope {
+    namespace SectorFile {
 
 
         /*
@@ -11,9 +11,8 @@ namespace UKControllerPlugin {
         class SectorFileProviderInterface
         {
             public:
-                virtual std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> GetAllElementsByType(
-                    int type
-                ) = 0;
+                virtual std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>> 
+                    GetAllElementsByType(int type) = 0;
                 virtual std::string GetSectorFileName(void) = 0;
         };
     }  // naemspace Euroscope

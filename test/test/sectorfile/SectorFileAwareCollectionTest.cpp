@@ -1,16 +1,16 @@
 #include "pch/pch.h"
-#include "euroscope/SectorFileAwareCollection.h"
+#include "sectorfile/SectorFileAwareCollection.h"
 #include "mock/MockSectorFileAwareInterface.h"
 #include "mock/MockSectorFileProviderInterface.h"
 
-using UKControllerPlugin::Euroscope::SectorFileAwareCollection;
-using UKControllerPluginTest::Euroscope::MockSectorFileProviderInterface;
+using UKControllerPlugin::SectorFile::SectorFileAwareCollection;
+using UKControllerPluginTest::SectorFile::MockSectorFileProviderInterface;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Ref;
 
 namespace UKControllerPluginTest {
-    namespace Euroscope {
+    namespace SectorFile {
 
         class SectorFileAwareCollectionTest : public Test
         {

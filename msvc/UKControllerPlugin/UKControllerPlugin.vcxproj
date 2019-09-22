@@ -116,10 +116,6 @@
     <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
-    <ClInclude Include="..\..\src\euroscope\SectorFileAwareCollection.h" />
-    <ClInclude Include="..\..\src\euroscope\SectorFileAwareInterface.h" />
-    <ClInclude Include="..\..\src\euroscope\SectorFileProviderInterface.h" />
-    <ClInclude Include="..\..\src\euroscope\UserSectorFileTracker.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
@@ -247,6 +243,11 @@
     <ClInclude Include="..\..\src\radarscreen\ScreenControls.h" />
     <ClInclude Include="..\..\src\radarscreen\ScreenControlsBootstrap.h" />
     <ClInclude Include="..\..\src\radarscreen\UKRadarScreen.h" />
+    <ClInclude Include="..\..\src\sectorfile\SectorFileAwareCollection.h" />
+    <ClInclude Include="..\..\src\sectorfile\SectorFileAwareInterface.h" />
+    <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
+    <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h" />
+    <ClInclude Include="..\..\src\sectorfile\UserSectorFileTracker.h" />
     <ClInclude Include="..\..\src\setting\SettingRepository.h" />
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
     <ClInclude Include="..\..\src\setting\SettingValue.h" />
@@ -371,8 +372,6 @@
     <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp" />
     <ClCompile Include="..\..\src\euroscope\PluginUserSettingBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp" />
-    <ClCompile Include="..\..\src\euroscope\SectorFileAwareCollection.cpp" />
-    <ClCompile Include="..\..\src\euroscope\UserSectorFileTracker.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />
@@ -482,6 +481,9 @@
     <ClCompile Include="..\..\src\radarscreen\ScreenControls.cpp" />
     <ClCompile Include="..\..\src\radarscreen\ScreenControlsBootstrap.cpp" />
     <ClCompile Include="..\..\src\radarscreen\UKRadarScreen.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\SectorFileAwareCollection.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\UserSectorFileTracker.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />

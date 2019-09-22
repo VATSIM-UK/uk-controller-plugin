@@ -1,9 +1,9 @@
 #pragma once
 #include "pch/stdafx.h"
-#include "euroscope/SectorFileProviderInterface.h"
+#include "sectorfile/SectorFileProviderInterface.h"
 
 namespace UKControllerPlugin {
-    namespace Euroscope {
+    namespace SectorFile {
 
         /*
             An interface for classes that want to know
@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
             public:
 
                 virtual void SectorFileUpdate(
-                    UKControllerPlugin::Euroscope::SectorFileProviderInterface & provider
+                    UKControllerPlugin::SectorFile::SectorFileProviderInterface & provider
                 ) = 0;
         };
     }  // namespace Euroscope

@@ -49,7 +49,7 @@
 #include "websocket/WebsocketConnectionInterface.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "airfield/RunwayCollection.h"
-#include "euroscope/SectorFileAwareCollection.h"
+#include "sectorfile/SectorFileAwareCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -89,7 +89,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Command::CommandHandlerCollection> commandHandlers;
             std::shared_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferredHandlers;
             std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareCollection> userSettingHandlers;
-            std::unique_ptr<UKControllerPlugin::Euroscope::SectorFileAwareCollection> sectorFileEventHandlers;
+            std::unique_ptr<UKControllerPlugin::SectorFile::SectorFileAwareCollection> sectorFileEventHandlers;
 
             // The plugin
             std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;

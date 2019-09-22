@@ -2,7 +2,7 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/UserSettingProviderInterface.h"
 #include "radarscreen/RadarScreenFactory.h"
-#include "euroscope/SectorFileProviderInterface.h"
+#include "sectorfile/SectorFileProviderInterface.h"
 
 // Forward Declarations
 namespace UKControllerPlugin {
@@ -57,7 +57,7 @@ namespace UKControllerPlugin {
     class UKPlugin : public EuroScopePlugIn::CPlugIn,
         public UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface,
         public UKControllerPlugin::Euroscope::UserSettingProviderInterface,
-        public UKControllerPlugin::Euroscope::SectorFileProviderInterface
+        public UKControllerPlugin::SectorFile::SectorFileProviderInterface
     {
         public:
             UKPlugin(

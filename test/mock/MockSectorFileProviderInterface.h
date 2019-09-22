@@ -1,13 +1,13 @@
 #pragma once
 #include "pch/pch.h"
-#include "euroscope/SectorFileProviderInterface.h"
+#include "sectorfile/SectorFileProviderInterface.h"
 #include "euroscope/EuroscopeSectorFileElementInterface.h"
 
 namespace UKControllerPluginTest {
-    namespace Euroscope {
+    namespace SectorFile {
 
         class MockSectorFileProviderInterface :
-            public UKControllerPlugin::Euroscope::SectorFileProviderInterface
+            public UKControllerPlugin::SectorFile::SectorFileProviderInterface
         {
             public:
                 MOCK_METHOD1(

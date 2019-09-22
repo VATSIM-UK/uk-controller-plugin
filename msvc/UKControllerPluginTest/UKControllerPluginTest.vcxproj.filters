@@ -112,6 +112,9 @@
     <Filter Include="test\websocket">
       <UniqueIdentifier>{40896d78-9aef-49a7-a041-e9c79d8e4150}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\sectorfile">
+      <UniqueIdentifier>{2b17f35f-90d1-4f2d-9826-0618a260c1f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -719,20 +722,20 @@
     <ClCompile Include="..\..\test\test\airfield\RunwayTest.cpp">
       <Filter>test\airfield</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\euroscope\SectorFileAwareCollectionTest.cpp">
-      <Filter>test\euroscope</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\mock\MockSectorFileAwareInterface.h">
       <Filter>mock</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\mock\MockSectorFileProviderInterface.h">
       <Filter>mock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\euroscope\UserSectorFileTrackerTest.cpp">
-      <Filter>test\euroscope</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\airfield\RunwayCollectionTest.cpp">
       <Filter>test\airfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\SectorFileAwareCollectionTest.cpp">
+      <Filter>test\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\UserSectorFileTrackerTest.cpp">
+      <Filter>test\sectorfile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

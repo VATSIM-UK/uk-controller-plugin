@@ -1,9 +1,9 @@
 #pragma once
 #include "pch/stdafx.h"
-#include "euroscope/UserSectorFileTracker.h"
+#include "sectorfile/UserSectorFileTracker.h"
 
 namespace UKControllerPlugin {
-    namespace Euroscope {
+    namespace SectorFile {
 
         UserSectorFileTracker::UserSectorFileTracker(
             SectorFileProviderInterface & provider,

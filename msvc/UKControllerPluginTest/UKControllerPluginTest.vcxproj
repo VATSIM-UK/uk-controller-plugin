@@ -90,8 +90,6 @@
     <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\LoadDefaultUserSettingsTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\RadarTargetEventHandlerCollectionTest.cpp" />
-    <ClCompile Include="..\..\test\test\euroscope\SectorFileAwareCollectionTest.cpp" />
-    <ClCompile Include="..\..\test\test\euroscope\UserSectorFileTrackerTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
@@ -195,6 +193,8 @@
     <ClCompile Include="..\..\test\test\radarscreen\RadarRenderableCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp" />
+    <ClCompile Include="..\..\test\test\sectorfile\SectorFileAwareCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\sectorfile\UserSectorFileTrackerTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp" />
