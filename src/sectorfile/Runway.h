@@ -1,7 +1,7 @@
 #pragma once
 
 namespace UKControllerPlugin {
-    namespace Airfield {
+    namespace SectorFile {
 
         /*
             Represents a runway as defined in the sectorfile
@@ -11,7 +11,6 @@ namespace UKControllerPlugin {
             public:
 
                 Runway(
-                    std::string sectorfileIdentifier,
                     std::string airfield,
                     std::string identifier,
                     unsigned int heading,
@@ -24,11 +23,6 @@ namespace UKControllerPlugin {
                 bool ActiveForArrivals(void) const;
                 void SetActiveForDepartures(bool active);
                 void SetActiveForArrivals(bool active);
-                bool operator<(const UKControllerPlugin::Airfield::Runway & compare) const;
-                bool operator==(const UKControllerPlugin::Airfield::Runway & compare) const;
-
-                // The runway identifier in the sector file
-                const std::string sectorfileIdentifier;
 
                 // The airfield associated with the runway
                 const std::string airfield;

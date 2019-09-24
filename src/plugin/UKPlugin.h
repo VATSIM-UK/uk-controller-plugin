@@ -138,7 +138,6 @@ namespace UKControllerPlugin {
             // Inherited via SectorFileProviderInterface
             std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>>
                 GetAllElementsByType(int type) override;
-            std::string GetSectorFileName(void) override;
 
         private:
 

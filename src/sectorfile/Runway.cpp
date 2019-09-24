@@ -1,19 +1,18 @@
 #pragma once
 #include "pch/stdafx.h"
-#include "airfield/Runway.h"
+#include "sectorfile/Runway.h"
 
 namespace UKControllerPlugin {
-    namespace Airfield {
+    namespace SectorFile {
 
         Runway::Runway(
-            std::string sectorfileIdentifier,
             std::string airfield,
             std::string identifier,
             unsigned int heading,
             bool activeForDepartures,
             bool activeForArrivals
         )
-            : sectorfileIdentifier(sectorfileIdentifier), airfield(airfield), identifier(identifier), heading(heading),
+            : airfield(airfield), identifier(identifier), heading(heading),
             activeForDepartures(activeForDepartures), activeForArrivals(activeForArrivals)
         {
 
@@ -45,16 +44,6 @@ namespace UKControllerPlugin {
         void Runway::SetActiveForArrivals(bool active)
         {
             this->activeForArrivals = active;
-        }
-
-        bool Runway::operator<(const UKControllerPlugin::Airfield::Runway & compare) const
-        {
-            return this->sectorfileIdentifier < compare.sectorfileIdentifier;
-        }
-
-        bool Runway::operator==(const UKControllerPlugin::Airfield::Runway & compare) const
-        {
-            return this->sectorfileIdentifier == compare.sectorfileIdentifier;
         }
     }  // namespace Airfield
 }  // namespace UKControllerPlugin

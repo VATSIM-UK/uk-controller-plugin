@@ -3,7 +3,7 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "tag/TagItemCollection.h"
 #include "euroscope/RadarTargetEventHandlerCollection.h"
-#include "sectorfile/SectorFileAwareCollection.h"
+#include "euroscope/RunwayDialogAwareCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "timedevent/TimedEventCollection.h"
@@ -25,7 +25,7 @@ using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
-using UKControllerPlugin::SectorFile::SectorFileAwareCollection;
+using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -45,7 +45,7 @@ namespace UKControllerPlugin {
             persistence.deferredHandlers.reset(new DeferredEventHandler);
             persistence.userSettingHandlers.reset(new UserSettingAwareCollection);
             persistence.commandHandlers.reset(new CommandHandlerCollection);
-            persistence.sectorFileEventHandlers.reset(new SectorFileAwareCollection);
+            persistence.runwayDialogEventHandlers.reset(new RunwayDialogAwareCollection);
 
             persistence.timedHandler->RegisterEvent(persistence.deferredHandlers, 3);
         }

@@ -8,7 +8,6 @@
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "airfield/AirfieldCollection.h"
-#include "airfield/RunwayCollection.h"
 #include "metar/MetarEventHandlerCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "command/CommandHandlerCollection.h"
@@ -17,7 +16,6 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
-using UKControllerPlugin::Airfield::RunwayCollection;
 using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
@@ -36,7 +34,6 @@ namespace UKControllerPlugin {
                 new AirfieldOwnershipManager(*persistence.airfields, *persistence.activeCallsigns)
             );
             persistence.flightplans.reset(new StoredFlightplanCollection);
-            persistence.runways.reset(new RunwayCollection);
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

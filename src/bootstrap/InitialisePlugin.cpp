@@ -39,7 +39,6 @@
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "datablock/DatablockBoostrap.h"
 #include "websocket/WebsocketBootstrap.h"
-#include "sectorfile/SectorFileBootstrap.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -203,7 +202,6 @@ namespace UKControllerPlugin {
         // Boostrap all the modules at a plugin level
         CollectionBootstrap::BootstrapPlugin(*this->container, dependencyCache);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
-        SectorFile::BootstrapPlugin(*this->container);
 
         // Bootstrap helpers
         UKControllerPlugin::Wake::BootstrapPlugin(*this->container, dependencyCache);

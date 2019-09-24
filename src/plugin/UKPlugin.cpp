@@ -186,8 +186,9 @@ namespace UKControllerPlugin {
     */
     std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> UKPlugin::GetAllElementsByType(int type)
     {
-        EuroScopePlugIn::CSectorElement first = this->SectorFileElementSelectFirst(type);
-        EuroScopePlugIn::CSectorElement selected = first;
+        this->SelectActiveSectorfile();
+        EuroScopePlugIn::CSectorElement selected = this->SectorFileElementSelectFirst(type);
+        EuroScopePlugIn::CSectorElement first = selected;
 
         std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> elements;
 
@@ -197,14 +198,10 @@ namespace UKControllerPlugin {
             }
 
             elements.insert(std::make_shared<EuroscopeSectorFileElementWrapper>(selected));
+            selected = this->SectorFileElementSelectNext(selected, type);
         }
 
         return std::move(elements);
-    }
-
-    std::string UKPlugin::GetSectorFileName(void)
-    {
-        return this->ControllerMyself().GetSectorFileName();
     }
 
     /*

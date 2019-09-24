@@ -936,35 +936,29 @@
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\airfield\Runway.h">
-      <Filter>src\airfield</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementInterface.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\airfield\RunwayCollection.h">
-      <Filter>src\airfield</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h">
-      <Filter>src\sectorfile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\sectorfile\UserSectorFileTracker.h">
-      <Filter>src\sectorfile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\sectorfile\SectorFileAwareCollection.h">
-      <Filter>src\sectorfile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\sectorfile\SectorFileAwareInterface.h">
       <Filter>src\sectorfile</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h">
       <Filter>src\sectorfile</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\sectorfile\SectorFileRunwayUpdater.h">
+    <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\Runway.h">
       <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareCollection.h">
+      <Filter>src\euroscope</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1627,26 +1621,20 @@
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\airfield\Runway.cpp">
-      <Filter>src\airfield</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.cpp">
       <Filter>src\euroscope</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\airfield\RunwayCollection.cpp">
-      <Filter>src\airfield</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp">
       <Filter>src\sectorfile</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sectorfile\UserSectorFileTracker.cpp">
+    <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp">
       <Filter>src\sectorfile</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sectorfile\SectorFileAwareCollection.cpp">
+    <ClCompile Include="..\..\src\sectorfile\Runway.cpp">
       <Filter>src\sectorfile</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sectorfile\SectorFileRunwayUpdater.cpp">
-      <Filter>src\sectorfile</Filter>
+    <ClCompile Include="..\..\src\euroscope\RunwayDialogAwareCollection.cpp">
+      <Filter>src\euroscope</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

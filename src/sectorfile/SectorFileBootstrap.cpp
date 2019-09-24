@@ -1,21 +1,21 @@
 #pragma once
 #include "pch/stdafx.h"
 #include "sectorfile/SectorFileBootstrap.h"
-#include "sectorfile/UserSectorFileTracker.h"
-#include "sectorfile/SectorFileRunwayUpdater.h"
+#include "sectorfile/RunwayCollection.h"
+
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 
 namespace UKControllerPlugin {
     namespace SectorFile {
 
-        void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer & container)
-        {
-            container.timedHandler->RegisterEvent(
-                std::make_shared<UserSectorFileTracker>(*container.plugin, *container.sectorFileEventHandlers),
-                1
-            );
+        void BootstrapRadarScreen(
+            const PersistenceContainer & container,
+            AsrEventHandlerCollection & asrEvents
 
-            container.sectorFileEventHandlers->AddHandler(
-                std::make_shared<SectorFileRunwayUpdater>(*container.runways)
+        ) {
+            asrEvents.RegisterHandler(
+                std::make_shared<RunwayCollection>(*container.plugin)
             );
         }
     }  // namespace SectorFile

@@ -22,8 +22,6 @@
     <ClInclude Include="..\..\src\airfield\AirfieldOwnershipModule.h" />
     <ClInclude Include="..\..\src\airfield\ControllerAirfieldOwnershipHandler.h" />
     <ClInclude Include="..\..\src\airfield\NormaliseSid.h" />
-    <ClInclude Include="..\..\src\airfield\Runway.h" />
-    <ClInclude Include="..\..\src\airfield\RunwayCollection.h" />
     <ClInclude Include="..\..\src\api\ApiAuthChecker.h" />
     <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h" />
     <ClInclude Include="..\..\src\api\ApiException.h" />
@@ -116,6 +114,8 @@
     <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareCollection.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
@@ -243,12 +243,10 @@
     <ClInclude Include="..\..\src\radarscreen\ScreenControls.h" />
     <ClInclude Include="..\..\src\radarscreen\ScreenControlsBootstrap.h" />
     <ClInclude Include="..\..\src\radarscreen\UKRadarScreen.h" />
-    <ClInclude Include="..\..\src\sectorfile\SectorFileAwareCollection.h" />
-    <ClInclude Include="..\..\src\sectorfile\SectorFileAwareInterface.h" />
+    <ClInclude Include="..\..\src\sectorfile\Runway.h" />
+    <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h" />
-    <ClInclude Include="..\..\src\sectorfile\SectorFileRunwayUpdater.h" />
-    <ClInclude Include="..\..\src\sectorfile\UserSectorFileTracker.h" />
     <ClInclude Include="..\..\src\setting\SettingRepository.h" />
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
     <ClInclude Include="..\..\src\setting\SettingValue.h" />
@@ -303,8 +301,6 @@
     <ClCompile Include="..\..\src\airfield\AirfieldOwnershipModule.cpp" />
     <ClCompile Include="..\..\src\airfield\ControllerAirfieldOwnershipHandler.cpp" />
     <ClCompile Include="..\..\src\airfield\NormaliseSid.cpp" />
-    <ClCompile Include="..\..\src\airfield\Runway.cpp" />
-    <ClCompile Include="..\..\src\airfield\RunwayCollection.cpp" />
     <ClCompile Include="..\..\src\api\ApiAuthChecker.cpp" />
     <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp" />
     <ClCompile Include="..\..\src\api\ApiHelper.cpp" />
@@ -373,6 +369,7 @@
     <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp" />
     <ClCompile Include="..\..\src\euroscope\PluginUserSettingBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\euroscope\RunwayDialogAwareCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />
@@ -482,10 +479,9 @@
     <ClCompile Include="..\..\src\radarscreen\ScreenControls.cpp" />
     <ClCompile Include="..\..\src\radarscreen\ScreenControlsBootstrap.cpp" />
     <ClCompile Include="..\..\src\radarscreen\UKRadarScreen.cpp" />
-    <ClCompile Include="..\..\src\sectorfile\SectorFileAwareCollection.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\Runway.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
-    <ClCompile Include="..\..\src\sectorfile\SectorFileRunwayUpdater.cpp" />
-    <ClCompile Include="..\..\src\sectorfile\UserSectorFileTracker.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />
