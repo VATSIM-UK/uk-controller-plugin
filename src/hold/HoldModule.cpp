@@ -25,6 +25,7 @@
 #include "radarscreen/RadarRenderableCollection.h"
 #include "hold/HoldDisplayManager.h"
 #include "command/CommandHandlerCollection.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;

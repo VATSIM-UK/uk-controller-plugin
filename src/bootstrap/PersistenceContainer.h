@@ -31,7 +31,6 @@
 #include "controller/ControllerPositionCollection.h"
 #include "intention/SectorExitRepository.h"
 #include "message/UserMessager.h"
-#include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/UserSetting.h"
 #include "command/CommandHandlerCollection.h"
 #include "timedevent/DeferredEventHandler.h"
@@ -84,7 +83,6 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Tag::TagItemCollection> tagHandler;
             std::unique_ptr<UKControllerPlugin::Metar::MetarEventHandlerCollection> metarEventHandler;
             std::unique_ptr<UKControllerPlugin::RadarScreen::ScreenControls> screenControls;
-            std::unique_ptr<UKControllerPlugin::Euroscope::AsrEventHandlerCollection> asrEventHandlers;
             std::unique_ptr<UKControllerPlugin::Command::CommandHandlerCollection> commandHandlers;
             std::shared_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferredHandlers;
             std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareCollection> userSettingHandlers;
