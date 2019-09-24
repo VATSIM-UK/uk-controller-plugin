@@ -2,11 +2,13 @@
 #include "sectorfile/SectorFileBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "timedevent/TimedEventCollection.h"
-#include "sectorfile/SectorFileAwareCollection.h"
+#include "euroscope/RunwayDialogAwareCollection.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
-using UKControllerPlugin::SectorFile::SectorFileAwareCollection;
+using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
@@ -17,24 +19,23 @@ namespace UKControllerPluginTest {
             public:
                 SectorFileBootstrapTest()
                 {
-                    container.timedHandler.reset(new TimedEventCollection);
-                    container.sectorFileEventHandlers.reset(new SectorFileAwareCollection);
+                    container.runwayDialogEventHandlers.reset(new RunwayDialogAwareCollection);
                 }
 
+                AsrEventHandlerCollection asrEvents;
                 PersistenceContainer container;
         };
 
-        TEST_F(SectorFileBootstrapTest, ItRegistersCheckerForTimedEvents)
+        TEST_F(SectorFileBootstrapTest, ItRegistersForRunwayEvents)
         {
-            UKControllerPlugin::SectorFile::BootstrapPlugin(this->container);
-            EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
-            EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(1));
+            UKControllerPlugin::SectorFile::BootstrapRadarScreen(this->container, this->asrEvents);
+            EXPECT_EQ(1, this->container.runwayDialogEventHandlers->CountHandlers());
         }
 
-        TEST_F(SectorFileBootstrapTest, ItRegistersRunwayUpdaterForSectorFileEvents)
+        TEST_F(SectorFileBootstrapTest, ItRegistersForAsrEvents)
         {
-            UKControllerPlugin::SectorFile::BootstrapPlugin(this->container);
-            EXPECT_EQ(1, this->container.sectorFileEventHandlers->CountHandlers());
+            UKControllerPlugin::SectorFile::BootstrapRadarScreen(this->container, this->asrEvents);
+            EXPECT_EQ(1, asrEvents.CountHandlers());
         }
     }  // namespace SectorFile
 }  // namespace UKControllerPluginTest

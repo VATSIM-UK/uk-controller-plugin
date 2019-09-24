@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
 
                 void AddHandler(std::shared_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareInterface> handler);
                 size_t CountHandlers(void) const;
-                void RunwayDialogSave(void) const;
+                void RunwayDialogSaved(void) const;
 
             private:
                 

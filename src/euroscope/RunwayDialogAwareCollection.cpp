@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
             return this->handlers.size();
         }
 
-        void RunwayDialogAwareCollection::RunwayDialogSave(void) const
+        void RunwayDialogAwareCollection::RunwayDialogSaved(void) const
         {
             for (
                 std::set<std::shared_ptr<RunwayDialogAwareInterface>>::const_iterator it = this->handlers.cbegin();

@@ -73,9 +73,9 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, this->container.commandHandlers->CountHandlers());
         }
 
-        TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginCreatesSectorFileAwareHandler)
+        TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginCreatesRunwayDialogHandler)
         {
-            EXPECT_EQ(0, this->container.sectorFileEventHandlers->CountHandlers());
+            EXPECT_EQ(0, this->container.runwayDialogEventHandlers->CountHandlers());
         }
 
         TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginRegistersDeferredHandlersForTimedEvents)

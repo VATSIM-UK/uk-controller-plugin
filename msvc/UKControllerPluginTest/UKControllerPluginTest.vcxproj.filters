@@ -719,26 +719,23 @@
     <ClCompile Include="..\..\test\test\hold\MinStackHoldLevelRestrictionSerializerTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\airfield\RunwayTest.cpp">
-      <Filter>test\airfield</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\mock\MockSectorFileAwareInterface.h">
-      <Filter>mock</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\mock\MockSectorFileProviderInterface.h">
       <Filter>mock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\airfield\RunwayCollectionTest.cpp">
-      <Filter>test\airfield</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\sectorfile\SectorFileAwareCollectionTest.cpp">
-      <Filter>test\sectorfile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\sectorfile\UserSectorFileTrackerTest.cpp">
-      <Filter>test\sectorfile</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp">
       <Filter>test\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\mock\MockRunwayDialogAwareInterface.h">
+      <Filter>mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp">
+      <Filter>test\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp">
+      <Filter>test\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\euroscope\RunwayDialogAwareCollectionTest.cpp">
+      <Filter>test\euroscope</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

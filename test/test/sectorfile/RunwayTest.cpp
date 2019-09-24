@@ -1,18 +1,18 @@
 #include "pch/pch.h"
-#include "airfield/Runway.h"
+#include "sectorfile/Runway.h"
 
-using UKControllerPlugin::Airfield::Runway;
+using UKControllerPlugin::SectorFile::Runway;
 using testing::Test;
 
 namespace UKControllerPluginTest {
-    namespace Airfield {
+    namespace SectorFile {
 
         class RunwayTest : public Test
         {
             public:
 
                 RunwayTest()
-                    : runway ("sectorident", "EGCC", "23L", 123)
+                    : runway ("EGCC", "23L", 123, false, false)
                 {
 
                 }
@@ -22,28 +22,34 @@ namespace UKControllerPluginTest {
 
         TEST_F(RunwayTest, ItSetsBaseProperties)
         {
-            EXPECT_EQ("sectorident", this->runway.sectorfileIdentifier);
             EXPECT_EQ("EGCC", this->runway.airfield);
             EXPECT_EQ("23L", this->runway.identifier);
             EXPECT_EQ(123, this->runway.heading);
-        }
-
-        TEST_F(RunwayTest, ItStartsInactive)
-        {
-            EXPECT_FALSE(this->runway.Active());
+            EXPECT_FALSE(this->runway.ActiveForDepartures());
+            EXPECT_FALSE(this->runway.ActiveForArrivals());
         }
 
         TEST_F(RunwayTest, ItCanBeMadeActiveForDepartures)
         {
             this->runway.SetActiveForDepartures(true);
-            EXPECT_TRUE(this->runway.ActiveForDepartures());
+            EXPECT_TRUE(this->runway.Active());
+        }
+
+        TEST_F(RunwayTest, IsActiveIfActiveForDepartures)
+        {
+            this->runway.SetActiveForDepartures(true);
             EXPECT_TRUE(this->runway.Active());
         }
 
         TEST_F(RunwayTest, ItCanBeMadeActiveForArrivals)
         {
             this->runway.SetActiveForArrivals(true);
-            EXPECT_TRUE(this->runway.ActiveForArrivals());
+            EXPECT_TRUE(this->runway.Active());
+        }
+
+        TEST_F(RunwayTest, IsActiveIfActiveForArrivals)
+        {
+            this->runway.SetActiveForArrivals(true);
             EXPECT_TRUE(this->runway.Active());
         }
     }  // namespace Airfield

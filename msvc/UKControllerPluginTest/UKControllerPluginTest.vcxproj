@@ -18,7 +18,7 @@
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp" />
     <ClCompile Include="..\..\test\helper\InitTests.cpp" />
     <ClCompile Include="..\..\test\helper\TestingFunctions.cpp" />
-    <ClCompile Include="..\..\test\mock\MockSectorFileAwareInterface.h" />
+    <ClCompile Include="..\..\test\mock\MockRunwayDialogAwareInterface.h" />
     <ClCompile Include="..\..\test\mock\MockSectorFileProviderInterface.h" />
     <ClCompile Include="..\..\test\mock\MockWebsocketEventProcessor.h" />
     <ClCompile Include="..\..\test\pch\pch.cpp">
@@ -29,8 +29,6 @@
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\AirfieldTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp" />
-    <ClCompile Include="..\..\test\test\airfield\RunwayCollectionTest.cpp" />
-    <ClCompile Include="..\..\test\test\airfield\RunwayTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiHelperTest.cpp" />
@@ -90,6 +88,7 @@
     <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\LoadDefaultUserSettingsTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\RadarTargetEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\RunwayDialogAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
@@ -193,9 +192,9 @@
     <ClCompile Include="..\..\test\test\radarscreen\RadarRenderableCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp" />
-    <ClCompile Include="..\..\test\test\sectorfile\SectorFileAwareCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp" />
-    <ClCompile Include="..\..\test\test\sectorfile\UserSectorFileTrackerTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp" />

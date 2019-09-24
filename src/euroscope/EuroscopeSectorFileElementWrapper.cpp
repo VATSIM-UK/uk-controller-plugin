@@ -42,16 +42,6 @@ namespace UKControllerPlugin {
             return this->originalData.IsElementActive(false, 1);
         }
 
-        std::string EuroscopeSectorFileElementWrapper::Runway1ComponentName(void)
-        {
-            return this->originalData.GetComponentName(0);
-        }
-
-        std::string EuroscopeSectorFileElementWrapper::Runway2ComponentName(void)
-        {
-            return this->originalData.GetComponentName(1);
-        }
-
         int EuroscopeSectorFileElementWrapper::Runway1Heading(void)
         {
             return this->originalData.GetRunwayHeading(0);

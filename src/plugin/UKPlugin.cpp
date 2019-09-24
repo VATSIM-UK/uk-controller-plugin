@@ -453,7 +453,7 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnAirportRunwayActivityChanged(void)
     {
-        this->runwayDialogHandlers.RunwayDialogSave();
+        this->runwayDialogHandlers.RunwayDialogSaved();
     }
 
     /*
