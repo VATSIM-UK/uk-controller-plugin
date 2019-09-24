@@ -25,7 +25,8 @@ namespace UKControllerPlugin {
                     RadarScreenFactory(persistence),
                     *persistence.metarEventHandler,
                     *persistence.pluginFunctionHandlers,
-                    *persistence.commandHandlers
+                    *persistence.commandHandlers,
+                    *persistence.runwayDialogEventHandlers
                 )
             );
         }

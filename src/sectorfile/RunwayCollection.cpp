@@ -76,8 +76,6 @@ namespace UKControllerPlugin {
 
                 this->runways[MakeRunwayKey(airfieldIcao, (*it)->Runway2Identifier())] = runway2;
             }
-
-            bool test = true;
         }
 
         /*
@@ -103,8 +101,19 @@ namespace UKControllerPlugin {
                 ++it
             ) {
 
-                std::shared_ptr<Runway> runway1 = this->GetRunway((*it)->Runway1ComponentName());
-                std::shared_ptr<Runway> runway2 = this->GetRunway((*it)->Runway2ComponentName());
+                std::string airfieldIcao = this->ParseIcaoFromAirfield((*it)->Airport());
+
+                // Skip the default adjacent airports one
+                if (airfieldIcao == "") {
+                    continue;
+                }
+
+                std::shared_ptr<Runway> runway1 = this->GetRunway(
+                    this->MakeRunwayKey(airfieldIcao, (*it)->Runway1Identifier())
+                );
+                std::shared_ptr<Runway> runway2 = this->GetRunway(
+                    this->MakeRunwayKey(airfieldIcao, (*it)->Runway2Identifier())
+                );
 
                 if (runway1 != nullptr) {
                     runway1->SetActiveForArrivals((*it)->Runway1ActiveForArrivals());

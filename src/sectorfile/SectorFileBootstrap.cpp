@@ -14,9 +14,10 @@ namespace UKControllerPlugin {
             AsrEventHandlerCollection & asrEvents
 
         ) {
-            asrEvents.RegisterHandler(
-                std::make_shared<RunwayCollection>(*container.plugin)
-            );
+            // Set up the runway tracking in the sectorfile
+            std::shared_ptr<RunwayCollection> runways = std::make_shared<RunwayCollection>(*container.plugin);
+            asrEvents.RegisterHandler(runways);
+            container.runwayDialogEventHandlers->AddHandler(runways);
         }
     }  // namespace SectorFile
 }  // namespace UKControllerPlugin

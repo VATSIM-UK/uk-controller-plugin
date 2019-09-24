@@ -36,6 +36,7 @@ using UKControllerPlugin::Plugin::PluginVersion;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementWrapper;
+using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
 
 namespace UKControllerPlugin {
 
@@ -48,7 +49,8 @@ namespace UKControllerPlugin {
         const RadarScreenFactory & radarScreenFactory,
         const MetarEventHandlerCollection & metarHandlers,
         const FunctionCallEventHandler & functionCallHandler,
-        const CommandHandlerCollection & commandHandlers
+        const CommandHandlerCollection & commandHandlers,
+        const RunwayDialogAwareCollection & runwayDialogHandlers
     )
         : UKPlugin::CPlugIn(
             EuroScopePlugIn::COMPATIBILITY_CODE,
@@ -65,7 +67,8 @@ namespace UKControllerPlugin {
         radarScreenFactory(radarScreenFactory),
         metarHandlers(metarHandlers),
         functionCallHandler(functionCallHandler),
-        commandHandlers(commandHandlers)
+        commandHandlers(commandHandlers),
+        runwayDialogHandlers(runwayDialogHandlers)
     {
     }
 
@@ -211,7 +214,6 @@ namespace UKControllerPlugin {
     {
         return this->KeyExists(key) ?  this->GetDataFromSettings(key.c_str()) : "";
     }
-
 
     /*
         Returns whether or not a key exists in user settings.
@@ -444,6 +446,14 @@ namespace UKControllerPlugin {
     void UKPlugin::OnNewMetarReceived(const char * sStation, const char * sFullMetar)
     {
         this->metarHandlers.NewMetarEvent(sStation, sFullMetar);
+    }
+
+    /*
+        Called when someone clicks OK on the runway settings dialog.
+    */
+    void UKPlugin::OnAirportRunwayActivityChanged(void)
+    {
+        this->runwayDialogHandlers.RunwayDialogSave();
     }
 
     /*
