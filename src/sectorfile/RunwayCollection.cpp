@@ -54,27 +54,40 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                // Add the runway in the first direction
-                std::shared_ptr<Runway> runway1 = std::make_shared<Runway>(
-                    airfieldIcao,
-                    (*it)->Runway1Identifier(),
-                    (*it)->Runway1Heading(),
-                    (*it)->Runway1ActiveForDepartures(),
-                    (*it)->Runway1ActiveForArrivals()
-                );
+                // Process the first of two runways, creating it if not exists or updating if it does
+                std::string runway1Key = MakeRunwayKey(airfieldIcao, (*it)->Runway1Identifier());
+                std::shared_ptr<Runway> runway1 = this->GetRunway(runway1Key);
+                if (!runway1) {
+                    runway1 = std::make_shared<Runway>(
+                        airfieldIcao,
+                        (*it)->Runway1Identifier(),
+                        (*it)->Runway1Heading(),
+                        (*it)->Runway1ActiveForDepartures(),
+                        (*it)->Runway1ActiveForArrivals()
+                    );
+                    this->runways[runway1Key] = runway1;
+                } else {
+                    runway1->SetActiveForDepartures((*it)->Runway1ActiveForDepartures());
+                    runway1->SetActiveForArrivals((*it)->Runway1ActiveForArrivals());
+                }
 
-                this->runways[MakeRunwayKey(airfieldIcao, (*it)->Runway1Identifier())] = runway1;
-
-                // Add the runway in the second direction
-                std::shared_ptr<Runway> runway2 = std::make_shared<Runway>(
-                    airfieldIcao,
-                    (*it)->Runway2Identifier(),
-                    (*it)->Runway2Heading(),
-                    (*it)->Runway2ActiveForDepartures(),
-                    (*it)->Runway2ActiveForArrivals()
-                );
-
-                this->runways[MakeRunwayKey(airfieldIcao, (*it)->Runway2Identifier())] = runway2;
+                // Process the second of two runways, creating it if not exists or updating if it does
+                std::string runway2Key = MakeRunwayKey(airfieldIcao, (*it)->Runway2Identifier());
+                std::shared_ptr<Runway> runway2 = this->GetRunway(runway2Key);
+                if (!runway2) {
+                    runway2 = std::make_shared<Runway>(
+                        airfieldIcao,
+                        (*it)->Runway2Identifier(),
+                        (*it)->Runway2Heading(),
+                        (*it)->Runway2ActiveForDepartures(),
+                        (*it)->Runway2ActiveForArrivals()
+                        );
+                    this->runways[runway2Key] = runway2;
+                }
+                else {
+                    runway2->SetActiveForDepartures((*it)->Runway2ActiveForDepartures());
+                    runway2->SetActiveForArrivals((*it)->Runway2ActiveForArrivals());
+                }
             }
         }
 

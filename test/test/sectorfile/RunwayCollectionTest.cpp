@@ -31,6 +31,7 @@ namespace UKControllerPluginTest {
                     element1.reset(new NiceMock<MockSectorFileElementInterface>);
                     element2.reset(new NiceMock<MockSectorFileElementInterface>);
                     element3.reset(new NiceMock<MockSectorFileElementInterface>);
+                    element4.reset(new NiceMock<MockSectorFileElementInterface>);
                 }
 
                 void SetUpDefaultElements(void)
@@ -102,10 +103,42 @@ namespace UKControllerPluginTest {
                     ON_CALL(*element3, Airport())
                         .WillByDefault(Return("EGKK"));
 
+                    // Setup the fouth element, a duplicate of the second with different runways setup
+                    ON_CALL(*element2, Airport())
+                        .WillByDefault(Return("EGKK - London Gatwick"));
+
+                    ON_CALL(*element2, Name())
+                        .WillByDefault(Return("EGKK London Gatwick 08L - 26R"));
+
+                    ON_CALL(*element2, Runway1ActiveForDepartures())
+                        .WillByDefault(Return(true));
+
+                    ON_CALL(*element2, Runway1ActiveForArrivals())
+                        .WillByDefault(Return(true));
+
+                    ON_CALL(*element2, Runway2ActiveForDepartures())
+                        .WillByDefault(Return(false));
+
+                    ON_CALL(*element2, Runway2ActiveForArrivals())
+                        .WillByDefault(Return(false));
+
+                    ON_CALL(*element2, Runway1Heading())
+                        .WillByDefault(Return(81));
+
+                    ON_CALL(*element2, Runway2Heading())
+                        .WillByDefault(Return(259));
+
+                    ON_CALL(*element2, Runway1Identifier())
+                        .WillByDefault(Return("08L"));
+
+                    ON_CALL(*element2, Runway2Identifier())
+                        .WillByDefault(Return("26R"));
+
                     std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> elements = {
                         element1,
                         element2,
-                        element3
+                        element3,
+                        element4
                     };
 
                     ON_CALL(mockSectorFile, GetAllElementsByType(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY))
@@ -115,6 +148,7 @@ namespace UKControllerPluginTest {
                 std::shared_ptr<NiceMock<MockSectorFileElementInterface>> element1;
                 std::shared_ptr<NiceMock<MockSectorFileElementInterface>> element2;
                 std::shared_ptr<NiceMock<MockSectorFileElementInterface>> element3;
+                std::shared_ptr<NiceMock<MockSectorFileElementInterface>> element4;
 
                 NiceMock<MockSectorFileProviderInterface> mockSectorFile;
                 NiceMock<MockUserSettingProviderInterface> mockUserSettings;
@@ -164,8 +198,8 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("EGKK", runway08L.airfield);
             EXPECT_EQ(81, runway08L.heading);
             EXPECT_EQ("08L", runway08L.identifier);
-            EXPECT_FALSE(runway08L.ActiveForDepartures());
-            EXPECT_FALSE(runway08L.ActiveForArrivals());
+            EXPECT_TRUE(runway08L.ActiveForDepartures());
+            EXPECT_TRUE(runway08L.ActiveForArrivals());
         }
 
         TEST_F(RunwayCollectionTest, ItReturnsInvalidIfNotFoundByAirfield)
