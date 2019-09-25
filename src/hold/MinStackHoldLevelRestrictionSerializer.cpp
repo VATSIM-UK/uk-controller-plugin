@@ -25,15 +25,21 @@ namespace UKControllerPlugin {
                 return nullptr;
             }
 
-            unsigned int override = json.count("override") && json.at("override").is_number_integer()
+            unsigned int override = json.count("override")
                 ? json.at("override").get<unsigned int>()
                 : 0;
+
+            std::string runway = json.count("runway")
+                ? json.at("runway").at("designator").get<std::string>()
+                : "";
 
             return std::make_unique<MinStackHoldLevelRestriction>(
                 json.at("target").get<std::string>(),
                 levelMap.at(json.at("level").get<std::string>()),
                 override,
-                *container.minStack
+                *container.minStack,
+                *container.runways,
+                runway
             );
         }
 
@@ -64,6 +70,16 @@ namespace UKControllerPlugin {
             if (
                 json.count("override") &&
                 (!json.at("override").is_number_integer() || json.at("override").get<int>() < 0)
+            ) {
+                return false;
+            }
+
+            // Check runway
+            if (
+                json.count("runway") &&
+                (!json.at("runway").is_object() ||
+                !json.at("runway").count("designator") || 
+                !json.at("runway").at("designator").is_string())
             ) {
                 return false;
             }

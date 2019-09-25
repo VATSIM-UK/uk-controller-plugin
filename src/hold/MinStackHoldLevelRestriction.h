@@ -1,6 +1,7 @@
 #pragma once
 #include "hold/AbstractHoldLevelRestriction.h"
 #include "minstack/MinStackManager.h"
+#include "sectorfile/RunwayCollection.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -14,10 +15,12 @@ namespace UKControllerPlugin {
 
             public: 
                 MinStackHoldLevelRestriction(
-                    std::string minStackSubjectAirfield,
+                    std::string airfield,
                     unsigned int minStackOffset,
                     unsigned int override,
-                    const UKControllerPlugin::MinStack::MinStackManager & minStackLevels
+                    const UKControllerPlugin::MinStack::MinStackManager & minStackLevels,
+                    const UKControllerPlugin::SectorFile::RunwayCollection & runways,
+                    std::string runway = ""
                 );
 
                 // Inherited via AbstractHoldLevelRestriction
@@ -32,10 +35,21 @@ namespace UKControllerPlugin {
                 // The offset against minstack levels - e.g. MSL+1 would be 1000
                 const unsigned int minStackOffset;
 
+                // The runways that this restriction applies to
+                const std::string runway;
+
+                const std::string airfield;
+
             private:
 
                 // Manages the Minimum Stack Levels
                 const UKControllerPlugin::MinStack::MinStackManager & minStackLevels;
+
+                // Looks after the active runways
+                const UKControllerPlugin::SectorFile::RunwayCollection & runways;
+
+                // No runway is selected for this restriction
+                const std::string noRunway = "";
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

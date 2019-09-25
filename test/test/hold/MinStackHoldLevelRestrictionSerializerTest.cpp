@@ -101,6 +101,54 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(RestrictionJsonValid(json));
         }
 
+        TEST_F(MinStackHoldLevelRestrictionSerializerTest, JsonIsInvalidIfRunwayNotAnObject)
+        {
+            nlohmann::json json = {
+                { "level", "MSL" },
+                { "target", "EGCC" },
+                { "override", 8000 },
+                { "runway", "23L" }
+            };
+
+            EXPECT_FALSE(RestrictionJsonValid(json));
+        }
+
+        TEST_F(MinStackHoldLevelRestrictionSerializerTest, JsonIsInvalidIfRunwayNoDesignator)
+        {
+            nlohmann::json json = {
+                { "level", "MSL" },
+                { "target", "EGCC" },
+                { "override", 8000 },
+                { "runway", { { "notdesignator", "23L" } }}
+            };
+
+            EXPECT_FALSE(RestrictionJsonValid(json));
+        }
+
+        TEST_F(MinStackHoldLevelRestrictionSerializerTest, JsonIsInvalidIfRunwayDesignatorNotAString)
+        {
+            nlohmann::json json = {
+                { "level", "MSL" },
+                { "target", "EGCC" },
+                { "override", 8000 },
+                { "runway", { { "designator", 23 } }}
+            };
+
+            EXPECT_FALSE(RestrictionJsonValid(json));
+        }
+
+        TEST_F(MinStackHoldLevelRestrictionSerializerTest, JsonIsValidWithRunway)
+        {
+            nlohmann::json json = {
+                { "level", "MSL" },
+                { "target", "EGCC" },
+                { "override", 8000 },
+                { "runway", { { "designator", "23L" } }}
+            };
+
+            EXPECT_TRUE(RestrictionJsonValid(json));
+        }
+
         TEST_F(MinStackHoldLevelRestrictionSerializerTest, ItReturnsNullPtrOnInvalidJson)
         {
             nlohmann::json json = {
@@ -152,6 +200,30 @@ namespace UKControllerPluginTest {
             };
 
             EXPECT_EQ(0, MinStackRestrictionFromJson(json, this->container)->override);
+        }
+
+        TEST_F(MinStackHoldLevelRestrictionSerializerTest, ItSetsRunway)
+        {
+            nlohmann::json json = {
+                { "level", "MSL" },
+                { "target", "EGCC" },
+                { "override", 8000 },
+                { "runway", { { "designator", "23L" } }}
+            };
+
+            EXPECT_EQ("23L", MinStackRestrictionFromJson(json, this->container)->runway);
+        }
+
+        TEST_F(MinStackHoldLevelRestrictionSerializerTest, ItSetsAirfield)
+        {
+            nlohmann::json json = {
+                { "level", "MSL" },
+                { "target", "EGCC" },
+                { "override", 8000 },
+                { "runway", { { "designator", "23L" } }}
+            };
+
+            EXPECT_EQ("EGCC", MinStackRestrictionFromJson(json, this->container)->airfield);
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

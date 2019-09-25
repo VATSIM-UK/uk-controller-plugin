@@ -5,7 +5,7 @@
 namespace UKControllerPluginTest {
     namespace Euroscope {
 
-        class MockSectorFileElementInterface :
+        class MockEuroscopeSectorFileElementInterface :
             public UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface
         {
             public:

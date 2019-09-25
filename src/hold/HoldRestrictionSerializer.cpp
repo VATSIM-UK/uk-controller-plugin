@@ -41,7 +41,6 @@ namespace UKControllerPlugin {
 
                 restrictions.insert(std::move(restriction));
             }
-
         }
 
         bool ValidRestrictionData(const nlohmann::json & json)

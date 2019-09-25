@@ -13,7 +13,7 @@ using ::testing::Return;
 using UKControllerPlugin::SectorFile::Runway;
 using UKControllerPlugin::SectorFile::RunwayCollection;
 using UKControllerPluginTest::SectorFile::MockSectorFileProviderInterface;
-using UKControllerPluginTest::Euroscope::MockSectorFileElementInterface;
+using UKControllerPluginTest::Euroscope::MockEuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
@@ -28,10 +28,10 @@ namespace UKControllerPluginTest {
                 RunwayCollectionTest()
                     : collection(mockSectorFile), userSetting(mockUserSettings)
                 {
-                    element1.reset(new NiceMock<MockSectorFileElementInterface>);
-                    element2.reset(new NiceMock<MockSectorFileElementInterface>);
-                    element3.reset(new NiceMock<MockSectorFileElementInterface>);
-                    element4.reset(new NiceMock<MockSectorFileElementInterface>);
+                    element1.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);
+                    element2.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);
+                    element3.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);
+                    element4.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);
                 }
 
                 void SetUpDefaultElements(void)
@@ -145,10 +145,10 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return(elements));
                 }
 
-                std::shared_ptr<NiceMock<MockSectorFileElementInterface>> element1;
-                std::shared_ptr<NiceMock<MockSectorFileElementInterface>> element2;
-                std::shared_ptr<NiceMock<MockSectorFileElementInterface>> element3;
-                std::shared_ptr<NiceMock<MockSectorFileElementInterface>> element4;
+                std::shared_ptr<NiceMock<MockEuroscopeSectorFileElementInterface>> element1;
+                std::shared_ptr<NiceMock<MockEuroscopeSectorFileElementInterface>> element2;
+                std::shared_ptr<NiceMock<MockEuroscopeSectorFileElementInterface>> element3;
+                std::shared_ptr<NiceMock<MockEuroscopeSectorFileElementInterface>> element4;
 
                 NiceMock<MockSectorFileProviderInterface> mockSectorFile;
                 NiceMock<MockUserSettingProviderInterface> mockUserSettings;
@@ -211,8 +211,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(RunwayCollectionTest, ItUpdatesRunwayActivity)
         {
-            std::shared_ptr<NiceMock<MockSectorFileElementInterface>> element = 
-                std::make_shared<NiceMock<MockSectorFileElementInterface>>();
+            std::shared_ptr<NiceMock<MockEuroscopeSectorFileElementInterface>> element =
+                std::make_shared<NiceMock<MockEuroscopeSectorFileElementInterface>>();
             std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> elementList = {element};
 
             ON_CALL(mockSectorFile, GetAllElementsByType(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY))
