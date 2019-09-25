@@ -9,15 +9,19 @@ using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 namespace UKControllerPlugin {
     namespace SectorFile {
 
+        void BootstrapPlugin(PersistenceContainer & container)
+        {
+            container.runways = std::make_shared<RunwayCollection>(*container.plugin);
+            container.runwayDialogEventHandlers->AddHandler(container.runways);
+        }
+
         void BootstrapRadarScreen(
             const PersistenceContainer & container,
             AsrEventHandlerCollection & asrEvents
 
         ) {
-            // Set up the runway tracking in the sectorfile
-            std::shared_ptr<RunwayCollection> runways = std::make_shared<RunwayCollection>(*container.plugin);
-            asrEvents.RegisterHandler(runways);
-            container.runwayDialogEventHandlers->AddHandler(runways);
+            // Register the runway collection to be updated when the ASR loads
+            asrEvents.RegisterHandler(container.runways);
         }
     }  // namespace SectorFile
 }  // namespace UKControllerPlugin

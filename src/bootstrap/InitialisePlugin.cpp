@@ -39,6 +39,7 @@
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "datablock/DatablockBoostrap.h"
 #include "websocket/WebsocketBootstrap.h"
+#include "sectorfile/SectorFileBootstrap.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -208,6 +209,7 @@ namespace UKControllerPlugin {
         LoginModule::BootstrapPlugin(*this->container);
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
         DeferredEventBootstrap(*this->container->timedHandler);
+        SectorFile::BootstrapPlugin(*this->container);
 
         // General settings config bootstrap
         GeneralSettingsConfigurationBootstrap::BootstrapPlugin(

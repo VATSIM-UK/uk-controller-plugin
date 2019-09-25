@@ -48,6 +48,7 @@
 #include "websocket/WebsocketConnectionInterface.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
+#include "sectorfile/RunwayCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -119,6 +120,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Airfield::AirfieldOwnershipManager> airfieldOwnership;
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
             std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
+            std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
 
             // Websocket
             std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnectionInterface> websocket;

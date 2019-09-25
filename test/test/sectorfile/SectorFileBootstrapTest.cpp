@@ -26,9 +26,15 @@ namespace UKControllerPluginTest {
                 PersistenceContainer container;
         };
 
-        TEST_F(SectorFileBootstrapTest, ItRegistersForRunwayEvents)
+        TEST_F(SectorFileBootstrapTest, BootstrapPluginSetsUpTheCollection)
         {
-            UKControllerPlugin::SectorFile::BootstrapRadarScreen(this->container, this->asrEvents);
+            UKControllerPlugin::SectorFile::BootstrapPlugin(this->container);
+            EXPECT_EQ(0, this->container.runways->Count());
+        }
+
+        TEST_F(SectorFileBootstrapTest, BootstrapPluginRegistersForRunwayDialogEvents)
+        {
+            UKControllerPlugin::SectorFile::BootstrapPlugin(this->container);
             EXPECT_EQ(1, this->container.runwayDialogEventHandlers->CountHandlers());
         }
 
