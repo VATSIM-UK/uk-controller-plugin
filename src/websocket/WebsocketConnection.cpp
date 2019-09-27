@@ -55,7 +55,7 @@ namespace UKControllerPlugin {
                 this->ProcessErrorCode(ec);
                 return;
             }
-            
+
             // Perform the websocket handshake
             this->websocket->async_handshake(
                 this->host,
@@ -131,7 +131,7 @@ namespace UKControllerPlugin {
                 std::lock_guard<std::mutex>(this->eventGuard);
 
                 this->ioContext.run();
-                          
+
                 // If not connected, try and connect
                 if (!this->connected) {
                     if (!this->connectionInProgress && std::chrono::system_clock::now() > this->nextReconnectAttempt) {
@@ -328,7 +328,7 @@ namespace UKControllerPlugin {
                     this,
                     std::placeholders::_1
                 )
-            );            
+            );
         }
 
         /*

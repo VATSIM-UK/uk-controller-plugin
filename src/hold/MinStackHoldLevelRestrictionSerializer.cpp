@@ -78,7 +78,7 @@ namespace UKControllerPlugin {
             if (
                 json.count("runway") &&
                 (!json.at("runway").is_object() ||
-                !json.at("runway").count("designator") || 
+                !json.at("runway").count("designator") ||
                 !json.at("runway").at("designator").is_string())
             ) {
                 return false;

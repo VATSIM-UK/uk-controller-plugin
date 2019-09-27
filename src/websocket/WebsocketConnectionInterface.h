@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
         {
             public:
 
-                virtual ~WebsocketConnectionInterface(void) {};
+                virtual ~WebsocketConnectionInterface(void) {}
                 virtual void ForceDisconnect(void) = 0;
                 virtual void WriteMessage(std::string message) = 0;
                 virtual std::string GetNextMessage(void) = 0;

@@ -152,7 +152,6 @@ namespace UKControllerPlugin {
                 IDD_MINSTACK,
                 reinterpret_cast<LPARAM>(&this->config)
             );
-            //this->visible = !this->visible;
         }
 
         MinStackRendererConfiguration & MinStackRenderer::GetConfig(void)
@@ -296,7 +295,9 @@ namespace UKControllerPlugin {
                 graphics.FillRect(msl, *this->brushes.greyBrush);
                 graphics.DrawRect(msl, *this->brushes.blackPen);
 
-                std::string mslString = mslData == this->minStackModule.invalidMsl ? "-" : std::to_string(mslData.msl).substr(0, 2);
+                std::string mslString = mslData == this->minStackModule.invalidMsl
+                    ? "-"
+                    : std::to_string(mslData.msl).substr(0, 2);
 
                 graphics.DrawString(
                     HelperFunctions::ConvertToWideString(mslString),

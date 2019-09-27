@@ -61,5 +61,5 @@ namespace UKControllerPlugin {
         {
             return this->originalData.GetRunwayName(1);
         }
-    }  // naemspace Euroscope
+    }  // namespace Euroscope
 }  // namespace UKControllerPlugin

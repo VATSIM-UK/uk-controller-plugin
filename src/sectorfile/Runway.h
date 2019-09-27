@@ -41,8 +41,7 @@ namespace UKControllerPlugin {
 
                 // Is the runway active for arrivals
                 bool activeForArrivals = false;
-                
         };
 
-    }  // namespace Airfield
+    }  // namespace SectorFile
 }  // namespace UKControllerPlugin

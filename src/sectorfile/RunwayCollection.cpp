@@ -26,8 +26,10 @@ namespace UKControllerPlugin {
         /*
             Find a runway by identifier and airfield
         */
-        const Runway & RunwayCollection::FetchByIdentifierAndAirfield(std::string identifier, std::string airfield) const
-        {
+        const Runway & RunwayCollection::FetchByIdentifierAndAirfield(
+            std::string identifier,
+            std::string airfield
+        ) const {
             std::shared_ptr<Runway> runway = this->GetRunway(this->MakeRunwayKey(airfield, identifier));
             return runway == nullptr ? this->invalidRunway : *runway;
         }
@@ -83,8 +85,7 @@ namespace UKControllerPlugin {
                         (*it)->Runway2ActiveForArrivals()
                         );
                     this->runways[runway2Key] = runway2;
-                }
-                else {
+                } else {
                     runway2->SetActiveForDepartures((*it)->Runway2ActiveForDepartures());
                     runway2->SetActiveForArrivals((*it)->Runway2ActiveForArrivals());
                 }
@@ -166,5 +167,6 @@ namespace UKControllerPlugin {
         {
             return this->runways.count(identifier) ? this->runways.at(identifier) : nullptr;
         }
-    }  // namespace runway
+    }  // namespace SectorFile
 }  // namespace UKControllerPlugin
+

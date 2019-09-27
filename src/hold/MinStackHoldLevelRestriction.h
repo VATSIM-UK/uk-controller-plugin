@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
         class MinStackHoldLevelRestriction : public UKControllerPlugin::Hold::AbstractHoldLevelRestriction
         {
 
-            public: 
+            public:
                 MinStackHoldLevelRestriction(
                     std::string airfield,
                     unsigned int minStackOffset,
@@ -24,7 +24,7 @@ namespace UKControllerPlugin {
                 );
 
                 // Inherited via AbstractHoldLevelRestriction
-                virtual bool LevelRestricted(unsigned int level) const override;
+                bool LevelRestricted(unsigned int level) const override;
 
                 // The subject airfield for minimum stack levels
                 const std::string minStackKey;

@@ -17,7 +17,7 @@ namespace UKControllerPlugin {
                 void RunwayDialogSaved(void) const;
 
             private:
-                
+
                 std::set<std::shared_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareInterface>> handlers;
         };
 

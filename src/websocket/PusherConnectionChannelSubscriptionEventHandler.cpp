@@ -40,14 +40,14 @@ namespace UKControllerPlugin {
                 std::string channel = *it;
                 this->taskRunner.QueueAsynchronousTask(
                     [this, socketId, channel](void) {
-                        
+
                         // Websocket data
                         nlohmann::json subscriptionData;
                         subscriptionData["event"] = "pusher:subscribe";
                         subscriptionData["data"] = {
                             {"channel", channel}
                         };
-                        
+
 
                         // If the channel is private, get an auth code for it
                         if (this->ChannelIsPrivate(channel)) {
@@ -69,7 +69,7 @@ namespace UKControllerPlugin {
                                 );
                                 return;
                             }
-     
+
 
                             subscriptionData["data"].push_back({ "auth", authCode });
                         }
@@ -93,5 +93,5 @@ namespace UKControllerPlugin {
                 }
             };
         }
-    }  // namespace UKControllerPlugin
-}  // namespace Websocket
+    }  // namespace Websocket
+}  // namespace UKControllerPlugin

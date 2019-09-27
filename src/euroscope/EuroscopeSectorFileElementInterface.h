@@ -3,8 +3,6 @@
 
 namespace UKControllerPlugin {
     namespace Euroscope {
-
-
         /*
             An interface for a class that wraps EuroScopes CSectorElement class
         */
@@ -23,5 +21,5 @@ namespace UKControllerPlugin {
                 virtual std::string Runway1Identifier(void) const = 0;
                 virtual std::string Runway2Identifier(void) const = 0;
         };
-    }  // naemspace Euroscope
+    }  // namespace Euroscope
 }  // namespace UKControllerPlugin

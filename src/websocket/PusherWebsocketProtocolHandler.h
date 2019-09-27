@@ -21,7 +21,7 @@ namespace UKControllerPlugin {
                 );
 
                 // Inherited via AbstractTimedEvent
-                virtual void TimedEventTrigger(void) override;
+                void TimedEventTrigger(void) override;
 
             private:
 

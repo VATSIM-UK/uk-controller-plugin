@@ -10,11 +10,13 @@ namespace UKControllerPlugin {
 
             public:
 
-                PusherPingEventHandler(UKControllerPlugin::Websocket::WebsocketConnectionInterface & websocket);
+                explicit PusherPingEventHandler(
+                    UKControllerPlugin::Websocket::WebsocketConnectionInterface & websocket
+                );
 
                 // Inherited via WebsocketEventProcessorInterface
-                virtual void ProcessWebsocketMessage(const WebsocketMessage & message) override;
-                virtual std::set<WebsocketSubscription> GetSubscriptions(void) const override;
+                void ProcessWebsocketMessage(const WebsocketMessage & message) override;
+                std::set<WebsocketSubscription> GetSubscriptions(void) const override;
 
             private:
 

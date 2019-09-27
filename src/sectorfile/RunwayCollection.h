@@ -24,11 +24,11 @@ namespace UKControllerPlugin {
                 ) const;
 
                 // Inherited via AsrEventHandlerInterface
-                virtual void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
-                virtual void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
+                void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
+                void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
 
                 // Inherited via RunwayDialogAwareInterface
-                virtual void RunwayDialogSaved(void) override;
+                void RunwayDialogSaved(void) override;
 
                 const UKControllerPlugin::SectorFile::Runway invalidRunway = {"", "", 371, false, false};
             private:
@@ -43,5 +43,5 @@ namespace UKControllerPlugin {
                 // Provides sectorfile information
                 UKControllerPlugin::SectorFile::SectorFileProviderInterface & sectorFile;
         };
-    }  // namespace Airfield
+    }  // namespace SectorFile
 }  // namespace UKControllerPlugin

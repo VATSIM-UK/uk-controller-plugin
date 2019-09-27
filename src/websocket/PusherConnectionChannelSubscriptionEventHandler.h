@@ -40,5 +40,5 @@ namespace UKControllerPlugin {
                 // For running async tasks
                 UKControllerPlugin::TaskManager::TaskRunnerInterface & taskRunner;
         };
-    }  // namespace UKControllerPlugin
-}  // namespace Websocket
+    }  // namespace Websocket
+}  // namespace UKControllerPlugin

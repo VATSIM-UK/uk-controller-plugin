@@ -11,7 +11,7 @@ namespace UKControllerPlugin {
         class MinStackConfigurationDialog
         {
             public:
-                MinStackConfigurationDialog(const UKControllerPlugin::MinStack::MinStackManager & manager);
+                explicit MinStackConfigurationDialog(const UKControllerPlugin::MinStack::MinStackManager & manager);
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             private:

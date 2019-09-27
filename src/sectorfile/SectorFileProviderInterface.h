@@ -11,8 +11,8 @@ namespace UKControllerPlugin {
         class SectorFileProviderInterface
         {
             public:
-                virtual std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>> 
+                virtual std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>>
                     GetAllElementsByType(int type) = 0;
         };
-    }  // naemspace Euroscope
+    }  // namespace SectorFile
 }  // namespace UKControllerPlugin

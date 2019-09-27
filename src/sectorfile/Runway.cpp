@@ -51,5 +51,5 @@ namespace UKControllerPlugin {
             return this->airfield + "." + this->identifier == compare.airfield + "." + compare.identifier;
             return false;
         }
-    }  // namespace Airfield
+    }  // namespace SectorFile
 }  // namespace UKControllerPlugin

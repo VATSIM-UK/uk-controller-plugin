@@ -11,7 +11,7 @@ namespace UKControllerPlugin {
         {
             // The type of subscription - channel or event
             const std::string subType;
-             
+
             // The target of the subscription
             const std::string subTarget;
 

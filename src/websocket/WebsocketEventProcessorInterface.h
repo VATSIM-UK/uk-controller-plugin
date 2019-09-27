@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
         class WebsocketEventProcessorInterface
         {
             public:
-                
+
                 /*
                     Process a message
                 */
@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
                 /*
                     Return the channels that we want to subscribe to with this processor
                 */
-                virtual std::set<UKControllerPlugin::Websocket::WebsocketSubscription> 
+                virtual std::set<UKControllerPlugin::Websocket::WebsocketSubscription>
                     GetSubscriptions(void) const = 0;
         };
     }  // namespace Websocket

@@ -100,7 +100,7 @@ namespace UKControllerPlugin {
                 std::chrono::system_clock::time_point lastActivityTime;
 
                 // The next time to try reconnecting
-                std::chrono::system_clock::time_point nextReconnectAttempt = 
+                std::chrono::system_clock::time_point nextReconnectAttempt =
                     (std::chrono::system_clock::time_point::min)();
 
                 // How long to allow idling for.

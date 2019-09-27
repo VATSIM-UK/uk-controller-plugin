@@ -45,7 +45,7 @@ namespace UKControllerPlugin {
                 std::make_shared<PusherPingEventHandler>(*container.websocket)
             );
 
-            std::shared_ptr<PusherActivityTimeoutEventHandler> timeoutHandler = 
+            std::shared_ptr<PusherActivityTimeoutEventHandler> timeoutHandler =
                 std::make_shared<PusherActivityTimeoutEventHandler>(*container.websocket);
 
             container.websocketProcessors->AddProcessor(
