@@ -5,6 +5,7 @@ Invoke-WebRequest $source -OutFile $destination
 
 # Unzip it
 Set-Location -Path C:\Libraries\
+Get-ChildItem -Path C:\Libraries\
 7z x boost_1_70_0.7z
 
 Set-Location -Path C:\Libraries\boost_1_70_0
