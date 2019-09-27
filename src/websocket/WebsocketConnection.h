@@ -22,6 +22,7 @@ namespace UKControllerPlugin {
                 // Inherited via WebsocketConnectionInterface
                 void WriteMessage(std::string message) override;
                 std::string GetNextMessage(void) override;
+                void SetIdleTimeout(std::chrono::seconds timeout) override;
                 std::chrono::seconds GetTimeSinceLastActivity(void) const override;
                 void ForceDisconnect(void) override;
 
@@ -101,6 +102,9 @@ namespace UKControllerPlugin {
                 // The next time to try reconnecting
                 std::chrono::system_clock::time_point nextReconnectAttempt = 
                     (std::chrono::system_clock::time_point::min)();
+
+                // How long to allow idling for.
+                std::chrono::seconds idleTimeout;
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

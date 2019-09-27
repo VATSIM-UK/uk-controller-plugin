@@ -51,7 +51,6 @@ namespace UKControllerPlugin {
             container.websocketProcessors->AddProcessor(
                 timeoutHandler
             );
-            container.timedHandler->RegisterEvent(timeoutHandler, 5);
 
             container.websocketProcessors->AddProcessor(
                 std::make_shared<PusherConnectionChannelSubscriptionEventHandler>(

@@ -5,24 +5,9 @@ namespace UKControllerPlugin {
     namespace Websocket {
 
         PusherActivityTimeoutEventHandler::PusherActivityTimeoutEventHandler(WebsocketConnectionInterface & websocket)
-            : websocket(websocket), defaultPingInterval(90), pongWaitInterval(30)
+            : websocket(websocket), defaultTimeoutInterval(60)
         {
 
-        }
-
-        std::chrono::seconds PusherActivityTimeoutEventHandler::GetPingInterval(void) const
-        {
-            return this->selectedPingInterval;
-        }
-
-        std::chrono::system_clock::time_point PusherActivityTimeoutEventHandler::GetPongTimeout(void) const
-        {
-            return this->pongTimeout;
-        }
-
-        void PusherActivityTimeoutEventHandler::SetPongTimeout(std::chrono::system_clock::time_point time)
-        {
-            this->pongTimeout = time;
         }
 
         /*
@@ -30,14 +15,15 @@ namespace UKControllerPlugin {
         */
         void PusherActivityTimeoutEventHandler::ProcessWebsocketMessage(const WebsocketMessage & message)
         {
-            if (message.event == "pusher:pong") {
-                this->pongTimeout = (std::chrono::system_clock::time_point::min)();
-            } else if (message.event == "pusher:connection_established") {
+            if (message.event == "pusher:connection_established") {
                 std::chrono::seconds serverPingInterval(message.data["activity_timeout"].get<int>());
 
-                this->selectedPingInterval = serverPingInterval < this->defaultPingInterval 
-                    ? serverPingInterval 
-                    : this->defaultPingInterval;
+                // Boost starts pinging after half the interval, so we want to double whatever the server sends
+                std::chrono::seconds timeoutInterval = serverPingInterval * 2 < this->defaultTimeoutInterval
+                    ? serverPingInterval * 2
+                    : this->defaultTimeoutInterval;
+
+                this->websocket.SetIdleTimeout(timeoutInterval);
             }
         }
 
@@ -56,28 +42,6 @@ namespace UKControllerPlugin {
                     "pusher:pong"
                 }
             };
-        }
-
-        /*
-            Every now and again, check our status
-        */
-        void PusherActivityTimeoutEventHandler::TimedEventTrigger(void)
-        {
-            // Send a ping if we've had no activity for a while
-            if (this->websocket.GetTimeSinceLastActivity() > this->selectedPingInterval) {
-                nlohmann::json data = {
-                    {"event", "pusher:ping"}
-                };
-
-                this->websocket.WriteMessage(data.dump());
-                this->pongTimeout = std::chrono::system_clock::now() + this->pongWaitInterval;
-                return;
-            }
-
-            // Force a disconnect if we've waited too long for a pong
-            if (this->pongTimeout > std::chrono::system_clock::now()) {
-                this->websocket.ForceDisconnect();
-            }
         }
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

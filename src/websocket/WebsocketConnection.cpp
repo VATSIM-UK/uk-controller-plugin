@@ -14,9 +14,9 @@ namespace UKControllerPlugin {
             std::string host,
             std::string port
         )
-            : tcpResolver(new boost::asio::ip::tcp::resolver(ioContext)), host(host), port(port), reconnectAttemptInterval(30),
-            websocket(new boost::beast::websocket::stream<boost::asio::ip::tcp::socket>(ioContext))
+            : host(host), port(port), reconnectAttemptInterval(30), idleTimeout(30)
         {
+            this->ResetWebsocket();
             this->websocketThread = std::thread(std::bind(&WebsocketConnection::Loop, this));
         }
 
@@ -28,24 +28,19 @@ namespace UKControllerPlugin {
             this->threadsRunning = false;
             this->websocketThread.join();
 
-            if (this->connected) {
-                this->websocket->close(boost::beast::websocket::close_code::normal);
-            }
-
-            while (this->connected) {
-                continue;
-            }
-
             LogInfo("Disconnected from websocket");
         }
 
+        /*
+            Handle the connection closing
+        */
         void WebsocketConnection::CloseHandler(boost::system::error_code ec)
         {
             if (ec) {
                 this->ProcessErrorCode(ec);
-                return;
             }
 
+            this->ResetWebsocket();
             LogInfo("Force closed websocket connection");
         }
 
@@ -86,6 +81,24 @@ namespace UKControllerPlugin {
 
             this->tcpResolver.reset(new boost::asio::ip::tcp::resolver(ioContext));
             this->websocket.reset(new boost::beast::websocket::stream<boost::asio::ip::tcp::socket>(ioContext));
+            this->SetIdleTimeout(std::chrono::seconds(10));
+
+            this->websocket->control_callback(
+                [](
+                boost::beast::websocket::frame_type kind,
+                boost::beast::string_view
+            ) {
+                switch (kind) {
+                    case boost::beast::websocket::frame_type::pong: {
+                        LogDebug("Pong received from websocket");
+                        break;
+                    }
+                    case boost::beast::websocket::frame_type::ping: {
+                        LogDebug("Ping received from websocket");
+                        break;
+                    }
+                }
+            });
         }
 
         /*
@@ -103,6 +116,7 @@ namespace UKControllerPlugin {
             this->connected = true;
             this->connectionInProgress = false;
             this->lastActivityTime = std::chrono::system_clock::now();
+            this->websocket->ping({});
             LogInfo("Websocket handshake successful");
         }
 
@@ -113,6 +127,8 @@ namespace UKControllerPlugin {
         void WebsocketConnection::Loop(void)
         {
             while (this->threadsRunning) {
+
+                std::lock_guard<std::mutex>(this->eventGuard);
 
                 this->ioContext.run();
                           
@@ -132,7 +148,6 @@ namespace UKControllerPlugin {
                             )
                         );
                     }
-
                     continue;
                 }
 
@@ -166,6 +181,13 @@ namespace UKControllerPlugin {
                     LogDebug("Sending websocket message: " + this->outboundMessages.front());
                     this->outboundMessages.pop();
                 }
+            }
+
+            // Once we get the instruction to terminate, throw away all the incoming messages until we
+            // get the close signal, to attain graceful shutdown.
+            if (this->connected) {
+                boost::system::error_code ec;
+                this->websocket->close(boost::beast::websocket::close_code::normal, ec);
             }
         }
 
@@ -266,6 +288,19 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Sets the idle timeout on the websocket
+        */
+        void WebsocketConnection::SetIdleTimeout(std::chrono::seconds timeout)
+        {
+            boost::beast::websocket::stream_base::timeout opt{
+                std::chrono::seconds(10),
+                std::chrono::seconds(timeout),
+                true
+            };
+            this->websocket->set_option(opt);
+        }
+
+        /*
             Get the time since last activity
         */
         std::chrono::seconds WebsocketConnection::GetTimeSinceLastActivity(void) const
@@ -280,12 +315,20 @@ namespace UKControllerPlugin {
         */
         void WebsocketConnection::ForceDisconnect(void)
         {
+            std::lock_guard<std::mutex>(this->eventGuard);
+            if (!this->connected) {
+                return;
+            }
+
             LogInfo("Forcing disconnect from websocket");
-            boost::system::error_code ec;
-            //this->websocket->close(
-            //    boost::beast::websocket::close_code::normal,
-            //    ec
-            //);
+            this->websocket->async_close(
+                boost::beast::websocket::close_code::normal,
+                std::bind(
+                    &WebsocketConnection::CloseHandler,
+                    this,
+                    std::placeholders::_1
+                )
+            );            
         }
 
         /*
@@ -296,11 +339,17 @@ namespace UKControllerPlugin {
             // Handle disconnection
             if (
                 ec == boost::asio::error::eof ||
-                ec == boost::asio::error::connection_reset |
-                ec == boost::asio::error::operation_aborted
+                ec == boost::asio::error::connection_reset ||
+                ec == boost::beast::error::timeout ||
+                ec == boost::beast::websocket::error::closed
             ) {
                 this->ResetWebsocket();
                 LogWarning("Disconnected from websocket: " + ec.message());
+                return;
+            }
+
+            // Ignore this code
+            if (ec == boost::asio::error::operation_aborted) {
                 return;
             }
 
