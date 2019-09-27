@@ -45,7 +45,6 @@ clone_depth: 1                      # clone entire repository history if not def
 environment:
   BOOST_ROOT: C:\Libraries\boost_1_69_0
   BOOST_LIBRARYDIR: C:\Libraries\boost_1_69_0\lib64-msvc-15.0
-  PATH: "%BOOST_ROOT%;%BOOST_LIBRARYDIR%;%PATH%"
   matrix:
     - compiler: msvc-15-seh
       generator: "Visual Studio 15 2017"

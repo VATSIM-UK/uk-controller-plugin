@@ -303,7 +303,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(SolutionDir)..\lib\test;$(SolutionDir)..\lib\plugin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(SolutionDir)..\lib\test;$(SolutionDir)..\lib\plugin;$(BOOST_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\obj\test\$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
@@ -312,7 +312,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\testing;$(SolutionDir)..\lib\plugin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\testing;$(SolutionDir)..\lib\plugin;$(BOOST_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\obj\test\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -323,7 +323,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\third_party;$(BOOST_ROOT);</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild />
@@ -354,7 +354,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\third_party;$(BOOST_ROOT);</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ForcedIncludeFiles />

@@ -559,7 +559,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\plugin;$(LibraryPath);</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\plugin;$(BOOST_LIBRARYDIR);$(LibraryPath);</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
     <IntDir>$(SolutionDir)..\obj\plugin\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
@@ -568,7 +568,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\plugin;$(LibraryPath);</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\plugin;$(BOOST_LIBRARYDIR);$(LibraryPath);</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
     <IntDir>$(SolutionDir)..\obj\plugin\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
@@ -580,7 +580,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);CURL_STATICLIB;DISABLE_VERSION_CHECK</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;$(BOOST_ROOT);</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -613,7 +613,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);CURL_STATICLIB;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;$(BOOST_ROOT);</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

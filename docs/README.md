@@ -37,7 +37,9 @@ dynamically to the plugin.
 - Fork the repo
 - Clone the project
 - Open the project, we suggest you either use Visual Studio Community Edition or Visual Studio Code (both free)
-- You will need to ensure that you have the libaries containing mitigations for the Spectre exploit, information on how to install them may be found in the [installation guide](https://docs.microsoft.com/en-us/cpp/build/reference/qspectre?view=vs-2017)
+- You will need to ensure that you have the libraries containing mitigation for the Spectre exploit, information on how to install them may be found in the [installation guide](https://docs.microsoft.com/en-us/cpp/build/reference/qspectre?view=vs-2017)
+- Download and install [Boost](https://www.boost.org/users/download/)
+- Set your `BOOST_ROOT` and `BOOST_LIBRARYDIR` environment variables in windows.
 
 ### Compiling
 
