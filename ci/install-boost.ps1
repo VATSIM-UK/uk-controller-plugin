@@ -9,5 +9,5 @@ Set-Location -Path C:\Libraries\
 Get-ChildItem -Path C:\Libraries\boost_1_70_0
 
 Set-Location -Path C:\Libraries\boost_1_70_0
-bootstrap.bat
-b2.exe architecture=x86 address-model=32
+.\bootstrap.bat
+.\b2.exe architecture=x86 address-model=32
