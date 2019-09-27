@@ -5,8 +5,8 @@ Invoke-WebRequest $source -OutFile $destination
 
 # Unzip it
 Set-Location -Path C:\Libraries\
-Get-ChildItem -Path C:\Libraries\
-7z x boost_1_70_0.7z -oC:\Libraries\boost_1_70_0
+7z x boost_1_70_0.7z -oC:\Libraries
+Get-ChildItem -Path C:\Libraries\boost_1_70_0
 
 Set-Location -Path C:\Libraries\boost_1_70_0
 bootstrap.bat
