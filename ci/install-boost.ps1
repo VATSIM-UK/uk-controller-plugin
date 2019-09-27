@@ -1,5 +1,7 @@
 try
 {
+	$previousCwd = Get-Location;
+
 	# Download boost
 	$source = "https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.7z"
 	$destination = "C:\Libraries\boost_1_70_0.7z"
@@ -14,7 +16,10 @@ try
 	$null = .\bootstrap.bat
 	$null = .\b2.exe -j 2 architecture=x86 address-model=32 threading=multi variant=release
 
-	Exit $lastExitCode;
+	$buildExitCode = $lastExitCode;
+
+	Set-Location $previousCwd;
+	Exit $buildExitCode;
 }
 catch
 {
