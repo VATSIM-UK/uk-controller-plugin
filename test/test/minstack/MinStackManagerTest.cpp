@@ -17,7 +17,7 @@ namespace UKControllerPluginTest {
 
         class MinStackManagerTest : public Test
         {
-            public: 
+            public:
                 MinStackManager msl;
         };
 

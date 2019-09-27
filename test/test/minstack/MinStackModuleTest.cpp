@@ -204,4 +204,4 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, userSettingHandlers.CountHandlers());
         }
     }  // namespace MinStack
-}  // namespace UKControllerModulesTest
+}  // namespace UKControllerPluginTest

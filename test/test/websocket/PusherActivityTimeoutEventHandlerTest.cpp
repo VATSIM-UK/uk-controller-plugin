@@ -27,7 +27,7 @@ namespace UKControllerPluginTest {
                 NiceMock<MockWebsocketConnection> mockWebsocket;
                 PusherActivityTimeoutEventHandler handler;
         };
-        
+
         TEST_F(PusherActivityTimeoutEventHandlerTest, ItReturnsSubscriptions)
         {
             std::set<WebsocketSubscription> expected = {

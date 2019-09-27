@@ -20,7 +20,7 @@ namespace UKControllerPluginTest {
                 {
 
                 }
-                
+
                 NiceMock<MockWebsocketConnection> mockWebsocket;
                 PusherPingEventHandler handler;
         };

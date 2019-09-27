@@ -16,7 +16,7 @@ namespace UKControllerPluginTest {
 
                 PusherErrorEventHandler handler;
         };
-        
+
         TEST_F(PusherErrorEventHandlerTest, ItReturnsSubscriptions)
         {
             std::set<WebsocketSubscription> expected = {

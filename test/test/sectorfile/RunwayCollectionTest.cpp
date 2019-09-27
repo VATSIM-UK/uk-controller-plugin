@@ -292,5 +292,5 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(runway26L.ActiveForDepartures());
             EXPECT_TRUE(runway26L.ActiveForArrivals());
         }
-    }  // namespace Airfield
+    }  // namespace SectorFile
 }  // namespace UKControllerPluginTest

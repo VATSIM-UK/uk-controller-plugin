@@ -20,7 +20,7 @@ namespace UKControllerPluginTest {
                     mockHandler1.reset(new NiceMock<MockRunwayDialogAwareInterface>);
                     mockHandler2.reset(new NiceMock<MockRunwayDialogAwareInterface>);
                 }
-           
+
                 std::shared_ptr<NiceMock<MockRunwayDialogAwareInterface>> mockHandler1;
                 std::shared_ptr<NiceMock<MockRunwayDialogAwareInterface>> mockHandler2;
                 RunwayDialogAwareCollection collection;

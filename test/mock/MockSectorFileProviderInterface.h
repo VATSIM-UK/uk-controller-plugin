@@ -16,5 +16,5 @@ namespace UKControllerPluginTest {
                 );
                 MOCK_METHOD0(GetSectorFileName, std::string(void));
         };
-    }  // namespace Euroscope
+    }  // namespace SectorFile
 }  // namespace UKControllerPluginTest

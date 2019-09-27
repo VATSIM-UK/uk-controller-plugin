@@ -52,5 +52,5 @@ namespace UKControllerPluginTest {
             this->runway.SetActiveForArrivals(true);
             EXPECT_TRUE(this->runway.Active());
         }
-    }  // namespace Airfield
+    }  // namespace SectorFile
 }  // namespace UKControllerPluginTest

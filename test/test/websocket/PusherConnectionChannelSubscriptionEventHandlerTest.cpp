@@ -42,7 +42,7 @@ namespace UKControllerPluginTest {
                 WebsocketEventProcessorCollection processors;
                 PusherConnectionChannelSubscriptionEventHandler handler;
         };
-        
+
         TEST_F(PusherConnectionChannelSubscriptionEventHandlerTest, ItReturnsSubscriptions)
         {
             std::set<WebsocketSubscription> expected = {
@@ -122,7 +122,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AuthoriseWebsocketChannel("abc", "private-minstack-updates"))
                 .Times(1)
                 .WillOnce(Return("def"));
-                
+
             nlohmann::json expectedMessage;
             expectedMessage["event"] = "pusher:subscribe";
             expectedMessage["data"] = {
