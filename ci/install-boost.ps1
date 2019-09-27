@@ -12,7 +12,7 @@ try
 	# Run the boost build
 	Set-Location -Path C:\Libraries\boost_1_70_0
 	$null = .\bootstrap.bat
-	$null = .\b2.exe architecture=x86 address-model=32
+	$null = .\b2.exe -j 2 architecture=x86 address-model=32 threading=multi variant=release
 
 	Exit $lastExitCode;
 }
