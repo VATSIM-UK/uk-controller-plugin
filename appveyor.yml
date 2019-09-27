@@ -43,12 +43,12 @@ shallow_clone: true                 # default is "false"
 clone_depth: 1                      # clone entire repository history if not defined
 
 environment:
+  BOOST_ROOT: "C:\Libraries\boost_1_69_0"
   matrix:
     - compiler: msvc-15-seh
       generator: "Visual Studio 15 2017"
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       enabled_on_pr: yes
-      BOOST_ROOT: "C:\Libraries\boost_1_69_0"
 
 #---------------------------------#
 #       build configuration       #
