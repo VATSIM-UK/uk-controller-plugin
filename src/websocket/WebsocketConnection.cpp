@@ -14,20 +14,10 @@ namespace UKControllerPlugin {
             std::string host,
             std::string port
         )
-            : tcpResolver(ioContext), websocket(ioContext), host(host), port(port), reconnectAttemptInterval(10)
+            : tcpResolver(new boost::asio::ip::tcp::resolver(ioContext)), host(host), port(port), reconnectAttemptInterval(30),
+            websocket(new boost::beast::websocket::stream<boost::asio::ip::tcp::socket>(ioContext))
         {
             this->websocketThread = std::thread(std::bind(&WebsocketConnection::Loop, this));
-            this->connectionInProgress = true;
-            this->tcpResolver.async_resolve(
-                host,
-                port,
-                std::bind(
-                    &WebsocketConnection::ResolveHandler,
-                    this,
-                    std::placeholders::_1,
-                    std::placeholders::_2
-                )
-            );
         }
 
         /*
@@ -39,7 +29,7 @@ namespace UKControllerPlugin {
             this->websocketThread.join();
 
             if (this->connected) {
-                this->websocket.close(boost::beast::websocket::close_code::normal);
+                this->websocket->close(boost::beast::websocket::close_code::normal);
             }
 
             while (this->connected) {
@@ -72,7 +62,7 @@ namespace UKControllerPlugin {
             }
             
             // Perform the websocket handshake
-            this->websocket.async_handshake(
+            this->websocket->async_handshake(
                 this->host,
                 "/app/ukcpwebsocket",
                 std::bind(
@@ -82,6 +72,20 @@ namespace UKControllerPlugin {
                 )
             );
             LogInfo("Successfully connected to the websocket");
+        }
+
+        /*
+            Reset the websocket, ready for a reconnection attempt
+        */
+        void WebsocketConnection::ResetWebsocket(void)
+        {
+            this->connected = false;
+            this->connectionInProgress = false;
+            this->asyncReadInProgress = false;
+            this->asyncWriteInProgress = false;
+
+            this->tcpResolver.reset(new boost::asio::ip::tcp::resolver(ioContext));
+            this->websocket.reset(new boost::beast::websocket::stream<boost::asio::ip::tcp::socket>(ioContext));
         }
 
         /*
@@ -111,13 +115,13 @@ namespace UKControllerPlugin {
             while (this->threadsRunning) {
 
                 this->ioContext.run();
-
+                          
                 // If not connected, try and connect
                 if (!this->connected) {
                     if (!this->connectionInProgress && std::chrono::system_clock::now() > this->nextReconnectAttempt) {
                         this->nextReconnectAttempt = std::chrono::system_clock::now() + this->reconnectAttemptInterval;
                         this->connectionInProgress = true;
-                        this->tcpResolver.async_resolve(
+                        this->tcpResolver->async_resolve(
                             host,
                             port,
                             std::bind(
@@ -135,7 +139,7 @@ namespace UKControllerPlugin {
                 // Process an inbound message if we can
                 if (!this->asyncReadInProgress) {
                     this->asyncReadInProgress = true;
-                    this->websocket.async_read(
+                    this->websocket->async_read(
                         this->incomingBuffer,
                         std::bind(
                             &WebsocketConnection::ReadHandler,
@@ -150,7 +154,7 @@ namespace UKControllerPlugin {
                 if (!this->asyncWriteInProgress && !this->outboundMessages.empty()) {
                     std::lock_guard<std::mutex> lock(this->outboundMessageQueueGuard);
                     this->asyncWriteInProgress = true;
-                    this->websocket.async_write(
+                    this->websocket->async_write(
                         boost::asio::buffer(this->outboundMessages.front()),
                         std::bind(
                             &WebsocketConnection::MessageSentHandler,
@@ -186,8 +190,8 @@ namespace UKControllerPlugin {
         void WebsocketConnection::ReadHandler(boost::beast::error_code ec, std::size_t bytes_transferred)
         {
             if (ec) {
-                this->ProcessErrorCode(ec);
                 this->asyncReadInProgress = false;
+                this->ProcessErrorCode(ec);
                 return;
             }
 
@@ -213,13 +217,13 @@ namespace UKControllerPlugin {
         ) {
             if (ec) {
                 LogWarning("Websocket: resolve error");
-                this->connectionInProgress = false;
+                this->ResetWebsocket();
                 this->ProcessErrorCode(ec);
                 return;
             }
 
             boost::asio::async_connect(
-                this->websocket.next_layer(),
+                this->websocket->next_layer(),
                 results.begin(),
                 results.end(),
                 std::bind(
@@ -278,7 +282,7 @@ namespace UKControllerPlugin {
         {
             LogInfo("Forcing disconnect from websocket");
             boost::system::error_code ec;
-            //this->websocket.close(
+            //this->websocket->close(
             //    boost::beast::websocket::close_code::normal,
             //    ec
             //);
@@ -290,9 +294,12 @@ namespace UKControllerPlugin {
         void WebsocketConnection::ProcessErrorCode(boost::system::error_code ec)
         {
             // Handle disconnection
-            if (ec == boost::asio::error::eof || ec == boost::asio::error::connection_reset) {
-                this->connected = false;
-                this->connectionInProgress = false;
+            if (
+                ec == boost::asio::error::eof ||
+                ec == boost::asio::error::connection_reset |
+                ec == boost::asio::error::operation_aborted
+            ) {
+                this->ResetWebsocket();
                 LogWarning("Disconnected from websocket: " + ec.message());
                 return;
             }

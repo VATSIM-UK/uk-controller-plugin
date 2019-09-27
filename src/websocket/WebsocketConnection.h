@@ -32,6 +32,7 @@ namespace UKControllerPlugin {
 
                 void CloseHandler(boost::system::error_code ec);
                 void ConnectHandler(boost::system::error_code ec);
+                void ResetWebsocket(void);
                 void HandshakeHandler(boost::system::error_code ec);
                 void Loop(void);
                 void MessageSentHandler(boost::system::error_code ec, std::size_t bytes_transferred);
@@ -56,10 +57,10 @@ namespace UKControllerPlugin {
                 boost::asio::io_context ioContext;
 
                 // Resolving addresses
-                boost::asio::ip::tcp::resolver tcpResolver;
+                std::shared_ptr<boost::asio::ip::tcp::resolver> tcpResolver;
 
                 // The websocket itself
-                boost::beast::websocket::stream<boost::asio::ip::tcp::socket> websocket;
+                std::shared_ptr<boost::beast::websocket::stream<boost::asio::ip::tcp::socket>> websocket;
 
                 // The thread we're using to run the websocket.
                 std::thread websocketThread;
@@ -75,6 +76,9 @@ namespace UKControllerPlugin {
 
                 // Protects the outbound messages queue
                 std::mutex outboundMessageQueueGuard;
+
+                // Protects the websocket whilst an event takes place
+                std::mutex eventGuard;
 
                 // Are we connected
                 bool connected = false;
