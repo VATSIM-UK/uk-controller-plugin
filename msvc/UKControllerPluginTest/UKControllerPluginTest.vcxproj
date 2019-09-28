@@ -338,7 +338,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;gmock_debug.lib;gmock_main_debug.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl.lib;libcrypto.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;gmock_debug.lib;gmock_main_debug.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl32MDd.lib;libcrypto32MDd.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile />
       <AdditionalOptions>"$(SolutionDir)..\obj\plugin\$(Configuration)\*.obj"</AdditionalOptions>
@@ -366,7 +366,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePluginDll.lib;gmock_release.lib;gmock_main_release.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl.lib;libcrypto.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePluginDll.lib;gmock_release.lib;gmock_main_release.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl32MD.lib;libcrypto32MD.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
       <AdditionalOptions>"$(SolutionDir)..\obj\plugin\$(Configuration)\*.obj"</AdditionalOptions>
