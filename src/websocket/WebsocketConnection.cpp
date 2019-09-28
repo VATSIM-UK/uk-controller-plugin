@@ -14,8 +14,14 @@ namespace UKControllerPlugin {
             std::string host,
             std::string port
         )
-            : host(host), port(port), reconnectAttemptInterval(30), idleTimeout(30)
+            : host(host), port(port), reconnectAttemptInterval(30), idleTimeout(30),
+            sslContext(boost::asio::ssl::context::tlsv12_client)
         {
+            //sslContext.set_options(
+            //    boost::asio::ssl::context::no_sslv2 |
+            //    boost::asio::ssl::context::no_sslv3 |
+            //    boost::asio::ssl::context::verify_none
+            //);
             this->ResetWebsocket();
             this->websocketThread = std::thread(std::bind(&WebsocketConnection::Loop, this));
         }
@@ -56,12 +62,11 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // Perform the websocket handshake
-            this->websocket->async_handshake(
-                this->host,
-                "/app/ukcpwebsocket",
+            // Perform the SSL handshake
+            this->websocket->next_layer().async_handshake(
+                boost::asio::ssl::stream_base::client,
                 std::bind(
-                    &WebsocketConnection::HandshakeHandler,
+                    &WebsocketConnection::SSLHandshakeHandler,
                     this,
                     std::placeholders::_1
                 )
@@ -80,7 +85,11 @@ namespace UKControllerPlugin {
             this->asyncWriteInProgress = false;
 
             this->tcpResolver.reset(new boost::asio::ip::tcp::resolver(ioContext));
-            this->websocket.reset(new boost::beast::websocket::stream<boost::asio::ip::tcp::socket>(ioContext));
+            this->websocket.reset(
+                new boost::beast::websocket::stream<boost::beast::ssl_stream<boost::beast::tcp_stream>>(
+                    boost::asio::make_strand(ioContext), this->sslContext
+                )
+            );
             this->SetIdleTimeout(std::chrono::seconds(10));
 
             this->websocket->control_callback(
@@ -244,16 +253,39 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            boost::asio::async_connect(
-                this->websocket->next_layer(),
-                results.begin(),
-                results.end(),
+            boost::beast::get_lowest_layer(*this->websocket).async_connect(
+                results,
                 std::bind(
                     &WebsocketConnection::ConnectHandler,
                     this,
                     std::placeholders::_1
                 )
             );
+        }
+
+        /*
+            Called once the SSL handshake has been performed
+        */
+        void WebsocketConnection::SSLHandshakeHandler(boost::system::error_code ec)
+        {
+            if (ec) {
+                LogWarning("Websocket: SSL handshake error");
+                this->connectionInProgress = false;
+                this->ProcessErrorCode(ec);
+                return;
+            }
+
+            // Perform the websocket handshake
+            this->websocket->async_handshake(
+                this->host,
+                "/app/ukcpwebsocket",
+                std::bind(
+                    &WebsocketConnection::HandshakeHandler,
+                    this,
+                    std::placeholders::_1
+                )
+            );
+            LogInfo("Websocket: SSL Handshake Successful");
         }
 
         bool WebsocketConnection::IsConnected(void) const

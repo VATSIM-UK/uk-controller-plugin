@@ -42,6 +42,7 @@ namespace UKControllerPlugin {
                     boost::system::error_code ec,
                     boost::asio::ip::tcp::resolver::results_type results
                 );
+                void SSLHandshakeHandler(boost::system::error_code ec);
 
                 void ProcessErrorCode(boost::system::error_code ec);
 
@@ -60,8 +61,13 @@ namespace UKControllerPlugin {
                 // Resolving addresses
                 std::shared_ptr<boost::asio::ip::tcp::resolver> tcpResolver;
 
+                // SSL Context
+                boost::asio::ssl::context sslContext;
+
                 // The websocket itself
-                std::shared_ptr<boost::beast::websocket::stream<boost::asio::ip::tcp::socket>> websocket;
+                std::shared_ptr<
+                    boost::beast::websocket::stream<boost::beast::ssl_stream<boost::beast::tcp_stream>>
+                > websocket;
 
                 // The thread we're using to run the websocket.
                 std::thread websocketThread;
