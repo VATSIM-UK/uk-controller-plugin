@@ -63,6 +63,7 @@ namespace UKControllerPlugin {
                     msl->UpdateAllMsls(
                         api.GetMinStackLevels()
                     );
+                    LogInfo("Loaded " + std::to_string(msl->GetAllMslKeys().size()) + " minimum stack levels");
                 } catch (ApiException api) {
                     LogError("ApiException when trying to get initial MSL download");
                 }
