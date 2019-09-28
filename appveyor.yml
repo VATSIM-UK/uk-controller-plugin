@@ -45,6 +45,8 @@ clone_depth: 1                      # clone entire repository history if not def
 environment:
   BOOST_ROOT: C:\Libraries\boost_1_70_0
   BOOST_LIBRARYDIR: C:\Libraries\boost_1_70_0\stage\lib
+  OPENSSL_ROOT: C:\OpenSSL-v111-Win32\bin\include
+  OPENSSL_LIBRARYDIR: C:\OpenSSL-v111-Win32\bin\lib\VC\static
   matrix:
     - compiler: msvc-15-seh
       generator: "Visual Studio 15 2017"
