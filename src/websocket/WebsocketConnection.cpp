@@ -1,6 +1,9 @@
 #pragma once
 #include "pch/stdafx.h"
 #include "websocket/WebsocketConnection.h"
+#include "update/PluginVersion.h"
+
+using UKControllerPlugin::Plugin::PluginVersion;
 
 namespace UKControllerPlugin {
     namespace Websocket {
@@ -17,11 +20,6 @@ namespace UKControllerPlugin {
             : host(host), port(port), reconnectAttemptInterval(30), idleTimeout(30),
             sslContext(boost::asio::ssl::context::tlsv12_client)
         {
-            //sslContext.set_options(
-            //    boost::asio::ssl::context::no_sslv2 |
-            //    boost::asio::ssl::context::no_sslv3 |
-            //    boost::asio::ssl::context::verify_none
-            //);
             this->ResetWebsocket();
             this->websocketThread = std::thread(std::bind(&WebsocketConnection::Loop, this));
         }
@@ -62,7 +60,8 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // Perform the SSL handshake
+            // Perform the SSL handshake with a fair timeout
+            boost::beast::get_lowest_layer(*this->websocket).expires_after(std::chrono::seconds(30));
             this->websocket->next_layer().async_handshake(
                 boost::asio::ssl::stream_base::client,
                 std::bind(
@@ -84,12 +83,13 @@ namespace UKControllerPlugin {
             this->asyncReadInProgress = false;
             this->asyncWriteInProgress = false;
 
-            this->tcpResolver.reset(new boost::asio::ip::tcp::resolver(ioContext));
+            this->tcpResolver.reset(new boost::asio::ip::tcp::resolver(boost::asio::make_strand(ioContext)));
             this->websocket.reset(
                 new boost::beast::websocket::stream<boost::beast::ssl_stream<boost::beast::tcp_stream>>(
                     boost::asio::make_strand(ioContext), this->sslContext
                 )
             );
+
             this->SetIdleTimeout(std::chrono::seconds(10));
 
             this->websocket->control_callback(
@@ -254,7 +254,8 @@ namespace UKControllerPlugin {
             }
 
             boost::beast::get_lowest_layer(*this->websocket).async_connect(
-                results,
+                results.cbegin(),
+                results.cend(),
                 std::bind(
                     &WebsocketConnection::ConnectHandler,
                     this,
@@ -274,6 +275,19 @@ namespace UKControllerPlugin {
                 this->ProcessErrorCode(ec);
                 return;
             }
+
+            // No timeout required on the stream as websockets handles this.
+            boost::beast::get_lowest_layer(*this->websocket).expires_never();
+
+            // Identify the user agent
+            this->websocket->set_option(boost::beast::websocket::stream_base::decorator(
+                [](boost::beast::websocket::request_type& req) {
+                    req.set(
+                        boost::beast::http::field::user_agent,
+                        std::string(BOOST_BEAST_VERSION_STRING) + " UCKP " + PluginVersion::version
+                    );
+                }
+            ));
 
             // Perform the websocket handshake
             this->websocket->async_handshake(
@@ -372,6 +386,9 @@ namespace UKControllerPlugin {
             if (
                 ec == boost::asio::error::eof ||
                 ec == boost::asio::error::connection_reset ||
+                ec == boost::asio::ssl::error::stream_truncated ||
+                ec == boost::asio::ssl::error::unexpected_result ||
+                ec == boost::asio::ssl::error::unspecified_system_error ||
                 ec == boost::beast::error::timeout ||
                 ec == boost::beast::websocket::error::closed
             ) {
