@@ -15,7 +15,6 @@ namespace UKControllerPlugin {
 
         bool WebsocketSubscription::operator<(const WebsocketSubscription & compare) const
         {
-
             return this->subType == compare.subType
                 ? this->subTarget < compare.subTarget
                 : this->subType < compare.subType;
