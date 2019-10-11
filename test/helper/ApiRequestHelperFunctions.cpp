@@ -19,6 +19,7 @@ CurlRequest GetApiCurlRequest(
     request.SetBody(body.dump());
     request.AddHeader("Authorization", "Bearer " + mockApiKey);
     request.AddHeader("Accept", "application/json");
+    request.AddHeader("Content-Type", "application/json");
     return request;
 }
 
@@ -32,6 +33,7 @@ CurlRequest GetApiCurlRequest(
     CurlRequest request(mockApiUrl + route, method);
     request.AddHeader("Authorization", "Bearer " + mockApiKey);
     request.AddHeader("Accept", "application/json");
+    request.AddHeader("Content-Type", "application/json");
     return request;
 }
 

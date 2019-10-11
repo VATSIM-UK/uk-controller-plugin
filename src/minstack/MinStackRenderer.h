@@ -3,6 +3,8 @@
 #include "radarscreen/RadarRenderableInterface.h"
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "plugin/PopupMenuItem.h"
+#include "minstack/MinStackRendererConfiguration.h"
+#include "dialog/DialogManager.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
@@ -43,12 +45,14 @@ namespace UKControllerPlugin {
                     int menuBarClickspotId,
                     int mslClickspotId,
                     int toggleCallbackFunctionId,
-                    const UKControllerPlugin::Windows::GdiplusBrushes & brushes
+                    const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
+                    const UKControllerPlugin::Dialog::DialogManager & dialogManager
                 );
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
                 void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const;
                 void Configure(int functionId, std::string subject, RECT screenObjectArea);
+                UKControllerPlugin::MinStack::MinStackRendererConfiguration & GetConfig(void);
                 RECT GetHideClickspotArea(void) const;
                 Gdiplus::Rect GetHideSpotRender(void) const;
                 RECT GetTopBarArea(void) const;
@@ -69,8 +73,8 @@ namespace UKControllerPlugin {
                     std::string objectDescription,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 );
-                void SetVisible(bool visible);
                 void ResetPosition(void) override;
+                void SetVisible(bool visible);
 
                 // The EuroScope ID for the close button.
                 const int hideClickspotId;
@@ -93,6 +97,12 @@ namespace UKControllerPlugin {
                 // The ASR key for whether or not to display the module
                 const std::string visibleUserSettingKey = "DisplayMinStack";
 
+                // The ASR key for saving the selected the selected minimum stack levels
+                const std::string selectedMinStackUserSettingKey = "SelectedMinStack";
+
+                // The description when saving the selected minimum stack levels
+                const std::string selectedMinStackUserSettingDescription = "Selected Minimum Stack Levels To Display";
+
                 // The description when saving the visibility ASR setting
                 const std::string visibleUserSettingDescription = "Minimum Stack Level Visibility";
 
@@ -109,7 +119,7 @@ namespace UKControllerPlugin {
                 const std::string yPositionUserSettingDescription = "Minimum Stack Level Y Position";
 
                 // The MSL module menu text
-                const std::string menuItemDescription = "Display Minimum Stack Levels";
+                const std::string menuItemDescription = "Configure Minimum Stack Levels";
 
                 // The callback function ID for the toggle function
                 const int toggleCallbackFunctionId;
@@ -142,14 +152,17 @@ namespace UKControllerPlugin {
                 // The rectangle to render for the hide clickspot
                 Gdiplus::Rect hideSpotRender;
 
-                // Whether or not the window should be visible on screen.
-                bool visible = false;
-
                 // Brushes
                 const UKControllerPlugin::Windows::GdiplusBrushes & brushes;
 
+                // The configuration for the renderer
+                UKControllerPlugin::MinStack::MinStackRendererConfiguration config;
+
                 // The module to render data for
                 UKControllerPlugin::MinStack::MinStackManager & minStackModule;
+
+                // Spawns the configuration dialog
+                const UKControllerPlugin::Dialog::DialogManager & dialogManager;
         };
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

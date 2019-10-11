@@ -9,6 +9,7 @@
 #define IDD_GENERAL_SETTINGS            106
 #define HOLD_SELECTOR_DIALOG            109
 #define IDD_TIMER_CONFIGURATION         111
+#define IDD_MINSTACK                    113
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -22,6 +23,7 @@
 #define IDC_CHECK1                      1013
 #define GS_DIALOG_PRENOTE_CHECK         1013
 #define TIMER1_ENABLED_CHECK            1013
+#define IDC_MINSTACK_DISPLAY_CHECK      1013
 #define TIMER2_ENABLED_CHECK            1014
 #define IDC_MFCBUTTON1                  1015
 #define TIMER3_ENABLED_CHECK            1015
@@ -51,9 +53,11 @@
 #define IDC_HOLD_OPEN                   1031
 #define IDC_HOLD_ADD                    1031
 #define IDC_BUTTON4                     1032
+#define IDC_MINSTACK_ADD                1032
 #define HOLD_SELECTOR_OK                1033
 #define IDC_LIST1                       1034
 #define IDC_HOLD_PROFILE_LIST           1034
+#define IDC_MINSTACK_LIST               1034
 #define IDC_HOLD_REMOVE                 1035
 #define IDC_HOLD_LIST                   1036
 #define IDC_HOLD_PROFILE_STATIC         1037
@@ -65,7 +69,9 @@
 #define IDC_BUTTON2                     1046
 #define TIMER1_EDIT_DURATION            1047
 #define TIMER2_EDIT_DURATION            1048
+#define IDC_TIME_FORMAT_CHECK           1048
 #define TIMER3_EDIT_DURATION            1049
+#define GS_TIME_FORMAT_CHECK            1049
 #define TIMER4_EDIT_DURATION            1050
 #define TIMER5_EDIT_VALUE               1051
 #define TIMER5_EDIT_DURATION            1051
@@ -76,16 +82,20 @@
 #define TIMER3_LABEL                    1056
 #define TIMER4_LABEL                    1057
 #define TIMER5_LABEL                    1058
-#define IDC_TIME_FORMAT_CHECK           1048
-#define GS_TIME_FORMAT_CHECK            1049
+#define IDC_MINSTACK_DELETE             1060
+#define IDC_MINSTACK_DOWN               1061
+#define IDC_MINSTACK_UP                 1062
+#define IDC_COMBO2                      1064
+#define IDC_MINSTACK_SELECT             1064
+#define IDC_MINSTACK_SELECTED_LABEL     1065
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        113
+#define _APS_NEXT_RESOURCE_VALUE        115
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1059
+#define _APS_NEXT_CONTROL_VALUE         1066
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

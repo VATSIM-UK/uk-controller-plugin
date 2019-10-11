@@ -1,13 +1,12 @@
 #pragma once
+#include "api/ApiInterface.h"
+#include "dialog/DialogManager.h"
 
 // Forward declare
 namespace UKControllerPlugin {
     namespace Plugin {
         class FunctionCallEventHandler;
     }  // namespace Plugin
-    namespace Metar {
-        class MetarEventHandlerCollection;
-    }  // namespace Metar
     namespace RadarScreen {
         class RadarRenderableCollection;
         class ConfigurableDisplayCollection;
@@ -27,6 +26,9 @@ namespace UKControllerPlugin {
     namespace Curl {
         class CurlInterface;
     }  // namespace Curl
+    namespace Websocket {
+        class WebsocketEventProcessorCollection;
+    }  // namespace Websocket
 }  // namespace UKControllerPlugin
 // END
 
@@ -42,9 +44,10 @@ namespace UKControllerPlugin {
             public:
                 static void BootstrapPlugin(
                     std::shared_ptr<MinStackManager> & msl,
-                    UKControllerPlugin::Metar::MetarEventHandlerCollection & metarEvents,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface & taskManager,
-                    UKControllerPlugin::Curl::CurlInterface & curl
+                    UKControllerPlugin::Api::ApiInterface & api,
+                    UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors,
+                    UKControllerPlugin::Dialog::DialogManager & dialogManager
                 );
                 static void BootstrapRadarScreen(
                     UKControllerPlugin::Plugin::FunctionCallEventHandler & eventHandler,
@@ -52,11 +55,9 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::RadarScreen::RadarRenderableCollection & radarRender,
                     UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays,
                     const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
-                    UKControllerPlugin::Euroscope::AsrEventHandlerCollection & userSettingHandlers
+                    UKControllerPlugin::Euroscope::AsrEventHandlerCollection & userSettingHandlers,
+                    const UKControllerPlugin::Dialog::DialogManager & dialogManager
                 );
-
-                // The URL to get METARs from.
-                static const std::string metarUrl;
         };
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

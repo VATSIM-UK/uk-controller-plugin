@@ -66,6 +66,22 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Returns a list of strings
+        */
+        std::vector<std::string> UserSetting::GetStringListEntry(std::string key, std::vector<std::string> defaultValue)
+        {
+            std::string value = this->userSettingProvider.GetKey(key);
+
+            if (!this->ValidStringEntry(value)) {
+                return defaultValue;
+            }
+
+            std::vector<std::string> list = HelperFunctions::TokeniseString(';', value);
+
+            return list.empty() ? defaultValue : list;
+        }
+
+        /*
             Returns true if there is some entry of some form for a given key.
         */
         bool UserSetting::HasEntry(std::string key)
@@ -167,6 +183,14 @@ namespace UKControllerPlugin {
         void UserSetting::Save(std::string name, std::string description, COLORREF data)
         {
             this->userSettingProvider.SetKey(name, description, HelperFunctions::GetColourString(data));
+        }
+
+        /*
+            Save string vector data
+        */
+        void UserSetting::Save(std::string name, std::string description, std::vector<std::string> data)
+        {
+            this->userSettingProvider.SetKey(name, description, HelperFunctions::VectorToDelimetedString(data, ";"));
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

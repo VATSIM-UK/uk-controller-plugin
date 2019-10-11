@@ -1,10 +1,13 @@
 #include "pch/pch.h"
 #include "hold/HoldingDataSerializer.h"
 #include "hold/HoldingData.h"
+#include "bootstrap/PersistenceContainer.h"
 
 using UKControllerPlugin::Hold::JsonValid;
 using UKControllerPlugin::Hold::holdSerializerInvalid;
 using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Hold::from_json_with_restrictions;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
@@ -31,6 +34,8 @@ namespace UKControllerPluginTest {
                         {"restrictions", nlohmann::json::array({restriction})}
                     };
                 }
+
+                PersistenceContainer container;
 
                 nlohmann::json testData;
         };
@@ -139,6 +144,19 @@ namespace UKControllerPluginTest {
         TEST_F(HoldingDataSerializerTest, ReturnsHoldingDataFromJson)
         {
             HoldingData actual = this->testData.get<HoldingData>();
+            EXPECT_EQ(1, actual.identifier);
+            EXPECT_EQ("TIMBA", actual.fix);
+            EXPECT_EQ("TIMBA LOW", actual.description);
+            EXPECT_EQ(7000, actual.minimum);
+            EXPECT_EQ(15000, actual.maximum);
+            EXPECT_EQ(309, actual.inbound);
+            EXPECT_EQ("right", actual.turnDirection);
+        }
+
+        TEST_F(HoldingDataSerializerTest, ReturnsHoldingDataWithRestrictionsFromJson)
+        {
+            HoldingData actual;
+            from_json_with_restrictions (this->testData, actual, this->container);
             EXPECT_EQ(1, actual.identifier);
             EXPECT_EQ("TIMBA", actual.fix);
             EXPECT_EQ("TIMBA LOW", actual.description);

@@ -73,6 +73,11 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, this->container.commandHandlers->CountHandlers());
         }
 
+        TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginCreatesRunwayDialogHandler)
+        {
+            EXPECT_EQ(0, this->container.runwayDialogEventHandlers->CountHandlers());
+        }
+
         TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginRegistersDeferredHandlersForTimedEvents)
         {
             EXPECT_EQ(1, this->container.timedHandler->CountHandlers());

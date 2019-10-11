@@ -141,6 +141,22 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Authorise connection to a websocket channel and return the authorisation code.
+        */
+        std::string ApiHelper::AuthoriseWebsocketChannel(std::string socketId, std::string channel) const
+        {
+            nlohmann::json response = this->MakeApiRequest(
+                this->requestBuilder.BuildWebsocketChannelAuthRequest(socketId, channel)
+            ).GetRawData();
+
+            if (!response.count("auth") || !response.at("auth").is_string()) {
+                throw ApiException("Authorsation response missing valid token");
+            }
+
+            return response.at("auth");
+        }
+
+        /*
             Hits the API root to find out whether we're allowed in.
         */
         bool ApiHelper::CheckApiAuthorisation(void) const
@@ -228,6 +244,14 @@ namespace UKControllerPlugin {
         nlohmann::json ApiHelper::GetUserHoldProfiles(void) const
         {
             return this->MakeApiRequest(this->requestBuilder.BuildUserHoldProfilesRequest()).GetRawData();
+        }
+
+        /*
+            Request all the min stack levels
+        */
+        nlohmann::json ApiHelper::GetMinStackLevels(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildMinStackLevelRequest()).GetRawData();
         }
 
         /*
