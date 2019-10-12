@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
             return id < callback.functionId;
         }
 
-        bool CompareFunctions::operator()(const CallbackFunction & a, const CallbackFunction & b)
+        bool CompareFunctions::operator()(const CallbackFunction & a, const CallbackFunction & b) const
         {
             return a.functionId < b.functionId;
         }
@@ -34,7 +34,7 @@ namespace UKControllerPlugin {
             return id < callback.functionId;
         }
 
-        bool CompareFunctions::operator()(const TagFunction & a, const TagFunction & b)
+        bool CompareFunctions::operator()(const TagFunction & a, const TagFunction & b) const
         {
             return a.functionId < b.functionId;
         }

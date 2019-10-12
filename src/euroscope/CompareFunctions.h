@@ -25,13 +25,13 @@ namespace UKControllerPlugin {
             bool operator()(
                 const UKControllerPlugin::Euroscope::CallbackFunction & a,
                 const UKControllerPlugin::Euroscope::CallbackFunction & b
-            );
+            ) const;
             bool operator()(const UKControllerPlugin::Tag::TagFunction & callback, int id) const;
             bool operator()(int id, const UKControllerPlugin::Tag::TagFunction & callback) const;
             bool operator()(
                 const UKControllerPlugin::Tag::TagFunction & a,
                 const UKControllerPlugin::Tag::TagFunction & b
-            );
+            ) const;
 
         } CompareFunctions;
     }  // namespace Euroscope
