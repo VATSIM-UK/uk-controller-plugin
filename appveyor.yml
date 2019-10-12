@@ -53,9 +53,9 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       enabled_on_pr: yes
 
-#---------------------------------#
-#       build configuration       #
-#---------------------------------#
+#----------------------------------#
+#       build configuration        #
+#----------------------------------#
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform: x86
