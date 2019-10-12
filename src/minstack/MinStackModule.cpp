@@ -7,13 +7,12 @@
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "graphics/GdiplusBrushes.h"
 #include "euroscope/AsrEventHandlerCollection.h"
-#include "minstack/TerminalControlArea.h"
 #include "task/TaskRunnerInterface.h"
-#include "curl/CurlInterface.h"
-#include "curl/CurlResponse.h"
 #include "metar/MetarEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
-#include "curl/CurlRequest.h"
+#include "websocket/WebsocketEventProcessorCollection.h"
+#include "api/ApiException.h"
+#include "minstack/MinStackConfigurationDialog.h"
 
 using UKControllerPlugin::MinStack::MinStackRenderer;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -22,63 +21,54 @@ using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
-using UKControllerPlugin::MinStack::TerminalControlArea;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
-using UKControllerPlugin::Curl::CurlInterface;
-using UKControllerPlugin::Curl::CurlResponse;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
-using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
+using UKControllerPlugin::Api::ApiInterface;
+using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace MinStack {
-
-        const std::string MinStackModule::metarUrl = "http://metar.vatsim.net/metar.php?id=";
 
         /*
             Bootstrap the plugin part of the module.
         */
         void MinStackModule::BootstrapPlugin(
             std::shared_ptr<MinStackManager> & msl,
-            MetarEventHandlerCollection & metarEvents,
             TaskRunnerInterface & taskManager,
-            CurlInterface & curl
+            ApiInterface & api,
+            WebsocketEventProcessorCollection & websocketProcessors,
+            DialogManager & dialogManager
         ) {
             msl.reset(new MinStackManager);
-            metarEvents.RegisterHandler(msl);
-            std::vector<std::shared_ptr<TerminalControlArea>> list = {
-                std::shared_ptr<TerminalControlArea>(new TerminalControlArea(L"LTMA", "LTMA", 6000, "EGLL", true)),
-                std::shared_ptr<TerminalControlArea>(new TerminalControlArea(L"MTMA", "MTMA", 5000, "EGCC", true)),
-                std::shared_ptr<TerminalControlArea>(new TerminalControlArea(L"STMA", "STMA", 6000, "EGPF", false)),
-                std::shared_ptr<TerminalControlArea>(new TerminalControlArea(L"CICZ", "CICZ", 5000, "EGJJ", true))
-            };
+            websocketProcessors.AddProcessor(msl);
 
+            // Create the dialog for configuration
+            std::shared_ptr<MinStackConfigurationDialog> dialog = std::make_shared<MinStackConfigurationDialog>(*msl);
+            dialogManager.AddDialog(
+                {
+                    IDD_MINSTACK,
+                    "Minimum Stack Levels",
+                    reinterpret_cast<DLGPROC>(dialog->WndProc),
+                    reinterpret_cast<LPARAM>(dialog.get()),
+                    dialog
+                }
+            );
 
-            // For each of the TMAs, schedule an asynchronous task to go and get the relevant METAR
-            for (
-                std::vector<std::shared_ptr<TerminalControlArea>>::iterator it = list.begin();
-                it != list.end();
-                ++it
-            ) {
-                std::shared_ptr<TerminalControlArea> tma = *it;
-                msl->AddTerminalControlArea(tma);
-                taskManager.QueueAsynchronousTask([msl, tma, &curl]() {
-
-                    CurlRequest request(
-                        MinStackModule::metarUrl + tma->GetCalculationAirfield(),
-                        CurlRequest::METHOD_GET
+            // Get all the minstacks up front
+            taskManager.QueueAsynchronousTask([& api, msl]() {
+                try {
+                    msl->UpdateAllMsls(
+                        api.GetMinStackLevels()
                     );
-                    CurlResponse response = curl.MakeCurlRequest(request);
+                    LogInfo("Loaded " + std::to_string(msl->GetAllMslKeys().size()) + " minimum stack levels");
+                } catch (ApiException api) {
+                    LogError("ApiException when trying to get initial MSL download");
+                }
 
-                    // We had a curl error, so don't update the MSL.
-                    if (response.IsCurlError() || !response.StatusOk()) {
-                        return;
-                    }
-
-                    msl->NewMetar(tma->GetCalculationAirfield(), response.GetResponse());
-                    LogInfo("Set MSL for " + std::string(tma->GetCharName()));
-                });
-            }
+            });
         }
 
         /*
@@ -90,7 +80,8 @@ namespace UKControllerPlugin {
             RadarRenderableCollection & radarRender,
             ConfigurableDisplayCollection & configurableDisplays,
             const GdiplusBrushes & brushes,
-            AsrEventHandlerCollection & userSettingHandlers
+            AsrEventHandlerCollection & userSettingHandlers,
+            const DialogManager & dialogManager
         )
         {
             // Create the renderer and get the ids for screen objects
@@ -103,7 +94,8 @@ namespace UKControllerPlugin {
                     radarRender.ReserveScreenObjectIdentifier(rendererId),
                     radarRender.ReserveScreenObjectIdentifier(rendererId),
                     configureFunctionId,
-                    brushes
+                    brushes,
+                    dialogManager
                 )
             );
 

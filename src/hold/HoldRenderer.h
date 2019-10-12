@@ -42,6 +42,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
                 ) override;
                 void SetVisible(bool visible);
+                void ResetPosition(void) override;
 
                 // Inherited via ConfigurableDisplayInterface
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;

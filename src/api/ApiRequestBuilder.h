@@ -44,6 +44,11 @@ namespace UKControllerPlugin {
                 ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildRemoteFileRequest(std::string uri) const;
                 UKControllerPlugin::Curl::CurlRequest BuildVersionCheckRequest(std::string versionString) const;
+                UKControllerPlugin::Curl::CurlRequest BuildWebsocketChannelAuthRequest(
+                    std::string socketId,
+                    std::string channel
+                ) const;
+                UKControllerPlugin::Curl::CurlRequest BuildMinStackLevelRequest(void) const;
                 std::string GetApiDomain(void) const;
                 std::string GetApiKey(void) const;
                 void SetApiDomain(std::string domain);

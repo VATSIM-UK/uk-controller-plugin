@@ -9,6 +9,13 @@
 #pragma warning( push )
 #pragma warning( disable : 26495 26451)
 #pragma warning( pop )
+
+#include <boost/beast.hpp>
+#include <boost/asio/connect.hpp>
+#include <boost/asio/strand.hpp>
+#include <boost/beast/ssl.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/beast/core/tcp_stream.hpp>
 #include "date/include/date/date.h"
 #include "../../resource/resource.h"
 #include "json/json.hpp"
@@ -23,6 +30,7 @@
 #include <CommCtrl.h>
 #include <CommDlg.h>
 #include <shtypes.h>
+#include <experimental/filesystem>
 #include <cctype>
 #include <ctime>
 #include <string>
@@ -30,6 +38,7 @@
 #include <map>
 #include <mutex>
 #include <vector>
+#include <KnownFolders.h>
 #include <iterator>
 #include <sstream>
 #include <queue>

@@ -24,6 +24,7 @@ using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Datablock::DisplayTime;
 
 using ::testing::Test;
 using ::testing::NiceMock;
@@ -40,15 +41,15 @@ namespace UKControllerPluginTest {
                     this->flightplans.UpdatePlan(StoredFlightplan("BAW123", "EGKK", "EGPH"));
                     this->handler = std::make_unique<ActualOffBlockTimeEventHandler>(
                         this->flightplans,
-                        this->displayTime
+                        this->timeFormat
                     );
                 };
 
+                DisplayTime timeFormat;
                 StoredFlightplanCollection flightplans;
                 NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
                 std::unique_ptr<ActualOffBlockTimeEventHandler> handler;
-                DisplayTime displayTime;
         };
 
         TEST_F(ActualOffBlockTimeEventHandlerTest, ControllerFlightplanDataEventSetsAobtIfPush)
@@ -188,9 +189,9 @@ namespace UKControllerPluginTest {
             ON_CALL(mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
-            EXPECT_TRUE(
-                this->handler->GetTagItemData(this->mockFlightplan, this->mockRadarTarget) ==
-                this->handler->defaultTime
+            EXPECT_EQ(
+                this->timeFormat.GetUnknownTimeFormat(),
+                this->handler->GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
             );
         }
 
@@ -199,9 +200,9 @@ namespace UKControllerPluginTest {
             ON_CALL(mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW124"));
 
-            EXPECT_TRUE(
-                this->handler->GetTagItemData(this->mockFlightplan, this->mockRadarTarget) ==
-                this->handler->defaultTime
+            EXPECT_EQ(
+                this->timeFormat.GetUnknownTimeFormat(),
+                this->handler->GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
             );
         }
 
@@ -216,7 +217,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_TRUE(
                 this->handler->GetTagItemData(this->mockFlightplan, this->mockRadarTarget) ==
-                    this->displayTime.FromSystemTime()
+                    this->timeFormat.FromSystemTime()
             );
         }
     }  // namespace Datablock

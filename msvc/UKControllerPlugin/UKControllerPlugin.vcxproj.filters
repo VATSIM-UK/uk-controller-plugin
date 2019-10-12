@@ -121,6 +121,12 @@
     <Filter Include="src\dialog">
       <UniqueIdentifier>{e0f95056-2640-4e39-bc95-a21844516f05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\websocket">
+      <UniqueIdentifier>{a390fff4-5510-4260-9be4-51f0438acefa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\sectorfile">
+      <UniqueIdentifier>{61c300dc-1834-4381-b018-2c7380756930}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\Airfield.h">
@@ -504,9 +510,6 @@
     <ClInclude Include="..\..\src\minstack\MinStackRenderer.h">
       <Filter>src\minstack</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\minstack\TerminalControlArea.h">
-      <Filter>src\minstack</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h">
       <Filter>src\offblock</Filter>
     </ClInclude>
@@ -858,6 +861,105 @@
     <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h">
       <Filter>src\api</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\countdown\TimerConfigurationManager.h">
+      <Filter>src\countdown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\countdown\TimerConfiguration.h">
+      <Filter>src\countdown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\countdown\TimerConfigurationDialog.h">
+      <Filter>src\countdown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\countdown\GlobalCountdownSettingFunctions.h">
+      <Filter>src\countdown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datablock\DatablockBoostrap.h">
+      <Filter>src\datablock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\radarscreen\PositionResetCommand.h">
+      <Filter>src\radarscreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketConnection.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherWebsocketProtocolHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketMessage.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorInterface.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorCollection.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherPingEventHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\websocket\WebsocketBootstrap.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\minstack\MinStackLevel.h">
+      <Filter>src\minstack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\minstack\MinStackRenderedItem.h">
+      <Filter>src\minstack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\minstack\MinStackRendererConfiguration.h">
+      <Filter>src\minstack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\minstack\MinStackConfigurationDialog.h">
+      <Filter>src\minstack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\Runway.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareCollection.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1180,9 +1282,6 @@
     <ClCompile Include="..\..\src\minstack\MinStackRenderer.cpp">
       <Filter>src\minstack</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\minstack\TerminalControlArea.cpp">
-      <Filter>src\minstack</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp">
       <Filter>src\offblock</Filter>
     </ClCompile>
@@ -1290,9 +1389,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp">
       <Filter>src\euroscope</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\offblock\EsimatedOffBlockTimeBootstrap.cpp">
-      <Filter>src\offblock</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bootstrap\LocateApiSettings.cpp">
       <Filter>src\bootstrap</Filter>
@@ -1464,6 +1560,81 @@
     </ClCompile>
     <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp">
       <Filter>src\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\countdown\TimerConfigurationManager.cpp">
+      <Filter>src\countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\countdown\TimerConfigurationDialog.cpp">
+      <Filter>src\countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\countdown\GlobalCountdownSettingFunctions.cpp">
+      <Filter>src\countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datablock\DatablockBoostrap.cpp">
+      <Filter>src\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp">
+      <Filter>src\offblock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp">
+      <Filter>src\radarscreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherWebsocketProtocolHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherPingEventHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\minstack\MinStackRendererConfiguration.cpp">
+      <Filter>src\minstack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\minstack\MinStackConfigurationDialog.cpp">
+      <Filter>src\minstack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestriction.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.cpp">
+      <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp">
+      <Filter>src\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp">
+      <Filter>src\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sectorfile\Runway.cpp">
+      <Filter>src\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\RunwayDialogAwareCollection.cpp">
+      <Filter>src\euroscope</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

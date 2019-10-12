@@ -9,10 +9,12 @@
 #include "historytrail/HistoryTrailModule.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/ScreenControlsBootstrap.h"
+#include "radarscreen/PositionResetCommand.h"
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "hold/HoldModule.h"
 #include "bootstrap/HelperBootstrap.h"
+#include "sectorfile/SectorFileBootstrap.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -40,7 +42,8 @@ namespace UKControllerPlugin {
         UKControllerPlugin::UKRadarScreen * RadarScreenFactory::Create(void) const
         {
             // Create the collections
-            RadarRenderableCollection renderers;
+            this->renderableCollections.push_back(std::make_shared<RadarRenderableCollection>());
+            RadarRenderableCollection & renderers = *renderableCollections.back();
             AsrEventHandlerCollection userSettingHandlers;
             ConfigurableDisplayCollection configurableDisplays;
             CommandHandlerCollection commandHandlers;
@@ -50,6 +53,8 @@ namespace UKControllerPlugin {
                 persistence,
                 configurableDisplays
             );
+
+            UKControllerPlugin::SectorFile::BootstrapRadarScreen(persistence, userSettingHandlers);
 
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
                 *persistence.pluginFunctionHandlers,
@@ -75,12 +80,14 @@ namespace UKControllerPlugin {
                 renderers,
                 configurableDisplays,
                 *persistence.brushes,
-                userSettingHandlers
+                userSettingHandlers,
+                *persistence.dialogManager
             );
 
             CountdownModule::BootstrapRadarScreen(
                 *persistence.pluginFunctionHandlers,
                 *persistence.countdownTimer,
+                persistence.timerConfigurationManager,
                 renderers,
                 configurableDisplays,
                 *persistence.brushes,
@@ -93,6 +100,11 @@ namespace UKControllerPlugin {
                 userSettingHandlers,
                 commandHandlers,
                 this->persistence
+            );
+
+            // Register command for position resets
+            this->persistence.commandHandlers->RegisterHandler(
+                std::make_shared<PositionResetCommand>(renderers)
             );
 
             // Last thing we do is ScreenControls

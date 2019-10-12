@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
     namespace Datablock {
         ActualOffBlockTimeEventHandler::ActualOffBlockTimeEventHandler(
             const StoredFlightplanCollection & flightplans,
-            const DisplayTime displayTime
+            const DisplayTime & displayTime
         )
             : flightplans(flightplans), displayTime(displayTime)
         {
@@ -70,7 +70,7 @@ namespace UKControllerPlugin {
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
             if (!this->flightplans.HasFlightplanForCallsign(flightPlan.GetCallsign())) {
-                return this->defaultTime;
+                return this->displayTime.GetUnknownTimeFormat();
             }
 
             std::chrono::system_clock::time_point offBlock = this->flightplans.GetFlightplanForCallsign(
@@ -78,7 +78,8 @@ namespace UKControllerPlugin {
             )
                 .GetActualOffBlockTime();
 
-            return offBlock == (std::chrono::system_clock::time_point::max)() ? this->defaultTime
+            return offBlock == (std::chrono::system_clock::time_point::max)()
+                ? this->displayTime.GetUnknownTimeFormat()
                 : this->displayTime.FromTimePoint(offBlock);
         }
     }  // namespace Datablock

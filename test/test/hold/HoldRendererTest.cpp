@@ -42,6 +42,7 @@ namespace UKControllerPluginTest {
                     this->holdManager.AddHold(ManagedHold({ 1, "WILLO", "WILLO", 8000, 15000, 209, "left", {} }));
                     this->holdManager.AddHold(ManagedHold({ 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left", {} }));
                     this->profileManager.AddProfile({ 1, "Test Profile", {1, 2} });
+
                     displayManager->AsrLoadedEvent(this->userSetting);
                     displayManager->LoadProfile(1);
                 }
@@ -140,6 +141,21 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(0, this->displayManager->GetDisplay(1).GetLevelsSkipped());
             EXPECT_EQ(0, this->displayManager->GetDisplay(2).GetLevelsSkipped());
+        }
+
+        TEST_F(HoldRendererTest, ItResetsDisplayPositions)
+        {
+            POINT expectedDisplay1 = { 100, 100 };
+            POINT expectedDisplay2 = { 100, 100 };
+
+            this->renderer.Move({ 200, 200, 200, 200 }, "1");
+            this->renderer.Move({ 200, 200, 200, 200 }, "2");
+
+            this->renderer.ResetPosition();
+            EXPECT_EQ(expectedDisplay1.x, this->displayManager->GetDisplay(1).GetDisplayPos().x);
+            EXPECT_EQ(expectedDisplay1.y, this->displayManager->GetDisplay(1).GetDisplayPos().y);
+            EXPECT_EQ(expectedDisplay2.x, this->displayManager->GetDisplay(2).GetDisplayPos().x);
+            EXPECT_EQ(expectedDisplay2.y, this->displayManager->GetDisplay(2).GetDisplayPos().y);
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

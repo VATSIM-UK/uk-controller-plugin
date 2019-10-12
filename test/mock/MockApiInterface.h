@@ -24,6 +24,7 @@ namespace UKControllerPluginTest {
                         std::string
                     )
                 );
+                MOCK_CONST_METHOD2(AuthoriseWebsocketChannel, std::string(std::string socketId, std::string channel));
                 MOCK_CONST_METHOD0(CheckApiAuthorisation, bool(void));
                 MOCK_CONST_METHOD1(DeleteSquawkAssignment, void(std::string));
                 MOCK_CONST_METHOD0(FetchDependencyManifest, UKControllerPlugin::Api::RemoteFileManifest(void));
@@ -33,6 +34,7 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(GetApiKey, std::string(void));
                 MOCK_CONST_METHOD0(GetHoldDependency, nlohmann::json(void));
                 MOCK_CONST_METHOD0(GetGenericHoldProfiles, nlohmann::json(void));
+                MOCK_CONST_METHOD0(GetMinStackLevels, nlohmann::json(void));
                 MOCK_CONST_METHOD0(GetUserHoldProfiles, nlohmann::json(void));
                 MOCK_CONST_METHOD1(GetDependency, nlohmann::json(UKControllerPlugin::Dependency::DependencyData));
                 MOCK_CONST_METHOD1(DeleteUserHoldProfile, void(unsigned int profileId));

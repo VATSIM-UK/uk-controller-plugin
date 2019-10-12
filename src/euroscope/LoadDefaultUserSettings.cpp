@@ -53,6 +53,18 @@ namespace UKControllerPlugin {
                     true
                 );
             }
+
+            // Time format
+            if (!userSetting.HasEntry(GeneralSettingsEntries::unknownTimeFormatBlankKey)) {
+                LogInfo(
+                    "Loading default value for setting " + GeneralSettingsEntries::unknownTimeFormatBlankKey
+                );
+                userSetting.Save(
+                    GeneralSettingsEntries::unknownTimeFormatBlankKey,
+                    GeneralSettingsEntries::unknownTimeFormatBlankDescription,
+                    false
+                );
+            }
         }
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

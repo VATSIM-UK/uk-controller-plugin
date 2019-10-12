@@ -389,6 +389,13 @@ namespace UKControllerPlugin {
         }
 
         /*
+            History Trails cannot have their position reset. Do nothing.
+        */
+        void HistoryTrailRenderer::ResetPosition(void)
+        {
+        }
+
+        /*
             They aren't clickable.
         */
         void HistoryTrailRenderer::RightClick(

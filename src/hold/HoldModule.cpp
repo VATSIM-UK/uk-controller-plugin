@@ -25,6 +25,7 @@
 #include "radarscreen/RadarRenderableCollection.h"
 #include "hold/HoldDisplayManager.h"
 #include "command/CommandHandlerCollection.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyCache;
@@ -77,7 +78,7 @@ namespace UKControllerPlugin {
         ) {
             // Update local dependencies and build hold data
             nlohmann::json holdDependency = dependencyProvider.GetDependency(DependencyConfig::holds);
-            container.holdManager = CreateHoldManager(holdDependency);
+            container.holdManager = CreateHoldManager(holdDependency, container);
 
             // Create the object to manage the popup menu
             int holdSelectionCancelId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();

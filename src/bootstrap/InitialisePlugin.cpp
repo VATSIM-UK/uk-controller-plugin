@@ -37,6 +37,9 @@
 #include "dependency/DependencyProviderFactory.h"
 #include "metar/PressureMonitorBootstrap.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
+#include "datablock/DatablockBoostrap.h"
+#include "websocket/WebsocketBootstrap.h"
+#include "sectorfile/SectorFileBootstrap.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -152,10 +155,15 @@ namespace UKControllerPlugin {
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
         ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
+        ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
-        // API
+        // API + Websocket
         HelperBootstrap::Bootstrap(*this->container);
+        UKControllerPlugin::Websocket::BootstrapPlugin(*this->container);
+
+        // Datetime
+        UKControllerPlugin::Datablock::BootstrapPlugin(*this->container);
 
         // If we're not allowed to use the API because we've been banned or something... It's no go.
         bool apiAuthorised = ApiAuthChecker::IsAuthorised(
@@ -201,6 +209,7 @@ namespace UKControllerPlugin {
         LoginModule::BootstrapPlugin(*this->container);
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
         DeferredEventBootstrap(*this->container->timedHandler);
+        SectorFile::BootstrapPlugin(*this->container);
 
         // General settings config bootstrap
         GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
@@ -220,19 +229,20 @@ namespace UKControllerPlugin {
             InitialAltitudeModule::BootstrapPlugin(dependencyCache, *this->container);
         }
 
+        IntentionCodeModule::BootstrapPlugin(*this->container);
+        HistoryTrailModule::BootstrapPlugin(*this->container);
+        CountdownModule::BootstrapPlugin(*this->container);
+        MinStackModule::BootstrapPlugin(
+            this->container->minStack,
+            *this->container->taskRunner,
+            *this->container->api,
+            *this->container->websocketProcessors,
+            *this->container->dialogManager
+        );
         UKControllerPlugin::Hold::BootstrapPlugin(
             *dependencyProvider,
             *this->container,
             *this->container->userMessager
-        );
-        IntentionCodeModule::BootstrapPlugin(*this->container);
-        HistoryTrailModule::BootstrapPlugin(*this->container);
-        CountdownModule::BootstrapPlugin(this->container->countdownTimer, *this->container->windows);
-        MinStackModule::BootstrapPlugin(
-            this->container->minStack,
-            *this->container->metarEventHandler,
-            *this->container->taskRunner,
-            *this->container->curl
         );
 
         // Due to flightplan modifications and API interactions, only enable the squawk module

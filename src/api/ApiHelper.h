@@ -40,6 +40,7 @@ namespace UKControllerPlugin {
                     std::string unit,
                     std::string flightRules
                 ) const override;
+                std::string AuthoriseWebsocketChannel(std::string socketId, std::string channel) const override;
                 bool CheckApiAuthorisation(void) const override;
                 void DeleteSquawkAssignment(std::string callsign) const override;
                 UKControllerPlugin::Api::RemoteFileManifest FetchDependencyManifest(void) const override;
@@ -50,6 +51,7 @@ namespace UKControllerPlugin {
                 nlohmann::json GetHoldDependency(void) const override;
                 nlohmann::json GetGenericHoldProfiles(void) const override;
                 nlohmann::json GetUserHoldProfiles(void) const override;
+                nlohmann::json GetMinStackLevels(void) const;
                 nlohmann::json GetDependency(
                     UKControllerPlugin::Dependency::DependencyData dependency
                 ) const override;

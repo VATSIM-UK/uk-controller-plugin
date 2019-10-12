@@ -109,6 +109,12 @@
     <Filter Include="test\log">
       <UniqueIdentifier>{93ae7490-c342-4194-8991-248b16db9733}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\websocket">
+      <UniqueIdentifier>{40896d78-9aef-49a7-a041-e9c79d8e4150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\sectorfile">
+      <UniqueIdentifier>{2b17f35f-90d1-4f2d-9826-0618a260c1f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -376,9 +382,6 @@
       <Filter>test\minstack</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\minstack\MinStackRendererTest.cpp">
-      <Filter>test\minstack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\minstack\TerminalControlAreaTest.cpp">
       <Filter>test\minstack</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeBootstrapTest.cpp">
@@ -668,6 +671,72 @@
     <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp">
       <Filter>test\log</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\countdown\TimerConfigurationTest.cpp">
+      <Filter>test\countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\countdown\TimerConfigurationManagerTest.cpp">
+      <Filter>test\countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\countdown\GlobalCountdownSettingsFunctionsTest.cpp">
+      <Filter>test\countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\datablock\DatablockBootstrapTest.cpp">
+      <Filter>test\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\radarscreen\PositionResetCommandTest.cpp">
+      <Filter>test\radarscreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\InterpretPusherWebsocketMessageTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\WebsocketEventProcessorCollectionTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\mock\MockWebsocketEventProcessor.h">
+      <Filter>mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\PusherWebsocketProtocolHandlerTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\PusherPingEventHandlerTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\PusherErrorEventHandlerTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\PusherActivityTimeoutEventHandlerTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\PusherConnectionChannelSubscriptionEventHandlerTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\minstack\MinStackRendererConfigurationTest.cpp">
+      <Filter>test\minstack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\MinStackHoldLevelRestrictionTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\MinStackHoldLevelRestrictionSerializerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\mock\MockSectorFileProviderInterface.h">
+      <Filter>mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp">
+      <Filter>test\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\mock\MockRunwayDialogAwareInterface.h">
+      <Filter>mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp">
+      <Filter>test\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp">
+      <Filter>test\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\euroscope\RunwayDialogAwareCollectionTest.cpp">
+      <Filter>test\euroscope</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -751,9 +820,6 @@
     <ClInclude Include="..\..\test\mock\MockTaskRunnerInterface.h">
       <Filter>mock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockTerminalControlArea.h">
-      <Filter>mock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h">
       <Filter>mock</Filter>
     </ClInclude>
@@ -774,6 +840,12 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockDependencyProvider.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockEuroscopeSectorFileElementInterface.h">
       <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>

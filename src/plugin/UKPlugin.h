@@ -2,6 +2,8 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/UserSettingProviderInterface.h"
 #include "radarscreen/RadarScreenFactory.h"
+#include "sectorfile/SectorFileProviderInterface.h"
+#include "euroscope/RunwayDialogAwareCollection.h"
 
 // Forward Declarations
 namespace UKControllerPlugin {
@@ -55,7 +57,8 @@ namespace UKControllerPlugin {
     */
     class UKPlugin : public EuroScopePlugIn::CPlugIn,
         public UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface,
-        public UKControllerPlugin::Euroscope::UserSettingProviderInterface
+        public UKControllerPlugin::Euroscope::UserSettingProviderInterface,
+        public UKControllerPlugin::SectorFile::SectorFileProviderInterface
     {
         public:
             UKPlugin(
@@ -67,7 +70,8 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::RadarScreen::RadarScreenFactory & radarScreenFactory,
                 const UKControllerPlugin::Metar::MetarEventHandlerCollection & metarHandlers,
                 const UKControllerPlugin::Plugin::FunctionCallEventHandler & functionCallHandler,
-                const UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers
+                const UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers,
+                const UKControllerPlugin::Euroscope::RunwayDialogAwareCollection & runwayDialogHandlers
             );
             void AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item) override;
             void ChatAreaMessage(
@@ -113,6 +117,7 @@ namespace UKControllerPlugin {
                 double * pFontSize
             );
             void OnNewMetarReceived(const char * sStation, const char * sFullMetar);
+            void OnAirportRunwayActivityChanged(void) override;
             void OnTimer(int time);
             inline virtual EuroScopePlugIn::CRadarScreen * OnRadarScreenCreated(
                 const char * sDisplayName,
@@ -132,6 +137,10 @@ namespace UKControllerPlugin {
             std::string GetKey(std::string key) override;
             bool KeyExists(std::string key) override;
             void SetKey(std::string key, std::string description, std::string value) override;
+
+            // Inherited via SectorFileProviderInterface
+            std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>>
+                GetAllElementsByType(int type) override;
 
         private:
 
@@ -166,7 +175,10 @@ namespace UKControllerPlugin {
             // Handles user dot commands
             const UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers;
 
+            // Handles runways changing activity
+            const UKControllerPlugin::Euroscope::RunwayDialogAwareCollection & runwayDialogHandlers;
+
             // Whether or not we've initialised the plugin.
             bool initialised = false;
-    };  // namespace Windows
+};  // namespace Windows
 }  // namespace UKControllerPlugin

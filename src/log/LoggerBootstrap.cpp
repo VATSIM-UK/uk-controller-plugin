@@ -13,23 +13,21 @@ namespace UKControllerPlugin {
         void LoggerBootstrap::Bootstrap(PersistenceContainer & persistence, bool nullLogger)
         {
             if (nullLogger) {
-                SetLoggerInstance(
-                    std::make_shared<spdlog::logger>(
-                        "null_logger",
-                        std::make_shared<spdlog::sinks::null_sink_mt>()
-                    )
-                );
+                LoggerBootstrap::CreateNullLogger();
                 return;
             }
 
             // Create us a logger, for now we log everything that happens.
             if (!persistence.windows->CreateLocalFolderRecursive("logs")) {
+                std::wstring msg = L"Unable to create logs folder, please contact the VATSIM UK Web Department.\n\n";
+                msg += L"Plugin events will not be logged.";
                 persistence.windows->OpenMessageBox(
-                    L"Unable to create the logs folder, please contact the VATSIM UK Web Department.",
+                    msg.c_str(),
                     L"UKCP Error",
                     MB_OK | MB_ICONSTOP
                 );
-                throw std::runtime_error("Could not create the logs folder.");
+                LoggerBootstrap::CreateNullLogger();
+                return;
             }
 
             std::shared_ptr<spdlog::sinks::rotating_file_sink_mt> rotatingSink =
@@ -42,7 +40,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("rotating logger", rotatingSink);
             logger->set_pattern("%Y-%m-%d %T [%l] - %v");
 
-#ifdef DEBUG
+#ifdef _DEBUG
             logger->set_level(spdlog::level::trace);
             logger->flush_on(spdlog::level::trace);
 #else
@@ -52,6 +50,19 @@ namespace UKControllerPlugin {
 
             SetLoggerInstance(logger);
             LogInfo("Log opened");
+        }
+
+        /*
+            Sets the logger instance to be a null logger.
+        */
+        void LoggerBootstrap::CreateNullLogger(void)
+        {
+            SetLoggerInstance(
+                std::make_shared<spdlog::logger>(
+                "null_logger",
+                std::make_shared<spdlog::sinks::null_sink_mt>()
+            )
+            );
         }
     }  // namespace Log
 }  // namespace UKControllerPlugin

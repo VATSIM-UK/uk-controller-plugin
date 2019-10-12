@@ -31,7 +31,6 @@
 #include "controller/ControllerPositionCollection.h"
 #include "intention/SectorExitRepository.h"
 #include "message/UserMessager.h"
-#include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/UserSetting.h"
 #include "command/CommandHandlerCollection.h"
 #include "timedevent/DeferredEventHandler.h"
@@ -43,6 +42,13 @@
 #include "hold/HoldProfileManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "setting/SettingRepository.h"
+#include "websocket/WebsocketConnection.h"
+#include "countdown/TimerConfigurationManager.h"
+#include "datablock/DisplayTime.h"
+#include "websocket/WebsocketConnectionInterface.h"
+#include "websocket/WebsocketEventProcessorCollection.h"
+#include "euroscope/RunwayDialogAwareCollection.h"
+#include "sectorfile/RunwayCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -56,6 +62,7 @@ namespace UKControllerPlugin {
             // The useful things
             std::unique_ptr<UKControllerPlugin::Curl::CurlInterface> curl;
             std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
+            std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnection> websocketConnection;
 
             // The helpers and collections
             std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
@@ -67,6 +74,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Controller::Login> login;
             std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
             std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;
+            std::shared_ptr<UKControllerPlugin::Datablock::DisplayTime> timeFormatting;
 
             // Collections of event handlers
             std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;
@@ -76,10 +84,10 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Tag::TagItemCollection> tagHandler;
             std::unique_ptr<UKControllerPlugin::Metar::MetarEventHandlerCollection> metarEventHandler;
             std::unique_ptr<UKControllerPlugin::RadarScreen::ScreenControls> screenControls;
-            std::unique_ptr<UKControllerPlugin::Euroscope::AsrEventHandlerCollection> asrEventHandlers;
             std::unique_ptr<UKControllerPlugin::Command::CommandHandlerCollection> commandHandlers;
             std::shared_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferredHandlers;
             std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareCollection> userSettingHandlers;
+            std::unique_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareCollection> runwayDialogEventHandlers;
 
             // The plugin
             std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;
@@ -88,6 +96,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler> initialAltitudeEvents;
             std::unique_ptr<UKControllerPlugin::HistoryTrail::HistoryTrailRepository> historyTrails;
             std::shared_ptr<UKControllerPlugin::Countdown::CountdownTimer> countdownTimer;
+            std::shared_ptr<UKControllerPlugin::Countdown::TimerConfigurationManager> timerConfigurationManager;
             std::shared_ptr<UKControllerPlugin::MinStack::MinStackManager> minStack;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkAssignment> squawkAssignmentRules;
             std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawkEvents;
@@ -111,6 +120,11 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Airfield::AirfieldOwnershipManager> airfieldOwnership;
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
             std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
+            std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
+
+            // Websocket
+            std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnectionInterface> websocket;
+            std::shared_ptr<UKControllerPlugin::Websocket::WebsocketEventProcessorCollection> websocketProcessors;
 
         } PersistenceContainer;
     }  // namespace Bootstrap
