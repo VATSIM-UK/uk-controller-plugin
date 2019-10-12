@@ -32,7 +32,6 @@ max_jobs: 1
 # scripts that are called at very beginning, before repo cloning
 init:
   - git config --global core.autocrlf input
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 # clone directory
 clone_folder: c:\projects\uk-controller-plugin
@@ -45,7 +44,7 @@ clone_depth: 1                      # clone entire repository history if not def
 
 environment:
   BOOST_ROOT: C:\Libraries\boost_1_71_0
-  BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\stage\lib
+  BOOST_LIBRARYDIR: C:\Libraries\boost_1_71_0\lib32-msvc-14.2
   OPENSSL_ROOT: C:\OpenSSL-v111-Win32\include
   OPENSSL_LIBRARYDIR: C:\OpenSSL-v111-Win32\lib\VC\static
   matrix:
@@ -80,6 +79,3 @@ build:
 test_script:
   - ps: .\ci\run-tests.ps1
   - ps: .\ci\run-lint.ps1
-
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
