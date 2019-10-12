@@ -8,8 +8,6 @@
 // Custom headers
 #pragma warning( push )
 #pragma warning( disable : 26495 26451)
-#pragma warning( pop )
-
 #include <boost/beast.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/strand.hpp>
@@ -24,6 +22,7 @@
 #include "spdlog/include/spdlog/sinks/null_sink.h"
 #include "log/LoggerFunctions.h"
 #include "euroscope/EuroScopePlugIn.h"
+#pragma warning( pop )
 
 // Standard headers
 #include <algorithm>
