@@ -107,7 +107,6 @@ namespace UKControllerPlugin {
         {
             auto aircraft = this->holdingAircraft.find(callsign);
             if (aircraft == this->holdingAircraft.cend()) {
-                LogWarning("Tried to remove " + callsign + " from holds, it isnt holding");
                 return;
             }
 
