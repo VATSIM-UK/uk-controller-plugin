@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
             static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             // Maximum renderable trail length
-            const int maxTrailLength = 50;
+            const int maxTrailLength = 99;
 
             // Minimum trail length
             const int minTrailLength = 1;
