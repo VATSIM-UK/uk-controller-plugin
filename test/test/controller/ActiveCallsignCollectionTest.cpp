@@ -132,6 +132,18 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(collection.GetUserCallsign(), callsign);
         }
 
+        TEST(ActiveCallsignCollection, AddingExtraUserCallsignRemovesTheFirst)
+        {
+            ActiveCallsignCollection collection;
+            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
+            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos);
+            ActiveCallsign callsign2("LON_S1_CTR", "Testy McTest", pos);
+            collection.AddUserCallsign(callsign);
+            collection.AddUserCallsign(callsign2);
+            EXPECT_EQ(collection.GetUserCallsign(), callsign2);
+            EXPECT_FALSE(collection.CallsignActive("LON_S_CTR"));
+        }
+
         TEST(ActiveCallsignCollection, UserHasCallsignReturnsFalseIfNoneSet)
         {
             ActiveCallsignCollection collection;

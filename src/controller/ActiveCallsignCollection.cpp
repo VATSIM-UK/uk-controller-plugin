@@ -37,8 +37,12 @@ namespace UKControllerPlugin {
         */
         void ActiveCallsignCollection::AddUserCallsign(ActiveCallsign controller)
         {
-            if (this->userActive || this->CallsignActive(controller.GetCallsign())) {
+            if (this->CallsignActive(controller.GetCallsign())) {
                 throw std::invalid_argument("Callsign is already active.");
+            }
+
+            if (this->userActive) {
+                this->RemoveCallsign(*this->userCallsign);
             }
 
             this->userCallsign = this->activePositions[controller.GetNormalisedPosition().GetCallsign()]
