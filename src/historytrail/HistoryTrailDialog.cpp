@@ -253,13 +253,20 @@ namespace UKControllerPlugin {
             *this->data->degrade = IsDlgButtonChecked(hwnd, IDC_CHECK_DEGRADING) == BST_CHECKED;
 
             // Length
-            *this->data->length = SendDlgItemMessage(
+            int trailLength = SendDlgItemMessage(
                 hwnd,
                 IDC_SPIN_LENGTH,
                 UDM_GETPOS,
                 NULL,
                 NULL
             );
+            if (trailLength > this->maxTrailLength) {
+                *this->data->length = this->maxTrailLength;
+            } else if (trailLength < this->minTrailLength) {
+                *this->data->length = this->minTrailLength;
+            } else {
+                *this->data->length = trailLength;
+            }
 
             // Dot size
             *this->data->dotSize = SendDlgItemMessage(
