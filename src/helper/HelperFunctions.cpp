@@ -201,7 +201,8 @@ namespace UKControllerPlugin {
     */
     std::wstring HelperFunctions::ConvertToWideString(std::string string)
     {
-        return std::wstring(string.cbegin(), string.cend());
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        return converter.from_bytes(string);
     }
 
     /*
@@ -209,6 +210,7 @@ namespace UKControllerPlugin {
     */
     std::string HelperFunctions::ConvertToRegularString(std::wstring wstring)
     {
-        return std::string(wstring.cbegin(), wstring.cend());
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        return converter.to_bytes(wstring);
     }
 }  // namespace UKControllerPlugin

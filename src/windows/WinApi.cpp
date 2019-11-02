@@ -35,9 +35,9 @@ namespace UKControllerPlugin {
         bool WinApi::CreateFolder(std::string folder)
         {
             try {
-                std::experimental::filesystem::create_directory(folder);
+                std::filesystem::create_directory(folder);
                 return true;
-            } catch (std::experimental::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error) {
                 return false;
             }
         }
@@ -48,9 +48,9 @@ namespace UKControllerPlugin {
         bool WinApi::CreateFolderRecursive(std::string folder)
         {
             try {
-                std::experimental::filesystem::create_directories(folder);
+                std::filesystem::create_directories(folder);
                 return true;
-            } catch (std::experimental::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error) {
                 return false;
             }
         }
@@ -61,9 +61,9 @@ namespace UKControllerPlugin {
         bool WinApi::CreateLocalFolderRecursive(std::string folder)
         {
             try {
-                std::experimental::filesystem::create_directories(this->filesDirectory + "/" + folder);
+                std::filesystem::create_directories(this->filesDirectory + "/" + folder);
                 return true;
-            } catch (std::experimental::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error) {
                 return false;
             }
         }
@@ -85,8 +85,8 @@ namespace UKControllerPlugin {
         bool WinApi::FileExists(std::string filename)
         {
             try {
-                return std::experimental::filesystem::exists(this->GetFullPathToLocalFile(filename));
-            } catch (std::experimental::filesystem::filesystem_error) {
+                return std::filesystem::exists(this->GetFullPathToLocalFile(filename));
+            } catch (std::filesystem::filesystem_error) {
                 return false;
             }
         }
@@ -200,8 +200,8 @@ namespace UKControllerPlugin {
         void WinApi::CreateMissingDirectories(std::string endFile)
         {
             try {
-                std::experimental::filesystem::create_directories(endFile.substr(0, endFile.find_last_of('/')));
-            } catch (std::experimental::filesystem::filesystem_error) {
+                std::filesystem::create_directories(endFile.substr(0, endFile.find_last_of('/')));
+            } catch (std::filesystem::filesystem_error) {
                 // Do nothing
             }
         }

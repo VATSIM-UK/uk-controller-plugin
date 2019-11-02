@@ -13,7 +13,7 @@ namespace UKControllerPluginTest {
 
         TEST(HoldDisplayFunctionsTest, ConvertToTcharConvertsString)
         {
-            EXPECT_EQ(0, _tcscmp(L"thisisatest", UKControllerPlugin::Hold::ConvertToTchar("thisisatest")));
+            EXPECT_EQ(L"thisisatest", UKControllerPlugin::Hold::ConvertToTchar("thisisatest"));
         }
 
         TEST(HoldDisplayFunctionsTest, ConverFromTcharConvertsToString)
@@ -23,7 +23,7 @@ namespace UKControllerPluginTest {
 
         TEST(HoldDisplayFunctionsTest, ConvertToTcharConvertsInt)
         {
-            EXPECT_EQ(0, _tcscmp(L"12345", UKControllerPlugin::Hold::ConvertToTchar(12345)));
+            EXPECT_EQ(L"12345", UKControllerPlugin::Hold::ConvertToTchar(12345));
         }
 
         TEST(HoldDisplayFunctionsTest, ItReturnsCorrectDisplayLevelUnder100)
@@ -140,11 +140,8 @@ namespace UKControllerPluginTest {
         {
             HoldProfile profile{ 1, "Test Profile" };
             EXPECT_EQ(
-                0,
-                _tcscmp(
-                    L"Selected Profile: Test Profile",
-                    UKControllerPlugin::Hold::GetSelectedHoldProfileText(profile)
-                )
+                L"Selected Profile: Test Profile",
+                UKControllerPlugin::Hold::GetSelectedHoldProfileText(profile)
             );
         }
     }  // namespace Hold

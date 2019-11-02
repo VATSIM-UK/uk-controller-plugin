@@ -72,7 +72,7 @@ namespace UKControllerPlugin {
                     IDC_HOLD_SELECTOR,
                     CB_ADDSTRING,
                     0,
-                    reinterpret_cast<LPARAM>(ConvertToTchar(it->description))
+                    reinterpret_cast<LPARAM>(ConvertToTchar(it->description).c_str())
                 );
                 SendDlgItemMessage(
                     hwnd,
@@ -106,7 +106,7 @@ namespace UKControllerPlugin {
                     IDC_HOLD_PROFILE_LIST,
                     LB_ADDSTRING,
                     NULL,
-                    reinterpret_cast<LPARAM>(ConvertToTchar(it->name))
+                    reinterpret_cast<LPARAM>(ConvertToTchar(it->name).c_str())
                 );
                 SendDlgItemMessage(
                     hwnd,
@@ -215,7 +215,7 @@ namespace UKControllerPlugin {
                 IDC_HOLD_LIST,
                 LB_ADDSTRING,
                 NULL,
-                reinterpret_cast<LPARAM>(ConvertToTchar(hold->description))
+                reinterpret_cast<LPARAM>(ConvertToTchar(hold->description).c_str())
             );
             SendDlgItemMessage(
                 hwnd,
@@ -401,7 +401,7 @@ namespace UKControllerPlugin {
                     IDC_HOLD_LIST,
                     LB_INSERTSTRING,
                     NULL,
-                    reinterpret_cast<LPARAM>(ConvertToTchar(hold->description))
+                    reinterpret_cast<LPARAM>(ConvertToTchar(hold->description).c_str())
                 );
                 SendDlgItemMessage(
                     hwnd,
@@ -418,7 +418,7 @@ namespace UKControllerPlugin {
                 IDC_HOLD_PROFILE_NAME_EDIT,
                 WM_SETTEXT,
                 NULL,
-                reinterpret_cast<LPARAM>(ConvertToTchar(profile.name))
+                reinterpret_cast<LPARAM>(ConvertToTchar(profile.name).c_str())
             );
         }
 

@@ -58,11 +58,16 @@ class FunctionCallEventHandler
         const int firstFixedId = 9000;
 
         // The registered functions which have dynamic ids - may be different on each load.
-        std::set<UKControllerPlugin::Euroscope::CallbackFunction, UKControllerPlugin::Euroscope::CompareFunctions>
-            callbackFunctions;
+        std::set<
+            UKControllerPlugin::Euroscope::CallbackFunction,
+            UKControllerPlugin::Euroscope::CompareFunctions
+        > callbackFunctions;
 
         // The registered functions which have fixed ids - always the same on every load, as defined in the wiki.
-        std::set<UKControllerPlugin::Tag::TagFunction, UKControllerPlugin::Euroscope::CompareFunctions> tagFunctions;
+        std::set<
+            UKControllerPlugin::Tag::TagFunction,
+            UKControllerPlugin::Euroscope::CompareFunctions
+        > tagFunctions;
 };
 }  // namespace Plugin
 }  // namespace UKControllerPlugin

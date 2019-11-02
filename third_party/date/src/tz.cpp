@@ -98,6 +98,7 @@
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
+#include <cwchar>
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -208,10 +209,19 @@ get_known_folder(const GUID& folderid)
     if (SUCCEEDED(hr))
     {
         co_task_mem_ptr folder_ptr(pfolder);
-        folder = std::string(folder_ptr.get(), folder_ptr.get() + wcslen(folder_ptr.get()));
+        const wchar_t* fptr = folder_ptr.get();
+        auto state = std::mbstate_t();
+        const auto required = std::wcsrtombs(nullptr, &fptr, 0, &state);
+        if (required != 0 && required != std::size_t(-1))
+        {
+            folder.resize(required);
+            std::wcsrtombs(&folder[0], &fptr, folder.size(), &state);
+        }
     }
     return folder;
 }
+
+#      ifndef INSTALL
 
 // Usually something like "c:\Users\username\Downloads".
 static
@@ -220,6 +230,8 @@ get_download_folder()
 {
     return get_known_folder(FOLDERID_Downloads);
 }
+
+#      endif  // !INSTALL
 
 #    endif // WINRT
 #  else // !_WIN32
@@ -384,11 +396,6 @@ get_tz_dir()
 // +-------------------+
 // | End Configuration |
 // +-------------------+
-
-namespace detail
-{
-struct undocumented {explicit undocumented() = default;};
-}
 
 #ifndef _MSC_VER
 static_assert(min_year <= max_year, "Configuration error");
@@ -2803,6 +2810,7 @@ download_to_string(const std::string& url, std::string& str)
     if (!curl)
         return false;
     std::string version;
+    curl_easy_setopt(curl.get(), CURLOPT_USERAGENT, "curl");
     curl_easy_setopt(curl.get(), CURLOPT_URL, url.c_str());
     curl_write_callback write_cb = [](char* contents, std::size_t size, std::size_t nmemb,
                                       void* userp) -> std::size_t
