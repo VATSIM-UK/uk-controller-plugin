@@ -388,10 +388,6 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanDisconnect(EuroScopePlugIn::CFlightPlan flightPlan)
     {
-        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
-            return;
-        }
-
         EuroScopeCFlightPlanWrapper flightplanWrapper(flightPlan);
         this->flightplanEventHandler.FlightPlanDisconnectEvent(
             flightplanWrapper
