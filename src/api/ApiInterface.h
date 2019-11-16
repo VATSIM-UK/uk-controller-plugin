@@ -22,6 +22,7 @@ namespace UKControllerPlugin {
                     std::string unit,
                     std::string flightRules
                 ) const = 0;
+                virtual std::string AuthoriseWebsocketChannel(std::string socketId, std::string channel) const = 0;
                 virtual bool CheckApiAuthorisation(void) const = 0;
                 virtual void DeleteSquawkAssignment(std::string callsign) const = 0;
                 virtual UKControllerPlugin::Api::RemoteFileManifest FetchDependencyManifest(void) const = 0;
@@ -34,6 +35,7 @@ namespace UKControllerPlugin {
                 virtual nlohmann::json GetHoldDependency(void) const = 0;
                 virtual nlohmann::json GetGenericHoldProfiles(void) const = 0;
                 virtual nlohmann::json GetUserHoldProfiles(void) const = 0;
+                virtual nlohmann::json GetMinStackLevels(void) const = 0;
                 virtual nlohmann::json GetDependency(
                     UKControllerPlugin::Dependency::DependencyData dependency
                 ) const = 0;

@@ -14,6 +14,7 @@
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "hold/HoldModule.h"
 #include "bootstrap/HelperBootstrap.h"
+#include "sectorfile/SectorFileBootstrap.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -53,6 +54,8 @@ namespace UKControllerPlugin {
                 configurableDisplays
             );
 
+            UKControllerPlugin::SectorFile::BootstrapRadarScreen(persistence, userSettingHandlers);
+
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
                 *persistence.pluginFunctionHandlers,
                 configurableDisplays,
@@ -77,7 +80,8 @@ namespace UKControllerPlugin {
                 renderers,
                 configurableDisplays,
                 *persistence.brushes,
-                userSettingHandlers
+                userSettingHandlers,
+                *persistence.dialogManager
             );
 
             CountdownModule::BootstrapRadarScreen(

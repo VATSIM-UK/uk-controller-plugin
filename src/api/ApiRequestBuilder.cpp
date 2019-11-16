@@ -20,6 +20,7 @@ namespace UKControllerPlugin {
         {
             request.AddHeader("Authorization", "Bearer " + this->apiKey);
             request.AddHeader("Accept", "application/json");
+            request.AddHeader("Content-Type", "application/json");
             return request;
         }
 
@@ -70,6 +71,32 @@ namespace UKControllerPlugin {
             return this->AddCommonHeaders(
                 CurlRequest(apiDomain + "/version/" + versionString + "/status", CurlRequest::METHOD_GET)
             );
+        }
+
+        /*
+            Build a request to authorise a websocket connection to a channel.
+        */
+        CurlRequest ApiRequestBuilder::BuildWebsocketChannelAuthRequest(
+            std::string socketId,
+            std::string channel
+        ) const {
+            CurlRequest request(apiDomain + "/broadcasting/auth", CurlRequest::METHOD_POST);
+
+            nlohmann::json body;
+            body["socket_id"] = socketId;
+            body["channel_name"] = channel;
+
+            request.SetBody(body.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
+        /*
+            Builds a request for getting minimum stack levels.
+        */
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildMinStackLevelRequest(void) const
+        {
+            return this->AddCommonHeaders(CurlRequest(apiDomain + "/msl", CurlRequest::METHOD_GET));
         }
 
         /*

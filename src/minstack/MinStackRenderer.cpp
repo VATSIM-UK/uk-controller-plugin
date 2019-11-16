@@ -6,7 +6,6 @@
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/GdiplusBrushes.h"
-#include "minstack/TerminalControlArea.h"
 
 using UKControllerPlugin::MinStack::MinStackRenderer;
 using UKControllerPlugin::Plugin::PopupMenuItem;
@@ -15,6 +14,7 @@ using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
 using UKControllerPlugin::Windows::GdiplusBrushes;
+using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace MinStack {
@@ -25,11 +25,12 @@ namespace UKControllerPlugin {
             int menuBarClickspotId,
             int mslClickspotId,
             int toggleCallbackFunctionId,
-            const GdiplusBrushes & brushes
+            const GdiplusBrushes & brushes,
+            const UKControllerPlugin::Dialog::DialogManager & dialogManager
         )
             : minStackModule(minStackModule), hideClickspotId(closeClickspotId), menuBarClickspotId(menuBarClickspotId),
             mslClickspotId(mslClickspotId), leftColumnWidth(75), rowHeight(20), hideClickspotWidth(25),
-            toggleCallbackFunctionId(toggleCallbackFunctionId), brushes(brushes)
+            toggleCallbackFunctionId(toggleCallbackFunctionId), brushes(brushes), dialogManager(dialogManager)
         {
 
         }
@@ -39,9 +40,32 @@ namespace UKControllerPlugin {
         */
         void MinStackRenderer::AsrLoadedEvent(UserSetting & userSetting)
         {
-            this->visible = userSetting.GetBooleanEntry(this->visibleUserSettingKey, true);
+            this->config.SetShouldRender(userSetting.GetBooleanEntry(this->visibleUserSettingKey, true));
             this->topBarArea.left = userSetting.GetIntegerEntry(this->xPositionUserSettingKey, 100);
             this->topBarArea.top = userSetting.GetIntegerEntry(this->yPositionUserSettingKey, 100);
+            std::vector<std::string> selectedMinStacks = userSetting.GetStringListEntry(
+                this->selectedMinStackUserSettingKey,
+                {
+                    this->minStackModule.GetMslKeyTma("LTMA"),
+                    this->minStackModule.GetMslKeyTma("MTMA"),
+                    this->minStackModule.GetMslKeyTma("STMA")
+                }
+            );
+
+            unsigned int order = 0;
+            for (
+                std::vector<std::string>::const_iterator it = selectedMinStacks.cbegin();
+                it != selectedMinStacks.cend();
+                ++it
+            ) {
+                this->config.AddItem(
+                    {
+                        order++,
+                        *it
+                    }
+                );
+            }
+
             this->topBarArea.right = this->topBarArea.left + this->leftColumnWidth;
             this->topBarArea.bottom = this->topBarArea.top + this->rowHeight;
 
@@ -74,7 +98,7 @@ namespace UKControllerPlugin {
             userSetting.Save(
                 this->visibleUserSettingKey,
                 this->visibleUserSettingDescription,
-                this->visible
+                this->config.ShouldRender()
             );
             userSetting.Save(
                 this->xPositionUserSettingKey,
@@ -85,6 +109,21 @@ namespace UKControllerPlugin {
                 this->yPositionUserSettingKey,
                 this->yPositionUserSettingDescription,
                 this->topBarArea.top
+            );
+
+            std::vector<std::string> selectedMinStacks;
+            for (
+                MinStackRendererConfiguration::const_iterator it = this->config.cbegin();
+                it != this->config.cend();
+                ++it
+            ) {
+                selectedMinStacks.push_back(it->key);
+            }
+
+            userSetting.Save(
+                this->selectedMinStackUserSettingKey,
+                this->selectedMinStackUserSettingDescription,
+                selectedMinStacks
             );
         }
 
@@ -97,7 +136,7 @@ namespace UKControllerPlugin {
             returnVal.firstValue = this->menuItemDescription;
             returnVal.secondValue = "";
             returnVal.callbackFunctionId = this->toggleCallbackFunctionId;
-            returnVal.checked = this->visible;
+            returnVal.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             returnVal.disabled = false;
             returnVal.fixedPosition = false;
             return returnVal;
@@ -109,7 +148,15 @@ namespace UKControllerPlugin {
         */
         void MinStackRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
-            this->visible = !this->visible;
+            this->dialogManager.OpenDialog(
+                IDD_MINSTACK,
+                reinterpret_cast<LPARAM>(&this->config)
+            );
+        }
+
+        MinStackRendererConfiguration & MinStackRenderer::GetConfig(void)
+        {
+            return this->config;
         }
 
         /*
@@ -154,11 +201,12 @@ namespace UKControllerPlugin {
         ) {
             // Hiding the module
             if (objectId == this->hideClickspotId) {
-                this->visible = false;
+                this->config.SetShouldRender(false);
+                return;
             }
 
             // It was the MSL that was clicked
-            this->minStackModule.MinStackClicked(objectDescription.c_str());
+            this->minStackModule.AcknowledgeMsl(objectDescription);
         }
 
         /*
@@ -166,7 +214,7 @@ namespace UKControllerPlugin {
         */
         bool MinStackRenderer::IsVisible(void) const
         {
-            return this->visible;
+            return this->config.ShouldRender();
         }
 
         /*
@@ -211,8 +259,6 @@ namespace UKControllerPlugin {
             GdiGraphicsInterface & graphics,
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
-            std::vector<std::shared_ptr<const TerminalControlArea>> tmaList = this->minStackModule.GetAllTmas();
-
             // Loop through each of the TMAs
             Gdiplus::Rect tma = {
                 this->topBarArea.left,
@@ -229,32 +275,40 @@ namespace UKControllerPlugin {
 
             int roundNumber = 0;
             for (
-                std::vector<std::shared_ptr<const TerminalControlArea>>::iterator it = tmaList.begin();
-                it != tmaList.end();
+                MinStackRendererConfiguration::const_iterator it = this->config.cbegin();
+                it != this->config.cend();
                 ++it
             ) {
+                const MinStackLevel & mslData = this->minStackModule.GetMinStackLevel(it->key);
+
                 // Draw the TMA title and rectangles
                 graphics.FillRect(tma, *this->brushes.greyBrush);
                 graphics.DrawRect(tma, *this->brushes.blackPen);
+
                 graphics.DrawString(
-                    (*it)->GetName(),
+                    HelperFunctions::ConvertToWideString(this->minStackModule.GetNameFromKey(it->key)),
                     tma,
-                    ((*it)->MinStackAcknowledged()) ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
+                    mslData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
                 );
 
                 // Draw the MSL itself and associated rectangles
                 graphics.FillRect(msl, *this->brushes.greyBrush);
                 graphics.DrawRect(msl, *this->brushes.blackPen);
+
+                std::string mslString = mslData == this->minStackModule.invalidMsl
+                    ? "-"
+                    : std::to_string(mslData.msl).substr(0, 2);
+
                 graphics.DrawString(
-                    (*it)->GetCurrentMinStackDisplay(),
+                    HelperFunctions::ConvertToWideString(mslString),
                     msl,
-                    ((*it)->MinStackAcknowledged()) ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
+                    mslData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
                 );
 
                 // Add the clickable area.
                 radarScreen.RegisterScreenObject(
                     this->mslClickspotId,
-                    (*it)->GetCharName(),
+                    it->key,
                     {
                         tma.X,
                         tma.Y,
@@ -339,14 +393,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Sets the visibility of the renderer.
-        */
-        void MinStackRenderer::SetVisible(bool visible)
-        {
-            this->visible = visible;
-        }
-
-        /*
             Reset the position of the renderer
         */
         void MinStackRenderer::ResetPosition(void)
@@ -355,6 +401,11 @@ namespace UKControllerPlugin {
                 { 100, 100, 100 + this->leftColumnWidth, 100 + this->rowHeight },
                 ""
             );
+        }
+
+        void MinStackRenderer::SetVisible(bool visible)
+        {
+            this->config.SetShouldRender(visible);
         }
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

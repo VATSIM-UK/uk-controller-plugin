@@ -8,14 +8,6 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UKControllerPlugin\UKControllerPlugin.vcxproj">
@@ -26,6 +18,9 @@
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp" />
     <ClCompile Include="..\..\test\helper\InitTests.cpp" />
     <ClCompile Include="..\..\test\helper\TestingFunctions.cpp" />
+    <ClCompile Include="..\..\test\mock\MockRunwayDialogAwareInterface.h" />
+    <ClCompile Include="..\..\test\mock\MockSectorFileProviderInterface.h" />
+    <ClCompile Include="..\..\test\mock\MockWebsocketEventProcessor.h" />
     <ClCompile Include="..\..\test\pch\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -93,6 +88,7 @@
     <ClCompile Include="..\..\test\test\euroscope\GeneralSettingsConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\LoadDefaultUserSettingsTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\RadarTargetEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\euroscope\RunwayDialogAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
@@ -134,6 +130,8 @@
     <ClCompile Include="..\..\test\test\hold\HoldRestrictionSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldSelectionMenuTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\ManagedHoldTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\MinStackHoldLevelRestrictionSerializerTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\MinStackHoldLevelRestrictionTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\CompareInitialAltitudesTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeEventHandlerTest.cpp" />
@@ -169,8 +167,8 @@
     <ClCompile Include="..\..\test\test\metar\PressureMonitorTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\minstack\MinStackRendererConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackRendererTest.cpp" />
-    <ClCompile Include="..\..\test\test\minstack\TerminalControlAreaTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\EstimatedDepartureTimeBootstrapTest.cpp" />
@@ -194,6 +192,9 @@
     <ClCompile Include="..\..\test\test\radarscreen\RadarRenderableCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp" />
+    <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp" />
+    <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp" />
@@ -215,6 +216,13 @@
     <ClCompile Include="..\..\test\test\wake\WakeCategoryEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryMapperTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\InterpretPusherWebsocketMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\PusherActivityTimeoutEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\PusherConnectionChannelSubscriptionEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\PusherErrorEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\PusherPingEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\PusherWebsocketProtocolHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\WebsocketEventProcessorCollectionTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h" />
@@ -238,6 +246,7 @@
     <ClInclude Include="..\..\test\mock\MockEuroscopeExtractedRouteInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopePluginLoopbackInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopeRadarScreenLoopbackInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockEuroscopeSectorFileElementInterface.h" />
     <ClInclude Include="..\..\test\mock\MockFlightPlanEventHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockGraphicsInterface.h" />
     <ClInclude Include="..\..\test\mock\MockHistoryTrailDialog.h" />
@@ -248,51 +257,41 @@
     <ClInclude Include="..\..\test\mock\MockRadarTargetEventHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockSquawkEventHandler.h" />
     <ClInclude Include="..\..\test\mock\MockTaskRunnerInterface.h" />
-    <ClInclude Include="..\..\test\mock\MockTerminalControlArea.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />
     <ClCompile Include="..\..\test\test\bootstrap\LocateApiSettingsTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\DuplicatePluginTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3C70CD05-DD99-406E-85AF-2A966B9CC675}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>UKControllerPluginTest</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>false</UseOfMfc>
     <SpectreMitigation>Spectre</SpectreMitigation>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>false</UseOfMfc>
     <SpectreMitigation>Spectre</SpectreMitigation>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -303,34 +302,22 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(SolutionDir)..\lib\test;$(SolutionDir)..\lib\plugin;</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(LibraryPath);</LibraryPath>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\obj\test\$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\testing;$(SolutionDir)..\lib\plugin</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(LibraryPath);</LibraryPath>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\obj\test\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -339,40 +326,26 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\third_party;$(BOOST_ROOT);$(OPENSSL_ROOT);</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild />
-      <ForcedIncludeFiles />
+      <ForcedIncludeFiles>pch/pch.h</ForcedIncludeFiles>
       <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
       <AdditionalOptions>-Zm200 %(AdditionalOptions)</AdditionalOptions>
       <EnablePREfast>false</EnablePREfast>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;gmock_debug.lib;gmock_main_debug.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl32MDd.lib;libcrypto32MDd.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile />
       <AdditionalOptions>"$(SolutionDir)..\obj\plugin\$(Configuration)\*.obj"</AdditionalOptions>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <PrecompiledHeader />
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);..\..\test\Matchers;..\..\test\MinStack;..\..\test\AirfieldGroup;..\..\test\ApiInterface;..\..\test\Countdown;..\..\test\Helper;..\..\test\HistoryTrail;..\..\test\Http;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -384,47 +357,38 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\third_party;$(BOOST_ROOT);$(OPENSSL_ROOT);</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <ForcedIncludeFiles />
+      <ForcedIncludeFiles>pch/pch.h</ForcedIncludeFiles>
       <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
       <AdditionalOptions>-Zm120 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePluginDll.lib;gmock_release.lib;gmock_main_release.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePluginDll.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl32MD.lib;libcrypto32MD.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
       <AdditionalOptions>"$(SolutionDir)..\obj\plugin\$(Configuration)\*.obj"</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader />
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);..\..\test\Matchers;..\..\test\MinStack;..\..\test\AirfieldGroup;..\..\test\ApiInterface;..\..\test\Countdown;..\..\test\Helper;..\..\test\HistoryTrail;..\..\test\Http;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\gmock.1.10.0\build\native\gmock.targets" Condition="Exists('..\packages\gmock.1.10.0\build\native\gmock.targets')" />
+  </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
       <UserProperties BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\gmock.1.10.0\build\native\gmock.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\gmock.1.10.0\build\native\gmock.targets'))" />
+  </Target>
 </Project>

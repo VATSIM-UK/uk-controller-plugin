@@ -101,9 +101,11 @@
     <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetPositionDataInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetWrapper.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroscopeExtractedRouteInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroscopePluginLoopbackInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroScopeRadarLoopbackInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfiguration.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\GeneralSettingsDialog.h" />
@@ -112,6 +114,8 @@
     <ClInclude Include="..\..\src\euroscope\PluginUserSettingBootstrap.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareCollection.h" />
     <ClInclude Include="..\..\src\euroscope\UserSetting.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
@@ -163,6 +167,8 @@
     <ClInclude Include="..\..\src\hold\HoldRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\hold\HoldSelectionMenu.h" />
     <ClInclude Include="..\..\src\hold\ManagedHold.h" />
+    <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h" />
+    <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
@@ -202,10 +208,13 @@
     <ClInclude Include="..\..\src\metar\PressureChangeMessage.h" />
     <ClInclude Include="..\..\src\metar\PressureMonitor.h" />
     <ClInclude Include="..\..\src\metar\PressureMonitorBootstrap.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackConfigurationDialog.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackLevel.h" />
     <ClInclude Include="..\..\src\minstack\MinStackManager.h" />
     <ClInclude Include="..\..\src\minstack\MinStackModule.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackRenderedItem.h" />
     <ClInclude Include="..\..\src\minstack\MinStackRenderer.h" />
-    <ClInclude Include="..\..\src\minstack\TerminalControlArea.h" />
+    <ClInclude Include="..\..\src\minstack\MinStackRendererConfiguration.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.h" />
     <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.h" />
@@ -234,6 +243,10 @@
     <ClInclude Include="..\..\src\radarscreen\ScreenControls.h" />
     <ClInclude Include="..\..\src\radarscreen\ScreenControlsBootstrap.h" />
     <ClInclude Include="..\..\src\radarscreen\UKRadarScreen.h" />
+    <ClInclude Include="..\..\src\sectorfile\Runway.h" />
+    <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h" />
+    <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
+    <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h" />
     <ClInclude Include="..\..\src\setting\SettingRepository.h" />
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
     <ClInclude Include="..\..\src\setting\SettingValue.h" />
@@ -261,6 +274,19 @@
     <ClInclude Include="..\..\src\wake\WakeCategoryEventHandler.h" />
     <ClInclude Include="..\..\src\wake\WakeCategoryMapper.h" />
     <ClInclude Include="..\..\src\wake\WakeModule.h" />
+    <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h" />
+    <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h" />
+    <ClInclude Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.h" />
+    <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h" />
+    <ClInclude Include="..\..\src\websocket\PusherPingEventHandler.h" />
+    <ClInclude Include="..\..\src\websocket\PusherWebsocketProtocolHandler.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketBootstrap.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorCollection.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketConnection.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorInterface.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketMessage.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h" />
     <ClInclude Include="..\..\src\windows\WinApi.h" />
     <ClInclude Include="..\..\src\windows\WinApiInterface.h" />
   </ItemGroup>
@@ -335,6 +361,7 @@
     <ClCompile Include="..\..\src\euroscope\EuroScopeCFlightPlanWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\EuroScopeCRadarTargetWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\EuroscopeExtractedRouteInterface.cpp" />
+    <ClCompile Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfiguration.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsDialog.cpp" />
@@ -342,6 +369,7 @@
     <ClCompile Include="..\..\src\euroscope\LoadDefaultUserSettings.cpp" />
     <ClCompile Include="..\..\src\euroscope\PluginUserSettingBootstrap.cpp" />
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\euroscope\RunwayDialogAwareCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />
@@ -384,6 +412,8 @@
     <ClCompile Include="..\..\src\hold\HoldRestrictionSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldSelectionMenu.cpp" />
     <ClCompile Include="..\..\src\hold\ManagedHold.cpp" />
+    <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestriction.cpp" />
+    <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp" />
@@ -419,10 +449,11 @@
     <ClCompile Include="..\..\src\metar\PressureChangeMessage.cpp" />
     <ClCompile Include="..\..\src\metar\PressureMonitor.cpp" />
     <ClCompile Include="..\..\src\metar\PressureMonitorBootstrap.cpp" />
+    <ClCompile Include="..\..\src\minstack\MinStackConfigurationDialog.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackManager.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackModule.cpp" />
     <ClCompile Include="..\..\src\minstack\MinStackRenderer.cpp" />
-    <ClCompile Include="..\..\src\minstack\TerminalControlArea.cpp" />
+    <ClCompile Include="..\..\src\minstack\MinStackRendererConfiguration.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp" />
@@ -448,6 +479,9 @@
     <ClCompile Include="..\..\src\radarscreen\ScreenControls.cpp" />
     <ClCompile Include="..\..\src\radarscreen\ScreenControlsBootstrap.cpp" />
     <ClCompile Include="..\..\src\radarscreen\UKRadarScreen.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\Runway.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />
@@ -472,6 +506,16 @@
     <ClCompile Include="..\..\src\wake\WakeCategoryEventHandler.cpp" />
     <ClCompile Include="..\..\src\wake\WakeCategoryMapper.cpp" />
     <ClCompile Include="..\..\src\wake\WakeModule.cpp" />
+    <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp" />
+    <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\PusherPingEventHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\PusherWebsocketProtocolHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp" />
     <ClCompile Include="..\..\src\windows\WinApi.cpp" />
     <ClInclude Include="..\..\src\timedevent\DeferredEventHandler.h" />
     <ClCompile Include="..\..\src\timedevent\DeferredEventHandler.cpp" />
@@ -481,13 +525,13 @@
     <ProjectGuid>{6F93F8C0-6773-4353-B7DD-B14DBD3F826B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>UKControllerPlugin</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
     <CLRSupport>false</CLRSupport>
@@ -496,7 +540,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -515,8 +559,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\plugin;</LibraryPath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
     <IntDir>$(SolutionDir)..\obj\plugin\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
@@ -524,8 +568,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib\plugin;</LibraryPath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
     <IntDir>$(SolutionDir)..\obj\plugin\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -536,7 +580,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);CURL_STATICLIB;DISABLE_VERSION_CHECK</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;$(BOOST_ROOT);$(OPENSSL_ROOT);</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -553,7 +597,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;libssl32MDd.lib;libcrypto32MDd.lib;</AdditionalDependencies>
       <AdditionalLibraryDirectories />
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
@@ -569,7 +613,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);CURL_STATICLIB;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;$(BOOST_ROOT);$(OPENSSL_ROOT);</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -577,13 +621,14 @@
       <ForcedIncludeFiles />
       <AdditionalOptions>/Zm200 %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeaderFile>pch\stdafx.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;libssl32MD.lib;libcrypto32MD.lib;</AdditionalDependencies>
       <IgnoreAllDefaultLibraries />
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>

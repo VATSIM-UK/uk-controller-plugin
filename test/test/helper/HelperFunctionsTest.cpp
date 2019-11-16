@@ -306,4 +306,10 @@ namespace UKControllerPluginTest {
             std::string("somestring")
         );
     }
+
+    TEST(HelperFunctions, VectorToDelimitedStringCreatesString)
+    {
+        std::vector<std::string> values = { "moo", "cluck", "bell" };
+        EXPECT_TRUE("moo;cluck;bell" == HelperFunctions::VectorToDelimetedString(values, ";"));
+    }
 }  // namespace UKControllerPluginTest

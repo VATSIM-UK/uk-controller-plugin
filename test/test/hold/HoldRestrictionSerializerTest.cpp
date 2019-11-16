@@ -2,10 +2,18 @@
 #include "hold/AbstractHoldLevelRestriction.h"
 #include "hold/HoldRestrictionSerializer.h"
 #include "hold/BlockedHoldLevelRestriction.h"
+#include "hold/MinStackHoldLevelRestriction.h"
+#include "bootstrap/PersistenceContainer.h"
+#include "minstack/MinStackManager.h"
 
+using UKControllerPlugin::Hold::hold_restriction_from_json;
+using UKControllerPlugin::Hold::ValidRestrictionData;
 using UKControllerPlugin::Hold::AbstractHoldLevelRestriction;
 using UKControllerPlugin::Hold::BlockedHoldLevelRestriction;
-using UKControllerPlugin::Hold::ValidRestrictionData;
+using UKControllerPlugin::Hold::BlockedHoldLevelRestriction;
+using UKControllerPlugin::Hold::MinStackHoldLevelRestriction;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::MinStack::MinStackManager;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
@@ -14,10 +22,12 @@ namespace UKControllerPluginTest {
         class HoldRestrictionSerializerTest : public Test
         {
             public:
-            HoldRestrictionSerializerTest()
-            {
+                HoldRestrictionSerializerTest()
+                {
+                    container.minStack.reset(new MinStackManager);
+                }
 
-            }
+                PersistenceContainer container;
 
         };
 
@@ -61,7 +71,9 @@ namespace UKControllerPluginTest {
             data["type"] = "lol";
 
             std::set<std::unique_ptr<AbstractHoldLevelRestriction>> expected = {};
-            EXPECT_EQ(expected, data.get<std::set<std::unique_ptr<AbstractHoldLevelRestriction>>>());
+            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> actual;
+            hold_restriction_from_json(data, actual, container);
+            EXPECT_EQ(expected, actual);
         }
 
         TEST_F(HoldRestrictionSerializerTest, FromJsonIgnoresInvalidBlockTypes)
@@ -71,7 +83,9 @@ namespace UKControllerPluginTest {
             data["levels"] = "nope";
 
             std::set<std::unique_ptr<AbstractHoldLevelRestriction>> expected = {};
-            EXPECT_EQ(expected, data.get<std::set<std::unique_ptr<AbstractHoldLevelRestriction>>>());
+            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> actual;
+            hold_restriction_from_json(data, actual, container);
+            EXPECT_EQ(expected, actual);
         }
 
         TEST_F(HoldRestrictionSerializerTest, FromJsonCreatesLevelBlockTypes)
@@ -82,8 +96,9 @@ namespace UKControllerPluginTest {
             };
             nlohmann::json restrictions = nlohmann::json::array({ data });
 
-            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> actual =
-                restrictions.get<std::set<std::unique_ptr<AbstractHoldLevelRestriction>>>();
+            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> actual;
+            hold_restriction_from_json(restrictions, actual, container);
+
             EXPECT_EQ(1, actual.size());
 
             BlockedHoldLevelRestriction * actualCast =
@@ -91,6 +106,30 @@ namespace UKControllerPluginTest {
 
             std::set<unsigned int> expectedLevels = { 10000, 13000 };
             EXPECT_EQ(expectedLevels, actualCast->GetLevels());
+        }
+
+        TEST_F(HoldRestrictionSerializerTest, FromJsonCreatesMinStackTypes)
+        {
+            nlohmann::json data = {
+                { "type", "minimum-level"},
+                { "level", "MSL" },
+                { "target", "EGCC" },
+                { "override", 8000 }
+            };
+
+            nlohmann::json restrictions = nlohmann::json::array({ data });
+
+            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> actual;
+            hold_restriction_from_json(restrictions, actual, container);
+
+            EXPECT_EQ(1, actual.size());
+
+            MinStackHoldLevelRestriction * actualCast =
+                dynamic_cast<MinStackHoldLevelRestriction *>(actual.cbegin()->get());
+
+            EXPECT_EQ(8000, actualCast->override);
+            EXPECT_EQ(0, actualCast->minStackOffset);
+            EXPECT_EQ("airfield.EGCC", actualCast->minStackKey);
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

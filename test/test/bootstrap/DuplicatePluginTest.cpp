@@ -34,6 +34,5 @@ namespace UKControllerPluginTest {
             DuplicatePlugin plugin3;
             EXPECT_FALSE(plugin3.Duplicate());
         }
-
     }  // namespace Bootstrap
 }  // namespace UKControllerPluginTest

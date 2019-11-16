@@ -32,7 +32,7 @@
 // We did not mean to shout.
 
 #ifndef HAS_STRING_VIEW
-#  if __cplusplus >= 201703
+#  if __cplusplus >= 201703 || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #    define HAS_STRING_VIEW 1
 #  else
 #    define HAS_STRING_VIEW 0
@@ -75,6 +75,12 @@
    // GCC 4.9 Bug 61489 Wrong warning with -Wmissing-field-initializers
 #  pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 # endif
+#endif
+
+#ifdef _MSC_VER
+#   pragma warning(push)
+// warning C4127: conditional expression is constant
+#   pragma warning(disable : 4127)
 #endif
 
 namespace date
@@ -125,6 +131,14 @@ namespace date
 #  define CONSTCD14
 #  define NOEXCEPT noexcept
 #endif
+
+#ifndef HAS_UNCAUGHT_EXCEPTIONS
+#  if __cplusplus > 201703
+#    define HAS_UNCAUGHT_EXCEPTIONS 1
+#  else
+#    define HAS_UNCAUGHT_EXCEPTIONS 0
+#  endif
+#endif  // HAS_UNCAUGHT_EXCEPTIONS
 
 #ifndef HAS_VOID_T
 #  if __cplusplus >= 201703
@@ -416,8 +430,8 @@ class weekday
 public:
     weekday() = default;
     explicit CONSTCD11 weekday(unsigned wd) NOEXCEPT;
-    CONSTCD11 weekday(const sys_days& dp) NOEXCEPT;
-    CONSTCD11 explicit weekday(const local_days& dp) NOEXCEPT;
+    CONSTCD14 weekday(const sys_days& dp) NOEXCEPT;
+    CONSTCD14 explicit weekday(const local_days& dp) NOEXCEPT;
 
     CONSTCD14 weekday& operator++()    NOEXCEPT;
     CONSTCD14 weekday  operator++(int) NOEXCEPT;
@@ -429,11 +443,14 @@ public:
 
     CONSTCD11 bool ok() const NOEXCEPT;
 
+    CONSTCD11 unsigned c_encoding() const NOEXCEPT;
+    CONSTCD11 unsigned iso_encoding() const NOEXCEPT;
+
     CONSTCD11 weekday_indexed operator[](unsigned index) const NOEXCEPT;
     CONSTCD11 weekday_last    operator[](last_spec)      const NOEXCEPT;
 
 private:
-    static CONSTCD11 unsigned char weekday_from_days(int z) NOEXCEPT;
+    static CONSTCD14 unsigned char weekday_from_days(int z) NOEXCEPT;
 
     friend CONSTCD11 bool operator==(const weekday& x, const weekday& y) NOEXCEPT;
     friend CONSTCD14 days operator-(const weekday& x, const weekday& y) NOEXCEPT;
@@ -1027,7 +1044,7 @@ public:
     ~save_ostream()
     {
         if ((this->flags_ & std::ios::unitbuf) &&
-#if __cplusplus >= 201703
+#if HAS_UNCAUGHT_EXCEPTIONS
                 std::uncaught_exceptions() == 0 &&
 #else
                 !std::uncaught_exception() &&
@@ -1711,13 +1728,13 @@ operator<<(std::basic_ostream<CharT, Traits>& os, const year& y)
 
 // weekday
 
-CONSTCD11
+CONSTCD14
 inline
 unsigned char
 weekday::weekday_from_days(int z) NOEXCEPT
 {
-    return static_cast<unsigned char>(static_cast<unsigned>(
-        z >= -4 ? (z+4) % 7 : (z+5) % 7 + 6));
+    auto u = static_cast<unsigned>(z);
+    return static_cast<unsigned char>(z >= -4 ? (u+4) % 7 : u % 7);
 }
 
 CONSTCD11
@@ -1726,13 +1743,13 @@ weekday::weekday(unsigned wd) NOEXCEPT
     : wd_(static_cast<decltype(wd_)>(wd != 7 ? wd : 0))
     {}
 
-CONSTCD11
+CONSTCD14
 inline
 weekday::weekday(const sys_days& dp) NOEXCEPT
     : wd_(weekday_from_days(dp.time_since_epoch().count()))
     {}
 
-CONSTCD11
+CONSTCD14
 inline
 weekday::weekday(const local_days& dp) NOEXCEPT
     : wd_(weekday_from_days(dp.time_since_epoch().count()))
@@ -1762,6 +1779,20 @@ weekday::operator-=(const days& d) NOEXCEPT
 }
 
 CONSTCD11 inline bool weekday::ok() const NOEXCEPT {return wd_ <= 6;}
+
+CONSTCD11
+inline
+unsigned weekday::c_encoding() const NOEXCEPT
+{
+    return unsigned{wd_};
+}
+
+CONSTCD11
+inline
+unsigned weekday::iso_encoding() const NOEXCEPT
+{
+    return unsigned{((wd_ == 0u) ? 7u : wd_)};
+}
 
 CONSTCD11
 inline
@@ -3633,12 +3664,12 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
             fields<Duration>& fds, std::basic_string<CharT, Traits, Alloc>* abbrev = nullptr,
             std::chrono::minutes* offset = nullptr);
 
-// time_of_day
-
-enum {am = 1, pm};
+// hh_mm_ss
 
 namespace detail
 {
+
+struct undocumented {explicit undocumented() = default;};
 
 // width<n>::value is the number of fractional decimal digits in 1/n
 // width<0>::value and width<1>::value are defined to be 0
@@ -3677,31 +3708,16 @@ struct static_pow10<0>
     static CONSTDATA std::uint64_t value = 1;
 };
 
-template <class Rep, unsigned w, bool in_range = (w < 19)>
-struct make_precision
-{
-    using type = std::chrono::duration<Rep,
-                                       std::ratio<1, static_pow10<w>::value>>;
-    static CONSTDATA unsigned width = w;
-};
-
-template <class Rep, unsigned w>
-struct make_precision<Rep, w, false>
-{
-    using type = std::chrono::duration<Rep, std::micro>;
-    static CONSTDATA unsigned width = 6;
-};
-
-template <class Duration,
-          unsigned w = width<std::common_type<
-                                 Duration,
-                                 std::chrono::seconds>::type::period::den>::value>
+template <class Duration>
 class decimal_format_seconds
 {
+    using CT = typename std::common_type<Duration, std::chrono::seconds>::type;
+    using rep = typename CT::rep;
 public:
-    using rep = typename std::common_type<Duration, std::chrono::seconds>::type::rep;
-    using precision = typename make_precision<rep, w>::type;
-    static auto CONSTDATA width = make_precision<rep, w>::width;
+    static unsigned constexpr width = detail::width<CT::period::den>::value < 19 ?
+                                      detail::width<CT::period::den>::value : 6u;
+    using precision = std::chrono::duration<rep,
+                                            std::ratio<1, static_pow10<width>::value>>;
 
 private:
     std::chrono::seconds s_;
@@ -3715,7 +3731,8 @@ public:
 
     CONSTCD11 explicit decimal_format_seconds(const Duration& d) NOEXCEPT
         : s_(std::chrono::duration_cast<std::chrono::seconds>(d))
-        , sub_s_(std::chrono::duration_cast<precision>(d - s_))
+        , sub_s_(std::chrono::treat_as_floating_point<rep>::value ? d - s_ :
+                     std::chrono::duration_cast<precision>(d - s_))
         {}
 
     CONSTCD14 std::chrono::seconds& seconds() NOEXCEPT {return s_;}
@@ -3738,82 +3755,42 @@ public:
     std::basic_ostream<CharT, Traits>&
     operator<<(std::basic_ostream<CharT, Traits>& os, const decimal_format_seconds& x)
     {
-        date::detail::save_ostream<CharT, Traits> _(os);
-        os.fill('0');
-        os.flags(std::ios::dec | std::ios::right);
-        os.width(2);
-        os << x.s_.count() <<
-              std::use_facet<std::numpunct<char>>(os.getloc()).decimal_point();
-        os.width(width);
-        os << static_cast<std::int64_t>(x.sub_s_.count());
-        return os;
-    }
-};
-
-template <class Duration>
-class decimal_format_seconds<Duration, 0>
-{
-    static CONSTDATA unsigned w = 0;
-public:
-    using rep = typename std::common_type<Duration, std::chrono::seconds>::type::rep;
-    using precision = std::chrono::duration<rep>;
-    static auto CONSTDATA width = make_precision<rep, w>::width;
-private:
-
-    std::chrono::seconds s_;
-
-public:
-    CONSTCD11 decimal_format_seconds() : s_() {}
-    CONSTCD11 explicit decimal_format_seconds(const precision& s) NOEXCEPT
-        : s_(s)
-        {}
-
-    CONSTCD14 std::chrono::seconds& seconds() NOEXCEPT {return s_;}
-    CONSTCD11 std::chrono::seconds seconds() const NOEXCEPT {return s_;}
-    CONSTCD14 precision to_duration() const NOEXCEPT {return s_;}
-
-    CONSTCD11 bool in_conventional_range() const NOEXCEPT
-    {
-        using namespace std::chrono;
-        return s_ < minutes{1};
+        return x.print(os, std::chrono::treat_as_floating_point<rep>{});
     }
 
     template <class CharT, class Traits>
-    friend
     std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os, const decimal_format_seconds& x)
+    print(std::basic_ostream<CharT, Traits>& os, std::true_type) const
+    {
+        date::detail::save_ostream<CharT, Traits> _(os);
+        std::chrono::duration<rep> d = s_ + sub_s_;
+        if (d < std::chrono::seconds{10})
+            os << '0';
+        os << std::fixed << d.count();
+        return os;
+    }
+
+    template <class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>&
+    print(std::basic_ostream<CharT, Traits>& os, std::false_type) const
     {
         date::detail::save_ostream<CharT, Traits> _(os);
         os.fill('0');
         os.flags(std::ios::dec | std::ios::right);
         os.width(2);
-        os << x.s_.count();
+        os << s_.count();
+        if (width > 0)
+        {
+#if !ONLY_C_LOCALE
+            os << std::use_facet<std::numpunct<CharT>>(os.getloc()).decimal_point();
+#else
+            os << '.';
+#endif
+            os.width(width);
+            os << sub_s_.count();
+        }
         return os;
     }
-};
-
-enum class classify
-{
-    not_valid,
-    hour,
-    minute,
-    second,
-    subsecond
-};
-
-template <class Duration>
-struct classify_duration
-{
-    static CONSTDATA classify value =
-        std::is_convertible<Duration, std::chrono::hours>::value
-                ? classify::hour :
-        std::is_convertible<Duration, std::chrono::minutes>::value
-                ? classify::minute :
-        std::is_convertible<Duration, std::chrono::seconds>::value
-                ? classify::second :
-        std::chrono::treat_as_floating_point<typename Duration::rep>::value
-                ? classify::not_valid :
-                classify::subsecond;
 };
 
 template <class Rep, class Period>
@@ -3842,540 +3819,153 @@ abs(std::chrono::duration<Rep, Period> d)
     return d;
 }
 
-class time_of_day_base
+}  // namespace detail
+
+template <class Duration>
+class hh_mm_ss
 {
-protected:
-    std::chrono::hours   h_;
-    unsigned char mode_;
-    bool          neg_;
+    using dfs = detail::decimal_format_seconds<typename std::common_type<Duration,
+                                               std::chrono::seconds>::type>;
 
-    enum {is24hr};
+    std::chrono::hours h_;
+    std::chrono::minutes m_;
+    dfs s_;
+    bool neg_;
 
-    CONSTCD11 time_of_day_base() NOEXCEPT
-        : h_(0)
-        , mode_(static_cast<decltype(mode_)>(is24hr))
-        , neg_(false)
+public:
+    static unsigned CONSTDATA fractional_width = dfs::width;
+    using precision = typename dfs::precision;
+
+    CONSTCD11 hh_mm_ss() NOEXCEPT
+        : hh_mm_ss(Duration::zero())
         {}
 
-
-    CONSTCD11 time_of_day_base(std::chrono::hours h, bool neg, unsigned m) NOEXCEPT
-        : h_(detail::abs(h))
-        , mode_(static_cast<decltype(mode_)>(m))
-        , neg_(neg)
+    CONSTCD11 explicit hh_mm_ss(Duration d) NOEXCEPT
+        : h_(std::chrono::duration_cast<std::chrono::hours>(detail::abs(d)))
+        , m_(std::chrono::duration_cast<std::chrono::minutes>(detail::abs(d)) - h_)
+        , s_(detail::abs(d) - h_ - m_)
+        , neg_(d < Duration::zero())
         {}
 
-    CONSTCD14 void make24() NOEXCEPT;
-    CONSTCD14 void make12() NOEXCEPT;
+    CONSTCD11 std::chrono::hours hours() const NOEXCEPT {return h_;}
+    CONSTCD11 std::chrono::minutes minutes() const NOEXCEPT {return m_;}
+    CONSTCD11 std::chrono::seconds seconds() const NOEXCEPT {return s_.seconds();}
+    CONSTCD14 std::chrono::seconds&
+        seconds(detail::undocumented) NOEXCEPT {return s_.seconds();}
+    CONSTCD11 precision subseconds() const NOEXCEPT {return s_.subseconds();}
+    CONSTCD11 bool is_negative() const NOEXCEPT {return neg_;}
 
-    CONSTCD14 std::chrono::hours to24hr() const;
+    CONSTCD11 explicit operator  precision()   const NOEXCEPT {return to_duration();}
+    CONSTCD11          precision to_duration() const NOEXCEPT
+        {return (h_ + m_ + s_.to_duration()) * (1-2*neg_);}
 
     CONSTCD11 bool in_conventional_range() const NOEXCEPT
     {
-        return !neg_ && h_ < days{1};
+        using namespace std;
+        return !neg_ && h_ < days{1} && m_ < chrono::hours{1} &&
+               s_.in_conventional_range();
     }
+
+private:
+
+    template <class charT, class traits>
+    friend
+    std::basic_ostream<charT, traits>&
+    operator<<(std::basic_ostream<charT, traits>& os, hh_mm_ss const& tod)
+    {
+        using namespace detail;
+        using namespace std;
+        if (tod.is_negative())
+            os << '-';
+        if (tod.h_ < chrono::hours{10})
+            os << '0';
+        os << tod.h_.count() << ':';
+        if (tod.m_ < chrono::minutes{10})
+            os << '0';
+        os << tod.m_.count() << ':' << tod.s_;
+        return os;
+    }
+
+    template <class CharT, class Traits, class Duration2>
+    friend
+    std::basic_ostream<CharT, Traits>&
+    date::to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
+          const fields<Duration2>& fds, const std::string* abbrev,
+          const std::chrono::seconds* offset_sec);
+
+    template <class CharT, class Traits, class Duration2, class Alloc>
+    friend
+    std::basic_istream<CharT, Traits>&
+    date::from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
+          fields<Duration2>& fds,
+          std::basic_string<CharT, Traits, Alloc>* abbrev, std::chrono::minutes* offset);
 };
 
-CONSTCD14
 inline
-std::chrono::hours
-time_of_day_base::to24hr() const
+CONSTCD14
+bool
+is_am(std::chrono::hours const& h) NOEXCEPT
 {
-    auto h = h_;
-    if (mode_ == am || mode_ == pm)
+    using namespace std::chrono;
+    return hours{0} <= h && h < hours{12};
+}
+
+inline
+CONSTCD14
+bool
+is_pm(std::chrono::hours const& h) NOEXCEPT
+{
+    using namespace std::chrono;
+    return hours{12} <= h && h < hours{24};
+}
+
+inline
+CONSTCD14
+std::chrono::hours
+make12(std::chrono::hours h) NOEXCEPT
+{
+    using namespace std::chrono;
+    if (h < hours{12})
     {
-        CONSTDATA auto h12 = std::chrono::hours(12);
-        if (mode_ == pm)
-        {
-            if (h != h12)
-                h = h + h12;
-        }
-        else if (h == h12)
-            h = std::chrono::hours(0);
+        if (h == hours{0})
+            h = hours{12};
+    }
+    else
+    {
+        if (h != hours{12})
+            h -= hours{12};
     }
     return h;
 }
 
-CONSTCD14
 inline
-void
-time_of_day_base::make24() NOEXCEPT
-{
-    h_ = to24hr();
-    mode_ = is24hr;
-}
-
 CONSTCD14
-inline
-void
-time_of_day_base::make12() NOEXCEPT
+std::chrono::hours
+make24(std::chrono::hours h, bool is_pm) NOEXCEPT
 {
-    if (mode_ == is24hr)
+    using namespace std::chrono;
+    if (is_pm)
     {
-        CONSTDATA auto h12 = std::chrono::hours(12);
-        if (h_ >= h12)
-        {
-            if (h_ > h12)
-                h_ = h_ - h12;
-            mode_ = pm;
-        }
-        else
-        {
-            if (h_ == std::chrono::hours(0))
-                h_ = h12;
-            mode_ = am;
-        }
+        if (h != hours{12})
+            h += hours{12};
     }
+    else if (h == hours{12})
+        h = hours{0};
+    return h;
 }
-
-template <class Duration, detail::classify = detail::classify_duration<Duration>::value>
-class time_of_day_storage;
-
-template <class Rep, class Period>
-class time_of_day_storage<std::chrono::duration<Rep, Period>, detail::classify::hour>
-    : private detail::time_of_day_base
-{
-    using base = detail::time_of_day_base;
-
-public:
-    using precision = std::chrono::hours;
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-    CONSTCD11 time_of_day_storage() NOEXCEPT = default;
-#else
-    CONSTCD11 time_of_day_storage() = default;
-#endif /* !defined(_MSC_VER) || _MSC_VER >= 1900 */
-
-    CONSTCD11 explicit time_of_day_storage(std::chrono::hours since_midnight) NOEXCEPT
-        : base(since_midnight, since_midnight < std::chrono::hours{0}, is24hr)
-        {}
-
-    CONSTCD11 explicit time_of_day_storage(std::chrono::hours h, unsigned md) NOEXCEPT
-        : base(h, h < std::chrono::hours{0}, md)
-        {}
-
-    CONSTCD11 std::chrono::hours hours() const NOEXCEPT {return h_;}
-    CONSTCD11 unsigned mode() const NOEXCEPT {return mode_;}
-
-    CONSTCD14 explicit operator precision() const NOEXCEPT
-    {
-        auto p = to24hr();
-        if (neg_)
-            p = -p;
-        return p;
-    }
-
-    CONSTCD14 precision to_duration() const NOEXCEPT
-    {
-        return static_cast<precision>(*this);
-    }
-
-    CONSTCD14 time_of_day_storage& make24() NOEXCEPT {base::make24(); return *this;}
-    CONSTCD14 time_of_day_storage& make12() NOEXCEPT {base::make12(); return *this;}
-
-    CONSTCD11 bool in_conventional_range() const NOEXCEPT
-    {
-        return base::in_conventional_range();
-    }
-
-    template<class CharT, class Traits>
-    friend
-    std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os, const time_of_day_storage& t)
-    {
-        using namespace std;
-        detail::save_ostream<CharT, Traits> _(os);
-        if (t.neg_)
-            os << '-';
-        os.fill('0');
-        os.flags(std::ios::dec | std::ios::right);
-        if (t.mode_ != am && t.mode_ != pm)
-            os.width(2);
-        os << t.h_.count();
-        switch (t.mode_)
-        {
-        case time_of_day_storage::is24hr:
-            os << "00";
-            break;
-        case am:
-            os << "am";
-            break;
-        case pm:
-            os << "pm";
-            break;
-        }
-        return os;
-    }
-};
-
-template <class Rep, class Period>
-class time_of_day_storage<std::chrono::duration<Rep, Period>, detail::classify::minute>
-    : private detail::time_of_day_base
-{
-    using base = detail::time_of_day_base;
-
-    std::chrono::minutes m_;
-
-public:
-   using precision = std::chrono::minutes;
-
-   CONSTCD11 time_of_day_storage() NOEXCEPT
-        : base()
-        , m_(0)
-        {}
-
-   CONSTCD11 explicit time_of_day_storage(std::chrono::minutes since_midnight) NOEXCEPT
-        : base(std::chrono::duration_cast<std::chrono::hours>(since_midnight),
-               since_midnight < std::chrono::minutes{0}, is24hr)
-        , m_(detail::abs(since_midnight) - h_)
-        {}
-
-    CONSTCD11 explicit time_of_day_storage(std::chrono::hours h, std::chrono::minutes m,
-                                           unsigned md) NOEXCEPT
-        : base(h, false, md)
-        , m_(m)
-        {}
-
-    CONSTCD11 std::chrono::hours hours() const NOEXCEPT {return h_;}
-    CONSTCD11 std::chrono::minutes minutes() const NOEXCEPT {return m_;}
-    CONSTCD11 unsigned mode() const NOEXCEPT {return mode_;}
-
-    CONSTCD14 explicit operator precision() const NOEXCEPT
-    {
-        auto p = to24hr() + m_;
-        if (neg_)
-            p = -p;
-        return p;
-    }
-
-    CONSTCD14 precision to_duration() const NOEXCEPT
-    {
-        return static_cast<precision>(*this);
-    }
-
-    CONSTCD14 time_of_day_storage& make24() NOEXCEPT {base::make24(); return *this;}
-    CONSTCD14 time_of_day_storage& make12() NOEXCEPT {base::make12(); return *this;}
-
-    CONSTCD11 bool in_conventional_range() const NOEXCEPT
-    {
-        return base::in_conventional_range() && m_ < std::chrono::hours{1};
-    }
-
-    template<class CharT, class Traits>
-    friend
-    std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os, const time_of_day_storage& t)
-    {
-        using namespace std;
-        detail::save_ostream<CharT, Traits> _(os);
-        if (t.neg_)
-            os << '-';
-        os.fill('0');
-        os.flags(std::ios::dec | std::ios::right);
-        if (t.mode_ != am && t.mode_ != pm)
-            os.width(2);
-        os << t.h_.count() << ':';
-        os.width(2);
-        os << t.m_.count();
-        switch (t.mode_)
-        {
-        case am:
-            os << "am";
-            break;
-        case pm:
-            os << "pm";
-            break;
-        }
-        return os;
-    }
-};
-
-template <class Rep, class Period>
-class time_of_day_storage<std::chrono::duration<Rep, Period>, detail::classify::second>
-    : private detail::time_of_day_base
-{
-    using base = detail::time_of_day_base;
-    using dfs = decimal_format_seconds<std::chrono::seconds>;
-
-    std::chrono::minutes m_;
-    dfs                  s_;
-
-public:
-    using precision = std::chrono::seconds;
-
-    CONSTCD11 time_of_day_storage() NOEXCEPT
-        : base()
-        , m_(0)
-        , s_()
-        {}
-
-    CONSTCD11 explicit time_of_day_storage(std::chrono::seconds since_midnight) NOEXCEPT
-        : base(std::chrono::duration_cast<std::chrono::hours>(since_midnight),
-               since_midnight < std::chrono::seconds{0}, is24hr)
-        , m_(std::chrono::duration_cast<std::chrono::minutes>(detail::abs(since_midnight) - h_))
-        , s_(detail::abs(since_midnight) - h_ - m_)
-        {}
-
-    CONSTCD11 explicit time_of_day_storage(std::chrono::hours h, std::chrono::minutes m,
-                                           std::chrono::seconds s, unsigned md) NOEXCEPT
-        : base(h, false, md)
-        , m_(m)
-        , s_(s)
-        {}
-
-    CONSTCD11 std::chrono::hours hours() const NOEXCEPT {return h_;}
-    CONSTCD11 std::chrono::minutes minutes() const NOEXCEPT {return m_;}
-    CONSTCD14 std::chrono::seconds& seconds() NOEXCEPT {return s_.seconds();}
-    CONSTCD11 std::chrono::seconds seconds() const NOEXCEPT {return s_.seconds();}
-    CONSTCD11 unsigned mode() const NOEXCEPT {return mode_;}
-
-    CONSTCD14 explicit operator precision() const NOEXCEPT
-    {
-        auto p = to24hr() + s_.to_duration() + m_;
-        if (neg_)
-            p = -p;
-        return p;
-    }
-
-    CONSTCD14 precision to_duration() const NOEXCEPT
-    {
-        return static_cast<precision>(*this);
-    }
-
-    CONSTCD14 time_of_day_storage& make24() NOEXCEPT {base::make24(); return *this;}
-    CONSTCD14 time_of_day_storage& make12() NOEXCEPT {base::make12(); return *this;}
-
-    CONSTCD11 bool in_conventional_range() const NOEXCEPT
-    {
-        return base::in_conventional_range() && m_ < std::chrono::hours{1} &&
-                                                s_.in_conventional_range();
-    }
-
-    template<class CharT, class Traits>
-    friend
-    std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os, const time_of_day_storage& t)
-    {
-        using namespace std;
-        detail::save_ostream<CharT, Traits> _(os);
-        if (t.neg_)
-            os << '-';
-        os.fill('0');
-        os.flags(std::ios::dec | std::ios::right);
-        if (t.mode_ != am && t.mode_ != pm)
-            os.width(2);
-        os << t.h_.count() << ':';
-        os.width(2);
-        os << t.m_.count() << ':' << t.s_;
-        switch (t.mode_)
-        {
-        case am:
-            os << "am";
-            break;
-        case pm:
-            os << "pm";
-            break;
-        }
-        return os;
-    }
-
-    template <class CharT, class Traits, class Duration>
-    friend
-    std::basic_ostream<CharT, Traits>&
-    date::to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
-          const fields<Duration>& fds, const std::string* abbrev,
-          const std::chrono::seconds* offset_sec);
-
-    template <class CharT, class Traits, class Duration, class Alloc>
-    friend
-    std::basic_istream<CharT, Traits>&
-    date::from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
-          fields<Duration>& fds,
-          std::basic_string<CharT, Traits, Alloc>* abbrev, std::chrono::minutes* offset);
-};
-
-template <class Rep, class Period>
-class time_of_day_storage<std::chrono::duration<Rep, Period>, detail::classify::subsecond>
-    : private detail::time_of_day_base
-{
-public:
-    using Duration = std::chrono::duration<Rep, Period>;
-    using dfs = decimal_format_seconds<typename std::common_type<Duration,
-                                       std::chrono::seconds>::type>;
-    using precision = typename dfs::precision;
-
-private:
-    using base = detail::time_of_day_base;
-
-    std::chrono::minutes m_;
-    dfs                  s_;
-
-public:
-    CONSTCD11 time_of_day_storage() NOEXCEPT
-        : base()
-        , m_(0)
-        , s_()
-        {}
-
-    CONSTCD11 explicit time_of_day_storage(Duration since_midnight) NOEXCEPT
-        : base(date::trunc<std::chrono::hours>(since_midnight),
-               since_midnight < Duration{0}, is24hr)
-        , m_(date::trunc<std::chrono::minutes>(detail::abs(since_midnight) - h_))
-        , s_(detail::abs(since_midnight) - h_ - m_)
-        {}
-
-    CONSTCD11 explicit time_of_day_storage(std::chrono::hours h, std::chrono::minutes m,
-                                           std::chrono::seconds s, precision sub_s,
-                                           unsigned md) NOEXCEPT
-        : base(h, false, md)
-        , m_(m)
-        , s_(s + sub_s)
-        {}
-
-    CONSTCD11 std::chrono::hours hours() const NOEXCEPT {return h_;}
-    CONSTCD11 std::chrono::minutes minutes() const NOEXCEPT {return m_;}
-    CONSTCD14 std::chrono::seconds& seconds() NOEXCEPT {return s_.seconds();}
-    CONSTCD11 std::chrono::seconds seconds() const NOEXCEPT {return s_.seconds();}
-    CONSTCD11 precision subseconds() const NOEXCEPT {return s_.subseconds();}
-    CONSTCD11 unsigned mode() const NOEXCEPT {return mode_;}
-
-    CONSTCD14 explicit operator precision() const NOEXCEPT
-    {
-        auto p = to24hr() + s_.to_duration() + m_;
-        if (neg_)
-            p = -p;
-        return p;
-    }
-
-    CONSTCD14 precision to_duration() const NOEXCEPT
-    {
-        return static_cast<precision>(*this);
-    }
-
-    CONSTCD14 time_of_day_storage& make24() NOEXCEPT {base::make24(); return *this;}
-    CONSTCD14 time_of_day_storage& make12() NOEXCEPT {base::make12(); return *this;}
-
-    CONSTCD11 bool in_conventional_range() const NOEXCEPT
-    {
-        return base::in_conventional_range() && m_ < std::chrono::hours{1} &&
-                                                s_.in_conventional_range();
-    }
-
-    template<class CharT, class Traits>
-    friend
-    std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os, const time_of_day_storage& t)
-    {
-        using namespace std;
-        detail::save_ostream<CharT, Traits> _(os);
-        if (t.neg_)
-            os << '-';
-        os.fill('0');
-        os.flags(std::ios::dec | std::ios::right);
-        if (t.mode_ != am && t.mode_ != pm)
-            os.width(2);
-        os << t.h_.count() << ':';
-        os.width(2);
-        os << t.m_.count() << ':' << t.s_;
-        switch (t.mode_)
-        {
-        case am:
-            os << "am";
-            break;
-        case pm:
-            os << "pm";
-            break;
-        }
-        return os;
-    }
-
-    template <class CharT, class Traits, class Duration>
-    friend
-    std::basic_ostream<CharT, Traits>&
-    date::to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
-          const fields<Duration>& fds, const std::string* abbrev,
-          const std::chrono::seconds* offset_sec);
-
-    template <class CharT, class Traits, class Duration, class Alloc>
-    friend
-    std::basic_istream<CharT, Traits>&
-    date::from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
-          fields<Duration>& fds,
-          std::basic_string<CharT, Traits, Alloc>* abbrev, std::chrono::minutes* offset);
-};
-
-}  // namespace detail
 
 template <class Duration>
-class time_of_day
-    : public detail::time_of_day_storage<Duration>
-{
-    using base = detail::time_of_day_storage<Duration>;
-public:
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-    CONSTCD11 time_of_day() NOEXCEPT = default;
-#else
-    CONSTCD11 time_of_day() = default;
-#endif /* !defined(_MSC_VER) || _MSC_VER >= 1900 */
-
-    CONSTCD11 explicit time_of_day(Duration since_midnight) NOEXCEPT
-        : base(since_midnight)
-        {}
-
-    template <class Arg0, class Arg1, class ...Args>
-    CONSTCD11
-    explicit time_of_day(Arg0&& arg0, Arg1&& arg1, Args&& ...args) NOEXCEPT
-        : base(std::forward<Arg0>(arg0), std::forward<Arg1>(arg1), std::forward<Args>(args)...)
-        {}
-};
+using time_of_day = hh_mm_ss<Duration>;
 
 template <class Rep, class Period,
           class = typename std::enable_if
               <!std::chrono::treat_as_floating_point<Rep>::value>::type>
 CONSTCD11
 inline
-time_of_day<std::chrono::duration<Rep, Period>>
+hh_mm_ss<std::chrono::duration<Rep, Period>>
 make_time(const std::chrono::duration<Rep, Period>& d)
 {
-    return time_of_day<std::chrono::duration<Rep, Period>>(d);
-}
-
-CONSTCD11
-inline
-time_of_day<std::chrono::hours>
-make_time(const std::chrono::hours& h, unsigned md)
-{
-    return time_of_day<std::chrono::hours>(h, md);
-}
-
-CONSTCD11
-inline
-time_of_day<std::chrono::minutes>
-make_time(const std::chrono::hours& h, const std::chrono::minutes& m,
-          unsigned md)
-{
-    return time_of_day<std::chrono::minutes>(h, m, md);
-}
-
-CONSTCD11
-inline
-time_of_day<std::chrono::seconds>
-make_time(const std::chrono::hours& h, const std::chrono::minutes& m,
-          const std::chrono::seconds& s, unsigned md)
-{
-    return time_of_day<std::chrono::seconds>(h, m, s, md);
-}
-
-template <class Rep, class Period,
-          class = typename std::enable_if<std::ratio_less<Period,
-                                                          std::ratio<1>>::value>::type>
-CONSTCD11
-inline
-time_of_day<std::chrono::duration<Rep, Period>>
-make_time(const std::chrono::hours& h, const std::chrono::minutes& m,
-          const std::chrono::seconds& s, const std::chrono::duration<Rep, Period>& sub_s,
-          unsigned md)
-{
-    return time_of_day<std::chrono::duration<Rep, Period>>(h, m, s, sub_s, md);
+    return hh_mm_ss<std::chrono::duration<Rep, Period>>(d);
 }
 
 template <class CharT, class Traits, class Duration>
@@ -4408,6 +3998,550 @@ operator<<(std::basic_ostream<CharT, Traits>& os, const local_time<Duration>& ut
     return (os << sys_time<Duration>{ut.time_since_epoch()});
 }
 
+namespace detail
+{
+
+template <class CharT, std::size_t N>
+class string_literal;
+
+template <class CharT1, class CharT2, std::size_t N1, std::size_t N2>
+inline
+CONSTCD14
+string_literal<typename std::conditional<sizeof(CharT2) <= sizeof(CharT1), CharT1, CharT2>::type,
+               N1 + N2 - 1>
+operator+(const string_literal<CharT1, N1>& x, const string_literal<CharT2, N2>& y) NOEXCEPT;
+
+template <class CharT, std::size_t N>
+class string_literal
+{
+    CharT p_[N];
+
+    CONSTCD11 string_literal() NOEXCEPT
+      : p_{}
+    {}
+
+public:
+    using const_iterator = const CharT*;
+
+    string_literal(string_literal const&) = default;
+    string_literal& operator=(string_literal const&) = delete;
+
+    template <std::size_t N1 = 2,
+              class = typename std::enable_if<N1 == N>::type>
+    CONSTCD11 string_literal(CharT c) NOEXCEPT
+        : p_{c}
+    {
+    }
+
+    template <std::size_t N1 = 3,
+              class = typename std::enable_if<N1 == N>::type>
+    CONSTCD11 string_literal(CharT c1, CharT c2) NOEXCEPT
+        : p_{c1, c2}
+    {
+    }
+
+    template <std::size_t N1 = 4,
+              class = typename std::enable_if<N1 == N>::type>
+    CONSTCD11 string_literal(CharT c1, CharT c2, CharT c3) NOEXCEPT
+        : p_{c1, c2, c3}
+    {
+    }
+
+    CONSTCD14 string_literal(const CharT(&a)[N]) NOEXCEPT
+        : p_{}
+    {
+        for (std::size_t i = 0; i < N; ++i)
+            p_[i] = a[i];
+    }
+
+    template <class U = CharT,
+              class = typename std::enable_if<(1 < sizeof(U))>::type>
+    CONSTCD14 string_literal(const char(&a)[N]) NOEXCEPT
+        : p_{}
+    {
+        for (std::size_t i = 0; i < N; ++i)
+            p_[i] = a[i];
+    }
+
+    template <class CharT2,
+              class = typename std::enable_if<!std::is_same<CharT2, CharT>::value>::type>
+    CONSTCD14 string_literal(string_literal<CharT2, N> const& a) NOEXCEPT
+        : p_{}
+    {
+        for (std::size_t i = 0; i < N; ++i)
+            p_[i] = a[i];
+    }
+
+    CONSTCD11 const CharT* data() const NOEXCEPT {return p_;}
+    CONSTCD11 std::size_t size() const NOEXCEPT {return N-1;}
+
+    CONSTCD11 const_iterator begin() const NOEXCEPT {return p_;}
+    CONSTCD11 const_iterator end()   const NOEXCEPT {return p_ + N-1;}
+
+    CONSTCD11 CharT const& operator[](std::size_t n) const NOEXCEPT
+    {
+        return p_[n];
+    }
+
+    template <class Traits>
+    friend
+    std::basic_ostream<CharT, Traits>&
+    operator<<(std::basic_ostream<CharT, Traits>& os, const string_literal& s)
+    {
+        return os << s.p_;
+    }
+
+    template <class CharT1, class CharT2, std::size_t N1, std::size_t N2>
+    friend
+    CONSTCD14
+    string_literal<typename std::conditional<sizeof(CharT2) <= sizeof(CharT1), CharT1, CharT2>::type,
+                   N1 + N2 - 1>
+    operator+(const string_literal<CharT1, N1>& x, const string_literal<CharT2, N2>& y) NOEXCEPT;
+};
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 3>
+operator+(const string_literal<CharT, 2>& x, const string_literal<CharT, 2>& y) NOEXCEPT
+{
+  return string_literal<CharT, 3>(x[0], y[0]);
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 4>
+operator+(const string_literal<CharT, 3>& x, const string_literal<CharT, 2>& y) NOEXCEPT
+{
+  return string_literal<CharT, 4>(x[0], x[1], y[0]);
+}
+
+template <class CharT1, class CharT2, std::size_t N1, std::size_t N2>
+CONSTCD14
+inline
+string_literal<typename std::conditional<sizeof(CharT2) <= sizeof(CharT1), CharT1, CharT2>::type,
+               N1 + N2 - 1>
+operator+(const string_literal<CharT1, N1>& x, const string_literal<CharT2, N2>& y) NOEXCEPT
+{
+    using CT = typename std::conditional<sizeof(CharT2) <= sizeof(CharT1), CharT1, CharT2>::type;
+
+    string_literal<CT, N1 + N2 - 1> r;
+    std::size_t i = 0;
+    for (; i < N1-1; ++i)
+       r.p_[i] = CT(x.p_[i]);
+    for (std::size_t j = 0; j < N2; ++j, ++i)
+       r.p_[i] = CT(y.p_[j]);
+
+    return r;
+}
+
+
+template <class CharT, class Traits, class Alloc, std::size_t N>
+inline
+std::basic_string<CharT, Traits, Alloc>
+operator+(std::basic_string<CharT, Traits, Alloc> x, const string_literal<CharT, N>& y)
+{
+    x.append(y.data(), y.size());
+    return x;
+}
+
+#if __cplusplus >= 201402  && (!defined(__EDG_VERSION__) || __EDG_VERSION__ > 411) \
+                           && (!defined(__SUNPRO_CC) || __SUNPRO_CC > 0x5150)
+
+template <class CharT,
+          class = std::enable_if_t<std::is_same<CharT, char>{} ||
+                                   std::is_same<CharT, wchar_t>{} ||
+                                   std::is_same<CharT, char16_t>{} ||
+                                   std::is_same<CharT, char32_t>{}>>
+CONSTCD14
+inline
+string_literal<CharT, 2>
+msl(CharT c) NOEXCEPT
+{
+    return string_literal<CharT, 2>{c};
+}
+
+CONSTCD14
+inline
+std::size_t
+to_string_len(std::intmax_t i)
+{
+    std::size_t r = 0;
+    do
+    {
+        i /= 10;
+        ++r;
+    } while (i > 0);
+    return r;
+}
+
+template <std::intmax_t N>
+CONSTCD14
+inline
+std::enable_if_t
+<
+    N < 10,
+    string_literal<char, to_string_len(N)+1>
+>
+msl() NOEXCEPT
+{
+    return msl(char(N % 10 + '0'));
+}
+
+template <std::intmax_t N>
+CONSTCD14
+inline
+std::enable_if_t
+<
+    10 <= N,
+    string_literal<char, to_string_len(N)+1>
+>
+msl() NOEXCEPT
+{
+    return msl<N/10>() + msl(char(N % 10 + '0'));
+}
+
+template <class CharT, std::intmax_t N, std::intmax_t D>
+CONSTCD14
+inline
+std::enable_if_t
+<
+    std::ratio<N, D>::type::den != 1,
+    string_literal<CharT, to_string_len(std::ratio<N, D>::type::num) +
+                          to_string_len(std::ratio<N, D>::type::den) + 4>
+>
+msl(std::ratio<N, D>) NOEXCEPT
+{
+    using R = typename std::ratio<N, D>::type;
+    return msl(CharT{'['}) + msl<R::num>() + msl(CharT{'/'}) +
+                             msl<R::den>() + msl(CharT{']'});
+}
+
+template <class CharT, std::intmax_t N, std::intmax_t D>
+CONSTCD14
+inline
+std::enable_if_t
+<
+    std::ratio<N, D>::type::den == 1,
+    string_literal<CharT, to_string_len(std::ratio<N, D>::type::num) + 3>
+>
+msl(std::ratio<N, D>) NOEXCEPT
+{
+    using R = typename std::ratio<N, D>::type;
+    return msl(CharT{'['}) + msl<R::num>() + msl(CharT{']'});
+}
+
+
+#else  // __cplusplus < 201402 || (defined(__EDG_VERSION__) && __EDG_VERSION__ <= 411)
+
+inline
+std::string
+to_string(std::uint64_t x)
+{
+    return std::to_string(x);
+}
+
+template <class CharT>
+inline
+std::basic_string<CharT>
+to_string(std::uint64_t x)
+{
+    auto y = std::to_string(x);
+    return std::basic_string<CharT>(y.begin(), y.end());
+}
+
+template <class CharT, std::intmax_t N, std::intmax_t D>
+inline
+typename std::enable_if
+<
+    std::ratio<N, D>::type::den != 1,
+    std::basic_string<CharT>
+>::type
+msl(std::ratio<N, D>)
+{
+    using R = typename std::ratio<N, D>::type;
+    return std::basic_string<CharT>(1, '[') + to_string<CharT>(R::num) + CharT{'/'} +
+                                              to_string<CharT>(R::den) + CharT{']'};
+}
+
+template <class CharT, std::intmax_t N, std::intmax_t D>
+inline
+typename std::enable_if
+<
+    std::ratio<N, D>::type::den == 1,
+    std::basic_string<CharT>
+>::type
+msl(std::ratio<N, D>)
+{
+    using R = typename std::ratio<N, D>::type;
+    return std::basic_string<CharT>(1, '[') + to_string<CharT>(R::num) + CharT{']'};
+}
+
+#endif  // __cplusplus < 201402 || (defined(__EDG_VERSION__) && __EDG_VERSION__ <= 411)
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::atto) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'a'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::femto) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'f'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::pico) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'p'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::nano) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'n'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+typename std::enable_if
+<
+    std::is_same<CharT, char>::value,
+    string_literal<char, 3>
+>::type
+msl(std::micro) NOEXCEPT
+{
+    return string_literal<char, 3>{'\xC2', '\xB5'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+typename std::enable_if
+<
+    !std::is_same<CharT, char>::value,
+    string_literal<CharT, 2>
+>::type
+msl(std::micro) NOEXCEPT
+{
+    return string_literal<CharT, 2>{CharT{static_cast<unsigned char>('\xB5')}};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::milli) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'m'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::centi) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'c'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 3>
+msl(std::deca) NOEXCEPT
+{
+    return string_literal<CharT, 3>{'d', 'a'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::deci) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'d'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::hecto) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'h'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::kilo) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'k'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::mega) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'M'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::giga) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'G'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::tera) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'T'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::peta) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'P'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+msl(std::exa) NOEXCEPT
+{
+    return string_literal<CharT, 2>{'E'};
+}
+
+template <class CharT, class Period>
+CONSTCD11
+inline
+auto
+get_units(Period p)
+ -> decltype(msl<CharT>(p) + string_literal<CharT, 2>{'s'})
+{
+    return msl<CharT>(p) + string_literal<CharT, 2>{'s'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+get_units(std::ratio<1>)
+{
+    return string_literal<CharT, 2>{'s'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+get_units(std::ratio<3600>)
+{
+    return string_literal<CharT, 2>{'h'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 4>
+get_units(std::ratio<60>)
+{
+    return string_literal<CharT, 4>{'m', 'i', 'n'};
+}
+
+template <class CharT>
+CONSTCD11
+inline
+string_literal<CharT, 2>
+get_units(std::ratio<86400>)
+{
+    return string_literal<CharT, 2>{'d'};
+}
+
+template <class CharT, class Traits = std::char_traits<CharT>>
+struct make_string;
+
+template <>
+struct make_string<char>
+{
+    template <class Rep>
+    static
+    std::string
+    from(Rep n)
+    {
+        return std::to_string(n);
+    }
+};
+
+template <class Traits>
+struct make_string<char, Traits>
+{
+    template <class Rep>
+    static
+    std::basic_string<char, Traits>
+    from(Rep n)
+    {
+        auto s = std::to_string(n);
+        return std::basic_string<char, Traits>(s.begin(), s.end());
+    }
+};
+
+template <>
+struct make_string<wchar_t>
+{
+    template <class Rep>
+    static
+    std::wstring
+    from(Rep n)
+    {
+        return std::to_wstring(n);
+    }
+};
+
+template <class Traits>
+struct make_string<wchar_t, Traits>
+{
+    template <class Rep>
+    static
+    std::basic_string<wchar_t, Traits>
+    from(Rep n)
+    {
+        auto s = std::to_wstring(n);
+        return std::basic_string<wchar_t, Traits>(s.begin(), s.end());
+    }
+};
+
+}  // namespace detail
+
 // to_stream
 
 CONSTDATA year nanyear{-32768};
@@ -4417,22 +4551,22 @@ struct fields
 {
     year_month_day        ymd{nanyear/0/0};
     weekday               wd{8u};
-    time_of_day<Duration> tod{};
+    hh_mm_ss<Duration>    tod{};
     bool                  has_tod = false;
 
     fields() = default;
 
     fields(year_month_day ymd_) : ymd(ymd_) {}
     fields(weekday wd_) : wd(wd_) {}
-    fields(time_of_day<Duration> tod_) : tod(tod_), has_tod(true) {}
+    fields(hh_mm_ss<Duration> tod_) : tod(tod_), has_tod(true) {}
 
     fields(year_month_day ymd_, weekday wd_) : ymd(ymd_), wd(wd_) {}
-    fields(year_month_day ymd_, time_of_day<Duration> tod_) : ymd(ymd_), tod(tod_),
-                                                              has_tod(true) {}
+    fields(year_month_day ymd_, hh_mm_ss<Duration> tod_) : ymd(ymd_), tod(tod_),
+                                                           has_tod(true) {}
 
-    fields(weekday wd_, time_of_day<Duration> tod_) : wd(wd_), tod(tod_), has_tod(true) {}
+    fields(weekday wd_, hh_mm_ss<Duration> tod_) : wd(wd_), tod(tod_), has_tod(true) {}
 
-    fields(year_month_day ymd_, weekday wd_, time_of_day<Duration> tod_)
+    fields(year_month_day ymd_, weekday wd_, hh_mm_ss<Duration> tod_)
         : ymd(ymd_)
         , wd(wd_)
         , tod(tod_)
@@ -5008,11 +5142,10 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
                     if (modified == CharT{})
 #endif
                     {
-                        if (*fmt == CharT{'I'})
-                            hms.make12();
-                        if (hms.hours() < hours{10})
+                        auto h = *fmt == CharT{'I'} ? make12(hms.hours()) : hms.hours();
+                        if (h < hours{10})
                             os << CharT{'0'};
-                        os << hms.hours().count();
+                        os << h.count();
                     }
 #if !ONLY_C_LOCALE
                     else if (modified == CharT{'O'})
@@ -5165,11 +5298,35 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
                     tm.tm_hour = static_cast<int>(fds.tod.hours().count());
                     facet.put(os, os, os.fill(), &tm, begin(f), end(f));
 #else
-                    if (fds.tod.hours() < hours{12})
+                    if (is_am(fds.tod.hours()))
                         os << ampm_names().first[0];
                     else
                         os << ampm_names().first[1];
 #endif
+                }
+                else
+                {
+                    os << CharT{'%'} << modified << *fmt;
+                }
+                modified = CharT{};
+                command = nullptr;
+            }
+            else
+                os << *fmt;
+            break;
+        case 'Q':
+        case 'q':
+            if (command)
+            {
+                if (modified == CharT{})
+                {
+                    if (!fds.has_tod)
+                        os.setstate(std::ios::failbit);
+                    auto d = fds.tod.to_duration();
+                    if (*fmt == 'q')
+                        os << get_units<CharT>(typename decltype(d)::period::type{});
+                    else
+                        os << d.count();
                 }
                 else
                 {
@@ -5195,18 +5352,16 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
                     tm.tm_sec = static_cast<int>(fds.tod.seconds().count());
                     facet.put(os, os, os.fill(), &tm, begin(f), end(f));
 #else
-                    time_of_day<seconds> tod(duration_cast<seconds>(fds.tod.to_duration()));
-                    tod.make12();
+                    hh_mm_ss<seconds> tod(duration_cast<seconds>(fds.tod.to_duration()));
                     save_ostream<CharT, Traits> _(os);
                     os.fill('0');
                     os.width(2);
-                    os << tod.hours().count() << CharT{':'};
+                    os << make12(tod.hours()).count() << CharT{':'};
                     os.width(2);
                     os << tod.minutes().count() << CharT{':'};
                     os.width(2);
                     os << tod.seconds().count() << CharT{' '};
-                    tod.make24();
-                    if (tod.hours() < hours{12})
+                    if (is_am(tod.hours()))
                         os << ampm_names().first[0];
                     else
                         os << ampm_names().first[1];
@@ -5797,7 +5952,7 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
 {
     using Duration = std::chrono::duration<Rep, Period>;
     using CT = typename std::common_type<Duration, std::chrono::seconds>::type;
-    fields<CT> fds{time_of_day<CT>{d}};
+    fields<CT> fds{hh_mm_ss<CT>{d}};
     return to_stream(os, fmt, fds);
 }
 
@@ -5809,7 +5964,7 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
 {
     using CT = typename std::common_type<Duration, std::chrono::seconds>::type;
     auto ld = floor<days>(tp);
-    fields<CT> fds{year_month_day{ld}, time_of_day<CT>{tp-local_seconds{ld}}};
+    fields<CT> fds{year_month_day{ld}, hh_mm_ss<CT>{tp-local_seconds{ld}}};
     return to_stream(os, fmt, fds, abbrev, offset_sec);
 }
 
@@ -5823,7 +5978,7 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
     const std::string abbrev("UTC");
     CONSTDATA seconds offset{0};
     auto sd = floor<days>(tp);
-    fields<CT> fds{year_month_day{sd}, time_of_day<CT>{tp-sys_seconds{sd}}};
+    fields<CT> fds{year_month_day{sd}, hh_mm_ss<CT>{tp-sys_seconds{sd}}};
     return to_stream(os, fmt, fds, &abbrev, &offset);
 }
 
@@ -6093,7 +6248,7 @@ read(std::basic_istream<CharT, Traits>& is, int a0, Args&& ...args)
         auto e = buf;
         do
         {
-            *e++ = CharT(u % 10) + CharT{'0'};
+            *e++ = static_cast<CharT>(CharT(u % 10) + CharT{'0'});
             u /= 10;
         } while (u > 0);
         std::reverse(buf, e);
@@ -7428,7 +7583,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
             if (H != not_a_hour)
             {
                 fds.has_tod = true;
-                fds.tod = time_of_day<Duration>{hours{H}};
+                fds.tod = hh_mm_ss<Duration>{hours{H}};
             }
             if (M != not_a_minute)
             {
@@ -7771,550 +7926,6 @@ parse(const CharT* format, Parsable& tp,
 
 // duration streaming
 
-namespace detail
-{
-
-template <class CharT, std::size_t N>
-class string_literal;
-
-template <class CharT1, class CharT2, std::size_t N1, std::size_t N2>
-inline
-CONSTCD14
-string_literal<typename std::conditional<sizeof(CharT2) <= sizeof(CharT1), CharT1, CharT2>::type,
-               N1 + N2 - 1>
-operator+(const string_literal<CharT1, N1>& x, const string_literal<CharT2, N2>& y) NOEXCEPT;
-
-template <class CharT, std::size_t N>
-class string_literal
-{
-    CharT p_[N];
-
-    CONSTCD11 string_literal() NOEXCEPT
-      : p_{}
-    {}
-
-public:
-    using const_iterator = const CharT*;
-
-    string_literal(string_literal const&) = default;
-    string_literal& operator=(string_literal const&) = delete;
-
-    template <std::size_t N1 = 2,
-              class = typename std::enable_if<N1 == N>::type>
-    CONSTCD11 string_literal(CharT c) NOEXCEPT
-        : p_{c}
-    {
-    }
-
-    template <std::size_t N1 = 3,
-              class = typename std::enable_if<N1 == N>::type>
-    CONSTCD11 string_literal(CharT c1, CharT c2) NOEXCEPT
-        : p_{c1, c2}
-    {
-    }
-
-    template <std::size_t N1 = 4,
-              class = typename std::enable_if<N1 == N>::type>
-    CONSTCD11 string_literal(CharT c1, CharT c2, CharT c3) NOEXCEPT
-        : p_{c1, c2, c3}
-    {
-    }
-
-    CONSTCD14 string_literal(const CharT(&a)[N]) NOEXCEPT
-        : p_{}
-    {
-        for (std::size_t i = 0; i < N; ++i)
-            p_[i] = a[i];
-    }
-
-    template <class U = CharT,
-              class = typename std::enable_if<(1 < sizeof(U))>::type>
-    CONSTCD14 string_literal(const char(&a)[N]) NOEXCEPT
-        : p_{}
-    {
-        for (std::size_t i = 0; i < N; ++i)
-            p_[i] = a[i];
-    }
-
-    template <class CharT2,
-              class = typename std::enable_if<!std::is_same<CharT2, CharT>::value>::type>
-    CONSTCD14 string_literal(string_literal<CharT2, N> const& a) NOEXCEPT
-        : p_{}
-    {
-        for (std::size_t i = 0; i < N; ++i)
-            p_[i] = a[i];
-    }
-
-    CONSTCD11 const CharT* data() const NOEXCEPT {return p_;}
-    CONSTCD11 std::size_t size() const NOEXCEPT {return N-1;}
-
-    CONSTCD11 const_iterator begin() const NOEXCEPT {return p_;}
-    CONSTCD11 const_iterator end()   const NOEXCEPT {return p_ + N-1;}
-
-    CONSTCD11 CharT const& operator[](std::size_t n) const NOEXCEPT
-    {
-        return p_[n];
-    }
-
-    template <class Traits>
-    friend
-    std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os, const string_literal& s)
-    {
-        return os << s.p_;
-    }
-
-    template <class CharT1, class CharT2, std::size_t N1, std::size_t N2>
-    friend
-    CONSTCD14
-    string_literal<typename std::conditional<sizeof(CharT2) <= sizeof(CharT1), CharT1, CharT2>::type,
-                   N1 + N2 - 1>
-    operator+(const string_literal<CharT1, N1>& x, const string_literal<CharT2, N2>& y) NOEXCEPT;
-};
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 3>
-operator+(const string_literal<CharT, 2>& x, const string_literal<CharT, 2>& y) NOEXCEPT
-{
-  return string_literal<CharT, 3>(x[0], y[0]);
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 4>
-operator+(const string_literal<CharT, 3>& x, const string_literal<CharT, 2>& y) NOEXCEPT
-{
-  return string_literal<CharT, 4>(x[0], x[1], y[0]);
-}
-
-template <class CharT1, class CharT2, std::size_t N1, std::size_t N2>
-CONSTCD14
-inline
-string_literal<typename std::conditional<sizeof(CharT2) <= sizeof(CharT1), CharT1, CharT2>::type,
-               N1 + N2 - 1>
-operator+(const string_literal<CharT1, N1>& x, const string_literal<CharT2, N2>& y) NOEXCEPT
-{
-    using CT = typename std::conditional<sizeof(CharT2) <= sizeof(CharT1), CharT1, CharT2>::type;
-
-    string_literal<CT, N1 + N2 - 1> r;
-    std::size_t i = 0;
-    for (; i < N1-1; ++i)
-       r.p_[i] = CT(x.p_[i]);
-    for (std::size_t j = 0; j < N2; ++j, ++i)
-       r.p_[i] = CT(y.p_[j]);
-
-    return r;
-}
-
-
-template <class CharT, class Traits, class Alloc, std::size_t N>
-inline
-std::basic_string<CharT, Traits, Alloc>
-operator+(std::basic_string<CharT, Traits, Alloc> x, const string_literal<CharT, N>& y)
-{
-    x.append(y.data(), y.size());
-    return x;
-}
-
-#if __cplusplus >= 201402  && (!defined(__EDG_VERSION__) || __EDG_VERSION__ > 411) \
-                           && (!defined(__SUNPRO_CC) || __SUNPRO_CC > 0x5150)
-
-template <class CharT,
-          class = std::enable_if_t<std::is_same<CharT, char>{} ||
-                                   std::is_same<CharT, wchar_t>{} ||
-                                   std::is_same<CharT, char16_t>{} ||
-                                   std::is_same<CharT, char32_t>{}>>
-CONSTCD14
-inline
-string_literal<CharT, 2>
-msl(CharT c) NOEXCEPT
-{
-    return string_literal<CharT, 2>{c};
-}
-
-CONSTCD14
-inline
-std::size_t
-to_string_len(std::intmax_t i)
-{
-    std::size_t r = 0;
-    do
-    {
-        i /= 10;
-        ++r;
-    } while (i > 0);
-    return r;
-}
-
-template <std::intmax_t N>
-CONSTCD14
-inline
-std::enable_if_t
-<
-    N < 10,
-    string_literal<char, to_string_len(N)+1>
->
-msl() NOEXCEPT
-{
-    return msl(char(N % 10 + '0'));
-}
-
-template <std::intmax_t N>
-CONSTCD14
-inline
-std::enable_if_t
-<
-    10 <= N,
-    string_literal<char, to_string_len(N)+1>
->
-msl() NOEXCEPT
-{
-    return msl<N/10>() + msl(char(N % 10 + '0'));
-}
-
-template <class CharT, std::intmax_t N, std::intmax_t D>
-CONSTCD14
-inline
-std::enable_if_t
-<
-    std::ratio<N, D>::type::den != 1,
-    string_literal<CharT, to_string_len(std::ratio<N, D>::type::num) +
-                          to_string_len(std::ratio<N, D>::type::den) + 4>
->
-msl(std::ratio<N, D>) NOEXCEPT
-{
-    using R = typename std::ratio<N, D>::type;
-    return msl(CharT{'['}) + msl<R::num>() + msl(CharT{'/'}) +
-                             msl<R::den>() + msl(CharT{']'});
-}
-
-template <class CharT, std::intmax_t N, std::intmax_t D>
-CONSTCD14
-inline
-std::enable_if_t
-<
-    std::ratio<N, D>::type::den == 1,
-    string_literal<CharT, to_string_len(std::ratio<N, D>::type::num) + 3>
->
-msl(std::ratio<N, D>) NOEXCEPT
-{
-    using R = typename std::ratio<N, D>::type;
-    return msl(CharT{'['}) + msl<R::num>() + msl(CharT{']'});
-}
-
-
-#else  // __cplusplus < 201402 || (defined(__EDG_VERSION__) && __EDG_VERSION__ <= 411)
-
-inline
-std::string
-to_string(std::uint64_t x)
-{
-    return std::to_string(x);
-}
-
-template <class CharT>
-inline
-std::basic_string<CharT>
-to_string(std::uint64_t x)
-{
-    auto y = std::to_string(x);
-    return std::basic_string<CharT>(y.begin(), y.end());
-}
-
-template <class CharT, std::intmax_t N, std::intmax_t D>
-inline
-typename std::enable_if
-<
-    std::ratio<N, D>::type::den != 1,
-    std::basic_string<CharT>
->::type
-msl(std::ratio<N, D>)
-{
-    using R = typename std::ratio<N, D>::type;
-    return std::basic_string<CharT>(1, '[') + to_string<CharT>(R::num) + CharT{'/'} +
-                                              to_string<CharT>(R::den) + CharT{']'};
-}
-
-template <class CharT, std::intmax_t N, std::intmax_t D>
-inline
-typename std::enable_if
-<
-    std::ratio<N, D>::type::den == 1,
-    std::basic_string<CharT>
->::type
-msl(std::ratio<N, D>)
-{
-    using R = typename std::ratio<N, D>::type;
-    return std::basic_string<CharT>(1, '[') + to_string<CharT>(R::num) + CharT{']'};
-}
-
-#endif  // __cplusplus < 201402 || (defined(__EDG_VERSION__) && __EDG_VERSION__ <= 411)
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::atto) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'a'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::femto) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'f'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::pico) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'p'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::nano) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'n'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-typename std::enable_if
-<
-    std::is_same<CharT, char>::value,
-    string_literal<char, 3>
->::type
-msl(std::micro) NOEXCEPT
-{
-    return string_literal<char, 3>{'\xC2', '\xB5'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-typename std::enable_if
-<
-    !std::is_same<CharT, char>::value,
-    string_literal<CharT, 2>
->::type
-msl(std::micro) NOEXCEPT
-{
-    return string_literal<CharT, 2>{CharT{static_cast<unsigned char>('\xB5')}};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::milli) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'m'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::centi) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'c'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 3>
-msl(std::deca) NOEXCEPT
-{
-    return string_literal<CharT, 3>{'d', 'a'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::deci) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'d'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::hecto) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'h'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::kilo) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'k'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::mega) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'M'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::giga) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'G'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::tera) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'T'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::peta) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'P'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-msl(std::exa) NOEXCEPT
-{
-    return string_literal<CharT, 2>{'E'};
-}
-
-template <class CharT, class Period>
-CONSTCD11
-inline
-auto
-get_units(Period p)
- -> decltype(msl<CharT>(p) + string_literal<CharT, 2>{'s'})
-{
-    return msl<CharT>(p) + string_literal<CharT, 2>{'s'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-get_units(std::ratio<1>)
-{
-    return string_literal<CharT, 2>{'s'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-get_units(std::ratio<3600>)
-{
-    return string_literal<CharT, 2>{'h'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 4>
-get_units(std::ratio<60>)
-{
-    return string_literal<CharT, 4>{'m', 'i', 'n'};
-}
-
-template <class CharT>
-CONSTCD11
-inline
-string_literal<CharT, 2>
-get_units(std::ratio<86400>)
-{
-    return string_literal<CharT, 2>{'d'};
-}
-
-template <class CharT, class Traits = std::char_traits<CharT>>
-struct make_string;
-
-template <>
-struct make_string<char>
-{
-    template <class Rep>
-    static
-    std::string
-    from(Rep n)
-    {
-        return std::to_string(n);
-    }
-};
-
-template <class Traits>
-struct make_string<char, Traits>
-{
-    template <class Rep>
-    static
-    std::basic_string<char, Traits>
-    from(Rep n)
-    {
-        auto s = std::to_string(n);
-        return std::basic_string<char, Traits>(s.begin(), s.end());
-    }
-};
-
-template <>
-struct make_string<wchar_t>
-{
-    template <class Rep>
-    static
-    std::wstring
-    from(Rep n)
-    {
-        return std::to_wstring(n);
-    }
-};
-
-template <class Traits>
-struct make_string<wchar_t, Traits>
-{
-    template <class Rep>
-    static
-    std::basic_string<wchar_t, Traits>
-    from(Rep n)
-    {
-        auto s = std::to_wstring(n);
-        return std::basic_string<wchar_t, Traits>(s.begin(), s.end());
-    }
-};
-
-}  // namespace detail
-
 template <class CharT, class Traits, class Rep, class Period>
 inline
 std::basic_ostream<CharT, Traits>&
@@ -8327,6 +7938,10 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
 }
 
 }  // namespace date
+
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
 
 #ifdef __GNUC__
 # pragma GCC diagnostic pop

@@ -41,7 +41,7 @@ namespace UKControllerPlugin {
                 void UpdateHoldProfile(HWND hwnd);
 
                 // The ES menu item that triggered this dialog - it should be notified when changes occur
-                UKControllerPlugin::Hold::HoldConfigurationMenuItem * configurationItem;
+                UKControllerPlugin::Hold::HoldConfigurationMenuItem * configurationItem = nullptr;
 
                 // Manages hold profiles
                 UKControllerPlugin::Hold::HoldProfileManager & holdProfileManager;

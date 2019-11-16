@@ -13,6 +13,7 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "update/PluginVersion.h"
 #include "command/CommandHandlerCollection.h"
+#include "euroscope/EuroscopeSectorFileElementWrapper.h"
 
 using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPlugin::Windows::WinApiInterface;
@@ -33,6 +34,9 @@ using UKControllerPlugin::RadarScreen::RadarScreenFactory;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PluginVersion;
 using UKControllerPlugin::Command::CommandHandlerCollection;
+using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
+using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementWrapper;
+using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
 
 namespace UKControllerPlugin {
 
@@ -45,7 +49,8 @@ namespace UKControllerPlugin {
         const RadarScreenFactory & radarScreenFactory,
         const MetarEventHandlerCollection & metarHandlers,
         const FunctionCallEventHandler & functionCallHandler,
-        const CommandHandlerCollection & commandHandlers
+        const CommandHandlerCollection & commandHandlers,
+        const RunwayDialogAwareCollection & runwayDialogHandlers
     )
         : UKPlugin::CPlugIn(
             EuroScopePlugIn::COMPATIBILITY_CODE,
@@ -62,7 +67,8 @@ namespace UKControllerPlugin {
         radarScreenFactory(radarScreenFactory),
         metarHandlers(metarHandlers),
         functionCallHandler(functionCallHandler),
-        commandHandlers(commandHandlers)
+        commandHandlers(commandHandlers),
+        runwayDialogHandlers(runwayDialogHandlers)
     {
     }
 
@@ -179,13 +185,35 @@ namespace UKControllerPlugin {
     }
 
     /*
+        Get all the sector file elements by type
+    */
+    std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> UKPlugin::GetAllElementsByType(int type)
+    {
+        this->SelectActiveSectorfile();
+        EuroScopePlugIn::CSectorElement selected = this->SectorFileElementSelectFirst(type);
+        EuroScopePlugIn::CSectorElement first = selected;
+
+        std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> elements;
+
+        while (true) {
+            if (!selected.IsValid()) {
+                break;
+            }
+
+            elements.insert(std::make_shared<EuroscopeSectorFileElementWrapper>(selected));
+            selected = this->SectorFileElementSelectNext(selected, type);
+        }
+
+        return std::move(elements);
+    }
+
+    /*
         Gets a given key from user settings.
     */
     std::string UKPlugin::GetKey(std::string key)
     {
         return this->KeyExists(key) ?  this->GetDataFromSettings(key.c_str()) : "";
     }
-
 
     /*
         Returns whether or not a key exists in user settings.
@@ -414,6 +442,14 @@ namespace UKControllerPlugin {
     void UKPlugin::OnNewMetarReceived(const char * sStation, const char * sFullMetar)
     {
         this->metarHandlers.NewMetarEvent(sStation, sFullMetar);
+    }
+
+    /*
+        Called when someone clicks OK on the runway settings dialog.
+    */
+    void UKPlugin::OnAirportRunwayActivityChanged(void)
+    {
+        this->runwayDialogHandlers.RunwayDialogSaved();
     }
 
     /*
