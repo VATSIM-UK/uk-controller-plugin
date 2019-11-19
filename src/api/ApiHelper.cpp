@@ -254,6 +254,11 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildMinStackLevelRequest()).GetRawData();
         }
 
+        nlohmann::json ApiHelper::GetUri(std::string uri) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildGetUriRequest(uri)).GetRawData();
+        }
+
         /*
             Get a dependency from the API
         */

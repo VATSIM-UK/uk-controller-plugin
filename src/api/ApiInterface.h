@@ -39,6 +39,7 @@ namespace UKControllerPlugin {
                 virtual nlohmann::json GetDependency(
                     UKControllerPlugin::Dependency::DependencyData dependency
                 ) const = 0;
+                virtual nlohmann::json GetUri(std::string uri) const = 0;
                 virtual void DeleteUserHoldProfile(unsigned int profileId) const = 0;
                 virtual unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const = 0;
                 virtual void UpdateUserHoldProfile(

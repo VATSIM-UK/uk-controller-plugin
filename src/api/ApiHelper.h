@@ -52,6 +52,7 @@ namespace UKControllerPlugin {
                 nlohmann::json GetGenericHoldProfiles(void) const override;
                 nlohmann::json GetUserHoldProfiles(void) const override;
                 nlohmann::json GetMinStackLevels(void) const;
+                nlohmann::json GetUri(std::string uri) const;
                 nlohmann::json GetDependency(
                     UKControllerPlugin::Dependency::DependencyData dependency
                 ) const override;

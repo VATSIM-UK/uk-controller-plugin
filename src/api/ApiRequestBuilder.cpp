@@ -54,6 +54,13 @@ namespace UKControllerPlugin {
             );
         }
 
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildGetUriRequest(std::string uri) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(apiDomain + uri, CurlRequest::METHOD_GET)
+            );
+        }
+
         /*
             Builds a request to return a static file stored on the API. This request
             does not need authentication headers.

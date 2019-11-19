@@ -18,6 +18,9 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Curl::CurlRequest BuildDependencyRequest(
                     UKControllerPlugin::Dependency::DependencyData dependency
                 ) const;
+                UKControllerPlugin::Curl::CurlRequest BuildGetUriRequest(
+                    std::string uri
+                ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildSquawkAssignmentCheckRequest(std::string callsign) const;
                 UKControllerPlugin::Curl::CurlRequest BuildSquawkAssignmentDeletionRequest(std::string callsign) const;
                 UKControllerPlugin::Curl::CurlRequest BuildLocalSquawkAssignmentRequest(
