@@ -969,6 +969,9 @@
     <ClInclude Include="..\..\src\dependency\Dependency.h">
       <Filter>src\dependency</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyLoaderInterface.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">

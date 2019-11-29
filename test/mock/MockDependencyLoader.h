@@ -1,13 +1,12 @@
 #pragma once
-#include "DependencyLoader.h"
+#include "dependency/DependencyLoaderInterface.h"
 
 namespace UKControllerPluginTest {
-    namespace Update {
-        class MockDependencyLoader : public UKControllerPlugin::Update::DependencyLoader
+    namespace Dependency {
+        class MockDependencyLoader : public UKControllerPlugin::Dependency::DependencyLoaderInterface
         {
             public:
-                MockDependencyLoader() : DependencyLoader(NULL, NULL) {}
-                MOCK_CONST_METHOD1(GetDependency, std::string(std::string));
+                MOCK_METHOD2(LoadDependency, nlohmann::json(std::string, nlohmann::json));
         };
     }  // namespace Update
 }  // namespace UKControllerPluginTest

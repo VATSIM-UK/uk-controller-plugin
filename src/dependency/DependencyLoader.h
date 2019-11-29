@@ -1,5 +1,5 @@
 #pragma once
-#include "dependency/Dependency.h"
+#include "dependency/DependencyLoaderInterface.h"
 #include "api/ApiInterface.h"
 #include "windows/WinApiInterface.h"
 
@@ -10,14 +10,14 @@ namespace UKControllerPlugin {
             A class that is responsible for loading dependencies
             off of the filesystem.
         */
-        class DependencyLoader
+        class DependencyLoader : public DependencyLoaderInterface
         {
             public:
                 DependencyLoader(
                     UKControllerPlugin::Windows::WinApiInterface& filesystem
                 );
 
-                nlohmann::json LoadDependency(std::string key , nlohmann::json defaultValue);
+                nlohmann::json LoadDependency(std::string key , nlohmann::json defaultValue) override;
 
             private:
 
