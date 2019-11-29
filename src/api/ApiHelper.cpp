@@ -222,6 +222,11 @@ namespace UKControllerPlugin {
             return this->requestBuilder.GetApiKey();
         }
 
+        nlohmann::json ApiHelper::GetDependencyList(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildDependencyListRequest()).GetRawData();
+        }
+
         /*
             Returns the hold data dependency
         */

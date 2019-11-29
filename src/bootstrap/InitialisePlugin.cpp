@@ -40,6 +40,8 @@
 #include "datablock/DatablockBoostrap.h"
 #include "websocket/WebsocketBootstrap.h"
 #include "sectorfile/SectorFileBootstrap.h"
+#include "dependency/UpdateDependencies.h"
+#include "dependency/DependencyLoader.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -74,6 +76,7 @@ using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
 using UKControllerPlugin::Dependency::DependencyProviderInterface;
 using UKControllerPlugin::Dependency::GetDependencyProvider;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
+using UKControllerPlugin::Dependency::DependencyLoader;
 
 namespace UKControllerPlugin {
 
@@ -186,11 +189,14 @@ namespace UKControllerPlugin {
         }
 
         // Dependency loading can happen regardless of plugin version or API status.
-        DependencyCache dependencyCache = DependencyBootstrap::Bootstrap(
+        UKControllerPlugin::Dependency::UpdateDependencies(
             *this->container->api,
-            *this->container->windows,
-            *this->container->curl
+            *this->container->windows
         );
+        DependencyLoader loader(
+            *this->container->windows
+        );
+        DependencyCache dependencyCache;
 
         // Load all the "new" dependencies that don't come from a manifest.
         std::unique_ptr<DependencyProviderInterface> dependencyProvider = GetDependencyProvider(

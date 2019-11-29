@@ -48,6 +48,7 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(std::string callsign) const override;
                 std::string GetApiDomain(void) const override;
                 std::string GetApiKey(void) const override;
+                nlohmann::json GetDependencyList(void) const override;
                 nlohmann::json GetHoldDependency(void) const override;
                 nlohmann::json GetGenericHoldProfiles(void) const override;
                 nlohmann::json GetUserHoldProfiles(void) const override;

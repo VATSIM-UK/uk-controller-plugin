@@ -28,6 +28,7 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(CheckApiAuthorisation, bool(void));
                 MOCK_CONST_METHOD1(DeleteSquawkAssignment, void(std::string));
                 MOCK_CONST_METHOD0(FetchDependencyManifest, UKControllerPlugin::Api::RemoteFileManifest(void));
+                MOCK_CONST_METHOD0(GetDependencyList, nlohmann::json(void));
                 MOCK_CONST_METHOD1(FetchRemoteFile, std::string(std::string));
                 MOCK_CONST_METHOD1(GetAssignedSquawk, UKControllerPlugin::Squawk::ApiSquawkAllocation(std::string));
                 MOCK_CONST_METHOD0(GetApiDomain, std::string(void));

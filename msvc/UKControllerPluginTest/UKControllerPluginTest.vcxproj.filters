@@ -737,6 +737,14 @@
     <ClCompile Include="..\..\test\test\euroscope\RunwayDialogAwareCollectionTest.cpp">
       <Filter>test\euroscope</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
+    <ClCompile Include="..\..\test\test\dependency\UpdateDependenciesTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\DependencyLoaderTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

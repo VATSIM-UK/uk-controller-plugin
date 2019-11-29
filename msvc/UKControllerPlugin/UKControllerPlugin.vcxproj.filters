@@ -960,6 +960,15 @@
     <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareCollection.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\dependency\UpdateDependencies.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyLoader.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\Dependency.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1635,6 +1644,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\RunwayDialogAwareCollection.cpp">
       <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\UpdateDependencies.cpp">
+      <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\DependencyLoader.cpp">
+      <Filter>src\dependency</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

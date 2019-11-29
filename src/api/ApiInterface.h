@@ -26,6 +26,7 @@ namespace UKControllerPlugin {
                 virtual bool CheckApiAuthorisation(void) const = 0;
                 virtual void DeleteSquawkAssignment(std::string callsign) const = 0;
                 virtual UKControllerPlugin::Api::RemoteFileManifest FetchDependencyManifest(void) const = 0;
+                virtual nlohmann::json GetDependencyList(void) const = 0;
                 virtual std::string FetchRemoteFile(std::string uri) const = 0;
                 virtual UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(
                     std::string callsign
