@@ -1,32 +1,29 @@
 #include "pch/stdafx.h"
 #include "initialaltitude/InitialAltitudeGeneratorFactory.h"
 #include "initialaltitude/InitialAltitudeGenerator.h"
-#include "dependency/DependencyCache.h"
+#include "dependency/DependencyLoaderInterface.h"
 
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator;
 namespace UKControllerPlugin {
     namespace InitialAltitude {
 
         // The JSON file that will contain the dependencies we need for this module.
-        static const std::string initialAltitudeFileDependency = "initial-altitudes.json";
+        static const std::string initialAltitudeFileDependency = "DEPENDENCY_SID";
+
+        // The default dependency value
+        static const nlohmann::json sidsDependencyDefault = nlohmann::json::array();
 
         /*
             Creates an InitialAltitudeGenerator factory. Only includes IAs that are integers.
         */
         std::unique_ptr<InitialAltitudeGenerator> InitialAltitudeGeneratorFactory::Create(
-            const DependencyCache & dependency
+            DependencyLoaderInterface & dependency
         ) {
             std::unique_ptr<InitialAltitudeGenerator> generator(new InitialAltitudeGenerator);
-            nlohmann::json dependencyData;
-            try {
-                dependencyData = nlohmann::json::parse(dependency.GetDependency(initialAltitudeFileDependency));
-            } catch (nlohmann::json::exception) {
-                // If the JSON fails to parse, nothing we can do here, so just let the default value return.
-                LogError("Found dependency data for initial altitudes, but the JSON was invalid");
-                return generator;
-            } catch (std::out_of_range) {
-                LogError("Could not find dependency data for initial altitudes");
+            nlohmann::json dependencyData = dependency.LoadDependency(initialAltitudeFileDependency, sidsDependencyDefault);
+            if (dependencyData == sidsDependencyDefault) {
+                LogError("Initial altitude dependency not found");
                 return generator;
             }
 

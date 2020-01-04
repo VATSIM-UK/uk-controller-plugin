@@ -8,7 +8,7 @@
 
 using UKControllerPlugin::InitialAltitude::InitialAltitudeGeneratorFactory;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagFunction;
@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
             and registers the event handler to receive flightplan events.
         */
         void InitialAltitudeModule::BootstrapPlugin(
-            DependencyCache & dependency,
+            DependencyLoaderInterface & dependency,
             PersistenceContainer & persistence
         ) {
             persistence.initialAltitudes = InitialAltitudeGeneratorFactory::Create(dependency);

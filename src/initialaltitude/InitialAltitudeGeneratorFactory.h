@@ -4,7 +4,7 @@
 // Forward declare
 namespace UKControllerPlugin {
     namespace Dependency {
-        class DependencyCache;
+        class DependencyLoaderInterface;
     }  // namespace Dependency
 }  // namespace UKControllerPlugin
 
@@ -27,7 +27,7 @@ namespace UKControllerPlugin {
         {
             public:
                 static std::unique_ptr<UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator> Create(
-                    const UKControllerPlugin::Dependency::DependencyCache & dependency
+                    UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
                 );
         };
     }  // namespace InitialAltitude

@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
                 virtual nlohmann::json LoadDependency(
                     std::string key,
                     nlohmann::json defaultValue
-                ) = 0;
+                ) noexcept = 0;
         };
 
     }  // namespace Dependency

@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
         /*
             Loads the requested dependency, but returns the default on error.
         */
-        nlohmann::json DependencyLoader::LoadDependency(std::string key, nlohmann::json defaultValue)
+        nlohmann::json DependencyLoader::LoadDependency(std::string key, nlohmann::json defaultValue) noexcept
         {
             if (!this->fileMap.count(key)) {
                 LogWarning("Dependency " + key + " does not exist in file map");

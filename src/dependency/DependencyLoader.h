@@ -17,7 +17,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Windows::WinApiInterface& filesystem
                 );
 
-                nlohmann::json LoadDependency(std::string key , nlohmann::json defaultValue) override;
+                nlohmann::json LoadDependency(std::string key , nlohmann::json defaultValue) noexcept override;
 
             private:
 
