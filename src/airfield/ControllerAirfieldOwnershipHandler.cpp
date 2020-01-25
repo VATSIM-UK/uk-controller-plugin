@@ -87,7 +87,6 @@ namespace UKControllerPlugin {
 
             // Perform a match based on frequency and facility to find the canonical position
             ControllerPositionParser parser;
-            std::shared_ptr<ControllerPosition> pos;
             try {
                 this->SetupPosition(controller, this->controllers.FetchPositionByFacilityAndFrequency(
                     parser.ParseFacilityFromCallsign(controller.GetCallsign()),
