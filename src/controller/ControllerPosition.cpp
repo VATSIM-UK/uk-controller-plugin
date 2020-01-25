@@ -35,6 +35,15 @@ namespace UKControllerPlugin {
             return this->type;
         }
 
+        bool ControllerPosition::HasTopdownAirfield(std::string icao) const
+        {
+            return std::find(
+                this->topdown.cbegin(),
+                this->topdown.cend(),
+                icao
+            ) != this->topdown.cend();
+        }
+
         std::vector<std::string> ControllerPosition::GetTopdown(void) const
         {
             return this->topdown;
