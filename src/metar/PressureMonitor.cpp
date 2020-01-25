@@ -3,18 +3,20 @@
 #include "metar/MetarParsingFunctions.h"
 #include "metar/PressureChangeMessage.h"
 #include "euroscope/GeneralSettingsEntries.h"
+#include "controller/ControllerPosition.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Metar::PressureChangeMessage;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
 
 namespace UKControllerPlugin {
     namespace Metar {
 
 
-        PressureMonitor::PressureMonitor(UserMessager & userMessager)
-            : userMessager(userMessager)
+        PressureMonitor::PressureMonitor(UserMessager & userMessager, const ActiveCallsignCollection& activeCallsigns)
+            : userMessager(userMessager), activeCallsigns(activeCallsigns)
         {
 
         }
@@ -62,7 +64,13 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            if (this->notificationsEnabled) {
+            if (
+                this->notificationsEnabled &&
+                this->activeCallsigns.UserHasCallsign() &&
+                this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().HasTopdownAirfield(station)
+            ) {
+
+
                // Send message
                 PressureChangeMessage message(station, this->qnhs.at(station), newQnh);
                 this->userMessager.SendMessageToUser(message);
