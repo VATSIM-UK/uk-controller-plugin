@@ -6,7 +6,7 @@ namespace UKControllerPluginTest {
         class MockDependencyLoader : public UKControllerPlugin::Dependency::DependencyLoaderInterface
         {
             public:
-                MOCK_METHOD2(LoadDependency, nlohmann::json(std::string, nlohmann::json));
+                MOCK_METHOD(nlohmann::json, LoadDependency, (std::string, nlohmann::json), (noexcept));
         };
     }  // namespace Update
 }  // namespace UKControllerPluginTest

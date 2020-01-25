@@ -232,7 +232,7 @@ namespace UKControllerPlugin {
             this->updateStatus == PluginUpdateChecker::versionAllowed &&
             !this->duplicatePlugin->Duplicate()
         ) {
-            InitialAltitudeModule::BootstrapPlugin(dependencyCache, *this->container);
+            InitialAltitudeModule::BootstrapPlugin(loader, *this->container);
         }
 
         IntentionCodeModule::BootstrapPlugin(*this->container);

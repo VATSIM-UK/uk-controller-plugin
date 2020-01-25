@@ -1,6 +1,6 @@
 #include "pch/pch.h"
 #include "initialaltitude/InitialAltitudeModule.h"
-#include "dependency/DependencyCache.h"
+#include "mock/MockDependencyLoader.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
@@ -8,11 +8,12 @@
 
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using ::testing::Test;
+using ::testing::NiceMock;
 
 namespace UKControllerPluginTest {
     namespace InitialAltitude {
@@ -29,7 +30,7 @@ namespace UKControllerPluginTest {
                 }
 
                 PersistenceContainer container;
-                DependencyCache dependency;
+                NiceMock<MockDependencyLoader> dependency;
         };
 
         TEST_F(InitialAltitudeModuleTest, BootstrapPluginCreatesInitialAltitudes)

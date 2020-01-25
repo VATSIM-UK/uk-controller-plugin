@@ -9,7 +9,7 @@ namespace UKControllerPlugin {
     namespace InitialAltitude {
 
         // The JSON file that will contain the dependencies we need for this module.
-        static const std::string initialAltitudeFileDependency = "DEPENDENCY_SID";
+        static const std::string initialAltitudeFileDependency = "DEPENDENCY_INITIAL_ALTITUDES";
 
         // The default dependency value
         static const nlohmann::json sidsDependencyDefault = nlohmann::json::array();
