@@ -5,7 +5,7 @@ namespace UKControllerPlugin {
         struct PersistenceContainer;
     }  // namespace Bootstrap
     namespace Dependency {
-        class DependencyCache;
+        class DependencyLoaderInterface;
     }  // namespace Dependency
 }  // namespace UKControllerPlugin
 
@@ -13,13 +13,12 @@ namespace UKControllerPlugin {
 namespace UKControllerPlugin {
     namespace Wake {
 
-        // The file we get dependencies from
-        extern const std::string dependencyFile;
         extern const int tagItemId;
+        extern const std::string wakeDependencyKey;
 
         void BootstrapPlugin(
             const UKControllerPlugin::Bootstrap::PersistenceContainer & container,
-            const UKControllerPlugin::Dependency::DependencyCache & dependencies
+            UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies
         );
 
     }  // namespace Wake

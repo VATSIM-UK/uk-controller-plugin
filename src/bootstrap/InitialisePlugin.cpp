@@ -211,7 +211,7 @@ namespace UKControllerPlugin {
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
 
         // Bootstrap helpers
-        UKControllerPlugin::Wake::BootstrapPlugin(*this->container, dependencyCache);
+        UKControllerPlugin::Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
         DeferredEventBootstrap(*this->container->timedHandler);
