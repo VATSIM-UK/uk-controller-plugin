@@ -3,6 +3,7 @@
 #include "euroscope/UserSetting.h"
 #include "message/UserMessager.h"
 #include "euroscope/UserSettingAwareInterface.h"
+#include "controller/ActiveCallsignCollection.h"
 
 namespace UKControllerPlugin {
     namespace Metar {
@@ -16,8 +17,9 @@ namespace UKControllerPlugin {
         {
             public:
 
-                explicit PressureMonitor(
-                    UKControllerPlugin::Message::UserMessager & userMessager
+                PressureMonitor(
+                    UKControllerPlugin::Message::UserMessager & userMessager,
+                    const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns
                 );
                 std::string GetStoredQnh(std::string station) const;
                 bool NotificationsEnabled(void) const;
@@ -42,6 +44,9 @@ namespace UKControllerPlugin {
 
                 // Interface with ES for sending messages to the user about pressure changes.
                 UKControllerPlugin::Message::UserMessager & userMessager;
+
+                // All the active controller callsigns
+                const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns;
         };
     }  // namespace Metar
 }  // namespace UKControllerPlugin

@@ -78,5 +78,18 @@ namespace UKControllerPluginTest {
             ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
             EXPECT_TRUE("EGFF" == controller.GetUnit());
         }
+
+        TEST(ControllerPosition, ItReturnsTrueOnTopdownAirfield)
+        {
+            ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
+            EXPECT_TRUE(controller.HasTopdownAirfield("EGFF"));
+            EXPECT_TRUE(controller.HasTopdownAirfield("EGGD"));
+        }
+
+        TEST(ControllerPosition, ItReturnsFalseOnNoTopdownAirfield)
+        {
+            ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
+            EXPECT_FALSE(controller.HasTopdownAirfield("EGLL"));
+        }
     }  // namespace Controller
 }  // namespace UKControllerPluginTest

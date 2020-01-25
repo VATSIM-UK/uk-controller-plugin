@@ -13,7 +13,9 @@ namespace UKControllerPlugin {
         */
         void PressureMonitorBootstrap(const PersistenceContainer & container)
         {
-            std::shared_ptr<PressureMonitor> handler(new PressureMonitor(*container.userMessager));
+            std::shared_ptr<PressureMonitor> handler(
+                new PressureMonitor(*container.userMessager, *container.activeCallsigns)
+            );
 
             container.metarEventHandler->RegisterHandler(handler);
             container.userSettingHandlers->RegisterHandler(handler);

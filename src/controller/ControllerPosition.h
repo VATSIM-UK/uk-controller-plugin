@@ -20,6 +20,7 @@ namespace UKControllerPlugin {
                 double GetFrequency(void) const;
                 std::vector<std::string> GetTopdown(void) const;
                 std::string GetType(void) const;
+                bool HasTopdownAirfield(std::string icao) const;
                 bool operator==(const ControllerPosition & position) const;
 
             private:
