@@ -54,8 +54,10 @@ namespace UKControllerPlugin {
             // Copenhagen
             points["VAXIT"] = std::make_unique<SectorExitPoint>("VAXIT", "K1", SectorExitPoint::outEast);
             points["TINAC"] = std::make_unique<SectorExitPoint>("TINAC", "K2", SectorExitPoint::outEast);
-            points["PETIL"] = std::make_unique<SectorExitPoint>("PETIL", "K3", SectorExitPoint::outEast);
-            points["INBOB"] = std::make_unique<SectorExitPoint>("INBOB", "K4", SectorExitPoint::outEast);
+            points["PETIL"] = std::make_unique<SectorExitPoint>("PETIL", "K2", SectorExitPoint::outEast);
+            points["INBOB"] = std::make_unique<SectorExitPoint>("INBOB", "K3", SectorExitPoint::outEast);
+            points["LESRA"] = std::make_unique<SectorExitPoint>("LESRA", "K3", SectorExitPoint::outEast);
+            points["SOPTO"] = std::make_unique<SectorExitPoint>("SOPTO", "K3", SectorExitPoint::outEast);
 
             // Stavanger
             points["PEPIN"] = std::make_unique<SectorExitPoint>("PEPIN", "Z1", SectorExitPoint::outEast);

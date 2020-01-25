@@ -108,13 +108,23 @@ namespace UKControllerPluginTest {
 
             // PETIL
             ASSERT_TRUE(repo->GetSectorExitPoint("PETIL").GetName().compare("PETIL") == 0);
-            ASSERT_TRUE(repo->GetSectorExitPoint("PETIL").GetIntentionCode(mockRoute, 0, 37000).compare("K3") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("PETIL").GetIntentionCode(mockRoute, 0, 37000).compare("K2") == 0);
             ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("PETIL").GetOutDirection());
 
             // INBOB
             ASSERT_TRUE(repo->GetSectorExitPoint("INBOB").GetName().compare("INBOB") == 0);
-            ASSERT_TRUE(repo->GetSectorExitPoint("INBOB").GetIntentionCode(mockRoute, 0, 37000).compare("K4") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("INBOB").GetIntentionCode(mockRoute, 0, 37000).compare("K3") == 0);
             ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("INBOB").GetOutDirection());
+
+            // LESRA
+            ASSERT_TRUE(repo->GetSectorExitPoint("LESRA").GetName().compare("LESRA") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("LESRA").GetIntentionCode(mockRoute, 0, 37000).compare("K3") == 0);
+            ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("LESRA").GetOutDirection());
+
+            // SOPTO
+            ASSERT_TRUE(repo->GetSectorExitPoint("SOPTO").GetName().compare("SOPTO") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("SOPTO").GetIntentionCode(mockRoute, 0, 37000).compare("K3") == 0);
+            ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("SOPTO").GetOutDirection());
 
             // Stavanger
 
