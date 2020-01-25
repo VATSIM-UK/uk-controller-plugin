@@ -261,7 +261,7 @@ namespace UKControllerPlugin {
         );
 
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, dependencyCache);
-        PrenoteModule::BootstrapPlugin(*this->container, dependencyCache);
+        PrenoteModule::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap other things
         ActualOffBlockTimeBootstrap::BootstrapPlugin(*this->container);
