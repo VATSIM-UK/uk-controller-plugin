@@ -8,5 +8,5 @@ namespace UKControllerPluginTest {
             public:
                 MOCK_METHOD(nlohmann::json, LoadDependency, (std::string, nlohmann::json), (noexcept));
         };
-    }  // namespace Update
+    }  // namespace Dependency
 }  // namespace UKControllerPluginTest

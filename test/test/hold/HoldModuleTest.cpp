@@ -89,10 +89,16 @@ namespace UKControllerPluginTest {
                     profile2["name"] = "Heathrow Director";
                     profile2["holds"] = { 1, 2, 3 };
 
-                    ON_CALL(this->mockDependencyProvider, LoadDependency("DEPENDENCY_HOLDS", nlohmann::json::array()))
+                    ON_CALL(
+                        this->mockDependencyProvider,
+                        LoadDependency("DEPENDENCY_HOLDS", nlohmann::json::array())
+                    )
                         .WillByDefault(Return(nlohmann::json::array({ hold, hold2 })));
 
-                    ON_CALL(this->mockDependencyProvider, LoadDependency("DEPENDENCY_HOLD_PROFILE", nlohmann::json::array()))
+                    ON_CALL(
+                        this->mockDependencyProvider,
+                        LoadDependency("DEPENDENCY_HOLD_PROFILE", nlohmann::json::array())
+                    )
                         .WillByDefault(Return(nlohmann::json::array({ profile1, profile2 })));
 
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);

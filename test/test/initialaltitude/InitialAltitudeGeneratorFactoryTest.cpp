@@ -49,7 +49,8 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return("{\"EGKK\": {\"ADMAG2X\":6000, \"DVR8M\":\"abc\"}}"_json));
             EXPECT_EQ(
                 6000,
-                InitialAltitudeGeneratorFactory::Create(this->mockLoader)->GetInitialAltitudeForDeparture("EGKK", "ADMAG2X")
+                InitialAltitudeGeneratorFactory::Create(this->mockLoader)
+                    ->GetInitialAltitudeForDeparture("EGKK", "ADMAG2X")
             );
         }
 
@@ -59,15 +60,22 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return("{\"EGKK\": {\"#ADMAG2X\":6000, \"DVR8M\":\"abc\"}}"_json));
             EXPECT_EQ(
                 6000,
-                InitialAltitudeGeneratorFactory::Create(this->mockLoader)->GetInitialAltitudeForDeparture("EGKK", "ADMAG2X")
+                InitialAltitudeGeneratorFactory::Create(this->mockLoader)
+                    ->GetInitialAltitudeForDeparture("EGKK", "ADMAG2X")
             );
         }
 
         TEST_F(InitialAltitudeGeneratorFactoryTest, CreateProcessesMultipleAirfields)
         {
-            ON_CALL(this->mockLoader, LoadDependency("DEPENDENCY_INITIAL_ALTITUDES", nlohmann::json::array()))
-                .WillByDefault(Return("{\"EGKK\": {\"ADMAG2X\":6000, \"SAM1X\":5000}, \"EGLC\": {\"BPK1A\" : 3000}}"_json));
-            std::unique_ptr<InitialAltitudeGenerator> initial = InitialAltitudeGeneratorFactory::Create(this->mockLoader);
+            ON_CALL(
+                this->mockLoader,
+                LoadDependency("DEPENDENCY_INITIAL_ALTITUDES", nlohmann::json::array())
+            )
+                .WillByDefault(
+                    Return("{\"EGKK\": {\"ADMAG2X\":6000, \"SAM1X\":5000}, \"EGLC\": {\"BPK1A\" : 3000}}"_json)
+                );
+            std::unique_ptr<InitialAltitudeGenerator> initial =
+                InitialAltitudeGeneratorFactory::Create(this->mockLoader);
             EXPECT_EQ(6000, initial->GetInitialAltitudeForDeparture("EGKK", "ADMAG2X"));
             EXPECT_EQ(5000, initial->GetInitialAltitudeForDeparture("EGKK", "SAM1X"));
             EXPECT_EQ(3000, initial->GetInitialAltitudeForDeparture("EGLC", "BPK1A"));
@@ -75,9 +83,15 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeGeneratorFactoryTest, KeepsGoingIfDuplicateDeparture)
         {
-            ON_CALL(this->mockLoader, LoadDependency("DEPENDENCY_INITIAL_ALTITUDES", nlohmann::json::array()))
-                .WillByDefault(Return("{\"EGKK\": {\"ADMAG2X\":6000, \"ADMAG2X\":6000}, \"EGLC\": {\"BPK1A\" : 3000}}"_json));
-            std::unique_ptr<InitialAltitudeGenerator> initial = InitialAltitudeGeneratorFactory::Create(this->mockLoader);
+            ON_CALL(
+                this->mockLoader,
+                LoadDependency("DEPENDENCY_INITIAL_ALTITUDES", nlohmann::json::array())
+            )
+                .WillByDefault(
+                    Return("{\"EGKK\": {\"ADMAG2X\":6000, \"ADMAG2X\":6000}, \"EGLC\": {\"BPK1A\" : 3000}}"_json)
+                );
+            std::unique_ptr<InitialAltitudeGenerator> initial =
+                InitialAltitudeGeneratorFactory::Create(this->mockLoader);
             EXPECT_EQ(6000, initial->GetInitialAltitudeForDeparture("EGKK", "ADMAG2X"));
             EXPECT_EQ(3000, initial->GetInitialAltitudeForDeparture("EGLC", "BPK1A"));
         }

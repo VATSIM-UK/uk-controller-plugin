@@ -25,8 +25,10 @@ using UKControllerPlugin::Command::CommandHandlerCollection;
 namespace UKControllerPlugin {
     namespace Bootstrap {
 
-        void CollectionBootstrap::BootstrapPlugin(PersistenceContainer & persistence, DependencyLoaderInterface & dependency)
-        {
+        void CollectionBootstrap::BootstrapPlugin(
+            PersistenceContainer & persistence,
+            DependencyLoaderInterface & dependency
+        ) {
             // Reset resources
             persistence.activeCallsigns.reset(new ActiveCallsignCollection);
             persistence.airfields = std::move(AirfieldCollectionFactory::Create(dependency));

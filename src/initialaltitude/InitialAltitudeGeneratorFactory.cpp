@@ -21,7 +21,11 @@ namespace UKControllerPlugin {
             DependencyLoaderInterface & dependency
         ) {
             std::unique_ptr<InitialAltitudeGenerator> generator(new InitialAltitudeGenerator);
-            nlohmann::json dependencyData = dependency.LoadDependency(initialAltitudeFileDependency, sidsDependencyDefault);
+            nlohmann::json dependencyData = dependency.LoadDependency(
+                initialAltitudeFileDependency,
+                sidsDependencyDefault
+            );
+
             if (dependencyData == sidsDependencyDefault) {
                 LogError("Initial altitude dependency not found");
                 return generator;

@@ -1,5 +1,5 @@
 #include "pch/stdafx.h"
-#include "DependencyLoader.h"
+#include "dependency/DependencyLoader.h"
 
 
 namespace UKControllerPlugin {
@@ -49,7 +49,9 @@ namespace UKControllerPlugin {
             nlohmann::json dependencies;
             try
             {
-                dependencies = nlohmann::json::parse(this->filesystem.ReadFromFile("dependencies/dependency-list.json"));
+                dependencies = nlohmann::json::parse(
+                    this->filesystem.ReadFromFile("dependencies/dependency-list.json")
+                );
             } catch (nlohmann::json::exception) {
                 LogWarning("Unable to parse JSON in dependency list, dependencies not loaded");
                 return;

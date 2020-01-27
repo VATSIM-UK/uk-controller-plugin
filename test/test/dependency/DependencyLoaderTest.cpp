@@ -73,7 +73,7 @@ namespace UKControllerPluginTest {
             DependencyLoader loader(this->mockWindows);
             EXPECT_EQ(this->dependency1, loader.LoadDependency("DEPENDENCY_ONE", "{}"));
             EXPECT_EQ(this->dependency2, loader.LoadDependency("DEPENDENCY_TWO", "{}"));
-        }   
+        }
 
         TEST_F(DependencyLoaderTest, ItDoesntLoadIfNoDependencyList)
         {

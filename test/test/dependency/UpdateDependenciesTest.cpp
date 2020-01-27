@@ -151,7 +151,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(this->dependency2));
 
 
-            EXPECT_CALL(this->mockWindows, WriteToFile("dependencies/dependency-list.json", dependencyList.dump(), true))
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile("dependencies/dependency-list.json", dependencyList.dump(), true)
+            )
                 .Times(1);
 
             EXPECT_CALL(this->mockWindows, WriteToFile("dependencies/test1.json", this->dependency1.dump(), true))
@@ -188,10 +191,16 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Throw(ApiException("nah")));
 
 
-            EXPECT_CALL(this->mockWindows, WriteToFile("dependencies/dependency-list.json", dependencyList.dump(), true))
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile("dependencies/dependency-list.json", dependencyList.dump(), true)
+            )
                 .Times(1);
 
-            EXPECT_CALL(this->mockWindows, WriteToFile("dependencies/test1.json", this->dependency1.dump(), true))
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile("dependencies/test1.json", this->dependency1.dump(), true)
+            )
                 .Times(0);
 
             EXPECT_CALL(this->mockWindows, WriteToFile("dependencies/test2.json", this->dependency2.dump(), true))
@@ -224,7 +233,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, GetUri("test2"))
                 .Times(0);
 
-            EXPECT_CALL(this->mockWindows, WriteToFile("dependencies/dependency-list.json", dependencyList.dump(), true))
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile("dependencies/dependency-list.json", dependencyList.dump(), true)
+            )
                 .Times(1);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
