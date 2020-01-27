@@ -260,6 +260,12 @@ namespace UKControllerPlugin {
 
         nlohmann::json ApiHelper::GetUri(std::string uri) const
         {
+            if (uri.find(this->GetApiDomain()) == std::string::npos)
+            {
+                LogCritical("Attempted to get URI on non-ukcp route");
+                throw ApiException("Attempted to get URI on non-ukcp route");
+            }
+
             return this->MakeApiRequest(this->requestBuilder.BuildGetUriRequest(uri)).GetRawData();
         }
 

@@ -43,10 +43,13 @@ namespace UKControllerPlugin {
             );
         }
 
+        /*
+            Method for querying any API URI
+        */
         UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildGetUriRequest(std::string uri) const
         {
             return this->AddCommonHeaders(
-                CurlRequest(apiDomain + uri, CurlRequest::METHOD_GET)
+                CurlRequest(uri, CurlRequest::METHOD_GET)
             );
         }
 

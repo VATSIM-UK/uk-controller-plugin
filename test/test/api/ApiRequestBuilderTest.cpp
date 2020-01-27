@@ -217,12 +217,12 @@ namespace UKControllerPluginTest {
 
         TEST_F(ApiRequestBuilderTest, ItBuildsAGetUriRequest)
         {
-            CurlRequest expectedRequest("http://testurl.com/someuri", CurlRequest::METHOD_GET);
+            CurlRequest expectedRequest("someuri", CurlRequest::METHOD_GET);
             expectedRequest.AddHeader("Authorization", "Bearer apikey");
             expectedRequest.AddHeader("Accept", "application/json");
             expectedRequest.AddHeader("Content-Type", "application/json");
 
-            EXPECT_TRUE(expectedRequest == this->builder.BuildGetUriRequest("/someuri"));
+            EXPECT_TRUE(expectedRequest == this->builder.BuildGetUriRequest("someuri"));
         }
     }  // namespace Api
 }  // namespace UKControllerPluginTest

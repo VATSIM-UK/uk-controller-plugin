@@ -26,6 +26,7 @@ using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::_;
 
 namespace UKControllerPluginTest {
 namespace Api {
@@ -677,17 +678,26 @@ TEST_F(ApiHelperTest, GetUriReturnsUriData)
     CurlResponse response(responseData.dump(), false, 200);
 
     CurlRequest expectedRequest(
-        GetApiCurlRequest(
-        "/someuri",
-        CurlRequest::METHOD_GET
-    )
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/someuri",
+            CurlRequest::METHOD_GET
+        )
     );
 
     EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
         .Times(1)
         .WillOnce(Return(response));
 
-    EXPECT_EQ(responseData, this->helper.GetUri("/someuri"));
+    EXPECT_EQ(responseData, this->helper.GetUri("http://ukcp.test.com/someuri"));
+}
+
+TEST_F(ApiHelperTest, GetUriThrowsExceptionIfNonUkcpRoute)
+{
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(_))
+        .Times(0);
+
+    EXPECT_THROW(this->helper.GetUri("http://ukcp.test.org/someuri"), ApiException);
 }
 }  // namespace Api
 }  // namespace UKControllerPluginTest
