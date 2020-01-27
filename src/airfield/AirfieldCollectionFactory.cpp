@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<AirfieldCollection> collection(new AirfieldCollection);
             nlohmann::json dependencyData;
 
-        try {
+            try {
                 dependencyData = nlohmann::json::parse(
                     dependency.GetDependency(AirfieldCollectionFactory::requiredDependency)
                 );

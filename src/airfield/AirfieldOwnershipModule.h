@@ -3,7 +3,7 @@
 // Forward declare
 namespace UKControllerPlugin {
     namespace Dependency {
-        class DependencyCache;
+        class DependencyLoaderInterface;
     }  // namespace Dependency
     namespace Bootstrap {
         struct PersistenceContainer;
@@ -22,7 +22,7 @@ namespace UKControllerPlugin {
             public:
                 static void BootstrapPlugin(
                     UKControllerPlugin::Bootstrap::PersistenceContainer & persistence,
-                    const UKControllerPlugin::Dependency::DependencyCache & dependency
+                    UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
                 );
         };
     }  // namespace Airfield

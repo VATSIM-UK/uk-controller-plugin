@@ -2,29 +2,28 @@
 #include "controller/ControllerPositionCollectionFactory.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPosition.h"
-#include "dependency/DependencyCache.h"
+#include "dependency/DependencyLoaderInterface.h"
 #include "helper/HelperFunctions.h"
 
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::HelperFunctions;
 
 namespace UKControllerPlugin {
     namespace Controller {
 
         // Initilise the required dependency constant
-        const std::string ControllerPositionCollectionFactory::requiredDependency = "controller-positions.json";
+        const std::string ControllerPositionCollectionFactory::requiredDependency = "DEPENDENCY_CONTROLLER_POSITIONS";
 
         std::unique_ptr<ControllerPositionCollection> ControllerPositionCollectionFactory::Create(
-            const DependencyCache & dependency
+            DependencyLoaderInterface& dependency
         ) {
             std::unique_ptr<ControllerPositionCollection> collection(new ControllerPositionCollection);
-            nlohmann::json controllerPositions;
-            try {
-                controllerPositions = nlohmann::json::parse(
-                    dependency.GetDependency(ControllerPositionCollectionFactory::requiredDependency)
-                );
-            } catch (...) {
-                // If something goes wrong, we cant do anything, return the empty collection.
+            nlohmann::json controllerPositions = dependency.LoadDependency(
+                requiredDependency,
+                nlohmann::json::object()
+            );
+
+            if (!controllerPositions.is_object()) {
                 LogError("Unable to load controller positions, dependency data invalid");
                 return collection;
             }

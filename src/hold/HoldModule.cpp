@@ -1,7 +1,6 @@
 #include "pch/stdafx.h"
 #include "hold/HoldModule.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "dependency/DependencyCache.h"
 #include "hold/HoldManagerFactory.h"
 #include "hold/HoldEventHandler.h"
 #include "hold/HoldManager.h"
@@ -28,7 +27,6 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::Hold::HoldEventHandler;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;

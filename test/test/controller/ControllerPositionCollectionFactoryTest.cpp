@@ -2,50 +2,52 @@
 #include "controller/ControllerPositionCollectionFactory.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPosition.h"
-#include "dependency/DependencyCache.h"
+#include "mock/MockDependencyLoader.h"
 
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Controller::ControllerPositionCollectionFactory;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 
 using ::testing::ElementsAre;
+using ::testing::Test;
+using ::testing::NiceMock;
+using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace Controller {
 
-        TEST(ControllerPositionCollectionFactory, HasCorrectDependencyFile)
+        class ControllerPositionCollectionFactoryTest : public Test
         {
-            DependencyCache dependency;
-            EXPECT_TRUE("controller-positions.json" == ControllerPositionCollectionFactory::requiredDependency);
-        }
+            public:
 
-        TEST(ControllerPositionCollectionFactory, ReturnsEmptyCollectionIfNoDependencyFound)
+                NiceMock<MockDependencyLoader> dependency;
+        };
+
+        TEST_F(ControllerPositionCollectionFactoryTest, ReturnsEmptyCollectionIfNoDependencyFound)
         {
-            DependencyCache dependency;
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_CONTROLLER_POSITIONS", nlohmann::json::object()))
+                .WillByDefault(Return(nlohmann::json::object()));
             std::shared_ptr<ControllerPositionCollection> collection = ControllerPositionCollectionFactory::Create(
                 dependency
             );
             EXPECT_EQ(0, collection->GetSize());
         }
 
-        TEST(ControllerPositionCollectionFactory, ReturnsEmptyCollectionIfInvalidJson)
+        TEST_F(ControllerPositionCollectionFactoryTest, ReturnsEmptyCollectionIfInvalidJson)
         {
-            DependencyCache dependency;
-            dependency.AddDependency(ControllerPositionCollectionFactory::requiredDependency, "{\"not\": valid json}");
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_CONTROLLER_POSITIONS", nlohmann::json::object()))
+                .WillByDefault(Return(nlohmann::json::array()));
             std::shared_ptr<ControllerPositionCollection> collection = ControllerPositionCollectionFactory::Create(
                 dependency
             );
             EXPECT_EQ(0, collection->GetSize());
         }
 
-        TEST(ControllerPositionCollectionFactory, AddsControllerIfValid)
+        TEST_F(ControllerPositionCollectionFactoryTest, AddsControllerIfValid)
         {
-            DependencyCache dependency;
-            dependency.AddDependency(
-                ControllerPositionCollectionFactory::requiredDependency,
-                "{\"EGAA_GND\": {\"frequency\": 121.750, \"top-down\" : [\"EGAA\"]}}"
-            );
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_CONTROLLER_POSITIONS", nlohmann::json::object()))
+                .WillByDefault(Return("{\"EGAA_GND\": {\"frequency\": 121.750, \"top-down\" : [\"EGAA\"]}}"_json));
             std::shared_ptr<ControllerPositionCollection> collection = ControllerPositionCollectionFactory::Create(
                 dependency
             );

@@ -260,7 +260,7 @@ namespace UKControllerPlugin {
             this->duplicatePlugin->Duplicate()
         );
 
-        AirfieldOwnershipModule::BootstrapPlugin(*this->container, dependencyCache);
+        AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         PrenoteModule::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap other things
