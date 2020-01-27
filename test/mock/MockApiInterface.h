@@ -37,7 +37,6 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(GetGenericHoldProfiles, nlohmann::json(void));
                 MOCK_CONST_METHOD0(GetMinStackLevels, nlohmann::json(void));
                 MOCK_CONST_METHOD0(GetUserHoldProfiles, nlohmann::json(void));
-                MOCK_CONST_METHOD1(GetDependency, nlohmann::json(UKControllerPlugin::Dependency::DependencyData));
                 MOCK_CONST_METHOD1(GetUri, nlohmann::json(std::string uri));
                 MOCK_CONST_METHOD1(DeleteUserHoldProfile, void(unsigned int profileId));
                 MOCK_CONST_METHOD2(

@@ -16,7 +16,6 @@
 #include "hold/HoldSelectionMenu.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "dialog/DialogData.h"
-#include "dependency/DependencyConfig.h"
 #include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldProfileManagerFactory.h"
 #include "hold/HoldRenderer.h"
@@ -40,7 +39,6 @@ using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Dialog::DialogData;
-using UKControllerPlugin::Dependency::DependencyConfig;
 using UKControllerPlugin::Hold::CreateHoldManager;
 using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
 using UKControllerPlugin::Hold::CreateHoldProfileManager;

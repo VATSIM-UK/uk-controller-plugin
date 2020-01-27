@@ -2,7 +2,6 @@
 #include "api/ApiResponse.h"
 #include "api/ApiRequestBuilder.h"
 #include "api/ApiInterface.h"
-#include "dependency/DependencyData.h"
 #include "hold/HoldProfile.h"
 
 namespace UKControllerPlugin {
@@ -54,9 +53,6 @@ namespace UKControllerPlugin {
                 nlohmann::json GetUserHoldProfiles(void) const override;
                 nlohmann::json GetMinStackLevels(void) const;
                 nlohmann::json GetUri(std::string uri) const;
-                nlohmann::json GetDependency(
-                    UKControllerPlugin::Dependency::DependencyData dependency
-                ) const override;
                 void DeleteUserHoldProfile(unsigned int profileId) const override;
                 unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
                 void UpdateUserHoldProfile(

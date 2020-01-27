@@ -6,9 +6,7 @@
 #include "log/LoggerBootstrap.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
-#include "dependency/DependencyBootstrap.h"
 #include "plugin/UkPluginBootstrap.h"
-#include "dependency/DependencyCache.h"
 #include "initialaltitude/InitialAltitudeModule.h"
 #include "intention/IntentionCodeModule.h"
 #include "historytrail/HistoryTrailModule.h"
@@ -33,8 +31,6 @@
 #include "offblock/EstimatedDepartureTimeBootstrap.h"
 #include "wake/WakeModule.h"
 #include "hold/HoldModule.h"
-#include "dependency/DependencyProviderInterface.h"
-#include "dependency/DependencyProviderFactory.h"
 #include "metar/PressureMonitorBootstrap.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "datablock/DatablockBoostrap.h"
@@ -50,9 +46,7 @@ using UKControllerPlugin::Log::LoggerBootstrap;
 using UKControllerPlugin::Bootstrap::HelperBootstrap;
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
 using UKControllerPlugin::Bootstrap::EventHandlerCollectionBootstrap;
-using UKControllerPlugin::Bootstrap::DependencyBootstrap;
 using UKControllerPlugin::Bootstrap::UkPluginBootstrap;
-using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::IntentionCode::IntentionCodeModule;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
@@ -73,8 +67,6 @@ using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Bootstrap::DuplicatePlugin;
 using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
-using UKControllerPlugin::Dependency::DependencyProviderInterface;
-using UKControllerPlugin::Dependency::GetDependencyProvider;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Dependency::DependencyLoader;
 
@@ -196,15 +188,6 @@ namespace UKControllerPlugin {
         DependencyLoader loader(
             *this->container->windows
         );
-        DependencyCache dependencyCache;
-
-        // Load all the "new" dependencies that don't come from a manifest.
-        std::unique_ptr<DependencyProviderInterface> dependencyProvider = GetDependencyProvider(
-            *container->api,
-            *container->windows,
-            apiAuthorised
-        );
-        LogInfo("Loading new dependencies with provider " + dependencyProvider->GetProviderType());
 
         // Boostrap all the modules at a plugin level
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);

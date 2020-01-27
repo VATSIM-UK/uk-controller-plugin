@@ -2,7 +2,6 @@
 #include "api/ApiRequestBuilder.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
-using UKControllerPlugin::Dependency::DependencyData;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -41,16 +40,6 @@ namespace UKControllerPlugin {
         {
             return this->AddCommonHeaders(
                 CurlRequest(apiDomain + "/dependency", CurlRequest::METHOD_GET)
-            );
-        }
-
-        /*
-            Download a dependency from the API
-        */
-        CurlRequest ApiRequestBuilder::BuildDependencyRequest(DependencyData dependency) const
-        {
-            return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/" + dependency.remotePath, CurlRequest::METHOD_GET)
             );
         }
 

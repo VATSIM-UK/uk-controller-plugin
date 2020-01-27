@@ -12,6 +12,7 @@ namespace UKControllerPlugin {
         void UpdateDependencies(const ApiInterface& api, WinApiInterface& filesystem)
         {
             // Download the dependency list and save it to the filesystem
+            LogInfo("Downloading dependency data");
             nlohmann::json dependencyList;
             try {
                 dependencyList = api.GetDependencyList();
