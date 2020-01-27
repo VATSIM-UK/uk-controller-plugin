@@ -246,7 +246,7 @@ namespace UKControllerPlugin {
             *this->container->dialogManager
         );
         UKControllerPlugin::Hold::BootstrapPlugin(
-            *dependencyProvider,
+            loader,
             *this->container,
             *this->container->userMessager
         );
