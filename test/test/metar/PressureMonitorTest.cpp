@@ -5,7 +5,13 @@
 #include "message/UserMessager.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "euroscope/GeneralSettingsEntries.h"
+#include "controller/ActiveCallsign.h"
+#include "controller/ActiveCallsignCollection.h"
+#include "controller/ControllerPosition.h"
 
+using UKControllerPlugin::Controller::ActiveCallsign;
+using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Metar::PressureMonitor;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
@@ -24,12 +30,21 @@ namespace UKControllerPluginTest {
         {
             public:
                 PressureMonitorTest()
-                    : userSetting(mockUserSettingProvider), messager(mockPlugin), monitor(messager)
+                    : userSetting(mockUserSettingProvider), messager(mockPlugin), monitor(messager, activeCallsigns),
+                    gatwickTower("EGKK_TWR", 124.22, "TWR", {"EGKK"})
                 {
-
+                    this->activeCallsigns.AddUserCallsign(
+                        ActiveCallsign(
+                            "EGKK_TWR",
+                            "Testy",
+                            this->gatwickTower
+                        )
+                    );
                 }
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+                ControllerPosition gatwickTower;
+                ActiveCallsignCollection activeCallsigns;
                 UserMessager messager;
                 UserSetting userSetting;
                 PressureMonitor monitor;
@@ -100,6 +115,17 @@ namespace UKControllerPluginTest {
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1012 SCT002");
+        }
+
+        TEST_F(PressureMonitorTest, ItDoesntSendMessageIfNonConcernedStation)
+        {
+            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
+                .Times(0);
+
+            this->monitor.SetNotficationsEnabled(true);
+
+            this->monitor.NewMetar("EGLL", "EGLL 02012KT Q1011 SCT002");
+            this->monitor.NewMetar("EGLL", "EGLL 02012KT Q1012 SCT002");
         }
 
         TEST_F(PressureMonitorTest, ItDoesntSendUpdateMessageIfTurnedOff)
