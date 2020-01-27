@@ -1,12 +1,10 @@
 #include "pch/pch.h"
 #include "initialaltitude/InitialAltitudeGeneratorFactory.h"
 #include "initialaltitude/InitialAltitudeGenerator.h"
-#include "dependency/DependencyCache.h"
 #include "mock/MockDependencyLoader.h"
 
 using UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeGeneratorFactory;
-using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using testing::Test;
 using testing::NiceMock;
