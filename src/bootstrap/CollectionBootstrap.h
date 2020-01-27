@@ -6,7 +6,7 @@ namespace UKControllerPlugin {
         struct PersistenceContainer;
     }  // namespace Bootstrap
     namespace Dependency {
-        class DependencyCache;
+        class DependencyLoaderInterface;
     }  // namespace Dependency
 }  // namespace UKControllerPlugin
 // END
@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
             public:
                 static void BootstrapPlugin(
                     UKControllerPlugin::Bootstrap::PersistenceContainer & persistence,
-                    UKControllerPlugin::Dependency::DependencyCache & dependency
+                    UKControllerPlugin::Dependency::DependencyLoaderInterface & dependency
                 );
         };
     }  // namespace Bootstrap

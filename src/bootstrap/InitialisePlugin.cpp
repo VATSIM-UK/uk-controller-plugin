@@ -207,7 +207,7 @@ namespace UKControllerPlugin {
         LogInfo("Loading new dependencies with provider " + dependencyProvider->GetProviderType());
 
         // Boostrap all the modules at a plugin level
-        CollectionBootstrap::BootstrapPlugin(*this->container, dependencyCache);
+        CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
 
         // Bootstrap helpers

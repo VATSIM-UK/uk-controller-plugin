@@ -1,6 +1,6 @@
 #include "pch/stdafx.h"
 #include "bootstrap/CollectionBootstrap.h"
-#include "dependency/DependencyCache.h"
+#include "dependency/DependencyLoaderInterface.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "airfield/AirfieldCollectionFactory.h"
@@ -13,7 +13,7 @@
 #include "command/CommandHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
 using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
@@ -25,7 +25,7 @@ using UKControllerPlugin::Command::CommandHandlerCollection;
 namespace UKControllerPlugin {
     namespace Bootstrap {
 
-        void CollectionBootstrap::BootstrapPlugin(PersistenceContainer & persistence, DependencyCache & dependency)
+        void CollectionBootstrap::BootstrapPlugin(PersistenceContainer & persistence, DependencyLoaderInterface & dependency)
         {
             // Reset resources
             persistence.activeCallsigns.reset(new ActiveCallsignCollection);
