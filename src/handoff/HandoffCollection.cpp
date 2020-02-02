@@ -6,7 +6,7 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 namespace UKControllerPlugin {
     namespace Handoff {
 
-        void HandoffCollection::AddHandoffOrder(std::string key, std::unique_ptr<ControllerPositionHierarchy> controllers)
+        void HandoffCollection::AddHandoffOrder(std::string key, std::shared_ptr<ControllerPositionHierarchy> controllers)
         {
             if (this->orders.count(key)) {
                 LogWarning("Duplicate handoff order detected for " + key);

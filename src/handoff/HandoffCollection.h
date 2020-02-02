@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#pragma once
 #include "controller/ControllerPositionHierarchy.h"
 
 namespace UKControllerPlugin {
@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
 
                 void AddHandoffOrder(
                     std::string key,
-                    std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy> controllers
+                    std::shared_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy> controllers
                 );
                 void AddSidMapping(std::string airfield, std::string identifier, std::string handoffKey);
                 const UKControllerPlugin::Controller::ControllerPositionHierarchy& GetSidHandoffOrder(
@@ -31,7 +31,7 @@ namespace UKControllerPlugin {
                 std::string GetStorageKeyForSid(std::string airfield, std::string identifier) const;
 
                 // All the handoff orders
-                std::map<std::string, std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy>> orders;
+                std::map<std::string, std::shared_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy>> orders;
 
                 // The SID -> handoff mappings
                 std::map<std::string, std::string> sidMappings;

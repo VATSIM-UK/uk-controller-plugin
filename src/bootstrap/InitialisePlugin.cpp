@@ -38,6 +38,7 @@
 #include "sectorfile/SectorFileBootstrap.h"
 #include "dependency/UpdateDependencies.h"
 #include "dependency/DependencyLoader.h"
+#include "handoff/HandoffModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -233,6 +234,7 @@ namespace UKControllerPlugin {
             *this->container,
             *this->container->userMessager
         );
+        UKControllerPlugin::Handoff::BootstrapPlugin(*this->container, loader);
 
         // Due to flightplan modifications and API interactions, only enable the squawk module
         // if the API is authorised and the plugin is an allowed version. Also, dont allow automatic

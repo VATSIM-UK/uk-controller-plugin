@@ -27,8 +27,8 @@ namespace UKControllerPluginTest {
 
                 std::unique_ptr<ControllerPosition> position;
                 HandoffCollection collection;
-                std::unique_ptr<ControllerPositionHierarchy> hierarchy1;
-                std::unique_ptr<ControllerPositionHierarchy> hierarchy2;
+                std::shared_ptr<ControllerPositionHierarchy> hierarchy1;
+                std::shared_ptr<ControllerPositionHierarchy> hierarchy2;
         };
 
         TEST_F(HandoffCollectionTest, ItStartsWithNoSids)
@@ -43,16 +43,16 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffCollectionTest, ItAddsHandoffOrders)
         {
-            this->collection.AddHandoffOrder("TEST_1", std::move(this->hierarchy1));
-            this->collection.AddHandoffOrder("TEST_2", std::move(this->hierarchy2));
+            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
+            this->collection.AddHandoffOrder("TEST_2", this->hierarchy2);
 
             EXPECT_EQ(2, this->collection.CountHandoffs());
         }
 
         TEST_F(HandoffCollectionTest, ItDoesntAddDuplicateHandoffs)
         {
-            this->collection.AddHandoffOrder("TEST_1", std::move(this->hierarchy1));
-            this->collection.AddHandoffOrder("TEST_1", std::move(this->hierarchy2));
+            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
+            this->collection.AddHandoffOrder("TEST_1", this->hierarchy2);
 
             EXPECT_EQ(1, this->collection.CountHandoffs());
         }
@@ -68,13 +68,15 @@ namespace UKControllerPluginTest {
         TEST_F(HandoffCollectionTest, ItDoesntAddDuplicateSidMappings)
         {
             this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_1");
-            this->collection.AddSidMapping("EGKK", "SFD4Z", "TEST_1");
+            this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_2");
 
             EXPECT_EQ(1, this->collection.CountSidMappings());
         }
 
         TEST_F(HandoffCollectionTest, ItReturnsControllerHierarchiesIfSidMappingsValid)
         {
+            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
+            this->collection.AddHandoffOrder("TEST_2", this->hierarchy2);
             this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_1");
             this->collection.AddSidMapping("EGKK", "SFD4Z", "TEST_2");
 
@@ -84,6 +86,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffCollectionTest, ItReturnsInvalidMappingIfSidNotFound)
         {
+            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
+            this->collection.AddHandoffOrder("TEST_2", this->hierarchy2);
             this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_1");
             this->collection.AddSidMapping("EGKK", "SFD4Z", "TEST_2");
 
@@ -92,6 +96,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffCollectionTest, ItReturnsInvalidMappingIfSidFoundButNoHierarchy)
         {
+            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
+            this->collection.AddHandoffOrder("TEST_2", this->hierarchy2);
             this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_1");
             this->collection.AddSidMapping("EGKK", "SFD4Z", "TEST_3");
 

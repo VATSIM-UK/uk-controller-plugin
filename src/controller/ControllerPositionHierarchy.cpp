@@ -40,5 +40,28 @@ namespace UKControllerPlugin {
                     return position == storedPosition.get();
             }) != this->positions.cend();
         }
+
+        bool ControllerPositionHierarchy::operator==(const ControllerPositionHierarchy& compare) const
+        {
+            if (compare.CountPositions() != this->CountPositions()) {
+                return false;
+            }
+
+            std::vector<std::reference_wrapper<const ControllerPosition>>::const_iterator it1 = this->positions.cbegin();
+            std::vector<std::reference_wrapper<const ControllerPosition>>::const_iterator it2 = compare.positions.cbegin();
+
+            while (it1 != this->positions.cend())
+            {
+                if (it1->get() == it2->get()) {
+                    it1++;
+                    it2++;
+                    continue;
+                }
+
+                return false;
+            }
+
+            return true;
+        }
     }  // namespace Controller
 }  // namespace UKControllerPlugin
