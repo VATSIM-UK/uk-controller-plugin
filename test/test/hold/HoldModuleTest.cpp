@@ -16,8 +16,7 @@
 #include "tag/TagItemCollection.h"
 #include "dialog/DialogManager.h"
 #include "mock/MockDialogProvider.h"
-#include "mock/MockDependencyProvider.h"
-#include "dependency/DependencyConfig.h"
+#include "mock/MockDependencyLoader.h"
 #include "dialog/DialogData.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
@@ -41,8 +40,7 @@ using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPluginTest::Dependency::MockDependencyProvider;
-using UKControllerPlugin::Dependency::DependencyConfig;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Dialog::DialogData;
 using ::testing::Test;
 using ::testing::NiceMock;
@@ -91,10 +89,16 @@ namespace UKControllerPluginTest {
                     profile2["name"] = "Heathrow Director";
                     profile2["holds"] = { 1, 2, 3 };
 
-                    ON_CALL(this->mockDependencyProvider, GetDependency(DependencyConfig::holds))
+                    ON_CALL(
+                        this->mockDependencyProvider,
+                        LoadDependency("DEPENDENCY_HOLDS", nlohmann::json::array())
+                    )
                         .WillByDefault(Return(nlohmann::json::array({ hold, hold2 })));
 
-                    ON_CALL(this->mockDependencyProvider, GetDependency(DependencyConfig::holdProfiles))
+                    ON_CALL(
+                        this->mockDependencyProvider,
+                        LoadDependency("DEPENDENCY_HOLD_PROFILE", nlohmann::json::array())
+                    )
                         .WillByDefault(Return(nlohmann::json::array({ profile1, profile2 })));
 
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
@@ -117,7 +121,7 @@ namespace UKControllerPluginTest {
                 AsrEventHandlerCollection asrEvents;
                 NiceMock<MockApiInterface> mockWebApi;
                 NiceMock<MockWinApi> mockWinApi;
-                NiceMock<MockDependencyProvider> mockDependencyProvider;
+                NiceMock<MockDependencyLoader> mockDependencyProvider;
         };
 
         TEST_F(HoldModuleTest, ItAddsToFlightplanHandler)
@@ -195,8 +199,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldModuleTest, ItReportsNoHoldsToTheUser)
         {
-            NiceMock<MockDependencyProvider> providerNoHolds;
-            ON_CALL(providerNoHolds, GetDependency(DependencyConfig::holds))
+            NiceMock<MockDependencyLoader> providerNoHolds;
+            ON_CALL(providerNoHolds, LoadDependency("DEPENDENCY_HOLDS", nlohmann::json::array()))
                 .WillByDefault(Return(nlohmann::json::array({})));
 
             EXPECT_CALL(

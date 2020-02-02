@@ -1,16 +1,17 @@
 #include "pch/pch.h"
 #include "wake/WakeModule.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "dependency/DependencyCache.h"
+#include "mock/MockDependencyLoader.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Wake::BootstrapPlugin;
 using ::testing::Test;
+using ::testing::NiceMock;
 
 namespace UKControllerPluginTest {
     namespace Wake {
@@ -20,17 +21,12 @@ namespace UKControllerPluginTest {
             public:
                 WakeModuleTest()
                 {
-                    nlohmann::json data;
-                    data["A333"] = "H";
-                    data["B738"] = "LM";
-                    dependencies.AddDependency("wake-categories.json", data.dump());
-
                     container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     container.tagHandler.reset(new TagItemCollection);
                 }
 
                 PersistenceContainer container;
-                DependencyCache dependencies;
+                NiceMock<MockDependencyLoader> dependencies;
         };
 
         TEST_F(WakeModuleTest, ItAddsToFlightplanHandler)

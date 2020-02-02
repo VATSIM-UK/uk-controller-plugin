@@ -15,7 +15,7 @@ namespace UKControllerPlugin {
         class FunctionCallEventHandler;
     }  // namespace Plugin
     namespace Dependency {
-        class DependencyProviderInterface;
+        class DependencyLoaderInterface;
     }  // namespace Dependency
     namespace Api {
         class ApiInterface;
@@ -39,7 +39,7 @@ namespace UKControllerPlugin {
         extern const int timedEventFrequency;
 
         void BootstrapPlugin(
-            const UKControllerPlugin::Dependency::DependencyProviderInterface & dependencyProvider,
+            UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencyProvider,
             UKControllerPlugin::Bootstrap::PersistenceContainer & container,
             UKControllerPlugin::Message::UserMessager & userMessages
         );

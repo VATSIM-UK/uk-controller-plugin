@@ -5,7 +5,7 @@
 #include "massevent/MassEvent.h"
 #include "airfield/ControllerAirfieldOwnershipHandler.h"
 #include "controller/ControllerPositionCollectionFactory.h"
-#include "dependency/DependencyCache.h"
+#include "dependency/DependencyLoaderInterface.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "controller/ControllerPositionCollection.h"
 
@@ -13,14 +13,14 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::EventHandler::MassEvent;
 using UKControllerPlugin::Airfield::ControllerAirfieldOwnershipHandler;
 using UKControllerPlugin::Controller::ControllerPositionCollectionFactory;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 
 namespace UKControllerPlugin {
     namespace Airfield {
 
         void AirfieldOwnershipModule::BootstrapPlugin(
             PersistenceContainer & persistence,
-            const DependencyCache & dependency
+            DependencyLoaderInterface& dependency
         ) {
             MassEvent mass(
                 *persistence.plugin,

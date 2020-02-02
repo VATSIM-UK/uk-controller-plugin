@@ -26,6 +26,7 @@ using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::_;
 
 namespace UKControllerPluginTest {
 namespace Api {
@@ -566,22 +567,6 @@ TEST_F(ApiHelperTest, ItCanUpdateTheKey)
     EXPECT_TRUE(this->helper.GetApiKey() == "notthekey");
 }
 
-TEST_F(ApiHelperTest, GetDependencyReturnsJsonData)
-{
-    nlohmann::json data;
-    data["foo"] = "bar";
-    data["big"] = "small";
-
-    CurlResponse response(data.dump(), false, 200);
-    CurlRequest expectedRequest(GetApiCurlRequest("/dependency/somecoolthing", CurlRequest::METHOD_GET));
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_EQ(data, this->helper.GetDependency({"local", "dependency/somecoolthing", "default"}));
-}
-
 TEST_F(ApiHelperTest, AuthoriseWebsocketChannelReturnsTheAuthCode)
 {
     nlohmann::json responseData;
@@ -684,6 +669,35 @@ TEST_F(ApiHelperTest, GetMinStackLevelsReturnsMinStackData)
         .WillOnce(Return(response));
 
     EXPECT_EQ(responseData, this->helper.GetMinStackLevels());
+}
+
+TEST_F(ApiHelperTest, GetUriReturnsUriData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/someuri",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetUri("http://ukcp.test.com/someuri"));
+}
+
+TEST_F(ApiHelperTest, GetUriThrowsExceptionIfNonUkcpRoute)
+{
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(_))
+        .Times(0);
+
+    EXPECT_THROW(this->helper.GetUri("http://ukcp.test.org/someuri"), ApiException);
 }
 }  // namespace Api
 }  // namespace UKControllerPluginTest

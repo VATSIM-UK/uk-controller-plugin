@@ -3,7 +3,7 @@
 // Forward declarations
 namespace UKControllerPlugin {
     namespace Dependency {
-        class DependencyCache;
+        class DependencyLoaderInterface;
     }  // namespace Dependency
     namespace EventHandler {
         class FlightPlanEventHandlerCollection;
@@ -25,7 +25,7 @@ namespace UKControllerPlugin {
         {
             public:
                 static void BootstrapPlugin(
-                    UKControllerPlugin::Dependency::DependencyCache & dependency,
+                    UKControllerPlugin::Dependency::DependencyLoaderInterface & dependency,
                     UKControllerPlugin::Bootstrap::PersistenceContainer & persistence
                 );
 

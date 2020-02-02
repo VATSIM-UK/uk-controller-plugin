@@ -240,18 +240,6 @@
     <ClCompile Include="..\..\test\test\datablock\DisplayTimeTest.cpp">
       <Filter>test\datablock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\dependency\DependencyBootstrapTest.cpp">
-      <Filter>test\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\dependency\DependencyCacheFactoryTest.cpp">
-      <Filter>test\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\dependency\DependencyCacheTest.cpp">
-      <Filter>test\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\dependency\LocalFileUpdaterTest.cpp">
-      <Filter>test\dependency</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\euroscope\AsrEventHandlerCollectionTest.cpp">
       <Filter>test\euroscope</Filter>
     </ClCompile>
@@ -587,18 +575,6 @@
     <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp">
       <Filter>test\dialog</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\dependency\LocalDependencyProviderTest.cpp">
-      <Filter>test\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\dependency\ApiDependencyProviderTest.cpp">
-      <Filter>test\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\dependency\DependencyDataTest.cpp">
-      <Filter>test\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\dependency\DependencyProviderFactoryTest.cpp">
-      <Filter>test\dependency</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\hold\HoldingDataSerializerTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
@@ -745,6 +721,12 @@
     <ClCompile Include="..\..\test\test\handoff\HandoffCollectionTest.cpp">
       <Filter>test\handoff</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\UpdateDependenciesTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\dependency\DependencyLoaderTest.cpp">
+      <Filter>test\dependency</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -845,9 +827,6 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockDialogProvider.h">
-      <Filter>mock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockDependencyProvider.h">
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h">

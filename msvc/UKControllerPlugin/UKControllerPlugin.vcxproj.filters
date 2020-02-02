@@ -285,18 +285,6 @@
     <ClInclude Include="..\..\src\datablock\DisplayTime.h">
       <Filter>src\datablock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dependency\DependencyBootstrap.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dependency\DependencyCache.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dependency\DependencyCacheFactory.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dependency\LocalFileUpdater.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\euroscope\AsrEventHandlerCollection.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
@@ -777,24 +765,6 @@
     <ClInclude Include="..\..\src\dialog\DialogProviderInterface.h">
       <Filter>src\dialog</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dependency\DependencyProviderInterface.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dependency\ApiDependencyProvider.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dependency\DependencyConfig.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dependency\LocalDependencyProvider.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dependency\DependencyData.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dependency\DependencyProviderFactory.h">
-      <Filter>src\dependency</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldingDataSerializer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -966,6 +936,15 @@
     <ClInclude Include="..\..\src\handoff\HandoffCollection.h">
       <Filter>src\handoff</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\dependency\UpdateDependencies.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyLoader.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dependency\DependencyLoaderInterface.h">
+      <Filter>src\dependency</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1104,18 +1083,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\datablock\DisplayTime.cpp">
       <Filter>src\datablock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\dependency\DependencyBootstrap.cpp">
-      <Filter>src\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\dependency\DependencyCache.cpp">
-      <Filter>src\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\dependency\DependencyCacheFactory.cpp">
-      <Filter>src\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\dependency\LocalFileUpdater.cpp">
-      <Filter>src\dependency</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\AsrEventHandlerCollection.cpp">
       <Filter>src\euroscope</Filter>
@@ -1492,18 +1459,6 @@
     <ClCompile Include="..\..\src\dialog\CompareDialogs.cpp">
       <Filter>src\dialog</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\dependency\ApiDependencyProvider.cpp">
-      <Filter>src\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\dependency\DependencyConfig.cpp">
-      <Filter>src\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\dependency\LocalDependencyProvider.cpp">
-      <Filter>src\dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\dependency\DependencyProviderFactory.cpp">
-      <Filter>src\dependency</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldingData.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
@@ -1644,6 +1599,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\handoff\HandoffCollection.cpp">
       <Filter>src\handoff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\UpdateDependencies.cpp">
+      <Filter>src\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dependency\DependencyLoader.cpp">
+      <Filter>src\dependency</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
