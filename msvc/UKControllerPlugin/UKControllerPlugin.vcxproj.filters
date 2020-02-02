@@ -127,6 +127,9 @@
     <Filter Include="src\sectorfile">
       <UniqueIdentifier>{61c300dc-1834-4381-b018-2c7380756930}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\handoff">
+      <UniqueIdentifier>{085e3771-d978-4fc0-bd1c-51bc74794325}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\Airfield.h">
@@ -960,6 +963,9 @@
     <ClInclude Include="..\..\src\euroscope\RunwayDialogAwareCollection.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\handoff\HandoffCollection.h">
+      <Filter>src\handoff</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1635,6 +1641,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\RunwayDialogAwareCollection.cpp">
       <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\handoff\HandoffCollection.cpp">
+      <Filter>src\handoff</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -130,6 +130,7 @@
     <ClInclude Include="..\..\src\graphics\GdiGraphicsInterface.h" />
     <ClInclude Include="..\..\src\graphics\GdiGraphicsWrapper.h" />
     <ClInclude Include="..\..\src\graphics\GdiplusBrushes.h" />
+    <ClInclude Include="..\..\src\handoff\HandoffCollection.h" />
     <ClInclude Include="..\..\src\helper\HelperFunctions.h" />
     <ClInclude Include="..\..\src\historytrail\AircraftHistoryTrail.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailData.h" />
@@ -379,6 +380,7 @@
     <ClCompile Include="..\..\src\flightplan\StoredFlightplanCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\StoredFlightplanEventHandler.cpp" />
     <ClCompile Include="..\..\src\graphics\GdiGraphicsWrapper.cpp" />
+    <ClCompile Include="..\..\src\handoff\HandoffCollection.cpp" />
     <ClCompile Include="..\..\src\helper\HelperFunctions.cpp" />
     <ClCompile Include="..\..\src\historytrail\AircraftHistoryTrail.cpp" />
     <ClCompile Include="..\..\src\historytrail\HistoryTrailDialog.cpp" />

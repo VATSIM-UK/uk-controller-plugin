@@ -115,6 +115,9 @@
     <Filter Include="test\sectorfile">
       <UniqueIdentifier>{2b17f35f-90d1-4f2d-9826-0618a260c1f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\handoff">
+      <UniqueIdentifier>{eb5327da-3251-4d89-958b-22d7179fd9cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -736,6 +739,11 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\euroscope\RunwayDialogAwareCollectionTest.cpp">
       <Filter>test\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
+    <ClCompile Include="..\..\test\test\handoff\HandoffCollectionTest.cpp">
+      <Filter>test\handoff</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
