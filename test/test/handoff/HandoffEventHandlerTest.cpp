@@ -108,5 +108,28 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
         }
 
+        TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanUpdate)
+        {
+            this->handler.AddCachedItem("BAW123", "132.600");
+            EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
+            this->handler.FlightPlanEvent(this->mockFlightplan, this->mockRadarTarget);
+            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+        }
+
+        TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanDisconnect)
+        {
+            this->handler.AddCachedItem("BAW123", "132.600");
+            EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
+            this->handler.FlightPlanDisconnectEvent(this->mockFlightplan);
+            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+        }
+
+        TEST_F(HandoffEventHandlerTest, TestItDoesntClearCacheOnFlightplanControllerDataChange)
+        {
+            this->handler.AddCachedItem("BAW123", "132.600");
+            EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
+            this->handler.ControllerFlightPlanDataEvent(this->mockFlightplan, 1);
+            EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
+        }
     }  // namespace Handoff
 }  // namespace UKControllerPluginTest

@@ -75,14 +75,19 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface& flightPlan,
             EuroScopeCRadarTargetInterface& radarTarget
         ) {
+            // FP changed, so erase the cache.
+            this->cache.erase(flightPlan.GetCallsign());
         }
 
         void HandoffEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
         {
+            // FP gone, so erase the cache.
+            this->cache.erase(flightPlan.GetCallsign());
         }
 
         void HandoffEventHandler::ControllerFlightPlanDataEvent(EuroScopeCFlightPlanInterface& flightPlan, int dataType)
         {
+            // No change required here.
         }
     }  // namespace Handoff
 }  // namespace UKControllerPlugin
