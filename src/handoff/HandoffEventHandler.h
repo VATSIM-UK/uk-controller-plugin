@@ -44,7 +44,7 @@ namespace UKControllerPlugin {
                 ) override;
 
                 // The default values to return
-                const std::string DEFAULT_TAG_VALUE = "-";
+                const std::string DEFAULT_TAG_VALUE = "---.---";
                 const std::string UNICOM_TAG_VALUE = "122.800";
 
             private:
