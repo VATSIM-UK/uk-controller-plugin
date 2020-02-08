@@ -5,6 +5,9 @@
 namespace UKControllerPlugin {
     namespace Handoff {
 
+        const extern std::string handoffOrdersDependencyKey;
+        const extern std::string handoffSidMappingsDependency;
+
         void BootstrapPlugin(
             UKControllerPlugin::Bootstrap::PersistenceContainer & container,
             UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
