@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
         /*
             Add an item to the cache.
         */
-        void HandoffEventHandler::AddCachedItem(std::string callsign, std::string item)
+        void HandoffEventHandler::AddCachedItem(std::string callsign, CachedHandoff item)
         {
             this->cache[callsign] = item;
         }
@@ -31,7 +31,7 @@ namespace UKControllerPlugin {
         /*
             Get the cached item
         */
-        std::string HandoffEventHandler::GetCachedItem(std::string callsign) const
+        CachedHandoff HandoffEventHandler::GetCachedItem(std::string callsign) const
         {
             return this->cache.count(callsign) ? this->cache.at(callsign) : this->DEFAULT_TAG_VALUE;
         }
@@ -46,7 +46,7 @@ namespace UKControllerPlugin {
             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget
         ) {
             if (this->cache.count(flightPlan.GetCallsign())) {
-                return this->cache.at(flightPlan.GetCallsign());
+                return this->cache.at(flightPlan.GetCallsign()).frequency;
             }
 
             ControllerPositionHierarchy controllers = this->handoffs.GetSidHandoffOrder(
@@ -56,7 +56,7 @@ namespace UKControllerPlugin {
 
             if (controllers == this->handoffs.invalidHierarchy) {
                 this->cache[flightPlan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
-                return this->DEFAULT_TAG_VALUE;
+                return this->DEFAULT_TAG_VALUE.frequency;
             }
 
             for (
@@ -69,18 +69,18 @@ namespace UKControllerPlugin {
                     // If we're handing off to the user, then don't bother displaying a handoff frequency
                     if (this->callsigns.UserHasCallsign() && this->callsigns.GetUserCallsign().GetNormalisedPosition() == *it) {
                         this->cache[flightPlan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
-                        return this->DEFAULT_TAG_VALUE;
+                        return this->DEFAULT_TAG_VALUE.frequency;
                     }
 
                     char frequencyString[24];
                     sprintf_s(frequencyString, "%.3f", it->get().GetFrequency());
-                    this->cache[flightPlan.GetCallsign()] = std::string(frequencyString);
-                    return this->cache[flightPlan.GetCallsign()];
+                    this->cache[flightPlan.GetCallsign()] = CachedHandoff(frequencyString, it->get().GetCallsign());
+                    return this->cache[flightPlan.GetCallsign()].frequency;
                 }
             }
 
             this->cache[flightPlan.GetCallsign()] = this->UNICOM_TAG_VALUE;
-            return this->UNICOM_TAG_VALUE;
+            return this->UNICOM_TAG_VALUE.frequency;
         }
 
         void HandoffEventHandler::FlightPlanEvent(

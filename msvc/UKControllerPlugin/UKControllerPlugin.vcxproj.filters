@@ -954,6 +954,9 @@
     <ClInclude Include="..\..\src\handoff\HandoffCollectionFactory.h">
       <Filter>src\handoff</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\handoff\CachedHandoff.h">
+      <Filter>src\handoff</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">

@@ -1,6 +1,7 @@
 #include "pch/pch.h"
 #include "handoff/HandoffEventHandler.h"
 #include "handoff/HandoffCollection.h"
+#include "handoff/CachedHandoff.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
@@ -10,6 +11,7 @@
 
 using UKControllerPlugin::Handoff::HandoffEventHandler;
 using UKControllerPlugin::Handoff::HandoffCollection;
+using UKControllerPlugin::Handoff::CachedHandoff;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
@@ -61,13 +63,16 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsCachedTagItem)
         {
-            this->handler.AddCachedItem("BAW123", "123.456");
+            this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
             EXPECT_EQ("123.456", this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsDefaultIfNoHandoffOrder)
         {
-            EXPECT_EQ(handler.DEFAULT_TAG_VALUE, this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
+            EXPECT_EQ(
+                handler.DEFAULT_TAG_VALUE.frequency,
+                this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
+            );
         }
 
         TEST_F(HandoffEventHandlerTest, TestItCachesNoHandoffOrder)
@@ -80,7 +85,10 @@ namespace UKControllerPluginTest {
         {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
-            EXPECT_EQ(handler.UNICOM_TAG_VALUE, this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
+            EXPECT_EQ(
+                handler.UNICOM_TAG_VALUE.frequency,
+                this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
+            );
         }
 
         TEST_F(HandoffEventHandlerTest, TestItCachesNoControllerOnline)
@@ -105,7 +113,7 @@ namespace UKControllerPluginTest {
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
             this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
             this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget);
-            EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsDefaultIfFoundControllerIsUser)
@@ -113,7 +121,10 @@ namespace UKControllerPluginTest {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
             this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
-            EXPECT_EQ(handler.DEFAULT_TAG_VALUE, this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
+            EXPECT_EQ(
+                handler.DEFAULT_TAG_VALUE.frequency,
+                this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
+            );
         }
 
         TEST_F(HandoffEventHandlerTest, TestItCachesIfFoundControllerIsUser)
@@ -127,26 +138,26 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanUpdate)
         {
-            this->handler.AddCachedItem("BAW123", "132.600");
-            EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
+            this->handler.AddCachedItem("BAW123", CachedHandoff("132.600", "LON_SC_CTR"));
+            EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
             this->handler.FlightPlanEvent(this->mockFlightplan, this->mockRadarTarget);
             EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanDisconnect)
         {
-            this->handler.AddCachedItem("BAW123", "132.600");
-            EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
+            this->handler.AddCachedItem("BAW123", CachedHandoff("132.600", "LON_SC_CTR"));
+            EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
             this->handler.FlightPlanDisconnectEvent(this->mockFlightplan);
             EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItDoesntClearCacheOnFlightplanControllerDataChange)
         {
-            this->handler.AddCachedItem("BAW123", "132.600");
-            EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
+            this->handler.AddCachedItem("BAW123", CachedHandoff("132.600", "LON_SC_CTR"));
+            EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
             this->handler.ControllerFlightPlanDataEvent(this->mockFlightplan, 1);
-            EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
         }
     }  // namespace Handoff
 }  // namespace UKControllerPluginTest

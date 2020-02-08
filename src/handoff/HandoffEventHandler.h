@@ -3,6 +3,7 @@
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "handoff/HandoffCollection.h"
+#include "handoff/CachedHandoff.h"
 
 namespace UKControllerPlugin {
     namespace Handoff {
@@ -20,8 +21,8 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Handoff::HandoffCollection& handoffs,
                     const UKControllerPlugin::Controller::ActiveCallsignCollection& callsigns
                 );
-                void AddCachedItem(std::string callsign, std::string item);
-                std::string GetCachedItem(std::string callsign) const;
+                void AddCachedItem(std::string callsign, CachedHandoff handoff);
+                CachedHandoff GetCachedItem(std::string callsign) const;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(void) const override;
@@ -44,8 +45,8 @@ namespace UKControllerPlugin {
                 ) override;
 
                 // The default values to return
-                const std::string DEFAULT_TAG_VALUE = "---.---";
-                const std::string UNICOM_TAG_VALUE = "122.800";
+                const CachedHandoff DEFAULT_TAG_VALUE = CachedHandoff("---.---", "");
+                const CachedHandoff UNICOM_TAG_VALUE = CachedHandoff("122.800", "");
 
             private:
 
@@ -56,7 +57,7 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Controller::ActiveCallsignCollection& callsigns;
                 
                 // Maps callsign -> result so we can cache it.
-                std::map<std::string, std::string> cache;
+                std::map<std::string, UKControllerPlugin::Handoff::CachedHandoff> cache;
         };
 
     }  // namespace Handoff

@@ -123,6 +123,7 @@
     <ClInclude Include="..\..\src\graphics\GdiGraphicsInterface.h" />
     <ClInclude Include="..\..\src\graphics\GdiGraphicsWrapper.h" />
     <ClInclude Include="..\..\src\graphics\GdiplusBrushes.h" />
+    <ClInclude Include="..\..\src\handoff\CachedHandoff.h" />
     <ClInclude Include="..\..\src\handoff\HandoffCollection.h" />
     <ClInclude Include="..\..\src\handoff\HandoffCollectionFactory.h" />
     <ClInclude Include="..\..\src\handoff\HandoffEventHandler.h" />
