@@ -4,6 +4,8 @@
 #include "initialaltitude/InitialAltitudeGenerator.h"
 #include "timedevent/DeferredEventHandler.h"
 #include "euroscope/UserSettingAwareInterface.h"
+#include "controller/ActiveCallsignEventHandlerInterface.h"
+#include "flightplan/StoredFlightplanCollection.h"
 
 // Forward declarations
 
@@ -37,7 +39,8 @@ namespace UKControllerPlugin {
             Class that responds to events related to initial altitudes.
         */
         class InitialAltitudeEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-            public UKControllerPlugin::Euroscope::UserSettingAwareInterface
+            public UKControllerPlugin::Euroscope::UserSettingAwareInterface,
+            public UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface
         {
             public:
                 InitialAltitudeEventHandler(
@@ -46,7 +49,8 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership,
                     const UKControllerPlugin::Controller::Login & login,
                     UKControllerPlugin::TimedEvent::DeferredEventHandler & deferredEvents,
-                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
+                    const UKControllerPlugin::Flightplan::StoredFlightplanCollection& storedFlightplans
                 );
                 void FlightPlanEvent(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
@@ -68,6 +72,17 @@ namespace UKControllerPlugin {
                 );
                 bool UserAutomaticAssignmentsAllowed(void) const;
                 void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
+
+                // Inherited via ActiveCallsignEventHandlerInterface
+                virtual void ActiveCallsignAdded(
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
+                ) override;
+                virtual void ActiveCallsignRemoved(
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
+                ) override;
+                virtual void CallsignsFlushed(void) override;
 
                 // The maximum distance from the airfield that an aircraft can be untracked
                 // to be considered for an altitude update.
@@ -103,12 +118,14 @@ namespace UKControllerPlugin {
                 // Class for parsing SIDs and removing deprecation warnings.
                 const UKControllerPlugin::Airfield::NormaliseSid normalise;
 
+                // Stored flightplans
+                const UKControllerPlugin::Flightplan::StoredFlightplanCollection& storedFlightplans;
+
                 // So we can get flightplans after deferred events
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
 
                 // Has the user enabled automatic assignments
                 bool userAutomaticAssignmentsAllowed = true;
-
         };
     }  // namespace InitialAltitude
 }  // namespace UKControllerPlugin

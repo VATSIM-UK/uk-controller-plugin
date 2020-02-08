@@ -197,7 +197,6 @@
     <ClInclude Include="..\..\src\login\LoginModule.h" />
     <ClInclude Include="..\..\src\log\LoggerBootstrap.h" />
     <ClInclude Include="..\..\src\log\LoggerFunctions.h" />
-    <ClInclude Include="..\..\src\massevent\MassEvent.h" />
     <ClInclude Include="..\..\src\message\MessageSerializableInterface.h" />
     <ClInclude Include="..\..\src\message\UserMessager.h" />
     <ClInclude Include="..\..\src\message\UserMessagerBootstrap.h" />
@@ -438,7 +437,6 @@
     <ClCompile Include="..\..\src\login\LoginModule.cpp" />
     <ClCompile Include="..\..\src\log\LoggerBootstrap.cpp" />
     <ClCompile Include="..\..\src\log\LoggerFunctions.cpp" />
-    <ClCompile Include="..\..\src\massevent\MassEvent.cpp" />
     <ClCompile Include="..\..\src\message\UserMessager.cpp" />
     <ClCompile Include="..\..\src\message\UserMessagerBootstrap.cpp" />
     <ClCompile Include="..\..\src\metar\MetarEventHandlerCollection.cpp" />

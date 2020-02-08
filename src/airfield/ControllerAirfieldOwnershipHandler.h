@@ -1,7 +1,6 @@
 #pragma once
 #include "controller/ControllerStatusEventHandlerInterface.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "massevent/MassEvent.h"
 #include "command/CommandHandlerInterface.h"
 
 // Forward declarations
@@ -45,7 +44,6 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Controller::ControllerPositionCollection & controllers,
                     UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership,
                     UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
-                    UKControllerPlugin::EventHandler::MassEvent massEventHandler,
                     UKControllerPlugin::Message::UserMessager & userMessager
                 );
                 void ControllerUpdateEvent(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface & controller);
@@ -73,9 +71,6 @@ namespace UKControllerPlugin {
 
                 // All the airfields
                 UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership;
-
-                // Mass event handlers
-                UKControllerPlugin::EventHandler::MassEvent massEventHandler;
 
                 // For sending user messages
                 UKControllerPlugin::Message::UserMessager & userMessager;

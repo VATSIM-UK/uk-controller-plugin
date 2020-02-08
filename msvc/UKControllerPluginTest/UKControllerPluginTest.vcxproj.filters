@@ -55,9 +55,6 @@
     <Filter Include="test\login">
       <UniqueIdentifier>{ff7d0351-16ca-42de-9b3b-41052aacdc15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test\massevent">
-      <UniqueIdentifier>{f276b365-76e0-4746-94db-e31e51fce477}</UniqueIdentifier>
-    </Filter>
     <Filter Include="test\message">
       <UniqueIdentifier>{995b6f9a-99dc-40ec-8da4-37d21f275161}</UniqueIdentifier>
     </Filter>
@@ -353,9 +350,6 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\login\LoginTest.cpp">
       <Filter>test\login</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\massevent\MassEventTest.cpp">
-      <Filter>test\massevent</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\message\UserMessagerBootstrapTest.cpp">
       <Filter>test\message</Filter>

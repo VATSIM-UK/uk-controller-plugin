@@ -155,7 +155,6 @@
     <ClCompile Include="..\..\test\test\login\LoginModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\login\LoginTest.cpp" />
     <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp" />
-    <ClCompile Include="..\..\test\test\massevent\MassEventTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp" />

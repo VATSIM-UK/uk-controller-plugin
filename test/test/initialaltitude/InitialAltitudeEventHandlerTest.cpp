@@ -16,6 +16,8 @@
 #include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
+#include "flightplan/StoredFlightplanCollection.h"
+#include "flightplan/StoredFlightplan.h"
 
 using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -34,6 +36,8 @@ using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
+using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
+using UKControllerPlugin::Flightplan::StoredFlightplan;
 
 using ::testing::Test;
 using ::testing::StrictMock;
@@ -50,7 +54,7 @@ namespace UKControllerPluginTest {
                 InitialAltitudeEventHandlerTest()
                     :  owners(airfields, callsigns),
                     login(plugin, ControllerStatusEventHandlerCollection()),
-                    handler(generator, callsigns, owners, login, deferredEvents, plugin)
+                    handler(generator, callsigns, owners, login, deferredEvents, plugin, flightplans)
                 {
 
                 }
@@ -69,6 +73,7 @@ namespace UKControllerPluginTest {
                 NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 Login login;
+                StoredFlightplanCollection flightplans;
                 ActiveCallsignCollection callsigns;
                 AirfieldOwnershipManager owners;
                 InitialAltitudeGenerator generator;
@@ -496,5 +501,91 @@ namespace UKControllerPluginTest {
             handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
 
+        TEST_F(InitialAltitudeEventHandlerTest, NewActiveCallsignAssignsIfUserCallsign)
+        {
+            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
+            ActiveCallsign userCallsign(
+                "LON_S_CTR",
+                "Test",
+                controller
+            );
+            callsigns.AddUserCallsign(userCallsign);
+
+            airfields.AddAirfield(std::unique_ptr<Airfield>(new Airfield("EGKK", { "LON_S_CTR" })));
+            owners.RefreshOwner("EGKK");
+            this->flightplans.UpdatePlan(StoredFlightplan("BAW123", "EGKK", "EGPF"));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockReturnFlightplan =
+                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockReturnRadarTarget =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(mockReturnFlightplan));
+
+            ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123"))
+                .WillByDefault(Return(mockReturnRadarTarget));
+
+            EXPECT_CALL(*mockReturnFlightplan, GetDistanceFromOrigin())
+                .Times(1)
+                .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
+
+            EXPECT_CALL(*mockReturnFlightplan, HasControllerClearedAltitude())
+                .Times(1)
+                .WillOnce(Return(false));
+
+            EXPECT_CALL(*mockReturnFlightplan, IsTracked())
+                .Times(1)
+                .WillOnce(Return(false));
+
+            EXPECT_CALL(*mockReturnFlightplan, IsSimulated())
+                .Times(1)
+                .WillOnce(Return(false));
+
+            EXPECT_CALL(*mockReturnFlightplan, GetSidName())
+                .Times(2)
+                .WillRepeatedly(Return("ADMAG2X"));
+
+            EXPECT_CALL(*mockReturnFlightplan, GetOrigin())
+                .Times(4)
+                .WillRepeatedly(Return("EGKK"));
+
+            EXPECT_CALL(*mockReturnFlightplan, GetCallsign())
+                .Times(1)
+                .WillOnce(Return("BAW123"));
+
+            EXPECT_CALL(*mockReturnFlightplan, GetCruiseLevel())
+                .Times(1)
+                .WillOnce(Return(6000));
+
+            EXPECT_CALL(*mockReturnFlightplan, SetClearedAltitude(6000))
+                .Times(1);
+
+            EXPECT_CALL(*mockReturnRadarTarget, GetGroundSpeed())
+                .Times(1)
+                .WillOnce(Return(handler.assignmentMaxSpeed));
+
+            handler.ActiveCallsignAdded(userCallsign, true);
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, NewActiveCallsignDoesNotAssignIfNotUserCallsign)
+        {
+            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
+            ActiveCallsign userCallsign(
+                "LON_S_CTR",
+                "Test",
+                controller
+            );
+            callsigns.AddCallsign(userCallsign);
+            airfields.AddAirfield(std::unique_ptr<Airfield>(new Airfield("EGKK", { "LON_S_CTR" })));
+            owners.RefreshOwner("EGKK");
+            this->flightplans.UpdatePlan(StoredFlightplan("BAW123", "EGKK", "EGPF"));
+
+            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
+                .Times(0);
+
+            handler.ActiveCallsignAdded(userCallsign, false);
+        }
     }  // namespace InitialAltitude
 }  // namespace UKControllerPluginTest

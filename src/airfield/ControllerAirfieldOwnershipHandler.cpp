@@ -19,7 +19,6 @@ using UKControllerPlugin::Controller::ControllerPositionParser;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
-using UKControllerPlugin::EventHandler::MassEvent;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Controller::AirfieldOwnerQueryMessage;
 using UKControllerPlugin::Controller::AirfieldsOwnedQueryMessage;
@@ -31,12 +30,10 @@ namespace UKControllerPlugin {
             const ControllerPositionCollection & controllers,
             UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership,
             ActiveCallsignCollection & activeCallsigns,
-            const MassEvent massEventHandler,
             UserMessager & userMessager
         )
             : activeCallsigns(activeCallsigns),
             airfieldOwnership(airfieldOwnership),
-            massEventHandler(massEventHandler),
             controllers(controllers),
             userMessager(userMessager)
         {
@@ -179,11 +176,6 @@ namespace UKControllerPlugin {
 
             // Work out who owns what airfields.
             this->ProcessAffectedAirfields(matchedPos);
-
-            // If it's the current user logging on, update squawks, initial altitudes etc.
-            if (callsign.IsCurrentUser()) {
-                this->massEventHandler.SetAllInitialAltitudes();
-            }
         }
     }  // namespace Airfield
 }   // namespace UKControllerPlugin

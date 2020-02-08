@@ -16,10 +16,12 @@ using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator;
 using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
+using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Airfield::NormaliseSid;
 using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Controller::Login;
 using UKControllerPlugin::Flightplan::DeferredFlightPlanEvent;
+using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
@@ -32,10 +34,12 @@ namespace UKControllerPlugin {
             const AirfieldOwnershipManager & airfieldOwnership,
             const Login & login,
             DeferredEventHandler & deferredEvents,
-            EuroscopePluginLoopbackInterface & plugin
+            EuroscopePluginLoopbackInterface & plugin,
+            const StoredFlightplanCollection& storedFlightplans
         )
             : generator(generator), activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership),
-            minimumLoginTimeBeforeAssignment(5), login(login), deferredEvents(deferredEvents), plugin(plugin)
+            minimumLoginTimeBeforeAssignment(5), login(login), deferredEvents(deferredEvents), plugin(plugin),
+            storedFlightplans(storedFlightplans)
         {
 
         }
@@ -173,6 +177,53 @@ namespace UKControllerPlugin {
             }
 
             return true;
+        }
+
+        /*
+            If its the user, do some updates
+        */
+        void InitialAltitudeEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+        {
+            if (!userCallsign) {
+                return;
+            }
+
+
+            LogInfo("Mass assigning initial altitudes");
+
+            for (
+                StoredFlightplanCollection::const_iterator it = this->storedFlightplans.cbegin();
+                it != this->storedFlightplans.cend();
+                ++it
+            ) {
+                try {
+
+                    this->FlightPlanEvent(
+                        *this->plugin.GetFlightplanForCallsign(it->second->GetCallsign()),
+                        *this->plugin.GetRadarTargetForCallsign(it->second->GetCallsign())
+                    );
+
+                }
+                catch (std::invalid_argument) {
+                    continue;
+                }
+            }
+        }
+
+        /*
+            Nothing to see here
+        */
+        void InitialAltitudeEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+        {
+
+        }
+
+        /*
+            Nothing to see here
+        */
+        void InitialAltitudeEventHandler::CallsignsFlushed(void)
+        {
+
         }
 
         /*

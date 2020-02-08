@@ -9,6 +9,7 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "login/Login.h"
 #include "timedevent/DeferredEventRunnerInterface.h"
+#include "flightplan/StoredFlightplanCollection.h"
 
 namespace UKControllerPluginTest {
     namespace EventHandler {
@@ -22,7 +23,8 @@ namespace UKControllerPluginTest {
                     *airfieldOwnership,
                     *login,
                     *deferredEvents,
-                    *plugin
+                    *plugin,
+                    *storedFlightplans
                 ) {}
                 MOCK_METHOD2(
                     FlightPlanEvent,
@@ -48,6 +50,7 @@ namespace UKControllerPluginTest {
                 std::unique_ptr<UKControllerPlugin::Controller::Login> login;
                 std::unique_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferredEvents;
                 std::unique_ptr<UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface> plugin;
+                std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> storedFlightplans;
         };
     }  // namespace EventHandler
 }  // namespace UKControllerPluginTest

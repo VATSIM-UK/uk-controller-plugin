@@ -2,7 +2,6 @@
 #include "airfield/AirfieldOwnershipModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "plugin/UKPlugin.h"
-#include "massevent/MassEvent.h"
 #include "airfield/ControllerAirfieldOwnershipHandler.h"
 #include "controller/ControllerPositionCollectionFactory.h"
 #include "dependency/DependencyLoaderInterface.h"
@@ -10,7 +9,6 @@
 #include "controller/ControllerPositionCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::EventHandler::MassEvent;
 using UKControllerPlugin::Airfield::ControllerAirfieldOwnershipHandler;
 using UKControllerPlugin::Controller::ControllerPositionCollectionFactory;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
@@ -22,11 +20,6 @@ namespace UKControllerPlugin {
             PersistenceContainer & persistence,
             DependencyLoaderInterface& dependency
         ) {
-            MassEvent mass(
-                *persistence.plugin,
-                persistence.initialAltitudeEvents,
-                *persistence.flightplans
-            );
             persistence.controllerPositions = std::move(ControllerPositionCollectionFactory::Create(dependency));
 
             std::shared_ptr<ControllerAirfieldOwnershipHandler> airfieldOwnership(
@@ -34,7 +27,6 @@ namespace UKControllerPlugin {
                     *persistence.controllerPositions,
                     *persistence.airfieldOwnership,
                     *persistence.activeCallsigns,
-                    mass,
                     *persistence.userMessager
                 )
             );

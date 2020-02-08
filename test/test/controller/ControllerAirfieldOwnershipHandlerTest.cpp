@@ -12,7 +12,6 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "massevent/MassEvent.h"
 #include "initialaltitude/InitialAltitudeEventHandler.h"
 #include "initialaltitude/InitialAltitudeGenerator.h"
 #include "mock/MockSquawkEventHandler.h"
@@ -35,7 +34,6 @@ using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
-using UKControllerPlugin::EventHandler::MassEvent;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator;
 using UKControllerPluginTest::Squawk::MockSquawkEventHandler;
@@ -66,16 +64,15 @@ namespace UKControllerPluginTest {
                             this->ownership,
                             this->login,
                             this->deferredEvents,
-                            this->plugin
+                            this->plugin,
+                            this->flightplans
                         )
                     ),
                     userMessager(this->plugin),
-                    massEvents(this->plugin, this->initialAltitudes, this->flightplans),
                     handler(
                         this->controllerCollection,
                         this->ownership,
                         this->activeCallsigns,
-                        this->massEvents,
                         this->userMessager
                     )
                 {
@@ -184,7 +181,6 @@ namespace UKControllerPluginTest {
                 DeferredEventHandler deferredEvents;
                 ActiveCallsignCollection activeCallsigns;
                 UserMessager userMessager;
-                MassEvent massEvents;
                 ControllerAirfieldOwnershipHandler handler;
 
                 // Controllers
@@ -359,7 +355,7 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(199.998));
 
             EXPECT_CALL(euroscopeMock, IsCurrentUser())
-                .Times(2)
+                .Times(1)
                 .WillRepeatedly(Return(true));
 
             this->handler.ControllerUpdateEvent(euroscopeMock);
@@ -388,7 +384,7 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(199.998));
 
             EXPECT_CALL(euroscopeMock, IsCurrentUser())
-                .Times(2)
+                .Times(1)
                 .WillRepeatedly(Return(true));
 
             this->handler.ControllerUpdateEvent(euroscopeMock);
@@ -416,7 +412,7 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(134.120));
 
             EXPECT_CALL(euroscopeMock, IsCurrentUser())
-                .Times(2)
+                .Times(1)
                 .WillRepeatedly(Return(true));
 
             this->handler.ControllerUpdateEvent(euroscopeMock);
@@ -449,98 +445,12 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(199.998));
 
             EXPECT_CALL(euroscopeMock, IsCurrentUser())
-                .Times(2)
+                .Times(1)
                 .WillRepeatedly(Return(true));
 
             this->handler.ControllerUpdateEvent(euroscopeMock);
             EXPECT_TRUE(this->activeCallsigns.CallsignActive("EGKK_1-DEL"));
             EXPECT_TRUE(this->activeCallsigns.PositionActive("EGKK_DEL"));
-        }
-
-        TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventUpdatesFlightplansIfControllerIsUser)
-        {
-
-            // Do some dummy flightplan setups.
-            NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
-            NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
-            ON_CALL(mockFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
-
-            ON_CALL(mockFlightplan, GetOrigin())
-                .WillByDefault(Return("EGKK"));
-
-            ON_CALL(mockFlightplan, GetDestination())
-                .WillByDefault(Return("EDDM"));
-
-            this->flightplans.UpdatePlan(StoredFlightplan(mockFlightplan));
-
-
-            // Create the controller mock
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            ON_CALL(euroscopeMock, GetCallsign())
-                .WillByDefault(Return("EGKK_DEL"));
-
-            ON_CALL(euroscopeMock, HasActiveFrequency())
-                .WillByDefault(Return(true));
-
-            ON_CALL(euroscopeMock, GetControllerName())
-                .WillByDefault(Return("Testy McTestington"));
-
-            ON_CALL(euroscopeMock, GetFrequency())
-                .WillByDefault(Return(199.998));
-
-            ON_CALL(euroscopeMock, IsCurrentUser())
-                .WillByDefault(Return(true));
-
-
-            // Create mock radar targets and flightplans, that simulate what ES returns when asked for a flightplan.
-            std::shared_ptr<MockEuroScopeCFlightPlanInterface> mockFlightplanReturn(
-                new NiceMock<MockEuroScopeCFlightPlanInterface>
-            );
-
-            ON_CALL(*mockFlightplanReturn, GetDistanceFromOrigin())
-                .WillByDefault(Return(1));
-
-            ON_CALL(*mockFlightplanReturn, HasControllerClearedAltitude())
-                .WillByDefault(Return(false));
-
-            ON_CALL(*mockFlightplanReturn, IsTracked())
-                .WillByDefault(Return(false));
-
-            ON_CALL(*mockFlightplanReturn, IsSimulated())
-                .WillByDefault(Return(false));
-
-            ON_CALL(*mockFlightplanReturn, GetSidName())
-                .WillByDefault(Return("ADMAG2X"));
-
-            ON_CALL(*mockFlightplanReturn, GetOrigin())
-                .WillByDefault(Return("EGKK"));
-
-            ON_CALL(*mockFlightplanReturn, GetCruiseLevel())
-                .WillByDefault(Return(6000));
-
-            ON_CALL(*mockFlightplanReturn, GetCallsign())
-                .WillByDefault(Return("BAW123"));
-
-            std::shared_ptr<MockEuroScopeCRadarTargetInterface> mockRadarTargetReturn(
-                new NiceMock<MockEuroScopeCRadarTargetInterface>
-            );
-
-            ON_CALL(*mockRadarTargetReturn, GetGroundSpeed())
-                .WillByDefault(Return(5));
-
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
-                .WillByDefault(Return(mockFlightplanReturn));
-
-            ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123"))
-                .WillByDefault(Return(mockRadarTargetReturn));
-
-            // The important expectation - we're expecting the cleared altitude to be set and squawks assigned.
-            EXPECT_CALL(*mockFlightplanReturn, SetClearedAltitude(6000))
-                .Times(1);
-
-            this->handler.ControllerUpdateEvent(euroscopeMock);
         }
     }  // namespace Controller
 }  // namespace UKControllerPluginTest
