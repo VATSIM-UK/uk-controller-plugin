@@ -108,6 +108,23 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("132.600", this->handler.GetCachedItem("BAW123"));
         }
 
+        TEST_F(HandoffEventHandlerTest, TestItReturnsDefaultIfFoundControllerIsUser)
+        {
+            this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
+            this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
+            this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
+            EXPECT_EQ(handler.DEFAULT_TAG_VALUE, this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
+        }
+
+        TEST_F(HandoffEventHandlerTest, TestItCachesIfFoundControllerIsUser)
+        {
+            this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
+            this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
+            this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
+            this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget);
+            EXPECT_EQ(handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+        }
+
         TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanUpdate)
         {
             this->handler.AddCachedItem("BAW123", "132.600");

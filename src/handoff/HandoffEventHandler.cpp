@@ -64,7 +64,14 @@ namespace UKControllerPlugin {
                 it != controllers.cend();
                 ++it
             ){
+
                 if (this->callsigns.PositionActive(it->get().GetCallsign())) {
+                    // If we're handing off to the user, then don't bother displaying a handoff frequency
+                    if (this->callsigns.UserHasCallsign() && this->callsigns.GetUserCallsign().GetNormalisedPosition() == *it) {
+                        this->cache[flightPlan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
+                        return this->DEFAULT_TAG_VALUE;
+                    }
+
                     char frequencyString[24];
                     sprintf_s(frequencyString, "%.3f", it->get().GetFrequency());
                     this->cache[flightPlan.GetCallsign()] = std::string(frequencyString);
