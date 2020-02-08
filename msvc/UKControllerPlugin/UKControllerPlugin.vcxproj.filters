@@ -957,6 +957,9 @@
     <ClInclude Include="..\..\src\handoff\CachedHandoff.h">
       <Filter>src\handoff</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\controller\ActiveCallsignEventHandlerInterface.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">

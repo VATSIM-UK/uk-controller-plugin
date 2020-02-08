@@ -50,6 +50,7 @@
     <ClInclude Include="..\..\src\command\CommandHandlerInterface.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsign.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignCollection.h" />
+    <ClInclude Include="..\..\src\controller\ActiveCallsignEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\controller\AirfieldOwnerQueryMessage.h" />
     <ClInclude Include="..\..\src\controller\AirfieldsOwnedQueryMessage.h" />
     <ClInclude Include="..\..\src\controller\ControllerPosition.h" />

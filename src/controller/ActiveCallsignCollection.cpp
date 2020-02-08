@@ -30,6 +30,14 @@ namespace UKControllerPlugin {
             this->activeCallsigns[controller.GetCallsign()] =
                 this->activePositions[controller.GetNormalisedPosition().GetCallsign()]
                 .insert(controller).first;
+
+            for (
+                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it = this->handlers.cbegin();
+                it != this->handlers.cend();
+                ++it
+            ) {
+                (*it)->ActiveCallsignAdded(controller);
+            }
         }
 
         /*
@@ -49,6 +57,14 @@ namespace UKControllerPlugin {
                 .insert(controller).first;
             this->activeCallsigns[controller.GetCallsign()] = this->userCallsign;
             this->userActive = true;
+
+            for (
+                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it = this->handlers.cbegin();
+                it != this->handlers.cend();
+                ++it
+            ) {
+                (*it)->ActiveCallsignAdded(controller);
+            }
         }
 
         /*
@@ -67,6 +83,13 @@ namespace UKControllerPlugin {
             this->activeCallsigns.clear();
             this->activePositions.clear();
             this->userActive = false;
+            for (
+                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it = this->handlers.cbegin();
+                it != this->handlers.cend();
+                ++it
+            ) {
+                (*it)->CallsignsFlushed();
+            }
         }
 
         int ActiveCallsignCollection::GetNumberActiveCallsigns() const
@@ -147,6 +170,14 @@ namespace UKControllerPlugin {
                 controller.GetNormalisedPosition().GetCallsign()
             )->second.erase(callsign->second);
             this->activeCallsigns.erase(callsign);
+
+            for (
+                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it = this->handlers.cbegin();
+                it != this->handlers.cend();
+                ++it
+            ) {
+                (*it)->ActiveCallsignRemoved(controller);
+            }
         }
 
         /*
@@ -157,5 +188,19 @@ namespace UKControllerPlugin {
             return this->userActive;
         }
 
+        void ActiveCallsignCollection::AddHandler(std::shared_ptr<ActiveCallsignEventHandlerInterface> handler)
+        {
+            if (std::find(this->handlers.cbegin(), this->handlers.cend(), handler) != this->handlers.cend()) {
+                LogWarning("Duplicate ActiveCallsignEventHandler detected");
+                return;
+            }
+
+            this->handlers.push_back(handler);
+        }
+
+        size_t ActiveCallsignCollection::CountHandlers(void) const
+        {
+            return this->handlers.size();
+        }
     }  // namespace Controller
 }  // namespace UKControllerPlugin

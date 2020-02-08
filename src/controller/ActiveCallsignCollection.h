@@ -1,5 +1,6 @@
 #pragma once
 #include "controller/ActiveCallsign.h"
+#include "controller/ActiveCallsignEventHandlerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Controller {
@@ -30,11 +31,15 @@ class ActiveCallsignCollection
         bool PositionActive(std::string normalisedCallsign) const;
         void RemoveCallsign(UKControllerPlugin::Controller::ActiveCallsign controller);
         bool UserHasCallsign(void) const;
+        void AddHandler(
+            std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface> handler
+        );
+        size_t CountHandlers(void) const;
 
     private:
 
         // Whether or not the user is active.
-        bool userActive;
+        bool userActive = false;
 
         // Set of normalised callsign to callsigns actively taking that position. Self ordering.
         std::map<std::string, std::set<UKControllerPlugin::Controller::ActiveCallsign>> activePositions;
@@ -44,6 +49,11 @@ class ActiveCallsignCollection
 
         // The callsign for the logged in user, if set.
         std::set<UKControllerPlugin::Controller::ActiveCallsign>::iterator userCallsign;
+
+        // All the handlers for these events
+        std::list<
+            std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface>
+        > handlers;
 };
 
 }  // namespace Controller
