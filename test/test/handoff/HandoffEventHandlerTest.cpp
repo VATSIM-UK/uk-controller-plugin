@@ -76,19 +76,19 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }
 
-        TEST_F(HandoffEventHandlerTest, TestItReturnsDefaultIfNoControllerOnlineInHandoffOrder)
+        TEST_F(HandoffEventHandlerTest, TestItReturnsUnicomIfNoControllerOnlineInHandoffOrder)
         {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
-            this->handoffs.AddSidMapping("EGKK", "ADMAG2K", "EGKK_ADMAG2X");
-            EXPECT_EQ(handler.DEFAULT_TAG_VALUE, this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
+            this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
+            EXPECT_EQ(handler.UNICOM_TAG_VALUE, this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItCachesNoControllerOnline)
         {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
-            this->handoffs.AddSidMapping("EGKK", "ADMAG2K", "EGKK_ADMAG2X");
+            this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
             this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget);
-            EXPECT_EQ(handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(handler.UNICOM_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsFrequencyIfControllerFoundInHandoffOrder)

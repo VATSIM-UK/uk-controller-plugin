@@ -54,6 +54,11 @@ namespace UKControllerPlugin {
                 flightPlan.GetSidName()
             );
 
+            if (controllers == this->handoffs.invalidHierarchy) {
+                this->cache[flightPlan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
+                return this->DEFAULT_TAG_VALUE;
+            }
+
             for (
                 ControllerPositionHierarchy::const_iterator it = controllers.cbegin();
                 it != controllers.cend();
@@ -67,8 +72,8 @@ namespace UKControllerPlugin {
                 }
             }
 
-            this->cache[flightPlan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
-            return this->DEFAULT_TAG_VALUE;
+            this->cache[flightPlan.GetCallsign()] = this->UNICOM_TAG_VALUE;
+            return this->UNICOM_TAG_VALUE;
         }
 
         void HandoffEventHandler::FlightPlanEvent(
