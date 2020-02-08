@@ -34,7 +34,8 @@ namespace UKControllerPlugin {
             ) {
 
                 // Missing data, skip this position.
-                if (!posIt.value()["frequency"].is_number_float() || !posIt.value()["top-down"].is_array()) {
+                if (!posIt.value()["frequency"].is_number() || !posIt.value()["top-down"].is_array()) {
+                    LogWarning("Invalid controller position " + posIt.key());
                     continue;
                 }
 
