@@ -92,6 +92,7 @@
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanTest.cpp" />
     <ClCompile Include="..\..\test\test\handoff\HandoffCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\handoff\HandoffEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\handoff\HandoffModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\helper\HelperFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\AircraftHistoryTrailTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailEventHandlerTest.cpp" />

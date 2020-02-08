@@ -21,7 +21,6 @@ namespace UKControllerPlugin {
                 *container.activeCallsigns
             );
 
-
             container.tagHandler->RegisterTagItem(107, handler);
             container.flightplanHandler->RegisterHandler(handler);
         }
