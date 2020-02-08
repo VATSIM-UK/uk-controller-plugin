@@ -159,5 +159,25 @@ namespace UKControllerPluginTest {
             collection.AddPosition(std::move(controller));
             EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("ESX", 120.620));
         }
+
+        TEST(ControllerPositionCollection, HasPositionReturnsFalseIfDoesntExist)
+        {
+            ControllerPositionCollection collection;
+            std::unique_ptr<ControllerPosition> controller(
+                new ControllerPosition("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD, EGFF"})
+            );
+            collection.AddPosition(std::move(controller));
+            EXPECT_FALSE(collection.HasPosition("EGHI_TWR"));
+        }
+
+        TEST(ControllerPositionCollection, HasPositionReturnsTrueIfExists)
+        {
+            ControllerPositionCollection collection;
+            std::unique_ptr<ControllerPosition> controller(
+                new ControllerPosition("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD, EGFF"})
+            );
+            collection.AddPosition(std::move(controller));
+            EXPECT_TRUE(collection.HasPosition("EGFF_APP"));
+        }
     }  // namespace Controller
 }  // namespace UKControllerPluginTest
