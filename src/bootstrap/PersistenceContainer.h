@@ -49,6 +49,7 @@
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "sectorfile/RunwayCollection.h"
+#include "handoff/HandoffCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -105,6 +106,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Hold::HoldProfileManager> holdProfiles;
             std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
             std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
+            std::unique_ptr<UKControllerPlugin::Handoff::HandoffCollection> handoffs;
 
             // Collections that are spawned multiple times.
             std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;

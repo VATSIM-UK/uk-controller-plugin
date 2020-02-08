@@ -14,10 +14,10 @@ namespace UKControllerPlugin {
             PersistenceContainer& container,
             DependencyLoaderInterface& dependency
         ) {
-            HandoffCollection handoffs;
+            container.handoffs.reset(new HandoffCollection);
 
             std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
-                std::move(handoffs),
+                *container.handoffs,
                 *container.activeCallsigns
             );
 

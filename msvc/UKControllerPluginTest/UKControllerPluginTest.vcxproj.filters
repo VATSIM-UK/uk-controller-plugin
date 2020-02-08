@@ -727,6 +727,9 @@
     <ClCompile Include="..\..\test\test\dependency\DependencyLoaderTest.cpp">
       <Filter>test\dependency</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\handoff\HandoffEventHandlerTest.cpp">
+      <Filter>test\handoff</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

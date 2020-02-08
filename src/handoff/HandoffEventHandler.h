@@ -17,9 +17,11 @@ namespace UKControllerPlugin {
             public: 
 
                 HandoffEventHandler(
-                    const UKControllerPlugin::Handoff::HandoffCollection handoffs,
+                    const UKControllerPlugin::Handoff::HandoffCollection& handoffs,
                     const UKControllerPlugin::Controller::ActiveCallsignCollection& callsigns
                 );
+                void AddCachedItem(std::string callsign, std::string item);
+                std::string GetCachedItem(std::string callsign) const;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(void) const override;
@@ -41,10 +43,13 @@ namespace UKControllerPlugin {
                     int dataType
                 ) override;
 
+                // The default value to return
+                const std::string DEFAULT_TAG_VALUE = "-";
+
             private:
 
                 // The handoffs
-                const UKControllerPlugin::Handoff::HandoffCollection handoffs;
+                const UKControllerPlugin::Handoff::HandoffCollection& handoffs;
 
                 // The active callsigns
                 const UKControllerPlugin::Controller::ActiveCallsignCollection& callsigns;
