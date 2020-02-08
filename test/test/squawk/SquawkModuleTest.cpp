@@ -6,6 +6,7 @@
 #include "timedevent/TimedEventCollection.h"
 #include "squawk/SquawkEventHandler.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "controller/ActiveCallsignCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Squawk::SquawkModule;
@@ -13,6 +14,7 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using ::testing::Test;
 
 namespace UKControllerPluginModuleTest {
@@ -28,6 +30,7 @@ namespace UKControllerPluginModuleTest {
                     this->container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
                     this->container.timedHandler.reset(new TimedEventCollection);
                     this->container.userSettingHandlers.reset(new UserSettingAwareCollection);
+                    this->container.activeCallsigns.reset(new ActiveCallsignCollection);
                 }
 
                 PersistenceContainer container;
@@ -55,6 +58,12 @@ namespace UKControllerPluginModuleTest {
                 1,
                 this->container.timedHandler->CountHandlersForFrequency(SquawkModule::trackedAircraftCheckFrequency)
             );
+        }
+
+        TEST_F(SquawkModuleTest, BootstrapPluginRegistersEventHandlerForActiveCallsignEvents)
+        {
+            SquawkModule::BootstrapPlugin(container, false, false);
+            EXPECT_EQ(1, this->container.activeCallsigns->CountHandlers());
         }
 
         TEST_F(SquawkModuleTest, BootstrapPluginRegistersFunctionCallbacks)

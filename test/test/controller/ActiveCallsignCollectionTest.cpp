@@ -59,12 +59,25 @@ namespace UKControllerPluginTest {
             this->collection.AddHandler(handler1);
             this->collection.AddHandler(handler2);
 
-            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign))
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, false))
                 .Times(1);
-            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign))
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, false))
                 .Times(1);
 
             this->collection.AddCallsign(this->testCallsign);
+        }
+
+        TEST_F(ActiveCallsignCollectionTest, ItHandlesNewUserCallsignEvents)
+        {
+            this->collection.AddHandler(handler1);
+            this->collection.AddHandler(handler2);
+
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, true))
+                .Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, true))
+                .Times(1);
+
+            this->collection.AddUserCallsign(this->testCallsign);
         }
 
         TEST_F(ActiveCallsignCollectionTest, ItHandlesRemovedCallsignEvents)
@@ -72,17 +85,36 @@ namespace UKControllerPluginTest {
             this->collection.AddHandler(handler1);
             this->collection.AddHandler(handler2);
 
-            EXPECT_CALL(*this->handler1, ActiveCallsignRemoved(this->testCallsign))
+            EXPECT_CALL(*this->handler1, ActiveCallsignRemoved(this->testCallsign, false))
                 .Times(1);
-            EXPECT_CALL(*this->handler2, ActiveCallsignRemoved(this->testCallsign))
+            EXPECT_CALL(*this->handler2, ActiveCallsignRemoved(this->testCallsign, false))
                 .Times(1);
 
-            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign))
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, false))
                 .Times(1);
-            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign))
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, false))
                 .Times(1);
 
             this->collection.AddCallsign(this->testCallsign);
+            this->collection.RemoveCallsign(this->testCallsign);
+        }
+
+        TEST_F(ActiveCallsignCollectionTest, ItHandlesRemovedUserCallsignEvents)
+        {
+            this->collection.AddHandler(handler1);
+            this->collection.AddHandler(handler2);
+
+            EXPECT_CALL(*this->handler1, ActiveCallsignRemoved(this->testCallsign, true))
+                .Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignRemoved(this->testCallsign, true))
+                .Times(1);
+
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, true))
+                .Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, true))
+                .Times(1);
+
+            this->collection.AddUserCallsign(this->testCallsign);
             this->collection.RemoveCallsign(this->testCallsign);
         }
 

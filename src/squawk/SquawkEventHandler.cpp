@@ -197,5 +197,50 @@ namespace UKControllerPlugin {
         {
             return this->userAutomaticAssignmentEnabled;
         }
+
+        /*
+            If the ActiveCallsign is the user callsign, then force a squawk regenerate.
+        */
+        void SquawkEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+        {
+            if (!userCallsign) {
+                return;
+            }
+
+            LogInfo("Mass assigning squawks");
+
+            for (
+                StoredFlightplanCollection::const_iterator it = this->storedFlightplans.cbegin();
+                it != this->storedFlightplans.cend();
+                ++it
+            ) {
+                try {
+
+                    this->FlightPlanEvent(
+                        *this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign()),
+                        *this->pluginLoopback.GetRadarTargetForCallsign(it->second->GetCallsign())
+                    );
+
+                }
+                catch (std::invalid_argument) {
+                    continue;
+                }
+            }
+        }
+
+        /*
+            Nothing to see here
+        */
+        void SquawkEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+        {
+
+        }
+
+        /*
+            Nothing to see here
+        */
+        void SquawkEventHandler::CallsignsFlushed(void)
+        {
+        }
     }  // namespace Squawk
 }  // namespace UKControllerPlugin

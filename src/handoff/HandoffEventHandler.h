@@ -50,10 +50,12 @@ namespace UKControllerPlugin {
 
                 // Inherited via ActiveCallsignEventHandlerInterface
                 void ActiveCallsignAdded(
-                    const UKControllerPlugin::Controller::ActiveCallsign& callsign
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
                 ) override;
                 void ActiveCallsignRemoved(
-                    const UKControllerPlugin::Controller::ActiveCallsign& callsign
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
                 ) override;
                 void CallsignsFlushed(void) override;
 

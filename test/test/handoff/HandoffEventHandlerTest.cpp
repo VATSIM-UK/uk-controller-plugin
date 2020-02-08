@@ -164,7 +164,7 @@ namespace UKControllerPluginTest {
         {
             this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
             this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_S_CTR"));
-            this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1));
+            this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1), false);
             EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
             EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
         }
@@ -173,7 +173,7 @@ namespace UKControllerPluginTest {
         {
             this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
             this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_S_CTR"));
-            this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1));
+            this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1), false);
             EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
             EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
         }
@@ -182,7 +182,7 @@ namespace UKControllerPluginTest {
         {
             this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
             this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_SC_CTR"));
-            this->handler.ActiveCallsignRemoved(ActiveCallsign("LON_SC_CTR", "Testy", this->position1));
+            this->handler.ActiveCallsignRemoved(ActiveCallsign("LON_SC_CTR", "Testy", this->position1), false);
             EXPECT_EQ(CachedHandoff("123.456", "LON_S_CTR"), this->handler.GetCachedItem("BAW123"));
             EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
         }

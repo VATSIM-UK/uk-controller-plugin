@@ -76,7 +76,7 @@ namespace UKControllerPluginTest {
                 new StrictMock<MockSquawkEventHandler>
             );
 
-            MassEvent mass(mockEuroscopePlugin, initialAltitudeEventHandler, flightplans, mockSquawkEventHandler);
+            MassEvent mass(mockEuroscopePlugin, initialAltitudeEventHandler, flightplans);
             mass.SetAllInitialAltitudes();
         }
 
@@ -109,92 +109,8 @@ namespace UKControllerPluginTest {
                 new StrictMock<MockSquawkEventHandler>
             );
 
-            MassEvent mass(mockEuroscopePlugin, initialAltitudeEventHandler, flightplans, mockSquawkEventHandler);
+            MassEvent mass(mockEuroscopePlugin, initialAltitudeEventHandler, flightplans);
             mass.SetAllInitialAltitudes();
-        }
-
-        TEST(MassEvent, SetAllSquawksSetsAll)
-        {
-            std::shared_ptr<MockEuroScopeCFlightPlanInterface> mockFlightplan1(
-                new NiceMock<MockEuroScopeCFlightPlanInterface>
-            );
-            std::shared_ptr<MockEuroScopeCRadarTargetInterface> mockRadarTarget1(
-                new NiceMock<MockEuroScopeCRadarTargetInterface>
-            );
-            std::shared_ptr<MockEuroScopeCFlightPlanInterface> mockFlightplan2(
-                new NiceMock<MockEuroScopeCFlightPlanInterface>
-            );
-            std::shared_ptr<MockEuroScopeCRadarTargetInterface> mockRadarTarget2(
-                new NiceMock<MockEuroScopeCRadarTargetInterface>
-            );
-
-            StrictMock<MockEuroscopePluginLoopbackInterface> mockEuroscopePlugin;
-
-            EXPECT_CALL(mockEuroscopePlugin, GetFlightplanForCallsign("BAW123"))
-                .Times(1)
-                .WillOnce(Return(mockFlightplan1));
-
-            EXPECT_CALL(mockEuroscopePlugin, GetRadarTargetForCallsign("BAW123"))
-                .Times(1)
-                .WillOnce(Return(mockRadarTarget1));
-
-            EXPECT_CALL(mockEuroscopePlugin, GetFlightplanForCallsign("EZY456"))
-                .Times(1)
-                .WillOnce(Return(mockFlightplan2));
-
-            EXPECT_CALL(mockEuroscopePlugin, GetRadarTargetForCallsign("EZY456"))
-                .Times(1)
-                .WillOnce(Return(mockRadarTarget2));
-
-            StoredFlightplanCollection flightplans;
-            flightplans.UpdatePlan(StoredFlightplan("BAW123", "EGKK", "EDDM"));
-            flightplans.UpdatePlan(StoredFlightplan("EZY456", "EGLL", "EIDW"));
-
-            std::shared_ptr<StrictMock<MockInitialAltitudeEventHandler>> initialAltitudeEventHandler;
-
-            std::shared_ptr<StrictMock<MockSquawkEventHandler>> mockSquawkEventHandler(
-                new StrictMock<MockSquawkEventHandler>
-            );
-            EXPECT_CALL(*mockSquawkEventHandler, FlightPlanEvent(Ref(*mockFlightplan1), Ref(*mockRadarTarget1)))
-                .Times(1);
-
-            EXPECT_CALL(*mockSquawkEventHandler, FlightPlanEvent(Ref(*mockFlightplan2), Ref(*mockRadarTarget2)))
-                .Times(1);
-
-            MassEvent mass(mockEuroscopePlugin, initialAltitudeEventHandler, flightplans, mockSquawkEventHandler);
-            mass.SetAllSquawks();
-        }
-
-        TEST(MassEvent, SetAllSquawksSetDoesNothingIfHandlerNull)
-        {
-            std::shared_ptr<MockEuroScopeCFlightPlanInterface> mockFlightplan1(
-                new NiceMock<MockEuroScopeCFlightPlanInterface>
-            );
-            std::shared_ptr<MockEuroScopeCRadarTargetInterface> mockRadarTarget1(
-                new NiceMock<MockEuroScopeCRadarTargetInterface>
-            );
-            std::shared_ptr<MockEuroScopeCFlightPlanInterface> mockFlightplan2(
-                new NiceMock<MockEuroScopeCFlightPlanInterface>
-            );
-            std::shared_ptr<MockEuroScopeCRadarTargetInterface> mockRadarTarget2(
-                new NiceMock<MockEuroScopeCRadarTargetInterface>
-            );
-
-            StrictMock<MockEuroscopePluginLoopbackInterface> mockEuroscopePlugin;
-
-            EXPECT_CALL(mockEuroscopePlugin, GetFlightplanForCallsign("BAW123"))
-                .Times(0);
-
-            StoredFlightplanCollection flightplans;
-            flightplans.UpdatePlan(StoredFlightplan("BAW123", "EGKK", "EDDM"));
-            flightplans.UpdatePlan(StoredFlightplan("EZY456", "EGLL", "EIDW"));
-
-            std::shared_ptr<StrictMock<MockInitialAltitudeEventHandler>> initialAltitudeEventHandler;
-
-            std::shared_ptr<StrictMock<MockSquawkEventHandler>> mockSquawkEventHandler;
-
-            MassEvent mass(mockEuroscopePlugin, initialAltitudeEventHandler, flightplans, mockSquawkEventHandler);
-            mass.SetAllSquawks();
         }
     }  // namespace EventHandler
 }  // namespace UKControllerPluginTest

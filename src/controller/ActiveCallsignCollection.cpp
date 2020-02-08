@@ -36,7 +36,7 @@ namespace UKControllerPlugin {
                 it != this->handlers.cend();
                 ++it
             ) {
-                (*it)->ActiveCallsignAdded(controller);
+                (*it)->ActiveCallsignAdded(controller, false);
             }
         }
 
@@ -63,7 +63,7 @@ namespace UKControllerPlugin {
                 it != this->handlers.cend();
                 ++it
             ) {
-                (*it)->ActiveCallsignAdded(controller);
+                (*it)->ActiveCallsignAdded(controller, true);
             }
         }
 
@@ -162,7 +162,8 @@ namespace UKControllerPlugin {
             }
 
             // If they're the current user, mark inactive.
-            if (this->userActive && *callsign->second == *this->userCallsign) {
+            bool isUser = this->userActive && *callsign->second == *this->userCallsign;
+            if (isUser) {
                 this->userActive = false;
             }
 
@@ -176,7 +177,7 @@ namespace UKControllerPlugin {
                 it != this->handlers.cend();
                 ++it
             ) {
-                (*it)->ActiveCallsignRemoved(controller);
+                (*it)->ActiveCallsignRemoved(controller, isUser);
             }
         }
 

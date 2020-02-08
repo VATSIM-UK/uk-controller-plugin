@@ -183,7 +183,6 @@ namespace UKControllerPlugin {
             // If it's the current user logging on, update squawks, initial altitudes etc.
             if (callsign.IsCurrentUser()) {
                 this->massEventHandler.SetAllInitialAltitudes();
-                this->massEventHandler.SetAllSquawks();
             }
         }
     }  // namespace Airfield

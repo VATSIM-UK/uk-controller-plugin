@@ -11,8 +11,14 @@ namespace UKControllerPlugin {
         class ActiveCallsignEventHandlerInterface
         {
             public:
-                virtual void ActiveCallsignAdded(const UKControllerPlugin::Controller::ActiveCallsign& callsign) = 0;
-                virtual void ActiveCallsignRemoved(const UKControllerPlugin::Controller::ActiveCallsign& callsign) = 0;
+                virtual void ActiveCallsignAdded(
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
+                ) = 0;
+                virtual void ActiveCallsignRemoved(
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
+                ) = 0;
                 virtual void CallsignsFlushed(void) = 0;
         };
     }  // namespace Controller

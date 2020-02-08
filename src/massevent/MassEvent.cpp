@@ -15,11 +15,10 @@ namespace UKControllerPlugin {
         MassEvent::MassEvent(
             EuroscopePluginLoopbackInterface & pluginInterface,
             std::shared_ptr<InitialAltitudeEventHandler> initialAltitudes,
-            const StoredFlightplanCollection & flightplans,
-            std::shared_ptr<SquawkEventHandler> squawks
+            const StoredFlightplanCollection & flightplans
         )
             : pluginInterface(pluginInterface), flightplans(flightplans),
-            initialAltitudes(initialAltitudes), squawks(squawks)
+            initialAltitudes(initialAltitudes)
         {
 
         }
@@ -48,36 +47,6 @@ namespace UKControllerPlugin {
                     );
 
                 } catch (std::invalid_argument) {
-                    continue;
-                }
-            }
-        }
-
-        /*
-            Loops through all the flightplans and triggers an update event.
-        */
-        void MassEvent::SetAllSquawks(void)
-        {
-            if (!this->squawks) {
-                return;
-            }
-
-            LogInfo("Mass assigning squawks");
-
-            for (
-                StoredFlightplanCollection::const_iterator it = this->flightplans.cbegin();
-                it != this->flightplans.cend();
-                ++it
-            ) {
-                try {
-
-                    this->squawks->FlightPlanEvent(
-                        *this->pluginInterface.GetFlightplanForCallsign(it->second->GetCallsign()),
-                        *this->pluginInterface.GetRadarTargetForCallsign(it->second->GetCallsign())
-                    );
-
-                }
-                catch (std::invalid_argument) {
                     continue;
                 }
             }

@@ -26,12 +26,10 @@ namespace UKControllerPlugin {
                 MassEvent(
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & pluginInterface,
                     std::shared_ptr<UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler> initialAltitudes,
-                    const UKControllerPlugin::Flightplan::StoredFlightplanCollection & flightplans,
-                    std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawks1
+                    const UKControllerPlugin::Flightplan::StoredFlightplanCollection & flightplans
                 );
 
                 void SetAllInitialAltitudes(void);
-                void SetAllSquawks(void);
 
             private:
                 // A way to get things we need from Euroscope.
@@ -39,9 +37,6 @@ namespace UKControllerPlugin {
 
                 // Event handler for initial altitudes
                 std::shared_ptr<UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler> initialAltitudes;
-
-                // Event handler for squawks
-                std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawks;
 
                 // The flightplan repository so we can iterate it.
                 const UKControllerPlugin::Flightplan::StoredFlightplanCollection & flightplans;

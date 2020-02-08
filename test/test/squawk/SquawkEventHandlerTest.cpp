@@ -103,7 +103,8 @@ namespace UKControllerPluginTest {
                         this->login,
                         this->deferredEvents,
                         false
-                    )
+                    ),
+                    userCallsign("EGKK_APP", "Testy McTestface", this->controller)
                 {
 
                 }
@@ -118,13 +119,7 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return(true));
 
                     this->airfields.AddAirfield(std::unique_ptr<Airfield>(new Airfield("EGKK", { "EGKK_APP" })));
-                    this->activeCallsigns.AddUserCallsign(
-                        ActiveCallsign(
-                            "EGKK_APP",
-                            "Testy McTestface",
-                            this->controller
-                        )
-                    );
+                    this->activeCallsigns.AddUserCallsign(this->userCallsign);
                     this->airfieldOwnership.RefreshOwner("EGKK");
 
                     // By default, lets assume we've been logged in for a while.
@@ -229,6 +224,7 @@ namespace UKControllerPluginTest {
                 SquawkGenerator generator;
                 SquawkAssignment assignmentRules;
                 ActiveCallsignCollection activeCallsigns;
+                ActiveCallsign userCallsign;
                 AirfieldOwnershipManager airfieldOwnership;
                 ControllerPosition controller;
                 AirfieldCollection airfields;
@@ -534,6 +530,40 @@ namespace UKControllerPluginTest {
            this->expectGeneralAssignment();
            handler.TimedEventTrigger();
            this->AssertGeneralAssignment();
+        }
+
+        TEST_F(SquawkEventHandlerTest, ActiveCallsignAddedAssignsAllSquawksWhenUserLogsOn)
+        {
+            this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
+                .WillByDefault(Return(false));
+
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser)
+                .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel())
+                .WillByDefault(Return(999999));
+
+            this->expectGeneralAssignment();
+            handler.ActiveCallsignAdded(this->userCallsign, true);
+            this->AssertGeneralAssignment();
+        }
+
+        TEST_F(SquawkEventHandlerTest, ActiveCallsignAddedDoesntAssignSquawkIfNotUserLogsOn)
+        {
+            this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
+                .WillByDefault(Return(false));
+
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser)
+                .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel())
+                .WillByDefault(Return(999999));
+
+            handler.ActiveCallsignAdded(this->userCallsign, false);
         }
     }  // namespace Squawk
 }  // namespace UKControllerPluginTest

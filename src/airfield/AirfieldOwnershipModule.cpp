@@ -25,8 +25,7 @@ namespace UKControllerPlugin {
             MassEvent mass(
                 *persistence.plugin,
                 persistence.initialAltitudeEvents,
-                *persistence.flightplans,
-                persistence.squawkEvents
+                *persistence.flightplans
             );
             persistence.controllerPositions = std::move(ControllerPositionCollectionFactory::Create(dependency));
 

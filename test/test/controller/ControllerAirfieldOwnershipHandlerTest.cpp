@@ -70,8 +70,7 @@ namespace UKControllerPluginTest {
                         )
                     ),
                     userMessager(this->plugin),
-                    squawkEvents(new MockSquawkEventHandler),
-                    massEvents(this->plugin, this->initialAltitudes, this->flightplans, this->squawkEvents),
+                    massEvents(this->plugin, this->initialAltitudes, this->flightplans),
                     handler(
                         this->controllerCollection,
                         this->ownership,
@@ -183,7 +182,6 @@ namespace UKControllerPluginTest {
                 NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 Login login;
                 DeferredEventHandler deferredEvents;
-                std::shared_ptr<MockSquawkEventHandler> squawkEvents;
                 ActiveCallsignCollection activeCallsigns;
                 UserMessager userMessager;
                 MassEvent massEvents;
@@ -541,13 +539,6 @@ namespace UKControllerPluginTest {
             // The important expectation - we're expecting the cleared altitude to be set and squawks assigned.
             EXPECT_CALL(*mockFlightplanReturn, SetClearedAltitude(6000))
                 .Times(1);
-
-            EXPECT_CALL(
-                    *this->squawkEvents,
-                    FlightPlanEvent(testing::Ref(*mockFlightplanReturn), testing::Ref(*mockRadarTargetReturn))
-                )
-                .Times(1);
-
 
             this->handler.ControllerUpdateEvent(euroscopeMock);
         }
