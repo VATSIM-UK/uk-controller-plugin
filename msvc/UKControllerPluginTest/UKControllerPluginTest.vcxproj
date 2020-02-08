@@ -90,6 +90,7 @@
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanTest.cpp" />
+    <ClCompile Include="..\..\test\test\handoff\HandoffCollectionFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\handoff\HandoffCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\handoff\HandoffEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\handoff\HandoffModuleTest.cpp" />

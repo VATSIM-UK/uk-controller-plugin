@@ -951,6 +951,9 @@
     <ClInclude Include="..\..\src\handoff\HandoffEventHandler.h">
       <Filter>src\handoff</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\handoff\HandoffCollectionFactory.h">
+      <Filter>src\handoff</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1616,6 +1619,9 @@
       <Filter>src\handoff</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\handoff\HandoffEventHandler.cpp">
+      <Filter>src\handoff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\handoff\HandoffCollectionFactory.cpp">
       <Filter>src\handoff</Filter>
     </ClCompile>
   </ItemGroup>

@@ -124,6 +124,7 @@
     <ClInclude Include="..\..\src\graphics\GdiGraphicsWrapper.h" />
     <ClInclude Include="..\..\src\graphics\GdiplusBrushes.h" />
     <ClInclude Include="..\..\src\handoff\HandoffCollection.h" />
+    <ClInclude Include="..\..\src\handoff\HandoffCollectionFactory.h" />
     <ClInclude Include="..\..\src\handoff\HandoffEventHandler.h" />
     <ClInclude Include="..\..\src\handoff\HandoffModule.h" />
     <ClInclude Include="..\..\src\helper\HelperFunctions.h" />
@@ -370,6 +371,7 @@
     <ClCompile Include="..\..\src\flightplan\StoredFlightplanEventHandler.cpp" />
     <ClCompile Include="..\..\src\graphics\GdiGraphicsWrapper.cpp" />
     <ClCompile Include="..\..\src\handoff\HandoffCollection.cpp" />
+    <ClCompile Include="..\..\src\handoff\HandoffCollectionFactory.cpp" />
     <ClCompile Include="..\..\src\handoff\HandoffEventHandler.cpp" />
     <ClCompile Include="..\..\src\handoff\HandoffModule.cpp" />
     <ClCompile Include="..\..\src\helper\HelperFunctions.cpp" />
