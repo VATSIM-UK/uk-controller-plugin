@@ -234,7 +234,6 @@ namespace UKControllerPlugin {
             *this->container,
             *this->container->userMessager
         );
-        UKControllerPlugin::Handoff::BootstrapPlugin(*this->container, loader);
 
         // Due to flightplan modifications and API interactions, only enable the squawk module
         // if the API is authorised and the plugin is an allowed version. Also, dont allow automatic
@@ -247,6 +246,7 @@ namespace UKControllerPlugin {
 
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         PrenoteModule::BootstrapPlugin(*this->container, loader);
+        UKControllerPlugin::Handoff::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap other things
         ActualOffBlockTimeBootstrap::BootstrapPlugin(*this->container);
