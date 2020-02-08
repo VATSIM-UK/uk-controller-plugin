@@ -8,6 +8,7 @@ using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Controller::ActiveCallsign;
 
 namespace UKControllerPlugin {
     namespace Handoff {
@@ -26,6 +27,11 @@ namespace UKControllerPlugin {
         void HandoffEventHandler::AddCachedItem(std::string callsign, CachedHandoff item)
         {
             this->cache[callsign] = item;
+        }
+
+        size_t HandoffEventHandler::CountCachedItems(void) const
+        {
+            return this->cache.size();
         }
 
         /*
@@ -100,6 +106,38 @@ namespace UKControllerPlugin {
         void HandoffEventHandler::ControllerFlightPlanDataEvent(EuroScopeCFlightPlanInterface& flightPlan, int dataType)
         {
             // No change required here.
+        }
+
+        /*
+            If a new callsign comes along, we have to clear the cache.
+        */
+        void HandoffEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign)
+        {
+            this->cache.clear();
+        }
+
+        /*
+            If a callsign is removed, clear the cache for anything they were involved in.
+        */
+        void HandoffEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign)
+        {
+            for (
+                std::map<std::string, CachedHandoff>::const_iterator it = this->cache.cbegin();
+                it != this->cache.cend();
+            ) {
+                auto keyToRemove = it++;
+                if (keyToRemove->second.callsign == callsign.GetCallsign()) {
+                    this->cache.erase(keyToRemove);
+                }
+            }
+        }
+
+        /*
+            If the callsigns are flushed, no cached values are valid
+        */
+        void HandoffEventHandler::CallsignsFlushed(void)
+        {
+            this->cache.clear();
         }
     }  // namespace Handoff
 }  // namespace UKControllerPlugin

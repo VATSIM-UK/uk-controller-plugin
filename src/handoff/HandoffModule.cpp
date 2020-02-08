@@ -31,6 +31,7 @@ namespace UKControllerPlugin {
 
             container.tagHandler->RegisterTagItem(107, handler);
             container.flightplanHandler->RegisterHandler(handler);
+            container.activeCallsigns->AddHandler(handler);
         }
     }  // namespace Handoff
 }  // namespace UKControllerPlugin

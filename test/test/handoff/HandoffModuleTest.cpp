@@ -4,12 +4,14 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "tag/TagItemCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "controller/ActiveCallsignCollection.h"
 
 using UKControllerPlugin::Handoff::BootstrapPlugin;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using ::testing::Test;
 using ::testing::NiceMock;
 
@@ -23,6 +25,7 @@ namespace UKControllerPluginTest {
                 {
                     this->container.tagHandler.reset(new TagItemCollection);
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+                    this->container.activeCallsigns.reset(new ActiveCallsignCollection);
                 }
 
                 PersistenceContainer container;
@@ -46,6 +49,12 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
             ASSERT_EQ(1, this->container.flightplanHandler->CountHandlers());
+        }
+
+        TEST_F(HandoffModuleTest, TestItRegistersActiveCallsignHandler)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            ASSERT_EQ(1, this->container.activeCallsigns->CountHandlers());
         }
     }  // namespace Handoff
 }  // namespace UKControllerPluginTest

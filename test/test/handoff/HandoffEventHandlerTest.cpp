@@ -159,5 +159,32 @@ namespace UKControllerPluginTest {
             this->handler.ControllerFlightPlanDataEvent(this->mockFlightplan, 1);
             EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
         }
+
+        TEST_F(HandoffEventHandlerTest, TestANewControllerPositionClearsTheCache)
+        {
+            this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
+            this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_S_CTR"));
+            this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1));
+            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
+        }
+
+        TEST_F(HandoffEventHandlerTest, TestAControllerLoggingOfClearsAssociatedCacheItems)
+        {
+            this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
+            this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_S_CTR"));
+            this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1));
+            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
+        }
+
+        TEST_F(HandoffEventHandlerTest, TestActiveCallsignFlushClearsTheCache)
+        {
+            this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
+            this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_SC_CTR"));
+            this->handler.ActiveCallsignRemoved(ActiveCallsign("LON_SC_CTR", "Testy", this->position1));
+            EXPECT_EQ(CachedHandoff("123.456", "LON_S_CTR"), this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
+        }
     }  // namespace Handoff
 }  // namespace UKControllerPluginTest

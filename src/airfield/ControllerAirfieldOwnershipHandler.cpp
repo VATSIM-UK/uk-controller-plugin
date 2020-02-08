@@ -57,6 +57,8 @@ namespace UKControllerPlugin {
             LogInfo(controller.GetCallsign() + " has disconnected or unset their primary frequency");
             this->activeCallsigns.RemoveCallsign(active);
 
+            // Remove it from the handoffs
+
             // Refresh the top-down responsibilities for affected airfields
             this->ProcessAffectedAirfields(active.GetNormalisedPosition());
         }
