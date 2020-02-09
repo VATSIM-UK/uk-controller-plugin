@@ -945,9 +945,6 @@
     <ClInclude Include="..\..\src\controller\ControllerBootstrap.h">
       <Filter>src\controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\ownership\ControllerAirfieldOwnershipHandler.h">
-      <Filter>src\ownership</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\ownership\AirfieldOwnershipManager.h">
       <Filter>src\ownership</Filter>
     </ClInclude>
@@ -961,6 +958,9 @@
       <Filter>src\ownership</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\ownership\AirfieldOwnerQueryMessage.h">
+      <Filter>src\ownership</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ownership\AirfieldOwnershipHandler.h">
       <Filter>src\ownership</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1618,9 +1618,6 @@
     <ClCompile Include="..\..\src\controller\ControllerBootstrap.cpp">
       <Filter>src\controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ownership\ControllerAirfieldOwnershipHandler.cpp">
-      <Filter>src\ownership</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\ownership\AirfieldOwnershipManager.cpp">
       <Filter>src\ownership</Filter>
     </ClCompile>
@@ -1634,6 +1631,9 @@
       <Filter>src\ownership</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ownership\AirfieldsOwnedQueryMessage.cpp">
+      <Filter>src\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ownership\AirfieldOwnershipHandler.cpp">
       <Filter>src\ownership</Filter>
     </ClCompile>
   </ItemGroup>

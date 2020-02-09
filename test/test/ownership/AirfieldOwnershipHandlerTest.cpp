@@ -1,5 +1,5 @@
 #include "pch/pch.h"
-#include "ownership/ControllerAirfieldOwnershipHandler.h"
+#include "ownership/AirfieldOwnershipHandler.h"
 #include "airfield/AirfieldCollection.h"
 #include "airfield/AirfieldModel.h"
 #include "controller/ControllerPosition.h"
@@ -21,7 +21,7 @@
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 
-using UKControllerPlugin::Ownership::ControllerAirfieldOwnershipHandler;
+using UKControllerPlugin::Ownership::AirfieldOwnershipHandler;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ControllerPosition;
@@ -70,9 +70,7 @@ namespace UKControllerPluginTest {
                     ),
                     userMessager(this->plugin),
                     handler(
-                        this->controllerCollection,
                         this->ownership,
-                        this->activeCallsigns,
                         this->userMessager
                     )
                 {
@@ -181,7 +179,7 @@ namespace UKControllerPluginTest {
                 DeferredEventHandler deferredEvents;
                 ActiveCallsignCollection activeCallsigns;
                 UserMessager userMessager;
-                ControllerAirfieldOwnershipHandler handler;
+                AirfieldOwnershipHandler handler;
 
                 // Controllers
                 std::unique_ptr<ControllerPosition> kkTwr;
@@ -250,207 +248,59 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->handler.ProcessCommand("ilikepie"));
         }
 
-        TEST_F(ControllerAirfieldOwnershipHandlerTest, SelfDisconnectEventFlushesAllCaches)
+        TEST_F(ControllerAirfieldOwnershipHandlerTest, ActiveCallsignFlushFlushesOwners)
         {
             this->ownership.RefreshOwner("EGKK");
             this->ownership.RefreshOwner("EGLL");
-            this->handler.SelfDisconnectEvent();
 
+            this->handler.CallsignsFlushed();
             EXPECT_FALSE(this->ownership.AirfieldHasOwner("EGKK"));
             EXPECT_FALSE(this->ownership.AirfieldHasOwner("EGLL"));
-            EXPECT_EQ(0, this->activeCallsigns.GetNumberActiveCallsigns());
-            EXPECT_EQ(0, this->activeCallsigns.GetNumberActivePositions());
         }
 
-        TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerDisconnectRemovesActiveCallsign)
+        TEST_F(ControllerAirfieldOwnershipHandlerTest, ActiveCallsignDisconnectRefreshesOwnership)
         {
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(3)
-                .WillRepeatedly(Return("EGKK_TWR"));
-
-            this->handler.ControllerDisconnectEvent(euroscopeMock);
-
-            EXPECT_FALSE(this->activeCallsigns.CallsignActive("EGKK_TWR"));
-        }
-
-        TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerDisconnectResetsOwnerIfPositionNoLongerActive)
-        {
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(3)
-                .WillRepeatedly(Return("EGKK_TWR"));
-
-            this->handler.ControllerDisconnectEvent(euroscopeMock);
+            ActiveCallsign gatwick = this->activeCallsigns.GetCallsign("EGKK_TWR");
+            this->activeCallsigns.RemoveCallsign(this->activeCallsigns.GetCallsign("EGKK_TWR"));
+            this->handler.ActiveCallsignRemoved(gatwick, false);
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_APP")));
         }
 
         TEST_F(
             ControllerAirfieldOwnershipHandlerTest,
-            ControllerDisconnectResetsOwnerToOtherCallsignIfPositionStillActive
+            ActiveCallsignDisconnectResetsOwnerToOtherCallsignIfPositionStillActive
         ) {
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(3)
-                .WillRepeatedly(Return("EGKK_TWR"));
-
             // Add the spare controller
             ControllerPosition pos("EGKK_TWR", 199.998, "TWR", { "EGKK" });
             this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_1_TWR", "Another Guy", pos));
 
-            this->handler.ControllerDisconnectEvent(euroscopeMock);
+            ActiveCallsign gatwick = this->activeCallsigns.GetCallsign("EGKK_TWR");
+            this->activeCallsigns.RemoveCallsign(this->activeCallsigns.GetCallsign("EGKK_TWR"));
+            this->handler.ActiveCallsignRemoved(gatwick, false);
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_1_TWR")));
         }
 
-        TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerDisconnectIngoresNonRecognisedControllers)
+        TEST_F(ControllerAirfieldOwnershipHandlerTest, NewActiveCallsignEventRefreshesTopDown)
         {
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(1)
-                .WillOnce(Return("NOTAREALCALLSIGN"));
-
-            this->handler.ControllerDisconnectEvent(euroscopeMock);
-        }
-
-        TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventRemovesCallsignIfFrequencyUnset)
-        {
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
-                .WillRepeatedly(Return("EGKK_TWR"));
-
-            EXPECT_CALL(euroscopeMock, HasActiveFrequency())
-                .Times(1)
-                .WillOnce(Return(false));
-
-            this->handler.ControllerUpdateEvent(euroscopeMock);
-            EXPECT_FALSE(this->activeCallsigns.CallsignActive("EGKK_TWR"));
-            EXPECT_FALSE(this->activeCallsigns.PositionActive("EGKK_TWR"));
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_APP")));
-        }
-
-        TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventAddsActiveCallsign)
-        {
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
-                .WillRepeatedly(Return("EGKK_DEL"));
-
-            EXPECT_CALL(euroscopeMock, HasActiveFrequency())
-                .Times(1)
-                .WillOnce(Return(true));
-
-            EXPECT_CALL(euroscopeMock, GetControllerName())
-                .Times(1)
-                .WillOnce(Return("Testy McTestington"));
-
-            EXPECT_CALL(euroscopeMock, GetFrequency())
-                .Times(1)
-                .WillOnce(Return(199.998));
-
-            EXPECT_CALL(euroscopeMock, IsCurrentUser())
-                .Times(1)
-                .WillRepeatedly(Return(true));
-
-            this->handler.ControllerUpdateEvent(euroscopeMock);
-            EXPECT_TRUE(this->activeCallsigns.CallsignActive("EGKK_DEL"));
-            EXPECT_TRUE(this->activeCallsigns.PositionActive("EGKK_DEL"));
-        }
-
-        TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventUpdatesTopDown)
-        {
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
-                .WillRepeatedly(Return("EGKK_DEL"));
-
-            EXPECT_CALL(euroscopeMock, HasActiveFrequency())
-                .Times(1)
-                .WillOnce(Return(true));
-
-            EXPECT_CALL(euroscopeMock, GetControllerName())
-                .Times(1)
-                .WillOnce(Return("Testy McTestington"));
-
-            EXPECT_CALL(euroscopeMock, GetFrequency())
-                .Times(1)
-                .WillOnce(Return(199.998));
-
-            EXPECT_CALL(euroscopeMock, IsCurrentUser())
-                .Times(1)
-                .WillRepeatedly(Return(true));
-
-            this->handler.ControllerUpdateEvent(euroscopeMock);
+            this->activeCallsigns.AddCallsign(
+                ActiveCallsign("EGKK_DEL", "Test", this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"))
+            );
+            this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("EGKK_DEL"), true);
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_DEL")));
         }
 
         TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventUpdatesTopDownMultiple)
         {
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
-                .WillRepeatedly(Return("LTC_S_CTR"));
-
-            EXPECT_CALL(euroscopeMock, HasActiveFrequency())
-                .Times(1)
-                .WillOnce(Return(true));
-
-            EXPECT_CALL(euroscopeMock, GetControllerName())
-                .Times(1)
-                .WillOnce(Return("Testy McTestington"));
-
-            EXPECT_CALL(euroscopeMock, GetFrequency())
-                .Times(1)
-                .WillOnce(Return(134.120));
-
-            EXPECT_CALL(euroscopeMock, IsCurrentUser())
-                .Times(1)
-                .WillRepeatedly(Return(true));
-
-            this->handler.ControllerUpdateEvent(euroscopeMock);
+            this->activeCallsigns.AddCallsign(
+                ActiveCallsign("LTC_S_CTR", "Test", this->controllerCollection.FetchPositionByCallsign("LTC_S_CTR"))
+            );
+            this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("LTC_S_CTR"), true);
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_TWR")));
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGLL", this->activeCallsigns.GetCallsign("EGLL_S_TWR")));
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGLC", this->activeCallsigns.GetCallsign("LTC_S_CTR")));
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKB", this->activeCallsigns.GetCallsign("LTC_S_CTR")));
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGMC", this->activeCallsigns.GetCallsign("LTC_S_CTR")));
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGMD", this->activeCallsigns.GetCallsign("LTC_S_CTR")));
-        }
-
-        TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventHandlesHyphenatedCallsigns)
-        {
-            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
-
-            EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
-                .WillRepeatedly(Return("EGKK_1-DEL"));
-
-            EXPECT_CALL(euroscopeMock, HasActiveFrequency())
-                .Times(1)
-                .WillOnce(Return(true));
-
-            EXPECT_CALL(euroscopeMock, GetControllerName())
-                .Times(1)
-                .WillOnce(Return("Testy McTestington"));
-
-            EXPECT_CALL(euroscopeMock, GetFrequency())
-                .Times(1)
-                .WillOnce(Return(199.998));
-
-            EXPECT_CALL(euroscopeMock, IsCurrentUser())
-                .Times(1)
-                .WillRepeatedly(Return(true));
-
-            this->handler.ControllerUpdateEvent(euroscopeMock);
-            EXPECT_TRUE(this->activeCallsigns.CallsignActive("EGKK_1-DEL"));
-            EXPECT_TRUE(this->activeCallsigns.PositionActive("EGKK_DEL"));
         }
     }  // namespace Ownership
 }  // namespace UKControllerPluginTest

@@ -1,13 +1,13 @@
 #include "pch/pch.h"
 #include "ownership/AirfieldOwnershipModule.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "controller/ControllerStatusEventHandlerCollection.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "mock/MockDependencyLoader.h"
 #include "command/CommandHandlerCollection.h"
 
 using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using ::testing::Test;
@@ -22,7 +22,7 @@ namespace UKControllerPluginTest {
 
                 void SetUp()
                 {
-                    this->container.controllerHandler.reset(new ControllerStatusEventHandlerCollection);
+                    this->container.activeCallsigns.reset(new ActiveCallsignCollection);
                     this->container.commandHandlers.reset(new CommandHandlerCollection);
                 }
 
@@ -37,11 +37,17 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
         }
 
-        TEST_F(AirfieldOwnershipModuleTest, BootstrapPluginRegistersWithControllerEvents)
+        TEST_F(AirfieldOwnershipModuleTest, BootstrapPluginRegistersWithActiveCallsigns)
         {
-            EXPECT_EQ(0, this->container.controllerHandler->CountHandlers());
+            EXPECT_EQ(0, this->container.activeCallsigns->CountHandlers());
             AirfieldOwnershipModule::BootstrapPlugin(this->container, this->dependency);
-            EXPECT_EQ(1, this->container.controllerHandler->CountHandlers());
+            EXPECT_EQ(1, this->container.activeCallsigns->CountHandlers());
+        }
+
+        TEST_F(AirfieldOwnershipModuleTest, ItCreatesAirfieldOwnershipManager)
+        {
+            AirfieldOwnershipModule::BootstrapPlugin(this->container, this->dependency);
+            EXPECT_NO_THROW(this->container.airfieldOwnership->Flush());
         }
     }  // namespace Ownership
 }  // namespace UKControllerPluginTest

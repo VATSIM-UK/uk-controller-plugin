@@ -21,6 +21,8 @@ namespace UKControllerPlugin {
             curlObject = curl_easy_init();
             curl_easy_setopt(curlObject, CURLOPT_URL, request.GetUri());
             curl_easy_setopt(curlObject, CURLOPT_CUSTOMREQUEST, request.GetMethod());
+            curl_easy_setopt(curlObject, CURLOPT_SSL_VERIFYHOST, 0L);
+            curl_easy_setopt(curlObject, CURLOPT_SSL_VERIFYPEER, 0L);
 
             // Add headers
             if (request.cbegin() != request.cend()) {

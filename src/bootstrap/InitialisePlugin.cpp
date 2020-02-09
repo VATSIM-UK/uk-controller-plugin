@@ -195,6 +195,7 @@ namespace UKControllerPlugin {
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         UKControllerPlugin::Controller::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
+        AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap helpers
         UKControllerPlugin::Wake::BootstrapPlugin(*this->container, loader);
@@ -246,7 +247,6 @@ namespace UKControllerPlugin {
             this->duplicatePlugin->Duplicate()
         );
 
-        AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         PrenoteModule::BootstrapPlugin(*this->container, loader);
         UKControllerPlugin::Handoff::BootstrapPlugin(*this->container, loader);
 

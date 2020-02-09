@@ -736,10 +736,10 @@
     <ClCompile Include="..\..\test\test\ownership\AirfieldsOwnedQueryMessageTest.cpp">
       <Filter>test\ownership</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\ownership\ControllerAirfieldOwnershipHandlerTest.cpp">
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnerQueryMessageTest.cpp">
       <Filter>test\ownership</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnerQueryMessageTest.cpp">
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipHandlerTest.cpp">
       <Filter>test\ownership</Filter>
     </ClCompile>
   </ItemGroup>

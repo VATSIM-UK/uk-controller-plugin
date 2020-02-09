@@ -1,15 +1,10 @@
 #pragma once
-#include "controller/ControllerStatusEventHandlerInterface.h"
+#include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "command/CommandHandlerInterface.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
-    namespace Controller {
-        class ControllerPositionCollection;
-        class ControllerPosition;
-        class ControllerStatusEventHandlerInterface;
-    }  // namespace Controller
     namespace Ownership {
         class AirfieldOwnershipManager;
     }  // namespace Ownership
@@ -35,39 +30,33 @@ namespace UKControllerPlugin {
             A class to handle the process of controllers coming and going and how this
             affects who owns which airfield.
         */
-        class ControllerAirfieldOwnershipHandler
-            : public UKControllerPlugin::Controller::ControllerStatusEventHandlerInterface,
+        class AirfieldOwnershipHandler
+            : public UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface,
             public UKControllerPlugin::Command::CommandHandlerInterface
         {
             public:
-                ControllerAirfieldOwnershipHandler(
-                    const UKControllerPlugin::Controller::ControllerPositionCollection & controllers,
+                AirfieldOwnershipHandler(
                     UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership,
-                    UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
                     UKControllerPlugin::Message::UserMessager & userMessager
                 );
-                void ControllerUpdateEvent(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface & controller);
-                void ControllerDisconnectEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface & controller
-                );
                 bool ProcessCommand(std::string command);
-                void SelfDisconnectEvent(void);
+
+                // Inherited via ActiveCallsignEventHandlerInterface
+                void ActiveCallsignAdded(
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
+                ) override;
+                void ActiveCallsignRemoved(
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
+                )override;
+                void CallsignsFlushed(void) override;
 
             private:
 
-                void SetupPosition(
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface & callsign,
-                    const UKControllerPlugin::Controller::ControllerPosition & matchedPos
-                );
                 void ProcessAffectedAirfields(
                     const UKControllerPlugin::Controller::ControllerPosition & controller
                 );
-
-                // All the controller positions
-                const UKControllerPlugin::Controller::ControllerPositionCollection & controllers;
-
-                // All the active callsigns
-                UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns;
 
                 // All the airfields
                 UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership;

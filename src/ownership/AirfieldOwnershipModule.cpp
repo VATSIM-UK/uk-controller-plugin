@@ -2,14 +2,14 @@
 #include "ownership/AirfieldOwnershipModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "plugin/UKPlugin.h"
-#include "ownership/ControllerAirfieldOwnershipHandler.h"
+#include "ownership/AirfieldOwnershipHandler.h"
 #include "controller/ControllerPositionCollectionFactory.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "controller/ControllerPositionCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Ownership::ControllerAirfieldOwnershipHandler;
+using UKControllerPlugin::Ownership::AirfieldOwnershipHandler;
 using UKControllerPlugin::Controller::ControllerPositionCollectionFactory;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 
@@ -20,19 +20,19 @@ namespace UKControllerPlugin {
             PersistenceContainer & persistence,
             DependencyLoaderInterface& dependency
         ) {
-            persistence.controllerPositions = std::move(ControllerPositionCollectionFactory::Create(dependency));
+            persistence.airfieldOwnership.reset(
+                new AirfieldOwnershipManager(*persistence.airfields, *persistence.activeCallsigns)
+            );
 
-            std::shared_ptr<ControllerAirfieldOwnershipHandler> airfieldOwnership(
-                new ControllerAirfieldOwnershipHandler(
-                    *persistence.controllerPositions,
+            std::shared_ptr<AirfieldOwnershipHandler> airfieldOwnership(
+                new AirfieldOwnershipHandler(
                     *persistence.airfieldOwnership,
-                    *persistence.activeCallsigns,
                     *persistence.userMessager
                 )
             );
 
             // Add the handlers to the collections.
-            persistence.controllerHandler->RegisterHandler(airfieldOwnership);
+            persistence.activeCallsigns->AddHandler(airfieldOwnership);
             persistence.commandHandlers->RegisterHandler(airfieldOwnership);
         }
     }  // namespace Ownership

@@ -31,9 +31,6 @@ namespace UKControllerPlugin {
         ) {
             // Reset resources
             persistence.airfields = std::move(AirfieldCollectionFactory::Create(dependency));
-            persistence.airfieldOwnership.reset(
-                new AirfieldOwnershipManager(*persistence.airfields, *persistence.activeCallsigns)
-            );
             persistence.flightplans.reset(new StoredFlightplanCollection);
         }
     }  // namespace Bootstrap

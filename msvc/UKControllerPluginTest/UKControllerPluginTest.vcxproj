@@ -174,7 +174,7 @@
     <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\ownership\AirfieldsOwnedQueryMessageTest.cpp" />
-    <ClCompile Include="..\..\test\test\ownership\ControllerAirfieldOwnershipHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\FunctionCallEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\PopupMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\UkPluginBootstrapTest.cpp" />
