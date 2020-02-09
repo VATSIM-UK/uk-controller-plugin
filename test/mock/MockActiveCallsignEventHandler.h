@@ -23,7 +23,7 @@ namespace UKControllerPluginTest {
                     ()
                 );
                 MOCK_METHOD(void, CallsignsFlushed, (), ());
-                
+
         };
     }  // namespace Controller
 }  // namespace UKControllerPluginTest

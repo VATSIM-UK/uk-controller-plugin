@@ -47,8 +47,10 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            std::vector<std::reference_wrapper<const ControllerPosition>>::const_iterator it1 = this->positions.cbegin();
-            std::vector<std::reference_wrapper<const ControllerPosition>>::const_iterator it2 = compare.positions.cbegin();
+            std::vector<std::reference_wrapper<const ControllerPosition>>::const_iterator it1
+                = this->positions.cbegin();
+            std::vector<std::reference_wrapper<const ControllerPosition>>::const_iterator it2
+                = compare.positions.cbegin();
 
             while (it1 != this->positions.cend())
             {

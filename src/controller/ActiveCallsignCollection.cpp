@@ -32,7 +32,8 @@ namespace UKControllerPlugin {
                 .insert(controller).first;
 
             for (
-                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it = this->handlers.cbegin();
+                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it
+                    = this->handlers.cbegin();
                 it != this->handlers.cend();
                 ++it
             ) {
@@ -59,7 +60,8 @@ namespace UKControllerPlugin {
             this->userActive = true;
 
             for (
-                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it = this->handlers.cbegin();
+                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it
+                    = this->handlers.cbegin();
                 it != this->handlers.cend();
                 ++it
             ) {
@@ -84,7 +86,8 @@ namespace UKControllerPlugin {
             this->activePositions.clear();
             this->userActive = false;
             for (
-                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it = this->handlers.cbegin();
+                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it
+                    = this->handlers.cbegin();
                 it != this->handlers.cend();
                 ++it
             ) {
@@ -173,7 +176,8 @@ namespace UKControllerPlugin {
             this->activeCallsigns.erase(callsign);
 
             for (
-                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it = this->handlers.cbegin();
+                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it
+                    = this->handlers.cbegin();
                 it != this->handlers.cend();
                 ++it
             ) {

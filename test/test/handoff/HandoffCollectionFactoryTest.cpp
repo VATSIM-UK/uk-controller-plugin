@@ -21,8 +21,12 @@ namespace UKControllerPluginTest {
                 HandoffCollectionFactoryTest()
                 {
                     std::vector<std::string> handoffs = { "EGKK" };
-                    controllers.AddPosition(std::make_unique<ControllerPosition>("EGKK_APP", 126.820, "APP", handoffs));
-                    controllers.AddPosition(std::make_unique<ControllerPosition>("LON_S_CTR", 129.420, "CTR", handoffs));
+                    controllers.AddPosition(
+                        std::make_unique<ControllerPosition>("EGKK_APP", 126.820, "APP", handoffs)
+                    );
+                    controllers.AddPosition(
+                        std::make_unique<ControllerPosition>("LON_S_CTR", 129.420, "CTR", handoffs)
+                    );
                 }
 
                 ControllerPositionCollection controllers;

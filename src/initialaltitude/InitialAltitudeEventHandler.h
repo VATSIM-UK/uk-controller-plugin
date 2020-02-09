@@ -74,15 +74,15 @@ namespace UKControllerPlugin {
                 void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
 
                 // Inherited via ActiveCallsignEventHandlerInterface
-                virtual void ActiveCallsignAdded(
+                void ActiveCallsignAdded(
                     const UKControllerPlugin::Controller::ActiveCallsign& callsign,
                     bool userCallsign
                 ) override;
-                virtual void ActiveCallsignRemoved(
+                void ActiveCallsignRemoved(
                     const UKControllerPlugin::Controller::ActiveCallsign& callsign,
                     bool userCallsign
                 ) override;
-                virtual void CallsignsFlushed(void) override;
+                void CallsignsFlushed(void) override;
 
                 // The maximum distance from the airfield that an aircraft can be untracked
                 // to be considered for an altitude update.

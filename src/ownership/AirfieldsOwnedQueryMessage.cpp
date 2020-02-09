@@ -93,5 +93,5 @@ namespace UKControllerPlugin {
             return false;
         }
 
-    }  // namespace Controller
+    }  // namespace Ownership
 }  // namespace UKControllerPlugin

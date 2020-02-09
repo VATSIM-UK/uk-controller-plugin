@@ -41,7 +41,9 @@ namespace UKControllerPluginTest {
                 void SetUp(void)
                 {
                     this->airfields = std::make_unique<AirfieldCollection>();
-                    this->airfields->AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "EGKK_GND" })));
+                    this->airfields->AddAirfield(
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "EGKK_GND" }))
+                    );
                     this->airfieldOwnership = std::make_unique<AirfieldOwnershipManager>(
                         *this->airfields,
                         this->activeCallsigns

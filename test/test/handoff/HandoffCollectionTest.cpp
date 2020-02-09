@@ -104,4 +104,4 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(this->collection.invalidHierarchy, this->collection.GetSidHandoffOrder("EGKK", "SFD4Z"));
         }
     }  // namespace Handoff
-} // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginTest

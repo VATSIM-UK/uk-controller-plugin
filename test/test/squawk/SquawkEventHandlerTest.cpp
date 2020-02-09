@@ -118,7 +118,9 @@ namespace UKControllerPluginTest {
                     ON_CALL(*this->mockSelfController, IsVatsimRecognisedController())
                         .WillByDefault(Return(true));
 
-                    this->airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "EGKK_APP" })));
+                    this->airfields.AddAirfield(
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "EGKK_APP" }))
+                    );
                     this->activeCallsigns.AddUserCallsign(this->userCallsign);
                     this->airfieldOwnership.RefreshOwner("EGKK");
 

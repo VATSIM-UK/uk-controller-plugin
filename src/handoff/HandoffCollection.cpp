@@ -6,8 +6,10 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 namespace UKControllerPlugin {
     namespace Handoff {
 
-        void HandoffCollection::AddHandoffOrder(std::string key, std::shared_ptr<ControllerPositionHierarchy> controllers)
-        {
+        void HandoffCollection::AddHandoffOrder(
+            std::string key,
+            std::shared_ptr<ControllerPositionHierarchy> controllers
+        ) {
             if (this->orders.count(key)) {
                 LogWarning("Duplicate handoff order detected for " + key);
                 return;
@@ -26,8 +28,10 @@ namespace UKControllerPlugin {
             this->sidMappings[this->GetStorageKeyForSid(airfield, identifier)] = handoffKey;
         }
 
-        const ControllerPositionHierarchy& HandoffCollection::GetSidHandoffOrder(std::string airfield, std::string identifier) const
-        {
+        const ControllerPositionHierarchy& HandoffCollection::GetSidHandoffOrder(
+            std::string airfield,
+            std::string identifier
+        ) const {
             std::string storageKey = this->GetStorageKeyForSid(airfield, identifier);
             if (!this->sidMappings.count(storageKey)) {
                 LogWarning("No SID mapping available for " + storageKey);
@@ -58,5 +62,5 @@ namespace UKControllerPlugin {
             return airfield + "." + identifier;
         }
 
-    }  // namespace UKControllerPlugin
-}  // namespacem Handoff
+    }  // namespace Handoff
+}  // namespace UKControllerPlugin

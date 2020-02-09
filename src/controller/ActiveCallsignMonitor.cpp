@@ -113,5 +113,5 @@ namespace UKControllerPlugin {
                 );
             }
         }
-    }  // namespace Airfield
+    }  // namespace Controller
 }   // namespace UKControllerPlugin

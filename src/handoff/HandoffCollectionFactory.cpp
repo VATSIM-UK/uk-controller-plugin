@@ -22,14 +22,19 @@ namespace UKControllerPlugin {
             }
 
             // Iterate the handoffs and build them up
-            for (nlohmann::json::const_iterator itHandoff = handoffs.cbegin(); itHandoff != handoffs.cend(); ++itHandoff) {
+            for (
+                nlohmann::json::const_iterator itHandoff = handoffs.cbegin();
+                itHandoff != handoffs.cend();
+                ++itHandoff
+            ) {
                 if (!HandoffOrderValid(itHandoff.value(), controllerPositions)) {
                     LogInfo("Invalid handoff order " + itHandoff.key());
                     continue;
                 }
 
                 // Build the hierarchy
-                std::shared_ptr<ControllerPositionHierarchy> hierarchy = std::make_shared<ControllerPositionHierarchy>();
+                std::shared_ptr<ControllerPositionHierarchy> hierarchy
+                    = std::make_shared<ControllerPositionHierarchy>();
                 for (
                     nlohmann::json::const_iterator itController = itHandoff.value().cbegin();
                     itController != itHandoff.value().cend();

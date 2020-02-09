@@ -27,14 +27,17 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Controller::ControllerPositionHierarchy invalidHierarchy;
 
             private:
-                
+
                 std::string GetStorageKeyForSid(std::string airfield, std::string identifier) const;
 
                 // All the handoff orders
-                std::map<std::string, std::shared_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy>> orders;
+                std::map<
+                    std::string,
+                    std::shared_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy>
+                > orders;
 
                 // The SID -> handoff mappings
                 std::map<std::string, std::string> sidMappings;
         };
-    }  // namespace UKControllerPlugin
-}  // namespacem Handoff
+    }  // namespace Handoff
+}  // namespace UKControllerPlugin

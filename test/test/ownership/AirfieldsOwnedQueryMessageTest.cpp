@@ -14,7 +14,7 @@ namespace UKControllerPluginTest {
             public:
                 AirfieldsOwnedQueryMessageTest(void)
                     : message(
-                        { 
+                        {
                             AirfieldModel("EGKK", {}),
                             AirfieldModel("EGLL", {}),
                             AirfieldModel("EGLC", {})

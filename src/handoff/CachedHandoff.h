@@ -36,5 +36,5 @@ namespace UKControllerPlugin {
                         this->frequency == compare.frequency;
                 }
         };
-    }  // namespace UKControllerPlugin
-}  // namespacem Handoff
+    }  // namespace Handoff
+}  // namespace UKControllerPlugin

@@ -13,12 +13,12 @@ namespace UKControllerPlugin {
         /*
             Handles handoff events
         */
-        class HandoffEventHandler 
+        class HandoffEventHandler
             : public UKControllerPlugin::Tag::TagItemInterface,
             public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
             public UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface
         {
-            public: 
+            public:
 
                 HandoffEventHandler(
                     const UKControllerPlugin::Handoff::HandoffCollection& handoffs,
@@ -70,7 +70,7 @@ namespace UKControllerPlugin {
 
                 // The active callsigns
                 const UKControllerPlugin::Controller::ActiveCallsignCollection& callsigns;
-                
+
                 // Maps callsign -> result so we can cache it.
                 std::map<std::string, UKControllerPlugin::Handoff::CachedHandoff> cache;
         };

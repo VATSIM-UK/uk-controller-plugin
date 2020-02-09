@@ -1,3 +1,4 @@
+#pragma once
 #include "handoff/HandoffCollection.h"
 #include "controller/ControllerPositionCollection.h"
 
