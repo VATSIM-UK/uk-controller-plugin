@@ -1,11 +1,11 @@
 #include "pch/pch.h"
-#include "airfield/AirfieldOwnershipModule.h"
+#include "ownership/AirfieldOwnershipModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "mock/MockDependencyLoader.h"
 #include "command/CommandHandlerCollection.h"
 
-using UKControllerPlugin::Airfield::AirfieldOwnershipModule;
+using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
@@ -14,7 +14,7 @@ using ::testing::Test;
 using ::testing::NiceMock;
 
 namespace UKControllerPluginTest {
-    namespace Airfield {
+    namespace Ownership {
 
         class AirfieldOwnershipModuleTest : public Test
         {
@@ -43,5 +43,5 @@ namespace UKControllerPluginTest {
             AirfieldOwnershipModule::BootstrapPlugin(this->container, this->dependency);
             EXPECT_EQ(1, this->container.controllerHandler->CountHandlers());
         }
-    }  // namespace Airfield
+    }  // namespace Ownership
 }  // namespace UKControllerPluginTest

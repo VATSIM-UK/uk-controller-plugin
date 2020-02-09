@@ -1,11 +1,11 @@
 #include "pch/pch.h"
-#include "controller/AirfieldOwnerQueryMessage.h"
+#include "ownership/AirfieldOwnerQueryMessage.h"
 
-using UKControllerPlugin::Controller::AirfieldOwnerQueryMessage;
+using UKControllerPlugin::Ownership::AirfieldOwnerQueryMessage;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
-    namespace Controller {
+    namespace Ownership {
 
         class AirfieldOwnerQueryMessageTest : public Test
         {
@@ -64,5 +64,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_FALSE(this->message.MessageRequiresConfirm());
         }
-    }  // namespace Controller
+    }  // namespace Ownership
 }  // namespace UKControllerPluginTest

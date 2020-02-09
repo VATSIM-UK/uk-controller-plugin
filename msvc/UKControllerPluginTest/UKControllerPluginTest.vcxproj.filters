@@ -115,6 +115,9 @@
     <Filter Include="test\handoff">
       <UniqueIdentifier>{eb5327da-3251-4d89-958b-22d7179fd9cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\ownership">
+      <UniqueIdentifier>{5bae5d01-7594-43d7-a7d9-afc0db0ecdcf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -127,9 +130,6 @@
       <Filter>test\airfield</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionTest.cpp">
-      <Filter>test\airfield</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\airfield\AirfieldTest.cpp">
       <Filter>test\airfield</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp">
@@ -181,18 +181,6 @@
       <Filter>test\controller</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\AirfieldOwnerQueryMessageTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipManagerTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipModuleTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\AirfieldsOwnedQueryMessageTest.cpp">
       <Filter>test\controller</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\controller\ControllerPositionCollectionFactoryTest.cpp">
@@ -730,14 +718,29 @@
     <ClCompile Include="..\..\test\mock\MockActiveCallsignEventHandler.h">
       <Filter>mock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\airfield\ControllerAirfieldOwnershipHandlerTest.cpp">
-      <Filter>test\airfield</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignMonitorTest.cpp">
       <Filter>test\controller</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\controller\ControllerBootstrapTest.cpp">
       <Filter>test\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\airfield\AirfieldModelTest.cpp">
+      <Filter>test\airfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipManagerTest.cpp">
+      <Filter>test\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipModuleTest.cpp">
+      <Filter>test\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\AirfieldsOwnedQueryMessageTest.cpp">
+      <Filter>test\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\ControllerAirfieldOwnershipHandlerTest.cpp">
+      <Filter>test\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnerQueryMessageTest.cpp">
+      <Filter>test\ownership</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

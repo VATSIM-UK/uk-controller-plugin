@@ -1,22 +1,12 @@
 #pragma once
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
-
-// Forward declarations
-namespace UKControllerPlugin {
-    namespace Controller {
-        class ActiveCallsignCollection;
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
-// END
+#include "airfield/AirfieldModel.h"
+#include "airfield/AirfieldCollection.h"
+#include "controller/ActiveCallsignCollection.h"
 
 namespace UKControllerPlugin {
-    namespace Airfield {
-
-        // More forward declarations
-        class AirfieldCollection;
-        class Airfield;
-        // END
+    namespace Ownership {
 
         /*
             A class for managing who "owns" a particular airfield. This can then be used
@@ -39,7 +29,7 @@ namespace UKControllerPlugin {
                 bool AirfieldHasOwner(std::string icao) const;
                 void Flush(void);
                 const UKControllerPlugin::Controller::ActiveCallsign & GetOwner(std::string icao) const;
-                std::vector<UKControllerPlugin::Airfield::Airfield> GetOwnedAirfields(std::string callsign) const;
+                std::vector<UKControllerPlugin::Airfield::AirfieldModel> GetOwnedAirfields(std::string callsign) const;
                 void RefreshOwner(std::string icao);
 
                 // A callsign to return when a lookup is done but the callsign cant be found
@@ -59,5 +49,5 @@ namespace UKControllerPlugin {
                 // Map of callsign to ownership
                 std::map<std::string, std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsign>> ownershipMap;
         };
-    }  // namespace Airfield
+    }  // namespace Ownership
 }  // namespace UKControllerPlugin

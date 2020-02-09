@@ -28,8 +28,7 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionTest.cpp" />
-    <ClCompile Include="..\..\test\test\airfield\AirfieldTest.cpp" />
-    <ClCompile Include="..\..\test\test\airfield\ControllerAirfieldOwnershipHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\airfield\AirfieldModelTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp" />
@@ -50,10 +49,6 @@
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignMonitorTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignTest.cpp" />
-    <ClCompile Include="..\..\test\test\controller\AirfieldOwnerQueryMessageTest.cpp" />
-    <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipManagerTest.cpp" />
-    <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipModuleTest.cpp" />
-    <ClCompile Include="..\..\test\test\controller\AirfieldsOwnedQueryMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerPositionCollectionFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerPositionCollectionTest.cpp" />
@@ -175,6 +170,11 @@
     <ClCompile Include="..\..\test\test\offblock\EstimatedDepartureTimeEventHanderTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\EstimatedOffBlockTimeBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\EstimatedOffBlockTimeEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnerQueryMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipManagerTest.cpp" />
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\ownership\AirfieldsOwnedQueryMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\ownership\ControllerAirfieldOwnershipHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\FunctionCallEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\PopupMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\UkPluginBootstrapTest.cpp" />

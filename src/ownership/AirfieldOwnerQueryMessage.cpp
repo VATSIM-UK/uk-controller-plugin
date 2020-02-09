@@ -1,8 +1,8 @@
 #include "pch/stdafx.h"
-#include "controller/AirfieldOwnerQueryMessage.h"
+#include "ownership/AirfieldOwnerQueryMessage.h"
 
 namespace UKControllerPlugin {
-    namespace Controller {
+    namespace Ownership {
 
         AirfieldOwnerQueryMessage::AirfieldOwnerQueryMessage(
             std::string airfield,

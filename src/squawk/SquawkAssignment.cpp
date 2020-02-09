@@ -1,6 +1,6 @@
 #include "pch/stdafx.h"
 #include "squawk/SquawkAssignment.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ControllerPosition.h"
 #include "flightplan/StoredFlightplan.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
@@ -15,7 +15,7 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 using UKControllerPlugin::Controller::ActiveCallsign;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Controller::ControllerPosition;

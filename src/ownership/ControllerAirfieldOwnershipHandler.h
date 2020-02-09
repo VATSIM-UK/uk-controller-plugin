@@ -10,9 +10,9 @@ namespace UKControllerPlugin {
         class ControllerPosition;
         class ControllerStatusEventHandlerInterface;
     }  // namespace Controller
-    namespace Airfield {
+    namespace Ownership {
         class AirfieldOwnershipManager;
-    }  // namespace Airfield
+    }  // namespace Ownership
     namespace Flightplan {
         class FlightplanCollection;
     }  // namespace Flightplan
@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
 // END
 
 namespace UKControllerPlugin {
-    namespace Airfield {
+    namespace Ownership {
 
         /*
             A class to handle the process of controllers coming and going and how this
@@ -42,7 +42,7 @@ namespace UKControllerPlugin {
             public:
                 ControllerAirfieldOwnershipHandler(
                     const UKControllerPlugin::Controller::ControllerPositionCollection & controllers,
-                    UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership,
+                    UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership,
                     UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
                     UKControllerPlugin::Message::UserMessager & userMessager
                 );
@@ -70,10 +70,10 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns;
 
                 // All the airfields
-                UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership;
+                UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership;
 
                 // For sending user messages
                 UKControllerPlugin::Message::UserMessager & userMessager;
         };
-    }  // namespace Airfield
+    }  // namespace Ownership
 }  // namespace UKControllerPlugin

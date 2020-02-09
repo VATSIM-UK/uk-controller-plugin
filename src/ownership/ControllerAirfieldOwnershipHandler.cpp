@@ -1,18 +1,18 @@
 #include "pch/stdafx.h"
-#include "airfield/ControllerAirfieldOwnershipHandler.h"
+#include "ownership/ControllerAirfieldOwnershipHandler.h"
 #include "airfield/AirfieldCollection.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ActiveCallsign.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionParser.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "message/UserMessager.h"
-#include "controller/AirfieldOwnerQueryMessage.h"
-#include "controller/AirfieldsOwnedQueryMessage.h"
+#include "ownership/AirfieldOwnerQueryMessage.h"
+#include "ownership/AirfieldsOwnedQueryMessage.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionParser;
@@ -20,15 +20,15 @@ using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Controller::AirfieldOwnerQueryMessage;
-using UKControllerPlugin::Controller::AirfieldsOwnedQueryMessage;
+using UKControllerPlugin::Ownership::AirfieldOwnerQueryMessage;
+using UKControllerPlugin::Ownership::AirfieldsOwnedQueryMessage;
 
 namespace UKControllerPlugin {
-    namespace Airfield {
+    namespace Ownership {
 
         ControllerAirfieldOwnershipHandler::ControllerAirfieldOwnershipHandler(
             const ControllerPositionCollection & controllers,
-            UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership,
+            UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership,
             ActiveCallsignCollection & activeCallsigns,
             UserMessager & userMessager
         )
@@ -177,5 +177,5 @@ namespace UKControllerPlugin {
             // Work out who owns what airfields.
             this->ProcessAffectedAirfields(matchedPos);
         }
-    }  // namespace Airfield
+    }  // namespace Ownership
 }   // namespace UKControllerPlugin

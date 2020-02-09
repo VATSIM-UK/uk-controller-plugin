@@ -1,10 +1,10 @@
 #include "pch/stdafx.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 
 namespace UKControllerPlugin {
     namespace Airfield {
 
-        Airfield::Airfield(std::string icao, std::vector<std::string> ownership)
+        AirfieldModel::AirfieldModel(std::string icao, std::vector<std::string> ownership)
         {
             if (icao.size() > 4 || icao.substr(0, 2).compare("EG") != 0) {
                 throw std::invalid_argument("Invalid UK code.");
@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
             this->ownershipPresedence = ownership;
         }
 
-        std::string Airfield::GetIcao(void) const
+        std::string AirfieldModel::GetIcao(void) const
         {
             return this->icao;
         }
@@ -22,7 +22,7 @@ namespace UKControllerPlugin {
         /*
             Returns the ownership presedence for the airfield.
         */
-        std::vector<std::string> Airfield::GetOwnershipPresedence(void) const
+        std::vector<std::string> AirfieldModel::GetOwnershipPresedence(void) const
         {
             return this->ownershipPresedence;
         }
@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
         /*
             Returns true if the two airfields are the same.
         */
-        bool Airfield::operator==(const Airfield & compare)
+        bool AirfieldModel::operator==(const AirfieldModel& compare)
         {
             return this->icao == compare.icao;
         }

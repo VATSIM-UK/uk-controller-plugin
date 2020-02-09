@@ -1,16 +1,20 @@
 #pragma once
 #include "message/MessageSerializableInterface.h"
+#include "airfield/AirfieldModel.h"
 
 namespace UKControllerPlugin {
-    namespace Controller {
+    namespace Ownership {
 
         /*
             A message returning which user owns a given airfield.
         */
-        class AirfieldOwnerQueryMessage : public UKControllerPlugin::Message::MessageSerializableInterface
+        class AirfieldsOwnedQueryMessage : public UKControllerPlugin::Message::MessageSerializableInterface
         {
             public:
-                AirfieldOwnerQueryMessage(std::string airfield, std::string callsign, std::string name);
+                AirfieldsOwnedQueryMessage(
+                    std::vector<UKControllerPlugin::Airfield::AirfieldModel> airfields,
+                    std::string userCallsign
+                );
                 std::string MessageHandler(void) const override;
                 std::string MessageSender(void) const override;
                 std::string MessageString(void) const override;
@@ -22,13 +26,10 @@ namespace UKControllerPlugin {
 
             private:
                 // The airfield involved
-                const std::string airfield;
+                const std::vector<UKControllerPlugin::Airfield::AirfieldModel> airfields;
 
-                // The controller callsign
-                const std::string callsign;
-
-                // The controllers name
-                const std::string name;
+                // The user callsign
+                const std::string userCallsign;
         };
-    }  // namespace Controller
+    }  // namespace Ownership
 }  // namespace UKControllerPlugin

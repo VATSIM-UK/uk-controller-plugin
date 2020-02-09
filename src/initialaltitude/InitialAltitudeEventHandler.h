@@ -13,9 +13,9 @@ namespace UKControllerPlugin {
     namespace Flightplan {
         class FlightPlanEventHandlerInterface;
     }  // namespace Flightplan
-    namespace Airfield {
+    namespace Ownership {
         class AirfieldOwnershipManager;
-    }  // namespace Airfield
+    }  // namespace Ownership
 
     namespace Controller {
         class ActiveCallsignCollection;
@@ -46,7 +46,7 @@ namespace UKControllerPlugin {
                 InitialAltitudeEventHandler(
                     const UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator & generator,
                     const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
-                    const UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership,
+                    const UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership,
                     const UKControllerPlugin::Controller::Login & login,
                     UKControllerPlugin::TimedEvent::DeferredEventHandler & deferredEvents,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
@@ -107,7 +107,7 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns;
 
                 // Used to find out if the user owns a particular airfield.
-                const UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership;
+                const UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership;
 
                 // So we can defer loading IAs on first login
                 UKControllerPlugin::TimedEvent::DeferredEventHandler & deferredEvents;

@@ -2,12 +2,12 @@
 #include "airfield/AirfieldCollection.h"
 #include "airfield/AirfieldCollectionFactory.h"
 #include "mock/MockDependencyLoader.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using ::testing::ElementsAre;
 using ::testing::Test;
 using ::testing::NiceMock;

@@ -5,7 +5,7 @@
 #include "task/TaskRunner.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "airfield/AirfieldCollection.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
@@ -119,7 +119,7 @@ namespace UKControllerPlugin {
             // Large collections that we don't want to go onto the stack
             std::unique_ptr<const UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator> initialAltitudes;
             std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
-            std::unique_ptr<UKControllerPlugin::Airfield::AirfieldOwnershipManager> airfieldOwnership;
+            std::unique_ptr<UKControllerPlugin::Ownership::AirfieldOwnershipManager> airfieldOwnership;
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
             std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
             std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;

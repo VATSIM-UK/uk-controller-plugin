@@ -1,17 +1,17 @@
 #include "pch/stdafx.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "airfield/AirfieldCollection.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 #include "controller/ActiveCallsignCollection.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
 
 namespace UKControllerPlugin {
-    namespace Airfield {
+    namespace Ownership {
 
         AirfieldOwnershipManager::AirfieldOwnershipManager(
             const AirfieldCollection & airfields,
@@ -74,9 +74,9 @@ namespace UKControllerPlugin {
         /*
             Returns a set of the airfields owned by a given contrroller.
         */
-        std::vector<Airfield> AirfieldOwnershipManager::GetOwnedAirfields(std::string callsign) const
+        std::vector<AirfieldModel> AirfieldOwnershipManager::GetOwnedAirfields(std::string callsign) const
         {
-            std::vector<Airfield> ownedAirfields;
+            std::vector<AirfieldModel> ownedAirfields;
 
             if (!this->activeCallsigns.CallsignActive(callsign)) {
                 return ownedAirfields;
@@ -139,5 +139,5 @@ namespace UKControllerPlugin {
             LogInfo("Airfield " + icao + " is no longer managed by any controller");
             this->ownershipMap.erase(icao);
         }
-    }  // namespace Airfield
+    }  // namespace Ownership
 }  // namespace UKControllerPlugin

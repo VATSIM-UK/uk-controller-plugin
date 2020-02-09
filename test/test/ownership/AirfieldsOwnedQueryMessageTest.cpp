@@ -1,19 +1,26 @@
 #include "pch/pch.h"
-#include "controller/AirfieldsOwnedQueryMessage.h"
-#include "airfield/Airfield.h"
+#include "ownership/AirfieldsOwnedQueryMessage.h"
+#include "airfield/AirfieldModel.h"
 
-using UKControllerPlugin::Controller::AirfieldsOwnedQueryMessage;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Ownership::AirfieldsOwnedQueryMessage;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
-    namespace Controller {
+    namespace Ownership {
 
         class AirfieldsOwnedQueryMessageTest : public Test
         {
             public:
                 AirfieldsOwnedQueryMessageTest(void)
-                    : message({Airfield("EGKK", {}), Airfield("EGLL", {}), Airfield("EGLC", {})}, "LON_S_CTR")
+                    : message(
+                        { 
+                            AirfieldModel("EGKK", {}),
+                            AirfieldModel("EGLL", {}),
+                            AirfieldModel("EGLC", {})
+                        },
+                        "LON_S_CTR"
+                    )
                 {
 
                 };
@@ -66,5 +73,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_FALSE(this->message.MessageRequiresConfirm());
         }
-    }  // namespace Controller
+    }  // namespace Ownership
 }  // namespace UKControllerPluginTest

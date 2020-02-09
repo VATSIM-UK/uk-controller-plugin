@@ -1,10 +1,10 @@
 #include "pch/pch.h"
-#include "airfield/ControllerAirfieldOwnershipHandler.h"
+#include "ownership/ControllerAirfieldOwnershipHandler.h"
 #include "airfield/AirfieldCollection.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "mock/MockEuroScopeCControllerInterface.h"
@@ -21,14 +21,14 @@
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 
-using UKControllerPlugin::Airfield::ControllerAirfieldOwnershipHandler;
+using UKControllerPlugin::Ownership::ControllerAirfieldOwnershipHandler;
 using UKControllerPlugin::Airfield::AirfieldCollection;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -49,7 +49,7 @@ using ::testing::Return;
 using ::testing::_;
 
 namespace UKControllerPluginTest {
-    namespace Controller {
+    namespace Ownership {
 
         class ControllerAirfieldOwnershipHandlerTest : public ::Test
         {
@@ -83,29 +83,29 @@ namespace UKControllerPluginTest {
                 {
                     // Add airfields to the collection
                     airfieldCollection.AddAirfield(
-                        std::unique_ptr<Airfield>(
-                            new Airfield("EGKK", { "EGKK_DEL", "EGKK_GND", "EGKK_TWR", "EGKK_APP" })
+                        std::unique_ptr<AirfieldModel>(
+                            new AirfieldModel("EGKK", { "EGKK_DEL", "EGKK_GND", "EGKK_TWR", "EGKK_APP" })
                         )
                     );
                     airfieldCollection.AddAirfield(
-                        std::unique_ptr<Airfield>(
-                            new Airfield("EGLL", { "EGLL_DEL", "EGLL_2_GND", "EGLL_S_TWR", "EGLL_N_APP" })
+                        std::unique_ptr<AirfieldModel>(
+                            new AirfieldModel("EGLL", { "EGLL_DEL", "EGLL_2_GND", "EGLL_S_TWR", "EGLL_N_APP" })
                         )
                     );
                     airfieldCollection.AddAirfield(
-                        std::unique_ptr<Airfield>(new Airfield("EGLC", { "LTC_SE_CTR", "LTC_S_CTR"}))
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGLC", { "LTC_SE_CTR", "LTC_S_CTR"}))
                     );
                     airfieldCollection.AddAirfield(
-                        std::unique_ptr<Airfield>(new Airfield("EGKB", { "LTC_SE_CTR", "LTC_S_CTR" }))
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKB", { "LTC_SE_CTR", "LTC_S_CTR" }))
                     );
                     airfieldCollection.AddAirfield(
-                        std::unique_ptr<Airfield>(new Airfield("EGMC", { "LTC_SE_CTR", "LTC_S_CTR" }))
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGMC", { "LTC_SE_CTR", "LTC_S_CTR" }))
                     );
                     airfieldCollection.AddAirfield(
-                        std::unique_ptr<Airfield>(new Airfield("EGMD", { "LTC_SE_CTR", "LTC_S_CTR" }))
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGMD", { "LTC_SE_CTR", "LTC_S_CTR" }))
                     );
                     airfieldCollection.AddAirfield(
-                        std::unique_ptr<Airfield>(new Airfield("EGKA", { "LTC_SW_CTR", "LTC_S_CTR" }))
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKA", { "LTC_SW_CTR", "LTC_S_CTR" }))
                     );
 
                     // Add the controllers
@@ -452,5 +452,5 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->activeCallsigns.CallsignActive("EGKK_1-DEL"));
             EXPECT_TRUE(this->activeCallsigns.PositionActive("EGKK_DEL"));
         }
-    }  // namespace Controller
+    }  // namespace Ownership
 }  // namespace UKControllerPluginTest

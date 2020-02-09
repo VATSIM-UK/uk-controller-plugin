@@ -1,11 +1,11 @@
 #include "pch/stdafx.h"
 #include "airfield/AirfieldCollectionFactory.h"
 #include "airfield/AirfieldCollection.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 #include "dependency/DependencyLoaderInterface.h"
 
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Airfield::AirfieldModel;
 
 namespace UKControllerPlugin {
     namespace Airfield {
@@ -37,7 +37,7 @@ namespace UKControllerPlugin {
                 }
 
                 try {
-                    collection->AddAirfield(std::unique_ptr<Airfield>(new Airfield(it.key(), it.value())));
+                    collection->AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel(it.key(), it.value())));
                 } catch (std::invalid_argument) {
                     // We've tried to add a duplicate or invalid airfield.
                 }

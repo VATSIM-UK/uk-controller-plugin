@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
 // END
 
 namespace UKControllerPlugin {
-    namespace Airfield {
+    namespace Ownership {
 
         /*
             Class for bootstrapping the airfield ownership event handlers.
@@ -25,5 +25,5 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
                 );
         };
-    }  // namespace Airfield
+    }  // namespace Ownership
 }  // namespace UKControllerPlugin

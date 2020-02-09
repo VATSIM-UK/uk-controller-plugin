@@ -11,7 +11,7 @@
 #include "intention/IntentionCodeModule.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "login/LoginModule.h"
-#include "airfield/AirfieldOwnershipModule.h"
+#include "ownership/AirfieldOwnershipModule.h"
 #include "radarscreen/RadarScreenFactory.h"
 #include "update/PluginUpdateChecker.h"
 #include "countdown/CountdownModule.h"
@@ -53,7 +53,7 @@ using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::IntentionCode::IntentionCodeModule;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::Controller::LoginModule;
-using UKControllerPlugin::Airfield::AirfieldOwnershipModule;
+using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
 using UKControllerPlugin::Update::PluginUpdateChecker;
 using UKControllerPlugin::Countdown::CountdownModule;
 using UKControllerPlugin::MinStack::MinStackModule;

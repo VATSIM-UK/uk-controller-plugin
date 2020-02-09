@@ -4,7 +4,7 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "airfield/AirfieldCollectionFactory.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "airfield/AirfieldCollection.h"
@@ -16,7 +16,7 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;

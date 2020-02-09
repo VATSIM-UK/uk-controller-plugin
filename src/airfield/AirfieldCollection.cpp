@@ -1,7 +1,7 @@
 #include "pch/stdafx.h"
 #include "airfield/AirfieldCollection.h"
 
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Airfield::AirfieldModel;
 
 namespace UKControllerPlugin {
     namespace Airfield {
@@ -10,7 +10,7 @@ namespace UKControllerPlugin {
             Add an airfield to the collection. Throws an exception
             if already added.
         */
-        void AirfieldCollection::AddAirfield(std::unique_ptr<Airfield> airfield)
+        void AirfieldCollection::AddAirfield(std::unique_ptr<AirfieldModel> airfield)
         {
             if (this->airfieldMap.count(airfield->GetIcao()) != 0) {
                 throw std::invalid_argument("Airfield " + airfield->GetIcao() + " has already been added.");
@@ -26,14 +26,14 @@ namespace UKControllerPlugin {
         /*
             Returns an airfield based on its ICAO code. Throws an exception if not found.
         */
-        const Airfield & AirfieldCollection::FetchAirfieldByIcao(std::string icao) const
+        const AirfieldModel& AirfieldCollection::FetchAirfieldByIcao(std::string icao) const
         {
             if (!this->IsHomeAirfield(icao) || this->GetSize() == 0) {
                 throw std::out_of_range("Airfield not found");
             }
 
             auto iterator = std::find_if(this->airfieldMap.begin(), this->airfieldMap.end(),
-                [icao](std::pair<std::string, const std::unique_ptr<Airfield> &> airfield) -> bool {
+                [icao](std::pair<std::string, const std::unique_ptr<AirfieldModel> &> airfield) -> bool {
 
                 return airfield.second->GetIcao().compare(icao) == 0;
             });

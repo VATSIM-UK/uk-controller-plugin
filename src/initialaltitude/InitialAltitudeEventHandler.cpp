@@ -2,7 +2,7 @@
 #include "initialaltitude/InitialAltitudeEventHandler.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "initialaltitude/InitialAltitudeGenerator.h"
 #include "timedevent/DeferredEventHandler.h"
@@ -14,7 +14,7 @@
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Airfield::NormaliseSid;

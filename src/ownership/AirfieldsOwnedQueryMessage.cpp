@@ -1,11 +1,11 @@
 #include "pch/stdafx.h"
-#include "controller/AirfieldsOwnedQueryMessage.h"
+#include "ownership/AirfieldsOwnedQueryMessage.h"
 
 namespace UKControllerPlugin {
-    namespace Controller {
+    namespace Ownership {
 
         AirfieldsOwnedQueryMessage::AirfieldsOwnedQueryMessage(
-            std::vector<UKControllerPlugin::Airfield::Airfield> airfields,
+            std::vector<UKControllerPlugin::Airfield::AirfieldModel> airfields,
             std::string userCallsign
         )
             : airfields(airfields), userCallsign(userCallsign)
@@ -40,7 +40,7 @@ namespace UKControllerPlugin {
 
             std::string airfieldString;
             for (
-                std::vector<UKControllerPlugin::Airfield::Airfield>::const_iterator it = this->airfields.cbegin();
+                std::vector<UKControllerPlugin::Airfield::AirfieldModel>::const_iterator it = this->airfields.cbegin();
                 it != this->airfields.cend();
                 ++it
             ) {

@@ -7,13 +7,13 @@ namespace UKControllerPlugin {
             A class representing a UK airfield. Contains details such as the top-down
             order, as well as who currently owns it.
         */
-        class Airfield
+        class AirfieldModel
         {
             public:
-                Airfield(std::string icao, std::vector<std::string> ownership);
+                AirfieldModel(std::string icao, std::vector<std::string> ownership);
                 std::string GetIcao(void) const;
                 std::vector<std::string> GetOwnershipPresedence(void) const;
-                bool operator==(const Airfield & compare);
+                bool operator==(const AirfieldModel& compare);
 
             private:
                 // The airfield ICAO

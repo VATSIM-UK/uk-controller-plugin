@@ -5,7 +5,7 @@
 #include "controller/ControllerPositionHierarchyFactory.h"
 #include "prenote/PrenoteFactory.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "airfield/AirfieldCollection.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "message/UserMessager.h"
@@ -18,7 +18,7 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 using UKControllerPlugin::Prenote::PrenoteServiceFactory;
 using UKControllerPlugin::Prenote::PrenoteFactory;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Message::UserMessager;

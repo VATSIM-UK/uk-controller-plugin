@@ -1,21 +1,21 @@
 #include "pch/pch.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "airfield/AirfieldCollection.h"
 #include "controller/ActiveCallsign.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 #include "controller/ControllerPosition.h"
 
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ControllerPosition;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
-    namespace Airfield {
+    namespace Ownership {
 
         class AirfieldOwnershipManagerTest : public Test
         {
@@ -30,7 +30,7 @@ namespace UKControllerPluginTest {
                 void SetUp()
                 {
                     std::vector<std::string> topDown = { "EGGD_GND", "EGGD_TWR", "EGGD_APP", "EGFF_APP", "LON_W_CTR" };
-                    this->airfields.AddAirfield(std::make_unique<UKControllerPlugin::Airfield::Airfield>(
+                    this->airfields.AddAirfield(std::make_unique<UKControllerPlugin::Airfield::AirfieldModel>(
                         "EGGD",
                         topDown
                     ));
@@ -198,5 +198,5 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE("" == this->manager.notFoundCallsign.GetCallsign());
             EXPECT_TRUE("" == this->manager.notFoundCallsign.GetControllerName());
         }
-    }  // namespace Airfield
+    }  // namespace Ownership
 }  // namespace UKControllerPluginTest

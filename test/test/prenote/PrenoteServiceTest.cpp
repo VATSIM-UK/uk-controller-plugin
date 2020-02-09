@@ -1,6 +1,6 @@
 #include "pch/pch.h"
 #include "prenote/PrenoteService.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "airfield/AirfieldCollection.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
@@ -10,12 +10,12 @@
 #include "message/UserMessager.h"
 #include "prenote/AbstractPrenote.h"
 #include "controller/ControllerPositionHierarchy.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 #include "mock/MockUserSettingProviderInterface.h"
 
 using UKControllerPlugin::Prenote::AbstractPrenote;
 using UKControllerPlugin::Prenote::PrenoteService;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -25,7 +25,7 @@ using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -66,7 +66,7 @@ namespace UKControllerPluginTest {
                 void SetUp(void)
                 {
                     this->airfields = std::make_unique<AirfieldCollection>();
-                    this->airfields->AddAirfield(std::unique_ptr<Airfield>(new Airfield("EGKK", { "EGKK_GND" })));
+                    this->airfields->AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "EGKK_GND" })));
                     this->airfieldOwnership = std::make_unique<AirfieldOwnershipManager>(
                         *this->airfields,
                         this->activeCallsigns

@@ -13,9 +13,9 @@ namespace UKControllerPlugin {
         class StoredFlightplan;
         class StoredFlightplanCollection;
     }  // namespace Flightplan
-    namespace Airfield {
+    namespace Ownership {
         class AirfieldOwnershipManager;
-    }  // namespace Airfield
+    }  // namespace Ownership
 }  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
                 SquawkAssignment(
                     const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    const UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership,
+                    const UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership,
                     const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
                     const bool disabled
                 );
@@ -95,7 +95,7 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans;
 
                 // Which controllers own which airfields
-                const UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership;
+                const UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership;
 
                 // Link back to the radar screen, for things like distances
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
