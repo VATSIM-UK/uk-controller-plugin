@@ -30,7 +30,6 @@ namespace UKControllerPlugin {
             DependencyLoaderInterface & dependency
         ) {
             // Reset resources
-            persistence.activeCallsigns.reset(new ActiveCallsignCollection);
             persistence.airfields = std::move(AirfieldCollectionFactory::Create(dependency));
             persistence.airfieldOwnership.reset(
                 new AirfieldOwnershipManager(*persistence.airfields, *persistence.activeCallsigns)

@@ -195,9 +195,6 @@
     <ClCompile Include="..\..\test\test\controller\AirfieldsOwnedQueryMessageTest.cpp">
       <Filter>test\controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\ControllerAirfieldOwnershipHandlerTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\controller\ControllerPositionCollectionFactoryTest.cpp">
       <Filter>test\controller</Filter>
     </ClCompile>
@@ -732,6 +729,15 @@
     </ClCompile>
     <ClCompile Include="..\..\test\mock\MockActiveCallsignEventHandler.h">
       <Filter>mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\airfield\ControllerAirfieldOwnershipHandlerTest.cpp">
+      <Filter>test\airfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\controller\ActiveCallsignMonitorTest.cpp">
+      <Filter>test\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\controller\ControllerBootstrapTest.cpp">
+      <Filter>test\controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

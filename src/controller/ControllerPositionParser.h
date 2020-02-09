@@ -28,7 +28,7 @@ namespace UKControllerPlugin {
                 // The middle character of a mentor callsign.
                 const std::string mentorMidCharcter = "M";
 
-                // The middle core of a trainee callsign.
+                // The middle character of a trainee callsign.
                 const std::string traineeMidCharacter = "T";
         };
     }  // namespace Controller

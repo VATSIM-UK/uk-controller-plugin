@@ -954,6 +954,12 @@
     <ClInclude Include="..\..\src\controller\ActiveCallsignEventHandlerInterface.h">
       <Filter>src\controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\controller\ActiveCallsignMonitor.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\controller\ControllerBootstrap.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1620,6 +1626,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\handoff\HandoffCollectionFactory.cpp">
       <Filter>src\handoff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\controller\ActiveCallsignMonitor.cpp">
+      <Filter>src\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\controller\ControllerBootstrap.cpp">
+      <Filter>src\controller</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

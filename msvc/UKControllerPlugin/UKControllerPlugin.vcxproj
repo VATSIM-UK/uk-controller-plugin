@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -51,8 +51,10 @@
     <ClInclude Include="..\..\src\controller\ActiveCallsign.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignCollection.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\controller\ActiveCallsignMonitor.h" />
     <ClInclude Include="..\..\src\controller\AirfieldOwnerQueryMessage.h" />
     <ClInclude Include="..\..\src\controller\AirfieldsOwnedQueryMessage.h" />
+    <ClInclude Include="..\..\src\controller\ControllerBootstrap.h" />
     <ClInclude Include="..\..\src\controller\ControllerPosition.h" />
     <ClInclude Include="..\..\src\controller\ControllerPositionCollection.h" />
     <ClInclude Include="..\..\src\controller\ControllerPositionCollectionFactory.h" />
@@ -321,8 +323,10 @@
     <ClCompile Include="..\..\src\command\CommandHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsign.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsignCollection.cpp" />
+    <ClCompile Include="..\..\src\controller\ActiveCallsignMonitor.cpp" />
     <ClCompile Include="..\..\src\controller\AirfieldOwnerQueryMessage.cpp" />
     <ClCompile Include="..\..\src\controller\AirfieldsOwnedQueryMessage.cpp" />
+    <ClCompile Include="..\..\src\controller\ControllerBootstrap.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerPosition.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerPositionCollection.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerPositionCollectionFactory.cpp" />

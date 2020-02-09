@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\AirfieldTest.cpp" />
+    <ClCompile Include="..\..\test\test\airfield\ControllerAirfieldOwnershipHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp" />
@@ -47,12 +48,13 @@
     <ClCompile Include="..\..\test\test\bootstrap\HelperBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\command\CommandHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ActiveCallsignMonitorTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\AirfieldOwnerQueryMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\AirfieldsOwnedQueryMessageTest.cpp" />
-    <ClCompile Include="..\..\test\test\controller\ControllerAirfieldOwnershipHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\ControllerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerPositionCollectionFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerPositionCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerPositionHierarchyFactoryTest.cpp" />
