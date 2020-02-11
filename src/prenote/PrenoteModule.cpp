@@ -1,7 +1,7 @@
 #include "pch/stdafx.h"
 #include "prenote/PrenoteModule.h"
 #include "prenote/PrenoteEventHandler.h"
-#include "dependency/DependencyCache.h"
+#include "dependency/DependencyLoaderInterface.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "prenote/DeparturePrenote.h"
 #include "controller/ControllerPosition.h"
@@ -13,7 +13,7 @@
 #include "prenote/PrenoteService.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
 using UKControllerPlugin::Prenote::DeparturePrenote;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
@@ -27,25 +27,15 @@ namespace UKControllerPlugin {
     namespace Prenote {
 
         // Set the static properties
-        const std::string PrenoteModule::dependencyFile = "prenotes.json";
+        const std::string PrenoteModule::dependencyKey = "DEPENDENCY_PRENOTE";
 
-        void PrenoteModule::BootstrapPlugin(PersistenceContainer & persistence, const DependencyCache & dependency)
+        void PrenoteModule::BootstrapPlugin(PersistenceContainer & persistence, DependencyLoaderInterface& dependency)
         {
-            if (!dependency.HasDependency(PrenoteModule::dependencyFile)) {
-                BootstrapWarningMessage message("Prenote data file not found, prenotes not loaded");
+            nlohmann::json prenotes = dependency.LoadDependency(dependencyKey, nlohmann::json::array());
+            if (prenotes.empty()) {
+                BootstrapWarningMessage message("Prenote data not found, prenotes not loaded");
                 persistence.userMessager->SendMessageToUser(message);
-                LogError("Prenote data file not found, prenotes not loaded");
-                return;
-            }
-
-            nlohmann::json prenotes;
-            try {
-                prenotes = nlohmann::json::parse(dependency.GetDependency(PrenoteModule::dependencyFile));
-            }
-            catch (...) {
-                BootstrapWarningMessage message("JSON exception when parsing prenotes file, prenotes not loaded");
-                persistence.userMessager->SendMessageToUser(message);
-                LogError("JSON exception when parsing prenotes file, prenotes not loaded");
+                LogError("Prenote data not found, prenotes not loaded");
                 return;
             }
 

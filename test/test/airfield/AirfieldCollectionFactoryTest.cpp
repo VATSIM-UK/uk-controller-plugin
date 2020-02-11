@@ -1,53 +1,55 @@
 #include "pch/pch.h"
 #include "airfield/AirfieldCollection.h"
 #include "airfield/AirfieldCollectionFactory.h"
-#include "dependency/DependencyCache.h"
+#include "mock/MockDependencyLoader.h"
 #include "airfield/Airfield.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Airfield::Airfield;
 using ::testing::ElementsAre;
+using ::testing::Test;
+using ::testing::NiceMock;
+using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace Airfield {
 
-        TEST(AirfieldCollectionFactory, HasCorrectDependencyFile)
+        class AirfieldCollectionFactoryTest : public Test
         {
-            DependencyCache dependency;
-            EXPECT_TRUE("airfield-ownership.json" == AirfieldCollectionFactory::requiredDependency);
-        }
+            public:
+                NiceMock<MockDependencyLoader> dependency;
+        };
 
-        TEST(AirfieldCollectionFactory, CreateReturnsEmptyColletionIfDependencyMissing)
+        TEST_F(AirfieldCollectionFactoryTest, CreateReturnsEmptyColletionIfDependencyMissing)
         {
-            DependencyCache dependency;
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_AIRFIELD_OWNERSHIP", nlohmann::json::object()))
+                .WillByDefault(Return(nlohmann::json::object()));
             std::unique_ptr<const AirfieldCollection> collection = AirfieldCollectionFactory::Create(dependency);
             EXPECT_EQ(0, collection->GetSize());
         }
 
-        TEST(AirfieldCollectionFactory, CreateReturnsEmptyColletionIfDependencyInvalidJson)
+        TEST_F(AirfieldCollectionFactoryTest, CreateReturnsEmptyColletionIfDependencyInvalidJson)
         {
-            DependencyCache dependency;
-            dependency.AddDependency(AirfieldCollectionFactory::requiredDependency, "{not valid : json}");
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_AIRFIELD_OWNERSHIP", nlohmann::json::object()))
+                .WillByDefault(Return(nlohmann::json::array()));
             std::unique_ptr<const AirfieldCollection> collection = AirfieldCollectionFactory::Create(dependency);
             EXPECT_EQ(0, collection->GetSize());
         }
 
-        TEST(AirfieldCollectionFactory, AddsAllAirfields)
+        TEST_F(AirfieldCollectionFactoryTest, AddsAllAirfields)
         {
-            DependencyCache dependency;
-            std::string dependencyJson = "{\"EGKK\":[\"EGKK_DEL\"], \"EGLL\" : [\"EGLL_DEL\"]}";
-            dependency.AddDependency(AirfieldCollectionFactory::requiredDependency, dependencyJson);
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_AIRFIELD_OWNERSHIP", nlohmann::json::object()))
+                .WillByDefault(Return("{\"EGKK\":[\"EGKK_DEL\"], \"EGLL\" : [\"EGLL_DEL\"]}"_json));
             std::unique_ptr<const AirfieldCollection> collection = AirfieldCollectionFactory::Create(dependency);
             EXPECT_EQ(2, collection->GetSize());
         }
 
-        TEST(AirfieldCollectionFactory, AddsCorrectAirfields)
+        TEST_F(AirfieldCollectionFactoryTest, AddsCorrectAirfields)
         {
-            DependencyCache dependency;
-            std::string dependencyJson = "{\"EGKK\":[\"EGKK_DEL\"], \"EGLL\" : [\"EGLL_DEL\"]}";
-            dependency.AddDependency(AirfieldCollectionFactory::requiredDependency, dependencyJson);
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_AIRFIELD_OWNERSHIP", nlohmann::json::object()))
+                .WillByDefault(Return("{\"EGKK\":[\"EGKK_DEL\"], \"EGLL\" : [\"EGLL_DEL\"]}"_json));
             std::unique_ptr<const AirfieldCollection> collection = AirfieldCollectionFactory::Create(dependency);
 
             EXPECT_THAT(collection->FetchAirfieldByIcao("EGKK").GetOwnershipPresedence(), ElementsAre("EGKK_DEL"));

@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin {
     namespace Dependency {
-        class DependencyCache;
+        class DependencyLoaderInterface;
     }  // namespace Dependency
     namespace Controller {
         class ControllerPositionCollection;
@@ -16,7 +16,7 @@ namespace UKControllerPlugin {
         {
             public:
                 static std::unique_ptr<ControllerPositionCollection> Create(
-                    const UKControllerPlugin::Dependency::DependencyCache & dependency
+                    UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
                 );
                 static const std::string requiredDependency;
         };

@@ -23,7 +23,6 @@ using UKControllerPlugin::Squawk::SquawkValidator;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Api::RemoteFileManifestFactory;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
-using UKControllerPlugin::Dependency::DependencyData;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -222,6 +221,11 @@ namespace UKControllerPlugin {
             return this->requestBuilder.GetApiKey();
         }
 
+        nlohmann::json ApiHelper::GetDependencyList(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildDependencyListRequest()).GetRawData();
+        }
+
         /*
             Returns the hold data dependency
         */
@@ -254,12 +258,15 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildMinStackLevelRequest()).GetRawData();
         }
 
-        /*
-            Get a dependency from the API
-        */
-        nlohmann::json ApiHelper::GetDependency(DependencyData dependency) const
+        nlohmann::json ApiHelper::GetUri(std::string uri) const
         {
-            return this->MakeApiRequest(this->requestBuilder.BuildDependencyRequest(dependency)).GetRawData();
+            if (uri.find(this->GetApiDomain()) == std::string::npos)
+            {
+                LogCritical("Attempted to get URI on non-ukcp route");
+                throw ApiException("Attempted to get URI on non-ukcp route");
+            }
+
+            return this->MakeApiRequest(this->requestBuilder.BuildGetUriRequest(uri)).GetRawData();
         }
 
         /*

@@ -2,7 +2,6 @@
 #include "api/ApiRequestBuilder.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
-using UKControllerPlugin::Dependency::DependencyData;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -45,12 +44,12 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Download a dependency from the API
+            Method for querying any API URI
         */
-        CurlRequest ApiRequestBuilder::BuildDependencyRequest(DependencyData dependency) const
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildGetUriRequest(std::string uri) const
         {
             return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/" + dependency.remotePath, CurlRequest::METHOD_GET)
+                CurlRequest(uri, CurlRequest::METHOD_GET)
             );
         }
 

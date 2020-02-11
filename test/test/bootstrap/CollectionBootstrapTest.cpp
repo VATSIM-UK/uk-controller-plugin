@@ -1,16 +1,17 @@
 #include "pch/pch.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "dependency/DependencyCache.h"
+#include "mock/MockDependencyLoader.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using ::testing::Test;
+using ::testing::NiceMock;
 
 namespace UKControllerPluginTest {
     namespace Bootstrap {
@@ -24,7 +25,7 @@ namespace UKControllerPluginTest {
                     container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                 }
                 PersistenceContainer container;
-                DependencyCache dependency;
+                NiceMock<MockDependencyLoader> dependency;
         };
 
         TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesActiveCallsigns)

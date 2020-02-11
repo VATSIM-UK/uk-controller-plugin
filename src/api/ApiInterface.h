@@ -1,7 +1,6 @@
 #pragma once
 #include "api/RemoteFileManifest.h"
 #include "squawk/ApiSquawkAllocation.h"
-#include "dependency/DependencyData.h"
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -26,6 +25,7 @@ namespace UKControllerPlugin {
                 virtual bool CheckApiAuthorisation(void) const = 0;
                 virtual void DeleteSquawkAssignment(std::string callsign) const = 0;
                 virtual UKControllerPlugin::Api::RemoteFileManifest FetchDependencyManifest(void) const = 0;
+                virtual nlohmann::json GetDependencyList(void) const = 0;
                 virtual std::string FetchRemoteFile(std::string uri) const = 0;
                 virtual UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(
                     std::string callsign
@@ -36,9 +36,7 @@ namespace UKControllerPlugin {
                 virtual nlohmann::json GetGenericHoldProfiles(void) const = 0;
                 virtual nlohmann::json GetUserHoldProfiles(void) const = 0;
                 virtual nlohmann::json GetMinStackLevels(void) const = 0;
-                virtual nlohmann::json GetDependency(
-                    UKControllerPlugin::Dependency::DependencyData dependency
-                ) const = 0;
+                virtual nlohmann::json GetUri(std::string uri) const = 0;
                 virtual void DeleteUserHoldProfile(unsigned int profileId) const = 0;
                 virtual unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const = 0;
                 virtual void UpdateUserHoldProfile(

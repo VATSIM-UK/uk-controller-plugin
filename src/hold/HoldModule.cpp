@@ -1,7 +1,6 @@
 #include "pch/stdafx.h"
 #include "hold/HoldModule.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "dependency/DependencyCache.h"
 #include "hold/HoldManagerFactory.h"
 #include "hold/HoldEventHandler.h"
 #include "hold/HoldManager.h"
@@ -12,12 +11,11 @@
 #include "euroscope/CallbackFunction.h"
 #include "api/ApiHelper.h"
 #include "windows/WinApiInterface.h"
-#include "dependency/DependencyProviderInterface.h"
+#include "dependency/DependencyLoaderInterface.h"
 #include "tag/TagFunction.h"
 #include "hold/HoldSelectionMenu.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "dialog/DialogData.h"
-#include "dependency/DependencyConfig.h"
 #include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldProfileManagerFactory.h"
 #include "hold/HoldRenderer.h"
@@ -28,7 +26,6 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::Hold::HoldEventHandler;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
@@ -37,12 +34,11 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Windows::WinApiInterface;
-using UKControllerPlugin::Dependency::DependencyProviderInterface;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Dialog::DialogData;
-using UKControllerPlugin::Dependency::DependencyConfig;
 using UKControllerPlugin::Hold::CreateHoldManager;
 using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
 using UKControllerPlugin::Hold::CreateHoldProfileManager;
@@ -68,16 +64,23 @@ namespace UKControllerPlugin {
         // The event handler
         std::shared_ptr<HoldEventHandler> eventHandler;
 
+        // Dependencies
+        const std::string holdDependencyKey = "DEPENDENCY_HOLDS";
+        const std::string holdProfileDependencyKey = "DEPENDENCY_HOLD_PROFILE";
+
         /*
             Bootstrap the module into the plugin
         */
         void BootstrapPlugin(
-            const DependencyProviderInterface & dependencyProvider,
+            DependencyLoaderInterface & dependencyProvider,
             PersistenceContainer & container,
             UserMessager & userMessages
         ) {
             // Update local dependencies and build hold data
-            nlohmann::json holdDependency = dependencyProvider.GetDependency(DependencyConfig::holds);
+            nlohmann::json holdDependency = dependencyProvider.LoadDependency(
+                holdDependencyKey,
+                nlohmann::json::array()
+            );
             container.holdManager = CreateHoldManager(holdDependency, container);
 
             // Create the object to manage the popup menu
@@ -136,7 +139,7 @@ namespace UKControllerPlugin {
 
             // Create the hold dialog and profile manager
             container.holdProfiles = CreateHoldProfileManager(
-                dependencyProvider.GetDependency(DependencyConfig::holdProfiles),
+                dependencyProvider.LoadDependency(holdProfileDependencyKey, nlohmann::json::array()),
                 *container.api
             );
 

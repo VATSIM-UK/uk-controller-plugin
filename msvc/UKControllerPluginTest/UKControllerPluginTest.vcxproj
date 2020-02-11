@@ -70,14 +70,8 @@
     <ClCompile Include="..\..\test\test\curl\CurlResponseTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DatablockBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DisplayTimeTest.cpp" />
-    <ClCompile Include="..\..\test\test\dependency\ApiDependencyProviderTest.cpp" />
-    <ClCompile Include="..\..\test\test\dependency\DependencyBootstrapTest.cpp" />
-    <ClCompile Include="..\..\test\test\dependency\DependencyCacheFactoryTest.cpp" />
-    <ClCompile Include="..\..\test\test\dependency\DependencyCacheTest.cpp" />
-    <ClCompile Include="..\..\test\test\dependency\DependencyDataTest.cpp" />
-    <ClCompile Include="..\..\test\test\dependency\DependencyProviderFactoryTest.cpp" />
-    <ClCompile Include="..\..\test\test\dependency\LocalDependencyProviderTest.cpp" />
-    <ClCompile Include="..\..\test\test\dependency\LocalFileUpdaterTest.cpp" />
+    <ClCompile Include="..\..\test\test\dependency\DependencyLoaderTest.cpp" />
+    <ClCompile Include="..\..\test\test\dependency\UpdateDependenciesTest.cpp" />
     <ClCompile Include="..\..\test\test\dialog\CompareDialogsTest.cpp" />
     <ClCompile Include="..\..\test\test\dialog\DialogDataTest.cpp" />
     <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp" />
@@ -238,7 +232,6 @@
     <ClInclude Include="..\..\test\mock\MockCurlApi.h" />
     <ClInclude Include="..\..\test\mock\MockDeferredEventRunner.h" />
     <ClInclude Include="..\..\test\mock\MockDependencyLoader.h" />
-    <ClInclude Include="..\..\test\mock\MockDependencyProvider.h" />
     <ClInclude Include="..\..\test\mock\MockDialogProvider.h" />
     <ClInclude Include="..\..\test\mock\MockEuroScopeCControllerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroScopeCFlightplanInterface.h" />
