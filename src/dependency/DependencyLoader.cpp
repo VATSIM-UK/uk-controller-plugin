@@ -21,14 +21,16 @@ namespace UKControllerPlugin {
                 return defaultValue;
             }
 
-            if (!this->filesystem.FileExists("dependencies/" + this->fileMap[key])) {
+            if (!this->filesystem.FileExists(this->DEPENDENCY_FOLDER + "/" + this->fileMap[key])) {
                 LogWarning("Dependency " + key + " does not exist on filesystem");
                 return defaultValue;
             }
 
             try
             {
-                return nlohmann::json::parse(this->filesystem.ReadFromFile("dependencies/" + this->fileMap[key]));
+                return nlohmann::json::parse(
+                    this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + "/" + "" + this->fileMap[key])
+                );
             } catch (nlohmann::json::exception) {
                 LogWarning("Unable to load dependency " + key + ", it is not valid JSON");
             }
@@ -41,7 +43,7 @@ namespace UKControllerPlugin {
         */
         void DependencyLoader::LoadDependencyMap(void)
         {
-            if (!this->filesystem.FileExists("dependencies/dependency-list.json")) {
+            if (!this->filesystem.FileExists(this->DEPENDENCY_FOLDER + "/" + "dependency-list.json")) {
                 LogWarning("No dependency list downloaded, dependencies not loaded");
                 return;
             }
@@ -50,7 +52,7 @@ namespace UKControllerPlugin {
             try
             {
                 dependencies = nlohmann::json::parse(
-                    this->filesystem.ReadFromFile("dependencies/dependency-list.json")
+                    this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + "/" + "dependency-list.json")
                 );
             } catch (nlohmann::json::exception) {
                 LogWarning("Unable to parse JSON in dependency list, dependencies not loaded");

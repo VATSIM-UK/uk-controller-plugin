@@ -193,7 +193,6 @@ namespace UKControllerPlugin {
 
         // Boostrap all the modules at a plugin level
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
-        UKControllerPlugin::Controller::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
 
