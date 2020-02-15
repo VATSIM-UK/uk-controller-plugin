@@ -1,28 +1,24 @@
 #include "pch/stdafx.h"
-#include "minstack/MinStackModule.h"
-#include "minstack/MinStackRenderer.h"
+#include "regional/RegionalPressureModule.h"
+#include "regional/RegionalPressureRenderer.h"
 #include "plugin/FunctionCallEventHandler.h"
-#include "minstack/MinStackManager.h"
+#include "regional/RegionalPressureManager.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "graphics/GdiplusBrushes.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "task/TaskRunnerInterface.h"
-#include "metar/MetarEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "api/ApiException.h"
-#include "minstack/MinStackConfigurationDialog.h"
+#include "regional/RegionalPressureConfigurationDialog.h"
 
-using UKControllerPlugin::MinStack::MinStackRenderer;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Windows::GdiplusBrushes;
-using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
-using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using UKControllerPlugin::Api::ApiInterface;
@@ -30,23 +26,24 @@ using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
-    namespace MinStack {
+    namespace Regional {
 
         /*
             Bootstrap the plugin part of the module.
         */
-        void MinStackModule::BootstrapPlugin(
-            std::shared_ptr<MinStackManager> & msl,
+        void RegionalPressureModule::BootstrapPlugin(
+            std::shared_ptr<RegionalPressureManager> & regional,
             TaskRunnerInterface & taskManager,
             ApiInterface & api,
             WebsocketEventProcessorCollection & websocketProcessors,
             DialogManager & dialogManager
         ) {
-            msl.reset(new MinStackManager);
-            websocketProcessors.AddProcessor(msl);
+            regional.reset(new RegionalPressureManager);
+            websocketProcessors.AddProcessor(regional);
 
             // Create the dialog for configuration
-            std::shared_ptr<MinStackConfigurationDialog> dialog = std::make_shared<MinStackConfigurationDialog>(*msl);
+            std::shared_ptr<RegionalPressureConfigurationDialog> dialog =
+                std::make_shared<RegionalPressureConfigurationDialog>(*regional);
             dialogManager.AddDialog(
                 {
                     IDD_MINSTACK,
@@ -58,12 +55,14 @@ namespace UKControllerPlugin {
             );
 
             // Get all the minstacks up front
-            taskManager.QueueAsynchronousTask([& api, msl]() {
+            taskManager.QueueAsynchronousTask([& api, regional]() {
                 try {
-                    msl->UpdateAllMsls(
+                    regional->UpdateAllPressures(
                         api.GetMinStackLevels()
                     );
-                    LogInfo("Loaded " + std::to_string(msl->GetAllMslKeys().size()) + " minimum stack levels");
+                    LogInfo(
+                        "Loaded " + std::to_string(regional->GetAllRegionalPressureKeys().size()) + " regional pressures"
+                    );
                 } catch (ApiException api) {
                     LogError("ApiException when trying to get initial MSL download");
                 }
@@ -74,9 +73,9 @@ namespace UKControllerPlugin {
         /*
             Bootstrap the radar screen part of the module.
         */
-        void MinStackModule::BootstrapRadarScreen(
+        void RegionalPressureModule::BootstrapRadarScreen(
             FunctionCallEventHandler & eventHandler,
-            MinStackManager & minStackManager,
+            RegionalPressureManager& regionalPressureManager,
             RadarRenderableCollection & radarRender,
             ConfigurableDisplayCollection & configurableDisplays,
             const GdiplusBrushes & brushes,
@@ -87,9 +86,9 @@ namespace UKControllerPlugin {
             // Create the renderer and get the ids for screen objects
             int rendererId = radarRender.ReserveRendererIdentifier();
             int configureFunctionId = eventHandler.ReserveNextDynamicFunctionId();
-            std::shared_ptr<MinStackRenderer> renderer(
-                new MinStackRenderer(
-                    minStackManager,
+            std::shared_ptr<RegionalPressureRenderer> renderer(
+                new RegionalPressureRenderer(
+                    regionalPressureManager,
                     radarRender.ReserveScreenObjectIdentifier(rendererId),
                     radarRender.ReserveScreenObjectIdentifier(rendererId),
                     radarRender.ReserveScreenObjectIdentifier(rendererId),
@@ -103,9 +102,9 @@ namespace UKControllerPlugin {
             radarRender.RegisterRenderer(rendererId, renderer, radarRender.beforeTags);
             CallbackFunction configureCallback(
                 configureFunctionId,
-                "Min Stack Configure",
+                "Regional pressure configure",
                 std::bind(
-                    &MinStackRenderer::Configure,
+                    &RegionalPressureRenderer::Configure,
                     renderer,
                     std::placeholders::_1,
                     std::placeholders::_2,
@@ -116,5 +115,5 @@ namespace UKControllerPlugin {
             configurableDisplays.RegisterDisplay(renderer);
             userSettingHandlers.RegisterHandler(renderer);
         }
-    }  // namespace MinStack
+    }  // namespace Regional
 }  // namespace UKControllerPlugin

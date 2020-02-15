@@ -115,6 +115,9 @@
     <Filter Include="test\sectorfile">
       <UniqueIdentifier>{2b17f35f-90d1-4f2d-9826-0618a260c1f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\regional">
+      <UniqueIdentifier>{55d16101-3944-4b04-b2a1-d177a9fe329b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -720,6 +723,18 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\dependency\DependencyLoaderTest.cpp">
       <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererConfigurationTest.cpp">
+      <Filter>test\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererTest.cpp">
+      <Filter>test\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\regional\RegionalPressureManagerTest.cpp">
+      <Filter>test\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\regional\RegionalPressureModuleTest.cpp">
+      <Filter>test\regional</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

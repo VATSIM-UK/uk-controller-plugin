@@ -37,13 +37,13 @@ namespace UKControllerPlugin {
                 bool IsLastElement(unsigned int selectedIndex, unsigned int itemCount, bool swapUp);
 
                 // The renderer configuration this relates to
-                UKControllerPlugin::Regional::RegionalPressureConfigurationDialog * config = nullptr;
+                UKControllerPlugin::Regional::RegionalPressureRendererConfiguration* config = nullptr;
 
                 // Manages MSLs
                 const UKControllerPlugin::Regional::RegionalPressureManager& manager;
 
-                // The keys currently active for MSL whilst the dialog is open
-                std::set<std::string> activeMslKeys;
+                // The keys currently active for RPS whilst the dialog is open
+                std::set<std::string> activePressureKeys;
         };
     }  // namespace MinStack
 }  // namespace UKControllerPlugin

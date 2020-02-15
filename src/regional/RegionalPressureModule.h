@@ -17,8 +17,8 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class AsrEventHandlerCollection;
     }  // namespace Euroscope
-    namespace MinStack {
-        class MinStackManager;
+    namespace Regional {
+        class RegionalPressureManager;
     }  // namespace MinStack
     namespace Windows {
         struct GdiplusBrushes;
@@ -34,16 +34,16 @@ namespace UKControllerPlugin {
 
 
 namespace UKControllerPlugin {
-    namespace MinStack {
+    namespace Regional {
 
         /*
-        Factory for creating history trail renderers.
+            Bootstrap for regional pressures
         */
-        class MinStackModule
+        class RegionalPressureModule
         {
             public:
                 static void BootstrapPlugin(
-                    std::shared_ptr<MinStackManager> & msl,
+                    std::shared_ptr<UKControllerPlugin::Regional::RegionalPressureManager> & regional,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface & taskManager,
                     UKControllerPlugin::Api::ApiInterface & api,
                     UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors,
@@ -51,7 +51,7 @@ namespace UKControllerPlugin {
                 );
                 static void BootstrapRadarScreen(
                     UKControllerPlugin::Plugin::FunctionCallEventHandler & eventHandler,
-                    UKControllerPlugin::MinStack::MinStackManager & minStackManager,
+                    UKControllerPlugin::Regional::RegionalPressureManager& regionalPressureManager,
                     UKControllerPlugin::RadarScreen::RadarRenderableCollection & radarRender,
                     UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays,
                     const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
@@ -59,5 +59,5 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Dialog::DialogManager & dialogManager
                 );
         };
-    }  // namespace MinStack
+    }  // namespace Regional
 }  // namespace UKControllerPlugin

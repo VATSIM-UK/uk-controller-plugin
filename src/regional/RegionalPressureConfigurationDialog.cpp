@@ -1,10 +1,10 @@
 #include "pch/stdafx.h"
 #include "regional/RegionalPressureConfigurationDialog.h"
+#include "regional/RegionalPressureRenderedItem.h"
 #include "dialog/DialogCallArgument.h"
 #include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
-using UKControllerPlugin::Regional::RegionalPressureConfigurationDialog;
 using UKControllerPlugin::Regional::RegionalPressureConfigurationDialog;
 using UKControllerPlugin::HelperFunctions;
 
@@ -177,7 +177,7 @@ namespace UKControllerPlugin {
             Swap two items in the list box, the second item should be AFTER the first in
             the order.
         */
-        void MinStackConfigurationDialog::DoElementSwap(
+        void RegionalPressureConfigurationDialog::DoElementSwap(
             HWND hwnd,
             unsigned int firstItemIndex,
             LPARAM firstItemString,
@@ -240,9 +240,9 @@ namespace UKControllerPlugin {
         /*
             Initialise the controls from config
         */
-        void MinStackConfigurationDialog::InitDialog(HWND hwnd, LPARAM lParam)
+        void RegionalPressureConfigurationDialog::InitDialog(HWND hwnd, LPARAM lParam)
         {
-            this->config = reinterpret_cast<MinStackRendererConfiguration *>(
+            this->config = reinterpret_cast<RegionalPressureRendererConfiguration *>(
                 reinterpret_cast<DialogCallArgument *>(lParam)->contextArgument
             );
 
@@ -254,14 +254,14 @@ namespace UKControllerPlugin {
             );
 
             // Add the selected MSLs to the existing list
-            this->activeMslKeys = this->manager.GetAllMslKeys();
+            this->activePressureKeys = this->manager.GetAllRegionalPressureKeys();
             for (
-                MinStackRendererConfiguration::const_iterator it = this->config->cbegin();
+                RegionalPressureRendererConfiguration::const_iterator it = this->config->cbegin();
                 it != this->config->cend();
                 ++it
             ) {
-                auto mslKey = this->activeMslKeys.find(it->key);
-                if (mslKey == this->activeMslKeys.cend()) {
+                auto mslKey = this->activePressureKeys.find(it->key);
+                if (mslKey == this->activePressureKeys.cend()) {
                     LogWarning("Unable to add Active MSL to list, not active: " + *mslKey);
                     continue;
                 }
@@ -285,8 +285,8 @@ namespace UKControllerPlugin {
 
             // Add all non-active keys to the dropdown
             for (
-                std::set<std::string>::const_iterator it = this->activeMslKeys.cbegin();
-                it != this->activeMslKeys.cend();
+                std::set<std::string>::const_iterator it = this->activePressureKeys.cbegin();
+                it != this->activePressureKeys.cend();
                 ++it
             ) {
                 if (this->config->GetItem(*it) != this->config->invalidItem) {
@@ -425,7 +425,7 @@ namespace UKControllerPlugin {
         /*
             Remove entry from the active list
         */
-        void MinStackConfigurationDialog::RemoveEntryFromActiveList(HWND hwnd, LPARAM lParam)
+        void RegionalPressureConfigurationDialog::RemoveEntryFromActiveList(HWND hwnd, LPARAM lParam)
         {
             LPARAM selectedMinstackIndex = SendDlgItemMessage(
                 hwnd,
@@ -498,7 +498,7 @@ namespace UKControllerPlugin {
         /*
             Save the controls to config
         */
-        void MinStackConfigurationDialog::SaveDialog(HWND hwnd)
+        void RegionalPressureConfigurationDialog::SaveDialog(HWND hwnd)
         {
             // Set display from check checkbox
             this->config->SetShouldRender(IsDlgButtonChecked(hwnd, IDC_MINSTACK_DISPLAY_CHECK) == BST_CHECKED);
@@ -518,7 +518,7 @@ namespace UKControllerPlugin {
             }
 
             // Update the config from the list
-            std::set<MinStackRenderedItem> newConfig;
+            std::set<RegionalPressureRenderedItem> newConfig;
             for (unsigned int i = 0; i < itemCount; i++) {
                 LPARAM mslKey = SendDlgItemMessage(
                     hwnd,
@@ -538,7 +538,7 @@ namespace UKControllerPlugin {
 
            this->config->Reset();
            for (
-               std::set<MinStackRenderedItem>::const_iterator it = newConfig.cbegin();
+               std::set<RegionalPressureRenderedItem>::const_iterator it = newConfig.cbegin();
                it != newConfig.cend();
                ++it
             ) {
