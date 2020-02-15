@@ -963,6 +963,9 @@
     <ClInclude Include="..\..\src\regional\RegionalPressure.h">
       <Filter>src\regional</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\regional\RegionalPressureManagerFactory.h">
+      <Filter>src\regional</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1634,6 +1637,9 @@
       <Filter>src\regional</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\regional\RegionalPressureRenderer.cpp">
+      <Filter>src\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\regional\RegionalPressureManagerFactory.cpp">
       <Filter>src\regional</Filter>
     </ClCompile>
   </ItemGroup>

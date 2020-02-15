@@ -13,6 +13,7 @@
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "mock/MockDialogProvider.h"
 #include "dialog/DialogProviderInterface.h"
+#include "mock/MockDependencyLoader.h"
 
 using UKControllerPlugin::Regional::RegionalPressureModule;
 using UKControllerPluginTest::Api::MockApiInterface;
@@ -28,6 +29,7 @@ using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::_;
@@ -52,6 +54,7 @@ namespace UKControllerPluginTest {
                 std::shared_ptr<RegionalPressureManager> manager;
 
                 // For the radar screen tests
+                NiceMock<MockDependencyLoader> dependency;
                 NiceMock<MockDialogProvider> dialogProvider;
                 DialogManager dialogManager;
                 FunctionCallEventHandler functionHandlers;
@@ -78,7 +81,8 @@ namespace UKControllerPluginTest {
                 this->mockRunner,
                 this->mockApi,
                 this->websockets,
-                this->dialogManager
+                this->dialogManager,
+                dependency
             );
             EXPECT_NO_THROW(manager->GetAllRegionalPressureKeys());
         }
@@ -99,7 +103,8 @@ namespace UKControllerPluginTest {
                 this->mockRunner,
                 this->mockApi,
                 this->websockets,
-                this->dialogManager
+                this->dialogManager,
+                dependency
             );
             EXPECT_EQ(1, websockets.CountProcessorsForChannel("private-rps-updates"));
         }
@@ -120,7 +125,8 @@ namespace UKControllerPluginTest {
                 this->mockRunner,
                 this->mockApi,
                 this->websockets,
-                this->dialogManager
+                this->dialogManager,
+                dependency
             );
             EXPECT_EQ(1, dialogManager.CountDialogs());
             EXPECT_EQ(1, dialogManager.HasDialog(IDD_REGIONAL_PRESSURE));

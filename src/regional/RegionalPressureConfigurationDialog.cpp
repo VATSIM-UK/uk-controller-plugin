@@ -551,7 +551,7 @@ namespace UKControllerPlugin {
         */
         std::wstring RegionalPressureConfigurationDialog::GetListEntryForKey(std::string mslKey)
         {
-            return HelperFunctions::ConvertToWideString(mslKey);
+            return HelperFunctions::ConvertToWideString(this->manager.GetNameFromKey(mslKey));
         }
 
         /*

@@ -12,6 +12,7 @@
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "api/ApiException.h"
 #include "regional/RegionalPressureConfigurationDialog.h"
+#include "regional/RegionalPressureManagerFactory.h"
 
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -36,9 +37,10 @@ namespace UKControllerPlugin {
             TaskRunnerInterface & taskManager,
             ApiInterface & api,
             WebsocketEventProcessorCollection & websocketProcessors,
-            DialogManager & dialogManager
+            DialogManager & dialogManager,
+            UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
         ) {
-            regional.reset(new RegionalPressureManager);
+            regional = UKControllerPlugin::Regional::Create(dependency);
             websocketProcessors.AddProcessor(regional);
 
             // Create the dialog for configuration

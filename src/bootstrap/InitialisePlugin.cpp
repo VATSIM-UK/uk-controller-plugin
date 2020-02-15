@@ -235,7 +235,8 @@ namespace UKControllerPlugin {
             *this->container->taskRunner,
             *this->container->api,
             *this->container->websocketProcessors,
-            *this->container->dialogManager
+            *this->container->dialogManager,
+            loader
         );
         UKControllerPlugin::Hold::BootstrapPlugin(
             loader,

@@ -18,6 +18,16 @@ namespace UKControllerPluginTest {
         class RegionalPressureManagerTest : public Test
         {
             public:
+                RegionalPressureManagerTest()
+                    : regional(asrKeys)
+                {
+
+                }
+
+                std::map<std::string, std::string> asrKeys = {
+                    {"ASR_LONDON", "London"},
+                    {"ASR_SCOTTISH", "Scottish"},
+                };
                 RegionalPressureManager regional;
         };
 
@@ -37,6 +47,12 @@ namespace UKControllerPluginTest {
 
             std::set<std::string> expectedKeys = { "ASR_LONDON", "ASR_SCOTTISH" };
             EXPECT_EQ(expectedKeys, this->regional.GetAllRegionalPressureKeys());
+        }
+
+        TEST_F(RegionalPressureManagerTest, ItConvertsKeysToNames)
+        {
+            this->regional.AddRegionalPressure("ASR_LONDON", "London", 1013);
+            EXPECT_EQ("London", this->regional.GetNameFromKey("ASR_LONDON"));
         }
 
         TEST_F(RegionalPressureManagerTest, ItReturnsInvalidMslIfKeyNotFound)
@@ -90,7 +106,11 @@ namespace UKControllerPluginTest {
 
             this->regional.ProcessWebsocketMessage(message);
             EXPECT_EQ(1013, this->regional.GetRegionalPressure("ASR_LONDON").pressure);
+            EXPECT_EQ("ASR_LONDON", this->regional.GetRegionalPressure("ASR_LONDON").key);
+            EXPECT_EQ("London", this->regional.GetRegionalPressure("ASR_LONDON").name);
             EXPECT_EQ(1014, this->regional.GetRegionalPressure("ASR_SCOTTISH").pressure);
+            EXPECT_EQ("ASR_SCOTTISH", this->regional.GetRegionalPressure("ASR_SCOTTISH").key);
+            EXPECT_EQ("Scottish", this->regional.GetRegionalPressure("ASR_SCOTTISH").name);
         }
 
         TEST_F(RegionalPressureManagerTest, ItHandlesNullRegionalPressures)

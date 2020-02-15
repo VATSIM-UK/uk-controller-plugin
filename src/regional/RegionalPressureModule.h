@@ -1,6 +1,7 @@
 #pragma once
 #include "api/ApiInterface.h"
 #include "dialog/DialogManager.h"
+#include "dependency/DependencyLoaderInterface.h"
 
 // Forward declare
 namespace UKControllerPlugin {
@@ -47,7 +48,8 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::TaskManager::TaskRunnerInterface & taskManager,
                     UKControllerPlugin::Api::ApiInterface & api,
                     UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors,
-                    UKControllerPlugin::Dialog::DialogManager & dialogManager
+                    UKControllerPlugin::Dialog::DialogManager & dialogManager,
+                    UKControllerPlugin::Dependency::DependencyLoaderInterface & dependency
                 );
                 static void BootstrapRadarScreen(
                     UKControllerPlugin::Plugin::FunctionCallEventHandler & eventHandler,
@@ -58,6 +60,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::AsrEventHandlerCollection & userSettingHandlers,
                     const UKControllerPlugin::Dialog::DialogManager & dialogManager
                 );
+
         };
     }  // namespace Regional
 }  // namespace UKControllerPlugin

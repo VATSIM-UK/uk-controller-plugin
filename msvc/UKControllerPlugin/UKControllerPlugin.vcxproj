@@ -238,6 +238,7 @@
     <ClInclude Include="..\..\src\radarscreen\UKRadarScreen.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressureConfigurationDialog.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressureManager.h" />
+    <ClInclude Include="..\..\src\regional\RegionalPressureManagerFactory.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressureModule.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressureRenderedItem.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressureRenderer.h" />
@@ -475,6 +476,7 @@
     <ClCompile Include="..\..\src\radarscreen\UKRadarScreen.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureConfigurationDialog.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureManager.cpp" />
+    <ClCompile Include="..\..\src\regional\RegionalPressureManagerFactory.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureModule.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureRenderer.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureRendererConfiguration.cpp" />

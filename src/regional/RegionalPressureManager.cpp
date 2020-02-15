@@ -11,6 +11,15 @@ using UKControllerPlugin::Websocket::WebsocketMessage;
 namespace UKControllerPlugin {
     namespace Regional {
 
+        RegionalPressureManager::RegionalPressureManager(void)
+        {
+        }
+
+        RegionalPressureManager::RegionalPressureManager(std::map<std::string, std::string> keyMap)
+            : keyMap(keyMap)
+        {
+        }
+
         void RegionalPressureManager::AcknowledgePressure(std::string key)
         {
             if (!this->pressureMap.count(key)) {
@@ -30,9 +39,15 @@ namespace UKControllerPlugin {
             }
 
             this->pressureMap[key] = {
+                key,
                 name,
                 pressure
             };
+        }
+
+        size_t RegionalPressureManager::CountAltimeterSettingRegions(void) const
+        {
+            return this->keyMap.size();
         }
 
         /*
@@ -67,7 +82,7 @@ namespace UKControllerPlugin {
         */
         std::string RegionalPressureManager::GetNameFromKey(std::string key) const
         {
-            return key.substr(key.find('.') + 1);
+            return this->keyMap.count(key) ? this->keyMap.at(key) : key;
         }
 
         /*
@@ -125,10 +140,16 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                this->pressureMap[it.key()] = {
-                    it.key(),
-                    it.value().get<unsigned int>()
-                };
+                if (this->pressureMap.count(it.key())) {
+                    this->pressureMap[it.key()].pressure = it.value().get<unsigned int>();
+                }
+                else {
+                    this->pressureMap[it.key()] = {
+                        it.key(),
+                        this->keyMap.count(it.key()) ? this->keyMap.at(it.key()) : it.key(),
+                        it.value().get<unsigned int>()
+                    };
+                }
             }
         }
     }  // namespace Regional

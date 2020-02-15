@@ -186,6 +186,7 @@
     <ClCompile Include="..\..\test\test\radarscreen\RadarRenderableCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp" />
+    <ClCompile Include="..\..\test\test\regional\RegionalPressureManagerFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererConfigurationTest.cpp" />

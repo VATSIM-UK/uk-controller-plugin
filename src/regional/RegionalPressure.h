@@ -9,6 +9,9 @@ namespace UKControllerPlugin {
         */
         typedef struct RegionalPressure
         {
+            // The key for the RPS
+            std::string key;
+
             // The display name of the RPS
             std::string name;
 

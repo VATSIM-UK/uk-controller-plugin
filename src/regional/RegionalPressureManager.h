@@ -20,8 +20,11 @@ namespace UKControllerPlugin {
         class RegionalPressureManager : public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
         {
             public:
+                explicit RegionalPressureManager(void);
+                explicit RegionalPressureManager(std::map<std::string, std::string> keyMap);
                 void AcknowledgePressure(std::string key);
                 void AddRegionalPressure(std::string key, std::string name, unsigned int pressure);
+                size_t CountAltimeterSettingRegions(void) const;
                 std::set<std::string> GetAllRegionalPressureKeys(void) const;
                 const UKControllerPlugin::Regional::RegionalPressure & GetRegionalPressure(std::string key) const;
                 std::string GetNameFromKey(std::string key) const;
@@ -39,6 +42,9 @@ namespace UKControllerPlugin {
 
                 // Map of identifier to rps
                 std::map<std::string, UKControllerPlugin::Regional::RegionalPressure> pressureMap;
+
+                // Maps the ASR key to its name
+                const std::map<std::string, std::string> keyMap;
         };
     }  // namespace Regional
 }  // namespace UKControllerPlugin
