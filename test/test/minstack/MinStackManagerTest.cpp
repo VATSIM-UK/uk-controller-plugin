@@ -106,6 +106,28 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(6000, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")).msl);
         }
 
+        TEST_F(MinStackManagerTest, ItHandlesNullMslValues)
+        {
+            nlohmann::json mslData;
+            mslData["airfield"] = {
+                {"EGBB", nullptr}
+            };
+            mslData["tma"] = {
+                {"MTMA", nullptr}
+            };
+
+            WebsocketMessage message{
+                "App\\Events\\MinStacksUpdatedEvent",
+                "private-minstack-updates",
+                mslData,
+                false
+            };
+
+            this->msl.ProcessWebsocketMessage(message);
+            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")).msl);
+            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")).msl);
+        }
+
         TEST_F(MinStackManagerTest, ItDoesntDoManualMinStackUpdatesIfItDoesntExist)
         {
             EXPECT_NO_THROW(this->msl.SetMinStackLevel("nope", 8000));
