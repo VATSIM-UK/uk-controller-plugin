@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
         class RegionalPressureManager : public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
         {
             public:
-                explicit RegionalPressureManager(void);
+                RegionalPressureManager(void);
                 explicit RegionalPressureManager(std::map<std::string, std::string> keyMap);
                 void AcknowledgePressure(std::string key);
                 void AddRegionalPressure(std::string key, std::string name, unsigned int pressure);

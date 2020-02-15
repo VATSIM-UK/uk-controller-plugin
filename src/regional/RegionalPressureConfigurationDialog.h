@@ -45,5 +45,5 @@ namespace UKControllerPlugin {
                 // The keys currently active for RPS whilst the dialog is open
                 std::set<std::string> activePressureKeys;
         };
-    }  // namespace MinStack
+    }  // namespace Regional
 }  // namespace UKControllerPlugin

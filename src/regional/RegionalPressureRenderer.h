@@ -100,7 +100,8 @@ namespace UKControllerPlugin {
                 const std::string selectedRegionalPressureUserSettingKey = "SelectedRegionalPressures";
 
                 // The description when saving the selected minimum stack levels
-                const std::string selecteRegionalPressureUserSettingDescription = "Selected Regional Pressures To Display";
+                const std::string selecteRegionalPressureUserSettingDescription =
+                    "Selected Regional Pressures To Display";
 
                 // The description when saving the visibility ASR setting
                 const std::string visibleUserSettingDescription = "Regional Pressure Visibility";
@@ -163,5 +164,5 @@ namespace UKControllerPlugin {
                 // Spawns the configuration dialog
                 const UKControllerPlugin::Dialog::DialogManager & dialogManager;
         };
-    }  // namespace MinStack
+    }  // namespace Regional
 }  // namespace UKControllerPlugin

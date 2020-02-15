@@ -63,7 +63,8 @@ namespace UKControllerPlugin {
                         api.GetRegionalPressures()
                     );
                     LogInfo(
-                        "Loaded " + std::to_string(regional->GetAllRegionalPressureKeys().size()) + " regional pressures"
+                        "Loaded " + std::to_string(regional->GetAllRegionalPressureKeys().size())
+                            + " regional pressures"
                     );
                 } catch (ApiException api) {
                     LogError("ApiException when trying to get initial regional pressure download");

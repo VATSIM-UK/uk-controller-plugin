@@ -142,8 +142,7 @@ namespace UKControllerPlugin {
 
                 if (this->pressureMap.count(it.key())) {
                     this->pressureMap[it.key()].pressure = it.value().get<unsigned int>();
-                }
-                else {
+                } else {
                     this->pressureMap[it.key()] = {
                         it.key(),
                         this->keyMap.count(it.key()) ? this->keyMap.at(it.key()) : it.key(),

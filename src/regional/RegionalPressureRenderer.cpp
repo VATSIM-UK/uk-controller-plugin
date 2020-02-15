@@ -244,8 +244,10 @@ namespace UKControllerPlugin {
         /*
             Function called to render the module to the screen.
         */
-        void RegionalPressureRenderer::Render(GdiGraphicsInterface & graphics, EuroscopeRadarLoopbackInterface & radarScreen)
-        {
+        void RegionalPressureRenderer::Render(
+            GdiGraphicsInterface & graphics,
+            EuroscopeRadarLoopbackInterface & radarScreen
+        ) {
             this->RenderTopBar(graphics, radarScreen);
             this->RenderOuterFrame(graphics, radarScreen, this->RenderPressures(graphics, radarScreen));
         }
@@ -296,11 +298,9 @@ namespace UKControllerPlugin {
                 std::string rpsString;
                 if (pressureData == this->manager.invalidPressure) {
                     rpsString = "-";
-                }
-                else if (pressureData.pressure < 1000) {
+                } else if (pressureData.pressure < 1000) {
                     rpsString = "0" + std::to_string(pressureData.pressure);
-                }
-                else {
+                } else {
                     rpsString = std::to_string(pressureData.pressure);
                 }
 

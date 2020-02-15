@@ -11,7 +11,9 @@ using UKControllerPlugin::HelperFunctions;
 namespace UKControllerPlugin {
     namespace Regional {
 
-        RegionalPressureConfigurationDialog::RegionalPressureConfigurationDialog(const RegionalPressureManager & manager)
+        RegionalPressureConfigurationDialog::RegionalPressureConfigurationDialog(
+            const RegionalPressureManager & manager
+        )
             : manager(manager)
         {
 
@@ -557,8 +559,11 @@ namespace UKControllerPlugin {
         /*
             Is the selected element the last in the list?
         */
-        bool RegionalPressureConfigurationDialog::IsLastElement(unsigned int selectedIndex, unsigned int itemCount, bool swapUp)
-        {
+        bool RegionalPressureConfigurationDialog::IsLastElement(
+            unsigned int selectedIndex,
+            unsigned int itemCount,
+            bool swapUp
+        ) {
             return swapUp ? selectedIndex == 0 : selectedIndex == itemCount - 1;
         }
     }  // namespace Regional

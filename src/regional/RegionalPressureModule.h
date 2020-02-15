@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
     }  // namespace Euroscope
     namespace Regional {
         class RegionalPressureManager;
-    }  // namespace MinStack
+    }  // namespace Regional
     namespace Windows {
         struct GdiplusBrushes;
     }  // namespace Windows
