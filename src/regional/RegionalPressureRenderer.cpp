@@ -293,9 +293,16 @@ namespace UKControllerPlugin {
                 graphics.FillRect(rps, *this->brushes.greyBrush);
                 graphics.DrawRect(rps, *this->brushes.blackPen);
 
-                std::string rpsString = pressureData == this->manager.invalidPressure
-                    ? "-"
-                    : std::to_string(pressureData.pressure);
+                std::string rpsString;
+                if (pressureData == this->manager.invalidPressure) {
+                    rpsString = "-";
+                }
+                else if (pressureData.pressure < 1000) {
+                    rpsString = "0" + std::to_string(pressureData.pressure);
+                }
+                else {
+                    rpsString = std::to_string(pressureData.pressure);
+                }
 
                 graphics.DrawString(
                     HelperFunctions::ConvertToWideString(rpsString),
@@ -355,7 +362,7 @@ namespace UKControllerPlugin {
             // The title bar - the draggable bit
             graphics.DrawRect(this->topBarRender, *this->brushes.blackPen);
             graphics.FillRect(this->topBarRender, *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawString(L"RPS", this->topBarRender, *this->brushes.whiteBrush);
+            graphics.DrawString(L"ASR", this->topBarRender, *this->brushes.whiteBrush);
             radarScreen.RegisterScreenObject(
                 this->menuBarClickspotId,
                 "",
