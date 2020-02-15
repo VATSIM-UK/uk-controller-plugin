@@ -1,44 +1,44 @@
 #include "pch/pch.h"
-#include "minstack/MinStackRendererConfiguration.h"
-#include "minstack/MinStackRenderedItem.h"
+#include "regional/RegionalPressureRendererConfiguration.h"
+#include "regional/RegionalPressureRenderedItem.h"
 
-using UKControllerPlugin::MinStack::MinStackRenderedItem;
-using UKControllerPlugin::MinStack::MinStackRendererConfiguration;
+using UKControllerPlugin::Regional::RegionalPressureRenderedItem;
+using UKControllerPlugin::Regional::RegionalPressureRendererConfiguration;
 using testing::Test;
 
 namespace UKControllerPluginTest {
-    namespace MinStack {
+    namespace Regional {
 
-        class MinStackRendererConfigurationTest : public Test
+        class RegionalPressureRendererConfigurationTest : public Test
         {
             public:
 
-                MinStackRenderedItem item1{ 1, "tma.LTMA" };
-                MinStackRenderedItem item2{ 2, "tma.STMA" };
-                MinStackRendererConfiguration configuration;
+                RegionalPressureRenderedItem item1{ 1, "ASR_LONDON" };
+                RegionalPressureRenderedItem item2{ 2, "ASR_SCOTTISH" };
+                RegionalPressureRendererConfiguration configuration;
         };
 
 
-        TEST_F(MinStackRendererConfigurationTest, ItStartsEmpty)
+        TEST_F(RegionalPressureRendererConfigurationTest, ItStartsEmpty)
         {
             EXPECT_EQ(0, this->configuration.CountItems());
         }
 
-        TEST_F(MinStackRendererConfigurationTest, ItAddsAnItem)
+        TEST_F(RegionalPressureRendererConfigurationTest, ItAddsAnItem)
         {
             this->configuration.AddItem(this->item1);
             this->configuration.AddItem(this->item2);
             EXPECT_EQ(2, this->configuration.CountItems());
         }
 
-        TEST_F(MinStackRendererConfigurationTest, ItDoesntAddDuplicates)
+        TEST_F(RegionalPressureRendererConfigurationTest, ItDoesntAddDuplicates)
         {
             this->configuration.AddItem(this->item1);
             this->configuration.AddItem(this->item1);
             EXPECT_EQ(1, this->configuration.CountItems());
         }
 
-        TEST_F(MinStackRendererConfigurationTest, ItRemovesItems)
+        TEST_F(RegionalPressureRendererConfigurationTest, ItRemovesItems)
         {
             this->configuration.AddItem(this->item1);
             this->configuration.AddItem(this->item2);
@@ -46,7 +46,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(this->item2, *this->configuration.cbegin());
         }
 
-        TEST_F(MinStackRendererConfigurationTest, ItRemovesItemsByOrder)
+        TEST_F(RegionalPressureRendererConfigurationTest, ItRemovesItemsByOrder)
         {
             this->configuration.AddItem(this->item1);
             this->configuration.AddItem(this->item2);
@@ -54,12 +54,12 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(this->item2, *this->configuration.cbegin());
         }
 
-        TEST_F(MinStackRendererConfigurationTest, ItHandlesNonExistantItems)
+        TEST_F(RegionalPressureRendererConfigurationTest, ItHandlesNonExistantItems)
         {
             EXPECT_NO_THROW(this->configuration.RemoveItem(55));
         }
 
-        TEST_F(MinStackRendererConfigurationTest, ItCanIterateItemsInOrder)
+        TEST_F(RegionalPressureRendererConfigurationTest, ItCanIterateItemsInOrder)
         {
             this->configuration.AddItem(this->item1);
             this->configuration.AddItem(this->item2);
@@ -68,18 +68,18 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(this->item2, *it);
         }
 
-        TEST_F(MinStackRendererConfigurationTest, ItReturnsInvalidItem)
+        TEST_F(RegionalPressureRendererConfigurationTest, ItReturnsInvalidItem)
         {
             this->configuration.AddItem(this->item1);
             this->configuration.AddItem(this->item2);
             EXPECT_EQ(this->configuration.invalidItem, this->configuration.GetItem("foo"));
         }
 
-        TEST_F(MinStackRendererConfigurationTest, ItReturnsItemsByKey)
+        TEST_F(RegionalPressureRendererConfigurationTest, ItReturnsItemsByKey)
         {
             this->configuration.AddItem(this->item1);
             this->configuration.AddItem(this->item2);
-            EXPECT_EQ(this->item1, this->configuration.GetItem("tma.LTMA"));
+            EXPECT_EQ(this->item1, this->configuration.GetItem("ASR_LONDON"));
         }
-    }  // namespace MinStack
+    }  // namespace Regional
 }  // namespace UKControllerPluginTest

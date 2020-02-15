@@ -1,8 +1,8 @@
 #include "pch/pch.h"
-#include "minstack/MinStackModule.h"
+#include "regional/RegionalPressureModule.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "mock/MockApiInterface.h"
-#include "minstack/MinStackManager.h"
+#include "regional/RegionalPressureManager.h"
 #include "curl/CurlResponse.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/RadarRenderableCollection.h"
@@ -14,10 +14,10 @@
 #include "mock/MockDialogProvider.h"
 #include "dialog/DialogProviderInterface.h"
 
-using UKControllerPlugin::MinStack::MinStackModule;
+using UKControllerPlugin::Regional::RegionalPressureModule;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
-using UKControllerPlugin::MinStack::MinStackManager;
+using UKControllerPlugin::Regional::RegionalPressureManager;
 using UKControllerPlugin::Curl::CurlResponse;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -34,13 +34,13 @@ using ::testing::_;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
-    namespace MinStack {
+    namespace Regional {
 
-        class MinStackModuleTest : public Test
+        class RegionalPressureModuleTest : public Test
         {
             public:
 
-                MinStackModuleTest()
+                RegionalPressureModuleTest()
                     : dialogManager(dialogProvider)
                 {
 
@@ -49,79 +49,73 @@ namespace UKControllerPluginTest {
                 NiceMock<MockApiInterface> mockApi;
                 MockTaskRunnerInterface mockRunner;
                 WebsocketEventProcessorCollection websockets;
-                std::shared_ptr<MinStackManager> manager;
+                std::shared_ptr<RegionalPressureManager> manager;
 
                 // For the radar screen tests
                 NiceMock<MockDialogProvider> dialogProvider;
                 DialogManager dialogManager;
                 FunctionCallEventHandler functionHandlers;
-                MinStackManager managerObject;
+                RegionalPressureManager managerObject;
                 RadarRenderableCollection radarRenderables;
                 ConfigurableDisplayCollection configruables;
                 GdiplusBrushes brushes;
                 AsrEventHandlerCollection userSettingHandlers;
         };
 
-        TEST_F(MinStackModuleTest, BootstrapPluginCreatesTheManager)
+        TEST_F(RegionalPressureModuleTest, BootstrapPluginCreatesTheManager)
         {
-            nlohmann::json mslData;
-            mslData["airfield"] = {
-                {"EGLL", 8000}
+            nlohmann::json pressureData;
+            pressureData = {
+                {"ASR_LONDON", 1013},
+                {"ASR_SCOTTISH", 1014}
             };
-            mslData["tma"] = {
-                {"LTMA", 7000}
-            };
-            EXPECT_CALL(this->mockApi, GetMinStackLevels())
+            EXPECT_CALL(this->mockApi, GetRegionalPressures())
                 .Times(1)
-                .WillRepeatedly(Return(mslData));
+                .WillRepeatedly(Return(pressureData));
 
-            MinStackModule::BootstrapPlugin(
+            RegionalPressureModule::BootstrapPlugin(
                 this->manager,
                 this->mockRunner,
                 this->mockApi,
                 this->websockets,
                 this->dialogManager
             );
-            EXPECT_NO_THROW(manager->GetMslKeyTma("LTMA"));
+            EXPECT_NO_THROW(manager->GetAllRegionalPressureKeys());
         }
 
-        TEST_F(MinStackModuleTest, BootstrapPluginRegistersManagerForWebsocketEvents)
+        TEST_F(RegionalPressureModuleTest, BootstrapPluginRegistersManagerForWebsocketEvents)
         {
-            nlohmann::json mslData;
-            mslData["airfield"] = {
-                {"EGLL", 8000}
+            nlohmann::json pressureData;
+            pressureData = {
+                {"ASR_LONDON", 1013},
+                {"ASR_SCOTTISH", 1014}
             };
-            mslData["tma"] = {
-                {"LTMA", 7000}
-            };
-            EXPECT_CALL(this->mockApi, GetMinStackLevels())
+            EXPECT_CALL(this->mockApi, GetRegionalPressures())
                 .Times(1)
-                .WillRepeatedly(Return(mslData));
+                .WillRepeatedly(Return(pressureData));
 
-            MinStackModule::BootstrapPlugin(
+            RegionalPressureModule::BootstrapPlugin(
                 this->manager,
                 this->mockRunner,
                 this->mockApi,
                 this->websockets,
                 this->dialogManager
             );
-            EXPECT_EQ(1, websockets.CountProcessorsForChannel("private-minstack-updates"));
+            EXPECT_EQ(1, websockets.CountProcessorsForChannel("private-rps-updates"));
         }
 
-        TEST_F(MinStackModuleTest, BootstrapPluginRegistersDialog)
+        TEST_F(RegionalPressureModuleTest, BootstrapPluginRegistersDialog)
         {
-            nlohmann::json mslData;
-            mslData["airfield"] = {
-                {"EGLL", 8000}
+            nlohmann::json pressureData;
+            pressureData = {
+                {"ASR_LONDON", 1013},
+                {"ASR_SCOTTISH", 1014}
             };
-            mslData["tma"] = {
-                {"LTMA", 7000}
-            };
-            EXPECT_CALL(this->mockApi, GetMinStackLevels())
+            EXPECT_CALL(this->mockApi, GetRegionalPressures())
                 .Times(1)
-                .WillRepeatedly(Return(mslData));
+                .WillRepeatedly(Return(pressureData));
 
-            MinStackModule::BootstrapPlugin(
+            RegionalPressureModule::BootstrapPlugin(
                 this->manager,
                 this->mockRunner,
                 this->mockApi,
@@ -129,12 +123,12 @@ namespace UKControllerPluginTest {
                 this->dialogManager
             );
             EXPECT_EQ(1, dialogManager.CountDialogs());
-            EXPECT_EQ(1, dialogManager.HasDialog(IDD_MINSTACK));
+            EXPECT_EQ(1, dialogManager.HasDialog(IDD_REGIONAL_PRESSURE));
         }
 
-        TEST_F(MinStackModuleTest, BootstrapRadarScreenAddsToFunctionEvents)
+        TEST_F(RegionalPressureModuleTest, BootstrapRadarScreenAddsToFunctionEvents)
         {
-            MinStackModule::BootstrapRadarScreen(
+            RegionalPressureModule::BootstrapRadarScreen(
                 this->functionHandlers,
                 this->managerObject,
                 this->radarRenderables,
@@ -147,9 +141,9 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, functionHandlers.CountTagFunctions());
         }
 
-        TEST_F(MinStackModuleTest, BootstrapRadarScreenAddsToRadarRenderablesInBeforeTagsPhase)
+        TEST_F(RegionalPressureModuleTest, BootstrapRadarScreenAddsToRadarRenderablesInBeforeTagsPhase)
         {
-            MinStackModule::BootstrapRadarScreen(
+            RegionalPressureModule::BootstrapRadarScreen(
                 this->functionHandlers,
                 this->managerObject,
                 this->radarRenderables,
@@ -162,9 +156,9 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.beforeTags));
         }
 
-        TEST_F(MinStackModuleTest, BootstrapRadarScreenRegistersScreenObjects)
+        TEST_F(RegionalPressureModuleTest, BootstrapRadarScreenRegistersScreenObjects)
         {
-            MinStackModule::BootstrapRadarScreen(
+            RegionalPressureModule::BootstrapRadarScreen(
                 this->functionHandlers,
                 this->managerObject,
                 this->radarRenderables,
@@ -176,9 +170,9 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(3, radarRenderables.CountScreenObjects());
         }
 
-        TEST_F(MinStackModuleTest, BootstrapRadarScreenAddsToConfigurableDisplays)
+        TEST_F(RegionalPressureModuleTest, BootstrapRadarScreenAddsToConfigurableDisplays)
         {
-            MinStackModule::BootstrapRadarScreen(
+            RegionalPressureModule::BootstrapRadarScreen(
                 this->functionHandlers,
                 this->managerObject,
                 this->radarRenderables,
@@ -190,9 +184,9 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, configruables.CountDisplays());
         }
 
-        TEST_F(MinStackModuleTest, BootstrapRadarScreenAddsToUserSettingEvents)
+        TEST_F(RegionalPressureModuleTest, BootstrapRadarScreenAddsToUserSettingEvents)
         {
-            MinStackModule::BootstrapRadarScreen(
+            RegionalPressureModule::BootstrapRadarScreen(
                 this->functionHandlers,
                 this->managerObject,
                 this->radarRenderables,
@@ -203,5 +197,5 @@ namespace UKControllerPluginTest {
             );
             EXPECT_EQ(1, userSettingHandlers.CountHandlers());
         }
-    }  // namespace MinStack
+    }  // namespace Regional
 }  // namespace UKControllerPluginTest

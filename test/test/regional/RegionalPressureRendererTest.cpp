@@ -1,24 +1,24 @@
 #include "pch/pch.h"
-#include "minstack/MinStackRenderer.h"
-#include "minstack/MinStackManager.h"
+#include "regional/RegionalPressureRenderer.h"
+#include "regional/RegionalPressureManager.h"
 #include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiplusBrushes.h"
 #include "helper/TestingFunctions.h"
 #include "plugin/PopupMenuItem.h"
 #include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-#include "minstack/MinStackRendererConfiguration.h"
+#include "regional/RegionalPressureRendererConfiguration.h"
 #include "dialog/DialogManager.h"
 #include "mock/MockDialogProvider.h"
 
-using UKControllerPlugin::MinStack::MinStackRenderer;
-using UKControllerPlugin::MinStack::MinStackManager;
+using UKControllerPlugin::Regional::RegionalPressureRenderer;
+using UKControllerPlugin::Regional::RegionalPressureManager;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
-using UKControllerPlugin::MinStack::MinStackRendererConfiguration;
+using UKControllerPlugin::Regional::RegionalPressureRendererConfiguration;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
@@ -28,28 +28,28 @@ using ::testing::_;
 using testing::Test;
 
 namespace UKControllerPluginTest {
-    namespace MinStack {
+    namespace Regional {
 
-        class MinStackRendererTest : public Test
+        class RegionalPressureRendererTest : public Test
         {
             public:
-                MinStackRendererTest()
+                RegionalPressureRendererTest()
                     : dialogManager(mockDialogProvider), renderer(manager, 1, 2, 3, 4, brushes, dialogManager)
                 {
-                    this->dialogManager.AddDialog(this->minStackDialogData);
+                    this->dialogManager.AddDialog(this->rpsDialogData);
                 }
 
-                DialogData minStackDialogData = { IDD_MINSTACK, "Test" };
-                MinStackManager manager;
+                DialogData rpsDialogData = { IDD_REGIONAL_PRESSURE, "Test" };
+                RegionalPressureManager manager;
                 GdiplusBrushes brushes;
                 NiceMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
                 NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
                 NiceMock<MockDialogProvider> mockDialogProvider;
                 DialogManager dialogManager;
-                MinStackRenderer renderer;
+                RegionalPressureRenderer renderer;
         };
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultVisibilityIfNoSetting)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsDefaultVisibilityIfNoSetting)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -62,7 +62,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(renderer.IsVisible());
         }
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultTopBarPositionIfNoSettings)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsDefaultTopBarPositionIfNoSettings)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -80,7 +80,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetTopBarArea()));
         }
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultTopBarRenderIfNoSettings)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsDefaultTopBarRenderIfNoSettings)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -98,7 +98,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedArea.Equals(renderer.GetTopBarRender()));
         }
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultHideSpotPositionIfNoSettings)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsDefaultHideSpotPositionIfNoSettings)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -121,7 +121,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetHideClickspotArea()));
         }
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultHideSpotRenderIfNoSettings)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsDefaultHideSpotRenderIfNoSettings)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -143,7 +143,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedArea.Equals(renderer.GetHideSpotRender()));
         }
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsVisibilityFromSettings)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsVisibilityFromSettings)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -156,7 +156,7 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(renderer.IsVisible());
         }
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultTopBarPositionFromSettings)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsDefaultTopBarPositionFromSettings)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -174,7 +174,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetTopBarArea()));
         }
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultTopBarRenderFromSettings)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsDefaultTopBarRenderFromSettings)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -192,7 +192,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedArea.Equals(renderer.GetTopBarRender()));
         }
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultHideSpotPositionFromSettings)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsDefaultHideSpotPositionFromSettings)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -215,7 +215,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetHideClickspotArea()));
         }
 
-        TEST_F(MinStackRendererTest, UserSettingContentLoadedSetsDefaultHideSpotRenderFromSettings)
+        TEST_F(RegionalPressureRendererTest, UserSettingContentLoadedSetsDefaultHideSpotRenderFromSettings)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
@@ -238,13 +238,13 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedArea.Equals(renderer.GetHideSpotRender()));
         }
 
-        TEST_F(MinStackRendererTest, AsrClosingEventSavesAllValues)
+        TEST_F(RegionalPressureRendererTest, AsrClosingEventSavesAllValues)
         {
             // Set the values
             renderer.SetVisible(true);
             renderer.Move({ 100, 50, 150, 100 }, "");
 
-            MinStackRendererConfiguration & config = renderer.GetConfig();
+            RegionalPressureRendererConfiguration & config = renderer.GetConfig();
             config.AddItem({ 1, "bar" });
             config.AddItem({ 2, "baz" });
             config.AddItem({ 3, "foo" });
@@ -271,8 +271,8 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(
                 mockUserSettingProvider,
                 SetKey(
-                    renderer.selectedMinStackUserSettingKey,
-                    renderer.selectedMinStackUserSettingDescription,
+                    renderer.selectedRegionalPressureUserSettingKey,
+                    renderer.selecteRegionalPressureUserSettingDescription,
                     "bar;baz;foo"
                 )
             )
@@ -281,7 +281,7 @@ namespace UKControllerPluginTest {
             renderer.AsrClosingEvent(UserSetting(mockUserSettingProvider));
         }
 
-        TEST_F(MinStackRendererTest, GetConfigurationMenuItemReturnsCorrectValues)
+        TEST_F(RegionalPressureRendererTest, GetConfigurationMenuItemReturnsCorrectValues)
         {
             // Set the values
             renderer.SetVisible(true);
@@ -295,17 +295,17 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(item.fixedPosition);
         }
 
-        TEST_F(MinStackRendererTest, SelectingMenuItemOpensDialog)
+        TEST_F(RegionalPressureRendererTest, SelectingMenuItemOpensDialog)
         {
             renderer.SetVisible(true);
 
-            EXPECT_CALL(mockDialogProvider, OpenDialog(this->minStackDialogData, _))
+            EXPECT_CALL(mockDialogProvider, OpenDialog(this->rpsDialogData, _))
                 .Times(1);
 
             renderer.Configure(0, "test", {});
         }
 
-        TEST_F(MinStackRendererTest, ClickingTheCloseClickspotMakesItInvisible)
+        TEST_F(RegionalPressureRendererTest, ClickingTheCloseClickspotMakesItInvisible)
         {
             renderer.SetVisible(true);
 
@@ -314,16 +314,16 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(renderer.IsVisible());
         }
 
-        TEST_F(MinStackRendererTest, ClickingTheMinStackMarksItAsAcknowledged)
+        TEST_F(RegionalPressureRendererTest, ClickingTheMinStackMarksItAsAcknowledged)
         {
-            manager.AddMsl("tma.LTMA", "tma", "LTMA", 7000);
+            this->manager.AddRegionalPressure("ASR_LONDON", "London", 1013);
 
-            EXPECT_FALSE(manager.GetMinStackLevel("tma.LTMA").IsAcknowledged());
-            renderer.LeftClick(renderer.mslClickspotId, "tma.LTMA", mockRadarScreen);
-            EXPECT_TRUE(manager.GetMinStackLevel("tma.LTMA").IsAcknowledged());
+            EXPECT_FALSE(manager.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
+            renderer.LeftClick(renderer.rpsClickspotId, "ASR_LONDON", mockRadarScreen);
+            EXPECT_TRUE(manager.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
         }
 
-        TEST_F(MinStackRendererTest, MoveShiftsTheTopBar)
+        TEST_F(RegionalPressureRendererTest, MoveShiftsTheTopBar)
         {
             Gdiplus::Rect expectedRender = { 150, 50, renderer.leftColumnWidth, renderer.rowHeight };
             RECT expectedArea = { 150, 50, 200, 25 };
@@ -333,7 +333,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedRender.Equals(renderer.GetTopBarRender()));
         }
 
-        TEST_F(MinStackRendererTest, RightClicksBehaveTheSameAsLeftClicks)
+        TEST_F(RegionalPressureRendererTest, RightClicksBehaveTheSameAsLeftClicks)
         {
             renderer.SetVisible(true);
 
@@ -342,11 +342,11 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(renderer.IsVisible());
         }
 
-        TEST_F(MinStackRendererTest, ResetPositionResetsPosition)
+        TEST_F(RegionalPressureRendererTest, ResetPositionResetsPosition)
         {
             renderer.ResetPosition();
             EXPECT_EQ(100, renderer.GetTopBarArea().left);
             EXPECT_EQ(100, renderer.GetTopBarArea().top);
         }
-    }  // namespace MinStack
+    }  // namespace Regional
 }  // namespace UKControllerPluginTest

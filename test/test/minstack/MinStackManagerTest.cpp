@@ -124,8 +124,8 @@ namespace UKControllerPluginTest {
             };
 
             this->msl.ProcessWebsocketMessage(message);
-            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")).msl);
-            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")).msl);
+            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")));
+            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")));
         }
 
         TEST_F(MinStackManagerTest, ItDoesntDoManualMinStackUpdatesIfItDoesntExist)

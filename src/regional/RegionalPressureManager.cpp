@@ -121,6 +121,10 @@ namespace UKControllerPlugin {
                 it != pressureData.cend();
                 ++it
             ) {
+                if (it.value().is_null()) {
+                    continue;
+                }
+
                 this->pressureMap[it.key()] = {
                     it.key(),
                     it.value().get<unsigned int>()

@@ -1,11 +1,11 @@
 #include "pch/pch.h"
-#include "minstack/MinStackManager.h"
-#include "minstack/MinStackLevel.h"
+#include "regional/RegionalPressureManager.h"
+#include "regional/RegionalPressure.h"
 #include "websocket/WebsocketSubscription.h"
 #include "websocket/WebsocketMessage.h"
 
-using UKControllerPlugin::MinStack::MinStackManager;
-using UKControllerPlugin::MinStack::MinStackLevel;
+using UKControllerPlugin::Regional::RegionalPressureManager;
+using UKControllerPlugin::Regional::RegionalPressure;
 using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPlugin::Websocket::WebsocketMessage;
 using ::testing::StrictMock;
@@ -15,100 +15,113 @@ using ::testing::Test;
 namespace UKControllerPluginTest {
     namespace MinStack {
 
-        class MinStackManagerTest : public Test
+        class RegionalPressureManagerTest : public Test
         {
             public:
-                MinStackManager msl;
+                RegionalPressureManager regional;
         };
 
-        TEST_F(MinStackManagerTest, ItGeneratesTmaKeys)
+        TEST_F(RegionalPressureManagerTest, ItCanStoreUserAcknowledgementsOfRegionalPressures)
         {
-            EXPECT_EQ("tma.LTMA", this->msl.GetMslKeyTma("LTMA"));
+            this->regional.AddRegionalPressure("ASR_LONDON", "London" , 1013);
+            EXPECT_FALSE(this->regional.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
+            this->regional.AcknowledgePressure("ASR_LONDON");
+            EXPECT_TRUE(this->regional.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
         }
 
-        TEST_F(MinStackManagerTest, ItGeneratesAirfieldKeys)
+        TEST_F(RegionalPressureManagerTest, ItReturnsAllThePossibleKeysForMinStacks)
         {
-            EXPECT_EQ("airfield.EGGD", this->msl.GetMslKeyAirfield("EGGD"));
+            this->regional.AddRegionalPressure("ASR_LONDON", "London", 1013);
+            this->regional.AddRegionalPressure("ASR_SCOTTISH", "Scottish", 1012);
+
+
+            std::set<std::string> expectedKeys = { "ASR_LONDON", "ASR_SCOTTISH" };
+            EXPECT_EQ(expectedKeys, this->regional.GetAllRegionalPressureKeys());
         }
 
-        TEST_F(MinStackManagerTest, ItCanStoreUserAcknowledgementsOfMinStackLevels)
+        TEST_F(RegionalPressureManagerTest, ItReturnsInvalidMslIfKeyNotFound)
         {
-            this->msl.AddMsl(msl.GetMslKeyTma("LTMA"), "tma", "LTMA", 8000);
-            EXPECT_FALSE(this->msl.GetMinStackLevel(msl.GetMslKeyTma("LTMA")).IsAcknowledged());
-            this->msl.AcknowledgeMsl(msl.GetMslKeyTma("LTMA"));
-            EXPECT_TRUE(this->msl.GetMinStackLevel(msl.GetMslKeyTma("LTMA")).IsAcknowledged());
+            EXPECT_EQ(this->regional.invalidPressure, this->regional.GetRegionalPressure("nope"));
         }
 
-        TEST_F(MinStackManagerTest, ItReturnsAllThePossibleKeysForMinStacks)
+        TEST_F(RegionalPressureManagerTest, ItReturnsAMsl)
         {
-            this->msl.AddMsl(this->msl.GetMslKeyTma("LTMA"), "tma", "LTMA", 8000);
-            this->msl.AddMsl(this->msl.GetMslKeyTma("STMA"), "tma", "STMA", 8000);
+            this->regional.AddRegionalPressure("ASR_LONDON", "London", 1013);
+            RegionalPressure pressure = this->regional.GetRegionalPressure("ASR_LONDON");
 
-
-            std::set<std::string> expectedKeys = { this->msl.GetMslKeyTma("LTMA"), this->msl.GetMslKeyTma("STMA") };
-            EXPECT_EQ(expectedKeys, this->msl.GetAllMslKeys());
+            EXPECT_EQ(1013, pressure.pressure);
+            EXPECT_EQ("London", pressure.name);
+            EXPECT_FALSE(pressure.IsAcknowledged());
         }
 
-        TEST_F(MinStackManagerTest, ItReturnsInvalidMslIfKeyNotFound)
-        {
-            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel("nope"));
-        }
-
-        TEST_F(MinStackManagerTest, ItReturnsAMsl)
-        {
-            this->msl.AddMsl(this->msl.GetMslKeyTma("LTMA"), "tma", "LTMA", 8000);
-            MinStackLevel minStack = this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("LTMA"));
-
-            EXPECT_EQ(8000, minStack.msl);
-            EXPECT_EQ("tma", minStack.type);
-            EXPECT_EQ("LTMA", minStack.name);
-            EXPECT_FALSE(minStack.IsAcknowledged());
-        }
-
-        TEST_F(MinStackManagerTest, ItHasWebsocketSubscriptions)
+        TEST_F(RegionalPressureManagerTest, ItHasWebsocketSubscriptions)
         {
             std::set<WebsocketSubscription> expected = {
                 {
                     WebsocketSubscription::SUB_TYPE_CHANNEL,
-                    "private-minstack-updates"
+                    "private-rps-updates"
                 }
             };
-            EXPECT_EQ(expected, this->msl.GetSubscriptions());
+            EXPECT_EQ(expected, this->regional.GetSubscriptions());
         }
 
-        TEST_F(MinStackManagerTest, ItAllowsManualMinStackUpdates)
+        TEST_F(RegionalPressureManagerTest, ItAllowsManualMinStackUpdates)
         {
-            this->msl.AddMsl(this->msl.GetMslKeyTma("LTMA"), "tma", "LTMA", 8000);
-            this->msl.SetMinStackLevel(this->msl.GetMslKeyTma("LTMA"), 9000);
+            this->regional.AddRegionalPressure("ASR_LONDON", "London", 1013);
+            this->regional.SetPressure("ASR_LONDON", 1014);
 
-            EXPECT_EQ(9000, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("LTMA")).msl);
+            EXPECT_EQ(1014, this->regional.GetRegionalPressure("ASR_LONDON").pressure);
         }
 
-        TEST_F(MinStackManagerTest, ItUpdatesMinStackLevelsFromJson)
+        TEST_F(RegionalPressureManagerTest, ItUpdatesRegionalPressuresFromJson)
         {
-            nlohmann::json mslData;
-            mslData["airfield"] = {
-                {"EGBB", 7000}
-            };
-            mslData["tma"] = {
-                {"MTMA", 6000}
+            nlohmann::json pressureData;
+            pressureData["pressures"] = {
+                {"ASR_LONDON", 1013},
+                {"ASR_SCOTTISH", 1014}
             };
 
             WebsocketMessage message{
-                "App\\Events\\MinStacksUpdatedEvent",
-                "private-minstack-updates",
-                mslData,
+                "App\\Events\\RegionalPressuresUpdatedEvent",
+                "private-rps-updates",
+                pressureData,
                 false
             };
 
-            this->msl.ProcessWebsocketMessage(message);
-            EXPECT_EQ(7000, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")).msl);
-            EXPECT_EQ(6000, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")).msl);
+            this->regional.ProcessWebsocketMessage(message);
+            EXPECT_EQ(1013, this->regional.GetRegionalPressure("ASR_LONDON").pressure);
+            EXPECT_EQ(1014, this->regional.GetRegionalPressure("ASR_SCOTTISH").pressure);
         }
 
-        TEST_F(MinStackManagerTest, ItDoesntDoManualMinStackUpdatesIfItDoesntExist)
+        TEST_F(RegionalPressureManagerTest, ItHandlesNullRegionalPressures)
         {
-            EXPECT_NO_THROW(this->msl.SetMinStackLevel("nope", 8000));
+            nlohmann::json pressureData;
+            pressureData["pressures"] = {
+                {"ASR_LONDON", nullptr},
+                {"ASR_SCOTTISH", nullptr}
+            };
+
+            WebsocketMessage message{
+                "App\\Events\\RegionalPressuresUpdatedEvent",
+                "private-rps-updates",
+                pressureData,
+                false
+            };
+
+            this->regional.ProcessWebsocketMessage(message);
+            EXPECT_EQ(
+                this->regional.invalidPressure,
+                this->regional.GetRegionalPressure("ASR_LONDON")
+            );
+            EXPECT_EQ(
+                this->regional.invalidPressure,
+                this->regional.GetRegionalPressure("ASR_SCOTTISH")
+            );
+        }
+
+        TEST_F(RegionalPressureManagerTest, ItDoesntDoManualMinStackUpdatesIfItDoesntExist)
+        {
+            EXPECT_NO_THROW(this->regional.SetPressure("nope", 8000));
         }
     }  // namespace MinStack
 }  // namespace UKControllerPluginTest
