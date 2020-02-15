@@ -58,13 +58,13 @@ namespace UKControllerPlugin {
             taskManager.QueueAsynchronousTask([& api, regional]() {
                 try {
                     regional->UpdateAllPressures(
-                        api.GetMinStackLevels()
+                        api.GetRegionalPressures()
                     );
                     LogInfo(
                         "Loaded " + std::to_string(regional->GetAllRegionalPressureKeys().size()) + " regional pressures"
                     );
                 } catch (ApiException api) {
-                    LogError("ApiException when trying to get initial MSL download");
+                    LogError("ApiException when trying to get initial regional pressure download");
                 }
 
             });
