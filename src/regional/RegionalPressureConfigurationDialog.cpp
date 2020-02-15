@@ -68,19 +68,19 @@ namespace UKControllerPlugin {
                             EndDialog(hwnd, wParam);
                             return TRUE;
                         }
-                        case IDC_MINSTACK_ADD: {
+                        case IDC_RPS_ADD: {
                             this->AddEntryToActiveList(hwnd, wParam);
                             return TRUE;
                         }
-                        case IDC_MINSTACK_DELETE: {
+                        case IDC_RPS_DELETE: {
                             this->RemoveEntryFromActiveList(hwnd, wParam);
                             return TRUE;
                         }
-                        case IDC_MINSTACK_DOWN: {
+                        case IDC_RPS_DOWN: {
                             this->SwapElements(hwnd, lParam, false);
                             return TRUE;
                         }
-                        case IDC_MINSTACK_UP: {
+                        case IDC_RPS_UP: {
                             this->SwapElements(hwnd, lParam, true);
                             return TRUE;
                         }
@@ -96,47 +96,47 @@ namespace UKControllerPlugin {
         */
         void RegionalPressureConfigurationDialog::AddEntryToActiveList(HWND hwnd, LPARAM lParam)
         {
-            LPARAM selectedMinstackIndex = SendDlgItemMessage(
+            LPARAM selectedRegionalIndex = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_SELECT,
+                IDC_RPS_SELECT,
                 CB_GETCURSEL,
                 NULL,
                 NULL
             );
 
             // None selected, stop
-            if (selectedMinstackIndex == LB_ERR) {
+            if (selectedRegionalIndex == LB_ERR) {
                 return;
             }
 
             // Get the selected item data
             TCHAR bufferDisplayString[250];
 
-            HRESULT mslDisplayString = SendDlgItemMessage(
+            HRESULT rpsDisplayString = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_SELECT,
+                IDC_RPS_SELECT,
                 CB_GETLBTEXT,
-                selectedMinstackIndex,
+                selectedRegionalIndex,
                 reinterpret_cast<LPARAM>(bufferDisplayString)
             );
 
-            LPARAM mslKeyData = SendDlgItemMessage(
+            LPARAM rpsKeyData = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_SELECT,
+                IDC_RPS_SELECT,
                 CB_GETITEMDATA,
-                selectedMinstackIndex,
+                selectedRegionalIndex,
                 NULL
             );
 
-            if (mslDisplayString == LB_ERR || mslKeyData == LB_ERR) {
-                LogError("Failed to get MSL data from select");
+            if (rpsDisplayString == LB_ERR || rpsKeyData == LB_ERR) {
+                LogError("Failed to get RPS data from select");
                 return;
             }
 
             // Get the insert position, insert
             LPARAM insertPosition = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETCURSEL,
                 NULL,
                 NULL
@@ -144,31 +144,31 @@ namespace UKControllerPlugin {
 
             LPARAM insertedStringPosition = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_INSERTSTRING,
                 insertPosition,
                 reinterpret_cast<LPARAM>(bufferDisplayString)
             );
 
             if (insertedStringPosition == LB_ERR) {
-                LogError("Failed to insert MSL into active list");
+                LogError("Failed to insert RPS into active list");
                 return;
             }
 
             LPARAM insertedData = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_SETITEMDATA,
                 insertedStringPosition,
-                mslKeyData
+                rpsKeyData
             );
 
             // Remove from previous list
             SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_SELECT,
+                IDC_RPS_SELECT,
                 CB_DELETESTRING,
-                selectedMinstackIndex,
+                selectedRegionalIndex,
                 NULL
             );
         }
@@ -189,7 +189,7 @@ namespace UKControllerPlugin {
             // Delete the items
             SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_DELETESTRING,
                 secondItemIndex,
                 NULL
@@ -197,7 +197,7 @@ namespace UKControllerPlugin {
 
             SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_DELETESTRING,
                 firstItemIndex,
                 NULL
@@ -206,7 +206,7 @@ namespace UKControllerPlugin {
             // Put them back, in the other order
             SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_INSERTSTRING,
                 firstItemIndex,
                 secondItemString
@@ -214,7 +214,7 @@ namespace UKControllerPlugin {
 
             SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_SETITEMDATA,
                 firstItemIndex,
                 secondItemData
@@ -222,7 +222,7 @@ namespace UKControllerPlugin {
 
             SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_INSERTSTRING,
                 secondItemIndex,
                 firstItemString
@@ -230,7 +230,7 @@ namespace UKControllerPlugin {
 
             SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_SETITEMDATA,
                 secondItemIndex,
                 firstItemData
@@ -249,37 +249,37 @@ namespace UKControllerPlugin {
             // Set the display checkbox
             CheckDlgButton(
                 hwnd,
-                IDC_MINSTACK_DISPLAY_CHECK,
+                IDC_RPS_DISPLAY_CHECK,
                 this->config->ShouldRender() ? BST_CHECKED : BST_UNCHECKED
             );
 
-            // Add the selected MSLs to the existing list
+            // Add the selected RPSs to the existing list
             this->activePressureKeys = this->manager.GetAllRegionalPressureKeys();
             for (
                 RegionalPressureRendererConfiguration::const_iterator it = this->config->cbegin();
                 it != this->config->cend();
                 ++it
             ) {
-                auto mslKey = this->activePressureKeys.find(it->key);
-                if (mslKey == this->activePressureKeys.cend()) {
-                    LogWarning("Unable to add Active MSL to list, not active: " + *mslKey);
+                auto rpsKey = this->activePressureKeys.find(it->key);
+                if (rpsKey == this->activePressureKeys.cend()) {
+                    LogWarning("Unable to add Active RPS to list, not active: " + *rpsKey);
                     continue;
                 }
 
                 unsigned int itemIndex = SendDlgItemMessage(
                     hwnd,
-                    IDC_MINSTACK_LIST,
+                    IDC_RPS_LIST,
                     LB_ADDSTRING,
                     NULL,
-                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(*mslKey).c_str())
+                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(*rpsKey).c_str())
                 );
 
                 SendDlgItemMessage(
                     hwnd,
-                    IDC_MINSTACK_LIST,
+                    IDC_RPS_LIST,
                     LB_SETITEMDATA,
                     itemIndex,
-                    reinterpret_cast<LPARAM>((*mslKey).c_str())
+                    reinterpret_cast<LPARAM>((*rpsKey).c_str())
                 );
             }
 
@@ -295,7 +295,7 @@ namespace UKControllerPlugin {
 
                 HRESULT itemIndex = SendDlgItemMessage(
                     hwnd,
-                    IDC_MINSTACK_SELECT,
+                    IDC_RPS_SELECT,
                     CB_ADDSTRING,
                     NULL,
                     reinterpret_cast<LPARAM>(this->GetListEntryForKey(*it).c_str())
@@ -303,7 +303,7 @@ namespace UKControllerPlugin {
 
                 SendDlgItemMessage(
                     hwnd,
-                    IDC_MINSTACK_SELECT,
+                    IDC_RPS_SELECT,
                     CB_SETITEMDATA,
                     itemIndex,
                     reinterpret_cast<LPARAM>(it->c_str())
@@ -316,9 +316,9 @@ namespace UKControllerPlugin {
         */
         void RegionalPressureConfigurationDialog::SwapElements(HWND hwnd, LPARAM lParam, bool swapUp)
         {
-            LPARAM selectedMinstackIndex = SendDlgItemMessage(
+            LPARAM selectedRegionalIndex = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETCURSEL,
                 NULL,
                 NULL
@@ -326,7 +326,7 @@ namespace UKControllerPlugin {
 
             LPARAM itemCount = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETCOUNT,
                 NULL,
                 NULL
@@ -334,57 +334,57 @@ namespace UKControllerPlugin {
 
             // None selected, or at the extemities
             if (
-                selectedMinstackIndex == LB_ERR ||
--                itemCount == LB_ERR ||
-                this->IsLastElement(selectedMinstackIndex, itemCount, swapUp)
+                selectedRegionalIndex == LB_ERR ||
+-               itemCount == LB_ERR ||
+                this->IsLastElement(selectedRegionalIndex, itemCount, swapUp)
             ) {
                 return;
             }
 
-            unsigned int swapItemIndex = swapUp ? selectedMinstackIndex - 1 : selectedMinstackIndex + 1;
+            unsigned int swapItemIndex = swapUp ? selectedRegionalIndex - 1 : selectedRegionalIndex + 1;
 
             // Get the selected item data
             TCHAR bufferDisplayStringOriginal[250];
-            HRESULT mslDisplayStringOriginal = SendDlgItemMessage(
+            HRESULT rpsDisplayStringOriginal = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETTEXT,
-                selectedMinstackIndex,
+                selectedRegionalIndex,
                 reinterpret_cast<LPARAM>(bufferDisplayStringOriginal)
             );
 
-            LPARAM mslKeyDataOriginal = SendDlgItemMessage(
+            LPARAM rpsKeyDataOriginal = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETITEMDATA,
-                selectedMinstackIndex,
+                selectedRegionalIndex,
                 NULL
             );
 
-            if (mslDisplayStringOriginal == LB_ERR || mslKeyDataOriginal == LB_ERR) {
-                LogError("Failed to get original item data for swap");
+            if (rpsDisplayStringOriginal == LB_ERR || rpsKeyDataOriginal == LB_ERR) {
+                LogError("Failed to get original rps item data for swap");
                 return;
             }
 
             // Get the swap item data
             TCHAR bufferDisplayStringSwap[250];
-            HRESULT mslDisplayStringSwap = SendDlgItemMessage(
+            HRESULT rpsDisplayStringSwap = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETTEXT,
                 swapItemIndex,
                 reinterpret_cast<LPARAM>(bufferDisplayStringSwap)
             );
 
-            LPARAM mslKeyDataSwap = SendDlgItemMessage(
+            LPARAM rpsKeyDataSwap = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETITEMDATA,
                 swapItemIndex,
                 NULL
             );
 
-            if (mslDisplayStringSwap == LB_ERR || mslKeyDataSwap == LB_ERR) {
+            if (rpsDisplayStringSwap == LB_ERR || rpsKeyDataSwap == LB_ERR) {
                 LogError("Failed to get original item data for swap");
                 return;
             }
@@ -395,27 +395,27 @@ namespace UKControllerPlugin {
                     hwnd,
                     swapItemIndex,
                     reinterpret_cast<LPARAM>(bufferDisplayStringSwap),
-                    mslKeyDataSwap,
-                    selectedMinstackIndex,
+                    rpsKeyDataSwap,
+                    selectedRegionalIndex,
                     reinterpret_cast<LPARAM>(bufferDisplayStringOriginal),
-                    mslKeyDataOriginal
+                    rpsKeyDataOriginal
                 );
             } else {
                 this->DoElementSwap(
                     hwnd,
-                    selectedMinstackIndex,
+                    selectedRegionalIndex,
                     reinterpret_cast<LPARAM>(bufferDisplayStringOriginal),
-                    mslKeyDataOriginal,
+                    rpsKeyDataOriginal,
                     swapItemIndex,
                     reinterpret_cast<LPARAM>(bufferDisplayStringSwap),
-                    mslKeyDataSwap
+                    rpsKeyDataSwap
                 );
             }
 
             // Select the new item index
             SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_SETCURSEL,
                 swapItemIndex,
                 NULL
@@ -427,70 +427,70 @@ namespace UKControllerPlugin {
         */
         void RegionalPressureConfigurationDialog::RemoveEntryFromActiveList(HWND hwnd, LPARAM lParam)
         {
-            LPARAM selectedMinstackIndex = SendDlgItemMessage(
+            LPARAM selectedRegionalIndex = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETCURSEL,
                 NULL,
                 NULL
             );
 
             // None selected, stop
-            if (selectedMinstackIndex == LB_ERR) {
+            if (selectedRegionalIndex == LB_ERR) {
                 return;
             }
 
             // Get the selected item data
             TCHAR bufferDisplayString[250];
-            HRESULT mslDisplayString = SendDlgItemMessage(
+            HRESULT rpsDisplayString = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETTEXT,
-                selectedMinstackIndex,
+                selectedRegionalIndex,
                 reinterpret_cast<LPARAM>(bufferDisplayString)
             );
 
-            LPARAM mslKeyData = SendDlgItemMessage(
+            LPARAM rpsKeyData = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETITEMDATA,
-                selectedMinstackIndex,
+                selectedRegionalIndex,
                 NULL
             );
 
-            if (mslDisplayString == LB_ERR || mslKeyData == LB_ERR) {
-                LogError("Failed to get MSL data from active list");
+            if (rpsDisplayString == LB_ERR || rpsKeyData == LB_ERR) {
+                LogError("Failed to get RPS data from active list");
                 return;
             }
 
             // Insert into the selection list
             LPARAM insertedStringPosition = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_SELECT,
+                IDC_RPS_SELECT,
                 CB_ADDSTRING,
                 NULL,
                 reinterpret_cast<LPARAM>(bufferDisplayString)
             );
 
             if (insertedStringPosition == LB_ERR) {
-                LogError("Failed to insert MSL into selection list");
+                LogError("Failed to insert RPS into selection list");
                 return;
             }
 
             LPARAM insertedData = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_SELECT,
+                IDC_RPS_SELECT,
                 CB_SETITEMDATA,
                 insertedStringPosition,
-                mslKeyData
+                rpsKeyData
             );
 
             // Remove from previous list
             SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_DELETESTRING,
-                selectedMinstackIndex,
+                selectedRegionalIndex,
                 NULL
             );
         }
@@ -501,28 +501,28 @@ namespace UKControllerPlugin {
         void RegionalPressureConfigurationDialog::SaveDialog(HWND hwnd)
         {
             // Set display from check checkbox
-            this->config->SetShouldRender(IsDlgButtonChecked(hwnd, IDC_MINSTACK_DISPLAY_CHECK) == BST_CHECKED);
+            this->config->SetShouldRender(IsDlgButtonChecked(hwnd, IDC_RPS_DISPLAY_CHECK) == BST_CHECKED);
 
             // Check how many items are in the minstack list
             unsigned int itemCount = SendDlgItemMessage(
                 hwnd,
-                IDC_MINSTACK_LIST,
+                IDC_RPS_LIST,
                 LB_GETCOUNT,
                 NULL,
                 NULL
             );
 
             if (itemCount == LB_ERR) {
-                LogError("Unable to count items in MinStack list");
+                LogError("Unable to count items in RPS list");
                 return;
             }
 
             // Update the config from the list
             std::set<RegionalPressureRenderedItem> newConfig;
             for (unsigned int i = 0; i < itemCount; i++) {
-                LPARAM mslKey = SendDlgItemMessage(
+                LPARAM rpsKey = SendDlgItemMessage(
                     hwnd,
-                    IDC_MINSTACK_LIST,
+                    IDC_RPS_LIST,
                     LB_GETITEMDATA,
                     i,
                     NULL
@@ -531,7 +531,7 @@ namespace UKControllerPlugin {
                 newConfig.insert(
                     {
                         i,
-                        reinterpret_cast<const char *>(mslKey),
+                        reinterpret_cast<const char *>(rpsKey),
                     }
                 );
             }
@@ -547,14 +547,11 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Transform each MSL key to how it should be displayed
+            Transform each RPS key to how it should be displayed
         */
         std::wstring RegionalPressureConfigurationDialog::GetListEntryForKey(std::string mslKey)
         {
-            std::string facility = mslKey.substr(0, 3) == "tma" ? "TMA" : "Airfield";
-            std::string identifier = facility == "TMA" ? mslKey.substr(4) : mslKey.substr(9);
-
-            return HelperFunctions::ConvertToWideString(facility + " - " + identifier);
+            return HelperFunctions::ConvertToWideString(mslKey);
         }
 
         /*

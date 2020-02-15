@@ -10,6 +10,8 @@
 #define HOLD_SELECTOR_DIALOG            109
 #define IDD_TIMER_CONFIGURATION         111
 #define IDD_MINSTACK                    113
+#define IDD_MINSTACK1                   114
+#define IDD_REGIONAL_PRESSURE           114
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -88,6 +90,14 @@
 #define IDC_COMBO2                      1064
 #define IDC_MINSTACK_SELECT             1064
 #define IDC_MINSTACK_SELECTED_LABEL     1065
+#define IDC_RPS_DISPLAY_CHECK           1066
+#define IDC_RPS_SELECTED_LABEL          1067
+#define IDC_RPS_LIST                    1068
+#define IDC_RPS_UP                      1069
+#define IDC_RPS_DOWN                    1070
+#define IDC_RPS_DELETE                  1071
+#define IDC_RPS_SELECT                  1072
+#define IDC_RPS_ADD                     1073
 
 // Next default values for new objects
 // 
@@ -95,7 +105,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        115
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1066
+#define _APS_NEXT_CONTROL_VALUE         1074
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

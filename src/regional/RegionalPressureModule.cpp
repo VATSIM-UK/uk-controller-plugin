@@ -46,8 +46,8 @@ namespace UKControllerPlugin {
                 std::make_shared<RegionalPressureConfigurationDialog>(*regional);
             dialogManager.AddDialog(
                 {
-                    IDD_MINSTACK,
-                    "Minimum Stack Levels",
+                    IDD_REGIONAL_PRESSURE,
+                    "Regional Pressures",
                     reinterpret_cast<DLGPROC>(dialog->WndProc),
                     reinterpret_cast<LPARAM>(dialog.get()),
                     dialog

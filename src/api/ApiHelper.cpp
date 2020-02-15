@@ -260,7 +260,7 @@ namespace UKControllerPlugin {
 
         nlohmann::json ApiHelper::GetRegionalPressures(void) const
         {
-            return nlohmann::json();
+            return this->MakeApiRequest(this->requestBuilder.BuildRegionalPressureRequest()).GetRawData();
         }
 
         nlohmann::json ApiHelper::GetUri(std::string uri) const

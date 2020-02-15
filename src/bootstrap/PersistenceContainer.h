@@ -49,6 +49,7 @@
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "sectorfile/RunwayCollection.h"
+#include "regional/RegionalPressureManager.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -98,6 +99,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Countdown::CountdownTimer> countdownTimer;
             std::shared_ptr<UKControllerPlugin::Countdown::TimerConfigurationManager> timerConfigurationManager;
             std::shared_ptr<UKControllerPlugin::MinStack::MinStackManager> minStack;
+            std::shared_ptr<UKControllerPlugin::Regional::RegionalPressureManager> regionalPressureManager;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkAssignment> squawkAssignmentRules;
             std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawkEvents;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkGenerator> squawkGenerator;

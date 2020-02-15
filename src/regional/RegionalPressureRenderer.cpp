@@ -22,13 +22,13 @@ namespace UKControllerPlugin {
             RegionalPressureManager & manager,
             int closeClickspotId,
             int menuBarClickspotId,
-            int mslClickspotId,
+            int rpsClickspotId,
             int toggleCallbackFunctionId,
             const GdiplusBrushes & brushes,
             const UKControllerPlugin::Dialog::DialogManager & dialogManager
         )
             : manager(manager), hideClickspotId(closeClickspotId), menuBarClickspotId(menuBarClickspotId),
-            mslClickspotId(mslClickspotId), leftColumnWidth(75), rowHeight(20), hideClickspotWidth(25),
+            rpsClickspotId(rpsClickspotId), leftColumnWidth(100), rowHeight(20), hideClickspotWidth(50),
             toggleCallbackFunctionId(toggleCallbackFunctionId), brushes(brushes), dialogManager(dialogManager)
         {
 
@@ -147,7 +147,7 @@ namespace UKControllerPlugin {
         void RegionalPressureRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
             this->dialogManager.OpenDialog(
-                IDD_MINSTACK,
+                IDD_REGIONAL_PRESSURE,
                 reinterpret_cast<LPARAM>(&this->config)
             );
         }
@@ -203,7 +203,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // It was the MSL that was clicked
+            // It was the RPS that was clicked
             this->manager.AcknowledgePressure(objectDescription);
         }
 
@@ -216,7 +216,7 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Moves the topleft point of the MSL window.
+            Moves the topleft point of the RPS window.
         */
         void RegionalPressureRenderer::Move(RECT titleBarArea, std::string objectDescription)
         {
@@ -258,13 +258,13 @@ namespace UKControllerPlugin {
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
             // Loop through each of the TMAs
-            Gdiplus::Rect tma = {
+            Gdiplus::Rect asr = {
                 this->topBarArea.left,
                 this->topBarArea.bottom,
                 this->leftColumnWidth,
                 this->rowHeight
             };
-            Gdiplus::Rect msl = {
+            Gdiplus::Rect rps = {
                 this->topBarArea.right,
                 this->topBarArea.bottom,
                 this->hideClickspotWidth,
@@ -280,45 +280,45 @@ namespace UKControllerPlugin {
                 const RegionalPressure & pressureData = this->manager.GetRegionalPressure(it->key);
 
                 // Draw the TMA title and rectangles
-                graphics.FillRect(tma, *this->brushes.greyBrush);
-                graphics.DrawRect(tma, *this->brushes.blackPen);
+                graphics.FillRect(asr, *this->brushes.greyBrush);
+                graphics.DrawRect(asr, *this->brushes.blackPen);
 
                 graphics.DrawString(
                     HelperFunctions::ConvertToWideString(this->manager.GetNameFromKey(it->key)),
-                    tma,
+                    asr,
                     pressureData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
                 );
 
-                // Draw the MSL itself and associated rectangles
-                graphics.FillRect(msl, *this->brushes.greyBrush);
-                graphics.DrawRect(msl, *this->brushes.blackPen);
+                // Draw the RPS itself and associated rectangles
+                graphics.FillRect(rps, *this->brushes.greyBrush);
+                graphics.DrawRect(rps, *this->brushes.blackPen);
 
-                std::string mslString = pressureData == this->manager.invalidPressure
+                std::string rpsString = pressureData == this->manager.invalidPressure
                     ? "-"
-                    : std::to_string(pressureData.pressure).substr(0, 2);
+                    : std::to_string(pressureData.pressure);
 
                 graphics.DrawString(
-                    HelperFunctions::ConvertToWideString(mslString),
-                    msl,
+                    HelperFunctions::ConvertToWideString(rpsString),
+                    rps,
                     pressureData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
                 );
 
                 // Add the clickable area.
                 radarScreen.RegisterScreenObject(
-                    this->mslClickspotId,
+                    this->rpsClickspotId,
                     it->key,
                     {
-                        tma.X,
-                        tma.Y,
-                        msl.X + this->hideClickspotWidth,
-                        msl.Y + this->rowHeight
+                        asr.X,
+                        asr.Y,
+                        rps.X + this->hideClickspotWidth,
+                        rps.Y + this->rowHeight
                     },
                     false
                 );
 
                 // Increment values for the next TMA
-                tma.Y = tma.Y + this->rowHeight;
-                msl.Y = msl.Y + this->rowHeight;
+                asr.Y = asr.Y + this->rowHeight;
+                rps.Y = rps.Y + this->rowHeight;
                 roundNumber++;
             }
 
@@ -331,13 +331,13 @@ namespace UKControllerPlugin {
         void RegionalPressureRenderer::RenderOuterFrame(
             GdiGraphicsInterface & graphics,
             EuroscopeRadarLoopbackInterface & radarScreen,
-            int numMinStacks
+            int numRegionalPressures
         ) {
             Gdiplus::Rect area = {
                 this->topBarArea.left,
                 this->topBarArea.top,
                 this->leftColumnWidth + this->hideClickspotWidth,
-                1 + ((numMinStacks) * this->rowHeight)
+                1 + ((numRegionalPressures) * this->rowHeight)
             };
             graphics.DrawRect(
                 area,
@@ -346,7 +346,7 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Renders the title bar of the MSL display.
+            Renders the title bar of the RPS display.
         */
         void RegionalPressureRenderer::RenderTopBar(
             GdiGraphicsInterface & graphics,
@@ -355,7 +355,7 @@ namespace UKControllerPlugin {
             // The title bar - the draggable bit
             graphics.DrawRect(this->topBarRender, *this->brushes.blackPen);
             graphics.FillRect(this->topBarRender, *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawString(L"MSL", this->topBarRender, *this->brushes.whiteBrush);
+            graphics.DrawString(L"RPS", this->topBarRender, *this->brushes.whiteBrush);
             radarScreen.RegisterScreenObject(
                 this->menuBarClickspotId,
                 "",
@@ -405,5 +405,5 @@ namespace UKControllerPlugin {
         {
             this->config.SetShouldRender(visible);
         }
-    }  // namespace MinStack
+    }  // namespace Regional
 }  // namespace UKControllerPlugin

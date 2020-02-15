@@ -79,7 +79,11 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            this->UpdateAllPressures(message.data);
+            if (!message.data.is_object() || !message.data.count("pressures")) {
+                return;
+            }
+
+            this->UpdateAllPressures(message.data.at("pressures"));
         }
 
         std::set<WebsocketSubscription> RegionalPressureManager::GetSubscriptions(void) const

@@ -42,7 +42,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Regional::RegionalPressureManager & manager,
                     int closeClickspotId,
                     int menuBarClickspotId,
-                    int mslClickspotId,
+                    int rpsClickspotId,
                     int toggleCallbackFunctionId,
                     const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
                     const UKControllerPlugin::Dialog::DialogManager & dialogManager
@@ -82,7 +82,7 @@ namespace UKControllerPlugin {
                 const int menuBarClickspotId;
 
                 // The clickspot id for each MSL
-                const int mslClickspotId;
+                const int rpsClickspotId;
 
                 // Width of the left column
                 const int leftColumnWidth;
@@ -132,7 +132,7 @@ namespace UKControllerPlugin {
                 void RenderOuterFrame(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
-                    int numMinStacks
+                    int numRegionalPressures
                 );
                 void RenderTopBar(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
