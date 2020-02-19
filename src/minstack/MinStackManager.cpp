@@ -143,7 +143,11 @@ namespace UKControllerPlugin {
                     nlohmann::json::const_iterator airfieldIt = mslData["airfield"].cbegin();
                     airfieldIt != mslData["airfield"].cend();
                     ++airfieldIt
-                    ) {
+                ) {
+                    if (airfieldIt.value().is_null()) {
+                        continue;
+                    }
+
                     this->mslMap[this->GetMslKeyAirfield(airfieldIt.key())] = {
                         "airfield",
                         airfieldIt.key(),
@@ -159,6 +163,10 @@ namespace UKControllerPlugin {
                     tmaIt != mslData["tma"].cend();
                     ++tmaIt
                 ) {
+                    if (tmaIt.value().is_null()) {
+                        continue;
+                    }
+
                     this->mslMap[this->GetMslKeyTma(tmaIt.key())] = {
                         "tma",
                         tmaIt.key(),

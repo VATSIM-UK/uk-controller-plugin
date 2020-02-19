@@ -258,6 +258,11 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildMinStackLevelRequest()).GetRawData();
         }
 
+        nlohmann::json ApiHelper::GetRegionalPressures(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildRegionalPressureRequest()).GetRawData();
+        }
+
         nlohmann::json ApiHelper::GetUri(std::string uri) const
         {
             if (uri.find(this->GetApiDomain()) == std::string::npos)

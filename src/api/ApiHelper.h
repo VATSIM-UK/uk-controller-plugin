@@ -51,7 +51,8 @@ namespace UKControllerPlugin {
                 nlohmann::json GetHoldDependency(void) const override;
                 nlohmann::json GetGenericHoldProfiles(void) const override;
                 nlohmann::json GetUserHoldProfiles(void) const override;
-                nlohmann::json GetMinStackLevels(void) const;
+                nlohmann::json GetMinStackLevels(void) const override;
+                nlohmann::json GetRegionalPressures(void) const override;
                 nlohmann::json GetUri(std::string uri) const;
                 void DeleteUserHoldProfile(unsigned int profileId) const override;
                 unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
