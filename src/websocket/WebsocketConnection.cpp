@@ -190,6 +190,9 @@ namespace UKControllerPlugin {
                     LogDebug("Sending websocket message: " + this->outboundMessages.front());
                     this->outboundMessages.pop();
                 }
+
+                // Sleep for a bit to give the CPU a break
+                std::this_thread::sleep_for(std::chrono::seconds(2));
             }
 
             // Once we get the instruction to terminate, throw away all the incoming messages until we
