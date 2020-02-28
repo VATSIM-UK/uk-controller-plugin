@@ -671,6 +671,26 @@ TEST_F(ApiHelperTest, GetMinStackLevelsReturnsMinStackData)
     EXPECT_EQ(responseData, this->helper.GetMinStackLevels());
 }
 
+TEST_F(ApiHelperTest, GetMinStackLevelsReturnsRegionalPressureData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+        "/regional-pressure",
+        CurlRequest::METHOD_GET
+    )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetRegionalPressures());
+}
+
 TEST_F(ApiHelperTest, GetUriReturnsUriData)
 {
     nlohmann::json responseData;

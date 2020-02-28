@@ -99,6 +99,17 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Builds a request for all the regional pressures
+        */
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildRegionalPressureRequest(void) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(apiDomain + "/regional-pressure",
+                CurlRequest::METHOD_GET)
+            );
+        }
+
+        /*
             Builds a request to check whether or not the given aircraft has been assigned a squawk.
         */
         CurlRequest ApiRequestBuilder::BuildSquawkAssignmentCheckRequest(std::string callsign) const

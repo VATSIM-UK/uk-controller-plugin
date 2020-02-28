@@ -130,6 +130,9 @@
     <Filter Include="src\ownership">
       <UniqueIdentifier>{6f1abdb9-e7c9-4c6e-8be1-7a9aaab34ec6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\regional">
+      <UniqueIdentifier>{05e23cc3-415e-4bb7-8e85-0cdad310c649}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -963,6 +966,30 @@
     <ClInclude Include="..\..\src\ownership\AirfieldOwnershipHandler.h">
       <Filter>src\ownership</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\regional\RegionalPressureRenderer.h">
+      <Filter>src\regional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\regional\RegionalPressureRendererConfiguration.h">
+      <Filter>src\regional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\regional\RegionalPressureConfigurationDialog.h">
+      <Filter>src\regional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\regional\RegionalPressureManager.h">
+      <Filter>src\regional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\regional\RegionalPressureModule.h">
+      <Filter>src\regional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\regional\RegionalPressureRenderedItem.h">
+      <Filter>src\regional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\regional\RegionalPressure.h">
+      <Filter>src\regional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\regional\RegionalPressureManagerFactory.h">
+      <Filter>src\regional</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1635,6 +1662,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\ownership\AirfieldOwnershipHandler.cpp">
       <Filter>src\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\regional\RegionalPressureRendererConfiguration.cpp">
+      <Filter>src\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\regional\RegionalPressureConfigurationDialog.cpp">
+      <Filter>src\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\regional\RegionalPressureManager.cpp">
+      <Filter>src\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\regional\RegionalPressureModule.cpp">
+      <Filter>src\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\regional\RegionalPressureRenderer.cpp">
+      <Filter>src\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\regional\RegionalPressureManagerFactory.cpp">
+      <Filter>src\regional</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

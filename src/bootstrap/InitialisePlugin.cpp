@@ -40,6 +40,7 @@
 #include "dependency/DependencyLoader.h"
 #include "handoff/HandoffModule.h"
 #include "controller/ControllerBootstrap.h"
+#include "regional/RegionalPressureModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -57,6 +58,7 @@ using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
 using UKControllerPlugin::Update::PluginUpdateChecker;
 using UKControllerPlugin::Countdown::CountdownModule;
 using UKControllerPlugin::MinStack::MinStackModule;
+using UKControllerPlugin::Regional::RegionalPressureModule;
 using UKControllerPlugin::Bootstrap::PostInit;
 using UKControllerPlugin::Plugin::PluginVersion;
 using UKControllerPlugin::Squawk::SquawkModule;
@@ -230,6 +232,14 @@ namespace UKControllerPlugin {
             *this->container->api,
             *this->container->websocketProcessors,
             *this->container->dialogManager
+        );
+        RegionalPressureModule::BootstrapPlugin(
+            this->container->regionalPressureManager,
+            *this->container->taskRunner,
+            *this->container->api,
+            *this->container->websocketProcessors,
+            *this->container->dialogManager,
+            loader
         );
         UKControllerPlugin::Hold::BootstrapPlugin(
             loader,
