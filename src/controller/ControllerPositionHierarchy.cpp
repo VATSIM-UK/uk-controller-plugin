@@ -52,6 +52,7 @@ namespace UKControllerPlugin {
             std::vector<std::reference_wrapper<const ControllerPosition>>::const_iterator it2
                 = compare.positions.cbegin();
 
+            // Loop through the positions, stop if they don't match
             while (it1 != this->positions.cend())
             {
                 if (it1->get() == it2->get()) {
