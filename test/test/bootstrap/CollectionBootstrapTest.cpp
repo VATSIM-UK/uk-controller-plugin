@@ -28,22 +28,10 @@ namespace UKControllerPluginTest {
                 NiceMock<MockDependencyLoader> dependency;
         };
 
-        TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesActiveCallsigns)
-        {
-            CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
-            EXPECT_NO_THROW(container.activeCallsigns->Flush());
-        }
-
         TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesAirfields)
         {
             CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
             EXPECT_NO_THROW(container.airfields->GetSize());
-        }
-
-        TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesAirfieldOwnership)
-        {
-            CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
-            EXPECT_NO_THROW(container.airfieldOwnership->Flush());
         }
 
         TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesFlightplans)

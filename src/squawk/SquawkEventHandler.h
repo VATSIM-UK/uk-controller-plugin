@@ -2,6 +2,7 @@
 #include "timedevent/AbstractTimedEvent.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "euroscope/UserSettingAwareInterface.h"
+#include "controller/ActiveCallsignEventHandlerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -34,7 +35,8 @@ namespace UKControllerPlugin {
 
         class SquawkEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
             public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
-            public UKControllerPlugin::Euroscope::UserSettingAwareInterface
+            public UKControllerPlugin::Euroscope::UserSettingAwareInterface,
+            public UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface
         {
             public:
                 SquawkEventHandler(
@@ -73,6 +75,17 @@ namespace UKControllerPlugin {
                 void TimedEventTrigger(void);
                 void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
                 bool UserAllowedSquawkAssignment(void) const;
+
+                // Inherited via ActiveCallsignEventHandlerInterface
+                void ActiveCallsignAdded(
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
+                ) override;
+                void ActiveCallsignRemoved(
+                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    bool userCallsign
+                ) override;
+                void CallsignsFlushed(void) override;
 
                 // The callback function ID with euroscope for forcing squawk refresh (general squawk).
                 const int squawkForceCallbackIdGeneral = 9000;

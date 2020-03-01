@@ -21,6 +21,8 @@ namespace UKControllerPlugin {
                 double frequency
             ) const;
             size_t GetSize(void) const;
+            bool HasPosition(std::string callsign) const;
+
         private:
             std::map<std::string, std::unique_ptr<ControllerPosition>> positions;
             bool IsPossibleAirfieldPosition(std::string facility) const;

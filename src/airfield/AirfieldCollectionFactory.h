@@ -10,7 +10,7 @@ namespace UKControllerPlugin {
     namespace Airfield {
 
         // Forward Declarations
-        class Airfield;
+        class AirfieldModel;
         class AirfieldCollection;
         // END
 

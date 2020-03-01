@@ -31,13 +31,15 @@ namespace UKControllerPlugin {
                     *persistence.airfieldOwnership,
                     *persistence.login,
                     *persistence.deferredHandlers,
-                    *persistence.plugin
+                    *persistence.plugin,
+                    *persistence.flightplans
                 )
             );
 
             persistence.initialAltitudeEvents = initialAltitudeEventHandler;
             persistence.userSettingHandlers->RegisterHandler(initialAltitudeEventHandler);
             persistence.flightplanHandler->RegisterHandler(initialAltitudeEventHandler);
+            persistence.activeCallsigns->AddHandler(initialAltitudeEventHandler);
 
 
             TagFunction recycleFunction(

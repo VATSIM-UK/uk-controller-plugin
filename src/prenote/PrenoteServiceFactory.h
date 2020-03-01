@@ -5,9 +5,9 @@ namespace UKControllerPlugin {
         class PrenoteService;
         class PrenoteFactory;
     }  // namespace Prenote
-    namespace Airfield {
+    namespace Ownership {
         class AirfieldOwnershipManager;
-    }  // namespace Airfield
+    }  // namespace Ownership
     namespace Controller {
         class ActiveCallsignCollection;
     }  // namespace Controller
@@ -31,7 +31,7 @@ namespace UKControllerPlugin {
                 );
 
                 std::unique_ptr<UKControllerPlugin::Prenote::PrenoteService> Create(
-                    const UKControllerPlugin::Airfield::AirfieldOwnershipManager & airfieldOwnership,
+                    const UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership,
                     const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
                     const nlohmann::json & json
                 );

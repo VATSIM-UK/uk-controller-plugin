@@ -2,7 +2,7 @@
 #include "prenote/PrenoteEventHandler.h"
 #include "prenote/AbstractPrenote.h"
 #include "flightplan/StoredFlightplanCollection.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPositionHierarchy.h"
 #include "controller/ActiveCallsign.h"
@@ -15,7 +15,7 @@
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Controller::ActiveCallsign;

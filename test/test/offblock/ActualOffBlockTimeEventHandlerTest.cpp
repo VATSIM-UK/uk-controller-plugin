@@ -5,12 +5,12 @@
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "flightplan/StoredFlightplan.h"
 #include "datablock/DisplayTime.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
 #include "airfield/AirfieldCollection.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 
 using UKControllerPlugin::Datablock::ActualOffBlockTimeEventHandler;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
@@ -18,7 +18,7 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Datablock::DisplayTime;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;

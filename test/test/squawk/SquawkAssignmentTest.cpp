@@ -10,8 +10,8 @@
 #include "airfield/AirfieldCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ActiveCallsign.h"
-#include "airfield/AirfieldOwnershipManager.h"
-#include "airfield/Airfield.h"
+#include "ownership/AirfieldOwnershipManager.h"
+#include "airfield/AirfieldModel.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "flightplan/StoredFlightplan.h"
 
@@ -26,8 +26,8 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ActiveCallsign;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using ::testing::NiceMock;
@@ -62,7 +62,9 @@ namespace UKControllerPluginTest {
                         new NiceMock<MockEuroScopeCControllerInterface>
                     );
 
-                    this->airfields.AddAirfield(std::unique_ptr<Airfield>(new Airfield("EGKK", { "EGKK_APP" })));
+                    this->airfields.AddAirfield(
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "EGKK_APP" }))
+                    );
                     this->activeCallsigns.AddUserCallsign(
                         ActiveCallsign(
                             "EGKK_APP",

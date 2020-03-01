@@ -11,7 +11,7 @@
 #include "intention/IntentionCodeModule.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "login/LoginModule.h"
-#include "airfield/AirfieldOwnershipModule.h"
+#include "ownership/AirfieldOwnershipModule.h"
 #include "radarscreen/RadarScreenFactory.h"
 #include "update/PluginUpdateChecker.h"
 #include "countdown/CountdownModule.h"
@@ -38,6 +38,8 @@
 #include "sectorfile/SectorFileBootstrap.h"
 #include "dependency/UpdateDependencies.h"
 #include "dependency/DependencyLoader.h"
+#include "handoff/HandoffModule.h"
+#include "controller/ControllerBootstrap.h"
 #include "regional/RegionalPressureModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
@@ -52,7 +54,7 @@ using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::IntentionCode::IntentionCodeModule;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::Controller::LoginModule;
-using UKControllerPlugin::Airfield::AirfieldOwnershipModule;
+using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
 using UKControllerPlugin::Update::PluginUpdateChecker;
 using UKControllerPlugin::Countdown::CountdownModule;
 using UKControllerPlugin::MinStack::MinStackModule;
@@ -194,6 +196,7 @@ namespace UKControllerPlugin {
         // Boostrap all the modules at a plugin level
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
+        AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap helpers
         UKControllerPlugin::Wake::BootstrapPlugin(*this->container, loader);
@@ -253,8 +256,8 @@ namespace UKControllerPlugin {
             this->duplicatePlugin->Duplicate()
         );
 
-        AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         PrenoteModule::BootstrapPlugin(*this->container, loader);
+        UKControllerPlugin::Handoff::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap other things
         ActualOffBlockTimeBootstrap::BootstrapPlugin(*this->container);

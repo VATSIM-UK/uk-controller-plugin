@@ -69,6 +69,11 @@ namespace UKControllerPlugin {
             return this->positions.size();
         }
 
+        bool ControllerPositionCollection::HasPosition(std::string callsign) const
+        {
+            return this->positions.find(callsign) != this->positions.cend();
+        }
+
         /*
             Returns true if the facility is possible for an airfield.
         */

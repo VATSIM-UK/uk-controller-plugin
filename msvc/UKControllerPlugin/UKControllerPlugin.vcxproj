@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -15,12 +15,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\resource\resource.h" />
-    <ClInclude Include="..\..\src\airfield\Airfield.h" />
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h" />
     <ClInclude Include="..\..\src\airfield\AirfieldCollectionFactory.h" />
-    <ClInclude Include="..\..\src\airfield\AirfieldOwnershipManager.h" />
-    <ClInclude Include="..\..\src\airfield\AirfieldOwnershipModule.h" />
-    <ClInclude Include="..\..\src\airfield\ControllerAirfieldOwnershipHandler.h" />
+    <ClInclude Include="..\..\src\airfield\AirfieldModel.h" />
     <ClInclude Include="..\..\src\airfield\NormaliseSid.h" />
     <ClInclude Include="..\..\src\api\ApiAuthChecker.h" />
     <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h" />
@@ -50,8 +47,9 @@
     <ClInclude Include="..\..\src\command\CommandHandlerInterface.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsign.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignCollection.h" />
-    <ClInclude Include="..\..\src\controller\AirfieldOwnerQueryMessage.h" />
-    <ClInclude Include="..\..\src\controller\AirfieldsOwnedQueryMessage.h" />
+    <ClInclude Include="..\..\src\controller\ActiveCallsignEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\controller\ActiveCallsignMonitor.h" />
+    <ClInclude Include="..\..\src\controller\ControllerBootstrap.h" />
     <ClInclude Include="..\..\src\controller\ControllerPosition.h" />
     <ClInclude Include="..\..\src\controller\ControllerPositionCollection.h" />
     <ClInclude Include="..\..\src\controller\ControllerPositionCollectionFactory.h" />
@@ -123,6 +121,11 @@
     <ClInclude Include="..\..\src\graphics\GdiGraphicsInterface.h" />
     <ClInclude Include="..\..\src\graphics\GdiGraphicsWrapper.h" />
     <ClInclude Include="..\..\src\graphics\GdiplusBrushes.h" />
+    <ClInclude Include="..\..\src\handoff\CachedHandoff.h" />
+    <ClInclude Include="..\..\src\handoff\HandoffCollection.h" />
+    <ClInclude Include="..\..\src\handoff\HandoffCollectionFactory.h" />
+    <ClInclude Include="..\..\src\handoff\HandoffEventHandler.h" />
+    <ClInclude Include="..\..\src\handoff\HandoffModule.h" />
     <ClInclude Include="..\..\src\helper\HelperFunctions.h" />
     <ClInclude Include="..\..\src\historytrail\AircraftHistoryTrail.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailData.h" />
@@ -191,7 +194,6 @@
     <ClInclude Include="..\..\src\login\LoginModule.h" />
     <ClInclude Include="..\..\src\log\LoggerBootstrap.h" />
     <ClInclude Include="..\..\src\log\LoggerFunctions.h" />
-    <ClInclude Include="..\..\src\massevent\MassEvent.h" />
     <ClInclude Include="..\..\src\message\MessageSerializableInterface.h" />
     <ClInclude Include="..\..\src\message\UserMessager.h" />
     <ClInclude Include="..\..\src\message\UserMessagerBootstrap.h" />
@@ -214,6 +216,11 @@
     <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeEventHandler.h" />
     <ClInclude Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.h" />
     <ClInclude Include="..\..\src\offblock\EstimatedOffBlockTimeEventHandler.h" />
+    <ClInclude Include="..\..\src\ownership\AirfieldOwnerQueryMessage.h" />
+    <ClInclude Include="..\..\src\ownership\AirfieldOwnershipManager.h" />
+    <ClInclude Include="..\..\src\ownership\AirfieldOwnershipModule.h" />
+    <ClInclude Include="..\..\src\ownership\AirfieldsOwnedQueryMessage.h" />
+    <ClInclude Include="..\..\src\ownership\AirfieldOwnershipHandler.h" />
     <ClInclude Include="..\..\src\plugin\FunctionCallEventHandler.h" />
     <ClInclude Include="..\..\src\plugin\PopupMenuItem.h" />
     <ClInclude Include="..\..\src\plugin\UKPlugin.h" />
@@ -295,12 +302,9 @@
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\airfield\Airfield.cpp" />
     <ClCompile Include="..\..\src\airfield\AirfieldCollection.cpp" />
     <ClCompile Include="..\..\src\airfield\AirfieldCollectionFactory.cpp" />
-    <ClCompile Include="..\..\src\airfield\AirfieldOwnershipManager.cpp" />
-    <ClCompile Include="..\..\src\airfield\AirfieldOwnershipModule.cpp" />
-    <ClCompile Include="..\..\src\airfield\ControllerAirfieldOwnershipHandler.cpp" />
+    <ClCompile Include="..\..\src\airfield\AirfieldModel.cpp" />
     <ClCompile Include="..\..\src\airfield\NormaliseSid.cpp" />
     <ClCompile Include="..\..\src\api\ApiAuthChecker.cpp" />
     <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp" />
@@ -324,8 +328,8 @@
     <ClCompile Include="..\..\src\command\CommandHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsign.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsignCollection.cpp" />
-    <ClCompile Include="..\..\src\controller\AirfieldOwnerQueryMessage.cpp" />
-    <ClCompile Include="..\..\src\controller\AirfieldsOwnedQueryMessage.cpp" />
+    <ClCompile Include="..\..\src\controller\ActiveCallsignMonitor.cpp" />
+    <ClCompile Include="..\..\src\controller\ControllerBootstrap.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerPosition.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerPositionCollection.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerPositionCollectionFactory.cpp" />
@@ -374,6 +378,10 @@
     <ClCompile Include="..\..\src\flightplan\StoredFlightplanCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\StoredFlightplanEventHandler.cpp" />
     <ClCompile Include="..\..\src\graphics\GdiGraphicsWrapper.cpp" />
+    <ClCompile Include="..\..\src\handoff\HandoffCollection.cpp" />
+    <ClCompile Include="..\..\src\handoff\HandoffCollectionFactory.cpp" />
+    <ClCompile Include="..\..\src\handoff\HandoffEventHandler.cpp" />
+    <ClCompile Include="..\..\src\handoff\HandoffModule.cpp" />
     <ClCompile Include="..\..\src\helper\HelperFunctions.cpp" />
     <ClCompile Include="..\..\src\historytrail\AircraftHistoryTrail.cpp" />
     <ClCompile Include="..\..\src\historytrail\HistoryTrailDialog.cpp" />
@@ -436,7 +444,6 @@
     <ClCompile Include="..\..\src\login\LoginModule.cpp" />
     <ClCompile Include="..\..\src\log\LoggerBootstrap.cpp" />
     <ClCompile Include="..\..\src\log\LoggerFunctions.cpp" />
-    <ClCompile Include="..\..\src\massevent\MassEvent.cpp" />
     <ClCompile Include="..\..\src\message\UserMessager.cpp" />
     <ClCompile Include="..\..\src\message\UserMessagerBootstrap.cpp" />
     <ClCompile Include="..\..\src\metar\MetarEventHandlerCollection.cpp" />
@@ -455,6 +462,11 @@
     <ClCompile Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedDepartureTimeEventHandler.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeEventHandler.cpp" />
+    <ClCompile Include="..\..\src\ownership\AirfieldOwnerQueryMessage.cpp" />
+    <ClCompile Include="..\..\src\ownership\AirfieldOwnershipManager.cpp" />
+    <ClCompile Include="..\..\src\ownership\AirfieldOwnershipModule.cpp" />
+    <ClCompile Include="..\..\src\ownership\AirfieldsOwnedQueryMessage.cpp" />
+    <ClCompile Include="..\..\src\ownership\AirfieldOwnershipHandler.cpp" />
     <ClCompile Include="..\..\src\plugin\FunctionCallEventHandler.cpp" />
     <ClCompile Include="..\..\src\plugin\UKPlugin.cpp" />
     <ClCompile Include="..\..\src\plugin\UkPluginBootstrap.cpp" />

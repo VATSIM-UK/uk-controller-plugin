@@ -55,9 +55,6 @@
     <Filter Include="test\login">
       <UniqueIdentifier>{ff7d0351-16ca-42de-9b3b-41052aacdc15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test\massevent">
-      <UniqueIdentifier>{f276b365-76e0-4746-94db-e31e51fce477}</UniqueIdentifier>
-    </Filter>
     <Filter Include="test\message">
       <UniqueIdentifier>{995b6f9a-99dc-40ec-8da4-37d21f275161}</UniqueIdentifier>
     </Filter>
@@ -115,6 +112,12 @@
     <Filter Include="test\sectorfile">
       <UniqueIdentifier>{2b17f35f-90d1-4f2d-9826-0618a260c1f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\handoff">
+      <UniqueIdentifier>{eb5327da-3251-4d89-958b-22d7179fd9cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\ownership">
+      <UniqueIdentifier>{5bae5d01-7594-43d7-a7d9-afc0db0ecdcf}</UniqueIdentifier>
+    </Filter>
     <Filter Include="test\regional">
       <UniqueIdentifier>{55d16101-3944-4b04-b2a1-d177a9fe329b}</UniqueIdentifier>
     </Filter>
@@ -130,9 +133,6 @@
       <Filter>test\airfield</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionTest.cpp">
-      <Filter>test\airfield</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\airfield\AirfieldTest.cpp">
       <Filter>test\airfield</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp">
@@ -184,21 +184,6 @@
       <Filter>test\controller</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\AirfieldOwnerQueryMessageTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipManagerTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\AirfieldOwnershipModuleTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\AirfieldsOwnedQueryMessageTest.cpp">
-      <Filter>test\controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\controller\ControllerAirfieldOwnershipHandlerTest.cpp">
       <Filter>test\controller</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\controller\ControllerPositionCollectionFactoryTest.cpp">
@@ -353,9 +338,6 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\login\LoginTest.cpp">
       <Filter>test\login</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\massevent\MassEventTest.cpp">
-      <Filter>test\massevent</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\message\UserMessagerBootstrapTest.cpp">
       <Filter>test\message</Filter>
@@ -718,11 +700,50 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
+    <ClCompile Include="..\..\test\test\handoff\HandoffCollectionTest.cpp">
+      <Filter>test\handoff</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\test\test\dependency\UpdateDependenciesTest.cpp">
       <Filter>test\dependency</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\dependency\DependencyLoaderTest.cpp">
       <Filter>test\dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\handoff\HandoffEventHandlerTest.cpp">
+      <Filter>test\handoff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\handoff\HandoffModuleTest.cpp">
+      <Filter>test\handoff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\handoff\HandoffCollectionFactoryTest.cpp">
+      <Filter>test\handoff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\mock\MockActiveCallsignEventHandler.h">
+      <Filter>mock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\controller\ActiveCallsignMonitorTest.cpp">
+      <Filter>test\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\controller\ControllerBootstrapTest.cpp">
+      <Filter>test\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\airfield\AirfieldModelTest.cpp">
+      <Filter>test\airfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipManagerTest.cpp">
+      <Filter>test\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipModuleTest.cpp">
+      <Filter>test\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\AirfieldsOwnedQueryMessageTest.cpp">
+      <Filter>test\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnerQueryMessageTest.cpp">
+      <Filter>test\ownership</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipHandlerTest.cpp">
+      <Filter>test\ownership</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererConfigurationTest.cpp">
       <Filter>test\regional</Filter>

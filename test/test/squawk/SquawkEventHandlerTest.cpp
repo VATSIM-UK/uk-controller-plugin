@@ -9,11 +9,11 @@
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/StoredFlightplan.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "airfield/AirfieldCollection.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "api/ApiRequestBuilder.h"
 #include "curl/CurlRequest.h"
@@ -42,11 +42,11 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Squawk::SquawkAssignment;
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Curl::CurlRequest;
@@ -103,7 +103,8 @@ namespace UKControllerPluginTest {
                         this->login,
                         this->deferredEvents,
                         false
-                    )
+                    ),
+                    userCallsign("EGKK_APP", "Testy McTestface", this->controller)
                 {
 
                 }
@@ -117,14 +118,10 @@ namespace UKControllerPluginTest {
                     ON_CALL(*this->mockSelfController, IsVatsimRecognisedController())
                         .WillByDefault(Return(true));
 
-                    this->airfields.AddAirfield(std::unique_ptr<Airfield>(new Airfield("EGKK", { "EGKK_APP" })));
-                    this->activeCallsigns.AddUserCallsign(
-                        ActiveCallsign(
-                            "EGKK_APP",
-                            "Testy McTestface",
-                            this->controller
-                        )
+                    this->airfields.AddAirfield(
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "EGKK_APP" }))
                     );
+                    this->activeCallsigns.AddUserCallsign(this->userCallsign);
                     this->airfieldOwnership.RefreshOwner("EGKK");
 
                     // By default, lets assume we've been logged in for a while.
@@ -229,6 +226,7 @@ namespace UKControllerPluginTest {
                 SquawkGenerator generator;
                 SquawkAssignment assignmentRules;
                 ActiveCallsignCollection activeCallsigns;
+                ActiveCallsign userCallsign;
                 AirfieldOwnershipManager airfieldOwnership;
                 ControllerPosition controller;
                 AirfieldCollection airfields;
@@ -534,6 +532,40 @@ namespace UKControllerPluginTest {
            this->expectGeneralAssignment();
            handler.TimedEventTrigger();
            this->AssertGeneralAssignment();
+        }
+
+        TEST_F(SquawkEventHandlerTest, ActiveCallsignAddedAssignsAllSquawksWhenUserLogsOn)
+        {
+            this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
+                .WillByDefault(Return(false));
+
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser)
+                .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel())
+                .WillByDefault(Return(999999));
+
+            this->expectGeneralAssignment();
+            handler.ActiveCallsignAdded(this->userCallsign, true);
+            this->AssertGeneralAssignment();
+        }
+
+        TEST_F(SquawkEventHandlerTest, ActiveCallsignAddedDoesntAssignSquawkIfNotUserLogsOn)
+        {
+            this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
+                .WillByDefault(Return(false));
+
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser)
+                .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel())
+                .WillByDefault(Return(999999));
+
+            handler.ActiveCallsignAdded(this->userCallsign, false);
         }
     }  // namespace Squawk
 }  // namespace UKControllerPluginTest
