@@ -32,8 +32,7 @@ namespace UKControllerPlugin {
             // All files should be relative to Documents/EuroScope
             std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(
                 instance,
-                ExternalsBootstrap::GetPluginFileRoot(),
-                ExternalsBootstrap::GetPluginFileRootWide()
+                ExternalsBootstrap::GetPluginFileRoot()
             );
             persistence.dialogManager.reset(new DialogManager(*winApi));
             persistence.windows = std::move(winApi);
@@ -42,17 +41,9 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Return the path to UKCP settings files location in narrow format
-        */
-        std::string ExternalsBootstrap::GetPluginFileRoot(void)
-        {
-            return HelperFunctions::ConvertToRegularString(GetPluginFileRootWide());
-        }
-
-        /*
             Return the path to UKCP settings files location in wide format
         */
-        std::wstring ExternalsBootstrap::GetPluginFileRootWide(void)
+        std::wstring ExternalsBootstrap::GetPluginFileRoot(void)
         {
             return ExternalsBootstrap::GetMyDocumentsPath() + L"/EuroScope/ukcp";
         }
@@ -62,11 +53,8 @@ namespace UKControllerPlugin {
         */
         void ExternalsBootstrap::SetupUkcpFolderRoot(WinApiInterface & winApi)
         {
-            std::string documentsPath = HelperFunctions::ConvertToRegularString(
-                ExternalsBootstrap::GetMyDocumentsPath()
-            );
-
-            if (!winApi.CreateFolderRecursive(documentsPath + "/EuroScope/ukcp")) {
+            std::wstring documentsPath = ExternalsBootstrap::GetMyDocumentsPath();
+            if (!winApi.CreateFolderRecursive(documentsPath + L"/EuroScope/ukcp")) {
                 winApi.OpenMessageBox(
                     L"Unable to create the UKCP root folder, please contact the VATUK Web Department.",
                     L"UKCP Fatal Error",

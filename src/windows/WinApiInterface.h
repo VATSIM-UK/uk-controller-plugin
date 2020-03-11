@@ -19,11 +19,11 @@ namespace UKControllerPlugin {
             {
             };
             virtual ~WinApiInterface(void) {}  // namespace Windows
-            virtual bool CreateFolder(std::string folder) = 0;
-            virtual bool CreateFolderRecursive(std::string folder) = 0;
-            virtual bool CreateLocalFolderRecursive(std::string folder) = 0;
-            virtual bool DeleteGivenFile(std::string filename) = 0;
-            virtual bool FileExists(std::string filename) = 0;
+            virtual bool CreateFolder(std::wstring folder) = 0;
+            virtual bool CreateFolderRecursive(std::wstring folder) = 0;
+            virtual bool CreateLocalFolderRecursive(std::wstring folder) = 0;
+            virtual bool DeleteGivenFile(std::wstring filename) = 0;
+            virtual bool FileExists(std::wstring filename) = 0;
             virtual std::wstring FileOpenDialog(
                 std::wstring title,
                 UINT numFileTypes,
@@ -32,12 +32,11 @@ namespace UKControllerPlugin {
             HINSTANCE GetDllInstance(void) const {
                 return this->dllInstance;
             }
-            virtual std::string GetFullPathToLocalFile(std::string relativePath) const = 0;
+            virtual std::wstring GetFullPathToLocalFile(std::wstring relativePath) const = 0;
             virtual int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) = 0;
             virtual void PlayWave(LPCTSTR sound) = 0;
-            virtual std::string ReadFromFile(std::string filename, bool relativePath = true) = 0;
             virtual std::string ReadFromFile(std::wstring filename, bool relativePath = true) = 0;
-            virtual void WriteToFile(std::string filename, std::string data, bool truncate) = 0;
+            virtual void WriteToFile(std::wstring filename, std::string data, bool truncate) = 0;
 
         private:
             // DLL Instance for the plugin
