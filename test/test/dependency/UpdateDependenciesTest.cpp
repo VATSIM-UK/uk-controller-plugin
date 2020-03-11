@@ -157,10 +157,16 @@ namespace UKControllerPluginTest {
             )
                 .Times(1);
 
-            EXPECT_CALL(this->mockWindows, WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true))
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true)
+            )
                 .Times(1);
 
-            EXPECT_CALL(this->mockWindows, WriteToFile(std::wstring(L"dependencies/test2.json"), this->dependency2.dump(), true))
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"dependencies/test2.json"), this->dependency2.dump(), true)
+            )
                 .Times(1);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
@@ -203,7 +209,12 @@ namespace UKControllerPluginTest {
             )
                 .Times(0);
 
-            EXPECT_CALL(this->mockWindows, WriteToFile(std::wstring(L"dependencies/test2.json"), this->dependency2.dump(), true))
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"dependencies/test2.json"),
+                this->dependency2.dump(),
+                true)
+            )
                 .Times(0);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
