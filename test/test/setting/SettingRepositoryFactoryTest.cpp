@@ -16,11 +16,11 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> mockWinApi;
 
-            EXPECT_CALL(mockWinApi, FileExists("settings/api-settings.json"))
+            EXPECT_CALL(mockWinApi, FileExists(std::wstring(L"settings/api-settings.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(mockWinApi, ReadFromFileMock("settings/api-settings.json", true))
+            EXPECT_CALL(mockWinApi, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"api-key\": \"testkey\"}"));
 

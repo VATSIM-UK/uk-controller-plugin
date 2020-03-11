@@ -73,7 +73,7 @@ namespace Bootstrap {
         std::string apiSettings = winApi.ReadFromFile(filePath, false);
 
         // Write the selected file to disk
-        winApi.WriteToFile("settings/api-settings.json", apiSettings, true);
+        winApi.WriteToFile(L"settings/api-settings.json", apiSettings, true);
         LogInfo("Updated user key file");
         return true;
     }

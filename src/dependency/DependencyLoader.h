@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
 
                 nlohmann::json LoadDependency(std::string key , nlohmann::json defaultValue) noexcept override;
 
-                const std::string DEPENDENCY_FOLDER = "dependencies";
+                const std::wstring DEPENDENCY_FOLDER = L"dependencies";
 
             private:
 
