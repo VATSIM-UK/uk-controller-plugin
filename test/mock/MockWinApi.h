@@ -18,22 +18,15 @@ namespace UKControllerPluginTest {
             );
             MOCK_METHOD3(OpenMessageBox, int(LPCWSTR, LPCWSTR, int));
             MOCK_METHOD1(PlayWave, void(LPCTSTR));
-            MOCK_METHOD3(WriteToFile, void(std::string, std::string, bool));
-            MOCK_METHOD2(ReadFromFileMock, std::string(std::string, bool));
+            MOCK_METHOD3(WriteToFile, void(std::wstring, std::string, bool));
             MOCK_METHOD2(ReadFromFileMock, std::string(std::wstring, bool));
-            MOCK_METHOD1(FileExists, bool(std::string ));
-            MOCK_METHOD1(CreateFolder, bool(std::string folder));
-            MOCK_METHOD1(CreateFolderRecursive, bool(std::string folder));
-            MOCK_METHOD1(CreateLocalFolderRecursive, bool(std::string folder));
-            MOCK_METHOD1(DeleteGivenFile, bool(std::string filename));
-            MOCK_CONST_METHOD1(GetFullPathToLocalFile, std::string(std::string));
+            MOCK_METHOD1(FileExists, bool(std::wstring));
+            MOCK_METHOD1(CreateFolder, bool(std::wstring folder));
+            MOCK_METHOD1(CreateFolderRecursive, bool(std::wstring folder));
+            MOCK_METHOD1(CreateLocalFolderRecursive, bool(std::wstring folder));
+            MOCK_METHOD1(DeleteGivenFile, bool(std::wstring filename));
+            MOCK_CONST_METHOD1(GetFullPathToLocalFile, std::wstring(std::wstring));
 
-
-            // Helper methods because optional parameters
-            std::string ReadFromFile(std::string path, bool relative = true)
-            {
-                return ReadFromFileMock(path, relative);
-            }
 
             std::string ReadFromFile(std::wstring path, bool relative = true)
             {
