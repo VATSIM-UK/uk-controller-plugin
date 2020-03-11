@@ -9,7 +9,6 @@
 #include "curl/CurlResponse.h"
 #include "squawk/SquawkValidator.h"
 #include "windows/WinApiInterface.h"
-#include "api/RemoteFileManifestFactory.h"
 
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Curl::CurlResponse;
@@ -21,7 +20,6 @@ using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPlugin::Squawk::SquawkValidator;
 using UKControllerPlugin::Windows::WinApiInterface;
-using UKControllerPlugin::Api::RemoteFileManifestFactory;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 
 namespace UKControllerPlugin {
@@ -170,18 +168,6 @@ namespace UKControllerPlugin {
         void ApiHelper::DeleteSquawkAssignment(std::string callsign) const
         {
             this->MakeApiRequest(this->requestBuilder.BuildSquawkAssignmentDeletionRequest(callsign));
-        }
-
-        /*
-            Fetches the dependency manifest.
-        */
-        UKControllerPlugin::Api::RemoteFileManifest ApiHelper::FetchDependencyManifest(void) const
-        {
-            RemoteFileManifestFactory manifestFactory(this->winApi);
-
-            return manifestFactory.CreateFromData(
-                this->MakeApiRequest(this->requestBuilder.BuildDependencyListRequest()).GetRawData()
-            );
         }
 
         /*

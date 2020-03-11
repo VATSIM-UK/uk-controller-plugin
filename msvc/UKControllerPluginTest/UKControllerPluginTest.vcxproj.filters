@@ -156,15 +156,6 @@
     <ClCompile Include="..\..\test\test\api\ApiResponseValidatorTest.cpp">
       <Filter>test\api</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\api\RemoteFileManifestFactoryTest.cpp">
-      <Filter>test\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\api\RemoteFileManifestTest.cpp">
-      <Filter>test\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\api\RemoteFileTest.cpp">
-      <Filter>test\api</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\bootstrap\BootstrapWarningMessageTest.cpp">
       <Filter>test\bootstrap</Filter>
     </ClCompile>

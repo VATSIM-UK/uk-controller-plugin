@@ -1,5 +1,4 @@
 #pragma once
-#include "api/RemoteFileManifest.h"
 #include "squawk/ApiSquawkAllocation.h"
 
 namespace UKControllerPlugin {
@@ -24,7 +23,6 @@ namespace UKControllerPlugin {
                 virtual std::string AuthoriseWebsocketChannel(std::string socketId, std::string channel) const = 0;
                 virtual bool CheckApiAuthorisation(void) const = 0;
                 virtual void DeleteSquawkAssignment(std::string callsign) const = 0;
-                virtual UKControllerPlugin::Api::RemoteFileManifest FetchDependencyManifest(void) const = 0;
                 virtual nlohmann::json GetDependencyList(void) const = 0;
                 virtual std::string FetchRemoteFile(std::string uri) const = 0;
                 virtual UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(
