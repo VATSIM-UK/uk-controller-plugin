@@ -1,6 +1,7 @@
 #include "pch/stdafx.h"
 #include "dependency/UpdateDependencies.h"
 #include "api/ApiException.h"
+#include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiException;
@@ -16,7 +17,7 @@ namespace UKControllerPlugin {
             nlohmann::json dependencyList;
             try {
                 dependencyList = api.GetDependencyList();
-                filesystem.WriteToFile("dependencies/dependency-list.json", dependencyList.dump(), true);
+                filesystem.WriteToFile(L"dependencies/dependency-list.json", dependencyList.dump(), true);
                 LogInfo("Downloaded dependency list");
             } catch (ApiException exception) {
                 LogError("Unable to download dependency list: " + std::string(exception.what()));
@@ -35,9 +36,9 @@ namespace UKControllerPlugin {
                 }
 
                 try {
-                    std::string filename = it->at("uri");
+                    std::wstring widePath = HelperFunctions::ConvertToWideString(it->at("local_file"));
                     filesystem.WriteToFile(
-                        "dependencies/" + it->at("local_file").get<std::string>(),
+                        L"dependencies/" + widePath,
                         api.GetUri(it->at("uri").get<std::string>()).dump(),
                         true
                     );

@@ -37,9 +37,6 @@
     <ClCompile Include="..\..\test\test\api\ApiResponseFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiResponseTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiResponseValidatorTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\RemoteFileManifestFactoryTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\RemoteFileManifestTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\RemoteFileTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\BootstrapWarningMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\CollectionBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\EventHandlerCollectionBootstrapTest.cpp" />

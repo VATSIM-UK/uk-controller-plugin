@@ -30,9 +30,6 @@
     <ClInclude Include="..\..\src\api\ApiResponse.h" />
     <ClInclude Include="..\..\src\api\ApiResponseFactory.h" />
     <ClInclude Include="..\..\src\api\ApiResponseValidator.h" />
-    <ClInclude Include="..\..\src\api\RemoteFile.h" />
-    <ClInclude Include="..\..\src\api\RemoteFileManifest.h" />
-    <ClInclude Include="..\..\src\api\RemoteFileManifestFactory.h" />
     <ClInclude Include="..\..\src\bootstrap\BootstrapWarningMessage.h" />
     <ClInclude Include="..\..\src\bootstrap\CollectionBootstrap.h" />
     <ClInclude Include="..\..\src\bootstrap\DuplicatePlugin.h" />
@@ -313,8 +310,6 @@
     <ClCompile Include="..\..\src\api\ApiResponse.cpp" />
     <ClCompile Include="..\..\src\api\ApiResponseFactory.cpp" />
     <ClCompile Include="..\..\src\api\ApiResponseValidator.cpp" />
-    <ClCompile Include="..\..\src\api\RemoteFileManifest.cpp" />
-    <ClCompile Include="..\..\src\api\RemoteFileManifestFactory.cpp" />
     <ClCompile Include="..\..\src\bootstrap\BootstrapWarningMessage.cpp" />
     <ClCompile Include="..\..\src\bootstrap\CollectionBootstrap.cpp" />
     <ClCompile Include="..\..\src\bootstrap\DllInterface.cpp" />

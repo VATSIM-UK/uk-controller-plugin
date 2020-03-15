@@ -156,17 +156,6 @@ TEST_F(ApiHelperTest, UpdateCheckReturnsVersionDisabledIfDisabled)
     EXPECT_EQ(ApiHelper::UPDATE_VERSION_DISABLED, this->helper.UpdateCheck("1.0.0"));
 }
 
-TEST_F(ApiHelperTest, FetchDependencyManifestReturnsCorrectly)
-{
-    CurlResponse response("{\"manifest\": {\"test1.json\": {\"md5\": \"md5\", \"uri\": \"uri\"}}}", false, 200);
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/dependency", CurlRequest::METHOD_GET)))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_FALSE(this->helper.FetchDependencyManifest().IsEmpty());
-}
-
 TEST_F(ApiHelperTest, FetchRemoteFileReturnsFileString)
 {
     nlohmann::json responseJson;

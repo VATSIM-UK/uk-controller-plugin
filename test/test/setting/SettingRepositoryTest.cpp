@@ -37,7 +37,7 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json")))
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -50,11 +50,11 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
                 .Times(1)
                 .WillOnce(Throw(std::ifstream::failure("test")));
 
@@ -67,11 +67,11 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
                 .Times(1)
                 .WillOnce(Return("{{}"));
 
@@ -84,11 +84,11 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
                 .Times(1)
                 .WillOnce(Return("abcd"));
 
@@ -101,11 +101,11 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"test1\": \"testValue1\", \"test2\": \"testValue2\"}"));
 
@@ -122,19 +122,19 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test1.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test1.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test2.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test2.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test1.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test1.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"test1\": \"testValue1\"}"));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test2.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test2.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"test1\": \"testValue2\"}"));
 
@@ -157,11 +157,11 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"test1\": \"testValue1\", \"test2\": \"testValue2\"}"));
 
@@ -184,18 +184,18 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"test1\": \"testValue1\", \"test2\": \"testValue2\"}"));
 
             EXPECT_CALL(
                 winApiMock,
                 WriteToFile(
-                    "settings/test/test.json",
+                    std::wstring(L"settings/test/test.json"),
                     "{\n    \"test1\": \"testValue1\",\n    \"test2\": \"testValue2\"\n}", true
                 ))
                 .Times(1);
@@ -209,18 +209,18 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"test1\": \"testValue1\", \"test2\": \"testValue2\"}"));
 
             EXPECT_CALL(
                 winApiMock,
                 WriteToFile(
-                    "settings/test/test.json",
+                    std::wstring(L"settings/test/test.json"),
                     "{\n    \"test1\": \"notTestValue1\",\n    \"test2\": \"testValue2\"\n}", true
                 ))
                 .Times(1);
@@ -235,31 +235,31 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test1.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test1.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, FileExists("settings/test/test2.json"))
+            EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test2.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test1.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test1.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"test1\": \"testValue1\"}"));
 
-            EXPECT_CALL(winApiMock, ReadFromFileMock("settings/test/test2.json", true))
+            EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test2.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"test2\": \"testValue2\"}"));
 
             EXPECT_CALL(
                 winApiMock,
-                WriteToFile("settings/test/test1.json", "{\n    \"test1\": \"testValue1\"\n}", true)
+                WriteToFile(std::wstring(L"settings/test/test1.json"), "{\n    \"test1\": \"testValue1\"\n}", true)
                 )
                 .Times(1);
 
             EXPECT_CALL(
                 winApiMock,
-                WriteToFile("settings/test/test2.json", "{\n    \"test2\": \"testValue2\"\n}", true)
+                WriteToFile(std::wstring(L"settings/test/test2.json"), "{\n    \"test2\": \"testValue2\"\n}", true)
                 )
                 .Times(1);
 

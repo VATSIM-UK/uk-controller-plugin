@@ -42,7 +42,6 @@ namespace UKControllerPlugin {
                 std::string AuthoriseWebsocketChannel(std::string socketId, std::string channel) const override;
                 bool CheckApiAuthorisation(void) const override;
                 void DeleteSquawkAssignment(std::string callsign) const override;
-                UKControllerPlugin::Api::RemoteFileManifest FetchDependencyManifest(void) const override;
                 std::string FetchRemoteFile(std::string uri) const override;
                 UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(std::string callsign) const override;
                 std::string GetApiDomain(void) const override;

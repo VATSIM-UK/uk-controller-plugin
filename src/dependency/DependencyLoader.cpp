@@ -1,6 +1,6 @@
 #include "pch/stdafx.h"
 #include "dependency/DependencyLoader.h"
-
+#include "helper/HelperFunctions.h"
 
 namespace UKControllerPlugin {
     namespace Dependency {
@@ -21,7 +21,9 @@ namespace UKControllerPlugin {
                 return defaultValue;
             }
 
-            if (!this->filesystem.FileExists(this->DEPENDENCY_FOLDER + "/" + this->fileMap[key])) {
+            std::wstring wideKey = HelperFunctions::ConvertToWideString(this->fileMap[key]);
+
+            if (!this->filesystem.FileExists(this->DEPENDENCY_FOLDER + L"/" + wideKey)) {
                 LogWarning("Dependency " + key + " does not exist on filesystem");
                 return defaultValue;
             }
@@ -29,7 +31,7 @@ namespace UKControllerPlugin {
             try
             {
                 return nlohmann::json::parse(
-                    this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + "/" + "" + this->fileMap[key])
+                    this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + L"/" + wideKey)
                 );
             } catch (nlohmann::json::exception) {
                 LogWarning("Unable to load dependency " + key + ", it is not valid JSON");
@@ -43,7 +45,7 @@ namespace UKControllerPlugin {
         */
         void DependencyLoader::LoadDependencyMap(void)
         {
-            if (!this->filesystem.FileExists(this->DEPENDENCY_FOLDER + "/" + "dependency-list.json")) {
+            if (!this->filesystem.FileExists(this->DEPENDENCY_FOLDER + L"/" + L"dependency-list.json")) {
                 LogWarning("No dependency list downloaded, dependencies not loaded");
                 return;
             }
@@ -52,7 +54,7 @@ namespace UKControllerPlugin {
             try
             {
                 dependencies = nlohmann::json::parse(
-                    this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + "/" + "dependency-list.json")
+                    this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + L"/" + L"dependency-list.json")
                 );
             } catch (nlohmann::json::exception) {
                 LogWarning("Unable to parse JSON in dependency list, dependencies not loaded");

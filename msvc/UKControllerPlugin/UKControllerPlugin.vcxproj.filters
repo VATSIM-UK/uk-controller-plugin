@@ -174,15 +174,6 @@
     <ClInclude Include="..\..\src\api\ApiResponseValidator.h">
       <Filter>src\api</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\api\RemoteFile.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\RemoteFileManifest.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\RemoteFileManifestFactory.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\bootstrap\BootstrapWarningMessage.h">
       <Filter>src\bootstrap</Filter>
     </ClInclude>
@@ -1028,12 +1019,6 @@
       <Filter>src\api</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\api\ApiResponseValidator.cpp">
-      <Filter>src\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\api\RemoteFileManifest.cpp">
-      <Filter>src\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\api\RemoteFileManifestFactory.cpp">
       <Filter>src\api</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bootstrap\BootstrapWarningMessage.cpp">
