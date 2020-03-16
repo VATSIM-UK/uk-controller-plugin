@@ -44,7 +44,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ApiRequestBuilderTest, ItBuildsAuthCheckRequests)
         {
-            CurlRequest expectedRequest("http://testurl.com/", CurlRequest::METHOD_GET);
+            CurlRequest expectedRequest("http://testurl.com/authorise", CurlRequest::METHOD_GET);
             expectedRequest.AddHeader("Authorization", "Bearer apikey");
             expectedRequest.AddHeader("Accept", "application/json");
             expectedRequest.AddHeader("Content-Type", "application/json");

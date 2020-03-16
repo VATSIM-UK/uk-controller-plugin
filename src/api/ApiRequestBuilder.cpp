@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
         CurlRequest ApiRequestBuilder::BuildAuthCheckRequest(void) const
         {
             return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/", CurlRequest::METHOD_GET)
+                CurlRequest(apiDomain + "/authorise", CurlRequest::METHOD_GET)
             );
         }
 

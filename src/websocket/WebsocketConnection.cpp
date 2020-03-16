@@ -18,10 +18,12 @@ namespace UKControllerPlugin {
             std::string port
         )
             : host(host), port(port), reconnectAttemptInterval(30), idleTimeout(30),
-            sslContext(boost::asio::ssl::context::tlsv12_client)
+            sslContext(boost::asio::ssl::context::tlsv12_client),
+            workGuard(boost::asio::make_work_guard(this->ioContext))
         {
             this->ResetWebsocket();
-            this->websocketThread = std::thread(std::bind(&WebsocketConnection::Loop, this));
+            this->processThread = std::thread(std::bind(&WebsocketConnection::Loop, this));
+            this->websocketThread = std::thread(std::bind(&WebsocketConnection::RunWebsocket, this));
         }
 
         /*
@@ -30,6 +32,9 @@ namespace UKControllerPlugin {
         WebsocketConnection::~WebsocketConnection(void)
         {
             this->threadsRunning = false;
+            // Stop the IO Context and wait for threads to join
+            this->ioContext.stop();
+            this->processThread.join();
             this->websocketThread.join();
 
             LogInfo("Disconnected from websocket");
@@ -139,8 +144,6 @@ namespace UKControllerPlugin {
 
                 std::lock_guard<std::mutex>(this->eventGuard);
 
-                this->ioContext.run();
-
                 // If not connected, try and connect
                 if (!this->connected) {
                     if (!this->connectionInProgress && std::chrono::system_clock::now() > this->nextReconnectAttempt) {
@@ -157,6 +160,8 @@ namespace UKControllerPlugin {
                             )
                         );
                     }
+                    // Sleep for a bit to give the CPU a break
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
                     continue;
                 }
 
@@ -192,7 +197,7 @@ namespace UKControllerPlugin {
                 }
 
                 // Sleep for a bit to give the CPU a break
-                std::this_thread::sleep_for(std::chrono::seconds(2));
+                std::this_thread::sleep_for(std::chrono::seconds(1));
             }
 
             // Once we get the instruction to terminate, throw away all the incoming messages until we
@@ -201,6 +206,14 @@ namespace UKControllerPlugin {
                 boost::system::error_code ec;
                 this->websocket->close(boost::beast::websocket::close_code::normal, ec);
             }
+        }
+
+        /*
+            Function that gets run by a thread to keep the IO Context going
+        */
+        void WebsocketConnection::RunWebsocket(void)
+        {
+            this->ioContext.run();
         }
 
         /*

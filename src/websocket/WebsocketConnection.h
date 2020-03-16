@@ -36,6 +36,7 @@ namespace UKControllerPlugin {
                 void ResetWebsocket(void);
                 void HandshakeHandler(boost::system::error_code ec);
                 void Loop(void);
+                void RunWebsocket(void);
                 void MessageSentHandler(boost::system::error_code ec, std::size_t bytes_transferred);
                 void ReadHandler(boost::beast::error_code ec, std::size_t bytes_transferred);
                 void ResolveHandler(
@@ -71,6 +72,9 @@ namespace UKControllerPlugin {
 
                 // The thread we're using to run the websocket.
                 std::thread websocketThread;
+
+                // The thread we're using to process websocket messages.
+                std::thread processThread;
 
                 // Messages that are yet to be processed by the rest of the plugin
                 std::queue<std::string> inboundMessages;
@@ -111,6 +115,9 @@ namespace UKControllerPlugin {
 
                 // How long to allow idling for.
                 std::chrono::seconds idleTimeout;
+
+                // Keeps the IO Context alive
+                boost::asio::executor_work_guard<boost::asio::io_context::executor_type> workGuard;
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

@@ -46,6 +46,28 @@ class ApiHelperTest : public Test
         NiceMock<MockCurlApi> mockCurlApi;
 };
 
+TEST_F(ApiHelperTest, TestItReturnsApiAuthorisedIf200)
+{
+    CurlResponse response("{\"message\": \"teapots\"}", false, 200);
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/authorise", CurlRequest::METHOD_GET)))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_TRUE(this->helper.CheckApiAuthorisation());
+}
+
+TEST_F(ApiHelperTest, TestItReturnsNotApiAuthorisedIfNot200)
+{
+    CurlResponse response("{\"message\": \"teapots\"}", false, 201);
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/authorise", CurlRequest::METHOD_GET)))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_FALSE(this->helper.CheckApiAuthorisation());
+}
+
 TEST_F(ApiHelperTest, TestItThrowsNotFoundExceptionIf404)
 {
     CurlResponse response("{\"version_disabled\": false, \"update_available\": false}", false, 404);
@@ -88,6 +110,17 @@ TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfServiceUnavailable)
         .WillOnce(Return(response));
 
     EXPECT_THROW(this->helper.UpdateCheck("1.0.0"), ApiException);
+}
+
+TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfTeapots)
+{
+    CurlResponse response("{\"message\": \"teapots\"}", false, 418);
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/authorise", CurlRequest::METHOD_GET)))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiException);
 }
 
 TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfServerError)

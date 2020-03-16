@@ -71,8 +71,7 @@ namespace UKControllerPlugin {
             if (
                 response.GetStatusCode() != this->STATUS_CREATED &&
                 response.GetStatusCode() != this->STATUS_NO_CONTENT &&
-                response.GetStatusCode() != this->STATUS_OK &&
-                response.GetStatusCode() != this->STATUS_TEAPOT
+                response.GetStatusCode() != this->STATUS_OK
             ) {
                 LogError("Unknown API response occured, HTTP status was " + std::to_string(response.GetStatusCode()));
                 throw ApiException("Unknown response");
@@ -159,7 +158,7 @@ namespace UKControllerPlugin {
         bool ApiHelper::CheckApiAuthorisation(void) const
         {
             return this->MakeApiRequest(this->requestBuilder.BuildAuthCheckRequest()).GetStatusCode() ==
-                this->STATUS_TEAPOT;
+                this->STATUS_OK;
         }
 
         /*
