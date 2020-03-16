@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin {
     namespace Dependency {
-        class DependencyCache;
+        class DependencyLoaderInterface;
     }  // namespace Dependency
     namespace Bootstrap {
         struct PersistenceContainer;
@@ -27,11 +27,11 @@ namespace UKControllerPlugin {
             public:
                 static void BootstrapPlugin(
                     UKControllerPlugin::Bootstrap::PersistenceContainer & persistence,
-                    const UKControllerPlugin::Dependency::DependencyCache & dependency
+                    UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
                 );
 
                 // The file to read to get the prenote data
-                static const std::string dependencyFile;
+                static const std::string dependencyKey;
         };
     }  // namespace Prenote
 }  // namespace UKControllerPlugin

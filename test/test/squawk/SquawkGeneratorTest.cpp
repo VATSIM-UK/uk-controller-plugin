@@ -11,7 +11,7 @@
 #include "flightplan/StoredFlightplan.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "squawk/SquawkAssignment.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "airfield/AirfieldCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ActiveCallsign.h"
@@ -33,7 +33,7 @@ using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Squawk::SquawkAssignment;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;

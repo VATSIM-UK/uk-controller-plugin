@@ -21,10 +21,9 @@ namespace UKControllerPlugin {
 
         WinApi::WinApi(
             HINSTANCE dllInstance,
-            std::string filesDirectory,
-            std::wstring filesDirectoryW
+            std::wstring filesDirectory
         )
-            : WinApiInterface(dllInstance), filesDirectory(filesDirectory), filesDirectoryW(filesDirectoryW)
+            : WinApiInterface(dllInstance), filesDirectory(filesDirectory)
         {
             this->dllInstance = dllInstance;
         }
@@ -32,7 +31,7 @@ namespace UKControllerPlugin {
         /*
             Creates a folder if it doesn't already exist.
         */
-        bool WinApi::CreateFolder(std::string folder)
+        bool WinApi::CreateFolder(std::wstring folder)
         {
             try {
                 std::filesystem::create_directory(folder);
@@ -45,7 +44,7 @@ namespace UKControllerPlugin {
         /*
             Creates a folder and all those before it.
         */
-        bool WinApi::CreateFolderRecursive(std::string folder)
+        bool WinApi::CreateFolderRecursive(std::wstring folder)
         {
             try {
                 std::filesystem::create_directories(folder);
@@ -58,10 +57,10 @@ namespace UKControllerPlugin {
         /*
             Create a folder from the UK file root, recursively.
         */
-        bool WinApi::CreateLocalFolderRecursive(std::string folder)
+        bool WinApi::CreateLocalFolderRecursive(std::wstring folder)
         {
             try {
-                std::filesystem::create_directories(this->filesDirectory + "/" + folder);
+                std::filesystem::create_directories(this->filesDirectory + L"/" + folder);
                 return true;
             } catch (std::filesystem::filesystem_error) {
                 return false;
@@ -71,7 +70,7 @@ namespace UKControllerPlugin {
         /*
             Deletes a file from the filesystem.
         */
-        bool WinApi::DeleteGivenFile(std::string filename)
+        bool WinApi::DeleteGivenFile(std::wstring filename)
         {
             std::wstring fileWide(filename.length(), L' ');
             std::copy(filename.begin(), filename.end(), fileWide.begin());
@@ -82,7 +81,7 @@ namespace UKControllerPlugin {
         /*
             Returns true if a file exists, false otherwise.
         */
-        bool WinApi::FileExists(std::string filename)
+        bool WinApi::FileExists(std::wstring filename)
         {
             try {
                 return std::filesystem::exists(this->GetFullPathToLocalFile(filename));
@@ -147,17 +146,9 @@ namespace UKControllerPlugin {
         /*
             Gets the full path to a given file
         */
-        std::string WinApi::GetFullPathToLocalFile(std::string relativePath) const
-        {
-            return this->filesDirectory + "/" + relativePath;
-        }
-
-        /*
-            Gets the full path to a given file when that file is in WString
-        */
         std::wstring WinApi::GetFullPathToLocalFile(std::wstring relativePath) const
         {
-            return this->filesDirectoryW + L"/" + relativePath;
+            return this->filesDirectory + L"/" + relativePath;
         }
 
         /*
@@ -179,9 +170,9 @@ namespace UKControllerPlugin {
         /*
             Write a given string into a file.
         */
-        void WinApi::WriteToFile(std::string filename, std::string data, bool truncate)
+        void WinApi::WriteToFile(std::wstring filename, std::string data, bool truncate)
         {
-            std::string newFilename = this->GetFullPathToLocalFile(filename);
+            std::wstring newFilename = this->GetFullPathToLocalFile(filename);
             this->CreateMissingDirectories(newFilename);
             std::ofstream file(
                 newFilename,
@@ -197,7 +188,7 @@ namespace UKControllerPlugin {
         /*
             Creates the directories needed for a given file.
         */
-        void WinApi::CreateMissingDirectories(std::string endFile)
+        void WinApi::CreateMissingDirectories(std::wstring endFile)
         {
             try {
                 std::filesystem::create_directories(endFile.substr(0, endFile.find_last_of('/')));
@@ -208,19 +199,6 @@ namespace UKControllerPlugin {
 
         /*
             Return the entire contents of a file as a string.
-        */
-        std::string WinApi::ReadFromFile(std::string filename, bool relativePath)
-        {
-            return this->ReadFileContents(
-                std::ifstream(
-                    relativePath ? this->GetFullPathToLocalFile(filename) : filename,
-                    std::ifstream::in
-                )
-            );
-        }
-
-        /*
-            Return the entire contents of a file as a string - except the filename is widechar
         */
         std::string WinApi::ReadFromFile(std::wstring filename, bool relativePath)
         {

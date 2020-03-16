@@ -5,7 +5,7 @@
 #include "task/TaskRunner.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "airfield/AirfieldCollection.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
@@ -49,6 +49,8 @@
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "sectorfile/RunwayCollection.h"
+#include "handoff/HandoffCollection.h"
+#include "regional/RegionalPressureManager.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -98,6 +100,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Countdown::CountdownTimer> countdownTimer;
             std::shared_ptr<UKControllerPlugin::Countdown::TimerConfigurationManager> timerConfigurationManager;
             std::shared_ptr<UKControllerPlugin::MinStack::MinStackManager> minStack;
+            std::shared_ptr<UKControllerPlugin::Regional::RegionalPressureManager> regionalPressureManager;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkAssignment> squawkAssignmentRules;
             std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawkEvents;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkGenerator> squawkGenerator;
@@ -105,6 +108,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Hold::HoldProfileManager> holdProfiles;
             std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
             std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
+            std::unique_ptr<UKControllerPlugin::Handoff::HandoffCollection> handoffs;
 
             // Collections that are spawned multiple times.
             std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;
@@ -117,7 +121,7 @@ namespace UKControllerPlugin {
             // Large collections that we don't want to go onto the stack
             std::unique_ptr<const UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator> initialAltitudes;
             std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
-            std::unique_ptr<UKControllerPlugin::Airfield::AirfieldOwnershipManager> airfieldOwnership;
+            std::unique_ptr<UKControllerPlugin::Ownership::AirfieldOwnershipManager> airfieldOwnership;
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
             std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
             std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;

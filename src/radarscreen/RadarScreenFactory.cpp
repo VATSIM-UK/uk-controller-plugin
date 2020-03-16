@@ -15,12 +15,14 @@
 #include "hold/HoldModule.h"
 #include "bootstrap/HelperBootstrap.h"
 #include "sectorfile/SectorFileBootstrap.h"
+#include "regional/RegionalPressureModule.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Countdown::CountdownModule;
 using UKControllerPlugin::MinStack::MinStackModule;
+using UKControllerPlugin::Regional::RegionalPressureModule;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::RadarScreen::ScreenControlsBootstrap;
 using UKControllerPlugin::Command::CommandHandlerCollection;
@@ -77,6 +79,16 @@ namespace UKControllerPlugin {
             MinStackModule::BootstrapRadarScreen(
                 *persistence.pluginFunctionHandlers,
                 *persistence.minStack,
+                renderers,
+                configurableDisplays,
+                *persistence.brushes,
+                userSettingHandlers,
+                *persistence.dialogManager
+            );
+
+            RegionalPressureModule ::BootstrapRadarScreen(
+                *persistence.pluginFunctionHandlers,
+                *persistence.regionalPressureManager,
                 renderers,
                 configurableDisplays,
                 *persistence.brushes,

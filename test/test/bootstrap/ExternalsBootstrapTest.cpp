@@ -39,14 +39,6 @@ namespace UKControllerPluginTest {
                     return widePath;
                 }
 
-                /*
-                    Get the My Documents path
-                */
-                std::string GetMyDocumentsPathNarrow(void)
-                {
-                    return HelperFunctions::ConvertToRegularString(this->GetMyDocumentsPath());
-                }
-
                 NiceMock<MockWinApi> winApiMock;
         };
 
@@ -67,8 +59,8 @@ namespace UKControllerPluginTest {
             ExternalsBootstrap::Bootstrap(container, dll);
 
             EXPECT_EQ(
-                container.windows->GetFullPathToLocalFile("testfile.json"),
-                ExternalsBootstrap::GetPluginFileRoot() + "/testfile.json"
+                container.windows->GetFullPathToLocalFile(L"testfile.json"),
+                ExternalsBootstrap::GetPluginFileRoot() + L"/testfile.json"
             );
         }
 
@@ -100,21 +92,15 @@ namespace UKControllerPluginTest {
             EXPECT_NO_THROW(container.graphics->SetDeviceHandle(handle));
         }
 
-        TEST_F(ExternalsBootstrapTest, GetPluginFileRootWideReturnsMyDocumentsEuroscopeFolder)
-        {
-            std::wstring expected = this->GetMyDocumentsPath() + std::wstring(L"/EuroScope/ukcp");
-            EXPECT_EQ(expected, ExternalsBootstrap::GetPluginFileRootWide());
-        }
-
         TEST_F(ExternalsBootstrapTest, GetPluginFileRootReturnsMyDocumentsEuroscopeFolder)
         {
-            std::string expected = this->GetMyDocumentsPathNarrow() + "/EuroScope/ukcp";
+            std::wstring expected = this->GetMyDocumentsPath() + L"/EuroScope/ukcp";
             EXPECT_EQ(expected, ExternalsBootstrap::GetPluginFileRoot());
         }
 
         TEST_F(ExternalsBootstrapTest, SetupUkcpFolderRootThrowsExceptionOnFailedCreatingEuroscopeFolder)
         {
-            std::string expected = this->GetMyDocumentsPathNarrow() + "/EuroScope";
+            std::wstring expected = this->GetMyDocumentsPath() + L"/EuroScope";
 
             ON_CALL(this->winApiMock, CreateFolder(expected))
                 .WillByDefault(Return(false));
@@ -125,7 +111,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ExternalsBootstrapTest, SetupUkcpFolderRootThrowsExceptionOnFailedCreatingUkcpFolder)
         {
-            std::string expected = this->GetMyDocumentsPathNarrow() + "/EuroScope/ukcp";
+            std::wstring expected = this->GetMyDocumentsPath() + L"/EuroScope/ukcp";
 
             ON_CALL(this->winApiMock, CreateFolder(_))
                 .WillByDefault(Return(true));
@@ -138,7 +124,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ExternalsBootstrapTest, SetupUkcpFolderRootCreatesFolders)
         {
-            EXPECT_CALL(this->winApiMock, CreateFolderRecursive(this->GetMyDocumentsPathNarrow() + "/EuroScope/ukcp"))
+            EXPECT_CALL(this->winApiMock, CreateFolderRecursive(this->GetMyDocumentsPath() + L"/EuroScope/ukcp"))
                 .Times(1)
                 .WillOnce(Return(true));
 

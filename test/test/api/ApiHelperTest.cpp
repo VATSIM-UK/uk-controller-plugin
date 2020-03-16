@@ -26,6 +26,7 @@ using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::_;
 
 namespace UKControllerPluginTest {
 namespace Api {
@@ -44,6 +45,28 @@ class ApiHelperTest : public Test
         NiceMock<MockWinApi> mockWinApi;
         NiceMock<MockCurlApi> mockCurlApi;
 };
+
+TEST_F(ApiHelperTest, TestItReturnsApiAuthorisedIf200)
+{
+    CurlResponse response("{\"message\": \"teapots\"}", false, 200);
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/authorise", CurlRequest::METHOD_GET)))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_TRUE(this->helper.CheckApiAuthorisation());
+}
+
+TEST_F(ApiHelperTest, TestItReturnsNotApiAuthorisedIfNot200)
+{
+    CurlResponse response("{\"message\": \"teapots\"}", false, 201);
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/authorise", CurlRequest::METHOD_GET)))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_FALSE(this->helper.CheckApiAuthorisation());
+}
 
 TEST_F(ApiHelperTest, TestItThrowsNotFoundExceptionIf404)
 {
@@ -87,6 +110,17 @@ TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfServiceUnavailable)
         .WillOnce(Return(response));
 
     EXPECT_THROW(this->helper.UpdateCheck("1.0.0"), ApiException);
+}
+
+TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfTeapots)
+{
+    CurlResponse response("{\"message\": \"teapots\"}", false, 418);
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/authorise", CurlRequest::METHOD_GET)))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiException);
 }
 
 TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfServerError)
@@ -153,17 +187,6 @@ TEST_F(ApiHelperTest, UpdateCheckReturnsVersionDisabledIfDisabled)
         .WillOnce(Return(response));
 
     EXPECT_EQ(ApiHelper::UPDATE_VERSION_DISABLED, this->helper.UpdateCheck("1.0.0"));
-}
-
-TEST_F(ApiHelperTest, FetchDependencyManifestReturnsCorrectly)
-{
-    CurlResponse response("{\"manifest\": {\"test1.json\": {\"md5\": \"md5\", \"uri\": \"uri\"}}}", false, 200);
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/dependency", CurlRequest::METHOD_GET)))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_FALSE(this->helper.FetchDependencyManifest().IsEmpty());
 }
 
 TEST_F(ApiHelperTest, FetchRemoteFileReturnsFileString)
@@ -566,22 +589,6 @@ TEST_F(ApiHelperTest, ItCanUpdateTheKey)
     EXPECT_TRUE(this->helper.GetApiKey() == "notthekey");
 }
 
-TEST_F(ApiHelperTest, GetDependencyReturnsJsonData)
-{
-    nlohmann::json data;
-    data["foo"] = "bar";
-    data["big"] = "small";
-
-    CurlResponse response(data.dump(), false, 200);
-    CurlRequest expectedRequest(GetApiCurlRequest("/dependency/somecoolthing", CurlRequest::METHOD_GET));
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_EQ(data, this->helper.GetDependency({"local", "dependency/somecoolthing", "default"}));
-}
-
 TEST_F(ApiHelperTest, AuthoriseWebsocketChannelReturnsTheAuthCode)
 {
     nlohmann::json responseData;
@@ -684,6 +691,55 @@ TEST_F(ApiHelperTest, GetMinStackLevelsReturnsMinStackData)
         .WillOnce(Return(response));
 
     EXPECT_EQ(responseData, this->helper.GetMinStackLevels());
+}
+
+TEST_F(ApiHelperTest, GetMinStackLevelsReturnsRegionalPressureData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+        "/regional-pressure",
+        CurlRequest::METHOD_GET
+    )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetRegionalPressures());
+}
+
+TEST_F(ApiHelperTest, GetUriReturnsUriData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/someuri",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetUri("http://ukcp.test.com/someuri"));
+}
+
+TEST_F(ApiHelperTest, GetUriThrowsExceptionIfNonUkcpRoute)
+{
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(_))
+        .Times(0);
+
+    EXPECT_THROW(this->helper.GetUri("http://ukcp.test.org/someuri"), ApiException);
 }
 }  // namespace Api
 }  // namespace UKControllerPluginTest

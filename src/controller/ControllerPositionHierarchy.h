@@ -19,6 +19,7 @@ class ControllerPositionHierarchy
         void AddPosition(const UKControllerPlugin::Controller::ControllerPosition & position);
         size_t CountPositions(void) const;
         bool PositionInHierarchy(const UKControllerPlugin::Controller::ControllerPosition & position) const;
+        bool operator==(const UKControllerPlugin::Controller::ControllerPositionHierarchy& compare) const;
 
         // Public type definitions for a custom iterator over the class.
         typedef std::vector<std::reference_wrapper<const ControllerPosition>> PositionHierarchy;

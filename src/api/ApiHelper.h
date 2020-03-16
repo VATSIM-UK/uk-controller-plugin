@@ -2,7 +2,6 @@
 #include "api/ApiResponse.h"
 #include "api/ApiRequestBuilder.h"
 #include "api/ApiInterface.h"
-#include "dependency/DependencyData.h"
 #include "hold/HoldProfile.h"
 
 namespace UKControllerPlugin {
@@ -43,18 +42,17 @@ namespace UKControllerPlugin {
                 std::string AuthoriseWebsocketChannel(std::string socketId, std::string channel) const override;
                 bool CheckApiAuthorisation(void) const override;
                 void DeleteSquawkAssignment(std::string callsign) const override;
-                UKControllerPlugin::Api::RemoteFileManifest FetchDependencyManifest(void) const override;
                 std::string FetchRemoteFile(std::string uri) const override;
                 UKControllerPlugin::Squawk::ApiSquawkAllocation GetAssignedSquawk(std::string callsign) const override;
                 std::string GetApiDomain(void) const override;
                 std::string GetApiKey(void) const override;
+                nlohmann::json GetDependencyList(void) const override;
                 nlohmann::json GetHoldDependency(void) const override;
                 nlohmann::json GetGenericHoldProfiles(void) const override;
                 nlohmann::json GetUserHoldProfiles(void) const override;
-                nlohmann::json GetMinStackLevels(void) const;
-                nlohmann::json GetDependency(
-                    UKControllerPlugin::Dependency::DependencyData dependency
-                ) const override;
+                nlohmann::json GetMinStackLevels(void) const override;
+                nlohmann::json GetRegionalPressures(void) const override;
+                nlohmann::json GetUri(std::string uri) const;
                 void DeleteUserHoldProfile(unsigned int profileId) const override;
                 unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
                 void UpdateUserHoldProfile(

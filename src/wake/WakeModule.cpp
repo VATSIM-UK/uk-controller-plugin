@@ -3,33 +3,26 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "wake/CreateWakeMappings.h"
 #include "WakeCategoryEventHandler.h"
-#include "dependency/DependencyCache.h"
+#include "dependency/DependencyLoaderInterface.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Wake::CreateWakeMappings;
 using UKControllerPlugin::Wake::WakeCategoryEventHandler;
 
 namespace UKControllerPlugin {
     namespace Wake {
 
-        const std::string dependencyFile = "wake-categories.json";
+        const std::string dependencyFile = "DEPENDENCY_WAKE";
         const int tagItemId = 105;
 
         /*
             Bootstrap everything
         */
-        void BootstrapPlugin(const PersistenceContainer & container, const DependencyCache & dependencies)
+        void BootstrapPlugin(const PersistenceContainer & container, DependencyLoaderInterface& dependencies)
         {
             // Create the data
-            nlohmann::json data;
-            try {
-                data = nlohmann::json::parse(dependencies.GetDependency(dependencyFile));
-            } catch (nlohmann::json::exception) {
-                LogError("Error wake categories file, invalid JSON");
-            } catch (...) {
-                LogError("GEneral area parsing wake categories file");
-            }
+            nlohmann::json data = dependencies.LoadDependency(dependencyFile, nlohmann::json::object());
 
             // Create handler and register
             std::shared_ptr<WakeCategoryEventHandler> handler = std::make_shared<WakeCategoryEventHandler>(

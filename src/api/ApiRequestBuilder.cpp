@@ -2,7 +2,6 @@
 #include "api/ApiRequestBuilder.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
-using UKControllerPlugin::Dependency::DependencyData;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -30,7 +29,7 @@ namespace UKControllerPlugin {
         CurlRequest ApiRequestBuilder::BuildAuthCheckRequest(void) const
         {
             return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/", CurlRequest::METHOD_GET)
+                CurlRequest(apiDomain + "/authorise", CurlRequest::METHOD_GET)
             );
         }
 
@@ -45,12 +44,12 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Download a dependency from the API
+            Method for querying any API URI
         */
-        CurlRequest ApiRequestBuilder::BuildDependencyRequest(DependencyData dependency) const
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildGetUriRequest(std::string uri) const
         {
             return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/" + dependency.remotePath, CurlRequest::METHOD_GET)
+                CurlRequest(uri, CurlRequest::METHOD_GET)
             );
         }
 
@@ -97,6 +96,17 @@ namespace UKControllerPlugin {
         UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildMinStackLevelRequest(void) const
         {
             return this->AddCommonHeaders(CurlRequest(apiDomain + "/msl", CurlRequest::METHOD_GET));
+        }
+
+        /*
+            Builds a request for all the regional pressures
+        */
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildRegionalPressureRequest(void) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(apiDomain + "/regional-pressure",
+                CurlRequest::METHOD_GET)
+            );
         }
 
         /*

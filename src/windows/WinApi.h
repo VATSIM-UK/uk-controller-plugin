@@ -15,16 +15,14 @@ namespace UKControllerPlugin {
             public:
                 WinApi(
                     HINSTANCE dllInstance,
-                    std::string filesDirectory,
-                    std::wstring filesDirectoryW
+                    std::wstring filesDirectory
                 );
-                bool CreateFolder(std::string folder);
-                bool CreateFolderRecursive(std::string folder) override;
-                bool CreateLocalFolderRecursive(std::string folder) override;
-                bool DeleteGivenFile(std::string filename);
-                bool FileExists(std::string filename);
-                std::string GetFullPathToLocalFile(std::string relativePath) const;
-                std::wstring GetFullPathToLocalFile(std::wstring relativePath) const;
+                bool CreateFolder(std::wstring folder) override;
+                bool CreateFolderRecursive(std::wstring folder) override;
+                bool CreateLocalFolderRecursive(std::wstring folder) override;
+                bool DeleteGivenFile(std::wstring filename) override;
+                bool FileExists(std::wstring filename) override;
+                std::wstring GetFullPathToLocalFile(std::wstring relativePath) const override;
                 std::wstring FileOpenDialog(
                     std::wstring title,
                     UINT numFileTypes,
@@ -32,9 +30,8 @@ namespace UKControllerPlugin {
                 ) const override;
                 int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) override;
                 void PlayWave(LPCTSTR sound);
-                std::string ReadFromFile(std::string filename, bool relativePath = true);
-                std::string ReadFromFile(std::wstring filename, bool relativePath = true);
-                void WriteToFile(std::string filename, std::string data, bool truncate);
+                std::string ReadFromFile(std::wstring filename, bool relativePath = true) override;
+                void WriteToFile(std::wstring filename, std::string data, bool truncate) override;
 
                 // Inherited via DialogProviderInterface
                 void OpenDialog(
@@ -43,17 +40,14 @@ namespace UKControllerPlugin {
                 ) const override;
 
             private:
-                void CreateMissingDirectories(std::string endFile);
+                void CreateMissingDirectories(std::wstring endFile);
                 std::string ReadFileContents(std::ifstream file);
 
                 // DLL Instance for the plugin
                 HINSTANCE dllInstance;
 
-                // Working directory for file operations
-                const std::string filesDirectory;
-
                 // Working directory for file operations in widestring
-                const std::wstring filesDirectoryW;
+                const std::wstring filesDirectory;
         };
     }  // namespace Windows
 }  // namespace UKControllerPlugin

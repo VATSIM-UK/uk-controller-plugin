@@ -1,10 +1,10 @@
 #include "pch/stdafx.h"
 #include "bootstrap/CollectionBootstrap.h"
-#include "dependency/DependencyCache.h"
+#include "dependency/DependencyLoaderInterface.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "airfield/AirfieldCollectionFactory.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "airfield/AirfieldCollection.h"
@@ -13,10 +13,10 @@
 #include "command/CommandHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyCache;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -25,14 +25,12 @@ using UKControllerPlugin::Command::CommandHandlerCollection;
 namespace UKControllerPlugin {
     namespace Bootstrap {
 
-        void CollectionBootstrap::BootstrapPlugin(PersistenceContainer & persistence, DependencyCache & dependency)
-        {
+        void CollectionBootstrap::BootstrapPlugin(
+            PersistenceContainer & persistence,
+            DependencyLoaderInterface & dependency
+        ) {
             // Reset resources
-            persistence.activeCallsigns.reset(new ActiveCallsignCollection);
             persistence.airfields = std::move(AirfieldCollectionFactory::Create(dependency));
-            persistence.airfieldOwnership.reset(
-                new AirfieldOwnershipManager(*persistence.airfields, *persistence.activeCallsigns)
-            );
             persistence.flightplans.reset(new StoredFlightplanCollection);
         }
     }  // namespace Bootstrap

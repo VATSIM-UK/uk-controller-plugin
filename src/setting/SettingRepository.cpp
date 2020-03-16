@@ -21,15 +21,17 @@ namespace UKControllerPlugin {
         */
         void SettingRepository::AddSettingsFromJsonFile(std::string relativePath, bool overwrite)
         {
+            std::wstring widePath = HelperFunctions::ConvertToWideString(relativePath);
+
             // If the file doesn't exist locally, there's no point.
-            if (!this->winApi.FileExists(this->settingFolder + "/" + relativePath)) {
+            if (!this->winApi.FileExists(this->settingFolder + L"/" + widePath)) {
                 return;
             }
 
             nlohmann::json settingsJson;
             try {
                 settingsJson = nlohmann::json::parse(
-                    this->winApi.ReadFromFile(this->settingFolder + "/" + relativePath)
+                    this->winApi.ReadFromFile(this->settingFolder + L"/" + widePath)
                 );
             } catch (nlohmann::json::exception) {
                 LogError("Settings file " + relativePath + " is corrupt");
@@ -131,7 +133,11 @@ namespace UKControllerPlugin {
                 ++it
             ) {
                 try {
-                    winApi.WriteToFile(this->settingFolder + "/" + it->first, nlohmann::json(it->second).dump(4), true);
+                    std::wstring widePath = HelperFunctions::ConvertToWideString(it->first);
+                    winApi.WriteToFile(
+                        this->settingFolder + L"/" + widePath, nlohmann::json(it->second).dump(4),
+                        true
+                    );
                 } catch (std::ifstream::failure) {
 
                 }

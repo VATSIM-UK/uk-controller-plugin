@@ -38,6 +38,20 @@ CurlRequest GetApiCurlRequest(
 }
 
 /*
+    Builds an expected cURL request with no body
+*/
+CurlRequest GetApiGetUriCurlRequest(
+    std::string route,
+    std::string method
+) {
+    CurlRequest request(route, method);
+    request.AddHeader("Authorization", "Bearer " + mockApiKey);
+    request.AddHeader("Accept", "application/json");
+    request.AddHeader("Content-Type", "application/json");
+    return request;
+}
+
+/*
     Returns an API Request Builder
 */
 ApiRequestBuilder GetApiRequestBuilder(void)

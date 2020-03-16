@@ -31,6 +31,8 @@ dynamically to the plugin.
 - UK Wake Categories
 - QNH change notifications
 - Hold Manager
+- Departure handoff indicator
+- Altimeter setting regions and regional pressures
 
 ## Setting Up The Project Locally
 

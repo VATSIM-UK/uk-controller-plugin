@@ -6,14 +6,12 @@
 #include "log/LoggerBootstrap.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
-#include "dependency/DependencyBootstrap.h"
 #include "plugin/UkPluginBootstrap.h"
-#include "dependency/DependencyCache.h"
 #include "initialaltitude/InitialAltitudeModule.h"
 #include "intention/IntentionCodeModule.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "login/LoginModule.h"
-#include "airfield/AirfieldOwnershipModule.h"
+#include "ownership/AirfieldOwnershipModule.h"
 #include "radarscreen/RadarScreenFactory.h"
 #include "update/PluginUpdateChecker.h"
 #include "countdown/CountdownModule.h"
@@ -33,13 +31,16 @@
 #include "offblock/EstimatedDepartureTimeBootstrap.h"
 #include "wake/WakeModule.h"
 #include "hold/HoldModule.h"
-#include "dependency/DependencyProviderInterface.h"
-#include "dependency/DependencyProviderFactory.h"
 #include "metar/PressureMonitorBootstrap.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "datablock/DatablockBoostrap.h"
 #include "websocket/WebsocketBootstrap.h"
 #include "sectorfile/SectorFileBootstrap.h"
+#include "dependency/UpdateDependencies.h"
+#include "dependency/DependencyLoader.h"
+#include "handoff/HandoffModule.h"
+#include "controller/ControllerBootstrap.h"
+#include "regional/RegionalPressureModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -48,17 +49,16 @@ using UKControllerPlugin::Log::LoggerBootstrap;
 using UKControllerPlugin::Bootstrap::HelperBootstrap;
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
 using UKControllerPlugin::Bootstrap::EventHandlerCollectionBootstrap;
-using UKControllerPlugin::Bootstrap::DependencyBootstrap;
 using UKControllerPlugin::Bootstrap::UkPluginBootstrap;
-using UKControllerPlugin::Dependency::DependencyCache;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::IntentionCode::IntentionCodeModule;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::Controller::LoginModule;
-using UKControllerPlugin::Airfield::AirfieldOwnershipModule;
+using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
 using UKControllerPlugin::Update::PluginUpdateChecker;
 using UKControllerPlugin::Countdown::CountdownModule;
 using UKControllerPlugin::MinStack::MinStackModule;
+using UKControllerPlugin::Regional::RegionalPressureModule;
 using UKControllerPlugin::Bootstrap::PostInit;
 using UKControllerPlugin::Plugin::PluginVersion;
 using UKControllerPlugin::Squawk::SquawkModule;
@@ -71,9 +71,8 @@ using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Bootstrap::DuplicatePlugin;
 using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
-using UKControllerPlugin::Dependency::DependencyProviderInterface;
-using UKControllerPlugin::Dependency::GetDependencyProvider;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
+using UKControllerPlugin::Dependency::DependencyLoader;
 
 namespace UKControllerPlugin {
 
@@ -186,26 +185,22 @@ namespace UKControllerPlugin {
         }
 
         // Dependency loading can happen regardless of plugin version or API status.
-        DependencyCache dependencyCache = DependencyBootstrap::Bootstrap(
+        UKControllerPlugin::Dependency::UpdateDependencies(
             *this->container->api,
-            *this->container->windows,
-            *this->container->curl
+            *this->container->windows
         );
-
-        // Load all the "new" dependencies that don't come from a manifest.
-        std::unique_ptr<DependencyProviderInterface> dependencyProvider = GetDependencyProvider(
-            *container->api,
-            *container->windows,
-            apiAuthorised
+        DependencyLoader loader(
+            *this->container->windows
         );
-        LogInfo("Loading new dependencies with provider " + dependencyProvider->GetProviderType());
 
         // Boostrap all the modules at a plugin level
-        CollectionBootstrap::BootstrapPlugin(*this->container, dependencyCache);
+        UKControllerPlugin::Controller::BootstrapPlugin(*this->container, loader);
+        CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
+        AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap helpers
-        UKControllerPlugin::Wake::BootstrapPlugin(*this->container, dependencyCache);
+        UKControllerPlugin::Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
         DeferredEventBootstrap(*this->container->timedHandler);
@@ -226,7 +221,7 @@ namespace UKControllerPlugin {
             this->updateStatus == PluginUpdateChecker::versionAllowed &&
             !this->duplicatePlugin->Duplicate()
         ) {
-            InitialAltitudeModule::BootstrapPlugin(dependencyCache, *this->container);
+            InitialAltitudeModule::BootstrapPlugin(loader, *this->container);
         }
 
         IntentionCodeModule::BootstrapPlugin(*this->container);
@@ -239,8 +234,16 @@ namespace UKControllerPlugin {
             *this->container->websocketProcessors,
             *this->container->dialogManager
         );
+        RegionalPressureModule::BootstrapPlugin(
+            this->container->regionalPressureManager,
+            *this->container->taskRunner,
+            *this->container->api,
+            *this->container->websocketProcessors,
+            *this->container->dialogManager,
+            loader
+        );
         UKControllerPlugin::Hold::BootstrapPlugin(
-            *dependencyProvider,
+            loader,
             *this->container,
             *this->container->userMessager
         );
@@ -254,8 +257,8 @@ namespace UKControllerPlugin {
             this->duplicatePlugin->Duplicate()
         );
 
-        AirfieldOwnershipModule::BootstrapPlugin(*this->container, dependencyCache);
-        PrenoteModule::BootstrapPlugin(*this->container, dependencyCache);
+        PrenoteModule::BootstrapPlugin(*this->container, loader);
+        UKControllerPlugin::Handoff::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap other things
         ActualOffBlockTimeBootstrap::BootstrapPlugin(*this->container);

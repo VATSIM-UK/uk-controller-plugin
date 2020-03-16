@@ -9,7 +9,6 @@
 #include "curl/CurlResponse.h"
 #include "squawk/SquawkValidator.h"
 #include "windows/WinApiInterface.h"
-#include "api/RemoteFileManifestFactory.h"
 
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Curl::CurlResponse;
@@ -21,9 +20,7 @@ using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPlugin::Squawk::SquawkValidator;
 using UKControllerPlugin::Windows::WinApiInterface;
-using UKControllerPlugin::Api::RemoteFileManifestFactory;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
-using UKControllerPlugin::Dependency::DependencyData;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -74,8 +71,7 @@ namespace UKControllerPlugin {
             if (
                 response.GetStatusCode() != this->STATUS_CREATED &&
                 response.GetStatusCode() != this->STATUS_NO_CONTENT &&
-                response.GetStatusCode() != this->STATUS_OK &&
-                response.GetStatusCode() != this->STATUS_TEAPOT
+                response.GetStatusCode() != this->STATUS_OK
             ) {
                 LogError("Unknown API response occured, HTTP status was " + std::to_string(response.GetStatusCode()));
                 throw ApiException("Unknown response");
@@ -162,7 +158,7 @@ namespace UKControllerPlugin {
         bool ApiHelper::CheckApiAuthorisation(void) const
         {
             return this->MakeApiRequest(this->requestBuilder.BuildAuthCheckRequest()).GetStatusCode() ==
-                this->STATUS_TEAPOT;
+                this->STATUS_OK;
         }
 
         /*
@@ -171,18 +167,6 @@ namespace UKControllerPlugin {
         void ApiHelper::DeleteSquawkAssignment(std::string callsign) const
         {
             this->MakeApiRequest(this->requestBuilder.BuildSquawkAssignmentDeletionRequest(callsign));
-        }
-
-        /*
-            Fetches the dependency manifest.
-        */
-        UKControllerPlugin::Api::RemoteFileManifest ApiHelper::FetchDependencyManifest(void) const
-        {
-            RemoteFileManifestFactory manifestFactory(this->winApi);
-
-            return manifestFactory.CreateFromData(
-                this->MakeApiRequest(this->requestBuilder.BuildDependencyListRequest()).GetRawData()
-            );
         }
 
         /*
@@ -222,6 +206,11 @@ namespace UKControllerPlugin {
             return this->requestBuilder.GetApiKey();
         }
 
+        nlohmann::json ApiHelper::GetDependencyList(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildDependencyListRequest()).GetRawData();
+        }
+
         /*
             Returns the hold data dependency
         */
@@ -254,12 +243,20 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildMinStackLevelRequest()).GetRawData();
         }
 
-        /*
-            Get a dependency from the API
-        */
-        nlohmann::json ApiHelper::GetDependency(DependencyData dependency) const
+        nlohmann::json ApiHelper::GetRegionalPressures(void) const
         {
-            return this->MakeApiRequest(this->requestBuilder.BuildDependencyRequest(dependency)).GetRawData();
+            return this->MakeApiRequest(this->requestBuilder.BuildRegionalPressureRequest()).GetRawData();
+        }
+
+        nlohmann::json ApiHelper::GetUri(std::string uri) const
+        {
+            if (uri.find(this->GetApiDomain()) == std::string::npos)
+            {
+                LogCritical("Attempted to get URI on non-ukcp route");
+                throw ApiException("Attempted to get URI on non-ukcp route");
+            }
+
+            return this->MakeApiRequest(this->requestBuilder.BuildGetUriRequest(uri)).GetRawData();
         }
 
         /*

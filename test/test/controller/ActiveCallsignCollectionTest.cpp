@@ -2,166 +2,244 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
+#include "mock/MockActiveCallsignEventHandler.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPluginTest::Controller::MockActiveCallsignEventHandler;
+using ::testing::NiceMock;
+using ::testing::Return;
+using ::testing::Test;
+using ::testing::Ref;
 
 namespace UKControllerPluginTest {
     namespace Controller {
 
-        TEST(ActiveCallsignCollection, AddCallsignThrowsExceptionIfAlreadyAdded)
+        class ActiveCallsignCollectionTest : public Test
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
-            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos);
+            public:
 
-            EXPECT_NO_THROW(collection.AddCallsign(callsign));
-            EXPECT_THROW(collection.AddCallsign(callsign), std::invalid_argument);
+                ActiveCallsignCollectionTest()
+                    : testPosition("LON_S_CTR", 129.420, "CTR", {}),
+                    testCallsign("LON_S_CTR", "Testy Boi", testPosition)
+                {
+                    handler1.reset(new NiceMock<MockActiveCallsignEventHandler>());
+                    handler2.reset(new NiceMock<MockActiveCallsignEventHandler>());
+                }
+
+                std::shared_ptr<NiceMock<MockActiveCallsignEventHandler>> handler1;
+                std::shared_ptr<NiceMock<MockActiveCallsignEventHandler>> handler2;
+                ActiveCallsignCollection collection;
+                ControllerPosition testPosition;
+                ActiveCallsign testCallsign;
+        };
+
+        TEST_F(ActiveCallsignCollectionTest, ItStartsWithNoHandlers)
+        {
+            EXPECT_EQ(0, this->collection.CountHandlers());
         }
 
-        TEST(ActiveCallsignCollection, PositionActiveDefaultsToFalse)
+        TEST_F(ActiveCallsignCollectionTest, ItAddsHandlers)
         {
-            ActiveCallsignCollection collection;
+            this->collection.AddHandler(handler1);
+            this->collection.AddHandler(handler2);
+            EXPECT_EQ(2, this->collection.CountHandlers());
+        }
 
+        TEST_F(ActiveCallsignCollectionTest, ItDoesntAddDuplicateHandlers)
+        {
+            this->collection.AddHandler(handler1);
+            this->collection.AddHandler(handler1);
+            EXPECT_EQ(1, this->collection.CountHandlers());
+        }
+
+        TEST_F(ActiveCallsignCollectionTest, ItHandlesNewCallsignEvents)
+        {
+            this->collection.AddHandler(handler1);
+            this->collection.AddHandler(handler2);
+
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, false))
+                .Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, false))
+                .Times(1);
+
+            this->collection.AddCallsign(this->testCallsign);
+        }
+
+        TEST_F(ActiveCallsignCollectionTest, ItHandlesNewUserCallsignEvents)
+        {
+            this->collection.AddHandler(handler1);
+            this->collection.AddHandler(handler2);
+
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, true))
+                .Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, true))
+                .Times(1);
+
+            this->collection.AddUserCallsign(this->testCallsign);
+        }
+
+        TEST_F(ActiveCallsignCollectionTest, ItHandlesRemovedCallsignEvents)
+        {
+            this->collection.AddHandler(handler1);
+            this->collection.AddHandler(handler2);
+
+            EXPECT_CALL(*this->handler1, ActiveCallsignRemoved(this->testCallsign, false))
+                .Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignRemoved(this->testCallsign, false))
+                .Times(1);
+
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, false))
+                .Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, false))
+                .Times(1);
+
+            this->collection.AddCallsign(this->testCallsign);
+            this->collection.RemoveCallsign(this->testCallsign);
+        }
+
+        TEST_F(ActiveCallsignCollectionTest, ItHandlesRemovedUserCallsignEvents)
+        {
+            this->collection.AddHandler(handler1);
+            this->collection.AddHandler(handler2);
+
+            EXPECT_CALL(*this->handler1, ActiveCallsignRemoved(this->testCallsign, true))
+                .Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignRemoved(this->testCallsign, true))
+                .Times(1);
+
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, true))
+                .Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, true))
+                .Times(1);
+
+            this->collection.AddUserCallsign(this->testCallsign);
+            this->collection.RemoveCallsign(this->testCallsign);
+        }
+
+        TEST_F(ActiveCallsignCollectionTest, ItHandlesCallsignFlushEvents)
+        {
+            this->collection.AddHandler(handler1);
+            this->collection.AddHandler(handler2);
+
+            EXPECT_CALL(*this->handler1, CallsignsFlushed())
+                .Times(1);
+            EXPECT_CALL(*this->handler2, CallsignsFlushed())
+                .Times(1);
+
+            this->collection.Flush();
+        }
+
+        TEST_F(ActiveCallsignCollectionTest, AddCallsignThrowsExceptionIfAlreadyAdded)
+        {
+            EXPECT_NO_THROW(collection.AddCallsign(this->testCallsign));
+            EXPECT_THROW(collection.AddCallsign(this->testCallsign), std::invalid_argument);
+        }
+
+        TEST_F(ActiveCallsignCollectionTest, PositionActiveDefaultsToFalse)
+        {
             EXPECT_FALSE(collection.PositionActive("LON_S_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, PositionActiveReturnsTrueIfCallsignActive)
+        TEST_F(ActiveCallsignCollectionTest, PositionActiveReturnsTrueIfCallsignActive)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", {});
-            ActiveCallsign cs("LON_S_CTR", "Bob Jones", controller);
-
-            collection.AddCallsign(cs);
+            collection.AddCallsign(this->testCallsign);
             EXPECT_TRUE(collection.PositionActive("LON_S_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, PositionActiveReturnsTrueIfCallsignInactive)
+        TEST_F(ActiveCallsignCollectionTest, PositionActiveReturnsFalseIfCallsignInactive)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", {});
-            ActiveCallsign cs("LON_S_CTR", "Bob Jones", controller);
-
-            collection.AddCallsign(cs);
+            collection.AddCallsign(this->testCallsign);
             EXPECT_TRUE(collection.CallsignActive("LON_S_CTR"));
-            collection.RemoveCallsign(cs);
+            collection.RemoveCallsign(this->testCallsign);
             EXPECT_FALSE(collection.PositionActive("LON_S_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, CallsignActiveReturnsTrueIfCallsignActive)
+        TEST_F(ActiveCallsignCollectionTest, CallsignActiveReturnsTrueIfCallsignActive)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", {});
-            ActiveCallsign cs("LON_S_CTR", "Bob Jones", controller);
-
-            collection.AddCallsign(cs);
+            collection.AddCallsign(this->testCallsign);
             EXPECT_TRUE(collection.CallsignActive("LON_S_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, CallsignActiveReturnsTrueIfCallsignInactive)
+        TEST_F(ActiveCallsignCollectionTest, CallsignActiveReturnsTrueIfCallsignInactive)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", {});
-            ActiveCallsign cs("LON_S_CTR", "Bob Jones", controller);
-
-            collection.AddCallsign(cs);
+            collection.AddCallsign(this->testCallsign);
             EXPECT_TRUE(collection.CallsignActive("LON_S_CTR"));
-            collection.RemoveCallsign(cs);
+            collection.RemoveCallsign(this->testCallsign);
             EXPECT_FALSE(collection.CallsignActive("LON_S_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, GetLeadCallsignForPositionThrowsExceptionIfNotFound)
+        TEST_F(ActiveCallsignCollectionTest, GetLeadCallsignForPositionThrowsExceptionIfNotFound)
         {
-            ActiveCallsignCollection collection;
             EXPECT_THROW(collection.GetLeadCallsignForPosition("LON_S_CTR"), std::out_of_range);
         }
 
-        TEST(ActiveCallsignCollection, GetLeadCallsignForPositionKeepsItemsInOrderBasedOnCallsign)
+        TEST_F(ActiveCallsignCollectionTest, GetLeadCallsignForPositionKeepsItemsInOrderBasedOnCallsign)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", {});
-            ActiveCallsign cs1("LON_S1_CTR", "Bob Jones", controller);
-            ActiveCallsign cs2("LON_S__CTR", "Jones Bob", controller);
+            ActiveCallsign cs1("LON_S1_CTR", "Bob Jones", this->testPosition);
+            ActiveCallsign cs2("LON_S__CTR", "Jones Bob", this->testPosition);
 
             collection.AddCallsign(cs1);
             collection.AddCallsign(cs2);
             EXPECT_EQ(0, collection.GetLeadCallsignForPosition("LON_S_CTR").GetCallsign().compare("LON_S1_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, GetLeadCallsignForPositionKeepsItemsInOrderIfAddedInWrongOrder)
+        TEST_F(ActiveCallsignCollectionTest, GetLeadCallsignForPositionKeepsItemsInOrderIfAddedInWrongOrder)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", {});
-            ActiveCallsign cs1("LON_S1_CTR", "Bob Jones", controller);
-            ActiveCallsign cs2("LON_S__CTR", "Jones Bob", controller);
+            ActiveCallsign cs1("LON_S1_CTR", "Bob Jones", this->testPosition);
+            ActiveCallsign cs2("LON_S__CTR", "Jones Bob", this->testPosition);
 
             collection.AddCallsign(cs2);
             collection.AddCallsign(cs1);
             EXPECT_EQ(0, collection.GetLeadCallsignForPosition("LON_S_CTR").GetCallsign().compare("LON_S1_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, GetCallsignThrowsExceptionIfNotFound)
+        TEST_F(ActiveCallsignCollectionTest, GetCallsignThrowsExceptionIfNotFound)
         {
-            ActiveCallsignCollection collection;
             EXPECT_THROW(collection.GetCallsign("LON_S_CTR"), std::out_of_range);
         }
 
-        TEST(ActiveCallsignCollection, GetCallsignReturnsCorrectItem)
+        TEST_F(ActiveCallsignCollectionTest, GetCallsignReturnsCorrectItem)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", {});
-            ActiveCallsign cs1("LON_S1_CTR", "Bob Jones", controller);
-
-            collection.AddCallsign(cs1);
-            EXPECT_EQ(cs1, collection.GetCallsign("LON_S1_CTR"));
+            collection.AddCallsign(this->testCallsign);
+            EXPECT_EQ(this->testCallsign, collection.GetCallsign("LON_S_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, GetUserCallsignThrowsExceptionIfNotFound)
+        TEST_F(ActiveCallsignCollectionTest, GetUserCallsignThrowsExceptionIfNotFound)
         {
-            ActiveCallsignCollection collection;
             EXPECT_THROW(collection.GetUserCallsign(), std::out_of_range);
         }
 
-        TEST(ActiveCallsignCollection, GetUserCallsignReturnsUserCallsign)
+        TEST_F(ActiveCallsignCollectionTest, GetUserCallsignReturnsUserCallsign)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
-            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos);
-            collection.AddUserCallsign(callsign);
-            EXPECT_EQ(collection.GetUserCallsign(), callsign);
+            collection.AddUserCallsign(this->testCallsign);
+            EXPECT_EQ(collection.GetUserCallsign(), this->testCallsign);
         }
 
-        TEST(ActiveCallsignCollection, AddingExtraUserCallsignRemovesTheFirst)
+        TEST_F(ActiveCallsignCollectionTest, AddingExtraUserCallsignRemovesTheFirst)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
-            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos);
-            ActiveCallsign callsign2("LON_S1_CTR", "Testy McTest", pos);
+            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", this->testPosition);
+            ActiveCallsign callsign2("LON_S1_CTR", "Testy McTest", this->testPosition);
             collection.AddUserCallsign(callsign);
             collection.AddUserCallsign(callsign2);
             EXPECT_EQ(collection.GetUserCallsign(), callsign2);
             EXPECT_FALSE(collection.CallsignActive("LON_S_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, UserHasCallsignReturnsFalseIfNoneSet)
+        TEST_F(ActiveCallsignCollectionTest, UserHasCallsignReturnsFalseIfNoneSet)
         {
-            ActiveCallsignCollection collection;
             EXPECT_FALSE(collection.UserHasCallsign());
         }
 
-        TEST(ActiveCallsignCollection, UserHasCallsignReturnsTrueIfSet)
+        TEST_F(ActiveCallsignCollectionTest, UserHasCallsignReturnsTrueIfSet)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
-            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos);
-            collection.AddUserCallsign(callsign);
+            collection.AddUserCallsign(this->testCallsign);
             EXPECT_TRUE(collection.UserHasCallsign());
         }
 
-        TEST(ActiveCallsignCollection, FlushEmptiesTheCollection)
+        TEST_F(ActiveCallsignCollectionTest, FlushEmptiesTheCollection)
         {
-            ActiveCallsignCollection collection;
             ControllerPosition controller1("LON_S_CTR", 129.420, "CTR", {});
             ControllerPosition controller2("LON_C_CTR", 127.100, "CTR", {});
             ControllerPosition controller3("LON_E_CTR", 121.200, "CTR", {});
@@ -182,58 +260,45 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(collection.PositionActive("LON_E_CTR"));
         }
 
-        TEST(ActiveCallsignCollection, FlushMarksUserAsInactive)
+        TEST_F(ActiveCallsignCollectionTest, FlushMarksUserAsInactive)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
-            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos);
-            collection.AddUserCallsign(callsign);
+            collection.AddUserCallsign(this->testCallsign);
             EXPECT_TRUE(collection.UserHasCallsign());
             collection.Flush();
             EXPECT_FALSE(collection.UserHasCallsign());
         }
 
-        TEST(ActiveCallsignCollection, CollectionCanHandlePositionChanges)
+        TEST_F(ActiveCallsignCollectionTest, CollectionCanHandlePositionChanges)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
-            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos);
-            collection.AddUserCallsign(callsign);
+            collection.AddUserCallsign(this->testCallsign);
             EXPECT_TRUE(collection.UserHasCallsign());
             collection.Flush();
             EXPECT_FALSE(collection.UserHasCallsign());
-            collection.AddUserCallsign(callsign);
+            collection.AddUserCallsign(this->testCallsign);
             EXPECT_TRUE(collection.UserHasCallsign());
         }
 
-        TEST(ActiveCallsignCollection, RemoveCallsignSetsUserInactiveIfCurrentUser)
+        TEST_F(ActiveCallsignCollectionTest, RemoveCallsignSetsUserInactiveIfCurrentUser)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
-            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos);
-            collection.AddUserCallsign(callsign);
+            collection.AddUserCallsign(this->testCallsign);
             EXPECT_TRUE(collection.UserHasCallsign());
-            collection.RemoveCallsign(callsign);
+            collection.RemoveCallsign(this->testCallsign);
             EXPECT_FALSE(collection.UserHasCallsign());
         }
 
-        TEST(ActiveCallsignCollection, RemoveCallsignDoesNotChangeUserIfNotUserLoggingOff)
+        TEST_F(ActiveCallsignCollectionTest, RemoveCallsignDoesNotChangeUserIfNotUserLoggingOff)
         {
-            ActiveCallsignCollection collection;
-            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
             ControllerPosition pos2("LON_E_CTR", 121.220, "CTR", { });
-            ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos);
             ActiveCallsign callsign2("LON_E_CTR", "Testy McTestingon", pos2);
-            collection.AddUserCallsign(callsign);
+            collection.AddUserCallsign(this->testCallsign);
             collection.AddCallsign(callsign2);
             EXPECT_TRUE(collection.UserHasCallsign());
             collection.RemoveCallsign(callsign2);
             EXPECT_TRUE(collection.UserHasCallsign());
         }
 
-        TEST(ActiveCallsignCollection, CorrectlyHandlesMismatchingCallsigns)
+        TEST_F(ActiveCallsignCollectionTest, CorrectlyHandlesMismatchingCallsigns)
         {
-            ActiveCallsignCollection collection;
             ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
             ControllerPosition pos2("LON_N_CTR", 133.700, "CTR", {"EGCC", "EGGP"});
             ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos2);

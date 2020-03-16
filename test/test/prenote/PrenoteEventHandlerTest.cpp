@@ -1,14 +1,14 @@
 #include "pch/pch.h"
 #include "prenote/PrenoteEventHandler.h"
 #include "prenote/PrenoteService.h"
-#include "airfield/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipManager.h"
 #include "airfield/AirfieldCollection.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "message/UserMessager.h"
 #include "prenote/AbstractPrenote.h"
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 #include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
@@ -17,14 +17,14 @@
 using UKControllerPlugin::Prenote::AbstractPrenote;
 using UKControllerPlugin::Prenote::PrenoteService;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
-using UKControllerPlugin::Airfield::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
@@ -41,7 +41,9 @@ namespace UKControllerPluginTest {
                 void SetUp(void)
                 {
                     this->airfields = std::make_unique<AirfieldCollection>();
-                    this->airfields->AddAirfield(std::unique_ptr<Airfield>(new Airfield("EGKK", { "EGKK_GND" })));
+                    this->airfields->AddAirfield(
+                        std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "EGKK_GND" }))
+                    );
                     this->airfieldOwnership = std::make_unique<AirfieldOwnershipManager>(
                         *this->airfields,
                         this->activeCallsigns

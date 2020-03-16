@@ -52,5 +52,56 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(it++->get(), position2);
             EXPECT_EQ(it++->get(), position3);
         }
+
+        TEST(ControllerPositionHierarchy, EqualityReturnsFalseIfDifferentSizes)
+        {
+            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
+            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
+            ControllerPositionHierarchy hierarchy1;
+            ControllerPositionHierarchy hierarchy2;
+
+            hierarchy1.AddPosition(position);
+            EXPECT_FALSE(hierarchy1 == hierarchy2);
+        }
+
+        TEST(ControllerPositionHierarchy, EqualityReturnsFalseIfPositions)
+        {
+            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
+            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
+            ControllerPositionHierarchy hierarchy1;
+            ControllerPositionHierarchy hierarchy2;
+
+            hierarchy1.AddPosition(position);
+            hierarchy2.AddPosition(position2);
+            EXPECT_FALSE(hierarchy1 == hierarchy2);
+        }
+
+        TEST(ControllerPositionHierarchy, EqualityReturnsFalseIfWrongOrder)
+        {
+            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
+            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
+            ControllerPositionHierarchy hierarchy1;
+            ControllerPositionHierarchy hierarchy2;
+
+            hierarchy1.AddPosition(position);
+            hierarchy1.AddPosition(position2);
+            hierarchy2.AddPosition(position2);
+            hierarchy2.AddPosition(position);
+            EXPECT_FALSE(hierarchy1 == hierarchy2);
+        }
+
+        TEST(ControllerPositionHierarchy, EqualityReturnsTrueIfEqual)
+        {
+            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
+            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
+            ControllerPositionHierarchy hierarchy1;
+            ControllerPositionHierarchy hierarchy2;
+
+            hierarchy1.AddPosition(position);
+            hierarchy1.AddPosition(position2);
+            hierarchy2.AddPosition(position);
+            hierarchy2.AddPosition(position2);
+            EXPECT_TRUE(hierarchy1 == hierarchy2);
+        }
     }  // namespace Controller
 }  // namespace UKControllerPluginTest

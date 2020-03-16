@@ -1,29 +1,28 @@
 #include "pch/stdafx.h"
 #include "airfield/AirfieldCollectionFactory.h"
 #include "airfield/AirfieldCollection.h"
-#include "airfield/Airfield.h"
-#include "dependency/DependencyCache.h"
+#include "airfield/AirfieldModel.h"
+#include "dependency/DependencyLoaderInterface.h"
 
-using UKControllerPlugin::Dependency::DependencyCache;
-using UKControllerPlugin::Airfield::Airfield;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
+using UKControllerPlugin::Airfield::AirfieldModel;
 
 namespace UKControllerPlugin {
     namespace Airfield {
 
         // Initialise the required dependency string
-        const std::string AirfieldCollectionFactory::requiredDependency = "airfield-ownership.json";
+        const std::string AirfieldCollectionFactory::requiredDependency = "DEPENDENCY_AIRFIELD_OWNERSHIP";
 
         std::unique_ptr<const AirfieldCollection> AirfieldCollectionFactory::Create(
-            const UKControllerPlugin::Dependency::DependencyCache & dependency
+            UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
         ) {
             std::unique_ptr<AirfieldCollection> collection(new AirfieldCollection);
-            nlohmann::json dependencyData;
+            nlohmann::json dependencyData = dependency.LoadDependency(
+                requiredDependency,
+                nlohmann::json::object()
+            );
 
-        try {
-                dependencyData = nlohmann::json::parse(
-                    dependency.GetDependency(AirfieldCollectionFactory::requiredDependency)
-                );
-            } catch (...) {
+            if (!dependencyData.is_object()) {
                 // If something goes wrong, just return the empty collection.
                 LogError("Failed to load airfields, dependency data was invalid");
                 return std::move(collection);
@@ -38,7 +37,7 @@ namespace UKControllerPlugin {
                 }
 
                 try {
-                    collection->AddAirfield(std::unique_ptr<Airfield>(new Airfield(it.key(), it.value())));
+                    collection->AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel(it.key(), it.value())));
                 } catch (std::invalid_argument) {
                     // We've tried to add a duplicate or invalid airfield.
                 }

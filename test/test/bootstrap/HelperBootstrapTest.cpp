@@ -34,11 +34,11 @@ namespace UKControllerPluginTest {
 
         TEST_F(HelperBootstrapTest, BootstrapCreatesApiHelper)
         {
-            EXPECT_CALL(*this->mockWinApi, FileExists("settings/api-settings.json"))
+            EXPECT_CALL(*this->mockWinApi, FileExists(std::wstring(L"settings/api-settings.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(*this->mockWinApi, ReadFromFileMock("settings/api-settings.json", true))
+            EXPECT_CALL(*this->mockWinApi, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"api-url\": \"testurl\", \"api-key\": \"testkey\"}"));
             this->container.windows = std::move(this->mockWinApi);
@@ -49,11 +49,11 @@ namespace UKControllerPluginTest {
 
         TEST_F(HelperBootstrapTest, BootstrapCreatesSettingsRepository)
         {
-            EXPECT_CALL(*this->mockWinApi, FileExists("settings/api-settings.json"))
+            EXPECT_CALL(*this->mockWinApi, FileExists(std::wstring(L"settings/api-settings.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(*this->mockWinApi, ReadFromFileMock("settings/api-settings.json", true))
+            EXPECT_CALL(*this->mockWinApi, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"api-url\": \"testurl\", \"api-key\": \"testkey\"}"));
             this->container.windows = std::move(this->mockWinApi);
@@ -64,11 +64,11 @@ namespace UKControllerPluginTest {
 
         TEST_F(HelperBootstrapTest, BootstrapCreatesTaskRunner)
         {
-            EXPECT_CALL(*this->mockWinApi, FileExists("settings/api-settings.json"))
+            EXPECT_CALL(*this->mockWinApi, FileExists(std::wstring(L"settings/api-settings.json")))
                 .Times(1)
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(*this->mockWinApi, ReadFromFileMock("settings/api-settings.json", true))
+            EXPECT_CALL(*this->mockWinApi, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .Times(1)
                 .WillOnce(Return("{\"api-key\": \"testkey\", \"api-url\": \"testurl\"}"));
             this->container.windows = std::move(this->mockWinApi);

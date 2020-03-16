@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin {
     namespace Dependency {
-        class DependencyCache;
+        class DependencyLoaderInterface;
     }  // namespace Dependency
 }  // namespace UKControllerPlugin
 
@@ -10,7 +10,7 @@ namespace UKControllerPlugin {
     namespace Airfield {
 
         // Forward Declarations
-        class Airfield;
+        class AirfieldModel;
         class AirfieldCollection;
         // END
 
@@ -22,7 +22,7 @@ namespace UKControllerPlugin {
         {
             public:
                 static std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> Create(
-                    const UKControllerPlugin::Dependency::DependencyCache & dependency
+                    UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
                 );
                 static const std::string requiredDependency;
         };

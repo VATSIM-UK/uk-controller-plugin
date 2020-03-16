@@ -18,7 +18,7 @@ namespace UKControllerPlugin {
             }
 
             // Create us a logger, for now we log everything that happens.
-            if (!persistence.windows->CreateLocalFolderRecursive("logs")) {
+            if (!persistence.windows->CreateLocalFolderRecursive(L"logs")) {
                 std::wstring msg = L"Unable to create logs folder, please contact the VATSIM UK Web Department.\n\n";
                 msg += L"Plugin events will not be logged.";
                 persistence.windows->OpenMessageBox(
@@ -32,7 +32,7 @@ namespace UKControllerPlugin {
 
             std::shared_ptr<spdlog::sinks::rotating_file_sink_mt> rotatingSink =
                 std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
-                persistence.windows->GetFullPathToLocalFile("logs/eventlog.txt"),
+                persistence.windows->GetFullPathToLocalFile(L"logs/eventlog.txt"),
                 1024 * 1024,
                 3
             );

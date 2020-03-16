@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
                 void WriteSettingsToFile(void);
 
                 // The folder where we put all our settings.
-                const std::string settingFolder = "settings";
+                const std::wstring settingFolder = L"settings";
 
             private:
 

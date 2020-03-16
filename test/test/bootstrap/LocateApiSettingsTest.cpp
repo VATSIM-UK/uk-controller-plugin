@@ -53,13 +53,13 @@ namespace Bootstrap {
             .Times(1)
             .WillOnce(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
-            .WillByDefault(Return(testJson.dump()));
+        EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
+            .WillRepeatedly(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+        ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
             .WillByDefault(Return(true));
 
-        EXPECT_CALL(this->mockWindows, WriteToFile("settings/api-settings.json", testJson.dump(), true))
+        EXPECT_CALL(this->mockWindows, WriteToFile(std::wstring(L"settings/api-settings.json"), testJson.dump(), true))
             .Times(1);
 
         LocateApiSettings(this->mockWindows, this->settings);
@@ -88,10 +88,10 @@ namespace Bootstrap {
         ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"testfile.json"), false))
             .WillByDefault(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
+        ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
             .WillByDefault(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+        ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
             .WillByDefault(Return(true));
 
         LocateApiSettings(this->mockWindows, this->settings);
@@ -113,13 +113,13 @@ namespace Bootstrap {
             .Times(1)
             .WillOnce(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
-            .WillByDefault(Return(testJson.dump()));
+        EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
+            .WillRepeatedly(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+        ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
             .WillByDefault(Return(true));
 
-        EXPECT_CALL(this->mockWindows, WriteToFile("settings/api-settings.json", testJson.dump(), true))
+        EXPECT_CALL(this->mockWindows, WriteToFile(std::wstring(L"settings/api-settings.json"), testJson.dump(), true))
             .Times(1);
 
         ReplaceApiSettings(this->mockWindows);
@@ -138,10 +138,10 @@ namespace Bootstrap {
             .Times(1)
             .WillOnce(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
+        ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
             .WillByDefault(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+        ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
             .WillByDefault(Return(true));
 
         EXPECT_TRUE(ReplaceApiSettings(this->mockWindows));
@@ -152,7 +152,7 @@ namespace Bootstrap {
         ON_CALL(this->mockWindows, FileOpenDialog(_, _, _))
             .WillByDefault(Return(L""));
 
-        EXPECT_CALL(this->mockWindows, WriteToFile("settings/api-settings.json", _, true))
+        EXPECT_CALL(this->mockWindows, WriteToFile(std::wstring(L"settings/api-settings.json"), _, true))
             .Times(0);
 
         ReplaceApiSettings(this->mockWindows);
@@ -189,13 +189,13 @@ namespace Bootstrap {
             .Times(1)
             .WillOnce(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
+        ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
             .WillByDefault(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+        ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
             .WillByDefault(Return(true));
 
-        EXPECT_CALL(this->mockWindows, WriteToFile("settings/api-settings.json", testJson.dump(), true))
+        EXPECT_CALL(this->mockWindows, WriteToFile(std::wstring(L"settings/api-settings.json"), testJson.dump(), true))
             .Times(1);
 
         UserRequestedKeyUpdate(this->mockWindows);
@@ -243,13 +243,13 @@ namespace Bootstrap {
             .Times(1)
             .WillOnce(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
-            .WillByDefault(Return(testJson.dump()));
+        EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
+            .WillRepeatedly(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+        ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
             .WillByDefault(Return(true));
 
-        EXPECT_CALL(this->mockWindows, WriteToFile("settings/api-settings.json", testJson.dump(), true))
+        EXPECT_CALL(this->mockWindows, WriteToFile(std::wstring(L"settings/api-settings.json"), testJson.dump(), true))
             .Times(1);
 
         UserRequestedKeyUpdateNoPrompts(this->mockWindows, this->settings);
@@ -268,10 +268,10 @@ namespace Bootstrap {
             .Times(1)
             .WillOnce(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
-            .WillByDefault(Return(testJson.dump()));
+        EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
+            .WillRepeatedly(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+        ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
             .WillByDefault(Return(true));
 
         UserRequestedKeyUpdateNoPrompts(this->mockWindows, this->settings);
@@ -293,10 +293,10 @@ namespace Bootstrap {
             .Times(1)
             .WillOnce(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, ReadFromFileMock("settings/api-settings.json", true))
-            .WillByDefault(Return(testJson.dump()));
+        EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
+            .WillRepeatedly(Return(testJson.dump()));
 
-        ON_CALL(this->mockWindows, FileExists("settings/api-settings.json"))
+        ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
             .WillByDefault(Return(true));
 
         // Set settings

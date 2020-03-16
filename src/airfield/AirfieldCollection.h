@@ -1,5 +1,5 @@
 #pragma once
-#include "airfield/Airfield.h"
+#include "airfield/AirfieldModel.h"
 
 namespace UKControllerPlugin {
     namespace Airfield {
@@ -11,14 +11,14 @@ namespace UKControllerPlugin {
         class AirfieldCollection
         {
             public:
-                void AddAirfield(std::unique_ptr<UKControllerPlugin::Airfield::Airfield> airfield);
-                const Airfield & FetchAirfieldByIcao(std::string icao) const;
+                void AddAirfield(std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel> airfield);
+                const AirfieldModel & FetchAirfieldByIcao(std::string icao) const;
                 size_t GetSize(void) const;
             private:
                 bool IsHomeAirfield(std::string icao) const;
 
                 // A map of ICAO code to airfield.
-                std::map<std::string, std::unique_ptr<UKControllerPlugin::Airfield::Airfield>> airfieldMap;
+                std::map<std::string, std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel>> airfieldMap;
         };
     }  // namespace Airfield
 }  // namespace UKControllerPlugin
