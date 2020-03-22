@@ -16,6 +16,7 @@
 #include "bootstrap/HelperBootstrap.h"
 #include "sectorfile/SectorFileBootstrap.h"
 #include "regional/RegionalPressureModule.h"
+#include "plugin/PluginInformationBootstrap.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -117,6 +118,12 @@ namespace UKControllerPlugin {
             // Register command for position resets
             this->persistence.commandHandlers->RegisterHandler(
                 std::make_shared<PositionResetCommand>(renderers)
+            );
+
+            // Register the plugin information message box
+            UKControllerPlugin::Plugin::BootstrapPluginInformationMessage(
+                this->persistence,
+                configurableDisplays
             );
 
             // Last thing we do is ScreenControls

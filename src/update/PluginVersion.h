@@ -10,6 +10,7 @@ namespace UKControllerPlugin {
         */
         typedef struct PluginVersion {
             static const char * const version;
+            static const std::wstring wideVersion;
             static const char * const title;
             static const char * const copyright;
             static const char * const author;

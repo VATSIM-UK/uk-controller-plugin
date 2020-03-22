@@ -981,6 +981,12 @@
     <ClInclude Include="..\..\src\regional\RegionalPressureManagerFactory.h">
       <Filter>src\regional</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\plugin\PluginInformationMessage.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\plugin\PluginInformationBootstrap.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1665,6 +1671,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\regional\RegionalPressureManagerFactory.cpp">
       <Filter>src\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginInformationMessage.cpp">
+      <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginInformationBootstrap.cpp">
+      <Filter>src\plugin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

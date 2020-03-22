@@ -12,7 +12,6 @@
 #define IDD_MINSTACK                    113
 #define IDD_MINSTACK1                   114
 #define IDD_REGIONAL_PRESSURE           114
-#define IDD_ABOUT                       115
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -99,9 +98,6 @@
 #define IDC_RPS_DELETE                  1071
 #define IDC_RPS_SELECT                  1072
 #define IDC_RPS_ADD                     1073
-#define IDC_STATIC_UKCP_VERSION         1074
-#define IDC_UKCP_VERSION                1074
-#define IDC_UKCP_COPYRIGHT              1075
 
 // Next default values for new objects
 // 
