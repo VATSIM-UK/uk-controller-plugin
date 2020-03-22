@@ -12,6 +12,7 @@
 #define IDD_MINSTACK                    113
 #define IDD_MINSTACK1                   114
 #define IDD_REGIONAL_PRESSURE           114
+#define IDD_ABOUT                       115
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -98,14 +99,17 @@
 #define IDC_RPS_DELETE                  1071
 #define IDC_RPS_SELECT                  1072
 #define IDC_RPS_ADD                     1073
+#define IDC_STATIC_UKCP_VERSION         1074
+#define IDC_UKCP_VERSION                1074
+#define IDC_UKCP_COPYRIGHT              1075
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        115
+#define _APS_NEXT_RESOURCE_VALUE        117
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1074
+#define _APS_NEXT_CONTROL_VALUE         1076
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
