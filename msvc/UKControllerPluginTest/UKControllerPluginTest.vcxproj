@@ -173,6 +173,7 @@
     <ClCompile Include="..\..\test\test\ownership\AirfieldsOwnedQueryMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\FunctionCallEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\plugin\PluginInformationBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\PluginInformationMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\PopupMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\UkPluginBootstrapTest.cpp" />
