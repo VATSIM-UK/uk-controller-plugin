@@ -751,6 +751,9 @@
     <ClCompile Include="..\..\test\test\regional\RegionalPressureManagerFactoryTest.cpp">
       <Filter>test\regional</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\plugin\PluginInformationMessageTest.cpp">
+      <Filter>test\plugin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
