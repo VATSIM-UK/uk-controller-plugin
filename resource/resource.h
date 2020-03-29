@@ -12,6 +12,8 @@
 #define IDD_MINSTACK                    113
 #define IDD_MINSTACK1                   114
 #define IDD_REGIONAL_PRESSURE           114
+#define IDD_DIALOG3                     117
+#define IDD_HELP                        117
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -103,7 +105,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        117
+#define _APS_NEXT_RESOURCE_VALUE        119
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1076
 #define _APS_NEXT_SYMED_VALUE           101
