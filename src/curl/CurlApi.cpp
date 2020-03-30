@@ -42,6 +42,7 @@ namespace UKControllerPlugin {
 
             // If we get an error, then throw an exception.
             if (result != CURLE_OK) {
+                LogError("cURL Error (" + std::to_string(result) +")");
                 return CurlResponse("", true, -1);
             }
 
