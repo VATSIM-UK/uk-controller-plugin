@@ -157,6 +157,9 @@ namespace UKControllerPlugin {
         ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
+        // User messager
+        UserMessagerBootstrap::BootstrapPlugin(*this->container);
+
         // API + Websocket
         HelperBootstrap::Bootstrap(*this->container);
         UKControllerPlugin::Websocket::BootstrapPlugin(*this->container);
@@ -202,7 +205,6 @@ namespace UKControllerPlugin {
         // Bootstrap helpers
         UKControllerPlugin::Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);
-        UserMessagerBootstrap::BootstrapPlugin(*this->container);
         DeferredEventBootstrap(*this->container->timedHandler);
         SectorFile::BootstrapPlugin(*this->container);
 
