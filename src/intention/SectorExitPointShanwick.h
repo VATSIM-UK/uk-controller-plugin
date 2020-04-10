@@ -11,8 +11,8 @@ namespace UKControllerPlugin {
     namespace IntentionCode {
 
         /*
-            Class that handles three specific sector exit points into Shanwick -
-            NIBOG, MIMKU, GOMUP.
+            Class that handles certain sector exit points into Shanwick -
+            NIBOG, LUTOV, KUGUR, APSOV, MIMKU, AMLAD, IBROD, GOMUP.
         */
         class SectorExitPointShanwick : public SectorExitPoint
         {
