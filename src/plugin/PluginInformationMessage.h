@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
 
                 // The command to accept
                 const std::string command = ".ukcp about";
-                
+
                 // The description of the menu item
                 const std::string menuItemDescription = "About UKCP";
 

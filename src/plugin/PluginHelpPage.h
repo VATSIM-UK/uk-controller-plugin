@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
 
                 // The command to accept
                 const std::string command = ".ukcp help";
-                
+
                 // The description of the menu item
                 const std::string menuItemDescription = "UKCP Help (Opens In Web Browser)";
 
