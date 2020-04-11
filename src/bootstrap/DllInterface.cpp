@@ -37,6 +37,7 @@ void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** ppPlu
         message += L"Message: " + std::wstring(what.cbegin(), what.cend());
 
         MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
+        throw e;
     }
 }
 
@@ -57,5 +58,6 @@ void __declspec(dllexport) EuroScopePlugInExit(void)
         message += L"Message: " + std::wstring(what.cbegin(), what.cend());
 
         MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Shutdown Failed", MB_OK | MB_ICONSTOP);
+        throw e;
     }
 }
