@@ -429,9 +429,6 @@
     <ClInclude Include="..\..\src\intention\SectorExitPointLelna.h">
       <Filter>src\intention</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\intention\SectorExitPointShanwick.h">
-      <Filter>src\intention</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\intention\SectorExitPointVeule.h">
       <Filter>src\intention</Filter>
     </ClInclude>
