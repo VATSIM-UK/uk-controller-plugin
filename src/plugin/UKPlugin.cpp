@@ -175,7 +175,7 @@ namespace UKControllerPlugin {
 
         // Loop through all visible flightplans
         do {
-            if (!current.IsValid() || current.GetSimulated()) {
+            if (!current.IsValid()) {
                 continue;
             }
 
@@ -260,7 +260,7 @@ namespace UKControllerPlugin {
     {
         EuroScopePlugIn::CFlightPlan plan = this->FlightPlanSelect(callsign.c_str());
 
-        if (!plan.IsValid() || plan.GetSimulated()) {
+        if (!plan.IsValid()) {
             throw std::invalid_argument("Flightplan not found");
         }
 
@@ -352,7 +352,7 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanControllerAssignedDataUpdate(EuroScopePlugIn::CFlightPlan flightPlan, int dataType)
     {
-        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
+        if (!flightPlan.IsValid()) {
             return;
         }
 
@@ -370,7 +370,7 @@ namespace UKControllerPlugin {
     */
     void UKPlugin::OnFlightPlanFlightPlanDataUpdate(EuroScopePlugIn::CFlightPlan flightPlan)
     {
-        if (!flightPlan.IsValid() || flightPlan.GetSimulated()) {
+        if (!flightPlan.IsValid()) {
             return;
         }
 
@@ -529,7 +529,7 @@ namespace UKControllerPlugin {
     {
         EuroScopePlugIn::CFlightPlan plan = this->FlightPlanSelect(callsign.c_str());
 
-        if (plan.IsValid() && !plan.GetSimulated()) {
+        if (plan.IsValid()) {
             this->OnFlightPlanFlightPlanDataUpdate(plan);
         }
     }

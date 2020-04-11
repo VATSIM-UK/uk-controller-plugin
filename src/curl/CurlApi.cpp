@@ -34,7 +34,8 @@ namespace UKControllerPlugin {
 
             std::string outBuffer;
             curl_easy_setopt(curlObject, CURLOPT_FOLLOWLOCATION, 1L);
-            curl_easy_setopt(curlObject, CURLOPT_TIMEOUT, 3);
+            curl_easy_setopt(curlObject, CURLOPT_CONNECTTIMEOUT, 4);
+            curl_easy_setopt(curlObject, CURLOPT_TIMEOUT, 7);
             curl_easy_setopt(curlObject, CURLOPT_WRITEDATA, &outBuffer);
             curl_easy_setopt(curlObject, CURLOPT_WRITEFUNCTION, &CurlApi::WriteFunction);
 
@@ -42,6 +43,7 @@ namespace UKControllerPlugin {
 
             // If we get an error, then throw an exception.
             if (result != CURLE_OK) {
+                LogError("cURL Error (" + std::to_string(result) +")");
                 return CurlResponse("", true, -1);
             }
 
