@@ -1,4 +1,5 @@
 #include "pch/stdafx.h"
+#include <shellapi.h>
 #include "windows/WinApi.h"
 #include "historytrail/HistoryTrailDialog.h"
 #include "helper/HelperFunctions.h"
@@ -157,6 +158,11 @@ namespace UKControllerPlugin {
         int WinApi::OpenMessageBox(LPCWSTR message, LPCWSTR title, int options)
         {
             return MessageBox(GetActiveWindow(), message, title, options);
+        }
+
+        void WinApi::OpenWebBrowser(std::wstring url)
+        {
+            ShellExecute(NULL, L"open", url.c_str() , NULL, NULL, SW_SHOWNORMAL);
         }
 
         /*

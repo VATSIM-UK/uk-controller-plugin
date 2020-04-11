@@ -34,6 +34,7 @@ namespace UKControllerPlugin {
             }
             virtual std::wstring GetFullPathToLocalFile(std::wstring relativePath) const = 0;
             virtual int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) = 0;
+            virtual void OpenWebBrowser(std::wstring url) = 0;
             virtual void PlayWave(LPCTSTR sound) = 0;
             virtual std::string ReadFromFile(std::wstring filename, bool relativePath = true) = 0;
             virtual void WriteToFile(std::wstring filename, std::string data, bool truncate) = 0;
