@@ -2,7 +2,6 @@
 #include "intention/SectorExitRepository.h"
 #include "intention/SectorExitPointEtrat.h"
 #include "intention/SectorExitPointLelna.h"
-#include "intention/SectorExitPointShanwick.h"
 #include "intention/SectorExitPointVeule.h"
 
 namespace UKControllerPlugin {
