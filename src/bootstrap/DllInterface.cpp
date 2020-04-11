@@ -32,7 +32,8 @@ void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** ppPlu
     catch (std::exception e) {
         std::string what = e.what();
 
-        std::wstring message = L"Exception thrown when bootstrapping UKCP.\r\n\r\n";
+        std::wstring message = L"Exception thrown when bootstrapping UKCP.\r\n";
+        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
         message += L"Message: " + std::wstring(what.cbegin(), what.cend());
 
         MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
@@ -51,7 +52,8 @@ void __declspec(dllexport) EuroScopePlugInExit(void)
     catch (std::exception e) {
         std::string what = e.what();
 
-        std::wstring message = L"Exception thrown when shutting down UKCP.\r\n\r\n";
+        std::wstring message = L"Exception thrown when shutting down UKCP.\r\n";
+        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
         message += L"Message: " + std::wstring(what.cbegin(), what.cend());
 
         MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Shutdown Failed", MB_OK | MB_ICONSTOP);
