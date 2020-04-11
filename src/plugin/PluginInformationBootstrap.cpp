@@ -1,6 +1,7 @@
 #include "pch/stdafx.h"
 #include "plugin/PluginInformationBootstrap.h"
 #include "plugin/PluginInformationMessage.h"
+#include "plugin/PluginHelpPage.h"
 #include "euroscope/CallbackFunction.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -14,16 +15,41 @@ namespace UKControllerPlugin {
             const PersistenceContainer& container,
             ConfigurableDisplayCollection& displays
         ) {
+            // Create the plugin help page toggle
+            int helpCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+            std::shared_ptr<PluginHelpPage> helpPage = std::make_shared<PluginHelpPage>(
+                *container.windows,
+                helpCallbackId
+                );
+
+                // Create callback
+            CallbackFunction helpCallback(
+                helpCallbackId,
+                "Plugin Help Page",
+                std::bind(
+                &PluginHelpPage::Configure,
+                helpPage,
+                std::placeholders::_1,
+                std::placeholders::_2,
+                std::placeholders::_3
+            )
+            );
+
+            // Register with handlers
+            container.pluginFunctionHandlers->RegisterFunctionCall(helpCallback);
+            container.commandHandlers->RegisterHandler(helpPage);
+            displays.RegisterDisplay(helpPage);
+
             // Create the plugin information message box
-            int toggleCallbackFunction = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+            int informationCallback = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             std::shared_ptr<PluginInformationMessage> infoMessage = std::make_shared<PluginInformationMessage>(
                 *container.windows,
-                toggleCallbackFunction
+                informationCallback
             );
 
             // Create callback
             CallbackFunction configureCallback(
-                toggleCallbackFunction,
+                informationCallback,
                 "Plugin Information Message",
                 std::bind(
                     &PluginInformationMessage::Configure,

@@ -987,6 +987,9 @@
     <ClInclude Include="..\..\src\plugin\PluginInformationBootstrap.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\plugin\PluginHelpPage.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1676,6 +1679,9 @@
       <Filter>src\plugin</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\plugin\PluginInformationBootstrap.cpp">
+      <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginHelpPage.cpp">
       <Filter>src\plugin</Filter>
     </ClCompile>
   </ItemGroup>

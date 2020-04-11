@@ -219,6 +219,7 @@
     <ClInclude Include="..\..\src\ownership\AirfieldsOwnedQueryMessage.h" />
     <ClInclude Include="..\..\src\ownership\AirfieldOwnershipHandler.h" />
     <ClInclude Include="..\..\src\plugin\FunctionCallEventHandler.h" />
+    <ClInclude Include="..\..\src\plugin\PluginHelpPage.h" />
     <ClInclude Include="..\..\src\plugin\PluginInformationBootstrap.h" />
     <ClInclude Include="..\..\src\plugin\PluginInformationMessage.h" />
     <ClInclude Include="..\..\src\plugin\PopupMenuItem.h" />
@@ -465,6 +466,7 @@
     <ClCompile Include="..\..\src\ownership\AirfieldsOwnedQueryMessage.cpp" />
     <ClCompile Include="..\..\src\ownership\AirfieldOwnershipHandler.cpp" />
     <ClCompile Include="..\..\src\plugin\FunctionCallEventHandler.cpp" />
+    <ClCompile Include="..\..\src\plugin\PluginHelpPage.cpp" />
     <ClCompile Include="..\..\src\plugin\PluginInformationBootstrap.cpp" />
     <ClCompile Include="..\..\src\plugin\PluginInformationMessage.cpp" />
     <ClCompile Include="..\..\src\plugin\UKPlugin.cpp" />
