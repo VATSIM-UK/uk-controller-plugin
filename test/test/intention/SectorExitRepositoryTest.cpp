@@ -210,22 +210,22 @@ namespace UKControllerPluginTest {
             // LUSEN
             ASSERT_TRUE(repo->GetSectorExitPoint("LUSEN").GetName().compare("LUSEN") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("LUSEN").GetIntentionCode(mockRoute, 0, 37000).compare("Y8") == 0);
-            ASSERT_EQ(repo->outNorthWest, repo->outNorthNorth, repo->GetSectorExitPoint("LUSEN").GetOutDirection());
+            ASSERT_EQ(repo->outNorthWest | repo->outNorth, repo->GetSectorExitPoint("LUSEN").GetOutDirection());
             
             // ATSIX
             ASSERT_TRUE(repo->GetSectorExitPoint("ATSIX").GetName().compare("ATSIX") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("ATSIX").GetIntentionCode(mockRoute, 0, 37000).compare("Y7") == 0);
-            ASSERT_EQ(repo->outWest, repo->outNorthWest, repo->GetSectorExitPoint("ATSIX").GetOutDirection());
+            ASSERT_EQ(repo->outWest | repo->outNorthWest, repo->GetSectorExitPoint("ATSIX").GetOutDirection());
             
             // ORTAV
             ASSERT_TRUE(repo->GetSectorExitPoint("ORTAV").GetName().compare("ORTAV") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("ORTAV").GetIntentionCode(mockRoute, 0, 37000).compare("Y6") == 0);
-            ASSERT_EQ(repo->outWest, repo->outNorthWest, repo->GetSectorExitPoint("ORTAV").GetOutDirection());
+            ASSERT_EQ(repo->outWest | repo->outNorthWest, repo->GetSectorExitPoint("ORTAV").GetOutDirection());
 
             // BALIX
             ASSERT_TRUE(repo->GetSectorExitPoint("BALIX").GetName().compare("BALIX") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("BALIX").GetIntentionCode(mockRoute, 0, 37000).compare("Y5") == 0);
-            ASSERT_EQ(repo->outWest, repo->outNorthWest, repo->GetSectorExitPoint("BALIX").GetOutDirection());
+            ASSERT_EQ(repo->outWest | repo->outNorthWest, repo->GetSectorExitPoint("BALIX").GetOutDirection());
 
             // ADODO
             ASSERT_TRUE(repo->GetSectorExitPoint("ADODO").GetName().compare("ADODO") == 0);
@@ -240,14 +240,14 @@ namespace UKControllerPluginTest {
             // ETILO
             ASSERT_TRUE(repo->GetSectorExitPoint("ETILO").GetName().compare("ETILO") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("ETILO").GetIntentionCode(mockRoute, -1, 37000).compare("Y2") == 0);
-            ASSERT_EQ(repo->outWest, repo->outNorthWest, repo->GetSectorExitPoint("ETILO").GetOutDirection());
+            ASSERT_EQ(repo->outWest | repo->outNorthWest, repo->GetSectorExitPoint("ETILO").GetOutDirection());
             
             // Shanwick NOTA
 
             // GOMUP
             ASSERT_TRUE(repo->GetSectorExitPoint("GOMUP").GetName().compare("GOMUP") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("GOMUP").GetIntentionCode(mockRoute, -1, 37000).compare("Y1") == 0);
-            ASSERT_EQ(repo->outWest, repo->outNorthWest, repo->GetSectorExitPoint("GOMUP").GetOutDirection());
+            ASSERT_EQ(repo->outWest | repo->outNorthWest, repo->GetSectorExitPoint("GOMUP").GetOutDirection());
 
             // IBROD
             ASSERT_TRUE(repo->GetSectorExitPoint("IBROD").GetName().compare("IBROD") == 0);
