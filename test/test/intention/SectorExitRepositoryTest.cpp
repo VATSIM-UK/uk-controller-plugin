@@ -519,6 +519,78 @@ namespace UKControllerPluginTest {
             ASSERT_TRUE(repo->GetSectorExitPoint("TAKAS").GetName().compare("TAKAS") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("TAKAS").GetIntentionCode(mockRoute, 0, 37000).compare("A") == 0);
             ASSERT_EQ(repo->outWest | repo->outSouthWest, repo->GetSectorExitPoint("TAKAS").GetOutDirection());
+
+            // EGPX SPECIFIC
+
+            // INKOB
+            ASSERT_TRUE(repo->GetSectorExitPoint("INKOB").GetName().compare("INKOB") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("INKOB").GetIntentionCode(mockRoute, 0, 37000).compare("E4") == 0);
+            ASSERT_EQ(repo->outSouthEast | repo->outEast, repo->GetSectorExitPoint("INKOB").GetOutDirection());
+
+            // SOSIM
+            ASSERT_TRUE(repo->GetSectorExitPoint("SOSIM").GetName().compare("SOSIM") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("SOSIM").GetIntentionCode(mockRoute, 0, 37000).compare("E5") == 0);
+            ASSERT_EQ(repo->outSouthEast | repo->outEast, repo->GetSectorExitPoint("SOSIM").GetOutDirection());
+
+            // KELLY
+            ASSERT_TRUE(repo->GetSectorExitPoint("KELLY").GetName().compare("KELLY") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("KELLY").GetIntentionCode(mockRoute, 0, 37000).compare("E7") == 0);
+            ASSERT_EQ(repo->outSouthEast | repo->outEast, repo->GetSectorExitPoint("KELLY").GetOutDirection());
+
+            // TUPEM
+            ASSERT_TRUE(repo->GetSectorExitPoint("TUPEM").GetName().compare("TUPEM") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("TUPEM").GetIntentionCode(mockRoute, 0, 37000).compare("E8") == 0);
+            ASSERT_EQ(repo->outSouthEast | repo->outEast, repo->GetSectorExitPoint("TUPEM").GetOutDirection());
+
+            // BELOX
+            ASSERT_TRUE(repo->GetSectorExitPoint("BELOX").GetName().compare("BELOX") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("BELOX").GetIntentionCode(mockRoute, 0, 37000).compare("E9") == 0);
+            ASSERT_EQ(repo->outSouthEast | repo->outEast, repo->GetSectorExitPoint("BELOX").GetOutDirection());
+            
+            // SUBUK
+            ASSERT_TRUE(repo->GetSectorExitPoint("SUBUK").GetName().compare("SUBUK") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("SUBUK").GetIntentionCode(mockRoute, 0, 37000).compare("H6") == 0);
+            ASSERT_EQ(repo->outSouth, repo->GetSectorExitPoint("SUBUK").GetOutDirection());
+
+            // LAKEY
+            ASSERT_TRUE(repo->GetSectorExitPoint("LAKEY").GetName().compare("LAKEY") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("LAKEY").GetIntentionCode(mockRoute, 0, 37000).compare("H7") == 0);
+            ASSERT_EQ(repo->outSouth, repo->GetSectorExitPoint("LAKEY").GetOutDirection());
+
+            // BINTI
+            ASSERT_TRUE(repo->GetSectorExitPoint("BINTI").GetName().compare("BINTI") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("BINTI").GetIntentionCode(mockRoute, 0, 37000).compare("U1") == 0);
+            ASSERT_EQ(repo->outSouth | repo->outSouthWest, repo->GetSectorExitPoint("BINTI").GetOutDirection());
+
+            // TILNI
+            ASSERT_TRUE(repo->GetSectorExitPoint("TILNI").GetName().compare("TILNI") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("TILNI").GetIntentionCode(mockRoute, 0, 37000).compare("U2") == 0);
+            ASSERT_EQ(repo->outSouth | repo->outSouthWest, repo->GetSectorExitPoint("TILNI").GetOutDirection());
+
+            // ERKIT
+            ASSERT_TRUE(repo->GetSectorExitPoint("ERKIT").GetName().compare("ERKIT") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("ERKIT").GetIntentionCode(mockRoute, 0, 37000).compare("U3") == 0);
+            ASSERT_EQ(repo->outSouth | repo->outSouthEast, repo->GetSectorExitPoint("ERKIT").GetOutDirection());
+
+            // ROVNI
+            ASSERT_TRUE(repo->GetSectorExitPoint("ROVNI").GetName().compare("ROVNI") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("ROVNI").GetIntentionCode(mockRoute, 0, 37000).compare("U4") == 0);
+            ASSERT_EQ(repo->outSouth | repo->outSouthWest, repo->GetSectorExitPoint("ROVNI").GetOutDirection());
+
+            // ELNAB
+            ASSERT_TRUE(repo->GetSectorExitPoint("ELNAB").GetName().compare("ELNAB") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("ELNAB").GetIntentionCode(mockRoute, 0, 37000).compare("U5") == 0);
+            ASSERT_EQ(repo->outSouth, repo->GetSectorExitPoint("ELNAB").GetOutDirection());
+
+            // ADGEG
+            ASSERT_TRUE(repo->GetSectorExitPoint("ADGEG").GetName().compare("ADGEG") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("ADGEG").GetIntentionCode(mockRoute, 0, 37000).compare("U6") == 0);
+            ASSERT_EQ(repo->outSouth | repo->outSouthEast, repo->GetSectorExitPoint("ADGEG").GetOutDirection());
+
+            // AKOKO
+            ASSERT_TRUE(repo->GetSectorExitPoint("AKOKO").GetName().compare("AKOKO") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("AKOKO").GetIntentionCode(mockRoute, 0, 37000).compare("U7") == 0);
+            ASSERT_EQ(repo->outSouth | repo->outSouthEast, repo->GetSectorExitPoint("AKOKO").GetOutDirection());
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPluginTest
