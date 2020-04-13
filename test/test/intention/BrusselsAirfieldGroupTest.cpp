@@ -9,6 +9,55 @@ using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
+
+        TEST(BrusselsAirfieldGroup, ItDoesntApplyToIrishAirfields)
+        {
+            BrusselsAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("EGAA_APP", wrapperMock));
+        }
+
+        TEST(BrusselsAirfieldGroup, ItDoesntApplyToScottishMilAirfields)
+        {
+            BrusselsAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("EGQX_APP", wrapperMock));
+        }
+
+        TEST(BrusselsAirfieldGroup, ItDoesntApplyToScottishAirfields)
+        {
+            BrusselsAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("EGPF_APP", wrapperMock));
+        }
+
+        TEST(BrusselsAirfieldGroup, ItDoesntApplyToScottishTc)
+        {
+            BrusselsAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("STC_A_CTR", wrapperMock));
+        }
+
+        TEST(BrusselsAirfieldGroup, ItDoesntApplyToScottishAc)
+        {
+            BrusselsAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("SCO_M_CTR", wrapperMock));
+        }
+
+        TEST(BrusselsAirfieldGroup, ItAppliesToEveryoneElse)
+        {
+            BrusselsAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_TRUE(airfieldGroup.AppliesToController("BLA", wrapperMock));
+        }
+
         TEST(BrusselsAirfieldGroup, HasAirfieldReturnsFalseNotInBrussels)
         {
             BrusselsAirfieldGroup airfieldGroup;

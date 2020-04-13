@@ -15,6 +15,10 @@ namespace UKControllerPlugin {
         */
         class AirfieldGroup {
             public:
+                virtual bool AppliesToController(
+                    std::string callsign,
+                    UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route
+                ) const;
                 virtual bool HasAirfield(
                     std::string airfield,
                     UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route
@@ -26,6 +30,7 @@ namespace UKControllerPlugin {
             protected:
                 void AddAirfieldToList(std::string airfield);
                 bool AirfieldInList(std::string airfield) const;
+                bool ControllerIsScottish(std::string callsign) const;
                 virtual bool Initialise(void) = 0;
                 bool IsViaPoint(
                     std::string point,
@@ -34,6 +39,12 @@ namespace UKControllerPlugin {
                 ) const;
             private:
                 std::vector <std::string> airfields;
+
+                const std::string SCAC_CALLSIGN_PREFIX = "SCO";
+                const std::string SCTC_CALLSIGN_PREFIX = "STC";
+                const std::string EGPX_CALLSIGN_PREFIX = "EGP";
+                const std::string EGPX_MIL_CALLSIGN_PREFIX = "EGP";
+                const std::string EGPX_NI_CALLSIGN_PREFIX = "EGA";
         };
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin
