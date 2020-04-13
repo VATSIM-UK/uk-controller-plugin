@@ -190,11 +190,6 @@ namespace UKControllerPluginTest {
             ASSERT_TRUE(repo->GetSectorExitPoint("PEMOS").GetIntentionCode(mockRoute, 0, 37000).compare("R5") == 0);
             ASSERT_EQ(repo->outNorth, repo->GetSectorExitPoint("PEMOS").GetOutDirection());
             
-            // LIRKI
-            ASSERT_TRUE(repo->GetSectorExitPoint("LIRKI").GetName().compare("LIRKI") == 0);
-            ASSERT_TRUE(repo->GetSectorExitPoint("LIRKI").GetIntentionCode(mockRoute, 0, 37000).compare("R6") == 0);
-            ASSERT_EQ(repo->outNorth, repo->GetSectorExitPoint("LIRKI").GetOutDirection());
-            
             // SOSAR
             ASSERT_TRUE(repo->GetSectorExitPoint("SOSAR").GetName().compare("SOSAR") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("SOSAR").GetIntentionCode(mockRoute, 0, 37000).compare("R7") == 0);
