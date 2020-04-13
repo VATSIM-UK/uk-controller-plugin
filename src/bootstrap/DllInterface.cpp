@@ -25,8 +25,20 @@ BOOL WINAPI DllMain(
 void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** ppPlugInInstance)
 {
     // Give ES the plugin instance and run the post initialisation method.
-    thePluginApp.PostInit(dllInstance);
-    *ppPlugInInstance = thePluginApp.GetPlugin();
+    try {
+        thePluginApp.PostInit(dllInstance);
+        *ppPlugInInstance = thePluginApp.GetPlugin();
+    }
+    catch (std::exception e) {
+        std::string what = e.what();
+
+        std::wstring message = L"Exception thrown when bootstrapping UKCP.\r\n";
+        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+        message += L"Message: " + std::wstring(what.cbegin(), what.cend());
+
+        MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
+        throw e;
+    }
 }
 
 
@@ -35,5 +47,17 @@ void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** ppPlu
 */
 void __declspec(dllexport) EuroScopePlugInExit(void)
 {
-    thePluginApp.EuroScopeCleanup();
+    try {
+        thePluginApp.EuroScopeCleanup();
+    }
+    catch (std::exception e) {
+        std::string what = e.what();
+
+        std::wstring message = L"Exception thrown when shutting down UKCP.\r\n";
+        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+        message += L"Message: " + std::wstring(what.cbegin(), what.cend());
+
+        MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Shutdown Failed", MB_OK | MB_ICONSTOP);
+        throw e;
+    }
 }
