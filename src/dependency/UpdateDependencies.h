@@ -4,7 +4,7 @@
 
 namespace UKControllerPlugin {
     namespace Dependency {
-        
+
         std::map<std::string, nlohmann::json> LoadDependencyList(
             UKControllerPlugin::Windows::WinApiInterface& filesystem
         );
