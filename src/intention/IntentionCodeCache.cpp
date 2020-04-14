@@ -28,6 +28,11 @@ namespace UKControllerPlugin {
             return this->intentionCodeMap.count(callsign) > 0;
         }
 
+        void IntentionCodeCache::Clear(void)
+        {
+            this->intentionCodeMap.clear();
+        }
+
         /*
             Returns true if the intention code is still valid.
         */
