@@ -44,7 +44,7 @@ namespace UKControllerPlugin {
                         i + 1 < route.GetPointsNumber() &&
                         (
                             !point.IsCorrectOutDirection(route.GetPointPosition(i).DirectionTo(route.GetPointPosition(i + 1))) ||
-                            !point.AppliesToController("SCO_CTR")
+                            !point.AppliesToController(this->userControllerPosition)
                         )
                     ) {
                         i++;
@@ -94,7 +94,7 @@ namespace UKControllerPlugin {
                 group != this->airfieldGroups.cend();
                 ++group
             ) {
-                if ((*group)->HasAirfield(destination, route) && (*group)->AppliesToController("SCO_CTR", route)) {
+                if ((*group)->HasAirfield(destination, route) && (*group)->AppliesToController(this->userControllerPosition, route)) {
 
                     return IntentionCodeData(
                         (*group)->GetIntentionCodeForGroup(destination, route),
@@ -132,6 +132,16 @@ namespace UKControllerPlugin {
                 false,
                 this->invalidExitPointIndex
             );
+        }
+
+        void IntentionCodeGenerator::SetUserControllerPosition(std::string position)
+        {
+            this->userControllerPosition = position;
+        }
+
+        std::string IntentionCodeGenerator::GetUserControllerPosition(void) const
+        {
+            return this->userControllerPosition;
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

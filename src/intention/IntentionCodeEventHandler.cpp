@@ -4,12 +4,14 @@
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "intention/IntentionCodeData.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
+#include "euroscope/EuroScopeCControllerInterface.h"
 
 using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::IntentionCode::IntentionCodeCache;
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 
 namespace UKControllerPlugin {
     namespace IntentionCode {
@@ -85,6 +87,29 @@ namespace UKControllerPlugin {
 
             this->codeCache.RegisterAircraft(flightPlan.GetCallsign(), data);
             return data.intentionCode;
+        }
+
+        /*
+            Clear the code cache if the user logs on with a different controller position.
+        */
+        void IntentionCodeEventHandler::ControllerUpdateEvent(EuroScopeCControllerInterface& controller)
+        {
+            if (controller.IsCurrentUser() && controller.GetCallsign() != this->intention.GetUserControllerPosition()) {
+                this->codeCache.Clear();
+            }
+        }
+
+        void IntentionCodeEventHandler::ControllerDisconnectEvent(EuroScopeCControllerInterface& controller)
+        {
+            // Nothing to do here, we only care about the current user
+        }
+
+        /*
+            Clear the code cache if the user disconnects
+        */
+        void IntentionCodeEventHandler::SelfDisconnectEvent(void)
+        {
+            this->codeCache.Clear();
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

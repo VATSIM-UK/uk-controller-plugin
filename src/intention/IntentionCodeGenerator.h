@@ -43,6 +43,9 @@ namespace UKControllerPlugin {
                     int cruiseLevel
                 );
 
+                void SetUserControllerPosition(std::string position);
+                std::string GetUserControllerPosition(void) const;
+
                 // Invalid code - to be used when we have no information for intention codes
                 const std::string invalidCode = "--";
 
@@ -53,6 +56,9 @@ namespace UKControllerPlugin {
                 const int exitPointPassed = -1;
 
             private:
+                
+                std::string userControllerPosition = "";
+
                 int FindFirExitPoint(UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route);
 
                 // Special airfields
