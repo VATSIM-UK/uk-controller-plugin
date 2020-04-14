@@ -12,7 +12,7 @@ using ::testing::StrictMock;
 namespace UKControllerPluginTest {
     namespace IntentionCode {
 
-        TEST(SectorExitPointEtrat, ItAppliesToAllControllers)
+        TEST(SectorExitPointLelna, ItAppliesToAllControllers)
         {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);

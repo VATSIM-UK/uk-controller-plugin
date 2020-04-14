@@ -72,7 +72,6 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
 
             EXPECT_CALL(wrapperMock, GetPointsNumber())
-                .Times(4)
                 .WillRepeatedly(Return(3));
 
             EXPECT_CALL(wrapperMock, GetPointName(0))
@@ -82,10 +81,6 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(wrapperMock, GetPointName(1))
                 .Times(1)
                 .WillOnce(Return("TOPPA"));
-
-            EXPECT_CALL(wrapperMock, GetPointName(2))
-                .Times(1)
-                .WillOnce(Return("EHAM"));
 
             EXPECT_TRUE(airfieldGroup.AppliesToController("SCO_M_CTR", wrapperMock));
         }

@@ -182,7 +182,7 @@ namespace UKControllerPlugin {
                 "ADGEG", "U6", SectorExitPoint::outSouthEast | SectorExitPoint::outEast
             );
             points["AKOKO"] = std::make_unique<SectorExitPointScottish>(
-                "AKOKO", "U6", SectorExitPoint::outSouthEast | SectorExitPoint::outEast
+                "AKOKO", "U7", SectorExitPoint::outSouthEast | SectorExitPoint::outEast
             );
 
             return std::make_unique<SectorExitRepository>(std::move(points));

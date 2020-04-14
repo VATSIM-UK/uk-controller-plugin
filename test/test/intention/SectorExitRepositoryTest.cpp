@@ -585,12 +585,12 @@ namespace UKControllerPluginTest {
             // ADGEG
             ASSERT_TRUE(repo->GetSectorExitPoint("ADGEG").GetName().compare("ADGEG") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("ADGEG").GetIntentionCode(mockRoute, 0, 37000).compare("U6") == 0);
-            ASSERT_EQ(repo->outSouth | repo->outSouthEast, repo->GetSectorExitPoint("ADGEG").GetOutDirection());
+            ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("ADGEG").GetOutDirection());
 
             // AKOKO
             ASSERT_TRUE(repo->GetSectorExitPoint("AKOKO").GetName().compare("AKOKO") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("AKOKO").GetIntentionCode(mockRoute, 0, 37000).compare("U7") == 0);
-            ASSERT_EQ(repo->outSouth | repo->outSouthEast, repo->GetSectorExitPoint("AKOKO").GetOutDirection());
+            ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("AKOKO").GetOutDirection());
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPluginTest

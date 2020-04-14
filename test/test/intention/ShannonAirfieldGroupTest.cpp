@@ -9,7 +9,7 @@ using ::testing::StrictMock;
 namespace UKControllerPluginTest {
     namespace IntentionCode {
 
-        TEST(DublinAirfieldGroup, ItAppliesToAllControllers)
+        TEST(ShannonAirfieldGroup, ItAppliesToAllControllers)
         {
             ShannonAirfieldGroup airfieldGroup;
             StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
