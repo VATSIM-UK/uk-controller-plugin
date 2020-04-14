@@ -165,6 +165,7 @@ namespace UKControllerPluginTest {
             IntentionCodeCache cache;
             cache.RegisterAircraft("BAW123", IntentionCodeData("D1", 0, true));
             cache.RegisterAircraft("BAW456", IntentionCodeData("D1", 0, true));
+            cache.Clear();
             EXPECT_FALSE(cache.HasIntentionCodeForAircraft("BAW123"));
             EXPECT_FALSE(cache.HasIntentionCodeForAircraft("BAW456"));
             EXPECT_EQ(0, cache.TotalCached());
