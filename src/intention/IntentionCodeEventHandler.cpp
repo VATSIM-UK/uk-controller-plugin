@@ -95,6 +95,7 @@ namespace UKControllerPlugin {
         void IntentionCodeEventHandler::ControllerUpdateEvent(EuroScopeCControllerInterface& controller)
         {
             if (controller.IsCurrentUser() && controller.GetCallsign() != this->intention.GetUserControllerPosition()) {
+                this->intention.SetUserControllerPosition(controller.GetCallsign());
                 this->codeCache.Clear();
             }
         }
@@ -110,6 +111,16 @@ namespace UKControllerPlugin {
         void IntentionCodeEventHandler::SelfDisconnectEvent(void)
         {
             this->codeCache.Clear();
+        }
+
+        const IntentionCodeGenerator& IntentionCodeEventHandler::GetGenerator() const
+        {
+            return this->intention;
+        }
+
+        const IntentionCodeCache& IntentionCodeEventHandler::GetCache() const
+        {
+            return this->codeCache;
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

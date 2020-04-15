@@ -47,6 +47,18 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 );
 
+                // Inherited via ControllerStatusEventHandlerInterface
+                void ControllerUpdateEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller
+                ) override;
+                void ControllerDisconnectEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller
+                ) override;
+                void SelfDisconnectEvent(void) override;
+
+                const UKControllerPlugin::IntentionCode::IntentionCodeGenerator& GetGenerator() const;
+                const UKControllerPlugin::IntentionCode::IntentionCodeCache& GetCache() const;
+
             private:
 
                 // A class for generating intention codes
@@ -54,11 +66,6 @@ namespace UKControllerPlugin {
 
                 // A cache for codes that have already been generated
                 UKControllerPlugin::IntentionCode::IntentionCodeCache codeCache;
-
-                // Inherited via ControllerStatusEventHandlerInterface
-                virtual void ControllerUpdateEvent(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller) override;
-                virtual void ControllerDisconnectEvent(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller) override;
-                virtual void SelfDisconnectEvent(void) override;
         };
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin
