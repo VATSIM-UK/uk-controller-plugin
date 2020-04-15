@@ -43,7 +43,8 @@ namespace UKControllerPlugin {
                     if (
                         i + 1 < route.GetPointsNumber() &&
                         (
-                            !point.IsCorrectOutDirection(route.GetPointPosition(i).DirectionTo(route.GetPointPosition(i + 1))) ||
+                            !point.IsCorrectOutDirection(route.GetPointPosition(i)
+                                .DirectionTo(route.GetPointPosition(i + 1))) ||
                             !point.AppliesToController(this->userControllerPosition)
                         )
                     ) {
@@ -94,7 +95,10 @@ namespace UKControllerPlugin {
                 group != this->airfieldGroups.cend();
                 ++group
             ) {
-                if ((*group)->HasAirfield(destination, route) && (*group)->AppliesToController(this->userControllerPosition, route)) {
+                if (
+                    (*group)->HasAirfield(destination, route) &&
+                    (*group)->AppliesToController(this->userControllerPosition, route)
+                ) {
 
                     return IntentionCodeData(
                         (*group)->GetIntentionCodeForGroup(destination, route),

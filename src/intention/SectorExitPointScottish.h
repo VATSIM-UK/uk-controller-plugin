@@ -22,5 +22,5 @@ namespace UKControllerPlugin {
                 const std::string EGPX_MIL_CALLSIGN_PREFIX = "EGP";
                 const std::string EGPX_NI_CALLSIGN_PREFIX = "EGA";
         };
-    }  // namespace Intention
-} // namespace UKControllerPlugin
+    }  // namespace IntentionCode
+}  // namespace UKControllerPlugin

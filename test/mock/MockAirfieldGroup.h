@@ -7,7 +7,7 @@ namespace UKControllerPluginTest {
         class MockAirfieldGroup : public UKControllerPlugin::IntentionCode::AirfieldGroup
         {
             public:
-                MockAirfieldGroup(bool applicableToController = true)
+                explicit MockAirfieldGroup(bool applicableToController = true)
                 {
                     this->applicableToController = applicableToController;
                 }

@@ -56,7 +56,7 @@ namespace UKControllerPlugin {
                 const int exitPointPassed = -1;
 
             private:
-                
+
                 std::string userControllerPosition = "";
 
                 int FindFirExitPoint(UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route);

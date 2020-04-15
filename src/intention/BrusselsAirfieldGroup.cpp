@@ -11,8 +11,10 @@ namespace UKControllerPlugin {
             this->Initialise();
         }
 
-        bool BrusselsAirfieldGroup::AppliesToController(std::string callsign, EuroscopeExtractedRouteInterface& route) const
-        {
+        bool BrusselsAirfieldGroup::AppliesToController(
+            std::string callsign,
+            EuroscopeExtractedRouteInterface& route
+        ) const {
             return !this->ControllerIsScottish(callsign);
         }
 
