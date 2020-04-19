@@ -264,6 +264,9 @@
     <ClInclude Include="..\..\src\squawk\SquawkRequest.h" />
     <ClInclude Include="..\..\src\squawk\SquawkValidator.h" />
     <ClInclude Include="..\..\src\pch\stdafx.h" />
+    <ClInclude Include="..\..\src\srd\SrdModule.h" />
+    <ClInclude Include="..\..\src\srd\SrdSearchDialog.h" />
+    <ClInclude Include="..\..\src\srd\SrdSearchHandler.h" />
     <ClInclude Include="..\..\src\srd\SrdSearchParameters.h" />
     <ClInclude Include="..\..\src\tag\TagFunction.h" />
     <ClInclude Include="..\..\src\tag\TagItemCollection.h" />
@@ -504,6 +507,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdModule.cpp" />
+    <ClCompile Include="..\..\src\srd\SrdSearchDialog.cpp" />
+    <ClCompile Include="..\..\src\srd\SrdSearchHandler.cpp" />
     <ClCompile Include="..\..\src\tag\TagFunction.cpp" />
     <ClCompile Include="..\..\src\tag\TagItemCollection.cpp" />
     <ClCompile Include="..\..\src\task\TaskRunner.cpp" />

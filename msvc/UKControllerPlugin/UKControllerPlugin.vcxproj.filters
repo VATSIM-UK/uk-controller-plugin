@@ -987,6 +987,15 @@
     <ClInclude Include="..\..\src\srd\SrdSearchParameters.h">
       <Filter>src\srd</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdModule.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdSearchDialog.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdSearchHandler.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1671,6 +1680,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\regional\RegionalPressureManagerFactory.cpp">
       <Filter>src\regional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdModule.cpp">
+      <Filter>src\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdSearchDialog.cpp">
+      <Filter>src\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdSearchHandler.cpp">
+      <Filter>src\srd</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
