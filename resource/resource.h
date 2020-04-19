@@ -12,6 +12,7 @@
 #define IDD_MINSTACK                    113
 #define IDD_MINSTACK1                   114
 #define IDD_REGIONAL_PRESSURE           114
+#define IDD_SRD_SEARCH                  115
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -37,6 +38,7 @@
 #define IDC_MAX_FILTER_LABEL            1018
 #define HOLD_PROFILE_NAME_EDIT          1018
 #define IDC_HOLD_PROFILE_NAME_EDIT      1018
+#define IDC_SRD_ORIGIN                  1018
 #define IDC_MIN_FILTER_TEXT             1019
 #define IDC_MIN_FILTER_SPIN             1020
 #define IDC_MIN_FILTER_LABEL            1021
@@ -98,14 +100,18 @@
 #define IDC_RPS_DELETE                  1071
 #define IDC_RPS_SELECT                  1072
 #define IDC_RPS_ADD                     1073
+#define IDC_ORIGIN_STATIC               1075
+#define IDC_SRD_DESTINATION             1076
+#define IDC_EDIT3                       1077
+#define IDC_EDIT4                       1078
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        115
+#define _APS_NEXT_RESOURCE_VALUE        117
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1074
+#define _APS_NEXT_CONTROL_VALUE         1079
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
