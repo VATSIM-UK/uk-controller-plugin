@@ -264,6 +264,7 @@
     <ClInclude Include="..\..\src\squawk\SquawkRequest.h" />
     <ClInclude Include="..\..\src\squawk\SquawkValidator.h" />
     <ClInclude Include="..\..\src\pch\stdafx.h" />
+    <ClInclude Include="..\..\src\srd\SrdSearchParameters.h" />
     <ClInclude Include="..\..\src\tag\TagFunction.h" />
     <ClInclude Include="..\..\src\tag\TagItemCollection.h" />
     <ClInclude Include="..\..\src\tag\TagItemInterface.h" />

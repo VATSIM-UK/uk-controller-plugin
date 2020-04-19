@@ -133,6 +133,9 @@
     <Filter Include="src\regional">
       <UniqueIdentifier>{05e23cc3-415e-4bb7-8e85-0cdad310c649}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\srd">
+      <UniqueIdentifier>{5f1c7726-0075-4d0b-883b-51f257857acb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -980,6 +983,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\regional\RegionalPressureManagerFactory.h">
       <Filter>src\regional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdSearchParameters.h">
+      <Filter>src\srd</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
