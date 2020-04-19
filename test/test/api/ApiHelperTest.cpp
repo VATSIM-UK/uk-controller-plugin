@@ -10,6 +10,7 @@
 #include "api/ApiNotAuthorisedException.h"
 #include "mock/MockWinApi.h"
 #include "squawk/ApiSquawkAllocation.h"
+#include "srd/SrdSearchParameters.h"
 
 using UKControllerPlugin::Api::ApiHelper;
 using UKControllerPlugin::Api::ApiResponse;
@@ -23,6 +24,7 @@ using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
+using UKControllerPlugin::Srd::SrdSearchParameters;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -740,6 +742,31 @@ TEST_F(ApiHelperTest, GetUriThrowsExceptionIfNonUkcpRoute)
         .Times(0);
 
     EXPECT_THROW(this->helper.GetUri("http://ukcp.test.org/someuri"), ApiException);
+}
+
+TEST_F(ApiHelperTest, SearchSrdReturnsData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    SrdSearchParameters params;
+    params.origin = "EGLL";
+    params.destination = "EGGD";
+    params.requestedLevel = 10000;
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/srd/route/search?origin=EGLL&destination=EGGD&requestedLevel=10000",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.SearchSrd(params));
 }
 }  // namespace Api
 }  // namespace UKControllerPluginTest

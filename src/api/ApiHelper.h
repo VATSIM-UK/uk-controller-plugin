@@ -53,6 +53,7 @@ namespace UKControllerPlugin {
                 nlohmann::json GetMinStackLevels(void) const override;
                 nlohmann::json GetRegionalPressures(void) const override;
                 nlohmann::json GetUri(std::string uri) const;
+                nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const;
                 void DeleteUserHoldProfile(unsigned int profileId) const override;
                 unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
                 void UpdateUserHoldProfile(
