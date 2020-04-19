@@ -15,7 +15,7 @@ namespace UKControllerPlugin {
 
         void BootstrapPlugin(PersistenceContainer& container)
         {
-            std::shared_ptr<SrdSearchDialog> dialog = std::make_shared<SrdSearchDialog>();
+            std::shared_ptr<SrdSearchDialog> dialog = std::make_shared<SrdSearchDialog>(*container.api);
             container.dialogManager->AddDialog(
                 {
                     IDD_SRD_SEARCH,
