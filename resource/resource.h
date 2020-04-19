@@ -106,8 +106,9 @@
 #define IDC_STATIC_REQUIRED             1079
 #define IDC_SRD_CRUISE_STATIC           1080
 #define IDC_SRD_DESTINATION_STATIC      1081
-#define IDC_LIST4                       1085
 #define IDC_SRD_RESULTS                 1085
+#define IDC_BUTTON1                     1086
+#define IDC_SRD_SEARCH                  1086
 
 // Next default values for new objects
 // 
@@ -115,7 +116,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        117
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1086
+#define _APS_NEXT_CONTROL_VALUE         1087
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
