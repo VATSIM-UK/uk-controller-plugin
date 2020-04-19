@@ -106,8 +106,8 @@
 #define IDC_STATIC_REQUIRED             1079
 #define IDC_SRD_CRUISE_STATIC           1080
 #define IDC_SRD_DESTINATION_STATIC      1081
-#define IDC_LIST3                       1084
 #define IDC_LIST4                       1085
+#define IDC_SRD_RESULTS                 1085
 
 // Next default values for new objects
 // 

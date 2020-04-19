@@ -67,7 +67,37 @@ namespace UKControllerPlugin {
 
         void SrdSearchDialog::InitDialog(HWND hwnd, LPARAM lParam)
         {
+            HWND resultsList = GetDlgItem(hwnd, IDC_SRD_RESULTS);
 
+            // Create the min level column
+            LVCOLUMN minLevelColumn = {
+                LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
+                LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
+                50,
+                L"Min",
+                0
+            };
+            ListView_InsertColumn(resultsList, 0, &minLevelColumn);
+
+            // Create the max level column
+            LVCOLUMN maxLevelColumn = {
+                LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
+                LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
+                50,
+                L"Max",
+                1
+            };
+            ListView_InsertColumn(resultsList, 1, &maxLevelColumn);
+
+            // Create the route string column
+            LVCOLUMN routeStringColumn = {
+                LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
+                LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
+                335,
+                L"Route String",
+                2
+            };
+            ListView_InsertColumn(resultsList, 2, &routeStringColumn);
         }
 
     }  // namespace Srd
