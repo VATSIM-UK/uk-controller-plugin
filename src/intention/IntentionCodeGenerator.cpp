@@ -38,13 +38,16 @@ namespace UKControllerPlugin {
                 if (exitPoints.HasSectorExitPoint(route.GetPointName(i))) {
 
                     // Check that they're travelling in the right direction to leave the FIR at this point.
+                    // Also make sure they're on the right position to use the exit point.
+                    const SectorExitPoint& point = exitPoints.GetSectorExitPoint(route.GetPointName(i));
                     if (
                         i + 1 < route.GetPointsNumber() &&
-                        !exitPoints.GetSectorExitPoint(route.GetPointName(i))
-                            .IsCorrectOutDirection(
-                                route.GetPointPosition(i).DirectionTo(route.GetPointPosition(i + 1))
-                            )
-                        ) {
+                        (
+                            !point.IsCorrectOutDirection(route.GetPointPosition(i)
+                                .DirectionTo(route.GetPointPosition(i + 1))) ||
+                            !point.AppliesToController(this->userControllerPosition)
+                        )
+                    ) {
                         i++;
                         continue;
                     }
@@ -92,7 +95,10 @@ namespace UKControllerPlugin {
                 group != this->airfieldGroups.cend();
                 ++group
             ) {
-                if ((*group)->HasAirfield(destination, route)) {
+                if (
+                    (*group)->HasAirfield(destination, route) &&
+                    (*group)->AppliesToController(this->userControllerPosition, route)
+                ) {
 
                     return IntentionCodeData(
                         (*group)->GetIntentionCodeForGroup(destination, route),
@@ -130,6 +136,16 @@ namespace UKControllerPlugin {
                 false,
                 this->invalidExitPointIndex
             );
+        }
+
+        void IntentionCodeGenerator::SetUserControllerPosition(std::string position)
+        {
+            this->userControllerPosition = position;
+        }
+
+        std::string IntentionCodeGenerator::GetUserControllerPosition(void) const
+        {
+            return this->userControllerPosition;
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

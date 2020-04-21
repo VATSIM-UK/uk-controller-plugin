@@ -1,5 +1,6 @@
 #pragma once
 #include "tag/TagItemInterface.h"
+#include "controller/ControllerStatusEventHandlerInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "intention/IntentionCodeGenerator.h"
 #include "intention/IntentionCodeCache.h"
@@ -21,7 +22,8 @@ namespace UKControllerPlugin {
         */
         class IntentionCodeEventHandler
             : public UKControllerPlugin::Tag::TagItemInterface,
-            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface
+            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
+            public UKControllerPlugin::Controller::ControllerStatusEventHandlerInterface
         {
             public:
                 IntentionCodeEventHandler(
@@ -44,6 +46,18 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 );
+
+                // Inherited via ControllerStatusEventHandlerInterface
+                void ControllerUpdateEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller
+                ) override;
+                void ControllerDisconnectEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller
+                ) override;
+                void SelfDisconnectEvent(void) override;
+
+                const UKControllerPlugin::IntentionCode::IntentionCodeGenerator& GetGenerator() const;
+                const UKControllerPlugin::IntentionCode::IntentionCodeCache& GetCache() const;
 
             private:
 

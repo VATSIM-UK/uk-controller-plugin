@@ -8,6 +8,15 @@ using ::testing::StrictMock;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
+
+        TEST(SectorExitPointEtrat, ItAppliesToAllControllers)
+        {
+            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
+            SectorExitPointEtrat exitPoint("ETRAT", "E", SectorExitPointEtrat::outSouth);
+
+            EXPECT_TRUE(exitPoint.AppliesToController("BLA"));
+        }
+
         TEST(SectorExitPointEtrat, GetIntentionCodeReturnsCorrectSecondaryCode)
         {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;

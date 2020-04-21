@@ -10,6 +10,89 @@ using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
+
+        TEST(AmsterdamAirfieldGroup, ItDoesntApplyToIrishAirfields)
+        {
+            AmsterdamAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_CALL(wrapperMock, GetPointsNumber())
+                .WillRepeatedly(Return(0));
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("EGAA_APP", wrapperMock));
+        }
+
+        TEST(AmsterdamAirfieldGroup, ItDoesntApplyToScottishMilAirfields)
+        {
+            AmsterdamAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_CALL(wrapperMock, GetPointsNumber())
+                .WillRepeatedly(Return(0));
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("EGQX_APP", wrapperMock));
+        }
+
+        TEST(AmsterdamAirfieldGroup, ItDoesntApplyToScottishAirfields)
+        {
+            AmsterdamAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_CALL(wrapperMock, GetPointsNumber())
+                .WillRepeatedly(Return(0));
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("EGPF_APP", wrapperMock));
+        }
+
+        TEST(AmsterdamAirfieldGroup, ItDoesntApplyToScottishTc)
+        {
+            AmsterdamAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_CALL(wrapperMock, GetPointsNumber())
+                .WillRepeatedly(Return(0));
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("STC_A_CTR", wrapperMock));
+        }
+
+        TEST(AmsterdamAirfieldGroup, ItDoesntApplyToScottishAc)
+        {
+            AmsterdamAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_CALL(wrapperMock, GetPointsNumber())
+                .WillRepeatedly(Return(0));
+
+            EXPECT_FALSE(airfieldGroup.AppliesToController("SCO_M_CTR", wrapperMock));
+        }
+
+        TEST(AmsterdamAirfieldGroup, ItAppliesToScottishIfViaToppa)
+        {
+            AmsterdamAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_CALL(wrapperMock, GetPointsNumber())
+                .WillRepeatedly(Return(3));
+
+            EXPECT_CALL(wrapperMock, GetPointName(0))
+                .Times(1)
+                .WillOnce(Return("EGKK"));
+
+            EXPECT_CALL(wrapperMock, GetPointName(1))
+                .Times(1)
+                .WillOnce(Return("TOPPA"));
+
+            EXPECT_TRUE(airfieldGroup.AppliesToController("SCO_M_CTR", wrapperMock));
+        }
+
+        TEST(AmsterdamAirfieldGroup, ItAppliesToEveryoneElse)
+        {
+            AmsterdamAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_TRUE(airfieldGroup.AppliesToController("BLA", wrapperMock));
+        }
+
         TEST(AmsterdamAirfieldGroup, HasAirfieldReturnsFalseNotInAmsterdam)
         {
             AmsterdamAirfieldGroup airfieldGroup;

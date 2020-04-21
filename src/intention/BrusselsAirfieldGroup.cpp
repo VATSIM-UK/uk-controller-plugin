@@ -11,6 +11,13 @@ namespace UKControllerPlugin {
             this->Initialise();
         }
 
+        bool BrusselsAirfieldGroup::AppliesToController(
+            std::string callsign,
+            EuroscopeExtractedRouteInterface& route
+        ) const {
+            return !this->ControllerIsScottish(callsign);
+        }
+
         /*
             We only recognise the airfield if it's in Brussels AND the aircraft is going via KOK.
             Other cases use the intention code determined by the sector exit point in IntentionCode.

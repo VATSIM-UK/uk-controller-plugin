@@ -309,9 +309,6 @@
     <ClCompile Include="..\..\test\test\intention\SectorExitPointLelnaTest.cpp">
       <Filter>test\intention</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\intention\SectorExitPointShanwickTest.cpp">
-      <Filter>test\intention</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\intention\SectorExitPointTest.cpp">
       <Filter>test\intention</Filter>
     </ClCompile>
