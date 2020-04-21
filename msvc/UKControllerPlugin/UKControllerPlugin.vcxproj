@@ -182,7 +182,7 @@
     <ClInclude Include="..\..\src\intention\SectorExitPoint.h" />
     <ClInclude Include="..\..\src\intention\SectorExitPointEtrat.h" />
     <ClInclude Include="..\..\src\intention\SectorExitPointLelna.h" />
-    <ClInclude Include="..\..\src\intention\SectorExitPointShanwick.h" />
+    <ClInclude Include="..\..\src\intention\SectorExitPointScottish.h" />
     <ClInclude Include="..\..\src\intention\SectorExitPointVeule.h" />
     <ClInclude Include="..\..\src\intention\SectorExitRepository.h" />
     <ClInclude Include="..\..\src\intention\SectorExitRepositoryFactory.h" />
@@ -430,7 +430,7 @@
     <ClCompile Include="..\..\src\intention\SectorExitPoint.cpp" />
     <ClCompile Include="..\..\src\intention\SectorExitPointEtrat.cpp" />
     <ClCompile Include="..\..\src\intention\SectorExitPointLelna.cpp" />
-    <ClCompile Include="..\..\src\intention\SectorExitPointShanwick.cpp" />
+    <ClCompile Include="..\..\src\intention\SectorExitPointScottish.cpp" />
     <ClCompile Include="..\..\src\intention\SectorExitPointVeule.cpp" />
     <ClCompile Include="..\..\src\intention\SectorExitRepository.cpp" />
     <ClCompile Include="..\..\src\intention\SectorExitRepositoryFactory.cpp" />

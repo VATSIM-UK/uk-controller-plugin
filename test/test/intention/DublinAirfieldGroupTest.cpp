@@ -8,6 +8,15 @@ using ::testing::StrictMock;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
+
+        TEST(DublinAirfieldGroup, ItAppliesToAllControllers)
+        {
+            DublinAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_TRUE(airfieldGroup.AppliesToController("BLA", wrapperMock));
+        }
+
         TEST(DublinAirfieldGroup, HasAirfieldReturnsFalseNotInDublin)
         {
             DublinAirfieldGroup airfieldGroup;

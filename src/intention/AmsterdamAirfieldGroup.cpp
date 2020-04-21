@@ -11,6 +11,13 @@ namespace UKControllerPlugin {
             this->Initialise();
         }
 
+        bool AmsterdamAirfieldGroup::AppliesToController(
+            std::string callsign,
+            EuroscopeExtractedRouteInterface& route
+        ) const {
+            return !this->ControllerIsScottish(callsign) || this->IsViaPoint("TOPPA", route);
+        }
+
         /*
             We only care about airfields beginning with EH (Amsterdam).
         */
