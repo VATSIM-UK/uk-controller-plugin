@@ -26,6 +26,7 @@ namespace UKControllerPlugin {
                 std::string GetName(void) const;
                 unsigned int GetOutDirection(void) const;
                 bool IsCorrectOutDirection(double directionOfTravel) const;
+                virtual bool AppliesToController(std::string callsign) const;
 
                 // The exit directions.
                 static const int outNorth = 1;

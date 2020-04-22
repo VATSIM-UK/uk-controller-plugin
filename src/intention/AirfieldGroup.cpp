@@ -6,6 +6,15 @@ using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
 
 namespace UKControllerPlugin {
     namespace IntentionCode {
+
+        bool AirfieldGroup::AppliesToController(
+            std::string callsign,
+            UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route
+        ) const
+        {
+            return true;
+        }
+
         /*
             Adds a particular airfield to the list of airfields.
         */
@@ -20,7 +29,17 @@ namespace UKControllerPlugin {
         bool AirfieldGroup::AirfieldInList(std::string airfield) const
         {
             return std::find(this->airfields.begin(), this->airfields.end(), airfield) != this->airfields.end();
-        };
+        }
+
+        bool AirfieldGroup::ControllerIsScottish(std::string callsign) const
+        {
+            std::string prefix = callsign.substr(0, 3);
+            return prefix == this->SCAC_CALLSIGN_PREFIX ||
+                prefix == this->SCTC_CALLSIGN_PREFIX ||
+                prefix == this->EGPX_CALLSIGN_PREFIX ||
+                prefix == this->EGPX_NI_CALLSIGN_PREFIX ||
+                prefix == this->EGPX_MIL_CALLSIGN_PREFIX;
+        }
 
         /*
             By default, we empty the airfield list.

@@ -31,6 +31,7 @@ namespace UKControllerPlugin {
             // Register with required event handlers.
             container.flightplanHandler->RegisterHandler(handler);
             container.tagHandler->RegisterTagItem(IntentionCodeModule::tagItemId, handler);
+            container.controllerHandler->RegisterHandler(handler);
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

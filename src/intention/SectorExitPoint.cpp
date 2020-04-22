@@ -91,5 +91,10 @@ namespace UKControllerPlugin {
             // Default return no.
             return result;
         }
+
+        bool SectorExitPoint::AppliesToController(std::string callsign) const
+        {
+            return true;
+        }
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

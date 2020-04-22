@@ -21,6 +21,10 @@ namespace UKControllerPlugin {
         {
         public:
             BrusselsAirfieldGroup(void);
+            bool AppliesToController(
+                std::string callsign,
+                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route
+            ) const override;
             bool HasAirfield(
                 std::string airfield,
                 UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route

@@ -19,6 +19,7 @@ namespace UKControllerPlugin {
         class IntentionCodeCache
         {
             public:
+                void Clear(void);
                 bool IntentionCodeValid(
                     std::string callsign,
                     UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route

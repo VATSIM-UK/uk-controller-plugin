@@ -432,9 +432,6 @@
     <ClInclude Include="..\..\src\intention\SectorExitPointLelna.h">
       <Filter>src\intention</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\intention\SectorExitPointShanwick.h">
-      <Filter>src\intention</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\intention\SectorExitPointVeule.h">
       <Filter>src\intention</Filter>
     </ClInclude>
@@ -996,6 +993,9 @@
     <ClInclude Include="..\..\src\srd\SrdSearchHandler.h">
       <Filter>src\srd</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\intention\SectorExitPointScottish.h">
+      <Filter>src\intention</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1238,9 +1238,6 @@
       <Filter>src\intention</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\intention\SectorExitPointLelna.cpp">
-      <Filter>src\intention</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\intention\SectorExitPointShanwick.cpp">
       <Filter>src\intention</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\intention\SectorExitPointVeule.cpp">
@@ -1689,6 +1686,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\srd\SrdSearchHandler.cpp">
       <Filter>src\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\intention\SectorExitPointScottish.cpp">
+      <Filter>src\intention</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

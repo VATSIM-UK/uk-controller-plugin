@@ -11,6 +11,15 @@ using ::testing::StrictMock;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
+
+        TEST(SectorExitPointLelna, ItAppliesToAllControllers)
+        {
+            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
+            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
+
+            EXPECT_TRUE(exitPoint.AppliesToController("BLA"));
+        }
+
         TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectDefaultCodeLelna)
         {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;

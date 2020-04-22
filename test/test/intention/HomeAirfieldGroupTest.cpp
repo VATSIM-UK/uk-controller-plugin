@@ -9,6 +9,15 @@ using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
+
+        TEST(HomeAirfieldGroup, ItAppliesToAllControllers)
+        {
+            HomeAirfieldGroup airfieldGroup;
+            StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
+
+            EXPECT_TRUE(airfieldGroup.AppliesToController("BLA", wrapperMock));
+        }
+
         TEST(HomeAirfieldGroup, HasAirfieldReturnsFalseNotInHome)
         {
             HomeAirfieldGroup airfieldGroup;
