@@ -3,8 +3,11 @@
 #include "dialog/DialogCallArgument.h"
 #include "srd/SrdSearchParameters.h"
 #include "hold/HoldDisplayFunctions.h"
+#include "helper/HelperFunctions.h"
+#include "api/ApiException.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
+using UKControllerPlugin::Api::ApiException;
 
 namespace UKControllerPlugin {
     namespace Srd {
@@ -28,13 +31,54 @@ namespace UKControllerPlugin {
             }
             else if (msg == WM_DESTROY) {
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
-                LogInfo("Minstack configuration dialog closed");
+                LogInfo("SRD search dialog closed");
             }
 
             SrdSearchDialog* dialog = reinterpret_cast<SrdSearchDialog*>(
                 GetWindowLongPtr(hwnd, GWLP_USERDATA)
             );
             return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
+        }
+
+        bool SrdSearchDialog::SearchResultsValid(const nlohmann::json results) const
+        {
+            if (!results.is_array()) {
+                return false;
+            }
+
+            for (nlohmann::json::const_iterator it = results.cbegin(); it != results.cend(); ++it) {
+
+                if (!it->contains("minimum_level") || (!it->at("minimum_level").is_number_integer() && !it->at("minimum_level").is_null())) {
+                    LogError("SRD search result has invalid minimum level " + results.dump());
+                    return false;
+                }
+
+                if (!it->contains("maximum_level") || !it->at("maximum_level").is_number_integer()) {
+                    LogError("SRD search result has invalid maximum level " + results.dump());
+                    return false;
+                }
+
+                if (!it->contains("route_string") || !it->at("route_string").is_string()) {
+                    LogError("SRD search result has invalid route string " + results.dump());
+                    return false;
+                }
+
+                return true;
+                if (it->contains("notes")) {
+                    if (!it->at("notes").is_object()) {
+                        LogError("SRD search result has invalid notes object " + results.dump());
+                        return false;
+                    }
+
+                    for (nlohmann::json::const_iterator noteIt = results.cbegin(); noteIt != results.cend(); ++noteIt) {
+                        if (!it->is_string()) {
+                            LogError("SRD search result has an invalid note " + results.dump());
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
 
         /*
@@ -78,6 +122,9 @@ namespace UKControllerPlugin {
         void SrdSearchDialog::InitDialog(HWND hwnd, LPARAM lParam)
         {
             HWND resultsList = GetDlgItem(hwnd, IDC_SRD_RESULTS);
+
+            // Make items highlight on row select
+            SendMessage(resultsList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT);
 
             // Create the min level column
             LVCOLUMN minLevelColumn = {
@@ -151,16 +198,54 @@ namespace UKControllerPlugin {
                 searchParams.requestedLevel = std::stoi(requestedLevel);
             }
 
-            // Do the search
-            nlohmann::json results = this->api.SearchSrd(searchParams);
+            // Clear the results list
+            HWND resultsList = GetDlgItem(hwnd, IDC_SRD_RESULTS);
+            ListView_DeleteAllItems(hwnd);
+
+            if (resultsList == NULL) {
+                return;
+            }
+
+            // Do the search and validate the results
+            nlohmann::json results;
+            try {
+                results = this->api.SearchSrd(searchParams);
+            } catch (ApiException e) {
+                LogError("Failed to perform SRD search: " + std::string(e.what()));
+                return;
+            }
+
+            if (!this->SearchResultsValid(results)) {
+                return;
+            }
+
 
             // Populate the results list with results
+            int itemNumber = 0;
             for (nlohmann::json::const_iterator it = results.cbegin(); it != results.cend(); ++it) {
                 LVITEM item;
                 item.mask = LVIF_TEXT;
-                // START HERE
-                //item.pszText = it->at("origin").get<std::wstring>().c_str();
+                item.iItem = itemNumber;
+                item.iSubItem = 0;
 
+                // Min Level
+                std::wstring minLevel = std::to_wstring(it->at("minimum_level").get<int>());
+                item.pszText = (LPWSTR)minLevel.c_str();
+                ListView_InsertItem(resultsList, &item);
+
+                // Max Level
+                item.iSubItem++;
+                std::wstring maxLevel = std::to_wstring(it->at("maximum_level").get<int>());
+                item.pszText = (LPWSTR)maxLevel.c_str();
+                ListView_SetItem(resultsList, &item);
+
+                // Route String
+                item.iSubItem++;
+                std::wstring routeString = HelperFunctions::ConvertToWideString(it->at("route_string").get<std::string>());
+                item.pszText = (LPWSTR)(routeString.c_str());
+                ListView_SetItem(resultsList, &item);
+
+                itemNumber++;
             }
         }
 
