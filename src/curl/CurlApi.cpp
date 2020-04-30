@@ -19,9 +19,10 @@ namespace UKControllerPlugin {
 
             // Set CURL params.
             curlObject = curl_easy_init();
-            char* escapedUrl = curl_easy_escape(curlObject, request.GetUri(), 0);
-            curl_easy_setopt(curlObject, CURLOPT_URL, escapedUrl);
+            curl_easy_setopt(curlObject, CURLOPT_URL, request.GetUri());
             curl_easy_setopt(curlObject, CURLOPT_CUSTOMREQUEST, request.GetMethod());
+            curl_easy_setopt(curlObject, CURLOPT_SSL_VERIFYHOST, 0L);
+            curl_easy_setopt(curlObject, CURLOPT_SSL_VERIFYPEER, 0L);
 
             // Add headers
             if (request.cbegin() != request.cend()) {
@@ -41,7 +42,6 @@ namespace UKControllerPlugin {
             curl_easy_setopt(curlObject, CURLOPT_WRITEFUNCTION, &CurlApi::WriteFunction);
 
             result = curl_easy_perform(curlObject);
-            curl_free(escapedUrl);
 
             // If we get an error, then throw an exception.
             if (result != CURLE_OK) {

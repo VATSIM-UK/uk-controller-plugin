@@ -210,9 +210,17 @@ namespace UKControllerPlugin {
                 searchParams.requestedLevel = std::stoi(requestedLevel);
             }
 
-            // Clear the results list
+            // Clear the results list and notes box
             HWND resultsList = GetDlgItem(hwnd, IDC_SRD_RESULTS);
+            HWND notesBox = GetDlgItem(hwnd, IDC_SRD_NOTES);
             ListView_DeleteAllItems(resultsList);
+            SendDlgItemMessage(
+                hwnd,
+                IDC_SRD_NOTES,
+                WM_SETTEXT,
+                NULL,
+                (LPARAM)L""
+            );
 
             if (resultsList == NULL) {
                 return;
@@ -224,7 +232,6 @@ namespace UKControllerPlugin {
                 results = this->api.SearchSrd(searchParams);
             } catch (ApiException e) {
                 LogError("Failed to perform SRD search: " + std::string(e.what()));
-                return;
             }
 
             if (results.empty() || !this->SearchResultsValid(results)) {
@@ -242,6 +249,7 @@ namespace UKControllerPlugin {
                 item.iSubItem++;
                 item.pszText = L"No routes found";
                 ListView_SetItem(resultsList, &item);
+
                 return;
             }
 
@@ -272,6 +280,30 @@ namespace UKControllerPlugin {
                 std::wstring routeString = HelperFunctions::ConvertToWideString(it->at("route_string").get<std::string>());
                 item.pszText = (LPWSTR)(routeString.c_str());
                 ListView_SetItem(resultsList, &item);
+
+                if (it->contains("notes") && !it->at("notes").empty()) {
+
+                    std::string noteString;
+                    for (
+                        nlohmann::json::const_iterator noteIt = it->at("notes").cbegin();
+                        noteIt != it->at("notes").cend();
+                        ++noteIt
+                    ) {
+                        noteString += "Note " + std::to_string(noteIt->at("id").get<int>()) + "\n\n"
+                            + noteIt->at("text").get<std::string>() + "\n\n";
+                    }
+
+                    noteString = std::regex_replace(noteString, std::regex("\n"), "\r\n");
+                    std::wstring noteStringWide = HelperFunctions::ConvertToWideString(noteString);
+
+                    SendDlgItemMessage(
+                        hwnd,
+                        IDC_SRD_NOTES,
+                        WM_SETTEXT,
+                        NULL,
+                        (LPARAM)noteStringWide.c_str()
+                    );
+                }
 
                 itemNumber++;
             }
