@@ -996,6 +996,9 @@
     <ClInclude Include="..\..\src\intention\SectorExitPointScottish.h">
       <Filter>src\intention</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\datablock\DatablockFunctions.h">
+      <Filter>src\datablock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1689,6 +1692,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\intention\SectorExitPointScottish.cpp">
       <Filter>src\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datablock\DatablockFunctions.cpp">
+      <Filter>src\datablock</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,9 +5,11 @@
 #include "hold/HoldDisplayFunctions.h"
 #include "helper/HelperFunctions.h"
 #include "api/ApiException.h"
+#include "datablock/DatablockFunctions.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Datablock::ConvertAltitudeToFlightLevel;
 
 namespace UKControllerPlugin {
     namespace Srd {
@@ -43,6 +45,7 @@ namespace UKControllerPlugin {
         bool SrdSearchDialog::SearchResultsValid(const nlohmann::json results) const
         {
             if (!results.is_array()) {
+                LogError("SRD search result is not an array" + results.dump());
                 return false;
             }
 
@@ -63,17 +66,26 @@ namespace UKControllerPlugin {
                     return false;
                 }
 
-                return true;
-                if (it->contains("notes")) {
-                    if (!it->at("notes").is_object()) {
-                        LogError("SRD search result has invalid notes object " + results.dump());
-                        return false;
-                    }
+                if (!it->at("notes").is_array()) {
+                    LogError("SRD search result has invalid notes array " + results.dump());
+                    return false;
+                }
 
-                    for (nlohmann::json::const_iterator noteIt = results.cbegin(); noteIt != results.cend(); ++noteIt) {
-                        if (!it->is_string()) {
-                            LogError("SRD search result has an invalid note " + results.dump());
-                        }
+                for (
+                    nlohmann::json::const_iterator noteIt = it->at("notes").cbegin();
+                    noteIt != it->at("notes").cend();
+                    ++noteIt
+                ) {
+
+                    if (
+                        !noteIt->is_object() ||
+                        !noteIt->contains("id") ||
+                        !noteIt->at("id").is_number_integer() ||
+                        !noteIt->contains("text") ||
+                        !noteIt->at("text").is_string()
+                    ) {
+                        LogError("SRD search result has an invalid note " + results.dump());
+                        return false;
                     }
                 }
             }
@@ -200,7 +212,7 @@ namespace UKControllerPlugin {
 
             // Clear the results list
             HWND resultsList = GetDlgItem(hwnd, IDC_SRD_RESULTS);
-            ListView_DeleteAllItems(hwnd);
+            ListView_DeleteAllItems(resultsList);
 
             if (resultsList == NULL) {
                 return;
@@ -215,7 +227,21 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            if (!this->SearchResultsValid(results)) {
+            if (results.empty() || !this->SearchResultsValid(results)) {
+                LVITEM item;
+                item.mask = LVIF_TEXT;
+                item.iItem = 0;
+                item.iSubItem = 0;
+
+                // Nothing found, display the fact
+                item.pszText = L"0";
+                ListView_InsertItem(resultsList, &item);
+                item.iSubItem++;
+                item.pszText = L"0";
+                ListView_SetItem(resultsList, &item);
+                item.iSubItem++;
+                item.pszText = L"No routes found";
+                ListView_SetItem(resultsList, &item);
                 return;
             }
 
@@ -229,13 +255,15 @@ namespace UKControllerPlugin {
                 item.iSubItem = 0;
 
                 // Min Level
-                std::wstring minLevel = std::to_wstring(it->at("minimum_level").get<int>());
+                std::wstring minLevel = it->at("minimum_level").is_null()
+                    ? L"MC"
+                    : std::to_wstring(ConvertAltitudeToFlightLevel(it->at("minimum_level").get<int>()));
                 item.pszText = (LPWSTR)minLevel.c_str();
                 ListView_InsertItem(resultsList, &item);
 
                 // Max Level
                 item.iSubItem++;
-                std::wstring maxLevel = std::to_wstring(it->at("maximum_level").get<int>());
+                std::wstring maxLevel = std::to_wstring(ConvertAltitudeToFlightLevel(it->at("maximum_level").get<int>()));
                 item.pszText = (LPWSTR)maxLevel.c_str();
                 ListView_SetItem(resultsList, &item);
 

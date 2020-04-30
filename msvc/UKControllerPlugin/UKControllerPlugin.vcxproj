@@ -69,6 +69,7 @@
     <ClInclude Include="..\..\src\curl\CurlResponse.h" />
     <ClInclude Include="..\..\src\curl\HttpException.h" />
     <ClInclude Include="..\..\src\datablock\DatablockBoostrap.h" />
+    <ClInclude Include="..\..\src\datablock\DatablockFunctions.h" />
     <ClInclude Include="..\..\src\datablock\DisplayTime.h" />
     <ClInclude Include="..\..\src\dependency\DependencyLoader.h" />
     <ClInclude Include="..\..\src\dependency\DependencyLoaderInterface.h" />
@@ -347,6 +348,7 @@
     <ClCompile Include="..\..\src\curl\CurlRequest.cpp" />
     <ClCompile Include="..\..\src\curl\CurlResponse.cpp" />
     <ClCompile Include="..\..\src\datablock\DatablockBoostrap.cpp" />
+    <ClCompile Include="..\..\src\datablock\DatablockFunctions.cpp" />
     <ClCompile Include="..\..\src\datablock\DisplayTime.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyLoader.cpp" />
     <ClCompile Include="..\..\src\dependency\UpdateDependencies.cpp" />
