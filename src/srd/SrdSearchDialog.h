@@ -19,6 +19,7 @@ namespace UKControllerPlugin {
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 void InitDialog(HWND hwnd, LPARAM lParam);
                 void StartSearch(HWND hwnd);
+                void CopyRouteStringToClipboard(HWND hwnd);
                 void SelectSearchResult(HWND hwnd, NMLISTVIEW * details);
 
                 // The API for making searches
@@ -29,6 +30,9 @@ namespace UKControllerPlugin {
 
                 // The JSON result of the previous search
                 nlohmann::json previousSearchResults = noResultsFound;
+
+                // The selected search result
+                size_t selectedResult;
         };
     }  // namespace Srd
 }  // UKControllerPlugin

@@ -163,6 +163,10 @@ namespace UKControllerPlugin {
                             this->StartSearch(hwnd);
                             return TRUE;
                         }
+                        case IDC_SRD_ROUTE_COPY: {
+                            this->CopyRouteStringToClipboard(hwnd);
+                            return TRUE;
+                        }
                     }
                 }
             }
@@ -262,6 +266,10 @@ namespace UKControllerPlugin {
                 (LPARAM)L""
             );
 
+            // Disable the route copy button
+            EnableWindow(GetDlgItem(hwnd, IDC_SRD_ROUTE_COPY), false);
+
+
             if (resultsList == NULL) {
                 return;
             }
@@ -328,6 +336,30 @@ namespace UKControllerPlugin {
             }
         }
 
+        void SrdSearchDialog::CopyRouteStringToClipboard(HWND hwnd)
+        {
+            if (!OpenClipboard(hwnd)) {
+                LogError("Failed to open clipboard: " + std::to_string(GetLastError()));
+            }
+
+            EmptyClipboard();
+
+            std::string routeString = this->previousSearchResults.at(this->selectedResult).at("route_string").get<std::string>();
+
+            HGLOBAL handle = GlobalAlloc(GMEM_MOVEABLE, (routeString.size() + 1) * sizeof(char));
+            if (handle == NULL) {
+                LogError("Failed to copy to clipboard: " + std::to_string(GetLastError()));
+                return;
+            }
+
+            LPSTR copy = reinterpret_cast<LPSTR>(GlobalLock(handle));
+            memcpy(copy, routeString.c_str(), (routeString.size() + 1) * sizeof(char));
+            GlobalUnlock(copy);
+
+            SetClipboardData(CF_TEXT, copy);
+            CloseClipboard();
+        }
+
         void SrdSearchDialog::SelectSearchResult(HWND hwnd, NMLISTVIEW * details)
         {
             // If a new item has been selected, change the notes
@@ -335,6 +367,8 @@ namespace UKControllerPlugin {
                 ((details->uNewState ^ details->uOldState) & LVIS_SELECTED) &&
                 !this->previousSearchResults.empty()
             ) {
+
+                this->selectedResult = details->iItem;
 
                 std::wstring noteStringWide = HelperFunctions::ConvertToWideString(
                     this->FormatNotes(this->previousSearchResults, details->iItem)
@@ -347,6 +381,9 @@ namespace UKControllerPlugin {
                     NULL,
                     (LPARAM) noteStringWide.c_str()
                 );
+
+                // Enable the route copy button
+                EnableWindow(GetDlgItem(hwnd, IDC_SRD_ROUTE_COPY), true);
             }
         }
 

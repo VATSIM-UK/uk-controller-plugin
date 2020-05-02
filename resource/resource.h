@@ -71,6 +71,8 @@
 #define IDC_HOLD_PROFILE_DELETE         1042
 #define HOLD_PROFILE_NAME_STATIC        1044
 #define IDC_BUTTON2                     1046
+#define IDC_ROUTE_COPY                  1046
+#define IDC_SRD_ROUTE_COPY              1046
 #define TIMER1_EDIT_DURATION            1047
 #define TIMER2_EDIT_DURATION            1048
 #define IDC_TIME_FORMAT_CHECK           1048
