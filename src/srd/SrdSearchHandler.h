@@ -1,6 +1,7 @@
 #pragma once
 #include "dialog/DialogManager.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
+#include "plugin/FunctionCallEventHandler.h"
 
 namespace UKControllerPlugin {
     namespace Srd {
@@ -8,7 +9,8 @@ namespace UKControllerPlugin {
         /*
             A handler that triggers the SRD searching dialog
         */
-        class SrdSearchHandler : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface
+        class SrdSearchHandler : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
+            public UKControllerPlugin::Plugin::FunctionCallEventHandler
         {
             public:
                 SrdSearchHandler(
@@ -19,6 +21,12 @@ namespace UKControllerPlugin {
                 // Inherited via ConfigurableDisplayInterface
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
+                void TagFunction(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string context,
+                    const POINT& mousePos
+                );
 
                 const std::string itemDescription = "Open SRD Search Dialog";
 

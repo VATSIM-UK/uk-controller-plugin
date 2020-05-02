@@ -5,6 +5,8 @@
 namespace UKControllerPlugin {
     namespace Srd {
 
+        extern const int srdDialogTagFunctionId;
+
         void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
 
         void BootstrapRadarScreen(
