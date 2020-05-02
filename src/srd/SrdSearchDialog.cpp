@@ -94,6 +94,34 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Format the notes for the SRD.
+        */
+        std::string SrdSearchDialog::FormatNotes(const nlohmann::json& json, size_t selectedIndex) const
+        {
+            if (json.size() - 1 < selectedIndex) {
+                LogWarning("Tried to access invalid selected route");
+                return "Notes invalid.";
+            }
+
+            nlohmann::json selectedRoute = json.at(selectedIndex);
+            if (!selectedRoute.contains("notes") || selectedRoute.at("notes").empty()) {
+                return "No notes.";
+            }
+
+            std::string noteString;
+            for (
+                nlohmann::json::const_iterator noteIt = selectedRoute.at("notes").cbegin();
+                noteIt != selectedRoute.at("notes").cend();
+                ++noteIt
+            ) {
+                noteString += "Note " + std::to_string(noteIt->at("id").get<int>()) + "\n\n"
+                    + noteIt->at("text").get<std::string>() + "\n\n";
+            }
+
+             return std::regex_replace(noteString, std::regex("\n"), "\r\n");;
+        }
+
+        /*
             Private window procedure bound to the objects
         */
         LRESULT SrdSearchDialog::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -108,6 +136,17 @@ namespace UKControllerPlugin {
                 case WM_CLOSE: {
                     EndDialog(hwnd, wParam);
                     return TRUE;
+                }
+                // Catching the events when search results are clicked.
+                case WM_NOTIFY: {
+                    switch (((LPNMHDR)lParam)->code) {
+                        case LVN_ITEMCHANGED: {
+                            if (((LPNMHDR)lParam)->idFrom == IDC_SRD_RESULTS){
+                                this->SelectSearchResult(hwnd, reinterpret_cast<NMLISTVIEW*>((LPNMHDR)lParam));
+                                return TRUE;
+                            }
+                        }
+                    }
                 }
                 // Buttons pressed
                 case WM_COMMAND: {
@@ -214,6 +253,7 @@ namespace UKControllerPlugin {
             HWND resultsList = GetDlgItem(hwnd, IDC_SRD_RESULTS);
             HWND notesBox = GetDlgItem(hwnd, IDC_SRD_NOTES);
             ListView_DeleteAllItems(resultsList);
+            this->previousSearchResults = this->noResultsFound;
             SendDlgItemMessage(
                 hwnd,
                 IDC_SRD_NOTES,
@@ -227,14 +267,13 @@ namespace UKControllerPlugin {
             }
 
             // Do the search and validate the results
-            nlohmann::json results;
             try {
-                results = this->api.SearchSrd(searchParams);
+                this->previousSearchResults = this->api.SearchSrd(searchParams);
             } catch (ApiException e) {
                 LogError("Failed to perform SRD search: " + std::string(e.what()));
             }
 
-            if (results.empty() || !this->SearchResultsValid(results)) {
+            if (this->previousSearchResults.empty() || !this->SearchResultsValid(this->previousSearchResults)) {
                 LVITEM item;
                 item.mask = LVIF_TEXT;
                 item.iItem = 0;
@@ -256,7 +295,11 @@ namespace UKControllerPlugin {
 
             // Populate the results list with results
             int itemNumber = 0;
-            for (nlohmann::json::const_iterator it = results.cbegin(); it != results.cend(); ++it) {
+            for (
+                nlohmann::json::const_iterator it = this->previousSearchResults.cbegin();
+                it != this->previousSearchResults.cend();
+                ++it
+            ) {
                 LVITEM item;
                 item.mask = LVIF_TEXT;
                 item.iItem = itemNumber;
@@ -281,31 +324,29 @@ namespace UKControllerPlugin {
                 item.pszText = (LPWSTR)(routeString.c_str());
                 ListView_SetItem(resultsList, &item);
 
-                if (it->contains("notes") && !it->at("notes").empty()) {
-
-                    std::string noteString;
-                    for (
-                        nlohmann::json::const_iterator noteIt = it->at("notes").cbegin();
-                        noteIt != it->at("notes").cend();
-                        ++noteIt
-                    ) {
-                        noteString += "Note " + std::to_string(noteIt->at("id").get<int>()) + "\n\n"
-                            + noteIt->at("text").get<std::string>() + "\n\n";
-                    }
-
-                    noteString = std::regex_replace(noteString, std::regex("\n"), "\r\n");
-                    std::wstring noteStringWide = HelperFunctions::ConvertToWideString(noteString);
-
-                    SendDlgItemMessage(
-                        hwnd,
-                        IDC_SRD_NOTES,
-                        WM_SETTEXT,
-                        NULL,
-                        (LPARAM)noteStringWide.c_str()
-                    );
-                }
-
                 itemNumber++;
+            }
+        }
+
+        void SrdSearchDialog::SelectSearchResult(HWND hwnd, NMLISTVIEW * details)
+        {
+            // If a new item has been selected, change the notes
+            if (
+                ((details->uNewState ^ details->uOldState) & LVIS_SELECTED) &&
+                !this->previousSearchResults.empty()
+            ) {
+
+                std::wstring noteStringWide = HelperFunctions::ConvertToWideString(
+                    this->FormatNotes(this->previousSearchResults, details->iItem)
+                );
+
+                SendDlgItemMessage(
+                    hwnd,
+                    IDC_SRD_NOTES,
+                    WM_SETTEXT,
+                    NULL,
+                    (LPARAM) noteStringWide.c_str()
+                );
             }
         }
 
