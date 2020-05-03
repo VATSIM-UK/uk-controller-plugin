@@ -39,4 +39,4 @@ namespace UKControllerPlugin {
                 const int menuCallbackId;
         };
     }  // namespace Srd
-}  // UKControllerPlugin
+}  // namespace UKControllerPlugin

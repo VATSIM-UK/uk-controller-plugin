@@ -37,7 +37,7 @@ namespace UKControllerPlugin {
 
             // Create the handler
             handlerCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            srdSearchHandler = std::make_shared<SrdSearchHandler>(handlerCallbackId,*container.dialogManager);
+            srdSearchHandler = std::make_shared<SrdSearchHandler>(handlerCallbackId, *container.dialogManager);
 
             // Register a callback function for clicking the the menu item
             CallbackFunction configureCallback(
@@ -77,4 +77,4 @@ namespace UKControllerPlugin {
             configurables.RegisterDisplay(srdSearchHandler);
         }
     }  // namespace Srd
-}  // UKControllerPlugin
+}  // namespace UKControllerPlugin

@@ -30,8 +30,7 @@ namespace UKControllerPlugin {
                     GWLP_USERDATA,
                     reinterpret_cast<DialogCallArgument*>(lParam)->dialogArgument
                 );
-            }
-            else if (msg == WM_DESTROY) {
+            } else if (msg == WM_DESTROY) {
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
                 LogInfo("SRD search dialog closed");
             }
@@ -51,7 +50,10 @@ namespace UKControllerPlugin {
 
             for (nlohmann::json::const_iterator it = results.cbegin(); it != results.cend(); ++it) {
 
-                if (!it->contains("minimum_level") || (!it->at("minimum_level").is_number_integer() && !it->at("minimum_level").is_null())) {
+                if (
+                    !it->contains("minimum_level") ||
+                    (!it->at("minimum_level").is_number_integer() && !it->at("minimum_level").is_null())
+                ) {
                     LogError("SRD search result has invalid minimum level " + results.dump());
                     return false;
                 }
@@ -322,13 +324,17 @@ namespace UKControllerPlugin {
 
                 // Max Level
                 item.iSubItem++;
-                std::wstring maxLevel = std::to_wstring(ConvertAltitudeToFlightLevel(it->at("maximum_level").get<int>()));
+                std::wstring maxLevel = std::to_wstring(
+                    ConvertAltitudeToFlightLevel(it->at("maximum_level").get<int>())
+                );
                 item.pszText = (LPWSTR)maxLevel.c_str();
                 ListView_SetItem(resultsList, &item);
 
                 // Route String
                 item.iSubItem++;
-                std::wstring routeString = HelperFunctions::ConvertToWideString(it->at("route_string").get<std::string>());
+                std::wstring routeString = HelperFunctions::ConvertToWideString(
+                    it->at("route_string").get<std::string>()
+                );
                 item.pszText = (LPWSTR)(routeString.c_str());
                 ListView_SetItem(resultsList, &item);
 
@@ -344,7 +350,9 @@ namespace UKControllerPlugin {
 
             EmptyClipboard();
 
-            std::string routeString = this->previousSearchResults.at(this->selectedResult).at("route_string").get<std::string>();
+            std::string routeString = this->previousSearchResults.at(this->selectedResult)
+                .at("route_string")
+                .get<std::string>();
 
             HGLOBAL handle = GlobalAlloc(GMEM_MOVEABLE, (routeString.size() + 1) * sizeof(char));
             if (handle == NULL) {
@@ -388,4 +396,4 @@ namespace UKControllerPlugin {
         }
 
     }  // namespace Srd
-}  // UKControllerPlugin
+}  // namespace UKControllerPlugin

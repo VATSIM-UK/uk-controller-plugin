@@ -35,4 +35,4 @@ namespace UKControllerPlugin {
                 size_t selectedResult = 0;
         };
     }  // namespace Srd
-}  // UKControllerPlugin
+}  // namespace UKControllerPlugin

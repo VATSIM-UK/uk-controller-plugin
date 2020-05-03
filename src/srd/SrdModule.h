@@ -13,4 +13,5 @@ namespace UKControllerPlugin {
             UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurables
         );
     }  // namespace Srd
-}  // UKControllerPlugin
+}  // namespace UKControllerPlugin
+

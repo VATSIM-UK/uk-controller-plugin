@@ -40,4 +40,4 @@ namespace UKControllerPlugin {
             this->dialog.OpenDialog(IDD_SRD_SEARCH, NULL);
         }
     }  // namespace Srd
-}  // UKControllerPlugin
+}  // namespace UKControllerPlugin
