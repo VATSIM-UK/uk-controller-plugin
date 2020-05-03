@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
             this->dialog.OpenDialog(IDD_SRD_SEARCH, NULL);
         }
 
-        UKControllerPlugin::Plugin::PopupMenuItem SrdSearchHandler::GetConfigurationMenuItem(void) const
+        PopupMenuItem SrdSearchHandler::GetConfigurationMenuItem(void) const
         {
             PopupMenuItem returnVal;
             returnVal.firstValue = this->itemDescription;
