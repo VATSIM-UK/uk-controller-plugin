@@ -6,8 +6,6 @@
 #include "mock/MockDialogProvider.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockDialogProvider.h"
-#include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Srd::SrdSearchHandler;
 using UKControllerPlugin::Dialog::DialogManager;

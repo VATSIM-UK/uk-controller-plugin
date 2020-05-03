@@ -14,7 +14,7 @@ namespace UKControllerPluginTest {
         {
             public:
 
-                SrdSearchDialogTest() : 
+                SrdSearchDialogTest() :
                     dialog(mockApi)
                 {
                 }
