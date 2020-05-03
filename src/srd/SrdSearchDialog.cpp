@@ -98,7 +98,7 @@ namespace UKControllerPlugin {
         */
         std::string SrdSearchDialog::FormatNotes(const nlohmann::json& json, size_t selectedIndex) const
         {
-            if (json.size() - 1 > selectedIndex) {
+            if (json.size() == 0 || json.size() - 1 < selectedIndex) {
                 LogWarning("Tried to access invalid selected route");
                 return "Notes invalid.";
             }
