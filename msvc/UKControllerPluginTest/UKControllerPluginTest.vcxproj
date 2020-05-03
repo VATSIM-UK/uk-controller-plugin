@@ -208,6 +208,7 @@
     <ClCompile Include="..\..\test\test\squawk\SquawkRequestTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\SquawkValidatorTest.cpp" />
     <ClCompile Include="..\..\test\test\srd\SrdModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\srd\SrdSearchDialogTest.cpp" />
     <ClCompile Include="..\..\test\test\tag\TagFunctionTest.cpp" />
     <ClCompile Include="..\..\test\test\tag\TagItemCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\task\TaskRunnerTest.cpp" />

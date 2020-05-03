@@ -32,7 +32,7 @@ namespace UKControllerPlugin {
                 nlohmann::json previousSearchResults = noResultsFound;
 
                 // The selected search result
-                size_t selectedResult;
+                size_t selectedResult = 0;
         };
     }  // namespace Srd
 }  // UKControllerPlugin

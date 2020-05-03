@@ -66,7 +66,7 @@ namespace UKControllerPlugin {
                     return false;
                 }
 
-                if (!it->at("notes").is_array()) {
+                if (!it->contains("notes") || !it->at("notes").is_array()) {
                     LogError("SRD search result has invalid notes array " + results.dump());
                     return false;
                 }
@@ -98,7 +98,7 @@ namespace UKControllerPlugin {
         */
         std::string SrdSearchDialog::FormatNotes(const nlohmann::json& json, size_t selectedIndex) const
         {
-            if (json.size() - 1 < selectedIndex) {
+            if (json.size() - 1 > selectedIndex) {
                 LogWarning("Tried to access invalid selected route");
                 return "Notes invalid.";
             }
@@ -118,7 +118,7 @@ namespace UKControllerPlugin {
                     + noteIt->at("text").get<std::string>() + "\n\n";
             }
 
-             return std::regex_replace(noteString, std::regex("\n"), "\r\n");;
+             return std::regex_replace(noteString, std::regex("[\r\n]"), "\r\n");;
         }
 
         /*

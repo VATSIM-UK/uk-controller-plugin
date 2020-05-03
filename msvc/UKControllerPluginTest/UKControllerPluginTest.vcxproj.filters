@@ -757,6 +757,9 @@
     <ClCompile Include="..\..\test\test\srd\SrdModuleTest.cpp">
       <Filter>test\srd</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\srd\SrdSearchDialogTest.cpp">
+      <Filter>test\srd</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
