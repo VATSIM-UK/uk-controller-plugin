@@ -64,6 +64,7 @@
     <ClCompile Include="..\..\test\test\curl\CurlRequestTest.cpp" />
     <ClCompile Include="..\..\test\test\curl\CurlResponseTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DatablockBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\datablock\DatablockFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DisplayTimeTest.cpp" />
     <ClCompile Include="..\..\test\test\dependency\DependencyLoaderTest.cpp" />
     <ClCompile Include="..\..\test\test\dependency\UpdateDependenciesTest.cpp" />
