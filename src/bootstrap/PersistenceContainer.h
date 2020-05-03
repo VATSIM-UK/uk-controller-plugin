@@ -110,7 +110,6 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
             std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
             std::unique_ptr<UKControllerPlugin::Handoff::HandoffCollection> handoffs;
-            std::shared_ptr<UKControllerPlugin::Srd::SrdSearchHandler> srd;
 
             // Collections that are spawned multiple times.
             std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;

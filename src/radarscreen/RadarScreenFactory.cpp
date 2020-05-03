@@ -115,7 +115,7 @@ namespace UKControllerPlugin {
                 this->persistence
             );
             
-            UKControllerPlugin::Srd::BootstrapRadarScreen(this->persistence, configurableDisplays);
+            UKControllerPlugin::Srd::BootstrapRadarScreen(configurableDisplays);
 
             // Register command for position resets
             this->persistence.commandHandlers->RegisterHandler(

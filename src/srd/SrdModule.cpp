@@ -19,6 +19,8 @@ namespace UKControllerPlugin {
 
         int handlerCallbackId;
 
+        std::shared_ptr<SrdSearchHandler> srdSearchHandler;
+
         void BootstrapPlugin(PersistenceContainer& container)
         {
             // Register the dialog
@@ -35,7 +37,7 @@ namespace UKControllerPlugin {
 
             // Create the handler
             handlerCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            container.srd = std::make_shared<SrdSearchHandler>(handlerCallbackId,*container.dialogManager);
+            srdSearchHandler = std::make_shared<SrdSearchHandler>(handlerCallbackId,*container.dialogManager);
 
             // Register a callback function for clicking the the menu item
             CallbackFunction configureCallback(
@@ -43,7 +45,7 @@ namespace UKControllerPlugin {
                 "SRD Search",
                 std::bind(
                     &SrdSearchHandler::Configure,
-                    container.srd.get(),
+                    srdSearchHandler,
                     std::placeholders::_1,
                     std::placeholders::_2,
                     std::placeholders::_3
@@ -59,7 +61,7 @@ namespace UKControllerPlugin {
                 "Open SRD Search",
                 std::bind(
                     &SrdSearchHandler::TagFunction,
-                    container.srd.get(),
+                    srdSearchHandler,
                     std::placeholders::_1,
                     std::placeholders::_2,
                     std::placeholders::_3,
@@ -70,9 +72,9 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(openHoldPopupMenu);
         }
 
-        void BootstrapRadarScreen(const PersistenceContainer& container, ConfigurableDisplayCollection& configurables)
+        void BootstrapRadarScreen(ConfigurableDisplayCollection& configurables)
         {
-            configurables.RegisterDisplay(container.srd);
+            configurables.RegisterDisplay(srdSearchHandler);
         }
     }  // namespace Srd
 }  // UKControllerPlugin

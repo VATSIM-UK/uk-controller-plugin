@@ -121,6 +121,9 @@
     <Filter Include="test\regional">
       <UniqueIdentifier>{55d16101-3944-4b04-b2a1-d177a9fe329b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\srd">
+      <UniqueIdentifier>{7410078c-d9f2-47e3-bf42-0ff32297264e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -750,6 +753,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\datablock\DatablockFunctionsTest.cpp">
       <Filter>test\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\srd\SrdModuleTest.cpp">
+      <Filter>test\srd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

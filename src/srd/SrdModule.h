@@ -10,7 +10,6 @@ namespace UKControllerPlugin {
         void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
 
         void BootstrapRadarScreen(
-            const UKControllerPlugin::Bootstrap::PersistenceContainer& container,
             UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurables
         );
     }  // namespace Srd
