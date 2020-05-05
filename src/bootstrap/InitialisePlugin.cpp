@@ -41,6 +41,7 @@
 #include "handoff/HandoffModule.h"
 #include "controller/ControllerBootstrap.h"
 #include "regional/RegionalPressureModule.h"
+#include "srd/SrdModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -226,6 +227,7 @@ namespace UKControllerPlugin {
             InitialAltitudeModule::BootstrapPlugin(loader, *this->container);
         }
 
+        Srd::BootstrapPlugin(*this->container);
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(*this->container);

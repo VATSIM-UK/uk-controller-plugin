@@ -133,6 +133,9 @@
     <Filter Include="src\regional">
       <UniqueIdentifier>{05e23cc3-415e-4bb7-8e85-0cdad310c649}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\srd">
+      <UniqueIdentifier>{5f1c7726-0075-4d0b-883b-51f257857acb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -978,8 +981,23 @@
     <ClInclude Include="..\..\src\regional\RegionalPressureManagerFactory.h">
       <Filter>src\regional</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdSearchParameters.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdModule.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdSearchDialog.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdSearchHandler.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\intention\SectorExitPointScottish.h">
       <Filter>src\intention</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datablock\DatablockFunctions.h">
+      <Filter>src\datablock</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1663,8 +1681,20 @@
     <ClCompile Include="..\..\src\regional\RegionalPressureManagerFactory.cpp">
       <Filter>src\regional</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdModule.cpp">
+      <Filter>src\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdSearchDialog.cpp">
+      <Filter>src\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdSearchHandler.cpp">
+      <Filter>src\srd</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\intention\SectorExitPointScottish.cpp">
       <Filter>src\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datablock\DatablockFunctions.cpp">
+      <Filter>src\datablock</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

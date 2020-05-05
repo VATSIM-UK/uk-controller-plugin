@@ -51,6 +51,7 @@
 #include "sectorfile/RunwayCollection.h"
 #include "handoff/HandoffCollection.h"
 #include "regional/RegionalPressureManager.h"
+#include "srd/SrdSearchHandler.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {

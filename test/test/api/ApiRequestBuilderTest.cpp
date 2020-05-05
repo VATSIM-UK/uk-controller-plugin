@@ -1,8 +1,10 @@
 #include "pch/pch.h"
 #include "api/ApiRequestBuilder.h"
+#include "srd/SrdSearchParameters.h"
 
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::Srd::SrdSearchParameters;
 using ::testing::Test;
 
 namespace UKControllerPluginTest {
@@ -233,6 +235,41 @@ namespace UKControllerPluginTest {
             expectedRequest.AddHeader("Content-Type", "application/json");
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildGetUriRequest("someuri"));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsASrdSearchRequest)
+        {
+            SrdSearchParameters params;
+            params.origin = "EGKK";
+            params.destination = "EGLL";
+
+            CurlRequest expectedRequest(
+                "http://testurl.com/srd/route/search?origin=EGKK&destination=EGLL",
+                CurlRequest::METHOD_GET
+            );
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildSrdQueryRequest(params));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsASrdSearchRequestWithRequestedLevel)
+        {
+            SrdSearchParameters params;
+            params.origin = "EGKK";
+            params.destination = "EGLL";
+            params.requestedLevel = 15000;
+
+            CurlRequest expectedRequest(
+                "http://testurl.com/srd/route/search?origin=EGKK&destination=EGLL&requestedLevel=15000",
+                CurlRequest::METHOD_GET
+            );
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildSrdQueryRequest(params));
         }
     }  // namespace Api
 }  // namespace UKControllerPluginTest
