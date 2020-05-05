@@ -39,11 +39,6 @@ namespace UKControllerPlugin {
 
             facility = TranslateFrequencyAbbreviation(facility);
 
-            // If there's no chance of finding anything, save us the iteration.
-            if (!this->IsPossibleAreaPosition(facility) && !this->IsPossibleAirfieldPosition(facility)) {
-                throw std::out_of_range("Position not found.");
-            }
-
             // Iterate through the positions and try to match.
             auto position = std::find_if(this->positions.begin(), this->positions.end(),
                 [facility, frequency]
@@ -72,24 +67,6 @@ namespace UKControllerPlugin {
         bool ControllerPositionCollection::HasPosition(std::string callsign) const
         {
             return this->positions.find(callsign) != this->positions.cend();
-        }
-
-        /*
-            Returns true if the facility is possible for an airfield.
-        */
-        bool ControllerPositionCollection::IsPossibleAirfieldPosition(std::string facility) const
-        {
-            return facility == "ESSEX" || facility == "THAMES" || facility == "SOLENT" ||
-                facility.size() == 4 && facility.substr(0, 2) == "EG";
-        }
-
-        /*
-            Returns true if the facility is possible for an area postion.
-        */
-        bool ControllerPositionCollection::IsPossibleAreaPosition(std::string facility) const
-        {
-            return facility == "LON" || facility == "LTC" ||
-                facility == "SCO" || facility == "STC" || facility == "MAN";
         }
     }  // namespace Controller
 }  // namespace UKControllerPlugin

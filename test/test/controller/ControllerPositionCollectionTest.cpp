@@ -56,12 +56,6 @@ namespace UKControllerPluginTest {
             EXPECT_THROW(collection.FetchPositionByCallsign("EGFF_APP"), std::out_of_range);
         }
 
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyThrowsExceptionIfNotPossible)
-        {
-            ControllerPositionCollection collection;
-            EXPECT_THROW(collection.FetchPositionByFacilityAndFrequency("EIDW", 121.200), std::out_of_range);
-        }
-
         TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyThrowsExceptionIfPositionNotFound)
         {
             ControllerPositionCollection collection;
