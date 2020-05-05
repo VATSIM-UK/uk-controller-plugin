@@ -119,7 +119,7 @@ namespace UKControllerPluginTest {
             // INBOB
             ASSERT_TRUE(repo->GetSectorExitPoint("INBOB").GetName().compare("INBOB") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("INBOB").GetIntentionCode(mockRoute, 0, 37000).compare("K3") == 0);
-            ASSERT_EQ(repo->outSouthEast, repo->GetSectorExitPoint("INBOB").GetOutDirection());
+            ASSERT_EQ(repo->outNorthEast, repo->GetSectorExitPoint("INBOB").GetOutDirection());
 
             // LESRA
             ASSERT_TRUE(repo->GetSectorExitPoint("LESRA").GetName().compare("LESRA") == 0);
