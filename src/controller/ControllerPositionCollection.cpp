@@ -32,8 +32,9 @@ namespace UKControllerPlugin {
         /*
             Retrieves a position based on it's facility (EGXX, LON, LTC, SCO etc) and frequency.
         */
-        const ControllerPosition & ControllerPositionCollection::FetchPositionByFacilityAndFrequency(
+        const ControllerPosition & ControllerPositionCollection::FetchPositionByFacilityTypeAndFrequency(
             std::string facility,
+            std::string type,
             double frequency
         ) const {
 
@@ -41,12 +42,13 @@ namespace UKControllerPlugin {
 
             // Iterate through the positions and try to match.
             auto position = std::find_if(this->positions.begin(), this->positions.end(),
-                [facility, frequency]
+                [facility, frequency, type]
                 (std::pair<std::string, const std::unique_ptr<ControllerPosition> &> position) -> bool {
 
                 // Frequency matching is done to 4dp, because floating points.
                 return fabs(frequency - position.second->GetFrequency()) < 0.001 &&
-                    position.first.substr(0, position.first.find('_')).compare(facility) == 0;
+                    position.second->GetUnit() == facility &&
+                    position.second->GetType() == type;
             });
 
             if (position == this->positions.end()) {

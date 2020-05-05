@@ -56,33 +56,43 @@ namespace UKControllerPluginTest {
             EXPECT_THROW(collection.FetchPositionByCallsign("EGFF_APP"), std::out_of_range);
         }
 
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyThrowsExceptionIfPositionNotFound)
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyThrowsExceptionIfPositionNotFound)
         {
             ControllerPositionCollection collection;
-            EXPECT_THROW(collection.FetchPositionByFacilityAndFrequency("EGBB", 121.200), std::out_of_range);
+            EXPECT_THROW(collection.FetchPositionByFacilityTypeAndFrequency("EGBB", "APP", 121.200), std::out_of_range);
         }
 
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyThrowsExceptionIfNoFrequencyMatch)
-        {
-            ControllerPositionCollection collection;
-            std::unique_ptr<ControllerPosition> controller(
-                new ControllerPosition("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD, EGFF"})
-            );
-            collection.AddPosition(std::move(controller));
-            EXPECT_THROW(collection.FetchPositionByFacilityAndFrequency("EGFF", 121.200), std::out_of_range);
-        }
-
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyThrowsExceptionIfNoFacilityMatch)
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyThrowsExceptionIfNoFrequencyMatch)
         {
             ControllerPositionCollection collection;
             std::unique_ptr<ControllerPosition> controller(
                 new ControllerPosition("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD, EGFF"})
             );
             collection.AddPosition(std::move(controller));
-            EXPECT_THROW(collection.FetchPositionByFacilityAndFrequency("EGHI", 125.850), std::out_of_range);
+            EXPECT_THROW(collection.FetchPositionByFacilityTypeAndFrequency("EGFF", "APP", 121.200), std::out_of_range);
         }
 
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyReturnsOnMatch)
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyThrowsExceptionIfNoTypeMatch)
+        {
+            ControllerPositionCollection collection;
+            std::unique_ptr<ControllerPosition> controller(
+                new ControllerPosition("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD, EGFF"})
+            );
+            collection.AddPosition(std::move(controller));
+            EXPECT_THROW(collection.FetchPositionByFacilityTypeAndFrequency("EGFF", "TWR", 125.850), std::out_of_range);
+        }
+
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyThrowsExceptionIfNoFacilityMatch)
+        {
+            ControllerPositionCollection collection;
+            std::unique_ptr<ControllerPosition> controller(
+                new ControllerPosition("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD, EGFF"})
+            );
+            collection.AddPosition(std::move(controller));
+            EXPECT_THROW(collection.FetchPositionByFacilityTypeAndFrequency("EGHI", "APP", 125.850), std::out_of_range);
+        }
+
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyReturnsOnMatch)
         {
             ControllerPositionCollection collection;
             std::unique_ptr<ControllerPosition> controller(
@@ -91,10 +101,10 @@ namespace UKControllerPluginTest {
 
             ControllerPosition * controllerRaw = controller.get();
             collection.AddPosition(std::move(controller));
-            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("EGFF", 125.850));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityTypeAndFrequency("EGFF", "APP", 125.850));
         }
 
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyReturnsOnMatchFrequencyDelta)
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyReturnsOnMatchFrequencyDelta)
         {
             ControllerPositionCollection collection;
             std::unique_ptr<ControllerPosition> controller(
@@ -103,10 +113,10 @@ namespace UKControllerPluginTest {
 
             ControllerPosition * controllerRaw = controller.get();
             collection.AddPosition(std::move(controller));
-            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("EGFF", 125.8514));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityTypeAndFrequency("EGFF", "APP", 125.8514));
         }
 
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyWillWorkForEssex)
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyWillWorkForEssex)
         {
             ControllerPositionCollection collection;
             std::unique_ptr<ControllerPosition> controller(
@@ -115,10 +125,10 @@ namespace UKControllerPluginTest {
 
             ControllerPosition * controllerRaw = controller.get();
             collection.AddPosition(std::move(controller));
-            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("ESSEX", 120.620));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityTypeAndFrequency("ESSEX", "APP", 120.620));
         }
 
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyWillWorkForThames)
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyWillWorkForThames)
         {
             ControllerPositionCollection collection;
             std::unique_ptr<ControllerPosition> controller(
@@ -127,10 +137,10 @@ namespace UKControllerPluginTest {
 
             ControllerPosition * controllerRaw = controller.get();
             collection.AddPosition(std::move(controller));
-            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("THAMES", 132.700));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityTypeAndFrequency("THAMES", "APP", 132.700));
         }
 
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyWillWorkForSolent)
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyWillWorkForSolent)
         {
             ControllerPositionCollection collection;
             std::unique_ptr<ControllerPosition> controller(
@@ -139,10 +149,10 @@ namespace UKControllerPluginTest {
 
             ControllerPosition * controllerRaw = controller.get();
             collection.AddPosition(std::move(controller));
-            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("SOLENT", 120.220));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityTypeAndFrequency("SOLENT", "APP", 120.220));
         }
 
-        TEST(ControllerPositionCollection, FetchPositionByFacilityAndFrequencyWillWorkForAbbreviations)
+        TEST(ControllerPositionCollection, FetchPositionByFacilityTypeAndFrequencyWillWorkForAbbreviations)
         {
             ControllerPositionCollection collection;
             std::unique_ptr<ControllerPosition> controller(
@@ -151,7 +161,7 @@ namespace UKControllerPluginTest {
 
             ControllerPosition * controllerRaw = controller.get();
             collection.AddPosition(std::move(controller));
-            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityAndFrequency("ESX", 120.620));
+            EXPECT_EQ(*controllerRaw, collection.FetchPositionByFacilityTypeAndFrequency("ESX", "APP", 120.620));
         }
 
         TEST(ControllerPositionCollection, HasPositionReturnsFalseIfDoesntExist)
