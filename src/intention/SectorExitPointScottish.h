@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
                 const std::string SCAC_CALLSIGN_PREFIX = "SCO";
                 const std::string SCTC_CALLSIGN_PREFIX = "STC";
                 const std::string EGPX_CALLSIGN_PREFIX = "EGP";
-                const std::string EGPX_MIL_CALLSIGN_PREFIX = "EGP";
+                const std::string EGPX_MIL_CALLSIGN_PREFIX = "EGQ";
                 const std::string EGPX_NI_CALLSIGN_PREFIX = "EGA";
         };
     }  // namespace IntentionCode
