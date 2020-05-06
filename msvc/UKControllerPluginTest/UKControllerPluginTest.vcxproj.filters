@@ -748,6 +748,9 @@
     <ClCompile Include="..\..\test\test\regional\RegionalPressureManagerFactoryTest.cpp">
       <Filter>test\regional</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointScottishTest.cpp">
+      <Filter>test\intention</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

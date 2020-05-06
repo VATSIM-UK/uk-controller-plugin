@@ -141,6 +141,7 @@
     <ClCompile Include="..\..\test\test\intention\IntentionCodeModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\SectorExitPointEtratTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\SectorExitPointLelnaTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointScottishTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\SectorExitPointTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\SectorExitPointVeuleTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\SectorExitRepositoryTest.cpp" />
