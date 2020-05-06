@@ -46,12 +46,36 @@ namespace UKControllerPlugin {
             points["MOLIX"] = std::make_unique<SectorExitPoint>("MOLIX", "F", SectorExitPoint::outEast);
 
             // Copenhagen
-            points["VAXIT"] = std::make_unique<SectorExitPoint>("VAXIT", "K1", SectorExitPoint::outEast);
-            points["TINAC"] = std::make_unique<SectorExitPoint>("TINAC", "K2", SectorExitPoint::outEast);
-            points["PETIL"] = std::make_unique<SectorExitPoint>("PETIL", "K2", SectorExitPoint::outEast);
-            points["INBOB"] = std::make_unique<SectorExitPoint>("INBOB", "K3", SectorExitPoint::outNorthEast);
-            points["LESRA"] = std::make_unique<SectorExitPoint>("LESRA", "K3", SectorExitPoint::outEast);
-            points["SOPTO"] = std::make_unique<SectorExitPoint>("SOPTO", "K3", SectorExitPoint::outEast);
+            points["VAXIT"] = std::make_unique<SectorExitPoint>(
+                "VAXIT",
+                "K1",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["TINAC"] = std::make_unique<SectorExitPoint>(
+                "TINAC",
+                "K2",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["PETIL"] = std::make_unique<SectorExitPoint>(
+                "PETIL",
+                "K2",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["INBOB"] = std::make_unique<SectorExitPoint>(
+                "INBOB",
+                "K3",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["LESRA"] = std::make_unique<SectorExitPoint>(
+                "LESRA",
+                "K3",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["SOPTO"] = std::make_unique<SectorExitPoint>(
+                "SOPTO",
+                "K3",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
 
             // Stavanger
             points["PEPIN"] = std::make_unique<SectorExitPoint>(
