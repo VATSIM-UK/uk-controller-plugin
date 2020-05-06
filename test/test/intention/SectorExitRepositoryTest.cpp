@@ -48,7 +48,7 @@ namespace UKControllerPluginTest {
             // RINTI
             ASSERT_TRUE(repo->GetSectorExitPoint("RINTI").GetName().compare("RINTI") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("RINTI").GetIntentionCode(mockRoute, 0, 37000).compare("D4") == 0);
-            ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("RINTI").GetOutDirection());
+            ASSERT_EQ(repo->outSouthEast, repo->GetSectorExitPoint("RINTI").GetOutDirection());
 
             // Clacton
 

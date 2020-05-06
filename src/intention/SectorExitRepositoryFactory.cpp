@@ -26,7 +26,7 @@ namespace UKControllerPlugin {
                 "D3",
                 SectorExitPoint::outEast | SectorExitPoint::outSouthEast
             );
-            points["RINTI"] = std::make_unique<SectorExitPoint>("RINTI", "D4", SectorExitPoint::outEast);
+            points["RINTI"] = std::make_unique<SectorExitPoint>("RINTI", "D4", SectorExitPoint::outSouthEast);
 
             // Clacton
             points["SOMVA"] = std::make_unique<SectorExitPoint>("SOMVA", "C1", SectorExitPoint::outEast);
