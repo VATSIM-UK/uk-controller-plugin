@@ -84,6 +84,84 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, parser.ParseFacilityFromCallsign(callsign).compare("LON"));
         }
 
+        TEST(ControllerPositionParser, ParseTypeFromCallsignWorksForDelivery)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "EGKK_DEL";
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("DEL"));
+        }
+
+        TEST(ControllerPositionParser, ParseTypeFromCalsignGracefullyHandlesNonCallsigns)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "GATWICK";
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("GATWICK"));
+        }
+
+        TEST(ControllerPositionParser, ParseTypeFromCallsignWorksForGround)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "EGKK_GND";
+
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("GND"));
+        }
+
+        TEST(ControllerPositionParser, ParseTypeFromCallsignWorksForTower)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "EGKK_TWR";
+
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("TWR"));
+        }
+
+        TEST(ControllerPositionParser, ParseTypeFromCallsignWorksForApp)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "EGKK_APP";
+
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("APP"));
+        }
+
+        TEST(ControllerPositionParser, ParseTypeFromCallsignWorksForArea)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "LTC_S_CTR";
+
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("CTR"));
+        }
+
+        TEST(ControllerPositionParser, ParseTypeFromCallsignWorksForFss)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "LTC_S_CTR";
+
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("CTR"));
+        }
+
+        TEST(ControllerPositionParser, ParseTypeFromCallsignWorksHyphenatedCallsigns)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "LON-S_CTR";
+
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("CTR"));
+        }
+
+        TEST(ControllerPositionParser, ParseTypeFromCallsignWorksHyphenatedCallsignsLast)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "LON_S-CTR";
+
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("CTR"));
+        }
+
+        TEST(ControllerPositionParser, ParseTypeFromCallsignWorksReliefCallsigns)
+        {
+            ControllerPositionParser parser;
+            std::string callsign = "LON_1_CTR";
+
+            EXPECT_EQ(0, parser.ParseTypeFromCallsign(callsign).compare("CTR"));
+        }
+
         TEST(ControllerPositionParser, IsMentoringPositionReturnsNonMentorIfNotTraining)
         {
             ControllerPositionParser parser;
