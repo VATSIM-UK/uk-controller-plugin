@@ -44,7 +44,7 @@ namespace UKControllerPluginTest {
             ASSERT_TRUE(repo->GetSectorExitPoint("MOTOX").GetName().compare("MOTOX") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("MOTOX").GetIntentionCode(mockRoute, 0, 37000).compare("D3") == 0);
             ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("MOTOX").GetOutDirection());
-            
+
             // RINTI
             ASSERT_TRUE(repo->GetSectorExitPoint("RINTI").GetName().compare("RINTI") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("RINTI").GetIntentionCode(mockRoute, 0, 37000).compare("D4") == 0);
