@@ -1,6 +1,7 @@
 #pragma once
 #include "pch/pch.h"
 #include "api/ApiInterface.h"
+#include "srd/SrdSearchParameters.h"
 
 namespace UKControllerPluginTest {
     namespace Api {
@@ -38,6 +39,10 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(GetUserHoldProfiles, nlohmann::json(void));
                 MOCK_CONST_METHOD1(GetUri, nlohmann::json(std::string uri));
                 MOCK_CONST_METHOD0(GetRegionalPressures, nlohmann::json(void));
+                MOCK_CONST_METHOD1(
+                    SearchSrd,
+                    nlohmann::json(UKControllerPlugin::Srd::SrdSearchParameters)
+                );
                 MOCK_CONST_METHOD1(DeleteUserHoldProfile, void(unsigned int profileId));
                 MOCK_CONST_METHOD2(
                     CreateUserHoldProfile, unsigned int(std::string name, std::set<unsigned int> holds)

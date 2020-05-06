@@ -2,6 +2,7 @@
 #include "api/ApiRequestBuilder.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::Srd::SrdSearchParameters;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -15,7 +16,7 @@ namespace UKControllerPlugin {
         /*
             Adds common headers such as the auth headers.
         */
-        CurlRequest ApiRequestBuilder::AddCommonHeaders(UKControllerPlugin::Curl::CurlRequest request) const
+        CurlRequest ApiRequestBuilder::AddCommonHeaders(CurlRequest request) const
         {
             request.AddHeader("Authorization", "Bearer " + this->apiKey);
             request.AddHeader("Accept", "application/json");
@@ -46,7 +47,7 @@ namespace UKControllerPlugin {
         /*
             Method for querying any API URI
         */
-        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildGetUriRequest(std::string uri) const
+        CurlRequest ApiRequestBuilder::BuildGetUriRequest(std::string uri) const
         {
             return this->AddCommonHeaders(
                 CurlRequest(uri, CurlRequest::METHOD_GET)
@@ -93,7 +94,7 @@ namespace UKControllerPlugin {
         /*
             Builds a request for getting minimum stack levels.
         */
-        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildMinStackLevelRequest(void) const
+        CurlRequest ApiRequestBuilder::BuildMinStackLevelRequest(void) const
         {
             return this->AddCommonHeaders(CurlRequest(apiDomain + "/msl", CurlRequest::METHOD_GET));
         }
@@ -101,12 +102,24 @@ namespace UKControllerPlugin {
         /*
             Builds a request for all the regional pressures
         */
-        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildRegionalPressureRequest(void) const
+        CurlRequest ApiRequestBuilder::BuildRegionalPressureRequest(void) const
         {
             return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/regional-pressure",
-                CurlRequest::METHOD_GET)
+                CurlRequest(apiDomain + "/regional-pressure", CurlRequest::METHOD_GET)
             );
+        }
+
+        CurlRequest ApiRequestBuilder::BuildSrdQueryRequest(SrdSearchParameters parameters) const
+        {
+            std::string uri = apiDomain + "/srd/route/search?";
+            uri += "origin=" + parameters.origin;
+            uri += "&destination=" + parameters.destination;
+
+            if (parameters.requestedLevel != NULL) {
+                uri += "&requestedLevel=" + std::to_string(parameters.requestedLevel);
+            }
+
+            return this->AddCommonHeaders(CurlRequest(uri, CurlRequest::METHOD_GET));
         }
 
         /*

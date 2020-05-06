@@ -27,6 +27,12 @@ namespace UKControllerPlugin {
             return normalise.substr(0, normalise.find('_'));
         }
 
+        std::string ControllerPositionParser::ParseTypeFromCallsign(std::string callsign) const
+        {
+            std::string normalise = this->NormaliseCallsign(callsign);
+            return normalise.substr(normalise.find_last_of('_') + 1);
+        }
+
         /*
             Returns whether the position is a mentors, trainees or non-mentoring
             position.

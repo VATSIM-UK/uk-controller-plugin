@@ -1,5 +1,6 @@
 #pragma once
 #include "curl/CurlRequest.h"
+#include "srd/SrdSearchParameters.h"
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -49,6 +50,9 @@ namespace UKControllerPlugin {
                 ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildMinStackLevelRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildRegionalPressureRequest(void) const;
+                UKControllerPlugin::Curl::CurlRequest BuildSrdQueryRequest(
+                    UKControllerPlugin::Srd::SrdSearchParameters parameters
+                ) const;
                 std::string GetApiDomain(void) const;
                 std::string GetApiKey(void) const;
                 void SetApiDomain(std::string domain);

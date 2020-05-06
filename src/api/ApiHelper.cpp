@@ -21,6 +21,7 @@ using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPlugin::Squawk::SquawkValidator;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
+using UKControllerPlugin::Srd::SrdSearchParameters;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -257,6 +258,11 @@ namespace UKControllerPlugin {
             }
 
             return this->MakeApiRequest(this->requestBuilder.BuildGetUriRequest(uri)).GetRawData();
+        }
+
+        nlohmann::json ApiHelper::SearchSrd(SrdSearchParameters params) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildSrdQueryRequest(params)).GetRawData();
         }
 
         /*

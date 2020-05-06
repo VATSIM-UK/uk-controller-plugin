@@ -69,6 +69,7 @@
     <ClInclude Include="..\..\src\curl\CurlResponse.h" />
     <ClInclude Include="..\..\src\curl\HttpException.h" />
     <ClInclude Include="..\..\src\datablock\DatablockBoostrap.h" />
+    <ClInclude Include="..\..\src\datablock\DatablockFunctions.h" />
     <ClInclude Include="..\..\src\datablock\DisplayTime.h" />
     <ClInclude Include="..\..\src\dependency\DependencyLoader.h" />
     <ClInclude Include="..\..\src\dependency\DependencyLoaderInterface.h" />
@@ -264,6 +265,10 @@
     <ClInclude Include="..\..\src\squawk\SquawkRequest.h" />
     <ClInclude Include="..\..\src\squawk\SquawkValidator.h" />
     <ClInclude Include="..\..\src\pch\stdafx.h" />
+    <ClInclude Include="..\..\src\srd\SrdModule.h" />
+    <ClInclude Include="..\..\src\srd\SrdSearchDialog.h" />
+    <ClInclude Include="..\..\src\srd\SrdSearchHandler.h" />
+    <ClInclude Include="..\..\src\srd\SrdSearchParameters.h" />
     <ClInclude Include="..\..\src\tag\TagFunction.h" />
     <ClInclude Include="..\..\src\tag\TagItemCollection.h" />
     <ClInclude Include="..\..\src\tag\TagItemInterface.h" />
@@ -343,6 +348,7 @@
     <ClCompile Include="..\..\src\curl\CurlRequest.cpp" />
     <ClCompile Include="..\..\src\curl\CurlResponse.cpp" />
     <ClCompile Include="..\..\src\datablock\DatablockBoostrap.cpp" />
+    <ClCompile Include="..\..\src\datablock\DatablockFunctions.cpp" />
     <ClCompile Include="..\..\src\datablock\DisplayTime.cpp" />
     <ClCompile Include="..\..\src\dependency\DependencyLoader.cpp" />
     <ClCompile Include="..\..\src\dependency\UpdateDependencies.cpp" />
@@ -503,6 +509,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdModule.cpp" />
+    <ClCompile Include="..\..\src\srd\SrdSearchDialog.cpp" />
+    <ClCompile Include="..\..\src\srd\SrdSearchHandler.cpp" />
     <ClCompile Include="..\..\src\tag\TagFunction.cpp" />
     <ClCompile Include="..\..\src\tag\TagItemCollection.cpp" />
     <ClCompile Include="..\..\src\task\TaskRunner.cpp" />

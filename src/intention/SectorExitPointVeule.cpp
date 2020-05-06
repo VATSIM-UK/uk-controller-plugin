@@ -22,37 +22,38 @@ namespace UKControllerPlugin {
 
                 // Via TEPRI
                 if (strcmp(route.GetPointName(foundPointIndex), "TEPRI") == 0) {
-                    return "V1";
+                    return this->GetCodeForRoute("1", cruiseLevel);
                 }
 
                 // Via PEKIM
                 if (strcmp(route.GetPointName(foundPointIndex), "PEKIM") == 0) {
-                    return "V2";
+                    return this->GetCodeForRoute("2", cruiseLevel);
                 }
 
                 // Via ODEBU - different code if crusing at FL270 or below.
                 if (strcmp(route.GetPointName(foundPointIndex), "ODEBU") == 0) {
-                    if (cruiseLevel <= 27000) {
-                        return "V4";
-                    }
-
-                    return "V3";
+                    return this->GetCodeForRoute("3", cruiseLevel);
                 }
 
                 // Via KOTAP
                 if (strcmp(route.GetPointName(foundPointIndex), "KOTAP") == 0) {
-                    return "V5";
+                    return this->GetCodeForRoute("5", cruiseLevel);
                 }
 
                 // Via DEKOD
                 if (strcmp(route.GetPointName(foundPointIndex), "DEKOD") == 0) {
-                    return "V6";
+                    return this->GetCodeForRoute("6", cruiseLevel);
                 }
 
                 foundPointIndex++;
             }
 
             return SectorExitPoint::GetIntentionCode(route, foundPointIndex, cruiseLevel);
+        }
+
+        std::string SectorExitPointVeule::GetCodeForRoute(std::string routeNumber, int cruiseLevel) const
+        {
+            return cruiseLevel > 29000 ? "V" + routeNumber : "X" + routeNumber;
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

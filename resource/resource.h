@@ -12,6 +12,7 @@
 #define IDD_MINSTACK                    113
 #define IDD_MINSTACK1                   114
 #define IDD_REGIONAL_PRESSURE           114
+#define IDD_SRD_SEARCH                  115
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -37,6 +38,7 @@
 #define IDC_MAX_FILTER_LABEL            1018
 #define HOLD_PROFILE_NAME_EDIT          1018
 #define IDC_HOLD_PROFILE_NAME_EDIT      1018
+#define IDC_SRD_ORIGIN                  1018
 #define IDC_MIN_FILTER_TEXT             1019
 #define IDC_MIN_FILTER_SPIN             1020
 #define IDC_MIN_FILTER_LABEL            1021
@@ -69,6 +71,8 @@
 #define IDC_HOLD_PROFILE_DELETE         1042
 #define HOLD_PROFILE_NAME_STATIC        1044
 #define IDC_BUTTON2                     1046
+#define IDC_ROUTE_COPY                  1046
+#define IDC_SRD_ROUTE_COPY              1046
 #define TIMER1_EDIT_DURATION            1047
 #define TIMER2_EDIT_DURATION            1048
 #define IDC_TIME_FORMAT_CHECK           1048
@@ -98,14 +102,26 @@
 #define IDC_RPS_DELETE                  1071
 #define IDC_RPS_SELECT                  1072
 #define IDC_RPS_ADD                     1073
+#define IDC_SRD_ORIGIN_STATIC           1075
+#define IDC_SRD_DESTINATION             1076
+#define IDC_SRD_CRUISE                  1078
+#define IDC_STATIC_REQUIRED             1079
+#define IDC_SRD_CRUISE_STATIC           1080
+#define IDC_SRD_DESTINATION_STATIC      1081
+#define IDC_SRD_RESULTS                 1085
+#define IDC_BUTTON1                     1086
+#define IDC_SRD_SEARCH                  1086
+#define IDC_EDIT1                       1087
+#define IDC_SRD_NOTES                   1087
+#define IDC_NOTES_STATIC                1088
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        115
+#define _APS_NEXT_RESOURCE_VALUE        117
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1074
+#define _APS_NEXT_CONTROL_VALUE         1089
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
