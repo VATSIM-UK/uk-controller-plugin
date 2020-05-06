@@ -54,13 +54,41 @@ namespace UKControllerPlugin {
             points["SOPTO"] = std::make_unique<SectorExitPoint>("SOPTO", "K3", SectorExitPoint::outEast);
 
             // Stavanger
-            points["PEPIN"] = std::make_unique<SectorExitPoint>("PEPIN", "Z1", SectorExitPoint::outEast);
-            points["ORVIK"] = std::make_unique<SectorExitPoint>("ORVIK", "Z2", SectorExitPoint::outEast);
-            points["KLONN"] = std::make_unique<SectorExitPoint>("KLONN", "Z3", SectorExitPoint::outEast);
-            points["ALOTI"] = std::make_unique<SectorExitPoint>("ALOTI", "Z4", SectorExitPoint::outEast);
-            points["NIVUN"] = std::make_unique<SectorExitPoint>("NIVUN", "Z5", SectorExitPoint::outEast);
-            points["BEREP"] = std::make_unique<SectorExitPoint>("BEREP", "Z6", SectorExitPoint::outEast);
-            points["RIGVU"] = std::make_unique<SectorExitPoint>("RIGVU", "Z7", SectorExitPoint::outEast);
+            points["PEPIN"] = std::make_unique<SectorExitPoint>(
+                "PEPIN",
+                "Z1",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["ORVIK"] = std::make_unique<SectorExitPoint>(
+                "ORVIK",
+                "Z2",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["KLONN"] = std::make_unique<SectorExitPoint>(
+                "KLONN",
+                "Z3",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["ALOTI"] = std::make_unique<SectorExitPoint>(
+                "ALOTI",
+                "Z4",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["NIVUN"] = std::make_unique<SectorExitPoint>(
+                "NIVUN",
+                "Z5",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["BEREP"] = std::make_unique<SectorExitPoint>(
+                "BEREP",
+                "Z6",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
+            points["RIGVU"] = std::make_unique<SectorExitPoint>(
+                "RIGVU",
+                "Z7",
+                SectorExitPoint::outEast | SectorExitPoint::outNorthEast
+            );
 
             // Reykjavik
             points["RATSU"] = std::make_unique<SectorExitPoint>("RATSU", "R", SectorExitPoint::outNorth);
