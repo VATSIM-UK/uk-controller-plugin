@@ -16,8 +16,9 @@ namespace UKControllerPlugin {
         public:
             bool AddPosition(std::unique_ptr<ControllerPosition> position);
             const ControllerPosition & FetchPositionByCallsign(std::string callsign) const;
-            const ControllerPosition & FetchPositionByFacilityAndFrequency(
+            const ControllerPosition & FetchPositionByFacilityTypeAndFrequency(
                 std::string facility,
+                std::string type,
                 double frequency
             ) const;
             size_t GetSize(void) const;

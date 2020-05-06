@@ -751,6 +751,9 @@
     <ClCompile Include="..\..\test\test\regional\RegionalPressureManagerFactoryTest.cpp">
       <Filter>test\regional</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointScottishTest.cpp">
+      <Filter>test\intention</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\test\test\datablock\DatablockFunctionsTest.cpp">
       <Filter>test\datablock</Filter>
     </ClCompile>

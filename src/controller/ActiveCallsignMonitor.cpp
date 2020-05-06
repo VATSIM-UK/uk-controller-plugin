@@ -68,8 +68,9 @@ namespace UKControllerPlugin {
             // Perform a match based on frequency and facility to find the canonical position
             ControllerPositionParser parser;
             try {
-                this->SetupPosition(controller, this->controllers.FetchPositionByFacilityAndFrequency(
+                this->SetupPosition(controller, this->controllers.FetchPositionByFacilityTypeAndFrequency(
                     parser.ParseFacilityFromCallsign(controller.GetCallsign()),
+                    parser.ParseTypeFromCallsign(controller.GetCallsign()),
                     controller.GetFrequency()
                 ));
             }

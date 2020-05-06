@@ -32,26 +32,23 @@ namespace UKControllerPlugin {
         /*
             Retrieves a position based on it's facility (EGXX, LON, LTC, SCO etc) and frequency.
         */
-        const ControllerPosition & ControllerPositionCollection::FetchPositionByFacilityAndFrequency(
+        const ControllerPosition & ControllerPositionCollection::FetchPositionByFacilityTypeAndFrequency(
             std::string facility,
+            std::string type,
             double frequency
         ) const {
 
             facility = TranslateFrequencyAbbreviation(facility);
 
-            // If there's no chance of finding anything, save us the iteration.
-            if (!this->IsPossibleAreaPosition(facility) && !this->IsPossibleAirfieldPosition(facility)) {
-                throw std::out_of_range("Position not found.");
-            }
-
             // Iterate through the positions and try to match.
             auto position = std::find_if(this->positions.begin(), this->positions.end(),
-                [facility, frequency]
+                [facility, frequency, type]
                 (std::pair<std::string, const std::unique_ptr<ControllerPosition> &> position) -> bool {
 
                 // Frequency matching is done to 4dp, because floating points.
                 return fabs(frequency - position.second->GetFrequency()) < 0.001 &&
-                    position.first.substr(0, position.first.find('_')).compare(facility) == 0;
+                    position.second->GetUnit() == facility &&
+                    position.second->GetType() == type;
             });
 
             if (position == this->positions.end()) {
@@ -72,24 +69,6 @@ namespace UKControllerPlugin {
         bool ControllerPositionCollection::HasPosition(std::string callsign) const
         {
             return this->positions.find(callsign) != this->positions.cend();
-        }
-
-        /*
-            Returns true if the facility is possible for an airfield.
-        */
-        bool ControllerPositionCollection::IsPossibleAirfieldPosition(std::string facility) const
-        {
-            return facility == "ESSEX" || facility == "THAMES" || facility == "SOLENT" ||
-                facility.size() == 4 && facility.substr(0, 2) == "EG";
-        }
-
-        /*
-            Returns true if the facility is possible for an area postion.
-        */
-        bool ControllerPositionCollection::IsPossibleAreaPosition(std::string facility) const
-        {
-            return facility == "LON" || facility == "LTC" ||
-                facility == "SCO" || facility == "STC" || facility == "MAN";
         }
     }  // namespace Controller
 }  // namespace UKControllerPlugin

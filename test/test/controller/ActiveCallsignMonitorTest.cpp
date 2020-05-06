@@ -138,7 +138,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(3)
                 .WillRepeatedly(Return("EGKK_TWR"));
 
             this->handler.ControllerDisconnectEvent(euroscopeMock);
@@ -151,7 +150,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(1)
                 .WillOnce(Return("NOTAREALCALLSIGN"));
 
             this->handler.ControllerDisconnectEvent(euroscopeMock);
@@ -162,7 +160,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
                 .WillRepeatedly(Return("EGKK_TWR"));
 
             EXPECT_CALL(euroscopeMock, HasActiveFrequency())
@@ -179,7 +176,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
                 .WillRepeatedly(Return("EGKK_DEL"));
 
             EXPECT_CALL(euroscopeMock, HasActiveFrequency())
@@ -208,7 +204,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
                 .WillRepeatedly(Return("EGKK_1-DEL"));
 
             EXPECT_CALL(euroscopeMock, HasActiveFrequency())
