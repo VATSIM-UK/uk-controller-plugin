@@ -192,7 +192,8 @@ namespace UKControllerPlugin {
         {
             try {
                 std::filesystem::create_directories(endFile.substr(0, endFile.find_last_of('/')));
-            } catch (std::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error e) {
+                LogError("Filesystem error when creating directories " + std::string(e.what()));
                 // Do nothing
             }
         }
