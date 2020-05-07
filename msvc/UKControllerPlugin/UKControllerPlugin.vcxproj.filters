@@ -136,6 +136,9 @@
     <Filter Include="src\srd">
       <UniqueIdentifier>{5f1c7726-0075-4d0b-883b-51f257857acb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\navaids">
+      <UniqueIdentifier>{8aa7f56a-92f3-42d0-9097-63a8c0ac61a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -999,6 +1002,15 @@
     <ClInclude Include="..\..\src\datablock\DatablockFunctions.h">
       <Filter>src\datablock</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\navaids\NavaidCollection.h">
+      <Filter>src\navaids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\navaids\CompareNavaids.h">
+      <Filter>src\navaids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\navaids\Navaid.h">
+      <Filter>src\navaids</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1695,6 +1707,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\datablock\DatablockFunctions.cpp">
       <Filter>src\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\navaids\NavaidCollection.cpp">
+      <Filter>src\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\navaids\CompareNavaids.cpp">
+      <Filter>src\navaids</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

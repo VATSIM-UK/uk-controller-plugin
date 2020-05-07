@@ -124,6 +124,9 @@
     <Filter Include="test\srd">
       <UniqueIdentifier>{7410078c-d9f2-47e3-bf42-0ff32297264e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\navaids">
+      <UniqueIdentifier>{6406bb4f-a9e7-4f19-8601-48d7f4fc81d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -765,6 +768,12 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\srd\SrdSearchHandlerTest.cpp">
       <Filter>test\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\navaids\CompareNavaidsTest.cpp">
+      <Filter>test\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\navaids\NavaidCollectionTest.cpp">
+      <Filter>test\navaids</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

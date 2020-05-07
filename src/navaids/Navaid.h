@@ -2,8 +2,11 @@
 #include "pch/stdafx.h"
 
 namespace UKControllerPlugin {
-    namespace Navaid {
+    namespace Navaids {
 
+        /*
+            Struct containing data about a Navaid
+        */
         typedef struct Navaid {
 
             // The database ID of the navaid
@@ -12,6 +15,10 @@ namespace UKControllerPlugin {
             // The identifier for the navaid
             std::string identifier;
 
+            bool operator==(const Navaid& compare) const {
+                return this->identifier == compare.identifier;
+            }
+
         } Navaid;
-    }  // namespace Navaid
+    }  // namespace Navaids
 }  // namespace UKControllerPlugin

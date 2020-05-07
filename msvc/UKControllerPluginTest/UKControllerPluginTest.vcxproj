@@ -162,6 +162,8 @@
     <ClCompile Include="..\..\test\test\minstack\MinStackModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackRendererConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\minstack\MinStackRendererTest.cpp" />
+    <ClCompile Include="..\..\test\test\navaids\CompareNavaidsTest.cpp" />
+    <ClCompile Include="..\..\test\test\navaids\NavaidCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\EstimatedDepartureTimeBootstrapTest.cpp" />
