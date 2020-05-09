@@ -81,14 +81,18 @@ namespace UKControllerPlugin {
                 it != newDependencies.cend();
                 ++it
             ) {
-                if (!NeedsDownload(existingDependencies, newDependencies, it->first)) {
+                std::wstring widePath = HelperFunctions::ConvertToWideString(it->second.at("local_file"));
+
+                if (
+                    filesystem.FileExists(L"dependencies/" + widePath) &&
+                    !NeedsDownload(existingDependencies, newDependencies, it->first)
+                ) {
                     LogInfo("Dependency " + it->first + " is up to date, skipping download");
                     continue;
                 }
 
                 try {
                     LogInfo("Dependency " + it->first + " has a new version available, downloading");
-                    std::wstring widePath = HelperFunctions::ConvertToWideString(it->second.at("local_file"));
                     filesystem.WriteToFile(
                         L"dependencies/" + widePath,
                         api.GetUri(it->second.at("uri").get<std::string>()).dump(),
