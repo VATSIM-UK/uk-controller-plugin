@@ -123,9 +123,18 @@ namespace UKControllerPlugin {
             return &(*managedHold->second);
         }
 
-        const std::set<HoldingData>& HoldManager::GetPublishedHolds(std::string navaid) const
+        const std::set<HoldingAircraft, CompareHoldingAircraft> HoldManager::GetHoldingAircraft(std::string navaid) const
         {
-            return this->publishedHolds.count(navaid) ? this->publishedHolds.at(navaid) : std::set<HoldingData>():
+            return this->holds.count(navaid)
+                ? this->holds.at(navaid)
+                : std::set<HoldingAircraft, CompareHoldingAircraft>();
+        }
+
+        const std::set<HoldingData, CompareHolds> HoldManager::GetPublishedHolds(std::string navaid) const
+        {
+            return this->publishedHolds.count(navaid)
+                ? this->publishedHolds.at(navaid)
+                : std::set<UKControllerPlugin::Hold::HoldingData, UKControllerPlugin::Hold::CompareHolds>();
         }
 
         /*

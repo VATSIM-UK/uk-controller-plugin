@@ -41,7 +41,9 @@ namespace UKControllerPlugin {
                 size_t CountHolds(void) const;
                 UKControllerPlugin::Hold::ManagedHold * const GetAircraftHold(std::string callsign) const;
                 const UKControllerPlugin::Hold::ManagedHold * const GetManagedHold(unsigned int holdId) const;
-                const std::set<HoldingData>& GetPublishedHolds(std::string navaid) const;
+                const std::set<HoldingAircraft, CompareHoldingAircraft> GetHoldingAircraft(std::string navaid) const;
+                const std::set<UKControllerPlugin::Hold::HoldingData, UKControllerPlugin::Hold::CompareHolds>
+                    GetPublishedHolds(std::string navaid) const;
                 void RemoveAircraftFromAnyHold(std::string callsign);
                 void HoldManager::UpdateHoldingAircraft(
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin

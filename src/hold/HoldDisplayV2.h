@@ -68,9 +68,6 @@ namespace UKControllerPlugin {
                     std::string profileName
                 ) const;
 
-                // Max levels skippable
-                const unsigned int maxLevelsSkippable;
-
                 // How high lines should be
                 const INT lineHeight = 17;
 
@@ -154,6 +151,13 @@ namespace UKControllerPlugin {
 
                 // How many levels to not draw
                 unsigned int numLevelsSkipped = 0;
+
+
+                // The minimum level in the hold
+                unsigned int minLevel = 7000;
+
+                // The maximum level in the hold
+                unsigned int maximumLevel = 15000;
 
                 // Should we display the information about the hold
                 bool showHoldInformation = false;

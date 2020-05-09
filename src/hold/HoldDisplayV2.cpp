@@ -45,17 +45,13 @@ namespace UKControllerPlugin {
             dataStartHeight(0),
             informationClickRect({}),
             minimiseClickRect({}),
-            maxLevelsSkippable(
-                (managedHold.GetHoldParameters().maximum - managedHold.GetHoldParameters().minimum) / 1000
-            ),
             navaid(navaid)
         {
-
             this->stringFormat.SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
 
-            this->windowHeight = this->dataStartOffset + (this->managedHold.GetNumberOfLevels() * this->lineHeight);
-            this->maxWindowHeight = this->dataStartOffset + (this->managedHold.GetNumberOfLevels() * this->lineHeight);
+            this->windowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minLevel) / 1000) + 1) * this->lineHeight);
+            this->maxWindowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minLevel) / 1000) + 1) * this->lineHeight);
             this->Move(this->windowPos);
         }
 
@@ -65,27 +61,19 @@ namespace UKControllerPlugin {
         void HoldDisplayV2::ButtonClicked(std::string button)
         {
             if (button == "plus") {
-                if (numLevelsSkipped > 0) {
-                    this->numLevelsSkipped--;
-                    this->windowHeight += this->lineHeight;
-                }
+                this->maximumLevel += 1000;
             } else if (button == "minus") {
-                if (this->maxLevelsSkippable != this->numLevelsSkipped) {
-                    numLevelsSkipped++;
-                    this->windowHeight -= this->lineHeight;
-                }
+                this->maximumLevel -= 1000;
             } else if (button == "allLevels") {
-                this->windowHeight = this->dataStartOffset + (
-                    this->managedHold.GetNumberOfLevels() * this->lineHeight
-                );
-                this->numLevelsSkipped = 0;
+                this->dataStartOffset + ((((this->maximumLevel - this->minLevel) / 1000) + 1) * this->lineHeight);
+                this->maximumLevel = 15000;
             } else if (button == "add") {
                 std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
                 std::shared_ptr<EuroScopeCRadarTargetInterface> rt = this->plugin.GetSelectedRadarTarget();
 
                 if (!fp || !rt) {
                     LogWarning(
-                        "Tried to add aircraft to hold " + this->managedHold.GetHoldParameters().description +
+                        "Tried to add aircraft to hold " + this->navaid.identifier +
                         " but none selected"
                     );
                     return;
@@ -94,7 +82,7 @@ namespace UKControllerPlugin {
                 this->holdManager.AddAircraftToHold(
                     *fp,
                     *rt,
-                    this->managedHold.GetHoldParameters().identifier
+                    this->navaid.identifier
                 );
             } else if (button == "minimise") {
                 this->minimised = !this->minimised;
@@ -274,8 +262,7 @@ namespace UKControllerPlugin {
                 0
             );
 
-            this->windowHeight = this->dataStartOffset +
-                ((this->managedHold.GetNumberOfLevels() - this->numLevelsSkipped) * this->lineHeight);
+            this->windowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minLevel) / 1000) + 1) * this->lineHeight);
 
             this->minimised = userSetting.GetBooleanEntry(
                 "holdProfile" + std::to_string(holdProfileId) + "Hold" +
@@ -443,6 +430,10 @@ namespace UKControllerPlugin {
             // Render the title bar
             this->RenderTitleBar(graphics, radarScreen, screenObjectId);
 
+            if (!this->publishedHolds.size()) {
+                return;
+            }
+
             // Render the data
             Gdiplus::Rect dataRect = {
                 this->windowPos.x,
@@ -452,35 +443,35 @@ namespace UKControllerPlugin {
             };
 
             graphics.DrawString(
-                std::wstring(L"Fix: ") + ConvertToTchar(this->managedHold.GetHoldParameters().fix),
+                std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Inbound: ") + ConvertToTchar(this->managedHold.GetHoldParameters().inbound),
+                std::wstring(L"Inbound: ") + ConvertToTchar(this->publishedHolds.find(0)->inbound),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Turn: ") + ConvertToTchar(this->managedHold.GetHoldParameters().turnDirection),
+                std::wstring(L"Turn: ") + ConvertToTchar(this->publishedHolds.find(0)->turnDirection),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Maximum: ") + ConvertToTchar(this->managedHold.GetHoldParameters().maximum),
+                std::wstring(L"Maximum: ") + ConvertToTchar(this->publishedHolds.find(0)->maximum),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Minimum: ") + ConvertToTchar(this->managedHold.GetHoldParameters().minimum),
+                std::wstring(L"Minimum: ") + ConvertToTchar(this->publishedHolds.find(0)->minimum),
                 dataRect,
                 this->dataBrush
             );
@@ -612,8 +603,8 @@ namespace UKControllerPlugin {
             // Render all the possible levels in the hold
             unsigned int levelNumber = 0;
             for (
-                unsigned int i = this->managedHold.GetHoldParameters().maximum;
-                i >= this->managedHold.GetHoldParameters().minimum;
+                unsigned int i = this->maximumLevel;
+                i >= this->minLevel;
                 i -= 1000
                 ) {
                     // Don't display the level if we're hiding it
@@ -623,26 +614,26 @@ namespace UKControllerPlugin {
                 }
 
                 // Display the restriction hash if a level is restricted
-                const HoldingData & holdParameters = this->managedHold.GetHoldParameters();
-                for (
-                    std::set<std::unique_ptr<AbstractHoldLevelRestriction>>::const_iterator it
-                        = holdParameters.restrictions.cbegin();
-                    it != holdParameters.restrictions.cend();
-                    ++it
-                ) {
-                    if ((*it)->LevelRestricted(i)) {
-                        Gdiplus::Rect restrictedRect = {
-                            this->windowPos.x,
-                            numbersDisplay.Y,
-                            windowWidth,
-                            this->lineHeight
-                        };
-                        graphics.FillRect(
-                            restrictedRect,
-                            this->blockedLevelBrush
-                        );
-                    }
-                }
+                //const HoldingData & holdParameters = this->managedHold.GetHoldParameters();
+                //for (
+                //    std::set<std::unique_ptr<AbstractHoldLevelRestriction>>::const_iterator it
+                //        = holdParameters.restrictions.cbegin();
+                //    it != holdParameters.restrictions.cend();
+                //    ++it
+                //) {
+                //    if ((*it)->LevelRestricted(i)) {
+                //        Gdiplus::Rect restrictedRect = {
+                //            this->windowPos.x,
+                //            numbersDisplay.Y,
+                //            windowWidth,
+                //            this->lineHeight
+                //        };
+                //        graphics.FillRect(
+                //            restrictedRect,
+                //            this->blockedLevelBrush
+                //        );
+                //    }
+                //}
 
                 graphics.DrawString(
                     GetLevelDisplayString(i),
@@ -685,13 +676,16 @@ namespace UKControllerPlugin {
             };
 
             // Loop the aircraft in the hold and render them
+            const std::set<HoldingAircraft, CompareHoldingAircraft> holdingAircraft = this->holdManager.GetHoldingAircraft(
+                this->navaid.identifier
+            );
             for (
-                ManagedHold::ManagedHoldAircraft::const_iterator it = this->managedHold.cbegin();
-                it != this->managedHold.cend();
+                std::set<HoldingAircraft, CompareHoldingAircraft>::const_iterator it = holdingAircraft.cbegin();
+                it != holdingAircraft.cend();
                 ++it
-                ) {
+            ) {
                 unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
-                unsigned int displayRow = GetDisplayRow(this->managedHold.GetHoldParameters().maximum, occupied);
+                unsigned int displayRow = GetDisplayRow(this->maximumLevel, occupied);
 
                 // Dont render any aircraft where a level is skipped
                 if (displayRow < this->numLevelsSkipped) {
@@ -700,8 +694,8 @@ namespace UKControllerPlugin {
 
                 // Dont render any aircraft that are outside the confines of the hold.
                 if (
-                    occupied > this->managedHold.GetHoldParameters().maximum ||
-                    occupied < this->managedHold.GetHoldParameters().minimum
+                    occupied > this->maximumLevel ||
+                    occupied < this->minLevel
                 ) {
                     continue;
                 }
@@ -749,7 +743,7 @@ namespace UKControllerPlugin {
 
             // Line sectioning off the bottom level.
             unsigned int bottomLevelLineHeight = this->dataStartHeight +
-                (this->lineHeight * (this->managedHold.GetNumberOfLevels() - this->numLevelsSkipped - 1)) - 2;
+                (this->lineHeight * ((((this->maximumLevel - this->minLevel) / 1000) + 1) - this->numLevelsSkipped - 1)) - 2;
 
             Gdiplus::GraphicsPath path;
             path.AddLine(
@@ -793,37 +787,37 @@ namespace UKControllerPlugin {
             unsigned int holdProfileId,
             std::string profileName
         ) const {
-            userSetting.Save(
-                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-                    this->navaid.identifier + "LevelsSkipped",
-                "Hold Profile (" + profileName + " - "+ this->managedHold.GetHoldParameters().description
-                    + ") Levels Skipped",
-                this->numLevelsSkipped
-            );
+            //userSetting.Save(
+            //    "holdProfile" + std::to_string(holdProfileId) + "Hold" +
+            //        this->navaid.identifier + "LevelsSkipped",
+            //    "Hold Profile (" + profileName + " - "+ this->managedHold.GetHoldParameters().description
+            //        + ") Levels Skipped",
+            //    this->numLevelsSkipped
+            //);
 
-            userSetting.Save(
-                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-                this->navaid.identifier + "Minimised",
-                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
-                    + ") Minimised",
-                this->minimised
-            );
+            //userSetting.Save(
+            //    "holdProfile" + std::to_string(holdProfileId) + "Hold" +
+            //    this->navaid.identifier + "Minimised",
+            //    "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
+            //        + ") Minimised",
+            //    this->minimised
+            //);
 
-            userSetting.Save(
-                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-                    this->navaid.identifier + "PositionX",
-                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
-                    + ") X Pos",
-                this->windowPos.x
-            );
+            //userSetting.Save(
+            //    "holdProfile" + std::to_string(holdProfileId) + "Hold" +
+            //        this->navaid.identifier + "PositionX",
+            //    "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
+            //        + ") X Pos",
+            //    this->windowPos.x
+            //);
 
-            userSetting.Save(
-                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-                this->navaid.identifier + "PositionY",
-                "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
-                    + ") Y Pos",
-                this->windowPos.y
-            );
+            //userSetting.Save(
+            //    "holdProfile" + std::to_string(holdProfileId) + "Hold" +
+            //    this->navaid.identifier + "PositionY",
+            //    "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
+            //        + ") Y Pos",
+            //    this->windowPos.y
+            //);
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
