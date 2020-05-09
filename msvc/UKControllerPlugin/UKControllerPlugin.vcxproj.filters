@@ -1011,6 +1011,9 @@
     <ClInclude Include="..\..\src\navaids\Navaid.h">
       <Filter>src\navaids</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\navaids\NavaidModule.h">
+      <Filter>src\navaids</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1712,6 +1715,9 @@
       <Filter>src\navaids</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\navaids\CompareNavaids.cpp">
+      <Filter>src\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\navaids\NavaidModule.cpp">
       <Filter>src\navaids</Filter>
     </ClCompile>
   </ItemGroup>

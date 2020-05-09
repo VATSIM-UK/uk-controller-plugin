@@ -52,6 +52,7 @@
 #include "handoff/HandoffCollection.h"
 #include "regional/RegionalPressureManager.h"
 #include "srd/SrdSearchHandler.h"
+#include "navaids/NavaidCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -78,6 +79,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
             std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;
             std::shared_ptr<UKControllerPlugin::Datablock::DisplayTime> timeFormatting;
+            std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
 
             // Collections of event handlers
             std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;

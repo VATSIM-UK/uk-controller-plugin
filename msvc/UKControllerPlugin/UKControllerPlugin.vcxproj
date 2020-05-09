@@ -211,6 +211,7 @@
     <ClInclude Include="..\..\src\navaids\CompareNavaids.h" />
     <ClInclude Include="..\..\src\navaids\Navaid.h" />
     <ClInclude Include="..\..\src\navaids\NavaidCollection.h" />
+    <ClInclude Include="..\..\src\navaids\NavaidModule.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.h" />
     <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.h" />
@@ -462,6 +463,7 @@
     <ClCompile Include="..\..\src\minstack\MinStackRendererConfiguration.cpp" />
     <ClCompile Include="..\..\src\navaids\CompareNavaids.cpp" />
     <ClCompile Include="..\..\src\navaids\NavaidCollection.cpp" />
+    <ClCompile Include="..\..\src\navaids\NavaidModule.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp" />
