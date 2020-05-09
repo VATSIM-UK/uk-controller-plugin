@@ -16,7 +16,7 @@ namespace UKControllerPlugin {
             return this->navaids.size();
         }
 
-        const Navaid& NavaidCollection::GetByIdentifier(std::string identifier)
+        const Navaid& NavaidCollection::GetByIdentifier(std::string identifier) const
         {
             auto navaid = this->navaids.find(identifier);
             return navaid == this->navaids.cend() ? this->invalidNavaid : *navaid;

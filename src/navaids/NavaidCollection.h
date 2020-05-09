@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
             public:
                 void AddNavaid(Navaid navaid);
                 size_t Count(void) const;
-                const UKControllerPlugin::Navaids::Navaid& GetByIdentifier(std::string identifier);
+                const UKControllerPlugin::Navaids::Navaid& GetByIdentifier(std::string identifier) const;
 
                 const Navaid invalidNavaid = { 0, "INVALID" };
 
