@@ -341,6 +341,77 @@ namespace UKControllerPluginTest {
             UpdateDependencies(this->mockApi, this->mockWindows);
         }
 
+        TEST_F(UpdateDependenciesTest, UpdateDependenciesRedownloadsIfFileMissing)
+        {
+            nlohmann::json existingDependencyList{
+                {
+                    {"key", "DEPENDENCY_ONE"},
+                    {"local_file", "test1.json"},
+                    {"uri", "test1"},
+                    {"updated_at", 1}
+                },
+                {
+                    {"key", "DEPENDENCY_TWO"},
+                    {"local_file", "test2.json"},
+                    {"uri", "test2"},
+                    {"updated_at", 2}
+                }
+            };
+
+            nlohmann::json dependencyList{
+                {
+                    {"key", "DEPENDENCY_ONE"},
+                    {"local_file", "test1.json"},
+                    {"uri", "test1"},
+                    {"updated_at", 1}
+                },
+                {
+                    {"key", "DEPENDENCY_TWO"},
+                    {"local_file", "test2.json"},
+                    {"uri", "test2"},
+                    {"updated_at", 2}
+                }
+            };
+
+            EXPECT_CALL(this->mockApi, GetDependencyList())
+                .WillRepeatedly(Return(dependencyList));
+
+            ON_CALL(this->mockApi, GetUri("test1"))
+                .WillByDefault(Return(this->dependency1));
+
+            ON_CALL(this->mockApi, GetUri("test2"))
+                .WillByDefault(Return(this->dependency2));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
+                .WillByDefault(Return(true));
+
+            EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
+                .Times(2)
+                .WillOnce(Return(existingDependencyList.dump()))
+                .WillOnce(Return(dependencyList.dump()));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true)
+            )
+                .Times(1);
+
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true)
+            )
+                .Times(1);
+
+            UpdateDependencies(this->mockApi, this->mockWindows);
+        }
+
+
         TEST_F(UpdateDependenciesTest, UpdateDependenciesDoesntUpdateIfUptoDate)
         {
             nlohmann::json existingDependencyList{
@@ -383,6 +454,12 @@ namespace UKControllerPluginTest {
                 .Times(0);
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
                 .WillByDefault(Return(true));
 
             EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
@@ -441,6 +518,12 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Throw(ApiException("nah")));
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
                 .WillByDefault(Return(true));
 
             EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
