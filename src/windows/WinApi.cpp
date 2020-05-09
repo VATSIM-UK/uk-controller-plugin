@@ -36,7 +36,8 @@ namespace UKControllerPlugin {
             try {
                 std::filesystem::create_directory(folder);
                 return true;
-            } catch (std::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error e) {
+                LogError("Unable to create folder: " + std::string(e.what()));
                 return false;
             }
         }
@@ -49,7 +50,8 @@ namespace UKControllerPlugin {
             try {
                 std::filesystem::create_directories(folder);
                 return true;
-            } catch (std::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error e) {
+                LogError("Unable to create folder recursively: " + std::string(e.what()));
                 return false;
             }
         }
@@ -62,7 +64,8 @@ namespace UKControllerPlugin {
             try {
                 std::filesystem::create_directories(this->filesDirectory + L"/" + folder);
                 return true;
-            } catch (std::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error e) {
+                LogError("Unable to create local folderrecursively: " + std::string(e.what()));
                 return false;
             }
         }
@@ -85,7 +88,8 @@ namespace UKControllerPlugin {
         {
             try {
                 return std::filesystem::exists(this->GetFullPathToLocalFile(filename));
-            } catch (std::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error e) {
+                LogError("Unable to check if file exists: " + std::string(e.what()));
                 return false;
             }
         }
@@ -182,6 +186,8 @@ namespace UKControllerPlugin {
             if (file.is_open()) {
                 file << data;
                 file.close();
+            } else {
+                LogError("File not opened for writing");
             }
         }
 
@@ -224,6 +230,8 @@ namespace UKControllerPlugin {
                     (std::istreambuf_iterator<char>()));
                 file.close();
                 return data;
+            } else {
+                LogError("File not opened for reading");
             }
 
             return "";
