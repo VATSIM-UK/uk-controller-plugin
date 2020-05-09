@@ -9,7 +9,7 @@ namespace UKControllerPluginTest {
         class ##CLASSNAME##Test : public Test
         {
 
-        }
+        };
 
         TEST_F(##CLASSNAME##Test, ItDoesSomething)
         {
