@@ -31,6 +31,11 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
                     unsigned int holdId
                 );
+                void AddAircraftToHold(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string hold
+                );
                 size_t CountHolds(void) const;
                 UKControllerPlugin::Hold::ManagedHold * const GetAircraftHold(std::string callsign) const;
                 const UKControllerPlugin::Hold::ManagedHold * const GetManagedHold(unsigned int holdId) const;
@@ -46,6 +51,8 @@ namespace UKControllerPlugin {
 
                 // A map of aircraft callsign -> hold id
                 std::map<std::string, unsigned int> holdingAircraft;
+                std::map<std::string, std::set<HoldingAircraft, CompareHoldingAircraft>> holds;
+                std::map<std::string, std::string> aircraft;
 
                 // A map of hold id -> managed hold
                 std::map<unsigned int, std::unique_ptr<UKControllerPlugin::Hold::ManagedHold>> holdData;

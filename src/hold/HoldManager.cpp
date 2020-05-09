@@ -63,7 +63,23 @@ namespace UKControllerPlugin {
                     std::chrono::system_clock::now()
                 }
             );
+
             this->holdingAircraft[flightplan.GetCallsign()] = managedHold->first;
+        }
+
+        void HoldManager::AddAircraftToHold(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan, UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget, std::string hold)
+        {
+            this->RemoveAircraftFromAnyHold(flightplan.GetCallsign());
+            this->aircraft[flightplan.GetCallsign()] = hold;
+            this->holds[hold].insert(
+                {
+                    flightplan.GetCallsign(),
+                    flightplan.GetClearedAltitude(),
+                    radarTarget.GetFlightLevel(),
+                    radarTarget.GetVerticalSpeed(),
+                    std::chrono::system_clock::now()
+                }
+            );
         }
 
         /*
@@ -112,6 +128,14 @@ namespace UKControllerPlugin {
 
             this->holdData[aircraft->second]->RemoveHoldingAircraft(aircraft->first);
             this->holdingAircraft.erase(aircraft);
+
+            // NEW CODE
+            if (!this->aircraft.count(callsign)) {
+                return;
+            }
+
+            this->holds[this->aircraft[callsign]].erase(this->holds[this->aircraft[callsign]].find(callsign));
+            this->aircraft.erase(callsign);
         }
 
         /*
