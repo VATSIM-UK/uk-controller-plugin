@@ -1,7 +1,7 @@
-#include "pch/pch.h.h"
+#include "pch/pch.h"
 #include "##FOLDERNAME##/##CLASSNAME##.h"
 
-using ::Testing::Test;
+using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace ##NAMESPACE## {
