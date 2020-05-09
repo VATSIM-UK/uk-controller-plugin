@@ -35,7 +35,8 @@ namespace UKControllerPlugin {
             return std::make_unique<HoldDisplayV2>(
                 plugin,
                 holdManager,
-                navaidData
+                navaidData,
+                this->holdManager.GetPublishedHolds(navaid)
             );
         }
     }  // namespace Hold

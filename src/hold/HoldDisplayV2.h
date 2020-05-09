@@ -1,5 +1,6 @@
 #pragma once
 #include "navaids/Navaid.h"
+#include "hold/HoldingData.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -27,7 +28,8 @@ namespace UKControllerPlugin {
                 HoldDisplayV2(
                     const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     UKControllerPlugin::Hold::HoldManager & holdManager,
-                    const UKControllerPlugin::Navaids::Navaid& navaid
+                    const UKControllerPlugin::Navaids::Navaid& navaid,
+                    const std::set<UKControllerPlugin::Hold::HoldingData>& publishedHolds
                 );
                 void ButtonClicked(std::string button);
                 INT GetDataStartHeight(void) const;
@@ -168,9 +170,11 @@ namespace UKControllerPlugin {
 
                 POINT windowPos = { 100, 100 };
 
-
                 // The navaid that the hold is against
                 const UKControllerPlugin::Navaids::Navaid& navaid;
+
+                // The holds that are published for this navaid
+                const std::set<UKControllerPlugin::Hold::HoldingData> publishedHolds;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

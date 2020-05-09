@@ -4,6 +4,7 @@
 #include "hold/HoldingAircraft.h"
 #include "hold/HoldingData.h"
 #include "hold/CompareHoldingAircraft.h"
+#include "hold/CompareHolds.h"
 #include "hold/ManagedHold.h"
 
 namespace UKControllerPlugin {
@@ -26,6 +27,7 @@ namespace UKControllerPlugin {
 
                 HoldManager(void);
                 void AddHold(UKControllerPlugin::Hold::ManagedHold hold);
+                void AddPublishedHold(UKControllerPlugin::Hold::HoldingData hold);
                 void AddAircraftToHold(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
@@ -39,6 +41,7 @@ namespace UKControllerPlugin {
                 size_t CountHolds(void) const;
                 UKControllerPlugin::Hold::ManagedHold * const GetAircraftHold(std::string callsign) const;
                 const UKControllerPlugin::Hold::ManagedHold * const GetManagedHold(unsigned int holdId) const;
+                const std::set<HoldingData>& GetPublishedHolds(std::string navaid) const;
                 void RemoveAircraftFromAnyHold(std::string callsign);
                 void HoldManager::UpdateHoldingAircraft(
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
@@ -56,6 +59,12 @@ namespace UKControllerPlugin {
 
                 // A map of hold id -> managed hold
                 std::map<unsigned int, std::unique_ptr<UKControllerPlugin::Hold::ManagedHold>> holdData;
+
+                // All the published holds
+                std::map<
+                    std::string,
+                    std::set<UKControllerPlugin::Hold::HoldingData, UKControllerPlugin::Hold::CompareHolds>
+                > publishedHolds;
         };
 
     }  // namespace Hold

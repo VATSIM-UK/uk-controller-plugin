@@ -38,6 +38,13 @@ namespace UKControllerPlugin {
             this->holdData[hold.GetHoldParameters().identifier] = std::make_unique<ManagedHold>(std::move(hold));
         }
 
+        void HoldManager::AddPublishedHold(UKControllerPlugin::Hold::HoldingData hold)
+        {
+            if (!this->publishedHolds[hold.fix].insert(hold).second) {
+                LogWarning("Attempted to add duplicate published hold " + hold.fix);
+            }
+        }
+
         /*
             Add an aircraft to the hold, removing from any other holds.
         */
@@ -114,6 +121,11 @@ namespace UKControllerPlugin {
             }
 
             return &(*managedHold->second);
+        }
+
+        const std::set<HoldingData>& HoldManager::GetPublishedHolds(std::string navaid) const
+        {
+            return this->publishedHolds.count(navaid) ? this->publishedHolds.at(navaid) : std::set<HoldingData>():
         }
 
         /*

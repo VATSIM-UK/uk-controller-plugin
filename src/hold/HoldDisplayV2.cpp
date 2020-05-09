@@ -24,10 +24,12 @@ namespace UKControllerPlugin {
         HoldDisplayV2::HoldDisplayV2(
             const EuroscopePluginLoopbackInterface & plugin,
             HoldManager & holdManager,
-            const UKControllerPlugin::Navaids::Navaid& navaid
+            const UKControllerPlugin::Navaids::Navaid& navaid,
+            const std::set<HoldingData>& publishedHolds
         )
             : plugin(plugin),
             holdManager(holdManager),
+            publishedHolds(publishedHolds),
             titleBarBrush(Gdiplus::Color(255, 153, 153)),
             backgroundBrush(Gdiplus::Color(0, 0, 0)),
             titleBarTextBrush(Gdiplus::Color(255, 255, 255)),
