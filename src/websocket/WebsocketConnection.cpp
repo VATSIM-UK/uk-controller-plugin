@@ -130,7 +130,6 @@ namespace UKControllerPlugin {
             this->connected = true;
             this->connectionInProgress = false;
             this->lastActivityTime = std::chrono::system_clock::now();
-            this->websocket->ping({});
             LogInfo("Websocket handshake successful");
         }
 
