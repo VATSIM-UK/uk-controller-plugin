@@ -1,6 +1,7 @@
 #pragma once
 #include "navaids/Navaid.h"
 #include "hold/HoldingData.h"
+#include "hold/CompareHoldingAircraft.h"
 
 namespace UKControllerPlugin {
     namespace Hold {

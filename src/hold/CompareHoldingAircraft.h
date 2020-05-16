@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin {
     namespace Hold {
-        struct HoldingAircraft;
+        class HoldingAircraft;
     }  // namespace Hold
 }  // namespace UKControllerPlugin
 

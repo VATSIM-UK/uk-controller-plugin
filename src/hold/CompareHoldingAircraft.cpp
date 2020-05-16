@@ -8,17 +8,17 @@ namespace UKControllerPlugin {
     namespace Hold {
         bool CompareHoldingAircraft::operator()(const std::shared_ptr<HoldingAircraft>& hold, std::string id) const
         {
-            return hold->callsign < id;
+            return hold->GetCallsign() < id;
         }
         bool CompareHoldingAircraft::operator()(std::string id, const std::shared_ptr<HoldingAircraft>& hold) const
         {
-            return id < hold->callsign;
+            return id < hold->GetCallsign();
         }
         bool CompareHoldingAircraft::operator()(
             const std::shared_ptr<HoldingAircraft>& a,
             const std::shared_ptr<HoldingAircraft>& b
         ) const {
-            return a->callsign < b->callsign;
+            return a->GetCallsign() < b->GetCallsign();
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
