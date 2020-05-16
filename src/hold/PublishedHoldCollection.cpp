@@ -17,12 +17,12 @@ namespace UKControllerPlugin {
         /*
             Get all the published holds at a fix
         */
-        const std::set<HoldingData, CompareHolds> PublishedHoldCollection::Get(std::string fix)
+        const std::set<HoldingData, CompareHolds>& PublishedHoldCollection::Get(std::string fix) const
         {
             return
                 this->holds.count(fix)
                 ? this->holds.at(fix)
-                : std::set<HoldingData, CompareHolds>();
+                : this->noHolds;
         }
 
         /*
