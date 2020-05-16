@@ -37,7 +37,13 @@ namespace UKControllerPlugin {
                 std::filesystem::create_directory(folder);
                 return true;
             } catch (std::filesystem::filesystem_error e) {
-                LogError("Unable to create folder: " + std::string(e.what()));
+                std::wstring message = L"Unable to create folder: "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
                 return false;
             }
         }
@@ -51,7 +57,13 @@ namespace UKControllerPlugin {
                 std::filesystem::create_directories(folder);
                 return true;
             } catch (std::filesystem::filesystem_error e) {
-                LogError("Unable to create folder recursively: " + std::string(e.what()));
+                std::wstring message = L"Unable to create folder recursively: "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
                 return false;
             }
         }
@@ -65,7 +77,13 @@ namespace UKControllerPlugin {
                 std::filesystem::create_directories(this->filesDirectory + L"/" + folder);
                 return true;
             } catch (std::filesystem::filesystem_error e) {
-                LogError("Unable to create local folderrecursively: " + std::string(e.what()));
+                std::wstring message = L"Unable to create local folder recursively: "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
                 return false;
             }
         }
@@ -89,7 +107,13 @@ namespace UKControllerPlugin {
             try {
                 return std::filesystem::exists(this->GetFullPathToLocalFile(filename));
             } catch (std::filesystem::filesystem_error e) {
-                LogError("Unable to check if file exists: " + std::string(e.what()));
+                std::wstring message = L"Unable to check if file exists: "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
                 return false;
             }
         }
@@ -187,7 +211,12 @@ namespace UKControllerPlugin {
                 file << data;
                 file.close();
             } else {
-                LogError("File not opened for writing");
+                std::wstring message = L"File not opened for writing: " + filename;
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
             }
         }
 
@@ -199,8 +228,13 @@ namespace UKControllerPlugin {
             try {
                 std::filesystem::create_directories(endFile.substr(0, endFile.find_last_of('/')));
             } catch (std::filesystem::filesystem_error e) {
-                LogError("Filesystem error when creating directories " + std::string(e.what()));
-                // Do nothing
+                std::wstring message = L"Error when creating directories "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
             }
         }
 
@@ -231,7 +265,12 @@ namespace UKControllerPlugin {
                 file.close();
                 return data;
             } else {
-                LogError("File not opened for reading");
+                std::wstring message = L"File not opened for reading";
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
             }
 
             return "";
