@@ -4,17 +4,20 @@
 #include "hold/HoldManager.h"
 
 using UKControllerPlugin::Hold::HoldManager;
-using UKControllerPlugin::Hold::HoldDisplay;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Navaids::Navaid;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
         HoldDisplayFactory::HoldDisplayFactory(
             const EuroscopePluginLoopbackInterface & plugin,
-            HoldManager & holdManager
+            HoldManager & holdManager,
+            const NavaidCollection& navaids,
+            const PublishedHoldCollection& holds
         )
-            : plugin(plugin), holdManager(holdManager)
+            : plugin(plugin), holdManager(holdManager), navaids(navaids), holds(holds)
         {
 
         }
@@ -22,17 +25,19 @@ namespace UKControllerPlugin {
         /*
             Create a hold display
         */
-        std::unique_ptr<HoldDisplay> HoldDisplayFactory::Create(unsigned int holdId) const
+        std::unique_ptr<HoldDisplay> HoldDisplayFactory::Create(std::string navaid) const
         {
-            const ManagedHold * const managed = this->holdManager.GetManagedHold(holdId);
-            if (managed == nullptr) {
+            const Navaid& navaidData = this->navaids.GetByIdentifier(navaid);
+
+            if (navaidData == this->navaids.invalidNavaid) {
                 return nullptr;
             }
 
             return std::make_unique<HoldDisplay>(
                 plugin,
-                *managed,
-                holdManager
+                holdManager,
+                navaidData,
+                holds.Get(navaid)
             );
         }
     }  // namespace Hold

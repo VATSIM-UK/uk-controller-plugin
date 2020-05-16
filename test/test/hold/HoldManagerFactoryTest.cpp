@@ -6,7 +6,7 @@
 #include "bootstrap/PersistenceContainer.h"
 
 using testing::Test;
-using UKControllerPlugin::Hold::CreateHoldManager;
+using UKControllerPlugin::Hold::CreatePublishedHoldCollection;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::ManagedHold;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -23,13 +23,13 @@ namespace UKControllerPluginTest {
         TEST_F(HoldManagerFactoryTest, ItReturnsEmptyIfDataEmpty)
         {
             nlohmann::json data = "[]"_json;
-            EXPECT_EQ(0, CreateHoldManager(data, container)->CountHolds());
+            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->CountHolds());
         }
 
         TEST_F(HoldManagerFactoryTest, ItReturnsEmptyIfDataNotArray)
         {
             nlohmann::json data = nlohmann::json::object();
-            EXPECT_EQ(0, CreateHoldManager(data, container)->CountHolds());
+            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->CountHolds());
         }
 
         TEST_F(HoldManagerFactoryTest, ItAddsHoldsWithData)
@@ -55,7 +55,7 @@ namespace UKControllerPluginTest {
             hold2["restrictions"] = nlohmann::json::array();
 
             data = { hold1, hold2 };
-            EXPECT_EQ(2, CreateHoldManager(data, container)->CountHolds());
+            EXPECT_EQ(2, CreatePublishedHoldCollection(data, container)->CountHolds());
         }
 
         TEST_F(HoldManagerFactoryTest, ItDoesntAddNonObjects)
@@ -63,7 +63,7 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data = { "Test" };
 
-            EXPECT_EQ(0, CreateHoldManager(data, container)->CountHolds());
+            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->CountHolds());
         }
 
         TEST_F(HoldManagerFactoryTest, ItDoesntAddInvalidData)
@@ -79,7 +79,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, CreateHoldManager(data, container)->CountHolds());
+            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->CountHolds());
         }
 
         TEST_F(HoldManagerFactoryTest, TheHoldStartsEmpty)
@@ -96,7 +96,7 @@ namespace UKControllerPluginTest {
             hold["restrictions"] = nlohmann::json::array();
 
             data = nlohmann::json::array({ hold });
-            EXPECT_EQ(0, CreateHoldManager(data, container)->GetManagedHold(1)->CountHoldingAircraft());
+            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->GetManagedHold(1)->CountHoldingAircraft());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

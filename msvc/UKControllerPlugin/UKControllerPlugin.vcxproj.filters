@@ -699,9 +699,6 @@
     <ClInclude Include="..\..\src\hold\HoldDisplayFunctions.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldDisplay.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
@@ -744,9 +741,6 @@
     <ClInclude Include="..\..\src\hold\HoldingDataSerializer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldManagerFactory.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldConfigurationDialogFactory.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -781,9 +775,6 @@
       <Filter>src\hold</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldRenderer.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h">
       <Filter>src\hold</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\dialog\DialogCallArgument.h">
@@ -1014,13 +1005,16 @@
     <ClInclude Include="..\..\src\navaids\NavaidModule.h">
       <Filter>src\navaids</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldDisplayFactoryV2.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldDisplayV2.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\PublishedHoldCollection.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\PublishedHoldCollectionFactory.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplay.h">
       <Filter>src\hold</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1477,9 +1471,6 @@
     <ClCompile Include="..\..\src\hold\HoldDisplayFunctions.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldDisplay.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
@@ -1513,9 +1504,6 @@
     <ClCompile Include="..\..\src\hold\HoldingDataSerializer.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldManagerFactory.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldConfigurationDialogFactory.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
@@ -1544,9 +1532,6 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldRenderer.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldConfigurationMenuItem.cpp">
@@ -1732,13 +1717,16 @@
     <ClCompile Include="..\..\src\hold\HoldingAircraft.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldDisplayFactoryV2.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldDisplayV2.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\hold\PublishedHoldCollection.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\PublishedHoldCollectionFactory.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplay.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,8 +1,9 @@
 #pragma once
+#include "navaids/Navaid.h"
+#include "hold/HoldingData.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
-        class ManagedHold;
         class HoldManager;
     }  // namespace Hold
     namespace Euroscope {
@@ -26,8 +27,9 @@ namespace UKControllerPlugin {
             public:
                 HoldDisplay(
                     const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    const UKControllerPlugin::Hold::ManagedHold & managedHold,
-                    UKControllerPlugin::Hold::HoldManager & holdManager
+                    UKControllerPlugin::Hold::HoldManager & holdManager,
+                    const UKControllerPlugin::Navaids::Navaid& navaid,
+                    const std::set<UKControllerPlugin::Hold::HoldingData>& publishedHolds
                 );
                 void ButtonClicked(std::string button);
                 INT GetDataStartHeight(void) const;
@@ -46,6 +48,8 @@ namespace UKControllerPlugin {
                 RECT GetAllClickArea(void) const;
                 Gdiplus::Rect GetAddArea(void) const;
                 RECT GetAddClickArea(void) const;
+                std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
+                    MapAircraftToLevels(const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft) const;
                 unsigned int GetLevelsSkipped(void) const;
                 int GetWindowHeight(void) const;
                 bool IsInInformationMode(void) const;
@@ -65,12 +69,6 @@ namespace UKControllerPlugin {
                     unsigned int profileId,
                     std::string profileName
                 ) const;
-
-                // The hold this display is managing.
-                const UKControllerPlugin::Hold::ManagedHold & managedHold;
-
-                // Max levels skippable
-                const unsigned int maxLevelsSkippable;
 
                 // How high lines should be
                 const INT lineHeight = 17;
@@ -156,6 +154,13 @@ namespace UKControllerPlugin {
                 // How many levels to not draw
                 unsigned int numLevelsSkipped = 0;
 
+
+                // The minimum level in the hold
+                unsigned int minLevel = 7000;
+
+                // The maximum level in the hold
+                unsigned int maximumLevel = 15000;
+
                 // Should we display the information about the hold
                 bool showHoldInformation = false;
 
@@ -170,6 +175,12 @@ namespace UKControllerPlugin {
                 RECT addButtonClickRect = { 190, this->buttonStartOffset, 40, 40 };
 
                 POINT windowPos = { 100, 100 };
+
+                // The navaid that the hold is against
+                const UKControllerPlugin::Navaids::Navaid& navaid;
+
+                // The holds that are published for this navaid
+                const std::set<UKControllerPlugin::Hold::HoldingData> publishedHolds;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin
