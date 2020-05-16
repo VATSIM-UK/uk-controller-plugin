@@ -20,11 +20,11 @@ def doFile(inputFile, outputFile, className, namespace):
   inputAbsolute = os.path.join(os.path.abspath(os.path.dirname(__file__)), inputFile)
   outputAbsolute = os.path.join(os.path.abspath(os.path.dirname(__file__)), outputFile)
 
-  if not os.path.exists(inputAbsolute):
-    os.makedirs(inputAbsolute)
+  if not os.path.exists(os.path.dirname(inputAbsolute)):
+    os.makedirs(os.path.dirname(inputAbsolute))
 
-  if not os.path.exists(outputAbsolute):
-    os.makedirs(outputAbsolute)
+  if not os.path.exists(os.path.dirname(outputAbsolute)):
+    os.makedirs(os.path.dirname(outputAbsolute))
 
   ## Open template, replace placeholders
   fileHandle = open(inputAbsolute, "r+")
