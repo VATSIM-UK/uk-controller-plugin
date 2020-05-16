@@ -2,6 +2,7 @@
 #include "##FOLDERNAME##/##CLASSNAME##.h"
 
 using ::testing::Test;
+using UKControllerPlugin::##NAMESPACE##::##CLASSNAME##;
 
 namespace UKControllerPluginTest {
     namespace ##NAMESPACE## {
