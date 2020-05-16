@@ -160,7 +160,6 @@
     <ClInclude Include="..\..\src\hold\HoldRenderer.h" />
     <ClInclude Include="..\..\src\hold\HoldRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\hold\HoldSelectionMenu.h" />
-    <ClInclude Include="..\..\src\hold\ManagedHold.h" />
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h" />
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\hold\PublishedHoldCollection.h" />
@@ -421,7 +420,6 @@
     <ClCompile Include="..\..\src\hold\HoldRenderer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldRestrictionSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\HoldSelectionMenu.cpp" />
-    <ClCompile Include="..\..\src\hold\ManagedHold.cpp" />
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestriction.cpp" />
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\PublishedHoldCollection.cpp" />

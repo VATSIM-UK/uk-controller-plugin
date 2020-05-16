@@ -171,7 +171,14 @@ namespace UKControllerPlugin {
 
 
             // Create the hold display factory
-            container.holdDisplayFactory.reset(new HoldDisplayFactory(*container.plugin, *container.holdManager));
+            container.holdDisplayFactory.reset(
+                new HoldDisplayFactory(
+                    *container.plugin,
+                    *container.holdManager,
+                    *container.navaids,
+                    *container.publishedHolds
+                )
+            );
         }
 
         /*

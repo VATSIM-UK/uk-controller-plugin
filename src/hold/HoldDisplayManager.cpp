@@ -92,13 +92,13 @@ namespace UKControllerPlugin {
         /*
             Return a display by hold ID, mainly for testing
         */
-        const UKControllerPlugin::Hold::HoldDisplay & HoldDisplayManager::GetDisplay(unsigned int holdId) const
+        const UKControllerPlugin::Hold::HoldDisplay & HoldDisplayManager::GetDisplay(std::string fix) const
         {
             auto display = std::find_if(
                 this->displays.cbegin(),
                 this->displays.cend(),
-                [holdId](const std::unique_ptr<HoldDisplay> & display) -> bool {
-                    return display->managedHold.GetHoldParameters().identifier == holdId;
+                [fix](const std::unique_ptr<HoldDisplay> & display) -> bool {
+                    return display->navaid.identifier == fix;
                 }
             );
 

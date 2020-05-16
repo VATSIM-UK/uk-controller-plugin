@@ -71,6 +71,9 @@ namespace UKControllerPlugin {
                     std::string profileName
                 ) const;
 
+                // The navaid that the hold is against
+                const UKControllerPlugin::Navaids::Navaid& navaid;
+
                 // How high lines should be
                 const INT lineHeight = 17;
 
@@ -176,9 +179,6 @@ namespace UKControllerPlugin {
                 RECT addButtonClickRect = { 190, this->buttonStartOffset, 40, 40 };
 
                 POINT windowPos = { 100, 100 };
-
-                // The navaid that the hold is against
-                const UKControllerPlugin::Navaids::Navaid& navaid;
 
                 // The holds that are published for this navaid
                 const std::set<UKControllerPlugin::Hold::HoldingData> publishedHolds;

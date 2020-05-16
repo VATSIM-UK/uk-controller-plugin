@@ -28,7 +28,7 @@ namespace UKControllerPlugin {
                 );
                 size_t CountDisplays(void) const;
                 unsigned int GetCurrentProfile(void) const;
-                const UKControllerPlugin::Hold::HoldDisplay & GetDisplay(unsigned int holdId) const;
+                const UKControllerPlugin::Hold::HoldDisplay & GetDisplay(std::string fix) const;
                 void LoadProfile(unsigned int profileId);
 
                 // Inherited via AsrEventHandlerInterface

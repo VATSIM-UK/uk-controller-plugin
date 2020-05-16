@@ -5,7 +5,6 @@
 #include "hold/HoldingData.h"
 #include "hold/CompareHoldingAircraft.h"
 #include "hold/CompareHolds.h"
-#include "hold/ManagedHold.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {

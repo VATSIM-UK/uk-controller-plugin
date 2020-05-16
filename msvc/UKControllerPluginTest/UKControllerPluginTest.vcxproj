@@ -123,7 +123,6 @@
     <ClCompile Include="..\..\test\test\hold\HoldRendererTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldRestrictionSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldSelectionMenuTest.cpp" />
-    <ClCompile Include="..\..\test\test\hold\ManagedHoldTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\MinStackHoldLevelRestrictionSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\MinStackHoldLevelRestrictionTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\PublishedHoldCollectionTest.cpp" />

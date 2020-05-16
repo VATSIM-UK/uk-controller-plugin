@@ -530,9 +530,6 @@
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp">
       <Filter>test\squawk</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\ManagedHoldTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\hold\HoldingAircraftTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>

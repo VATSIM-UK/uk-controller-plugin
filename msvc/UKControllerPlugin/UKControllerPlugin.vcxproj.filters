@@ -714,9 +714,6 @@
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h">
       <Filter>src\squawk</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\ManagedHold.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldSelectionMenu.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -1479,9 +1476,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp">
       <Filter>src\squawk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\ManagedHold.cpp">
-      <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldSelectionMenu.cpp">
       <Filter>src\hold</Filter>

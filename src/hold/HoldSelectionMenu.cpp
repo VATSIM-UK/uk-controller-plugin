@@ -5,7 +5,6 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
-#include "hold/ManagedHold.h"
 #include "hold/HoldProfileManager.h"
 #include "hold/HoldDisplayManager.h"
 
@@ -15,7 +14,6 @@ using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Hold::ManagedHold;
 
 namespace UKControllerPlugin {
     namespace Hold {

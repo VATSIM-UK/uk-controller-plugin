@@ -1,7 +1,6 @@
 ﻿#include "pch/stdafx.h"
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFunctions.h"
-#include "hold/ManagedHold.h"
 #include "hold/HoldManager.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeRadarLoopbackInterface.h"
