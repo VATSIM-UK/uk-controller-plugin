@@ -1,7 +1,7 @@
 #include "pch/stdafx.h"
 #include "hold/HoldModule.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "hold/HoldManagerFactory.h"
+#include "hold/PublishedHoldCollectionFactory.h"
 #include "hold/HoldEventHandler.h"
 #include "hold/HoldManager.h"
 #include "message/UserMessager.h"
@@ -39,7 +39,7 @@ using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Dialog::DialogData;
-using UKControllerPlugin::Hold::CreateHoldManager;
+using UKControllerPlugin::Hold::CreatePublishedHoldCollection;
 using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
 using UKControllerPlugin::Hold::CreateHoldProfileManager;
 using UKControllerPlugin::Hold::HoldRenderer;
@@ -81,7 +81,8 @@ namespace UKControllerPlugin {
                 holdDependencyKey,
                 nlohmann::json::array()
             );
-            container.holdManager = CreateHoldManager(holdDependency, container);
+            container.holdManager = std::make_unique<HoldManager>();
+            container.publishedHolds = CreatePublishedHoldCollection(holdDependency, container);
 
             // Create the object to manage the popup menu
             int holdSelectionCancelId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
@@ -168,11 +169,6 @@ namespace UKControllerPlugin {
             container.timedHandler->RegisterEvent(eventHandler, timedEventFrequency);
             container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
 
-            // If there aren't any holds, tell the user this explicitly
-            if (container.holdManager->CountHolds() == 0) {
-                BootstrapWarningMessage warning("No holds were loaded for the hold manager");
-                userMessages.SendMessageToUser(warning);
-            }
 
             // Create the hold display factory
             container.holdDisplayFactory.reset(new HoldDisplayFactory(*container.plugin, *container.holdManager));

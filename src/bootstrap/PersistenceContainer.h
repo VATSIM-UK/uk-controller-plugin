@@ -53,6 +53,7 @@
 #include "regional/RegionalPressureManager.h"
 #include "srd/SrdSearchHandler.h"
 #include "navaids/NavaidCollection.h"
+#include "hold/PublishedHoldCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -79,7 +80,6 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
             std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;
             std::shared_ptr<UKControllerPlugin::Datablock::DisplayTime> timeFormatting;
-            std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
 
             // Collections of event handlers
             std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;
@@ -128,6 +128,8 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
             std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
             std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
+            std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
+            std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
 
             // Websocket
             std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnectionInterface> websocket;
