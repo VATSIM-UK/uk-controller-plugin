@@ -18,182 +18,84 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Add a hold to the manager, doesnt add duplicates
+            Add an aircraft to a "hold" because it's within proximity to the fix
         */
-        void HoldManager::AddHold(UKControllerPlugin::Hold::ManagedHold hold)
+        void HoldManager::AddAircrafToProximityHold(EuroScopeCFlightPlanInterface& flightplan, std::string hold)
         {
-            auto existingHold = std::find_if(
-                this->holdData.begin(),
-                this->holdData.end(),
-                [&hold] (std::pair<unsigned int, const std::unique_ptr<ManagedHold> &> compare) -> bool {
-                    return hold.GetHoldParameters() == compare.second->GetHoldParameters();
-                }
-            );
-
-            if (existingHold != this->holdData.end()) {
-                LogWarning("Tried to add duplicate hold " + std::to_string(hold.GetHoldParameters().identifier));
+            // If the aircraft is already registered with the hold manager add to proximity
+            if (this->aircraft.count(flightplan.GetCallsign())) {
+                (*this->aircraft.find(flightplan.GetCallsign()))->AddProximityHold.insert(hold);
                 return;
             }
 
-            this->holdData[hold.GetHoldParameters().identifier] = std::make_unique<ManagedHold>(std::move(hold));
-        }
+            // Create a new instance of a holding aircraft
+            std::shared_ptr<HoldingAircraft> holdingAircraft = std::make_shared<HoldingAircraft>(
+                flightplan.GetCallsign(),
+                std::set<std::string>({ hold })
+            );
 
-        void HoldManager::AddPublishedHold(UKControllerPlugin::Hold::HoldingData hold)
-        {
-            if (!this->publishedHolds[hold.fix].insert(hold).second) {
-                LogWarning("Attempted to add duplicate published hold " + hold.fix);
-            }
+            this->aircraft.insert(holdingAircraft);
+            this->holds[hold].insert(holdingAircraft);
         }
 
         /*
-            Add an aircraft to the hold, removing from any other holds.
+            Assign an aircraft to a given hold
         */
-        void HoldManager::AddAircraftToHold(
-            EuroScopeCFlightPlanInterface & flightplan,
-            EuroScopeCRadarTargetInterface & radarTarget,
-            unsigned int holdId
+        void HoldManager::AssignAircraftToHold(
+            EuroScopeCFlightPlanInterface& flightplan,
+            std::string hold
         ) {
-            auto managedHold = this->holdData.find(holdId);
-            if (managedHold == this->holdData.end()) {
-                LogWarning("Tried to add aircraft to non existant hold " + std::to_string(holdId));
+            // If the aircraft is already registered with the hold manager, change its assigned.
+            if (this->aircraft.count(flightplan.GetCallsign())) {
+                (*this->aircraft.find(flightplan.GetCallsign()))->SetAssignedHold(hold);
                 return;
             }
 
-            this->RemoveAircraftFromAnyHold(flightplan.GetCallsign());
-
-            managedHold->second->AddHoldingAircraft(
-                {
+            // Create a new instance of a holding aircraft
+            std::shared_ptr<HoldingAircraft> holdingAircraft = std::make_shared<HoldingAircraft>(
                     flightplan.GetCallsign(),
-                    flightplan.GetClearedAltitude(),
-                    radarTarget.GetFlightLevel(),
-                    radarTarget.GetVerticalSpeed(),
-                    std::chrono::system_clock::now()
-                }
+                    std::chrono::system_clock::now(),
+                    hold,
+                    std::set<std::string>()
             );
 
-            this->holdingAircraft[flightplan.GetCallsign()] = managedHold->first;
-        }
-
-        void HoldManager::AddAircraftToHold(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan, UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget, std::string hold)
-        {
-            this->RemoveAircraftFromAnyHold(flightplan.GetCallsign());
-            this->aircraft[flightplan.GetCallsign()] = hold;
-            this->holds[hold].insert(
-                {
-                    flightplan.GetCallsign(),
-                    flightplan.GetClearedAltitude(),
-                    radarTarget.GetFlightLevel(),
-                    radarTarget.GetVerticalSpeed(),
-                    std::chrono::system_clock::now()
-                }
-            );
+            this->aircraft.insert(holdingAircraft);
+            this->holds[hold].insert(holdingAircraft);
         }
 
         /*
-            Count the number of holds
+            Remove an aircraft from the proximity hold    
         */
-        size_t HoldManager::CountHolds(void) const
+        void HoldManager::RemoveAircraftFromProximityHold(std::string callsign, std::string hold)
         {
-            return this->holdData.size();
-        }
-
-        /*
-            Returns the hold that an aircraft is in
-        */
-        ManagedHold * const HoldManager::GetAircraftHold(std::string callsign) const
-        {
-            if (!this->holdingAircraft.count(callsign)) {
-                return NULL;
+            auto aircraft = this->aircraft.find(callsign);
+            if (aircraft == this->aircraft.cend()) {
+                return;
             }
 
-            return this->holdData.at(this->holdingAircraft.at(callsign)).get();
+            (*aircraft)->RemoveProximityHold(hold);
         }
 
         /*
-            Return one of the managed holds
-        */
-        const UKControllerPlugin::Hold::ManagedHold * const HoldManager::GetManagedHold(unsigned int holdId) const
-        {
-            auto managedHold = this->holdData.find(holdId);
-            if (managedHold == this->holdData.cend()) {
-                LogWarning("Tried to access invalid hold " + std::to_string(holdId));
-                return nullptr;
-            }
-
-            return &(*managedHold->second);
-        }
-
-        const std::set<HoldingAircraft, CompareHoldingAircraft> HoldManager::GetHoldingAircraft(std::string navaid) const
-        {
-            return this->holds.count(navaid)
-                ? this->holds.at(navaid)
-                : std::set<HoldingAircraft, CompareHoldingAircraft>();
-        }
-
-        const std::set<HoldingData, CompareHolds> HoldManager::GetPublishedHolds(std::string navaid) const
-        {
-            return this->publishedHolds.count(navaid)
-                ? this->publishedHolds.at(navaid)
-                : std::set<UKControllerPlugin::Hold::HoldingData, UKControllerPlugin::Hold::CompareHolds>();
-        }
-
-        /*
-            Remove aircarft from any holds that they are in
+            Remove aircraft from any holds that they are in, regardless of status
         */
         void HoldManager::RemoveAircraftFromAnyHold(std::string callsign)
         {
-            auto aircraft = this->holdingAircraft.find(callsign);
-            if (aircraft == this->holdingAircraft.cend()) {
+            auto aircraft = this->aircraft.find(callsign);
+            if (aircraft == this->aircraft.cend()) {
                 return;
             }
 
-            this->holdData[aircraft->second]->RemoveHoldingAircraft(aircraft->first);
-            this->holdingAircraft.erase(aircraft);
-
-            // NEW CODE
-            if (!this->aircraft.count(callsign)) {
-                return;
-            }
-
-            this->holds[this->aircraft[callsign]].erase(this->holds[this->aircraft[callsign]].find(callsign));
-            this->aircraft.erase(callsign);
-        }
-
-        /*
-            Update every aircraftin the holds, namely its cleared level and its actual level
-        */
-        void HoldManager::UpdateHoldingAircraft(EuroscopePluginLoopbackInterface & plugin)
-        {
-            // Iterate the holds
+            const std::set<std::string> proximityHolds = (*aircraft)->GetProximityHolds();
             for (
-                std::map<unsigned int, std::unique_ptr<ManagedHold>>::const_iterator itHold = this->holdData.cbegin();
-                itHold != this->holdData.cend();
-                ++itHold
+                std::set<std::string>::const_iterator it = proximityHolds.cbegin();
+                it != proximityHolds.cend();
+                ++it
             ) {
-
-                // Iterate the aircraft in the holds
-                for (
-                    ManagedHold::ManagedHoldAircraft::const_iterator itAircraft = itHold->second->cbegin();
-                    itAircraft != itHold->second->cend();
-                    ++itAircraft
-                ) {
-                    // Update aircraft altitudes
-                    try {
-                        std::shared_ptr<EuroScopeCRadarTargetInterface> radarTarget = plugin.GetRadarTargetForCallsign(
-                            itAircraft->callsign
-                        );
-                        itHold->second->UpdateHoldingAircraft(
-                            itAircraft->callsign,
-                            plugin.GetFlightplanForCallsign(itAircraft->callsign)->GetClearedAltitude(),
-                            radarTarget->GetFlightLevel(),
-                            radarTarget->GetVerticalSpeed()
-                        );
-                    }
-                    catch (std::invalid_argument) {
-                     // Cant update, no FP.
-                    }
-                }
+                this->holds[*it].erase(this->holds[*it].find(callsign));
             }
+
+            this->aircraft.erase(this->aircraft.find(callsign));
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
