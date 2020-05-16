@@ -48,6 +48,8 @@ namespace UKControllerPlugin {
                 RECT GetAllClickArea(void) const;
                 Gdiplus::Rect GetAddArea(void) const;
                 RECT GetAddClickArea(void) const;
+                std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
+                    MapAircraftToLevels(const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft) const;
                 unsigned int GetLevelsSkipped(void) const;
                 int GetWindowHeight(void) const;
                 bool IsInInformationMode(void) const;

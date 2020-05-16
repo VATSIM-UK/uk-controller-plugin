@@ -89,7 +89,7 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                this->holdManager.AddAircraftToHold(
+                this->holdManager.AssignAircraftToHold(
                     *fp,
                     *rt,
                     this->managedHold.GetHoldParameters().identifier

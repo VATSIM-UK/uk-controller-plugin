@@ -29,6 +29,11 @@ namespace UKControllerPlugin {
             return this->entryTime;
         }
 
+        std::string HoldingAircraft::GetCallsign(void) const
+        {
+            return this->callsign;
+        }
+
         const std::set<std::string> HoldingAircraft::GetProximityHolds(void) const
         {
             return this->proximityHolds;

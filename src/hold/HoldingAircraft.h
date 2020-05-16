@@ -15,6 +15,7 @@ namespace UKControllerPlugin {
                 void AddProximityHold(std::string hold);
                 std::string GetAssignedHold(void) const;
                 const std::chrono::system_clock::time_point& GetAssignedHoldEntryTime(void) const;
+                std::string GetCallsign(void) const;
                 const std::set<std::string> GetProximityHolds(void) const;
                 bool IsInHoldProximity(std::string hold);
                 void SetAssignedHold(std::string hold);

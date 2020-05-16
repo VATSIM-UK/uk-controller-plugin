@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
         /*
             Add an aircraft to a "hold" because it's within proximity to the fix
         */
-        void HoldManager::AddAircrafToProximityHold(EuroScopeCFlightPlanInterface& flightplan, std::string hold)
+        void HoldManager::AddAircraftToProximityHold(EuroScopeCFlightPlanInterface& flightplan, std::string hold)
         {
             // If the aircraft is already registered with the hold manager add to proximity
             if (this->aircraft.count(flightplan.GetCallsign())) {
@@ -61,6 +61,30 @@ namespace UKControllerPlugin {
 
             this->aircraft.insert(holdingAircraft);
             this->holds[hold].insert(holdingAircraft);
+        }
+
+        /*
+            Gets all the aircraft in a hold
+        */
+        const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>&
+            HoldManager::GetAircraftForHold(std::string hold) const
+        {
+            return this->holds.count(hold) 
+                ? this->holds.find(hold)->second
+                : std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>();
+        }
+
+        /*
+            Unassign an aircrafts hold
+        */
+        void HoldManager::UnassignAircraftFromHold(std::string callsign)
+        {
+            auto aircraft = this->aircraft.find(callsign);
+            if (aircraft == this->aircraft.cend()) {
+                return;
+            }
+
+            (*aircraft)->RemoveAssignedHold();
         }
 
         /*

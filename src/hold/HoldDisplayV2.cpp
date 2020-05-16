@@ -63,6 +63,10 @@ namespace UKControllerPlugin {
             if (button == "plus") {
                 this->maximumLevel += 1000;
             } else if (button == "minus") {
+                if (this->maximumLevel == this->minLevel) {
+                    return;
+                }
+
                 this->maximumLevel -= 1000;
             } else if (button == "allLevels") {
                 this->dataStartOffset + ((((this->maximumLevel - this->minLevel) / 1000) + 1) * this->lineHeight);
@@ -79,9 +83,8 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                this->holdManager.AddAircraftToHold(
+                this->holdManager.AssignAircraftToHold(
                     *fp,
-                    *rt,
                     this->navaid.identifier
                 );
             } else if (button == "minimise") {
@@ -217,6 +220,41 @@ namespace UKControllerPlugin {
         RECT HoldDisplayV2::GetAddClickArea(void) const
         {
             return this->addButtonClickRect;
+        }
+
+        /*
+            Maps the holding aircraft to their occupied levels
+        */
+        std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
+            HoldDisplayV2::MapAircraftToLevels(
+                const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft
+        ) const {
+
+            std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> levelMap;
+            std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
+
+            for (
+                std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator it = aircraft.cbegin();
+                it != aircraft.cend();
+                ++it
+            ) {
+                try {
+                    rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
+
+                    // If the aircraft is above the displaying levels of the hold, dont map
+                    int occupied = GetOccupiedLevel(rt->GetFlightLevel(), rt->GetVerticalSpeed());
+                    if (occupied > this->maximumLevel || occupied < this->minLevel) {
+                        continue;
+                    }
+
+                    levelMap[occupied].insert(*it);
+                }
+                catch (std::invalid_argument) {
+                    // Cant display, dont have the data
+                }
+            }
+
+            return levelMap;
         }
 
         /*
@@ -600,51 +638,13 @@ namespace UKControllerPlugin {
                 15
             };
 
-            // Render all the possible levels in the hold
-            unsigned int levelNumber = 0;
-            for (
-                unsigned int i = this->maximumLevel;
-                i >= this->minLevel;
-                i -= 1000
-                ) {
-                    // Don't display the level if we're hiding it
-                if (levelNumber < this->numLevelsSkipped) {
-                    levelNumber++;
-                    continue;
-                }
-
-                // Display the restriction hash if a level is restricted
-                //const HoldingData & holdParameters = this->managedHold.GetHoldParameters();
-                //for (
-                //    std::set<std::unique_ptr<AbstractHoldLevelRestriction>>::const_iterator it
-                //        = holdParameters.restrictions.cbegin();
-                //    it != holdParameters.restrictions.cend();
-                //    ++it
-                //) {
-                //    if ((*it)->LevelRestricted(i)) {
-                //        Gdiplus::Rect restrictedRect = {
-                //            this->windowPos.x,
-                //            numbersDisplay.Y,
-                //            windowWidth,
-                //            this->lineHeight
-                //        };
-                //        graphics.FillRect(
-                //            restrictedRect,
-                //            this->blockedLevelBrush
-                //        );
-                //    }
-                //}
-
-                graphics.DrawString(
-                    GetLevelDisplayString(i),
-                    numbersDisplay,
-                    this->titleBarTextBrush
-                );
-
-                numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
-                levelNumber++;
-            }
-
+            // The row in question
+            Gdiplus::Rect holdRow = {
+                this->windowPos.x,
+                this->dataStartHeight,
+                this->windowWidth,
+                15
+            };
 
             // Rects for rendering the actual data
             Gdiplus::Rect callsignDisplay = {
@@ -668,91 +668,137 @@ namespace UKControllerPlugin {
                 this->lineHeight
             };
 
-            Gdiplus::Rect timeInHoldDisplayV2 = {
+            Gdiplus::Rect timeInHoldDisplay = {
                 this->windowPos.x + 170,
                 this->dataStartHeight,
                 30,
                 this->lineHeight
             };
 
-            // Loop the aircraft in the hold and render them
-            const std::set<HoldingAircraft, CompareHoldingAircraft> holdingAircraft = this->holdManager.GetHoldingAircraft(
-                this->navaid.identifier
-            );
+            // Loop over all the possiible levels in the hold and render
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holdingAircraft =
+                this->MapAircraftToLevels(this->holdManager.GetAircraftForHold(this->navaid.identifier));
             for (
-                std::set<HoldingAircraft, CompareHoldingAircraft>::const_iterator it = holdingAircraft.cbegin();
-                it != holdingAircraft.cend();
-                ++it
+                unsigned int i = this->maximumLevel;
+                i >= this->minLevel;
+                i -= 1000
             ) {
-                unsigned int occupied = GetOccupiedLevel(it->reportedLevel, it->verticalSpeed);
-                unsigned int displayRow = GetDisplayRow(this->maximumLevel, occupied);
+                bool levelRestricted = false;
 
-                // Dont render any aircraft where a level is skipped
-                if (displayRow < this->numLevelsSkipped) {
-                    continue;
-                }
-
-                // Dont render any aircraft that are outside the confines of the hold.
-                if (
-                    occupied > this->maximumLevel ||
-                    occupied < this->minLevel
+                // Loop the published holds and check if we need to render any restrictions
+                for (
+                    std::set<HoldingData>::const_iterator publishedIt = this->publishedHolds.cbegin();
+                    publishedIt != this->publishedHolds.cend();
+                    publishedIt++
                 ) {
-                    continue;
+                    // Print the restrictions
+                    for (
+                        std::set<std::unique_ptr<AbstractHoldLevelRestriction>>::const_iterator it
+                        = publishedIt->restrictions.cbegin();
+                        it != publishedIt->restrictions.cend();
+                        ++it
+                    ) {
+                        if ((*it)->LevelRestricted(i)) {
+                            levelRestricted = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // No holding aircraft at this level, so just render the blank display
+                if (holdingAircraft.size() == 0) {
+                    // Render the row
+                    graphics.FillRect(holdRow, this->backgroundBrush);
+
+                    // Render the restrictions
+                    if (levelRestricted) {
+                        graphics.FillRect(holdRow, this->blockedLevelBrush);
+                    }
+
+
+                    // Render the numbers
+                    graphics.DrawString(GetLevelDisplayString(i), numbersDisplay, this->titleBarTextBrush);
+
+                } else {
+                    std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraftAtLevel =
+                        holdingAircraft.at(i);
+                    int i = 0;
+
+                    std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
+                    std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
+
+                    // We have holding aircraft to deal with, render them in
+                    for (
+                        std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator
+                            it = aircraftAtLevel.cbegin();
+                        it != aircraftAtLevel.cend();
+                        ++it
+                    ) {
+                        // Render the row
+                        graphics.FillRect(holdRow, this->backgroundBrush);
+
+                        // Render the restrictions
+                        if (levelRestricted) {
+                            graphics.FillRect(holdRow, this->blockedLevelBrush);
+                        }
+
+                        // Render the numbers
+                        if (i == 0) {
+                            graphics.DrawString(GetLevelDisplayString(i), numbersDisplay, this->titleBarTextBrush);
+                            i++;
+                        }
+
+                        try {
+                            rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
+                            fp = this->plugin.GetFlightplanForCallsign((*it)->GetCallsign());
+
+                            // Render the aircraft
+                            std::wstring callsign = ConvertToTchar((*it)->GetCallsign());
+                            graphics.DrawString(
+                                callsign,
+                                callsignDisplay,
+                                this->dataBrush
+                            );
+
+                            // Reported level
+                            graphics.DrawString(
+                                GetLevelDisplayString(rt->GetFlightLevel()),
+                                actualLevelDisplay,
+                                this->dataBrush
+                            );
+
+
+                            // Cleared level
+                            graphics.DrawString(
+                                GetLevelDisplayString(fp->GetClearedAltitude()),
+                                clearedLevelDisplay,
+                                this->clearedLevelBrush
+                            );
+
+                            // Time in hold, if it's assigned
+                            if ((*it)->GetAssignedHold() != (*it)->noHoldAssigned) {
+                                std::wstring timeString = GetTimeInHoldDisplayString((*it)->GetAssignedHoldEntryTime());
+                                graphics.DrawString(
+                                    timeString,
+                                    timeInHoldDisplay,
+                                    this->dataBrush
+                                );
+                            }
+                        }
+                        catch (std::invalid_argument) {
+                            // Skip the render
+                        }
+
+                        // Increase the lines
+                        numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
+                        callsignDisplay.Y = callsignDisplay.Y + this->lineHeight;
+                        actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
+                        clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
+                        timeInHoldDisplay.Y = timeInHoldDisplay.Y + this->lineHeight;
+                    }
                 }
 
-                callsignDisplay.Y = this->dataStartHeight +
-                    (this->lineHeight * (displayRow - this->numLevelsSkipped));
-                actualLevelDisplay.Y = this->dataStartHeight +
-                    (this->lineHeight * (displayRow - this->numLevelsSkipped));
-                clearedLevelDisplay.Y = this->dataStartHeight +
-                    (this->lineHeight * (displayRow - this->numLevelsSkipped));
-                timeInHoldDisplayV2.Y = this->dataStartHeight +
-                    (this->lineHeight * (displayRow - this->numLevelsSkipped));
-
-                // The callsign display
-                std::wstring callsign = ConvertToTchar(it->callsign);
-                graphics.DrawString(
-                    callsign,
-                    callsignDisplay,
-                    this->dataBrush
-                );
-
-                // Reported level
-                graphics.DrawString(
-                    GetLevelDisplayString(it->reportedLevel),
-                    actualLevelDisplay,
-                    this->dataBrush
-                );
-
-
-                // Cleared level
-                graphics.DrawString(
-                    GetLevelDisplayString(it->clearedLevel),
-                    clearedLevelDisplay,
-                    this->clearedLevelBrush
-                );
-
-                // Time in hold
-                std::wstring timeString = GetTimeInHoldDisplayString(it->entryTime);
-                graphics.DrawString(
-                    timeString,
-                    timeInHoldDisplayV2,
-                    this->dataBrush
-                );
             }
-
-            // Line sectioning off the bottom level.
-            unsigned int bottomLevelLineHeight = this->dataStartHeight +
-                (this->lineHeight * ((((this->maximumLevel - this->minLevel) / 1000) + 1) - this->numLevelsSkipped - 1)) - 2;
-
-            Gdiplus::GraphicsPath path;
-            path.AddLine(
-                this->windowPos.x,
-                bottomLevelLineHeight,
-                this->windowPos.x + this->windowWidth,
-                bottomLevelLineHeight
-            );
-            graphics.DrawPath(path, this->borderPen);
 
             // Border around whole thing, draw this last
             graphics.DrawRect(

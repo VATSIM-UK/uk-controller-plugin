@@ -26,7 +26,7 @@ namespace UKControllerPlugin {
             public:
 
                 HoldManager(void);
-                void AddAircrafToProximityHold(
+                void AddAircraftToProximityHold(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
                     std::string hold
                 );
@@ -34,14 +34,19 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
                     std::string hold
                 );
+
+                const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>&
+                    GetAircraftForHold(std::string hold) const;
                 void UnassignAircraftFromHold(std::string callsign);
                 void RemoveAircraftFromProximityHold(std::string callsign, std::string hold);
                 void RemoveAircraftFromAnyHold(std::string callsign);
 
             private:
 
-                // A map of aircraft callsign -> hold id
+                // All the possible holds
                 std::map<std::string, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holds;
+
+                // The aircraft in the holds
                 std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
         };
 
