@@ -748,11 +748,12 @@ namespace UKControllerPlugin {
                             i++;
                         }
 
+                        // Render the aircraft data
                         try {
                             rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
                             fp = this->plugin.GetFlightplanForCallsign((*it)->GetCallsign());
 
-                            // Render the aircraft
+                            // Callsign
                             std::wstring callsign = ConvertToTchar((*it)->GetCallsign());
                             graphics.DrawString(
                                 callsign,
@@ -802,7 +803,12 @@ namespace UKControllerPlugin {
 
             // Border around whole thing, draw this last
             graphics.DrawRect(
-                borderRect,
+                RECT{
+                    this->windowPos.x,
+                    this->windowPos.y,
+                    this->windowPos.x + this->windowWidth,
+                    timeInHoldDisplay.Y + this->lineHeight
+                },
                 this->borderPen
             );
         }
