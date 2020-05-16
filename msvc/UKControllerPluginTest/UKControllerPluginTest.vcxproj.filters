@@ -778,6 +778,9 @@
     <ClCompile Include="..\..\test\test\navaids\NavaidModuleTest.cpp">
       <Filter>test\navaids</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\PublishedHoldCollectionTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

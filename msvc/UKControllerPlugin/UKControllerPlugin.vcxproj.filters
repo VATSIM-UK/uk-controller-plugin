@@ -1014,6 +1014,15 @@
     <ClInclude Include="..\..\src\navaids\NavaidModule.h">
       <Filter>src\navaids</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplayFactoryV2.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplayV2.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\PublishedHoldCollection.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1719,6 +1728,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\navaids\NavaidModule.cpp">
       <Filter>src\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldingAircraft.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplayFactoryV2.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplayV2.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\PublishedHoldCollection.cpp">
+      <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

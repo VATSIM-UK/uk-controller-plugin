@@ -139,7 +139,9 @@
     <ClInclude Include="..\..\src\hold\CompareHoldsDescription.h" />
     <ClInclude Include="..\..\src\hold\HoldConfigurationDialogFactory.h" />
     <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h" />
+    <ClInclude Include="..\..\src\hold\HoldDisplayFactoryV2.h" />
     <ClInclude Include="..\..\src\hold\HoldDisplayManager.h" />
+    <ClInclude Include="..\..\src\hold\HoldDisplayV2.h" />
     <ClInclude Include="..\..\src\hold\HoldManagerFactory.h" />
     <ClInclude Include="..\..\src\hold\CompareHoldingAircraft.h" />
     <ClInclude Include="..\..\src\hold\CompareHolds.h" />
@@ -163,6 +165,7 @@
     <ClInclude Include="..\..\src\hold\ManagedHold.h" />
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h" />
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h" />
+    <ClInclude Include="..\..\src\hold\PublishedHoldCollection.h" />
     <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
@@ -400,7 +403,10 @@
     <ClCompile Include="..\..\src\hold\CompareHoldsDescription.cpp" />
     <ClCompile Include="..\..\src\hold\HoldConfigurationDialogFactory.cpp" />
     <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldDisplayFactoryV2.cpp" />
     <ClCompile Include="..\..\src\hold\HoldDisplayManager.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldDisplayV2.cpp" />
+    <ClCompile Include="..\..\src\hold\HoldingAircraft.cpp" />
     <ClCompile Include="..\..\src\hold\HoldManagerFactory.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHoldingAircraft.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHolds.cpp" />
@@ -422,6 +428,7 @@
     <ClCompile Include="..\..\src\hold\ManagedHold.cpp" />
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestriction.cpp" />
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.cpp" />
+    <ClCompile Include="..\..\src\hold\PublishedHoldCollection.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp" />
