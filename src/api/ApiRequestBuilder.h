@@ -31,17 +31,6 @@ namespace UKControllerPlugin {
                     std::string destination
                 ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildHoldDependencyRequest(void) const;
-                UKControllerPlugin::Curl::CurlRequest BuildUserHoldProfilesRequest(void) const;
-                UKControllerPlugin::Curl::CurlRequest BuildDeleteUserHoldProfileRequest(unsigned int id) const;
-                UKControllerPlugin::Curl::CurlRequest BuildCreateUserHoldProfileRequest(
-                    std::string profileName,
-                    std::set<unsigned int> holdIds
-                ) const;
-                UKControllerPlugin::Curl::CurlRequest BuildUpdateUserHoldProfileRequest(
-                    unsigned int profileId,
-                    std::string profileName,
-                    std::set<unsigned int> holdIds
-                ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildRemoteFileRequest(std::string uri) const;
                 UKControllerPlugin::Curl::CurlRequest BuildVersionCheckRequest(std::string versionString) const;
                 UKControllerPlugin::Curl::CurlRequest BuildWebsocketChannelAuthRequest(

@@ -32,19 +32,10 @@ namespace UKControllerPlugin {
                 virtual std::string GetApiDomain(void) const = 0;
                 virtual std::string GetApiKey(void) const = 0;
                 virtual nlohmann::json GetHoldDependency(void) const = 0;
-                virtual nlohmann::json GetGenericHoldProfiles(void) const = 0;
-                virtual nlohmann::json GetUserHoldProfiles(void) const = 0;
                 virtual nlohmann::json GetMinStackLevels(void) const = 0;
                 virtual nlohmann::json GetRegionalPressures(void) const = 0;
                 virtual nlohmann::json GetUri(std::string uri) const = 0;
                 virtual nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const = 0;
-                virtual void DeleteUserHoldProfile(unsigned int profileId) const = 0;
-                virtual unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const = 0;
-                virtual void UpdateUserHoldProfile(
-                    unsigned int id,
-                    std::string name,
-                    std::set<unsigned int> holds
-                ) const = 0;
                 virtual int UpdateCheck(std::string version) const = 0;
                 virtual void SetApiKey(std::string key) = 0;
                 virtual void SetApiDomain(std::string domain) = 0;

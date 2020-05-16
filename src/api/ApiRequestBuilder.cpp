@@ -191,62 +191,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Builds a request to download all the users custom hold profiles
-        */
-        CurlRequest ApiRequestBuilder::BuildUserHoldProfilesRequest(void) const
-        {
-            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/profile", CurlRequest::METHOD_GET));
-        }
-
-        /*
-            Builds a request to delete a users custom hold profile
-        */
-        CurlRequest ApiRequestBuilder::BuildDeleteUserHoldProfileRequest(unsigned int id) const
-        {
-            return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/hold/profile/" + std::to_string(id), CurlRequest::METHOD_DELETE)
-            );
-        }
-
-        /*
-            Builds a request to create a custom hold profile for a user
-        */
-        CurlRequest ApiRequestBuilder::BuildCreateUserHoldProfileRequest(
-            std::string profileName,
-            std::set<unsigned int> holdIds
-        ) const {
-            nlohmann::json body;
-            body["name"] = profileName;
-            body["holds"] = holdIds;
-
-            CurlRequest request(apiDomain + "/hold/profile", CurlRequest::METHOD_PUT);
-            request.SetBody(body.dump());
-
-            return this->AddCommonHeaders(request);
-        }
-
-        /*
-            Builds a request to update a users custom hold profile
-        */
-        CurlRequest ApiRequestBuilder::BuildUpdateUserHoldProfileRequest(
-            unsigned int profileId,
-            std::string profileName,
-            std::set<unsigned int> holdIds
-        ) const {
-            nlohmann::json body;
-            body["name"] = profileName;
-            body["holds"] = holdIds;
-
-            CurlRequest request(
-                apiDomain + "/hold/profile/" + std::to_string(profileId),
-                CurlRequest::METHOD_PUT
-            );
-            request.SetBody(body.dump());
-
-            return this->AddCommonHeaders(request);
-        }
-
-        /*
             Returns the API Domain that the builder is using
         */
         std::string ApiRequestBuilder::GetApiDomain(void) const
