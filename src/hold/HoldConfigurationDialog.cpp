@@ -1,11 +1,9 @@
 #include "pch/stdafx.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "hold/HoldDisplayFunctions.h"
-#include "hold/HoldProfileManager.h"
 #include "dialog/DialogCallArgument.h"
 
 using UKControllerPlugin::Hold::ConvertToTchar;
-using UKControllerPlugin::Hold::GetSelectedHoldProfileText;
 using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Hold::HoldConfigurationMenuItem;

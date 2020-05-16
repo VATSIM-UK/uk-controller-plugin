@@ -1,7 +1,5 @@
 #include "pch/stdafx.h"
 #include "hold/HoldDisplayManager.h"
-#include "hold/HoldProfile.h"
-#include "hold/HoldProfileManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "euroscope/UserSetting.h"
@@ -12,10 +10,9 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         HoldDisplayManager::HoldDisplayManager(
-            const HoldProfileManager & profileManager,
             const HoldManager & holdManager,
             const HoldDisplayFactory & displayFactory
-        ) : profileManager(profileManager), holdManager(holdManager), displayFactory(displayFactory)
+        ) : holdManager(holdManager), displayFactory(displayFactory)
         {
 
         }

@@ -108,13 +108,5 @@ namespace UKControllerPlugin {
 
             return std::to_wstring(minutes) + L"m";
         }
-
-        /*
-            Get the hold profile static text
-        */
-        std::wstring GetSelectedHoldProfileText(const HoldProfile & profile)
-        {
-            return ConvertToTchar("Selected Profile: " + profile.name);
-        }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

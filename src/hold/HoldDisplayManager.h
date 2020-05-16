@@ -22,7 +22,6 @@ namespace UKControllerPlugin {
         {
             public:
                 HoldDisplayManager(
-                    const UKControllerPlugin::Hold::HoldProfileManager & profileManager,
                     const UKControllerPlugin::Hold::HoldManager & holdManager,
                     const UKControllerPlugin::Hold::HoldDisplayFactory & displayFactory
                 );
@@ -53,9 +52,6 @@ namespace UKControllerPlugin {
             private:
 
                 void SaveDisplaysToAsr(void) const;
-
-                // Manages profiles
-                const UKControllerPlugin::Hold::HoldProfileManager & profileManager;
 
                 // Manages holds
                 const UKControllerPlugin::Hold::HoldManager & holdManager;
