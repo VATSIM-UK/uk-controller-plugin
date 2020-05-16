@@ -17,7 +17,6 @@
 #include "hold/HoldConfigurationDialog.h"
 #include "dialog/DialogData.h"
 #include "hold/HoldConfigurationDialogFactory.h"
-#include "hold/HoldProfileManagerFactory.h"
 #include "hold/HoldRenderer.h"
 #include "hold/HoldConfigurationMenuItem.h"
 #include "radarscreen/RadarRenderableCollection.h"
@@ -41,7 +40,6 @@ using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Hold::CreatePublishedHoldCollection;
 using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
-using UKControllerPlugin::Hold::CreateHoldProfileManager;
 using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
@@ -109,9 +107,9 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(openHoldPopupMenu);
 
             // The selection cancel function takes the base id
-            CallbackFunction holdSelectionCancelCallback(
+            CallbackFunction holdSelectionCallback(
                 holdSelectionCancelId,
-                "Hold Selection Cancel",
+                "Hold Selection",
                 std::bind(
                     &HoldSelectionMenu::MenuItemClicked,
                     container.holdSelectionMenu,
@@ -119,31 +117,9 @@ namespace UKControllerPlugin {
                     std::placeholders::_2
                 )
             );
-            container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCancelCallback);
-
-            // Add the hold selection callback function for each hold in the collection so we can tell between them
-            unsigned int i = 0;
-            while (i < container.holdManager->CountHolds()) {
-                CallbackFunction holdSelectionCallback(
-                    container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
-                    "Hold Selection",
-                    std::bind(
-                        &HoldSelectionMenu::MenuItemClicked,
-                        container.holdSelectionMenu,
-                        std::placeholders::_1,
-                        std::placeholders::_2
-                    )
-                );
-                container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
-                i++;
-            }
+            container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
 
             // Create the hold dialog and profile manager
-            container.holdProfiles = CreateHoldProfileManager(
-                dependencyProvider.LoadDependency(holdProfileDependencyKey, nlohmann::json::array()),
-                *container.api
-            );
-
             std::shared_ptr<HoldConfigurationDialog> dialog = CreateHoldConfigurationDialog(
                 holdDependency,
                 *container.holdProfiles

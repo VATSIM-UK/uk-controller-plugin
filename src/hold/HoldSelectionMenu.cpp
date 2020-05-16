@@ -5,7 +5,6 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
-#include "hold/HoldProfileManager.h"
 #include "hold/HoldDisplayManager.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
@@ -19,11 +18,9 @@ namespace UKControllerPlugin {
     namespace Hold {
         HoldSelectionMenu::HoldSelectionMenu(
             HoldManager & holdManager,
-            HoldProfileManager & profileManager,
             EuroscopePluginLoopbackInterface & plugin,
-            unsigned int callbackIdFirstHold
-        ) : holdManager(holdManager), profileManager(profileManager),
-            plugin(plugin), callbackIdFirstHold(callbackIdFirstHold)
+            unsigned int callbackId
+        ) : holdManager(holdManager), plugin(plugin), callbackId(callbackId)
         {
         }
 
@@ -68,13 +65,16 @@ namespace UKControllerPlugin {
 
             // Use a "different" callback function for each hold, so we can easily determine which one is called
             PopupMenuItem menuItem;
+            menuItem.firstValue = this->noHold;
             menuItem.secondValue = "";
+            menuItem.callbackFunctionId = this->callbackId;
             menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItem.disabled = false;
             menuItem.fixedPosition = false;
+            this->plugin.AddItemToPopupList(menuItem);
 
             // Iterate through the profiles
-            std::set<unsigned int> addedHolds;
+            std::set<std::string> addedHolds;
             for (
                 std::set<std::shared_ptr<const HoldDisplayManager>>::const_iterator it = this->displays.cbegin();
                 it != this->displays.cend();
@@ -86,26 +86,14 @@ namespace UKControllerPlugin {
                     holdIt != (*it)->cend();
                     ++holdIt
                 ) {
-                    if (!addedHolds.insert((*holdIt)->managedHold.GetHoldParameters().identifier).second) {
+                    if (!addedHolds.insert((*holdIt)->navaid.identifier).second) {
                         continue;
                     }
 
-                    menuItem.firstValue = (*holdIt)->managedHold.GetHoldParameters().description;
-                    menuItem.callbackFunctionId = this->callbackIdFirstHold +
-                        (*holdIt)->managedHold.GetHoldParameters().identifier;
+                    menuItem.firstValue = (*holdIt)->navaid.identifier;
                     this->plugin.AddItemToPopupList(menuItem);
                 }
             }
-
-            // Add the cancel menu item.
-            PopupMenuItem menuItemCancel;
-            menuItemCancel.firstValue = "--";
-            menuItemCancel.secondValue = "";
-            menuItemCancel.callbackFunctionId = this->callbackIdFirstHold;
-            menuItemCancel.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-            menuItemCancel.disabled = false;
-            menuItemCancel.fixedPosition = true;
-            this->plugin.AddItemToPopupList(menuItemCancel);
         }
 
         /*
@@ -114,8 +102,6 @@ namespace UKControllerPlugin {
         */
         void HoldSelectionMenu::MenuItemClicked(int functionId, std::string context)
         {
-            // The hold ID is the number in sequence of the callback functions
-            int holdId = functionId - this->callbackIdFirstHold;
             std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
             std::shared_ptr<EuroScopeCRadarTargetInterface> rt = this->plugin.GetSelectedRadarTarget();
 
@@ -124,17 +110,11 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // If we click the first option, that's the cancel button
-            if (functionId == this->callbackIdFirstHold) {
-                this->holdManager.RemoveAircraftFromAnyHold(fp->GetCallsign());
-                return;
+            if (context == "--") {
+                this->holdManager.UnassignAircraftFromHold(fp->GetCallsign());
+            } else {
+                this->holdManager.AssignAircraftToHold(*fp, context);
             }
-
-            this->holdManager.AddAircraftToHold(
-                *fp,
-                *rt,
-                holdId
-            );
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -8,7 +8,6 @@ namespace UKControllerPlugin {
     }  // namespace Euroscope
     namespace Hold {
         class HoldManager;
-        class HoldProfileManager;
         class HoldDisplayManager;
     }  // namespace Hold
 }  // namespace UKControllerPlugin
@@ -20,9 +19,8 @@ namespace UKControllerPlugin {
             public:
                 HoldSelectionMenu(
                     UKControllerPlugin::Hold::HoldManager & holdManager,
-                    UKControllerPlugin::Hold::HoldProfileManager & profileManager,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    unsigned int callbackIdFirstHold
+                    unsigned int callbackId
                 );
                 void AddDisplayManager(
                     const std::shared_ptr<const UKControllerPlugin::Hold::HoldDisplayManager> manager
@@ -37,15 +35,14 @@ namespace UKControllerPlugin {
                 void MenuItemClicked(int functionId, std::string context);
 
                 // The callback id of the first hold
-                const unsigned int callbackIdFirstHold;
+                const unsigned int callbackId;
+
+                const std::string noHold = "--";
 
             private:
 
                 // A set of all the open ASR's display managers.
                 std::set<std::shared_ptr<const UKControllerPlugin::Hold::HoldDisplayManager>> displays;
-
-                // Manages hold profiles
-                UKControllerPlugin::Hold::HoldProfileManager & profileManager;
 
                 // The hold manager
                 UKControllerPlugin::Hold::HoldManager & holdManager;

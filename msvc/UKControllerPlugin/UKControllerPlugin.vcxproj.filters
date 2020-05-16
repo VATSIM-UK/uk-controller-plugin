@@ -744,18 +744,6 @@
     <ClInclude Include="..\..\src\hold\CompareHoldsDescription.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfileSerializer.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfile.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfileManager.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfileManagerFactory.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\CompareHoldProfile.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -1502,15 +1490,6 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\CompareHoldsDescription.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldProfileSerializer.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldProfileManager.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldProfileManagerFactory.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\CompareHoldProfile.cpp">
