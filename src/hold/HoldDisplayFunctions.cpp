@@ -54,6 +54,8 @@ namespace UKControllerPlugin {
         */
         std::wstring GetLevelDisplayString(int altitude)
         {
+            // Round altitude to nearest 100
+            altitude = ((altitude + 50) / 100) * 100;
             std::wstring altString = std::to_wstring(altitude);
             size_t stringLength = altString.size();
 
