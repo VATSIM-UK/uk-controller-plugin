@@ -563,9 +563,6 @@
     <ClCompile Include="..\..\test\test\hold\CompareHoldsDescriptionTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\CompareHoldProfileTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>

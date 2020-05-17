@@ -98,7 +98,6 @@
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailRepositoryTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionTest.cpp" />
-    <ClCompile Include="..\..\test\test\hold\CompareHoldProfileTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldsDescriptionTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogTest.cpp" />

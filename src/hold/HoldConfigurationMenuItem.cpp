@@ -33,7 +33,7 @@ namespace UKControllerPlugin {
         */
         void HoldConfigurationMenuItem::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
-            this->dialogManager.OpenDialog(HOLD_SELECTOR_DIALOG, reinterpret_cast<LPARAM>(this));
+            this->dialogManager.OpenDialog(IDD_HOLD_SELECTION, reinterpret_cast<LPARAM>(this));
         }
 
         /*
