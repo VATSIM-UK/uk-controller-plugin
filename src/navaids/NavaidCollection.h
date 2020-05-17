@@ -17,9 +17,14 @@ namespace UKControllerPlugin {
 
                 const Navaid invalidNavaid = { 0, "INVALID" };
 
+                typedef std::set<Navaid, CompareNavaids> NavaidList;
+                typedef NavaidList::const_iterator const_iterator;
+                const_iterator cbegin() const { return navaids.cbegin(); }
+                const_iterator cend() const { return navaids.cend(); }
+
             private:
                 // All the navaids
-                std::set<Navaid, CompareNavaids> navaids;
+                NavaidList navaids;
         };
     }  // namespace Navaids
 }  // namespace UKControllerPlugin

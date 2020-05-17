@@ -23,15 +23,8 @@ namespace UKControllerPlugin {
             private:
 
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-                void AddHoldToSelectedList(HWND hwnd);
-                void CreateNewHoldProfile(HWND hwnd);
-                void DeleteHoldProfile(HWND hwnd);
-                void DestroyDialog(HWND hwnd);
-                void DisplaySelectedProfile();
+                void SaveDialog(HWND hwnd);
                 void InitDialog(HWND hwnd, LPARAM lParam);
-                void RemoveHoldFromSelectedList(HWND hwnd);
-                void SelectProfile(HWND hwnd, WPARAM wParam);
-                void UpdateHoldProfile(HWND hwnd);
 
                 // The ES menu item that triggered this dialog - it should be notified when changes occur
                 UKControllerPlugin::Hold::HoldConfigurationMenuItem * configurationItem = nullptr;

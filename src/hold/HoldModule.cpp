@@ -86,7 +86,6 @@ namespace UKControllerPlugin {
             int holdSelectionCancelId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             container.holdSelectionMenu = std::make_shared<HoldSelectionMenu>(
                 *container.holdManager,
-                *container.holdProfiles,
                 *container.plugin,
                 holdSelectionCancelId
             );
@@ -120,13 +119,10 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
 
             // Create the hold dialog and profile manager
-            std::shared_ptr<HoldConfigurationDialog> dialog = CreateHoldConfigurationDialog(
-                holdDependency,
-                *container.holdProfiles
-            );
+            std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(*container.navaids);
             container.dialogManager->AddDialog(
                 {
-                    HOLD_SELECTOR_DIALOG,
+                    IDD_HOLD_SELECTION,
                     "Hold Configuration",
                     reinterpret_cast<DLGPROC>(dialog->WndProc),
                     reinterpret_cast<LPARAM>(dialog.get()),
@@ -169,7 +165,6 @@ namespace UKControllerPlugin {
         ) {
             // Display manager
             std::shared_ptr<HoldDisplayManager> displayManager = std::make_shared<HoldDisplayManager>(
-                *container.holdProfiles,
                 *container.holdManager,
                 *container.holdDisplayFactory
             );
