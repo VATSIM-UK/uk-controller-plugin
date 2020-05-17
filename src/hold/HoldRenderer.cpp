@@ -1,6 +1,5 @@
 #include "pch/stdafx.h"
 #include "hold/HoldRenderer.h"
-#include "hold/HoldProfileManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFactory.h"
@@ -10,7 +9,6 @@
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
-using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldDisplay;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
@@ -70,12 +68,12 @@ namespace UKControllerPlugin {
             std::string objectDescription,
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
-            int holdId = this->GetHoldIdFromObjectDescription(objectDescription);
+            std::string holdName = this->GetHoldNameFromObjectDescription(objectDescription);
             auto display = std::find_if(
                 this->displays->cbegin(),
                 this->displays->cend(),
-                [holdId](const std::unique_ptr<HoldDisplay> & hold) -> bool {
-                    return hold->managedHold.GetHoldParameters().identifier == holdId;
+                [holdName](const std::unique_ptr<HoldDisplay>& hold) -> bool {
+                    return hold->navaid.identifier == holdName;
                 }
             );
 
@@ -103,12 +101,12 @@ namespace UKControllerPlugin {
         */
         void HoldRenderer::Move(RECT position, std::string objectDescription)
         {
-            int holdId = this->GetHoldIdFromObjectDescription(objectDescription);
+            std::string holdName = this->GetHoldNameFromObjectDescription(objectDescription);
             auto display = std::find_if(
                 this->displays->cbegin(),
                 this->displays->cend(),
-                [holdId](const std::unique_ptr<HoldDisplay> & hold) -> bool {
-                    return hold->managedHold.GetHoldParameters().identifier == holdId;
+                [holdName](const std::unique_ptr<HoldDisplay> & hold) -> bool {
+                    return hold->navaid.identifier == holdName;
                 }
             );
 
@@ -184,9 +182,9 @@ namespace UKControllerPlugin {
         /*
             Given an item description, return the hold id
         */
-        int HoldRenderer::GetHoldIdFromObjectDescription(std::string objectDescription) const
+        std::string HoldRenderer::GetHoldNameFromObjectDescription(std::string objectDescription) const
         {
-            return std::stoi(objectDescription.substr(0, objectDescription.find("/")));
+            return objectDescription.substr(0, objectDescription.find("/"));
         }
 
         /*

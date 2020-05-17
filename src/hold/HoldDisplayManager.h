@@ -23,9 +23,9 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Hold::HoldDisplayFactory & displayFactory
                 );
                 size_t CountDisplays(void) const;
-                unsigned int GetCurrentProfile(void) const;
                 const UKControllerPlugin::Hold::HoldDisplay & GetDisplay(std::string fix) const;
-                void LoadProfile(unsigned int profileId);
+                std::vector<std::string> GetSelectedHolds(void) const;
+                void LoadSelectedHolds(std::vector<std::string> holds);
 
                 // Inherited via AsrEventHandlerInterface
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
@@ -36,6 +36,11 @@ namespace UKControllerPlugin {
                 typedef HoldDisplays::const_iterator const_iterator;
                 const_iterator cbegin() const { return displays.cbegin(); }
                 const_iterator cend() const { return displays.cend(); }
+
+                // ASR Data
+                const std::string selectedHoldsAsrKey = "selectedHolds";
+
+                const std::string selectedHoldsAsrDescription = "Selected Holds";
 
             private:
 
@@ -52,6 +57,9 @@ namespace UKControllerPlugin {
 
                 // Place to find settings
                 UKControllerPlugin::Euroscope::UserSetting * userSetting;
+
+                // The currently selected holds
+                std::vector<std::string> selectedHolds;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

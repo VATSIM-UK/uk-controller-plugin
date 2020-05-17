@@ -136,7 +136,6 @@
     <ClInclude Include="..\..\src\hold\BlockedHoldLevelRestriction.h" />
     <ClInclude Include="..\..\src\hold\BlockedHoldLevelRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\hold\CompareHoldsDescription.h" />
-    <ClInclude Include="..\..\src\hold\HoldConfigurationDialogFactory.h" />
     <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h" />
     <ClInclude Include="..\..\src\hold\HoldDisplayManager.h" />
     <ClInclude Include="..\..\src\hold\HoldDisplay.h" />
@@ -392,7 +391,6 @@
     <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestriction.cpp" />
     <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestrictionSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\CompareHoldsDescription.cpp" />
-    <ClCompile Include="..\..\src\hold\HoldConfigurationDialogFactory.cpp" />
     <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp" />
     <ClCompile Include="..\..\src\hold\HoldDisplayManager.cpp" />
     <ClCompile Include="..\..\src\hold\HoldDisplay.cpp" />

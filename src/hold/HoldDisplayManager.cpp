@@ -33,7 +33,7 @@ namespace UKControllerPlugin {
             this->userSetting = &userSetting;
 
             // Load the profile
-            this->LoadProfile(this->profileId);
+            this->LoadSelectedHolds(this->userSetting->GetStringListEntry(selectedHoldsAsrKey, {}));
         }
 
         /*
@@ -59,14 +59,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Return the current profile ID
-        */
-        unsigned int HoldDisplayManager::GetCurrentProfile(void) const
-        {
-            return this->profileId;
-        }
-
-        /*
             Return a display by hold ID, mainly for testing
         */
         const UKControllerPlugin::Hold::HoldDisplay & HoldDisplayManager::GetDisplay(std::string fix) const
@@ -82,34 +74,32 @@ namespace UKControllerPlugin {
             return **display;
         }
 
+        std::vector<std::string> HoldDisplayManager::GetSelectedHolds(void) const
+        {
+            return this->selectedHolds;
+        }
+
         /*
             Load the given hold profile
         */
-        void HoldDisplayManager::LoadProfile(unsigned int profileId)
+        void HoldDisplayManager::LoadSelectedHolds(std::vector<std::string> holds)
         {
-            HoldProfile selected = this->profileManager.GetProfile(profileId);
-            if (selected == this->profileManager.invalidProfile) {
-                LogWarning("Tried to load invalid hold profile");
-                return;
-            }
-
-            // Save the current displays ASR data and clear the displays
             this->SaveDisplaysToAsr();
             this->displays.clear();
 
             // Setup new profile
-            this->profileId = profileId;
-            for (std::set<unsigned int>::const_iterator holdIt = selected.holds.cbegin();
-                holdIt != selected.holds.cend();
+            this->selectedHolds = holds;
+            for (std::vector<std::string>::const_iterator holdIt = holds.cbegin();
+                holdIt != holds.cend();
                 ++holdIt
             ) {
                 std::unique_ptr<HoldDisplay> display = this->displayFactory.Create(*holdIt);
                 if (display == nullptr) {
-                    LogWarning("Failed to create hold display for " + std::to_string(*holdIt));
+                    LogWarning("Failed to create hold display for " + *holdIt);
                     continue;
                 }
 
-                display->LoadDataFromAsr(*this->userSetting, this->profileId);
+                display->LoadDataFromAsr(*this->userSetting);
                 this->displays.insert(std::move(display));
             }
         }

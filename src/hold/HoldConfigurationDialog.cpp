@@ -35,6 +35,7 @@ namespace UKControllerPlugin {
             // Add checkboxes to the navaids list so they may be selected
             ListView_SetExtendedListViewStyle(holdList, LVS_EX_CHECKBOXES);
 
+            std::vector<std::string> selectedHolds = this->configurationItem->GetHolds();
 
             LVITEM item;
             item.mask = LVIF_TEXT;
@@ -52,7 +53,11 @@ namespace UKControllerPlugin {
                     &item
                 );
 
-                ListView_SetCheckState(holdList, item.iItem, true);
+                ListView_SetCheckState(
+                    holdList,
+                    item.iItem,
+                    (bool) std::count(selectedHolds.cbegin(), selectedHolds.cend(), it->identifier)
+                );
             }           
         }
 
@@ -63,10 +68,16 @@ namespace UKControllerPlugin {
         {
             HWND holdList = GetDlgItem(hwnd, IDC_HOLD_LIST);
 
+
+            std::vector<std::string> selectedHolds;
             int numItems = ListView_GetItemCount(holdList);
             for (int item = 0; item < numItems; ++item)
             {
-                // Get the save status
+                if (ListView_GetCheckState(holdList, item)) {
+                    TCHAR buffer[10];
+                    ListView_GetItemText(holdList, item, 0, buffer, 10);
+                    selectedHolds.push_back(ConvertFromTchar(buffer));
+                }
             }
         }
 

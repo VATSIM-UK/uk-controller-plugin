@@ -5,7 +5,6 @@
 #include "euroscope//EuroScopeCRadarTargetInterface.h"
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
-#include "hold/ManagedHold.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -13,7 +12,6 @@ using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::TimedEvent::AbstractTimedEvent;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Hold::ManagedHold;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -48,14 +46,6 @@ namespace UKControllerPlugin {
             int dataType
         ) {
             // Nothing to do here
-        }
-
-        /*
-            When the timed event is called, we should update the holding aircrafts details
-        */
-        void HoldEventHandler::TimedEventTrigger(void)
-        {
-            this->holdManager.UpdateHoldingAircraft(this->plugin);
         }
 
         /*

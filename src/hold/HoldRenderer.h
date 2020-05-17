@@ -69,7 +69,7 @@ namespace UKControllerPlugin {
 
             private:
 
-                int GetHoldIdFromObjectDescription(std::string objectDescription) const;
+                std::string GetHoldNameFromObjectDescription(std::string objectDescription) const;
                 std::string GetButtonNameFromObjectDescription(std::string objectDescription) const;
 
                 // Should the renderer render the holds?

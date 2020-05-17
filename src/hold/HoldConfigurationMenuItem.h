@@ -39,8 +39,8 @@ namespace UKControllerPlugin {
                 // Inherited via CommandHandlerInterface
                 bool ProcessCommand(std::string command) override;
 
-                void InvalidateProfile(unsigned int profileId);
-                void SelectProfile(unsigned int profileId);
+                std::vector<std::string> GetHolds(void) const;
+                void SelectHolds(std::vector<std::string> holds);
 
                 // What to display in the configuration menu
                 const std::string menuItemDescription = "Hold Profile Configuration";

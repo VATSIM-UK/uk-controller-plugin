@@ -68,7 +68,6 @@ namespace UKControllerPlugin {
 
                 this->maximumLevel -= 1000;
             } else if (button == "allLevels") {
-                this->dataStartOffset + ((((this->maximumLevel - this->minLevel) / 1000) + 1) * this->lineHeight);
                 this->maximumLevel = 15000;
             } else if (button == "add") {
                 std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
@@ -241,7 +240,7 @@ namespace UKControllerPlugin {
                     rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
 
                     // If the aircraft is above the displaying levels of the hold, dont map
-                    int occupied = GetOccupiedLevel(rt->GetFlightLevel(), rt->GetVerticalSpeed());
+                    unsigned int occupied = GetOccupiedLevel(rt->GetFlightLevel(), rt->GetVerticalSpeed());
                     if (occupied > this->maximumLevel || occupied < this->minLevel) {
                         continue;
                     }
