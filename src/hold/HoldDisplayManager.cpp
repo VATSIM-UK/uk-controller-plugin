@@ -41,6 +41,11 @@ namespace UKControllerPlugin {
         */
         void HoldDisplayManager::AsrClosingEvent(UserSetting & userSetting)
         {
+            this->userSetting->Save(
+                this->selectedHoldsAsrKey,
+                this->selectedHoldsAsrDescription,
+                this->selectedHolds
+            );
             this->SaveDisplaysToAsr();
         }
 
