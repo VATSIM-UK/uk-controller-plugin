@@ -680,9 +680,9 @@ namespace UKControllerPlugin {
 
             // Loop over all the possible levels in the hold and render
             for (
-                int i = this->maximumLevel;
-                i >= this->minimumLevel;
-                i -= 1000
+                int level = this->maximumLevel;
+                level >= this->minimumLevel;
+                level -= 1000
             ) {
                 bool levelRestricted = false;
 
@@ -699,7 +699,7 @@ namespace UKControllerPlugin {
                         it != publishedIt->restrictions.cend();
                         ++it
                     ) {
-                        if ((*it)->LevelRestricted(i)) {
+                        if ((*it)->LevelRestricted(level)) {
                             levelRestricted = true;
                             break;
                         }
@@ -707,7 +707,7 @@ namespace UKControllerPlugin {
                 }
                 
                 // No holding aircraft at this level, so just render the blank display
-                if (holdingAircraft.size() == 0) {
+                if (holdingAircraft.count(level) == 0) {
                     // Render the restrictions
                     if (levelRestricted) {
                         graphics.FillRect(holdRow, this->blockedLevelBrush);
@@ -715,7 +715,7 @@ namespace UKControllerPlugin {
 
 
                     // Render the numbers
-                    graphics.DrawString(GetLevelDisplayString(i), numbersDisplay, this->titleBarTextBrush);
+                    graphics.DrawString(GetLevelDisplayString(level), numbersDisplay, this->titleBarTextBrush);
 
 
                     // Increase the lines
@@ -728,8 +728,8 @@ namespace UKControllerPlugin {
 
                 } else {
                     std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraftAtLevel =
-                        holdingAircraft.at(i);
-                    int i = 0;
+                        holdingAircraft.at(level);
+                    int aircraftIndex = 0;
 
                     std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
                     std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
@@ -747,9 +747,13 @@ namespace UKControllerPlugin {
                         }
 
                         // Render the numbers
-                        if (i == 0) {
-                            graphics.DrawString(GetLevelDisplayString(i), numbersDisplay, this->titleBarTextBrush);
-                            i++;
+                        if (aircraftIndex == 0) {
+                            graphics.DrawString(
+                                GetLevelDisplayString(level),
+                                numbersDisplay,
+                                this->titleBarTextBrush
+                            );
+                            aircraftIndex++;
                         }
 
                         // Render the aircraft data
@@ -775,7 +779,7 @@ namespace UKControllerPlugin {
 
                             // Cleared level
                             graphics.DrawString(
-                                GetLevelDisplayString(fp->GetClearedAltitude()),
+                                fp->GetClearedAltitude() == 0 ? L"---" : GetLevelDisplayString(fp->GetClearedAltitude()),
                                 clearedLevelDisplay,
                                 this->clearedLevelBrush
                             );
