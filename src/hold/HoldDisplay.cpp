@@ -49,8 +49,8 @@ namespace UKControllerPlugin {
             this->stringFormat.SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
 
-            this->windowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minLevel) / 1000) + 1) * this->lineHeight);
-            this->maxWindowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minLevel) / 1000) + 1) * this->lineHeight);
+            this->windowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel) / 1000) + 1) * this->lineHeight);
+            this->maxWindowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel) / 1000) + 1) * this->lineHeight);
             this->Move(this->windowPos);
         }
 
@@ -62,7 +62,7 @@ namespace UKControllerPlugin {
             if (button == "plus") {
                 this->maximumLevel += 1000;
             } else if (button == "minus") {
-                if (this->maximumLevel == this->minLevel) {
+                if (this->maximumLevel == this->minimumLevel) {
                     return;
                 }
 
@@ -90,6 +90,29 @@ namespace UKControllerPlugin {
             } else if (button == "information") {
                 this->showHoldInformation = !this->showHoldInformation;
             }
+        }
+
+        Gdiplus::Rect HoldDisplay::GetHoldViewBackgroundRender(
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& aircraft
+        ) const {
+            Gdiplus::Rect area{
+                this->windowPos.x,
+                this->windowPos.y,
+                this->windowWidth,
+                this->titleArea.Height +
+                    this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel)/1000) + 1) * this->lineHeight)
+            };
+
+            for (
+                std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>::const_iterator it
+                    = aircraft.cbegin();
+                it != aircraft.cend();
+                ++it
+            ) {
+                area.Height += (it->second.size() - 1) * this->lineHeight;
+            }
+
+            return area;
         }
 
         /*
@@ -240,8 +263,8 @@ namespace UKControllerPlugin {
                     rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
 
                     // If the aircraft is above the displaying levels of the hold, dont map
-                    unsigned int occupied = GetOccupiedLevel(rt->GetFlightLevel(), rt->GetVerticalSpeed());
-                    if (occupied > this->maximumLevel || occupied < this->minLevel) {
+                    int occupied = GetOccupiedLevel(rt->GetFlightLevel(), rt->GetVerticalSpeed());
+                    if (occupied > this->maximumLevel || occupied < this->minimumLevel) {
                         continue;
                     }
 
@@ -559,15 +582,13 @@ namespace UKControllerPlugin {
             const int screenObjectId
         ) const {
 
-            Gdiplus::Rect borderRect = {
-               this->windowPos.x,
-               this->windowPos.y,
-               this->windowWidth,
-               this->windowHeight
-            };
+            // Get the aircraft in each hold level
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holdingAircraft =
+                this->MapAircraftToLevels(this->holdManager.GetAircraftForHold(this->navaid.identifier));
 
-            // Black background
-            graphics.FillRect(borderRect, this->backgroundBrush);
+            // Render the background
+            Gdiplus::Rect backgroundRect = this->GetHoldViewBackgroundRender(holdingAircraft);
+            graphics.FillRect(backgroundRect, this->backgroundBrush);
 
             // Render the title bar
             this->RenderTitleBar(graphics, radarScreen, screenObjectId);
@@ -614,7 +635,7 @@ namespace UKControllerPlugin {
                 this->windowPos.x,
                 this->dataStartHeight,
                 30,
-                15
+                this->lineHeight
             };
 
             // The row in question
@@ -622,7 +643,7 @@ namespace UKControllerPlugin {
                 this->windowPos.x,
                 this->dataStartHeight,
                 this->windowWidth,
-                15
+                this->lineHeight
             };
 
             // Rects for rendering the actual data
@@ -654,12 +675,10 @@ namespace UKControllerPlugin {
                 this->lineHeight
             };
 
-            // Loop over all the possiible levels in the hold and render
-            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holdingAircraft =
-                this->MapAircraftToLevels(this->holdManager.GetAircraftForHold(this->navaid.identifier));
+            // Loop over all the possible levels in the hold and render
             for (
-                unsigned int i = this->maximumLevel;
-                i >= this->minLevel;
+                int i = this->maximumLevel;
+                i >= this->minimumLevel;
                 i -= 1000
             ) {
                 bool levelRestricted = false;
@@ -686,9 +705,6 @@ namespace UKControllerPlugin {
                 
                 // No holding aircraft at this level, so just render the blank display
                 if (holdingAircraft.size() == 0) {
-                    // Render the row
-                    graphics.FillRect(holdRow, this->backgroundBrush);
-
                     // Render the restrictions
                     if (levelRestricted) {
                         graphics.FillRect(holdRow, this->blockedLevelBrush);
@@ -697,6 +713,15 @@ namespace UKControllerPlugin {
 
                     // Render the numbers
                     graphics.DrawString(GetLevelDisplayString(i), numbersDisplay, this->titleBarTextBrush);
+
+
+                    // Increase the lines
+                    holdRow.Y = holdRow.Y + this->lineHeight;
+                    numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
+                    callsignDisplay.Y = callsignDisplay.Y + this->lineHeight;
+                    actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
+                    clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
+                    timeInHoldDisplay.Y = timeInHoldDisplay.Y + this->lineHeight;
 
                 } else {
                     std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraftAtLevel =
@@ -713,9 +738,6 @@ namespace UKControllerPlugin {
                         it != aircraftAtLevel.cend();
                         ++it
                     ) {
-                        // Render the row
-                        graphics.FillRect(holdRow, this->backgroundBrush);
-
                         // Render the restrictions
                         if (levelRestricted) {
                             graphics.FillRect(holdRow, this->blockedLevelBrush);
@@ -770,6 +792,7 @@ namespace UKControllerPlugin {
                         }
 
                         // Increase the lines
+                        holdRow.Y = holdRow.Y + this->lineHeight;
                         numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
                         callsignDisplay.Y = callsignDisplay.Y + this->lineHeight;
                         actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
@@ -786,7 +809,7 @@ namespace UKControllerPlugin {
                     this->windowPos.x,
                     this->windowPos.y,
                     this->windowPos.x + this->windowWidth,
-                    timeInHoldDisplay.Y + this->lineHeight
+                    holdRow.Y
                 },
                 this->borderPen
             );

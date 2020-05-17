@@ -59,7 +59,7 @@ namespace UKControllerPlugin {
                 const int screenObjectId;
 
                 // The description to show in our menu item
-                const std::string menuItemDescription = "Show Managed Holds";
+                const std::string menuItemDescription = "Display Holds";
 
                 // The ASR key for whether or not the hold displays should be visible
                 const std::string asrVisibleKey = "holdDisplayVisibility";

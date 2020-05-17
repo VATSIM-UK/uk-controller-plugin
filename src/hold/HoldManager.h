@@ -46,6 +46,9 @@ namespace UKControllerPlugin {
                 // All the possible holds
                 std::map<std::string, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holds;
 
+                // The hold to return if nobody is holding there
+                const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> invalidHolds;
+
                 // The aircraft in the holds
                 std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
         };

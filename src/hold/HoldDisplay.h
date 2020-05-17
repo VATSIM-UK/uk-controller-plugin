@@ -37,6 +37,9 @@ namespace UKControllerPlugin {
                     >& publishedHolds
                 );
                 void ButtonClicked(std::string button);
+                Gdiplus::Rect GetHoldViewBackgroundRender(
+                    const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& aircraft
+                ) const;
                 INT GetDataStartHeight(void) const;
                 POINT GetDisplayPos(void) const;
                 Gdiplus::Rect GetTitleArea(void) const;
@@ -162,10 +165,10 @@ namespace UKControllerPlugin {
                 const int informationDisplayWindowHeight = 225;
 
                 // The minimum level in the hold
-                unsigned int minLevel = 7000;
+                int minimumLevel = 7000;
 
                 // The maximum level in the hold
-                unsigned int maximumLevel = 15000;
+                int maximumLevel = 15000;
 
                 // Should we display the information about the hold
                 bool showHoldInformation = false;

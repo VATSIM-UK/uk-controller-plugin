@@ -43,7 +43,7 @@ namespace UKControllerPlugin {
                 void SelectHolds(std::vector<std::string> holds);
 
                 // What to display in the configuration menu
-                const std::string menuItemDescription = "Hold Profile Configuration";
+                const std::string menuItemDescription = "Hold Configuration";
 
                 // The callback function id for the menu being opened
                 const unsigned int selectorMenuOpenCallbackId;

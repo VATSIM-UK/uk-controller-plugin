@@ -47,7 +47,8 @@ namespace UKControllerPlugin {
                 it != this->navaids.cend();
                 ++it
             ) {
-                item.pszText = (LPWSTR)ConvertToTchar(it->identifier).c_str();
+                std::wstring text = ConvertToTchar(it->identifier);
+                item.pszText = (LPWSTR)text.c_str();
                 ListView_InsertItem(
                     holdList,
                     &item
@@ -68,7 +69,6 @@ namespace UKControllerPlugin {
         {
             HWND holdList = GetDlgItem(hwnd, IDC_HOLD_LIST);
 
-
             std::vector<std::string> selectedHolds;
             int numItems = ListView_GetItemCount(holdList);
             for (int item = 0; item < numItems; ++item)
@@ -79,6 +79,8 @@ namespace UKControllerPlugin {
                     selectedHolds.push_back(ConvertFromTchar(buffer));
                 }
             }
+
+            this->configurationItem->SelectHolds(selectedHolds);
         }
 
         /*
