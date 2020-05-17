@@ -36,6 +36,7 @@ namespace UKControllerPlugin {
 
                 const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>&
                     GetAircraftForHold(std::string hold) const;
+                const std::shared_ptr<HoldingAircraft>& GetHoldingAircraft(std::string callsign);
                 void UnassignAircraftFromHold(std::string callsign);
                 void RemoveAircraftFromProximityHold(std::string callsign, std::string hold);
                 void RemoveAircraftFromAnyHold(std::string callsign);

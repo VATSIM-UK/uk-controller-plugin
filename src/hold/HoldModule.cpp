@@ -16,7 +16,6 @@
 #include "hold/HoldSelectionMenu.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "dialog/DialogData.h"
-#include "hold/HoldConfigurationDialogFactory.h"
 #include "hold/HoldRenderer.h"
 #include "hold/HoldConfigurationMenuItem.h"
 #include "radarscreen/RadarRenderableCollection.h"
@@ -39,7 +38,6 @@ using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Hold::CreatePublishedHoldCollection;
-using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
 using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;

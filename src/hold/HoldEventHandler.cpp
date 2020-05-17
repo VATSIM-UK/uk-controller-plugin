@@ -63,12 +63,12 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightPlan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
-            ManagedHold * const hold = this->holdManager.GetAircraftHold(flightPlan.GetCallsign());
-            if (!hold) {
+            std::shared_ptr<HoldingAircraft> aircraft = this->holdManager.GetHoldingAircraft(flightPlan.GetCallsign());
+            if (!aircraft) {
                 return this->noHold;
             }
 
-            return "H" + hold->GetHoldParameters().fix;
+            return "H" + aircraft->GetAssignedHold();
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

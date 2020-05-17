@@ -74,6 +74,12 @@ namespace UKControllerPlugin {
                 : std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>();
         }
 
+        const std::shared_ptr<HoldingAircraft>& HoldManager::GetHoldingAircraft(std::string callsign)
+        {
+            auto aircraft = this->aircraft.find(callsign);
+            return aircraft != this->aircraft.cend() ? *aircraft : nullptr;
+        }
+
         /*
             Unassign an aircrafts hold
         */

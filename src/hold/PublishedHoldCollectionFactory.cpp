@@ -1,7 +1,7 @@
 #include "pch/stdafx.h"
-#include "hold/HoldManagerFactory.h"
-#include "hold/ManagedHold.h"
+#include "hold/PublishedHoldCollectionFactory.h"
 #include "hold/HoldingDataSerializer.h"
+
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
 namespace UKControllerPlugin {

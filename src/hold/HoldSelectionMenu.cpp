@@ -11,7 +11,6 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Hold::HoldManager;
-using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 
 namespace UKControllerPlugin {
