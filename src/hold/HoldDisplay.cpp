@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
             : plugin(plugin),
             holdManager(holdManager),
             publishedHolds(publishedHolds),
-            titleBarBrush(Gdiplus::Color(255, 153, 153)),
+            titleBarBrush(Gdiplus::Color(197, 129, 214)),
             backgroundBrush(Gdiplus::Color(0, 0, 0)),
             titleBarTextBrush(Gdiplus::Color(255, 255, 255)),
             fontFamily(L"EuroScope"),
