@@ -102,8 +102,12 @@ namespace UKControllerPlugin {
                 case WM_COMMAND: {
                     switch (LOWORD(wParam)) {
                         case IDC_HOLDS_SAVE: {
-                            // OK clicked, close the window
+                            // OK clicked, close the window after saving
                             this->SaveDialog(hwnd);
+                            EndDialog(hwnd, wParam);
+                            return TRUE;
+                        }
+                        case IDC_HOLD_CLOSE: {
                             EndDialog(hwnd, wParam);
                             return TRUE;
                         }
