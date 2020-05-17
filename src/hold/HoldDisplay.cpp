@@ -92,6 +92,9 @@ namespace UKControllerPlugin {
             }
         }
 
+        /*
+            Get the rectangle to render the background of the hold display
+        */
         Gdiplus::Rect HoldDisplay::GetHoldViewBackgroundRender(
             const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& aircraft
         ) const {
@@ -100,7 +103,7 @@ namespace UKControllerPlugin {
                 this->windowPos.y,
                 this->windowWidth,
                 this->titleArea.Height +
-                    this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel)/1000) + 1) * this->lineHeight)
+                    this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel)/1000)) * this->lineHeight)
             };
 
             for (
