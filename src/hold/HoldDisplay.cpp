@@ -257,14 +257,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Return the number of levels skipped on the display
-        */
-        unsigned int HoldDisplay::GetLevelsSkipped(void) const
-        {
-            return this->numLevelsSkipped;
-        }
-
-        /*
             Return the height of the window
         */
         int HoldDisplay::GetWindowHeight(void) const
@@ -291,32 +283,21 @@ namespace UKControllerPlugin {
         /*
             Load data from an ASR
         */
-        void HoldDisplay::LoadDataFromAsr(UserSetting & userSetting, unsigned int holdProfileId)
+        void HoldDisplay::LoadDataFromAsr(UserSetting & userSetting)
         {
-            this->numLevelsSkipped = userSetting.GetUnsignedIntegerEntry(
-                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-                    this->navaid.identifier + "LevelsSkipped",
-                0
-            );
-
-            this->windowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minLevel) / 1000) + 1) * this->lineHeight);
-
             this->minimised = userSetting.GetBooleanEntry(
-                "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-                    this->navaid.identifier + "Minimised",
+                "hold" + this->navaid.identifier + "Minimised",
                 false
             );
 
             this->Move(
                 {
                     userSetting.GetIntegerEntry(
-                        "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-                            this->navaid.identifier + "PositionX",
+                        "hold" + this->navaid.identifier + "PositionX",
                         100
                     ),
                     userSetting.GetIntegerEntry(
-                        "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-                            this->navaid.identifier + "PositionY",
+                        "hold" + this->navaid.identifier + "PositionY",
                         100
                     )
                 }
@@ -834,41 +815,29 @@ namespace UKControllerPlugin {
             Save display data to the ASR
         */
         void HoldDisplay::SaveDataToAsr(
-            UserSetting & userSetting,
-            unsigned int holdProfileId,
-            std::string profileName
+            UserSetting & userSetting
         ) const {
-            //userSetting.Save(
-            //    "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-            //        this->navaid.identifier + "LevelsSkipped",
-            //    "Hold Profile (" + profileName + " - "+ this->managedHold.GetHoldParameters().description
-            //        + ") Levels Skipped",
-            //    this->numLevelsSkipped
-            //);
 
-            //userSetting.Save(
-            //    "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-            //    this->navaid.identifier + "Minimised",
-            //    "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
-            //        + ") Minimised",
-            //    this->minimised
-            //);
+            // Minimised window
+            userSetting.Save(
+                "hold" + this->navaid.identifier + "Minimised",
+                "Hold " + this->navaid.identifier + " Minimised",
+                this->minimised
+            );
 
-            //userSetting.Save(
-            //    "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-            //        this->navaid.identifier + "PositionX",
-            //    "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
-            //        + ") X Pos",
-            //    this->windowPos.x
-            //);
+            // X position
+            userSetting.Save(
+                "hold" + this->navaid.identifier + "PositionX",
+                "Hold " + this->navaid.identifier + " X Position",
+                this->windowPos.x
+            );
 
-            //userSetting.Save(
-            //    "holdProfile" + std::to_string(holdProfileId) + "Hold" +
-            //    this->navaid.identifier + "PositionY",
-            //    "Hold Profile (" + profileName + " - " + this->managedHold.GetHoldParameters().description
-            //        + ") Y Pos",
-            //    this->windowPos.y
-            //);
+            // Y position
+            userSetting.Save(
+                "hold" + this->navaid.identifier + "PositionY",
+                "Hold " + this->navaid.identifier + " Y Position",
+                this->windowPos.y
+            );
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

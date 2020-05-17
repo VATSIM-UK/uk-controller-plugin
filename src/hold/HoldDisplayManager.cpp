@@ -31,14 +31,6 @@ namespace UKControllerPlugin {
         void HoldDisplayManager::AsrLoadedEvent(UserSetting & userSetting)
         {
             this->userSetting = &userSetting;
-            this->profileId = this->userSetting->GetUnsignedIntegerEntry(
-                this->selectedProfileAsrKey,
-                this->noProfileSelectedId
-            );
-
-            if (this->profileId == this->noProfileSelectedId) {
-                return;
-            }
 
             // Load the profile
             this->LoadProfile(this->profileId);
@@ -49,14 +41,6 @@ namespace UKControllerPlugin {
         */
         void HoldDisplayManager::AsrClosingEvent(UserSetting & userSetting)
         {
-            // Save the selected profile
-            this->userSetting->Save(
-                this->selectedProfileAsrKey,
-                this->selectedProfileAsrDescription,
-                this->profileId
-            );
-
-            // Save the profiles
             this->SaveDisplaysToAsr();
         }
 
@@ -70,11 +54,7 @@ namespace UKControllerPlugin {
                 it != this->displays.cend();
                 ++it
             ) {
-                HoldProfile profile = this->profileManager.GetProfile(this->profileId);
-                if (profile == this->profileManager.invalidProfile) {
-                    return;
-                }
-                (*it)->SaveDataToAsr(*this->userSetting, this->profileId, profile.name);
+                (*it)->SaveDataToAsr(*this->userSetting);
             }
         }
 

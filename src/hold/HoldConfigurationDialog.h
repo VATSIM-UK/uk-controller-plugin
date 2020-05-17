@@ -2,12 +2,7 @@
 #include "hold/HoldingData.h"
 #include "hold/CompareHolds.h"
 #include "hold/HoldConfigurationMenuItem.h"
-
-namespace UKControllerPlugin {
-    namespace Hold {
-        class HoldProfileManager;
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+#include "navaids/NavaidCollection.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -21,10 +16,8 @@ namespace UKControllerPlugin {
         {
             public:
                 HoldConfigurationDialog(
-                    UKControllerPlugin::Hold::HoldProfileManager & holdProfileManager
+                    const UKControllerPlugin::Navaids::NavaidCollection& navaids
                 );
-                bool AddHold(UKControllerPlugin::Hold::HoldingData hold);
-                size_t CountHolds(void) const;
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             private:
@@ -43,21 +36,8 @@ namespace UKControllerPlugin {
                 // The ES menu item that triggered this dialog - it should be notified when changes occur
                 UKControllerPlugin::Hold::HoldConfigurationMenuItem * configurationItem = nullptr;
 
-                // Manages hold profiles
-                UKControllerPlugin::Hold::HoldProfileManager & holdProfileManager;
-
-                // The holds.
-                std::set<
-                    UKControllerPlugin::Hold::HoldingData,
-                    UKControllerPlugin::Hold::CompareHolds
-                > holds;
-
-                // The holds that have been selected
-                std::set<unsigned int> selectedHolds;
-
-                // The hold profile currently selected
-                unsigned int selectedHoldProfile = 0;
-                int selectedHoldProfileIndex = LB_ERR;
+                // Contains all the navaids
+                const UKControllerPlugin::Navaids::NavaidCollection& navaids;
         };
 
     }  // namespace Hold

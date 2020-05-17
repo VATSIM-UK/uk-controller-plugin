@@ -4,7 +4,6 @@
 
 namespace UKControllerPlugin {
     namespace Hold {
-        class HoldProfileManager;
         class HoldManager;
         class HoldDisplayFactory;
     }  // namespace Hold
@@ -14,9 +13,7 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         /*
-            A class that manages hold display classes based on the selected
-            profile. Separates loading the displays from actually rendering them. This class
-            is instantiated per-ASR
+            A class that manages hold display classes for each of the ASRs.
         */
         class HoldDisplayManager : public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
         {
@@ -40,15 +37,6 @@ namespace UKControllerPlugin {
                 const_iterator cbegin() const { return displays.cbegin(); }
                 const_iterator cend() const { return displays.cend(); }
 
-                // The profile id if no profile has been selected
-                const unsigned int noProfileSelectedId = 0;
-
-                // The key in the ASR for the selected hold profile
-                const std::string selectedProfileAsrKey = "selectedHoldProfile";
-
-                // The description for the ASR item
-                const std::string selectedProfileAsrDescription = "Selected Hold Profile";
-
             private:
 
                 void SaveDisplaysToAsr(void) const;
@@ -64,9 +52,6 @@ namespace UKControllerPlugin {
 
                 // Place to find settings
                 UKControllerPlugin::Euroscope::UserSetting * userSetting;
-
-                // The currently selected profile id
-                unsigned int profileId = 0;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

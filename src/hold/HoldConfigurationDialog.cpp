@@ -4,40 +4,19 @@
 #include "dialog/DialogCallArgument.h"
 
 using UKControllerPlugin::Hold::ConvertToTchar;
-using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Hold::HoldConfigurationMenuItem;
+using UKControllerPlugin::Navaids::NavaidCollection;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
         HoldConfigurationDialog::HoldConfigurationDialog(
-            HoldProfileManager & holdProfileManager
+            const NavaidCollection& navaids
         )
-            : holdProfileManager(holdProfileManager)
+            : navaids(navaids)
         {
 
-        }
-
-        /*
-            Add a hold to the dialog.
-        */
-        bool HoldConfigurationDialog::AddHold(UKControllerPlugin::Hold::HoldingData hold)
-        {
-            if (!this->holds.insert(std::move(hold)).second) {
-                LogWarning("Attempted to add duplicate hold to dialog " + std::to_string(hold.identifier));
-                return false;
-            }
-
-            return true;
-        }
-
-        /*
-            Return the number of holds.
-        */
-        size_t HoldConfigurationDialog::CountHolds(void) const
-        {
-            return this->holds.size();
         }
 
         /*

@@ -51,13 +51,11 @@ namespace UKControllerPlugin {
                 RECT GetAddClickArea(void) const;
                 std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
                     MapAircraftToLevels(const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft) const;
-                unsigned int GetLevelsSkipped(void) const;
                 int GetWindowHeight(void) const;
                 bool IsInInformationMode(void) const;
                 bool IsMinimised(void) const;
                 void LoadDataFromAsr(
-                    UKControllerPlugin::Euroscope::UserSetting & userSetting,
-                    unsigned int profileId
+                    UKControllerPlugin::Euroscope::UserSetting & userSetting
                 );
                 void Move(const POINT & pos);
                 void PaintWindow(
@@ -66,9 +64,7 @@ namespace UKControllerPlugin {
                     const int screenObjectId
                 ) const;
                 void SaveDataToAsr(
-                    UKControllerPlugin::Euroscope::UserSetting & userSetting,
-                    unsigned int profileId,
-                    std::string profileName
+                    UKControllerPlugin::Euroscope::UserSetting & userSetting
                 ) const;
 
                 // The navaid that the hold is against
@@ -154,10 +150,6 @@ namespace UKControllerPlugin {
 
                 // The height of the window to use when doing the information display
                 const int informationDisplayWindowHeight = 225;
-
-                // How many levels to not draw
-                unsigned int numLevelsSkipped = 0;
-
 
                 // The minimum level in the hold
                 unsigned int minLevel = 7000;
