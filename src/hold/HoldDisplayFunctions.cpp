@@ -110,5 +110,14 @@ namespace UKControllerPlugin {
 
             return std::to_wstring(minutes) + L"m";
         }
+
+        int GetVerticalSpeedDirection(int verticalSpeed)
+        {
+            if (std::abs(verticalSpeed) < minimumVerticalSpeed) {
+                return 0;
+            }
+
+            return verticalSpeed > 0 ? 1 : -1;
+        }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

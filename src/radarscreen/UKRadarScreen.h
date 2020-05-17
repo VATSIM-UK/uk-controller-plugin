@@ -73,6 +73,11 @@ namespace UKControllerPlugin {
             bool PositionOffScreen(EuroScopePlugIn::CPosition pos) override;
             void RegisterScreenObject(int objectType, std::string objectId, RECT location, bool moveable) override;
             void SetKey(std::string key, std::string description, std::string value) override;
+            void ToggleTemporaryAltitudePopupList(
+                std::string callsign,
+                POINT mousePos,
+                RECT tagItemArea
+            ) override;
             void ToogleMenu(RECT area, std::string title, int numColumns) override;
 
         private:

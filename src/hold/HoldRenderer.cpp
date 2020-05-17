@@ -64,9 +64,11 @@ namespace UKControllerPlugin {
             A button has been left clicked
         */
         void HoldRenderer::LeftClick(
+            EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
             std::string objectDescription,
-            EuroscopeRadarLoopbackInterface & radarScreen
+            POINT mousePos,
+            RECT itemArea
         ) {
             std::string holdName = this->GetHoldNameFromObjectDescription(objectDescription);
             auto display = std::find_if(
@@ -79,6 +81,16 @@ namespace UKControllerPlugin {
 
             if (display == this->displays->cend()) {
                 LogWarning("Tried to interact with invalid hold display");
+                return;
+            }
+
+            if (objectDescription.find("cleared") != std::string::npos) {
+                (*display)->ClearedLevelClicked(
+                    this->GetCallsignFromObjectDescription(objectDescription),
+                    radarScreen,
+                    mousePos,
+                    itemArea
+                );
                 return;
             }
 
@@ -185,6 +197,11 @@ namespace UKControllerPlugin {
         std::string HoldRenderer::GetHoldNameFromObjectDescription(std::string objectDescription) const
         {
             return objectDescription.substr(0, objectDescription.find("/"));
+        }
+
+        std::string HoldRenderer::GetCallsignFromObjectDescription(std::string objectDescription) const
+        {
+            return objectDescription.substr(objectDescription.find_last_of("/") + 1);
         }
 
         /*

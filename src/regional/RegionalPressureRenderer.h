@@ -57,9 +57,11 @@ namespace UKControllerPlugin {
                 RECT GetTopBarArea(void) const;
                 Gdiplus::Rect GetTopBarRender(void) const;
                 void LeftClick(
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
                     int objectId,
                     std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
+                    POINT mousePos,
+                    RECT itemArea
                 );
                 bool IsVisible(void) const;
                 void Move(RECT titleBarArea, std::string objectDescription);

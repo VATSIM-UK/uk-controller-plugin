@@ -23,6 +23,11 @@ namespace UKControllerPlugin {
                 virtual int GetGroundspeedForCallsign(std::string cs) = 0;
                 virtual bool HasAsrKey(std::string key) = 0;
                 virtual bool PositionOffScreen(EuroScopePlugIn::CPosition pos) = 0;
+                virtual void ToggleTemporaryAltitudePopupList(
+                    std::string callsign,
+                    POINT mousePos,
+                    RECT tagItemArea
+                ) = 0;
                 virtual void ToogleMenu(RECT area, std::string title, int numColumns) = 0;
                 virtual POINT ConvertCoordinateToScreenPoint(EuroScopePlugIn::CPosition pos) = 0;
         };

@@ -28,7 +28,7 @@ namespace UKControllerPlugin {
         {
             public:
                 HoldDisplay(
-                    const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     UKControllerPlugin::Hold::HoldManager & holdManager,
                     const UKControllerPlugin::Navaids::Navaid& navaid,
                     const std::set<
@@ -37,6 +37,12 @@ namespace UKControllerPlugin {
                     >& publishedHolds
                 );
                 void ButtonClicked(std::string button);
+                void ClearedLevelClicked(
+                    std::string callsign,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+                    POINT mousePos,
+                    RECT area
+                );
                 Gdiplus::Rect GetHoldViewBackgroundRender(
                     const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& aircraft
                 ) const;
@@ -114,7 +120,7 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Hold::HoldManager & holdManager;
 
                 // Reference to the plugin
-                const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
 
                 // The holds that are published for this display
                 const std::set<
@@ -138,14 +144,6 @@ namespace UKControllerPlugin {
                 const Gdiplus::Font plusFont;
                 Gdiplus::StringFormat stringFormat;
 
-                // Titlebar
-                Gdiplus::Rect titleArea = { 0, 0, 200, 15 };
-                RECT titleRect = { 0, 0, 200, 15 };
-                Gdiplus::Rect minimiseButtonArea = { 0, 0, 11, 11 };
-                RECT minimiseClickRect;
-                Gdiplus::Rect informationButtonArea = { 21, 0, 11, 11 };
-                RECT informationClickRect;
-
                 // Where to start the data drawing.
                 INT dataStartHeight;
 
@@ -153,7 +151,7 @@ namespace UKControllerPlugin {
                 bool minimised = false;
 
                 // The window width
-                int windowWidth = 200;
+                int windowWidth = 210;
 
                 // The window height
                 int windowHeight = 500;
@@ -172,6 +170,14 @@ namespace UKControllerPlugin {
 
                 // Should we display the information about the hold
                 bool showHoldInformation = false;
+
+                // Titlebar
+                Gdiplus::Rect titleArea = { 0, 0, this->windowWidth, 15 };
+                RECT titleRect = { 0, 0, this->windowWidth, 15 };
+                Gdiplus::Rect minimiseButtonArea = { 0, 0, 11, 11 };
+                RECT minimiseClickRect;
+                Gdiplus::Rect informationButtonArea = { 21, 0, 11, 11 };
+                RECT informationClickRect;
 
                 // Some more rects
                 Gdiplus::Rect minusButtonRect = {5, this->buttonStartOffset, 40, 40};

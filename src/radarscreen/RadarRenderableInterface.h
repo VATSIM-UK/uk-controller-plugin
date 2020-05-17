@@ -35,9 +35,11 @@ namespace UKControllerPlugin {
                     Called when a screen object is left clicked on.
                 */
                 virtual void LeftClick(
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
                     int objectId,
                     std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
+                    POINT mousePos,
+                    RECT itemArea
                 ) = 0;
 
                 /*

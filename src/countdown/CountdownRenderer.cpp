@@ -189,9 +189,11 @@ namespace UKControllerPlugin {
             If someone clicks on the timer, handle it.
         */
         void CountdownRenderer::LeftClick(
+            EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
             std::string objectDescription,
-            EuroscopeRadarLoopbackInterface & radarScreen
+            POINT mousePos,
+            RECT itemArea
         ) {
             if (objectId == this->closeClickspotId) {
                 this->visible = false;

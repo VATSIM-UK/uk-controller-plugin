@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         HoldDisplayFactory::HoldDisplayFactory(
-            const EuroscopePluginLoopbackInterface & plugin,
+            EuroscopePluginLoopbackInterface & plugin,
             HoldManager & holdManager,
             const NavaidCollection& navaids,
             const PublishedHoldCollection& holds

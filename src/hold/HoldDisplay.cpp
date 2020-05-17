@@ -21,7 +21,7 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         HoldDisplay::HoldDisplay(
-            const EuroscopePluginLoopbackInterface & plugin,
+            EuroscopePluginLoopbackInterface & plugin,
             HoldManager & holdManager,
             const UKControllerPlugin::Navaids::Navaid& navaid,
             const std::set<HoldingData, CompareHolds>& publishedHolds
@@ -90,6 +90,15 @@ namespace UKControllerPlugin {
             } else if (button == "information") {
                 this->showHoldInformation = !this->showHoldInformation;
             }
+        }
+
+        void HoldDisplay::ClearedLevelClicked(
+            std::string callsign,
+            EuroscopeRadarLoopbackInterface& radarScreen,
+            POINT mousePos,
+            RECT area
+        ) {
+            radarScreen.ToggleTemporaryAltitudePopupList(callsign, mousePos, area);
         }
 
         /*
@@ -660,19 +669,19 @@ namespace UKControllerPlugin {
             Gdiplus::Rect actualLevelDisplay = {
                 this->windowPos.x + 100,
                 this->dataStartHeight,
-                30,
+                40,
                 this->lineHeight
             };
 
             Gdiplus::Rect clearedLevelDisplay = {
-                this->windowPos.x + 135,
+                this->windowPos.x + 145,
                 this->dataStartHeight,
                 30,
                 this->lineHeight
             };
 
             Gdiplus::Rect timeInHoldDisplay = {
-                this->windowPos.x + 170,
+                this->windowPos.x + 180,
                 this->dataStartHeight,
                 30,
                 this->lineHeight
@@ -734,6 +743,8 @@ namespace UKControllerPlugin {
                     std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
                     std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
 
+                    std::string verticalIndicator;
+
                     // We have holding aircraft to deal with, render them in
                     for (
                         std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator
@@ -777,11 +788,22 @@ namespace UKControllerPlugin {
                             );
 
 
-                            // Cleared level
+                            // Cleared level - plus a clickspot for the aircraft in question
                             graphics.DrawString(
                                 fp->GetClearedAltitude() == 0 ? L"---" : GetLevelDisplayString(fp->GetClearedAltitude()),
                                 clearedLevelDisplay,
                                 this->clearedLevelBrush
+                            );
+                            radarScreen.RegisterScreenObject(
+                                screenObjectId,
+                                this->navaid.identifier + "/cleared/" + fp->GetCallsign(),
+                                {
+                                    clearedLevelDisplay.X,
+                                    clearedLevelDisplay.Y,
+                                    clearedLevelDisplay.X + clearedLevelDisplay.Width,
+                                    clearedLevelDisplay.Y + clearedLevelDisplay.Height
+                                },
+                                false
                             );
 
                             // Time in hold, if it's assigned

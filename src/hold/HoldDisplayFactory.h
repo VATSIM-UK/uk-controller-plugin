@@ -22,7 +22,7 @@ namespace UKControllerPlugin {
         {
             public:
                 HoldDisplayFactory(
-                    const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     UKControllerPlugin::Hold::HoldManager & holdManager,
                     const UKControllerPlugin::Navaids::NavaidCollection& navaids,
                     const UKControllerPlugin::Hold::PublishedHoldCollection& holds
@@ -32,7 +32,7 @@ namespace UKControllerPlugin {
             private:
 
                 // The plugin instance
-                const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
 
                 // The hold manager
                 UKControllerPlugin::Hold::HoldManager & holdManager;

@@ -262,9 +262,11 @@ namespace UKControllerPlugin {
             They aren't clickable.
         */
         void HistoryTrailRenderer::LeftClick(
+            EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
             std::string objectDescription,
-            EuroscopeRadarLoopbackInterface & radarScreen
+            POINT mousePos,
+            RECT itemArea
         ) {
 
         }

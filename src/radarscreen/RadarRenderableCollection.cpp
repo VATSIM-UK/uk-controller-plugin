@@ -68,12 +68,14 @@ namespace UKControllerPlugin {
             Tell the renderer that a screen object has been left clicked.
         */
         void RadarRenderableCollection::LeftClickScreenObject(
+            EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
             std::string objectDescription,
-            EuroscopeRadarLoopbackInterface & radarScreen
+            POINT mousePos,
+            RECT itemArea
         ) const {
             this->allRenderers.at(this->screenObjectMap.at(objectId))
-                ->LeftClick(objectId, objectDescription, radarScreen);
+                ->LeftClick(radarScreen,objectId, objectDescription, mousePos, itemArea);
         }
 
         /*

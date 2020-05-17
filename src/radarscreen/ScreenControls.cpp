@@ -41,9 +41,11 @@ namespace UKControllerPlugin {
             When someone clicks on the clickspot, pop up a menu with all the configuration options.
         */
         void ScreenControls::LeftClick(
+            EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
             std::string objectDescription,
-            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
+            POINT mousePos,
+            RECT itemArea
         ) {
             if (objectId != this->toggleboxIdEuroscope) {
                 return;
@@ -83,7 +85,7 @@ namespace UKControllerPlugin {
             std::string objectDescription,
             UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
         ) {
-            this->LeftClick(objectId, objectDescription, radarScreen);
+            this->LeftClick(radarScreen, objectId, objectDescription, POINT{}, RECT{});
         }
 
         /*
