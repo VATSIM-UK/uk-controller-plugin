@@ -24,7 +24,7 @@ namespace UKControllerPlugin {
             const EuroscopePluginLoopbackInterface & plugin,
             HoldManager & holdManager,
             const UKControllerPlugin::Navaids::Navaid& navaid,
-            const std::set<HoldingData>& publishedHolds
+            const std::set<HoldingData, CompareHolds>& publishedHolds
         )
             : plugin(plugin),
             holdManager(holdManager),

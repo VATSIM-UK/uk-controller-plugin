@@ -9,7 +9,7 @@ namespace UKControllerPlugin {
         */
         void PublishedHoldCollection::Add(HoldingData data)
         {
-            if (!this->holds[data.fix].insert(data).second) {
+            if (!this->holds[data.fix].insert(std::move(data)).second) {
                 LogWarning("Attempted to add duplicate published hold: " + std::to_string(data.identifier));
             }
         }

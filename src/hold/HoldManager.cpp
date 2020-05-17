@@ -24,7 +24,7 @@ namespace UKControllerPlugin {
         {
             // If the aircraft is already registered with the hold manager add to proximity
             if (this->aircraft.count(flightplan.GetCallsign())) {
-                (*this->aircraft.find(flightplan.GetCallsign()))->AddProximityHold.insert(hold);
+                (*this->aircraft.find(flightplan.GetCallsign()))->AddProximityHold(hold);
                 return;
             }
 
@@ -53,10 +53,8 @@ namespace UKControllerPlugin {
 
             // Create a new instance of a holding aircraft
             std::shared_ptr<HoldingAircraft> holdingAircraft = std::make_shared<HoldingAircraft>(
-                    flightplan.GetCallsign(),
-                    std::chrono::system_clock::now(),
-                    hold,
-                    std::set<std::string>()
+                flightplan.GetCallsign(),
+                hold
             );
 
             this->aircraft.insert(holdingAircraft);

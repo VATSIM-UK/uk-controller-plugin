@@ -1,5 +1,4 @@
 #pragma once
-#include "timedevent/AbstractTimedEvent.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "command/CommandHandlerInterface.h"
@@ -22,7 +21,6 @@ namespace UKControllerPlugin {
             update of holding data.
         */
         class HoldEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-            public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
             public UKControllerPlugin::Tag::TagItemInterface
         {
             public:
@@ -43,9 +41,6 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     int dataType
                 ) override;
-
-                // Inherited via AbstractTimedEvent
-                void TimedEventTrigger(void) override;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(void) const override;

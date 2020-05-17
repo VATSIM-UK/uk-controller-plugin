@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
         HoldDisplayManager::HoldDisplayManager(
             const HoldManager & holdManager,
             const HoldDisplayFactory & displayFactory
-        ) : holdManager(holdManager), displayFactory(displayFactory)
+        ) : holdManager(holdManager), displayFactory(displayFactory), userSetting(nullptr)
         {
 
         }

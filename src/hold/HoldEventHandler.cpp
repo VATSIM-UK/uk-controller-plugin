@@ -9,7 +9,6 @@
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
-using UKControllerPlugin::TimedEvent::AbstractTimedEvent;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 

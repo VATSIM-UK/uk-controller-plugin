@@ -1,6 +1,7 @@
 #pragma once
 #include "navaids/Navaid.h"
 #include "hold/HoldingData.h"
+#include "hold/CompareHolds.h"
 #include "hold/CompareHoldingAircraft.h"
 
 namespace UKControllerPlugin {
@@ -30,7 +31,10 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     UKControllerPlugin::Hold::HoldManager & holdManager,
                     const UKControllerPlugin::Navaids::Navaid& navaid,
-                    const std::set<UKControllerPlugin::Hold::HoldingData>& publishedHolds
+                    const std::set<
+                        UKControllerPlugin::Hold::HoldingData,
+                        UKControllerPlugin::Hold::CompareHolds
+                    >& publishedHolds
                 );
                 void ButtonClicked(std::string button);
                 INT GetDataStartHeight(void) const;
@@ -109,6 +113,12 @@ namespace UKControllerPlugin {
                 // Reference to the plugin
                 const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
 
+                // The holds that are published for this display
+                const std::set<
+                    UKControllerPlugin::Hold::HoldingData,
+                    UKControllerPlugin::Hold::CompareHolds
+                >& publishedHolds;
+
                 // Brushes
                 const Gdiplus::SolidBrush titleBarTextBrush;
                 const Gdiplus::SolidBrush titleBarBrush;
@@ -171,9 +181,6 @@ namespace UKControllerPlugin {
                 RECT addButtonClickRect = { 190, this->buttonStartOffset, 40, 40 };
 
                 POINT windowPos = { 100, 100 };
-
-                // The holds that are published for this navaid
-                const std::set<UKControllerPlugin::Hold::HoldingData> publishedHolds;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

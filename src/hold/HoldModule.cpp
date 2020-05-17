@@ -136,7 +136,6 @@ namespace UKControllerPlugin {
             );
 
             container.flightplanHandler->RegisterHandler(eventHandler);
-            container.timedHandler->RegisterEvent(eventHandler, timedEventFrequency);
             container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
 
 
