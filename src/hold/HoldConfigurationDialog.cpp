@@ -59,6 +59,8 @@ namespace UKControllerPlugin {
                     item.iItem,
                     (bool) std::count(selectedHolds.cbegin(), selectedHolds.cend(), it->identifier)
                 );
+
+                item.iItem++;
             }           
         }
 
