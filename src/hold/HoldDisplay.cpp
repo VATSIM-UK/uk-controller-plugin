@@ -39,6 +39,7 @@ namespace UKControllerPlugin {
             dataBrush(Gdiplus::Color(7, 237, 7)),
             clearedLevelBrush(Gdiplus::Color(246, 181, 4)),
             borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
+            sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f),
             exitButtonBrush(Gdiplus::Color(0, 0, 0)),
             blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255)),
             dataStartHeight(0),
@@ -763,7 +764,6 @@ namespace UKControllerPlugin {
                                 numbersDisplay,
                                 this->titleBarTextBrush
                             );
-                            aircraftIndex++;
                         }
 
                         // Render the aircraft data
@@ -819,6 +819,8 @@ namespace UKControllerPlugin {
                             // Skip the render
                         }
 
+                        aircraftIndex++;
+
                         // Increase the lines
                         holdRow.Y = holdRow.Y + this->lineHeight;
                         numbersDisplay.Y = numbersDisplay.Y + this->lineHeight;
@@ -826,6 +828,17 @@ namespace UKControllerPlugin {
                         actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
                         clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
                         timeInHoldDisplay.Y = timeInHoldDisplay.Y + this->lineHeight;
+                    }
+
+                    // If the last aircraft and we have multiple at the level, draw a bounding box
+                    if (aircraftAtLevel.size() > 1) {
+                        Gdiplus::Rect boundingBox{
+                            holdRow.X + 10,
+                            holdRow.Y - (((INT) holdingAircraft.count(level) + 1) * this->lineHeight),
+                            holdRow.Width - 20,
+                            holdRow.Height + ((INT) holdingAircraft.count(level) * this->lineHeight)
+                        };
+                        graphics.DrawRect(boundingBox, this->sameLevelBoxPen);
                     }
                 }
 
