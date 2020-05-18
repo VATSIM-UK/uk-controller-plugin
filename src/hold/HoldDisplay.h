@@ -84,7 +84,7 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Navaids::Navaid& navaid;
 
                 // How high lines should be
-                const INT lineHeight = 17;
+                const INT lineHeight = 25;
 
                 // The default offset for buttons
                 const INT buttonStartOffset = 18;
@@ -151,7 +151,7 @@ namespace UKControllerPlugin {
                 bool minimised = false;
 
                 // The window width
-                int windowWidth = 210;
+                int windowWidth = 225;
 
                 // The window height
                 int windowHeight = 500;

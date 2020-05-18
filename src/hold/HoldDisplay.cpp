@@ -30,15 +30,15 @@ namespace UKControllerPlugin {
             holdManager(holdManager),
             publishedHolds(publishedHolds),
             titleBarBrush(Gdiplus::Color(197, 129, 214)),
-            backgroundBrush(Gdiplus::Color(0, 0, 0)),
-            titleBarTextBrush(Gdiplus::Color(255, 255, 255)),
+            backgroundBrush(Gdiplus::Color(58, 57, 58)),
+            titleBarTextBrush(Gdiplus::Color(227, 227, 227)),
             fontFamily(L"EuroScope"),
-            font(&fontFamily, 12, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
+            font(&fontFamily, 12, Gdiplus::FontStyleBold, Gdiplus::UnitPixel),
             plusFont(&fontFamily, 18, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
             stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
-            dataBrush(Gdiplus::Color(0, 176, 0)),
-            clearedLevelBrush(Gdiplus::Color(255, 128, 64)),
-            borderPen(Gdiplus::Color(255, 255, 255), 1.5f),
+            dataBrush(Gdiplus::Color(7, 237, 7)),
+            clearedLevelBrush(Gdiplus::Color(246, 181, 4)),
+            borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
             exitButtonBrush(Gdiplus::Color(0, 0, 0)),
             blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255)),
             dataStartHeight(0),
@@ -111,8 +111,7 @@ namespace UKControllerPlugin {
                 this->windowPos.x,
                 this->windowPos.y,
                 this->windowWidth,
-                this->titleArea.Height +
-                    this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel)/1000)) * this->lineHeight)
+                this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel)/1000) + 1) * this->lineHeight)
             };
 
             for (
@@ -644,7 +643,7 @@ namespace UKControllerPlugin {
 
             // Hold display
             Gdiplus::Rect numbersDisplay = {
-                this->windowPos.x,
+                this->windowPos.x + 10,
                 this->dataStartHeight,
                 30,
                 this->lineHeight
@@ -660,7 +659,7 @@ namespace UKControllerPlugin {
 
             // Rects for rendering the actual data
             Gdiplus::Rect callsignDisplay = {
-                this->windowPos.x + 35,
+                this->windowPos.x + 45,
                 this->dataStartHeight,
                 60,
                 this->lineHeight
