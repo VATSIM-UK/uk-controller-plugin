@@ -38,6 +38,8 @@ namespace UKControllerPlugin {
             plusFont(&fontFamily, 18, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
             stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
             dataBrush(Gdiplus::Color(7, 237, 7)),
+            verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f),
+            verticalSpeedDescentPen(Gdiplus::Color(7, 237, 7), 2.5f),
             clearedLevelBrush(Gdiplus::Color(246, 181, 4)),
             borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
             sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f),
@@ -48,6 +50,9 @@ namespace UKControllerPlugin {
             minimiseClickRect({}),
             navaid(navaid)
         {
+            verticalSpeedAscentPen.SetStartCap(Gdiplus::LineCapArrowAnchor);
+            verticalSpeedDescentPen.SetEndCap(Gdiplus::LineCapArrowAnchor);
+
             this->stringFormat.SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
 
@@ -122,7 +127,7 @@ namespace UKControllerPlugin {
                 this->windowPos.x,
                 this->windowPos.y,
                 this->windowWidth,
-                this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel)/1000) + 1) * this->lineHeight)
+                this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel)/1000) + 2) * this->lineHeight)
             };
 
             for (
@@ -685,6 +690,16 @@ namespace UKControllerPlugin {
                 this->lineHeight
             };
 
+            Gdiplus::Point verticalSpeedArrowDisplayStart = {
+                this->windowPos.x + 135,
+                this->dataStartHeight + (this->lineHeight / 3),
+            };
+
+            Gdiplus::Point verticalSpeedArrowDisplayEnd = {
+                this->windowPos.x + 135,
+                this->dataStartHeight + this->lineHeight - (this->lineHeight / 3),
+            };
+
             Gdiplus::Rect clearedLevelDisplay = {
                 this->windowPos.x + 145,
                 this->dataStartHeight,
@@ -746,6 +761,8 @@ namespace UKControllerPlugin {
                     actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
                     clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
                     timeInHoldDisplay.Y = timeInHoldDisplay.Y + this->lineHeight;
+                    verticalSpeedArrowDisplayStart.Y = verticalSpeedArrowDisplayStart.Y + this->lineHeight;
+                    verticalSpeedArrowDisplayEnd.Y = verticalSpeedArrowDisplayEnd.Y + this->lineHeight;
 
                 } else {
                     std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraftAtLevel =
@@ -808,6 +825,19 @@ namespace UKControllerPlugin {
                                 actualLevelDisplay,
                                 this->dataBrush
                             );
+                            if (GetVerticalSpeedDirection(rt->GetVerticalSpeed()) == 1) {
+                                graphics.DrawLine(
+                                    this->verticalSpeedAscentPen,
+                                    verticalSpeedArrowDisplayStart,
+                                    verticalSpeedArrowDisplayEnd
+                                );
+                            } else if (GetVerticalSpeedDirection(rt->GetVerticalSpeed()) == -1) {
+                                graphics.DrawLine(
+                                    this->verticalSpeedDescentPen,
+                                    verticalSpeedArrowDisplayStart,
+                                    verticalSpeedArrowDisplayEnd
+                                );
+                            }
 
 
                             // Cleared level - plus a clickspot for the aircraft in question
@@ -851,6 +881,8 @@ namespace UKControllerPlugin {
                         actualLevelDisplay.Y = actualLevelDisplay.Y + this->lineHeight;
                         clearedLevelDisplay.Y = clearedLevelDisplay.Y + this->lineHeight;
                         timeInHoldDisplay.Y = timeInHoldDisplay.Y + this->lineHeight;
+                        verticalSpeedArrowDisplayStart.Y = verticalSpeedArrowDisplayStart.Y + this->lineHeight;
+                        verticalSpeedArrowDisplayEnd.Y = verticalSpeedArrowDisplayEnd.Y + this->lineHeight;
                     }
 
                     // If the last aircraft and we have multiple at the level, draw a bounding box
@@ -873,7 +905,7 @@ namespace UKControllerPlugin {
                     this->windowPos.x,
                     this->windowPos.y,
                     this->windowPos.x + this->windowWidth,
-                    holdRow.Y
+                    holdRow.Y + this->lineHeight
                 },
                 this->borderPen
             );
