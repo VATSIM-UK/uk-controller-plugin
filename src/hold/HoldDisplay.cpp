@@ -496,6 +496,8 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            const HoldingData& hold = *this->publishedHolds.cbegin();
+
             // Render the data
             Gdiplus::Rect dataRect = {
                 this->windowPos.x,
@@ -512,28 +514,28 @@ namespace UKControllerPlugin {
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Inbound: ") + ConvertToTchar(this->publishedHolds.find(0)->inbound),
+                std::wstring(L"Inbound: ") + ConvertToTchar(hold.inbound),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Turn: ") + ConvertToTchar(this->publishedHolds.find(0)->turnDirection),
+                std::wstring(L"Turn: ") + ConvertToTchar(hold.turnDirection),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Maximum: ") + ConvertToTchar(this->publishedHolds.find(0)->maximum),
+                std::wstring(L"Maximum: ") + ConvertToTchar(hold.maximum),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Minimum: ") + ConvertToTchar(this->publishedHolds.find(0)->minimum),
+                std::wstring(L"Minimum: ") + ConvertToTchar(hold.minimum),
                 dataRect,
                 this->dataBrush
             );
