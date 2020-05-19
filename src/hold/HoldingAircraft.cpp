@@ -39,7 +39,17 @@ namespace UKControllerPlugin {
             return this->proximityHolds;
         }
 
-        bool HoldingAircraft::IsInHoldProximity(std::string hold)
+        bool HoldingAircraft::IsInAnyHold(void) const
+        {
+            return this->proximityHolds.size() != 0 || this->assignedHold != this->noHoldAssigned;
+        }
+
+        bool HoldingAircraft::IsInHold(std::string hold) const
+        {
+            return this->IsInHoldProximity(hold) || this->assignedHold == hold;
+        }
+
+        bool HoldingAircraft::IsInHoldProximity(std::string hold) const
         {
             return this->proximityHolds.find(hold) != this->proximityHolds.cend();
         }

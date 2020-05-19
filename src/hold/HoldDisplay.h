@@ -37,6 +37,12 @@ namespace UKControllerPlugin {
                     >& publishedHolds
                 );
                 void ButtonClicked(std::string button);
+                void CallsignClicked(
+                    std::string callsign,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+                    POINT mousePos,
+                    RECT area
+                );
                 void ClearedLevelClicked(
                     std::string callsign,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,

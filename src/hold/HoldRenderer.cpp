@@ -94,6 +94,16 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            if (objectDescription.find("callsign") != std::string::npos) {
+                (*display)->CallsignClicked(
+                    this->GetCallsignFromObjectDescription(objectDescription),
+                    radarScreen,
+                    mousePos,
+                    itemArea
+                );
+                return;
+            }
+
             (*display)->ButtonClicked(this->GetButtonNameFromObjectDescription(objectDescription));
         }
 

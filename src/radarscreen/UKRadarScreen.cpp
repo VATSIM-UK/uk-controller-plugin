@@ -5,9 +5,12 @@
 #include "helper/HelperFunctions.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "euroscope/UserSetting.h"
+#include "update/PluginVersion.h"
 
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Plugin::PluginVersion;
+
 namespace UKControllerPlugin {
 
     UKRadarScreen::UKRadarScreen(
@@ -223,6 +226,21 @@ namespace UKControllerPlugin {
             callsign.c_str(),
             NULL,
             EuroScopePlugIn::TAG_ITEM_FUNCTION_TEMP_ALTITUDE_POPUP,
+            mousePos,
+            tagItemArea
+        );
+    }
+
+    void UKRadarScreen::TogglePluginTagFunction(std::string callsign, int functionId, POINT mousePos, RECT tagItemArea)
+    {
+        this->GetPlugIn()->SetASELAircraft(this->GetPlugIn()->FlightPlanSelect(callsign.c_str()));
+        this->StartTagFunction(
+            callsign.c_str(),
+            NULL,
+            EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
+            callsign.c_str(),
+            PluginVersion::title,
+            functionId,
             mousePos,
             tagItemArea
         );

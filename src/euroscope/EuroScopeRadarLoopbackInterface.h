@@ -28,6 +28,12 @@ namespace UKControllerPlugin {
                     POINT mousePos,
                     RECT tagItemArea
                 ) = 0;
+                virtual void TogglePluginTagFunction(
+                    std::string callsign,
+                    int functionId,
+                    POINT mousePos,
+                    RECT tagItemArea
+                ) = 0;
                 virtual void ToogleMenu(RECT area, std::string title, int numColumns) = 0;
                 virtual POINT ConvertCoordinateToScreenPoint(EuroScopePlugIn::CPosition pos) = 0;
         };

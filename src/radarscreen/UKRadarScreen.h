@@ -78,6 +78,12 @@ namespace UKControllerPlugin {
                 POINT mousePos,
                 RECT tagItemArea
             ) override;
+            void TogglePluginTagFunction(
+                std::string callsign,
+                int functionId,
+                POINT mousePos,
+                RECT tagItemArea
+            ) override;
             void ToogleMenu(RECT area, std::string title, int numColumns) override;
 
         private:

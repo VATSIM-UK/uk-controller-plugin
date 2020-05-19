@@ -8,6 +8,7 @@
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "euroscope/UserSetting.h"
+#include "hold/HoldModule.h"
 
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
@@ -91,6 +92,15 @@ namespace UKControllerPlugin {
             } else if (button == "information") {
                 this->showHoldInformation = !this->showHoldInformation;
             }
+        }
+
+        void HoldDisplay::CallsignClicked(
+            std::string callsign,
+            EuroscopeRadarLoopbackInterface& radarScreen,
+            POINT mousePos,
+            RECT area
+        ) {
+            radarScreen.TogglePluginTagFunction(callsign, popupMenuTagItemId, mousePos, area);
         }
 
         void HoldDisplay::ClearedLevelClicked(
@@ -777,6 +787,17 @@ namespace UKControllerPlugin {
                                 callsign,
                                 callsignDisplay,
                                 this->dataBrush
+                            );
+                            radarScreen.RegisterScreenObject(
+                                screenObjectId,
+                                this->navaid.identifier + "/callsign/" + fp->GetCallsign(),
+                                {
+                                    callsignDisplay.X,
+                                    callsignDisplay.Y,
+                                    callsignDisplay.X + callsignDisplay.Width,
+                                    callsignDisplay.Y + callsignDisplay.Height
+                                },
+                                false
                             );
 
                             // Reported level

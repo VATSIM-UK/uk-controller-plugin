@@ -22,19 +22,17 @@ namespace UKControllerPlugin {
         */
         void HoldManager::AddAircraftToProximityHold(EuroScopeCFlightPlanInterface& flightplan, std::string hold)
         {
-            // If the aircraft is already registered with the hold manager add to proximity
+            std::shared_ptr<HoldingAircraft> holdingAircraft;
             if (this->aircraft.count(flightplan.GetCallsign())) {
-                (*this->aircraft.find(flightplan.GetCallsign()))->AddProximityHold(hold);
-                return;
+                holdingAircraft = *this->aircraft.find(flightplan.GetCallsign());
+            } else {
+                holdingAircraft = std::make_shared<HoldingAircraft>(
+                    flightplan.GetCallsign(),
+                    std::set<std::string>({ hold })
+                );
+                this->aircraft.insert(holdingAircraft);
             }
 
-            // Create a new instance of a holding aircraft
-            std::shared_ptr<HoldingAircraft> holdingAircraft = std::make_shared<HoldingAircraft>(
-                flightplan.GetCallsign(),
-                std::set<std::string>({ hold })
-            );
-
-            this->aircraft.insert(holdingAircraft);
             this->holds[hold].insert(holdingAircraft);
         }
 
@@ -45,19 +43,27 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface& flightplan,
             std::string hold
         ) {
-            // If the aircraft is already registered with the hold manager, change its assigned.
+
+            // Add it to the aircraft list or fetch it if needed
+            std::shared_ptr<HoldingAircraft> holdingAircraft;
             if (this->aircraft.count(flightplan.GetCallsign())) {
-                (*this->aircraft.find(flightplan.GetCallsign()))->SetAssignedHold(hold);
-                return;
+                holdingAircraft = *this->aircraft.find(flightplan.GetCallsign());
+            } else {
+                holdingAircraft = std::make_shared<HoldingAircraft>(
+                    flightplan.GetCallsign(),
+                    hold
+                );
+                this->aircraft.insert(holdingAircraft);
             }
 
-            // Create a new instance of a holding aircraft
-            std::shared_ptr<HoldingAircraft> holdingAircraft = std::make_shared<HoldingAircraft>(
-                flightplan.GetCallsign(),
-                hold
-            );
+            // Remove the aircraft from its previous hold entirely if its no longer needed
+            std::string previousHold = holdingAircraft->GetAssignedHold();
+            holdingAircraft->SetAssignedHold(hold);
+            if (previousHold != hold && !holdingAircraft->IsInHold(previousHold)) {
+                this->holds[previousHold].erase(holdingAircraft);
+            }
 
-            this->aircraft.insert(holdingAircraft);
+            // Add it to the right hold list
             this->holds[hold].insert(holdingAircraft);
         }
 
@@ -83,12 +89,24 @@ namespace UKControllerPlugin {
         */
         void HoldManager::UnassignAircraftFromHold(std::string callsign)
         {
-            auto aircraft = this->aircraft.find(callsign);
-            if (aircraft == this->aircraft.cend()) {
+            if (this->aircraft.find(callsign) == this->aircraft.cend()) {
                 return;
             }
 
-            (*aircraft)->RemoveAssignedHold();
+            auto aircraft = *this->aircraft.find(callsign);
+            std::string previousHold = aircraft->GetAssignedHold();
+
+            aircraft->RemoveAssignedHold();
+
+            // Remove the aircraft from its previous hold entirely if its no longer needed
+            if (!aircraft->IsInHold(previousHold)) {
+                this->holds[previousHold].erase(aircraft);
+            }
+
+            // Remove the aircraft from the manager if not holding anywhere
+            if (!aircraft->IsInAnyHold()) {
+                this->aircraft.erase(aircraft);
+            }
         }
 
         /*
@@ -96,12 +114,23 @@ namespace UKControllerPlugin {
         */
         void HoldManager::RemoveAircraftFromProximityHold(std::string callsign, std::string hold)
         {
-            auto aircraft = this->aircraft.find(callsign);
-            if (aircraft == this->aircraft.cend()) {
+            if (this->aircraft.find(callsign) == this->aircraft.cend()) {
                 return;
             }
 
-            (*aircraft)->RemoveProximityHold(hold);
+            auto aircraft = *this->aircraft.find(callsign);
+
+            aircraft->RemoveProximityHold(hold);
+
+            // Remove the aircraft from its previous hold entirely if its no longer needed
+            if (!aircraft->IsInHold(hold)) {
+                this->holds[hold].erase(aircraft);
+            }
+
+            // Remove the aircraft from the manager if not holding anywhere
+            if (!aircraft->IsInAnyHold()) {
+                this->aircraft.erase(aircraft);
+            }
         }
 
         /*
