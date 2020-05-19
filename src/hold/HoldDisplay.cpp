@@ -75,7 +75,8 @@ namespace UKControllerPlugin {
 
                 this->maximumLevel -= 1000;
             } else if (button == "allLevels") {
-                this->maximumLevel = 15000;
+                this->minimumLevel = this->publishedHolds.size() ? this->publishedHolds.cbegin()->minimum : 7000;
+                this->maximumLevel = this->publishedHolds.size() ? this->publishedHolds.cbegin()->maximum : 15000;
             } else if (button == "add") {
                 std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
                 std::shared_ptr<EuroScopeCRadarTargetInterface> rt = this->plugin.GetSelectedRadarTarget();
@@ -337,6 +338,16 @@ namespace UKControllerPlugin {
             this->minimised = userSetting.GetBooleanEntry(
                 "hold" + this->navaid.identifier + "Minimised",
                 false
+            );
+
+            this->minimumLevel = userSetting.GetIntegerEntry(
+                "hold" + this->navaid.identifier + "MinLevel",
+                this->publishedHolds.size() ? this->publishedHolds.cbegin()->minimum : 7000
+            );
+
+            this->maximumLevel = userSetting.GetIntegerEntry(
+                "hold" + this->navaid.identifier + "MaxLevel",
+                this->publishedHolds.size() ? this->publishedHolds.cbegin()->maximum : 15000
             );
 
             this->Move(
@@ -955,6 +966,20 @@ namespace UKControllerPlugin {
                 "hold" + this->navaid.identifier + "PositionY",
                 "Hold " + this->navaid.identifier + " Y Position",
                 this->windowPos.y
+            );
+
+            // Min level
+            userSetting.Save(
+                "hold" + this->navaid.identifier + "MinLevel",
+                "Hold " + this->navaid.identifier + " Minimum Level",
+                this->minimumLevel
+            );
+
+            // Max level
+            userSetting.Save(
+                "hold" + this->navaid.identifier + "MaxLevel",
+                "Hold " + this->navaid.identifier + " Maximum Level",
+                this->maximumLevel
             );
         }
     }  // namespace Hold
