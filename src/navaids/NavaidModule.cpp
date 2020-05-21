@@ -31,7 +31,11 @@ namespace UKControllerPlugin {
                 }
 
                 container.navaids->AddNavaid(
-                    { it->at("id").get<int>(), it->at("identifier").get<std::string>()}
+                    { 
+                        it->at("id").get<int>(),
+                        it->at("identifier").get<std::string>(),
+                        it->at("type").get<std::string>()
+                    }
                 );
             }
 
@@ -43,6 +47,13 @@ namespace UKControllerPlugin {
             return navaid.is_object() &&
                 navaid.contains("id") &&
                 navaid.at("id").is_number_integer() &&
+                navaid.contains("type") &&
+                navaid.at("type").is_string() &&
+                (
+                    navaid.at("type").get<std::string>() == "VOR" ||
+                    navaid.at("type").get<std::string>() == "NDB" ||
+                    navaid.at("type").get<std::string>() == "FIX"
+                ) &&
                 navaid.contains("identifier") && 
                 navaid.at("identifier").is_string();
         }

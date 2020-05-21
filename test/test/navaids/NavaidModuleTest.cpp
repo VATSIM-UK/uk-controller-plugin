@@ -25,6 +25,7 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = {
                 {"id", 1},
+                {"type", "FIX"},
                 {"identifier", "TIMBA"}
             };
             EXPECT_TRUE(NavaidValid(data));
@@ -34,6 +35,7 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = {
                 {"id", "test"},
+                {"type", "FIX"},
                 {"identifier", "TIMBA"}
             };
             EXPECT_FALSE(NavaidValid(data));
@@ -42,6 +44,7 @@ namespace UKControllerPluginTest {
         TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfNoId)
         {
             nlohmann::json data = {
+                {"type", "FIX"},
                 {"identifier", "TIMBA"}
             };
             EXPECT_FALSE(NavaidValid(data));
@@ -51,6 +54,7 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = {
                 {"id", 1},
+                {"type", "FIX"},
                 {"identifier", 1}
             };
             EXPECT_FALSE(NavaidValid(data));
@@ -59,7 +63,37 @@ namespace UKControllerPluginTest {
         TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfIdentifierMissing)
         {
             nlohmann::json data = {
+                {"type", "FIX"},
                 {"id", 1},
+            };
+            EXPECT_FALSE(NavaidValid(data));
+        }
+
+        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfTypeNotValid)
+        {
+            nlohmann::json data = {
+                {"id", 1},
+                {"type", "ILS"},
+                {"identifier", "TIMBA"}
+            };
+            EXPECT_FALSE(NavaidValid(data));
+        }
+
+        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfTypeNotString)
+        {
+            nlohmann::json data = {
+                {"id", 1},
+                {"type", 123},
+                {"identifier", "TIMBA"}
+            };
+            EXPECT_FALSE(NavaidValid(data));
+        }
+
+        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfTypeMissing)
+        {
+            nlohmann::json data = {
+                {"id", 1},
+                {"identifier", "TIMBA"}
             };
             EXPECT_FALSE(NavaidValid(data));
         }
@@ -100,12 +134,14 @@ namespace UKControllerPluginTest {
             data.push_back(
                 {
                     {"id", 1},
+                    {"type", "FIX"},
                     {"identifier", "TIMBA"}
                 }
             );
             data.push_back(
                 {
                     {"id", 2},
+                    {"type", "FIX"},
                     {"identifier", "WILLO"}
                 }
             );
@@ -116,7 +152,9 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependency);
             EXPECT_EQ(2, this->container.navaids->Count());
             EXPECT_EQ("TIMBA", this->container.navaids->GetByIdentifier("TIMBA").identifier);
+            EXPECT_EQ("FIX", this->container.navaids->GetByIdentifier("TIMBA").type);
             EXPECT_EQ("WILLO", this->container.navaids->GetByIdentifier("WILLO").identifier);
+            EXPECT_EQ("FIX", this->container.navaids->GetByIdentifier("WILLO").type);
         }
     }  // namespace Navaids
 }  // namespace UKControllerPluginTest
