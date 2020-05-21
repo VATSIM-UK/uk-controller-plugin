@@ -24,6 +24,7 @@ namespace UKControllerPlugin {
             HWND maxBox = GetDlgItem(hwnd, IDC_HOLD_MAXIMUM);
             std::wstring maxText = std::to_wstring(this->configurationItem->GetMaximumLevel());
 
+            // Increment altitude displays by 1000 each time
             UDACCEL accelArray[1];
             accelArray[0] = {
                 0,
@@ -99,6 +100,7 @@ namespace UKControllerPlugin {
                 NULL,
                 NULL
             );
+            maximumLevel = maximumLevel > this->maxHoldingLevel ? this->maxHoldingLevel : maximumLevel;
             this->configurationItem->SetMaximumLevel((maximumLevel / 1000) * 1000);
 
             int minimumLevel = SendDlgItemMessage(
@@ -108,6 +110,7 @@ namespace UKControllerPlugin {
                 NULL,
                 NULL
             );
+            minimumLevel = minimumLevel < this->minHoldingLevel ? this->minHoldingLevel : minimumLevel;
             this->configurationItem->SetMinimumLevel((minimumLevel / 1000) * 1000);
         }
 
