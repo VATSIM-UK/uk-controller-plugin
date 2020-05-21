@@ -3,6 +3,7 @@
 #include "hold/HoldingData.h"
 #include "hold/CompareHolds.h"
 #include "hold/CompareHoldingAircraft.h"
+#include "dialog/DialogManager.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -34,7 +35,8 @@ namespace UKControllerPlugin {
                     const std::set<
                         UKControllerPlugin::Hold::HoldingData,
                         UKControllerPlugin::Hold::CompareHolds
-                    >& publishedHolds
+                    >& publishedHolds,
+                    const UKControllerPlugin::Dialog::DialogManager& dialogManager
                 );
                 void ButtonClicked(std::string button);
                 void CallsignClicked(
@@ -68,6 +70,10 @@ namespace UKControllerPlugin {
                 RECT GetAllClickArea(void) const;
                 Gdiplus::Rect GetAddArea(void) const;
                 RECT GetAddClickArea(void) const;
+                int GetMaximumLevel(void) const;
+                int GetMinimumLevel(void) const;
+                void SetMaximumLevel(int level);
+                void SetMinimumLevel(int level);
                 std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
                     MapAircraftToLevels(const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft) const;
                 int GetWindowHeight(void) const;
@@ -128,6 +134,9 @@ namespace UKControllerPlugin {
                 // Reference to the plugin
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
 
+                // For opening dialogs
+                const UKControllerPlugin::Dialog::DialogManager& dialogManager;
+
                 // The holds that are published for this display
                 const std::set<
                     UKControllerPlugin::Hold::HoldingData,
@@ -187,6 +196,8 @@ namespace UKControllerPlugin {
                 RECT minimiseClickRect;
                 Gdiplus::Rect informationButtonArea = { 21, 0, 11, 11 };
                 RECT informationClickRect;
+                Gdiplus::Rect optionsButtonArea = { 42, 0, 11, 11 };
+                RECT optionsClickRect;
 
                 // Some more rects
                 Gdiplus::Rect minusButtonRect = {5, this->buttonStartOffset, 40, 40};

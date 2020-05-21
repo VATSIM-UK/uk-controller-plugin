@@ -22,6 +22,7 @@
 #include "hold/HoldDisplayManager.h"
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "hold/HoldDisplayConfigurationDialog.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Hold::HoldEventHandler;
@@ -116,7 +117,7 @@ namespace UKControllerPlugin {
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
 
-            // Create the hold dialog and profile manager
+            // Create the hold selection dialog
             std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(*container.navaids);
             container.dialogManager->AddDialog(
                 {
@@ -125,6 +126,18 @@ namespace UKControllerPlugin {
                     reinterpret_cast<DLGPROC>(dialog->WndProc),
                     reinterpret_cast<LPARAM>(dialog.get()),
                     dialog
+                }
+            );
+
+            // Create the hold display configuration dialog
+            std::shared_ptr<HoldDisplayConfigurationDialog> displayDialog = std::make_shared<HoldDisplayConfigurationDialog>();
+            container.dialogManager->AddDialog(
+                {
+                    IDD_HOLD_PARAMS,
+                    "Hold Parameters",
+                    reinterpret_cast<DLGPROC>(displayDialog->WndProc),
+                    reinterpret_cast<LPARAM>(displayDialog.get()),
+                    displayDialog
                 }
             );
 
@@ -145,7 +158,8 @@ namespace UKControllerPlugin {
                     *container.plugin,
                     *container.holdManager,
                     *container.navaids,
-                    *container.publishedHolds
+                    *container.publishedHolds,
+                    *container.dialogManager
                 )
             );
         }

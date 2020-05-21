@@ -108,6 +108,7 @@
 #define IDC_HOLD_PARAMS_MAX_STATIC      1090
 #define IDC_HOLD_MIN_SPIN               1091
 #define IDC_HOLD_MAX                    1092
+#define IDC_HOLD_MAXIMUM                1092
 #define IDC_SPIN2                       1093
 #define IDC_HOLD_MAX_SPIN               1093
 

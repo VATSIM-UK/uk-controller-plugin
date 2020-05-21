@@ -17,6 +17,7 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -25,10 +26,12 @@ namespace UKControllerPlugin {
             EuroscopePluginLoopbackInterface & plugin,
             HoldManager & holdManager,
             const UKControllerPlugin::Navaids::Navaid& navaid,
-            const std::set<HoldingData, CompareHolds>& publishedHolds
+            const std::set<HoldingData, CompareHolds>& publishedHolds,
+            const DialogManager& dialogManager
         )
             : plugin(plugin),
             holdManager(holdManager),
+            dialogManager(dialogManager),
             publishedHolds(publishedHolds),
             titleBarBrush(Gdiplus::Color(197, 129, 214)),
             backgroundBrush(Gdiplus::Color(58, 57, 58)),
@@ -97,6 +100,8 @@ namespace UKControllerPlugin {
                 this->minimised = !this->minimised;
             } else if (button == "information") {
                 this->showHoldInformation = !this->showHoldInformation;
+            } else if (button == "options") {
+                this->dialogManager.OpenDialog(IDD_HOLD_PARAMS, reinterpret_cast<LPARAM>(this));
             }
         }
 
@@ -271,6 +276,26 @@ namespace UKControllerPlugin {
             return this->addButtonClickRect;
         }
 
+        int HoldDisplay::GetMaximumLevel(void) const
+        {
+            return this->maximumLevel;
+        }
+
+        int HoldDisplay::GetMinimumLevel(void) const
+        {
+            return this->minimumLevel;
+        }
+
+        void HoldDisplay::SetMaximumLevel(int level)
+        {
+            this->maximumLevel = level;
+        }
+
+        void HoldDisplay::SetMinimumLevel(int level)
+        {
+            this->minimumLevel = level;
+        }
+
         /*
             Maps the holding aircraft to their occupied levels
         */
@@ -404,6 +429,17 @@ namespace UKControllerPlugin {
                 this->informationButtonArea.Y,
                 this->informationButtonArea.X + this->informationButtonArea.Width,
                 this->informationButtonArea.Y + this->informationButtonArea.Height
+            };
+
+            // Options button
+            this->optionsButtonArea.X = informationButtonArea.X + informationButtonArea.Width + 5;
+            this->optionsButtonArea.Y = this->titleArea.Y + 2;
+
+            this->optionsClickRect = {
+                this->optionsButtonArea.X,
+                this->optionsButtonArea.Y,
+                this->optionsButtonArea.X + this->optionsButtonArea.Width,
+                this->optionsButtonArea.Y + this->optionsButtonArea.Height
             };
 
             // Minus button
@@ -589,12 +625,8 @@ namespace UKControllerPlugin {
             );
 
             // Minimise Button
+            graphics.FillRect(this->minimiseButtonArea, this->backgroundBrush);
             graphics.DrawRect(this->minimiseButtonArea, this->borderPen);
-            graphics.DrawString(
-                this->minimised ? L"\u25B2" : L"\u25BC",
-                this->minimiseButtonArea,
-                this->titleBarTextBrush
-            );
             radarScreen.RegisterScreenObject(
                 screenObjectId,
                 this->navaid.identifier + "/minimise",
@@ -603,12 +635,24 @@ namespace UKControllerPlugin {
             );
 
             // Information button
+            graphics.FillRect(this->informationButtonArea, this->backgroundBrush);
             graphics.DrawRect(this->informationButtonArea, this->borderPen);
             graphics.DrawString(L"i", this->informationButtonArea, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
                 screenObjectId,
                 this->navaid.identifier + "/information",
                 this->informationClickRect,
+                false
+            );
+
+            // Options button
+            graphics.FillRect(this->optionsButtonArea, this->backgroundBrush);
+            graphics.DrawRect(this->optionsButtonArea, this->borderPen);
+            graphics.DrawString(L"o", this->optionsButtonArea, this->titleBarTextBrush);
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                this->navaid.identifier + "/options",
+                this->optionsClickRect,
                 false
             );
         }

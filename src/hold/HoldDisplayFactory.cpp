@@ -2,11 +2,13 @@
 #include "hold/HoldDisplayFactory.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "hold/HoldManager.h"
+#include "dialog/DialogManager.h"
 
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Navaids::Navaid;
+using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -15,9 +17,11 @@ namespace UKControllerPlugin {
             EuroscopePluginLoopbackInterface & plugin,
             HoldManager & holdManager,
             const NavaidCollection& navaids,
-            const PublishedHoldCollection& holds
+            const PublishedHoldCollection& holds,
+            const DialogManager& dialogManager
         )
-            : plugin(plugin), holdManager(holdManager), navaids(navaids), holds(holds)
+            : plugin(plugin), holdManager(holdManager), navaids(navaids),
+            holds(holds), dialogManager(dialogManager)
         {
 
         }
@@ -37,7 +41,8 @@ namespace UKControllerPlugin {
                 plugin,
                 holdManager,
                 navaidData,
-                holds.Get(navaid)
+                holds.Get(navaid),
+                dialogManager
             );
         }
     }  // namespace Hold
