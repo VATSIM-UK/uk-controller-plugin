@@ -103,6 +103,9 @@ namespace UKControllerPlugin {
                 // The default offset for data
                 const INT dataStartOffset = 68;
 
+                // The distance from the navaid at which the same level box renders
+                const double sameLevelBoxDistance = 12.0;
+
             private:
 
                 void DrawRoundRectangle(

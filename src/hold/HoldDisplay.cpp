@@ -766,6 +766,7 @@ namespace UKControllerPlugin {
                 level -= 1000
             ) {
                 bool levelRestricted = false;
+                bool aircraftInProximity = false;
 
                 // Loop the published holds and check if we need to render any restrictions
                 for (
@@ -789,6 +790,7 @@ namespace UKControllerPlugin {
                 
                 // No holding aircraft at this level, so just render the blank display
                 if (holdingAircraft.count(level) == 0) {
+
                     // Render the restrictions
                     if (levelRestricted) {
                         graphics.FillRect(holdRow, this->blockedLevelBrush);
@@ -817,8 +819,6 @@ namespace UKControllerPlugin {
                     std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
                     std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
 
-                    std::string verticalIndicator;
-
                     // We have holding aircraft to deal with, render them in
                     for (
                         std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator
@@ -844,6 +844,10 @@ namespace UKControllerPlugin {
                         try {
                             rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
                             fp = this->plugin.GetFlightplanForCallsign((*it)->GetCallsign());
+
+                            if (rt->GetPosition().DistanceTo(this->navaid.coordinates) < this->sameLevelBoxDistance) {
+                                aircraftInProximity = true;
+                            }
 
                             // Callsign
                             std::wstring callsign = ConvertToTchar((*it)->GetCallsign());
@@ -931,7 +935,7 @@ namespace UKControllerPlugin {
                     }
 
                     // If the last aircraft and we have multiple at the level, draw a bounding box
-                    if (aircraftAtLevel.size() > 1) {
+                    if (aircraftAtLevel.size() > 1 && aircraftInProximity) {
                         Gdiplus::Rect boundingBox{
                             holdRow.X + 10,
                             holdRow.Y - (((INT) holdingAircraft.count(level) + 1) * this->lineHeight),
