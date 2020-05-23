@@ -14,10 +14,9 @@ namespace UKControllerPlugin {
 
             // The identifier for the navaid
             std::string identifier;
-
-
-            // The type of the navaid: NDB, FIX, VOR
-            std::string type;
+ 
+            // The navaid coordinates
+            EuroScopePlugIn::CPosition coordinates;
 
             // Type strings
             const std::string TYPE_FIX = "FIX";

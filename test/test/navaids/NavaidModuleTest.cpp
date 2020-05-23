@@ -25,8 +25,9 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = {
                 {"id", 1},
-                {"type", "FIX"},
-                {"identifier", "TIMBA"}
+                {"identifier", "TIMBA"},
+                {"latitude", "N051.18.18.000"},
+                {"longitude", "W000.26.50.000"}
             };
             EXPECT_TRUE(NavaidValid(data));
         }
@@ -35,7 +36,8 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = {
                 {"id", "test"},
-                {"type", "FIX"},
+                {"latitude", "N051.18.18.000"},
+                {"longitude", "W000.26.50.000"},
                 {"identifier", "TIMBA"}
             };
             EXPECT_FALSE(NavaidValid(data));
@@ -44,7 +46,8 @@ namespace UKControllerPluginTest {
         TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfNoId)
         {
             nlohmann::json data = {
-                {"type", "FIX"},
+                {"latitude", "N051.18.18.000"},
+                {"longitude", "W000.26.50.000"},
                 {"identifier", "TIMBA"}
             };
             EXPECT_FALSE(NavaidValid(data));
@@ -54,7 +57,8 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = {
                 {"id", 1},
-                {"type", "FIX"},
+                {"latitude", "N051.18.18.000"},
+                {"longitude", "W000.26.50.000"},
                 {"identifier", 1}
             };
             EXPECT_FALSE(NavaidValid(data));
@@ -63,36 +67,72 @@ namespace UKControllerPluginTest {
         TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfIdentifierMissing)
         {
             nlohmann::json data = {
-                {"type", "FIX"},
+                {"latitude", "N051.18.18.000"},
+                {"longitude", "W000.26.50.000"},
                 {"id", 1},
             };
             EXPECT_FALSE(NavaidValid(data));
         }
 
-        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfTypeNotValid)
+        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfLatitudeInvalid)
         {
             nlohmann::json data = {
                 {"id", 1},
-                {"type", "ILS"},
+                {"latitude", "abc"},
+                {"longitude", "W000.26.50.000"},
                 {"identifier", "TIMBA"}
             };
             EXPECT_FALSE(NavaidValid(data));
         }
 
-        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfTypeNotString)
+        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfLatitudeNotString)
         {
             nlohmann::json data = {
                 {"id", 1},
-                {"type", 123},
+                {"latitude", 123},
+                {"longitude", "W000.26.50.000"},
                 {"identifier", "TIMBA"}
             };
             EXPECT_FALSE(NavaidValid(data));
         }
 
-        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfTypeMissing)
+        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfLatitudeMissing)
         {
             nlohmann::json data = {
                 {"id", 1},
+                {"longitude", "W000.26.50.000"},
+                {"identifier", "TIMBA"}
+            };
+            EXPECT_FALSE(NavaidValid(data));
+        }
+
+        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfLongitudeInvalid)
+        {
+            nlohmann::json data = {
+                {"id", 1},
+                {"latitude", "W000.26.50.000"},
+                {"longitude", "abc"},
+                {"identifier", "TIMBA"}
+            };
+            EXPECT_FALSE(NavaidValid(data));
+        }
+
+        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfLongitudeNotString)
+        {
+            nlohmann::json data = {
+                {"id", 1},
+                {"longitude", 123},
+                {"latitude", "W000.26.50.000"},
+                {"identifier", "TIMBA"}
+            };
+            EXPECT_FALSE(NavaidValid(data));
+        }
+
+        TEST_F(NavaidModuleTest, NavaidValidReturnsFalseIfLongitudeMissing)
+        {
+            nlohmann::json data = {
+                {"id", 1},
+                {"latitude", "W000.26.50.000"},
                 {"identifier", "TIMBA"}
             };
             EXPECT_FALSE(NavaidValid(data));
@@ -135,26 +175,33 @@ namespace UKControllerPluginTest {
                 {
                     {"id", 1},
                     {"type", "FIX"},
-                    {"identifier", "TIMBA"}
+                    {"identifier", "TIMBA"},
+                    {"latitude", "N051.18.18.000"},
+                    {"longitude", "W000.26.50.000"}
                 }
             );
             data.push_back(
                 {
                     {"id", 2},
                     {"type", "FIX"},
-                    {"identifier", "WILLO"}
+                    {"identifier", "WILLO"},
+                    {"latitude", "N051.18.18.000"},
+                    {"longitude", "W000.26.50.000"}
                 }
             );
 
             ON_CALL(this->dependency, LoadDependency("DEPENDENCY_NAVAIDS", "{}"_json))
                 .WillByDefault(Return(data));
 
+            EuroScopePlugIn::CPosition expectedPosition;
+            expectedPosition.LoadFromStrings("W000.26.50.000", "N051.18.18.000");
+
             BootstrapPlugin(this->container, this->dependency);
             EXPECT_EQ(2, this->container.navaids->Count());
             EXPECT_EQ("TIMBA", this->container.navaids->GetByIdentifier("TIMBA").identifier);
-            EXPECT_EQ("FIX", this->container.navaids->GetByIdentifier("TIMBA").type);
+            EXPECT_EQ(expectedPosition, this->container.navaids->GetByIdentifier("TIMBA").coordinates);
             EXPECT_EQ("WILLO", this->container.navaids->GetByIdentifier("WILLO").identifier);
-            EXPECT_EQ("FIX", this->container.navaids->GetByIdentifier("WILLO").type);
+            EXPECT_EQ(expectedPosition, this->container.navaids->GetByIdentifier("WILLO").coordinates);
         }
     }  // namespace Navaids
 }  // namespace UKControllerPluginTest
