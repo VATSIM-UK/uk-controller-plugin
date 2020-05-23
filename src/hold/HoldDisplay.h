@@ -76,7 +76,6 @@ namespace UKControllerPlugin {
                 void SetMinimumLevel(int level);
                 std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
                     MapAircraftToLevels(const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft) const;
-                int GetWindowHeight(void) const;
                 bool IsInInformationMode(void) const;
                 bool IsMinimised(void) const;
                 void LoadDataFromAsr(
@@ -148,7 +147,7 @@ namespace UKControllerPlugin {
                 const Gdiplus::SolidBrush titleBarBrush;
                 const Gdiplus::SolidBrush dataBrush;
                 const Gdiplus::SolidBrush clearedLevelBrush;
-                const Gdiplus::HatchBrush blockedLevelBrush;
+                const Gdiplus::SolidBrush blockedLevelBrush;
                 const Gdiplus::Pen borderPen;
                 const Gdiplus::Pen sameLevelBoxPen;
                 Gdiplus::Pen verticalSpeedAscentPen;
@@ -170,12 +169,6 @@ namespace UKControllerPlugin {
 
                 // The window width
                 int windowWidth = 225;
-
-                // The window height
-                int windowHeight = 500;
-
-                // The maximum possible window height based on the number of levels in the hold
-                int maxWindowHeight = 500;
 
                 // The height of the window to use when doing the information display
                 const int informationDisplayWindowHeight = 225;

@@ -47,7 +47,7 @@ namespace UKControllerPlugin {
             borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
             sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f),
             exitButtonBrush(Gdiplus::Color(0, 0, 0)),
-            blockedLevelBrush(Gdiplus::HatchStyleBackwardDiagonal, Gdiplus::Color(255, 255, 255)),
+            blockedLevelBrush(Gdiplus::Color(123, 125, 123)),
             dataStartHeight(0),
             informationClickRect({}),
             minimiseClickRect({}),
@@ -59,8 +59,6 @@ namespace UKControllerPlugin {
             this->stringFormat.SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat.SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
 
-            this->windowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel) / 1000) + 1) * this->lineHeight);
-            this->maxWindowHeight = this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel) / 1000) + 1) * this->lineHeight);
             this->Move(this->windowPos);
         }
 
@@ -329,14 +327,6 @@ namespace UKControllerPlugin {
             }
 
             return levelMap;
-        }
-
-        /*
-            Return the height of the window
-        */
-        int HoldDisplay::GetWindowHeight(void) const
-        {
-            return this->windowHeight;
         }
 
         /*
