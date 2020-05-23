@@ -5,22 +5,27 @@
 #include "euroscope//EuroScopeCRadarTargetInterface.h"
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
+#include "euroscope/EuroscopeSectorFileElementInterface.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Navaids::NavaidCollection;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
         HoldEventHandler::HoldEventHandler(
             HoldManager & holdManager,
+            const NavaidCollection& navaids,
             EuroscopePluginLoopbackInterface & plugin,
             const int popupMenuItemId
         )
-            : holdManager(holdManager), plugin(plugin), popupMenuItemId(popupMenuItemId)
+            : holdManager(holdManager), navaids(navaids), plugin(plugin),
+            popupMenuItemId(popupMenuItemId)
         {
 
         }
@@ -68,6 +73,27 @@ namespace UKControllerPlugin {
             }
 
             return "H" + aircraft->GetAssignedHold();
+        }
+
+        void HoldEventHandler::TimedEventTrigger(void)
+        {
+            this->plugin.ApplyFunctionToAllFlightplans(
+                [this](std::shared_ptr<EuroScopeCFlightPlanInterface> fp, std::shared_ptr<EuroScopeCRadarTargetInterface> rt) {
+                    
+                    for (
+                        NavaidCollection::const_iterator navaids = this->navaids.cbegin();
+                        navaids != this->navaids.cend();
+                        ++navaids
+                    ) {
+                        if (rt->GetPosition().DistanceTo(navaids->coordinates) <= this->proximityDistance) {
+                            this->holdManager.AddAircraftToProximityHold(*fp, navaids->identifier);
+                        } else {
+                            this->holdManager.RemoveAircraftFromProximityHold(fp->GetCallsign(), navaids->identifier);
+                        };
+                    }
+
+                }
+            );
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -144,12 +144,14 @@ namespace UKControllerPlugin {
             // Create the event handler and register
             eventHandler = std::make_shared<HoldEventHandler>(
                 *container.holdManager,
+                *container.navaids,
                 *container.plugin,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 
             container.flightplanHandler->RegisterHandler(eventHandler);
             container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
+            container.timedHandler->RegisterEvent(eventHandler, 7);
 
 
             // Create the hold display factory

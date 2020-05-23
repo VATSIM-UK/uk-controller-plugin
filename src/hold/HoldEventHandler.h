@@ -3,6 +3,8 @@
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "command/CommandHandlerInterface.h"
 #include "tag/TagItemInterface.h"
+#include "timedevent/AbstractTimedEvent.h"
+#include "navaids/NavaidCollection.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -21,12 +23,14 @@ namespace UKControllerPlugin {
             update of holding data.
         */
         class HoldEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-            public UKControllerPlugin::Tag::TagItemInterface
+            public UKControllerPlugin::Tag::TagItemInterface,
+            public UKControllerPlugin::TimedEvent::AbstractTimedEvent
         {
             public:
                 // Inherited via FlightPlanEventHandlerInterface
-                HoldEventHandler(
-                    UKControllerPlugin::Hold::HoldManager & holdManager,
+            HoldEventHandler(
+                    UKControllerPlugin::Hold::HoldManager& holdManager,
+                    const UKControllerPlugin::Navaids::NavaidCollection& navaids,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     const int popupMenuItemId
                 );
@@ -56,13 +60,22 @@ namespace UKControllerPlugin {
                 // The id of this handlers popup menu item
                 const int popupMenuItemId;
 
+                // How far from a navaid an aircraft can be before its considered in proximity of the hold
+                const double proximityDistance = 12.0;
+
             private:
+                
+                // Navaids against which holds are based
+                const UKControllerPlugin::Navaids::NavaidCollection& navaids;
 
                 // Gives access to the plugin
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
 
                 // Manages holds
                 UKControllerPlugin::Hold::HoldManager & holdManager;
+
+                // Inherited via AbstractTimedEvent
+                virtual void TimedEventTrigger(void) override;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

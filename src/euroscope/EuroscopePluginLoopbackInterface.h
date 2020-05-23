@@ -49,6 +49,14 @@ class EuroscopePluginLoopbackInterface
         virtual void TriggerFlightplanUpdateForCallsign(std::string callsign) = 0;
         virtual void RegisterTagFunction(int itemCode, std::string description) = 0;
         virtual void RegisterTagItem(int itemCode, std::string description) = 0;
+        virtual void ApplyFunctionToAllFlightplans(
+            std::function<
+                void(
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>,
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+                )
+            > function
+        ) = 0;
 };
 }  // namespace Euroscope
 }  // namespace UKControllerPlugin
