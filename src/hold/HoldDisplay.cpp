@@ -326,6 +326,31 @@ namespace UKControllerPlugin {
                 }
             }
 
+            // Only display holding aircraft if at least one of them is assigned to it.
+            for (
+                std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>::const_iterator it
+                = levelMap.cbegin();
+                it != levelMap.cend();
+            ) {
+                bool shouldInclude = false;
+                for (
+                    std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator levelIt = it->second.cbegin();
+                    levelIt != it->second.cend();
+                    levelIt++
+                ) {
+                    if ((*levelIt)->GetAssignedHold() == this->navaid.identifier) {
+                        shouldInclude = true;
+                        break;
+                    }
+                }
+
+                if (!shouldInclude) {
+                    levelMap.erase(it++);
+                } else {
+                    ++it;
+                }
+            }
+
             return levelMap;
         }
 
