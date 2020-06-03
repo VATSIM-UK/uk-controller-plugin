@@ -220,6 +220,21 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildHoldDependencyRequest()).GetRawData();
         }
 
+        nlohmann::json ApiHelper::GetAssignedHolds(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildAllAssignedHoldsRequest()).GetRawData();
+        }
+
+        void ApiHelper::AssignAircraftToHold(std::string callsign, std::string navaid) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildSetAssignedHoldRequest(callsign, navaid));
+        }
+
+        void ApiHelper::UnassignAircraftHold(std::string callsign) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildDeleteAssignedHoldRequest(callsign));
+        }
+
         /*
             Request all the min stack levels
         */

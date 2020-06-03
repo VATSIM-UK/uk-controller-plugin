@@ -32,6 +32,9 @@ namespace UKControllerPlugin {
                 virtual std::string GetApiDomain(void) const = 0;
                 virtual std::string GetApiKey(void) const = 0;
                 virtual nlohmann::json GetHoldDependency(void) const = 0;
+                virtual nlohmann::json GetAssignedHolds(void) const = 0;
+                virtual void AssignAircraftToHold(std::string callsign, std::string navaid) const = 0;
+                virtual void UnassignAircraftHold(std::string callsign) const = 0;
                 virtual nlohmann::json GetMinStackLevels(void) const = 0;
                 virtual nlohmann::json GetRegionalPressures(void) const = 0;
                 virtual nlohmann::json GetUri(std::string uri) const = 0;

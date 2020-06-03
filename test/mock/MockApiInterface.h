@@ -34,6 +34,9 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(GetApiDomain, std::string(void));
                 MOCK_CONST_METHOD0(GetApiKey, std::string(void));
                 MOCK_CONST_METHOD0(GetHoldDependency, nlohmann::json(void));
+                MOCK_CONST_METHOD0(GetAssignedHolds, nlohmann::json(void));
+                MOCK_CONST_METHOD2(AssignAircraftToHold, void(std::string, std::string));
+                MOCK_CONST_METHOD1(UnassignAircraftHold, void(std::string));
                 MOCK_CONST_METHOD0(GetMinStackLevels, nlohmann::json(void));
                 MOCK_CONST_METHOD1(GetUri, nlohmann::json(std::string uri));
                 MOCK_CONST_METHOD0(GetRegionalPressures, nlohmann::json(void));

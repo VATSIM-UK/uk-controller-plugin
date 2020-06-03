@@ -191,6 +191,39 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Builds a request to get all the currently assigned holds
+        */
+        CurlRequest ApiRequestBuilder::BuildAllAssignedHoldsRequest(void) const
+        {
+            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/assigned", CurlRequest::METHOD_GET));
+        }
+
+        /*
+            Build request to assign an aircraft to a hold
+        */
+        CurlRequest ApiRequestBuilder::BuildSetAssignedHoldRequest(std::string callsign, std::string navaid) const
+        {
+            CurlRequest request(this->apiDomain + "/hold/assigned/" + callsign, CurlRequest::METHOD_PUT);
+            nlohmann::json data{
+                {"callsign", callsign},
+                {"navaid", navaid}
+            };
+            request.SetBody(data.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
+        /*
+            Build request to unassign an aircraft from all holds
+        */
+        CurlRequest ApiRequestBuilder::BuildDeleteAssignedHoldRequest(std::string callsign) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(apiDomain + "/hold/assigned/" + callsign, CurlRequest::METHOD_DELETE)
+            );
+        }
+
+        /*
             Returns the API Domain that the builder is using
         */
         std::string ApiRequestBuilder::GetApiDomain(void) const

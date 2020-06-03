@@ -47,6 +47,9 @@ namespace UKControllerPlugin {
                 std::string GetApiKey(void) const override;
                 nlohmann::json GetDependencyList(void) const override;
                 nlohmann::json GetHoldDependency(void) const override;
+                nlohmann::json GetAssignedHolds(void) const override;;
+                void AssignAircraftToHold(std::string callsign, std::string navaid) const override;
+                void UnassignAircraftHold(std::string callsign) const override;
                 nlohmann::json GetMinStackLevels(void) const override;
                 nlohmann::json GetRegionalPressures(void) const override;
                 nlohmann::json GetUri(std::string uri) const;
