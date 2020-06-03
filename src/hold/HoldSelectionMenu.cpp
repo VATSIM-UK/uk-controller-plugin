@@ -6,20 +6,27 @@
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
 #include "hold/HoldDisplayManager.h"
+#include "api/ApiException.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Api::ApiInterface;
+using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 
 namespace UKControllerPlugin {
     namespace Hold {
         HoldSelectionMenu::HoldSelectionMenu(
             HoldManager & holdManager,
             EuroscopePluginLoopbackInterface & plugin,
+            const ApiInterface& api,
+            TaskRunnerInterface& taskRunner,
             unsigned int callbackId
-        ) : holdManager(holdManager), plugin(plugin), callbackId(callbackId)
+        ) : holdManager(holdManager), plugin(plugin), callbackId(callbackId),
+            api(api), taskRunner(taskRunner)
         {
         }
 
@@ -102,17 +109,30 @@ namespace UKControllerPlugin {
         void HoldSelectionMenu::MenuItemClicked(int functionId, std::string context)
         {
             std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
-            std::shared_ptr<EuroScopeCRadarTargetInterface> rt = this->plugin.GetSelectedRadarTarget();
 
-            if (!fp || !rt) {
+            if (!fp) {
                 LogWarning("Tried to put a non existent flight into a hold");
                 return;
             }
 
             if (context == "--") {
-                this->holdManager.UnassignAircraftFromHold(fp->GetCallsign());
+                this->taskRunner.QueueAsynchronousTask([this, fp]() {
+                    this->holdManager.UnassignAircraftFromHold(fp->GetCallsign());
+                    try {
+                        this->api.UnassignAircraftHold(fp->GetCallsign());
+                    } catch (ApiException api) {
+                        LogError("Failed to remove aircraft from the API hold: " + fp->GetCallsign());
+                    }
+                });
             } else {
-                this->holdManager.AssignAircraftToHold(*fp, context);
+                this->taskRunner.QueueAsynchronousTask([this, fp, context]() {
+                    this->holdManager.AssignAircraftToHold(*fp, context);
+                    try {
+                        this->api.AssignAircraftToHold(fp->GetCallsign(), context);
+                    } catch (ApiException api) {
+                        LogError("Failed to add aircraft to the API hold: " + fp->GetCallsign());
+                    }
+                });
             }
         }
     }  // namespace Hold

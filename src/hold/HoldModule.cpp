@@ -86,6 +86,8 @@ namespace UKControllerPlugin {
             container.holdSelectionMenu = std::make_shared<HoldSelectionMenu>(
                 *container.holdManager,
                 *container.plugin,
+                *container.api,
+                *container.taskRunner,
                 holdSelectionCancelId
             );
 

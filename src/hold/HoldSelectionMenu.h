@@ -1,4 +1,6 @@
 #pragma once
+#include "api/ApiInterface.h"
+#include "task/TaskRunnerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -20,6 +22,8 @@ namespace UKControllerPlugin {
                 HoldSelectionMenu(
                     UKControllerPlugin::Hold::HoldManager & holdManager,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
+                    const UKControllerPlugin::Api::ApiInterface& api,
+                    UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner,
                     unsigned int callbackId
                 );
                 void AddDisplayManager(
@@ -49,6 +53,12 @@ namespace UKControllerPlugin {
 
                 // The plugin, used to display menus
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+
+                // To run hold assignments
+                const UKControllerPlugin::Api::ApiInterface& api;
+                
+                // To run async API tasks
+                UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner;
         };
 
     }  // namespace Hold

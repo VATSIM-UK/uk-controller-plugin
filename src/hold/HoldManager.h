@@ -41,6 +41,8 @@ namespace UKControllerPlugin {
                 void RemoveAircraftFromProximityHold(std::string callsign, std::string hold);
                 void RemoveAircraftFromAnyHold(std::string callsign);
 
+                const std::shared_ptr<HoldingAircraft> invalidAircraft = nullptr;
+
             private:
 
                 // All the possible holds
