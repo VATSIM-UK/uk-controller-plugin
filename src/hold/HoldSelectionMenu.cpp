@@ -130,7 +130,7 @@ namespace UKControllerPlugin {
                     try {
                         this->api.AssignAircraftToHold(fp->GetCallsign(), context);
                     } catch (ApiException api) {
-                        LogError("Failed to add aircraft to the API hold: " + fp->GetCallsign());
+                        LogError("Failed to add aircraft to the API hold: " + fp->GetCallsign() + "/" + context);
                     }
                 });
             }

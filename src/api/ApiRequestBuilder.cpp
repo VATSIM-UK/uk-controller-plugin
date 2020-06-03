@@ -203,7 +203,7 @@ namespace UKControllerPlugin {
         */
         CurlRequest ApiRequestBuilder::BuildSetAssignedHoldRequest(std::string callsign, std::string navaid) const
         {
-            CurlRequest request(this->apiDomain + "/hold/assigned/" + callsign, CurlRequest::METHOD_PUT);
+            CurlRequest request(this->apiDomain + "/hold/assigned", CurlRequest::METHOD_PUT);
             nlohmann::json data{
                 {"callsign", callsign},
                 {"navaid", navaid}
