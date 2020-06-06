@@ -1,25 +1,19 @@
 #include "pch/pch.h"
 #include "hold/HoldDisplayManager.h"
-#include "hold/HoldProfileManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockApiInterface.h"
 #include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
-#include "hold/HoldProfile.h"
-#include "hold/ManagedHold.h"
 
 using UKControllerPlugin::Hold::HoldDisplayManager;
-using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Hold::HoldProfile;
-using UKControllerPlugin::Hold::ManagedHold;
 using testing::Test;
 using testing::NiceMock;
 using testing::Return;
@@ -47,7 +41,6 @@ namespace UKControllerPluginTest {
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 UserSetting userSetting;
                 HoldManager holdManager;
-                HoldProfileManager holdProfileManager;
                 HoldDisplayFactory displayFactory;
                 HoldDisplayManager displayManager;
         };

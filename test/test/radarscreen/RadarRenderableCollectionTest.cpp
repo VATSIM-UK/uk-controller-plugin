@@ -163,10 +163,10 @@ namespace UKControllerPluginTest {
             std::string desc = "testdesc";
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
 
-            EXPECT_CALL(*renderer1, LeftClick(screenObjectId, desc, Ref(mockRadarScreen)))
+            EXPECT_CALL(*renderer1, LeftClick(Ref(mockRadarScreen), screenObjectId, desc, POINT {}, RECT {}))
                 .Times(1);
 
-            collection.LeftClickScreenObject(screenObjectId, desc, mockRadarScreen);
+            collection.LeftClickScreenObject(mockRadarScreen, screenObjectId, desc, {}, {});
         }
 
         TEST(RadarRenderableCollection, RightClickScreenObjectMapsScreenObjectToRenderer)

@@ -10,9 +10,15 @@ namespace UKControllerPluginTest {
         {
             public:
                 MOCK_CONST_METHOD0(IsVisible, bool(void));
-                MOCK_METHOD3(
+                MOCK_METHOD5(
                     LeftClick,
-                    void(int, std::string, UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface &)
+                    void(
+                        UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface&,
+                        int,
+                        std::string,
+                        POINT,
+                        RECT
+                    )
                 );
                 MOCK_METHOD3(
                     RightClick,

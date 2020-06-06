@@ -354,56 +354,56 @@ namespace UKControllerPluginTest {
         TEST_F(CountdownRendererTest, LeftClickCloseClickspotSetsInvisible)
         {
             renderer.SetVisible(true);
-            renderer.LeftClick(renderer.closeClickspotId, "", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.closeClickspotId, "", {}, {});
             EXPECT_FALSE(renderer.IsVisible());
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer1)
         {
-            renderer.LeftClick(renderer.functionsClickspotId, "timer1Toggle", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer1Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 0 && timer.GetSecondsRemaining() <= 10);
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer2)
         {
-            renderer.LeftClick(renderer.functionsClickspotId, "timer2Toggle", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer2Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 10 && timer.GetSecondsRemaining() <= 20);
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer3)
         {
-            renderer.LeftClick(renderer.functionsClickspotId, "timer3Toggle", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer3Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 20 && timer.GetSecondsRemaining() <= 30);
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer4)
         {
-            renderer.LeftClick(renderer.functionsClickspotId, "timer4Toggle", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer4Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 30 && timer.GetSecondsRemaining() <= 40);
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer5)
         {
-            renderer.LeftClick(renderer.functionsClickspotId, "timer5Toggle", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer5Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 40 && timer.GetSecondsRemaining() <= 50);
         }
 
         TEST_F(CountdownRendererTest, LeftClickHandlesUnknownTimer)
         {
-            renderer.LeftClick(renderer.functionsClickspotId, "timerAToggle", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timerAToggle", {}, {});
             EXPECT_EQ(0, timer.GetSecondsRemaining());
         }
 
         TEST_F(CountdownRendererTest, LeftClickHandlesMissingTimerConfig)
         {
-            renderer.LeftClick(renderer.functionsClickspotId, "timer6Toggle", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer6Toggle", {}, {});
             EXPECT_EQ(0, timer.GetSecondsRemaining());
         }
 
         TEST_F(CountdownRendererTest, LeftClickResetsTimer)
         {
             timer.StartTimer(1000);
-            renderer.LeftClick(renderer.functionsClickspotId, "R", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "R", {}, {});
             EXPECT_EQ(0, timer.GetSecondsRemaining());
         }
 

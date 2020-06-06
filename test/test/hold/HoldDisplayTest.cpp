@@ -1,21 +1,25 @@
 #include "pch/pch.h"
 #include "euroscope/UserSetting.h"
 #include "hold/HoldDisplay.h"
-#include "hold/ManagedHold.h"
+#include "navaids/Navaid.h"
 #include "hold/HoldManager.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockUserSettingProviderInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "mock/MockDialogProvider.h"
+#include "dialog/DialogManager.h"
 
 using UKControllerPlugin::Hold::HoldDisplay;
-using UKControllerPlugin::Hold::ManagedHold;
+using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
+using UKControllerPlugin::Dialog::DialogManager;
 using testing::Test;
 using testing::NiceMock;
 using testing::Return;
@@ -28,16 +32,19 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldDisplayTest()
-                    : display(mockPlugin, hold, holdManager), userSetting(mockUserSettingProvider),
-                    hold({ 2, "TIMBA", "TIMBA", 7000, 15000, 301, "left", {} })
+                    : display(mockPlugin, navaid, holdManager, {}, dialogManager),
+                    userSetting(mockUserSettingProvider), navaid({ 2, "TIMBA", EuroScopePlugIn::CPosition()}),
+                    dialogManager(mockDialogProvider)
                 {
-                    this->holdManager.AddHold(std::move(hold));
+                    this->navaid.coordinates.LoadFromStrings("E000.15.42.000", "N050.56.44.000");
                 }
 
+                NiceMock<MockDialogProvider> mockDialogProvider;
+                DialogManager dialogManager;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
                 UserSetting userSetting;
-                ManagedHold hold;
+                Navaid navaid;
                 HoldManager holdManager;
                 HoldDisplay display;
         };

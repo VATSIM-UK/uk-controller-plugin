@@ -18,21 +18,21 @@ namespace UKControllerPluginTest {
 
         TEST_F(CompareHoldingAircraftTest, LessThanStringReturnsTrueIfLessThan)
         {
-            HoldingAircraft hold = { "BAW123", 1, 1, -350, std::chrono::system_clock::now() };
-            EXPECT_TRUE(compare(hold, "BAW124"));
+            std::shared_ptr<HoldingAircraft> aircraft = std::make_shared<HoldingAircraft>("BAW123", "BNN");
+            EXPECT_TRUE(compare(aircraft, "BAW124"));
         }
 
         TEST_F(CompareHoldingAircraftTest, LessThanStructReturnsTrueIfLessThan)
         {
-            HoldingAircraft hold = { "BAW124", 1, 1, -350, std::chrono::system_clock::now() };
-            EXPECT_TRUE(compare("BAW123", hold));
+            std::shared_ptr<HoldingAircraft> aircraft = std::make_shared<HoldingAircraft>("BAW124", "BNN");
+            EXPECT_TRUE(compare("BAW123", aircraft));
         }
 
         TEST_F(CompareHoldingAircraftTest, CompareReturnsTrueIfFirstLessThanLast)
         {
-            HoldingAircraft hold1 = { "BAW123", 1, 1, -350, std::chrono::system_clock::now() };
-            HoldingAircraft hold2 = { "BAW124", 1, 1, -350, std::chrono::system_clock::now() };
-            EXPECT_TRUE(compare(hold1, hold2));
+            std::shared_ptr<HoldingAircraft> aircraft1 = std::make_shared<HoldingAircraft>("BAW123", "BNN");
+            std::shared_ptr<HoldingAircraft> aircraft2 = std::make_shared<HoldingAircraft>("BAW124", "BNN");
+            EXPECT_TRUE(compare(aircraft1, aircraft2));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

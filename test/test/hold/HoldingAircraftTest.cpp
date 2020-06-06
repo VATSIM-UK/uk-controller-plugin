@@ -10,109 +10,92 @@ namespace UKControllerPluginTest {
         class HoldingAircraftTest : public Test
         {
             public:
-                HoldingAircraft baseAircraft = {
-                    "BAW123",
-                    7000,
-                    8000,
-                    350,
-                    std::chrono::system_clock::now()
-                };
+                HoldingAircraftTest()
+                    : baseAircraft("BAW123", "BNN"),
+                    proximityAircraft("BAW123", std::set<std::string>({ "BNN", "LAM" }))
+                {
+
+                }
+
+                HoldingAircraft baseAircraft;
+                HoldingAircraft proximityAircraft;
         };
 
-        TEST_F(HoldingAircraftTest, EqualityOperatorStructReturnsTrueIdentical)
+        TEST_F(HoldingAircraftTest, AssignedConstructionSetsCallsignAssignedHoldAndEntryTime)
         {
-            EXPECT_TRUE(baseAircraft == baseAircraft);
+            EXPECT_EQ("BAW123", this->baseAircraft.GetCallsign());
+            EXPECT_EQ("BNN", this->baseAircraft.GetAssignedHold());
+
+            std::chrono::seconds seconds = std::chrono::duration_cast<std::chrono::seconds> (
+                this->baseAircraft.GetAssignedHoldEntryTime() - std::chrono::system_clock::now()
+            );
+
+            EXPECT_LT(seconds, 3);
         }
 
-        TEST_F(HoldingAircraftTest, EqualityOperatorStructReturnsTrueDifferentClearedLevel)
+        TEST_F(HoldingAircraftTest, ProximityConstructionSetsCallsignAndProximityHolds)
         {
-            HoldingAircraft compare = {
-                "BAW123",
-                9000,
-                8000,
-                350,
-                std::chrono::system_clock::now()
-            };
-            EXPECT_TRUE(baseAircraft == compare);
+            EXPECT_EQ("BAW123", this->proximityAircraft.GetCallsign());
+            EXPECT_EQ(std::set<std::string>({ "BNN", "LAM" }), this->proximityAircraft.GetProximityHolds());
         }
 
-        TEST_F(HoldingAircraftTest, EqualityOperatorStructReturnsTrueDifferentReportedLevel)
+        TEST_F(HoldingAircraftTest, TestItAddsAProximityHold)
         {
-            HoldingAircraft compare = {
-                "BAW123",
-                7000,
-                9000,
-                350,
-                std::chrono::system_clock::now()
-            };
-            EXPECT_TRUE(baseAircraft == compare);
+            this->baseAircraft.AddProximityHold("TIMBA");
+            EXPECT_EQ(std::set<std::string>({ "TIMBA" }), this->baseAircraft.GetProximityHolds());
         }
 
-        TEST_F(HoldingAircraftTest, EqualityOperatorStructReturnsTrueDifferentVerticalSpeed)
+        TEST_F(HoldingAircraftTest, IsInAnyHoldReturnsTrueIfAssigned)
         {
-            HoldingAircraft compare = {
-                "BAW123",
-                7000,
-                8000,
-                400,
-                std::chrono::system_clock::now()
-            };
-            EXPECT_TRUE(baseAircraft == compare);
+            EXPECT_TRUE(this->baseAircraft.IsInAnyHold());
         }
 
-        TEST_F(HoldingAircraftTest, EqualityOperatorStructReturnsTrueDifferentEntryTime)
+        TEST_F(HoldingAircraftTest, IsInAnyHoldReturnsTrueIfProximity)
         {
-            HoldingAircraft compare = {
-                "BAW123",
-                7000,
-                8000,
-                350,
-                std::chrono::system_clock::now() - std::chrono::seconds(25)
-            };
-            EXPECT_TRUE(baseAircraft == compare);
+            EXPECT_TRUE(this->proximityAircraft.IsInAnyHold());
         }
 
-        TEST_F(HoldingAircraftTest, EqualityOperatorStructReturnsFalseDifferentCallsign)
+        TEST_F(HoldingAircraftTest, IsInHoldReturnsTrueIfHoldMatches)
         {
-            HoldingAircraft compare = {
-                "BAW124",
-                7000,
-                8000,
-                350,
-                std::chrono::system_clock::now()
-            };
-            EXPECT_FALSE(baseAircraft == compare);
+            EXPECT_TRUE(this->baseAircraft.IsInHold("BNN"));
         }
 
-        TEST_F(HoldingAircraftTest, AssignmentOperatorSetsFields)
+        TEST_F(HoldingAircraftTest, IsInHoldReturnsFalseIfHoldDoesntMatch)
         {
-            HoldingAircraft compare = {
-                "BAW125",
-                8000,
-                9000,
-                500,
-                std::chrono::system_clock::now() + std::chrono::minutes(15)
-            };
-
-            std::chrono::system_clock::time_point timeBefore = baseAircraft.entryTime;
-
-            baseAircraft = compare;
-
-            EXPECT_EQ("BAW123", baseAircraft.callsign);
-            EXPECT_EQ(8000, baseAircraft.clearedLevel);
-            EXPECT_EQ(9000, baseAircraft.reportedLevel);
-            EXPECT_EQ(500, baseAircraft.verticalSpeed);
-            EXPECT_EQ(timeBefore, baseAircraft.entryTime);
+            EXPECT_FALSE(this->baseAircraft.IsInHold("LAM"));
         }
 
-        TEST_F(HoldingAircraftTest, EqualityOperatorStringReturnsFalseDifferentCallsign)
+        TEST_F(HoldingAircraftTest, IsInHoldReturnsFalseIfAircraftNotInHold)
         {
-            EXPECT_FALSE(baseAircraft == "BAW124");
+            this->baseAircraft.RemoveAssignedHold();
+            EXPECT_FALSE(this->baseAircraft.IsInHold("BNN"));
         }
 
-        TEST_F(HoldingAircraftTest, EqualityOperatorStringReturnsTrueSameCallsign)
+        TEST_F(HoldingAircraftTest, IsInProximityReturnsTrueIfInProximity)
         {
-            EXPECT_TRUE(baseAircraft == "BAW123");
+            EXPECT_TRUE(this->proximityAircraft.IsInHoldProximity("BNN"));
+        }
+
+        TEST_F(HoldingAircraftTest, IsInProximityReturnsFalseIfNotInProximity)
+        {
+            EXPECT_FALSE(this->proximityAircraft.IsInHoldProximity("OCK"));
+        }
+
+        TEST_F(HoldingAircraftTest, RemoveAssignedHoldRemovesFromHold)
+        {
+            this->baseAircraft.RemoveAssignedHold();
+            EXPECT_EQ(this->baseAircraft.noHoldAssigned, this->baseAircraft.GetAssignedHold());
+        }
+
+        TEST_F(HoldingAircraftTest, RemoveProximityHoldRemovesProximity)
+        {
+            this->proximityAircraft.RemoveProximityHold("BNN");
+            EXPECT_EQ(std::set<std::string>({ "LAM" }), this->baseAircraft.GetProximityHolds());
+        }
+
+        TEST_F(HoldingAircraftTest, RemoveProximityHoldHandlesNotInProximity)
+        {
+            EXPECT_NO_THROW(this->proximityAircraft.RemoveProximityHold("ABCDEF"));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

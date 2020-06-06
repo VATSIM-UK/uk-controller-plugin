@@ -18,6 +18,9 @@ namespace UKControllerPluginTest {
                 MOCK_METHOD1(PositionOffScreen, bool(EuroScopePlugIn::CPosition));
                 MOCK_METHOD3(ToogleMenu, void(RECT, std::string, int));
                 MOCK_METHOD1(ConvertCoordinateToScreenPoint, POINT(EuroScopePlugIn::CPosition));
+                MOCK_METHOD3(ToggleTemporaryAltitudePopupList, void(std::string, POINT, RECT));
+                MOCK_METHOD4(TogglePluginTagFunction, void(std::string, int, POINT, RECT));
+
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest
