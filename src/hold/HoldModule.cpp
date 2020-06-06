@@ -78,7 +78,7 @@ namespace UKControllerPlugin {
                 holdDependencyKey,
                 nlohmann::json::array()
             );
-            container.holdManager = std::make_unique<HoldManager>();
+            container.holdManager = std::make_unique<HoldManager>(*container.api, *container.taskRunner);
             container.publishedHolds = CreatePublishedHoldCollection(holdDependency, container);
 
             // Create the object to manage the popup menu
@@ -86,8 +86,6 @@ namespace UKControllerPlugin {
             container.holdSelectionMenu = std::make_shared<HoldSelectionMenu>(
                 *container.holdManager,
                 *container.plugin,
-                *container.api,
-                *container.taskRunner,
                 holdSelectionCancelId
             );
 
