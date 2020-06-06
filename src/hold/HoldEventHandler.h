@@ -1,10 +1,10 @@
 #pragma once
-#include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "command/CommandHandlerInterface.h"
 #include "tag/TagItemInterface.h"
 #include "timedevent/AbstractTimedEvent.h"
 #include "navaids/NavaidCollection.h"
+#include "websocket/WebsocketEventProcessorInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -22,29 +22,17 @@ namespace UKControllerPlugin {
             Handles events that relate to holding - namely the periodic
             update of holding data.
         */
-        class HoldEventHandler : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-            public UKControllerPlugin::Tag::TagItemInterface,
-            public UKControllerPlugin::TimedEvent::AbstractTimedEvent
+        class HoldEventHandler : public UKControllerPlugin::Tag::TagItemInterface,
+            public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
+            public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
         {
             public:
-                // Inherited via FlightPlanEventHandlerInterface
-            HoldEventHandler(
+                HoldEventHandler(
                     UKControllerPlugin::Hold::HoldManager& holdManager,
                     const UKControllerPlugin::Navaids::NavaidCollection& navaids,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     const int popupMenuItemId
                 );
-                void FlightPlanEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-                ) override;
-                void FlightPlanDisconnectEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan
-                ) override;
-                void ControllerFlightPlanDataEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    int dataType
-                ) override;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(void) const override;
@@ -52,6 +40,16 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 ) override;
+
+                // Inherited via AbstractTimedEvent
+                virtual void TimedEventTrigger(void) override;
+
+                // Inherited via WebsocketEventProcessorInterface
+                void ProcessWebsocketMessage(
+                    const UKControllerPlugin::Websocket::WebsocketMessage& message
+                ) override;
+                std::set<UKControllerPlugin::Websocket::WebsocketSubscription>
+                    GetSubscriptions(void) const override;
 
 
                 // The string to display when an aircraft is not holding
@@ -73,9 +71,6 @@ namespace UKControllerPlugin {
 
                 // Manages holds
                 UKControllerPlugin::Hold::HoldManager & holdManager;
-
-                // Inherited via AbstractTimedEvent
-                virtual void TimedEventTrigger(void) override;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

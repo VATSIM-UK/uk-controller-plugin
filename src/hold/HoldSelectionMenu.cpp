@@ -110,9 +110,9 @@ namespace UKControllerPlugin {
             }
 
             if (context == "--") {
-                this->holdManager.UnassignAircraftFromHold(fp->GetCallsign());
+                this->holdManager.UnassignAircraftFromHold(fp->GetCallsign(), true);
             } else {
-                this->holdManager.AssignAircraftToHold(*fp, context);
+                this->holdManager.AssignAircraftToHold(*fp, context, true);
             }
         }
     }  // namespace Hold

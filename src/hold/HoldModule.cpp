@@ -149,10 +149,9 @@ namespace UKControllerPlugin {
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 
-            container.flightplanHandler->RegisterHandler(eventHandler);
             container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
             container.timedHandler->RegisterEvent(eventHandler, 7);
-
+            container.websocketProcessors->AddProcessor(eventHandler);
 
             // Create the hold display factory
             container.holdDisplayFactory.reset(

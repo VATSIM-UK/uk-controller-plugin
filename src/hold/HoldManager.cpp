@@ -46,7 +46,8 @@ namespace UKControllerPlugin {
         */
         void HoldManager::AssignAircraftToHold(
             EuroScopeCFlightPlanInterface& flightplan,
-            std::string hold
+            std::string hold,
+            bool updateApi
         ) {
 
             // Add it to the aircraft list or fetch it if needed
@@ -71,7 +72,11 @@ namespace UKControllerPlugin {
             // Add it to the right hold list
             this->holds[hold].insert(holdingAircraft);
 
-            // Sync with the API
+            // Sync with the API if we need to
+            if (!updateApi) {
+                return;
+            }
+
             std::string callsign = flightplan.GetCallsign();
             this->taskRunner.QueueAsynchronousTask([this, callsign, hold]() {
                 try {
@@ -103,7 +108,7 @@ namespace UKControllerPlugin {
         /*
             Unassign an aircrafts hold
         */
-        void HoldManager::UnassignAircraftFromHold(std::string callsign)
+        void HoldManager::UnassignAircraftFromHold(std::string callsign, bool updateApi)
         {
             if (this->aircraft.find(callsign) == this->aircraft.cend()) {
                 return;
@@ -124,7 +129,11 @@ namespace UKControllerPlugin {
                 this->aircraft.erase(aircraft);
             }
 
-            // Sync with the API
+            // Sync with the API if we need to
+            if (!updateApi) {
+                return;
+            }
+
             this->taskRunner.QueueAsynchronousTask([this, callsign]() {
                 try {
                     this->api.UnassignAircraftHold(callsign);
@@ -157,28 +166,6 @@ namespace UKControllerPlugin {
             if (!aircraft->IsInAnyHold()) {
                 this->aircraft.erase(aircraft);
             }
-        }
-
-        /*
-            Remove aircraft from any holds that they are in, regardless of status
-        */
-        void HoldManager::RemoveAircraftFromAnyHold(std::string callsign)
-        {
-            auto aircraft = this->aircraft.find(callsign);
-            if (aircraft == this->aircraft.cend()) {
-                return;
-            }
-
-            const std::set<std::string> proximityHolds = (*aircraft)->GetProximityHolds();
-            for (
-                std::set<std::string>::const_iterator it = proximityHolds.cbegin();
-                it != proximityHolds.cend();
-                ++it
-            ) {
-                this->holds[*it].erase(this->holds[*it].find(callsign));
-            }
-
-            this->aircraft.erase(this->aircraft.find(callsign));
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

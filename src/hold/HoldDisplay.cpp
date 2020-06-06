@@ -92,7 +92,8 @@ namespace UKControllerPlugin {
 
                 this->holdManager.AssignAircraftToHold(
                     *fp,
-                    this->navaid.identifier
+                    this->navaid.identifier,
+                    true
                 );
             } else if (button == "minimise") {
                 this->minimised = !this->minimised;

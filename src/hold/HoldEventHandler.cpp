@@ -6,6 +6,8 @@
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
 #include "euroscope/EuroscopeSectorFileElementInterface.h"
+#include "websocket/WebsocketMessage.h"
+#include "websocket/WebsocketSubscription.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -14,6 +16,8 @@ using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Websocket::WebsocketSubscription;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -28,28 +32,6 @@ namespace UKControllerPlugin {
             popupMenuItemId(popupMenuItemId)
         {
 
-        }
-
-        void HoldEventHandler::FlightPlanEvent(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            EuroScopeCRadarTargetInterface & radarTarget
-        ) {
-            // Nothing to do here
-        }
-
-        /*
-            When a flightplan disconnects, remove that aircraft from the hold.
-        */
-        void HoldEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface & flightPlan)
-        {
-            this->holdManager.RemoveAircraftFromAnyHold(flightPlan.GetCallsign());
-        }
-
-        void HoldEventHandler::ControllerFlightPlanDataEvent(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            int dataType
-        ) {
-            // Nothing to do here
         }
 
         /*
@@ -94,6 +76,46 @@ namespace UKControllerPlugin {
 
                 }
             );
+        }
+
+        void HoldEventHandler::ProcessWebsocketMessage(const WebsocketMessage& message)
+        {
+            if (message.event == "App\\Events\\HoldAssignedEvent") {
+                if (
+                    message.data.is_object() &&
+                    message.data.contains("callsign") &&
+                    message.data.at("callsign").is_string() &&
+                    message.data.contains("navaid") &&
+                    message.data.at("navaid").is_string()
+                ) {
+                    try {
+                        std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(
+                            message.data.at("callsign").get<std::string>()
+                        );
+                        this->holdManager.AssignAircraftToHold(*fp, message.data.at("navaid").get<std::string>(), false);
+                    } catch (std::invalid_argument) {
+                        // Nothing to do
+                    }
+                }
+            } else if (message.event == "App\\Events\\HoldUnassignedEvent") {
+                if (
+                    message.data.is_object() &&
+                    message.data.contains("callsign") &&
+                    message.data.at("callsign").is_string()
+                ) {
+                    this->holdManager.UnassignAircraftFromHold(message.data.at("callsign").get<std::string>(), false);
+                }
+            }
+        }
+
+        std::set<WebsocketSubscription> HoldEventHandler::GetSubscriptions(void) const
+        {
+            return {
+                {
+                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    "private-hold-assignments"
+                }
+            };
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
