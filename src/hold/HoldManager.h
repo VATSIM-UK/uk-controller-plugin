@@ -5,6 +5,8 @@
 #include "hold/HoldingData.h"
 #include "hold/CompareHoldingAircraft.h"
 #include "hold/CompareHolds.h"
+#include "api/ApiInterface.h"
+#include "task/TaskRunnerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -24,7 +26,10 @@ namespace UKControllerPlugin {
         {
             public:
 
-                HoldManager(void);
+                HoldManager(
+                    const UKControllerPlugin::Api::ApiInterface& api,
+                    UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner
+                );
                 void AddAircraftToProximityHold(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
                     std::string hold
@@ -44,6 +49,12 @@ namespace UKControllerPlugin {
                 const std::shared_ptr<HoldingAircraft> invalidAircraft = nullptr;
 
             private:
+
+                // For running async tasks
+                UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner;
+
+                // Api for syncing with the rest of the controllers
+                const UKControllerPlugin::Api::ApiInterface& api;
 
                 // All the possible holds
                 std::map<std::string, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holds;

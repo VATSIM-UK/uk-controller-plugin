@@ -4,15 +4,20 @@
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "HoldManager.h"
+#include "api/ApiException.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Api::ApiInterface;
+using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
-        HoldManager::HoldManager()
+        HoldManager::HoldManager(const ApiInterface& api, TaskRunnerInterface& taskRunner)
+            : api(api), taskRunner(taskRunner)
         {
 
         }
@@ -65,6 +70,17 @@ namespace UKControllerPlugin {
 
             // Add it to the right hold list
             this->holds[hold].insert(holdingAircraft);
+
+            // Sync with the API
+            std::string callsign = flightplan.GetCallsign();
+            this->taskRunner.QueueAsynchronousTask([this, callsign, hold]() {
+                try {
+                    this->api.AssignAircraftToHold(callsign, hold);
+                }
+                catch (ApiException api) {
+                    LogError("Failed to add aircraft to the API hold: " + callsign + "/" + hold);
+                }
+            });
         }
 
         /*
@@ -107,6 +123,16 @@ namespace UKControllerPlugin {
             if (!aircraft->IsInAnyHold()) {
                 this->aircraft.erase(aircraft);
             }
+
+            // Sync with the API
+            this->taskRunner.QueueAsynchronousTask([this, callsign]() {
+                try {
+                    this->api.UnassignAircraftHold(callsign);
+                }
+                catch (ApiException api) {
+                    LogError("Failed to remove aircraft from the API hold: " + callsign);
+                }
+            });
         }
 
         /*

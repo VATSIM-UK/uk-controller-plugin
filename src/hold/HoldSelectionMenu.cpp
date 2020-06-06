@@ -6,15 +6,12 @@
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
 #include "hold/HoldDisplayManager.h"
-#include "api/ApiException.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Api::ApiInterface;
-using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 
 namespace UKControllerPlugin {
@@ -22,11 +19,8 @@ namespace UKControllerPlugin {
         HoldSelectionMenu::HoldSelectionMenu(
             HoldManager & holdManager,
             EuroscopePluginLoopbackInterface & plugin,
-            const ApiInterface& api,
-            TaskRunnerInterface& taskRunner,
             unsigned int callbackId
-        ) : holdManager(holdManager), plugin(plugin), callbackId(callbackId),
-            api(api), taskRunner(taskRunner)
+        ) : holdManager(holdManager), plugin(plugin), callbackId(callbackId)
         {
         }
 
@@ -116,23 +110,9 @@ namespace UKControllerPlugin {
             }
 
             if (context == "--") {
-                this->taskRunner.QueueAsynchronousTask([this, fp]() {
-                    this->holdManager.UnassignAircraftFromHold(fp->GetCallsign());
-                    try {
-                        this->api.UnassignAircraftHold(fp->GetCallsign());
-                    } catch (ApiException api) {
-                        LogError("Failed to remove aircraft from the API hold: " + fp->GetCallsign());
-                    }
-                });
+                this->holdManager.UnassignAircraftFromHold(fp->GetCallsign());
             } else {
-                this->taskRunner.QueueAsynchronousTask([this, fp, context]() {
-                    this->holdManager.AssignAircraftToHold(*fp, context);
-                    try {
-                        this->api.AssignAircraftToHold(fp->GetCallsign(), context);
-                    } catch (ApiException api) {
-                        LogError("Failed to add aircraft to the API hold: " + fp->GetCallsign() + "/" + context);
-                    }
-                });
+                this->holdManager.AssignAircraftToHold(*fp, context);
             }
         }
     }  // namespace Hold
