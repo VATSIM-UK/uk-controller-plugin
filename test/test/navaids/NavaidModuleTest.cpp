@@ -199,9 +199,25 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependency);
             EXPECT_EQ(2, this->container.navaids->Count());
             EXPECT_EQ("TIMBA", this->container.navaids->GetByIdentifier("TIMBA").identifier);
-            EXPECT_EQ(expectedPosition, this->container.navaids->GetByIdentifier("TIMBA").coordinates);
+            EXPECT_EQ(
+                expectedPosition.m_Latitude,
+                this->container.navaids->GetByIdentifier("TIMBA").coordinates.m_Latitude
+            );
+
+            EXPECT_EQ(
+                expectedPosition.m_Longitude,
+                this->container.navaids->GetByIdentifier("TIMBA").coordinates.m_Longitude
+            );
             EXPECT_EQ("WILLO", this->container.navaids->GetByIdentifier("WILLO").identifier);
-            EXPECT_EQ(expectedPosition, this->container.navaids->GetByIdentifier("WILLO").coordinates);
+            EXPECT_EQ(
+                expectedPosition.m_Latitude,
+                this->container.navaids->GetByIdentifier("WILLO").coordinates.m_Latitude
+            );
+
+            EXPECT_EQ(
+                expectedPosition.m_Longitude,
+                this->container.navaids->GetByIdentifier("WILLO").coordinates.m_Longitude
+            );
         }
     }  // namespace Navaids
 }  // namespace UKControllerPluginTest

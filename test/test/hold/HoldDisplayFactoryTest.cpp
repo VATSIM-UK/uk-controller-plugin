@@ -2,16 +2,28 @@
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldManager.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "hold/ManagedHold.h"
 #include "hold/HoldingData.h"
 #include "hold/HoldDisplay.h"
+#include "navaids/NavaidCollection.h"
+#include "navaids/Navaid.h"
+#include "hold/PublishedHoldCollection.h"
+#include "mock/MockDialogProvider.h"
+#include "dialog/DialogManager.h"
+#include "mock/MockApiInterface.h"
+#include "mock/MockTaskRunnerInterface.h"
 
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Hold::ManagedHold;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldDisplay;
+using UKControllerPlugin::Hold::PublishedHoldCollection;
+using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Navaids::Navaid;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using ::testing::Test;
 using ::testing::NiceMock;
 
@@ -23,28 +35,43 @@ namespace UKControllerPluginTest {
             public:
 
                 HoldDisplayFactoryTest()
-                    : factory(mockPlugin, holdManager),
-                    managedHold({ 1, "TIMBA", "TIMBA TEST", 7000, 15000, 360, "left", {} })
+                    : factory(mockPlugin, holdManager, navaids, holds, dialogManager),
+                    navaid({ 1, "TIMBA", EuroScopePlugIn::CPosition()}),
+                    dialogManager(dialogProvider), holdManager(mockApi, taskRunner)
                 {
-                    this->holdManager.AddHold(std::move(managedHold));
+                    this->navaids.AddNavaid(navaid);
+                    this->holds.Add(std::move(this->holdData));
                 }
 
+                NiceMock<MockTaskRunnerInterface> taskRunner;
+                NiceMock<MockApiInterface> mockApi;
+                NiceMock<MockDialogProvider> dialogProvider;
+                DialogManager dialogManager;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+                HoldingData holdData = { 1, "TIMBA", "TIMBA TEST", 7000, 15000, 360, "left", {} };
+                PublishedHoldCollection holds;
+                Navaid navaid;
+                NavaidCollection navaids;
                 HoldManager holdManager;
                 HoldDisplayFactory factory;
-                HoldingData holdData = {1, "TIMBA", "TIMBA TEST", 7000, 15000, 360, "left", {}};
-                ManagedHold managedHold;
         };
 
-        TEST_F(HoldDisplayFactoryTest, ItReturnsNullPointerIfHoldNotFound)
+        TEST_F(HoldDisplayFactoryTest, ItReturnsNullPointerIfNavaidNotFound)
         {
-            EXPECT_EQ(nullptr, this->factory.Create(55));
+            EXPECT_EQ(nullptr, this->factory.Create("WILLO"));
         }
 
-        TEST_F(HoldDisplayFactoryTest, ItReturnsAHoldDisplayIfHoldFound)
+        TEST_F(HoldDisplayFactoryTest, ItReturnsAHoldDisplayIfNavaidFound)
         {
-            std::unique_ptr<HoldDisplay> display = this->factory.Create(1);
-            EXPECT_EQ(this->holdData, display->managedHold.GetHoldParameters());
+            std::set<
+                UKControllerPlugin::Hold::HoldingData,
+                UKControllerPlugin::Hold::CompareHolds
+            > expectedPublished;
+            expectedPublished.insert(this->holdData);
+
+            std::unique_ptr<HoldDisplay> display = this->factory.Create("TIMBA");
+            EXPECT_EQ(this->navaid, display->navaid);
+            EXPECT_EQ(expectedPublished, display->publishedHolds);
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

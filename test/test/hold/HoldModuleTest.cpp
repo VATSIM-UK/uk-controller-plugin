@@ -12,7 +12,6 @@
 #include "command/CommandHandlerCollection.h"
 #include "mock/MockWinApi.h"
 #include "mock/MockApiInterface.h"
-#include "hold/ManagedHold.h"
 #include "tag/TagItemCollection.h"
 #include "dialog/DialogManager.h"
 #include "mock/MockDialogProvider.h"
@@ -20,6 +19,7 @@
 #include "dialog/DialogData.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "hold/CompareHolds.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -27,6 +27,7 @@ using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Hold::BootstrapPlugin;
 using UKControllerPlugin::Hold::BootstrapRadarScreen;
 using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Hold::CompareHolds;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
@@ -158,13 +159,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldModuleTest, ItInitialisesHoldManager)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(2, this->container.holdManager->CountHolds());
-        }
-
-        TEST_F(HoldModuleTest, ItInitialisesHoldProfileManager)
-        {
-            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(2, this->container.holdProfiles->CountProfiles());
+            EXPECT_EQ(0, this->container.holdManager->CountHoldingAircraft());
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldDisplayFactory)
@@ -176,8 +171,15 @@ namespace UKControllerPluginTest {
         TEST_F(HoldModuleTest, ItRegistersHoldConfigurationDialog)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(1, this->container.dialogManager->CountDialogs());
-            EXPECT_TRUE(this->container.dialogManager->HasDialog(HOLD_SELECTOR_DIALOG));
+            EXPECT_EQ(2, this->container.dialogManager->CountDialogs());
+            EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_HOLD_SELECTION));
+        }
+
+        TEST_F(HoldModuleTest, ItRegistersHoldParametersDialog)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+            EXPECT_EQ(2, this->container.dialogManager->CountDialogs());
+            EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_HOLD_PARAMS));
         }
 
         TEST_F(HoldModuleTest, ItLoadsHoldData)
@@ -194,7 +196,9 @@ namespace UKControllerPluginTest {
                 {}
             };
 
-            EXPECT_TRUE(expectedHold == this->container.holdManager->GetManagedHold(1)->GetHoldParameters());
+            std::set<HoldingData, CompareHolds> expectedHoldSet({ std::move(expectedHold) });
+
+            EXPECT_EQ(expectedHoldSet, this->container.publishedHolds->Get("TIMBA"));
         }
 
         TEST_F(HoldModuleTest, ItReportsNoHoldsToTheUser)

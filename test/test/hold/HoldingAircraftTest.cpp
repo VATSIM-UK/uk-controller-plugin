@@ -30,7 +30,7 @@ namespace UKControllerPluginTest {
                 this->baseAircraft.GetAssignedHoldEntryTime() - std::chrono::system_clock::now()
             );
 
-            EXPECT_LT(seconds, 3);
+            EXPECT_LT(seconds, std::chrono::seconds(3));
         }
 
         TEST_F(HoldingAircraftTest, ProximityConstructionSetsCallsignAndProximityHolds)

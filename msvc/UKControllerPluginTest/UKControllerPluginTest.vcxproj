@@ -99,12 +99,11 @@
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldsDescriptionTest.cpp" />
-    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldConfigurationMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldDisplayFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldDisplayManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldDisplayTest.cpp" />
-    <ClCompile Include="..\..\test\test\hold\HoldManagerFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\PublishedHoldCollectionFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldingAircraftTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldsTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldDisplayFunctionsTest.cpp" />

@@ -106,6 +106,12 @@ namespace UKControllerPlugin {
                 // The distance from the navaid at which the same level box renders
                 const double sameLevelBoxDistance = 12.0;
 
+                // The holds that are published for this display
+                const std::set<
+                    UKControllerPlugin::Hold::HoldingData,
+                    UKControllerPlugin::Hold::CompareHolds
+                >& publishedHolds;
+
             private:
 
                 void DrawRoundRectangle(
@@ -138,12 +144,6 @@ namespace UKControllerPlugin {
 
                 // For opening dialogs
                 const UKControllerPlugin::Dialog::DialogManager& dialogManager;
-
-                // The holds that are published for this display
-                const std::set<
-                    UKControllerPlugin::Hold::HoldingData,
-                    UKControllerPlugin::Hold::CompareHolds
-                >& publishedHolds;
 
                 // Brushes
                 const Gdiplus::SolidBrush titleBarTextBrush;

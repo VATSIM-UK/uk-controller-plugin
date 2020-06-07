@@ -551,12 +551,6 @@
     <ClCompile Include="..\..\test\test\hold\HoldingDataSerializerTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldManagerFactoryTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\hold\CompareHoldsDescriptionTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
@@ -758,6 +752,9 @@
       <Filter>test\navaids</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\hold\PublishedHoldCollectionTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\PublishedHoldCollectionFactoryTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
   </ItemGroup>

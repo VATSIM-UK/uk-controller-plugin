@@ -3,21 +3,27 @@
 #include "hold/HoldDisplay.h"
 #include "navaids/Navaid.h"
 #include "hold/HoldManager.h"
+#include "mock/MockApiInterface.h"
+#include "mock/MockTaskRunnerInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockUserSettingProviderInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "mock/MockDialogProvider.h"
 #include "dialog/DialogManager.h"
+#include "dialog/DialogData.h"
 
 using UKControllerPlugin::Hold::HoldDisplay;
 using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogManager;
 using testing::Test;
@@ -32,13 +38,16 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldDisplayTest()
-                    : display(mockPlugin, navaid, holdManager, {}, dialogManager),
+                    : display(mockPlugin, holdManager, navaid, {}, dialogManager),
                     userSetting(mockUserSettingProvider), navaid({ 2, "TIMBA", EuroScopePlugIn::CPosition()}),
-                    dialogManager(mockDialogProvider)
+                    dialogManager(mockDialogProvider), holdManager(mockApi, mockTaskRunner)
                 {
                     this->navaid.coordinates.LoadFromStrings("E000.15.42.000", "N050.56.44.000");
                 }
 
+                DialogData holdDialogData = { IDD_HOLD_PARAMS, "Test" };
+                NiceMock<MockTaskRunnerInterface> mockTaskRunner;
+                NiceMock<MockApiInterface> mockApi;
                 NiceMock<MockDialogProvider> mockDialogProvider;
                 DialogManager dialogManager;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
@@ -49,66 +58,33 @@ namespace UKControllerPluginTest {
                 HoldDisplay display;
         };
 
-        TEST_F(HoldDisplayTest, ItSetsLevelsSkippable)
-        {
-            EXPECT_EQ(8, this->display.maxLevelsSkippable);
-        }
-
-        TEST_F(HoldDisplayTest, ItLoadsLevelsSkippedFromAsr)
-        {
-            ON_CALL(this->mockUserSettingProvider, GetKey("holdProfile1Hold2LevelsSkipped"))
-                .WillByDefault(Return("4"));
-
-            this->display.LoadDataFromAsr(userSetting, 1);
-            EXPECT_EQ(4, this->display.GetLevelsSkipped());
-        }
-
-        TEST_F(HoldDisplayTest, ItDefaultsToNoLevelsSkipped)
-        {
-            ON_CALL(this->mockUserSettingProvider, GetKey("holdProfile1Hold2LevelsSkipped"))
-                .WillByDefault(Return("a"));
-
-            this->display.LoadDataFromAsr(userSetting, 1);
-            EXPECT_EQ(0, this->display.GetLevelsSkipped());
-        }
-
-        TEST_F(HoldDisplayTest, ItSetsWindowHeightBasedOnLevelsSkipped)
-        {
-            ON_CALL(this->mockUserSettingProvider, GetKey("holdProfile1Hold2LevelsSkipped"))
-                .WillByDefault(Return("4"));
-
-            this->display.LoadDataFromAsr(userSetting, 1);
-            int expected = this->display.dataStartOffset + (5 * this->display.lineHeight);
-            EXPECT_EQ(expected, this->display.GetWindowHeight());
-        }
-
         TEST_F(HoldDisplayTest, ItLoadsMinimisedFromAsr)
         {
-            ON_CALL(this->mockUserSettingProvider, GetKey("holdProfile1Hold2Minimised"))
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMinimised"))
                 .WillByDefault(Return("1"));
 
-            this->display.LoadDataFromAsr(userSetting, 1);
+            this->display.LoadDataFromAsr(userSetting);
             EXPECT_TRUE(this->display.IsMinimised());
         }
 
         TEST_F(HoldDisplayTest, ItDefaultsToNotMinimised)
         {
-            ON_CALL(this->mockUserSettingProvider, GetKey("holdProfile1Hold2LevelsSkipped"))
-                .WillByDefault(Return("a"));
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMinimised"))
+                .WillByDefault(Return("abc"));
 
-            this->display.LoadDataFromAsr(userSetting, 1);
+            this->display.LoadDataFromAsr(userSetting);
             EXPECT_FALSE(this->display.IsMinimised());
         }
 
         TEST_F(HoldDisplayTest, ItLoadsWindowPositionFromAsr)
         {
-            ON_CALL(this->mockUserSettingProvider, GetKey("holdProfile1Hold2PositionX"))
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAPositionX"))
                 .WillByDefault(Return("151"));
 
-            ON_CALL(this->mockUserSettingProvider, GetKey("holdProfile1Hold2PositionY"))
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAPositionY"))
                 .WillByDefault(Return("262"));
 
-            this->display.LoadDataFromAsr(userSetting, 1);
+            this->display.LoadDataFromAsr(userSetting);
 
             EXPECT_EQ(151, this->display.GetDisplayPos().x);
             EXPECT_EQ(262, this->display.GetDisplayPos().y);
@@ -116,32 +92,36 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldDisplayTest, ItDefaultsWindowPosition)
         {
-            ON_CALL(this->mockUserSettingProvider, GetKey("holdProfile1Hold2PositionX"))
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAPositionX"))
                 .WillByDefault(Return(""));
 
-            ON_CALL(this->mockUserSettingProvider, GetKey("holdProfile1Hold2PositionY"))
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAPositionY"))
                 .WillByDefault(Return(""));
 
-            this->display.LoadDataFromAsr(userSetting, 1);
+            this->display.LoadDataFromAsr(userSetting);
             EXPECT_EQ(100, this->display.GetDisplayPos().x);
             EXPECT_EQ(100, this->display.GetDisplayPos().y);
         }
 
-        TEST_F(HoldDisplayTest, ItSavesLevelsSkippedToTheAsr)
+        TEST_F(HoldDisplayTest, ItSavesDisplayLevelsToAsr)
         {
-            EXPECT_CALL(this->mockUserSettingProvider, SetKey(_, _, _))
-                .Times(3);
+            EXPECT_CALL(this->mockUserSettingProvider, SetKey(_, _, _));
 
             EXPECT_CALL(
                 this->mockUserSettingProvider,
-                SetKey("holdProfile1Hold2LevelsSkipped", "Hold Profile (Test Profile - TIMBA) Levels Skipped", "3")
+                SetKey("holdTIMBAMaxLevel", "Hold TIMBA Maximum Level", "9000")
             )
                 .Times(1);
 
-            this->display.ButtonClicked("minus");
-            this->display.ButtonClicked("minus");
-            this->display.ButtonClicked("minus");
-            this->display.SaveDataToAsr(userSetting, 1, "Test Profile");
+            EXPECT_CALL(
+                this->mockUserSettingProvider,
+                SetKey("holdTIMBAMinLevel", "Hold TIMBA Minimum Level", "5000")
+            )
+                .Times(1);
+
+            this->display.SetMinimumLevel(5000);
+            this->display.SetMinimumLevel(9000);
+            this->display.SaveDataToAsr(userSetting);
         }
 
         TEST_F(HoldDisplayTest, ItSavesMinimisedToTheAsr)
@@ -151,12 +131,12 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockUserSettingProvider,
-                SetKey("holdProfile1Hold2Minimised", "Hold Profile (Test Profile - TIMBA) Minimised", "1")
+                SetKey("holdTIMBAMinimised", "Hold TIMBA Minimised", "1")
             )
                 .Times(1);
 
             this->display.ButtonClicked("minimise");
-            this->display.SaveDataToAsr(userSetting, 1, "Test Profile");
+            this->display.SaveDataToAsr(userSetting);
         }
 
         TEST_F(HoldDisplayTest, ItSavesPositionToTheAsr)
@@ -166,116 +146,64 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockUserSettingProvider,
-                SetKey("holdProfile1Hold2PositionX", "Hold Profile (Test Profile - TIMBA) X Pos", "151")
+                SetKey("holdTIMBAPositionX", "Hold TIMBA X Position", "151")
             )
                 .Times(1);
 
             EXPECT_CALL(
                 this->mockUserSettingProvider,
-                SetKey("holdProfile1Hold2PositionY", "Hold Profile (Test Profile - TIMBA) Y Pos", "262")
+                SetKey("holdTIMBAPositionY", "Hold TIMBA Y Position", "262")
             )
                 .Times(1);
 
             this->display.Move({ 151, 262 });
-            this->display.SaveDataToAsr(userSetting, 1, "Test Profile");
+            this->display.SaveDataToAsr(userSetting);
         }
 
-        TEST_F(HoldDisplayTest, ClickingMinusIncreasesSkippedLevelsUpToALimit)
+        TEST_F(HoldDisplayTest, ClickingMinusDescreasesMaximumDisplayLevelUntilMinimum)
         {
-            EXPECT_EQ(0, this->display.GetLevelsSkipped());
+            EXPECT_EQ(15000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(1, this->display.GetLevelsSkipped());
+            EXPECT_EQ(14000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(2, this->display.GetLevelsSkipped());
+            EXPECT_EQ(13000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(3, this->display.GetLevelsSkipped());
+            EXPECT_EQ(12000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(4, this->display.GetLevelsSkipped());
+            EXPECT_EQ(11000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(5, this->display.GetLevelsSkipped());
+            EXPECT_EQ(10000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(6, this->display.GetLevelsSkipped());
+            EXPECT_EQ(9000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(7, this->display.GetLevelsSkipped());
+            EXPECT_EQ(8000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(8, this->display.GetLevelsSkipped());
+            EXPECT_EQ(7000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(8, this->display.GetLevelsSkipped());
+            EXPECT_EQ(7000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(8, this->display.GetLevelsSkipped());
+            EXPECT_EQ(7000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("minus");
-            EXPECT_EQ(8, this->display.GetLevelsSkipped());
         }
 
-        TEST_F(HoldDisplayTest, ClickingMinusIncreasesWindowHeightToALimit)
+        TEST_F(HoldDisplayTest, ClickingPlusIncreasesMaximumDisplayLevel)
         {
-            int windowHeight = this->display.GetWindowHeight();
-
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - this->display.lineHeight, this->display.GetWindowHeight());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - (2 * this->display.lineHeight), this->display.GetWindowHeight());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - (3 * this->display.lineHeight), this->display.GetWindowHeight());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - (4 * this->display.lineHeight), this->display.GetWindowHeight());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - (5 * this->display.lineHeight), this->display.GetWindowHeight());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - (6 * this->display.lineHeight), this->display.GetWindowHeight());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - (7 * this->display.lineHeight), this->display.GetWindowHeight());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - (8 * this->display.lineHeight), this->display.GetWindowHeight());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - (8 * this->display.lineHeight), this->display.GetWindowHeight());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(windowHeight - (8 * this->display.lineHeight), this->display.GetWindowHeight());
-        }
-
-        TEST_F(HoldDisplayTest, ClickingPlusReducesLevelsSkipped)
-        {
-            EXPECT_EQ(0, this->display.GetLevelsSkipped());
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(1, this->display.GetLevelsSkipped());
+            EXPECT_EQ(15000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("plus");
-            EXPECT_EQ(0, this->display.GetLevelsSkipped());
+            EXPECT_EQ(16000, this->display.GetMaximumLevel());
             this->display.ButtonClicked("plus");
-            EXPECT_EQ(0, this->display.GetLevelsSkipped());
+            EXPECT_EQ(17000, this->display.GetMaximumLevel());
+            this->display.ButtonClicked("plus");
+            EXPECT_EQ(18000, this->display.GetMaximumLevel());
         }
 
-        TEST_F(HoldDisplayTest, ClickingPlusReducesWindowHeight)
+        TEST_F(HoldDisplayTest, ClickingAllResetsToDefaultsIfNoPublishedHold)
         {
-            int originalWindowHeight = this->display.GetWindowHeight();
-
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(originalWindowHeight - this->display.lineHeight, this->display.GetWindowHeight());
-            this->display.ButtonClicked("plus");
-            EXPECT_EQ(originalWindowHeight, this->display.GetWindowHeight());
-            this->display.ButtonClicked("plus");
-            EXPECT_EQ(originalWindowHeight, this->display.GetWindowHeight());
-        }
-
-        TEST_F(HoldDisplayTest, ClickingAllResetsLevelsSkipped)
-        {
-            this->display.ButtonClicked("minus");
-            this->display.ButtonClicked("minus");
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(3, this->display.GetLevelsSkipped());
+            this->display.SetMinimumLevel(2000);
+            this->display.SetMinimumLevel(3000);
             this->display.ButtonClicked("allLevels");
-            EXPECT_EQ(0, this->display.GetLevelsSkipped());
-        }
-
-        TEST_F(HoldDisplayTest, ClickingAllResetsWindowHeight)
-        {
-            int originalWindowHeight = this->display.GetWindowHeight();
-
-            this->display.ButtonClicked("minus");
-            this->display.ButtonClicked("minus");
-            this->display.ButtonClicked("minus");
-            EXPECT_EQ(originalWindowHeight - (3 * this->display.lineHeight), this->display.GetWindowHeight());
-            this->display.ButtonClicked("allLevels");
-            EXPECT_EQ(originalWindowHeight, this->display.GetWindowHeight());
+            EXPECT_EQ(15000, this->display.GetMaximumLevel());
+            EXPECT_EQ(7000, this->display.GetMinimumLevel());
         }
 
         TEST_F(HoldDisplayTest, ClickingMinimiseMinimisesDisplay)
@@ -296,7 +224,14 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->display.IsInInformationMode());
         }
 
-        TEST_F(HoldDisplayTest, ClickingAddAddsAircraftToHoldManager)
+        TEST_F(HoldDisplayTest, ClickingOpionsLoadsConfigDialog)
+        {
+            EXPECT_CALL(mockDialogProvider, OpenDialog(this->holdDialogData, _))
+                .Times(1);
+            this->display.ButtonClicked("options");
+        }
+
+        TEST_F(HoldDisplayTest, ClickingAddAddsAircraftToHoldManagerAndNotifiesApi)
         {
             std::shared_ptr<MockEuroScopeCRadarTargetInterface> mockRadarTarget(
                 new NiceMock<MockEuroScopeCRadarTargetInterface>()
@@ -315,8 +250,11 @@ namespace UKControllerPluginTest {
             ON_CALL(*mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
+            EXPECT_CALL(this->mockApi, AssignAircraftToHold("BAW123", "TIMBA"))
+                .Times(1);
+
             this->display.ButtonClicked("add");
-            EXPECT_TRUE(this->holdManager.GetAircraftHold("BAW123")->GetHoldParameters().identifier == 2);
+            EXPECT_EQ("TIMBA", this->holdManager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
         TEST_F(HoldDisplayTest, ClickingAddDoesNothingIfNoAircraftSelected)
@@ -329,7 +267,10 @@ namespace UKControllerPluginTest {
 
             this->display.ButtonClicked("add");
 
-            EXPECT_EQ(0, this->holdManager.GetManagedHold(2)->CountHoldingAircraft());
+            EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
+                .Times(0);
+
+            EXPECT_EQ(0, this->holdManager.CountHoldingAircraft());
         }
 
         TEST_F(HoldDisplayTest, MoveSetsWindowPos)

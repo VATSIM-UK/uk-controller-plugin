@@ -1,38 +1,37 @@
 #include "pch/pch.h"
-#include "hold/HoldManagerFactory.h"
-#include "hold/HoldManager.h"
+#include "hold/PublishedHoldCollectionFactory.h"
+#include "hold/PublishedHoldCollection.h"
 #include "hold/HoldingData.h"
-#include "hold/ManagedHold.h"
 #include "bootstrap/PersistenceContainer.h"
 
 using testing::Test;
 using UKControllerPlugin::Hold::CreatePublishedHoldCollection;
 using UKControllerPlugin::Hold::HoldingData;
-using UKControllerPlugin::Hold::ManagedHold;
+using UKControllerPlugin::Hold::PublishedHoldCollection;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
 namespace UKControllerPluginTest {
     namespace Hold {
 
-        class HoldManagerFactoryTest : public Test
+        class PublishedHoldCollectionFactoryTest : public Test
         {
             public:
                 PersistenceContainer container;
         };
 
-        TEST_F(HoldManagerFactoryTest, ItReturnsEmptyIfDataEmpty)
+        TEST_F(PublishedHoldCollectionFactoryTest, ItReturnsEmptyIfDataEmpty)
         {
             nlohmann::json data = "[]"_json;
-            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->CountHolds());
+            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->Count());
         }
 
-        TEST_F(HoldManagerFactoryTest, ItReturnsEmptyIfDataNotArray)
+        TEST_F(PublishedHoldCollectionFactoryTest, ItReturnsEmptyIfDataNotArray)
         {
             nlohmann::json data = nlohmann::json::object();
-            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->CountHolds());
+            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->Count());
         }
 
-        TEST_F(HoldManagerFactoryTest, ItAddsHoldsWithData)
+        TEST_F(PublishedHoldCollectionFactoryTest, ItAddsHoldsWithData)
         {
             nlohmann::json data;
             nlohmann::json hold1;
@@ -55,18 +54,18 @@ namespace UKControllerPluginTest {
             hold2["restrictions"] = nlohmann::json::array();
 
             data = { hold1, hold2 };
-            EXPECT_EQ(2, CreatePublishedHoldCollection(data, container)->CountHolds());
+            EXPECT_EQ(2, CreatePublishedHoldCollection(data, container)->Count());
         }
 
-        TEST_F(HoldManagerFactoryTest, ItDoesntAddNonObjects)
+        TEST_F(PublishedHoldCollectionFactoryTest, ItDoesntAddNonObjects)
         {
             nlohmann::json data;
             data = { "Test" };
 
-            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->CountHolds());
+            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->Count());
         }
 
-        TEST_F(HoldManagerFactoryTest, ItDoesntAddInvalidData)
+        TEST_F(PublishedHoldCollectionFactoryTest, ItDoesntAddInvalidData)
         {
             nlohmann::json data;
             nlohmann::json hold;
@@ -79,24 +78,7 @@ namespace UKControllerPluginTest {
 
             data = { hold };
 
-            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->CountHolds());
-        }
-
-        TEST_F(HoldManagerFactoryTest, TheHoldStartsEmpty)
-        {
-            nlohmann::json data;
-            nlohmann::json hold;
-            hold["id"] = 1;
-            hold["description"] = "TIMBA";
-            hold["fix"] = "TIMBA Description";
-            hold["minimum_altitude"] = 7000;
-            hold["maximum_altitude"] = 15000;
-            hold["inbound_heading"] = 309;
-            hold["turn_direction"] = "right";
-            hold["restrictions"] = nlohmann::json::array();
-
-            data = nlohmann::json::array({ hold });
-            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->GetManagedHold(1)->CountHoldingAircraft());
+            EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->Count());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

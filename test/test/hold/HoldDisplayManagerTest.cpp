@@ -6,6 +6,13 @@
 #include "mock/MockApiInterface.h"
 #include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
+#include "mock/MockTaskRunnerInterface.h"
+#include "navaids/NavaidCollection.h"
+#include "navaids/Navaid.h"
+#include "hold/PublishedHoldCollection.h"
+#include "mock/MockDialogProvider.h"
+#include "dialog/DialogManager.h"
+#include "hold/HoldingData.h"
 
 using UKControllerPlugin::Hold::HoldDisplayManager;
 using UKControllerPlugin::Hold::HoldManager;
@@ -14,6 +21,14 @@ using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
+using UKControllerPlugin::Hold::PublishedHoldCollection;
+using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Navaids::Navaid;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 using testing::Test;
 using testing::NiceMock;
 using testing::Return;
@@ -26,226 +41,154 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldDisplayManagerTest()
-                    : displayFactory(mockPlugin, holdManager), holdProfileManager(mockApi),
-                    displayManager(holdProfileManager, holdManager, displayFactory),
-                    userSetting(mockUserSettingProvider)
+                    : displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager),
+                    displayManager(holdManager, displayFactory), dialogManager(dialogProvider),
+                    userSetting(mockUserSettingProvider), holdManager(mockApi, taskRunner)
                 {
-                    this->holdProfileManager.AddProfile({ 1, "Test Profile", {1} });
-                    this->holdProfileManager.AddProfile({ 2, "Test Profile 2", {1} });
-                    this->holdProfileManager.AddProfile({ 3, "Test Profile 3", {55} });
-                    this->holdManager.AddHold(ManagedHold({ 1, "TIMBA", "TIMBA", 7000, 15000, 300, "right", {} }));
+                    this->navaids.AddNavaid({ 1, "TIMBA", EuroScopePlugIn::CPosition() });
+                    this->navaids.AddNavaid({ 2, "WILLO", EuroScopePlugIn::CPosition() });
+                    this->navaids.AddNavaid({ 2, "LAM", EuroScopePlugIn::CPosition() });
+                    this->holds.Add(std::move(holdData));
                 }
 
-                NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+                NiceMock<MockTaskRunnerInterface> taskRunner;
                 NiceMock<MockApiInterface> mockApi;
+                NiceMock<MockDialogProvider> dialogProvider;
+                DialogManager dialogManager;
+                NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 UserSetting userSetting;
+                HoldingData holdData = { 1, "TIMBA", "TIMBA TEST", 7000, 15000, 360, "left", {} };
+                PublishedHoldCollection holds;
+                NavaidCollection navaids;
                 HoldManager holdManager;
                 HoldDisplayFactory displayFactory;
                 HoldDisplayManager displayManager;
         };
 
-        TEST_F(HoldDisplayManagerTest, ItDefaultsToNoProfileSet)
-        {
-            EXPECT_EQ(0, this->displayManager.GetCurrentProfile());
-        }
-
-        TEST_F(HoldDisplayManagerTest, ItDefaultsToNoProfileIfNoAsrProfile)
-        {
-            ON_CALL(mockUserSettingProvider, GetKey(this->displayManager.selectedProfileAsrKey))
-                .WillByDefault(Return(""));
-
-            ON_CALL(mockUserSettingProvider, KeyExists(this->displayManager.selectedProfileAsrKey))
-                .WillByDefault(Return(false));
-
-            this->displayManager.AsrLoadedEvent(this->userSetting);
-            EXPECT_EQ(0, this->displayManager.GetCurrentProfile());
-        }
-
-        TEST_F(HoldDisplayManagerTest, ItDoesntLoadDisplaysIfNoProfile)
-        {
-            ON_CALL(mockUserSettingProvider, GetKey(this->displayManager.selectedProfileAsrKey))
-                .WillByDefault(Return("0"));
-
-            ON_CALL(mockUserSettingProvider, KeyExists(this->displayManager.selectedProfileAsrKey))
-                .WillByDefault(Return(true));
-
-            this->displayManager.AsrLoadedEvent(this->userSetting);
-            EXPECT_EQ(0, this->displayManager.GetCurrentProfile());
-        }
-
-        TEST_F(HoldDisplayManagerTest, ItSetsCurrentProfile)
-        {
-            ON_CALL(mockUserSettingProvider, GetKey(this->displayManager.selectedProfileAsrKey))
-                .WillByDefault(Return("1"));
-
-            ON_CALL(mockUserSettingProvider, KeyExists(this->displayManager.selectedProfileAsrKey))
-                .WillByDefault(Return(true));
-
-            this->displayManager.AsrLoadedEvent(this->userSetting);
-            EXPECT_EQ(1, this->displayManager.GetCurrentProfile());
-        }
-
-        TEST_F(HoldDisplayManagerTest, ItLoadsDisplaysForGivenProfile)
+        TEST_F(HoldDisplayManagerTest, ItLoadsDisplaysFromTheAsr)
         {
             // Just prove that the hold is being added to the list of displays and that its ASR
             // is being loaded
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey("holdProfile1Hold1LevelsSkipped"))
+            EXPECT_CALL(mockUserSettingProvider, GetKey("selectedHolds"))
+                .Times(1)
+                .WillRepeatedly(Return("TIMBA,WILLO"));
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey("holdTIMBAMinimised"))
                 .Times(1)
                 .WillRepeatedly(Return("1"));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(this->displayManager.selectedProfileAsrKey))
-                .WillRepeatedly(Return("1"));
-
-            EXPECT_CALL(mockUserSettingProvider, KeyExists(this->displayManager.selectedProfileAsrKey))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(mockUserSettingProvider, GetKey("holdWILLOMinimised"))
+                .Times(1)
+                .WillRepeatedly(Return("0"));
 
             this->displayManager.AsrLoadedEvent(this->userSetting);
-            EXPECT_EQ(1, this->displayManager.CountDisplays());
+            EXPECT_EQ(2, this->displayManager.CountDisplays());
+            EXPECT_EQ("TIMBA", this->displayManager.GetDisplay("TIMBA").navaid.identifier);
+            EXPECT_EQ("WILLO", this->displayManager.GetDisplay("WILLO").navaid.identifier);
         }
 
-        TEST_F(HoldDisplayManagerTest, ItSavesSelectedProfileAndDisplaysToAsr)
+        TEST_F(HoldDisplayManagerTest, ItSavesSelectedHoldsAndDisplaysToAsr)
         {
             // Just prove that the hold is being added to the list of displays and that its ASR
             // is being loaded
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey("holdProfile1Hold1LevelsSkipped"))
+            EXPECT_CALL(mockUserSettingProvider, GetKey("selectedHolds"))
+                .Times(1)
+                .WillRepeatedly(Return("TIMBA,WILLO"));
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey("holdTIMBAMinimised"))
                 .Times(1)
                 .WillRepeatedly(Return("1"));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(this->displayManager.selectedProfileAsrKey))
-                .WillRepeatedly(Return("1"));
-
-            EXPECT_CALL(mockUserSettingProvider, KeyExists(this->displayManager.selectedProfileAsrKey))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(mockUserSettingProvider, GetKey("holdWILLOMinimised"))
+                .Times(1)
+                .WillRepeatedly(Return("0"));
 
             this->displayManager.AsrLoadedEvent(this->userSetting);
 
             // Save the display and assert that the display is trying to save itself properly
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey("selectedHoldProfile", "Selected Hold Profile", "1")
-            )
+            EXPECT_CALL(mockUserSettingProvider, SetKey("selectedHolds", "Selected Holds", "TIMBA,WILLO"))
                 .Times(1);
 
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey("holdProfile1Hold1LevelsSkipped", "Hold Profile (Test Profile - TIMBA) Levels Skipped", "1")
-            )
+            EXPECT_CALL(mockUserSettingProvider, SetKey("holdWILLOMinimised", "Hold WILLO Minimised", "0"))
                 .Times(1);
 
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey("holdProfile1Hold1Minimised", "Hold Profile (Test Profile - TIMBA) Minimised", "0")
-            )
-                .Times(1);
-
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey("holdProfile1Hold1PositionX", "Hold Profile (Test Profile - TIMBA) X Pos", "100")
-            )
-                .Times(1);
-
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey("holdProfile1Hold1PositionY", "Hold Profile (Test Profile - TIMBA) Y Pos", "100")
-            )
+            EXPECT_CALL(mockUserSettingProvider, SetKey("holdTIMBAMinimised", "Hold TIMBA Minimised", "1"))
                 .Times(1);
 
             displayManager.AsrClosingEvent(this->userSetting);
         }
 
-        TEST_F(HoldDisplayManagerTest, ItLoadsAProfile)
+        TEST_F(HoldDisplayManagerTest, ItLoadsSelectedHolds)
         {
             // Just prove that the hold is being added to the list of displays and that its ASR
             // is being loaded
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey("holdProfile1Hold1LevelsSkipped"))
+            EXPECT_CALL(mockUserSettingProvider, GetKey("selectedHolds"))
+                .Times(1)
+                .WillRepeatedly(Return("TIMBA"));
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey("holdTIMBAMinimised"))
                 .Times(1)
                 .WillRepeatedly(Return("1"));
-
-            EXPECT_CALL(mockUserSettingProvider, GetKey(this->displayManager.selectedProfileAsrKey))
-                .WillRepeatedly(Return("1"));
-
-            EXPECT_CALL(mockUserSettingProvider, KeyExists(this->displayManager.selectedProfileAsrKey))
-                .WillRepeatedly(Return(true));
 
             this->displayManager.AsrLoadedEvent(this->userSetting);
 
-            // Load the new profile
-            EXPECT_CALL(mockUserSettingProvider, GetKey("holdProfile2Hold1LevelsSkipped"))
+            // Load the new holds
+            EXPECT_CALL(mockUserSettingProvider, GetKey("holdLAMMinimised"))
                 .Times(1)
                 .WillRepeatedly(Return("1"));
-            this->displayManager.LoadProfile(2);
-            EXPECT_EQ(2, this->displayManager.GetCurrentProfile());
+            this->displayManager.LoadSelectedHolds(std::vector<std::string>({ "LAM" }));
             EXPECT_EQ(1, this->displayManager.CountDisplays());
+            EXPECT_EQ("LAM", this->displayManager.GetDisplay("LAM").navaid.identifier);
         }
 
-        TEST_F(HoldDisplayManagerTest, ItSavesAProfileWhenLoadingNewOne)
+        TEST_F(HoldDisplayManagerTest, ItSavesAHoldDisplaysWhenLoadingNewSelection)
         {
             // Just prove that the hold is being added to the list of displays and that its ASR
             // is being loaded
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
                 .WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey("holdProfile1Hold1LevelsSkipped"))
+            EXPECT_CALL(mockUserSettingProvider, GetKey("selectedHolds"))
+                .Times(1)
+                .WillRepeatedly(Return("TIMBA"));
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey("holdTIMBAMinimised"))
                 .Times(1)
                 .WillRepeatedly(Return("1"));
-
-            EXPECT_CALL(mockUserSettingProvider, GetKey(this->displayManager.selectedProfileAsrKey))
-                .WillRepeatedly(Return("1"));
-
-            EXPECT_CALL(mockUserSettingProvider, KeyExists(this->displayManager.selectedProfileAsrKey))
-                .WillRepeatedly(Return(true));
 
             this->displayManager.AsrLoadedEvent(this->userSetting);
 
-            // Load the new profile
-            EXPECT_CALL(mockUserSettingProvider, GetKey("holdProfile2Hold1LevelsSkipped"))
+            // Load the new selection
+            EXPECT_CALL(mockUserSettingProvider, SetKey("selectedHolds", "Selected Holds", "TIMBA"))
+                .Times(1);
+
+            EXPECT_CALL(mockUserSettingProvider, SetKey("holdTIMBAMinimised", "Hold TIMBA Minimised", "1"))
+                .Times(1);
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey("holdLAMMinimised"))
                 .Times(1)
                 .WillRepeatedly(Return("1"));
 
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey("holdProfile1Hold1LevelsSkipped", "Hold Profile (Test Profile - TIMBA) Levels Skipped", "1")
-            )
-                .Times(1);
-
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey("holdProfile1Hold1Minimised", "Hold Profile (Test Profile - TIMBA) Minimised", "0")
-            )
-                .Times(1);
-
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey("holdProfile1Hold1PositionX", "Hold Profile (Test Profile - TIMBA) X Pos", "100")
-            )
-                .Times(1);
-
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey("holdProfile1Hold1PositionY", "Hold Profile (Test Profile - TIMBA) Y Pos", "100")
-            )
-                .Times(1);
-
-            this->displayManager.LoadProfile(2);
-            EXPECT_EQ(2, this->displayManager.GetCurrentProfile());
+            this->displayManager.LoadSelectedHolds(std::vector<std::string>({ "LAM" }));
             EXPECT_EQ(1, this->displayManager.CountDisplays());
+            EXPECT_EQ("LAM", this->displayManager.GetDisplay("LAM").navaid.identifier);
         }
 
         TEST_F(HoldDisplayManagerTest, ItDoesntLoadNonExistantHoldDisplays)
         {
             // Just prove that the hold is being added to the list of displays and that its ASR
             // is being loaded
-            this->displayManager.LoadProfile(3);
+            this->displayManager.LoadSelectedHolds(std::vector<std::string>({ "UWUT" }));
             EXPECT_EQ(0, this->displayManager.CountDisplays());
         }
     }  // namespace Hold

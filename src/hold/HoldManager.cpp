@@ -167,5 +167,10 @@ namespace UKControllerPlugin {
                 this->aircraft.erase(aircraft);
             }
         }
+
+        size_t HoldManager::CountHoldingAircraft(void) const
+        {
+            return this->aircraft.size();
+        }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

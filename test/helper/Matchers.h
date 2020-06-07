@@ -23,11 +23,18 @@ MATCHER_P(RectEq, rect, "")
         arg.right == rect.right;
 }
 
-// Matches Two RECTS
+// Matches Two POINTS
 MATCHER_P(PointEq, point, "")
 {
     return arg.x == point.x &&
         arg.y == point.y;
+}
+
+// Matches Two POINTS
+MATCHER_P(CPositionEq, position, "")
+{
+    return arg.m_Latitude == position.m_Latitude &&
+        arg.m_Longitude == position.m_Longitude;
 }
 
 MATCHER_P(PopupMenuItemEq, item, "")

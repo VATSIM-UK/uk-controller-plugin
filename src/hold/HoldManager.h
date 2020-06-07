@@ -39,7 +39,7 @@ namespace UKControllerPlugin {
                     std::string hold,
                     bool updateApi
                 );
-
+                size_t CountHoldingAircraft(void) const;
                 const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>&
                     GetAircraftForHold(std::string hold) const;
                 const std::shared_ptr<HoldingAircraft>& GetHoldingAircraft(std::string callsign);
