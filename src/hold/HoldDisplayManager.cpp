@@ -64,7 +64,7 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Return a display by hold ID, mainly for testing
+            Return a display by hold fix
         */
         const UKControllerPlugin::Hold::HoldDisplay & HoldDisplayManager::GetDisplay(std::string fix) const
         {

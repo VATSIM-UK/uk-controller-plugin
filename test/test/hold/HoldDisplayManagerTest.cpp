@@ -47,7 +47,7 @@ namespace UKControllerPluginTest {
                 {
                     this->navaids.AddNavaid({ 1, "TIMBA", EuroScopePlugIn::CPosition() });
                     this->navaids.AddNavaid({ 2, "WILLO", EuroScopePlugIn::CPosition() });
-                    this->navaids.AddNavaid({ 2, "LAM", EuroScopePlugIn::CPosition() });
+                    this->navaids.AddNavaid({ 3, "LAM", EuroScopePlugIn::CPosition() });
                     this->holds.Add(std::move(holdData));
                 }
 
@@ -75,7 +75,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(mockUserSettingProvider, GetKey("selectedHolds"))
                 .Times(1)
-                .WillRepeatedly(Return("TIMBA,WILLO"));
+                .WillRepeatedly(Return("TIMBA;WILLO"));
 
             EXPECT_CALL(mockUserSettingProvider, GetKey("holdTIMBAMinimised"))
                 .Times(1)
@@ -100,7 +100,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(mockUserSettingProvider, GetKey("selectedHolds"))
                 .Times(1)
-                .WillRepeatedly(Return("TIMBA,WILLO"));
+                .WillRepeatedly(Return("TIMBA;WILLO"));
 
             EXPECT_CALL(mockUserSettingProvider, GetKey("holdTIMBAMinimised"))
                 .Times(1)
@@ -113,7 +113,7 @@ namespace UKControllerPluginTest {
             this->displayManager.AsrLoadedEvent(this->userSetting);
 
             // Save the display and assert that the display is trying to save itself properly
-            EXPECT_CALL(mockUserSettingProvider, SetKey("selectedHolds", "Selected Holds", "TIMBA,WILLO"))
+            EXPECT_CALL(mockUserSettingProvider, SetKey("selectedHolds", "Selected Holds", "TIMBA;WILLO"))
                 .Times(1);
 
             EXPECT_CALL(mockUserSettingProvider, SetKey("holdWILLOMinimised", "Hold WILLO Minimised", "0"))
