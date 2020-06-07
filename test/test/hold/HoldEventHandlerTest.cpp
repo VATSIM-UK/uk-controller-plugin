@@ -35,22 +35,18 @@ namespace UKControllerPluginTest {
                     manager(mockApi, mockTaskRunner)
                 {
 
-                    // Add a FP to the holds initially.
-                    NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplanInitial;
-                    NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTargetInitial;
-
-                    ON_CALL(mockFlightplanInitial, GetCallsign())
+                    ON_CALL(this->mockFlightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
 
-                    this->manager.AssignAircraftToHold(mockFlightplanInitial, "TIMBA", false);
+                    this->manager.AssignAircraftToHold(mockFlightplan, "TIMBA", false);
                 }
 
+                NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
+                NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
                 NiceMock<MockApiInterface> mockApi;
                 NiceMock<MockTaskRunnerInterface> mockTaskRunner;
                 NavaidCollection navaids;
                 HoldingData holdData = { 1, "TIMBA", "TIMBA", 8000, 15000, 209, "left", {} };
-                std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplan;
-                std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 HoldManager manager;
                 HoldEventHandler handler;
@@ -63,14 +59,14 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItReturnsTheSelectedHoldForAnAircraft)
         {
-            EXPECT_TRUE("HTIMBA" == this->handler.GetTagItemData(*this->mockFlightplan, *this->mockRadarTarget));
+            EXPECT_TRUE("HTIMBA" == this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
         }
 
         TEST_F(HoldEventHandlerTest, ItReturnsNoHoldIfAircraftNotInHold)
         {
             this->manager.UnassignAircraftFromHold("BAW123", false);
             EXPECT_TRUE(
-                this->handler.noHold == this->handler.GetTagItemData(*this->mockFlightplan, *this->mockRadarTarget)
+                this->handler.noHold == this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
             );
         }
     }  // namespace Hold

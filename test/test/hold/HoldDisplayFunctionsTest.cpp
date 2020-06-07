@@ -24,10 +24,16 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(L"12345", UKControllerPlugin::Hold::ConvertToTchar(12345));
         }
 
-        TEST(HoldDisplayFunctionsTest, ItReturnsCorrectDisplayLevelUnder100)
+        TEST(HoldDisplayFunctionsTest, ItReturnsCorrectDisplayLevelWithRoundingUp)
+        {
+            std::wstring expected = L"001";
+            EXPECT_TRUE(expected == UKControllerPlugin::Hold::GetLevelDisplayString(50));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsCorrectDisplayLevelUnder100RoundDown)
         {
             std::wstring expected = L"000";
-            EXPECT_TRUE(expected == UKControllerPlugin::Hold::GetLevelDisplayString(50));
+            EXPECT_TRUE(expected == UKControllerPlugin::Hold::GetLevelDisplayString(49));
         }
 
         TEST(HoldDisplayFunctionsTest, ItReturnsCorrectDisplayLevelUnder1000)

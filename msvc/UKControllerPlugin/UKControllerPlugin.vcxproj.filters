@@ -999,6 +999,9 @@
     <ClInclude Include="..\..\src\hold\HoldDisplayConfigurationDialog.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\SectorFileCoordinates.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1695,6 +1698,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldDisplayConfigurationDialog.cpp">
       <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sectorfile\SectorFileCoordinates.cpp">
+      <Filter>src\sectorfile</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

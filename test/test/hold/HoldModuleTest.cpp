@@ -20,6 +20,7 @@
 #include "radarscreen/RadarRenderableCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "hold/CompareHolds.h"
+#include "websocket/WebsocketEventProcessorCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -43,6 +44,7 @@ using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -110,6 +112,7 @@ namespace UKControllerPluginTest {
                     this->container.windows.reset(new NiceMock<MockWinApi>);
                     this->container.tagHandler.reset(new TagItemCollection);
                     this->container.dialogManager.reset(new DialogManager(this->mockDialogProvider));
+                    this->container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
                 }
 
                 NiceMock<MockDialogProvider> mockDialogProvider;

@@ -1,7 +1,10 @@
 #include "pch/stdafx.h"
 #include "navaids/NavaidModule.h"
 #include "navaids/NavaidCollection.h"
+#include "sectorfile/SectorFileCoordinates.h"
 
+using UKControllerPlugin::SectorFile::ParseSectorFileCoordinates;
+using UKControllerPlugin::SectorFile::PositionIsInvalid;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 
@@ -31,17 +34,14 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                EuroScopePlugIn::CPosition position;
-                position.LoadFromStrings(
-                    it->at("longitude").get<std::string>().c_str(),
-                    it->at("latitude").get<std::string>().c_str()
-                );
-
                 container.navaids->AddNavaid(
                     { 
                         it->at("id").get<int>(),
                         it->at("identifier").get<std::string>(),
-                        position
+                        ParseSectorFileCoordinates(
+                            it->at("latitude").get<std::string>().c_str(),
+                            it->at("longitude").get<std::string>().c_str()
+                        )
                     }
                 );
             }
@@ -58,9 +58,11 @@ namespace UKControllerPlugin {
                 navaid.at("latitude").is_string() &&
                 navaid.contains("longitude") &&
                 navaid.at("longitude").is_string() &&
-                (EuroScopePlugIn::CPosition()).LoadFromStrings(
-                    navaid.at("longitude").get<std::string>().c_str(),
-                    navaid.at("latitude").get<std::string>().c_str()
+                !PositionIsInvalid(
+                    ParseSectorFileCoordinates(
+                        navaid.at("latitude").get<std::string>().c_str(),
+                        navaid.at("longitude").get<std::string>().c_str()
+                    )
                 ) &&
                 navaid.contains("identifier") && 
                 navaid.at("identifier").is_string();

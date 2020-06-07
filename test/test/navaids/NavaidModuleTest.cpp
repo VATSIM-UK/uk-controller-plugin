@@ -2,10 +2,12 @@
 #include "navaids/NavaidModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "mock/MockDependencyLoader.h"
+#include "sectorfile/SectorFileCoordinates.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Navaids::BootstrapPlugin;
 using UKControllerPlugin::Navaids::NavaidValid;
+using UKControllerPlugin::SectorFile::ParseSectorFileCoordinates;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using ::testing::Test;
 using ::testing::NiceMock;
@@ -174,7 +176,6 @@ namespace UKControllerPluginTest {
             data.push_back(
                 {
                     {"id", 1},
-                    {"type", "FIX"},
                     {"identifier", "TIMBA"},
                     {"latitude", "N051.18.18.000"},
                     {"longitude", "W000.26.50.000"}
@@ -183,7 +184,6 @@ namespace UKControllerPluginTest {
             data.push_back(
                 {
                     {"id", 2},
-                    {"type", "FIX"},
                     {"identifier", "WILLO"},
                     {"latitude", "N051.18.18.000"},
                     {"longitude", "W000.26.50.000"}
@@ -193,8 +193,10 @@ namespace UKControllerPluginTest {
             ON_CALL(this->dependency, LoadDependency("DEPENDENCY_NAVAIDS", "{}"_json))
                 .WillByDefault(Return(data));
 
-            EuroScopePlugIn::CPosition expectedPosition;
-            expectedPosition.LoadFromStrings("W000.26.50.000", "N051.18.18.000");
+            EuroScopePlugIn::CPosition expectedPosition = ParseSectorFileCoordinates(
+                "N051.18.18.000",
+                "W000.26.50.000"
+            );
 
             BootstrapPlugin(this->container, this->dependency);
             EXPECT_EQ(2, this->container.navaids->Count());

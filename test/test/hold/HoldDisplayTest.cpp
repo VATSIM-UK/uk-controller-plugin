@@ -38,13 +38,17 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldDisplayTest()
-                    : display(mockPlugin, holdManager, navaid, {}, dialogManager),
+                    : display(mockPlugin, holdManager, navaid, publishedHolds, dialogManager),
                     userSetting(mockUserSettingProvider), navaid({ 2, "TIMBA", EuroScopePlugIn::CPosition()}),
                     dialogManager(mockDialogProvider), holdManager(mockApi, mockTaskRunner)
                 {
                     this->navaid.coordinates.LoadFromStrings("E000.15.42.000", "N050.56.44.000");
                 }
 
+                std::set<
+                    UKControllerPlugin::Hold::HoldingData,
+                    UKControllerPlugin::Hold::CompareHolds
+                > publishedHolds;
                 DialogData holdDialogData = { IDD_HOLD_PARAMS, "Test" };
                 NiceMock<MockTaskRunnerInterface> mockTaskRunner;
                 NiceMock<MockApiInterface> mockApi;

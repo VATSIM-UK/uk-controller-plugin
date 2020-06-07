@@ -248,9 +248,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(std::shared_ptr<MockEuroScopeCFlightPlanInterface>(NULL)));
 
             this->holdSelectionMenu.MenuItemClicked(2, "test");
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("WILLO"));
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("TIMBA"));
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("MAY"));
+            EXPECT_EQ(this->holdManager.invalidAircraft, this->holdManager.GetHoldingAircraft("BAW123"));
         }
 
         TEST_F(HoldSelectionMenuTest, SelectingAMenuItemDoesNothingIfFlightplanNotTrackedByUser)
@@ -262,9 +260,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(false));
 
             this->holdSelectionMenu.MenuItemClicked(2, "test");
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("WILLO"));
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("TIMBA"));
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("MAY"));
+            EXPECT_EQ(this->holdManager.invalidAircraft, this->holdManager.GetHoldingAircraft("BAW123"));
         }
 
         TEST_F(HoldSelectionMenuTest, ClickingTheDashedMenuItemRemovesAircraftFromHold)
@@ -283,9 +279,7 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             this->holdSelectionMenu.MenuItemClicked(2, "--");
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("WILLO"));
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("TIMBA"));
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("MAY"));
+            EXPECT_EQ(this->holdManager.invalidAircraft, this->holdManager.GetHoldingAircraft("BAW123"));
         }
 
         TEST_F(HoldSelectionMenuTest, ClickingTheDashedMenuItemDoesNothingIfNotAssignedHold)
@@ -296,16 +290,11 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, IsTrackedByUser())
                 .WillByDefault(Return(true));
 
-            EXPECT_TRUE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("TIMBA"));
-
-
             EXPECT_CALL(this->mockApi, UnassignAircraftHold("BAW123"))
                 .Times(0);
 
             this->holdSelectionMenu.MenuItemClicked(2, "--");
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("WILLO"));
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("TIMBA"));
-            EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("MAY"));
+            EXPECT_EQ(this->holdManager.invalidAircraft, this->holdManager.GetHoldingAircraft("BAW123"));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

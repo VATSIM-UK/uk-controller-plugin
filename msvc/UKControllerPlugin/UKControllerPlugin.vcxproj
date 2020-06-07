@@ -251,6 +251,7 @@
     <ClInclude Include="..\..\src\sectorfile\Runway.h" />
     <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
+    <ClInclude Include="..\..\src\sectorfile\SectorFileCoordinates.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h" />
     <ClInclude Include="..\..\src\setting\SettingRepository.h" />
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
@@ -495,6 +496,7 @@
     <ClCompile Include="..\..\src\sectorfile\Runway.cpp" />
     <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
+    <ClCompile Include="..\..\src\sectorfile\SectorFileCoordinates.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />
