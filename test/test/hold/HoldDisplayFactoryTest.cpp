@@ -67,7 +67,7 @@ namespace UKControllerPluginTest {
                 UKControllerPlugin::Hold::HoldingData,
                 UKControllerPlugin::Hold::CompareHolds
             > expectedPublished;
-            expectedPublished.insert(this->holdData);
+            expectedPublished.emplace(std::move(this->holdData));
 
             std::unique_ptr<HoldDisplay> display = this->factory.Create("TIMBA");
             EXPECT_EQ(this->navaid, display->navaid);

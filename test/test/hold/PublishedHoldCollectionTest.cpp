@@ -56,7 +56,9 @@ namespace UKControllerPluginTest {
             this->collection.Add(std::move(this->hold2));
             this->collection.Add(std::move(this->hold3));
 
-            const std::set<HoldingData, CompareHolds> expected = {std::move(hold2), std::move(hold3)};
+            std::set<HoldingData, CompareHolds> expected;
+            expected.emplace(std::move(hold2));
+            expected.emplace(std::move(hold3));
             EXPECT_EQ(expected, this->collection.Get("WILLO"));
         }
     }  // namespace Hold

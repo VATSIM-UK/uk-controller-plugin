@@ -196,7 +196,8 @@ namespace UKControllerPluginTest {
                 {}
             };
 
-            std::set<HoldingData, CompareHolds> expectedHoldSet({ std::move(expectedHold) });
+            std::set<HoldingData, CompareHolds> expectedHoldSet;
+            expectedHoldSet.emplace(std::move(expectedHold));
 
             EXPECT_EQ(expectedHoldSet, this->container.publishedHolds->Get("TIMBA"));
         }
