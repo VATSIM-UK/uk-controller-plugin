@@ -122,7 +122,7 @@ namespace UKControllerPluginTest {
             POINT expectedDisplay1 = { 212, 323 };
             POINT expectedDisplay2 = { 100, 100 };
 
-            this->renderer.Move({ 212, 323, 600, 600 }, "1");
+            this->renderer.Move({ 212, 323, 600, 600 }, "WILLO");
             EXPECT_EQ(expectedDisplay1.x, this->displayManager->GetDisplay("WILLO").GetDisplayPos().x);
             EXPECT_EQ(expectedDisplay1.y, this->displayManager->GetDisplay("WILLO").GetDisplayPos().y);
             EXPECT_EQ(expectedDisplay2.x, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().x);
@@ -133,7 +133,7 @@ namespace UKControllerPluginTest {
         {
             POINT expectedDisplay = { 100, 100 };
 
-            this->renderer.Move({ 212, 323, 600, 600 }, "5");
+            this->renderer.Move({ 212, 323, 600, 600 }, "MAY");
             EXPECT_EQ(expectedDisplay.x, this->displayManager->GetDisplay("WILLO").GetDisplayPos().x);
             EXPECT_EQ(expectedDisplay.y, this->displayManager->GetDisplay("WILLO").GetDisplayPos().y);
             EXPECT_EQ(expectedDisplay.x, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().x);
@@ -143,8 +143,8 @@ namespace UKControllerPluginTest {
         TEST_F(HoldRendererTest, ItHandlesLeftClicks)
         {
             this->renderer.LeftClick(this->mockRadarScreen, 1, "TIMBA/minus", {}, {});
-            EXPECT_EQ(14000, this->displayManager->GetDisplay("WILLO").GetMaximumLevel());
-            EXPECT_EQ(15000, this->displayManager->GetDisplay("TIMBA").GetMaximumLevel());
+            EXPECT_EQ(14000, this->displayManager->GetDisplay("TIMBA").GetMaximumLevel());
+            EXPECT_EQ(15000, this->displayManager->GetDisplay("WILLO").GetMaximumLevel());
         }
 
         TEST_F(HoldRendererTest, ItHandlesInvalidLeftClicks)

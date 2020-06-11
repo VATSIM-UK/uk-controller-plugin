@@ -42,6 +42,7 @@ namespace UKControllerPluginTest {
                     userSetting(mockUserSettingProvider), navaid({ 2, "TIMBA", EuroScopePlugIn::CPosition()}),
                     dialogManager(mockDialogProvider), holdManager(mockApi, mockTaskRunner)
                 {
+                    this->dialogManager.AddDialog(this->holdDialogData);
                     this->navaid.coordinates.LoadFromStrings("E000.15.42.000", "N050.56.44.000");
                 }
 
@@ -109,7 +110,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldDisplayTest, ItSavesDisplayLevelsToAsr)
         {
-            EXPECT_CALL(this->mockUserSettingProvider, SetKey(_, _, _));
+            EXPECT_CALL(this->mockUserSettingProvider, SetKey(_, _, _))
+                .Times(3);
 
             EXPECT_CALL(
                 this->mockUserSettingProvider,
@@ -124,14 +126,14 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             this->display.SetMinimumLevel(5000);
-            this->display.SetMinimumLevel(9000);
+            this->display.SetMaximumLevel(9000);
             this->display.SaveDataToAsr(userSetting);
         }
 
         TEST_F(HoldDisplayTest, ItSavesMinimisedToTheAsr)
         {
             EXPECT_CALL(this->mockUserSettingProvider, SetKey(_, _, _))
-                .Times(3);
+                .Times(4);
 
             EXPECT_CALL(
                 this->mockUserSettingProvider,
@@ -146,7 +148,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldDisplayTest, ItSavesPositionToTheAsr)
         {
             EXPECT_CALL(this->mockUserSettingProvider, SetKey(_, _, _))
-                .Times(2);
+                .Times(3);
 
             EXPECT_CALL(
                 this->mockUserSettingProvider,
@@ -297,7 +299,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            Gdiplus::Rect expected = { 300, 300, 200, 15 };
+            Gdiplus::Rect expected = { 300, 300, 225, 15 };
             EXPECT_TRUE(expected.Equals(this->display.GetTitleArea()));
         }
 
@@ -306,7 +308,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            RECT expected = { 300, 300, 500, 315 };
+            RECT expected = { 300, 300, 525, 315 };
             EXPECT_TRUE(expected.left == this->display.GetTitleClickArea().left);
             EXPECT_TRUE(expected.top == this->display.GetTitleClickArea().top);
             EXPECT_TRUE(expected.right == this->display.GetTitleClickArea().right);

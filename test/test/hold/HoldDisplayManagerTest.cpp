@@ -113,6 +113,9 @@ namespace UKControllerPluginTest {
             this->displayManager.AsrLoadedEvent(this->userSetting);
 
             // Save the display and assert that the display is trying to save itself properly
+            EXPECT_CALL(mockUserSettingProvider, SetKey(_, _, _))
+                .Times(8);
+
             EXPECT_CALL(mockUserSettingProvider, SetKey("selectedHolds", "Selected Holds", "TIMBA;WILLO"))
                 .Times(1);
 
@@ -169,8 +172,8 @@ namespace UKControllerPluginTest {
             this->displayManager.AsrLoadedEvent(this->userSetting);
 
             // Load the new selection
-            EXPECT_CALL(mockUserSettingProvider, SetKey("selectedHolds", "Selected Holds", "TIMBA"))
-                .Times(1);
+            EXPECT_CALL(mockUserSettingProvider, SetKey(_, _, _))
+                .Times(4);
 
             EXPECT_CALL(mockUserSettingProvider, SetKey("holdTIMBAMinimised", "Hold TIMBA Minimised", "1"))
                 .Times(1);
