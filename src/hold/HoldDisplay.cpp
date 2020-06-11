@@ -459,8 +459,8 @@ namespace UKControllerPlugin {
             };
 
             // Minus button
-            this->minusButtonRect.X = pos.x + 5;
-            this->minusButtonRect.Y = this->buttonStartOffset + pos.y;
+            this->minusButtonRect.X = pos.x + this->buttonStartOffsetX + 5;
+            this->minusButtonRect.Y = this->buttonStartOffsetY + pos.y;
 
             this->minusButtonClickRect = {
                 this->minusButtonRect.X,
@@ -470,8 +470,8 @@ namespace UKControllerPlugin {
             };
 
             // Plus button
-            this->plusButtonRect.X = pos.x + 55;
-            this->plusButtonRect.Y = this->buttonStartOffset + pos.y;
+            this->plusButtonRect.X = pos.x + this->buttonStartOffsetX + 55;
+            this->plusButtonRect.Y = this->buttonStartOffsetY + pos.y;
 
             this->plusButtonClickRect = {
                 this->plusButtonRect.X,
@@ -481,8 +481,8 @@ namespace UKControllerPlugin {
             };
 
             // Show all levels button
-            this->allButtonRect.X = pos.x + 105;
-            this->allButtonRect.Y = this->buttonStartOffset + pos.y;
+            this->allButtonRect.X = pos.x + this->buttonStartOffsetX + 105;
+            this->allButtonRect.Y = this->buttonStartOffsetY + pos.y;
 
             this->allButtonClickRect = {
                 this->allButtonRect.X,
@@ -492,8 +492,8 @@ namespace UKControllerPlugin {
             };
 
             // Add button
-            this->addButtonRect.X = pos.x + 155;
-            this->addButtonRect.Y = this->buttonStartOffset + pos.y;
+            this->addButtonRect.X = pos.x + this->buttonStartOffsetX + 155;
+            this->addButtonRect.Y = this->buttonStartOffsetY + pos.y;
 
             this->addButtonClickRect = {
                 this->addButtonRect.X,
@@ -501,6 +501,13 @@ namespace UKControllerPlugin {
                 this->addButtonRect.X + this->addButtonRect.Width,
                 this->addButtonRect.Y + this->addButtonRect.Height
             };
+
+            // Line under the buttons
+            this->underButtonLineLeft.X = pos.x;
+            this->underButtonLineLeft.Y = this->allButtonRect.Y + this->allButtonRect.Height + 7;
+
+            this->underButtonLineRight.X = pos.x + this->windowWidth;
+            this->underButtonLineRight.Y = this->allButtonRect.Y + this->allButtonRect.Height + 7;
         }
 
         /*
@@ -673,27 +680,8 @@ namespace UKControllerPlugin {
             );
         }
 
-        /*
-            Render the managed hold data - positions of aircraft in the hold etc
-        */
-        void HoldDisplay::RenderManagedHoldDisplay(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen,
-            const int screenObjectId
-        ) const {
-
-            // Get the aircraft in each hold level
-            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holdingAircraft =
-                this->MapAircraftToLevels(this->holdManager.GetAircraftForHold(this->navaid.identifier));
-
-            // Render the background
-            Gdiplus::Rect backgroundRect = this->GetHoldViewBackgroundRender(holdingAircraft);
-            graphics.FillRect(backgroundRect, this->backgroundBrush);
-
-            // Render the title bar
-            this->RenderTitleBar(graphics, radarScreen, screenObjectId);
-
-            // Action buttons
+        void HoldDisplay::RenderActionButtons(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen, const int screenObjectId) const
+        {
             this->DrawRoundRectangle(graphics, minusButtonRect, 5);
             graphics.DrawString(L"-", minusButtonRect, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
@@ -729,6 +717,32 @@ namespace UKControllerPlugin {
                 this->allButtonClickRect,
                 false
             );
+
+            graphics.DrawLine(this->borderPen, this->underButtonLineLeft, this->underButtonLineRight);
+        }
+
+        /*
+            Render the managed hold data - positions of aircraft in the hold etc
+        */
+        void HoldDisplay::RenderManagedHoldDisplay(
+            GdiGraphicsInterface & graphics,
+            EuroscopeRadarLoopbackInterface & radarScreen,
+            const int screenObjectId
+        ) const {
+
+            // Get the aircraft in each hold level
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holdingAircraft =
+                this->MapAircraftToLevels(this->holdManager.GetAircraftForHold(this->navaid.identifier));
+
+            // Render the background
+            Gdiplus::Rect backgroundRect = this->GetHoldViewBackgroundRender(holdingAircraft);
+            graphics.FillRect(backgroundRect, this->backgroundBrush);
+
+            // Render the title bar
+            this->RenderTitleBar(graphics, radarScreen, screenObjectId);
+
+            // Action buttons
+            this->RenderActionButtons(graphics, radarScreen, screenObjectId);
 
             // Hold display
             Gdiplus::Rect numbersDisplay = {

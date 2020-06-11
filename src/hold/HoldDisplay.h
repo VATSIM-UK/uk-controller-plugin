@@ -98,10 +98,12 @@ namespace UKControllerPlugin {
                 const INT lineHeight = 25;
 
                 // The default offset for buttons
-                const INT buttonStartOffset = 18;
+                const INT buttonStartOffsetY = 18;
+                const INT buttonStartOffsetX = 10;
+                const INT bigButtonHeight = 25;
 
                 // The default offset for data
-                const INT dataStartOffset = 68;
+                const INT dataStartOffset = 55;
 
                 // The distance from the navaid at which the same level box renders
                 const double sameLevelBoxDistance = 12.0;
@@ -128,6 +130,11 @@ namespace UKControllerPlugin {
                 void RenderTitleBar(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
+                    const int screenObjectId
+                ) const;
+                void RenderActionButtons(
+                    UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
                     const int screenObjectId
                 ) const;
                 void RenderManagedHoldDisplay(
@@ -188,6 +195,8 @@ namespace UKControllerPlugin {
                 // Titlebar
                 Gdiplus::Rect titleArea = { 0, 0, this->windowWidth, 15 };
                 RECT titleRect = { 0, 0, this->windowWidth, 15 };
+                Gdiplus::Point underButtonLineLeft = { 0, 45 };
+                Gdiplus::Point underButtonLineRight = { this->windowWidth, 45 };
                 Gdiplus::Rect minimiseButtonArea = { 0, 0, 11, 11 };
                 RECT minimiseClickRect;
                 Gdiplus::Rect informationButtonArea = { 21, 0, 11, 11 };
@@ -196,14 +205,14 @@ namespace UKControllerPlugin {
                 RECT optionsClickRect;
 
                 // Some more rects
-                Gdiplus::Rect minusButtonRect = {5, this->buttonStartOffset, 40, 40};
-                RECT minusButtonClickRect = { 5, this->buttonStartOffset, 40, 40 };
-                Gdiplus::Rect plusButtonRect = {55, this->buttonStartOffset, 40, 40};
-                RECT plusButtonClickRect = { 55, this->buttonStartOffset, 40, 40 };
-                Gdiplus::Rect allButtonRect = { 105, this->buttonStartOffset, 40, 40 };
-                RECT allButtonClickRect = { 105, this->buttonStartOffset, 40, 40 };
-                Gdiplus::Rect addButtonRect = {190, this->buttonStartOffset, 40, 40};
-                RECT addButtonClickRect = { 190, this->buttonStartOffset, 40, 40 };
+                Gdiplus::Rect minusButtonRect = {5, this->buttonStartOffsetY, 40, this->bigButtonHeight };
+                RECT minusButtonClickRect = { 5, this->buttonStartOffsetY, 40, this->bigButtonHeight };
+                Gdiplus::Rect plusButtonRect = {55, this->buttonStartOffsetY, 40, this->bigButtonHeight };
+                RECT plusButtonClickRect = { 55, this->buttonStartOffsetY, 40, this->bigButtonHeight };
+                Gdiplus::Rect allButtonRect = { 105, this->buttonStartOffsetY, 40, this->bigButtonHeight };
+                RECT allButtonClickRect = { 105, this->buttonStartOffsetY, 40, this->bigButtonHeight };
+                Gdiplus::Rect addButtonRect = {190, this->buttonStartOffsetY, 40, this->bigButtonHeight };
+                RECT addButtonClickRect = { 190, this->buttonStartOffsetY, 40, this->bigButtonHeight };
 
                 POINT windowPos = { 100, 100 };
         };
