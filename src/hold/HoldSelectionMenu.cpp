@@ -71,9 +71,8 @@ namespace UKControllerPlugin {
             menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItem.disabled = false;
             menuItem.fixedPosition = false;
-            this->plugin.AddItemToPopupList(menuItem);
 
-            // Iterate through the profiles
+            // Iterate through the displays
             std::set<std::string> addedHolds;
             for (
                 std::set<std::shared_ptr<const HoldDisplayManager>>::const_iterator it = this->displays.cbegin();
@@ -94,6 +93,11 @@ namespace UKControllerPlugin {
                     this->plugin.AddItemToPopupList(menuItem);
                 }
             }
+
+            // Add the final item, no hold
+            menuItem.firstValue = this->noHold;
+            menuItem.fixedPosition = true;
+            this->plugin.AddItemToPopupList(menuItem);
         }
 
         /*

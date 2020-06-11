@@ -118,7 +118,7 @@ namespace UKControllerPluginTest {
             displayManager1->AsrLoadedEvent(this->userSetting);
             displayManager2->AsrLoadedEvent(this->userSetting);
             displayManager1->LoadSelectedHolds(std::vector<std::string>({ "TIMBA", "WILLO" }));
-            displayManager2->LoadSelectedHolds(std::vector<std::string>({ "MAY", }));
+            displayManager2->LoadSelectedHolds(std::vector<std::string>({ "WILLO", "MAY", }));
             this->holdSelectionMenu.AddDisplayManager(displayManager1);
             this->holdSelectionMenu.AddDisplayManager(displayManager2);
 
@@ -126,7 +126,7 @@ namespace UKControllerPluginTest {
             PopupMenuItem menuItemHold1;
             menuItemHold1.firstValue = "TIMBA";
             menuItemHold1.secondValue = "";
-            menuItemHold1.callbackFunctionId = 2;
+            menuItemHold1.callbackFunctionId = 1;
             menuItemHold1.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemHold1.disabled = false;
             menuItemHold1.fixedPosition = false;
@@ -134,7 +134,7 @@ namespace UKControllerPluginTest {
             PopupMenuItem menuItemHold2;
             menuItemHold2.firstValue = "WILLO";
             menuItemHold2.secondValue = "";
-            menuItemHold2.callbackFunctionId = 3;
+            menuItemHold2.callbackFunctionId = 1;
             menuItemHold2.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemHold2.disabled = false;
             menuItemHold2.fixedPosition = false;
@@ -142,7 +142,7 @@ namespace UKControllerPluginTest {
             PopupMenuItem menuItemHold3;
             menuItemHold3.firstValue = "MAY";
             menuItemHold3.secondValue = "";
-            menuItemHold3.callbackFunctionId = 4;
+            menuItemHold3.callbackFunctionId = 1;
             menuItemHold3.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemHold3.disabled = false;
             menuItemHold3.fixedPosition = false;
@@ -162,7 +162,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockPlugin, AddItemToPopupList(menuItemHold1))
                 .Times(1);
 
-            // Hold 2 is in common with both profiles, but it should only be added once!
+            // WILLO is common to both managers, but should only appear once
             EXPECT_CALL(this->mockPlugin, AddItemToPopupList(menuItemHold2))
                 .Times(1);
 

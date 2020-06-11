@@ -128,12 +128,6 @@ namespace UKControllerPluginTest {
                 NiceMock<MockDependencyLoader> mockDependencyProvider;
         };
 
-        TEST_F(HoldModuleTest, ItAddsToFlightplanHandler)
-        {
-            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
-        }
-
         TEST_F(HoldModuleTest, ItAddsToTagItemhandler)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
@@ -144,13 +138,13 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
             EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
-            EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(5));
+            EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(7));
         }
 
         TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(3, this->container.pluginFunctionHandlers->CountCallbacks());
+            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
         TEST_F(HoldModuleTest, ItAddsHoldSelectionCallback)
@@ -203,30 +197,6 @@ namespace UKControllerPluginTest {
             expectedHoldSet.emplace(std::move(expectedHold));
 
             EXPECT_EQ(expectedHoldSet, this->container.publishedHolds->Get("TIMBA"));
-        }
-
-        TEST_F(HoldModuleTest, ItReportsNoHoldsToTheUser)
-        {
-            NiceMock<MockDependencyLoader> providerNoHolds;
-            ON_CALL(providerNoHolds, LoadDependency("DEPENDENCY_HOLDS", nlohmann::json::array()))
-                .WillByDefault(Return(nlohmann::json::array({})));
-
-            EXPECT_CALL(
-                this->mockPlugin,
-                ChatAreaMessage(
-                    BootstrapWarningMessage::handler,
-                    BootstrapWarningMessage::sender,
-                    "No holds were loaded for the hold manager",
-                    true,
-                    true,
-                    true,
-                    true,
-                    true
-                )
-            )
-                .Times(1);
-
-            BootstrapPlugin(providerNoHolds, this->container, this->messager);
         }
 
         TEST_F(HoldModuleTest, RadarScreenRegistersForAsrEvents)

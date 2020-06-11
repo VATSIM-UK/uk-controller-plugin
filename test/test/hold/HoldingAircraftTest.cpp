@@ -90,7 +90,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldingAircraftTest, RemoveProximityHoldRemovesProximity)
         {
             this->proximityAircraft.RemoveProximityHold("BNN");
-            EXPECT_EQ(std::set<std::string>({ "LAM" }), this->baseAircraft.GetProximityHolds());
+            EXPECT_EQ(std::set<std::string>({ "LAM" }), this->proximityAircraft.GetProximityHolds());
         }
 
         TEST_F(HoldingAircraftTest, RemoveProximityHoldHandlesNotInProximity)
