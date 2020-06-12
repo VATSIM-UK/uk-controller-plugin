@@ -158,6 +158,7 @@
     <ClCompile Include="..\..\test\test\navaids\CompareNavaidsTest.cpp" />
     <ClCompile Include="..\..\test\test\navaids\NavaidCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\navaids\NavaidModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\navaids\NavaidTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\EstimatedDepartureTimeBootstrapTest.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\sectorfile\SectorFileCoordinatesTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp" />

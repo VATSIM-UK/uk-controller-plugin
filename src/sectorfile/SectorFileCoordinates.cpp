@@ -37,12 +37,14 @@ namespace UKControllerPlugin {
 
             // Check the validity of the values
             if (
-                latitudeDegrees > 60 ||
-                latitudeMinutes > 60 ||
-                latitudeSeconds > 60.0 ||
-                longitudeDegrees > 60 ||
-                longitudeMinutes > 60 ||
-                longitudeSeconds > 60.0
+                (latitudeDegrees == 90 && (latitudeMinutes != 0 || latitudeSeconds != 0)) ||
+                latitudeDegrees > 90 ||
+                latitudeMinutes >= 60 ||
+                latitudeSeconds >= 60.0 ||
+                (longitudeDegrees == 180 && (longitudeMinutes != 0 || longitudeSeconds != 0)) ||
+                longitudeDegrees > 180 ||
+                longitudeMinutes >= 60 ||
+                longitudeSeconds >= 60.0
             ) {
                 return GetInvalidPosition();
             }

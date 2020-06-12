@@ -168,5 +168,25 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(expectedDisplay2.x, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().x);
             EXPECT_EQ(expectedDisplay2.y, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().y);
         }
+
+        TEST_F(HoldRendererTest, ItHandlesClearedLevelClicks)
+        {
+            EXPECT_CALL(
+                this->mockRadarScreen,
+                ToggleTemporaryAltitudePopupList("BAW123", PointEq(POINT({ 1, 2 })), RectEq(RECT({ 1, 2, 3, 4 })))
+            )
+                .Times(1);
+            this->renderer.LeftClick(this->mockRadarScreen, 1, "TIMBA/cleared/BAW123", {1, 2}, {1, 2, 3, 4});
+        }
+
+        TEST_F(HoldRendererTest, ItHandlesCallsignClicks)
+        {
+            EXPECT_CALL(
+                this->mockRadarScreen,
+                TogglePluginTagFunction("BAW123", 9003, PointEq(POINT({ 1, 2 })), RectEq(RECT({ 1, 2, 3, 4 })))
+            )
+                .Times(1);
+            this->renderer.LeftClick(this->mockRadarScreen, 1, "TIMBA/callsign/BAW123", { 1, 2 }, { 1, 2, 3, 4 });
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

@@ -757,6 +757,12 @@
     <ClCompile Include="..\..\test\test\hold\PublishedHoldCollectionFactoryTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\navaids\NavaidTest.cpp">
+      <Filter>test\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\SectorFileCoordinatesTest.cpp">
+      <Filter>test\sectorfile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
