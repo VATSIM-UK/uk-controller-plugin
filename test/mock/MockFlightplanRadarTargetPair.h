@@ -1,3 +1,4 @@
+#pragma once
 #include "pch/pch.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"

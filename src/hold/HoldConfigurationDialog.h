@@ -9,8 +9,8 @@ namespace UKControllerPlugin {
 
         /*
             A class that handles the hold configuration
-            dialog which allows users to interact with hold
-            profiles and select holds to display.
+            dialog which allows users to select which holds
+            they would like to display
         */
         class HoldConfigurationDialog
         {
