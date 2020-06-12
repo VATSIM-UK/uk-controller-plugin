@@ -80,9 +80,8 @@ namespace UKControllerPlugin {
                 this->maximumLevel = this->publishedHolds.size() ? this->publishedHolds.cbegin()->maximum : 15000;
             } else if (button == "add") {
                 std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
-                std::shared_ptr<EuroScopeCRadarTargetInterface> rt = this->plugin.GetSelectedRadarTarget();
 
-                if (!fp || !rt) {
+                if (!fp) {
                     LogWarning(
                         "Tried to add aircraft to hold " + this->navaid.identifier +
                         " but none selected"
@@ -211,6 +210,16 @@ namespace UKControllerPlugin {
             return this->informationClickRect;
         }
 
+        Gdiplus::Rect HoldDisplay::GetOptionsArea(void) const
+        {
+            return this->optionsButtonArea;
+        }
+
+        RECT HoldDisplay::GetOptionsClickArea(void) const
+        {
+            return this->optionsClickRect;
+        }
+
         /*
             Return the renderable area for the plus button
         */
@@ -273,6 +282,16 @@ namespace UKControllerPlugin {
         RECT HoldDisplay::GetAddClickArea(void) const
         {
             return this->addButtonClickRect;
+        }
+
+        Gdiplus::Point HoldDisplay::GetUnderButtonLineLeft(void) const
+        {
+            return this->underButtonLineLeft;
+        }
+
+        Gdiplus::Point HoldDisplay::GetUnderButtonLineRight(void) const
+        {
+            return this->underButtonLineRight;
         }
 
         int HoldDisplay::GetMaximumLevel(void) const

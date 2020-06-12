@@ -9,19 +9,27 @@
 #include "mock/MockUserSettingProviderInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "mock/MockDialogProvider.h"
 #include "dialog/DialogManager.h"
 #include "dialog/DialogData.h"
+#include "hold/HoldingAircraft.h"
+#include "hold/CompareHoldingAircraft.h"
+#include "hold/HoldingData.h"
 
 using UKControllerPlugin::Hold::HoldDisplay;
 using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Hold::CompareHoldingAircraft;
+using UKControllerPlugin::Hold::HoldingAircraft;
+using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
@@ -29,6 +37,7 @@ using UKControllerPlugin::Dialog::DialogManager;
 using testing::Test;
 using testing::NiceMock;
 using testing::Return;
+using testing::Throw;
 using testing::_;
 
 namespace UKControllerPluginTest {
@@ -38,10 +47,12 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldDisplayTest()
-                    : display(mockPlugin, holdManager, navaid, publishedHolds, dialogManager),
+                    : display(mockPlugin, holdManager, navaid, noPublishedHolds, dialogManager),
                     userSetting(mockUserSettingProvider), navaid({ 2, "TIMBA", EuroScopePlugIn::CPosition()}),
                     dialogManager(mockDialogProvider), holdManager(mockApi, mockTaskRunner)
                 {
+                    HoldingData data = {1, "TIMBA", "TIMBA", 2000, 3000};
+                    this->publishedHolds.insert(std::move(data));
                     this->dialogManager.AddDialog(this->holdDialogData);
                     this->navaid.coordinates.LoadFromStrings("E000.15.42.000", "N050.56.44.000");
                 }
@@ -50,12 +61,17 @@ namespace UKControllerPluginTest {
                     UKControllerPlugin::Hold::HoldingData,
                     UKControllerPlugin::Hold::CompareHolds
                 > publishedHolds;
+                std::set<
+                    UKControllerPlugin::Hold::HoldingData,
+                    UKControllerPlugin::Hold::CompareHolds
+                > noPublishedHolds;
                 DialogData holdDialogData = { IDD_HOLD_PARAMS, "Test" };
                 NiceMock<MockTaskRunnerInterface> mockTaskRunner;
                 NiceMock<MockApiInterface> mockApi;
                 NiceMock<MockDialogProvider> mockDialogProvider;
                 DialogManager dialogManager;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+                NiceMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
                 NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
                 UserSetting userSetting;
                 Navaid navaid;
@@ -79,6 +95,62 @@ namespace UKControllerPluginTest {
 
             this->display.LoadDataFromAsr(userSetting);
             EXPECT_FALSE(this->display.IsMinimised());
+        }
+
+        TEST_F(HoldDisplayTest, ItLoadsMinimumLevelFromAsr)
+        {
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMinLevel"))
+                .WillByDefault(Return("10000"));
+
+            this->display.LoadDataFromAsr(userSetting);
+            EXPECT_EQ(10000, this->display.GetMinimumLevel());
+        }
+
+        TEST_F(HoldDisplayTest, ItLoadsMinimumLevelFromPublishedHoldIfNotInAsr)
+        {
+            HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMinLevel"))
+                .WillByDefault(Return(""));
+
+            display2.LoadDataFromAsr(userSetting);
+            EXPECT_EQ(2000, display2.GetMinimumLevel());
+        }
+
+        TEST_F(HoldDisplayTest, ItLoadsMinimumLevelFromDefaultIfNonePublished)
+        {
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMinLevel"))
+                .WillByDefault(Return(""));
+
+            this->display.LoadDataFromAsr(userSetting);
+            EXPECT_EQ(7000, this->display.GetMinimumLevel());
+        }
+
+        TEST_F(HoldDisplayTest, ItLoadsMaximumLevelFromAsr)
+        {
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMaxLevel"))
+                .WillByDefault(Return("19000"));
+
+            this->display.LoadDataFromAsr(userSetting);
+            EXPECT_EQ(19000, this->display.GetMaximumLevel());
+        }
+
+        TEST_F(HoldDisplayTest, ItLoadsMaximumLevelFromPublishedHoldIfNotInAsr)
+        {
+            HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMaxLevel"))
+                .WillByDefault(Return(""));
+
+            display2.LoadDataFromAsr(userSetting);
+            EXPECT_EQ(3000, display2.GetMaximumLevel());
+        }
+
+        TEST_F(HoldDisplayTest, ItLoadsMaximumLevelFromDefaultIfNonePublished)
+        {
+            ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMaxLevel"))
+                .WillByDefault(Return(""));
+
+            this->display.LoadDataFromAsr(userSetting);
+            EXPECT_EQ(15000, this->display.GetMaximumLevel());
         }
 
         TEST_F(HoldDisplayTest, ItLoadsWindowPositionFromAsr)
@@ -345,7 +417,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expected.Equals(this->display.GetInformationArea()));
         }
 
-        TEST_F(HoldDisplayTest, MoveSetsInformationClickableArea)
+        TEST_F(HoldDisplayTest, MoveSetsOptionsClickableArea)
         {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
@@ -355,6 +427,27 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expected.top == this->display.GetInformationClickArea().top);
             EXPECT_TRUE(expected.right == this->display.GetInformationClickArea().right);
             EXPECT_TRUE(expected.bottom == this->display.GetInformationClickArea().bottom);
+        }
+
+        TEST_F(HoldDisplayTest, MoveSetsOptionsRenderableArea)
+        {
+            POINT newPos = { 300, 300 };
+            this->display.Move(newPos);
+
+            Gdiplus::Rect expected = { 337, 302, 11, 11 };
+            EXPECT_TRUE(expected.Equals(this->display.GetOptionsArea()));
+        }
+
+        TEST_F(HoldDisplayTest, MoveSetsInformationClickableArea)
+        {
+            POINT newPos = { 300, 300 };
+            this->display.Move(newPos);
+
+            RECT expected = { 321, 302, 332, 313 };
+            EXPECT_TRUE(expected.left == this->display.GetOptionsClickArea().left);
+            EXPECT_TRUE(expected.top == this->display.GetOptionsClickArea().top);
+            EXPECT_TRUE(expected.right == this->display.GetOptionsClickArea().right);
+            EXPECT_TRUE(expected.bottom == this->display.GetOptionsClickArea().bottom);
         }
 
         TEST_F(HoldDisplayTest, MoveSetsMinusRenderableArea)
@@ -439,6 +532,166 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expected.top == this->display.GetAddClickArea().top);
             EXPECT_TRUE(expected.right == this->display.GetAddClickArea().right);
             EXPECT_TRUE(expected.bottom == this->display.GetAddClickArea().bottom);
+        }
+
+        TEST_F(HoldDisplayTest, MoveSetsUnderButtonLine)
+        {
+            POINT newPos = { 300, 300 };
+            this->display.Move(newPos);
+
+            Gdiplus::Point expectedLeft = { 300, 350 };
+            Gdiplus::Point expectedRight = { 465, 350 };
+            EXPECT_TRUE(expectedLeft.Equals(this->display.GetUnderButtonLineLeft()));
+            EXPECT_TRUE(expectedRight.Equals(this->display.GetUnderButtonLineRight()));
+        }
+
+        TEST_F(HoldDisplayTest, CallsignClickedTriggersHoldMenu)
+        {
+            EXPECT_CALL(
+                this->mockRadarScreen,
+                TogglePluginTagFunction("BAW123", 9003, PointEq(POINT({ 1, 2 })), RectEq(RECT({ 1, 2, 3, 4 })))
+            )
+                .Times(1);
+
+            this->display.CallsignClicked("BAW123", this->mockRadarScreen, { 1, 2 }, { 1, 2, 3, 4 });
+        }
+
+        TEST_F(HoldDisplayTest, ClearedLevelClickedTriggersHoldMenu)
+        {
+            EXPECT_CALL(
+                this->mockRadarScreen,
+                ToggleTemporaryAltitudePopupList("BAW123", PointEq(POINT({ 1, 2 })), RectEq(RECT({ 1, 2, 3, 4 })))
+            )
+                .Times(1);
+
+            this->display.ClearedLevelClicked("BAW123", this->mockRadarScreen, { 1, 2 }, { 1, 2, 3, 4 });
+        }
+
+        TEST_F(HoldDisplayTest, ItCalculatesTheBackgroundRenderDetailsNoAircraftAtSameLevel)
+        {
+            Gdiplus::Rect expected{
+                this->display.GetDisplayPos().x,
+                this->display.GetDisplayPos().y,
+                this->display.windowWidth,
+                305
+            };
+            std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> aircraft;
+            aircraft[7000].insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
+            aircraft[8000].insert(std::make_shared<HoldingAircraft>("VIR25A", "TIMBA"));
+
+            this->display.SetMinimumLevel(7000);
+            this->display.SetMaximumLevel(15000);
+
+            ASSERT_TRUE(expected.Equals(this->display.GetHoldViewBackgroundRender(aircraft)));
+        }
+
+        TEST_F(HoldDisplayTest, ItCalculatesTheBackgroundRenderDetailsAircraftAtSameLevel)
+        {
+            Gdiplus::Rect expected{
+                this->display.GetDisplayPos().x,
+                this->display.GetDisplayPos().y,
+                this->display.windowWidth,
+                380
+            };
+            std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> aircraft;
+            aircraft[7000].insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
+            aircraft[7000].insert(std::make_shared<HoldingAircraft>("EZY234", std::set<std::string>()));
+            aircraft[8000].insert(std::make_shared<HoldingAircraft>("VIR25A", "TIMBA"));
+            aircraft[8000].insert(std::make_shared<HoldingAircraft>("LOT123", "TIMBA"));
+            aircraft[8000].insert(std::make_shared<HoldingAircraft>("RYR93", "TIMBA"));
+
+            this->display.SetMinimumLevel(7000);
+            this->display.SetMaximumLevel(15000);
+
+            ASSERT_TRUE(expected.Equals(this->display.GetHoldViewBackgroundRender(aircraft)));
+        }
+
+        TEST_F(HoldDisplayTest, ItMapsAircraftToLevels)
+        {
+            std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
+            aircraft.insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
+            aircraft.insert(std::make_shared<HoldingAircraft>("EZY234", std::set<std::string>({ "TIMBA" })));
+            aircraft.insert(std::make_shared<HoldingAircraft>("VIR25A", std::set<std::string>({ "TIMBA" })));
+            aircraft.insert(std::make_shared<HoldingAircraft>("RYR191", "TIMBA"));
+            aircraft.insert(std::make_shared<HoldingAircraft>("BMI234", "TIMBA"));
+            aircraft.insert(std::make_shared<HoldingAircraft>("LOT555", "TIMBA"));
+
+            this->display.SetMinimumLevel(7000);
+            this->display.SetMaximumLevel(15000);
+
+            // These two should both make it through at FL80 as BAW123 is assigned TIMBA
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetBaw123 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetBaw123, GetFlightLevel())
+                .WillByDefault(Return(8100));
+
+            ON_CALL(*radarTargetBaw123, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
+                .WillByDefault(Return(radarTargetBaw123));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetEzy234 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetEzy234, GetFlightLevel())
+                .WillByDefault(Return(8550));
+
+            ON_CALL(*radarTargetEzy234, GetVerticalSpeed())
+                .WillByDefault(Return(-400));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("EZY234"))
+                .WillByDefault(Return(radarTargetEzy234));
+
+            // This one shouldnt make it through as there's no assigned aircraft at this level
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetVir25a =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetVir25a, GetFlightLevel())
+                .WillByDefault(Return(9000));
+
+            ON_CALL(*radarTargetVir25a, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("VIR25A"))
+                .WillByDefault(Return(radarTargetVir25a));
+
+            // This one should make it through as assigned
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetRyr191 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetRyr191, GetFlightLevel())
+                .WillByDefault(Return(10000));
+
+            ON_CALL(*radarTargetRyr191, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("RYR191"))
+                .WillByDefault(Return(radarTargetRyr191));
+
+            // This one shouldn't make it through as no radar target
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BMI234"))
+                .WillByDefault(Throw(std::invalid_argument("Test")));
+
+            // This one shouldnt make it through as its too high
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetLot555 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetLot555, GetFlightLevel())
+                .WillByDefault(Return(16000));
+
+            ON_CALL(*radarTargetLot555, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("LOT555"))
+                .WillByDefault(Return(radarTargetLot555));
+
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> mapped =
+                this->display.MapAircraftToLevels(aircraft);
+
+            EXPECT_EQ(2, mapped.size());
+            EXPECT_EQ(2, mapped.at(8000).size());
+            EXPECT_EQ("BAW123", (*mapped.at(8000).cbegin())->GetCallsign());
+            EXPECT_EQ("EZY234", (*++mapped.at(8000).cbegin())->GetCallsign());
+            EXPECT_EQ(0, mapped.count(9000));
+            EXPECT_EQ(1, mapped.at(10000).size());
+            EXPECT_EQ("RYR191", (*mapped.at(10000).cbegin())->GetCallsign());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

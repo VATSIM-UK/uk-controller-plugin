@@ -101,7 +101,6 @@ namespace UKControllerPlugin {
                 NULL
             );
             maximumLevel = maximumLevel > this->maxHoldingLevel ? this->maxHoldingLevel : maximumLevel;
-            this->configurationItem->SetMaximumLevel((maximumLevel / 1000) * 1000);
 
             int minimumLevel = SendDlgItemMessage(
                 hwnd,
@@ -111,6 +110,15 @@ namespace UKControllerPlugin {
                 NULL
             );
             minimumLevel = minimumLevel < this->minHoldingLevel ? this->minHoldingLevel : minimumLevel;
+
+            if (minimumLevel < maximumLevel) {
+                LogWarning(
+                    "Tried to save the hold configuration dialog but the maximum level is less than the minimum"
+                );
+                return;
+            }
+
+            this->configurationItem->SetMaximumLevel((maximumLevel / 1000) * 1000);
             this->configurationItem->SetMinimumLevel((minimumLevel / 1000) * 1000);
         }
 

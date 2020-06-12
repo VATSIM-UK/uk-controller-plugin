@@ -62,6 +62,8 @@ namespace UKControllerPlugin {
                 RECT GetMinimiseClickArea(void) const;
                 Gdiplus::Rect GetInformationArea(void) const;
                 RECT GetInformationClickArea(void) const;
+                Gdiplus::Rect GetOptionsArea(void) const;
+                RECT GetOptionsClickArea(void) const;
                 Gdiplus::Rect GetPlusArea(void) const;
                 RECT GetPlusClickArea(void) const;
                 Gdiplus::Rect GetMinusArea(void) const;
@@ -70,6 +72,8 @@ namespace UKControllerPlugin {
                 RECT GetAllClickArea(void) const;
                 Gdiplus::Rect GetAddArea(void) const;
                 RECT GetAddClickArea(void) const;
+                Gdiplus::Point GetUnderButtonLineLeft(void) const;
+                Gdiplus::Point GetUnderButtonLineRight(void) const;
                 int GetMaximumLevel(void) const;
                 int GetMinimumLevel(void) const;
                 void SetMaximumLevel(int level);
@@ -93,6 +97,9 @@ namespace UKControllerPlugin {
 
                 // The navaid that the hold is against
                 const UKControllerPlugin::Navaids::Navaid& navaid;
+
+                // The window width
+                int windowWidth = 225;
 
                 // How high lines should be
                 const INT lineHeight = 25;
@@ -177,9 +184,6 @@ namespace UKControllerPlugin {
 
                 // Is the window minimised
                 bool minimised = false;
-
-                // The window width
-                int windowWidth = 225;
 
                 // The height of the window to use when doing the information display
                 const int informationDisplayWindowHeight = 225;
