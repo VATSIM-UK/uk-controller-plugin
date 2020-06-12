@@ -30,6 +30,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<HoldingAircraft> holdingAircraft;
             if (this->aircraft.count(flightplan.GetCallsign())) {
                 holdingAircraft = *this->aircraft.find(flightplan.GetCallsign());
+                holdingAircraft->AddProximityHold(hold);
             } else {
                 holdingAircraft = std::make_shared<HoldingAircraft>(
                     flightplan.GetCallsign(),
