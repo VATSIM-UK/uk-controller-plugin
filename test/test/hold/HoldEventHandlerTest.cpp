@@ -370,6 +370,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, TimedEventAddsAircraftToProximityHoldsIfCloseEnough)
         {
+            this->manager.UnassignAircraftFromHold("BAW123", "TIMBA");
+
             // Aircraft is at TIMBA
             this->CreateFlightplanRadarTargetPair(
                 "RYR123",
