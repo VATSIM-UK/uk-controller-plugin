@@ -159,6 +159,12 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, this->container.holdManager->CountHoldingAircraft());
         }
 
+        TEST_F(HoldModuleTest, ItAddsToWebsocketHandlers)
+        {
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+            EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-hold-assignments"));
+        }
+
         TEST_F(HoldModuleTest, ItInitialisesHoldDisplayFactory)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
