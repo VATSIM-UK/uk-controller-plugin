@@ -139,5 +139,40 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now() - std::chrono::seconds(13);
             EXPECT_TRUE(L"0m" == UKControllerPlugin::Hold::GetTimeInHoldDisplayString(testTime));
         }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionPositive)
+        {
+            EXPECT_EQ(1, UKControllerPlugin::Hold::GetVerticalSpeedDirection(500));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionPositiveBoundary)
+        {
+            EXPECT_EQ(1, UKControllerPlugin::Hold::GetVerticalSpeedDirection(300));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNoneBoundary)
+        {
+            EXPECT_EQ(0, UKControllerPlugin::Hold::GetVerticalSpeedDirection(299));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNone)
+        {
+            EXPECT_EQ(0, UKControllerPlugin::Hold::GetVerticalSpeedDirection(0));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNoneNegativeBoundary)
+        {
+            EXPECT_EQ(0, UKControllerPlugin::Hold::GetVerticalSpeedDirection(-299));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNegativeBoundary)
+        {
+            EXPECT_EQ(-1, UKControllerPlugin::Hold::GetVerticalSpeedDirection(-300));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNegative)
+        {
+            EXPECT_EQ(-1, UKControllerPlugin::Hold::GetVerticalSpeedDirection(-500));
+        }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
