@@ -101,6 +101,7 @@ namespace UKControllerPlugin {
                 const INT buttonStartOffsetY = 18;
                 const INT buttonStartOffsetX = 10;
                 const INT bigButtonHeight = 25;
+                const INT bigButtonWidth = 40;
 
                 // The default offset for data
                 const INT dataStartOffset = 55;
@@ -205,14 +206,54 @@ namespace UKControllerPlugin {
                 RECT optionsClickRect;
 
                 // Some more rects
-                Gdiplus::Rect minusButtonRect = {5, this->buttonStartOffsetY, 40, this->bigButtonHeight };
-                RECT minusButtonClickRect = { 5, this->buttonStartOffsetY, 40, this->bigButtonHeight };
-                Gdiplus::Rect plusButtonRect = {55, this->buttonStartOffsetY, 40, this->bigButtonHeight };
-                RECT plusButtonClickRect = { 55, this->buttonStartOffsetY, 40, this->bigButtonHeight };
-                Gdiplus::Rect allButtonRect = { 105, this->buttonStartOffsetY, 40, this->bigButtonHeight };
-                RECT allButtonClickRect = { 105, this->buttonStartOffsetY, 40, this->bigButtonHeight };
-                Gdiplus::Rect addButtonRect = {190, this->buttonStartOffsetY, 40, this->bigButtonHeight };
-                RECT addButtonClickRect = { 190, this->buttonStartOffsetY, 40, this->bigButtonHeight };
+                Gdiplus::Rect minusButtonRect = {
+                    5,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                RECT minusButtonClickRect = {
+                    5,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                Gdiplus::Rect plusButtonRect = {
+                    55,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                RECT plusButtonClickRect = {
+                    55,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                Gdiplus::Rect allButtonRect = {
+                    105,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                RECT allButtonClickRect = {
+                    105,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                Gdiplus::Rect addButtonRect = {
+                    190,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                RECT addButtonClickRect = {
+                    190,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
 
                 POINT windowPos = { 100, 100 };
         };

@@ -362,7 +362,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            Gdiplus::Rect expected = { 305, 318, 40, 40 };
+            Gdiplus::Rect expected = { 315, 318, this->display.bigButtonWidth, this->display.bigButtonHeight };
             EXPECT_TRUE(expected.Equals(this->display.GetMinusArea()));
         }
 
@@ -371,7 +371,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            RECT expected = { 305, 318, 345, 358 };
+            RECT expected = { 315, 318, 315 + this->display.bigButtonWidth, 318 + this->display.bigButtonHeight};
             EXPECT_TRUE(expected.left == this->display.GetMinusClickArea().left);
             EXPECT_TRUE(expected.top == this->display.GetMinusClickArea().top);
             EXPECT_TRUE(expected.right == this->display.GetMinusClickArea().right);
@@ -383,7 +383,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            Gdiplus::Rect expected = { 355, 318, 40, 40 };
+            Gdiplus::Rect expected = { 365, 318, this->display.bigButtonWidth, this->display.bigButtonHeight };
             EXPECT_TRUE(expected.Equals(this->display.GetPlusArea()));
         }
 
@@ -392,7 +392,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            RECT expected = { 355, 318, 395, 358 };
+            RECT expected = { 365, 318, 365 + this->display.bigButtonWidth, 318 + this->display.bigButtonHeight };
             EXPECT_TRUE(expected.left == this->display.GetPlusClickArea().left);
             EXPECT_TRUE(expected.top == this->display.GetPlusClickArea().top);
             EXPECT_TRUE(expected.right == this->display.GetPlusClickArea().right);
@@ -404,7 +404,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            Gdiplus::Rect expected = { 405, 318, 40, 40 };
+            Gdiplus::Rect expected = { 415, 318, this->display.bigButtonWidth, this->display.bigButtonHeight };
             EXPECT_TRUE(expected.Equals(this->display.GetAllArea()));
         }
 
@@ -413,7 +413,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            RECT expected = { 405, 318, 445, 358 };
+            RECT expected = { 415, 318, 415 + this->display.bigButtonWidth, 318 + this->display.bigButtonHeight };
             EXPECT_TRUE(expected.left == this->display.GetAllClickArea().left);
             EXPECT_TRUE(expected.top == this->display.GetAllClickArea().top);
             EXPECT_TRUE(expected.right == this->display.GetAllClickArea().right);
@@ -425,7 +425,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            Gdiplus::Rect expected = { 455, 318, 40, 40 };
+            Gdiplus::Rect expected = { 465, 318, this->display.bigButtonWidth, this->display.bigButtonHeight };
             EXPECT_TRUE(expected.Equals(this->display.GetAddArea()));
         }
 
@@ -434,7 +434,7 @@ namespace UKControllerPluginTest {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            RECT expected = { 455, 318, 495, 358 };
+            RECT expected = { 465, 318, 465 + this->display.bigButtonWidth, 318 + this->display.bigButtonHeight };
             EXPECT_TRUE(expected.left == this->display.GetAddClickArea().left);
             EXPECT_TRUE(expected.top == this->display.GetAddClickArea().top);
             EXPECT_TRUE(expected.right == this->display.GetAddClickArea().right);

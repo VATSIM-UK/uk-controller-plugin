@@ -643,5 +643,70 @@ TEST_F(ApiHelperTest, SearchSrdReturnsData)
 
     EXPECT_EQ(responseData, this->helper.SearchSrd(params));
 }
+
+TEST_F(ApiHelperTest, GetAssignedHoldsReturnsData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/hold/assigned",
+            CurlRequest::METHOD_GET
+         )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetAssignedHolds());
+}
+
+TEST_F(ApiHelperTest, AssignAircraftToHoldGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    nlohmann::json requestBody;
+    requestBody["callsign"] = "BAW123";
+    requestBody["navaid"] = "TIMBA";
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/hold/assigned",
+            CurlRequest::METHOD_PUT,
+            requestBody
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.AssignAircraftToHold("BAW123", "TIMBA"));
+}
+
+TEST_F(ApiHelperTest, UnassignAircraftHoldGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/hold/assigned/BAW123",
+            CurlRequest::METHOD_DELETE
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.UnassignAircraftHold("BAW123"));
+}
 }  // namespace Api
 }  // namespace UKControllerPluginTest

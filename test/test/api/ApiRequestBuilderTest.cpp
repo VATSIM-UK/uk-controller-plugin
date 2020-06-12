@@ -217,5 +217,51 @@ namespace UKControllerPluginTest {
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildSrdQueryRequest(params));
         }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsGetAssignedHoldsRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/hold/assigned",
+                CurlRequest::METHOD_GET
+            );
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildAllAssignedHoldsRequest());
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsSetAssignedHoldRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/hold/assigned",
+                CurlRequest::METHOD_PUT
+            );
+
+            nlohmann::json expectedData;
+            expectedData["callsign"] = "BAW123";
+            expectedData["navaid"] = "TIMBA";
+            expectedRequest.SetBody(expectedData.dump());
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildSetAssignedHoldRequest("BAW123", "TIMBA"));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildDeleteAssignedHoldRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/hold/assigned/BAW123",
+                CurlRequest::METHOD_DELETE
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildDeleteAssignedHoldRequest("BAW123"));
+        }
     }  // namespace Api
 }  // namespace UKControllerPluginTest
