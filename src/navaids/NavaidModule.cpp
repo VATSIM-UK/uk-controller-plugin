@@ -35,7 +35,7 @@ namespace UKControllerPlugin {
                 }
 
                 container.navaids->AddNavaid(
-                    { 
+                    {
                         it->at("id").get<int>(),
                         it->at("identifier").get<std::string>(),
                         ParseSectorFileCoordinates(
@@ -64,7 +64,7 @@ namespace UKControllerPlugin {
                         navaid.at("longitude").get<std::string>().c_str()
                     )
                 ) &&
-                navaid.contains("identifier") && 
+                navaid.contains("identifier") &&
                 navaid.at("identifier").is_string();
         }
     }  // namespace Navaids

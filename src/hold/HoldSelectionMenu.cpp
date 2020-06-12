@@ -121,15 +121,22 @@ namespace UKControllerPlugin {
 
             if (context == "--") {
                 // Dont do anything if already not holding
-                std::shared_ptr<HoldingAircraft> holdingAircraft = this->holdManager.GetHoldingAircraft(fp->GetCallsign());
-                if (holdingAircraft == nullptr || holdingAircraft->GetAssignedHold() == holdingAircraft->noHoldAssigned) {
+                std::shared_ptr<HoldingAircraft> holdingAircraft = this->holdManager.GetHoldingAircraft(
+                    fp->GetCallsign()
+                );
+                if (
+                    holdingAircraft == nullptr ||
+                    holdingAircraft->GetAssignedHold() == holdingAircraft->noHoldAssigned
+                ) {
                     return;
                 }
 
                 this->holdManager.UnassignAircraftFromHold(fp->GetCallsign(), true);
             } else {
                 // Dont do anything if aircraft already holding here
-                std::shared_ptr<HoldingAircraft> holdingAircraft = this->holdManager.GetHoldingAircraft(fp->GetCallsign());
+                std::shared_ptr<HoldingAircraft> holdingAircraft = this->holdManager.GetHoldingAircraft(
+                    fp->GetCallsign()
+                );
                 if (holdingAircraft != nullptr && holdingAircraft->GetAssignedHold() == context) {
                     return;
                 }

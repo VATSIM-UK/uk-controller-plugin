@@ -79,7 +79,9 @@ namespace UKControllerPlugin {
                 void SetMaximumLevel(int level);
                 void SetMinimumLevel(int level);
                 std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
-                    MapAircraftToLevels(const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft) const;
+                    MapAircraftToLevels(
+                        const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft
+                    ) const;
                 bool IsInInformationMode(void) const;
                 bool IsMinimised(void) const;
                 void LoadDataFromAsr(

@@ -75,7 +75,7 @@ namespace UKControllerPlugin {
             RECT itemArea
         ) const {
             this->allRenderers.at(this->screenObjectMap.at(objectId))
-                ->LeftClick(radarScreen,objectId, objectDescription, mousePos, itemArea);
+                ->LeftClick(radarScreen, objectId, objectDescription, mousePos, itemArea);
         }
 
         /*

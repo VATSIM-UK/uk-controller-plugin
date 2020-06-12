@@ -42,7 +42,7 @@ namespace UKControllerPlugin {
                 ) override;
 
                 // Inherited via AbstractTimedEvent
-                virtual void TimedEventTrigger(void) override;
+                void TimedEventTrigger(void) override;
 
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(
@@ -62,7 +62,7 @@ namespace UKControllerPlugin {
                 const double proximityDistance = 12.0;
 
             private:
-                
+
                 // Navaids against which holds are based
                 const UKControllerPlugin::Navaids::NavaidCollection& navaids;
 

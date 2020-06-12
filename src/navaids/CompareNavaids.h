@@ -26,5 +26,5 @@ namespace UKControllerPlugin {
             ) const;
 
         } CompareNavaids;
-    }  // namespace navaids
+    }  // namespace Navaids
 }  // namespace UKControllerPlugin

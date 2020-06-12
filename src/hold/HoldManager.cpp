@@ -95,7 +95,7 @@ namespace UKControllerPlugin {
         const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>&
             HoldManager::GetAircraftForHold(std::string hold) const
         {
-            return this->holds.count(hold) 
+            return this->holds.count(hold)
                 ? this->holds.find(hold)->second
                 : this->invalidHolds;
         }

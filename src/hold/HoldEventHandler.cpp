@@ -60,8 +60,10 @@ namespace UKControllerPlugin {
         void HoldEventHandler::TimedEventTrigger(void)
         {
             this->plugin.ApplyFunctionToAllFlightplans(
-                [this](std::shared_ptr<EuroScopeCFlightPlanInterface> fp, std::shared_ptr<EuroScopeCRadarTargetInterface> rt) {
-                    
+                [this](
+                    std::shared_ptr<EuroScopeCFlightPlanInterface> fp,
+                    std::shared_ptr<EuroScopeCRadarTargetInterface> rt
+                ) {
                     for (
                         NavaidCollection::const_iterator navaids = this->navaids.cbegin();
                         navaids != this->navaids.cend();
@@ -71,7 +73,7 @@ namespace UKControllerPlugin {
                             this->holdManager.AddAircraftToProximityHold(*fp, navaids->identifier);
                         } else {
                             this->holdManager.RemoveAircraftFromProximityHold(fp->GetCallsign(), navaids->identifier);
-                        };
+                        }
                     }
 
                 }
@@ -92,7 +94,11 @@ namespace UKControllerPlugin {
                         std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(
                             message.data.at("callsign").get<std::string>()
                         );
-                        this->holdManager.AssignAircraftToHold(*fp, message.data.at("navaid").get<std::string>(), false);
+                        this->holdManager.AssignAircraftToHold(
+                            *fp,
+                            message.data.at("navaid").get<std::string>(),
+                            false
+                        );
                     } catch (std::invalid_argument) {
                         // Nothing to do
                     }

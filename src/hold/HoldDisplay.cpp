@@ -326,7 +326,8 @@ namespace UKControllerPlugin {
             std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
 
             for (
-                std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator it = aircraft.cbegin();
+                std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator it =
+                    aircraft.cbegin();
                 it != aircraft.cend();
                 ++it
             ) {
@@ -354,7 +355,8 @@ namespace UKControllerPlugin {
             ) {
                 bool shouldInclude = false;
                 for (
-                    std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator levelIt = it->second.cbegin();
+                    std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator levelIt =
+                        it->second.cbegin();
                     levelIt != it->second.cend();
                     levelIt++
                 ) {
@@ -699,8 +701,11 @@ namespace UKControllerPlugin {
             );
         }
 
-        void HoldDisplay::RenderActionButtons(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen, const int screenObjectId) const
-        {
+        void HoldDisplay::RenderActionButtons(
+            GdiGraphicsInterface& graphics,
+            EuroscopeRadarLoopbackInterface& radarScreen,
+            const int screenObjectId
+        ) const {
             this->DrawRoundRectangle(graphics, minusButtonRect, 5);
             graphics.DrawString(L"-", minusButtonRect, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
@@ -846,7 +851,7 @@ namespace UKControllerPlugin {
                         }
                     }
                 }
-                
+
                 // No holding aircraft at this level, so just render the blank display
                 if (holdingAircraft.count(level) == 0) {
 
@@ -950,7 +955,9 @@ namespace UKControllerPlugin {
 
                             // Cleared level - plus a clickspot for the aircraft in question
                             graphics.DrawString(
-                                fp->GetClearedAltitude() == 0 ? L"---" : GetLevelDisplayString(fp->GetClearedAltitude()),
+                                fp->GetClearedAltitude() == 0
+                                    ? L"---"
+                                    : GetLevelDisplayString(fp->GetClearedAltitude()),
                                 clearedLevelDisplay,
                                 this->clearedLevelBrush
                             );

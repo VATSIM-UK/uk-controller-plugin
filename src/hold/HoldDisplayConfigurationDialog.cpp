@@ -44,7 +44,10 @@ namespace UKControllerPlugin {
                 IDC_HOLD_MAX_SPIN,
                 UDM_SETPOS32,
                 NULL,
-                this->ValueInRange(this->configurationItem->GetMaximumLevel(), this->minHoldingLevel, this->maxHoldingLevel)
+                this->ValueInRange(
+                    this->configurationItem->GetMaximumLevel(),
+                    this->minHoldingLevel, this->maxHoldingLevel
+                )
                 ? this->configurationItem->GetMaximumLevel()
                 : this->maxHoldingLevel
             );
@@ -70,7 +73,11 @@ namespace UKControllerPlugin {
                 IDC_HOLD_MIN_SPIN,
                 UDM_SETPOS32,
                 NULL,
-                this->ValueInRange(this->configurationItem->GetMinimumLevel(), this->minHoldingLevel, this->maxHoldingLevel)
+                this->ValueInRange(
+                    this->configurationItem->GetMinimumLevel(),
+                    this->minHoldingLevel,
+                    this->maxHoldingLevel
+                )
                 ? this->configurationItem->GetMinimumLevel()
                 : this->minHoldingLevel
             );

@@ -118,7 +118,9 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
 
             // Create the hold selection dialog
-            std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(*container.navaids);
+            std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(
+                *container.navaids
+            );
             container.dialogManager->AddDialog(
                 {
                     IDD_HOLD_SELECTION,
@@ -130,7 +132,8 @@ namespace UKControllerPlugin {
             );
 
             // Create the hold display configuration dialog
-            std::shared_ptr<HoldDisplayConfigurationDialog> displayDialog = std::make_shared<HoldDisplayConfigurationDialog>();
+            std::shared_ptr<HoldDisplayConfigurationDialog> displayDialog =
+                std::make_shared<HoldDisplayConfigurationDialog>();
             container.dialogManager->AddDialog(
                 {
                     IDD_HOLD_PARAMS,

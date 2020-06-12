@@ -57,11 +57,13 @@ namespace UKControllerPlugin {
                 ListView_SetCheckState(
                     holdList,
                     item.iItem,
-                    (bool) std::count(selectedHolds.cbegin(), selectedHolds.cend(), it->identifier)
+                    static_cast<bool>(
+                        std::count(selectedHolds.cbegin(), selectedHolds.cend(), it->identifier)
+                    )
                 );
 
                 item.iItem++;
-            }           
+            }
         }
 
         /*

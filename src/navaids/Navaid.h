@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
 
             // The identifier for the navaid
             std::string identifier;
- 
+
             // The navaid coordinates
             EuroScopePlugIn::CPosition coordinates;
 
