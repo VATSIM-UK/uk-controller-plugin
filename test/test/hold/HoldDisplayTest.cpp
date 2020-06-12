@@ -540,7 +540,7 @@ namespace UKControllerPluginTest {
             this->display.Move(newPos);
 
             Gdiplus::Point expectedLeft = { 300, 350 };
-            Gdiplus::Point expectedRight = { 465, 350 };
+            Gdiplus::Point expectedRight = { 525, 350 };
             EXPECT_TRUE(expectedLeft.Equals(this->display.GetUnderButtonLineLeft()));
             EXPECT_TRUE(expectedRight.Equals(this->display.GetUnderButtonLineRight()));
         }
