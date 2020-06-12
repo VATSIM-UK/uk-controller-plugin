@@ -384,15 +384,15 @@ namespace UKControllerPluginTest {
 
             this->handler.TimedEventTrigger();
 
-            std::set<std::string> expectedProximityHoldsBaw123({ "MAY", "TIMBA" });
-            EXPECT_EQ("RYR123", (*this->manager.GetAircraftForHold("TIMBA").cbegin())->GetCallsign());
-            EXPECT_EQ("RYR123", (*this->manager.GetAircraftForHold("MAY").cbegin())->GetCallsign());
-            EXPECT_EQ(expectedProximityHoldsBaw123, this->manager.GetHoldingAircraft("RYR123")->GetProximityHolds());
-
             std::set<std::string> expectedProximityHoldsEzy234({ "MAY", "OLEVI", "TIMBA" });
-            EXPECT_EQ("EZY234", (*++this->manager.GetAircraftForHold("TIMBA").cbegin())->GetCallsign());
-            EXPECT_EQ("EZY234", (*++this->manager.GetAircraftForHold("MAY").cbegin())->GetCallsign());
+            EXPECT_EQ("EZY234", (*this->manager.GetAircraftForHold("TIMBA").cbegin())->GetCallsign());
+            EXPECT_EQ("EZY234", (*this->manager.GetAircraftForHold("MAY").cbegin())->GetCallsign());
             EXPECT_EQ(expectedProximityHoldsEzy234, this->manager.GetHoldingAircraft("EZY234")->GetProximityHolds());
+
+            std::set<std::string> expectedProximityHoldsRyr123({ "MAY", "TIMBA" });
+            EXPECT_EQ("RYR123", (*++this->manager.GetAircraftForHold("TIMBA").cbegin())->GetCallsign());
+            EXPECT_EQ("RYR123", (*++this->manager.GetAircraftForHold("MAY").cbegin())->GetCallsign());
+            EXPECT_EQ(expectedProximityHoldsRyr123, this->manager.GetHoldingAircraft("RYR123")->GetProximityHolds());
         }
 
         TEST_F(HoldEventHandlerTest, TimedEventRemovesAircraftFromProximityHoldsIfNotCloseEnough)

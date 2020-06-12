@@ -417,7 +417,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expected.Equals(this->display.GetInformationArea()));
         }
 
-        TEST_F(HoldDisplayTest, MoveSetsOptionsClickableArea)
+        TEST_F(HoldDisplayTest, MoveSetsInformationClickableArea)
         {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
@@ -438,12 +438,12 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expected.Equals(this->display.GetOptionsArea()));
         }
 
-        TEST_F(HoldDisplayTest, MoveSetsInformationClickableArea)
+        TEST_F(HoldDisplayTest, MoveSetsOptionsClickableArea)
         {
             POINT newPos = { 300, 300 };
             this->display.Move(newPos);
 
-            RECT expected = { 321, 302, 332, 313 };
+            RECT expected = { 337, 302, 348, 313 };
             EXPECT_TRUE(expected.left == this->display.GetOptionsClickArea().left);
             EXPECT_TRUE(expected.top == this->display.GetOptionsClickArea().top);
             EXPECT_TRUE(expected.right == this->display.GetOptionsClickArea().right);
