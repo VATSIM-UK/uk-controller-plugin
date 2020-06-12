@@ -41,7 +41,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldEventHandlerTest(void)
-                    : handler(this->manager,this->navaids, this->mockPlugin, 1),
+                    : handler(this->manager, this->navaids, this->mockPlugin, 1),
                     manager(mockApi, mockTaskRunner)
                 {
                     this->navaids.AddNavaid(
