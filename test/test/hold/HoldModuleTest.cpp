@@ -22,6 +22,7 @@
 #include "hold/CompareHolds.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "mock/MockTaskRunnerInterface.h"
+#include "api/ApiException.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -40,6 +41,7 @@ using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPlugin::Api::ApiException;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
@@ -50,6 +52,7 @@ using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::Throw;
 using ::testing::_;
 
 namespace UKControllerPluginTest {
@@ -120,6 +123,12 @@ namespace UKControllerPluginTest {
 
                     this->containerApi = new NiceMock<MockApiInterface>;
                     this->container.api.reset(this->containerApi);
+                }
+
+                ~HoldModuleTest()
+                {
+                    this->container.api.release();
+                    delete this->containerApi;
                 }
 
                 NiceMock<MockApiInterface> * containerApi;
@@ -233,6 +242,15 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("TIMBA", this->container.holdManager->GetHoldingAircraft("BAW123")->GetAssignedHold());
             EXPECT_EQ("WILLO", this->container.holdManager->GetHoldingAircraft("EZY234")->GetAssignedHold());
             EXPECT_EQ(2, this->container.holdManager->CountHoldingAircraft());
+        }
+
+        TEST_F(HoldModuleTest, ItHandlesApiExceptionsOnAssignedHoldLoad)
+        {
+            ON_CALL(*this->containerApi, GetAssignedHolds())
+                .WillByDefault(Throw(ApiException("Test")));
+
+            EXPECT_NO_THROW(BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager));
+            EXPECT_EQ(0, this->container.holdManager->CountHoldingAircraft());
         }
 
         TEST_F(HoldModuleTest, ItDoesntLoadAssignedHoldsIfCallsignMissing)
