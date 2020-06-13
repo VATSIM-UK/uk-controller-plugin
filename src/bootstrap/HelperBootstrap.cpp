@@ -41,7 +41,7 @@ namespace UKControllerPlugin {
                 new ApiHelper(*persistence.curl, requestBuilder, *persistence.windows)
             );
 
-            persistence.taskRunner = std::make_unique<TaskRunner>(5);
+            persistence.taskRunner = std::make_unique<TaskRunner>(3);
         }
 
         /*

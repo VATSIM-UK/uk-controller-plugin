@@ -22,6 +22,7 @@ namespace UKControllerPlugin {
                 TaskRunner(int numThreads);
                 TaskRunner(const TaskRunner&) = delete;
                 ~TaskRunner(void);
+                size_t CountThreads(void) const override;
                 void QueueAsynchronousTask(std::function<void(void)> task) override;
 
             private:

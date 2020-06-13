@@ -34,6 +34,11 @@ namespace UKControllerPlugin {
             LogInfo("All TaskRunner threads shut down");
         }
 
+        size_t TaskRunner::CountThreads(void) const
+        {
+            return this->threads.size();
+        }
+
         /*
             Queue an aysynchronous task and notify one thread. These kinds of tasks involve actions
             that may be blocking to the EuroScope instance for significant periods

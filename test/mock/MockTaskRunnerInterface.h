@@ -14,6 +14,11 @@ namespace UKControllerPluginTest {
                     this->runTask = runTask;
                 };
 
+                size_t CountThreads(void) const override
+                {
+                    return 0;
+                }
+
                 /*
                     Run the task only if required.
                 */
