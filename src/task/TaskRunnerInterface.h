@@ -12,6 +12,7 @@ namespace UKControllerPlugin {
         class TaskRunnerInterface
         {
             public:
+                virtual ~TaskRunnerInterface(void) {};
                 virtual void QueueAsynchronousTask(std::function<void(void)> task) = 0;
         };
     }  // namespace TaskManager

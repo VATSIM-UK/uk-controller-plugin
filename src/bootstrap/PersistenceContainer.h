@@ -70,7 +70,7 @@ namespace UKControllerPlugin {
 
             // The helpers and collections
             std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
-            std::unique_ptr<UKControllerPlugin::TaskManager::TaskRunner> taskRunner;
+            std::unique_ptr<UKControllerPlugin::TaskManager::TaskRunnerInterface> taskRunner;
             std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
             std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> flightplans;
             std::unique_ptr<UKControllerPlugin::Message::UserMessager> userMessager;

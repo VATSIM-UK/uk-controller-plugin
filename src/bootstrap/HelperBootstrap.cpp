@@ -40,7 +40,8 @@ namespace UKControllerPlugin {
             persistence.api.reset(
                 new ApiHelper(*persistence.curl, requestBuilder, *persistence.windows)
             );
-            persistence.taskRunner.reset(new TaskRunner(2, 0));
+
+            persistence.taskRunner = std::make_unique<TaskRunner>(5);
         }
 
         /*
