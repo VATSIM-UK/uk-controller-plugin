@@ -21,6 +21,7 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "hold/CompareHolds.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
+#include "mock/MockTaskRunnerInterface.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -39,6 +40,7 @@ using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogManager;
@@ -113,8 +115,14 @@ namespace UKControllerPluginTest {
                     this->container.tagHandler.reset(new TagItemCollection);
                     this->container.dialogManager.reset(new DialogManager(this->mockDialogProvider));
                     this->container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
+                    this->container.taskRunner.reset(new NiceMock<MockTaskRunnerInterface>);
+
+
+                    this->containerApi = new NiceMock<MockApiInterface>;
+                    this->container.api.reset(this->containerApi);
                 }
 
+                NiceMock<MockApiInterface> * containerApi;
                 NiceMock<MockDialogProvider> mockDialogProvider;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 PersistenceContainer container;
@@ -203,6 +211,133 @@ namespace UKControllerPluginTest {
             expectedHoldSet.emplace(std::move(expectedHold));
 
             EXPECT_EQ(expectedHoldSet, this->container.publishedHolds->Get("TIMBA"));
+        }
+
+        TEST_F(HoldModuleTest, ItLoadsAssignedHolds)
+        {
+            nlohmann::json responseData = nlohmann::json::array();
+            responseData.push_back({
+                {"callsign", "BAW123"},
+                {"navaid", "TIMBA"}
+            });
+            responseData.push_back({
+                {"callsign", "EZY234"},
+                {"navaid", "WILLO"}
+            });
+
+            ON_CALL(*this->containerApi, GetAssignedHolds())
+                .WillByDefault(Return(responseData));
+
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            EXPECT_EQ("TIMBA", this->container.holdManager->GetHoldingAircraft("BAW123")->GetAssignedHold());
+            EXPECT_EQ("WILLO", this->container.holdManager->GetHoldingAircraft("EZY234")->GetAssignedHold());
+            EXPECT_EQ(2, this->container.holdManager->CountHoldingAircraft());
+        }
+
+        TEST_F(HoldModuleTest, ItDoesntLoadAssignedHoldsIfCallsignMissing)
+        {
+            nlohmann::json responseData = nlohmann::json::array();
+            responseData.push_back({
+                {"navaid", "TIMBA"}
+            });
+            ON_CALL(*this->containerApi, GetAssignedHolds())
+                .WillByDefault(Return(responseData));
+
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            EXPECT_EQ(
+                this->container.holdManager->invalidAircraft,
+                this->container.holdManager->GetHoldingAircraft("BAW123")
+            );
+        }
+
+        TEST_F(HoldModuleTest, ItDoesntLoadAssignedHoldsIfCallsignNotString)
+        {
+            nlohmann::json responseData = nlohmann::json::array();
+            responseData.push_back({
+                {"callsign", 123},
+                {"navaid", "TIMBA"}
+            });
+            ON_CALL(*this->containerApi, GetAssignedHolds())
+                .WillByDefault(Return(responseData));
+
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            EXPECT_EQ(
+                this->container.holdManager->invalidAircraft,
+                this->container.holdManager->GetHoldingAircraft("BAW123")
+            );
+        }
+
+        TEST_F(HoldModuleTest, ItDoesntLoadAssignedHoldsIfNavaidMissing)
+        {
+            nlohmann::json responseData = nlohmann::json::array();
+            responseData.push_back({
+                {"callsign", "BAW123"},
+            });
+            ON_CALL(*this->containerApi, GetAssignedHolds())
+                .WillByDefault(Return(responseData));
+
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            EXPECT_EQ(
+                this->container.holdManager->invalidAircraft,
+                this->container.holdManager->GetHoldingAircraft("BAW123")
+            );
+        }
+
+        TEST_F(HoldModuleTest, ItDoesntLoadAssignedHoldsIfNavaidNotString)
+        {
+            nlohmann::json responseData = nlohmann::json::array();
+            responseData.push_back({
+                {"callsign", "BAW123"},
+                {"navaid", 123}
+            });
+            ON_CALL(*this->containerApi, GetAssignedHolds())
+                .WillByDefault(Return(responseData));
+
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            EXPECT_EQ(
+                this->container.holdManager->invalidAircraft,
+                this->container.holdManager->GetHoldingAircraft("BAW123")
+            );
+        }
+
+        TEST_F(HoldModuleTest, ItDoesntLoadAssignedHoldsIfDataNotObject)
+        {
+            nlohmann::json responseData = nlohmann::json::array();
+            responseData.push_back(nlohmann::json::array({
+                {"callsign", "BAW123", "navaid", "TIMBA"}
+            }));
+            ON_CALL(*this->containerApi, GetAssignedHolds())
+                .WillByDefault(Return(responseData));
+
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            EXPECT_EQ(
+                this->container.holdManager->invalidAircraft,
+                this->container.holdManager->GetHoldingAircraft("BAW123")
+            );
+        }
+
+        TEST_F(HoldModuleTest, ItDoesntLoadAssignedHoldsIfResponseNotArray)
+        {
+            nlohmann::json responseData = nlohmann::json::object();
+            responseData["BAW123"] = {
+                {"callsign", "BAW123"},
+                {"navaid", "TIMBA"}
+            };
+            ON_CALL(*this->containerApi, GetAssignedHolds())
+                .WillByDefault(Return(responseData));
+
+            BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+
+            EXPECT_EQ(
+                this->container.holdManager->invalidAircraft,
+                this->container.holdManager->GetHoldingAircraft("BAW123")
+            );
         }
 
         TEST_F(HoldModuleTest, RadarScreenRegistersForAsrEvents)

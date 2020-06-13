@@ -23,6 +23,7 @@
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "hold/HoldDisplayConfigurationDialog.h"
+#include "api/ApiException.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Hold::HoldEventHandler;
@@ -32,6 +33,7 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Api::ApiInterface;
+using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Tag::TagFunction;
@@ -167,7 +169,46 @@ namespace UKControllerPlugin {
                 )
             );
 
-            // Start a task to load all the holds
+            // Start a task to load all the already assigned holds
+            container.taskRunner->QueueAsynchronousTask([&container]() {
+                nlohmann::json assignedHolds;
+                try {
+                    assignedHolds = container.api->GetAssignedHolds();
+                } catch (ApiException exception) {
+                    LogError("Api exception thrown when loading assigned holds");
+                    return;
+                }
+
+                if (!assignedHolds.is_array()) {
+                    LogError("Assigned holds is not array");
+                    return;
+                }
+
+                for (nlohmann::json::const_iterator it = assignedHolds.cbegin(); it != assignedHolds.cend(); ++it) {
+                    if (
+                        !it->is_object() ||
+                        !it->contains("callsign") ||
+                        !it->at("callsign").is_string() ||
+                        !it->contains("navaid") ||
+                        !it->at("navaid").is_string()
+                    ) {
+                        LogError("Invalid assigned hold: " + it->dump());
+                        return;
+                    }
+
+                    container.holdManager->AssignAircraftToHold(
+                        it->at("callsign").get<std::string>(),
+                        it->at("navaid").get<std::string>(),
+                        false
+                    );
+                }
+
+                LogInfo(
+                    "Loaded " + std::to_string(container.holdManager->CountHoldingAircraft()) +
+                        " aircraft into assigned holds"
+                );
+
+            });
         }
 
         /*
