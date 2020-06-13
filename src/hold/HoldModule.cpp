@@ -166,6 +166,8 @@ namespace UKControllerPlugin {
                     *container.dialogManager
                 )
             );
+
+            // Start a task to load all the holds
         }
 
         /*

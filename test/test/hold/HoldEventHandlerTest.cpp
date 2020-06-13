@@ -64,7 +64,7 @@ namespace UKControllerPluginTest {
                     ON_CALL(this->mockFlightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
 
-                    this->manager.AssignAircraftToHold(mockFlightplan, "TIMBA", false);
+                    this->manager.AssignAircraftToHold("BAW123", "TIMBA", false);
                 }
 
                 void CreateFlightplanRadarTargetPair(
@@ -147,27 +147,6 @@ namespace UKControllerPluginTest {
 
             this->handler.ProcessWebsocketMessage(message);
             EXPECT_EQ("WILLO", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
-        }
-
-        TEST_F(HoldEventHandlerTest, ItHandlesFlightplansNotBeingFoundOnAssignment)
-        {
-            WebsocketMessage message{
-                "App\\Events\\HoldAssignedEvent",
-                "private-hold-assignments",
-                {
-                    {"callsign", "BAW123"},
-                    {"navaid", "WILLO"}
-                }
-            };
-
-            ON_CALL(this->mockPlugin, GetFlightplanForCallsign("BAW123"))
-                .WillByDefault(Throw(std::invalid_argument("Test")));
-
-            EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
-                .Times(0);
-
-            this->handler.ProcessWebsocketMessage(message);
-            EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
         TEST_F(HoldEventHandlerTest, ItDoesNotAssignIfCallsignMissing)
@@ -405,11 +384,8 @@ namespace UKControllerPluginTest {
                 ParseSectorFileCoordinates("N050.57.18.900", "W001.20.42.200")
             );
 
-            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
-            ON_CALL(flightplan, GetCallsign())
-                .WillByDefault(Return("RYR123"));
-            this->manager.AddAircraftToProximityHold(flightplan, "OLEVI");
-            this->manager.AddAircraftToProximityHold(flightplan, "MAY");
+            this->manager.AddAircraftToProximityHold("RYR123", "OLEVI");
+            this->manager.AddAircraftToProximityHold("RYR123", "MAY");
 
             this->handler.TimedEventTrigger();
 

@@ -70,7 +70,7 @@ namespace UKControllerPlugin {
                         ++navaids
                     ) {
                         if (rt->GetPosition().DistanceTo(navaids->coordinates) <= this->proximityDistance) {
-                            this->holdManager.AddAircraftToProximityHold(*fp, navaids->identifier);
+                            this->holdManager.AddAircraftToProximityHold(fp->GetCallsign(), navaids->identifier);
                         } else {
                             this->holdManager.RemoveAircraftFromProximityHold(fp->GetCallsign(), navaids->identifier);
                         }
@@ -90,18 +90,11 @@ namespace UKControllerPlugin {
                     message.data.contains("navaid") &&
                     message.data.at("navaid").is_string()
                 ) {
-                    try {
-                        std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(
-                            message.data.at("callsign").get<std::string>()
-                        );
-                        this->holdManager.AssignAircraftToHold(
-                            *fp,
-                            message.data.at("navaid").get<std::string>(),
-                            false
-                        );
-                    } catch (std::invalid_argument) {
-                        // Nothing to do
-                    }
+                    this->holdManager.AssignAircraftToHold(
+                        message.data.at("callsign").get<std::string>(),
+                        message.data.at("navaid").get<std::string>(),
+                        false
+                    );
                 }
             } else if (message.event == "App\\Events\\HoldUnassignedEvent") {
                 if (

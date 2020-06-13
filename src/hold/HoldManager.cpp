@@ -25,15 +25,15 @@ namespace UKControllerPlugin {
         /*
             Add an aircraft to a "hold" because it's within proximity to the fix
         */
-        void HoldManager::AddAircraftToProximityHold(EuroScopeCFlightPlanInterface& flightplan, std::string hold)
+        void HoldManager::AddAircraftToProximityHold(std::string callsign, std::string hold)
         {
             std::shared_ptr<HoldingAircraft> holdingAircraft;
-            if (this->aircraft.count(flightplan.GetCallsign())) {
-                holdingAircraft = *this->aircraft.find(flightplan.GetCallsign());
+            if (this->aircraft.count(callsign)) {
+                holdingAircraft = *this->aircraft.find(callsign);
                 holdingAircraft->AddProximityHold(hold);
             } else {
                 holdingAircraft = std::make_shared<HoldingAircraft>(
-                    flightplan.GetCallsign(),
+                    callsign,
                     std::set<std::string>({ hold })
                 );
                 this->aircraft.insert(holdingAircraft);
@@ -46,18 +46,18 @@ namespace UKControllerPlugin {
             Assign an aircraft to a given hold
         */
         void HoldManager::AssignAircraftToHold(
-            EuroScopeCFlightPlanInterface& flightplan,
+            std::string callsign,
             std::string hold,
             bool updateApi
         ) {
 
             // Add it to the aircraft list or fetch it if needed
             std::shared_ptr<HoldingAircraft> holdingAircraft;
-            if (this->aircraft.count(flightplan.GetCallsign())) {
-                holdingAircraft = *this->aircraft.find(flightplan.GetCallsign());
+            if (this->aircraft.count(callsign)) {
+                holdingAircraft = *this->aircraft.find(callsign);
             } else {
                 holdingAircraft = std::make_shared<HoldingAircraft>(
-                    flightplan.GetCallsign(),
+                    callsign,
                     hold
                 );
                 this->aircraft.insert(holdingAircraft);
@@ -78,7 +78,6 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            std::string callsign = flightplan.GetCallsign();
             this->taskRunner.QueueAsynchronousTask([this, callsign, hold]() {
                 try {
                     this->api.AssignAircraftToHold(callsign, hold);

@@ -217,7 +217,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold("BAW123", "WILLO"))
                 .Times(1);
 
-            this->holdManager.AssignAircraftToHold(*mockFlightplan, "TIMBA", false);
+            this->holdManager.AssignAircraftToHold("BAW123", "TIMBA", false);
             this->holdSelectionMenu.MenuItemClicked(2, "WILLO");
             EXPECT_TRUE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("WILLO"));
             EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("TIMBA"));
@@ -235,7 +235,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold("BAW123", "WILLO"))
                 .Times(0);
 
-            this->holdManager.AssignAircraftToHold(*mockFlightplan, "WILLO", false);
+            this->holdManager.AssignAircraftToHold("BAW123", "WILLO", false);
             this->holdSelectionMenu.MenuItemClicked(2, "WILLO");
             EXPECT_TRUE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("WILLO"));
             EXPECT_FALSE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("TIMBA"));
@@ -271,7 +271,7 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, IsTrackedByUser())
                 .WillByDefault(Return(true));
 
-            this->holdManager.AssignAircraftToHold(*this->mockFlightplan, "TIMBA", false);
+            this->holdManager.AssignAircraftToHold("BAW123", "TIMBA", false);
             EXPECT_TRUE(this->holdManager.GetHoldingAircraft("BAW123")->IsInHold("TIMBA"));
 
 

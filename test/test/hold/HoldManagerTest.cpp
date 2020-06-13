@@ -38,7 +38,7 @@ namespace UKControllerPluginTest {
                     ON_CALL(mockFlightplan2, GetCallsign())
                         .WillByDefault(Return("EZY234"));
 
-                    this->manager.AssignAircraftToHold(this->mockFlightplan2, "TIMBA", false);
+                    this->manager.AssignAircraftToHold("EZY234", "TIMBA", false);
                 }
 
                 NiceMock<MockApiInterface> mockApi;
@@ -52,7 +52,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, AddingAircraftToProximityHoldsCreatesNewInstance)
         {
-            this->manager.AddAircraftToProximityHold(this->mockFlightplan1, "LAM");
+            this->manager.AddAircraftToProximityHold("BAW123", "LAM");
 
             std::set<std::string> expectedProximityHolds({ "LAM" });
             EXPECT_EQ(expectedProximityHolds, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds());
@@ -66,8 +66,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, AddingAircraftToProximityHoldsUpdatesExistingInstance)
         {
-            this->manager.AddAircraftToProximityHold(this->mockFlightplan1, "LAM");
-            this->manager.AddAircraftToProximityHold(this->mockFlightplan1, "BNN");
+            this->manager.AddAircraftToProximityHold("BAW123", "LAM");
+            this->manager.AddAircraftToProximityHold("BAW123", "BNN");
 
             std::set<std::string> expectedProximityHolds({ "LAM", "BNN" });
             EXPECT_EQ(expectedProximityHolds, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds());
@@ -82,7 +82,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->manager.AssignAircraftToHold(this->mockFlightplan1, "LAM", false);
+            this->manager.AssignAircraftToHold("BAW123", "LAM", false);
 
             EXPECT_EQ(0, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds().size());
             EXPECT_EQ(
@@ -98,8 +98,8 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->manager.AssignAircraftToHold(this->mockFlightplan1, "LAM", false);
-            this->manager.AssignAircraftToHold(this->mockFlightplan1, "BNN", false);
+            this->manager.AssignAircraftToHold("BAW123", "LAM", false);
+            this->manager.AssignAircraftToHold("BAW123", "BNN", false);
 
             EXPECT_EQ(0, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds().size());
             EXPECT_EQ(
@@ -116,9 +116,9 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->manager.AddAircraftToProximityHold(this->mockFlightplan1, "LAM");
-            this->manager.AssignAircraftToHold(this->mockFlightplan1, "LAM", false);
-            this->manager.AssignAircraftToHold(this->mockFlightplan1, "BNN", false);
+            this->manager.AddAircraftToProximityHold("BAW123", "LAM");
+            this->manager.AssignAircraftToHold("BAW123", "LAM", false);
+            this->manager.AssignAircraftToHold("BAW123", "BNN", false);
 
             EXPECT_EQ(
                 "BNN",
@@ -135,7 +135,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold("BAW123", "LAM"))
                 .Times(1);
 
-            this->manager.AssignAircraftToHold(this->mockFlightplan1, "LAM", true);
+            this->manager.AssignAircraftToHold("BAW123", "LAM", true);
         }
 
         TEST_F(HoldManagerTest, AssigningAircraftToHoldHandlesApiExceptions)
@@ -144,7 +144,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Throw(ApiException("Test")));
 
-            this->manager.AssignAircraftToHold(this->mockFlightplan1, "LAM", true);
+            this->manager.AssignAircraftToHold("BAW123", "LAM", true);
         }
 
         TEST_F(HoldManagerTest, GetAircraftForHoldReturnsEmptySetIfNone)
@@ -175,7 +175,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, UnassignAircraftHold(_))
                 .Times(0);
 
-            this->manager.AddAircraftToProximityHold(this->mockFlightplan2, "TIMBA");
+            this->manager.AddAircraftToProximityHold("EZY234", "TIMBA");
             this->manager.UnassignAircraftFromHold("EZY234", false);
             EXPECT_EQ(
                 this->manager.GetHoldingAircraft("EZY234")->noHoldAssigned,
@@ -209,7 +209,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, RemoveAircraftFromProximityRemovesAircraftEntirelyIfNoHolds)
         {
-            this->manager.AddAircraftToProximityHold(this->mockFlightplan1, "WILLO");
+            this->manager.AddAircraftToProximityHold("BAW123", "WILLO");
             this->manager.RemoveAircraftFromProximityHold("BAW123", "WILLO");
             EXPECT_EQ(this->manager.invalidAircraft, this->manager.GetHoldingAircraft("BAW123"));
             EXPECT_EQ(0, this->manager.GetAircraftForHold("WILLO").size());
@@ -217,8 +217,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, RemoveAircraftFromProximityRetainsAircraftIfHoldingSomewhere)
         {
-            this->manager.AddAircraftToProximityHold(this->mockFlightplan1, "MAY");
-            this->manager.AddAircraftToProximityHold(this->mockFlightplan1, "WILLO");
+            this->manager.AddAircraftToProximityHold("BAW123", "MAY");
+            this->manager.AddAircraftToProximityHold("BAW123", "WILLO");
             this->manager.RemoveAircraftFromProximityHold("BAW123", "MAY");
 
             std::set<std::string> expectedProximityHolds({ "WILLO" });

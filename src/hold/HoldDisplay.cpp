@@ -90,7 +90,7 @@ namespace UKControllerPlugin {
                 }
 
                 this->holdManager.AssignAircraftToHold(
-                    *fp,
+                    fp->GetCallsign(),
                     this->navaid.identifier,
                     true
                 );

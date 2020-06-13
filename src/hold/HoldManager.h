@@ -31,11 +31,11 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner
                 );
                 void AddAircraftToProximityHold(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    std::string callsign,
                     std::string hold
                 );
                 void AssignAircraftToHold(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    std::string callsign,
                     std::string hold,
                     bool updateApi
                 );

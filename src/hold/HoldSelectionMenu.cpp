@@ -140,7 +140,7 @@ namespace UKControllerPlugin {
                 if (holdingAircraft != nullptr && holdingAircraft->GetAssignedHold() == context) {
                     return;
                 }
-                this->holdManager.AssignAircraftToHold(*fp, context, true);
+                this->holdManager.AssignAircraftToHold(fp->GetCallsign(), context, true);
             }
         }
     }  // namespace Hold
