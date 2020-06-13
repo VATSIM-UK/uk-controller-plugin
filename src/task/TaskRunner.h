@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
         class TaskRunner : public UKControllerPlugin::TaskManager::TaskRunnerInterface
         {
             public:
-                TaskRunner(int numThreads);
+                explicit TaskRunner(int numThreads);
                 TaskRunner(const TaskRunner&) = delete;
                 ~TaskRunner(void);
                 size_t CountThreads(void) const override;
