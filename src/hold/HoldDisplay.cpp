@@ -89,6 +89,15 @@ namespace UKControllerPlugin {
                     return;
                 }
 
+                if (!fp->IsTrackedByUser())
+                {
+                    LogInfo(
+                        "Tried to add aircraft " + fp->GetCallsign() +
+                        " to hold but it is not tracked by the user"
+                    );
+                    return;
+                }
+
                 this->holdManager.AssignAircraftToHold(
                     fp->GetCallsign(),
                     this->navaid.identifier,

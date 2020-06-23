@@ -328,11 +328,44 @@ namespace UKControllerPluginTest {
             ON_CALL(*mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
+            ON_CALL(*mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
             EXPECT_CALL(this->mockApi, AssignAircraftToHold("BAW123", "TIMBA"))
                 .Times(1);
 
             this->display.ButtonClicked("add");
             EXPECT_EQ("TIMBA", this->holdManager.GetHoldingAircraft("BAW123")->GetAssignedHold());
+        }
+
+        TEST_F(HoldDisplayTest, ClickingAddAddsDoesntAddToHoldManagerIfNotTrackedByUser)
+        {
+            std::shared_ptr<MockEuroScopeCRadarTargetInterface> mockRadarTarget(
+                new NiceMock<MockEuroScopeCRadarTargetInterface>()
+            );
+
+            std::shared_ptr<MockEuroScopeCFlightPlanInterface> mockFlightplan(
+                new NiceMock<MockEuroScopeCFlightPlanInterface>()
+            );
+
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan())
+                .WillByDefault(Return(mockFlightplan));
+
+            ON_CALL(this->mockPlugin, GetSelectedRadarTarget())
+                .WillByDefault(Return(mockRadarTarget));
+
+            ON_CALL(*mockFlightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(*mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
+                .Times(0);
+
+            EXPECT_EQ(0, this->holdManager.CountHoldingAircraft());
+
+            this->display.ButtonClicked("add");
         }
 
         TEST_F(HoldDisplayTest, ClickingAddDoesNothingIfNoAircraftSelected)
