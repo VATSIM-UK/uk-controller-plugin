@@ -50,7 +50,7 @@ namespace UKControllerPlugin {
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
             std::shared_ptr<HoldingAircraft> aircraft = this->holdManager.GetHoldingAircraft(flightPlan.GetCallsign());
-            if (!aircraft) {
+            if (!aircraft || aircraft->GetAssignedHold() == aircraft->noHoldAssigned) {
                 return this->noHold;
             }
 

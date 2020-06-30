@@ -116,6 +116,15 @@ namespace UKControllerPluginTest {
             );
         }
 
+        TEST_F(HoldEventHandlerTest, ItReturnsNoHoldIfAircraftNotAssignedToHold)
+        {
+            this->manager.UnassignAircraftFromHold("BAW123", false);
+            this->manager.AddAircraftToProximityHold("TIMBA");
+            EXPECT_TRUE(
+                this->handler.noHold == this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
+            );
+        }
+
         TEST_F(HoldEventHandlerTest, ItHasSubscriptionsToWebsocketEvents)
         {
             std::set<WebsocketSubscription> expectedSubscriptions;
