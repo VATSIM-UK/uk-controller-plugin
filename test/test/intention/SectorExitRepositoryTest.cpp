@@ -173,7 +173,7 @@ namespace UKControllerPluginTest {
             // RATSU
             ASSERT_TRUE(repo->GetSectorExitPoint("RATSU").GetName().compare("RATSU") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("RATSU").GetIntentionCode(mockRoute, 0, 37000).compare("R") == 0);
-            ASSERT_EQ(repo->outNorth, repo->GetSectorExitPoint("RATSU").GetOutDirection());
+            ASSERT_EQ(repo->outNorth | repo->outNorthWest, repo->GetSectorExitPoint("RATSU").GetOutDirection());
 
             // MATIK
             ASSERT_TRUE(repo->GetSectorExitPoint("MATIK").GetName().compare("MATIK") == 0);
