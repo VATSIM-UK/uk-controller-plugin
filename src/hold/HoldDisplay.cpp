@@ -1009,7 +1009,7 @@ namespace UKControllerPlugin {
                         verticalSpeedArrowDisplayEnd.Y = verticalSpeedArrowDisplayEnd.Y + this->lineHeight;
                     }
 
-                    // If the last aircraft and we have multiple at the level, with one close to the hold, draw a bounding box
+                    // If we have multiple at the level, with one close to the hold, draw a bounding box
                     if (aircraftAtLevel.size() > 1 && aircraftInProximity) {
                         Gdiplus::Rect boundingBox{
                             holdRow.X + 10,
