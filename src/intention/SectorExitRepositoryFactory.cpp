@@ -115,7 +115,11 @@ namespace UKControllerPlugin {
             );
 
             // Reykjavik
-            points["RATSU"] = std::make_unique<SectorExitPoint>("RATSU", "R", SectorExitPoint::outNorth);
+            points["RATSU"] = std::make_unique<SectorExitPoint>(
+                "RATSU",
+                "R",
+                SectorExitPoint::outNorth | SectorExitPoint::outNorthWest
+            );
             points["MATIK"] = std::make_unique<SectorExitPoint>("MATIK", "R1", SectorExitPoint::outNorth);
             points["NALAN"] = std::make_unique<SectorExitPoint>("NALAN", "R2", SectorExitPoint::outNorth);
             points["OSBON"] = std::make_unique<SectorExitPoint>("OSBON", "R3", SectorExitPoint::outNorth);
