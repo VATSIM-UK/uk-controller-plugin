@@ -124,11 +124,45 @@ namespace UKControllerPluginTest {
 
         TEST_F(ExternalsBootstrapTest, SetupUkcpFolderRootCreatesFolders)
         {
-            EXPECT_CALL(this->winApiMock, CreateFolderRecursive(this->GetMyDocumentsPath() + L"/EuroScope/ukcp"))
+            std::wstring expected = this->GetMyDocumentsPath() + L"/EuroScope/ukcp";
+
+            ON_CALL(this->winApiMock, SetPermissions(expected, std::filesystem::perms::all))
+                .WillByDefault(Return(true));
+
+            EXPECT_CALL(this->winApiMock, CreateFolderRecursive(expected))
                 .Times(1)
                 .WillOnce(Return(true));
 
             EXPECT_NO_THROW(ExternalsBootstrap::SetupUkcpFolderRoot(this->winApiMock));
+        }
+
+        TEST_F(ExternalsBootstrapTest, SetupUkcpFolderRootSetsPermissions)
+        {
+            std::wstring expected = this->GetMyDocumentsPath() + L"/EuroScope/ukcp";
+            EXPECT_CALL(this->winApiMock, CreateFolderRecursive(expected))
+                .WillRepeatedly(Return(true));
+
+            EXPECT_CALL(
+                this->winApiMock,
+                SetPermissions(expected, std::filesystem::perms::all)
+            )
+                .Times(1)
+                .WillOnce(Return(true));
+
+            EXPECT_NO_THROW(ExternalsBootstrap::SetupUkcpFolderRoot(this->winApiMock));
+        }
+
+        TEST_F(ExternalsBootstrapTest, SetupUkcpFolderRootThrowsExceptionOnFailedSettingFolderPermissions)
+        {
+            std::wstring expected = this->GetMyDocumentsPath() + L"/EuroScope/ukcp";
+
+            ON_CALL(this->winApiMock, CreateFolderRecursive(_))
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->winApiMock, SetPermissions(expected, std::filesystem::perms::all))
+                .WillByDefault(Return(false));
+
+            EXPECT_THROW(ExternalsBootstrap::SetupUkcpFolderRoot(this->winApiMock), std::runtime_error);
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPluginTest
