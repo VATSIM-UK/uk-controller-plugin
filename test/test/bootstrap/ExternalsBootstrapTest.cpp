@@ -102,7 +102,7 @@ namespace UKControllerPluginTest {
         {
             std::wstring expected = this->GetMyDocumentsPath() + L"/EuroScope";
 
-            ON_CALL(this->winApiMock, CreateFolder(expected))
+            ON_CALL(this->winApiMock, CreateFolderRecursive(expected))
                 .WillByDefault(Return(false));
 
 
@@ -113,10 +113,10 @@ namespace UKControllerPluginTest {
         {
             std::wstring expected = this->GetMyDocumentsPath() + L"/EuroScope/ukcp";
 
-            ON_CALL(this->winApiMock, CreateFolder(_))
+            ON_CALL(this->winApiMock, CreateFolderRecursive(_))
                 .WillByDefault(Return(true));
 
-            ON_CALL(this->winApiMock, CreateFolder(expected))
+            ON_CALL(this->winApiMock, CreateFolderRecursive(expected))
                 .WillByDefault(Return(false));
 
             EXPECT_THROW(ExternalsBootstrap::SetupUkcpFolderRoot(this->winApiMock), std::runtime_error);
