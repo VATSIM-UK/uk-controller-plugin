@@ -1,6 +1,5 @@
 #include "pch/stdafx.h"
 #include "hold/HoldRenderer.h"
-#include "hold/HoldProfileManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFactory.h"
@@ -10,7 +9,6 @@
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
-using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldDisplay;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
@@ -66,21 +64,43 @@ namespace UKControllerPlugin {
             A button has been left clicked
         */
         void HoldRenderer::LeftClick(
+            EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
             std::string objectDescription,
-            EuroscopeRadarLoopbackInterface & radarScreen
+            POINT mousePos,
+            RECT itemArea
         ) {
-            int holdId = this->GetHoldIdFromObjectDescription(objectDescription);
+            std::string holdName = this->GetHoldNameFromObjectDescription(objectDescription);
             auto display = std::find_if(
                 this->displays->cbegin(),
                 this->displays->cend(),
-                [holdId](const std::unique_ptr<HoldDisplay> & hold) -> bool {
-                    return hold->managedHold.GetHoldParameters().identifier == holdId;
+                [holdName](const std::unique_ptr<HoldDisplay>& hold) -> bool {
+                    return hold->navaid.identifier == holdName;
                 }
             );
 
             if (display == this->displays->cend()) {
                 LogWarning("Tried to interact with invalid hold display");
+                return;
+            }
+
+            if (objectDescription.find("cleared") != std::string::npos) {
+                (*display)->ClearedLevelClicked(
+                    this->GetCallsignFromObjectDescription(objectDescription),
+                    radarScreen,
+                    mousePos,
+                    itemArea
+                );
+                return;
+            }
+
+            if (objectDescription.find("callsign") != std::string::npos) {
+                (*display)->CallsignClicked(
+                    this->GetCallsignFromObjectDescription(objectDescription),
+                    radarScreen,
+                    mousePos,
+                    itemArea
+                );
                 return;
             }
 
@@ -103,12 +123,12 @@ namespace UKControllerPlugin {
         */
         void HoldRenderer::Move(RECT position, std::string objectDescription)
         {
-            int holdId = this->GetHoldIdFromObjectDescription(objectDescription);
+            std::string holdName = this->GetHoldNameFromObjectDescription(objectDescription);
             auto display = std::find_if(
                 this->displays->cbegin(),
                 this->displays->cend(),
-                [holdId](const std::unique_ptr<HoldDisplay> & hold) -> bool {
-                    return hold->managedHold.GetHoldParameters().identifier == holdId;
+                [holdName](const std::unique_ptr<HoldDisplay> & hold) -> bool {
+                    return hold->navaid.identifier == holdName;
                 }
             );
 
@@ -184,9 +204,14 @@ namespace UKControllerPlugin {
         /*
             Given an item description, return the hold id
         */
-        int HoldRenderer::GetHoldIdFromObjectDescription(std::string objectDescription) const
+        std::string HoldRenderer::GetHoldNameFromObjectDescription(std::string objectDescription) const
         {
-            return std::stoi(objectDescription.substr(0, objectDescription.find("/")));
+            return objectDescription.substr(0, objectDescription.find("/"));
+        }
+
+        std::string HoldRenderer::GetCallsignFromObjectDescription(std::string objectDescription) const
+        {
+            return objectDescription.substr(objectDescription.find_last_of("/") + 1);
         }
 
         /*

@@ -2,7 +2,6 @@
 #include "api/ApiResponse.h"
 #include "api/ApiRequestBuilder.h"
 #include "api/ApiInterface.h"
-#include "hold/HoldProfile.h"
 
 namespace UKControllerPlugin {
     namespace Curl {
@@ -48,19 +47,13 @@ namespace UKControllerPlugin {
                 std::string GetApiKey(void) const override;
                 nlohmann::json GetDependencyList(void) const override;
                 nlohmann::json GetHoldDependency(void) const override;
-                nlohmann::json GetGenericHoldProfiles(void) const override;
-                nlohmann::json GetUserHoldProfiles(void) const override;
+                nlohmann::json GetAssignedHolds(void) const override;;
+                void AssignAircraftToHold(std::string callsign, std::string navaid) const override;
+                void UnassignAircraftHold(std::string callsign) const override;
                 nlohmann::json GetMinStackLevels(void) const override;
                 nlohmann::json GetRegionalPressures(void) const override;
                 nlohmann::json GetUri(std::string uri) const;
                 nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const;
-                void DeleteUserHoldProfile(unsigned int profileId) const override;
-                unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
-                void UpdateUserHoldProfile(
-                    unsigned int id,
-                    std::string name,
-                    std::set<unsigned int> holds
-                ) const override;
                 int UpdateCheck(std::string version) const override;
                 void SetApiKey(std::string key) override;
                 void SetApiDomain(std::string domain) override;

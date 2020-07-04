@@ -65,9 +65,11 @@ namespace UKControllerPlugin {
                 Gdiplus::Color & GetTrailColour(void) const;
                 bool IsVisible(void) const override;
                 void LeftClick(
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
                     int objectId,
                     std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
+                    POINT mousePos,
+                    RECT itemArea
                 ) override;
                 void Move(RECT position, std::string objectDescription) override;
                 bool ProcessCommand(std::string command) override;

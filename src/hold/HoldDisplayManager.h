@@ -4,7 +4,6 @@
 
 namespace UKControllerPlugin {
     namespace Hold {
-        class HoldProfileManager;
         class HoldManager;
         class HoldDisplayFactory;
     }  // namespace Hold
@@ -14,22 +13,19 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         /*
-            A class that manages hold display classes based on the selected
-            profile. Separates loading the displays from actually rendering them. This class
-            is instantiated per-ASR
+            A class that manages hold display classes for each of the ASRs.
         */
         class HoldDisplayManager : public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
         {
             public:
                 HoldDisplayManager(
-                    const UKControllerPlugin::Hold::HoldProfileManager & profileManager,
                     const UKControllerPlugin::Hold::HoldManager & holdManager,
                     const UKControllerPlugin::Hold::HoldDisplayFactory & displayFactory
                 );
                 size_t CountDisplays(void) const;
-                unsigned int GetCurrentProfile(void) const;
-                const UKControllerPlugin::Hold::HoldDisplay & GetDisplay(unsigned int holdId) const;
-                void LoadProfile(unsigned int profileId);
+                const UKControllerPlugin::Hold::HoldDisplay & GetDisplay(std::string fix) const;
+                std::vector<std::string> GetSelectedHolds(void) const;
+                void LoadSelectedHolds(std::vector<std::string> holds);
 
                 // Inherited via AsrEventHandlerInterface
                 void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
@@ -41,21 +37,14 @@ namespace UKControllerPlugin {
                 const_iterator cbegin() const { return displays.cbegin(); }
                 const_iterator cend() const { return displays.cend(); }
 
-                // The profile id if no profile has been selected
-                const unsigned int noProfileSelectedId = 0;
+                // ASR Data
+                const std::string selectedHoldsAsrKey = "selectedHolds";
 
-                // The key in the ASR for the selected hold profile
-                const std::string selectedProfileAsrKey = "selectedHoldProfile";
-
-                // The description for the ASR item
-                const std::string selectedProfileAsrDescription = "Selected Hold Profile";
+                const std::string selectedHoldsAsrDescription = "Selected Holds";
 
             private:
 
                 void SaveDisplaysToAsr(void) const;
-
-                // Manages profiles
-                const UKControllerPlugin::Hold::HoldProfileManager & profileManager;
 
                 // Manages holds
                 const UKControllerPlugin::Hold::HoldManager & holdManager;
@@ -69,8 +58,8 @@ namespace UKControllerPlugin {
                 // Place to find settings
                 UKControllerPlugin::Euroscope::UserSetting * userSetting;
 
-                // The currently selected profile id
-                unsigned int profileId = 0;
+                // The currently selected holds
+                std::vector<std::string> selectedHolds;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

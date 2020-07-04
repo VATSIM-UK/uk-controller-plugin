@@ -310,7 +310,7 @@ namespace UKControllerPluginTest {
             renderer.SetVisible(true);
 
             EXPECT_TRUE(renderer.IsVisible());
-            renderer.LeftClick(renderer.hideClickspotId, "", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.hideClickspotId, "", {}, {});
             EXPECT_FALSE(renderer.IsVisible());
         }
 
@@ -319,7 +319,7 @@ namespace UKControllerPluginTest {
             this->manager.AddRegionalPressure("ASR_LONDON", "London", 1013);
 
             EXPECT_FALSE(manager.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
-            renderer.LeftClick(renderer.rpsClickspotId, "ASR_LONDON", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.rpsClickspotId, "ASR_LONDON", {}, {});
             EXPECT_TRUE(manager.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
         }
 

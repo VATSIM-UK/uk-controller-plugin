@@ -191,59 +191,36 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Builds a request to download all the users custom hold profiles
+            Builds a request to get all the currently assigned holds
         */
-        CurlRequest ApiRequestBuilder::BuildUserHoldProfilesRequest(void) const
+        CurlRequest ApiRequestBuilder::BuildAllAssignedHoldsRequest(void) const
         {
-            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/profile", CurlRequest::METHOD_GET));
+            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/assigned", CurlRequest::METHOD_GET));
         }
 
         /*
-            Builds a request to delete a users custom hold profile
+            Build request to assign an aircraft to a hold
         */
-        CurlRequest ApiRequestBuilder::BuildDeleteUserHoldProfileRequest(unsigned int id) const
+        CurlRequest ApiRequestBuilder::BuildSetAssignedHoldRequest(std::string callsign, std::string navaid) const
+        {
+            CurlRequest request(this->apiDomain + "/hold/assigned", CurlRequest::METHOD_PUT);
+            nlohmann::json data{
+                {"callsign", callsign},
+                {"navaid", navaid}
+            };
+            request.SetBody(data.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
+        /*
+            Build request to unassign an aircraft from all holds
+        */
+        CurlRequest ApiRequestBuilder::BuildDeleteAssignedHoldRequest(std::string callsign) const
         {
             return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/hold/profile/" + std::to_string(id), CurlRequest::METHOD_DELETE)
+                CurlRequest(apiDomain + "/hold/assigned/" + callsign, CurlRequest::METHOD_DELETE)
             );
-        }
-
-        /*
-            Builds a request to create a custom hold profile for a user
-        */
-        CurlRequest ApiRequestBuilder::BuildCreateUserHoldProfileRequest(
-            std::string profileName,
-            std::set<unsigned int> holdIds
-        ) const {
-            nlohmann::json body;
-            body["name"] = profileName;
-            body["holds"] = holdIds;
-
-            CurlRequest request(apiDomain + "/hold/profile", CurlRequest::METHOD_PUT);
-            request.SetBody(body.dump());
-
-            return this->AddCommonHeaders(request);
-        }
-
-        /*
-            Builds a request to update a users custom hold profile
-        */
-        CurlRequest ApiRequestBuilder::BuildUpdateUserHoldProfileRequest(
-            unsigned int profileId,
-            std::string profileName,
-            std::set<unsigned int> holdIds
-        ) const {
-            nlohmann::json body;
-            body["name"] = profileName;
-            body["holds"] = holdIds;
-
-            CurlRequest request(
-                apiDomain + "/hold/profile/" + std::to_string(profileId),
-                CurlRequest::METHOD_PUT
-            );
-            request.SetBody(body.dump());
-
-            return this->AddCommonHeaders(request);
         }
 
         /*

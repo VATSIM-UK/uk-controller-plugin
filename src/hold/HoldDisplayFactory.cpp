@@ -2,19 +2,26 @@
 #include "hold/HoldDisplayFactory.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "hold/HoldManager.h"
+#include "dialog/DialogManager.h"
 
 using UKControllerPlugin::Hold::HoldManager;
-using UKControllerPlugin::Hold::HoldDisplay;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Navaids::Navaid;
+using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
         HoldDisplayFactory::HoldDisplayFactory(
-            const EuroscopePluginLoopbackInterface & plugin,
-            HoldManager & holdManager
+            EuroscopePluginLoopbackInterface & plugin,
+            HoldManager & holdManager,
+            const NavaidCollection& navaids,
+            const PublishedHoldCollection& holds,
+            const DialogManager& dialogManager
         )
-            : plugin(plugin), holdManager(holdManager)
+            : plugin(plugin), holdManager(holdManager), navaids(navaids),
+            holds(holds), dialogManager(dialogManager)
         {
 
         }
@@ -22,17 +29,20 @@ namespace UKControllerPlugin {
         /*
             Create a hold display
         */
-        std::unique_ptr<HoldDisplay> HoldDisplayFactory::Create(unsigned int holdId) const
+        std::unique_ptr<HoldDisplay> HoldDisplayFactory::Create(std::string navaid) const
         {
-            const ManagedHold * const managed = this->holdManager.GetManagedHold(holdId);
-            if (managed == nullptr) {
+            const Navaid& navaidData = this->navaids.GetByIdentifier(navaid);
+
+            if (navaidData == this->navaids.invalidNavaid) {
                 return nullptr;
             }
 
             return std::make_unique<HoldDisplay>(
                 plugin,
-                *managed,
-                holdManager
+                holdManager,
+                navaidData,
+                holds.Get(navaid),
+                dialogManager
             );
         }
     }  // namespace Hold

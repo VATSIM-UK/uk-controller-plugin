@@ -5,7 +5,7 @@
 namespace UKControllerPlugin {
     namespace Hold {
 
-        std::unique_ptr<UKControllerPlugin::Hold::HoldManager> CreateHoldManager(
+        std::unique_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> CreatePublishedHoldCollection(
             nlohmann::json data,
             const UKControllerPlugin::Bootstrap::PersistenceContainer & container
         );

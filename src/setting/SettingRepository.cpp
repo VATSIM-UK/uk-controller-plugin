@@ -25,6 +25,7 @@ namespace UKControllerPlugin {
 
             // If the file doesn't exist locally, there's no point.
             if (!this->winApi.FileExists(this->settingFolder + L"/" + widePath)) {
+                LogError("Settings file does not exist");
                 return;
             }
 

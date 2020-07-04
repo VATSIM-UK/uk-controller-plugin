@@ -33,7 +33,7 @@ namespace UKControllerPlugin {
         */
         void HoldConfigurationMenuItem::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
-            this->dialogManager.OpenDialog(HOLD_SELECTOR_DIALOG, reinterpret_cast<LPARAM>(this));
+            this->dialogManager.OpenDialog(IDD_HOLD_SELECTION, reinterpret_cast<LPARAM>(this));
         }
 
         /*
@@ -51,12 +51,17 @@ namespace UKControllerPlugin {
             return returnVal;
         }
 
+        std::vector<std::string> HoldConfigurationMenuItem::GetHolds(void) const
+        {
+            return this->displayManager->GetSelectedHolds();
+        }
+
         /*
             An item has been selected from the menu, load that profile
         */
-        void HoldConfigurationMenuItem::SelectProfile(unsigned int profileId)
+        void HoldConfigurationMenuItem::SelectHolds(std::vector<std::string> holds)
         {
-            this->displayManager->LoadProfile(profileId);
+            this->displayManager->LoadSelectedHolds(holds);
         }
 
         /*
@@ -70,19 +75,6 @@ namespace UKControllerPlugin {
             }
 
             return false;
-        }
-
-        /*
-            A hold profile has become invalidated, make sure that the renderer
-            re-loads it.
-        */
-        void HoldConfigurationMenuItem::InvalidateProfile(unsigned int profileId)
-        {
-            if (profileId != this->displayManager->GetCurrentProfile()) {
-                return;
-            }
-
-            this->displayManager->LoadProfile(profileId);
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

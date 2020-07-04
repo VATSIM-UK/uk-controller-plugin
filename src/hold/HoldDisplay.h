@@ -1,8 +1,12 @@
 #pragma once
+#include "navaids/Navaid.h"
+#include "hold/HoldingData.h"
+#include "hold/CompareHolds.h"
+#include "hold/CompareHoldingAircraft.h"
+#include "dialog/DialogManager.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
-        class ManagedHold;
         class HoldManager;
     }  // namespace Hold
     namespace Euroscope {
@@ -25,11 +29,31 @@ namespace UKControllerPlugin {
         {
             public:
                 HoldDisplay(
-                    const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    const UKControllerPlugin::Hold::ManagedHold & managedHold,
-                    UKControllerPlugin::Hold::HoldManager & holdManager
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
+                    UKControllerPlugin::Hold::HoldManager & holdManager,
+                    const UKControllerPlugin::Navaids::Navaid& navaid,
+                    const std::set<
+                        UKControllerPlugin::Hold::HoldingData,
+                        UKControllerPlugin::Hold::CompareHolds
+                    >& publishedHolds,
+                    const UKControllerPlugin::Dialog::DialogManager& dialogManager
                 );
                 void ButtonClicked(std::string button);
+                void CallsignClicked(
+                    std::string callsign,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+                    POINT mousePos,
+                    RECT area
+                );
+                void ClearedLevelClicked(
+                    std::string callsign,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+                    POINT mousePos,
+                    RECT area
+                );
+                Gdiplus::Rect GetHoldViewBackgroundRender(
+                    const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& aircraft
+                ) const;
                 INT GetDataStartHeight(void) const;
                 POINT GetDisplayPos(void) const;
                 Gdiplus::Rect GetTitleArea(void) const;
@@ -38,6 +62,8 @@ namespace UKControllerPlugin {
                 RECT GetMinimiseClickArea(void) const;
                 Gdiplus::Rect GetInformationArea(void) const;
                 RECT GetInformationClickArea(void) const;
+                Gdiplus::Rect GetOptionsArea(void) const;
+                RECT GetOptionsClickArea(void) const;
                 Gdiplus::Rect GetPlusArea(void) const;
                 RECT GetPlusClickArea(void) const;
                 Gdiplus::Rect GetMinusArea(void) const;
@@ -46,13 +72,20 @@ namespace UKControllerPlugin {
                 RECT GetAllClickArea(void) const;
                 Gdiplus::Rect GetAddArea(void) const;
                 RECT GetAddClickArea(void) const;
-                unsigned int GetLevelsSkipped(void) const;
-                int GetWindowHeight(void) const;
+                Gdiplus::Point GetUnderButtonLineLeft(void) const;
+                Gdiplus::Point GetUnderButtonLineRight(void) const;
+                int GetMaximumLevel(void) const;
+                int GetMinimumLevel(void) const;
+                void SetMaximumLevel(int level);
+                void SetMinimumLevel(int level);
+                std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
+                    MapAircraftToLevels(
+                        const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft
+                    ) const;
                 bool IsInInformationMode(void) const;
                 bool IsMinimised(void) const;
                 void LoadDataFromAsr(
-                    UKControllerPlugin::Euroscope::UserSetting & userSetting,
-                    unsigned int profileId
+                    UKControllerPlugin::Euroscope::UserSetting & userSetting
                 );
                 void Move(const POINT & pos);
                 void PaintWindow(
@@ -61,25 +94,35 @@ namespace UKControllerPlugin {
                     const int screenObjectId
                 ) const;
                 void SaveDataToAsr(
-                    UKControllerPlugin::Euroscope::UserSetting & userSetting,
-                    unsigned int profileId,
-                    std::string profileName
+                    UKControllerPlugin::Euroscope::UserSetting & userSetting
                 ) const;
 
-                // The hold this display is managing.
-                const UKControllerPlugin::Hold::ManagedHold & managedHold;
+                // The navaid that the hold is against
+                const UKControllerPlugin::Navaids::Navaid& navaid;
 
-                // Max levels skippable
-                const unsigned int maxLevelsSkippable;
+                // The window width
+                int windowWidth = 225;
 
                 // How high lines should be
-                const INT lineHeight = 17;
+                const INT lineHeight = 25;
 
                 // The default offset for buttons
-                const INT buttonStartOffset = 18;
+                const INT buttonStartOffsetY = 18;
+                const INT buttonStartOffsetX = 10;
+                const INT bigButtonHeight = 25;
+                const INT bigButtonWidth = 40;
 
                 // The default offset for data
-                const INT dataStartOffset = 68;
+                const INT dataStartOffset = 55;
+
+                // The distance from the navaid at which the same level box renders
+                const double sameLevelBoxDistance = 12.0;
+
+                // The holds that are published for this display
+                const std::set<
+                    UKControllerPlugin::Hold::HoldingData,
+                    UKControllerPlugin::Hold::CompareHolds
+                >& publishedHolds;
 
             private:
 
@@ -99,6 +142,11 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
                     const int screenObjectId
                 ) const;
+                void RenderActionButtons(
+                    UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+                    const int screenObjectId
+                ) const;
                 void RenderManagedHoldDisplay(
                     UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
@@ -109,15 +157,21 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Hold::HoldManager & holdManager;
 
                 // Reference to the plugin
-                const UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+
+                // For opening dialogs
+                const UKControllerPlugin::Dialog::DialogManager& dialogManager;
 
                 // Brushes
                 const Gdiplus::SolidBrush titleBarTextBrush;
                 const Gdiplus::SolidBrush titleBarBrush;
                 const Gdiplus::SolidBrush dataBrush;
                 const Gdiplus::SolidBrush clearedLevelBrush;
-                const Gdiplus::HatchBrush blockedLevelBrush;
+                const Gdiplus::SolidBrush blockedLevelBrush;
                 const Gdiplus::Pen borderPen;
+                const Gdiplus::Pen sameLevelBoxPen;
+                Gdiplus::Pen verticalSpeedAscentPen;
+                Gdiplus::Pen verticalSpeedDescentPen;
                 const Gdiplus::SolidBrush exitButtonBrush;
                 const Gdiplus::SolidBrush backgroundBrush;
 
@@ -127,47 +181,85 @@ namespace UKControllerPlugin {
                 const Gdiplus::Font plusFont;
                 Gdiplus::StringFormat stringFormat;
 
-                // Titlebar
-                Gdiplus::Rect titleArea = { 0, 0, 200, 15 };
-                RECT titleRect = { 0, 0, 200, 15 };
-                Gdiplus::Rect minimiseButtonArea = { 0, 0, 11, 11 };
-                RECT minimiseClickRect;
-                Gdiplus::Rect informationButtonArea = { 21, 0, 11, 11 };
-                RECT informationClickRect;
-
                 // Where to start the data drawing.
                 INT dataStartHeight;
 
                 // Is the window minimised
                 bool minimised = false;
 
-                // The window width
-                int windowWidth = 200;
-
-                // The window height
-                int windowHeight = 500;
-
-                // The maximum possible window height based on the number of levels in the hold
-                int maxWindowHeight = 500;
-
                 // The height of the window to use when doing the information display
                 const int informationDisplayWindowHeight = 225;
 
-                // How many levels to not draw
-                unsigned int numLevelsSkipped = 0;
+                // The minimum level in the hold
+                int minimumLevel = 7000;
+
+                // The maximum level in the hold
+                int maximumLevel = 15000;
 
                 // Should we display the information about the hold
                 bool showHoldInformation = false;
 
+                // Titlebar
+                Gdiplus::Rect titleArea = { 0, 0, this->windowWidth, 15 };
+                RECT titleRect = { 0, 0, this->windowWidth, 15 };
+                Gdiplus::Point underButtonLineLeft = { 0, 45 };
+                Gdiplus::Point underButtonLineRight = { this->windowWidth, 45 };
+                Gdiplus::Rect minimiseButtonArea = { 0, 0, 11, 11 };
+                RECT minimiseClickRect;
+                Gdiplus::Rect informationButtonArea = { 21, 0, 11, 11 };
+                RECT informationClickRect;
+                Gdiplus::Rect optionsButtonArea = { 42, 0, 11, 11 };
+                RECT optionsClickRect;
+
                 // Some more rects
-                Gdiplus::Rect minusButtonRect = {5, this->buttonStartOffset, 40, 40};
-                RECT minusButtonClickRect = { 5, this->buttonStartOffset, 40, 40 };
-                Gdiplus::Rect plusButtonRect = {55, this->buttonStartOffset, 40, 40};
-                RECT plusButtonClickRect = { 55, this->buttonStartOffset, 40, 40 };
-                Gdiplus::Rect allButtonRect = { 105, this->buttonStartOffset, 40, 40 };
-                RECT allButtonClickRect = { 105, this->buttonStartOffset, 40, 40 };
-                Gdiplus::Rect addButtonRect = {190, this->buttonStartOffset, 40, 40};
-                RECT addButtonClickRect = { 190, this->buttonStartOffset, 40, 40 };
+                Gdiplus::Rect minusButtonRect = {
+                    5,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                RECT minusButtonClickRect = {
+                    5,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                Gdiplus::Rect plusButtonRect = {
+                    55,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                RECT plusButtonClickRect = {
+                    55,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                Gdiplus::Rect allButtonRect = {
+                    105,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                RECT allButtonClickRect = {
+                    105,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                Gdiplus::Rect addButtonRect = {
+                    190,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
+                RECT addButtonClickRect = {
+                    190,
+                    this->buttonStartOffsetY,
+                    this->bigButtonWidth,
+                    this->bigButtonHeight
+                };
 
                 POINT windowPos = { 100, 100 };
         };

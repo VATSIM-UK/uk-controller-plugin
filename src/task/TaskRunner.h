@@ -19,17 +19,14 @@ namespace UKControllerPlugin {
         class TaskRunner : public UKControllerPlugin::TaskManager::TaskRunnerInterface
         {
             public:
-                TaskRunner(
-                    int numAsynchronousTaskThreads,
-                    int numInlineTaskThreads
-                );
+                explicit TaskRunner(int numThreads);
+                TaskRunner(const TaskRunner&) = delete;
                 ~TaskRunner(void);
+                size_t CountThreads(void) const override;
                 void QueueAsynchronousTask(std::function<void(void)> task) override;
-                void QueueInlineTask(std::function<void(void)> task);
 
             private:
-                void ProcessInlineTasks(void);
-                void ProcessAsynchronousTasks(void);
+                void ProcessAsynchronousTasks(int threadNumber);
 
                 // Are the threads running
                 bool threadsRunning = true;
@@ -45,15 +42,6 @@ namespace UKControllerPlugin {
 
                 // A condition variable for the asynchronous queue.
                 std::condition_variable asynchronousQueueCondVar;
-
-                // A lock for the inline queue when picking off tasks.
-                std::mutex inlineQueueLock;
-
-                // The master queue for inline tasks - will be taken off in order.
-                std::deque <std::function<void()>> inlineTaskQueue;
-
-                // A condition variable for the inline queue.
-                std::condition_variable inlineQueueCondVar;
         };
     }  // namespace TaskManager
 }  // namespace UKControllerPlugin

@@ -534,6 +534,40 @@ namespace UKControllerPlugin {
         }
     }
 
+    void UKPlugin::ApplyFunctionToAllFlightplans(
+        std::function<void(
+            std::shared_ptr<EuroScopeCFlightPlanInterface>,
+            std::shared_ptr<EuroScopeCRadarTargetInterface>)
+        > function)
+    {
+        EuroScopePlugIn::CFlightPlan current = this->FlightPlanSelectFirst();
+
+        // If there's nothing, stop
+        if (!current.IsValid() || strcmp(current.GetCallsign(), "") == 0) {
+            return;
+        }
+
+        // Loop through all visible flightplans
+        do {
+            if (!current.IsValid()) {
+                continue;
+            }
+
+            EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelect(current.GetCallsign());
+
+            if (!rt.IsValid()) {
+                continue;
+            }
+
+            function(
+                std::make_shared<EuroScopeCFlightPlanWrapper>(current),
+                std::make_shared<EuroScopeCRadarTargetWrapper>(rt)
+            );
+
+            this->OnFlightPlanFlightPlanDataUpdate(current);
+        } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
+    }
+
     /*
         Called on a timer by EuroScope.
     */

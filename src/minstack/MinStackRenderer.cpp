@@ -195,9 +195,11 @@ namespace UKControllerPlugin {
             Called when one of the clickable areas is clicked on.
         */
         void MinStackRenderer::LeftClick(
+            EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
             std::string objectDescription,
-            EuroscopeRadarLoopbackInterface & radarScreen
+            POINT mousePos,
+            RECT itemArea
         ) {
             // Hiding the module
             if (objectId == this->hideClickspotId) {
@@ -389,7 +391,7 @@ namespace UKControllerPlugin {
             std::string objectDescription,
             EuroscopeRadarLoopbackInterface & radarScreen
         ) {
-            this->LeftClick(objectId, objectDescription, radarScreen);
+            this->LeftClick(radarScreen, objectId, objectDescription, POINT{}, RECT{});
         }
 
         /*

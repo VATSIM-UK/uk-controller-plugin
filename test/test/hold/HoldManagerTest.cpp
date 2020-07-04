@@ -3,20 +3,24 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "hold/ManagedHold.h"
-#include "hold/HoldingData.h"
 #include "hold/HoldingAircraft.h"
+#include "mock/MockApiInterface.h"
+#include "mock/MockTaskRunnerInterface.h"
+#include "api/ApiException.h"
 
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
-using UKControllerPlugin::Hold::ManagedHold;
-using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPlugin::Hold::HoldingAircraft;
+using UKControllerPlugin::Api::ApiException;
 using ::testing::Return;
 using ::testing::NiceMock;
 using ::testing::Test;
+using ::testing::Throw;
+using ::testing::_;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -25,154 +29,203 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldManagerTest(void)
+                    : manager(mockApi, mockTaskRunner)
                 {
-                    manager.AddHold(ManagedHold(std::move(hold1)));
 
-                    ON_CALL(mockFlightplan, GetCallsign())
+                    ON_CALL(mockFlightplan1, GetCallsign())
                         .WillByDefault(Return("BAW123"));
 
-                    ON_CALL(mockFlightplan, GetClearedAltitude())
-                        .WillByDefault(Return(8000));
+                    ON_CALL(mockFlightplan2, GetCallsign())
+                        .WillByDefault(Return("EZY234"));
 
-                    ON_CALL(mockRadarTarget, GetFlightLevel())
-                        .WillByDefault(Return(9000));
-
-                    ON_CALL(mockRadarTarget, GetVerticalSpeed())
-                        .WillByDefault(Return(300));
+                    this->manager.AssignAircraftToHold("EZY234", "TIMBA", false);
                 }
 
-                HoldingData hold1 = { 1, "WILLO", "WILLO", 8000, 15000, 209, "left", {} };
-                NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
+                NiceMock<MockApiInterface> mockApi;
+                NiceMock<MockTaskRunnerInterface> mockTaskRunner;
+                NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan1;
+                NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan2;
                 NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 HoldManager manager;
         };
 
-
-        TEST_F(HoldManagerTest, ItStartsEmpty)
+        TEST_F(HoldManagerTest, AddingAircraftToProximityHoldsCreatesNewInstance)
         {
-            EXPECT_EQ(1, this->manager.CountHolds());
-        }
+            this->manager.AddAircraftToProximityHold("BAW123", "LAM");
 
-        TEST_F(HoldManagerTest, ItAddsAHold)
-        {
-            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left", {} };
-            this->manager.AddHold(ManagedHold(std::move(hold2)));
-            EXPECT_EQ(2, this->manager.CountHolds());
-        }
-
-        TEST_F(HoldManagerTest, ItHandlesDuplicateHolds)
-        {
-            HoldingData duplicate = { 1, "WILLO", "WILLO", 8000, 15000, 209, "left", {} };
-            this->manager.AddHold(ManagedHold(std::move(duplicate)));
-            EXPECT_EQ(1, this->manager.CountHolds());
-        }
-
-        TEST_F(HoldManagerTest, ItAddsAircraftToHold)
-        {
-            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
-            EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
-            EXPECT_EQ(1, this->manager.GetManagedHold(1)->CountHoldingAircraft());
-        }
-
-        TEST_F(HoldManagerTest, AddingAircraftToAHoldSetsData)
-        {
-            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
-            HoldingAircraft holding = *this->manager.GetManagedHold(1)->cbegin();
-
-            int64_t seconds = std::chrono::duration_cast<std::chrono::seconds> (
-                holding.entryTime - std::chrono::system_clock::now()
-            ).count();
-
-            EXPECT_TRUE(holding.callsign == "BAW123");
-            EXPECT_EQ(8000, holding.clearedLevel);
-            EXPECT_EQ(9000, holding.reportedLevel);
-            EXPECT_EQ(300, holding.verticalSpeed);
-            EXPECT_LT(seconds, 2);
-        }
-
-        TEST_F(HoldManagerTest, AddingAircraftToOneHoldRemovesFromAnother)
-        {
-            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
-            this->manager.AddHold(ManagedHold(std::move(hold2)));
-            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
-            EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
-            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 2);
-            EXPECT_FALSE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
-            EXPECT_TRUE(this->manager.GetManagedHold(2)->HasAircraft("BAW123"));
-        }
-
-        TEST_F(HoldManagerTest, ItHandlesAddingToNonExistantHold)
-        {
-            EXPECT_NO_THROW(this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 555));
-        }
-
-        TEST_F(HoldManagerTest, GetHoldReturnsNullPointerIfDoesntExist)
-        {
-            EXPECT_EQ(nullptr, this->manager.GetManagedHold(555));
-        }
-
-        TEST_F(HoldManagerTest, ItRemovesAnAircraftFromAnyHold)
-        {
-            HoldingData hold2 = { 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left" };
-            this->manager.AddHold(ManagedHold(std::move(hold2)));
-            manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
-            EXPECT_TRUE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
-            manager.RemoveAircraftFromAnyHold("BAW123");
-            EXPECT_FALSE(this->manager.GetManagedHold(1)->HasAircraft("BAW123"));
-        }
-
-        TEST_F(HoldManagerTest, ItHandlesRemovingNonExistantAircraft)
-        {
-            EXPECT_NO_THROW(manager.RemoveAircraftFromAnyHold("BAW123"));
-        }
-
-        TEST_F(HoldManagerTest, ItUpdatesHoldingAircraftData)
-        {
-            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> updatedmockFp(
-                new NiceMock<MockEuroScopeCFlightPlanInterface>
+            std::set<std::string> expectedProximityHolds({ "LAM" });
+            EXPECT_EQ(expectedProximityHolds, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds());
+            EXPECT_EQ(
+                this->manager.GetHoldingAircraft("BAW123")->noHoldAssigned,
+                this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold()
             );
+            EXPECT_EQ(1, this->manager.GetAircraftForHold("LAM").size());
+            EXPECT_EQ("BAW123", (*this->manager.GetAircraftForHold("LAM").cbegin())->GetCallsign());
+        }
 
-            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> updatedmockRt(
-                new NiceMock<MockEuroScopeCRadarTargetInterface>
+        TEST_F(HoldManagerTest, AddingAircraftToProximityHoldsUpdatesExistingInstance)
+        {
+            this->manager.AddAircraftToProximityHold("BAW123", "LAM");
+            this->manager.AddAircraftToProximityHold("BAW123", "BNN");
+
+            std::set<std::string> expectedProximityHolds({ "LAM", "BNN" });
+            EXPECT_EQ(expectedProximityHolds, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds());
+            EXPECT_EQ(
+                this->manager.GetHoldingAircraft("BAW123")->noHoldAssigned,
+                this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold()
             );
-
-            ON_CALL(*updatedmockFp, GetClearedAltitude())
-                .WillByDefault(Return(7000));
-
-            ON_CALL(*updatedmockRt, GetFlightLevel())
-                .WillByDefault(Return(8000));
-
-            ON_CALL(*updatedmockRt, GetVerticalSpeed())
-                .WillByDefault(Return(-250));
-
-            ON_CALL(mockPlugin, GetFlightplanForCallsign("BAW123"))
-                .WillByDefault(Return(updatedmockFp));
-
-            ON_CALL(mockPlugin, GetRadarTargetForCallsign("BAW123"))
-                .WillByDefault(Return(updatedmockRt));
-
-            manager.UpdateHoldingAircraft(this->mockPlugin);
-            EXPECT_EQ(7000, manager.GetManagedHold(1)->cbegin()->clearedLevel);
-            EXPECT_EQ(8000, manager.GetManagedHold(1)->cbegin()->reportedLevel);
-            EXPECT_EQ(-250, manager.GetManagedHold(1)->cbegin()->verticalSpeed);
         }
 
-        TEST_F(HoldManagerTest, ItDoesNothingIfNoUpdatesRequired)
+        TEST_F(HoldManagerTest, AssigningAircraftToHoldCreatesNewInstance)
         {
-            EXPECT_NO_THROW(manager.UpdateHoldingAircraft(this->mockPlugin));
+            EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
+                .Times(0);
+
+            this->manager.AssignAircraftToHold("BAW123", "LAM", false);
+
+            EXPECT_EQ(0, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds().size());
+            EXPECT_EQ(
+                "LAM",
+                this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold()
+            );
+            EXPECT_EQ(1, this->manager.GetAircraftForHold("LAM").size());
+            EXPECT_EQ("BAW123", (*this->manager.GetAircraftForHold("LAM").cbegin())->GetCallsign());
         }
 
-        TEST_F(HoldManagerTest, ItGetsAHoldForAGivenAircraft)
+        TEST_F(HoldManagerTest, AssigningAircraftToHoldUpdatesExistingAndRemovesFromPreviousHoldIfNotAffiliated)
         {
-            this->manager.AddAircraftToHold(mockFlightplan, mockRadarTarget, 1);
-            EXPECT_TRUE(this->hold1 == this->manager.GetAircraftHold("BAW123")->GetHoldParameters());
+            EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
+                .Times(0);
+
+            this->manager.AssignAircraftToHold("BAW123", "LAM", false);
+            this->manager.AssignAircraftToHold("BAW123", "BNN", false);
+
+            EXPECT_EQ(0, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds().size());
+            EXPECT_EQ(
+                "BNN",
+                this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold()
+            );
+            EXPECT_EQ(1, this->manager.GetAircraftForHold("BNN").size());
+            EXPECT_EQ("BAW123", (*this->manager.GetAircraftForHold("BNN").cbegin())->GetCallsign());
+            EXPECT_EQ(0, this->manager.GetAircraftForHold("LAM").size());
         }
 
-        TEST_F(HoldManagerTest, ItReturnsNullIfAircraftDoesntHaveAHold)
+        TEST_F(HoldManagerTest, AssigningAircraftToHoldUpdatesExistingAndRemovesFromPreviousHoldIfNotProximity)
         {
-            EXPECT_EQ(NULL, this->manager.GetAircraftHold("BAW123"));
+            EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
+                .Times(0);
+
+            this->manager.AddAircraftToProximityHold("BAW123", "LAM");
+            this->manager.AssignAircraftToHold("BAW123", "LAM", false);
+            this->manager.AssignAircraftToHold("BAW123", "BNN", false);
+
+            EXPECT_EQ(
+                "BNN",
+                this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold()
+            );
+            EXPECT_EQ(1, this->manager.GetAircraftForHold("BNN").size());
+            EXPECT_EQ("BAW123", (*this->manager.GetAircraftForHold("BNN").cbegin())->GetCallsign());
+            EXPECT_EQ(1, this->manager.GetAircraftForHold("LAM").size());
+            EXPECT_EQ("BAW123", (*this->manager.GetAircraftForHold("LAM").cbegin())->GetCallsign());
+        }
+
+        TEST_F(HoldManagerTest, AssigningAircraftToHoldUpdatesApiIfSelected)
+        {
+            EXPECT_CALL(this->mockApi, AssignAircraftToHold("BAW123", "LAM"))
+                .Times(1);
+
+            this->manager.AssignAircraftToHold("BAW123", "LAM", true);
+        }
+
+        TEST_F(HoldManagerTest, AssigningAircraftToHoldHandlesApiExceptions)
+        {
+            EXPECT_CALL(this->mockApi, AssignAircraftToHold("BAW123", "LAM"))
+                .Times(1)
+                .WillOnce(Throw(ApiException("Test")));
+
+            this->manager.AssignAircraftToHold("BAW123", "LAM", true);
+        }
+
+        TEST_F(HoldManagerTest, GetAircraftForHoldReturnsEmptySetIfNone)
+        {
+            EXPECT_EQ(0, this->manager.GetAircraftForHold("LAM").size());
+        }
+
+        TEST_F(HoldManagerTest, UnassigningAircraftFromHoldHandlesIfNotHolding)
+        {
+            EXPECT_CALL(this->mockApi, UnassignAircraftHold(_))
+                .Times(0);
+
+            EXPECT_NO_THROW(this->manager.UnassignAircraftFromHold("BAW123", false));
+        }
+
+        TEST_F(HoldManagerTest, UnassigningAircraftRemovesAircraftFromHoldEntirelyIfNoProximity)
+        {
+            EXPECT_CALL(this->mockApi, UnassignAircraftHold(_))
+                .Times(0);
+
+            this->manager.UnassignAircraftFromHold("EZY234", false);
+            EXPECT_EQ(this->manager.invalidAircraft, this->manager.GetHoldingAircraft("EZY234"));
+            EXPECT_EQ(0, this->manager.GetAircraftForHold("TIMBA").size());
+        }
+
+        TEST_F(HoldManagerTest, UnassigningAircraftKeepsAircraftInHoldIfProximity)
+        {
+            EXPECT_CALL(this->mockApi, UnassignAircraftHold(_))
+                .Times(0);
+
+            this->manager.AddAircraftToProximityHold("EZY234", "TIMBA");
+            this->manager.UnassignAircraftFromHold("EZY234", false);
+            EXPECT_EQ(
+                this->manager.GetHoldingAircraft("EZY234")->noHoldAssigned,
+                this->manager.GetHoldingAircraft("EZY234")->GetAssignedHold()
+            );
+            EXPECT_EQ(1, this->manager.GetAircraftForHold("TIMBA").size());
+            EXPECT_EQ("EZY234", (*this->manager.GetAircraftForHold("TIMBA").cbegin())->GetCallsign());
+        }
+
+        TEST_F(HoldManagerTest, UnassigningAircraftUpdatesApiHoldIfRequired)
+        {
+            EXPECT_CALL(this->mockApi, UnassignAircraftHold("EZY234"))
+                .Times(1);
+
+            this->manager.UnassignAircraftFromHold("EZY234", true);
+        }
+
+        TEST_F(HoldManagerTest, UnassigningAircraftHandlesApiException)
+        {
+            EXPECT_CALL(this->mockApi, UnassignAircraftHold("EZY234"))
+                .Times(1)
+                .WillOnce(Throw(ApiException("Test")));
+
+            EXPECT_NO_THROW(this->manager.UnassignAircraftFromHold("EZY234", true));
+        }
+
+        TEST_F(HoldManagerTest, RemoveAircraftFromProximityHoldHandlesNonExistentCallsign)
+        {
+            EXPECT_NO_THROW(this->manager.RemoveAircraftFromProximityHold("BAW123", "TIMBA"));
+        }
+
+        TEST_F(HoldManagerTest, RemoveAircraftFromProximityRemovesAircraftEntirelyIfNoHolds)
+        {
+            this->manager.AddAircraftToProximityHold("BAW123", "WILLO");
+            this->manager.RemoveAircraftFromProximityHold("BAW123", "WILLO");
+            EXPECT_EQ(this->manager.invalidAircraft, this->manager.GetHoldingAircraft("BAW123"));
+            EXPECT_EQ(0, this->manager.GetAircraftForHold("WILLO").size());
+        }
+
+        TEST_F(HoldManagerTest, RemoveAircraftFromProximityRetainsAircraftIfHoldingSomewhere)
+        {
+            this->manager.AddAircraftToProximityHold("BAW123", "MAY");
+            this->manager.AddAircraftToProximityHold("BAW123", "WILLO");
+            this->manager.RemoveAircraftFromProximityHold("BAW123", "MAY");
+
+            std::set<std::string> expectedProximityHolds({ "WILLO" });
+            EXPECT_EQ("BAW123", this->manager.GetHoldingAircraft("BAW123")->GetCallsign());
+            EXPECT_EQ(expectedProximityHolds, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds());
+            EXPECT_EQ(0, this->manager.GetAircraftForHold("MAY").size());
+            EXPECT_EQ(1, this->manager.GetAircraftForHold("WILLO").size());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

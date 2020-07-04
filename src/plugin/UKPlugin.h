@@ -132,6 +132,14 @@ namespace UKControllerPlugin {
             void RegisterTagFunction(int itemCode, std::string description) override;
             void RegisterTagItem(int itemCode, std::string description);
             void TriggerFlightplanUpdateForCallsign(std::string callsign);
+            void ApplyFunctionToAllFlightplans(
+                std::function<
+                void(
+                std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>,
+                std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+            )
+                > function
+            ) override;
 
             // Inherited via UserSettingProviderInterface
             std::string GetKey(std::string key) override;

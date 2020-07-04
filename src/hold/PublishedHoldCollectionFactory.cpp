@@ -1,8 +1,7 @@
 #include "pch/stdafx.h"
-#include "hold/HoldManagerFactory.h"
-#include "hold/ManagedHold.h"
+#include "hold/PublishedHoldCollectionFactory.h"
 #include "hold/HoldingDataSerializer.h"
-using UKControllerPlugin::Hold::HoldManager;
+
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
 namespace UKControllerPlugin {
@@ -11,14 +10,16 @@ namespace UKControllerPlugin {
         /*
             Create a hold manager from JSON.
         */
-        std::unique_ptr<HoldManager> CreateHoldManager(nlohmann::json data, const PersistenceContainer & container)
-        {
-            std::unique_ptr<HoldManager> holdManager = std::make_unique<HoldManager>();
+        std::unique_ptr<PublishedHoldCollection> CreatePublishedHoldCollection(
+            nlohmann::json data,
+            const PersistenceContainer & container
+        ) {
+            std::unique_ptr<PublishedHoldCollection> collection = std::make_unique<PublishedHoldCollection>();
 
             // If not object, nothing to do
             if (!data.is_array()) {
                 LogWarning("Holding data is invalid");
-                return holdManager;
+                return collection;
             }
 
             // Check valid and add
@@ -30,11 +31,11 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                holdManager->AddHold(ManagedHold(std::move(holdingData)));
+                collection->Add(std::move(holdingData));
             }
 
-            LogInfo("Created Hold Manager with " + std::to_string(holdManager->CountHolds()) + " holds");
-            return holdManager;
+            LogInfo("Created Hold Manager with " + std::to_string(collection->Count()) + " holds");
+            return collection;
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -38,9 +38,11 @@ namespace UKControllerPlugin {
                 );
                 bool IsVisible(void) const;
                 void LeftClick(
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
                     int objectId,
                     std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
+                    POINT mousePos,
+                    RECT itemArea
                 ) override;
                 void Move(RECT position, std::string objectDescription);
                 void RightClick(
