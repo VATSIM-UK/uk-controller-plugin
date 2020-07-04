@@ -118,7 +118,7 @@ namespace UKControllerPlugin {
             );
             minimumLevel = minimumLevel < this->minHoldingLevel ? this->minHoldingLevel : minimumLevel;
 
-            if (minimumLevel < maximumLevel) {
+            if (maximumLevel < minimumLevel) {
                 LogWarning(
                     "Tried to save the hold configuration dialog but the maximum level is less than the minimum"
                 );
