@@ -75,6 +75,7 @@ namespace UKControllerPlugin {
         {
             try {
                 std::filesystem::create_directories(this->filesDirectory + L"/" + folder);
+                this->SetPermissions(this->filesDirectory + L"/" + folder, std::filesystem::perms::all);
                 return true;
             } catch (std::filesystem::filesystem_error e) {
                 std::wstring message = L"Unable to create local folder recursively: "
@@ -249,6 +250,24 @@ namespace UKControllerPlugin {
                     std::ifstream::in
                 )
             );
+        }
+
+        bool WinApi::SetPermissions(std::wstring fileOrFolder, std::filesystem::perms permissions)
+        {
+            try {
+                std::filesystem::permissions(fileOrFolder, permissions);
+                return true;
+            }
+            catch (std::filesystem::filesystem_error e) {
+                std::wstring message = L"Unable to set filesystem permissions on " + fileOrFolder + L" "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
+                return false;
+            }
         }
 
         /*
