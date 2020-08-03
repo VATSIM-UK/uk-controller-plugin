@@ -248,6 +248,7 @@
     <ClInclude Include="..\..\src\regional\RegionalPressureRenderer.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressureRendererConfiguration.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressure.h" />
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseType.h" />
     <ClInclude Include="..\..\src\sectorfile\Runway.h" />
     <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />

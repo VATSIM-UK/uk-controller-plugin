@@ -139,6 +139,9 @@
     <Filter Include="src\navaids">
       <UniqueIdentifier>{8aa7f56a-92f3-42d0-9097-63a8c0ac61a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\releases">
+      <UniqueIdentifier>{27638ea8-4c02-42f1-a831-fa2951a6b3db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1001,6 +1004,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\sectorfile\SectorFileCoordinates.h">
       <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseType.h">
+      <Filter>src\releases</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
