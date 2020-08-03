@@ -1011,6 +1011,9 @@
     <ClInclude Include="..\..\src\releases\ReleaseModule.h">
       <Filter>src\releases</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseTypesSerializer.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1712,6 +1715,9 @@
       <Filter>src\sectorfile</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\releases\ReleaseModule.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\EnrouteReleaseTypesSerializer.cpp">
       <Filter>src\releases</Filter>
     </ClCompile>
   </ItemGroup>

@@ -249,6 +249,7 @@
     <ClInclude Include="..\..\src\regional\RegionalPressureRendererConfiguration.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressure.h" />
     <ClInclude Include="..\..\src\releases\EnrouteReleaseType.h" />
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseTypesSerializer.h" />
     <ClInclude Include="..\..\src\releases\ReleaseModule.h" />
     <ClInclude Include="..\..\src\sectorfile\Runway.h" />
     <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h" />
@@ -495,6 +496,7 @@
     <ClCompile Include="..\..\src\regional\RegionalPressureModule.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureRenderer.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureRendererConfiguration.cpp" />
+    <ClCompile Include="..\..\src\releases\EnrouteReleaseTypesSerializer.cpp" />
     <ClCompile Include="..\..\src\releases\ReleaseModule.cpp" />
     <ClCompile Include="..\..\src\sectorfile\Runway.cpp" />
     <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp" />

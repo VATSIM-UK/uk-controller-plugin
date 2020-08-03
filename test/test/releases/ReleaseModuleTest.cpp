@@ -2,7 +2,6 @@
 #include "releases/ReleaseModule.h"
 
 using ::testing::Test;
-using UKControllerPlugin::Releases::ReleaseModule;
 
 namespace UKControllerPluginTest {
     namespace Releases {
