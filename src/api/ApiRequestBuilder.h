@@ -48,6 +48,20 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Curl::CurlRequest BuildSrdQueryRequest(
                     UKControllerPlugin::Srd::SrdSearchParameters parameters
                 ) const;
+                UKControllerPlugin::Curl::CurlRequest BuildEnrouteReleaseRequest(
+                    std::string aircraftCallsign,
+                    std::string sendingController,
+                    std::string targetController,
+                    int releaseType
+                ) const;
+
+                UKControllerPlugin::Curl::CurlRequest BuildEnrouteReleaseRequestWithReleasePoint(
+                    std::string aircraftCallsign,
+                    std::string sendingController,
+                    std::string targetController,
+                    int releaseType,
+                    std::string releasePoint
+                ) const;
                 std::string GetApiDomain(void) const;
                 std::string GetApiKey(void) const;
                 void SetApiDomain(std::string domain);

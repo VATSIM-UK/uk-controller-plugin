@@ -250,7 +250,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedRequest == this->builder.BuildSetAssignedHoldRequest("BAW123", "TIMBA"));
         }
 
-        TEST_F(ApiRequestBuilderTest, ItBuildDeleteAssignedHoldRequest)
+        TEST_F(ApiRequestBuilderTest, ItBuildsDeleteAssignedHoldRequest)
         {
             CurlRequest expectedRequest(
                 "http://testurl.com/hold/assigned/BAW123",
@@ -262,6 +262,61 @@ namespace UKControllerPluginTest {
             expectedRequest.AddHeader("Content-Type", "application/json");
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildDeleteAssignedHoldRequest("BAW123"));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsBuildEnrouteReleaseRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/release/enroute",
+                CurlRequest::METHOD_POST
+            );
+
+            nlohmann::json expectedData{
+                {"callsign", "BAW123"},
+                {"type", 1},
+                {"initiating_controller", "LON_S_CTR"},
+                {"target_controller", "LON_C_CTR"},
+            };
+            expectedRequest.SetBody(expectedData.dump());
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildEnrouteReleaseRequest("BAW123", "LON_S_CTR", "LON_C_CTR", 1)
+            );
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsBuildEnrouteReleaseRequestWithReleasePoint)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/release/enroute",
+                CurlRequest::METHOD_POST
+            );
+
+            nlohmann::json expectedData{
+                {"callsign", "BAW123"},
+                {"type", 1},
+                {"initiating_controller", "LON_S_CTR"},
+                {"target_controller", "LON_C_CTR"},
+                {"release_point", "LAM"},
+            };
+            expectedRequest.SetBody(expectedData.dump());
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildEnrouteReleaseRequestWithReleasePoint(
+                    "BAW123",
+                    "LON_S_CTR",
+                    "LON_C_CTR",
+                    1,
+                    "LAM"
+                )
+            );
         }
     }  // namespace Api
 }  // namespace UKControllerPluginTest
