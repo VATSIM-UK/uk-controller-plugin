@@ -1014,6 +1014,9 @@
     <ClInclude Include="..\..\src\releases\EnrouteReleaseTypesSerializer.h">
       <Filter>src\releases</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\tag\TagData.h">
+      <Filter>src\tag</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1719,6 +1722,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\releases\EnrouteReleaseTypesSerializer.cpp">
       <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tag\TagData.cpp">
+      <Filter>src\tag</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

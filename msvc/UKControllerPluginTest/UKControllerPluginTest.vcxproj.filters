@@ -772,6 +772,9 @@
     <ClCompile Include="..\..\test\test\releases\EnrouteReleaseTypesSerializerTest.cpp">
       <Filter>test\releases</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\tag\TagDataTest.cpp">
+      <Filter>test\tag</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
