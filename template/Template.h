@@ -8,7 +8,7 @@ namespace UKControllerPlugin {
         class ##CLASSNAME##
         {
             public:
-                void ##CLASSNAME##(void);
+                ##CLASSNAME##(void);
         };
     }  // namespace ##NAMESPACE##
 }  // namespace UKControllerPlugin
