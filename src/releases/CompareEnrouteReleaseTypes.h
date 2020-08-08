@@ -24,6 +24,6 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Releases::EnrouteReleaseType& releaseTypeB
             ) const;
 
-        } CompareHoldingAircraft;
+        } CompareEnrouteReleaseTypes;
     }  // namespace Releases
 }  // namespace UKControllerPlugin

@@ -1,9 +1,11 @@
 #include "pch/pch.h"
 #include "releases/EnrouteReleaseTypesSerializer.h"
 #include "releases/EnrouteReleaseType.h"
+#include "releases/CompareEnrouteReleaseTypes.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Releases::EnrouteReleaseType;
+using UKControllerPlugin::Releases::CompareEnrouteReleaseTypes;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -12,6 +14,16 @@ namespace UKControllerPluginTest {
         {
 
         };
+
+        TEST_F(EnrouteReleaseTypesSerializerTest, DependencyValidReturnsTrueIfValid)
+        {
+            EXPECT_TRUE(UKControllerPlugin::Releases::DependencyValid(nlohmann::json::array()));
+        }
+
+        TEST_F(EnrouteReleaseTypesSerializerTest, DependencyValidReturnsFalseIfNotArray)
+        {
+            EXPECT_FALSE(UKControllerPlugin::Releases::DependencyValid(nlohmann::json::object()));
+        }
 
         TEST_F(EnrouteReleaseTypesSerializerTest, JsonValidReturnsTrueIfValid)
         {
@@ -87,33 +99,76 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(UKControllerPlugin::Releases::JsonValid(data));
         }
 
-        TEST_F(EnrouteReleaseTypesSerializerTest, ItReturnsModelOnValidJson)
+        TEST_F(EnrouteReleaseTypesSerializerTest, ItReturnsCollectionOfReleaseTypes)
         {
-            nlohmann::json data{
+            nlohmann::json dependency = nlohmann::json::array();
+            dependency.push_back(
+                {
+                    {"id", 1},
+                    {"tag_string", "RFC"},
+                    {"description", "Released For Climb"}
+                }
+            );
+            dependency.push_back(
+                {
+                    {"id", 2},
+                    {"tag_string", "RFD"},
+                    {"description", "Released For Descent"}
+                }
+            );
+
+            
+            std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
+            UKControllerPlugin::Releases::from_json(dependency, releases);
+
+            EXPECT_EQ(2, releases.size());
+            EXPECT_TRUE(releases.find(1) != releases.cend());
+            EXPECT_EQ(1, releases.find(1)->id);
+            EXPECT_EQ("RFC", releases.find(1)->tagString);
+            EXPECT_EQ("Released For Climb", releases.find(1)->description);
+            EXPECT_TRUE(releases.find(2) != releases.cend());
+            EXPECT_EQ(2, releases.find(2)->id);
+            EXPECT_EQ("RFD", releases.find(2)->tagString);
+            EXPECT_EQ("Released For Descent", releases.find(2)->description);
+        }
+
+        TEST_F(EnrouteReleaseTypesSerializerTest, ItHandlesInvalidDependency)
+        {
+            nlohmann::json dependency = {
                 {"id", 1},
                 {"tag_string", "RFC"},
                 {"description", "Released For Climb"}
             };
-            
-            EnrouteReleaseType releaseType;
-            UKControllerPlugin::Releases::from_json(data, releaseType);
 
-            EXPECT_EQ(1, releaseType.id);
-            EXPECT_EQ("RFC", releaseType.tagString);
-            EXPECT_EQ("Released For Climb", releaseType.description);
+
+            std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
+            UKControllerPlugin::Releases::from_json(dependency, releases);
+
+            EXPECT_EQ(0, releases.size());
         }
 
-        TEST_F(EnrouteReleaseTypesSerializerTest, ItReturnsInvalidOnBadJson)
+        TEST_F(EnrouteReleaseTypesSerializerTest, ItHandlesInvalidTypes)
         {
-            nlohmann::json data{
-                {"tag_string", "RFC"},
-                {"description", "Released For Climb"}
-            };
+            nlohmann::json dependency = nlohmann::json::array();
+            dependency.push_back(
+                {
+                    {"id", 1},
+                    {"tag_string", 123}, // Invalid
+                    {"description", "Released For Climb"}
+                }
+            );
+            dependency.push_back(
+                {
+                    {"id", 2},
+                    {"tag_string", "RFD"}, // Missing description
+                }
+            );
 
-            EnrouteReleaseType releaseType;
-            UKControllerPlugin::Releases::from_json(data, releaseType);
 
-            EXPECT_EQ(UKControllerPlugin::Releases::releaseTypeInvalid, releaseType);
+            std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
+            UKControllerPlugin::Releases::from_json(dependency, releases);
+
+            EXPECT_EQ(0, releases.size());
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

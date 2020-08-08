@@ -6,16 +6,34 @@ namespace UKControllerPlugin {
 
         const EnrouteReleaseType releaseTypeInvalid = {};
 
-        void from_json(const nlohmann::json& json, EnrouteReleaseType& releaseType)
+        void from_json(const nlohmann::json& json, std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes>& releases)
         {
-            if (!JsonValid(json)) {
-                releaseType = releaseTypeInvalid;
+            if (!DependencyValid(json)) {
+                LogError("Enroute release dependency is not valid");
                 return;
             }
 
-            json.at("id").get_to(releaseType.id);
-            json.at("tag_string").get_to(releaseType.tagString);
-            json.at("description").get_to(releaseType.description);
+            for (nlohmann::json::const_iterator it = json.cbegin(); it != json.cend(); ++it) {
+                if (!JsonValid(*it)) {
+                    LogError("Invalid enroute release " + it->dump());
+                    continue;
+                }
+
+                releases.insert(
+                    {
+                        it->at("id").get<int>(),
+                        it->at("tag_string").get<std::string>(),
+                        it->at("description").get<std::string>()
+                    }
+                );
+            }
+
+            LogInfo("Loaded " + std::to_string(releases.size()) + " enroute release types");
+        }
+
+        bool DependencyValid(const nlohmann::json& data)
+        {
+            return data.is_array();
         }
 
         bool JsonValid(const nlohmann::json& data)

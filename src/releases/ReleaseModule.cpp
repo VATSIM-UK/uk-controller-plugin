@@ -10,10 +10,10 @@ namespace UKControllerPlugin {
         void BootstrapPlugin(PersistenceContainer& container)
         {
             // TODO: Get available releases
-            std::shared_ptr<EnrouteReleaseEventHandler> handler = std::make_shared<EnrouteReleaseEventHandler>(
-                *container.api,
-                {}
-            );
+            //std::shared_ptr<EnrouteReleaseEventHandler> handler = std::make_shared<EnrouteReleaseEventHandler>(
+            //    *container.api,
+            //    {}
+            //);
         }
     }  // namespace Releases
 }  // namespace UKControllerPlugin
