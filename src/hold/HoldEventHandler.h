@@ -5,6 +5,7 @@
 #include "timedevent/AbstractTimedEvent.h"
 #include "navaids/NavaidCollection.h"
 #include "websocket/WebsocketEventProcessorInterface.h"
+#include "tag/TagData.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -36,10 +37,7 @@ namespace UKControllerPlugin {
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(void) const override;
-                std::string GetTagItemData(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-                ) override;
+                void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
                 // Inherited via AbstractTimedEvent
                 void TimedEventTrigger(void) override;

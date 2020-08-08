@@ -9,7 +9,11 @@
 #include "mock/MockEuroscopeExtractedRouteInterface.h"
 #include "intention/SectorExitRepositoryFactory.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "mock/MockEuroScopeCFlightplanInterface.h"
+#include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "tag/TagData.h"
 
+using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
 using UKControllerPlugin::IntentionCode::IntentionCodeEventHandler;
 using UKControllerPlugin::IntentionCode::IntentionCodeFactory;
@@ -20,6 +24,8 @@ using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::IntentionCode::SectorExitRepositoryFactory;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using ::testing::StrictMock;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -42,6 +48,10 @@ namespace UKControllerPluginTest {
                     ));
                 };
 
+                double fontSize = 24.1;
+                COLORREF tagColour = RGB(255, 255, 255);
+                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+                char itemString[16] = "Foooooo";
                 std::unique_ptr<IntentionCodeEventHandler> handler;
         };
 
@@ -55,6 +65,16 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> route;
             StrictMock<MockEuroScopeCFlightPlanInterface> flightplan;
             StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            TagData tagData(
+                flightplan,
+                radarTarget,
+                1,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
 
             EXPECT_CALL(flightplan, GetExtractedRoute())
                 .Times(1)
@@ -76,7 +96,8 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(8000));
 
-            EXPECT_TRUE("LL" == handler->GetTagItemData(flightplan, radarTarget));
+            handler->SetTagItemData(tagData);
+            EXPECT_EQ("LL", tagData.GetItemString());
         }
 
         TEST_F(IntentionCodeEventHandlerTest, GetTagItemDataCachesCodeAndReusesIt)
@@ -84,6 +105,16 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> route;
             StrictMock<MockEuroScopeCFlightPlanInterface> flightplan;
             StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            TagData tagData(
+                flightplan,
+                radarTarget,
+                1,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
 
             EXPECT_CALL(flightplan, GetExtractedRoute())
                 .Times(2)
@@ -105,8 +136,10 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(8000));
 
-            this->handler->GetTagItemData(flightplan, radarTarget);
-            EXPECT_TRUE("LL" == handler->GetTagItemData(flightplan, radarTarget));
+            handler->SetTagItemData(tagData);
+            EXPECT_EQ("LL", tagData.GetItemString());
+            handler->SetTagItemData(tagData);
+            EXPECT_EQ("LL", tagData.GetItemString());
         }
 
         // These two tests proves that the cache drops a code if it becomes invalid.
@@ -115,6 +148,16 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> route;
             StrictMock<MockEuroScopeCFlightPlanInterface> flightplan;
             StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            TagData tagData(
+                flightplan,
+                radarTarget,
+                1,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
 
             EXPECT_CALL(flightplan, GetExtractedRoute())
                 .Times(2)
@@ -137,9 +180,11 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(8000));
 
-            EXPECT_TRUE("LL" == handler->GetTagItemData(flightplan, radarTarget));
+            handler->SetTagItemData(tagData);
+            EXPECT_EQ("LL", tagData.GetItemString());
             this->handler->FlightPlanEvent(flightplan, radarTarget);
-            EXPECT_TRUE("SS" == handler->GetTagItemData(flightplan, radarTarget));
+            handler->SetTagItemData(tagData);
+            EXPECT_EQ("SS", tagData.GetItemString());
         }
 
         TEST_F(IntentionCodeEventHandlerTest, FlightplanDisconnectEventClearsCache)
@@ -147,6 +192,16 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> route;
             StrictMock<MockEuroScopeCFlightPlanInterface> flightplan;
             StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            TagData tagData(
+                flightplan,
+                radarTarget,
+                1,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
 
             EXPECT_CALL(flightplan, GetExtractedRoute())
                 .Times(2)
@@ -169,9 +224,11 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(8000));
 
-            EXPECT_TRUE("LL" == handler->GetTagItemData(flightplan, radarTarget));
+            handler->SetTagItemData(tagData);
+            EXPECT_EQ("LL", tagData.GetItemString());
             handler->FlightPlanDisconnectEvent(flightplan);
-            EXPECT_TRUE("SS" == handler->GetTagItemData(flightplan, radarTarget));
+            handler->SetTagItemData(tagData);
+            EXPECT_EQ("SS", tagData.GetItemString());
         }
 
         TEST_F(IntentionCodeEventHandlerTest, ControllerSelfDisconnectClearsCache)

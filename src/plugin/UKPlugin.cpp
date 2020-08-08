@@ -14,6 +14,7 @@
 #include "update/PluginVersion.h"
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/EuroscopeSectorFileElementWrapper.h"
+#include "tag/TagData.h"
 
 using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPlugin::Windows::WinApiInterface;
@@ -37,6 +38,7 @@ using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementWrapper;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin {
 
@@ -416,7 +418,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CFlightPlan FlightPlan,
         EuroScopePlugIn::CRadarTarget RadarTarget,
         int ItemCode,
-        int TagData,
+        int dataAvailable,
         char sItemString[16],
         int * pColorCode,
         COLORREF * pRGB,
@@ -428,12 +430,9 @@ namespace UKControllerPlugin {
 
         EuroScopeCFlightPlanWrapper flightplanWrapper(FlightPlan);
         EuroScopeCRadarTargetWrapper radarTargetWrapper(RadarTarget);
-        this->tagEvents.TagItemUpdate(
-            ItemCode,
-            sItemString,
-            flightplanWrapper,
-            radarTargetWrapper
-        );
+        TagData tagData(flightplanWrapper, radarTargetWrapper, ItemCode, dataAvailable, sItemString, pColorCode, pRGB, pFontSize);
+
+        this->tagEvents.TagItemUpdate(tagData);
     }
 
     /*

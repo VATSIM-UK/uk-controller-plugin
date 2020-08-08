@@ -1,6 +1,7 @@
 #pragma once
 #include "tag/TagItemInterface.h"
 #include "datablock/DisplayTime.h"
+#include "tag/TagData.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -23,10 +24,7 @@ class EstimatedOffBlockTimeEventHandler : public UKControllerPlugin::Tag::TagIte
             const UKControllerPlugin::Datablock::DisplayTime & displayTime
         );
         std::string GetTagItemDescription(void) const override;
-        std::string GetTagItemData(
-            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-        ) override;
+        void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
     private:
 

@@ -89,6 +89,7 @@ namespace UKControllerPluginTest {
         {
             tagData.SetTagColour(RGB(1, 2, 3));
             EXPECT_EQ(RGB(1, 2, 3), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_RGB_DEFINED, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(TagDataTest, ItSetsFontSize)

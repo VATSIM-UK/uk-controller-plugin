@@ -1,12 +1,5 @@
 #pragma once
-// Forward declarations
-namespace UKControllerPlugin {
-    namespace Euroscope {
-        class EuroScopeCFlightPlanInterface;
-        class EuroScopeCRadarTargetInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
-// END
+#include "tag/TagData.h"
 
 namespace UKControllerPlugin {
     namespace Tag {
@@ -19,10 +12,7 @@ namespace UKControllerPlugin {
         {
             public:
                 virtual std::string GetTagItemDescription(void) const = 0;
-                virtual std::string GetTagItemData(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-                ) = 0;
+                virtual void SetTagItemData(UKControllerPlugin::Tag::TagData & tagData) = 0;
         };
     }  // namespace Tag
 }  // namespace UKControllerPlugin

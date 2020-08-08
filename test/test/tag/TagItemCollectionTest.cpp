@@ -6,7 +6,10 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
+#include "tag/TagData.h"
 
+using testing::Test;
+using UKControllerPlugin::Tag::TagData;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
@@ -17,6 +20,15 @@ using ::testing::StrictMock;
 
 namespace UKControllerPluginTest {
     namespace Tag {
+
+        class TagItemCollectionTest : public Test
+        {
+            public: 
+                double fontSize = 24.1;
+                COLORREF tagColour = RGB(255, 255, 255);
+                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+                char itemString[16] = "Foooooo";
+        };
 
         class FakeTagItem : public UKControllerPlugin::Tag::TagItemInterface
         {
@@ -32,10 +44,8 @@ namespace UKControllerPluginTest {
                     return this->desc;
                 }
 
-                std::string GetTagItemData(
-                    EuroScopeCFlightPlanInterface & flightPlan, EuroScopeCRadarTargetInterface & radarTarget
-                ) {
-                    return this->data;
+                void SetTagItemData(TagData& tagData) {
+                    tagData.SetItemString(this->data);
                 }
 
                 // Tag item description
@@ -45,7 +55,7 @@ namespace UKControllerPluginTest {
                 const std::string data;
         };
 
-        TEST(TagItemCollection, RegisterTagItemThrowsExceptionIfIdAlreadyExists)
+        TEST_F(TagItemCollectionTest, RegisterTagItemThrowsExceptionIfIdAlreadyExists)
         {
             TagItemCollection collection;
             EXPECT_NO_THROW(
@@ -57,7 +67,7 @@ namespace UKControllerPluginTest {
             );
         }
 
-        TEST(TagItemCollection, RegisterAllItemsWithEuroscopeCallsCorrectly)
+        TEST_F(TagItemCollectionTest, RegisterAllItemsWithEuroscopeCallsCorrectly)
         {
             TagItemCollection collection;
             StrictMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
@@ -68,59 +78,54 @@ namespace UKControllerPluginTest {
             collection.RegisterAllItemsWithEuroscope(mockPlugin);
         }
 
-        TEST(TagItemCollection, TagItemUpdateReturnsErrorIfNotRegistered)
+        TEST_F(TagItemCollectionTest, TagItemUpdateReturnsErrorIfNotRegistered)
         {
             TagItemCollection collection;
             StrictMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
             StrictMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
-            char test[16];
-            collection.TagItemUpdate(25421, test, mockFlightplan, mockRadarTarget);
-            EXPECT_EQ(0, collection.errorTagItemText.compare(test));
+            TagData tagData(
+                mockFlightplan,
+                mockRadarTarget,
+                1,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
+
+            collection.TagItemUpdate(tagData);
+            EXPECT_EQ(collection.errorTagItemText, tagData.GetItemString());
         }
 
-        TEST(TagItemCollection, TagItemUpdateDisplaysInvalidIfTooLarge)
+        TEST_F(TagItemCollectionTest, TagItemUpdateSetsTagItemData)
         {
             TagItemCollection collection;
             StrictMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
             StrictMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
-            char test[16];
-            collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "thisdataistoolongforthetagitem"));
-            collection.TagItemUpdate(1, test, mockFlightplan, mockRadarTarget);
+            TagData tagData(
+                mockFlightplan,
+                mockRadarTarget,
+                1,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
 
-            EXPECT_EQ(0, collection.invalidItemText.compare(test));
-        }
-
-        TEST(TagItemCollection, TagItemUpdateSetsTagItemData)
-        {
-            TagItemCollection collection;
-            StrictMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
-            StrictMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
-            char test[16];
             collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "testdata"));
-            collection.TagItemUpdate(1, test, mockFlightplan, mockRadarTarget);
-
-            EXPECT_EQ(0, strcmp("testdata", test));
+            collection.TagItemUpdate(tagData);
+            EXPECT_EQ("testdata", tagData.GetItemString());
         }
 
-        TEST(TagItemCollection, TagItemUpdateSetsTagItemDataMaxLength)
-        {
-            TagItemCollection collection;
-            StrictMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
-            StrictMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
-            char test[16];
-            collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "123456789012345"));
-            collection.TagItemUpdate(1, test, mockFlightplan, mockRadarTarget);
-
-            EXPECT_EQ(0, strcmp("123456789012345", test));
-        }
-
-        TEST(TagItemCollection, StartsEmpty)
+        TEST_F(TagItemCollectionTest, StartsEmpty)
         {
             TagItemCollection collection;
             EXPECT_EQ(0, collection.CountHandlers());
         }
 
-        TEST(TagItemCollection, CountHandlersReturnsNumberOfHandlers)
+        TEST_F(TagItemCollectionTest, CountHandlersReturnsNumberOfHandlers)
         {
             TagItemCollection collection;
             collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "testdata"));
@@ -131,14 +136,14 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(3, collection.CountHandlers());
         }
 
-        TEST(TagItemCollection, HasHandlerForItemIdReturnsFalseIfIdNotRegistered)
+        TEST_F(TagItemCollectionTest, HasHandlerForItemIdReturnsFalseIfIdNotRegistered)
         {
             TagItemCollection collection;
             collection.RegisterTagItem(2, std::make_shared<FakeTagItem>("testdesc", "testdata"));
             EXPECT_FALSE(collection.HasHandlerForItemId(5));
         }
 
-        TEST(TagItemCollection, HasHandlerForItemIdReturnsTrueIfIdRegistered)
+        TEST_F(TagItemCollectionTest, HasHandlerForItemIdReturnsTrueIfIdRegistered)
         {
             TagItemCollection collection;
             collection.RegisterTagItem(5, std::make_shared<FakeTagItem>("testdesc", "testdata"));

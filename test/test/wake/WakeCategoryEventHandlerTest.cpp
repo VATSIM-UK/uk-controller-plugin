@@ -3,11 +3,13 @@
 #include "wake/WakeCategoryEventHandler.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
+#include "tag/TagData.h"
 
 using UKControllerPlugin::Wake::WakeCategoryMapper;
 using UKControllerPlugin::Wake::WakeCategoryEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Tag::TagData;
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -18,6 +20,42 @@ namespace UKControllerPluginTest {
         class WakeCategoryEventHandlerTest : public Test
         {
             public:
+
+                WakeCategoryEventHandlerTest()
+                    : tagData1(
+                        flightplan,
+                        radarTarget,
+                        1,
+                        EuroScopePlugIn::TAG_DATA_CORRELATED,
+                        itemString,
+                        &euroscopeColourCode,
+                        &tagColour,
+                        &fontSize
+                    ),
+                    tagData2(
+                        flightplan2,
+                        radarTarget,
+                        1,
+                        EuroScopePlugIn::TAG_DATA_CORRELATED,
+                        itemString,
+                        &euroscopeColourCode,
+                        &tagColour,
+                        &fontSize
+                    ),
+                    tagDataLong(
+                        flightplanLongType,
+                        radarTarget,
+                        1,
+                        EuroScopePlugIn::TAG_DATA_CORRELATED,
+                        itemString,
+                        &euroscopeColourCode,
+                        &tagColour,
+                        &fontSize
+                    )
+                {
+
+                }
+
                 void SetUp()
                 {
                     this->mapper.AddTypeMapping("B733", "LM");
@@ -37,10 +75,17 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return("123456789012345678"));
                 }
 
+                double fontSize = 24.1;
+                COLORREF tagColour = RGB(255, 255, 255);
+                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+                char itemString[16] = "Foooooo";
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplan2;
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplanLongType;
                 NiceMock< MockEuroScopeCRadarTargetInterface> radarTarget;
+                TagData tagData1;
+                TagData tagData2;
+                TagData tagDataLong;
                 WakeCategoryMapper mapper;
         };
 
@@ -53,28 +98,34 @@ namespace UKControllerPluginTest {
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheTagItem)
         {
             WakeCategoryEventHandler handler(this->mapper);
-            EXPECT_TRUE("B733/LM" == handler.GetTagItemData(this->flightplan, this->radarTarget));
+            handler.SetTagItemData(this->tagData1);
+            EXPECT_EQ("B733/LM", this->tagData1.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItTrimsLongAircraftTypes)
         {
             WakeCategoryEventHandler handler(this->mapper);
-            EXPECT_TRUE("123456789012/UM" == handler.GetTagItemData(this->flightplanLongType, this->radarTarget));
+            handler.SetTagItemData(this->tagDataLong);
+            EXPECT_EQ("123456789012/UM", this->tagDataLong.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItCachesTheResponse)
         {
             WakeCategoryEventHandler handler(this->mapper);
-            EXPECT_TRUE("B733/LM" == handler.GetTagItemData(this->flightplan, this->radarTarget));
-            EXPECT_TRUE("B733/LM" == handler.GetTagItemData(this->flightplan2, this->radarTarget));
+            handler.SetTagItemData(this->tagData1);
+            handler.SetTagItemData(this->tagData2);
+            EXPECT_EQ("B733/LM", this->tagData1.GetItemString());
+            EXPECT_EQ("B733/LM", this->tagData2.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestFlightplanEventsClearTheCache)
         {
             WakeCategoryEventHandler handler(this->mapper);
-            EXPECT_TRUE("B733/LM" == handler.GetTagItemData(this->flightplan, this->radarTarget));
+            handler.SetTagItemData(this->tagData1);
+            EXPECT_EQ("B733/LM", this->tagData1.GetItemString());
             handler.FlightPlanEvent(this->flightplan, this->radarTarget);
-            EXPECT_TRUE("B744/H" == handler.GetTagItemData(this->flightplan2, this->radarTarget));
+            handler.SetTagItemData(this->tagData2);
+            EXPECT_EQ("B744/H", this->tagData2.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestFlightplanEventHandlesNonExistantCacheItem)
@@ -86,9 +137,11 @@ namespace UKControllerPluginTest {
         TEST_F(WakeCategoryEventHandlerTest, TestFlightplanDisconnectsClearTheCache)
         {
             WakeCategoryEventHandler handler(this->mapper);
-            EXPECT_TRUE("B733/LM" == handler.GetTagItemData(this->flightplan, this->radarTarget));
+            handler.SetTagItemData(this->tagData1);
+            EXPECT_EQ("B733/LM", this->tagData1.GetItemString());
             handler.FlightPlanDisconnectEvent(this->flightplan);
-            EXPECT_TRUE("B744/H" == handler.GetTagItemData(this->flightplan2, this->radarTarget));
+            handler.SetTagItemData(this->tagData2);
+            EXPECT_EQ("B744/H", this->tagData2.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestFlightplanDisconnectEventHandlesNonExistantCacheItem)

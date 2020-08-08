@@ -13,9 +13,9 @@ namespace UKControllerPlugin {
                 TagData(
                     const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
-                    int itemCode,
-                    int dataAvailable,
-                    char itemString[16],
+                    const int itemCode,
+                    const int dataAvailable,
+                    char * itemString,
                     int * euroscopeColourCode,
                     COLORREF * tagColour,
                     double * fontSize
