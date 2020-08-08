@@ -1017,6 +1017,12 @@
     <ClInclude Include="..\..\src\tag\TagData.h">
       <Filter>src\tag</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseEventHandler.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\CompareEnrouteReleaseTypes.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1725,6 +1731,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\tag\TagData.cpp">
       <Filter>src\tag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\EnrouteReleaseEventHandler.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\CompareEnrouteReleaseTypes.cpp">
+      <Filter>src\releases</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

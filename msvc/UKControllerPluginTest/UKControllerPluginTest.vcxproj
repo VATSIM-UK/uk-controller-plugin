@@ -192,6 +192,8 @@
     <ClCompile Include="..\..\test\test\regional\RegionalPressureModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\CompareEnrouteReleaseTypesTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\EnrouteReleaseEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\EnrouteReleaseTypesSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\ReleaseModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp" />
