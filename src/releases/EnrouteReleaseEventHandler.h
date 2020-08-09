@@ -3,6 +3,7 @@
 #include "api/ApiInterface.h"
 #include "releases/EnrouteReleaseType.h"
 #include "releases/CompareEnrouteReleaseTypes.h"
+#include "tag/TagItemInterface.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -10,7 +11,8 @@ namespace UKControllerPlugin {
         /*
             Handles events around enroute releases
         */
-        class EnrouteReleaseEventHandler: public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
+        class EnrouteReleaseEventHandler: public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface,
+            public UKControllerPlugin::Tag::TagItemInterface
         {
             public:
                 EnrouteReleaseEventHandler(
@@ -29,6 +31,14 @@ namespace UKControllerPlugin {
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message) override;
                 std::set<UKControllerPlugin::Websocket::WebsocketSubscription> GetSubscriptions(void) const override;
+
+                // Inherited via TagItemInterface
+                std::string GetTagItemDescription(int tagItemId) const override;
+                void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
+
+                // Tag items
+                const int enrouteReleaseTypeTagItemId = 108;
+                const int enrouteReleasePointTagItemId = 109;
 
             private:
 

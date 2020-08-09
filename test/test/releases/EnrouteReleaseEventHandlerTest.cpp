@@ -195,5 +195,21 @@ namespace UKControllerPluginTest {
             };
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItHasATagItemDescriptionForReleaseType)
+        {
+            EXPECT_EQ(
+                "Enroute Release Type",
+                this->handler.GetTagItemDescription(this->handler.enrouteReleaseTypeTagItemId)
+            );
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItHasATagItemDescriptionForReleasePoint)
+        {
+            EXPECT_EQ(
+                "Enroute Release Point",
+                this->handler.GetTagItemDescription(this->handler.enrouteReleasePointTagItemId)
+            );
+        }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

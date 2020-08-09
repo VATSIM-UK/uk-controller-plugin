@@ -37,6 +37,17 @@ namespace UKControllerPlugin {
             };
         }
 
+        std::string EnrouteReleaseEventHandler::GetTagItemDescription(int tagItemId) const
+        {
+            return tagItemId == this->enrouteReleasePointTagItemId
+                ? "Enroute Release Point"
+                : "Enroute Release Type";
+        }
+
+        void EnrouteReleaseEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        {
+        }
+
         bool EnrouteReleaseEventHandler::ReleaseMessageValid(const nlohmann::json& message) const
         {
             return message.contains("callsign") &&
