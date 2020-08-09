@@ -75,7 +75,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsATagItemDescription)
         {
-            EXPECT_EQ("Departure Handoff Next Controller", this->handler.GetTagItemDescription());
+            EXPECT_EQ("Departure Handoff Next Controller", this->handler.GetTagItemDescription(0));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsCachedTagItem)

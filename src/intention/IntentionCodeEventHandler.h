@@ -42,7 +42,7 @@ namespace UKControllerPlugin {
                 void FlightPlanDisconnectEvent(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan
                 );
-                std::string GetTagItemDescription(void) const;
+                std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
 

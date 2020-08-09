@@ -36,7 +36,7 @@ namespace UKControllerPlugin {
                 );
 
                 // Inherited via TagItemInterface
-                std::string GetTagItemDescription(void) const override;
+                std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
                 // Inherited via AbstractTimedEvent

@@ -43,7 +43,7 @@ namespace UKControllerPlugin {
             return this->cache.count(callsign) ? this->cache.at(callsign) : this->DEFAULT_TAG_VALUE;
         }
 
-        std::string HandoffEventHandler::GetTagItemDescription(void) const
+        std::string HandoffEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Departure Handoff Next Controller";
         }

@@ -203,7 +203,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ActualOffBlockTimeEventHandlerTest, TagItemDescriptionReturnsDescription)
         {
-            EXPECT_TRUE(this->handler->GetTagItemDescription() == "Actual Off-block Time");
+            EXPECT_TRUE(this->handler->GetTagItemDescription(0) == "Actual Off-block Time");
         }
 
         TEST_F(ActualOffBlockTimeEventHandlerTest, TagItemDataReturnsBlankIfNoData)

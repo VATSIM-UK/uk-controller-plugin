@@ -61,7 +61,7 @@ namespace UKControllerPlugin {
                 SetActualOffBlockTime(std::chrono::system_clock::now());
         }
 
-        std::string ActualOffBlockTimeEventHandler::GetTagItemDescription(void) const
+        std::string ActualOffBlockTimeEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Actual Off-block Time";
         }

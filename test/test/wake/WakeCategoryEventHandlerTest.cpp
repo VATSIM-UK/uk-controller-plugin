@@ -92,7 +92,7 @@ namespace UKControllerPluginTest {
         TEST_F(WakeCategoryEventHandlerTest, TestItHasATagItemName)
         {
             WakeCategoryEventHandler handler(this->mapper);
-            EXPECT_TRUE("Aircraft Type / UK Wake Category" == handler.GetTagItemDescription());
+            EXPECT_TRUE("Aircraft Type / UK Wake Category" == handler.GetTagItemDescription(0));
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheTagItem)

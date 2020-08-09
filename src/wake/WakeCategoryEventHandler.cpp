@@ -43,7 +43,7 @@ namespace UKControllerPlugin {
 
         }
 
-        std::string WakeCategoryEventHandler::GetTagItemDescription(void) const
+        std::string WakeCategoryEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Aircraft Type / UK Wake Category";
         }

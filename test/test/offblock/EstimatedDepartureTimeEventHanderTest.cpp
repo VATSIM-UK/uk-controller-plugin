@@ -60,7 +60,7 @@ class EstimatedDepartureTimeEventHandlerTest : public Test
 
 TEST_F(EstimatedDepartureTimeEventHandlerTest, TestItHasATagItemDescription)
 {
-    EXPECT_TRUE("Estimated Departure Time" == handler.GetTagItemDescription());
+    EXPECT_TRUE("Estimated Departure Time" == handler.GetTagItemDescription(0));
 }
 
 TEST_F(EstimatedDepartureTimeEventHandlerTest, TestItDoesntUpdateOnNoStoredPlan)

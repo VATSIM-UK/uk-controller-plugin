@@ -54,7 +54,7 @@ class EstimatedOffBlockTimeEventHandlerTest : public Test
 
 TEST_F(EstimatedOffBlockTimeEventHandlerTest, TestItHasATagItemDescription)
 {
-    EXPECT_TRUE("Estimated Off-block Time" == handler.GetTagItemDescription());
+    EXPECT_TRUE("Estimated Off-block Time" == handler.GetTagItemDescription(0));
 }
 
 TEST_F(EstimatedOffBlockTimeEventHandlerTest, TestItReturnsEmptyOnNoStoredPlan)

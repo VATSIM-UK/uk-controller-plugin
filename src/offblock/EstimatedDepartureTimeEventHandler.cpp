@@ -25,7 +25,7 @@ EstimatedDepartureTimeEventHandler::EstimatedDepartureTimeEventHandler(
 
 }
 
-std::string EstimatedDepartureTimeEventHandler::GetTagItemDescription(void) const
+std::string EstimatedDepartureTimeEventHandler::GetTagItemDescription(int tagItemId) const
 {
     return "Estimated Departure Time";
 }

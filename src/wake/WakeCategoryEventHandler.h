@@ -26,7 +26,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     int dataType
                 ) override;
-                std::string GetTagItemDescription(void) const override;
+                std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
             private:

@@ -23,7 +23,7 @@ class EstimatedOffBlockTimeEventHandler : public UKControllerPlugin::Tag::TagIte
             const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans,
             const UKControllerPlugin::Datablock::DisplayTime & displayTime
         );
-        std::string GetTagItemDescription(void) const override;
+        std::string GetTagItemDescription(int tagItemId) const override;
         void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
     private:

@@ -67,7 +67,7 @@ namespace UKControllerPlugin {
                 it != this->tagItems.cend();
                 ++it
             ) {
-                pluginCore.RegisterTagItem(it->first, it->second->GetTagItemDescription());
+                pluginCore.RegisterTagItem(it->first, it->second->GetTagItemDescription(it->first));
             }
 
             LogInfo("Registered " + std::to_string(this->tagItems.size()) + " TAG items");

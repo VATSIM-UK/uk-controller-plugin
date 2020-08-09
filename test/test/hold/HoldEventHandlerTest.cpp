@@ -117,7 +117,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItHasATagItemDescription)
         {
-            EXPECT_TRUE("Selected Hold" == this->handler.GetTagItemDescription());
+            EXPECT_TRUE("Selected Hold" == this->handler.GetTagItemDescription(0));
         }
 
         TEST_F(HoldEventHandlerTest, ItReturnsTheSelectedHoldForAnAircraft)

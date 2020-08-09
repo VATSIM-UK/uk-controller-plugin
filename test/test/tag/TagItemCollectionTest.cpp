@@ -39,7 +39,7 @@ namespace UKControllerPluginTest {
 
                 }
 
-                std::string GetTagItemDescription(void) const
+                std::string GetTagItemDescription(int tagItemId) const
                 {
                     return this->desc;
                 }

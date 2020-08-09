@@ -56,7 +56,7 @@ namespace UKControllerPlugin {
         /*
             Returns the description of the TagItem.
         */
-        std::string IntentionCodeEventHandler::GetTagItemDescription(void) const
+        std::string IntentionCodeEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "UKCP Intention Code";
         }

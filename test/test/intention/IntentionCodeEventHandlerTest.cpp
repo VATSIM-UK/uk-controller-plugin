@@ -57,7 +57,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(IntentionCodeEventHandlerTest, GetTagItemDescriptionReturnsCorrectDescription)
         {
-            EXPECT_TRUE("UKCP Intention Code" == this->handler->GetTagItemDescription());
+            EXPECT_TRUE("UKCP Intention Code" == this->handler->GetTagItemDescription(0));
         }
 
         TEST_F(IntentionCodeEventHandlerTest, GetTagItemDataGeneratesIntentionCodeIfNonePresent)

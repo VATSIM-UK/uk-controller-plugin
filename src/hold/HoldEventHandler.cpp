@@ -38,7 +38,7 @@ namespace UKControllerPlugin {
         /*
             Return the description of the hold tag item
         */
-        std::string HoldEventHandler::GetTagItemDescription(void) const
+        std::string HoldEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Selected Hold";
         }

@@ -20,7 +20,7 @@ EstimatedOffBlockTimeEventHandler::EstimatedOffBlockTimeEventHandler(
 
 }
 
-std::string EstimatedOffBlockTimeEventHandler::GetTagItemDescription(void) const
+std::string EstimatedOffBlockTimeEventHandler::GetTagItemDescription(int tagItemId) const
 {
     return "Estimated Off-block Time";
 }
