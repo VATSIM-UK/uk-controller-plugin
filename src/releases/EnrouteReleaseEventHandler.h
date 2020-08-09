@@ -20,6 +20,10 @@ namespace UKControllerPlugin {
                         UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
                     > releaseTypes
                 );
+                const std::set<
+                    UKControllerPlugin::Releases::EnrouteReleaseType,
+                    UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
+                > GetReleaseTypes(void) const;
                 bool ReleaseMessageValid(const nlohmann::json& message) const;
 
                 // Inherited via WebsocketEventProcessorInterface

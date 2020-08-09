@@ -16,6 +16,12 @@ namespace UKControllerPlugin {
         {
         }
 
+        const std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes>
+            EnrouteReleaseEventHandler::GetReleaseTypes(void) const
+        {
+            return this->releaseTypes;
+        }
+
         void EnrouteReleaseEventHandler::ProcessWebsocketMessage(const WebsocketMessage& message)
         {
 
