@@ -16,6 +16,34 @@ namespace UKControllerPlugin {
         {
         }
 
+        void EnrouteReleaseEventHandler::AddIncomingRelease(std::string callsign, EnrouteRelease release)
+        {
+            this->incomingReleases[callsign] = release;
+        }
+
+        void EnrouteReleaseEventHandler::AddOutgoingRelease(std::string callsign, EnrouteRelease release)
+        {
+            this->outgoingReleases[callsign] = release;
+        }
+
+        const EnrouteRelease& EnrouteReleaseEventHandler::GetIncomingRelease(std::string callsign) const
+        {
+            if (!this->incomingReleases.count(callsign)) {
+                return this->invalidRelease;
+            }
+
+            return this->incomingReleases.at(callsign);
+        }
+
+        const EnrouteRelease& EnrouteReleaseEventHandler::GetOutgoingRelease(std::string callsign) const
+        {
+            if (!this->outgoingReleases.count(callsign)) {
+                return this->invalidRelease;
+            }
+
+            return this->outgoingReleases.at(callsign);
+        }
+
         const std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes>
             EnrouteReleaseEventHandler::GetReleaseTypes(void) const
         {
@@ -24,7 +52,22 @@ namespace UKControllerPlugin {
 
         void EnrouteReleaseEventHandler::ProcessWebsocketMessage(const WebsocketMessage& message)
         {
+            if (message.event != "App\\Events\\EnrouteReleaseEvent") {
+                return;
+            }
 
+            if (!this->ReleaseMessageValid(message.data)) {
+                LogWarning("Invalid enroute release message");
+                return;
+            }
+
+            // Add the incoming release
+            this->incomingReleases[message.data.at("callsign").get<std::string>()] = {
+                message.data.at("type").get<int>(),
+                !message.data.at("release_point").is_null(),
+                message.data.at("release_point").is_null() ? "" : message.data.at("release_point").get<std::string>(),
+                std::chrono::system_clock::now() + std::chrono::minutes(3)
+            };
         }
 
         std::set<WebsocketSubscription> EnrouteReleaseEventHandler::GetSubscriptions(void) const
@@ -46,6 +89,28 @@ namespace UKControllerPlugin {
 
         void EnrouteReleaseEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
         {
+            tagData.SetItemString("");
+            if (tagData.itemCode == this->enrouteReleaseTypeTagItemId) {
+
+                // We can skip for valid release type checks here as this is checked on incoming messages
+                if (this->outgoingReleases.count(tagData.flightPlan.GetCallsign())) {
+                    const EnrouteReleaseType & releaseType = *this->releaseTypes.find(
+                        this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).releaseType
+                    );
+
+                    tagData.SetItemString(releaseType.tagString);
+                    tagData.SetTagColour(RGB(255, 255, 0));
+                } else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign())) {
+                    const EnrouteReleaseType& releaseType = *this->releaseTypes.find(
+                        this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releaseType
+                    );
+
+                    tagData.SetItemString(releaseType.tagString);
+                    tagData.SetTagColour(RGB(255, 0, 0));
+                }
+            } else if (tagData.itemCode == this->enrouteReleasePointTagItemId) {
+
+            }
         }
 
         bool EnrouteReleaseEventHandler::ReleaseMessageValid(const nlohmann::json& message) const

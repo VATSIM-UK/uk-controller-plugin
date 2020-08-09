@@ -3,17 +3,26 @@
 #include "mock/MockApiInterface.h"
 #include "websocket/WebsocketSubscription.h"
 #include "releases/EnrouteReleaseType.h"
-#include "releases//CompareEnrouteReleaseTypes.h"
+#include "releases/EnrouteRelease.h"
+#include "releases/CompareEnrouteReleaseTypes.h"
 #include "websocket/WebsocketMessage.h"
+#include "mock/MockEuroScopeCFlightplanInterface.h"
+#include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "tag/TagData.h"
 
 using ::testing::Test;
 using ::testing::NiceMock;
+using ::testing::Return;
 using UKControllerPlugin::Releases::EnrouteReleaseEventHandler;
 using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Releases::CompareEnrouteReleaseTypes;
 using UKControllerPlugin::Releases::EnrouteReleaseType;
+using UKControllerPlugin::Releases::EnrouteRelease;
 using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -28,6 +37,12 @@ namespace UKControllerPluginTest {
 
                 }
 
+                double fontSize = 24.1;
+                COLORREF tagColour = RGB(255, 255, 255);
+                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+                char itemString[16] = "Foooooo";
+                NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+                NiceMock< MockEuroScopeCRadarTargetInterface> radarTarget;
                 std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
                 NiceMock<MockApiInterface> mockApi;
                 EnrouteReleaseEventHandler handler;
@@ -210,6 +225,187 @@ namespace UKControllerPluginTest {
                 "Enroute Release Point",
                 this->handler.GetTagItemDescription(this->handler.enrouteReleasePointTagItemId)
             );
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItReceivesIncomingReleases)
+        {
+            WebsocketMessage message{
+                "App\\Events\\EnrouteReleaseEvent",
+                "private-enroute-releases",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"type", 1},
+                    {"initiating_controller", "LON_S_CTR"},
+                    {"target_controller", "LON_C_CTR"},
+                    {"release_point", nlohmann::json::value_t::null}
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            
+            const EnrouteRelease& incomingRelease = this->handler.GetIncomingRelease("BAW123");
+            EXPECT_EQ(1, incomingRelease.releaseType);
+            EXPECT_FALSE(incomingRelease.hasReleasePoint);
+            std::chrono::minutes minutesFromNow = std::chrono::duration_cast<std::chrono::minutes>(
+                incomingRelease.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10)
+            );
+            EXPECT_EQ(std::chrono::minutes(3), minutesFromNow);
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItReceivesIncomingReleasesWithReleasePoints)
+        {
+            WebsocketMessage message{
+                "App\\Events\\EnrouteReleaseEvent",
+                "private-enroute-releases",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"type", 1},
+                    {"initiating_controller", "LON_S_CTR"},
+                    {"target_controller", "LON_C_CTR"},
+                    {"release_point", "ARNUN"}
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+
+            const EnrouteRelease& incomingRelease = this->handler.GetIncomingRelease("BAW123");
+            EXPECT_EQ(1, incomingRelease.releaseType);
+            EXPECT_TRUE(incomingRelease.hasReleasePoint);
+            EXPECT_EQ("ARNUN", incomingRelease.releasePoint);
+            std::chrono::minutes minutesFromNow = std::chrono::duration_cast<std::chrono::minutes>(
+                incomingRelease.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10)
+            );
+            EXPECT_EQ(std::chrono::minutes(3), minutesFromNow);
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItRejectsInvalidReleaseMessages)
+        {
+            WebsocketMessage message{
+                "App\\Events\\EnrouteReleaseEvent",
+                "private-enroute-releases",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"type", 1},
+                    {"initiating_controller", "LON_S_CTR"},
+                    {"target_controller", "LON_C_CTR"},
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+
+            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItIgnoresIncorrectEvents)
+        {
+            WebsocketMessage message{
+                "App\\Events\\NotEnrouteReleaseEvent",
+                "private-enroute-releases",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"type", 1},
+                    {"initiating_controller", "LON_S_CTR"},
+                    {"target_controller", "LON_C_CTR"},
+                    {"release_point", nlohmann::json::value_t::null}
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+
+            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysOutgoingReleaseTypeTagItem)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                108,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddOutgoingRelease("BAW123", { 1, false });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("test1", tagData.GetItemString());
+            EXPECT_EQ(RGB(255, 255, 0), tagData.GetTagColour());
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysIncomingReleaseTypeTagItem)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                108,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddIncomingRelease("BAW123", { 1, false });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("test1", tagData.GetItemString());
+            EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItPrefersOutgoingReleaseTypeTagItem)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                108,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddIncomingRelease("BAW123", { 1, false });
+            this->handler.AddOutgoingRelease("BAW123", { 2, false });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("test2", tagData.GetItemString());
+            EXPECT_EQ(RGB(255, 255, 0), tagData.GetTagColour());
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItHandlesNoReleaseForCallsign)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW345"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                108,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddOutgoingRelease("BAW123", { 1, false });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("", tagData.GetItemString());
+            EXPECT_EQ(RGB(255, 255, 255), tagData.GetTagColour());
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

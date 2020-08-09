@@ -4,6 +4,7 @@
 #include "releases/EnrouteReleaseType.h"
 #include "releases/CompareEnrouteReleaseTypes.h"
 #include "tag/TagItemInterface.h"
+#include "releases/EnrouteRelease.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -22,6 +23,16 @@ namespace UKControllerPlugin {
                         UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
                     > releaseTypes
                 );
+                void AddIncomingRelease(
+                    std::string callsign,
+                    UKControllerPlugin::Releases::EnrouteRelease release
+                );
+                void AddOutgoingRelease(
+                    std::string callsign,
+                    UKControllerPlugin::Releases::EnrouteRelease release
+                );
+                const UKControllerPlugin::Releases::EnrouteRelease & GetIncomingRelease(std::string callsign) const;
+                const UKControllerPlugin::Releases::EnrouteRelease& GetOutgoingRelease(std::string callsign) const;
                 const std::set<
                     UKControllerPlugin::Releases::EnrouteReleaseType,
                     UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
@@ -40,6 +51,9 @@ namespace UKControllerPlugin {
                 const int enrouteReleaseTypeTagItemId = 108;
                 const int enrouteReleasePointTagItemId = 109;
 
+                // Invalid release
+                const UKControllerPlugin::Releases::EnrouteRelease invalidRelease = {-1};
+
             private:
 
                 // For sending releases
@@ -50,6 +64,12 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Releases::EnrouteReleaseType,
                     UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
                 > releaseTypes;
+
+                // All incoming enroute releases
+                std::map<std::string, UKControllerPlugin::Releases::EnrouteRelease> incomingReleases;
+
+                // All outgoing enroute releases
+                std::map<std::string, UKControllerPlugin::Releases::EnrouteRelease> outgoingReleases;
         };
     }  // namespace Releases
 }  // namespace UKControllerPlugin

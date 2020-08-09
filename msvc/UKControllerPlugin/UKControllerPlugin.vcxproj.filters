@@ -1023,6 +1023,9 @@
     <ClInclude Include="..\..\src\releases\CompareEnrouteReleaseTypes.h">
       <Filter>src\releases</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteRelease.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
