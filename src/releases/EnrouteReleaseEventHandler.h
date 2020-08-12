@@ -47,6 +47,10 @@ namespace UKControllerPlugin {
                 std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
+                // Colours
+                const COLORREF outgoingItemColour = RGB(255, 255, 0);
+                const COLORREF incomingItemColour = RGB(255, 0, 0);
+
                 // Tag items
                 const int enrouteReleaseTypeTagItemId = 108;
                 const int enrouteReleasePointTagItemId = 109;

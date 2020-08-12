@@ -93,23 +93,40 @@ namespace UKControllerPlugin {
             if (tagData.itemCode == this->enrouteReleaseTypeTagItemId) {
 
                 // We can skip for valid release type checks here as this is checked on incoming messages
+                // Prioritise displaying outgoing releases
                 if (this->outgoingReleases.count(tagData.flightPlan.GetCallsign())) {
                     const EnrouteReleaseType & releaseType = *this->releaseTypes.find(
                         this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).releaseType
                     );
 
                     tagData.SetItemString(releaseType.tagString);
-                    tagData.SetTagColour(RGB(255, 255, 0));
+                    tagData.SetTagColour(this->outgoingItemColour);
                 } else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign())) {
                     const EnrouteReleaseType& releaseType = *this->releaseTypes.find(
                         this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releaseType
                     );
 
                     tagData.SetItemString(releaseType.tagString);
-                    tagData.SetTagColour(RGB(255, 0, 0));
+                    tagData.SetTagColour(this->incomingItemColour);
                 }
             } else if (tagData.itemCode == this->enrouteReleasePointTagItemId) {
+                // Prioritise displaying outgoing releases
+                if (this->outgoingReleases.count(tagData.flightPlan.GetCallsign())) {
+                    if (!this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).hasReleasePoint) {
+                        return;
+                    }
 
+                    tagData.SetItemString(this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint);
+                    tagData.SetTagColour(this->outgoingItemColour);
+                }
+                else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign())) {
+                    if (!this->incomingReleases.at(tagData.flightPlan.GetCallsign()).hasReleasePoint) {
+                        return;
+                    }
+
+                    tagData.SetItemString(this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint);
+                    tagData.SetTagColour(this->incomingItemColour);
+                }
             }
         }
 

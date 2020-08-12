@@ -407,5 +407,122 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("", tagData.GetItemString());
             EXPECT_EQ(RGB(255, 255, 255), tagData.GetTagColour());
         }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysOutgoingReleasePointTagItem)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                109,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddOutgoingRelease("BAW123", { 1, true, "ARNUN" });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("ARNUN", tagData.GetItemString());
+            EXPECT_EQ(RGB(255, 255, 0), tagData.GetTagColour());
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoOutgoingReleasePointTagItem)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                109,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddOutgoingRelease("BAW123", { 1, false, "ARNUN" });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("", tagData.GetItemString());
+            EXPECT_EQ(RGB(255, 255, 255), tagData.GetTagColour());
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysIncomingReleasePointTagItem)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                109,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddIncomingRelease("BAW123", { 1, true, "ABTUM" });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("ABTUM", tagData.GetItemString());
+            EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoIncomingReleasePointTagItem)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                109,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddIncomingRelease("BAW123", { 1, false, "ABTUM" });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("", tagData.GetItemString());
+            EXPECT_EQ(RGB(255, 255, 255), tagData.GetTagColour());
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItPrefersOutgoingReleasePointTagItem)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                109,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddIncomingRelease("BAW123", { 1, true, "ARNUN" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ABTUM" });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("ABTUM", tagData.GetItemString());
+            EXPECT_EQ(RGB(255, 255, 0), tagData.GetTagColour());
+        }
+
     }  // namespace Releases
 }  // namespace UKControllerPluginTest
