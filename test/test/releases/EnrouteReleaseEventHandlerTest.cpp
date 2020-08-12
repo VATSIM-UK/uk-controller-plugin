@@ -524,5 +524,42 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(RGB(255, 255, 0), tagData.GetTagColour());
         }
 
+        TEST_F(EnrouteReleaseEventHandlerTest, ItClearsExpiredReleases)
+        {
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                109,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddIncomingRelease(
+                "BAW123",
+                { 1, true, "ARNUN", std::chrono::system_clock::now() + std::chrono::seconds(3) }
+            );
+            this->handler.AddOutgoingRelease(
+                "BAW123",
+                { 2, true, "ABTUM", std::chrono::system_clock::now() + std::chrono::seconds(3) }
+            );
+
+            this->handler.AddIncomingRelease(
+                "BAW456",
+                { 1, true, "ARNUN", std::chrono::system_clock::now() - std::chrono::seconds(1) }
+            );
+            this->handler.AddOutgoingRelease(
+                "BAW456",
+                { 2, true, "ABTUM", std::chrono::system_clock::now() - std::chrono::seconds(1) }
+            );
+            this->handler.TimedEventTrigger();
+
+            EXPECT_EQ("ARNUN", this->handler.GetIncomingRelease("BAW123").releasePoint);
+            EXPECT_EQ("ABTUM", this->handler.GetOutgoingRelease("BAW123").releasePoint);
+            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW456"));
+            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW456"));
+        }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

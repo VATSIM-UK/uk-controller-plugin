@@ -29,6 +29,7 @@ namespace UKControllerPlugin {
             container.websocketProcessors->AddProcessor(handler);
             container.tagHandler->RegisterTagItem(handler->enrouteReleaseTypeTagItemId, handler);
             container.tagHandler->RegisterTagItem(handler->enrouteReleasePointTagItemId, handler);
+            container.timedHandler->RegisterEvent(handler, 10);
         }
     }  // namespace Releases
 }  // namespace UKControllerPlugin

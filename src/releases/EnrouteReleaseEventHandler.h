@@ -5,6 +5,7 @@
 #include "releases/CompareEnrouteReleaseTypes.h"
 #include "tag/TagItemInterface.h"
 #include "releases/EnrouteRelease.h"
+#include "timedevent/AbstractTimedEvent.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -13,7 +14,7 @@ namespace UKControllerPlugin {
             Handles events around enroute releases
         */
         class EnrouteReleaseEventHandler: public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface,
-            public UKControllerPlugin::Tag::TagItemInterface
+            public UKControllerPlugin::Tag::TagItemInterface, public UKControllerPlugin::TimedEvent::AbstractTimedEvent
         {
             public:
                 EnrouteReleaseEventHandler(
@@ -46,6 +47,9 @@ namespace UKControllerPlugin {
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
+
+                // Inherited via AbstractTimedEvent
+                void TimedEventTrigger(void) override;
 
                 // Colours
                 const COLORREF outgoingItemColour = RGB(255, 255, 0);

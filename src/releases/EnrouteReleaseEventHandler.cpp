@@ -130,6 +130,36 @@ namespace UKControllerPlugin {
             }
         }
 
+        /*
+            Tidy up any releases that we don't need anymore
+        */
+        void EnrouteReleaseEventHandler::TimedEventTrigger(void)
+        {
+            // Clear incoming releases
+            for (
+                auto incomingIt = this->incomingReleases.cbegin();
+                incomingIt != this->incomingReleases.cend();
+            ) {
+                if (incomingIt->second.clearTime < std::chrono::system_clock::now()) {
+                    this->incomingReleases.erase(incomingIt++);
+                } else {
+                    ++incomingIt;
+                }
+            }
+
+            // Clear outgoing releases
+            for (
+                auto outgoingIt = this->outgoingReleases.cbegin();
+                outgoingIt != this->outgoingReleases.cend();
+            ) {
+                if (outgoingIt->second.clearTime < std::chrono::system_clock::now()) {
+                    this->outgoingReleases.erase(outgoingIt++);
+                } else {
+                    ++outgoingIt;
+                }
+            }
+        }
+
         bool EnrouteReleaseEventHandler::ReleaseMessageValid(const nlohmann::json& message) const
         {
             return message.contains("callsign") &&

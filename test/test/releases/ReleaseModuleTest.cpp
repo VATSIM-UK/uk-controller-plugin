@@ -4,12 +4,14 @@
 #include "mock/MockDependencyLoader.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "tag/TagItemCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
 using ::testing::Return;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Releases::BootstrapPlugin;
+using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
@@ -25,6 +27,7 @@ namespace UKControllerPluginTest {
                 {
                     container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
                     container.tagHandler.reset(new TagItemCollection);
+                    container.timedHandler.reset(new TimedEventCollection);
 
                     nlohmann::json dependency = nlohmann::json::array();
                     dependency.push_back(
@@ -75,6 +78,13 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_EQ(2, this->container.tagHandler->CountHandlers());
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersForTimedEvents)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
+            EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(10));
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest
