@@ -567,6 +567,11 @@ namespace UKControllerPlugin {
         } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
     }
 
+    void UKPlugin::ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue)
+    {
+        OpenPopupEdit(editArea, callbackId, initialValue.c_str());
+    }
+
     /*
         Called on a timer by EuroScope.
     */

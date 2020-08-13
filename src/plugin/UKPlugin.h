@@ -140,6 +140,7 @@ namespace UKControllerPlugin {
             )
                 > function
             ) override;
+            void ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue) override;
 
             // Inherited via UserSettingProviderInterface
             std::string GetKey(std::string key) override;
