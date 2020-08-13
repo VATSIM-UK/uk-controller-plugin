@@ -6,6 +6,7 @@
 #include "tag/TagItemInterface.h"
 #include "releases/EnrouteRelease.h"
 #include "timedevent/AbstractTimedEvent.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -19,10 +20,12 @@ namespace UKControllerPlugin {
             public:
                 EnrouteReleaseEventHandler(
                     const UKControllerPlugin::Api::ApiInterface& api,
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
                     const std::set<
                         UKControllerPlugin::Releases::EnrouteReleaseType,
                         UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
-                    > releaseTypes
+                    > releaseTypes,
+                    const int releaseTypeSelectedCallbackId
                 );
                 void AddIncomingRelease(
                     std::string callsign,
@@ -39,6 +42,13 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
                 > GetReleaseTypes(void) const;
                 bool ReleaseMessageValid(const nlohmann::json& message) const;
+                void DisplayReleaseTypeMenu(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string context,
+                    const POINT& mousePos
+                );
+                void ReleaseTypeSelected(int functionId, std::string context, RECT);
 
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message) override;
@@ -59,13 +69,27 @@ namespace UKControllerPlugin {
                 const int enrouteReleaseTypeTagItemId = 108;
                 const int enrouteReleasePointTagItemId = 109;
 
+                // Function ids
+                const int releaseTypeSelectedCallbackId;
+
+                const std::string noReleaseItemColumn1 = "NONE";
+                const std::string noReleaseItemColumn2 = "No Release";
+
                 // Invalid release
                 const UKControllerPlugin::Releases::EnrouteRelease invalidRelease = {-1};
 
             private:
 
+                void UpdateOutgoingReleaseType(
+                    std::string callsign,
+                    int type
+                );
+
                 // For sending releases
                 const UKControllerPlugin::Api::ApiInterface& api;
+
+                // The plugin instance
+                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
                 // The different type of enroute releases
                 const std::set<

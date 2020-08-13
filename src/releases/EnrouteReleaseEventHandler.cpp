@@ -1,18 +1,26 @@
 #include "pch/stdafx.h"
 #include "releases/EnrouteReleaseEventHandler.h"
+#include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Websocket::WebsocketMessage;
 using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Plugin::PopupMenuItem;
 
 namespace UKControllerPlugin {
     namespace Releases {
 
         EnrouteReleaseEventHandler::EnrouteReleaseEventHandler(
             const ApiInterface& api,
-            std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes
+            EuroscopePluginLoopbackInterface& plugin,
+            std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes,
+            const int releaseTypeSelectedCallbackId
         )
-            : api(api), releaseTypes(releaseTypes)
+            : api(api), releaseTypes(releaseTypes), plugin(plugin),
+            releaseTypeSelectedCallbackId(releaseTypeSelectedCallbackId)
         {
         }
 
@@ -160,6 +168,21 @@ namespace UKControllerPlugin {
             }
         }
 
+        void EnrouteReleaseEventHandler::UpdateOutgoingReleaseType(std::string callsign, int type)
+        {
+            if (this->outgoingReleases.count("callsign")) {
+                this->outgoingReleases.at("callsign").releaseType = type;
+                return;
+            }
+
+            this->outgoingReleases[callsign] = {
+                type,
+                false,
+                "",
+                (std::chrono::system_clock::time_point::max)()
+            };
+        }
+
         bool EnrouteReleaseEventHandler::ReleaseMessageValid(const nlohmann::json& message) const
         {
             return message.contains("callsign") &&
@@ -174,6 +197,88 @@ namespace UKControllerPlugin {
                 message.at("initiating_controller").is_string()&&
                 message.contains("target_controller") &&
                 message.at("target_controller").is_string();
+        }
+
+        void EnrouteReleaseEventHandler::DisplayReleaseTypeMenu(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        ) {
+            // Create the list in place
+            RECT popupArea = {
+                mousePos.x,
+                mousePos.y,
+                mousePos.x + 400,
+                mousePos.y + 600
+            };
+
+            this->plugin.TriggerPopupList(
+                popupArea,
+                "Release Type",
+                1
+            );
+
+            PopupMenuItem menuItem;
+            menuItem.firstValue = "";
+            menuItem.secondValue = "";
+            menuItem.callbackFunctionId = this->releaseTypeSelectedCallbackId;
+            menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItem.disabled = false;
+            menuItem.fixedPosition = false;
+
+            // Add each type of release
+            for (
+                auto releaseType = this->releaseTypes.cbegin();
+                releaseType != this->releaseTypes.cend();
+                ++releaseType
+            ) {
+                menuItem.firstValue = releaseType->tagString;
+                menuItem.secondValue = releaseType->description;
+                this->plugin.AddItemToPopupList(menuItem);
+            }
+
+            // Add the final item, no release, in a fixed position
+            menuItem.firstValue = this->noReleaseItemColumn1;
+            menuItem.secondValue = this->noReleaseItemColumn2;
+            menuItem.fixedPosition = true;
+            this->plugin.AddItemToPopupList(menuItem);
+        }
+
+        /*
+            Release type has been selected for this aircraft, so select the release type for this aircraft
+            The context string is the first column of the release type menu, which is the tag item string.
+        */
+        void EnrouteReleaseEventHandler::ReleaseTypeSelected(int functionId, std::string context, RECT)
+        {
+            // Only allow this action if they're tracking the flightplan.
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
+
+            if (!fp) {
+                LogWarning("Tried to do a release for a non-existant flight");
+                return;
+            }
+
+            if (!fp->IsTrackedByUser()) {
+                LogInfo("Attempted to set release type but flightplan is not tracked by user " + fp->GetCallsign());
+                return;
+            }
+
+            // If it's none, then delete any release, otherwise set the release
+            if (context == this->noReleaseItemColumn1) {
+                this->outgoingReleases.erase(fp->GetCallsign());
+            } else {
+                // Find the release type and set it for the callsign
+                auto releaseType = std::find_if(
+                    this->releaseTypes.cbegin(),
+                    this->releaseTypes.cend(),
+                    [context](EnrouteReleaseType releaseType) -> bool {
+                        return releaseType.tagString == context;
+                    }
+                );
+
+                this->UpdateOutgoingReleaseType(fp->GetCallsign(), releaseType->id);
+            }
         }
     }  // namespace Releases
 }  // namespace UKControllerPlugin

@@ -4,14 +4,19 @@
 #include "releases/EnrouteReleaseType.h"
 #include "releases/CompareEnrouteReleaseTypes.h"
 #include "releases/EnrouteReleaseTypesSerializer.h"
+#include "tag/TagFunction.h"
+#include "euroscope/CallbackFunction.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
+using UKControllerPlugin::Euroscope::CallbackFunction;
+using UKControllerPlugin::Tag::TagFunction;
 
 namespace UKControllerPlugin {
     namespace Releases {
 
         const std::string enrouteReleaseTypesDependency = "DEPENDENCY_ENROUTE_RELEASE_TYPES";
+        const unsigned int popupMenuTagFunctionId = 9005;
 
         void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
         {
@@ -22,8 +27,38 @@ namespace UKControllerPlugin {
             // Create the handler
             std::shared_ptr<EnrouteReleaseEventHandler> handler = std::make_shared<EnrouteReleaseEventHandler>(
                 *container.api,
-                releaseTypes
+                *container.plugin,
+                releaseTypes,
+                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
+
+            // TAG function to trigger the release type menu and receive the changes
+            TagFunction openReleaseTypePopupMenu(
+                popupMenuTagFunctionId,
+                "Open Release Type Menu",
+                std::bind(
+                    &EnrouteReleaseEventHandler::DisplayReleaseTypeMenu,
+                    handler,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(openReleaseTypePopupMenu);
+
+            CallbackFunction releaseTypeSelectedCallback(
+                handler->releaseTypeSelectedCallbackId,
+                "Release Type Selected",
+                std::bind(
+                    &EnrouteReleaseEventHandler::ReleaseTypeSelected,
+                    handler,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(releaseTypeSelectedCallback);
 
             // Add to events
             container.websocketProcessors->AddProcessor(handler);

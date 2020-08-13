@@ -5,11 +5,13 @@
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
 using ::testing::Return;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Releases::BootstrapPlugin;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
@@ -28,6 +30,7 @@ namespace UKControllerPluginTest {
                     container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
                     container.tagHandler.reset(new TagItemCollection);
                     container.timedHandler.reset(new TimedEventCollection);
+                    container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
 
                     nlohmann::json dependency = nlohmann::json::array();
                     dependency.push_back(
@@ -85,6 +88,13 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
             EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(10));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersReleaseTypeSelectionFunctions)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9005));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

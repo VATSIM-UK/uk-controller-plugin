@@ -9,6 +9,8 @@
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
+#include "mock/MockEuroscopePluginLoopbackInterface.h"
+#include "plugin/PopupMenuItem.h"
 
 using ::testing::Test;
 using ::testing::NiceMock;
@@ -18,11 +20,13 @@ using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Releases::CompareEnrouteReleaseTypes;
 using UKControllerPlugin::Releases::EnrouteReleaseType;
 using UKControllerPlugin::Releases::EnrouteRelease;
 using UKControllerPlugin::Websocket::WebsocketMessage;
 using UKControllerPlugin::Tag::TagData;
+using UKControllerPlugin::Plugin::PopupMenuItem;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -32,7 +36,7 @@ namespace UKControllerPluginTest {
             public:
                 EnrouteReleaseEventHandlerTest()
                     : releases({ { 1, "test1", "testdesc1" }, { 2, "test2", "testdesc2" } }),
-                    handler(mockApi, releases)
+                    handler(mockApi, plugin, releases, 101)
                 {
 
                 }
@@ -41,6 +45,7 @@ namespace UKControllerPluginTest {
                 COLORREF tagColour = RGB(255, 255, 255);
                 int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
                 char itemString[16] = "Foooooo";
+                NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
                 NiceMock< MockEuroScopeCRadarTargetInterface> radarTarget;
                 std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
@@ -560,6 +565,136 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("ABTUM", this->handler.GetOutgoingRelease("BAW123").releasePoint);
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW456"));
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW456"));
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItTriggersTheReleaseTypeMenu)
+        {
+            PopupMenuItem menuItemRelease1;
+            menuItemRelease1.firstValue = "test1";
+            menuItemRelease1.secondValue = "testdesc1";
+            menuItemRelease1.callbackFunctionId = 101;
+            menuItemRelease1.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItemRelease1.disabled = false;
+            menuItemRelease1.fixedPosition = false;
+
+            PopupMenuItem menuItemRelease2;
+            menuItemRelease2.firstValue = "test2";
+            menuItemRelease2.secondValue = "testdesc2";
+            menuItemRelease2.callbackFunctionId = 101;
+            menuItemRelease2.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItemRelease2.disabled = false;
+            menuItemRelease2.fixedPosition = false;
+
+            PopupMenuItem menuItemReleaseNone;
+            menuItemReleaseNone.firstValue = "NONE";
+            menuItemReleaseNone.secondValue = "No Release";
+            menuItemReleaseNone.callbackFunctionId = 101;
+            menuItemReleaseNone.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItemReleaseNone.disabled = false;
+            menuItemReleaseNone.fixedPosition = true;
+
+            RECT expectedArea = { 0, 0, 400, 600 };
+            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Release Type", 1))
+                .Times(1);
+
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemRelease1))
+                .Times(1);
+
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemRelease2))
+                .Times(1);
+
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemReleaseNone))
+                .Times(1);
+
+            this->handler.DisplayReleaseTypeMenu(this->flightplan, this->radarTarget, "", { 0, 0 });
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDoesNotAddOutgoingReleaseIfAircraftNotOnline)
+        {
+            EXPECT_CALL(this->plugin, GetSelectedFlightplan())
+                .Times(1)
+                .WillOnce(Return(nullptr));
+            
+            this->handler.ReleaseTypeSelected(1, "test1", {});
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDoesNotAddOutgoingReleaseIfAircraftNotTracked)
+        {
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
+                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginFlightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(*pluginFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginFlightplan));
+
+            this->handler.ReleaseTypeSelected(1, "test1", {});
+            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW123"));
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItErasesOutgoingReleaseIfNoneSelected)
+        {
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
+                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginFlightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(*pluginFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginFlightplan));
+
+            this->handler.AddOutgoingRelease("BAW123", { 2, false });
+            this->handler.ReleaseTypeSelected(1, "NONE", {});
+            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW123"));
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItUpdatesOutgoingReleaseIfAlreadyExists)
+        {
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
+                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginFlightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(*pluginFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginFlightplan));
+
+            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ARNUN" });
+            this->handler.ReleaseTypeSelected(1, "test1", {});
+            EXPECT_EQ(1, this->handler.GetOutgoingRelease("BAW123").releaseType);
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItCreatesOutgoingReleaseWhenReleaseTypeSelected)
+        {
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
+                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginFlightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(*pluginFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginFlightplan));
+
+            this->handler.ReleaseTypeSelected(1, "test1", {});
+            EXPECT_EQ(1, this->handler.GetOutgoingRelease("BAW123").releaseType);
+            EXPECT_FALSE(this->handler.GetOutgoingRelease("BAW123").hasReleasePoint);
+            EXPECT_EQ(
+                (std::chrono::system_clock::time_point::max)(),
+                this->handler.GetOutgoingRelease("BAW123").clearTime
+            );
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest
