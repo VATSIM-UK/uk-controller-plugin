@@ -192,6 +192,10 @@ namespace UKControllerPlugin {
             };
         }
 
+        /*
+            When a handoff is initiated, send the release to the API
+            so that it can be broadcast.
+        */
         void EnrouteReleaseEventHandler::HandoffInitiated(
             EuroScopeCFlightPlanInterface& flightplan,
             EuroScopeCControllerInterface& transferringController,
@@ -257,6 +261,9 @@ namespace UKControllerPlugin {
                 message.at("target_controller").is_string();
         }
 
+        /*
+            Display the types of release available.
+        */
         void EnrouteReleaseEventHandler::DisplayReleaseTypeMenu(
             EuroScopeCFlightPlanInterface& flightplan,
             EuroScopeCRadarTargetInterface& radarTarget,
