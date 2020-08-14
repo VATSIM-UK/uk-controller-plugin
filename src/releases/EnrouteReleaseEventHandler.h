@@ -25,7 +25,8 @@ namespace UKControllerPlugin {
                         UKControllerPlugin::Releases::EnrouteReleaseType,
                         UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
                     > releaseTypes,
-                    const int releaseTypeSelectedCallbackId
+                    const int releaseTypeSelectedCallbackId,
+                    const int editReleasePointCallbackId
                 );
                 void AddIncomingRelease(
                     std::string callsign,
@@ -49,6 +50,13 @@ namespace UKControllerPlugin {
                     const POINT& mousePos
                 );
                 void ReleaseTypeSelected(int functionId, std::string context, RECT);
+                void DisplayReleasePointEditBox(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string context,
+                    const POINT& mousePos
+                );
+                void EditReleasePoint(int functionId, std::string context, RECT);
 
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message) override;
@@ -71,6 +79,7 @@ namespace UKControllerPlugin {
 
                 // Function ids
                 const int releaseTypeSelectedCallbackId;
+                const int editReleasePointCallbackId;
 
                 const std::string noReleaseItemColumn1 = "NONE";
                 const std::string noReleaseItemColumn2 = "No Release";

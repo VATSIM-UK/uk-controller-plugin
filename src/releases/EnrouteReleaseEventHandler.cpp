@@ -17,10 +17,12 @@ namespace UKControllerPlugin {
             const ApiInterface& api,
             EuroscopePluginLoopbackInterface& plugin,
             std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes,
-            const int releaseTypeSelectedCallbackId
+            const int releaseTypeSelectedCallbackId,
+            const int editReleasePointCallbackId
         )
             : api(api), releaseTypes(releaseTypes), plugin(plugin),
-            releaseTypeSelectedCallbackId(releaseTypeSelectedCallbackId)
+            releaseTypeSelectedCallbackId(releaseTypeSelectedCallbackId),
+            editReleasePointCallbackId(editReleasePointCallbackId)
         {
         }
 
@@ -279,6 +281,51 @@ namespace UKControllerPlugin {
 
                 this->UpdateOutgoingReleaseType(fp->GetCallsign(), releaseType->id);
             }
+        }
+
+        void EnrouteReleaseEventHandler::DisplayReleasePointEditBox(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        ) {
+            const EnrouteRelease& release = this->GetOutgoingRelease(flightplan.GetCallsign());
+            if (release == this->invalidRelease) {
+                return;
+            }
+
+            this->plugin.ShowTextEditPopup(
+                { mousePos.x, mousePos.y, mousePos.x + 150, mousePos.y + 45 },
+                this->editReleasePointCallbackId,
+                release.releasePoint
+            );
+        }
+
+        void EnrouteReleaseEventHandler::EditReleasePoint(
+            int functionId,
+            std::string context,
+            RECT
+        ) {
+            // Only allow this action if they're tracking the flightplan.
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
+
+            if (!fp) {
+                LogWarning("Tried to do a release for a non-existant flight");
+                return;
+            }
+
+            if (!fp->IsTrackedByUser()) {
+                LogInfo("Attempted to set release type but flightplan is not tracked by user " + fp->GetCallsign());
+                return;
+            }
+
+            // Only update existing releases here, as release points without a release type are invalid
+            const EnrouteRelease& release = this->GetOutgoingRelease(fp->GetCallsign());
+            if (!this->outgoingReleases.count(fp->GetCallsign())) {
+                return;
+            }
+
+            this->outgoingReleases.at(fp->GetCallsign()).releasePoint = context.substr(0, 15);
         }
     }  // namespace Releases
 }  // namespace UKControllerPlugin

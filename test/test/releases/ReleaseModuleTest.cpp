@@ -96,5 +96,12 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9005));
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
         }
+
+        TEST_F(ReleaseModuleTest, ItRegistersReleasePointEditingFunctions)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9006));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5001));
+        }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

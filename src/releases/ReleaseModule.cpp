@@ -16,7 +16,8 @@ namespace UKControllerPlugin {
     namespace Releases {
 
         const std::string enrouteReleaseTypesDependency = "DEPENDENCY_ENROUTE_RELEASE_TYPES";
-        const unsigned int popupMenuTagFunctionId = 9005;
+        const unsigned int enrouteReleaseTypeTagItemId = 9005;
+        const unsigned int enrouteReleasePointTagItemId = 9006;
 
         void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
         {
@@ -29,12 +30,13 @@ namespace UKControllerPlugin {
                 *container.api,
                 *container.plugin,
                 releaseTypes,
+                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 
             // TAG function to trigger the release type menu and receive the changes
             TagFunction openReleaseTypePopupMenu(
-                popupMenuTagFunctionId,
+                enrouteReleaseTypeTagItemId,
                 "Open Release Type Menu",
                 std::bind(
                     &EnrouteReleaseEventHandler::DisplayReleaseTypeMenu,
@@ -59,6 +61,34 @@ namespace UKControllerPlugin {
                 )
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(releaseTypeSelectedCallback);
+
+            // TAG function to trigger the release edit popup and receive the changes
+            TagFunction openReleasePointEditBox(
+                enrouteReleasePointTagItemId,
+                "Edit Release Point",
+                std::bind(
+                &EnrouteReleaseEventHandler::DisplayReleasePointEditBox,
+                    handler,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(openReleasePointEditBox);
+
+            CallbackFunction editReleaseTypeCallback(
+                handler->editReleasePointCallbackId,
+                "Release Point Edited",
+                std::bind(
+                &EnrouteReleaseEventHandler::EditReleasePoint,
+                    handler,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(editReleaseTypeCallback);
 
             // Add to events
             container.websocketProcessors->AddProcessor(handler);
