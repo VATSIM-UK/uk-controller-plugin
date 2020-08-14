@@ -39,5 +39,11 @@ namespace UKControllerPluginTest {
             CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
             EXPECT_NO_THROW(container.flightplans->cend());
         }
+
+        TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesHandoffHandlers)
+        {
+            CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
+            EXPECT_NO_THROW(container.controllerHandoffHandlers->CountHandlers());
+        }
     }  // namespace Bootstrap
 }  // namespace UKControllerPluginTest

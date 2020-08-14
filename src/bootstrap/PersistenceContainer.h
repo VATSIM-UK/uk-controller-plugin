@@ -53,6 +53,7 @@
 #include "srd/SrdSearchHandler.h"
 #include "navaids/NavaidCollection.h"
 #include "hold/PublishedHoldCollection.h"
+#include "controller/HandoffEventHandlerCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -92,6 +93,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferredHandlers;
             std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareCollection> userSettingHandlers;
             std::unique_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareCollection> runwayDialogEventHandlers;
+            std::unique_ptr<UKControllerPlugin::Controller::HandoffEventHandlerCollection> controllerHandoffHandlers;
 
             // The plugin
             std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;

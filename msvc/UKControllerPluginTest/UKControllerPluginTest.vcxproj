@@ -54,6 +54,7 @@
     <ClCompile Include="..\..\test\test\controller\ControllerPositionParserTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerPositionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerStatusEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\HandoffEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\TranslateFrequencyAbbreviationTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\CountdownModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\CountdownRendererTest.cpp" />

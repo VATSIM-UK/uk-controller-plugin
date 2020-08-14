@@ -15,6 +15,7 @@
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/EuroscopeSectorFileElementWrapper.h"
 #include "tag/TagData.h"
+#include "controller/HandoffEventHandlerCollection.h"
 
 using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPlugin::Windows::WinApiInterface;
@@ -39,6 +40,7 @@ using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementWrapper;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
 using UKControllerPlugin::Tag::TagData;
+using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 
 namespace UKControllerPlugin {
 
@@ -52,7 +54,8 @@ namespace UKControllerPlugin {
         const MetarEventHandlerCollection & metarHandlers,
         const FunctionCallEventHandler & functionCallHandler,
         const CommandHandlerCollection & commandHandlers,
-        const RunwayDialogAwareCollection & runwayDialogHandlers
+        const RunwayDialogAwareCollection & runwayDialogHandlers,
+        const HandoffEventHandlerCollection& controllerHandoffHandlers
     )
         : UKPlugin::CPlugIn(
             EuroScopePlugIn::COMPATIBILITY_CODE,
@@ -70,7 +73,8 @@ namespace UKControllerPlugin {
         metarHandlers(metarHandlers),
         functionCallHandler(functionCallHandler),
         commandHandlers(commandHandlers),
-        runwayDialogHandlers(runwayDialogHandlers)
+        runwayDialogHandlers(runwayDialogHandlers),
+        controllerHandoffHandlers(controllerHandoffHandlers)
     {
     }
 
@@ -570,6 +574,27 @@ namespace UKControllerPlugin {
     void UKPlugin::ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue)
     {
         OpenPopupEdit(editArea, callbackId, initialValue.c_str());
+    }
+
+    /*
+        Called when a handoff is initiated between controllers
+    */
+    void UKPlugin::OnFlightPlanFlightStripPushed(
+        EuroScopePlugIn::CFlightPlan flightplan,
+        const char* sendingController,
+        const char* targetController
+    ) {
+        EuroScopePlugIn::CController sender = this->ControllerSelect(sendingController);
+        EuroScopePlugIn::CController target = this->ControllerSelect(targetController);
+        if (!sender.IsValid() || !target.IsValid()) {
+            return;
+        }
+
+        EuroScopeCFlightPlanWrapper flightplanWrapper(flightplan);
+        EuroScopeCControllerWrapper senderWrapper(sender, this->ControllerIsMe(sender, this->ControllerMyself()));
+        EuroScopeCControllerWrapper targetWrapper(target, this->ControllerIsMe(target, this->ControllerMyself()));
+
+        this->controllerHandoffHandlers.HandoffInitiated(flightplanWrapper, senderWrapper, targetWrapper);
     }
 
     /*

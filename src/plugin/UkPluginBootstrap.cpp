@@ -26,7 +26,8 @@ namespace UKControllerPlugin {
                     *persistence.metarEventHandler,
                     *persistence.pluginFunctionHandlers,
                     *persistence.commandHandlers,
-                    *persistence.runwayDialogEventHandlers
+                    *persistence.runwayDialogEventHandlers,
+                    *persistence.controllerHandoffHandlers
                 )
             );
         }

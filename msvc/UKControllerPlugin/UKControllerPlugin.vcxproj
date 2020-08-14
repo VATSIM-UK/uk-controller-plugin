@@ -55,6 +55,8 @@
     <ClInclude Include="..\..\src\controller\ControllerPositionParser.h" />
     <ClInclude Include="..\..\src\controller\ControllerStatusEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\controller\ControllerStatusEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerCollection.h" />
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\controller\TranslateFrequencyAbbreviation.h" />
     <ClInclude Include="..\..\src\countdown\CountdownModule.h" />
     <ClInclude Include="..\..\src\countdown\CountdownRenderer.h" />
@@ -344,6 +346,7 @@
     <ClCompile Include="..\..\src\controller\ControllerPositionHierarchyFactory.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerPositionParser.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerStatusEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\controller\HandoffEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\controller\TranslateFrequencyAbbreviation.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownModule.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownRenderer.cpp" />

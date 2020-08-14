@@ -1026,6 +1026,12 @@
     <ClInclude Include="..\..\src\releases\EnrouteRelease.h">
       <Filter>src\releases</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerInterface.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerCollection.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1740,6 +1746,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\releases\CompareEnrouteReleaseTypes.cpp">
       <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\controller\HandoffEventHandlerCollection.cpp">
+      <Filter>src\controller</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
