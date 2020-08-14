@@ -9,9 +9,6 @@ namespace UKControllerPlugin {
             // The type of release
             int releaseType;
 
-            // Does it have a release point
-            bool hasReleasePoint;
-
             // The release point
             std::string releasePoint;
 
@@ -21,7 +18,6 @@ namespace UKControllerPlugin {
             bool operator==(const EnrouteRelease& compare) const
             {
                 return this->releaseType == compare.releaseType &&
-                    this->hasReleasePoint == compare.hasReleasePoint &&
                     this->releasePoint == compare.releasePoint &&
                     this->clearTime == compare.clearTime;
             }

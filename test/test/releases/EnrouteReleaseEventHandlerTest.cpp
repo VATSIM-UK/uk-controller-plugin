@@ -251,7 +251,7 @@ namespace UKControllerPluginTest {
             
             const EnrouteRelease& incomingRelease = this->handler.GetIncomingRelease("BAW123");
             EXPECT_EQ(1, incomingRelease.releaseType);
-            EXPECT_FALSE(incomingRelease.hasReleasePoint);
+            EXPECT_EQ("", incomingRelease.releasePoint);
             std::chrono::minutes minutesFromNow = std::chrono::duration_cast<std::chrono::minutes>(
                 incomingRelease.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10)
             );
@@ -276,7 +276,6 @@ namespace UKControllerPluginTest {
 
             const EnrouteRelease& incomingRelease = this->handler.GetIncomingRelease("BAW123");
             EXPECT_EQ(1, incomingRelease.releaseType);
-            EXPECT_TRUE(incomingRelease.hasReleasePoint);
             EXPECT_EQ("ARNUN", incomingRelease.releasePoint);
             std::chrono::minutes minutesFromNow = std::chrono::duration_cast<std::chrono::minutes>(
                 incomingRelease.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10)
@@ -337,7 +336,7 @@ namespace UKControllerPluginTest {
                 &this->fontSize
             );
 
-            this->handler.AddOutgoingRelease("BAW123", { 1, false });
+            this->handler.AddOutgoingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("test1", tagData.GetItemString());
@@ -360,7 +359,7 @@ namespace UKControllerPluginTest {
                 &this->fontSize
             );
 
-            this->handler.AddIncomingRelease("BAW123", { 1, false });
+            this->handler.AddIncomingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("test1", tagData.GetItemString());
@@ -383,8 +382,8 @@ namespace UKControllerPluginTest {
                 &this->fontSize
             );
 
-            this->handler.AddIncomingRelease("BAW123", { 1, false });
-            this->handler.AddOutgoingRelease("BAW123", { 2, false });
+            this->handler.AddIncomingRelease("BAW123", { 1, "" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "" });
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("test2", tagData.GetItemString());
@@ -407,7 +406,7 @@ namespace UKControllerPluginTest {
                 &this->fontSize
             );
 
-            this->handler.AddOutgoingRelease("BAW123", { 1, false });
+            this->handler.AddOutgoingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("", tagData.GetItemString());
@@ -430,7 +429,7 @@ namespace UKControllerPluginTest {
                 &this->fontSize
             );
 
-            this->handler.AddOutgoingRelease("BAW123", { 1, true, "ARNUN" });
+            this->handler.AddOutgoingRelease("BAW123", { 1, "ARNUN" });
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("ARNUN", tagData.GetItemString());
@@ -453,7 +452,7 @@ namespace UKControllerPluginTest {
                 &this->fontSize
             );
 
-            this->handler.AddOutgoingRelease("BAW123", { 1, false, "ARNUN" });
+            this->handler.AddOutgoingRelease("BAW123", { 1, "" });
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("", tagData.GetItemString());
@@ -476,7 +475,7 @@ namespace UKControllerPluginTest {
                 &this->fontSize
             );
 
-            this->handler.AddIncomingRelease("BAW123", { 1, true, "ABTUM" });
+            this->handler.AddIncomingRelease("BAW123", { 1, "ABTUM" });
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("ABTUM", tagData.GetItemString());
@@ -499,7 +498,7 @@ namespace UKControllerPluginTest {
                 &this->fontSize
             );
 
-            this->handler.AddIncomingRelease("BAW123", { 1, false, "ABTUM" });
+            this->handler.AddIncomingRelease("BAW123", { 1, "" });
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("", tagData.GetItemString());
@@ -522,8 +521,8 @@ namespace UKControllerPluginTest {
                 &this->fontSize
             );
 
-            this->handler.AddIncomingRelease("BAW123", { 1, true, "ARNUN" });
-            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ABTUM" });
+            this->handler.AddIncomingRelease("BAW123", { 1, "ARNUN" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("ABTUM", tagData.GetItemString());
@@ -545,20 +544,20 @@ namespace UKControllerPluginTest {
 
             this->handler.AddIncomingRelease(
                 "BAW123",
-                { 1, true, "ARNUN", std::chrono::system_clock::now() + std::chrono::seconds(3) }
+                { 1, "ARNUN", std::chrono::system_clock::now() + std::chrono::seconds(3) }
             );
             this->handler.AddOutgoingRelease(
                 "BAW123",
-                { 2, true, "ABTUM", std::chrono::system_clock::now() + std::chrono::seconds(3) }
+                { 2, "ABTUM", std::chrono::system_clock::now() + std::chrono::seconds(3) }
             );
 
             this->handler.AddIncomingRelease(
                 "BAW456",
-                { 1, true, "ARNUN", std::chrono::system_clock::now() - std::chrono::seconds(1) }
+                { 1, "ARNUN", std::chrono::system_clock::now() - std::chrono::seconds(1) }
             );
             this->handler.AddOutgoingRelease(
                 "BAW456",
-                { 2, true, "ABTUM", std::chrono::system_clock::now() - std::chrono::seconds(1) }
+                { 2, "ABTUM", std::chrono::system_clock::now() - std::chrono::seconds(1) }
             );
             this->handler.TimedEventTrigger();
 
@@ -616,7 +615,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(nullptr));
             
-            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
             this->handler.ReleaseTypeSelected(1, "test1", {});
             EXPECT_EQ(2, this->handler.GetOutgoingRelease("BAW123").releaseType);
         }
@@ -635,7 +634,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
             this->handler.ReleaseTypeSelected(1, "test1", {});
             EXPECT_EQ(2, this->handler.GetOutgoingRelease("BAW123").releaseType);
         }
@@ -654,7 +653,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, false });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "" });
             this->handler.ReleaseTypeSelected(1, "NONE", {});
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW123"));
         }
@@ -673,7 +672,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ARNUN" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "ARNUN" });
             this->handler.ReleaseTypeSelected(1, "test1", {});
             EXPECT_EQ(1, this->handler.GetOutgoingRelease("BAW123").releaseType);
         }
@@ -694,7 +693,7 @@ namespace UKControllerPluginTest {
 
             this->handler.ReleaseTypeSelected(1, "test1", {});
             EXPECT_EQ(1, this->handler.GetOutgoingRelease("BAW123").releaseType);
-            EXPECT_FALSE(this->handler.GetOutgoingRelease("BAW123").hasReleasePoint);
+            EXPECT_EQ("", this->handler.GetOutgoingRelease("BAW123").releasePoint);
             EXPECT_EQ(
                 (std::chrono::system_clock::time_point::max)(),
                 this->handler.GetOutgoingRelease("BAW123").clearTime
@@ -709,7 +708,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(RECT{ 0, 0, 150, 45 }), 102, "ARNUN"))
                 .Times(1);
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ARNUN" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "ARNUN" });
 
             this->handler.DisplayReleasePointEditBox(this->flightplan, this->radarTarget, "", { 0, 0 });
         }
@@ -731,7 +730,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(nullptr));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
             this->handler.EditReleasePoint(1, "ARNUN", {});
             EXPECT_EQ("ABTUM", this->handler.GetOutgoingRelease("BAW123").releasePoint);
         }
@@ -750,7 +749,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
             this->handler.EditReleasePoint(1, "ARNUN", {});
             EXPECT_EQ("ABTUM", this->handler.GetOutgoingRelease("BAW123").releasePoint);
         }
@@ -769,7 +768,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
             this->handler.EditReleasePoint(1, "ARNUN", {});
             EXPECT_EQ("ARNUN", this->handler.GetOutgoingRelease("BAW123").releasePoint);
         }
@@ -806,7 +805,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, true, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
             this->handler.EditReleasePoint(1, "1234567890123456", {});
             EXPECT_EQ("123456789012345", this->handler.GetOutgoingRelease("BAW123").releasePoint);
         }

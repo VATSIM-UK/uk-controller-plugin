@@ -74,7 +74,6 @@ namespace UKControllerPlugin {
             // Add the incoming release
             this->incomingReleases[message.data.at("callsign").get<std::string>()] = {
                 message.data.at("type").get<int>(),
-                !message.data.at("release_point").is_null(),
                 message.data.at("release_point").is_null() ? "" : message.data.at("release_point").get<std::string>(),
                 std::chrono::system_clock::now() + std::chrono::minutes(3)
             };
@@ -122,7 +121,9 @@ namespace UKControllerPlugin {
             } else if (tagData.itemCode == this->enrouteReleasePointTagItemId) {
                 // Prioritise displaying outgoing releases
                 if (this->outgoingReleases.count(tagData.flightPlan.GetCallsign())) {
-                    if (!this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).hasReleasePoint) {
+                    if (
+                        this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint == this->noReleasePoint
+                    ) {
                         return;
                     }
 
@@ -130,7 +131,9 @@ namespace UKControllerPlugin {
                     tagData.SetTagColour(this->outgoingItemColour);
                 }
                 else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign())) {
-                    if (!this->incomingReleases.at(tagData.flightPlan.GetCallsign()).hasReleasePoint) {
+                    if (
+                        this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint == this->noReleasePoint
+                    ) {
                         return;
                     }
 
@@ -179,8 +182,7 @@ namespace UKControllerPlugin {
 
             this->outgoingReleases[callsign] = {
                 type,
-                false,
-                "",
+                this->noReleasePoint,
                 (std::chrono::system_clock::time_point::max)()
             };
         }

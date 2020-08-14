@@ -94,6 +94,9 @@ namespace UKControllerPlugin {
                     int type
                 );
 
+                // Release point string to use when there is no release point
+                const std::string noReleasePoint = "";
+
                 // For sending releases
                 const UKControllerPlugin::Api::ApiInterface& api;
 
