@@ -39,13 +39,13 @@ namespace UKControllerPlugin {
                 virtual nlohmann::json GetRegionalPressures(void) const = 0;
                 virtual nlohmann::json GetUri(std::string uri) const = 0;
                 virtual nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const = 0;
-                virtual void EnrouteRelease(
+                virtual void SendEnrouteRelease(
                     std::string aircraftCallsign,
                     std::string sendingController,
                     std::string targetController,
                     int releaseType
                 ) const = 0;
-                virtual void EnrouteReleaseWithReleasePoint(
+                virtual void SendEnrouteReleaseWithReleasePoint(
                     std::string aircraftCallsign,
                     std::string sendingController,
                     std::string targetController,

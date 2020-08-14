@@ -264,7 +264,7 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildSrdQueryRequest(params)).GetRawData();
         }
 
-        void ApiHelper::EnrouteRelease(
+        void ApiHelper::SendEnrouteRelease(
             std::string aircraftCallsign,
             std::string sendingController,
             std::string targetController,
@@ -280,7 +280,7 @@ namespace UKControllerPlugin {
             );
         }
 
-        void ApiHelper::EnrouteReleaseWithReleasePoint(
+        void ApiHelper::SendEnrouteReleaseWithReleasePoint(
             std::string aircraftCallsign,
             std::string sendingController,
             std::string targetController,

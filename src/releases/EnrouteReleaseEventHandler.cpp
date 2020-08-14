@@ -1,14 +1,18 @@
 #include "pch/stdafx.h"
 #include "releases/EnrouteReleaseEventHandler.h"
 #include "plugin/PopupMenuItem.h"
+#include "api/ApiException.h"
 
 using UKControllerPlugin::Api::ApiInterface;
+using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Websocket::WebsocketMessage;
 using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -16,11 +20,12 @@ namespace UKControllerPlugin {
         EnrouteReleaseEventHandler::EnrouteReleaseEventHandler(
             const ApiInterface& api,
             EuroscopePluginLoopbackInterface& plugin,
+            TaskRunnerInterface& taskRunner,
             std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes,
             const int releaseTypeSelectedCallbackId,
             const int editReleasePointCallbackId
         )
-            : api(api), releaseTypes(releaseTypes), plugin(plugin),
+            : api(api), releaseTypes(releaseTypes), plugin(plugin), taskRunner(taskRunner),
             releaseTypeSelectedCallbackId(releaseTypeSelectedCallbackId),
             editReleasePointCallbackId(editReleasePointCallbackId)
         {
@@ -185,6 +190,55 @@ namespace UKControllerPlugin {
                 this->noReleasePoint,
                 (std::chrono::system_clock::time_point::max)()
             };
+        }
+
+        void EnrouteReleaseEventHandler::HandoffInitiated(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCControllerInterface& transferringController,
+            EuroScopeCControllerInterface& targetController
+        ) {
+            // Only send the release if there is one and the controller transferring is us
+            if (!transferringController.IsCurrentUser()) {
+                return;
+            }
+
+            if (!this->outgoingReleases.count(flightplan.GetCallsign())) {
+                return;
+            }
+
+            // Send the release to the API so it can be broadcast
+            std::string callsign = flightplan.GetCallsign();
+            std::string transferringCallsign = transferringController.GetCallsign();
+            std::string targetCallsign = targetController.GetCallsign();
+            EnrouteRelease release = this->outgoingReleases.at(callsign);
+            this->taskRunner.QueueAsynchronousTask(
+                [this, release, callsign, transferringCallsign, targetCallsign]() {
+                    try {
+                        if (release.releasePoint != this->noReleasePoint) {
+                            this->api.SendEnrouteReleaseWithReleasePoint(
+                                callsign,
+                                transferringCallsign,
+                                targetCallsign,
+                                release.releaseType,
+                                release.releasePoint
+                            );
+                        }
+                        else {
+                            this->api.SendEnrouteRelease(
+                                callsign,
+                                transferringCallsign,
+                                targetCallsign,
+                                release.releaseType
+                            );
+                        }
+                    } catch (ApiException exception) {
+                        LogError("Failed to send enroute release: " + std::string(exception.what()));
+                    }
+                }
+            );
+
+            // Set a clear time for us, so it disappears in a while
+            this->outgoingReleases.at(callsign).clearTime = std::chrono::system_clock::now() + std::chrono::minutes(3);
         }
 
         bool EnrouteReleaseEventHandler::ReleaseMessageValid(const nlohmann::json& message) const

@@ -730,7 +730,7 @@ TEST_F(ApiHelperTest, EnrouteReleaseGeneratesRequest)
         .Times(1)
         .WillOnce(Return(response));
 
-    EXPECT_NO_THROW(this->helper.EnrouteRelease("BAW123", "LON_S_CTR", "LON_C_CTR", 1));
+    EXPECT_NO_THROW(this->helper.SendEnrouteRelease("BAW123", "LON_S_CTR", "LON_C_CTR", 1));
 }
 
 TEST_F(ApiHelperTest, EnrouteReleaseGeneratesRequestWithReleasePoint)
@@ -755,7 +755,9 @@ TEST_F(ApiHelperTest, EnrouteReleaseGeneratesRequestWithReleasePoint)
         .Times(1)
         .WillOnce(Return(response));
 
-    EXPECT_NO_THROW(this->helper.EnrouteReleaseWithReleasePoint("BAW123", "LON_S_CTR", "LON_C_CTR", 1, "LAM"));
+    EXPECT_NO_THROW(
+        this->helper.SendEnrouteReleaseWithReleasePoint("BAW123", "LON_S_CTR", "LON_C_CTR", 1, "LAM")
+    );
 }
 }  // namespace Api
 }  // namespace UKControllerPluginTest

@@ -29,6 +29,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<EnrouteReleaseEventHandler> handler = std::make_shared<EnrouteReleaseEventHandler>(
                 *container.api,
                 *container.plugin,
+                *container.taskRunner,
                 releaseTypes,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()

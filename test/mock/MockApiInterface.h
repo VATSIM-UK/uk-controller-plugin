@@ -44,9 +44,9 @@ namespace UKControllerPluginTest {
                     SearchSrd,
                     nlohmann::json(UKControllerPlugin::Srd::SrdSearchParameters)
                 );
-                MOCK_CONST_METHOD4(EnrouteRelease, void(std::string, std::string, std::string, int));
+                MOCK_CONST_METHOD4(SendEnrouteRelease, void(std::string, std::string, std::string, int));
                 MOCK_CONST_METHOD5(
-                    EnrouteReleaseWithReleasePoint,
+                    SendEnrouteReleaseWithReleasePoint,
                     void(std::string, std::string, std::string, int, std::string)
                 );
                 MOCK_CONST_METHOD1(UpdateCheck, int(std::string));

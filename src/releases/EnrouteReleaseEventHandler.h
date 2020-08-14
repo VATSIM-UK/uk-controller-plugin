@@ -7,6 +7,8 @@
 #include "releases/EnrouteRelease.h"
 #include "timedevent/AbstractTimedEvent.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "controller/HandoffEventHandlerInterface.h"
+#include "task/TaskRunnerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -15,12 +17,15 @@ namespace UKControllerPlugin {
             Handles events around enroute releases
         */
         class EnrouteReleaseEventHandler: public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface,
-            public UKControllerPlugin::Tag::TagItemInterface, public UKControllerPlugin::TimedEvent::AbstractTimedEvent
+            public UKControllerPlugin::Tag::TagItemInterface,
+            public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
+            public UKControllerPlugin::Controller::HandoffEventHandlerInterface
         {
             public:
                 EnrouteReleaseEventHandler(
                     const UKControllerPlugin::Api::ApiInterface& api,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
+                    UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner,
                     const std::set<
                         UKControllerPlugin::Releases::EnrouteReleaseType,
                         UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
@@ -69,6 +74,13 @@ namespace UKControllerPlugin {
                 // Inherited via AbstractTimedEvent
                 void TimedEventTrigger(void) override;
 
+                // Inherited via HandoffEventHandlerInterface
+                void HandoffInitiated(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& transferringController,
+                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& targetController
+                ) override;
+
                 // Colours
                 const COLORREF outgoingItemColour = RGB(255, 255, 0);
                 const COLORREF incomingItemColour = RGB(255, 0, 0);
@@ -94,14 +106,14 @@ namespace UKControllerPlugin {
                     int type
                 );
 
-                // Release point string to use when there is no release point
-                const std::string noReleasePoint = "";
-
                 // For sending releases
                 const UKControllerPlugin::Api::ApiInterface& api;
 
                 // The plugin instance
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin;
+
+                // For running tasks asynchronously
+                UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner;
 
                 // The different type of enroute releases
                 const std::set<
@@ -109,11 +121,14 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
                 > releaseTypes;
 
+                // Release point string to use when there is no release point
+                const std::string noReleasePoint = "";
+
                 // All incoming enroute releases
                 std::map<std::string, UKControllerPlugin::Releases::EnrouteRelease> incomingReleases;
 
                 // All outgoing enroute releases
                 std::map<std::string, UKControllerPlugin::Releases::EnrouteRelease> outgoingReleases;
-        };
+            };
     }  // namespace Releases
 }  // namespace UKControllerPlugin
