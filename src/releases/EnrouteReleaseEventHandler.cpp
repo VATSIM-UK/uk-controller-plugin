@@ -76,6 +76,15 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            // Only do an incoming release if I'm the target
+            std::shared_ptr<EuroScopeCControllerInterface> myController = this->plugin.GetUserControllerObject();
+            if (
+                !myController ||
+                message.data.at("target_controller").get<std::string>() != myController->GetCallsign()
+            ) {
+                return;
+            }
+
             // Add the incoming release
             this->incomingReleases[message.data.at("callsign").get<std::string>()] = {
                 message.data.at("type").get<int>(),

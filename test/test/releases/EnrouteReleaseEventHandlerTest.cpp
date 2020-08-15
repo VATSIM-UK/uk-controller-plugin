@@ -245,6 +245,15 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItReceivesIncomingReleases)
         {
+            std::shared_ptr<MockEuroScopeCControllerInterface> myController =
+                std::make_shared<MockEuroScopeCControllerInterface>();
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(myController));
+
+            ON_CALL(*myController, GetCallsign())
+                .WillByDefault(Return("LON_C_CTR"));
+
             WebsocketMessage message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
@@ -270,6 +279,15 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItReceivesIncomingReleasesWithReleasePoints)
         {
+            std::shared_ptr<MockEuroScopeCControllerInterface> myController =
+                std::make_shared<MockEuroScopeCControllerInterface>();
+
+            ON_CALL(this->plugin, GetUserControllerObject)
+                .WillByDefault(Return(myController));
+
+            ON_CALL(*myController, GetCallsign())
+                .WillByDefault(Return("LON_C_CTR"));
+
             WebsocketMessage message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
@@ -291,6 +309,54 @@ namespace UKControllerPluginTest {
                 incomingRelease.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10)
             );
             EXPECT_EQ(std::chrono::minutes(3), minutesFromNow);
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDoesntAddIncomingReleasesIfNotTargetingUser)
+        {
+            std::shared_ptr<MockEuroScopeCControllerInterface> myController =
+                std::make_shared<MockEuroScopeCControllerInterface>();
+
+            ON_CALL(this->plugin, GetUserControllerObject)
+                .WillByDefault(Return(myController));
+
+            ON_CALL(*myController, GetCallsign())
+                .WillByDefault(Return("LON_D_CTR"));
+
+            WebsocketMessage message{
+                "App\\Events\\EnrouteReleaseEvent",
+                "private-enroute-releases",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"type", 1},
+                    {"initiating_controller", "LON_S_CTR"},
+                    {"target_controller", "LON_C_CTR"},
+                    {"release_point", "ARNUN"}
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDoesntAddIncomingReleasesIfNoUserController)
+        {
+            ON_CALL(this->plugin, GetUserControllerObject)
+                .WillByDefault(Return(nullptr));
+
+            WebsocketMessage message{
+                "App\\Events\\EnrouteReleaseEvent",
+                "private-enroute-releases",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"type", 1},
+                    {"initiating_controller", "LON_S_CTR"},
+                    {"target_controller", "LON_C_CTR"},
+                    {"release_point", "ARNUN"}
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItRejectsInvalidReleaseMessages)
