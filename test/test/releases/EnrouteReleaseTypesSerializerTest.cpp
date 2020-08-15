@@ -117,7 +117,7 @@ namespace UKControllerPluginTest {
                 }
             );
 
-            
+
             std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
             UKControllerPlugin::Releases::from_json(dependency, releases);
 
@@ -153,14 +153,14 @@ namespace UKControllerPluginTest {
             dependency.push_back(
                 {
                     {"id", 1},
-                    {"tag_string", 123}, // Invalid
+                    {"tag_string", 123},  // Invalid
                     {"description", "Released For Climb"}
                 }
             );
             dependency.push_back(
                 {
                     {"id", 2},
-                    {"tag_string", "RFD"}, // Missing description
+                    {"tag_string", "RFD"},  // Missing description
                 }
             );
 

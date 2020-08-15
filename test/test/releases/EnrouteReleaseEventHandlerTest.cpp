@@ -267,7 +267,7 @@ namespace UKControllerPluginTest {
             };
 
             this->handler.ProcessWebsocketMessage(message);
-            
+
             const EnrouteRelease& incomingRelease = this->handler.GetIncomingRelease("BAW123");
             EXPECT_EQ(1, incomingRelease.releaseType);
             EXPECT_EQ("", incomingRelease.releasePoint);
@@ -690,7 +690,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->plugin, GetSelectedFlightplan())
                 .Times(1)
                 .WillOnce(Return(nullptr));
-            
+
             this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
             this->handler.ReleaseTypeSelected(1, "test1", {});
             EXPECT_EQ(2, this->handler.GetOutgoingRelease("BAW123").releaseType);
@@ -944,7 +944,7 @@ namespace UKControllerPluginTest {
                 .Times(0);
 
             this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
-            
+
             EXPECT_NO_THROW(
                 this->handler.HandoffInitiated(this->flightplan, this->transferringController, this->targetController)
             );

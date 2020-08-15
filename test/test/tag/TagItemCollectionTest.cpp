@@ -23,7 +23,7 @@ namespace UKControllerPluginTest {
 
         class TagItemCollectionTest : public Test
         {
-            public: 
+            public:
                 double fontSize = 24.1;
                 COLORREF tagColour = RGB(255, 255, 255);
                 int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;

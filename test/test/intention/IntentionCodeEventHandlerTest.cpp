@@ -9,8 +9,6 @@
 #include "mock/MockEuroscopeExtractedRouteInterface.h"
 #include "intention/SectorExitRepositoryFactory.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
 
 using UKControllerPlugin::Tag::TagData;
@@ -24,8 +22,6 @@ using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::IntentionCode::SectorExitRepositoryFactory;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
-using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using ::testing::StrictMock;
 using ::testing::NiceMock;
 using ::testing::Return;
