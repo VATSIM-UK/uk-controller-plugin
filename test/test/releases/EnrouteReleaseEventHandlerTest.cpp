@@ -670,7 +670,7 @@ namespace UKControllerPluginTest {
             menuItemReleaseNone.fixedPosition = true;
 
             RECT expectedArea = { 0, 0, 400, 600 };
-            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Release Type", 1))
+            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Release Type", 2))
                 .Times(1);
 
             EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemRelease1))
@@ -781,7 +781,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
-            EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(RECT{ 0, 0, 150, 45 }), 102, "ARNUN"))
+            EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(RECT{ 0, 0, 80, 25 }), 102, "ARNUN"))
                 .Times(1);
 
             this->handler.AddOutgoingRelease("BAW123", { 2, "ARNUN" });
