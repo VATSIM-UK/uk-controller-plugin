@@ -123,14 +123,14 @@ namespace UKControllerPlugin {
                     );
 
                     tagData.SetItemString(releaseType.tagString);
-                    tagData.SetTagColour(this->outgoingItemColour);
+                    tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME);
                 } else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign())) {
                     const EnrouteReleaseType& releaseType = *this->releaseTypes.find(
                         this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releaseType
                     );
 
                     tagData.SetItemString(releaseType.tagString);
-                    tagData.SetTagColour(this->incomingItemColour);
+                    tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_TRANSFER_TO_ME_INITIATED);
                 }
             } else if (tagData.itemCode == this->enrouteReleasePointTagItemId) {
                 // Prioritise displaying outgoing releases
@@ -142,7 +142,7 @@ namespace UKControllerPlugin {
                     }
 
                     tagData.SetItemString(this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint);
-                    tagData.SetTagColour(this->outgoingItemColour);
+                    tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME);
                 }
                 else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign())) {
                     if (
@@ -152,7 +152,7 @@ namespace UKControllerPlugin {
                     }
 
                     tagData.SetItemString(this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint);
-                    tagData.SetTagColour(this->incomingItemColour);
+                    tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_TRANSFER_TO_ME_INITIATED);
                 }
             }
         }
@@ -290,7 +290,7 @@ namespace UKControllerPlugin {
             this->plugin.TriggerPopupList(
                 popupArea,
                 "Release Type",
-                1
+                2
             );
 
             PopupMenuItem menuItem;
@@ -367,7 +367,7 @@ namespace UKControllerPlugin {
             }
 
             this->plugin.ShowTextEditPopup(
-                { mousePos.x, mousePos.y, mousePos.x + 150, mousePos.y + 45 },
+                { mousePos.x, mousePos.y, mousePos.x + 80, mousePos.y + 25 },
                 this->editReleasePointCallbackId,
                 release.releasePoint
             );

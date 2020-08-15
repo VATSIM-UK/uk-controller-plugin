@@ -416,7 +416,7 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("test1", tagData.GetItemString());
-            EXPECT_EQ(RGB(255, 255, 0), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysIncomingReleaseTypeTagItem)
@@ -439,7 +439,7 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("test1", tagData.GetItemString());
-            EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_TRANSFER_TO_ME_INITIATED, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItPrefersOutgoingReleaseTypeTagItem)
@@ -463,7 +463,7 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("test2", tagData.GetItemString());
-            EXPECT_EQ(RGB(255, 255, 0), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItHandlesNoReleaseForCallsign)
@@ -486,7 +486,7 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("", tagData.GetItemString());
-            EXPECT_EQ(RGB(255, 255, 255), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysOutgoingReleasePointTagItem)
@@ -509,7 +509,7 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("ARNUN", tagData.GetItemString());
-            EXPECT_EQ(RGB(255, 255, 0), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoOutgoingReleasePointTagItem)
@@ -532,7 +532,7 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("", tagData.GetItemString());
-            EXPECT_EQ(RGB(255, 255, 255), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysIncomingReleasePointTagItem)
@@ -555,7 +555,7 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("ABTUM", tagData.GetItemString());
-            EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_TRANSFER_TO_ME_INITIATED, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoIncomingReleasePointTagItem)
@@ -578,7 +578,7 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("", tagData.GetItemString());
-            EXPECT_EQ(RGB(255, 255, 255), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItPrefersOutgoingReleasePointTagItem)
@@ -602,7 +602,7 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("ABTUM", tagData.GetItemString());
-            EXPECT_EQ(RGB(255, 255, 0), tagData.GetTagColour());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME, tagData.GetEuroscopeColourCode());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItClearsExpiredReleases)

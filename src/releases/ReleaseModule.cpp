@@ -38,7 +38,7 @@ namespace UKControllerPlugin {
             // TAG function to trigger the release type menu and receive the changes
             TagFunction openReleaseTypePopupMenu(
                 enrouteReleaseTypeTagItemId,
-                "Open Release Type Menu",
+                "Open Enroute Release Type Menu",
                 std::bind(
                     &EnrouteReleaseEventHandler::DisplayReleaseTypeMenu,
                     handler,
@@ -66,7 +66,7 @@ namespace UKControllerPlugin {
             // TAG function to trigger the release edit popup and receive the changes
             TagFunction openReleasePointEditBox(
                 enrouteReleasePointTagItemId,
-                "Edit Release Point",
+                "Edit Enroute Release Point",
                 std::bind(
                 &EnrouteReleaseEventHandler::DisplayReleasePointEditBox,
                     handler,
@@ -96,6 +96,7 @@ namespace UKControllerPlugin {
             container.tagHandler->RegisterTagItem(handler->enrouteReleaseTypeTagItemId, handler);
             container.tagHandler->RegisterTagItem(handler->enrouteReleasePointTagItemId, handler);
             container.timedHandler->RegisterEvent(handler, 10);
+            container.controllerHandoffHandlers->RegisterHandler(handler);
         }
     }  // namespace Releases
 }  // namespace UKControllerPlugin

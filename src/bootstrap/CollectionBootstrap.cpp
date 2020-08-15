@@ -11,12 +11,10 @@
 #include "metar/MetarEventHandlerCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "command/CommandHandlerCollection.h"
-#include "controller/HandoffEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
-using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
 using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
@@ -34,7 +32,6 @@ namespace UKControllerPlugin {
             // Reset resources
             persistence.airfields = std::move(AirfieldCollectionFactory::Create(dependency));
             persistence.flightplans.reset(new StoredFlightplanCollection);
-            persistence.controllerHandoffHandlers.reset(new HandoffEventHandlerCollection);
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

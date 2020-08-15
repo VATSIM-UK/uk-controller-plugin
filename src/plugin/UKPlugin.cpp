@@ -584,8 +584,14 @@ namespace UKControllerPlugin {
         const char* sendingController,
         const char* targetController
     ) {
-        EuroScopePlugIn::CController sender = this->ControllerSelect(sendingController);
-        EuroScopePlugIn::CController target = this->ControllerSelect(targetController);
+        EuroScopePlugIn::CController sender = std::string(sendingController) == this->ControllerMyself().GetCallsign()
+            ? this->ControllerMyself()
+            : this->ControllerSelect(sendingController);
+
+        EuroScopePlugIn::CController target = std::string(targetController) == this->ControllerMyself().GetCallsign()
+            ? this->ControllerMyself()
+            : this->ControllerSelect(targetController);
+
         if (!sender.IsValid() || !target.IsValid()) {
             return;
         }

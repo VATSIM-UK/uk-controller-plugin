@@ -6,11 +6,13 @@
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "controller/HandoffEventHandlerCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
 using ::testing::Return;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Releases::BootstrapPlugin;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
@@ -31,6 +33,7 @@ namespace UKControllerPluginTest {
                     container.tagHandler.reset(new TagItemCollection);
                     container.timedHandler.reset(new TimedEventCollection);
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
+                    container.controllerHandoffHandlers.reset(new HandoffEventHandlerCollection);
 
                     nlohmann::json dependency = nlohmann::json::array();
                     dependency.push_back(
@@ -88,6 +91,12 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
             EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(10));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersForHandoffEvents)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.controllerHandoffHandlers->CountHandlers());
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersReleaseTypeSelectionFunctions)
