@@ -86,6 +86,7 @@ namespace UKControllerPlugin {
             }
 
             // Add the incoming release
+            LogInfo("Received enroute release for " + message.data.at("callsign").get<std::string>());
             this->incomingReleases[message.data.at("callsign").get<std::string>()] = {
                 message.data.at("type").get<int>(),
                 message.data.at("release_point").is_null() ? "" : message.data.at("release_point").get<std::string>(),
@@ -143,8 +144,7 @@ namespace UKControllerPlugin {
 
                     tagData.SetItemString(this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint);
                     tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME);
-                }
-                else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign())) {
+                } else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign())) {
                     if (
                         this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint == this->noReleasePoint
                     ) {
@@ -235,8 +235,7 @@ namespace UKControllerPlugin {
                                 release.releaseType,
                                 release.releasePoint
                             );
-                        }
-                        else {
+                        } else {
                             this->api.SendEnrouteRelease(
                                 callsign,
                                 transferringCallsign,

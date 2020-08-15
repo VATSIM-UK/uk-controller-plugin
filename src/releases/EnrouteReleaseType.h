@@ -10,7 +10,7 @@ namespace UKControllerPlugin {
 
             // What to show in the tag
             std::string tagString;
-            
+
             // The description for menus
             std::string description;
 

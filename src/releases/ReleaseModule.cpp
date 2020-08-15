@@ -23,7 +23,10 @@ namespace UKControllerPlugin {
         {
             // Load the release types
             std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes;
-            from_json(dependencies.LoadDependency(enrouteReleaseTypesDependency, nlohmann::json::array()), releaseTypes);
+            from_json(
+                dependencies.LoadDependency(enrouteReleaseTypesDependency, nlohmann::json::array()),
+                releaseTypes
+            );
 
             // Create the handler
             std::shared_ptr<EnrouteReleaseEventHandler> handler = std::make_shared<EnrouteReleaseEventHandler>(

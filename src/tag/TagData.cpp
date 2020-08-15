@@ -16,7 +16,7 @@ namespace UKControllerPlugin {
             int* euroscopeColourCode,
             COLORREF* tagColour,
             double* fontSize
-        ) 
+        )
             : flightPlan(flightPlan), radarTarget(radarTarget), itemCode(itemCode), dataAvailable(dataAvailable),
             itemString(itemString), euroscopeColourCode(euroscopeColourCode), tagColour(tagColour), fontSize(fontSize)
         {

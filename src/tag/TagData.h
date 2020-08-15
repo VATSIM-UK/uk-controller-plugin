@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
                 void SetFontSize(double fontSize);
                 double GetFontSize(void) const;
 
-                
+
                 // The tag item text is too long
                 const std::string invalidItemText = "INVALID";
 

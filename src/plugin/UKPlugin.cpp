@@ -434,7 +434,16 @@ namespace UKControllerPlugin {
 
         EuroScopeCFlightPlanWrapper flightplanWrapper(FlightPlan);
         EuroScopeCRadarTargetWrapper radarTargetWrapper(RadarTarget);
-        TagData tagData(flightplanWrapper, radarTargetWrapper, ItemCode, dataAvailable, sItemString, pColorCode, pRGB, pFontSize);
+        TagData tagData(
+            flightplanWrapper,
+            radarTargetWrapper,
+            ItemCode,
+            dataAvailable,
+            sItemString,
+            pColorCode,
+            pRGB,
+            pFontSize
+        );
 
         this->tagEvents.TagItemUpdate(tagData);
     }

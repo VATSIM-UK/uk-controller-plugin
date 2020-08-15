@@ -48,7 +48,7 @@ namespace UKControllerPlugin {
             return "Departure Handoff Next Controller";
         }
 
-        void HandoffEventHandler::SetTagItemData(TagData & tagData) 
+        void HandoffEventHandler::SetTagItemData(TagData & tagData)
         {
             if (this->cache.count(tagData.flightPlan.GetCallsign())) {
                 tagData.SetItemString(this->cache[tagData.flightPlan.GetCallsign()].frequency);
