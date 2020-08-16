@@ -139,6 +139,9 @@
     <Filter Include="src\navaids">
       <UniqueIdentifier>{8aa7f56a-92f3-42d0-9097-63a8c0ac61a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\stands">
+      <UniqueIdentifier>{e8eedfab-3e7e-4875-9485-c7fea0d1fd40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1002,6 +1005,15 @@
     <ClInclude Include="..\..\src\sectorfile\SectorFileCoordinates.h">
       <Filter>src\sectorfile</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\stands\Stand.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\StandSerializer.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\CompareStands.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1701,6 +1713,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\sectorfile\SectorFileCoordinates.cpp">
       <Filter>src\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\StandSerializer.cpp">
+      <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\CompareStands.cpp">
+      <Filter>src\stands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
