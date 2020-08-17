@@ -37,7 +37,7 @@ namespace UKControllerPlugin {
             }
 
             ActiveCallsign active = this->activeCallsigns.GetCallsign(controller.GetCallsign());
-            LogInfo(controller.GetCallsign() + " has disconnected or unset their primary frequency");
+            LogInfo(controller.GetCallsign() + " has disconnected or has unset or changed their primary frequency");
             this->activeCallsigns.RemoveCallsign(active);
         }
 
@@ -49,9 +49,16 @@ namespace UKControllerPlugin {
             bool callsignActive = this->activeCallsigns.CallsignActive(controller.GetCallsign());
             bool frequencyActive = controller.HasActiveFrequency();
 
-            // If it's already an active callsign with an active frequency, do nothing.
+            // If it's already an active callsign with an active frequency, do nothing unless frequency has changed.
             if (callsignActive && frequencyActive) {
-                return;
+                double normalisedFrequency = this->activeCallsigns.GetCallsign(controller.GetCallsign())
+                    .GetNormalisedPosition()
+                    .GetFrequency();
+                if (fabs(controller.GetFrequency() - normalisedFrequency) < 0.001) {
+                    return;
+                }
+
+                this->ControllerDisconnectEvent(controller);
             }
 
             // If they're a registered callsign, but they've not got an active frequency, they must have unset primary.
