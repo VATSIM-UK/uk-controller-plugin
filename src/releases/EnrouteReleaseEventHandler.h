@@ -93,7 +93,7 @@ namespace UKControllerPlugin {
                 const int releaseTypeSelectedCallbackId;
                 const int editReleasePointCallbackId;
 
-                const std::string noReleaseItemColumn1 = "NONE";
+                const std::string noReleaseItemColumn1 = "N";
                 const std::string noReleaseItemColumn2 = "No Release";
 
                 // Invalid release

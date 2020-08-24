@@ -485,7 +485,7 @@ namespace UKControllerPluginTest {
             this->handler.AddOutgoingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
 
-            EXPECT_EQ("", tagData.GetItemString());
+            EXPECT_EQ("N", tagData.GetItemString());
             EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
         }
 
@@ -531,7 +531,7 @@ namespace UKControllerPluginTest {
             this->handler.AddOutgoingRelease("BAW123", { 1, "" });
             this->handler.SetTagItemData(tagData);
 
-            EXPECT_EQ("", tagData.GetItemString());
+            EXPECT_EQ("RLSPT", tagData.GetItemString());
             EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
         }
 
@@ -577,7 +577,7 @@ namespace UKControllerPluginTest {
             this->handler.AddIncomingRelease("BAW123", { 1, "" });
             this->handler.SetTagItemData(tagData);
 
-            EXPECT_EQ("", tagData.GetItemString());
+            EXPECT_EQ("RLSPT", tagData.GetItemString());
             EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
         }
 
@@ -662,7 +662,7 @@ namespace UKControllerPluginTest {
             menuItemRelease2.fixedPosition = false;
 
             PopupMenuItem menuItemReleaseNone;
-            menuItemReleaseNone.firstValue = "NONE";
+            menuItemReleaseNone.firstValue = "N";
             menuItemReleaseNone.secondValue = "No Release";
             menuItemReleaseNone.callbackFunctionId = 101;
             menuItemReleaseNone.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
@@ -730,7 +730,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginFlightplan));
 
             this->handler.AddOutgoingRelease("BAW123", { 2, "" });
-            this->handler.ReleaseTypeSelected(1, "NONE", {});
+            this->handler.ReleaseTypeSelected(1, "N", {});
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW123"));
         }
 

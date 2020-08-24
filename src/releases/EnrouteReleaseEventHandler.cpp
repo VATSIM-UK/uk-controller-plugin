@@ -113,8 +113,8 @@ namespace UKControllerPlugin {
 
         void EnrouteReleaseEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
         {
-            tagData.SetItemString("");
-            if (tagData.itemCode == this->enrouteReleaseTypeTagItemId) {
+            if (tagData.itemCode == this->enrouteReleaseTypeTagItemId) { 
+                tagData.SetItemString(this->noReleaseItemColumn1);
 
                 // We can skip for valid release type checks here as this is checked on incoming messages
                 // Prioritise displaying outgoing releases
@@ -134,6 +134,8 @@ namespace UKControllerPlugin {
                     tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_TRANSFER_TO_ME_INITIATED);
                 }
             } else if (tagData.itemCode == this->enrouteReleasePointTagItemId) {
+                tagData.SetItemString("RLSPT");
+
                 // Prioritise displaying outgoing releases
                 if (this->outgoingReleases.count(tagData.flightPlan.GetCallsign())) {
                     if (
