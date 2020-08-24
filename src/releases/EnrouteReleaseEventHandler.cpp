@@ -113,7 +113,7 @@ namespace UKControllerPlugin {
 
         void EnrouteReleaseEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
         {
-            if (tagData.itemCode == this->enrouteReleaseTypeTagItemId) { 
+            if (tagData.itemCode == this->enrouteReleaseTypeTagItemId) {
                 tagData.SetItemString(this->noReleaseItemColumn1);
 
                 // We can skip for valid release type checks here as this is checked on incoming messages
@@ -363,9 +363,6 @@ namespace UKControllerPlugin {
             const POINT& mousePos
         ) {
             const EnrouteRelease& release = this->GetOutgoingRelease(flightplan.GetCallsign());
-            if (release == this->invalidRelease) {
-                return;
-            }
 
             this->plugin.ShowTextEditPopup(
                 { mousePos.x, mousePos.y, mousePos.x + 80, mousePos.y + 25 },
