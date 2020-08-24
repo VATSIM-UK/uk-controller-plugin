@@ -104,7 +104,7 @@ namespace UKControllerPlugin {
                 const int rowHeight = 20;
 
                 // The width of each button
-                const int buttonWidth = 30;
+                const int buttonWidth = 35;
 
                 // The description when saving the visibility ASR setting
                 const std::string visibleUserSettingDescription = "Display UKCP Countdown Timer";
