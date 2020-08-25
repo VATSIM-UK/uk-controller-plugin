@@ -363,6 +363,9 @@ namespace UKControllerPlugin {
             const POINT& mousePos
         ) {
             const EnrouteRelease& release = this->GetOutgoingRelease(flightplan.GetCallsign());
+            if (release == this->invalidRelease) {
+                return;
+            }
 
             this->plugin.ShowTextEditPopup(
                 { mousePos.x, mousePos.y, mousePos.x + 80, mousePos.y + 25 },
