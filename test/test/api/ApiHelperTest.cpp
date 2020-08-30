@@ -708,5 +708,56 @@ TEST_F(ApiHelperTest, UnassignAircraftHoldGeneratesRequest)
 
     EXPECT_NO_THROW(this->helper.UnassignAircraftHold("BAW123"));
 }
+
+TEST_F(ApiHelperTest, EnrouteReleaseGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest = GetApiCurlRequest(
+        "/release/enroute",
+        CurlRequest::METHOD_POST,
+        {
+            {"callsign", "BAW123"},
+            {"type", 1},
+            {"initiating_controller", "LON_S_CTR"},
+            {"target_controller", "LON_C_CTR"},
+        }
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.SendEnrouteRelease("BAW123", "LON_S_CTR", "LON_C_CTR", 1));
+}
+
+TEST_F(ApiHelperTest, EnrouteReleaseGeneratesRequestWithReleasePoint)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest = GetApiCurlRequest(
+        "/release/enroute",
+        CurlRequest::METHOD_POST,
+        {
+            {"callsign", "BAW123"},
+            {"type", 1},
+            {"initiating_controller", "LON_S_CTR"},
+            {"target_controller", "LON_C_CTR"},
+            {"release_point", "LAM"}
+        }
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(
+        this->helper.SendEnrouteReleaseWithReleasePoint("BAW123", "LON_S_CTR", "LON_C_CTR", 1, "LAM")
+    );
+}
 }  // namespace Api
 }  // namespace UKControllerPluginTest

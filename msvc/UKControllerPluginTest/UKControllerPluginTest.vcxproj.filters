@@ -127,6 +127,9 @@
     <Filter Include="test\navaids">
       <UniqueIdentifier>{6406bb4f-a9e7-4f19-8601-48d7f4fc81d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\releases">
+      <UniqueIdentifier>{c322a647-fb24-42df-bb70-3dbdd857b17d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -762,6 +765,24 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileCoordinatesTest.cpp">
       <Filter>test\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\ReleaseModuleTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\EnrouteReleaseTypesSerializerTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\tag\TagDataTest.cpp">
+      <Filter>test\tag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\EnrouteReleaseEventHandlerTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\CompareEnrouteReleaseTypesTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\controller\HandoffEventHandlerCollectionTest.cpp">
+      <Filter>test\controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

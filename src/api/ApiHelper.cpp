@@ -264,6 +264,40 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildSrdQueryRequest(params)).GetRawData();
         }
 
+        void ApiHelper::SendEnrouteRelease(
+            std::string aircraftCallsign,
+            std::string sendingController,
+            std::string targetController,
+            int releaseType
+        ) const {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildEnrouteReleaseRequest(
+                    aircraftCallsign,
+                    sendingController,
+                    targetController,
+                    releaseType
+                )
+            );
+        }
+
+        void ApiHelper::SendEnrouteReleaseWithReleasePoint(
+            std::string aircraftCallsign,
+            std::string sendingController,
+            std::string targetController,
+            int releaseType,
+            std::string releasePoint
+        ) const {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildEnrouteReleaseRequestWithReleasePoint(
+                    aircraftCallsign,
+                    sendingController,
+                    targetController,
+                    releaseType,
+                    releasePoint
+                )
+            );
+        }
+
         /*
             Runs an update check.
         */

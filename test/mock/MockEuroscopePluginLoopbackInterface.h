@@ -61,6 +61,7 @@ namespace UKControllerPluginTest {
                         bool confirm
                     )
                 );
+                MOCK_METHOD3(ShowTextEditPopup, void(RECT, int, std::string));
 
                 void ApplyFunctionToAllFlightplans(
                     std::function<

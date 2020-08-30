@@ -11,7 +11,9 @@
 #include "controller/ControllerPosition.h"
 #include "airfield/AirfieldCollection.h"
 #include "airfield/AirfieldModel.h"
+#include "tag/TagData.h"
 
+using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Datablock::ActualOffBlockTimeEventHandler;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -36,6 +38,21 @@ namespace UKControllerPluginTest {
         class ActualOffBlockTimeEventHandlerTest : public Test
         {
             public:
+
+                ActualOffBlockTimeEventHandlerTest()
+                    : tagData(
+                    mockFlightplan,
+                    mockRadarTarget,
+                    1,
+                    EuroScopePlugIn::TAG_DATA_CORRELATED,
+                    itemString,
+                    &euroscopeColourCode,
+                    &tagColour,
+                    &fontSize
+                    )
+                {
+                }
+
                 void SetUp()
                 {
                     this->flightplans.UpdatePlan(StoredFlightplan("BAW123", "EGKK", "EGPH"));
@@ -45,10 +62,15 @@ namespace UKControllerPluginTest {
                     );
                 };
 
+                double fontSize = 24.1;
+                COLORREF tagColour = RGB(255, 255, 255);
+                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+                char itemString[16] = "Foooooo";
                 DisplayTime timeFormat;
                 StoredFlightplanCollection flightplans;
                 NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+                TagData tagData;
                 std::unique_ptr<ActualOffBlockTimeEventHandler> handler;
         };
 
@@ -181,7 +203,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ActualOffBlockTimeEventHandlerTest, TagItemDescriptionReturnsDescription)
         {
-            EXPECT_TRUE(this->handler->GetTagItemDescription() == "Actual Off-block Time");
+            EXPECT_TRUE(this->handler->GetTagItemDescription(0) == "Actual Off-block Time");
         }
 
         TEST_F(ActualOffBlockTimeEventHandlerTest, TagItemDataReturnsBlankIfNoData)
@@ -189,10 +211,8 @@ namespace UKControllerPluginTest {
             ON_CALL(mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
-            EXPECT_EQ(
-                this->timeFormat.GetUnknownTimeFormat(),
-                this->handler->GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
-            );
+            handler->SetTagItemData(this->tagData);
+            EXPECT_EQ(this->timeFormat.GetUnknownTimeFormat(), this->tagData.GetItemString());
         }
 
         TEST_F(ActualOffBlockTimeEventHandlerTest, TagItemDataReturnsBlankIfNoFlightplan)
@@ -200,10 +220,8 @@ namespace UKControllerPluginTest {
             ON_CALL(mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW124"));
 
-            EXPECT_EQ(
-                this->timeFormat.GetUnknownTimeFormat(),
-                this->handler->GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
-            );
+            handler->SetTagItemData(this->tagData);
+            EXPECT_EQ(this->timeFormat.GetUnknownTimeFormat(), this->tagData.GetItemString());
         }
 
         TEST_F(ActualOffBlockTimeEventHandlerTest, TagItemDataReturnsAobtIfSet)
@@ -215,10 +233,8 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now()
             );
 
-            EXPECT_TRUE(
-                this->handler->GetTagItemData(this->mockFlightplan, this->mockRadarTarget) ==
-                    this->timeFormat.FromSystemTime()
-            );
+            handler->SetTagItemData(this->tagData);
+            EXPECT_EQ(this->timeFormat.FromSystemTime(), this->tagData.GetItemString());
         }
     }  // namespace Datablock
 }  // namespace UKControllerPluginTest

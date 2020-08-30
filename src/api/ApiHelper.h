@@ -54,6 +54,19 @@ namespace UKControllerPlugin {
                 nlohmann::json GetRegionalPressures(void) const override;
                 nlohmann::json GetUri(std::string uri) const;
                 nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const;
+                void SendEnrouteRelease(
+                    std::string aircraftCallsign,
+                    std::string sendingController,
+                    std::string targetController,
+                    int releaseType
+                ) const override;
+                void SendEnrouteReleaseWithReleasePoint(
+                    std::string aircraftCallsign,
+                    std::string sendingController,
+                    std::string targetController,
+                    int releaseType,
+                    std::string releasePoint
+                ) const override;
                 int UpdateCheck(std::string version) const override;
                 void SetApiKey(std::string key) override;
                 void SetApiDomain(std::string domain) override;

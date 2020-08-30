@@ -9,6 +9,7 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Controller::ActiveCallsign;
+using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin {
     namespace Handoff {
@@ -42,27 +43,27 @@ namespace UKControllerPlugin {
             return this->cache.count(callsign) ? this->cache.at(callsign) : this->DEFAULT_TAG_VALUE;
         }
 
-        std::string HandoffEventHandler::GetTagItemDescription(void) const
+        std::string HandoffEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Departure Handoff Next Controller";
         }
 
-        std::string HandoffEventHandler::GetTagItemData(
-            EuroScopeCFlightPlanInterface& flightPlan,
-            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget
-        ) {
-            if (this->cache.count(flightPlan.GetCallsign())) {
-                return this->cache.at(flightPlan.GetCallsign()).frequency;
+        void HandoffEventHandler::SetTagItemData(TagData & tagData)
+        {
+            if (this->cache.count(tagData.flightPlan.GetCallsign())) {
+                tagData.SetItemString(this->cache[tagData.flightPlan.GetCallsign()].frequency);
+                return;
             }
 
             ControllerPositionHierarchy controllers = this->handoffs.GetSidHandoffOrder(
-                flightPlan.GetOrigin(),
-                flightPlan.GetSidName()
+                tagData.flightPlan.GetOrigin(),
+                tagData.flightPlan.GetSidName()
             );
 
             if (controllers == this->handoffs.invalidHierarchy) {
-                this->cache[flightPlan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
-                return this->DEFAULT_TAG_VALUE.frequency;
+                this->cache[tagData.flightPlan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
+                tagData.SetItemString(this->DEFAULT_TAG_VALUE.frequency);
+                return;
             }
 
             for (
@@ -77,19 +78,22 @@ namespace UKControllerPlugin {
                         this->callsigns.UserHasCallsign() &&
                         this->callsigns.GetUserCallsign().GetNormalisedPosition() == *it
                     ) {
-                        this->cache[flightPlan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
-                        return this->DEFAULT_TAG_VALUE.frequency;
+                        this->cache[tagData.flightPlan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
+                        tagData.SetItemString(this->cache[tagData.flightPlan.GetCallsign()].frequency);
+                        return;
                     }
 
                     char frequencyString[24];
                     sprintf_s(frequencyString, "%.3f", it->get().GetFrequency());
-                    this->cache[flightPlan.GetCallsign()] = CachedHandoff(frequencyString, it->get().GetCallsign());
-                    return this->cache[flightPlan.GetCallsign()].frequency;
+                    this->cache[tagData.flightPlan.GetCallsign()] =
+                        CachedHandoff(frequencyString, it->get().GetCallsign());
+                    tagData.SetItemString(this->cache[tagData.flightPlan.GetCallsign()].frequency);
+                    return;
                 }
             }
 
-            this->cache[flightPlan.GetCallsign()] = this->UNICOM_TAG_VALUE;
-            return this->UNICOM_TAG_VALUE.frequency;
+            this->cache[tagData.flightPlan.GetCallsign()] = this->UNICOM_TAG_VALUE;
+            tagData.SetItemString(this->cache[tagData.flightPlan.GetCallsign()].frequency);
         }
 
         void HandoffEventHandler::FlightPlanEvent(

@@ -55,6 +55,8 @@
     <ClInclude Include="..\..\src\controller\ControllerPositionParser.h" />
     <ClInclude Include="..\..\src\controller\ControllerStatusEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\controller\ControllerStatusEventHandlerInterface.h" />
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerCollection.h" />
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\controller\TranslateFrequencyAbbreviation.h" />
     <ClInclude Include="..\..\src\countdown\CountdownModule.h" />
     <ClInclude Include="..\..\src\countdown\CountdownRenderer.h" />
@@ -248,6 +250,12 @@
     <ClInclude Include="..\..\src\regional\RegionalPressureRenderer.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressureRendererConfiguration.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressure.h" />
+    <ClInclude Include="..\..\src\releases\CompareEnrouteReleaseTypes.h" />
+    <ClInclude Include="..\..\src\releases\EnrouteRelease.h" />
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseEventHandler.h" />
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseType.h" />
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseTypesSerializer.h" />
+    <ClInclude Include="..\..\src\releases\ReleaseModule.h" />
     <ClInclude Include="..\..\src\sectorfile\Runway.h" />
     <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
@@ -269,6 +277,7 @@
     <ClInclude Include="..\..\src\srd\SrdSearchDialog.h" />
     <ClInclude Include="..\..\src\srd\SrdSearchHandler.h" />
     <ClInclude Include="..\..\src\srd\SrdSearchParameters.h" />
+    <ClInclude Include="..\..\src\tag\TagData.h" />
     <ClInclude Include="..\..\src\tag\TagFunction.h" />
     <ClInclude Include="..\..\src\tag\TagItemCollection.h" />
     <ClInclude Include="..\..\src\tag\TagItemInterface.h" />
@@ -337,6 +346,7 @@
     <ClCompile Include="..\..\src\controller\ControllerPositionHierarchyFactory.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerPositionParser.cpp" />
     <ClCompile Include="..\..\src\controller\ControllerStatusEventHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\controller\HandoffEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\controller\TranslateFrequencyAbbreviation.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownModule.cpp" />
     <ClCompile Include="..\..\src\countdown\CountdownRenderer.cpp" />
@@ -493,6 +503,10 @@
     <ClCompile Include="..\..\src\regional\RegionalPressureModule.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureRenderer.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureRendererConfiguration.cpp" />
+    <ClCompile Include="..\..\src\releases\CompareEnrouteReleaseTypes.cpp" />
+    <ClCompile Include="..\..\src\releases\EnrouteReleaseEventHandler.cpp" />
+    <ClCompile Include="..\..\src\releases\EnrouteReleaseTypesSerializer.cpp" />
+    <ClCompile Include="..\..\src\releases\ReleaseModule.cpp" />
     <ClCompile Include="..\..\src\sectorfile\Runway.cpp" />
     <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
@@ -513,6 +527,7 @@
     <ClCompile Include="..\..\src\srd\SrdModule.cpp" />
     <ClCompile Include="..\..\src\srd\SrdSearchDialog.cpp" />
     <ClCompile Include="..\..\src\srd\SrdSearchHandler.cpp" />
+    <ClCompile Include="..\..\src\tag\TagData.cpp" />
     <ClCompile Include="..\..\src\tag\TagFunction.cpp" />
     <ClCompile Include="..\..\src\tag\TagItemCollection.cpp" />
     <ClCompile Include="..\..\src\task\TaskRunner.cpp" />

@@ -2,6 +2,7 @@
 #include "tag/TagItemInterface.h"
 #include "datablock/DisplayTime.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
+#include "tag/TagData.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -34,11 +35,8 @@ class EstimatedDepartureTimeEventHandler : public UKControllerPlugin::Tag::TagIt
         void ControllerFlightPlanDataEvent(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan, int dataType
         ) override;
-        std::string GetTagItemDescription(void) const override;
-        std::string GetTagItemData(
-            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-        ) override;
+        std::string GetTagItemDescription(int tagItemId) const override;
+        void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
     private:
 

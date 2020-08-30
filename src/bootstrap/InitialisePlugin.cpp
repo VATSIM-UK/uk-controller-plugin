@@ -43,6 +43,7 @@
 #include "regional/RegionalPressureModule.h"
 #include "srd/SrdModule.h"
 #include "navaids/NavaidModule.h"
+#include "releases/ReleaseModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -204,6 +205,7 @@ namespace UKControllerPlugin {
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         Navaids::BootstrapPlugin(*this->container, loader);
+        UKControllerPlugin::Releases::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap helpers
         UKControllerPlugin::Wake::BootstrapPlugin(*this->container, loader);

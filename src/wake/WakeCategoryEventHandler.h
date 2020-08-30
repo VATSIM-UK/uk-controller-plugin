@@ -2,6 +2,7 @@
 #include "wake/WakeCategoryMapper.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "tag/TagItemInterface.h"
+#include "tag/TagData.h"
 
 namespace UKControllerPlugin {
     namespace Wake {
@@ -25,11 +26,8 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     int dataType
                 ) override;
-                std::string GetTagItemDescription(void) const override;
-                std::string GetTagItemData(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-                ) override;
+                std::string GetTagItemDescription(int tagItemId) const override;
+                void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
             private:
 
