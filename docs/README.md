@@ -30,9 +30,10 @@ dynamically to the plugin.
 - Estimated departure times
 - UK Wake Categories
 - QNH change notifications
-- Hold Manager
+- Hold Manager, synced between controllers
 - Departure handoff indicator
 - Altimeter setting regions and regional pressures
+- Enroute releases
 
 ## Setting Up The Project Locally
 
