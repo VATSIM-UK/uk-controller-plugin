@@ -67,6 +67,16 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            // The aircraft has already had it's initial altitude set once, so don't double set
+            // it for the same SID
+            if (
+                this->alreadySetMap.count(flightPlan.GetCallsign()) &&
+                this->alreadySetMap.at(flightPlan.GetCallsign()) == flightPlan.GetSidName()
+            ) {
+                return;
+            }
+
+
             // Check necessary conditions for assignment are met.
             if (!this->MeetsAssignmentConditions(flightPlan, radarTarget)) {
                 return;
@@ -80,19 +90,19 @@ namespace UKControllerPlugin {
                 return;
             }
 
-
             // Doesn't assign an init altitude if cruise level is less than the initial altitude of the SID.
             const int initialAltitude = generator.GetInitialAltitudeForDeparture(flightPlan.GetOrigin(), sidName);
             if (flightPlan.GetCruiseLevel() < initialAltitude) {
                 return;
             }
 
-            // Set the IA.
+            // Set the IA and record it
             LogInfo(
                 "Set initial altitude for " + flightPlan.GetCallsign() +
-                " (" + flightPlan.GetOrigin() + ", " + flightPlan.GetSidName() + ")"
+                " (" + flightPlan.GetOrigin() + ", " + sidName + ")"
             );
             flightPlan.SetClearedAltitude(initialAltitude);
+            this->alreadySetMap[flightPlan.GetCallsign()] = sidName;
         }
 
         InitialAltitudeEventHandler::~InitialAltitudeEventHandler(void)
@@ -104,7 +114,7 @@ namespace UKControllerPlugin {
         */
         void InitialAltitudeEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface & flightPlan)
         {
-            // Nothing to do here.
+            this->alreadySetMap.erase(flightPlan.GetCallsign());
         }
 
         /*
@@ -114,7 +124,7 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightPlan,
             int dataType
         ) {
-            // Nothing to do here.
+            // Nothing to do here
         }
 
         /*
@@ -136,8 +146,9 @@ namespace UKControllerPlugin {
             );
             LogInfo(
                 "Recycled initial altitude for " + flightplan.GetCallsign() +
-                    " (" + flightplan.GetOrigin() + ", " + flightplan.GetSidName() + ")"
+                    " (" + flightplan.GetOrigin() + ", " + sidName + ")"
             );
+            this->alreadySetMap[flightplan.GetCallsign()] = sidName;
         }
 
         /*
