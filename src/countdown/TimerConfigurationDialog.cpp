@@ -192,7 +192,7 @@ namespace UKControllerPlugin {
                 hwnd,
                 durationBoxId,
                 EM_SETLIMITTEXT,
-                3,
+                4,
                 NULL
             );
         }
@@ -207,12 +207,12 @@ namespace UKControllerPlugin {
             unsigned int durationBoxId
         ) {
             // Get the timer duration
-            TCHAR buffer[4];
+            TCHAR buffer[5];
             LRESULT valid = SendDlgItemMessage(
                 hwnd,
                 durationBoxId,
                 WM_GETTEXT,
-                4,
+                6,
                 reinterpret_cast<LPARAM>(buffer)
             );
 
@@ -224,7 +224,7 @@ namespace UKControllerPlugin {
             unsigned int timerDuration = std::stoi(buffer);
 
             // Check timer duration valid
-            if (timerDuration > 999) {
+            if (timerDuration > 3600) {
                 LogWarning("Invalid timer duration " + std::to_string(timerDuration)
                     + " for timer #" + std::to_string(timerId));
                 return;
