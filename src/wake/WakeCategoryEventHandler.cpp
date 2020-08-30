@@ -4,6 +4,7 @@
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin {
     namespace Wake {
@@ -42,7 +43,7 @@ namespace UKControllerPlugin {
 
         }
 
-        std::string WakeCategoryEventHandler::GetTagItemDescription(void) const
+        std::string WakeCategoryEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Aircraft Type / UK Wake Category";
         }
@@ -50,26 +51,24 @@ namespace UKControllerPlugin {
         /*
             Get item from the cache or generate if not exists
         */
-        std::string WakeCategoryEventHandler::GetTagItemData(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            EuroScopeCRadarTargetInterface & radarTarget
-        ) {
-            if (this->cache.count(flightPlan.GetCallsign()) == 0) {
-                std::string tagString = flightPlan.GetAircraftType()
-                    + "/" + this->mapper.MapFlightplanToCategory(flightPlan);
+        void WakeCategoryEventHandler::SetTagItemData(TagData& tagData)
+        {
+            if (this->cache.count(tagData.flightPlan.GetCallsign()) == 0) {
+                std::string tagString = tagData.flightPlan.GetAircraftType()
+                    + "/" + this->mapper.MapFlightplanToCategory(tagData.flightPlan);
 
                 // 15 characters is the max for tag functions, trim the aircraft type accordingly
                 if (tagString.size() > this->maxItemSize) {
                     const unsigned int charactersToTrim = tagString.size() - this->maxItemSize;
-                    const std::string aircraftType = flightPlan.GetAircraftType();
+                    const std::string aircraftType = tagData.flightPlan.GetAircraftType();
                     tagString = aircraftType.substr(0, aircraftType.size() - charactersToTrim) + "/"
-                        + this->mapper.MapFlightplanToCategory(flightPlan);
+                        + this->mapper.MapFlightplanToCategory(tagData.flightPlan);
                 }
 
-                this->cache[flightPlan.GetCallsign()] = tagString;
+                this->cache[tagData.flightPlan.GetCallsign()] = tagString;
             }
 
-            return this->cache.at(flightPlan.GetCallsign());
+            tagData.SetItemString(this->cache[tagData.flightPlan.GetCallsign()]);
         }
     }  // namespace Wake
 }  // namespace UKControllerPlugin

@@ -13,6 +13,7 @@
 #include "euroscope/UserSettingAwareCollection.h"
 #include "plugin/UKPlugin.h"
 #include "command/CommandHandlerCollection.h"
+#include "controller/HandoffEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Tag::TagItemCollection;
@@ -26,6 +27,7 @@ using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -46,8 +48,8 @@ namespace UKControllerPlugin {
             persistence.userSettingHandlers.reset(new UserSettingAwareCollection);
             persistence.commandHandlers.reset(new CommandHandlerCollection);
             persistence.runwayDialogEventHandlers.reset(new RunwayDialogAwareCollection);
-
             persistence.timedHandler->RegisterEvent(persistence.deferredHandlers, 3);
+            persistence.controllerHandoffHandlers.reset(new HandoffEventHandlerCollection);
         }
     }  // namespace Bootstrap
 }  // namespace UKControllerPlugin

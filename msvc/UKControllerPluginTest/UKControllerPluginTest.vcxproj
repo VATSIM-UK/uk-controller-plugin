@@ -54,6 +54,7 @@
     <ClCompile Include="..\..\test\test\controller\ControllerPositionParserTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerPositionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ControllerStatusEventHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\controller\HandoffEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\TranslateFrequencyAbbreviationTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\CountdownModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\CountdownRendererTest.cpp" />
@@ -192,6 +193,10 @@
     <ClCompile Include="..\..\test\test\regional\RegionalPressureModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\CompareEnrouteReleaseTypesTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\EnrouteReleaseEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\EnrouteReleaseTypesSerializerTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\ReleaseModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp" />
@@ -211,6 +216,7 @@
     <ClCompile Include="..\..\test\test\srd\SrdSearchHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\stands\CompareStandsTest.cpp" />
     <ClCompile Include="..\..\test\test\stands\StandSerializerTest.cpp" />
+    <ClCompile Include="..\..\test\test\tag\TagDataTest.cpp" />
     <ClCompile Include="..\..\test\test\tag\TagFunctionTest.cpp" />
     <ClCompile Include="..\..\test\test\tag\TagItemCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\task\TaskRunnerTest.cpp" />

@@ -130,6 +130,9 @@
     <Filter Include="test\stands">
       <UniqueIdentifier>{2912fe25-720b-4cb7-97ad-099a4bd010d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\releases">
+      <UniqueIdentifier>{c322a647-fb24-42df-bb70-3dbdd857b17d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -771,6 +774,24 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\stands\StandSerializerTest.cpp">
       <Filter>test\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\ReleaseModuleTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\EnrouteReleaseTypesSerializerTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\tag\TagDataTest.cpp">
+      <Filter>test\tag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\EnrouteReleaseEventHandlerTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\CompareEnrouteReleaseTypesTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\controller\HandoffEventHandlerCollectionTest.cpp">
+      <Filter>test\controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

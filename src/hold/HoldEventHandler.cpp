@@ -18,6 +18,7 @@ using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Websocket::WebsocketMessage;
 using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -37,7 +38,7 @@ namespace UKControllerPlugin {
         /*
             Return the description of the hold tag item
         */
-        std::string HoldEventHandler::GetTagItemDescription(void) const
+        std::string HoldEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Selected Hold";
         }
@@ -45,16 +46,16 @@ namespace UKControllerPlugin {
         /*
             Return the value of the hold tag item
         */
-        std::string HoldEventHandler::GetTagItemData(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            EuroScopeCRadarTargetInterface & radarTarget
-        ) {
-            std::shared_ptr<HoldingAircraft> aircraft = this->holdManager.GetHoldingAircraft(flightPlan.GetCallsign());
+        void HoldEventHandler::SetTagItemData(TagData& tagData)
+        {
+            std::shared_ptr<HoldingAircraft> aircraft = this->holdManager.GetHoldingAircraft(
+                tagData.flightPlan.GetCallsign()
+            );
             if (!aircraft || aircraft->GetAssignedHold() == aircraft->noHoldAssigned) {
-                return this->noHold;
+                tagData.SetItemString(this->noHold);
+            } else {
+                tagData.SetItemString("H" + aircraft->GetAssignedHold());
             }
-
-            return "H" + aircraft->GetAssignedHold();
         }
 
         void HoldEventHandler::TimedEventTrigger(void)

@@ -6,6 +6,7 @@
 #include "handoff/CachedHandoff.h"
 #include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "controller/ActiveCallsign.h"
+#include "tag/TagData.h"
 
 namespace UKControllerPlugin {
     namespace Handoff {
@@ -29,11 +30,8 @@ namespace UKControllerPlugin {
                 CachedHandoff GetCachedItem(std::string callsign) const;
 
                 // Inherited via TagItemInterface
-                std::string GetTagItemDescription(void) const override;
-                std::string GetTagItemData(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget
-                ) override;
+                std::string GetTagItemDescription(int tagItemId) const override;
+                void SetTagItemData(UKControllerPlugin::Tag::TagData & tagData) override;
 
                 // Inherited via FlightPlanEventHandlerInterface
                 void FlightPlanEvent(

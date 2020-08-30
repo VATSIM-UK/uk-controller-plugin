@@ -13,7 +13,9 @@
 #include "websocket/WebsocketMessage.h"
 #include "sectorfile/SectorFileCoordinates.h"
 #include "mock/MockFlightplanRadarTargetPair.h"
+#include "tag/TagData.h"
 
+using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldManager;
@@ -42,7 +44,17 @@ namespace UKControllerPluginTest {
             public:
                 HoldEventHandlerTest(void)
                     : handler(this->manager, this->navaids, this->mockPlugin, 1),
-                    manager(mockApi, mockTaskRunner)
+                    manager(mockApi, mockTaskRunner),
+                    tagData(
+                        mockFlightplan,
+                        mockRadarTarget,
+                        1,
+                        EuroScopePlugIn::TAG_DATA_CORRELATED,
+                        itemString,
+                        &euroscopeColourCode,
+                        &tagColour,
+                        &fontSize
+                    )
                 {
                     this->navaids.AddNavaid(
                         {1, "TIMBA", ParseSectorFileCoordinates("N050.56.44.000", "E000.15.42.000")}
@@ -86,6 +98,10 @@ namespace UKControllerPluginTest {
                     this->mockPlugin.AddAllFlightplansItem({ flightplan, radarTarget });
                 }
 
+                double fontSize = 24.1;
+                COLORREF tagColour = RGB(255, 255, 255);
+                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+                char itemString[16] = "Foooooo";
                 NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
                 NiceMock<MockApiInterface> mockApi;
@@ -95,34 +111,34 @@ namespace UKControllerPluginTest {
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 HoldManager manager;
                 HoldEventHandler handler;
+                TagData tagData;
                 std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplanPointer;
         };
 
         TEST_F(HoldEventHandlerTest, ItHasATagItemDescription)
         {
-            EXPECT_TRUE("Selected Hold" == this->handler.GetTagItemDescription());
+            EXPECT_TRUE("Selected Hold" == this->handler.GetTagItemDescription(0));
         }
 
         TEST_F(HoldEventHandlerTest, ItReturnsTheSelectedHoldForAnAircraft)
         {
-            EXPECT_TRUE("HTIMBA" == this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget));
+            handler.SetTagItemData(this->tagData);
+            EXPECT_EQ("HTIMBA", this->tagData.GetItemString());
         }
 
         TEST_F(HoldEventHandlerTest, ItReturnsNoHoldIfAircraftNotInHold)
         {
             this->manager.UnassignAircraftFromHold("BAW123", false);
-            EXPECT_TRUE(
-                this->handler.noHold == this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
-            );
+            handler.SetTagItemData(this->tagData);
+            EXPECT_EQ(this->handler.noHold, this->tagData.GetItemString());
         }
 
         TEST_F(HoldEventHandlerTest, ItReturnsNoHoldIfAircraftNotAssignedToHold)
         {
             this->manager.UnassignAircraftFromHold("BAW123", false);
             this->manager.AddAircraftToProximityHold("BAW123", "TIMBA");
-            EXPECT_TRUE(
-                this->handler.noHold == this->handler.GetTagItemData(this->mockFlightplan, this->mockRadarTarget)
-            );
+            handler.SetTagItemData(this->tagData);
+            EXPECT_EQ(this->handler.noHold, this->tagData.GetItemString());
         }
 
         TEST_F(HoldEventHandlerTest, ItHasSubscriptionsToWebsocketEvents)

@@ -9,6 +9,7 @@ using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Datablock::DisplayTime;
+using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin {
     namespace Datablock {
@@ -60,27 +61,28 @@ namespace UKControllerPlugin {
                 SetActualOffBlockTime(std::chrono::system_clock::now());
         }
 
-        std::string ActualOffBlockTimeEventHandler::GetTagItemDescription(void) const
+        std::string ActualOffBlockTimeEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Actual Off-block Time";
         }
 
-        std::string ActualOffBlockTimeEventHandler::GetTagItemData(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            EuroScopeCRadarTargetInterface & radarTarget
-        ) {
-            if (!this->flightplans.HasFlightplanForCallsign(flightPlan.GetCallsign())) {
-                return this->displayTime.GetUnknownTimeFormat();
+        void ActualOffBlockTimeEventHandler::SetTagItemData(TagData& tagData)
+        {
+            if (!this->flightplans.HasFlightplanForCallsign(tagData.flightPlan.GetCallsign())) {
+                tagData.SetItemString(this->displayTime.GetUnknownTimeFormat());
+                return;
             }
 
             std::chrono::system_clock::time_point offBlock = this->flightplans.GetFlightplanForCallsign(
-                flightPlan.GetCallsign()
+                tagData.flightPlan.GetCallsign()
             )
                 .GetActualOffBlockTime();
 
-            return offBlock == (std::chrono::system_clock::time_point::max)()
-                ? this->displayTime.GetUnknownTimeFormat()
-                : this->displayTime.FromTimePoint(offBlock);
+            tagData.SetItemString(
+                offBlock == (std::chrono::system_clock::time_point::max)()
+                    ? this->displayTime.GetUnknownTimeFormat()
+                    : this->displayTime.FromTimePoint(offBlock)
+            );
         }
     }  // namespace Datablock
 }  // namespace UKControllerPlugin

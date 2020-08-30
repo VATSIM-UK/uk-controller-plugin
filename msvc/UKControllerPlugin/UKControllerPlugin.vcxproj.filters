@@ -142,6 +142,9 @@
     <Filter Include="src\stands">
       <UniqueIdentifier>{e8eedfab-3e7e-4875-9485-c7fea0d1fd40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\releases">
+      <UniqueIdentifier>{27638ea8-4c02-42f1-a831-fa2951a6b3db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1014,6 +1017,33 @@
     <ClInclude Include="..\..\src\stands\CompareStands.h">
       <Filter>src\stands</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseType.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\ReleaseModule.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseTypesSerializer.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\tag\TagData.h">
+      <Filter>src\tag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseEventHandler.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\CompareEnrouteReleaseTypes.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteRelease.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerInterface.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerCollection.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1719,6 +1749,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\stands\CompareStands.cpp">
       <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\ReleaseModule.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\EnrouteReleaseTypesSerializer.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tag\TagData.cpp">
+      <Filter>src\tag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\EnrouteReleaseEventHandler.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\CompareEnrouteReleaseTypes.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\controller\HandoffEventHandlerCollection.cpp">
+      <Filter>src\controller</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

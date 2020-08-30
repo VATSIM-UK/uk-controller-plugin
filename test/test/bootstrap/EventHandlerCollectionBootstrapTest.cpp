@@ -83,5 +83,10 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
             EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(3));
         }
+
+        TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginCreatesHandoffHandlers)
+        {
+            EXPECT_EQ(0, this->container.controllerHandoffHandlers->CountHandlers());
+        }
     }  // namespace Bootstrap
 }  // namespace UKControllerPluginTest

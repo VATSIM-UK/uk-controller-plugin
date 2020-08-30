@@ -42,29 +42,18 @@ namespace UKControllerPlugin {
             Called when we want to get data for a given tag item. For example, if we're looking
             for an intention code, the intention code tag item will be called to return data.
         */
-        void TagItemCollection::TagItemUpdate(
-            int tagItemId,
-            char itemData[16],
-            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-        ) const {
+        void TagItemCollection::TagItemUpdate(TagData & tagData) const
+        {
 
-            if (this->tagItems.count(tagItemId) == 0) {
-                LogWarning("Invalid TAG item requested, id: " + std::to_string(tagItemId));
-                strcpy_s(itemData, 16, this->errorTagItemText.c_str());
+            // Make sure the item exists
+            if (this->tagItems.count(tagData.itemCode) == 0) {
+                LogWarning("Invalid TAG item requested, id: " + std::to_string(tagData.itemCode));
+                tagData.SetItemString(this->errorTagItemText);
                 return;
             }
 
-            // Get the TAG data and check it's of a suitable length
-            std::string tagData = this->tagItems.at(tagItemId)->GetTagItemData(flightPlan, radarTarget);
-
-            // We only allow data of length maxlength - 1 because of null char on the end.
-            if (tagData.size() > this->maxItemSize - 1) {
-                tagData = this->invalidItemText;
-            }
-
-            // Copy into place
-            strcpy_s(itemData, 16, tagData.c_str());
+            // Set the data for the tag item
+            this->tagItems.at(tagData.itemCode)->SetTagItemData(tagData);
         }
 
         /*
@@ -78,7 +67,7 @@ namespace UKControllerPlugin {
                 it != this->tagItems.cend();
                 ++it
             ) {
-                pluginCore.RegisterTagItem(it->first, it->second->GetTagItemDescription());
+                pluginCore.RegisterTagItem(it->first, it->second->GetTagItemDescription(it->first));
             }
 
             LogInfo("Registered " + std::to_string(this->tagItems.size()) + " TAG items");

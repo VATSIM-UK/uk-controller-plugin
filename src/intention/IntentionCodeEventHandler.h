@@ -4,6 +4,7 @@
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "intention/IntentionCodeGenerator.h"
 #include "intention/IntentionCodeCache.h"
+#include "tag/TagData.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
@@ -41,11 +42,9 @@ namespace UKControllerPlugin {
                 void FlightPlanDisconnectEvent(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan
                 );
-                std::string GetTagItemDescription(void) const;
-                std::string GetTagItemData(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-                );
+                std::string GetTagItemDescription(int tagItemId) const override;
+                void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
+
 
                 // Inherited via ControllerStatusEventHandlerInterface
                 void ControllerUpdateEvent(

@@ -223,6 +223,44 @@ namespace UKControllerPlugin {
             );
         }
 
+        CurlRequest ApiRequestBuilder::BuildEnrouteReleaseRequestWithReleasePoint(
+            std::string aircraftCallsign,
+            std::string sendingController,
+            std::string targetController,
+            int releaseType,
+            std::string releasePoint
+        ) const {
+            CurlRequest request(this->apiDomain + "/release/enroute", CurlRequest::METHOD_POST);
+            nlohmann::json data{
+                {"callsign", aircraftCallsign},
+                {"type", releaseType},
+                {"initiating_controller", sendingController},
+                {"target_controller", targetController},
+                {"release_point", releasePoint},
+            };
+            request.SetBody(data.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
+        CurlRequest ApiRequestBuilder::BuildEnrouteReleaseRequest(
+            std::string aircraftCallsign,
+            std::string sendingController,
+            std::string targetController,
+            int releaseType
+        ) const {
+            CurlRequest request(this->apiDomain + "/release/enroute", CurlRequest::METHOD_POST);
+            nlohmann::json data{
+                {"callsign", aircraftCallsign},
+                {"type", releaseType},
+                {"initiating_controller", sendingController},
+                {"target_controller", targetController},
+            };
+            request.SetBody(data.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
         /*
             Returns the API Domain that the builder is using
         */
