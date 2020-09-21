@@ -61,6 +61,16 @@ namespace UKControllerPlugin {
                 this->headers == compare.headers;
         }
 
+        long CurlRequest::GetMaxRequestTime(void) const
+        {
+            return this->maxRequestTime;
+        }
+
+        void CurlRequest::SetMaxRequestTime(long requestTime)
+        {
+            this->maxRequestTime = requestTime;
+        }
+
         /*
             Sets the body of the request, if its valid
         */
