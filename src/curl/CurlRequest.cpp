@@ -62,12 +62,12 @@ namespace UKControllerPlugin {
                 this->maxRequestTime == compare.maxRequestTime;
         }
 
-        long CurlRequest::GetMaxRequestTime(void) const
+        INT64 CurlRequest::GetMaxRequestTime(void) const
         {
             return this->maxRequestTime;
         }
 
-        void CurlRequest::SetMaxRequestTime(long requestTime)
+        void CurlRequest::SetMaxRequestTime(INT64 requestTime)
         {
             this->maxRequestTime = requestTime;
         }

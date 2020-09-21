@@ -17,8 +17,8 @@ namespace UKControllerPlugin {
                 const char * const GetMethod(void) const;
                 const char * const GetUri(void) const;
                 bool operator==(const CurlRequest & compare) const;
-                long GetMaxRequestTime(void) const;
-                void SetMaxRequestTime(long requestTime);
+                INT64 GetMaxRequestTime(void) const;
+                void SetMaxRequestTime(INT64 requestTime);
                 void SetBody(std::string body);
 
                 // No request body
@@ -52,7 +52,7 @@ namespace UKControllerPlugin {
                 std::map<std::string, std::string> headers;
 
                 // The maximum amount of time that requests are allowed to take
-                long maxRequestTime = 10L;
+                INT64 maxRequestTime = 10L;
         };
     }  // namespace Curl
 }  // namespace UKControllerPlugin
