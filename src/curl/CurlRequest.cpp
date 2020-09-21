@@ -58,7 +58,8 @@ namespace UKControllerPlugin {
             return this->uri == compare.uri &&
                 this->method == compare.method &&
                 this->body == compare.body &&
-                this->headers == compare.headers;
+                this->headers == compare.headers &&
+                this->maxRequestTime == compare.maxRequestTime;
         }
 
         long CurlRequest::GetMaxRequestTime(void) const
