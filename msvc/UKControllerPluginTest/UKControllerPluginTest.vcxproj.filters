@@ -793,6 +793,9 @@
     <ClCompile Include="..\..\test\test\controller\HandoffEventHandlerCollectionTest.cpp">
       <Filter>test\controller</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\stands\StandEventHandlerTest.cpp">
+      <Filter>test\stands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

@@ -1047,6 +1047,9 @@
     <ClInclude Include="..\..\src\stands\StandModule.h">
       <Filter>src\stands</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\stands\StandEventHandler.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1772,6 +1775,9 @@
       <Filter>src\controller</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\stands\StandModule.cpp">
+      <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\StandEventHandler.cpp">
       <Filter>src\stands</Filter>
     </ClCompile>
   </ItemGroup>
