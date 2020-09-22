@@ -179,6 +179,7 @@ namespace UKControllerPluginTest {
             expectedRequest.AddHeader("Authorization", "Bearer apikey");
             expectedRequest.AddHeader("Accept", "application/json");
             expectedRequest.AddHeader("Content-Type", "application/json");
+            expectedRequest.SetMaxRequestTime(0L);
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildGetUriRequest("someuri"));
         }

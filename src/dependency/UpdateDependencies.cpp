@@ -12,42 +12,50 @@ namespace UKControllerPlugin {
 
         const std::wstring dependencyListFile = L"dependencies/dependency-list.json";
 
+        std::map<std::string, nlohmann::json> LoadDependencyList(const nlohmann::json dependencyList)
+        {
+            std::map<std::string, nlohmann::json> dependencies;
+            for (
+                nlohmann::json::const_iterator it = dependencyList.cbegin();
+                it != dependencyList.cend();
+                ++it
+             ) {
+                if (!ValidDependency(*it)) {
+                    LogWarning("Invalid dependency in dependency list, skipping: " + it->dump());
+                    continue;
+                }
+
+                dependencies[it->at("key").get<std::string>()] = *it;
+            }
+
+            return dependencies;
+        }
+
         /*
             Load up a map of key -> dependency
         */
-        std::map<std::string, nlohmann::json> LoadDependencyList(WinApiInterface& filesystem)
+        std::map<std::string, nlohmann::json> LoadDependencyListFromFilesystem(WinApiInterface& filesystem)
         {
-            std::map<std::string, nlohmann::json> dependencies;
             if (!filesystem.FileExists(dependencyListFile)) {
                 LogInfo("Local dependencies file not found");
-                return dependencies;
+                return {};
             }
 
             nlohmann::json dependencyList;
             try {
-                dependencyList = nlohmann::json::parse(filesystem.ReadFromFile(dependencyListFile));
-
-                for (
-                    nlohmann::json::const_iterator it = dependencyList.cbegin();
-                    it != dependencyList.cend();
-                    ++it
-                    ) {
-                    if (!ValidDependency(*it)) {
-                        LogWarning("Invalid dependency in dependency list, skipping: " + it->dump());
-                        continue;
-                    }
-
-                    dependencies[it->at("key").get<std::string>()] = *it;
-                }
+                return LoadDependencyList(nlohmann::json::parse(filesystem.ReadFromFile(dependencyListFile)));
             }
             catch (std::exception e)
             {
                 LogError("Exception thrown when reading dependency list file: " + std::string(e.what()));
             }
 
-            return dependencies;
+            return {};
         }
 
+        /*
+            If the local dependency is older than the newer one, download it.
+        */
         bool NeedsDownload(
             const std::map<std::string, nlohmann::json>& local,
             const std::map<std::string, nlohmann::json>& remote,
@@ -61,21 +69,20 @@ namespace UKControllerPlugin {
         {
             // Download the dependency list and save it to the filesystem
             LogInfo("Loading existing dependencies");
-            std::map<std::string, nlohmann::json> existingDependencies = LoadDependencyList(filesystem);
+            std::map<std::string, nlohmann::json> existingDependencies = LoadDependencyListFromFilesystem(filesystem);
 
             LogInfo("Downloading new dependency list");
+            std::map<std::string, nlohmann::json> newDependencies;
             try {
-                nlohmann::json dependencyList = api.GetDependencyList();
-                filesystem.WriteToFile(dependencyListFile, dependencyList.dump(), true);
+                newDependencies = LoadDependencyList(api.GetDependencyList());
                 LogInfo("Downloaded new dependency list");
             } catch (ApiException exception) {
                 LogError("Unable to download dependency list: " + std::string(exception.what()));
                 return;
             }
 
-            std::map<std::string, nlohmann::json> newDependencies = LoadDependencyList(filesystem);
-
             // Loop the dependencies and download just the ones we need.
+            nlohmann::json dependencyListToSave = nlohmann::json::array();
             for (
                 std::map<std::string, nlohmann::json>::const_iterator it = newDependencies.cbegin();
                 it != newDependencies.cend();
@@ -88,6 +95,7 @@ namespace UKControllerPlugin {
                     !NeedsDownload(existingDependencies, newDependencies, it->first)
                 ) {
                     LogInfo("Dependency " + it->first + " is up to date, skipping download");
+                    dependencyListToSave.push_back(it->second);
                     continue;
                 }
 
@@ -98,6 +106,7 @@ namespace UKControllerPlugin {
                         api.GetUri(it->second.at("uri").get<std::string>()).dump(),
                         true
                     );
+                    dependencyListToSave.push_back(it->second);
                     LogInfo("New version of dependency " + it->first + " has been downloaded");
                 }
                 catch (ApiException exception) {
@@ -106,6 +115,7 @@ namespace UKControllerPlugin {
                 }
             }
 
+            filesystem.WriteToFile(dependencyListFile, dependencyListToSave.dump(), true);
             LogInfo("Finished downloading dependency files");
         }
 
