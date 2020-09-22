@@ -6,7 +6,7 @@ namespace UKControllerPlugin {
     namespace Stands {
 
         /*
-            Create HoldingData from JSON
+            Create Stand data from JSON
         */
         void from_json(
             const nlohmann::json& json,
@@ -37,6 +37,9 @@ namespace UKControllerPlugin {
             );
         }
 
+        /*
+            Checks that the entire stand dependency is valid
+        */
         bool DependencyValid(const nlohmann::json& data)
         {
             if (!data.is_object()) {
@@ -52,6 +55,9 @@ namespace UKControllerPlugin {
             return true;
         }
 
+        /*
+            Checks that each airport has a valid list of stands
+        */
         bool AirportDataValid(const nlohmann::json& data)
         {
             if (!data.is_array()) {
@@ -67,6 +73,9 @@ namespace UKControllerPlugin {
             return true;
         }
 
+        /*
+            Checks that each stand is valid
+        */
         bool StandDataValid(const nlohmann::json& data)
         {
             return data.is_object() &&

@@ -7,6 +7,9 @@ namespace UKControllerPlugin {
 
         extern const std::string standDependency;
 
+        /*
+            Bootstraps everything to do with stand assignment
+        */
         void BootstrapPlugin(
             UKControllerPlugin::Bootstrap::PersistenceContainer& container,
             UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies

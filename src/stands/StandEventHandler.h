@@ -1,29 +1,35 @@
 #pragma once
 #include "stands/Stand.h"
 #include "stands/CompareStands.h"
+#include "tag/TagItemInterface.h"
 
 namespace UKControllerPlugin {
     namespace Stands {
         /*
             A new class
         */
-        class StandEventHandler
+        class StandEventHandler: public UKControllerPlugin::Tag::TagItemInterface
         {
             public:
                 StandEventHandler(
-                    const std::map<
-                        std::string,
-                        std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands>
-                    > stands
+                    std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands
                 );
+
+                size_t CountStands(void) const;
+                size_t CountStandAssignments(void) const;
+                void SetAssignedStand(std::string callsign, int standId);
+
+                // Inherited via TagItemInterface
+                std::string GetTagItemDescription(int tagItemId) const override;
+                void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
             private:
 
-                // A map of airfield ICAO -> stand struct
-                const std::map<
-                    std::string,
-                    std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands>
-                > stands;
+                // All the stands we have
+                std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands;
+
+                // The currently assigned stands and who they are assigned to
+                std::map<std::string, int> standAssignments;
         };
     }  // namespace Stands
 }  // namespace UKControllerPlugin

@@ -216,6 +216,7 @@
     <ClCompile Include="..\..\test\test\srd\SrdSearchHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\stands\CompareStandsTest.cpp" />
     <ClCompile Include="..\..\test\test\stands\StandEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\stands\StandModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\stands\StandSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\tag\TagDataTest.cpp" />
     <ClCompile Include="..\..\test\test\tag\TagFunctionTest.cpp" />
