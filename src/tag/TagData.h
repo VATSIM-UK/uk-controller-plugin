@@ -46,7 +46,7 @@ namespace UKControllerPlugin {
                 // The code for the tag item
                 const int itemCode;
 
-                // What data is available - e.g. correlated track, uncorrelated etcx
+                // What data is available - e.g. correlated track, uncorrelated etc
                 const int dataAvailable;
 
             private:
