@@ -1,5 +1,8 @@
 #include "pch/stdafx.h"
 #include "stands/StandEventHandler.h"
+#include "websocket/WebsocketSubscription.h"
+
+using UKControllerPlugin::Websocket::WebsocketSubscription;
 
 namespace UKControllerPlugin {
     namespace Stands {
@@ -41,6 +44,20 @@ namespace UKControllerPlugin {
 
                 tagData.SetItemString(stand->identifier);
             }
+        }
+
+        void StandEventHandler::ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message)
+        {
+        }
+
+        std::set<UKControllerPlugin::Websocket::WebsocketSubscription> StandEventHandler::GetSubscriptions(void) const
+        {
+            return {
+                {
+                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    "private-stand-assignments"
+                }
+            };
         }
     }  // namespace Stands
 }  // namespace UKControllerPlugin

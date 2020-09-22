@@ -72,5 +72,11 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(110));
         }
+
+        TEST_F(StandModuleTest, ItRegistersForWebsocketEvents)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-stand-assignments"));
+        }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

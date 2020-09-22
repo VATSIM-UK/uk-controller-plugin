@@ -35,6 +35,7 @@ namespace UKControllerPlugin {
 
             // Assign to handlers
             container.tagHandler->RegisterTagItem(assignedStandTagItemId, eventHandler);
+            container.websocketProcessors->AddProcessor(eventHandler);
         }
     }  // namespace Stands
 }  // namespace UKControllerPlugin

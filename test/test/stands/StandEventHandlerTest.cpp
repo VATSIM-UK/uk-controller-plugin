@@ -5,12 +5,14 @@
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
+#include "websocket/WebsocketSubscription.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Stands::StandEventHandler;
 using UKControllerPlugin::Stands::CompareStands;
 using UKControllerPlugin::Stands::Stand;
 using UKControllerPlugin::Tag::TagData;
+using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using ::testing::NiceMock;
@@ -70,6 +72,18 @@ namespace UKControllerPluginTest {
         {
             this->handler.SetTagItemData(this->tagData);
             EXPECT_EQ("Foooooo", this->tagData.GetItemString());
+        }
+
+        TEST_F(StandEventHandlerTest, ItSubscribesToChannels)
+        {
+            std::set<WebsocketSubscription> expectedSubscriptions;
+            expectedSubscriptions.insert(
+                {
+                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    "private-stand-assignments"
+                }
+            );
+            EXPECT_EQ(expectedSubscriptions, this->handler.GetSubscriptions());
         }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest
