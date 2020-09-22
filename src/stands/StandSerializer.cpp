@@ -10,10 +10,7 @@ namespace UKControllerPlugin {
         */
         void from_json(
             const nlohmann::json& json,
-            std::map<
-                std::string,
-                std::set<Stand, CompareStands>
-            >& stands
+            std::set<Stand, CompareStands>& stands
         ) {
             if (!DependencyValid(json)) {
                 LogInfo("Stand data is not valid");
@@ -26,8 +23,9 @@ namespace UKControllerPlugin {
                 numberOfAirfields++;
                 for (auto standIt = airfieldIt->cbegin(); standIt != airfieldIt->cend(); ++standIt) {
                     numberOfStands++;
-                    stands[airfieldIt.key()].insert({
+                    stands.insert({
                         standIt->at("id").get<int>(),
+                        airfieldIt.key(),
                         standIt->at("identifier").get<std::string>()
                     });
                 }

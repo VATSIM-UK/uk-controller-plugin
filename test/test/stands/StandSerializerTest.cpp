@@ -221,10 +221,7 @@ namespace UKControllerPluginTest {
                 {"EGLL", heathrow}
             };
 
-            std::map<
-                std::string,
-                std::set<Stand, CompareStands>
-            > stands;
+            std::set<Stand, CompareStands> stands;
             from_json(dependency, stands);
             EXPECT_EQ(0, stands.size());
         }
@@ -256,21 +253,19 @@ namespace UKControllerPluginTest {
                 {"EGLL", heathrow}
             };
 
-            std::map<
-                std::string,
-                std::set<Stand, CompareStands>
-            > stands;
+            std::set<Stand, CompareStands> stands;
             from_json(dependency, stands);
 
-            EXPECT_EQ(2, stands.size());
-            EXPECT_EQ(2, stands.at("EGKK").size());
-            EXPECT_EQ(1, stands.at("EGKK").find(1)->id);
-            EXPECT_EQ("31R", stands.at("EGKK").find(1)->identifier);
-            EXPECT_EQ(2, stands.at("EGKK").find(2)->id);
-            EXPECT_EQ("35", stands.at("EGKK").find(2)->identifier);
-            EXPECT_EQ(1, stands.at("EGLL").size());
-            EXPECT_EQ(3, stands.at("EGLL").find(3)->id);
-            EXPECT_EQ("76R", stands.at("EGLL").find(3)->identifier);
+            EXPECT_EQ(3, stands.size());
+            EXPECT_EQ(1, stands.find(1)->id);
+            EXPECT_EQ("EGKK", stands.find(1)->airfieldCode);
+            EXPECT_EQ("31R", stands.find(1)->identifier);
+            EXPECT_EQ(2, stands.find(2)->id);
+            EXPECT_EQ("EGKK", stands.find(2)->airfieldCode);
+            EXPECT_EQ("35", stands.find(2)->identifier);
+            EXPECT_EQ(3, stands.find(3)->id);
+            EXPECT_EQ("EGLL", stands.find(3)->airfieldCode);
+            EXPECT_EQ("76R", stands.find(3)->identifier);
         }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

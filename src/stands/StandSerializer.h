@@ -10,10 +10,7 @@ namespace UKControllerPlugin {
         */
         void from_json(
             const nlohmann::json& json,
-            std::map<
-                std::string,
-                std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands>
-            >& stands
+            std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands>& stands
         );
 
         /*
