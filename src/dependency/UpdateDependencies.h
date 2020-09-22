@@ -6,6 +6,9 @@ namespace UKControllerPlugin {
     namespace Dependency {
 
         std::map<std::string, nlohmann::json> LoadDependencyList(
+            const nlohmann::json dependencyList
+        );
+        std::map<std::string, nlohmann::json> LoadDependencyListFromFilesystem(
             UKControllerPlugin::Windows::WinApiInterface& filesystem
         );
         bool NeedsDownload(

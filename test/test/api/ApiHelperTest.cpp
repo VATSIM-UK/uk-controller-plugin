@@ -602,6 +602,7 @@ TEST_F(ApiHelperTest, GetUriReturnsUriData)
             CurlRequest::METHOD_GET
         )
     );
+    expectedRequest.SetMaxRequestTime(0L);
 
     EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
         .Times(1)

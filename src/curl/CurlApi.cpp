@@ -35,7 +35,7 @@ namespace UKControllerPlugin {
             std::string outBuffer;
             curl_easy_setopt(curlObject, CURLOPT_FOLLOWLOCATION, 1L);
             curl_easy_setopt(curlObject, CURLOPT_CONNECTTIMEOUT, 4);
-            curl_easy_setopt(curlObject, CURLOPT_TIMEOUT, 10);
+            curl_easy_setopt(curlObject, CURLOPT_TIMEOUT, request.GetMaxRequestTime());
             curl_easy_setopt(curlObject, CURLOPT_WRITEDATA, &outBuffer);
             curl_easy_setopt(curlObject, CURLOPT_WRITEFUNCTION, &CurlApi::WriteFunction);
 

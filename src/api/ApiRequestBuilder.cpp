@@ -45,13 +45,15 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Method for querying any API URI
+            Method for querying any API URI. On this method only we disable the
+            CURLOPT_TIMEOUT as this method is used to download dependencies and may
+            be quite big.
         */
         CurlRequest ApiRequestBuilder::BuildGetUriRequest(std::string uri) const
         {
-            return this->AddCommonHeaders(
-                CurlRequest(uri, CurlRequest::METHOD_GET)
-            );
+            CurlRequest request(uri, CurlRequest::METHOD_GET);
+            request.SetMaxRequestTime(0L);
+            return this->AddCommonHeaders(request);
         }
 
         /*
