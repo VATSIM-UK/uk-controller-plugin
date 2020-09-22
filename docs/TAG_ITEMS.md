@@ -9,3 +9,4 @@
 107 - Departure handoff controller
 108 - Enroute Release Type
 109 - Enroute Release Point
+110 - Assigned Stand
