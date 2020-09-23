@@ -37,6 +37,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<StandEventHandler> eventHandler = std::make_shared<StandEventHandler>(
                 *container.api,
                 *container.taskRunner,
+                *container.plugin,
                 stands,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );

@@ -2,13 +2,16 @@
 #include "stands/StandEventHandler.h"
 #include "websocket/WebsocketSubscription.h"
 #include "api/ApiException.h"
+#include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 
 namespace UKControllerPlugin {
     namespace Stands {
@@ -16,10 +19,12 @@ namespace UKControllerPlugin {
         StandEventHandler::StandEventHandler(
             const ApiInterface& api,
             TaskRunnerInterface& taskRunner,
+            EuroscopePluginLoopbackInterface& plugin,
             const std::set<Stand, CompareStands> stands,
             int standSelectedCallbackId
         )
-            : api(api), taskRunner(taskRunner), stands(stands), standSelectedCallbackId(standSelectedCallbackId)
+            : api(api), taskRunner(taskRunner), plugin(plugin), stands(stands),
+            standSelectedCallbackId(standSelectedCallbackId)
         {
         }
 
@@ -39,7 +44,57 @@ namespace UKControllerPlugin {
             std::string context,
             const POINT& mousePos
         ) {
+            // Only allow a user to do this if they are tracking the aircraft or its untracked
+            if (flightplan.IsTracked() && !flightplan.IsTrackedByUser()) {
+                return;
+            }
 
+            // Pick the airfield based on distance from origin
+            this->lastAirfieldUsed = flightplan.GetDistanceFromOrigin() < this->maxDistanceFromDepartureAirport
+                ? flightplan.GetOrigin()
+                : flightplan.GetDestination();
+
+            // Create the list in place
+            RECT popupArea = {
+                mousePos.x,
+                mousePos.y,
+                mousePos.x + 400,
+                mousePos.y + 600
+            };
+
+
+            this->plugin.TriggerPopupList(
+                popupArea,
+                "Assign Stand at " + this->lastAirfieldUsed,
+                2
+            );
+
+            PopupMenuItem menuItem;
+            menuItem.firstValue = "";
+            menuItem.secondValue = "";
+            menuItem.callbackFunctionId = this->standSelectedCallbackId;
+            menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItem.disabled = false;
+            menuItem.fixedPosition = false;
+
+            // Add each stand in turn
+            for (
+                auto stand = this->stands.cbegin();
+                stand != this->stands.cend();
+                ++stand
+            ) {
+                if (stand->airfieldCode != this->lastAirfieldUsed) {
+                    continue;
+                }
+
+                menuItem.firstValue = stand->identifier;
+                this->plugin.AddItemToPopupList(menuItem);
+            }
+
+            // Add the final item, no stand, in a fixed position
+            menuItem.firstValue = this->noStandMenuItem;
+            menuItem.fixedPosition = true;
+            this->plugin.AddItemToPopupList(menuItem);
         }
 
         int StandEventHandler::GetAssignedStandForCallsign(std::string callsign) const
@@ -54,7 +109,56 @@ namespace UKControllerPlugin {
 
         void StandEventHandler::StandSelected(int functionId, std::string context, RECT)
         {
+            // Only allow this action if they're tracking the flightplan or its untracked
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
 
+            if (!fp) {
+                LogWarning("Tried assign a stand for a non-existant aircraft");
+                return;
+            }
+
+            if (fp->IsTracked() && !fp->IsTrackedByUser()) {
+                LogInfo("Attempted to assign stand but flightplan is tracked by someone else " + fp->GetCallsign());
+                return;
+            }
+
+            std::string callsign = fp->GetCallsign();
+            // If no stand is selected, delete the current assisnment if there is one
+            if (context == this->noStandMenuItem && this->standAssignments.count(callsign)) {
+                this->taskRunner.QueueAsynchronousTask([this, callsign]() {
+                    this->standAssignments.erase(callsign);
+                    try {
+                        this->api.DeleteStandAssignmentForAircraft(callsign);
+                    } catch (ApiException) {
+                        LogError("Failed to delete stand assignment for " + callsign);
+                    }
+                });
+            } else {
+                // Find the requested stand
+                auto stand = std::find_if(
+                    this->stands.cbegin(),
+                    this->stands.cend(),
+                    [this, context](const Stand& stand) -> bool {
+                        return stand.identifier == context && stand.airfieldCode == this->lastAirfieldUsed;
+                    }
+                );
+
+                if (stand == this->stands.cend()) {
+                    LogInfo("Tried to assign a non-existant stand");
+                    return;
+                }
+
+                // Assign that stand
+                int standId = stand->id;
+                this->standAssignments[callsign] = standId;
+                this->taskRunner.QueueAsynchronousTask([this, standId, callsign]() {
+                    try {
+                        this->api.AssignStandToAircraft(callsign, standId);
+                    } catch (ApiException) {
+                        LogError("Failed to create stand assignment for " + callsign);
+                    }
+                });
+            }
         }
 
         std::string StandEventHandler::GetTagItemDescription(int tagItemId) const

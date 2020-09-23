@@ -5,6 +5,7 @@
 #include "api/ApiInterface.h"
 #include "task/TaskRunnerInterface.h"
 #include "websocket/WebsocketEventProcessorInterface.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
 
 namespace UKControllerPlugin {
     namespace Stands {
@@ -18,6 +19,7 @@ namespace UKControllerPlugin {
                 StandEventHandler(
                     const UKControllerPlugin::Api::ApiInterface& api,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner,
+                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
                     std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
                     int standSelectedCallbackId
                 );
@@ -48,16 +50,28 @@ namespace UKControllerPlugin {
                 // The id for the callback when a stand is selected
                 const int standSelectedCallbackId;
 
+                // Max distance from departure airport to decide whether we show departure or arrival airport stands
+                const int maxDistanceFromDepartureAirport = 7;
+
+                // The menu item to display for no assigned stand
+                const std::string noStandMenuItem = "--";
+
             private:
 
                 bool AssignmentMessageValid(const nlohmann::json& message) const;
                 bool UnassignmentMessageValid(const nlohmann::json & message) const;
+
+                // The last airfield that was used to populate the stand menu
+                std::string lastAirfieldUsed;
 
                 // The API for making requests in relation to stands
                 const UKControllerPlugin::Api::ApiInterface& api;
 
                 // Allows API calls to be made asynchronously
                 UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner;
+
+                // Used to interact with the main plugin
+                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
                 // All the stands we have
                 std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands;
