@@ -6,6 +6,7 @@
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
 #include "websocket/WebsocketSubscription.h"
+#include "websocket/WebsocketMessage.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Stands::StandEventHandler;
@@ -15,6 +16,7 @@ using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Websocket::WebsocketMessage;
 using ::testing::NiceMock;
 using ::testing::Return;
 
@@ -84,6 +86,153 @@ namespace UKControllerPluginTest {
                 }
             );
             EXPECT_EQ(expectedSubscriptions, this->handler.GetSubscriptions());
+        }
+
+        TEST_F(StandEventHandlerTest, ItAssignsStandsFromWebsocketMessage)
+        {
+            WebsocketMessage message{
+                "App\\Events\\StandAssignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"stand_id", 1},
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfNoCallsign)
+        {
+            WebsocketMessage message{
+                "App\\Events\\StandAssignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"stand_id", 1},
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfCallsignInvalid)
+        {
+            WebsocketMessage message{
+                "App\\Events\\StandAssignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", 123},
+                    {"stand_id", 1},
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfNoStandId)
+        {
+            WebsocketMessage message{
+                "App\\Events\\StandAssignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfStandIdInvalid)
+        {
+            WebsocketMessage message{
+                "App\\Events\\StandAssignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"stand_id", "1"},
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfStandIdNotRealStand)
+        {
+            WebsocketMessage message{
+                "App\\Events\\StandAssignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"stand_id", -999},
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItUnassignsStandsFromWebsocketMessage)
+        {
+            this->handler.SetAssignedStand("BAW123", 3);
+            WebsocketMessage message{
+                "App\\Events\\StandUnassignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", "BAW123"}
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromWebsocketMessageIfCallsignMissing)
+        {
+            this->handler.SetAssignedStand("BAW123", 3);
+            WebsocketMessage message{
+                "App\\Events\\StandUnassignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"notcallsign", "BAW123"}
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(3, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromWebsocketMessageIfCallsignInvalid)
+        {
+            this->handler.SetAssignedStand("BAW123", 3);
+            WebsocketMessage message{
+                "App\\Events\\StandUnassignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", 123}
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(3, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesUnassignStandFromWebsocketMessageIfStandNotAssigned)
+        {
+            WebsocketMessage message{
+                "App\\Events\\StandUnassignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", "BAW123"}
+                }
+            };
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

@@ -22,6 +22,11 @@ namespace UKControllerPlugin {
             return this->standAssignments.size();
         }
 
+        int StandEventHandler::GetAssignedStandForCallsign(std::string callsign) const
+        {
+            return this->standAssignments.count(callsign) ? this->standAssignments.at(callsign) : this->noStandAssigned;
+        }
+
         void StandEventHandler::SetAssignedStand(std::string callsign, int standId)
         {
             this->standAssignments[callsign] = standId;
@@ -32,6 +37,9 @@ namespace UKControllerPlugin {
             return "Assigned Stand";
         }
 
+        /*
+            Set the text of the tag item to be the identifier for whichever stand is assigned
+        */
         void StandEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
         {
             if (
@@ -46,8 +54,45 @@ namespace UKControllerPlugin {
             }
         }
 
+        bool StandEventHandler::AssignmentMessageValid(const nlohmann::json& message) const
+        {
+            return message.is_object() &&
+                message.contains("callsign") &&
+                message.at("callsign").is_string() &&
+                message.contains("stand_id") &&
+                message.at("stand_id").is_number_integer() &&
+                this->stands.find(message.at("stand_id").get<int>()) != this->stands.cend();
+        }
+
+        bool StandEventHandler::UnassignmentMessageValid(const nlohmann::json& message) const
+        {
+            return message.is_object() &&
+                message.contains("callsign") &&
+                message.at("callsign").is_string();
+        }
+
         void StandEventHandler::ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message)
         {
+            if (message.event == "App\\Events\\StandAssignedEvent") {
+                if (!AssignmentMessageValid(message.data)) {
+                    LogWarning("Invalid stand assignment message " + message.data.dump());
+                    return;
+                }
+
+                this->standAssignments[message.data.at("callsign").get<std::string>()] = message.data.at("stand_id").get<int>();
+                LogInfo(
+                    "Stand id " + std::to_string(message.data.at("stand_id").get<int>()) +
+                        " assigned to " + message.data.at("callsign").get<std::string>()
+                );
+            } else if (message.event == "App\\Events\\StandUnassignedEvent") {
+                if (!UnassignmentMessageValid(message.data)) {
+                    LogWarning("Invalid stand unassignment message " + message.data.dump());
+                    return;
+                }
+
+                this->standAssignments.erase(message.data.at("callsign").get<std::string>());
+                LogInfo("Stand assignment removed for " + message.data.at("callsign").get<std::string>());
+            }
         }
 
         std::set<UKControllerPlugin::Websocket::WebsocketSubscription> StandEventHandler::GetSubscriptions(void) const
