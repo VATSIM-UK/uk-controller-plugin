@@ -319,5 +319,51 @@ namespace UKControllerPluginTest {
                 )
             );
         }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsGetAssignedStandsRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/stand/assignment",
+                CurlRequest::METHOD_GET
+            );
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildGetStandAssignmentsRequest());
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsSetAssignedStandForAircraftRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/stand/assignment",
+                CurlRequest::METHOD_PUT
+            );
+
+            nlohmann::json expectedData;
+            expectedData["callsign"] = "BAW123";
+            expectedData["stand_id"] = 1;
+            expectedRequest.SetBody(expectedData.dump());
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildAssignStandToAircraftRequest("BAW123", 1));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsDeleteAssignedStandForAircraftRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/stand/assignment/BAW123",
+                CurlRequest::METHOD_DELETE
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildDeleteStandAssignmentForAircraftRequest("BAW123"));
+        }
     }  // namespace Api
 }  // namespace UKControllerPluginTest

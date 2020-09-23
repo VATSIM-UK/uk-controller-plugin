@@ -264,6 +264,21 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildSrdQueryRequest(params)).GetRawData();
         }
 
+        nlohmann::json ApiHelper::GetAssignedStands(void) const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildGetStandAssignmentsRequest()).GetRawData();
+        }
+
+        void ApiHelper::AssignStandToAircraft(std::string callsign, int standId) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildAssignStandToAircraftRequest(callsign, standId));
+        }
+
+        void ApiHelper::DeleteStandAssignmentForAircraft(std::string callsign) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildDeleteStandAssignmentForAircraftRequest(callsign));
+        }
+
         void ApiHelper::SendEnrouteRelease(
             std::string aircraftCallsign,
             std::string sendingController,

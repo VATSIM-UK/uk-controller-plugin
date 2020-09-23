@@ -48,6 +48,14 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Curl::CurlRequest BuildSrdQueryRequest(
                     UKControllerPlugin::Srd::SrdSearchParameters parameters
                 ) const;
+                UKControllerPlugin::Curl::CurlRequest BuildGetStandAssignmentsRequest(void) const;
+                UKControllerPlugin::Curl::CurlRequest BuildAssignStandToAircraftRequest(
+                    std::string callsign,
+                    int standId
+                ) const;
+                UKControllerPlugin::Curl::CurlRequest BuildDeleteStandAssignmentForAircraftRequest(
+                    std::string callsign
+                ) const;
                 UKControllerPlugin::Curl::CurlRequest BuildEnrouteReleaseRequest(
                     std::string aircraftCallsign,
                     std::string sendingController,

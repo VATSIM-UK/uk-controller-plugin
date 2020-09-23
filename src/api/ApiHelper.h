@@ -54,6 +54,9 @@ namespace UKControllerPlugin {
                 nlohmann::json GetRegionalPressures(void) const override;
                 nlohmann::json GetUri(std::string uri) const;
                 nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const;
+                nlohmann::json GetAssignedStands(void) const override;
+                void AssignStandToAircraft(std::string callsign, int standId) const override;
+                void DeleteStandAssignmentForAircraft(std::string callsign) const override;
                 void SendEnrouteRelease(
                     std::string aircraftCallsign,
                     std::string sendingController,
