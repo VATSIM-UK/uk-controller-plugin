@@ -18,13 +18,21 @@ namespace UKControllerPlugin {
                 StandEventHandler(
                     const UKControllerPlugin::Api::ApiInterface& api,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner,
-                    std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands
+                    std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
+                    int standSelectedCallbackId
                 );
 
                 size_t CountStands(void) const;
                 size_t CountStandAssignments(void) const;
+                void DisplayStandSelectionMenu(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string context,
+                    const POINT& mousePos
+                );
                 int GetAssignedStandForCallsign(std::string callsign) const;
                 void SetAssignedStand(std::string callsign, int standId);
+                void StandSelected(int functionId, std::string context, RECT);
 
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message) override;
@@ -36,6 +44,9 @@ namespace UKControllerPlugin {
 
                 // No stand has been assigned to the aircraft
                 const int noStandAssigned = -1;
+
+                // The id for the callback when a stand is selected
+                const int standSelectedCallbackId;
 
             private:
 

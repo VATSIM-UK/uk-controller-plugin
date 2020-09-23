@@ -78,5 +78,14 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-stand-assignments"));
         }
+
+        TEST_F(StandModuleTest, ItRegistersTheStandAssignmentPopupMenuFunction)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountTagFunctions());
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9007));
+            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
+        }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

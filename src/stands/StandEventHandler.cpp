@@ -7,6 +7,8 @@ using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 
 namespace UKControllerPlugin {
     namespace Stands {
@@ -14,9 +16,10 @@ namespace UKControllerPlugin {
         StandEventHandler::StandEventHandler(
             const ApiInterface& api,
             TaskRunnerInterface& taskRunner,
-            const std::set<Stand, CompareStands> stands
+            const std::set<Stand, CompareStands> stands,
+            int standSelectedCallbackId
         )
-            : api(api), taskRunner(taskRunner), stands(stands)
+            : api(api), taskRunner(taskRunner), stands(stands), standSelectedCallbackId(standSelectedCallbackId)
         {
         }
 
@@ -30,6 +33,15 @@ namespace UKControllerPlugin {
             return this->standAssignments.size();
         }
 
+        void StandEventHandler::DisplayStandSelectionMenu(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        ) {
+
+        }
+
         int StandEventHandler::GetAssignedStandForCallsign(std::string callsign) const
         {
             return this->standAssignments.count(callsign) ? this->standAssignments.at(callsign) : this->noStandAssigned;
@@ -38,6 +50,11 @@ namespace UKControllerPlugin {
         void StandEventHandler::SetAssignedStand(std::string callsign, int standId)
         {
             this->standAssignments[callsign] = standId;
+        }
+
+        void StandEventHandler::StandSelected(int functionId, std::string context, RECT)
+        {
+
         }
 
         std::string StandEventHandler::GetTagItemDescription(int tagItemId) const

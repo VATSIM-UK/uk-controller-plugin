@@ -34,7 +34,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 StandEventHandlerTest()
-                    : handler(api, taskRunner, this->GetStands()),
+                    : handler(api, taskRunner, this->GetStands(), 1),
                     tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize)
                 {
                     ON_CALL(this->flightplan, GetCallsign())
@@ -61,6 +61,11 @@ namespace UKControllerPluginTest {
                 TagData tagData;
                 StandEventHandler handler;
         };
+
+        TEST_F(StandEventHandlerTest, ItSetsStandSelectedCallbackId)
+        {
+            EXPECT_EQ(1, this->handler.standSelectedCallbackId);
+        }
 
         TEST_F(StandEventHandlerTest, ItStartsWithNoAssignments)
         {
