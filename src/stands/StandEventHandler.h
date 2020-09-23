@@ -2,6 +2,8 @@
 #include "stands/Stand.h"
 #include "stands/CompareStands.h"
 #include "tag/TagItemInterface.h"
+#include "api/ApiInterface.h"
+#include "task/TaskRunnerInterface.h"
 #include "websocket/WebsocketEventProcessorInterface.h"
 
 namespace UKControllerPlugin {
@@ -14,6 +16,8 @@ namespace UKControllerPlugin {
         {
             public:
                 StandEventHandler(
+                    const UKControllerPlugin::Api::ApiInterface& api,
+                    UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner,
                     std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands
                 );
 
@@ -37,6 +41,12 @@ namespace UKControllerPlugin {
 
                 bool AssignmentMessageValid(const nlohmann::json& message) const;
                 bool UnassignmentMessageValid(const nlohmann::json & message) const;
+
+                // The API for making requests in relation to stands
+                const UKControllerPlugin::Api::ApiInterface& api;
+
+                // Allows API calls to be made asynchronously
+                UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner;
 
                 // All the stands we have
                 std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands;

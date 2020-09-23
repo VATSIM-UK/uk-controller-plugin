@@ -7,18 +7,25 @@
 #include "tag/TagData.h"
 #include "websocket/WebsocketSubscription.h"
 #include "websocket/WebsocketMessage.h"
+#include "mock/MockApiInterface.h"
+#include "mock/MockTaskRunnerInterface.h"
+#include "api/ApiException.h"
 
 using ::testing::Test;
+using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Stands::StandEventHandler;
 using UKControllerPlugin::Stands::CompareStands;
 using UKControllerPlugin::Stands::Stand;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Websocket::WebsocketMessage;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::Throw;
 
 namespace UKControllerPluginTest {
     namespace Stands {
@@ -27,7 +34,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 StandEventHandlerTest()
-                    : handler(this->GetStands()),
+                    : handler(api, taskRunner, this->GetStands()),
                     tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize)
                 {
                     ON_CALL(this->flightplan, GetCallsign())
@@ -47,6 +54,8 @@ namespace UKControllerPluginTest {
                 COLORREF tagColour = RGB(255, 255, 255);
                 int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
                 char itemString[16] = "Foooooo";
+                NiceMock<MockApiInterface> api;
+                NiceMock<MockTaskRunnerInterface> taskRunner;
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
                 TagData tagData;
@@ -83,6 +92,12 @@ namespace UKControllerPluginTest {
                 {
                     WebsocketSubscription::SUB_TYPE_CHANNEL,
                     "private-stand-assignments"
+                }
+            );
+            expectedSubscriptions.insert(
+                {
+                    WebsocketSubscription::SUB_TYPE_EVENT,
+                    "pusher:connection_established"
                 }
             );
             EXPECT_EQ(expectedSubscriptions, this->handler.GetSubscriptions());
@@ -233,6 +248,218 @@ namespace UKControllerPluginTest {
 
             this->handler.ProcessWebsocketMessage(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItLoadsAssignmentsOnWebsocketConnection)
+        {
+            nlohmann::json assignments = nlohmann::json::array();
+            assignments.push_back({
+                {"callsign", "BAW123"},
+                {"stand_id", 1},
+            });
+            assignments.push_back({
+                {"callsign", "VIR245"},
+                {"stand_id", 2},
+            });
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Return(assignments));
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+            ASSERT_EQ(2, this->handler.GetAssignedStandForCallsign("VIR245"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesNonArrayStandAssignments)
+        {
+            nlohmann::json assignments = nlohmann::json::object();
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Return(assignments));
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesNonArrayAssignmentsOnWebsocketConnection)
+        {
+            nlohmann::json assignments = nlohmann::json::array();
+            assignments.push_back({
+                {"callsign", "BAW123"},
+                {"stand_id", 1},
+            });
+            assignments.push_back(nlohmann::json::object());
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Return(assignments));
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingCallsignOnWebsocketConnection)
+        {
+            nlohmann::json assignments = nlohmann::json::array();
+            assignments.push_back({
+                {"callsign", "BAW123"},
+                {"stand_id", 1},
+            });
+            assignments.push_back({
+                {"stand_id", 2},
+            });
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Return(assignments));
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidCallsignOnWebsocketConnection)
+        {
+            nlohmann::json assignments = nlohmann::json::array();
+            assignments.push_back({
+                {"callsign", "BAW123"},
+                {"stand_id", 1},
+            });
+            assignments.push_back({
+                {"callsign", 123},
+                {"stand_id", 2},
+            });
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Return(assignments));
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingStandOnWebsocketConnection)
+        {
+            nlohmann::json assignments = nlohmann::json::array();
+            assignments.push_back({
+                {"callsign", "BAW123"},
+                {"stand_id", 1},
+                });
+            assignments.push_back({
+                {"callsign", "VIR245"},
+            });
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Return(assignments));
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidStandOnWebsocketConnection)
+        {
+            nlohmann::json assignments = nlohmann::json::array();
+            assignments.push_back({
+                {"callsign", "BAW123"},
+                {"stand_id", 1},
+            });
+            assignments.push_back({
+                {"callsign", "VIR245"},
+                {"stand_id", "2"},
+            });
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Return(assignments));
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithNonExistentStandOnWebsocketConnection)
+        {
+            nlohmann::json assignments = nlohmann::json::array();
+            assignments.push_back({
+                {"callsign", "BAW123"},
+                {"stand_id", 1},
+            });
+            assignments.push_back({
+                {"callsign", "VIR245"},
+                {"stand_id", -55},
+            });
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Return(assignments));
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesApiExceptionsWhenFetchingStandsOnWebsocketConnection)
+        {
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Throw(ApiException("Foo")));
+
+            EXPECT_NO_THROW(this->handler.ProcessWebsocketMessage(message));
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

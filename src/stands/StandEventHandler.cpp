@@ -1,14 +1,22 @@
 #include "pch/stdafx.h"
 #include "stands/StandEventHandler.h"
 #include "websocket/WebsocketSubscription.h"
+#include "api/ApiException.h"
 
 using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Api::ApiInterface;
+using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 
 namespace UKControllerPlugin {
     namespace Stands {
 
-        StandEventHandler::StandEventHandler(const std::set<Stand, CompareStands> stands)
-            : stands(stands)
+        StandEventHandler::StandEventHandler(
+            const ApiInterface& api,
+            TaskRunnerInterface& taskRunner,
+            const std::set<Stand, CompareStands> stands
+        )
+            : api(api), taskRunner(taskRunner), stands(stands)
         {
         }
 
@@ -71,9 +79,37 @@ namespace UKControllerPlugin {
                 message.at("callsign").is_string();
         }
 
+        /*
+            Process messages from the websocket.
+        */
         void StandEventHandler::ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message)
         {
-            if (message.event == "App\\Events\\StandAssignedEvent") {
+            if (message.event == "pusher:connection_established") {
+                // On connection to the websocket, download all the live stand assignments
+                this->taskRunner.QueueAsynchronousTask([this]() {
+                    try {
+                        nlohmann::json standAssignments = this->api.GetAssignedStands();
+
+                        if (!standAssignments.is_array()) {
+                            LogWarning("Invalid stand assignment data");
+                            return;
+                        }
+
+                        for (auto assignment = standAssignments.cbegin(); assignment != standAssignments.cend(); ++assignment) {
+                            if (!this->AssignmentMessageValid(*assignment)) {
+                                LogWarning("Invalid stand assignment message on mass assignment " + assignment->dump());
+                                continue;
+                            }
+
+                            this->standAssignments[assignment->at("callsign").get<std::string>()] = assignment->at("stand_id").get<int>();
+                        }
+                        LogInfo("Loaded " + std::to_string(this->standAssignments.size()) + " stand assignments");
+                    } catch (ApiException e) {
+                        LogError("Unable to load stand assignment data");
+                    }
+                });
+            } else if (message.event == "App\\Events\\StandAssignedEvent") {
+                // If a stand has been assigned, assign it here
                 if (!AssignmentMessageValid(message.data)) {
                     LogWarning("Invalid stand assignment message " + message.data.dump());
                     return;
@@ -85,6 +121,7 @@ namespace UKControllerPlugin {
                         " assigned to " + message.data.at("callsign").get<std::string>()
                 );
             } else if (message.event == "App\\Events\\StandUnassignedEvent") {
+                // If a stand has been unassigned, unassign it here
                 if (!UnassignmentMessageValid(message.data)) {
                     LogWarning("Invalid stand unassignment message " + message.data.dump());
                     return;
@@ -101,6 +138,10 @@ namespace UKControllerPlugin {
                 {
                     WebsocketSubscription::SUB_TYPE_CHANNEL,
                     "private-stand-assignments"
+                },
+                {
+                    WebsocketSubscription::SUB_TYPE_EVENT,
+                    "pusher:connection_established"
                 }
             };
         }

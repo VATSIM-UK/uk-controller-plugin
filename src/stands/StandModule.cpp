@@ -30,6 +30,8 @@ namespace UKControllerPlugin {
 
             // Create the event handler
             std::shared_ptr<StandEventHandler> eventHandler = std::make_shared<StandEventHandler>(
+                *container.api,
+                *container.taskRunner,
                 stands
             );
 
