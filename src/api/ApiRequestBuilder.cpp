@@ -140,7 +140,7 @@ namespace UKControllerPlugin {
         /*
             Builds a request for assigning a stand to an aircraft
         */
-        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildAssignStandToAircraftRequest(std::string callsign, int standId) const
+        CurlRequest ApiRequestBuilder::BuildAssignStandToAircraftRequest(std::string callsign, int standId) const
         {
             CurlRequest request(apiDomain + "/stand/assignment", CurlRequest::METHOD_PUT);
             nlohmann::json body;
@@ -154,7 +154,7 @@ namespace UKControllerPlugin {
         /*
             Builds a request for deleting an aircrafts stand assignment
         */
-        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildDeleteStandAssignmentForAircraftRequest(std::string callsign) const
+        CurlRequest ApiRequestBuilder::BuildDeleteStandAssignmentForAircraftRequest(std::string callsign) const
         {
             return this->AddCommonHeaders(
                 CurlRequest(apiDomain + "/stand/assignment/" + callsign, CurlRequest::METHOD_DELETE)

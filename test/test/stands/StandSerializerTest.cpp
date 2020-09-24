@@ -1,7 +1,6 @@
 #include "pch/pch.h"
 #include "stands/StandSerializer.h"
 #include "stands/Stand.h"
-#include "stands/StandSerializer.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Stands::from_json;

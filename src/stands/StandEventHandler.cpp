@@ -217,13 +217,18 @@ namespace UKControllerPlugin {
                             return;
                         }
 
-                        for (auto assignment = standAssignments.cbegin(); assignment != standAssignments.cend(); ++assignment) {
+                        for (
+                            auto assignment = standAssignments.cbegin();
+                            assignment != standAssignments.cend();
+                            ++assignment
+                        ) {
                             if (!this->AssignmentMessageValid(*assignment)) {
                                 LogWarning("Invalid stand assignment message on mass assignment " + assignment->dump());
                                 continue;
                             }
 
-                            this->standAssignments[assignment->at("callsign").get<std::string>()] = assignment->at("stand_id").get<int>();
+                            this->standAssignments[assignment->at("callsign").get<std::string>()] =
+                                assignment->at("stand_id").get<int>();
                         }
                         LogInfo("Loaded " + std::to_string(this->standAssignments.size()) + " stand assignments");
                     } catch (ApiException e) {
@@ -237,7 +242,8 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                this->standAssignments[message.data.at("callsign").get<std::string>()] = message.data.at("stand_id").get<int>();
+                this->standAssignments[message.data.at("callsign").get<std::string>()] =
+                    message.data.at("stand_id").get<int>();
                 LogInfo(
                     "Stand id " + std::to_string(message.data.at("stand_id").get<int>()) +
                         " assigned to " + message.data.at("callsign").get<std::string>()
