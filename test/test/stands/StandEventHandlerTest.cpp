@@ -477,7 +477,7 @@ namespace UKControllerPluginTest {
         {
             PopupMenuItem menuItemStand1;
             menuItemStand1.firstValue = "1L";
-            menuItemStand1.secondValue = "";
+            menuItemStand1.secondValue = "EGKK";
             menuItemStand1.callbackFunctionId = 1;
             menuItemStand1.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemStand1.disabled = false;
@@ -485,7 +485,7 @@ namespace UKControllerPluginTest {
 
             PopupMenuItem menuItemStand2;
             menuItemStand2.firstValue = "55";
-            menuItemStand2.secondValue = "";
+            menuItemStand2.secondValue = "EGKK";
             menuItemStand2.callbackFunctionId = 1;
             menuItemStand2.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemStand2.disabled = false;
@@ -493,7 +493,7 @@ namespace UKControllerPluginTest {
 
             PopupMenuItem menuItemStandNone;
             menuItemStandNone.firstValue = "--";
-            menuItemStandNone.secondValue = "";
+            menuItemStandNone.secondValue = "None";
             menuItemStandNone.callbackFunctionId = 1;
             menuItemStandNone.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemStandNone.disabled = false;
@@ -516,7 +516,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(4));
 
             RECT expectedArea = { 0, 0, 400, 600 };
-            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand at EGKK", 2))
+            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand", 2))
                 .Times(1);
 
             EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemStand1))
@@ -535,7 +535,7 @@ namespace UKControllerPluginTest {
         {
             PopupMenuItem menuItemStand;
             menuItemStand.firstValue = "317";
-            menuItemStand.secondValue = "";
+            menuItemStand.secondValue = "EGLL";
             menuItemStand.callbackFunctionId = 1;
             menuItemStand.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemStand.disabled = false;
@@ -543,7 +543,7 @@ namespace UKControllerPluginTest {
 
             PopupMenuItem menuItemStandNone;
             menuItemStandNone.firstValue = "--";
-            menuItemStandNone.secondValue = "";
+            menuItemStandNone.secondValue = "None";
             menuItemStandNone.callbackFunctionId = 1;
             menuItemStandNone.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemStandNone.disabled = false;
@@ -569,7 +569,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(8));
 
             RECT expectedArea = { 0, 0, 400, 600 };
-            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand at EGLL", 2))
+            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand", 2))
                 .Times(1);
 
             EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemStand))
@@ -585,7 +585,7 @@ namespace UKControllerPluginTest {
         {
             PopupMenuItem menuItemStand1;
             menuItemStand1.firstValue = "1L";
-            menuItemStand1.secondValue = "";
+            menuItemStand1.secondValue = "EGKK";
             menuItemStand1.callbackFunctionId = 1;
             menuItemStand1.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemStand1.disabled = false;
@@ -593,7 +593,7 @@ namespace UKControllerPluginTest {
 
             PopupMenuItem menuItemStand2;
             menuItemStand2.firstValue = "55";
-            menuItemStand2.secondValue = "";
+            menuItemStand2.secondValue = "EGKK";
             menuItemStand2.callbackFunctionId = 1;
             menuItemStand2.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemStand2.disabled = false;
@@ -601,7 +601,7 @@ namespace UKControllerPluginTest {
 
             PopupMenuItem menuItemStandNone;
             menuItemStandNone.firstValue = "--";
-            menuItemStandNone.secondValue = "";
+            menuItemStandNone.secondValue = "None";
             menuItemStandNone.callbackFunctionId = 1;
             menuItemStandNone.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemStandNone.disabled = false;
@@ -624,7 +624,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(4));
 
             RECT expectedArea = { 0, 0, 400, 600 };
-            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand at EGKK", 2))
+            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand", 2))
                 .Times(0);
 
             EXPECT_CALL(this->plugin, AddItemToPopupList(_))

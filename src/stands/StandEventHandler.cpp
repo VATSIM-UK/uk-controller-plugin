@@ -65,13 +65,13 @@ namespace UKControllerPlugin {
 
             this->plugin.TriggerPopupList(
                 popupArea,
-                "Assign Stand at " + this->lastAirfieldUsed,
+                "Assign Stand",
                 2
             );
 
             PopupMenuItem menuItem;
             menuItem.firstValue = "";
-            menuItem.secondValue = "";
+            menuItem.secondValue = this->lastAirfieldUsed;
             menuItem.callbackFunctionId = this->standSelectedCallbackId;
             menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItem.disabled = false;
@@ -93,6 +93,7 @@ namespace UKControllerPlugin {
 
             // Add the final item, no stand, in a fixed position
             menuItem.firstValue = this->noStandMenuItem;
+            menuItem.secondValue = "None";
             menuItem.fixedPosition = true;
             this->plugin.AddItemToPopupList(menuItem);
         }
