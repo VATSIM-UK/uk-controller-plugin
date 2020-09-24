@@ -34,6 +34,7 @@ dynamically to the plugin.
 - Departure handoff indicator
 - Altimeter setting regions and regional pressures
 - Enroute releases
+- Stand assignment
 
 ## Setting Up The Project Locally
 
