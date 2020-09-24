@@ -33,6 +33,7 @@ dynamically to the plugin.
 - Hold Manager, synced between controllers
 - Departure handoff indicator
 - Altimeter setting regions and regional pressures
+- SRD Search
 - Enroute releases
 - Stand assignment
 
