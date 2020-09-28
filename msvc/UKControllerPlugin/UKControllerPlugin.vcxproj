@@ -277,6 +277,11 @@
     <ClInclude Include="..\..\src\srd\SrdSearchDialog.h" />
     <ClInclude Include="..\..\src\srd\SrdSearchHandler.h" />
     <ClInclude Include="..\..\src\srd\SrdSearchParameters.h" />
+    <ClInclude Include="..\..\src\stands\CompareStands.h" />
+    <ClInclude Include="..\..\src\stands\Stand.h" />
+    <ClInclude Include="..\..\src\stands\StandEventHandler.h" />
+    <ClInclude Include="..\..\src\stands\StandModule.h" />
+    <ClInclude Include="..\..\src\stands\StandSerializer.h" />
     <ClInclude Include="..\..\src\tag\TagData.h" />
     <ClInclude Include="..\..\src\tag\TagFunction.h" />
     <ClInclude Include="..\..\src\tag\TagItemCollection.h" />
@@ -527,6 +532,10 @@
     <ClCompile Include="..\..\src\srd\SrdModule.cpp" />
     <ClCompile Include="..\..\src\srd\SrdSearchDialog.cpp" />
     <ClCompile Include="..\..\src\srd\SrdSearchHandler.cpp" />
+    <ClCompile Include="..\..\src\stands\CompareStands.cpp" />
+    <ClCompile Include="..\..\src\stands\StandEventHandler.cpp" />
+    <ClCompile Include="..\..\src\stands\StandModule.cpp" />
+    <ClCompile Include="..\..\src\stands\StandSerializer.cpp" />
     <ClCompile Include="..\..\src\tag\TagData.cpp" />
     <ClCompile Include="..\..\src\tag\TagFunction.cpp" />
     <ClCompile Include="..\..\src\tag\TagItemCollection.cpp" />

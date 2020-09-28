@@ -44,6 +44,9 @@ namespace UKControllerPluginTest {
                     SearchSrd,
                     nlohmann::json(UKControllerPlugin::Srd::SrdSearchParameters)
                 );
+                MOCK_CONST_METHOD0(GetAssignedStands, nlohmann::json(void));
+                MOCK_CONST_METHOD2(AssignStandToAircraft, void(std::string, int));
+                MOCK_CONST_METHOD1(DeleteStandAssignmentForAircraft, void(std::string));
                 MOCK_CONST_METHOD4(SendEnrouteRelease, void(std::string, std::string, std::string, int));
                 MOCK_CONST_METHOD5(
                     SendEnrouteReleaseWithReleasePoint,

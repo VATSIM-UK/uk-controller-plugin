@@ -760,5 +760,70 @@ TEST_F(ApiHelperTest, EnrouteReleaseGeneratesRequestWithReleasePoint)
         this->helper.SendEnrouteReleaseWithReleasePoint("BAW123", "LON_S_CTR", "LON_C_CTR", 1, "LAM")
     );
 }
+
+TEST_F(ApiHelperTest, GetAssignedStandsReturnsData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/stand/assignment",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetAssignedStands());
+}
+
+TEST_F(ApiHelperTest, AssignStandToAircraftGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    nlohmann::json requestBody;
+    requestBody["callsign"] = "BAW123";
+    requestBody["stand_id"] = 1;
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/stand/assignment",
+            CurlRequest::METHOD_PUT,
+            requestBody
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.AssignStandToAircraft("BAW123", 1));
+}
+
+TEST_F(ApiHelperTest, DeleteStandAssignmentForAircraftGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/stand/assignment/BAW123",
+            CurlRequest::METHOD_DELETE
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.DeleteStandAssignmentForAircraft("BAW123"));
+}
 }  // namespace Api
 }  // namespace UKControllerPluginTest

@@ -111,6 +111,9 @@ namespace UKControllerPlugin {
             );
         }
 
+        /*
+            Builds a request for querying the SRD
+        */
         CurlRequest ApiRequestBuilder::BuildSrdQueryRequest(SrdSearchParameters parameters) const
         {
             std::string uri = apiDomain + "/srd/route/search?";
@@ -122,6 +125,40 @@ namespace UKControllerPlugin {
             }
 
             return this->AddCommonHeaders(CurlRequest(uri, CurlRequest::METHOD_GET));
+        }
+
+        /*
+            Builds a request for getting all the stand assignments
+        */
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildGetStandAssignmentsRequest(void) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(apiDomain + "/stand/assignment", CurlRequest::METHOD_GET)
+            );
+        }
+
+        /*
+            Builds a request for assigning a stand to an aircraft
+        */
+        CurlRequest ApiRequestBuilder::BuildAssignStandToAircraftRequest(std::string callsign, int standId) const
+        {
+            CurlRequest request(apiDomain + "/stand/assignment", CurlRequest::METHOD_PUT);
+            nlohmann::json body;
+            body["callsign"] = callsign;
+            body["stand_id"] = standId;
+            request.SetBody(body.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
+        /*
+            Builds a request for deleting an aircrafts stand assignment
+        */
+        CurlRequest ApiRequestBuilder::BuildDeleteStandAssignmentForAircraftRequest(std::string callsign) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(apiDomain + "/stand/assignment/" + callsign, CurlRequest::METHOD_DELETE)
+            );
         }
 
         /*

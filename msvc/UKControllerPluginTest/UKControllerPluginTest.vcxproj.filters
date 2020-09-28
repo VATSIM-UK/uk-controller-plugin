@@ -127,6 +127,9 @@
     <Filter Include="test\navaids">
       <UniqueIdentifier>{6406bb4f-a9e7-4f19-8601-48d7f4fc81d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\stands">
+      <UniqueIdentifier>{2912fe25-720b-4cb7-97ad-099a4bd010d2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="test\releases">
       <UniqueIdentifier>{c322a647-fb24-42df-bb70-3dbdd857b17d}</UniqueIdentifier>
     </Filter>
@@ -766,6 +769,12 @@
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileCoordinatesTest.cpp">
       <Filter>test\sectorfile</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\stands\CompareStandsTest.cpp">
+      <Filter>test\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\stands\StandSerializerTest.cpp">
+      <Filter>test\stands</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\test\test\releases\ReleaseModuleTest.cpp">
       <Filter>test\releases</Filter>
     </ClCompile>
@@ -783,6 +792,12 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\controller\HandoffEventHandlerCollectionTest.cpp">
       <Filter>test\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\stands\StandEventHandlerTest.cpp">
+      <Filter>test\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\stands\StandModuleTest.cpp">
+      <Filter>test\stands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

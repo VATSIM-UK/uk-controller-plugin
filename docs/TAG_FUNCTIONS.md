@@ -7,3 +7,4 @@
 9004 - Open SRD Search Dialog
 9005 - Open Enroute Release Type Menu
 9006 - Open Enroute Release Point Edit Box
+9007 - Open Stand Assignment Selection Menu

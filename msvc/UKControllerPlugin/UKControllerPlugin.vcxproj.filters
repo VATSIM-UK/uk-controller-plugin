@@ -139,6 +139,9 @@
     <Filter Include="src\navaids">
       <UniqueIdentifier>{8aa7f56a-92f3-42d0-9097-63a8c0ac61a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\stands">
+      <UniqueIdentifier>{e8eedfab-3e7e-4875-9485-c7fea0d1fd40}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\releases">
       <UniqueIdentifier>{27638ea8-4c02-42f1-a831-fa2951a6b3db}</UniqueIdentifier>
     </Filter>
@@ -1005,6 +1008,15 @@
     <ClInclude Include="..\..\src\sectorfile\SectorFileCoordinates.h">
       <Filter>src\sectorfile</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\stands\Stand.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\StandSerializer.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\CompareStands.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\releases\EnrouteReleaseType.h">
       <Filter>src\releases</Filter>
     </ClInclude>
@@ -1031,6 +1043,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\controller\HandoffEventHandlerCollection.h">
       <Filter>src\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\StandModule.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\StandEventHandler.h">
+      <Filter>src\stands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1732,6 +1750,12 @@
     <ClCompile Include="..\..\src\sectorfile\SectorFileCoordinates.cpp">
       <Filter>src\sectorfile</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\stands\StandSerializer.cpp">
+      <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\CompareStands.cpp">
+      <Filter>src\stands</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\releases\ReleaseModule.cpp">
       <Filter>src\releases</Filter>
     </ClCompile>
@@ -1749,6 +1773,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\controller\HandoffEventHandlerCollection.cpp">
       <Filter>src\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\StandModule.cpp">
+      <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\StandEventHandler.cpp">
+      <Filter>src\stands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
