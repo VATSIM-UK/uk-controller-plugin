@@ -74,7 +74,7 @@ namespace UKControllerPlugin {
             // TAG function to trigger the stand assignment edit box, uses existing callback
             TagFunction openStandAssignmentEditBox(
                 openStandAssignmentEditBoxTagFunctionId,
-                "Edit Enroute Release Point",
+                "Open Stand Assignment Edit Box",
                 std::bind(
                     &StandEventHandler::DisplayStandAssignmentEditBox,
                     eventHandler,
