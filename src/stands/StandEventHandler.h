@@ -35,6 +35,12 @@ namespace UKControllerPlugin {
                 int GetAssignedStandForCallsign(std::string callsign) const;
                 void SetAssignedStand(std::string callsign, int standId);
                 void StandSelected(int functionId, std::string context, RECT);
+                void DisplayStandAssignmentEditBox(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string context,
+                    const POINT& mousePos
+                );
 
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message) override;
