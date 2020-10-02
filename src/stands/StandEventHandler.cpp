@@ -49,10 +49,8 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // Pick the airfield based on distance from origin
-            this->lastAirfieldUsed = flightplan.GetDistanceFromOrigin() < this->maxDistanceFromDepartureAirport
-                ? flightplan.GetOrigin()
-                : flightplan.GetDestination();
+            // Pick the airfield to use
+            this->lastAirfieldUsed = this->GetAirfieldForStandAssignment(flightplan);
 
             // Create the list in place
             RECT popupArea = {
@@ -101,6 +99,11 @@ namespace UKControllerPlugin {
         int StandEventHandler::GetAssignedStandForCallsign(std::string callsign) const
         {
             return this->standAssignments.count(callsign) ? this->standAssignments.at(callsign) : this->noStandAssigned;
+        }
+
+        std::string StandEventHandler::GetLastAirfield(void) const
+        {
+            return this->lastAirfieldUsed;
         }
 
         void StandEventHandler::SetAssignedStand(std::string callsign, int standId)
@@ -162,6 +165,39 @@ namespace UKControllerPlugin {
             }
         }
 
+        void StandEventHandler::DisplayStandAssignmentEditBox(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        ) {
+            // Only allow a user to do this if they are tracking the aircraft or its untracked
+            if (flightplan.IsTracked() && !flightplan.IsTrackedByUser()) {
+                return;
+            }
+
+            // Pick the airfield to use
+            this->lastAirfieldUsed = this->GetAirfieldForStandAssignment(flightplan);
+
+            // If a stand is assigned, set the starting text to be the stand identifier
+            std::string startingText = "";
+            auto assignedStand = this->standAssignments.find(flightplan.GetCallsign());
+            if (
+                assignedStand != this->standAssignments.cend() &&
+                this->stands.find(assignedStand->second) != this->stands.cend()
+            ) {
+                startingText = this->stands.find(assignedStand->second)->identifier;
+            }
+
+            // Display the popup
+            this->plugin.ShowTextEditPopup(
+                { mousePos.x, mousePos.y, mousePos.x + 80, mousePos.y + 25 },
+                this->standSelectedCallbackId,
+                startingText
+            );
+
+        }
+
         std::string StandEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Assigned Stand";
@@ -199,6 +235,17 @@ namespace UKControllerPlugin {
             return message.is_object() &&
                 message.contains("callsign") &&
                 message.at("callsign").is_string();
+        }
+
+        /*
+            Get the airfield to use for stand assignment purposes, depending on how far the aircraft is from
+            its origin.
+        */
+        std::string StandEventHandler::GetAirfieldForStandAssignment(EuroScopeCFlightPlanInterface& flightplan)
+        {
+            return flightplan.GetDistanceFromOrigin() < this->maxDistanceFromDepartureAirport
+                ? flightplan.GetOrigin()
+                : flightplan.GetDestination();
         }
 
         /*

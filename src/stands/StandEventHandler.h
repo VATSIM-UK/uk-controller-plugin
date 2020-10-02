@@ -33,6 +33,7 @@ namespace UKControllerPlugin {
                     const POINT& mousePos
                 );
                 int GetAssignedStandForCallsign(std::string callsign) const;
+                std::string GetLastAirfield(void) const;
                 void SetAssignedStand(std::string callsign, int standId);
                 void StandSelected(int functionId, std::string context, RECT);
                 void DisplayStandAssignmentEditBox(
@@ -66,9 +67,12 @@ namespace UKControllerPlugin {
 
                 bool AssignmentMessageValid(const nlohmann::json& message) const;
                 bool UnassignmentMessageValid(const nlohmann::json & message) const;
+                std::string GetAirfieldForStandAssignment(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan
+                );
 
                 // The last airfield that was used to populate the stand menu
-                std::string lastAirfieldUsed;
+                std::string lastAirfieldUsed = "";
 
                 // The API for making requests in relation to stands
                 const UKControllerPlugin::Api::ApiInterface& api;

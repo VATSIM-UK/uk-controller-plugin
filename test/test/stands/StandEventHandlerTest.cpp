@@ -633,6 +633,116 @@ namespace UKControllerPluginTest {
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", { 0, 0 });
         }
 
+        TEST_F(StandEventHandlerTest, ItTriggersTheStandEditBoxWithDepartureAirportIfWithinLimit)
+        {
+            // Tracked by user
+            ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(4));
+
+            RECT expectedArea = { 0, 0, 80, 25 };
+            EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(expectedArea), 1, ""))
+                .Times(1);
+
+            this->handler.DisplayStandAssignmentEditBox(this->flightplan, this->radarTarget, "", { 0, 0 });
+            EXPECT_EQ("EGKK", this->handler.GetLastAirfield());
+        }
+
+        TEST_F(StandEventHandlerTest, ItTriggersTheStandEditBoxWithArrivalAirportIfNotCloseToDeparture)
+        {
+            // Not tracked by anyone
+            ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDestination())
+                .WillByDefault(Return("EGLL"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(8));
+
+            RECT expectedArea = { 0, 0, 80, 25 };
+            EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(expectedArea), 1, ""))
+                .Times(1);
+
+            this->handler.DisplayStandAssignmentEditBox(this->flightplan, this->radarTarget, "", { 0, 0 });
+            EXPECT_EQ("EGLL", this->handler.GetLastAirfield());
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntTriggerTheEditBoxIfFlightplanTrackedBySomeoneElse)
+        {
+            // Not tracked by user
+            ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(4));
+
+            EXPECT_CALL(this->plugin, ShowTextEditPopup(_, _, _))
+                .Times(0);
+
+            this->handler.DisplayStandAssignmentEditBox(this->flightplan, this->radarTarget, "", { 0, 0 });
+            EXPECT_EQ("", this->handler.GetLastAirfield());
+        }
+
+        TEST_F(StandEventHandlerTest, ItTriggersTheStandEditBoxWithCurrentStandIfOneAssigned)
+        {
+            this->handler.SetAssignedStand("BAW123", 1);
+
+            // Not tracked by anyone
+            ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDestination())
+                .WillByDefault(Return("EGLL"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(8));
+
+            RECT expectedArea = { 0, 0, 80, 25 };
+            EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(expectedArea), 1, "1L"))
+                .Times(1);
+
+            this->handler.DisplayStandAssignmentEditBox(this->flightplan, this->radarTarget, "", { 0, 0 });
+        }
+
         TEST_F(StandEventHandlerTest, ItDoesntMakeAStandAssignmentRequestIfFlightplanTrackedBySomeoneElse)
         {
             // Trigger the menu first to set the last airport
