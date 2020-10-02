@@ -21,6 +21,7 @@ namespace UKControllerPlugin {
         // The tag item id for assigned stand
         const int assignedStandTagItemId = 110;
         const int openStandAssignmentPopupTagFunctionId = 9007;
+        const int openStandAssignmentEditBoxTagFunctionId = 9008;
 
         const std::string standDependency = "DEPENDENCY_STANDS";
 
@@ -57,9 +58,9 @@ namespace UKControllerPlugin {
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(openStandAssignmentPopupMenu);
 
-            CallbackFunction releaseTypeSelectedCallback(
+            CallbackFunction standSelectedCallback(
                 eventHandler->standSelectedCallbackId,
-                "Release Type Selected",
+                "Stand Selected",
                 std::bind(
                     &StandEventHandler::StandSelected,
                     eventHandler,
@@ -68,7 +69,22 @@ namespace UKControllerPlugin {
                     std::placeholders::_3
                 )
             );
-            container.pluginFunctionHandlers->RegisterFunctionCall(releaseTypeSelectedCallback);
+            container.pluginFunctionHandlers->RegisterFunctionCall(standSelectedCallback);
+
+            // TAG function to trigger the stand assignment edit box, uses existing callback
+            TagFunction openStandAssignmentEditBox(
+                openStandAssignmentEditBoxTagFunctionId,
+                "Edit Enroute Release Point",
+                std::bind(
+                    &StandEventHandler::DisplayStandAssignmentEditBox,
+                    eventHandler,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(openStandAssignmentEditBox);
 
             // Assign to handlers
             container.tagHandler->RegisterTagItem(assignedStandTagItemId, eventHandler);
