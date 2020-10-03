@@ -114,6 +114,17 @@ namespace UKControllerPlugin {
 
         void StandEventHandler::StandSelected(int functionId, std::string context, RECT)
         {
+            /*
+                EuroScope has a weird bug when using edit boxes where it duplicates up the OnFunctionCall
+                event as a result of the box being filled in. This check makes sure we only process one event
+                per menu-load or edit-box completion.
+            */
+            if (this->lastAirfieldUsed == "") {
+                return;
+            }
+            std::string airfield = this->lastAirfieldUsed;
+            this->lastAirfieldUsed = "";
+
             // Only allow this action if they're tracking the flightplan or its untracked
             std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
 
@@ -146,8 +157,8 @@ namespace UKControllerPlugin {
                 auto stand = std::find_if(
                     this->stands.cbegin(),
                     this->stands.cend(),
-                    [this, context](const Stand& stand) -> bool {
-                        return stand.identifier == context && stand.airfieldCode == this->lastAirfieldUsed;
+                    [airfield, context](const Stand& stand) -> bool {
+                        return stand.identifier == context && stand.airfieldCode == airfield;
                     }
                 );
 
@@ -198,7 +209,6 @@ namespace UKControllerPlugin {
                 this->standSelectedCallbackId,
                 startingText
             );
-
         }
 
         /*

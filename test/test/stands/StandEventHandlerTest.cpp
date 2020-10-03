@@ -949,6 +949,36 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
+        TEST_F(StandEventHandlerTest, ItDoesntMakeAStandAssignmentRequestIfMenuOrEditBoxWasntPreviouslyTriggered)
+        {
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
+                .Times(0);
+
+            this->handler.StandSelected(1, "55", {});
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
         TEST_F(StandEventHandlerTest, ItMakesAStandAssignmentRequestWhenStandSelected)
         {
             // Trigger the menu first to set the last airport
@@ -1243,6 +1273,38 @@ namespace UKControllerPluginTest {
 
             EXPECT_NO_THROW(this->handler.StandSelected(1, "--", {}));
             EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntDeleteStandAssignmentIfNotDoneViaMenuOrEditBox)
+        {
+            this->handler.SetAssignedStand("BAW123", 2);
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft("BAW123"))
+                .Times(0);
+
+            this->handler.StandSelected(1, "", {});
+            EXPECT_EQ(2, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItDoesntMakeDeletionRequestIfNoStandAssigned)

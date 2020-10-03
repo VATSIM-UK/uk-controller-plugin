@@ -75,7 +75,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan
                 );
 
-                // The last airfield that was used to populate the stand menu
+                // The last airfield that was used to populate the stand menu, used when we receive the callback
                 std::string lastAirfieldUsed = "";
 
                 // The API for making requests in relation to stands
