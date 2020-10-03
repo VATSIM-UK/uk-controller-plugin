@@ -128,8 +128,11 @@ namespace UKControllerPlugin {
             }
 
             std::string callsign = fp->GetCallsign();
-            // If no stand is selected, delete the current assisnment if there is one
-            if (context == this->noStandMenuItem && this->standAssignments.count(callsign)) {
+            // If no stand is selected, delete the current assignment if there is one
+            if (
+                (context == this->noStandMenuItem || context == this->noStandEditBoxItem) &&
+                this->standAssignments.count(callsign)
+            ) {
                 this->taskRunner.QueueAsynchronousTask([this, callsign]() {
                     this->standAssignments.erase(callsign);
                     try {

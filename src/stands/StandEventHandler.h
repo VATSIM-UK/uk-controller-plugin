@@ -63,6 +63,9 @@ namespace UKControllerPlugin {
                 // The menu item to display for no assigned stand
                 const std::string noStandMenuItem = "--";
 
+                // The text we get if no stand is specified in the edit box
+                const std::string noStandEditBoxItem = "";
+
             private:
 
                 bool AssignmentMessageValid(const nlohmann::json& message) const;
