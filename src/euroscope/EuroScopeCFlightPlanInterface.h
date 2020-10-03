@@ -11,6 +11,7 @@ namespace UKControllerPlugin {
         {
             public:
                 virtual ~EuroScopeCFlightPlanInterface(void) {}
+                virtual void AnnotateFlightStrip(int index, std::string data) const = 0;
                 virtual const std::string GetCallsign(void) const = 0;
                 virtual const int GetClearedAltitude(void) const = 0;
                 virtual const int GetCruiseLevel(void) const = 0;
