@@ -274,6 +274,9 @@ namespace UKControllerPlugin {
                             return;
                         }
 
+                        // Delete all existing assignments
+                        this->standAssignments.clear();
+
                         for (
                             auto assignment = standAssignments.cbegin();
                             assignment != standAssignments.cend();

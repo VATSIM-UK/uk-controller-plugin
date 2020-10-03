@@ -292,6 +292,28 @@ namespace UKControllerPluginTest {
             ASSERT_EQ(2, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
+        TEST_F(StandEventHandlerTest, ItClearsPreviousAssignmentsOnWebsocketConnection)
+        {
+            nlohmann::json assignments = nlohmann::json::array();
+            assignments.push_back({
+                {"callsign", "BAW123"},
+                {"stand_id", 1},
+            });
+            WebsocketMessage message{
+                "pusher:connection_established",
+                "bla",
+                nlohmann::json(),
+            };
+
+            EXPECT_CALL(this->api, GetAssignedStands())
+                .Times(1)
+                .WillOnce(Return(assignments));
+
+            this->handler.SetAssignedStand("RYR234", 3);
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("RYR234"));
+        }
+
         TEST_F(StandEventHandlerTest, ItHandlesNonArrayStandAssignments)
         {
             nlohmann::json assignments = nlohmann::json::object();
