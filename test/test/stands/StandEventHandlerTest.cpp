@@ -155,7 +155,7 @@ namespace UKControllerPluginTest {
             };
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
-                .WillByDefault(Return(nullptr));
+                .WillByDefault(Throw(std::invalid_argument("Test")));
 
             this->handler.ProcessWebsocketMessage(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
@@ -1585,6 +1585,52 @@ namespace UKControllerPluginTest {
 
             this->handler.StandSelected(1, "--", {});
             EXPECT_EQ(2, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItUpdatesFlightplanAnnotationsOnEvent)
+        {
+            this->handler.SetAssignedStand("BAW123", 2);
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetAnnotation(3))
+                .WillByDefault(Return("LOL"));
+
+            EXPECT_CALL(this->flightplan, AnnotateFlightStrip(3, "55"))
+                .Times(1);
+
+            this->handler.FlightPlanEvent(this->flightplan, this->radarTarget);
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntUpdateFlightplanAnnotationsIfAlreadySet)
+        {
+            this->handler.SetAssignedStand("BAW123", 2);
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetAnnotation(3))
+                .WillByDefault(Return("55"));
+
+            EXPECT_CALL(this->flightplan, AnnotateFlightStrip(3, _))
+                .Times(0);
+
+            this->handler.FlightPlanEvent(this->flightplan, this->radarTarget);
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntUpdateFlightplanAnnotationsIfNoAssignment)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetAnnotation(3))
+                .WillByDefault(Return("55"));
+
+            EXPECT_CALL(this->flightplan, AnnotateFlightStrip(3, _))
+                .Times(0);
+
+            this->handler.FlightPlanEvent(this->flightplan, this->radarTarget);
         }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

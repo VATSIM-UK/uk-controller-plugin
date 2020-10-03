@@ -6,6 +6,7 @@
 #include "task/TaskRunnerInterface.h"
 #include "websocket/WebsocketEventProcessorInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "flightplan/FlightPlanEventHandlerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Stands {
@@ -13,7 +14,8 @@ namespace UKControllerPlugin {
             A new class
         */
         class StandEventHandler: public UKControllerPlugin::Tag::TagItemInterface,
-            public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
+            public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface,
+            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface
         {
             public:
                 StandEventHandler(
@@ -53,6 +55,19 @@ namespace UKControllerPlugin {
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
+
+                // Inherited via FlightPlanEventHandlerInterface
+                void FlightPlanEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget
+                ) override;
+                void FlightPlanDisconnectEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan
+                ) override;
+                void ControllerFlightPlanDataEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+                    int dataType
+                ) override;
 
                 // No stand has been assigned to the aircraft
                 const int noStandAssigned = -1;

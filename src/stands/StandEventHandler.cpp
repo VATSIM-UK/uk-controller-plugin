@@ -37,10 +37,15 @@ namespace UKControllerPlugin {
         void StandEventHandler::AnnotateFlightStrip(std::string callsign, int standId) const
         {
             // Find the flightplan to apply annotation
-            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(callsign);
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = nullptr;
+            try {
+                fp = this->plugin.GetFlightplanForCallsign(callsign);
+            }
+            catch (std::invalid_argument) {
+                // Nothing to do
+            }
 
             if (!fp) {
-                LogWarning("Tried assign a stand for a non-existant aircraft");
                 return;
             }
 
@@ -253,7 +258,7 @@ namespace UKControllerPlugin {
             Users can only assign a stand if they're a valid VATSIM controller and the flightplan is either
             untracked or tracked by them.
         */
-        bool StandEventHandler::CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+        bool StandEventHandler::CanAssignStand(EuroScopeCFlightPlanInterface& flightplan) const
         {
             return this->plugin.GetUserControllerObject()->IsVatsimRecognisedController() &&
                 (!flightplan.IsTracked() || flightplan.IsTrackedByUser());
@@ -310,6 +315,42 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Every time the flightplan updates, keep the annotation up to date if it's
+            not so. This is needed because there wont be any flightplans to annotate
+            when the plugin first starts up, so it annotates them as they come along.
+        */
+        void StandEventHandler::FlightPlanEvent(
+            EuroScopeCFlightPlanInterface& flightPlan,
+            EuroScopeCRadarTargetInterface& radarTarget
+        ) {
+            if (!this->standAssignments.count(flightPlan.GetCallsign())) {
+                return;
+            }
+
+            if (
+                this->stands.find(this->standAssignments.at(flightPlan.GetCallsign()))->identifier ==
+                    flightPlan.GetAnnotation(this->annotationIndex)
+            ) {
+                return;
+            }
+
+            flightPlan.AnnotateFlightStrip(
+                this->annotationIndex,
+                this->stands.find(this->standAssignments.at(flightPlan.GetCallsign()))->identifier
+            );
+        }
+
+        void StandEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
+        {
+            // Nothing to do
+        }
+
+        void StandEventHandler::ControllerFlightPlanDataEvent(EuroScopeCFlightPlanInterface& flightPlan, int dataType)
+        {
+            // Nothing to do
+        }
+
+        /*
             Process messages from the websocket.
         */
         void StandEventHandler::ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message)
@@ -336,16 +377,6 @@ namespace UKControllerPlugin {
                             if (!this->AssignmentMessageValid(*assignment)) {
                                 LogWarning("Invalid stand assignment message on mass assignment " + assignment->dump());
                                 continue;
-                            }
-
-                            // Find the flightplan to apply annotation
-                            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(
-                                assignment->at("callsign").get<std::string>()
-                            );
-
-                            if (!fp) {
-                                LogWarning("Tried assign a stand for a non-existant aircraft");
-                                return;
                             }
 
                             this->AnnotateFlightStrip(
