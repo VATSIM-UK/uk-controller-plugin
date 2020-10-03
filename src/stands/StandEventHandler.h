@@ -24,6 +24,8 @@ namespace UKControllerPlugin {
                     int standSelectedCallbackId
                 );
 
+                void AnnotateFlightStrip(std::string callsign, int standId) const;
+
                 size_t CountStands(void) const;
                 size_t CountStandAssignments(void) const;
                 void DisplayStandSelectionMenu(
@@ -34,6 +36,7 @@ namespace UKControllerPlugin {
                 );
                 int GetAssignedStandForCallsign(std::string callsign) const;
                 std::string GetLastAirfield(void) const;
+                void RemoveFlightStripAnnotation(std::string callsign) const;
                 void SetAssignedStand(std::string callsign, int standId);
                 void StandSelected(int functionId, std::string context, RECT);
                 void DisplayStandAssignmentEditBox(
@@ -65,6 +68,9 @@ namespace UKControllerPlugin {
 
                 // The text we get if no stand is specified in the edit box
                 const std::string noStandEditBoxItem = "";
+
+                // Annotation box 4
+                const int annotationIndex = 3;
 
             private:
 

@@ -130,6 +130,33 @@ namespace UKControllerPluginTest {
                 }
             };
 
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesNoFlightplanForAnnotations)
+        {
+            WebsocketMessage message{
+                "App\\Events\\StandAssignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", "BAW123"},
+                    {"stand_id", 1},
+                }
+            };
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(nullptr));
+
             this->handler.ProcessWebsocketMessage(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
@@ -218,6 +245,15 @@ namespace UKControllerPluginTest {
                 }
             };
 
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
+                .Times(1);
+
             this->handler.ProcessWebsocketMessage(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
@@ -283,6 +319,24 @@ namespace UKControllerPluginTest {
                 nlohmann::json(),
             };
 
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp1
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp1));
+
+            EXPECT_CALL(*pluginReturnedFp1, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp2
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("VIR245"))
+                .WillByDefault(Return(pluginReturnedFp2));
+
+            EXPECT_CALL(*pluginReturnedFp2, AnnotateFlightStrip(3, "55"))
+                .Times(1);
+
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
@@ -346,6 +400,15 @@ namespace UKControllerPluginTest {
                 nlohmann::json(),
             };
 
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
@@ -370,6 +433,15 @@ namespace UKControllerPluginTest {
                 "bla",
                 nlohmann::json(),
             };
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
@@ -397,6 +469,15 @@ namespace UKControllerPluginTest {
                 nlohmann::json(),
             };
 
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
@@ -421,6 +502,15 @@ namespace UKControllerPluginTest {
                 "bla",
                 nlohmann::json(),
             };
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
@@ -448,6 +538,15 @@ namespace UKControllerPluginTest {
                 nlohmann::json(),
             };
 
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
@@ -473,6 +572,15 @@ namespace UKControllerPluginTest {
                 "bla",
                 nlohmann::json(),
             };
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
@@ -1020,6 +1128,12 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginReturnedFp));
 
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
+                .Times(1);
+
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
                 .Times(1);
 
@@ -1067,6 +1181,12 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginReturnedFp));
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
+                .Times(1);
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
                 .Times(1)
@@ -1167,7 +1287,13 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginReturnedFp));
 
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
             EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft("BAW123"))
+                .Times(1);
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
                 .Times(1);
 
             this->handler.StandSelected(1, "--", {});
@@ -1217,7 +1343,13 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetSelectedFlightplan())
                 .WillByDefault(Return(pluginReturnedFp));
 
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
             EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft("BAW123"))
+                .Times(1);
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
                 .Times(1);
 
             this->handler.StandSelected(1, "", {});

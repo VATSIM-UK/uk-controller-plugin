@@ -30,6 +30,26 @@ namespace UKControllerPlugin {
         {
         }
 
+        /*
+            Apply the stand annotation to the flightstrip so we can share it with other
+            plugins like vSMR
+        */
+        void StandEventHandler::AnnotateFlightStrip(std::string callsign, int standId) const
+        {
+            // Find the flightplan to apply annotation
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(callsign);
+
+            if (!fp) {
+                LogWarning("Tried assign a stand for a non-existant aircraft");
+                return;
+            }
+
+            fp->AnnotateFlightStrip(
+                this->annotationIndex,
+                this->stands.find(standId)->identifier
+            );
+        }
+
         size_t StandEventHandler::CountStands(void) const
         {
             return this->stands.size();
@@ -107,6 +127,22 @@ namespace UKControllerPlugin {
             return this->lastAirfieldUsed;
         }
 
+        void StandEventHandler::RemoveFlightStripAnnotation(std::string callsign) const
+        {
+             // Find the flightplan to apply annotation
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(callsign);
+
+            if (!fp) {
+                LogWarning("Tried assign a stand for a non-existant aircraft");
+                return;
+            }
+
+            fp->AnnotateFlightStrip(
+                this->annotationIndex,
+                ""
+            );
+        }
+
         void StandEventHandler::SetAssignedStand(std::string callsign, int standId)
         {
             this->standAssignments[callsign] = standId;
@@ -144,8 +180,9 @@ namespace UKControllerPlugin {
                 (context == this->noStandMenuItem || context == this->noStandEditBoxItem) &&
                 this->standAssignments.count(callsign)
             ) {
+                this->standAssignments.erase(callsign);
+                this->RemoveFlightStripAnnotation(callsign);
                 this->taskRunner.QueueAsynchronousTask([this, callsign]() {
-                    this->standAssignments.erase(callsign);
                     try {
                         this->api.DeleteStandAssignmentForAircraft(callsign);
                     } catch (ApiException) {
@@ -170,6 +207,7 @@ namespace UKControllerPlugin {
                 // Assign that stand
                 int standId = stand->id;
                 this->standAssignments[callsign] = standId;
+                this->AnnotateFlightStrip(callsign, standId);
                 this->taskRunner.QueueAsynchronousTask([this, standId, callsign]() {
                     try {
                         this->api.AssignStandToAircraft(callsign, standId);
@@ -300,6 +338,20 @@ namespace UKControllerPlugin {
                                 continue;
                             }
 
+                            // Find the flightplan to apply annotation
+                            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(
+                                assignment->at("callsign").get<std::string>()
+                            );
+
+                            if (!fp) {
+                                LogWarning("Tried assign a stand for a non-existant aircraft");
+                                return;
+                            }
+
+                            this->AnnotateFlightStrip(
+                                assignment->at("callsign").get<std::string>(),
+                                assignment->at("stand_id").get<int>()
+                            );
                             this->standAssignments[assignment->at("callsign").get<std::string>()] =
                                 assignment->at("stand_id").get<int>();
                         }
@@ -315,6 +367,10 @@ namespace UKControllerPlugin {
                     return;
                 }
 
+                this->AnnotateFlightStrip(
+                    message.data.at("callsign").get<std::string>(),
+                    message.data.at("stand_id").get<int>()
+                );
                 this->standAssignments[message.data.at("callsign").get<std::string>()] =
                     message.data.at("stand_id").get<int>();
                 LogInfo(
@@ -328,6 +384,9 @@ namespace UKControllerPlugin {
                     return;
                 }
 
+                this->RemoveFlightStripAnnotation(
+                    message.data.at("callsign").get<std::string>()
+                );
                 this->standAssignments.erase(message.data.at("callsign").get<std::string>());
                 LogInfo("Stand assignment removed for " + message.data.at("callsign").get<std::string>());
             }
