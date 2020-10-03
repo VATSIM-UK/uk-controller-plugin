@@ -9,6 +9,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 MOCK_CONST_METHOD2(AnnotateFlightStrip, void(int, std::string));
+                MOCK_CONST_METHOD1(GetAnnotation, std::string(int));
                 MOCK_CONST_METHOD0(GetAircraftType, std::string(void));
                 MOCK_CONST_METHOD0(GetCallsign, const std::string(void));
                 MOCK_CONST_METHOD0(GetClearedAltitude, const int(void));

@@ -21,6 +21,11 @@ namespace UKControllerPlugin {
             this->originalData.GetControllerAssignedData().SetFlightStripAnnotation(index, data.c_str());
         }
 
+        std::string EuroScopeCFlightPlanWrapper::GetAnnotation(int index) const
+        {
+            return this->originalData.GetControllerAssignedData().GetFlightStripAnnotation(index);
+        }
+
         std::string EuroScopeCFlightPlanWrapper::GetAircraftType(void) const
         {
             return this->originalData.GetFlightPlanData().GetAircraftFPType();
