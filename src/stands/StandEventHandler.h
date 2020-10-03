@@ -66,6 +66,7 @@ namespace UKControllerPlugin {
             private:
 
                 bool AssignmentMessageValid(const nlohmann::json& message) const;
+                bool CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const;
                 bool UnassignmentMessageValid(const nlohmann::json & message) const;
                 std::string GetAirfieldForStandAssignment(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan

@@ -4,6 +4,7 @@
 #include "stands/Stand.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "mock/MockEuroScopeCControllerInterface.h"
 #include "tag/TagData.h"
 #include "websocket/WebsocketSubscription.h"
 #include "websocket/WebsocketMessage.h"
@@ -26,6 +27,7 @@ using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::Websocket::WebsocketMessage;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -44,6 +46,8 @@ namespace UKControllerPluginTest {
                 {
                     ON_CALL(this->flightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
+
+                    this->mockController = std::make_shared<NiceMock<MockEuroScopeCControllerInterface>>();
                 }
 
                 std::set<Stand, CompareStands> GetStands(void) const
@@ -64,6 +68,7 @@ namespace UKControllerPluginTest {
                 NiceMock<MockTaskRunnerInterface> taskRunner;
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+                std::shared_ptr<NiceMock<MockEuroScopeCControllerInterface>> mockController;
                 TagData tagData;
                 StandEventHandler handler;
         };
@@ -506,6 +511,12 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(true));
 
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -556,6 +567,12 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
 
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -583,35 +600,51 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItDoesntTriggerTheSelectionMenuIfFlightplanTrackedBySomeoneElse)
         {
-            PopupMenuItem menuItemStand1;
-            menuItemStand1.firstValue = "1L";
-            menuItemStand1.secondValue = "EGKK";
-            menuItemStand1.callbackFunctionId = 1;
-            menuItemStand1.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-            menuItemStand1.disabled = false;
-            menuItemStand1.fixedPosition = false;
-
-            PopupMenuItem menuItemStand2;
-            menuItemStand2.firstValue = "55";
-            menuItemStand2.secondValue = "EGKK";
-            menuItemStand2.callbackFunctionId = 1;
-            menuItemStand2.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-            menuItemStand2.disabled = false;
-            menuItemStand2.fixedPosition = false;
-
-            PopupMenuItem menuItemStandNone;
-            menuItemStandNone.firstValue = "--";
-            menuItemStandNone.secondValue = "None";
-            menuItemStandNone.callbackFunctionId = 1;
-            menuItemStandNone.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-            menuItemStandNone.disabled = false;
-            menuItemStandNone.fixedPosition = true;
-
             // Not tracked by user
             ON_CALL(this->flightplan, IsTracked())
                 .WillByDefault(Return(true));
 
             ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(4));
+
+            RECT expectedArea = { 0, 0, 400, 600 };
+            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand", 2))
+                .Times(0);
+
+            EXPECT_CALL(this->plugin, AddItemToPopupList(_))
+                .Times(0);
+
+            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", { 0, 0 });
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntTriggerTheSelectionMenuIfNotVatsimRecognisedController)
+        {
+            // Not tracked by user
+            ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
                 .WillByDefault(Return(false));
 
             ON_CALL(this->flightplan, GetCallsign())
@@ -642,6 +675,12 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(true));
 
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -667,6 +706,12 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
 
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
@@ -697,6 +742,43 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
 
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(4));
+
+            EXPECT_CALL(this->plugin, ShowTextEditPopup(_, _, _))
+                .Times(0);
+
+            this->handler.DisplayStandAssignmentEditBox(this->flightplan, this->radarTarget, "", { 0, 0 });
+            EXPECT_EQ("", this->handler.GetLastAirfield());
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntTriggerTheEditBoxIfNotVatsimRecognisedController)
+        {
+            // Not tracked by user
+            ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(false));
+
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -724,6 +806,12 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
 
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -747,9 +835,63 @@ namespace UKControllerPluginTest {
         {
             // Trigger the menu first to set the last airport
             ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(4));
+
+            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", { 0, 0 });
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(true));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", _))
+                .Times(0);
+
+            this->handler.StandSelected(1, "55", {});
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntMakeAStandAssignmentRequestIfNotVatsimRecognisedController)
+        {
+            // Trigger the menu first to set the last airport
+            ON_CALL(this->flightplan, IsTracked())
                 .WillByDefault(Return(false));
 
             ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
                 .WillByDefault(Return(false));
 
             ON_CALL(this->flightplan, GetCallsign())
@@ -794,6 +936,12 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
 
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -835,6 +983,12 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
 
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
@@ -878,6 +1032,12 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
 
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
@@ -923,6 +1083,12 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
 
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -967,6 +1133,12 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
 
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -1010,6 +1182,12 @@ namespace UKControllerPluginTest {
             ON_CALL(this->flightplan, IsTrackedByUser())
                 .WillByDefault(Return(false));
 
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
             ON_CALL(this->flightplan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
@@ -1041,6 +1219,106 @@ namespace UKControllerPluginTest {
 
             this->handler.StandSelected(1, "--", {});
             EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntMakeDeletionRequestIfFlightplanTrackedBySomeoneElse)
+        {
+            this->handler.SetAssignedStand("BAW123", 2);
+
+            // Trigger the menu first to set the last airport
+            ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(4));
+
+            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", { 0, 0 });
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(true));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft(_))
+                .Times(0);
+
+            this->handler.StandSelected(1, "--", {});
+            EXPECT_EQ(2, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntMakeDeletionRequestIfNotVatsimRecognisedController)
+        {
+            this->handler.SetAssignedStand("BAW123", 2);
+
+            // Trigger the menu first to set the last airport
+            ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(4));
+
+            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", { 0, 0 });
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft(_))
+                .Times(0);
+
+            this->handler.StandSelected(1, "--", {});
+            EXPECT_EQ(2, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

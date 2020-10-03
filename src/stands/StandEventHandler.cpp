@@ -3,6 +3,7 @@
 #include "websocket/WebsocketSubscription.h"
 #include "api/ApiException.h"
 #include "plugin/PopupMenuItem.h"
+#include "euroscope/EuroScopeCControllerInterface.h"
 
 using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPlugin::Api::ApiInterface;
@@ -10,6 +11,7 @@ using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 
@@ -44,8 +46,7 @@ namespace UKControllerPlugin {
             std::string context,
             const POINT& mousePos
         ) {
-            // Only allow a user to do this if they are tracking the aircraft or its untracked
-            if (flightplan.IsTracked() && !flightplan.IsTrackedByUser()) {
+            if (!this->CanAssignStand(flightplan)) {
                 return;
             }
 
@@ -121,7 +122,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            if (fp->IsTracked() && !fp->IsTrackedByUser()) {
+            if (!this->CanAssignStand(*fp)) {
                 LogInfo("Attempted to assign stand but flightplan is tracked by someone else " + fp->GetCallsign());
                 return;
             }
@@ -171,8 +172,7 @@ namespace UKControllerPlugin {
             std::string context,
             const POINT& mousePos
         ) {
-            // Only allow a user to do this if they are tracking the aircraft or its untracked
-            if (flightplan.IsTracked() && !flightplan.IsTrackedByUser()) {
+            if (!this->CanAssignStand(flightplan)) {
                 return;
             }
 
@@ -196,6 +196,16 @@ namespace UKControllerPlugin {
                 startingText
             );
 
+        }
+
+        /*
+            Users can only assign a stand if they're a valid VATSIM controller and the flightplan is either
+            untracked or tracked by them.
+        */
+        bool StandEventHandler::CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+        {
+            return this->plugin.GetUserControllerObject()->IsVatsimRecognisedController() &&
+                (!flightplan.IsTracked() || flightplan.IsTrackedByUser());
         }
 
         std::string StandEventHandler::GetTagItemDescription(int tagItemId) const
