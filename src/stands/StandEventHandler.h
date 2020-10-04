@@ -6,6 +6,7 @@
 #include "task/TaskRunnerInterface.h"
 #include "websocket/WebsocketEventProcessorInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "flightplan/FlightPlanEventHandlerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Stands {
@@ -13,7 +14,8 @@ namespace UKControllerPlugin {
             A new class
         */
         class StandEventHandler: public UKControllerPlugin::Tag::TagItemInterface,
-            public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
+            public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface,
+            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface
         {
             public:
                 StandEventHandler(
@@ -24,6 +26,8 @@ namespace UKControllerPlugin {
                     int standSelectedCallbackId
                 );
 
+                void AnnotateFlightStrip(std::string callsign, int standId) const;
+
                 size_t CountStands(void) const;
                 size_t CountStandAssignments(void) const;
                 void DisplayStandSelectionMenu(
@@ -33,8 +37,16 @@ namespace UKControllerPlugin {
                     const POINT& mousePos
                 );
                 int GetAssignedStandForCallsign(std::string callsign) const;
+                std::string GetLastAirfield(void) const;
+                void RemoveFlightStripAnnotation(std::string callsign) const;
                 void SetAssignedStand(std::string callsign, int standId);
                 void StandSelected(int functionId, std::string context, RECT);
+                void DisplayStandAssignmentEditBox(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string context,
+                    const POINT& mousePos
+                );
 
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message) override;
@@ -43,6 +55,19 @@ namespace UKControllerPlugin {
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
+
+                // Inherited via FlightPlanEventHandlerInterface
+                void FlightPlanEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget
+                ) override;
+                void FlightPlanDisconnectEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan
+                ) override;
+                void ControllerFlightPlanDataEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+                    int dataType
+                ) override;
 
                 // No stand has been assigned to the aircraft
                 const int noStandAssigned = -1;
@@ -56,13 +81,23 @@ namespace UKControllerPlugin {
                 // The menu item to display for no assigned stand
                 const std::string noStandMenuItem = "--";
 
+                // The text we get if no stand is specified in the edit box
+                const std::string noStandEditBoxItem = "";
+
+                // Annotation box 4
+                const int annotationIndex = 3;
+
             private:
 
                 bool AssignmentMessageValid(const nlohmann::json& message) const;
+                bool CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const;
                 bool UnassignmentMessageValid(const nlohmann::json & message) const;
+                std::string GetAirfieldForStandAssignment(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan
+                );
 
-                // The last airfield that was used to populate the stand menu
-                std::string lastAirfieldUsed;
+                // The last airfield that was used to populate the stand menu, used when we receive the callback
+                std::string lastAirfieldUsed = "";
 
                 // The API for making requests in relation to stands
                 const UKControllerPlugin::Api::ApiInterface& api;

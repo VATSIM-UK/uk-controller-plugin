@@ -3,6 +3,7 @@
 #include "websocket/WebsocketSubscription.h"
 #include "api/ApiException.h"
 #include "plugin/PopupMenuItem.h"
+#include "euroscope/EuroScopeCControllerInterface.h"
 
 using UKControllerPlugin::Websocket::WebsocketSubscription;
 using UKControllerPlugin::Api::ApiInterface;
@@ -10,6 +11,7 @@ using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 
@@ -28,6 +30,31 @@ namespace UKControllerPlugin {
         {
         }
 
+        /*
+            Apply the stand annotation to the flightstrip so we can share it with other
+            plugins like vSMR
+        */
+        void StandEventHandler::AnnotateFlightStrip(std::string callsign, int standId) const
+        {
+            // Find the flightplan to apply annotation
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = nullptr;
+            try {
+                fp = this->plugin.GetFlightplanForCallsign(callsign);
+            }
+            catch (std::invalid_argument) {
+                // Nothing to do
+            }
+
+            if (!fp) {
+                return;
+            }
+
+            fp->AnnotateFlightStrip(
+                this->annotationIndex,
+                this->stands.find(standId)->identifier
+            );
+        }
+
         size_t StandEventHandler::CountStands(void) const
         {
             return this->stands.size();
@@ -44,15 +71,12 @@ namespace UKControllerPlugin {
             std::string context,
             const POINT& mousePos
         ) {
-            // Only allow a user to do this if they are tracking the aircraft or its untracked
-            if (flightplan.IsTracked() && !flightplan.IsTrackedByUser()) {
+            if (!this->CanAssignStand(flightplan)) {
                 return;
             }
 
-            // Pick the airfield based on distance from origin
-            this->lastAirfieldUsed = flightplan.GetDistanceFromOrigin() < this->maxDistanceFromDepartureAirport
-                ? flightplan.GetOrigin()
-                : flightplan.GetDestination();
+            // Pick the airfield to use
+            this->lastAirfieldUsed = this->GetAirfieldForStandAssignment(flightplan);
 
             // Create the list in place
             RECT popupArea = {
@@ -103,6 +127,27 @@ namespace UKControllerPlugin {
             return this->standAssignments.count(callsign) ? this->standAssignments.at(callsign) : this->noStandAssigned;
         }
 
+        std::string StandEventHandler::GetLastAirfield(void) const
+        {
+            return this->lastAirfieldUsed;
+        }
+
+        void StandEventHandler::RemoveFlightStripAnnotation(std::string callsign) const
+        {
+             // Find the flightplan to apply annotation
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(callsign);
+
+            if (!fp) {
+                LogWarning("Tried assign a stand for a non-existant aircraft");
+                return;
+            }
+
+            fp->AnnotateFlightStrip(
+                this->annotationIndex,
+                ""
+            );
+        }
+
         void StandEventHandler::SetAssignedStand(std::string callsign, int standId)
         {
             this->standAssignments[callsign] = standId;
@@ -110,6 +155,17 @@ namespace UKControllerPlugin {
 
         void StandEventHandler::StandSelected(int functionId, std::string context, RECT)
         {
+            /*
+                EuroScope has a weird bug when using edit boxes where it duplicates up the OnFunctionCall
+                event as a result of the box being filled in. This check makes sure we only process one event
+                per menu-load or edit-box completion.
+            */
+            if (this->lastAirfieldUsed == "") {
+                return;
+            }
+            std::string airfield = this->lastAirfieldUsed;
+            this->lastAirfieldUsed = "";
+
             // Only allow this action if they're tracking the flightplan or its untracked
             std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
 
@@ -118,16 +174,20 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            if (fp->IsTracked() && !fp->IsTrackedByUser()) {
+            if (!this->CanAssignStand(*fp)) {
                 LogInfo("Attempted to assign stand but flightplan is tracked by someone else " + fp->GetCallsign());
                 return;
             }
 
             std::string callsign = fp->GetCallsign();
-            // If no stand is selected, delete the current assisnment if there is one
-            if (context == this->noStandMenuItem && this->standAssignments.count(callsign)) {
+            // If no stand is selected, delete the current assignment if there is one
+            if (
+                (context == this->noStandMenuItem || context == this->noStandEditBoxItem) &&
+                this->standAssignments.count(callsign)
+            ) {
+                this->standAssignments.erase(callsign);
+                this->RemoveFlightStripAnnotation(callsign);
                 this->taskRunner.QueueAsynchronousTask([this, callsign]() {
-                    this->standAssignments.erase(callsign);
                     try {
                         this->api.DeleteStandAssignmentForAircraft(callsign);
                     } catch (ApiException) {
@@ -139,8 +199,8 @@ namespace UKControllerPlugin {
                 auto stand = std::find_if(
                     this->stands.cbegin(),
                     this->stands.cend(),
-                    [this, context](const Stand& stand) -> bool {
-                        return stand.identifier == context && stand.airfieldCode == this->lastAirfieldUsed;
+                    [airfield, context](const Stand& stand) -> bool {
+                        return stand.identifier == context && stand.airfieldCode == airfield;
                     }
                 );
 
@@ -152,6 +212,7 @@ namespace UKControllerPlugin {
                 // Assign that stand
                 int standId = stand->id;
                 this->standAssignments[callsign] = standId;
+                this->AnnotateFlightStrip(callsign, standId);
                 this->taskRunner.QueueAsynchronousTask([this, standId, callsign]() {
                     try {
                         this->api.AssignStandToAircraft(callsign, standId);
@@ -160,6 +221,47 @@ namespace UKControllerPlugin {
                     }
                 });
             }
+        }
+
+        void StandEventHandler::DisplayStandAssignmentEditBox(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        ) {
+            if (!this->CanAssignStand(flightplan)) {
+                return;
+            }
+
+            // Pick the airfield to use
+            this->lastAirfieldUsed = this->GetAirfieldForStandAssignment(flightplan);
+
+            // If a stand is assigned, set the starting text to be the stand identifier
+            std::string startingText = "";
+            auto assignedStand = this->standAssignments.find(flightplan.GetCallsign());
+            if (
+                assignedStand != this->standAssignments.cend() &&
+                this->stands.find(assignedStand->second) != this->stands.cend()
+            ) {
+                startingText = this->stands.find(assignedStand->second)->identifier;
+            }
+
+            // Display the popup
+            this->plugin.ShowTextEditPopup(
+                { mousePos.x, mousePos.y, mousePos.x + 80, mousePos.y + 25 },
+                this->standSelectedCallbackId,
+                startingText
+            );
+        }
+
+        /*
+            Users can only assign a stand if they're a valid VATSIM controller and the flightplan is either
+            untracked or tracked by them.
+        */
+        bool StandEventHandler::CanAssignStand(EuroScopeCFlightPlanInterface& flightplan) const
+        {
+            return this->plugin.GetUserControllerObject()->IsVatsimRecognisedController() &&
+                (!flightplan.IsTracked() || flightplan.IsTrackedByUser());
         }
 
         std::string StandEventHandler::GetTagItemDescription(int tagItemId) const
@@ -202,6 +304,53 @@ namespace UKControllerPlugin {
         }
 
         /*
+            Get the airfield to use for stand assignment purposes, depending on how far the aircraft is from
+            its origin.
+        */
+        std::string StandEventHandler::GetAirfieldForStandAssignment(EuroScopeCFlightPlanInterface& flightplan)
+        {
+            return flightplan.GetDistanceFromOrigin() < this->maxDistanceFromDepartureAirport
+                ? flightplan.GetOrigin()
+                : flightplan.GetDestination();
+        }
+
+        /*
+            Every time the flightplan updates, keep the annotation up to date if it's
+            not so. This is needed because there wont be any flightplans to annotate
+            when the plugin first starts up, so it annotates them as they come along.
+        */
+        void StandEventHandler::FlightPlanEvent(
+            EuroScopeCFlightPlanInterface& flightPlan,
+            EuroScopeCRadarTargetInterface& radarTarget
+        ) {
+            if (!this->standAssignments.count(flightPlan.GetCallsign())) {
+                return;
+            }
+
+            if (
+                this->stands.find(this->standAssignments.at(flightPlan.GetCallsign()))->identifier ==
+                    flightPlan.GetAnnotation(this->annotationIndex)
+            ) {
+                return;
+            }
+
+            flightPlan.AnnotateFlightStrip(
+                this->annotationIndex,
+                this->stands.find(this->standAssignments.at(flightPlan.GetCallsign()))->identifier
+            );
+        }
+
+        void StandEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
+        {
+            // Nothing to do
+        }
+
+        void StandEventHandler::ControllerFlightPlanDataEvent(EuroScopeCFlightPlanInterface& flightPlan, int dataType)
+        {
+            // Nothing to do
+        }
+
+        /*
             Process messages from the websocket.
         */
         void StandEventHandler::ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message)
@@ -217,6 +366,9 @@ namespace UKControllerPlugin {
                             return;
                         }
 
+                        // Delete all existing assignments
+                        this->standAssignments.clear();
+
                         for (
                             auto assignment = standAssignments.cbegin();
                             assignment != standAssignments.cend();
@@ -227,6 +379,10 @@ namespace UKControllerPlugin {
                                 continue;
                             }
 
+                            this->AnnotateFlightStrip(
+                                assignment->at("callsign").get<std::string>(),
+                                assignment->at("stand_id").get<int>()
+                            );
                             this->standAssignments[assignment->at("callsign").get<std::string>()] =
                                 assignment->at("stand_id").get<int>();
                         }
@@ -242,6 +398,10 @@ namespace UKControllerPlugin {
                     return;
                 }
 
+                this->AnnotateFlightStrip(
+                    message.data.at("callsign").get<std::string>(),
+                    message.data.at("stand_id").get<int>()
+                );
                 this->standAssignments[message.data.at("callsign").get<std::string>()] =
                     message.data.at("stand_id").get<int>();
                 LogInfo(
@@ -255,6 +415,9 @@ namespace UKControllerPlugin {
                     return;
                 }
 
+                this->RemoveFlightStripAnnotation(
+                    message.data.at("callsign").get<std::string>()
+                );
                 this->standAssignments.erase(message.data.at("callsign").get<std::string>());
                 LogInfo("Stand assignment removed for " + message.data.at("callsign").get<std::string>());
             }

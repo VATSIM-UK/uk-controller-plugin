@@ -12,6 +12,8 @@ namespace UKControllerPlugin {
         {
             public:
                 explicit EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan originalData);
+                void AnnotateFlightStrip(int index, std::string data) const override;
+                std::string GetAnnotation(int index) const override;
                 std::string GetAircraftType(void) const override;
                 std::string GetAssignedSquawk(void) const;
                 const std::string GetCallsign(void) const;

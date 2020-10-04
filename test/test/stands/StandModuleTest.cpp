@@ -6,6 +6,7 @@
 #include "tag/TagItemCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/HandoffEventHandlerCollection.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -13,6 +14,7 @@ using ::testing::Return;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Stands::BootstrapPlugin;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
@@ -28,6 +30,7 @@ namespace UKControllerPluginTest {
                 {
                     container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
                     container.tagHandler.reset(new TagItemCollection);
+                    container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
 
                     nlohmann::json gatwick = nlohmann::json::array();
@@ -79,11 +82,24 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-stand-assignments"));
         }
 
+        TEST_F(StandModuleTest, ItRegistersForFlightplanEvents)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
+        }
+
         TEST_F(StandModuleTest, ItRegistersTheStandAssignmentPopupMenuFunction)
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
-            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountTagFunctions());
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9007));
+            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
+        }
+
+        TEST_F(StandModuleTest, ItRegistersTheStandAssignmentEditBoxFunction)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9008));
             EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
         }
