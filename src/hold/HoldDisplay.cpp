@@ -964,8 +964,8 @@ namespace UKControllerPlugin {
                             // Cleared level - plus a clickspot for the aircraft in question
                             graphics.DrawString(
                                 fp->GetClearedAltitude() == 0
-                                ? L"---"
-                                : GetLevelDisplayString(fp->GetClearedAltitude()),
+                                    ? L"---"
+                                    : GetLevelDisplayString(fp->GetClearedAltitude()),
                                 clearedLevelDisplay,
                                 this->clearedLevelBrush
                             );

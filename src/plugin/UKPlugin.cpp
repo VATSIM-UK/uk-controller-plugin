@@ -309,7 +309,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelectASEL();
 
         if (!rt.IsValid()) {
-            return NULL;
+            return nullptr;
         }
 
         return std::make_shared<EuroScopeCRadarTargetWrapper>(rt);
