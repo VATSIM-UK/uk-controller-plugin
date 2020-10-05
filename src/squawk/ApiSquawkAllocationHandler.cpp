@@ -49,19 +49,17 @@ namespace UKControllerPlugin {
         void ApiSquawkAllocationHandler::TimedEventTrigger(void)
         {
             std::lock_guard<std::mutex> lock(this->queueGuard);
+            std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan;
             for (
                 std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation>::iterator it = this->allocationQueue.begin();
                 it != this->allocationQueue.end();
             ) {
-                try {
-                    std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan =
-                        this->plugin.GetFlightplanForCallsign(it->callsign);
-
+                flightplan = this->plugin.GetFlightplanForCallsign(it->callsign);
+                if (!flightplan) {
+                    LogInfo("Could not find flightplan for " + it->callsign + " when trying to assign squawk");
+                } else {
                     flightplan->SetSquawk(it->squawk);
                     LogInfo("Assigned squawk " + it->squawk + " to " + it->callsign);
-                } catch (std::invalid_argument) {
-                    // Flightplan has gone somewhere, do nothing
-                    LogInfo("Could not find flightplan for " + it->callsign + " when trying to assign squawk");
                 }
 
                 this->allocationQueue.erase(it++);

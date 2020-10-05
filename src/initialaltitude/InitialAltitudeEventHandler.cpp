@@ -202,22 +202,21 @@ namespace UKControllerPlugin {
 
             LogInfo("Mass assigning initial altitudes");
 
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
+            std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
             for (
                 StoredFlightplanCollection::const_iterator it = this->storedFlightplans.cbegin();
                 it != this->storedFlightplans.cend();
                 ++it
             ) {
-                try {
+                fp = this->plugin.GetFlightplanForCallsign(it->second->GetCallsign());
+                rt = this->plugin.GetRadarTargetForCallsign(it->second->GetCallsign());
 
-                    this->FlightPlanEvent(
-                        *this->plugin.GetFlightplanForCallsign(it->second->GetCallsign()),
-                        *this->plugin.GetRadarTargetForCallsign(it->second->GetCallsign())
-                    );
-
-                }
-                catch (std::invalid_argument) {
+                if (!fp || !rt) {
                     continue;
                 }
+
+                this->FlightPlanEvent(*fp, *rt);
             }
         }
 

@@ -151,29 +151,26 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
+            std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
             for (
                 StoredFlightplanCollection::const_iterator it = this->storedFlightplans.cbegin();
                 it != this->storedFlightplans.cend();
                 ++it
             ) {
-                try {
-                    if (this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign())->HasAssignedSquawk() ||
-                        !this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign())->IsTrackedByUser()
-                    ) {
-                        continue;
-                    }
+                fp = this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign());
+                rt = this->pluginLoopback.GetRadarTargetForCallsign(it->second->GetCallsign());
 
-                    if (!this->generator.RequestLocalSquawkForAircraft(
-                        *this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign()),
-                        *this->pluginLoopback.GetRadarTargetForCallsign(it->second->GetCallsign())
-                    )) {
-                        this->generator.RequestGeneralSquawkForAircraft(
-                            *this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign()),
-                            *this->pluginLoopback.GetRadarTargetForCallsign(it->second->GetCallsign()));
-                    }
-                }
-                catch (std::invalid_argument) {
+                if (!fp || !rt) {
                     continue;
+                }
+
+                if (fp->HasAssignedSquawk() || !fp->IsTrackedByUser()) {
+                    continue;
+                }
+
+                if (!this->generator.RequestLocalSquawkForAircraft(*fp, *rt)) {
+                    this->generator.RequestGeneralSquawkForAircraft(*fp, *rt);
                 }
             }
         }
@@ -209,22 +206,21 @@ namespace UKControllerPlugin {
 
             LogInfo("Mass assigning squawks");
 
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
+            std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
             for (
                 StoredFlightplanCollection::const_iterator it = this->storedFlightplans.cbegin();
                 it != this->storedFlightplans.cend();
                 ++it
             ) {
-                try {
+                fp = this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign());
+                rt = this->pluginLoopback.GetRadarTargetForCallsign(it->second->GetCallsign());
 
-                    this->FlightPlanEvent(
-                        *this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign()),
-                        *this->pluginLoopback.GetRadarTargetForCallsign(it->second->GetCallsign())
-                    );
-
-                }
-                catch (std::invalid_argument) {
+                if (!fp || !rt) {
                     continue;
                 }
+
+                this->FlightPlanEvent(*fp, *rt);
             }
         }
 

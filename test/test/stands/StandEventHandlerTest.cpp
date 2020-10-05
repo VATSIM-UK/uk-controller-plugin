@@ -155,7 +155,8 @@ namespace UKControllerPluginTest {
             };
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
-                .WillByDefault(Throw(std::invalid_argument("Test")));
+                .WillByDefault(Return(nullptr));
+
 
             this->handler.ProcessWebsocketMessage(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
@@ -246,7 +247,7 @@ namespace UKControllerPluginTest {
             };
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
-                .WillByDefault(Throw(std::invalid_argument("Test")));
+                .WillByDefault(Return(nullptr));
 
             this->handler.ProcessWebsocketMessage(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));

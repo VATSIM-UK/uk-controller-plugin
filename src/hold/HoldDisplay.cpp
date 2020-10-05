@@ -340,20 +340,19 @@ namespace UKControllerPlugin {
                 it != aircraft.cend();
                 ++it
             ) {
-                try {
-                    rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
-
-                    // If the aircraft is above the displaying levels of the hold, dont map
-                    int occupied = GetOccupiedLevel(rt->GetFlightLevel(), rt->GetVerticalSpeed());
-                    if (occupied > this->maximumLevel || occupied < this->minimumLevel) {
-                        continue;
-                    }
-
-                    levelMap[occupied].insert(*it);
+                // Check for the radar target
+                rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
+                if (!rt) {
+                    continue;
                 }
-                catch (std::invalid_argument) {
-                    // Cant display, dont have the data
+
+                // If the aircraft is above the displaying levels of the hold, dont map
+                int occupied = GetOccupiedLevel(rt->GetFlightLevel(), rt->GetVerticalSpeed());
+                if (occupied > this->maximumLevel || occupied < this->minimumLevel) {
+                    continue;
                 }
+
+                levelMap[occupied].insert(*it);
             }
 
             // Only display holding aircraft if at least one of them is assigned to it.
@@ -913,11 +912,11 @@ namespace UKControllerPlugin {
                             );
                         }
 
-                        // Render the aircraft data
-                        try {
-                            rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
-                            fp = this->plugin.GetFlightplanForCallsign((*it)->GetCallsign());
 
+                        rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
+                        fp = this->plugin.GetFlightplanForCallsign((*it)->GetCallsign());
+
+                        if (fp && rt) {
                             if (rt->GetPosition().DistanceTo(this->navaid.coordinates) < this->sameLevelBoxDistance) {
                                 aircraftInProximity = true;
                             }
@@ -965,8 +964,8 @@ namespace UKControllerPlugin {
                             // Cleared level - plus a clickspot for the aircraft in question
                             graphics.DrawString(
                                 fp->GetClearedAltitude() == 0
-                                    ? L"---"
-                                    : GetLevelDisplayString(fp->GetClearedAltitude()),
+                                ? L"---"
+                                : GetLevelDisplayString(fp->GetClearedAltitude()),
                                 clearedLevelDisplay,
                                 this->clearedLevelBrush
                             );
@@ -991,9 +990,6 @@ namespace UKControllerPlugin {
                                     this->dataBrush
                                 );
                             }
-                        }
-                        catch (std::invalid_argument) {
-                            // Skip the render
                         }
 
                         aircraftIndex++;
