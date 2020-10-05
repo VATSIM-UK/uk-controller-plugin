@@ -134,11 +134,16 @@ namespace UKControllerPlugin {
 
         void StandEventHandler::RemoveFlightStripAnnotation(std::string callsign) const
         {
-             // Find the flightplan to apply annotation
-            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(callsign);
+            // Find the flightplan to apply annotation
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = nullptr;
+            try {
+                fp = this->plugin.GetFlightplanForCallsign(callsign);
+            }
+            catch (std::invalid_argument) {
+                // Nothing to do
+            }
 
             if (!fp) {
-                LogWarning("Tried assign a stand for a non-existant aircraft");
                 return;
             }
 

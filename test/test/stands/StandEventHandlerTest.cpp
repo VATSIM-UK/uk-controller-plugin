@@ -234,6 +234,24 @@ namespace UKControllerPluginTest {
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
+        TEST_F(StandEventHandlerTest, ItHandlesNoFlightplanForUnassignmentRemovalOfAnnotations)
+        {
+            this->handler.SetAssignedStand("BAW123", 3);
+            WebsocketMessage message{
+                "App\\Events\\StandUnassignedEvent",
+                "private-stand-assignments",
+                nlohmann::json {
+                    {"callsign", "BAW123"}
+                }
+            };
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Throw(std::invalid_argument("Test")));
+
+            this->handler.ProcessWebsocketMessage(message);
+            ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
         TEST_F(StandEventHandlerTest, ItUnassignsStandsFromWebsocketMessage)
         {
             this->handler.SetAssignedStand("BAW123", 3);
