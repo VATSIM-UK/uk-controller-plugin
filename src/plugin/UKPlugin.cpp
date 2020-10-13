@@ -267,7 +267,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CFlightPlan plan = this->FlightPlanSelect(callsign.c_str());
 
         if (!plan.IsValid()) {
-            throw std::invalid_argument("Flightplan not found");
+            return nullptr;
         }
 
         return std::make_shared<EuroScopeCFlightPlanWrapper>(plan);
@@ -281,7 +281,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CRadarTarget target = this->RadarTargetSelect(callsign.c_str());
 
         if (!target.IsValid()) {
-            throw std::invalid_argument("Target not found");
+            return nullptr;
         }
 
         return std::make_shared<EuroScopeCRadarTargetWrapper>(target);
@@ -295,7 +295,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CFlightPlan fp = this->FlightPlanSelectASEL();
 
         if (!fp.IsValid()) {
-            return NULL;
+            return nullptr;
         }
 
         return std::make_shared<EuroScopeCFlightPlanWrapper>(fp);
@@ -309,7 +309,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelectASEL();
 
         if (!rt.IsValid()) {
-            return NULL;
+            return nullptr;
         }
 
         return std::make_shared<EuroScopeCRadarTargetWrapper>(rt);

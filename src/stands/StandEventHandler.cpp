@@ -37,13 +37,7 @@ namespace UKControllerPlugin {
         void StandEventHandler::AnnotateFlightStrip(std::string callsign, int standId) const
         {
             // Find the flightplan to apply annotation
-            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = nullptr;
-            try {
-                fp = this->plugin.GetFlightplanForCallsign(callsign);
-            }
-            catch (std::invalid_argument) {
-                // Nothing to do
-            }
+            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(callsign);
 
             if (!fp) {
                 return;
@@ -132,13 +126,15 @@ namespace UKControllerPlugin {
             return this->lastAirfieldUsed;
         }
 
+        /*
+            Remove the flight strip annotation for vSMR
+        */
         void StandEventHandler::RemoveFlightStripAnnotation(std::string callsign) const
         {
-             // Find the flightplan to apply annotation
+            // Find the flightplan to apply annotation
             std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetFlightplanForCallsign(callsign);
 
             if (!fp) {
-                LogWarning("Tried assign a stand for a non-existant aircraft");
                 return;
             }
 

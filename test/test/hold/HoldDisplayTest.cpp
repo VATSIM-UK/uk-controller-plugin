@@ -701,7 +701,7 @@ namespace UKControllerPluginTest {
 
             // This one shouldn't make it through as no radar target
             ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BMI234"))
-                .WillByDefault(Throw(std::invalid_argument("Test")));
+                .WillByDefault(Return(nullptr));
 
             // This one shouldnt make it through as its too high
             std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetLot555 =

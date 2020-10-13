@@ -28,16 +28,16 @@ namespace UKControllerPlugin {
         */
         void DeferredFlightPlanEvent::Run(void)
         {
-            try {
-                std::shared_ptr<EuroScopeCFlightPlanInterface> currentFlightplan =
-                    this->plugin.GetFlightplanForCallsign(callsign);
-                std::shared_ptr<EuroScopeCRadarTargetInterface> currentRadarTarget =
-                    this->plugin.GetRadarTargetForCallsign(callsign);
+            std::shared_ptr<EuroScopeCFlightPlanInterface> currentFlightplan =
+                this->plugin.GetFlightplanForCallsign(callsign);
+            std::shared_ptr<EuroScopeCRadarTargetInterface> currentRadarTarget =
+                this->plugin.GetRadarTargetForCallsign(callsign);
 
-                this->handler.FlightPlanEvent(*currentFlightplan, *currentRadarTarget);
-            } catch (std::invalid_argument) {
-                // If we cant find the ES data, then nothing we can do.
+            if (!currentFlightplan || !currentRadarTarget) {
+                return;
             }
+
+            this->handler.FlightPlanEvent(*currentFlightplan, *currentRadarTarget);
         }
 
     }  // namespace Flightplan
