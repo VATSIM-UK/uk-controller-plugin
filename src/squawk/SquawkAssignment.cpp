@@ -145,7 +145,7 @@ namespace UKControllerPlugin {
             return !flightPlan.HasAssignedSquawk() &&
                 radarTarget.GetFlightLevel() <= this->maxAssignmentAltitude &&
                 this->plugin.GetDistanceFromUserVisibilityCentre(radarTarget.GetPosition()) <= this->trackedLarsRadius
-                && this->NeedsLocalSquawkTracked(flightPlan, radarTarget;
+                && this->NeedsLocalSquawkTracked(flightPlan, radarTarget);
         }
 
         /*
