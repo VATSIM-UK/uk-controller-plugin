@@ -87,6 +87,10 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 ) const;
+                bool NeedsSquawkFlightPlan(
+                    const EuroScopeCFlightPlanInterface & flightPlan,
+                    const EuroScopeCRadarTargetInterface & radarTarget
+                ) const;
 
                 // The active callsigns
                 const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns;
