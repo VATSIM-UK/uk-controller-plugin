@@ -96,6 +96,10 @@ namespace UKControllerPlugin {
                 return false;
             }
 
+            if (!this->NeedsSquawkFlightPlan(flightPlan, radarTarget)) {
+                return false;
+            }
+
             if (!flightPlan.IsTrackedByUser()) {
                 return radarTarget.GetGroundSpeed() <= this->untrackedMaxAssignmentSpeed &&
                     flightPlan.GetDistanceFromOrigin() <= this->untrackedMaxAssignmentDistanceFromOrigin &&
@@ -140,7 +144,8 @@ namespace UKControllerPlugin {
             // If the controller is APP/TWR, their vis centre should be on the airfield.
             return !flightPlan.HasAssignedSquawk() &&
                 radarTarget.GetFlightLevel() <= this->maxAssignmentAltitude &&
-                this->plugin.GetDistanceFromUserVisibilityCentre(radarTarget.GetPosition()) <= this->trackedLarsRadius;
+                this->plugin.GetDistanceFromUserVisibilityCentre(radarTarget.GetPosition()) <= this->trackedLarsRadius
+                && this->NeedsLocalSquawkTracked(flightPlan, radarTarget;
         }
 
         /*
@@ -161,7 +166,8 @@ namespace UKControllerPlugin {
                 this->airfieldOwnership.AirfieldOwnedBy(
                     flightPlan.GetOrigin(), this->activeCallsigns.GetUserCallsign()
                 ) &&
-                !flightPlan.HasAssignedSquawk();
+                !flightPlan.HasAssignedSquawk()
+                && this->NeedsLocalSquawkTracked(flightPlan, radarTarget);
         }
 
         /*
@@ -177,11 +183,26 @@ namespace UKControllerPlugin {
             if (!this->activeCallsigns.UserHasCallsign()) {
                 return false;
             }
-
+            
             return this->GeneralAssignmentNeeded(flightPlan, radarTarget) &&
                 this->storedFlightplans.HasFlightplanForCallsign(flightPlan.GetCallsign()) &&
                 this->storedFlightplans.GetFlightplanForCallsign(flightPlan.GetCallsign())
                     .HasPreviouslyAssignedSquawk();
+        }
+
+        /*
+            Checks if the flight plan has basic validations such as destination ICAO being correct.
+        */
+        bool SquawkAssignment::NeedsSquawkFlightPlan(
+            const EuroScopeCFlightPlanInterface & flightPlan,
+            const EuroScopeCRadarTargetInterface & radarTarget
+        ) const
+        {
+            if (flightPlan.GetOrigin().empty() || flightPlan.GetOrigin() == " " || flightPlan.GetOrigin() == "NOFP" || flightPlan.GetOrigin().length() >= 5) {
+                return false;
+            }
+
+            return true;
         }
     }  // namespace Squawk
 }  // namespace UKControllerPlugin
