@@ -178,10 +178,12 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            return this->GeneralAssignmentNeeded(flightPlan, radarTarget) &&
-                this->storedFlightplans.HasFlightplanForCallsign(flightPlan.GetCallsign()) &&
-                this->storedFlightplans.GetFlightplanForCallsign(flightPlan.GetCallsign())
-                    .HasPreviouslyAssignedSquawk();
+            if (this->GeneralAssignmentNeeded(flightPlan, radarTarget) && this->storedFlightplans.HasFlightplanForCallsign(flightPlan.GetCallsign())) {
+                return this->storedFlightplans.GetFlightplanForCallsign(flightPlan.GetCallsign()) == flightPlan
+                        && this->storedFlightplans.GetFlightplanForCallsign(flightPlan.GetCallsign()).GetRawRouteString() == flightPlan.GetRawRouteString();
+			}
+
+            return false;
         }
     }  // namespace Squawk
 }  // namespace UKControllerPlugin
