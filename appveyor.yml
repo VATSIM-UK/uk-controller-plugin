@@ -13,7 +13,7 @@
 branches:
   # whitelist
   only:
-    - master
+    - main
     - develop
 
 # Do not build on tags (GitHub and BitBucket)
