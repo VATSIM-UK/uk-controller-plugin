@@ -198,7 +198,10 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
-            if (flightPlan.GetOrigin().empty() || flightPlan.GetOrigin() == " " || flightPlan.GetOrigin() == "NOFP" || flightPlan.GetOrigin().length() >= 5) {
+            std::string origin = flightPlan.GetOrigin();
+
+            // Trim the origin to white space and check that it is 4 characters (Standard ICAO)
+            if (origin.erase(remove(origin.begin(), origin.end(), " "), origin.end()).length != 4|| origin == "NOFP") {
                 return false;
             }
 
