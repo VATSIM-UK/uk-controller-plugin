@@ -7,6 +7,7 @@
 #include "websocket/WebsocketEventProcessorInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
+#include "integration/ExternalMessageHandlerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Stands {
@@ -15,7 +16,8 @@ namespace UKControllerPlugin {
         */
         class StandEventHandler: public UKControllerPlugin::Tag::TagItemInterface,
             public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface,
-            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface
+            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
+            public UKControllerPlugin::Integration::ExternalMessageHandlerInterface
         {
             public:
                 StandEventHandler(
@@ -27,6 +29,11 @@ namespace UKControllerPlugin {
                 );
 
                 void AnnotateFlightStrip(std::string callsign, int standId) const;
+                void DoStandAssignment(
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> aircraft,
+                    std::string airfield,
+                    std::string identifier
+                );
 
                 size_t CountStands(void) const;
                 size_t CountStandAssignments(void) const;
@@ -68,6 +75,9 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
                     int dataType
                 ) override;
+
+                // Inherited via ExternalMessageHandlerInterface
+                virtual bool ProcessMessage(std::string message) override;
 
                 // No stand has been assigned to the aircraft
                 const int noStandAssigned = -1;
@@ -113,6 +123,6 @@ namespace UKControllerPlugin {
 
                 // The currently assigned stands and who they are assigned to
                 std::map<std::string, int> standAssignments;
-        };
+            };
     }  // namespace Stands
 }  // namespace UKControllerPlugin

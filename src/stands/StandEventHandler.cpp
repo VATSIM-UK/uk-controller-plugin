@@ -49,6 +49,68 @@ namespace UKControllerPlugin {
             );
         }
 
+        void StandEventHandler::DoStandAssignment(
+            std::shared_ptr<EuroScopeCFlightPlanInterface> aircraft,
+            std::string airfield,
+            std::string identifier
+        ) {
+            // Only allow this action if they're tracking the flightplan or its untracked
+            if (!aircraft) {
+                LogWarning("Tried assign a stand for a non-existant aircraft");
+                return;
+            }
+
+            if (!this->CanAssignStand(*aircraft)) {
+                LogInfo("Attempted to assign stand but flightplan is tracked by someone else " + aircraft->GetCallsign());
+                return;
+            }
+
+            std::string callsign = aircraft->GetCallsign();
+            // If no stand is selected, delete the current assignment if there is one
+            if (
+                (identifier == this->noStandMenuItem || identifier == this->noStandEditBoxItem) &&
+                this->standAssignments.count(callsign)
+            ) {
+                this->standAssignments.erase(callsign);
+                this->RemoveFlightStripAnnotation(callsign);
+                this->taskRunner.QueueAsynchronousTask([this, callsign]() {
+                    try {
+                        this->api.DeleteStandAssignmentForAircraft(callsign);
+                    }
+                    catch (ApiException) {
+                        LogError("Failed to delete stand assignment for " + callsign);
+                    }
+                });
+            } else {
+             // Find the requested stand
+                auto stand = std::find_if(
+                    this->stands.cbegin(),
+                    this->stands.cend(),
+                    [airfield, identifier](const Stand& stand) -> bool {
+                        return stand.identifier == identifier && stand.airfieldCode == airfield;
+                    }
+                );
+
+                if (stand == this->stands.cend()) {
+                    LogInfo("Tried to assign a non-existant stand");
+                    return;
+                }
+
+                // Assign that stand
+                int standId = stand->id;
+                this->standAssignments[callsign] = standId;
+                this->AnnotateFlightStrip(callsign, standId);
+                this->taskRunner.QueueAsynchronousTask([this, standId, callsign]() {
+                    try {
+                        this->api.AssignStandToAircraft(callsign, standId);
+                    }
+                    catch (ApiException) {
+                        LogError("Failed to create stand assignment for " + callsign);
+                    }
+                });
+            }
+        }
+
         size_t StandEventHandler::CountStands(void) const
         {
             return this->stands.size();
@@ -151,72 +213,24 @@ namespace UKControllerPlugin {
 
         void StandEventHandler::StandSelected(int functionId, std::string context, RECT)
         {
+
             /*
                 EuroScope has a weird bug when using edit boxes where it duplicates up the OnFunctionCall
-                event as a result of the box being filled in. This check makes sure we only process one event
-                per menu-load or edit-box completion.
+                event as a result of the box being filled in. By setting this to empty after we are done, we can make sure
+                that the same event doesn't get processed twice.
             */
             if (this->lastAirfieldUsed == "") {
                 return;
             }
-            std::string airfield = this->lastAirfieldUsed;
+
+
+            this->DoStandAssignment(
+                this->plugin.GetSelectedFlightplan(),
+                this->lastAirfieldUsed,
+                context
+            );
+
             this->lastAirfieldUsed = "";
-
-            // Only allow this action if they're tracking the flightplan or its untracked
-            std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
-
-            if (!fp) {
-                LogWarning("Tried assign a stand for a non-existant aircraft");
-                return;
-            }
-
-            if (!this->CanAssignStand(*fp)) {
-                LogInfo("Attempted to assign stand but flightplan is tracked by someone else " + fp->GetCallsign());
-                return;
-            }
-
-            std::string callsign = fp->GetCallsign();
-            // If no stand is selected, delete the current assignment if there is one
-            if (
-                (context == this->noStandMenuItem || context == this->noStandEditBoxItem) &&
-                this->standAssignments.count(callsign)
-            ) {
-                this->standAssignments.erase(callsign);
-                this->RemoveFlightStripAnnotation(callsign);
-                this->taskRunner.QueueAsynchronousTask([this, callsign]() {
-                    try {
-                        this->api.DeleteStandAssignmentForAircraft(callsign);
-                    } catch (ApiException) {
-                        LogError("Failed to delete stand assignment for " + callsign);
-                    }
-                });
-            } else {
-                // Find the requested stand
-                auto stand = std::find_if(
-                    this->stands.cbegin(),
-                    this->stands.cend(),
-                    [airfield, context](const Stand& stand) -> bool {
-                        return stand.identifier == context && stand.airfieldCode == airfield;
-                    }
-                );
-
-                if (stand == this->stands.cend()) {
-                    LogInfo("Tried to assign a non-existant stand");
-                    return;
-                }
-
-                // Assign that stand
-                int standId = stand->id;
-                this->standAssignments[callsign] = standId;
-                this->AnnotateFlightStrip(callsign, standId);
-                this->taskRunner.QueueAsynchronousTask([this, standId, callsign]() {
-                    try {
-                        this->api.AssignStandToAircraft(callsign, standId);
-                    } catch (ApiException) {
-                        LogError("Failed to create stand assignment for " + callsign);
-                    }
-                });
-            }
         }
 
         void StandEventHandler::DisplayStandAssignmentEditBox(
@@ -308,6 +322,34 @@ namespace UKControllerPlugin {
             return flightplan.GetDistanceFromOrigin() < this->maxDistanceFromDepartureAirport
                 ? flightplan.GetOrigin()
                 : flightplan.GetDestination();
+        }
+
+        /*
+            Process message to assign stands
+        */
+        bool StandEventHandler::ProcessMessage(std::string message)
+        {
+            std::vector<std::string> parts;
+            std::stringstream ss(message);
+            std::string temp;
+
+            if (message.substr(0, 6) != "STANDS") {
+                return false;
+            }
+
+            while (std::getline(ss, temp, ':')) {
+                parts.push_back(temp);
+            }
+
+            if (parts.size() != 4) {
+                return false;
+            }
+
+            this->DoStandAssignment(
+                this->plugin.GetFlightplanForCallsign(parts[1]),
+                parts[2],
+                parts[3]
+            );
         }
 
         /*

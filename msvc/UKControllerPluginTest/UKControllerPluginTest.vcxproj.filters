@@ -133,6 +133,9 @@
     <Filter Include="test\releases">
       <UniqueIdentifier>{c322a647-fb24-42df-bb70-3dbdd857b17d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\integration">
+      <UniqueIdentifier>{edc625ab-5fc3-4fcc-9abe-29d1e9513b23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -798,6 +801,12 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\stands\StandModuleTest.cpp">
       <Filter>test\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\integration\IntegrationModuleTest.cpp">
+      <Filter>test\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\integration\ExternalMessageEventHandlerTest.cpp">
+      <Filter>test\integration</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
