@@ -13,9 +13,11 @@ namespace UKControllerPlugin {
             public UKControllerPlugin::Command::CommandHandlerInterface
         {
             public:
-                ExternalMessageEventHandler(void);
-                ~ExternalMessageEventHandler(void);
-                void AddHandler(std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageHandlerInterface> handler);
+                explicit ExternalMessageEventHandler(bool duplicatePlugin);
+                virtual ~ExternalMessageEventHandler(void);
+                void AddHandler(
+                    std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageHandlerInterface> handler
+                );
                 void AddMessageToQueue(std::string message);
                 size_t CountHandlers(void) const;
 
@@ -23,11 +25,13 @@ namespace UKControllerPlugin {
                 void TimedEventTrigger(void) override;
 
                 // Inherited via CommandHandlerInterface
-                virtual bool ProcessCommand(std::string command) override;
+                bool ProcessCommand(std::string command) override;
 
             private:
 
-                std::set<std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageHandlerInterface>> eventHandlers;
+                std::set<
+                    std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageHandlerInterface>
+                > eventHandlers;
 
                 // Lock for the message queue
                 std::mutex messageLock;

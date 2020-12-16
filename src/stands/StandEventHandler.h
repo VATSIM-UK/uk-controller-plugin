@@ -77,7 +77,7 @@ namespace UKControllerPlugin {
                 ) override;
 
                 // Inherited via ExternalMessageHandlerInterface
-                virtual bool ProcessMessage(std::string message) override;
+                bool ProcessMessage(std::string message) override;
 
                 // No stand has been assigned to the aircraft
                 const int noStandAssigned = -1;

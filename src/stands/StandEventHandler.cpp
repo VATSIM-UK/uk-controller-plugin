@@ -61,7 +61,9 @@ namespace UKControllerPlugin {
             }
 
             if (!this->CanAssignStand(*aircraft)) {
-                LogInfo("Attempted to assign stand but flightplan is tracked by someone else " + aircraft->GetCallsign());
+                LogInfo(
+                    "Attempted to assign stand but flightplan is tracked by someone else " + aircraft->GetCallsign()
+                );
                 return;
             }
 
@@ -350,6 +352,8 @@ namespace UKControllerPlugin {
                 parts[2],
                 parts[3]
             );
+
+            return true;
         }
 
         /*

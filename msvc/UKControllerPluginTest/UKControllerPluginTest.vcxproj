@@ -262,6 +262,7 @@
     <ClInclude Include="..\..\test\mock\MockEuroscopePluginLoopbackInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopeRadarScreenLoopbackInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopeSectorFileElementInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockExternalMessageHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockFlightPlanEventHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockFlightplanRadarTargetPair.h" />
     <ClInclude Include="..\..\test\mock\MockGraphicsInterface.h" />

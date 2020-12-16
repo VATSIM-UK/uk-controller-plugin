@@ -5,8 +5,13 @@
 namespace UKControllerPlugin {
     namespace Integration {
 
-        ExternalMessageEventHandler::ExternalMessageEventHandler(void)
+        ExternalMessageEventHandler::ExternalMessageEventHandler(bool duplicatePlugin)
         {
+            if (duplicatePlugin)
+            {
+                return;
+            }
+
             RegisterClass(&this->windowClass);
 
             this->hiddenWindow = CreateWindow(
@@ -80,7 +85,7 @@ namespace UKControllerPlugin {
             if (command.substr(0, this->newMessageCommand.size()) != this->newMessageCommand) {
                 return false;
             }
-            
+
             command = command.substr(this->newMessageCommand.size());
 
             COPYDATASTRUCT cds;
@@ -96,7 +101,7 @@ namespace UKControllerPlugin {
 
             // Send the data
             SendMessage(window, WM_COPYDATA, reinterpret_cast<WPARAM>(window), reinterpret_cast<LPARAM>(&cds));
-            #endif // _DEBUG
+            #endif  // _DEBUG
             return true;
         }
     }  // namespace Integration

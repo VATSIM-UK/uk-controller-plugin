@@ -7,6 +7,7 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "integration/ExternalMessageEventHandler.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -19,6 +20,7 @@ using UKControllerPlugin::Stands::BootstrapPlugin;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
+using UKControllerPlugin::Integration::ExternalMessageEventHandler;
 
 namespace UKControllerPluginTest {
     namespace Stands {
@@ -32,6 +34,7 @@ namespace UKControllerPluginTest {
                     container.tagHandler.reset(new TagItemCollection);
                     container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
+                    container.externalEventHandler.reset(new ExternalMessageEventHandler(true));
 
                     nlohmann::json gatwick = nlohmann::json::array();
                     gatwick.push_back(
@@ -102,6 +105,12 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9008));
             EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
+        }
+
+        TEST_F(StandModuleTest, ItRegistersForExternalMessages)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.externalEventHandler->CountHandlers());
         }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

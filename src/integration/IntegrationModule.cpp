@@ -9,12 +9,13 @@ namespace UKControllerPlugin {
 
         void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin)
         {
+            // Create handler and add to other handlers
+            container.externalEventHandler = std::make_shared<ExternalMessageEventHandler>(duplicatePlugin);
+
             if (duplicatePlugin) {
                 return;
             }
 
-            // Create handler and add to other handlers
-            container.externalEventHandler = std::make_shared<ExternalMessageEventHandler>();
             container.commandHandlers->RegisterHandler(container.externalEventHandler);
             container.timedHandler->RegisterEvent(container.externalEventHandler, 1);
         }
