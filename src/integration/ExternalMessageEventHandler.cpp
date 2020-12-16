@@ -76,11 +76,27 @@ namespace UKControllerPlugin {
 
         bool ExternalMessageEventHandler::ProcessCommand(std::string command)
         {
+            #ifdef _DEBUG
             if (command.substr(0, this->newMessageCommand.size()) != this->newMessageCommand) {
                 return false;
             }
+            
+            command = command.substr(this->newMessageCommand.size());
 
-            this->AddMessageToQueue(command.substr(this->newMessageCommand.size()));
+            COPYDATASTRUCT cds;
+            cds.dwData = 811;
+            cds.cbData = command.size() + 1;
+            cds.lpData = (PVOID)command.c_str();
+
+            // Find the hidden window
+            HWND window = FindWindowEx(NULL, NULL, this->windowClass.lpszClassName, NULL);
+            if (window == NULL) {
+                return true;
+            }
+
+            // Send the data
+            SendMessage(window, WM_COPYDATA, reinterpret_cast<WPARAM>(window), reinterpret_cast<LPARAM>(&cds));
+            #endif // _DEBUG
             return true;
         }
     }  // namespace Integration
