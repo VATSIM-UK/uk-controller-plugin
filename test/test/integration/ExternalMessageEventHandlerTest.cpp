@@ -11,42 +11,53 @@ namespace UKControllerPluginTest {
         class ExternalMessageEventHandlerTest : public Test
         {
             public:
-                ExternalMessageEventHandler eventHandler = ExternalMessageEventHandler(true);
+                std::shared_ptr<ExternalMessageEventHandler> eventHandler;
+
+            protected:
+
+                void SetHandler(bool duplicatePlugin)
+                {
+                    this->eventHandler = std::make_shared<ExternalMessageEventHandler>(duplicatePlugin);
+                }
         };
 
         TEST_F(ExternalMessageEventHandlerTest, ItStartsWithNoHandlers)
         {
-            EXPECT_EQ(0, this->eventHandler.CountHandlers());
+            this->SetHandler(true);
+            EXPECT_EQ(0, this->eventHandler->CountHandlers());
         }
 
         TEST_F(ExternalMessageEventHandlerTest, ItAddsHandlers)
         {
-            this->eventHandler.AddHandler(std::make_shared<MockExternalMessageHandlerInterface>(false));
-            this->eventHandler.AddHandler(std::make_shared<MockExternalMessageHandlerInterface>(false));
-            this->eventHandler.AddHandler(std::make_shared<MockExternalMessageHandlerInterface>(false));
-            EXPECT_EQ(3, this->eventHandler.CountHandlers());
+            this->SetHandler(true);
+            this->eventHandler->AddHandler(std::make_shared<MockExternalMessageHandlerInterface>(false));
+            this->eventHandler->AddHandler(std::make_shared<MockExternalMessageHandlerInterface>(false));
+            this->eventHandler->AddHandler(std::make_shared<MockExternalMessageHandlerInterface>(false));
+            EXPECT_EQ(3, this->eventHandler->CountHandlers());
         }
 
         TEST_F(ExternalMessageEventHandlerTest, ItDoesntAddDuplicateHandlers)
         {
+            this->SetHandler(true);
             std::shared_ptr<MockExternalMessageHandlerInterface> handler;
-            this->eventHandler.AddHandler(handler);
-            this->eventHandler.AddHandler(handler);
-            this->eventHandler.AddHandler(handler);
-            EXPECT_EQ(1, this->eventHandler.CountHandlers());
+            this->eventHandler->AddHandler(handler);
+            this->eventHandler->AddHandler(handler);
+            this->eventHandler->AddHandler(handler);
+            EXPECT_EQ(1, this->eventHandler->CountHandlers());
         }
 
         TEST_F(ExternalMessageEventHandlerTest, ItTriesHandlersWithMessage)
         {
+            this->SetHandler(true);
             std::shared_ptr<MockExternalMessageHandlerInterface> handler1 =
                 std::make_shared<MockExternalMessageHandlerInterface>(false);
             std::shared_ptr<MockExternalMessageHandlerInterface> handler2 =
                 std::make_shared<MockExternalMessageHandlerInterface>(false);
-            this->eventHandler.AddHandler(handler1);
-            this->eventHandler.AddHandler(handler2);
+            this->eventHandler->AddHandler(handler1);
+            this->eventHandler->AddHandler(handler2);
 
-            this->eventHandler.AddMessageToQueue("foo");
-            this->eventHandler.TimedEventTrigger();
+            this->eventHandler->AddMessageToQueue("foo");
+            this->eventHandler->TimedEventTrigger();
 
             EXPECT_TRUE(handler1->hasBeenCalled);
             EXPECT_EQ("foo", handler1->receivedMessage);
@@ -56,15 +67,16 @@ namespace UKControllerPluginTest {
 
         TEST_F(ExternalMessageEventHandlerTest, ItShortCircuitsIfProcessorHandlesEvent)
         {
+            this->SetHandler(true);
             std::shared_ptr<MockExternalMessageHandlerInterface> handler1 =
                 std::make_shared<MockExternalMessageHandlerInterface>(true);
             std::shared_ptr<MockExternalMessageHandlerInterface> handler2 =
                 std::make_shared<MockExternalMessageHandlerInterface>(true);
 
-            this->eventHandler.AddHandler(handler1);
-            this->eventHandler.AddHandler(handler2);
-            this->eventHandler.AddMessageToQueue("foo");
-            this->eventHandler.TimedEventTrigger();
+            this->eventHandler->AddHandler(handler1);
+            this->eventHandler->AddHandler(handler2);
+            this->eventHandler->AddMessageToQueue("foo");
+            this->eventHandler->TimedEventTrigger();
 
             if (handler1 < handler2)
             {
@@ -74,6 +86,18 @@ namespace UKControllerPluginTest {
                 EXPECT_TRUE(handler2->hasBeenCalled);
                 EXPECT_FALSE(handler1->hasBeenCalled);
             }
+        }
+
+        TEST_F(ExternalMessageEventHandlerTest, ItDoesntLoadWindowInDuplicatePluginMode)
+        {
+            this->SetHandler(true);
+            EXPECT_EQ(nullptr, FindWindowA("UKControllerPluginHiddenWindowClass", "UKControllerPluginHiddenWindow"));
+        }
+
+        TEST_F(ExternalMessageEventHandlerTest, ItLoadsHiddenWindow)
+        {
+            this->SetHandler(false);
+            EXPECT_NE(nullptr, FindWindowA("UKControllerPluginHiddenWindowClass", "UKControllerPluginHiddenWindow"));
         }
     }  // namespace Integration
 }  // namespace UKControllerPluginTest
