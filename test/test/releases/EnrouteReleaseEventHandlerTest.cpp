@@ -535,6 +535,29 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
         }
 
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoOutgoingReleasePointTagItemOnBlankMode)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                111,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddOutgoingRelease("BAW123", { 1, "" });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("", tagData.GetItemString());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
+        }
+
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysIncomingReleasePointTagItem)
         {
             ON_CALL(this->flightplan, GetCallsign())
@@ -578,6 +601,29 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("RLSPT", tagData.GetItemString());
+            EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
+        }
+
+        TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoIncomingReleasePointTagItemOnBlankMode)
+        {
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            TagData tagData(
+                this->flightplan,
+                this->radarTarget,
+                111,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                this->itemString,
+                &this->euroscopeColourCode,
+                &this->tagColour,
+                &this->fontSize
+            );
+
+            this->handler.AddIncomingRelease("BAW123", { 1, "" });
+            this->handler.SetTagItemData(tagData);
+
+            EXPECT_EQ("", tagData.GetItemString());
             EXPECT_EQ(EuroScopePlugIn::TAG_COLOR_ASSUMED, tagData.GetEuroscopeColourCode());
         }
 

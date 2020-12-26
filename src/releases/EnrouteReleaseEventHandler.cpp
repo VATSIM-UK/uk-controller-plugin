@@ -133,8 +133,11 @@ namespace UKControllerPlugin {
                     tagData.SetItemString(releaseType.tagString);
                     tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_TRANSFER_TO_ME_INITIATED);
                 }
-            } else if (tagData.itemCode == this->enrouteReleasePointTagItemId) {
-                tagData.SetItemString("RLSPT");
+            } else if (
+                tagData.itemCode == this->enrouteReleasePointTagItemId ||
+                tagData.itemCode == this->enrouteReleasePointOrBlankTagItemId
+            ) {
+                tagData.SetItemString(this->GetNoReleasePointText(tagData.itemCode));
 
                 // Prioritise displaying outgoing releases
                 if (this->outgoingReleases.count(tagData.flightPlan.GetCallsign())) {
@@ -201,6 +204,13 @@ namespace UKControllerPlugin {
                 this->noReleasePoint,
                 (std::chrono::system_clock::time_point::max)()
             };
+        }
+
+        std::string EnrouteReleaseEventHandler::GetNoReleasePointText(int tagId) const
+        {
+            return tagId == this->enrouteReleasePointOrBlankTagItemId
+                ? ""
+                : "RLSPT";
         }
 
         /*

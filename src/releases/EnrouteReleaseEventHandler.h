@@ -107,6 +107,8 @@ namespace UKControllerPlugin {
                     int type
                 );
 
+                std::string GetNoReleasePointText(int tagId) const;
+
                 // For sending releases
                 const UKControllerPlugin::Api::ApiInterface& api;
 
