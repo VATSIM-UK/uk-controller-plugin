@@ -45,7 +45,6 @@ namespace UKControllerPlugin {
                 std::string GetRecatTagItemData(UKControllerPlugin::Tag::TagData& tagData);
                 std::string GetUkRecatCombinedTagItemData(UKControllerPlugin::Tag::TagData& tagData);
                 CacheItem & FirstOrNewCacheItem(const std::string callsign);
-                
 
                 // The maximum length we can have in a tag item
                 const size_t maxItemSize = 15;

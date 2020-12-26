@@ -28,7 +28,9 @@ namespace UKControllerPlugin {
             }
 
             if (!errorCount == 0) {
-                BootstrapWarningMessage message("Failed to load " + std::to_string(errorCount) + " " + type + " categories");
+                BootstrapWarningMessage message(
+                    "Failed to load " + std::to_string(errorCount) + " " + type + " categories"
+                );
                 messager.SendMessageToUser(message);
             }
 
