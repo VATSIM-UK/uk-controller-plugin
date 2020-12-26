@@ -46,13 +46,13 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(105));
         }
 
-        TEST_F(WakeModuleTest, ItAddsToTagHandlerWithCorrectIdRecat)
+        TEST_F(WakeModuleTest, ItAddsToTagHandlerWithCorrectIdStandalone)
         {
             BootstrapPlugin(this->container, this->dependencies);
             EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(112));
         }
 
-        TEST_F(WakeModuleTest, ItAddsToTagHandlerWithCorrectIdStandalone)
+        TEST_F(WakeModuleTest, ItAddsToTagHandlerWithCorrectIdRecat)
         {
             BootstrapPlugin(this->container, this->dependencies);
             EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(113));

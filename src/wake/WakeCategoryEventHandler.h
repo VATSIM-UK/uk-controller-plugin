@@ -33,8 +33,8 @@ namespace UKControllerPlugin {
                 void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
                 const int tagItemIdAircraftTypeCategory = 105;
-                const int tagItemIdRecat = 112;
-                const int tagItemIdStandaloneCategory = 113;
+                const int tagItemIdStandaloneCategory = 112;
+                const int tagItemIdRecat = 113;
 
             private:
 

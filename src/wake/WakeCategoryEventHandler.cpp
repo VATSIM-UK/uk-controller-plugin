@@ -48,7 +48,14 @@ namespace UKControllerPlugin {
 
         std::string WakeCategoryEventHandler::GetTagItemDescription(int tagItemId) const
         {
-            return "Aircraft Type / UK Wake Category";
+            if (tagItemId == this->tagItemIdAircraftTypeCategory)
+            {
+                return "Aircraft Type / UK Wake Category";
+            }
+
+            return tagItemId == this->tagItemIdStandaloneCategory
+                ? "UK Wake Category"
+                : "RECAT-EU Category";
         }
 
         /*
