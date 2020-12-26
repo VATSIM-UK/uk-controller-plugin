@@ -1,9 +1,7 @@
 #include "pch/pch.h"
 #include "wake/WakeCategoryMapper.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
 
 using UKControllerPlugin::Wake::WakeCategoryMapper;
-using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -14,7 +12,6 @@ namespace UKControllerPluginTest {
         class WakeCategoryMapperTest : public Test
         {
             public:
-                NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
                 WakeCategoryMapper mapper;
         };
 
@@ -25,30 +22,19 @@ namespace UKControllerPluginTest {
 
         TEST_F(WakeCategoryMapperTest, TestItAddsAMapping)
         {
-            this->mapper.AddTypeMapping("B733", "LM");
+            this->mapper.AddCategoryMapping("B733", "LM");
             EXPECT_EQ(1, this->mapper.Count());
         }
 
-        TEST_F(WakeCategoryMapperTest, TestItMapsIfTypeMatch)
+        TEST_F(WakeCategoryMapperTest, TestItReturnsTypeIfKnown)
         {
-            ON_CALL(this->flightplan, GetAircraftType())
-                .WillByDefault(Return("B733"));
-
-            this->mapper.AddTypeMapping("B733", "LM");
-            EXPECT_TRUE(this->mapper.MapFlightplanToCategory(this->flightplan) == "LM");
+            this->mapper.AddCategoryMapping("B733", "LM");
+            EXPECT_TRUE(this->mapper.GetCategoryForAircraftType("B733") == "LM");
         }
 
-        TEST_F(WakeCategoryMapperTest, TestItReturnsIcaoIfNoMap)
+        TEST_F(WakeCategoryMapperTest, TestItReturnsNoTypeIfKNowKnown)
         {
-            ON_CALL(this->flightplan, GetAircraftType())
-                .WillByDefault(Return("B733"));
-
-            ON_CALL(this->flightplan, GetIcaoWakeCategory())
-                .WillByDefault(Return("M"));
-
-            this->mapper.AddTypeMapping("B744", "H");
-            EXPECT_TRUE(this->mapper.MapFlightplanToCategory(this->flightplan) == "M");
+            EXPECT_TRUE(this->mapper.GetCategoryForAircraftType("B733") == "");
         }
-
     }  // namespace Wake
 }  // namespace UKControllerPluginTest

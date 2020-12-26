@@ -63,22 +63,91 @@ namespace UKControllerPlugin {
         */
         void WakeCategoryEventHandler::SetTagItemData(TagData& tagData)
         {
-            if (this->cache.count(tagData.flightPlan.GetCallsign()) == 0) {
+            if (tagData.itemCode == this->tagItemIdAircraftTypeCategory)
+            {
+                tagData.SetItemString(this->GetAircraftTypeTagItemData(tagData));
+            } else if (tagData.itemCode == this->tagItemIdStandaloneCategory)
+            {
+                tagData.SetItemString(this->GetStandaloneTagItemData(tagData));
+
+            } else if (tagData.itemCode == this->tagItemIdRecat) 
+            {
+                tagData.SetItemString(this->GetRecatTagItemData(tagData));
+            }
+        }
+
+        /*
+         * Get the data for the combined UK category / aircraft type item.
+         */
+        std::string WakeCategoryEventHandler::GetAircraftTypeTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        {
+            CacheItem& cached = this->FirstOrNewCacheItem(tagData.flightPlan.GetCallsign());
+            if (cached.aircraftTypeItem == cached.noData)
+            {
+                std::string mappedCategory = this->mapper.GetCategoryForAircraftType(tagData.flightPlan.GetAircraftType());
+                if (mappedCategory == this->mapper.noCategory)
+                {
+                    mappedCategory = tagData.flightPlan.GetIcaoWakeCategory();
+                }
+
                 std::string tagString = tagData.flightPlan.GetAircraftType()
-                    + "/" + this->mapper.MapFlightplanToCategory(tagData.flightPlan);
+                    + "/" + mappedCategory;
 
                 // 15 characters is the max for tag functions, trim the aircraft type accordingly
                 if (tagString.size() > this->maxItemSize) {
                     const unsigned int charactersToTrim = tagString.size() - this->maxItemSize;
                     const std::string aircraftType = tagData.flightPlan.GetAircraftType();
                     tagString = aircraftType.substr(0, aircraftType.size() - charactersToTrim) + "/"
-                        + this->mapper.MapFlightplanToCategory(tagData.flightPlan);
+                        + mappedCategory;
                 }
 
-                this->cache[tagData.flightPlan.GetCallsign()] = tagString;
+                cached.aircraftTypeItem = tagString;
             }
 
-            tagData.SetItemString(this->cache[tagData.flightPlan.GetCallsign()]);
+            return cached.aircraftTypeItem;
+        }
+
+        /*
+         * Get the data for the standalone category item.
+         */
+        std::string WakeCategoryEventHandler::GetStandaloneTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        {
+            CacheItem& cached = this->FirstOrNewCacheItem(tagData.flightPlan.GetCallsign());
+            if (cached.standaloneItem == cached.noData)
+            {
+                cached.standaloneItem = "?";
+                cached.standaloneItem = this->mapper.GetCategoryForAircraftType(tagData.flightPlan.GetAircraftType());
+            }
+
+            return cached.standaloneItem;
+        }
+
+        /*
+         * Get the data for the RECAT-EU category item.
+         */
+        std::string WakeCategoryEventHandler::GetRecatTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        {
+            CacheItem& cached = this->FirstOrNewCacheItem(tagData.flightPlan.GetCallsign());
+            if (cached.recatItem == cached.noData)
+            {
+                cached.recatItem = "?";
+                cached.recatItem = this->recatMapper.GetCategoryForAircraftType(tagData.flightPlan.GetAircraftType());
+            }
+
+            return cached.recatItem;
+        }
+
+        /*
+         * Return a fresh cache item, or the current item if it exists.
+         */
+        CacheItem& WakeCategoryEventHandler::FirstOrNewCacheItem(const std::string callsign)
+        {
+            if (!this->cache.count(callsign))
+            {
+                this->cache[callsign] = {};
+            }
+
+            return this->cache.at(callsign);
         }
     }  // namespace Wake
 }  // namespace UKControllerPlugin

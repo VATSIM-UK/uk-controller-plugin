@@ -24,7 +24,7 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                mapper.AddTypeMapping(it.key(), it.value());
+                mapper.AddCategoryMapping(it.key(), it.value());
             }
 
             if (!errorCount == 0) {

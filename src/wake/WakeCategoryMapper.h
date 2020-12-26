@@ -1,12 +1,6 @@
 #pragma once
 
 namespace UKControllerPlugin {
-    namespace Euroscope {
-        class EuroScopeCFlightPlanInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
-
-namespace UKControllerPlugin {
     namespace Wake {
 
         /*
@@ -16,15 +10,17 @@ namespace UKControllerPlugin {
         class WakeCategoryMapper
         {
             public:
-                void AddTypeMapping(std::string type, std::string category);
+                void AddCategoryMapping(std::string type, std::string category);
                 int Count(void) const;
-                std::string MapFlightplanToCategory(
-                    const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan
+
+                std::string GetCategoryForAircraftType(
+                    std::string aircraftType
                 ) const;
 
+                const std::string noCategory = "";
             private:
                 // Maps ICAO code to wake category
-                std::map<std::string, std::string> typeMap;
+                std::map<std::string, std::string> categoryMap;
         };
 
     }  // namespace Wake

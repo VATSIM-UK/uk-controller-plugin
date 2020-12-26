@@ -3,6 +3,7 @@
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "tag/TagItemInterface.h"
 #include "tag/TagData.h"
+#include "wake/CacheItem.h"
 
 namespace UKControllerPlugin {
     namespace Wake {
@@ -38,11 +39,17 @@ namespace UKControllerPlugin {
 
             private:
 
+                std::string GetAircraftTypeTagItemData(UKControllerPlugin::Tag::TagData& tagData);
+                std::string GetStandaloneTagItemData(UKControllerPlugin::Tag::TagData& tagData);
+                std::string GetRecatTagItemData(UKControllerPlugin::Tag::TagData& tagData);
+                CacheItem & FirstOrNewCacheItem(const std::string callsign);
+                
+
                 // The maximum length we can have in a tag item
                 const size_t maxItemSize = 15;
 
                 // Cache any data
-                std::map<std::string, std::string> cache;
+                std::map<std::string, CacheItem> cache;
 
                 // Maps categories
                 const UKControllerPlugin::Wake::WakeCategoryMapper mapper;
