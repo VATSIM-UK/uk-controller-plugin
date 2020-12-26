@@ -73,6 +73,9 @@ namespace UKControllerPlugin {
             } else if (tagData.itemCode == this->tagItemIdRecat) 
             {
                 tagData.SetItemString(this->GetRecatTagItemData(tagData));
+            } else if (tagData.itemCode == this->tagItemIdUkRecatCombined) 
+            {
+                tagData.SetItemString(this->GetUkRecatCombinedTagItemData(tagData));
             }
         }
 
@@ -135,6 +138,14 @@ namespace UKControllerPlugin {
             }
 
             return cached.recatItem;
+        }
+
+        /*
+         * Return a combination of UK and RECAT categories
+         */
+        std::string WakeCategoryEventHandler::GetUkRecatCombinedTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        {
+            return this->GetStandaloneTagItemData(tagData) + "/" + this->GetRecatTagItemData(tagData);
         }
 
         /*

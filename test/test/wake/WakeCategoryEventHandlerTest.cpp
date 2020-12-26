@@ -213,5 +213,21 @@ namespace UKControllerPluginTest {
             handler->SetTagItemData(recatData);
             EXPECT_EQ("D", recatData.GetItemString());
         }
+
+        TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheUkRecatCombionedItem)
+        {
+            TagData recatData = TagData (
+                flightplan,
+                radarTarget,
+                114,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
+            handler->SetTagItemData(recatData);
+            EXPECT_EQ("LM/D", recatData.GetItemString());
+        }
     }  // namespace Wake
 }  // namespace UKControllerPluginTest

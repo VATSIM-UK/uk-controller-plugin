@@ -36,12 +36,14 @@ namespace UKControllerPlugin {
                 const int tagItemIdAircraftTypeCategory = 105;
                 const int tagItemIdStandaloneCategory = 112;
                 const int tagItemIdRecat = 113;
+                const int tagItemIdUkRecatCombined = 114;
 
             private:
 
                 std::string GetAircraftTypeTagItemData(UKControllerPlugin::Tag::TagData& tagData);
                 std::string GetStandaloneTagItemData(UKControllerPlugin::Tag::TagData& tagData);
                 std::string GetRecatTagItemData(UKControllerPlugin::Tag::TagData& tagData);
+                std::string GetUkRecatCombinedTagItemData(UKControllerPlugin::Tag::TagData& tagData);
                 CacheItem & FirstOrNewCacheItem(const std::string callsign);
                 
 

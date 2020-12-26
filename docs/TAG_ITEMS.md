@@ -12,3 +12,4 @@
 110 - Assigned Stand
 112 - UK Wake Category (Without Aircraft Type)
 113 - RECAT-EU Category
+114 - UK Wake Category / RECAT-EU Category Combined

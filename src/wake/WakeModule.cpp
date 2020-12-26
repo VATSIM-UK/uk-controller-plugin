@@ -42,6 +42,7 @@ namespace UKControllerPlugin {
             container.tagHandler->RegisterTagItem(handler->tagItemIdAircraftTypeCategory, handler);
             container.tagHandler->RegisterTagItem(handler->tagItemIdStandaloneCategory, handler);
             container.tagHandler->RegisterTagItem(handler->tagItemIdRecat, handler);
+            container.tagHandler->RegisterTagItem(handler->tagItemIdUkRecatCombined, handler);
         }
 
     }  // namespace Wake
