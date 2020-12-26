@@ -89,7 +89,7 @@ namespace UKControllerPluginTest {
         TEST_F(ReleaseModuleTest, ItRegistersAllTagItems)
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
-            EXPECT_EQ(2, this->container.tagHandler->CountHandlers());
+            EXPECT_EQ(3, this->container.tagHandler->CountHandlers());
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersForTimedEvents)
