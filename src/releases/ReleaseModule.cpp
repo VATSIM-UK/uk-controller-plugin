@@ -98,6 +98,7 @@ namespace UKControllerPlugin {
             container.websocketProcessors->AddProcessor(handler);
             container.tagHandler->RegisterTagItem(handler->enrouteReleaseTypeTagItemId, handler);
             container.tagHandler->RegisterTagItem(handler->enrouteReleasePointTagItemId, handler);
+            container.tagHandler->RegisterTagItem(handler->enrouteReleasePointOrBlankTagItemId, handler);
             container.timedHandler->RegisterEvent(handler, 10);
             container.controllerHandoffHandlers->RegisterHandler(handler);
         }

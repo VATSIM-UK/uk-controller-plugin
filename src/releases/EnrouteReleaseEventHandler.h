@@ -88,6 +88,7 @@ namespace UKControllerPlugin {
                 // Tag items
                 const int enrouteReleaseTypeTagItemId = 108;
                 const int enrouteReleasePointTagItemId = 109;
+                const int enrouteReleasePointOrBlankTagItemId = 111;
 
                 // Function ids
                 const int releaseTypeSelectedCallbackId;
