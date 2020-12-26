@@ -11,3 +11,4 @@
 109 - Enroute Release Point
 110 - Assigned Stand
 112 - RECAT-EU Category
+113 - UK Wake Category (Without Aircraft Type)

@@ -15,6 +15,7 @@ namespace UKControllerPlugin {
 
         extern const int tagItemId;
         extern const int tagItemRecatId;
+        extern const int tagItemStandaloneId;
         extern const std::string wakeDependencyKey;
 
         void BootstrapPlugin(

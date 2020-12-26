@@ -38,7 +38,7 @@ namespace UKControllerPluginTest {
         TEST_F(WakeModuleTest, ItAddsToTagHandler)
         {
             BootstrapPlugin(this->container, this->dependencies);
-            EXPECT_EQ(2, this->container.tagHandler->CountHandlers());
+            EXPECT_EQ(3, this->container.tagHandler->CountHandlers());
         }
 
         TEST_F(WakeModuleTest, ItAddsToTagHandlerWithCorrectId)
@@ -53,5 +53,10 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(UKControllerPlugin::Wake::tagItemRecatId));
         }
 
+        TEST_F(WakeModuleTest, ItAddsToTagHandlerWithCorrectIdStandalone)
+        {
+            BootstrapPlugin(this->container, this->dependencies);
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(UKControllerPlugin::Wake::tagItemStandaloneId));
+        }
     }  // namespace Wake
 }  // namespace UKControllerPluginTest
