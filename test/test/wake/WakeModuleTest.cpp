@@ -2,7 +2,6 @@
 #include "wake/WakeModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "mock/MockDependencyLoader.h"
-#include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -44,19 +43,19 @@ namespace UKControllerPluginTest {
         TEST_F(WakeModuleTest, ItAddsToTagHandlerWithCorrectId)
         {
             BootstrapPlugin(this->container, this->dependencies);
-            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(UKControllerPlugin::Wake::tagItemId));
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(105));
         }
 
         TEST_F(WakeModuleTest, ItAddsToTagHandlerWithCorrectIdRecat)
         {
             BootstrapPlugin(this->container, this->dependencies);
-            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(UKControllerPlugin::Wake::tagItemRecatId));
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(112));
         }
 
         TEST_F(WakeModuleTest, ItAddsToTagHandlerWithCorrectIdStandalone)
         {
             BootstrapPlugin(this->container, this->dependencies);
-            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(UKControllerPlugin::Wake::tagItemStandaloneId));
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(113));
         }
     }  // namespace Wake
 }  // namespace UKControllerPluginTest

@@ -15,9 +15,6 @@ namespace UKControllerPlugin {
 
         const std::string dependencyFile = "DEPENDENCY_WAKE";
         const std::string recatDependencyFile = "DEPENDENCY_RECAT";
-        const int tagItemId = 105;
-        const int tagItemRecatId = 112;
-        const int tagItemStandaloneId = 113;
 
         /*
             Bootstrap everything
@@ -42,9 +39,9 @@ namespace UKControllerPlugin {
             );
 
             container.flightplanHandler->RegisterHandler(handler);
-            container.tagHandler->RegisterTagItem(tagItemId, handler);
-            container.tagHandler->RegisterTagItem(tagItemRecatId, handler);
-            container.tagHandler->RegisterTagItem(tagItemStandaloneId, handler);
+            container.tagHandler->RegisterTagItem(handler->tagItemIdAircraftTypeCategory, handler);
+            container.tagHandler->RegisterTagItem(handler->tagItemIdStandaloneCategory, handler);
+            container.tagHandler->RegisterTagItem(handler->tagItemIdRecat, handler);
         }
 
     }  // namespace Wake

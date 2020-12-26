@@ -32,6 +32,10 @@ namespace UKControllerPlugin {
                 std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
+                const int tagItemIdAircraftTypeCategory = 105;
+                const int tagItemIdRecat = 112;
+                const int tagItemIdStandaloneCategory = 113;
+
             private:
 
                 // The maximum length we can have in a tag item
