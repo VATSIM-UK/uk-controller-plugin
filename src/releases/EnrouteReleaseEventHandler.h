@@ -41,8 +41,12 @@ namespace UKControllerPlugin {
                     const std::string callsign,
                     UKControllerPlugin::Releases::EnrouteRelease release
                 );
-                const UKControllerPlugin::Releases::EnrouteRelease & GetIncomingRelease(const std::string callsign) const;
-                const UKControllerPlugin::Releases::EnrouteRelease& GetOutgoingRelease(const std::string callsign) const;
+                const UKControllerPlugin::Releases::EnrouteRelease & GetIncomingRelease(
+                    const std::string callsign
+                ) const;
+                const UKControllerPlugin::Releases::EnrouteRelease& GetOutgoingRelease(
+                    const std::string callsign
+                ) const;
                 const std::set<
                     UKControllerPlugin::Releases::EnrouteReleaseType,
                     UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
