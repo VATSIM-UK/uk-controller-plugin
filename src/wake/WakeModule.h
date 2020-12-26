@@ -14,6 +14,7 @@ namespace UKControllerPlugin {
     namespace Wake {
 
         extern const int tagItemId;
+        extern const int tagItemRecatId;
         extern const std::string wakeDependencyKey;
 
         void BootstrapPlugin(

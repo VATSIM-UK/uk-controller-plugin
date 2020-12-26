@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
         /*
             Create the mapper from JSON data
         */
-        WakeCategoryMapper CreateWakeMappings(nlohmann::json jsonData, UserMessager & messager, const std::string type = "wake")
+        WakeCategoryMapper CreateWakeMappings(nlohmann::json jsonData, UserMessager & messager, const std::string type)
         {
             WakeCategoryMapper mapper;
             int errorCount = 0;

@@ -10,3 +10,4 @@
 108 - Enroute Release Type
 109 - Enroute Release Point
 110 - Assigned Stand
+112 - RECAT-EU Category

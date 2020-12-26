@@ -9,8 +9,11 @@ using UKControllerPlugin::Tag::TagData;
 namespace UKControllerPlugin {
     namespace Wake {
 
-        WakeCategoryEventHandler::WakeCategoryEventHandler(const WakeCategoryMapper mapper)
-            : mapper(mapper)
+        WakeCategoryEventHandler::WakeCategoryEventHandler(
+            const WakeCategoryMapper mapper,
+            const WakeCategoryMapper recatMapper
+        )
+            : mapper(mapper), recatMapper(recatMapper)
         {
 
         }

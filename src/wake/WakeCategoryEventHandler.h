@@ -14,7 +14,10 @@ namespace UKControllerPlugin {
             public UKControllerPlugin::Tag::TagItemInterface
         {
             public:
-                explicit WakeCategoryEventHandler(const UKControllerPlugin::Wake::WakeCategoryMapper mapper);
+                explicit WakeCategoryEventHandler(
+                    const UKControllerPlugin::Wake::WakeCategoryMapper mapper,
+                    const UKControllerPlugin::Wake::WakeCategoryMapper recatMapper
+                );
                 void FlightPlanEvent(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
@@ -39,6 +42,9 @@ namespace UKControllerPlugin {
 
                 // Maps categories
                 const UKControllerPlugin::Wake::WakeCategoryMapper mapper;
+
+                // Maps recat categories
+                const UKControllerPlugin::Wake::WakeCategoryMapper recatMapper;
         };
 
     }  // namespace Wake
