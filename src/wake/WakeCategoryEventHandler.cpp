@@ -85,7 +85,7 @@ namespace UKControllerPlugin {
         /*
          * Get the data for the combined Aircraft Type / UK Category item.
          */
-        std::string WakeCategoryEventHandler::GetAircraftTypeUkCategoryTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        std::string WakeCategoryEventHandler::GetAircraftTypeUkCategoryTagItemData(TagData& tagData)
         {
             CacheItem& cached = this->FirstOrNewCacheItem(tagData.flightPlan.GetCallsign());
             if (cached.aircraftTypeUKCategoryItem == cached.noData)
@@ -103,7 +103,7 @@ namespace UKControllerPlugin {
         /*
          * Get the data for the combined Aircraft Type / RECAT-EU category item.
          */
-        std::string WakeCategoryEventHandler::GetAircraftTypeRecatCategoryTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        std::string WakeCategoryEventHandler::GetAircraftTypeRecatCategoryTagItemData(TagData& tagData)
         {
             CacheItem& cached = this->FirstOrNewCacheItem(tagData.flightPlan.GetCallsign());
             if (cached.aircraftTypeRecatCategoryItem == cached.noData)
@@ -121,7 +121,7 @@ namespace UKControllerPlugin {
         /*
          * Get the data for the standalone category item.
          */
-        std::string WakeCategoryEventHandler::GetStandaloneTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        std::string WakeCategoryEventHandler::GetStandaloneTagItemData(TagData& tagData)
         {
             CacheItem& cached = this->FirstOrNewCacheItem(tagData.flightPlan.GetCallsign());
             if (cached.standaloneItem == cached.noData)
@@ -136,7 +136,7 @@ namespace UKControllerPlugin {
         /*
          * Get the data for the RECAT-EU category item.
          */
-        std::string WakeCategoryEventHandler::GetRecatTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        std::string WakeCategoryEventHandler::GetRecatTagItemData(TagData& tagData)
         {
             CacheItem& cached = this->FirstOrNewCacheItem(tagData.flightPlan.GetCallsign());
             if (cached.recatItem == cached.noData)
@@ -151,7 +151,7 @@ namespace UKControllerPlugin {
         /*
          * Return a combination of UK and RECAT categories
          */
-        std::string WakeCategoryEventHandler::GetUkRecatCombinedTagItemData(UKControllerPlugin::Tag::TagData& tagData)
+        std::string WakeCategoryEventHandler::GetUkRecatCombinedTagItemData(TagData& tagData)
         {
             return this->GetStandaloneTagItemData(tagData) + "/" + this->GetRecatTagItemData(tagData);
         }
