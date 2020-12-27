@@ -48,19 +48,9 @@ namespace UKControllerPlugin {
 
         std::string WakeCategoryEventHandler::GetTagItemDescription(int tagItemId) const
         {
-            if (tagItemId == this->tagItemIdAircraftTypeCategory) {
-                return "Aircraft Type / UK Wake Category";
-            } else if (tagItemId == this->tagItemIdStandaloneCategory) {
-                return "UK Wake Category";
-            } else if (tagItemId ==  this->tagItemIdRecat) {
-                return "RECAT-EU Category";
-            } else if (tagItemId == this->tagItemIdUkRecatCombined) {
-                return "UK / RECAT-EU Combined";
-            } else if (tagItemId == this->tagItemIdAircraftTypeRecat) {
-                return "Aircraft Type / RECAT-EU Category";
-            }
-
-            return "";
+            return this->tagItemDescriptions.count(tagItemId)
+                ? this->tagItemDescriptions.at(tagItemId)
+                : "";
         }
 
         /*
@@ -79,6 +69,15 @@ namespace UKControllerPlugin {
             } else if (tagData.itemCode == this->tagItemIdAircraftTypeRecat) {
                 tagData.SetItemString(this->GetAircraftTypeRecatCategoryTagItemData(tagData));
             }
+        }
+
+        std::string WakeCategoryEventHandler::GetMappedCategory(
+            const WakeCategoryMapper& mapper,
+            const std::string aircraftType,
+            const std::string defaultValue
+        ) const {
+            std::string mapping = mapper.GetCategoryForAircraftType(aircraftType);
+            return mapping == mapper.noCategory ? defaultValue : mapping;
         }
 
         /*
@@ -110,7 +109,7 @@ namespace UKControllerPlugin {
                 cached.aircraftTypeRecatCategoryItem = this->GetAircraftTypeCategoryString(
                     tagData.flightPlan.GetAircraftType(),
                     this->recatMapper,
-                    "?"
+                    this->unknownTagItemString
                 );
             }
 
@@ -125,8 +124,11 @@ namespace UKControllerPlugin {
             CacheItem& cached = this->FirstOrNewCacheItem(tagData.flightPlan.GetCallsign());
             if (cached.standaloneItem == cached.noData)
             {
-                cached.standaloneItem = "?";
-                cached.standaloneItem = this->ukMapper.GetCategoryForAircraftType(tagData.flightPlan.GetAircraftType());
+                cached.standaloneItem = this->GetMappedCategory(
+                    this->ukMapper,
+                    tagData.flightPlan.GetAircraftType(),
+                    this->unknownTagItemString
+                );
             }
 
             return cached.standaloneItem;
@@ -140,8 +142,11 @@ namespace UKControllerPlugin {
             CacheItem& cached = this->FirstOrNewCacheItem(tagData.flightPlan.GetCallsign());
             if (cached.recatItem == cached.noData)
             {
-                cached.recatItem = "?";
-                cached.recatItem = this->recatMapper.GetCategoryForAircraftType(tagData.flightPlan.GetAircraftType());
+                cached.recatItem = this->GetMappedCategory(
+                    this->recatMapper,
+                    tagData.flightPlan.GetAircraftType(),
+                    this->unknownTagItemString
+                );
             }
 
             return cached.recatItem;
@@ -164,11 +169,11 @@ namespace UKControllerPlugin {
             const WakeCategoryMapper& mapper,
             const std::string defaultValue
         ) const {
-            std::string mappedCategory = mapper.GetCategoryForAircraftType(aircraftType);
-            if (mappedCategory == mapper.noCategory)
-            {
-                mappedCategory = defaultValue;
-            }
+            std::string mappedCategory = this->GetMappedCategory(
+                mapper,
+                aircraftType,
+                defaultValue
+            );
 
             std::string tagString = aircraftType + "/" + mappedCategory;
 

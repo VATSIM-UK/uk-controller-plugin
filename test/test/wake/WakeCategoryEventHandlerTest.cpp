@@ -208,6 +208,22 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("LM", standaloneData.GetItemString());
         }
 
+        TEST_F(WakeCategoryEventHandlerTest, TestItReturnsUnknownStandaloneItem)
+        {
+            TagData standaloneData = TagData (
+                flightplan3,
+                radarTarget,
+                112,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
+            handler->SetTagItemData(standaloneData);
+            EXPECT_EQ("?", standaloneData.GetItemString());
+        }
+
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheRecatItem)
         {
             TagData recatData = TagData (
@@ -222,6 +238,22 @@ namespace UKControllerPluginTest {
             );
             handler->SetTagItemData(recatData);
             EXPECT_EQ("D", recatData.GetItemString());
+        }
+
+        TEST_F(WakeCategoryEventHandlerTest, TestItReturnsUnknownRecatItem)
+        {
+            TagData recatData = TagData (
+                flightplan3,
+                radarTarget,
+                113,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
+            handler->SetTagItemData(recatData);
+            EXPECT_EQ("?", recatData.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheUkRecatCombinedItem)
