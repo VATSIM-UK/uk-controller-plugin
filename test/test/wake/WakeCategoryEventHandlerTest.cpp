@@ -128,6 +128,11 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE("RECAT-EU Category" == handler->GetTagItemDescription(113));
         }
 
+        TEST_F(WakeCategoryEventHandlerTest, TestItHasATagItemNameForUkRecatCombined)
+        {
+            EXPECT_TRUE("UK / RECAT-EU Combined" == handler->GetTagItemDescription(114));
+        }
+
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheTagItem)
         {
             handler->SetTagItemData(this->tagData1);

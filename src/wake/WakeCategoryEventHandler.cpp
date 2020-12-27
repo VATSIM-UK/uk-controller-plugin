@@ -51,11 +51,15 @@ namespace UKControllerPlugin {
             if (tagItemId == this->tagItemIdAircraftTypeCategory)
             {
                 return "Aircraft Type / UK Wake Category";
+            } else if (tagItemId == this->tagItemIdStandaloneCategory) {
+                return "UK Wake Category";
+            } else if (tagItemId ==  this->tagItemIdRecat) {
+                return "RECAT-EU Category";
+            } else if (tagItemId == this->tagItemIdUkRecatCombined) {
+                return "UK / RECAT-EU Combined";
             }
 
-            return tagItemId == this->tagItemIdStandaloneCategory
-                ? "UK Wake Category"
-                : "RECAT-EU Category";
+            return "";
         }
 
         /*
