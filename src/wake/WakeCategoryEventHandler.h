@@ -16,7 +16,7 @@ namespace UKControllerPlugin {
         {
             public:
                 explicit WakeCategoryEventHandler(
-                    const UKControllerPlugin::Wake::WakeCategoryMapper mapper,
+                    const UKControllerPlugin::Wake::WakeCategoryMapper ukMapper,
                     const UKControllerPlugin::Wake::WakeCategoryMapper recatMapper
                 );
                 void FlightPlanEvent(
@@ -60,7 +60,7 @@ namespace UKControllerPlugin {
                 std::map<std::string, CacheItem> cache;
 
                 // Maps categories
-                const UKControllerPlugin::Wake::WakeCategoryMapper mapper;
+                const UKControllerPlugin::Wake::WakeCategoryMapper ukMapper;
 
                 // Maps recat categories
                 const UKControllerPlugin::Wake::WakeCategoryMapper recatMapper;

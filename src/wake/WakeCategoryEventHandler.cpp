@@ -10,10 +10,10 @@ namespace UKControllerPlugin {
     namespace Wake {
 
         WakeCategoryEventHandler::WakeCategoryEventHandler(
-            const WakeCategoryMapper mapper,
+            const WakeCategoryMapper ukMapper,
             const WakeCategoryMapper recatMapper
         )
-            : mapper(mapper), recatMapper(recatMapper)
+            : ukMapper(ukMapper), recatMapper(recatMapper)
         {
 
         }
@@ -92,7 +92,7 @@ namespace UKControllerPlugin {
             {
                 cached.aircraftTypeUKCategoryItem = this->GetAircraftTypeCategoryString(
                     tagData.flightPlan.GetAircraftType(),
-                    this->mapper,
+                    this->ukMapper,
                     tagData.flightPlan.GetIcaoWakeCategory()
                 );
             }
@@ -127,7 +127,7 @@ namespace UKControllerPlugin {
             if (cached.standaloneItem == cached.noData)
             {
                 cached.standaloneItem = "?";
-                cached.standaloneItem = this->mapper.GetCategoryForAircraftType(tagData.flightPlan.GetAircraftType());
+                cached.standaloneItem = this->ukMapper.GetCategoryForAircraftType(tagData.flightPlan.GetAircraftType());
             }
 
             return cached.standaloneItem;
