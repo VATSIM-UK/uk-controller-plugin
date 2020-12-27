@@ -16,7 +16,10 @@ namespace UKControllerPlugin {
             std::string recatItem = noData;
 
             // UK Wake Category + Aircraft Type
-            std::string aircraftTypeItem = noData;
+            std::string aircraftTypeUKCategoryItem = noData;
+
+            // RECAT-EU Category + Aircraft Type
+            std::string aircraftTypeRecatCategoryItem = noData;
         } CacheItem;
     }  // namespace Wake
 }  // namespace UKControllerPlugin

@@ -37,13 +37,20 @@ namespace UKControllerPlugin {
                 const int tagItemIdStandaloneCategory = 112;
                 const int tagItemIdRecat = 113;
                 const int tagItemIdUkRecatCombined = 114;
+                const int tagItemIdAircraftTypeRecat = 115;
 
             private:
 
-                std::string GetAircraftTypeTagItemData(UKControllerPlugin::Tag::TagData& tagData);
+                std::string GetAircraftTypeUkCategoryTagItemData(UKControllerPlugin::Tag::TagData& tagData);
+                std::string GetAircraftTypeRecatCategoryTagItemData(UKControllerPlugin::Tag::TagData& tagData);
                 std::string GetStandaloneTagItemData(UKControllerPlugin::Tag::TagData& tagData);
                 std::string GetRecatTagItemData(UKControllerPlugin::Tag::TagData& tagData);
                 std::string GetUkRecatCombinedTagItemData(UKControllerPlugin::Tag::TagData& tagData);
+                std::string GetAircraftTypeCategoryString(
+                    const std::string aircraftType,
+                    const UKControllerPlugin::Wake::WakeCategoryMapper& mapper,
+                    const std::string defaultValue
+                ) const;
                 CacheItem & FirstOrNewCacheItem(const std::string callsign);
 
                 // The maximum length we can have in a tag item

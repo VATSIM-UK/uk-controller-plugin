@@ -133,6 +133,11 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE("UK / RECAT-EU Combined" == handler->GetTagItemDescription(114));
         }
 
+        TEST_F(WakeCategoryEventHandlerTest, TestItHasATagItemNameForAircraftTypeRecat)
+        {
+            EXPECT_TRUE("Aircraft Type / RECAT-EU Category" == handler->GetTagItemDescription(115));
+        }
+
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheTagItem)
         {
             handler->SetTagItemData(this->tagData1);
@@ -219,7 +224,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("D", recatData.GetItemString());
         }
 
-        TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheUkRecatCombionedItem)
+        TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheUkRecatCombinedItem)
         {
             TagData recatData = TagData (
                 flightplan,
@@ -233,6 +238,39 @@ namespace UKControllerPluginTest {
             );
             handler->SetTagItemData(recatData);
             EXPECT_EQ("LM/D", recatData.GetItemString());
+        }
+
+        TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheAircraftTypeRecatItem)
+        {
+            TagData recatData = TagData (
+                flightplan,
+                radarTarget,
+                115,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
+            handler->SetTagItemData(recatData);
+            EXPECT_EQ("B733/D", recatData.GetItemString());
+        }
+
+        TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheCorrectAircraftTypeRecatItemIfNoCategory)
+        {
+            TagData unknownTypeData = TagData (
+                flightplan3,
+                radarTarget,
+                115,
+                EuroScopePlugIn::TAG_DATA_CORRELATED,
+                itemString,
+                &euroscopeColourCode,
+                &tagColour,
+                &fontSize
+            );
+
+            handler->SetTagItemData(unknownTypeData);
+            EXPECT_EQ("AN225/?", unknownTypeData.GetItemString());
         }
     }  // namespace Wake
 }  // namespace UKControllerPluginTest
