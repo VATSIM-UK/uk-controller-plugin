@@ -80,10 +80,16 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->container.tagHandler->HasHandlerForItemId(109));
         }
 
+        TEST_F(ReleaseModuleTest, ItRegistersTagItemForEnrouteReleasePointOrBlank)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.tagHandler->HasHandlerForItemId(111));
+        }
+
         TEST_F(ReleaseModuleTest, ItRegistersAllTagItems)
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
-            EXPECT_EQ(2, this->container.tagHandler->CountHandlers());
+            EXPECT_EQ(3, this->container.tagHandler->CountHandlers());
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersForTimedEvents)

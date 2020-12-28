@@ -34,15 +34,19 @@ namespace UKControllerPlugin {
                     const int editReleasePointCallbackId
                 );
                 void AddIncomingRelease(
-                    std::string callsign,
+                    const std::string callsign,
                     UKControllerPlugin::Releases::EnrouteRelease release
                 );
                 void AddOutgoingRelease(
-                    std::string callsign,
+                    const std::string callsign,
                     UKControllerPlugin::Releases::EnrouteRelease release
                 );
-                const UKControllerPlugin::Releases::EnrouteRelease & GetIncomingRelease(std::string callsign) const;
-                const UKControllerPlugin::Releases::EnrouteRelease& GetOutgoingRelease(std::string callsign) const;
+                const UKControllerPlugin::Releases::EnrouteRelease & GetIncomingRelease(
+                    const std::string callsign
+                ) const;
+                const UKControllerPlugin::Releases::EnrouteRelease& GetOutgoingRelease(
+                    const std::string callsign
+                ) const;
                 const std::set<
                     UKControllerPlugin::Releases::EnrouteReleaseType,
                     UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
@@ -88,6 +92,7 @@ namespace UKControllerPlugin {
                 // Tag items
                 const int enrouteReleaseTypeTagItemId = 108;
                 const int enrouteReleasePointTagItemId = 109;
+                const int enrouteReleasePointOrBlankTagItemId = 111;
 
                 // Function ids
                 const int releaseTypeSelectedCallbackId;
@@ -105,6 +110,8 @@ namespace UKControllerPlugin {
                     std::string callsign,
                     int type
                 );
+
+                std::string GetNoReleasePointText(int tagId) const;
 
                 // For sending releases
                 const UKControllerPlugin::Api::ApiInterface& api;

@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "pch/stdafx.h"
 #include "releases/EnrouteReleaseEventHandler.h"
 #include "plugin/PopupMenuItem.h"
@@ -25,23 +27,23 @@ namespace UKControllerPlugin {
             const int releaseTypeSelectedCallbackId,
             const int editReleasePointCallbackId
         )
-            : api(api), releaseTypes(releaseTypes), plugin(plugin), taskRunner(taskRunner),
+            : api(api), releaseTypes(std::move(releaseTypes)), plugin(plugin), taskRunner(taskRunner),
             releaseTypeSelectedCallbackId(releaseTypeSelectedCallbackId),
             editReleasePointCallbackId(editReleasePointCallbackId)
         {
         }
 
-        void EnrouteReleaseEventHandler::AddIncomingRelease(std::string callsign, EnrouteRelease release)
+        void EnrouteReleaseEventHandler::AddIncomingRelease(const std::string callsign, EnrouteRelease release)
         {
-            this->incomingReleases[callsign] = release;
+            this->incomingReleases[callsign] = std::move(release);
         }
 
-        void EnrouteReleaseEventHandler::AddOutgoingRelease(std::string callsign, EnrouteRelease release)
+        void EnrouteReleaseEventHandler::AddOutgoingRelease(const std::string callsign, EnrouteRelease release)
         {
-            this->outgoingReleases[callsign] = release;
+            this->outgoingReleases[callsign] = std::move(release);
         }
 
-        const EnrouteRelease& EnrouteReleaseEventHandler::GetIncomingRelease(std::string callsign) const
+        const EnrouteRelease& EnrouteReleaseEventHandler::GetIncomingRelease(const std::string callsign) const
         {
             if (!this->incomingReleases.count(callsign)) {
                 return this->invalidRelease;
@@ -50,7 +52,7 @@ namespace UKControllerPlugin {
             return this->incomingReleases.at(callsign);
         }
 
-        const EnrouteRelease& EnrouteReleaseEventHandler::GetOutgoingRelease(std::string callsign) const
+        const EnrouteRelease& EnrouteReleaseEventHandler::GetOutgoingRelease(const std::string callsign) const
         {
             if (!this->outgoingReleases.count(callsign)) {
                 return this->invalidRelease;
@@ -133,8 +135,11 @@ namespace UKControllerPlugin {
                     tagData.SetItemString(releaseType.tagString);
                     tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_TRANSFER_TO_ME_INITIATED);
                 }
-            } else if (tagData.itemCode == this->enrouteReleasePointTagItemId) {
-                tagData.SetItemString("RLSPT");
+            } else if (
+                tagData.itemCode == this->enrouteReleasePointTagItemId ||
+                tagData.itemCode == this->enrouteReleasePointOrBlankTagItemId
+            ) {
+                tagData.SetItemString(this->GetNoReleasePointText(tagData.itemCode));
 
                 // Prioritise displaying outgoing releases
                 if (this->outgoingReleases.count(tagData.flightPlan.GetCallsign())) {
@@ -201,6 +206,13 @@ namespace UKControllerPlugin {
                 this->noReleasePoint,
                 (std::chrono::system_clock::time_point::max)()
             };
+        }
+
+        std::string EnrouteReleaseEventHandler::GetNoReleasePointText(int tagId) const
+        {
+            return tagId == this->enrouteReleasePointOrBlankTagItemId
+                ? ""
+                : "RLSPT";
         }
 
         /*
