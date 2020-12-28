@@ -34,6 +34,7 @@ dynamically to the plugin.
 - SRD Search
 - Enroute releases
 - Stand assignment
+- RECAT-EU Wake Categories
 
 ## Setting Up The Project Locally
 
