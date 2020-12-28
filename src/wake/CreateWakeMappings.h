@@ -11,7 +11,8 @@ namespace UKControllerPlugin {
     namespace Wake {
         WakeCategoryMapper CreateWakeMappings(
             nlohmann::json jsonData,
-            UKControllerPlugin::Message::UserMessager & messager
+            UKControllerPlugin::Message::UserMessager & messager,
+            std::string type = "wake"
         );
     }  // namespace Wake
 }  // namespace UKControllerPlugin
