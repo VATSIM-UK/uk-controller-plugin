@@ -1,5 +1,4 @@
-[master_build_status]: https://ci.appveyor.com/api/projects/status/github/VATSIM-UK/uk-controller-plugin?svg=true&retina=true&branch=master
-[develop_build_status]: https://ci.appveyor.com/api/projects/status/github/VATSIM-UK/uk-controller-plugin?svg=true&retina=true&branch=develop
+[main_build_status]: https://ci.appveyor.com/api/projects/status/github/VATSIM-UK/uk-controller-plugin?svg=true&retina=true&branch=main
 
 # uk-controller-plugin
 
@@ -8,8 +7,7 @@ the Plugin API to offer useful functionality to controllers of UK positions on t
 
 |      Check      |                            Provider                                          |              Status             |
 |-----------------|------------------------------------------------------------------------------|---------------------------------|
-| Build (Master)  | [AppVeyor](https://ci.appveyor.com/project/CalumTowers/uk-controller-plugin) | ![master_build_status]          |
-| Build (Develop) | [AppVeyor](https://ci.appveyor.com/project/CalumTowers/uk-controller-plugin) | ![develop_build_status]         |
+| Build (Main)    | [AppVeyor](https://ci.appveyor.com/project/CalumTowers/uk-controller-plugin) | ![main_build_status]            |
 
 ## Feature List
 
