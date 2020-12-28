@@ -298,6 +298,7 @@
     <ClInclude Include="..\..\src\timedevent\TimedEventCollection.h" />
     <ClInclude Include="..\..\src\update\PluginUpdateChecker.h" />
     <ClInclude Include="..\..\src\update\PluginVersion.h" />
+    <ClInclude Include="..\..\src\wake\CacheItem.h" />
     <ClInclude Include="..\..\src\wake\CreateWakeMappings.h" />
     <ClInclude Include="..\..\src\wake\WakeCategoryEventHandler.h" />
     <ClInclude Include="..\..\src\wake\WakeCategoryMapper.h" />

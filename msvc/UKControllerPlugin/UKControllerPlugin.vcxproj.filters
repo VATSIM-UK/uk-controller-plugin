@@ -1065,6 +1065,9 @@
     <ClInclude Include="..\..\src\integration\IntegrationModule.h">
       <Filter>src\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\wake\CacheItem.h">
+      <Filter>src\wake</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
