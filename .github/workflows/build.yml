@@ -36,9 +36,6 @@ jobs:
         if: steps.cache-cache-openssl.outputs.cache-hit != 'true'
         run: choco install openssl --forcex86 | out-null
 
-      - name: Echo OpenSSL
-        run: dir "C:\\Program Files"
-
       - name: Setup OpenSSL Environment
         run: |
           echo "OPENSSL_ROOT=C:\\Program Files\\OpenSSL\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
