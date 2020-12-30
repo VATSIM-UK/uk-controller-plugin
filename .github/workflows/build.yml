@@ -48,6 +48,9 @@ jobs:
           cd msvc
           nuget restore
           cd ..
+
+      - name: Setup Build Version
+        run: echo (Get-Content ".\\src\update\\PluginVersion.php").replace("#VERSION#", ${{ github.ref }})
       
       # Run the build and tests
       - name: Run Build

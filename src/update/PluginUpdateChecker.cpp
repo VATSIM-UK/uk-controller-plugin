@@ -4,12 +4,14 @@
 #include "api/ApiInterface.h"
 #include "api/ApiResponseValidator.h"
 #include "api/ApiException.h"
+#include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiResponse;
 using UKControllerPlugin::Api::ApiResponseValidator;
 using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::HelperFunctions;
 
 namespace UKControllerPlugin {
     namespace Update {
@@ -51,8 +53,10 @@ namespace UKControllerPlugin {
         ) {
 
             if (apiResponse == ApiInterface::UPDATE_VERSION_DISABLED) {
+                std::wstring message = L"This version of the plugin has been withdrawn, you need to update to continue using the plugin.\n";
+                message += L"Reported version: " + HelperFunctions::ConvertToWideString(pluginVersion);
                 winApi.OpenMessageBox(
-                    L"This version of the plugin has been withdrawn, you need to update to continue using the plugin.",
+                    message.c_str(),
                     L"UKCP Update Notification",
                     MB_OK | MB_ICONERROR
                 );
@@ -61,8 +65,10 @@ namespace UKControllerPlugin {
             }
 
             if (apiResponse == ApiInterface::UPDATE_VERSION_NEEDS_UPDATE) {
+                std::wstring message = L"An update to the plugin is available.\n";
+                message += L"Reported version: " + HelperFunctions::ConvertToWideString(pluginVersion);
                 winApi.OpenMessageBox(
-                    L"An update to the plugin is available.",
+                    message.c_str(),
                     L"UKCP Update Notification",
                     MB_OK | MB_ICONINFORMATION
                 );
