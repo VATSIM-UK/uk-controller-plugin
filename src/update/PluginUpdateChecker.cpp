@@ -53,7 +53,7 @@ namespace UKControllerPlugin {
         ) {
 
             if (apiResponse == ApiInterface::UPDATE_VERSION_DISABLED) {
-                std::wstring message =L"This version of the plugin has been withdrawn, ";
+                std::wstring message = L"This version of the plugin has been withdrawn, ";
                 message += L"you need to update to continue using the plugin.\n";
                 message += L"Reported version: " + HelperFunctions::ConvertToWideString(pluginVersion);
                 winApi.OpenMessageBox(
