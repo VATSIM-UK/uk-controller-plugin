@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
 		..\appveyor.yml = ..\appveyor.yml
+		..\.github\workflows\build.yml = ..\.github\workflows\build.yml
 		..\CPPLINT.cfg = ..\CPPLINT.cfg
 		..\ci\install-boost.ps1 = ..\ci\install-boost.ps1
 		..\script\newclass.py = ..\script\newclass.py
@@ -42,8 +43,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E66A8B71-97BA-4E8F-BBF1-625958342CB5}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {E66A8B71-97BA-4E8F-BBF1-625958342CB5}
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution
 		PrimaryVersionType = AssemblyInfoVersionAttribute

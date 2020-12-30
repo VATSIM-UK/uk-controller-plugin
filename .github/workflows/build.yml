@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    env:
+        BOOST_ROOT: "$ENV{BOOST_ROOT_1_72_0}"
+        BOOST_INCLUDEDIR : "$ENV{BOOST_ROOT_1_72_0}\\boost\\include"
+        BOOST_LIBRARYDIR : "$ENV{BOOST_ROOT_1_72_0}\\lib"
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Restore Nuget Packages
+        run: |
+          cd msvc
+          nuget restore
+          cd ..
+      
+      - name: Run Build
+        run: msbuild msvc/UKControllerPlugin.sln /property:Configuration=Debug
+
+      - name: Run Tests
+        run: ".\\bin\\Release\\UKControllerPluginTest.exe"
+
+      - name: Install cpplint
+        run: pip install cpplint
+
+      - name: Run lint
+        run: cpplint --quiet --recursive src/ test/
