@@ -18,6 +18,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+         vs-version: '[16.5)'
+
       - name: Restore Nuget Packages
         run: |
           cd msvc
@@ -25,13 +30,13 @@ jobs:
           cd ..
       
       - name: Run Build
-        run: msbuild msvc/UKControllerPlugin.sln /property:Configuration=Debug
+        run: msbuild msvc/UKControllerPlugin.sln /property:Configuration=Release
 
       - name: Run Tests
         run: ".\\bin\\Release\\UKControllerPluginTest.exe"
 
-      - name: Install cpplint
+      - name: Install Cpplint
         run: pip install cpplint
 
-      - name: Run lint
+      - name: Run Lint
         run: cpplint --quiet --recursive src/ test/
