@@ -31,11 +31,11 @@ jobs:
         id: cache-openssl
         uses: actions/cache@v2.1.3
         with:
-          path: "C:\\Program Files\\OpenSSL"
+          path: "C:\\Program Files (x86)\\OpenSSL-Win32"
           key: "ukcp-openssl"
 
       - name: Install OpenSSL
-        if: steps.cache-cache-openssl.outputs.cache-hit != 'true'
+        if: steps.cache-openssl.outputs.cache-hit != 'true'
         run: choco install openssl --forcex86 | out-null
 
       - name: Setup OpenSSL Environment
@@ -51,7 +51,7 @@ jobs:
       
       # Run the build and tests
       - name: Run Build
-        run: msbuild msvc/UKControllerPlugin.sln /verbosity:minimal /property:Configuration=Release -m
+        run: msbuild msvc/UKControllerPlugin.sln /verbosity:quiet /property:Configuration=Release -m
 
       - name: Run Tests
         run: ".\\bin\\Release\\UKControllerPluginTest.exe"
