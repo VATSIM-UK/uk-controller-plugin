@@ -34,10 +34,10 @@ jobs:
 
       - name: Install OpenSSL
         if: steps.cache-cache-openssl.outputs.cache-hit != 'true'
-        run: choco install openssl --limitoutput --x86
+        run: choco install openssl --x86 | out-null
 
       - name: Echo OpenSSL
-        run: dir "C:\\Program Files\\OpenSSL-Win32"
+        run: dir "C:\\Program Files"
 
       - name: Setup OpenSSL Environment
         run: |
