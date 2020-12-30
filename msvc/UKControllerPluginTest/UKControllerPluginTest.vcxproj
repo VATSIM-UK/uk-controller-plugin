@@ -126,6 +126,8 @@
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeGeneratorFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeGeneratorTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\ExternalMessageEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\IntegrationModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\AmsterdamAirfieldGroupTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\BrusselsAirfieldGroupTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\DublinAirfieldGroupTest.cpp" />
@@ -260,6 +262,7 @@
     <ClInclude Include="..\..\test\mock\MockEuroscopePluginLoopbackInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopeRadarScreenLoopbackInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopeSectorFileElementInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockExternalMessageHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockFlightPlanEventHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockFlightplanRadarTargetPair.h" />
     <ClInclude Include="..\..\test\mock\MockGraphicsInterface.h" />

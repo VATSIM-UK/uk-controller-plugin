@@ -145,6 +145,9 @@
     <Filter Include="src\releases">
       <UniqueIdentifier>{27638ea8-4c02-42f1-a831-fa2951a6b3db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\integration">
+      <UniqueIdentifier>{0acb7a6a-6973-4c79-8276-312c7e76dd17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1050,6 +1053,18 @@
     <ClInclude Include="..\..\src\stands\StandEventHandler.h">
       <Filter>src\stands</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\integration\ExternalMessageEventHandler.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\HiddenWindow.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\ExternalMessageHandlerInterface.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\IntegrationModule.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\wake\CacheItem.h">
       <Filter>src\wake</Filter>
     </ClInclude>
@@ -1782,6 +1797,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\stands\StandEventHandler.cpp">
       <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\ExternalMessageEventHandler.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\HiddenWindow.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\IntegrationModule.cpp">
+      <Filter>src\integration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

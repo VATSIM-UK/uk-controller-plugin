@@ -45,6 +45,7 @@
 #include "navaids/NavaidModule.h"
 #include "releases/ReleaseModule.h"
 #include "stands/StandModule.h"
+#include "integration/IntegrationModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -200,6 +201,8 @@ namespace UKControllerPlugin {
             *this->container->windows
         );
 
+        UKControllerPlugin::Integration::BootstrapPlugin(*this->container, duplicatePlugin->Duplicate());
+
         // Boostrap all the modules at a plugin level
         UKControllerPlugin::Controller::BootstrapPlugin(*this->container, loader);
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
@@ -209,7 +212,6 @@ namespace UKControllerPlugin {
         UKControllerPlugin::Releases::BootstrapPlugin(*this->container, loader);
         UKControllerPlugin::Stands::BootstrapPlugin(*this->container, loader);
 
-        // Bootstrap helpers
         UKControllerPlugin::Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);
         DeferredEventBootstrap(*this->container->timedHandler);

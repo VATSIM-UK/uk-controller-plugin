@@ -1651,5 +1651,100 @@ namespace UKControllerPluginTest {
 
             this->handler.FlightPlanEvent(this->flightplan, this->radarTarget);
         }
+
+        TEST_F(StandEventHandlerTest, ItDoesntProcessMessageNotForStands)
+        {
+            EXPECT_FALSE(this->handler.ProcessMessage("NOTSTANDS:BAW123:EGLL:317"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntProcessMessageWithTooFewParts)
+        {
+            EXPECT_FALSE(this->handler.ProcessMessage("STANDS:BAW123:317"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntProcessMessageWithTooManyParts)
+        {
+            EXPECT_FALSE(this->handler.ProcessMessage("STANDS:BAW123:EGLL:317:FOO"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItMakesAStandAssignmentFromExternalMessage)
+        {
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
+                .Times(1);
+
+            EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
+                .Times(1);
+
+            EXPECT_TRUE(this->handler.ProcessMessage("STANDS:BAW123:EGKK:55"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItHandlesInvalidFlightplanOnExternalMessage)
+        {
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp = nullptr;
+
+            EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
+                .Times(0);
+
+            EXPECT_TRUE(this->handler.ProcessMessage("STANDS:BAW123:EGKK:55"));
+        }
+
+        TEST_F(StandEventHandlerTest, ItDoesntAssignNonExistentStandsFromExternalMessage)
+        {
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
+                .Times(0);
+
+            EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
+                .Times(0);
+
+            EXPECT_TRUE(this->handler.ProcessMessage("STANDS:BAW123:EGKK:XXX"));
+        }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest
