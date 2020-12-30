@@ -40,8 +40,9 @@ jobs:
         run: dir "C:\\Program Files\\OpenSSL-Win32"
 
       - name: Setup OpenSSL Environment
-         echo "OPENSSL_ROOT=C:\\Program Files\\OpenSSL-Win32\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-         echo "OPENSSL_LIBRARYDIR=C:\\Program Files\\OpenSSL-Win32\\lib\\VC\\static" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        run: |
+          echo "OPENSSL_ROOT=C:\\Program Files\\OpenSSL-Win32\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "OPENSSL_LIBRARYDIR=C:\\Program Files\\OpenSSL-Win32\\lib\\VC\\static" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Restore Nuget Packages
         run: |
