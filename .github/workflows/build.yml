@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - '**'
+    tags:
+      - '*'
   pull_request:
 
 jobs:
@@ -41,6 +43,9 @@ jobs:
           echo "OPENSSL_ROOT=C:\\Program Files\\OpenSSL\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "OPENSSL_LIBRARYDIR=C:\\Program Files\\OpenSSL\\lib\\VC\\static" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
+      - name: OpenSSL Includes
+        run: dir "C:\\Program Files\\OpenSSL\\include" 
+
       - name: Restore Nuget Packages
         run: |
           cd msvc
@@ -67,3 +72,27 @@ jobs:
         with:
           name: UKControllerPlugin.dll
           path: ".\\bin\\Release\\UKControllerPlugin.dll"
+
+      # Create release if we're building a tag
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      # Upload release asset to the release
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ".\\bin\\Release\\UKControllerPlugin.dll"
+          asset_name: UKControllerPlugin.dll
+          asset_content_type: application/octet-stream
