@@ -11,9 +11,6 @@ jobs:
     name: Build
     runs-on: windows-latest
     steps:
-      - name: Echo boost
-        run: "echo ${env:BOOST_ROOT_1_72_0}"
-
       - name: Checkout Code
         uses: actions/checkout@v2
 
@@ -28,12 +25,16 @@ jobs:
           nuget restore
           cd ..
 
-      - name: Setup Environment
+      - name: Setup Boost
         run: |
-          echo "{BOOST_ROOT}={${env:BOOST_ROOT_1_72_0}}" >> $GITHUB_ENV
-          echo "{BOOST_LIBRARYDIR}={${env:BOOST_ROOT_1_72_0}\\lib}" >> $GITHUB_ENV
-          echo "${env:BOOST_ROOT}"
-          echo "${env:BOOST_LIBRARYDIR}"
+          echo "BOOST_ROOT=${env:BOOST_ROOT_1_72_0}" >> $GITHUB_ENV
+          echo "BOOST_LIBRARYDIR=${env:BOOST_ROOT_1_72_0}\\lib" >> $GITHUB_ENV
+
+      - name: Echo Boost Root
+        run: echo ${env:BOOST_ROOT}
+
+      - name: Echo Boost Libary Dir
+        run: echo ${env:BOOST_LIBRARYDIR}
       
       - name: Run Build
         run: msbuild msvc/UKControllerPlugin.sln /property:Configuration=Release
