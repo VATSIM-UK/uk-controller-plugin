@@ -50,10 +50,11 @@ jobs:
           cd ..
 
       - name: Setup Build Version
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
-          $tagVersion = "${{ github.ref }}" -replace "refs/pull/",""
+          $tagVersion = "${{ github.ref }}" -replace "refs/tags/",""
           $versionFile = ".\\src\update\\PluginVersion.cpp"
-          echo (Get-Content $versionFile).replace("#VERSION_STRING#", "$tagVersion")
+          (Get-Content $versionFile).replace("#VERSION_STRING#", "$tagVersion") | Set-Content $versionFile
       
       # Run the build and tests
       - name: Run Build
