@@ -29,12 +29,15 @@ jobs:
         id: cache-openssl
         uses: actions/cache@v2.1.3
         with:
-          path: "PATH HERE"
+          path: "C:\\Program Files\\OpenSSL-Win64"
           key: "ukcp-openssl"
 
       - name: Setup OpenSSL
         if: steps.cache-cache-openssl.outputs.cache-hit != 'true'
         run: choco install openssl
+
+      - name: Echo OpenSSL
+        run: dir C:\\Program Files\\OpenSSL-Win64
 
       - name: Restore Nuget Packages
         run: |
