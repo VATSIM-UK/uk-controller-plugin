@@ -31,7 +31,7 @@ jobs:
           echo "BOOST_LIBRARYDIR=${env:BOOST_ROOT_1_72_0}\\lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       
       - name: Run Build
-        run: msbuild msvc/UKControllerPlugin.sln /property:Configuration=Release
+        run: msbuild msvc/UKControllerPlugin.sln /property:Configuration=Release -m
 
       - name: Run Tests
         run: ".\\bin\\Release\\UKControllerPluginTest.exe"
