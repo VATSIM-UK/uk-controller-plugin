@@ -50,7 +50,9 @@ jobs:
           cd ..
 
       - name: Setup Build Version
-        run: echo (Get-Content ".\\src\update\\PluginVersion.php").replace("#VERSION#", ${{ github.ref }} -replace "refs/tags/" "")
+        run: |
+          $tagVersion = ${{ github.ref }} -replace "refs/tags/" ""
+          echo (Get-Content ".\\src\update\\PluginVersion.php") -replace "#VERSION#" $tagVersion
       
       # Run the build and tests
       - name: Run Build
