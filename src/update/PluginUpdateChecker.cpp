@@ -27,7 +27,7 @@ namespace UKControllerPlugin {
         ) {
 
             try {
-                return PluginUpdateChecker::CheckApiResponse(
+                return CheckApiResponse(
                     api.UpdateCheck(pluginVersion),
                     pluginVersion,
                     winApi
@@ -39,7 +39,7 @@ namespace UKControllerPlugin {
                     MB_OK | MB_ICONWARNING
                 );
                 LogCritical("Unable to check plugin version, the API threw an exception: " + std::string(e.what()));
-                return PluginUpdateChecker::unsupportedVersion;
+                return unsupportedVersion;
             }
         }
 
@@ -53,7 +53,8 @@ namespace UKControllerPlugin {
         ) {
 
             if (apiResponse == ApiInterface::UPDATE_VERSION_DISABLED) {
-                std::wstring message = L"This version of the plugin has been withdrawn, you need to update to continue using the plugin.\n";
+                std::wstring message =L"This version of the plugin has been withdrawn, ";
+                message += L"you need to update to continue using the plugin.\n";
                 message += L"Reported version: " + HelperFunctions::ConvertToWideString(pluginVersion);
                 winApi.OpenMessageBox(
                     message.c_str(),
@@ -61,7 +62,7 @@ namespace UKControllerPlugin {
                     MB_OK | MB_ICONERROR
                 );
                 LogCritical("Plugin version is no longer supported. Your version: " + pluginVersion);
-                return PluginUpdateChecker::unsupportedVersion;
+                return unsupportedVersion;
             }
 
             if (apiResponse == ApiInterface::UPDATE_VERSION_NEEDS_UPDATE) {
@@ -77,7 +78,7 @@ namespace UKControllerPlugin {
                 LogInfo("Plugin is up to date, version: " + pluginVersion);
             }
 
-            return PluginUpdateChecker::versionAllowed;
+            return versionAllowed;
         }
     }  // namespace Update
 }  // namespace UKControllerPlugin
