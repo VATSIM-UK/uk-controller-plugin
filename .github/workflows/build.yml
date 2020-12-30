@@ -37,7 +37,7 @@ jobs:
         run: choco install openssl --limitoutput
 
       - name: Echo OpenSSL
-        run: dir C:\\Program Files\\OpenSSL-Win64
+        run: dir "C:\\Program Files\\OpenSSL-Win64"
 
       - name: Restore Nuget Packages
         run: |
