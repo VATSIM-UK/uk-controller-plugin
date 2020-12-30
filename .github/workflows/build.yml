@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Echo OpenSSL
-        run: dir "C\\:Program Files\\OpenSSL"
+        run: dir "C:\\Program Files\\OpenSSL"
         
       - name: Checkout Code
         uses: actions/checkout@v2
