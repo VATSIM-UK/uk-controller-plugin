@@ -10,10 +10,6 @@ jobs:
   build:
     name: Build
     runs-on: windows-latest
-    env:
-        BOOST_ROOT: "${env:BOOST_ROOT_1_72_0}"
-        BOOST_LIBRARYDIR : "${env:BOOST_ROOT_1_72_0}\\lib"
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -28,6 +24,11 @@ jobs:
           cd msvc
           nuget restore
           cd ..
+
+      - name: Setup Environment
+        run: |
+          echo "{BOOST_ROOT}={${env:BOOST_ROOT_1_72_0}}" >> $GITHUB_ENV
+          echo "{BOOST_LIBRARYDIR}={${env:BOOST_ROOT_1_72_0}\\lib}" >> $GITHUB_ENV
       
       - name: Run Build
         run: msbuild msvc/UKControllerPlugin.sln /property:Configuration=Release
