@@ -40,11 +40,11 @@ jobs:
 
       - name: Setup OpenSSL Environment
         run: |
-          echo "OPENSSL_ROOT=C:\\Program Files\\OpenSSL\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          echo "OPENSSL_LIBRARYDIR=C:\\Program Files\\OpenSSL\\lib\\VC\\static" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "OPENSSL_ROOT=C:\\Program Files (x86)\\OpenSSL\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "OPENSSL_LIBRARYDIR=C:\\Program Files (x86)\\OpenSSL\\lib\\VC\\static" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: OpenSSL Includes
-        run: dir "C:\\Program Files\\OpenSSL"
+        run: dir "C:\\Program Files (x86)"
 
       - name: Restore Nuget Packages
         run: |
@@ -67,7 +67,7 @@ jobs:
         run: cpplint --quiet --recursive src/ test/
       
       # Upload artifacts
-      - name: Upload build artifact
+      - name: Upload Plugin DLL As Artifact
         uses: actions/upload-artifact@v2
         with:
           name: UKControllerPlugin.dll
@@ -86,7 +86,7 @@ jobs:
           prerelease: false
 
       # Upload release asset to the release
-      - name: Upload Release Asset
+      - name: Upload Plugin DLL As Release Asset
         uses: actions/upload-release-asset@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
