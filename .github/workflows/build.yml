@@ -51,7 +51,7 @@ jobs:
       
       # Run the build and tests
       - name: Run Build
-        run: msbuild msvc/UKControllerPlugin.sln /property:Configuration=Release -m
+        run: msbuild msvc/UKControllerPlugin.sln /verbosity:minimal /property:Configuration=Release -m
 
       - name: Run Tests
         run: ".\\bin\\Release\\UKControllerPluginTest.exe"
