@@ -9,10 +9,11 @@ on:
 jobs:
   build:
     name: Build
-    env:
-      BOOST_ROOT: ${env:BOOST_ROOT_1_72_0}
     runs-on: windows-latest
     steps:
+      - name: Echo boost
+        run: "echo ${env:BOOST_ROOT_1_72_0}"
+
       - name: Checkout Code
         uses: actions/checkout@v2
 
