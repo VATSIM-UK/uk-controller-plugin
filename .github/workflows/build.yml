@@ -12,13 +12,13 @@ jobs:
     runs-on: windows-latest
     env:
         BOOST_ROOT: "$ENV{BOOST_ROOT_1_72_0}"
-        BOOST_INCLUDEDIR : "$ENV{BOOST_ROOT_1_72_0}\\boost\\include"
+        BOOST_INCLUDEDIR : "$ENV{BOOST_ROOT_1_72_0}\\include"
         BOOST_LIBRARYDIR : "$ENV{BOOST_ROOT_1_72_0}\\lib"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Add msbuild to PATH
+      - name: Add Msbuild To PATH
         uses: microsoft/setup-msbuild@v1.0.2
         with:
          vs-version: '16.5'
