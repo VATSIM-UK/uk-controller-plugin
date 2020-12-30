@@ -35,7 +35,7 @@ jobs:
           key: "ukcp-openssl"
 
       - name: Install OpenSSL
-        if: steps.cache-cache-openssl.outputs.cache-hit != 'true'
+        if: steps.cache-openssl.outputs.cache-hit != 'true'
         run: choco install openssl --forcex86 | out-null
 
       - name: Setup OpenSSL Environment
