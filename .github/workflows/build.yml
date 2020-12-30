@@ -11,9 +11,9 @@ jobs:
     name: Build
     runs-on: windows-latest
     env:
-        BOOST_ROOT: "$ENV{BOOST_ROOT_1_72_0}"
-        BOOST_INCLUDEDIR : "$ENV{BOOST_ROOT_1_72_0}\\include"
-        BOOST_LIBRARYDIR : "$ENV{BOOST_ROOT_1_72_0}\\lib"
+        BOOST_ROOT: "${BOOST_ROOT_1_72_0}"
+        BOOST_INCLUDEDIR : "{BOOST_ROOT_1_72_0}\\include"
+        BOOST_LIBRARYDIR : "${BOOST_ROOT_1_72_0}\\lib"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
