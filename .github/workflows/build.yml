@@ -52,7 +52,7 @@ jobs:
       - name: Setup Build Version
         run: |
           $tagVersion = "${{ github.ref }}" -replace "refs/pull/,""
-          echo (Get-Content ".\\src\update\\PluginVersion.php") -replace "#VERSION#",$tagVersion
+          echo (Get-Content ".\\src\update\\PluginVersion.php") -replace "#VERSION#","$tagVersion""
       
       # Run the build and tests
       - name: Run Build
