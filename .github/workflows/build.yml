@@ -60,3 +60,10 @@ jobs:
 
       - name: Run Lint
         run: cpplint --quiet --recursive src/ test/
+      
+      # Upload artifacts
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: UKControllerPlugin.dll
+          path: ".\\bin\\Release\\UKControllerPlugin.dll"
