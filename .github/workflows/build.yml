@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     name: Build
+    env:
+      BOOST_ROOT: ${env:BOOST_ROOT_1_72_0}
     runs-on: windows-latest
     steps:
       - name: Checkout Code
