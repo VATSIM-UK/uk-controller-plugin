@@ -243,6 +243,14 @@ namespace UKControllerPluginTest {
             );
         }
 
+        TEST_F(EnrouteReleaseEventHandlerTest, ItHasATagItemDescriptionForReleasePointOrBlank)
+        {
+            EXPECT_EQ(
+                "Enroute Release Point or Blank",
+                this->handler.GetTagItemDescription(this->handler.enrouteReleasePointOrBlankTagItemId)
+            );
+        }
+
         TEST_F(EnrouteReleaseEventHandlerTest, ItReceivesIncomingReleases)
         {
             std::shared_ptr<MockEuroScopeCControllerInterface> myController =

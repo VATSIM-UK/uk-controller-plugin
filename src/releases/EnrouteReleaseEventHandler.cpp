@@ -108,9 +108,7 @@ namespace UKControllerPlugin {
 
         std::string EnrouteReleaseEventHandler::GetTagItemDescription(int tagItemId) const
         {
-            return tagItemId == this->enrouteReleasePointTagItemId
-                ? "Enroute Release Point"
-                : "Enroute Release Type";
+            return this->tagItemDescriptions.count(tagItemId) ? this->tagItemDescriptions.at(tagItemId) : "";
         }
 
         void EnrouteReleaseEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
