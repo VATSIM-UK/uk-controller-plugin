@@ -50,7 +50,7 @@ jobs:
       # If we're running on main, get the next release version
       - name: Setup Build Version
         run: |
-          echo npx semantic-release@15 --dry-run
+          npx semantic-release@15 --dry-run
           $tagVersion = npx semantic-release@15 --dry-run | Select-String -Pattern "Published release \K.*? "
           echo $tagVersion
           dosomethingtobreakithere
