@@ -3,7 +3,7 @@
 The VATSIM UK Controller Plugin for EuroScope 3.2 only. This project works in cooperation with
 the Plugin API to offer useful functionality to controllers of UK positions on the VATSIM network.
 
-[Build](https://github.com/VATSIM-UK/uk-controller-plugin/workflows/Build/badge.svg)
+[![Build](https://github.com/VATSIM-UK/uk-controller-plugin/workflows/Build/badge.svg)](https://github.com/VATSIM-UK/uk-controller-plugin/actions)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 ## Feature List
