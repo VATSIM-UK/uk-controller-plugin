@@ -51,11 +51,12 @@ jobs:
       - name: Setup Build Version
         run: |
           npx semantic-release@15 --dry-run
-          $tagVersion = npx semantic-release@15 --dry-run | Select-String -Pattern "Published release \K.*? "
-          echo $tagVersion
-          dosomethingtobreakithere
+          $semanticRelease = "Published release 2.5.1 and some other things" | Select-String -Pattern "Published release ((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)"
+          $tagVersion = $semanticRelease.Matches.Groups[1].value
           $versionFile = ".\\src\update\\PluginVersion.cpp"
           (Get-Content $versionFile).replace("#VERSION_STRING#", "$tagVersion") | Set-Content $versionFile
+          echo (Get-Content $versionFile)
+          breakathing
       
       # Run the build and tests
       - name: Run Build
