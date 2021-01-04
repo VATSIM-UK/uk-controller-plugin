@@ -1,4 +1,5 @@
 #include "pch/stdafx.h"
+#include "spdlog/spdlog.h"
 #include "log/LoggerFunctions.h"
 
 std::shared_ptr<spdlog::logger> logger;
@@ -35,4 +36,14 @@ void SetLoggerInstance(std::shared_ptr<spdlog::logger> instance)
     }
 
     logger = instance;
+}
+
+void ShutdownLogger(void)
+{
+    if (!logger) {
+        return;
+    }
+
+    spdlog::drop_all();
+    logger = nullptr;
 }

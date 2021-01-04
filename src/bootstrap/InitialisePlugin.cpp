@@ -12,7 +12,6 @@
 #include "historytrail/HistoryTrailModule.h"
 #include "login/LoginModule.h"
 #include "ownership/AirfieldOwnershipModule.h"
-#include "radarscreen/RadarScreenFactory.h"
 #include "update/PluginUpdateChecker.h"
 #include "countdown/CountdownModule.h"
 #include "minstack/MinStackModule.h"
@@ -116,13 +115,15 @@ namespace UKControllerPlugin {
     */
     void InitialisePlugin::EuroScopeCleanup(void)
     {
-        // Shut down the container.;
+        // Shut down the container, task runner and logs.
         this->container->taskRunner.reset();
         this->container.reset();
+        this->duplicatePlugin.reset();
 
         // Shut down GDI
         Gdiplus::GdiplusShutdown(this->gdiPlusToken);
         LogInfo("Plugin shutdown");
+        LoggerBootstrap::Shutdown();
     }
 
     /*
@@ -145,7 +146,7 @@ namespace UKControllerPlugin {
     {
         // Start GdiPlus
         Gdiplus::GdiplusStartupInput gdiStartup;
-        Gdiplus::GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
+        GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
 
         // Check if we're a duplicate plugin
         this->duplicatePlugin = std::make_unique<DuplicatePlugin>();
