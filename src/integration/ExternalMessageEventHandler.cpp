@@ -81,10 +81,11 @@ namespace UKControllerPlugin {
 
         bool ExternalMessageEventHandler::ProcessCommand(std::string command)
         {
-            #ifdef _DEBUG
             if (command.substr(0, this->newMessageCommand.size()) != this->newMessageCommand) {
                 return false;
             }
+
+            #ifdef _DEBUG
 
             command = command.substr(this->newMessageCommand.size());
 
@@ -102,6 +103,7 @@ namespace UKControllerPlugin {
             // Send the data
             SendMessage(window, WM_COPYDATA, reinterpret_cast<WPARAM>(window), reinterpret_cast<LPARAM>(&cds));
             #endif  // _DEBUG
+
             return true;
         }
     }  // namespace Integration
