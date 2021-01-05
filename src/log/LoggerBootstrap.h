@@ -24,6 +24,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Bootstrap::PersistenceContainer & persistence,
                     bool nullLogger
                 );
+                static void Shutdown(void);
 
             private:
 
