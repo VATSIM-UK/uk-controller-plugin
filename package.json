@@ -1,0 +1,35 @@
+{
+  "name": "uk-controller-plugin",
+  "version": "2.6.1",
+  "description": "UK Controller Plugin",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VATSIM-UK/uk-controller-plugin.git"
+  },
+  "keywords": [
+    "vatsim",
+    "vatsim-uk",
+    "ukcp",
+    "uk-controller-plugin"
+  ],
+  "author": "VATSIM-UK",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/VATSIM-UK/uk-controller-plugin/issues"
+  },
+  "homepage": "https://github.com/VATSIM-UK/uk-controller-plugin#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
