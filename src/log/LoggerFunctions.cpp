@@ -45,5 +45,5 @@ void ShutdownLogger(void)
     }
 
     spdlog::drop_all();
-    logger = nullptr;
+    logger.reset();
 }
