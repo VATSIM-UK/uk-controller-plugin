@@ -136,6 +136,13 @@ namespace UKControllerPlugin {
 
                 // All outgoing enroute releases
                 std::map<std::string, UKControllerPlugin::Releases::EnrouteRelease> outgoingReleases;
+
+                // TAG item descriptions
+                std::map<int, std::string> tagItemDescriptions {
+                    {enrouteReleaseTypeTagItemId, "Enroute Release Type"},
+                    {enrouteReleasePointTagItemId, "Enroute Release Point"},
+                    {enrouteReleasePointOrBlankTagItemId, "Enroute Release Point or Blank"},
+                };
             };
     }  // namespace Releases
 }  // namespace UKControllerPlugin

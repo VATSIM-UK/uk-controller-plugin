@@ -99,5 +99,23 @@ namespace UKControllerPluginTest {
             this->SetHandler(false);
             EXPECT_NE(nullptr, FindWindowA("UKControllerPluginHiddenWindowClass", "UKControllerPluginHiddenWindow"));
         }
+
+        TEST_F(ExternalMessageEventHandlerTest, ProcessCommandReturnsTrueIfValidCommand)
+        {
+            this->SetHandler(true);
+            EXPECT_TRUE(this->eventHandler->ProcessCommand(".ukcp msg foobarbaz"));
+        }
+
+        TEST_F(ExternalMessageEventHandlerTest, ProcessCommandReturnsFalseIfEuroscopeCommand)
+        {
+            this->SetHandler(true);
+            EXPECT_FALSE(this->eventHandler->ProcessCommand(".distance"));
+        }
+
+        TEST_F(ExternalMessageEventHandlerTest, ProcessCommandReturnsFalseIfNotCorrectUkcpCommand)
+        {
+            this->SetHandler(true);
+            EXPECT_FALSE(this->eventHandler->ProcessCommand(".ukcp msg2 test"));
+        }
     }  // namespace Integration
 }  // namespace UKControllerPluginTest

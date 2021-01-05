@@ -64,5 +64,13 @@ namespace UKControllerPlugin {
                 )
             );
         }
+
+        /*
+         * Shuts everything down
+         */
+        void LoggerBootstrap::Shutdown(void)
+        {
+            ShutdownLogger();
+        }
     }  // namespace Log
 }  // namespace UKControllerPlugin

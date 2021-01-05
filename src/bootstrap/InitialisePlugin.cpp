@@ -12,7 +12,6 @@
 #include "historytrail/HistoryTrailModule.h"
 #include "login/LoginModule.h"
 #include "ownership/AirfieldOwnershipModule.h"
-#include "radarscreen/RadarScreenFactory.h"
 #include "update/PluginUpdateChecker.h"
 #include "countdown/CountdownModule.h"
 #include "minstack/MinStackModule.h"
@@ -116,13 +115,15 @@ namespace UKControllerPlugin {
     */
     void InitialisePlugin::EuroScopeCleanup(void)
     {
-        // Shut down the container.;
+        // Shut down the container, task runner and logs.
         this->container->taskRunner.reset();
         this->container.reset();
+        this->duplicatePlugin.reset();
 
         // Shut down GDI
         Gdiplus::GdiplusShutdown(this->gdiPlusToken);
         LogInfo("Plugin shutdown");
+        LoggerBootstrap::Shutdown();
     }
 
     /*
@@ -145,7 +146,7 @@ namespace UKControllerPlugin {
     {
         // Start GdiPlus
         Gdiplus::GdiplusStartupInput gdiStartup;
-        Gdiplus::GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
+        GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
 
         // Check if we're a duplicate plugin
         this->duplicatePlugin = std::make_unique<DuplicatePlugin>();
@@ -167,10 +168,10 @@ namespace UKControllerPlugin {
 
         // API + Websocket
         HelperBootstrap::Bootstrap(*this->container);
-        UKControllerPlugin::Websocket::BootstrapPlugin(*this->container);
+        Websocket::BootstrapPlugin(*this->container);
 
         // Datetime
-        UKControllerPlugin::Datablock::BootstrapPlugin(*this->container);
+        Datablock::BootstrapPlugin(*this->container);
 
         // If we're not allowed to use the API because we've been banned or something... It's no go.
         bool apiAuthorised = ApiAuthChecker::IsAuthorised(
@@ -193,7 +194,7 @@ namespace UKControllerPlugin {
         }
 
         // Dependency loading can happen regardless of plugin version or API status.
-        UKControllerPlugin::Dependency::UpdateDependencies(
+        Dependency::UpdateDependencies(
             *this->container->api,
             *this->container->windows
         );
@@ -201,18 +202,18 @@ namespace UKControllerPlugin {
             *this->container->windows
         );
 
-        UKControllerPlugin::Integration::BootstrapPlugin(*this->container, duplicatePlugin->Duplicate());
+        Integration::BootstrapPlugin(*this->container, duplicatePlugin->Duplicate());
 
         // Boostrap all the modules at a plugin level
-        UKControllerPlugin::Controller::BootstrapPlugin(*this->container, loader);
+        Controller::BootstrapPlugin(*this->container, loader);
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         Navaids::BootstrapPlugin(*this->container, loader);
-        UKControllerPlugin::Releases::BootstrapPlugin(*this->container, loader);
-        UKControllerPlugin::Stands::BootstrapPlugin(*this->container, loader);
+        Releases::BootstrapPlugin(*this->container, loader);
+        Stands::BootstrapPlugin(*this->container, loader);
 
-        UKControllerPlugin::Wake::BootstrapPlugin(*this->container, loader);
+        Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);
         DeferredEventBootstrap(*this->container->timedHandler);
         SectorFile::BootstrapPlugin(*this->container);
@@ -254,7 +255,7 @@ namespace UKControllerPlugin {
             *this->container->dialogManager,
             loader
         );
-        UKControllerPlugin::Hold::BootstrapPlugin(
+        Hold::BootstrapPlugin(
             loader,
             *this->container,
             *this->container->userMessager
@@ -270,7 +271,7 @@ namespace UKControllerPlugin {
         );
 
         PrenoteModule::BootstrapPlugin(*this->container, loader);
-        UKControllerPlugin::Handoff::BootstrapPlugin(*this->container, loader);
+        Handoff::BootstrapPlugin(*this->container, loader);
 
         // Bootstrap other things
         ActualOffBlockTimeBootstrap::BootstrapPlugin(*this->container);
@@ -278,7 +279,7 @@ namespace UKControllerPlugin {
         EstimatedDepartureTimeBootstrap::BootstrapPlugin(*this->container);
 
         // Pressure monitor
-        UKControllerPlugin::Metar::PressureMonitorBootstrap(*this->container);
+        Metar::PressureMonitorBootstrap(*this->container);
 
         // Do post-init and final setup, which involves running tasks that need to happen on load.
         PostInit::Process(*this->container);
