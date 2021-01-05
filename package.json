@@ -31,7 +31,7 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
   "release": {
     "repositoryUrl": "https://github.com/VATSIM-UK/uk-controller-plugin",
     "branches": ["main"],
