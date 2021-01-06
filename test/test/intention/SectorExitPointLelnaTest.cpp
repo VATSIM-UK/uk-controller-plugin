@@ -26,7 +26,7 @@ namespace UKControllerPluginTest {
             SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
 
             EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(3)
+                .Times(1)
                 .WillRepeatedly(Return(2));
 
             EXPECT_CALL(routeMock, GetPointName(0))
@@ -34,7 +34,7 @@ namespace UKControllerPluginTest {
                 .WillRepeatedly(Return("LELNA"));
 
             EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(3)
+                .Times(4)
                 .WillRepeatedly(Return("LFMN"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H2"));
@@ -46,7 +46,7 @@ namespace UKControllerPluginTest {
             SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
 
             EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
+                .Times(1)
                 .WillRepeatedly(Return(3));
 
             EXPECT_CALL(routeMock, GetPointName(0))
@@ -57,6 +57,10 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillRepeatedly(Return("DIN"));
 
+            EXPECT_CALL(routeMock, GetPointName(2))
+                .Times(1)
+                .WillRepeatedly(Return("LEMD"));
+
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H2"));
         }
 
@@ -66,7 +70,7 @@ namespace UKControllerPluginTest {
             SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
 
             EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
+                .Times(1)
                 .WillRepeatedly(Return(3));
 
             EXPECT_CALL(routeMock, GetPointName(0))
@@ -77,6 +81,10 @@ namespace UKControllerPluginTest {
                 .Times(3)
                 .WillRepeatedly(Return("ARE"));
 
+            EXPECT_CALL(routeMock, GetPointName(2))
+                .Times(1)
+                .WillRepeatedly(Return("LEMD"));
+
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H3"));
         }
 
@@ -86,7 +94,7 @@ namespace UKControllerPluginTest {
             SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
 
             EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
+                 .Times(1)
                 .WillRepeatedly(Return(3));
 
             EXPECT_CALL(routeMock, GetPointName(0))
@@ -97,7 +105,51 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return("DOMOK"));
 
+            EXPECT_CALL(routeMock, GetPointName(2))
+                .Times(1)
+                .WillRepeatedly(Return("LEMD"));
+
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H3"));
+        }
+
+        TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectIntentionCodeForBrestFirArrivals)
+        {
+            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
+            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
+
+            EXPECT_CALL(routeMock, GetPointsNumber())
+                .Times(1)
+                .WillRepeatedly(Return(3));
+
+            EXPECT_CALL(routeMock, GetPointName(2))
+                .Times(1)
+                .WillRepeatedly(Return("LFRO"));
+
+            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H5"));
+        }
+
+        TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectIntentionCodeForCherbourgArrivals)
+        {
+            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
+            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
+
+            EXPECT_CALL(routeMock, GetPointsNumber())
+                .Times(1)
+                .WillRepeatedly(Return(3));
+
+            EXPECT_CALL(routeMock, GetPointName(0))
+                .Times(3)
+                .WillRepeatedly(Return("LELNA"));
+
+            EXPECT_CALL(routeMock, GetPointName(1))
+                .Times(3)
+                .WillRepeatedly(Return("HELLO"));
+
+            EXPECT_CALL(routeMock, GetPointName(2))
+                .Times(4)
+                .WillRepeatedly(Return("LFRC"));
+
+            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H2"));
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPluginTest

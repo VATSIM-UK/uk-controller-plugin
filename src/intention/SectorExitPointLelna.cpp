@@ -10,7 +10,7 @@ namespace UKControllerPlugin {
     namespace IntentionCode {
 
         /*
-           Loop through the rest of the route to see where the aircraft goes in order to determine
+           Look at the rest of the route to see where the aircraft goes in order to determine
            the intention code.
         */
         std::string SectorExitPointLelna::GetIntentionCode(
@@ -18,7 +18,19 @@ namespace UKControllerPlugin {
             int foundPointIndex,
             int cruiseLevel
         ) const {
-            while (foundPointIndex < route.GetPointsNumber()) {
+            const int numberOfPointsInRoute = route.GetPointsNumber();
+
+            // The arrival airport is always the last point on the route
+            if (numberOfPointsInRoute >= 2)
+            {
+                std::string arrivalAirport = route.GetPointName(numberOfPointsInRoute - 1);
+                if (arrivalAirport.substr(0, 3) == "LFR" && arrivalAirport != "LFRC")
+                {
+                    return "H5";
+                }
+            }
+
+            while (foundPointIndex < numberOfPointsInRoute) {
                 if (strcmp(route.GetPointName(foundPointIndex), "DIN") == 0) {
                     return "H2";
                 }
