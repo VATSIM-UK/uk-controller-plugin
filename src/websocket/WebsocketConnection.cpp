@@ -406,7 +406,7 @@ namespace UKControllerPlugin {
                 ec == boost::asio::ssl::error::unspecified_system_error ||
                 ec == boost::beast::error::timeout ||
                 ec == boost::beast::websocket::error::closed ||
-                ec.value() == 1236 // The network connection was aborted by the local system
+                ec.value() == 1236  // The network connection was aborted by the local system
             ) {
                 this->ResetWebsocket();
                 LogWarning("Disconnected from websocket: " + ec.message());
