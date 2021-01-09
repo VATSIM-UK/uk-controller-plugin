@@ -14,6 +14,8 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 namespace UKControllerPlugin {
     namespace Prenote {
 
+        const std::string noFlightRules = "";
+
         PrenoteFactory::PrenoteFactory(
             const ControllerPositionHierarchyFactory & controllerFactory
         )
@@ -23,7 +25,7 @@ namespace UKControllerPlugin {
 
         /*
             Creates and returns an airfield pairing prenote based on the
-            JSON specification proveided.
+            JSON specification provided.
         */
         std::unique_ptr<AirfieldPairingPrenote> PrenoteFactory::CreateAirfieldPairingPrenote(
             const nlohmann::json & json
@@ -36,10 +38,18 @@ namespace UKControllerPlugin {
                 throw std::invalid_argument("Invalid pairing prenote destination");
             }
 
+            if (
+                !json.contains("flight_rules") ||
+                (!json.at("flight_rules").is_string() && !json.at("flight_rules").is_null())
+            ) {
+                throw std::invalid_argument("Invalid pairing prenote flight rules");
+            }
+
             return std::make_unique<AirfieldPairingPrenote>(
                 this->controllerFactory.CreateFromJson(json.at("recipient")),
                 json["origin"],
-                json["destination"]
+                json["destination"],
+                json.at("flight_rules").is_string() ? json["flight_rules"] : noFlightRules
             );
         }
 
