@@ -28,7 +28,7 @@ namespace UKControllerPlugin {
                 );
 
                 // Inherited via AbstractPrenote
-            
+
                 std::string GetSummaryString(void) const override;
                 std::string GetFlightRules() const;
                 bool IsApplicable(

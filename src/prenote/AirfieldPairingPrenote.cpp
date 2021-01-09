@@ -15,7 +15,8 @@ namespace UKControllerPlugin {
             std::string destination,
             std::string flightRules
         )
-            : AbstractPrenote(std::move(controllers)), origin(origin), destination(destination), flightRules(flightRules)
+            : AbstractPrenote(std::move(controllers)), origin(origin), destination(destination),
+                flightRules(flightRules)
         {
 
         }
@@ -34,7 +35,7 @@ namespace UKControllerPlugin {
         {
             return flightplan.GetOrigin() == this->origin &&
                 flightplan.GetDestination() == this->destination &&
-                (this->flightRules == this->NO_FLIGHT_RULES || flightplan.GetFlightRules() == this->flightRules );
+                (this->flightRules == this->NO_FLIGHT_RULES || flightplan.GetFlightRules() == this->flightRules);
         }
     }  // namespace Prenote
 }  // namespace UKControllerPlugin
