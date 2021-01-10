@@ -400,6 +400,7 @@ namespace UKControllerPlugin {
             // Handle disconnection
             if (
                 ec == boost::asio::error::eof ||
+                ec == boost::asio::error::connection_aborted ||
                 ec == boost::asio::error::connection_reset ||
                 ec == boost::asio::ssl::error::stream_truncated ||
                 ec == boost::asio::ssl::error::unexpected_result ||
