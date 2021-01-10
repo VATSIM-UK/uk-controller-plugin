@@ -15,7 +15,11 @@ namespace UKControllerPlugin {
             std::map<std::string, std::unique_ptr<SectorExitPoint>> points;
 
             // Dover
-            points["KOK"] = std::make_unique<SectorExitPoint>("KOK", "D1", SectorExitPoint::outEast);
+            points["KOK"] = std::make_unique<SectorExitPoint>(
+                "KOK",
+                "D1",
+                SectorExitPoint::outEast | SectorExitPoint::outSouthEast
+            );
             points["TRACA"] = std::make_unique<SectorExitPoint>(
                 "TRACA",
                 "D2",
