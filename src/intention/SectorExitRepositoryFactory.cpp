@@ -219,7 +219,7 @@ namespace UKControllerPlugin {
             // Paris
             points["NEVIL"] = std::make_unique<SectorExitPoint>("NEVIL", "W", SectorExitPoint::outSouth);
             points["ANGLO"] = std::make_unique<SectorExitPoint>("ANGLO", "W", SectorExitPoint::outSouth);
-            points["ETRAT"] = std::make_unique<SectorExitPoint>("ETRAT", "E", SectorExitPoint::outSouth);
+            points["ETRAT"] = std::make_unique<SectorExitPointEtrat>("ETRAT", "E", SectorExitPoint::outSouth);
             points["VEULE"] = std::make_unique<SectorExitPointVeule>("VEULE", "V", SectorExitPoint::outSouth);
             points["PETAX"] = std::make_unique<SectorExitPoint>("PETAX", "P", SectorExitPoint::outSouth);
 
