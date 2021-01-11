@@ -3,6 +3,7 @@
 #include "intention/SectorExitRepository.h"
 #include "intention/SectorExitPoint.h"
 #include "intention/SectorExitPointEtrat.h"
+#include "intention/SectorExitPointKonan.h"
 #include "intention/SectorExitPointVeule.h"
 #include "intention/SectorExitPointLelna.h"
 #include "intention/SectorExitPointScottish.h"
@@ -15,9 +16,9 @@ namespace UKControllerPlugin {
             std::map<std::string, std::unique_ptr<SectorExitPoint>> points;
 
             // Dover
-            points["KOK"] = std::make_unique<SectorExitPoint>(
-                "KOK",
-                "D1",
+            points["KONAN"] = std::make_unique<SectorExitPointKonan>(
+                "KONAN",
+                "D",
                 SectorExitPoint::outEast | SectorExitPoint::outSouthEast
             );
             points["TRACA"] = std::make_unique<SectorExitPoint>(

@@ -808,6 +808,9 @@
     <ClCompile Include="..\..\test\test\integration\ExternalMessageEventHandlerTest.cpp">
       <Filter>test\integration</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointKonanTest.cpp">
+      <Filter>test\intention</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

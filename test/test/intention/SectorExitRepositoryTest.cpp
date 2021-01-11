@@ -15,7 +15,7 @@ namespace UKControllerPluginTest {
 
         TEST(SectorExitRepository, HasSectorExitPointReturnsTrueIfPointExists)
         {
-            EXPECT_TRUE(SectorExitRepositoryFactory::Create()->HasSectorExitPoint("KOK"));
+            EXPECT_TRUE(SectorExitRepositoryFactory::Create()->HasSectorExitPoint("KONAN"));
         }
 
         TEST(SectorExitRepository, ConstructorInitialisesSectorExitPoints)
@@ -30,10 +30,10 @@ namespace UKControllerPluginTest {
 
             // Brussels
 
-            // Koksy
-            ASSERT_TRUE(repo->GetSectorExitPoint("KOK").GetName().compare("KOK") == 0);
-            ASSERT_TRUE(repo->GetSectorExitPoint("KOK").GetIntentionCode(mockRoute, 0, 37000).compare("D1") == 0);
-            ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("KOK").GetOutDirection());
+            // Koksy / KONAN
+            ASSERT_TRUE(repo->GetSectorExitPoint("KONAN").GetName().compare("KONAN") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("KONAN").GetIntentionCode(mockRoute, 0, 37000).compare("D") == 0);
+            ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("KONAN").GetOutDirection());
 
             // TRACA
             ASSERT_TRUE(repo->GetSectorExitPoint("TRACA").GetName().compare("TRACA") == 0);
