@@ -11,7 +11,8 @@ namespace UKControllerPlugin {
     namespace IntentionCode {
 
         /*
-            Special case SectorExitPoint for ETRAT.
+            Special case SectorExitPoint for KONAN.
+
         */
         class SectorExitPointKonan : public SectorExitPoint
         {
