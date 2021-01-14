@@ -95,7 +95,7 @@ namespace UKControllerPlugin {
             cds.lpData = (PVOID)command.c_str();
 
             // Find the hidden window
-            HWND window = FindWindowEx(NULL, NULL, this->windowClass.lpszClassName, NULL);
+            HWND window = FindWindowEx(HWND_MESSAGE, NULL, this->windowClass.lpszClassName, NULL);
             if (window == NULL) {
                 return true;
             }

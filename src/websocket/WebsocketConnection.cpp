@@ -400,12 +400,14 @@ namespace UKControllerPlugin {
             // Handle disconnection
             if (
                 ec == boost::asio::error::eof ||
+                ec == boost::asio::error::connection_aborted ||
                 ec == boost::asio::error::connection_reset ||
                 ec == boost::asio::ssl::error::stream_truncated ||
                 ec == boost::asio::ssl::error::unexpected_result ||
                 ec == boost::asio::ssl::error::unspecified_system_error ||
                 ec == boost::beast::error::timeout ||
-                ec == boost::beast::websocket::error::closed
+                ec == boost::beast::websocket::error::closed ||
+                ec.value() == 1236  // The network connection was aborted by the local system
             ) {
                 this->ResetWebsocket();
                 LogWarning("Disconnected from websocket: " + ec.message());
