@@ -556,6 +556,28 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->generator->ForceLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
+        TEST_F(SquawkGeneratorTest, ForceLocalSquawkForAircraftReturnsFalseOnNoUserController)
+        {
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(nullptr));
+
+            ON_CALL(this->pluginLoopback, GetUserControllerObject())
+                .WillByDefault(Return(this->mockSelfController));
+
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
+            this->activeCallsigns.RemoveCallsign(
+                ActiveCallsign(
+                    "EGKK_APP",
+                    "Testy McTestface",
+                    *this->controller
+                )
+            );
+
+            EXPECT_FALSE(this->generator->ForceLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
+        }
+
         TEST_F(SquawkGeneratorTest, ForceLocalSquawkAssignsSquawks)
         {
             ON_CALL(this->pluginLoopback, GetUserControllerObject())
