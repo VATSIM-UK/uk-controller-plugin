@@ -1068,6 +1068,9 @@
     <ClInclude Include="..\..\src\wake\CacheItem.h">
       <Filter>src\wake</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\intention\SectorExitPointKonan.h">
+      <Filter>src\intention</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1806,6 +1809,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\integration\IntegrationModule.cpp">
       <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\intention\SectorExitPointKonan.cpp">
+      <Filter>src\intention</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

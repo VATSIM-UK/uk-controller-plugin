@@ -3,6 +3,7 @@
 #include "intention/SectorExitRepository.h"
 #include "intention/SectorExitPoint.h"
 #include "intention/SectorExitPointEtrat.h"
+#include "intention/SectorExitPointKonan.h"
 #include "intention/SectorExitPointVeule.h"
 #include "intention/SectorExitPointLelna.h"
 #include "intention/SectorExitPointScottish.h"
@@ -15,7 +16,11 @@ namespace UKControllerPlugin {
             std::map<std::string, std::unique_ptr<SectorExitPoint>> points;
 
             // Dover
-            points["KOK"] = std::make_unique<SectorExitPoint>("KOK", "D1", SectorExitPoint::outEast);
+            points["KONAN"] = std::make_unique<SectorExitPointKonan>(
+                "KONAN",
+                "D",
+                SectorExitPoint::outEast | SectorExitPoint::outSouthEast
+            );
             points["TRACA"] = std::make_unique<SectorExitPoint>(
                 "TRACA",
                 "D2",
@@ -214,7 +219,7 @@ namespace UKControllerPlugin {
             // Paris
             points["NEVIL"] = std::make_unique<SectorExitPoint>("NEVIL", "W", SectorExitPoint::outSouth);
             points["ANGLO"] = std::make_unique<SectorExitPoint>("ANGLO", "W", SectorExitPoint::outSouth);
-            points["ETRAT"] = std::make_unique<SectorExitPoint>("ETRAT", "E", SectorExitPoint::outSouth);
+            points["ETRAT"] = std::make_unique<SectorExitPointEtrat>("ETRAT", "E", SectorExitPoint::outSouth);
             points["VEULE"] = std::make_unique<SectorExitPointVeule>("VEULE", "V", SectorExitPoint::outSouth);
             points["PETAX"] = std::make_unique<SectorExitPoint>("PETAX", "P", SectorExitPoint::outSouth);
 
