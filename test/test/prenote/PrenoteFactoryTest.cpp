@@ -161,6 +161,7 @@ namespace UKControllerPluginTest {
             json["origin"] = 123;
             json["destination"] = "EGHI";
             json["recipient"] = { "EGKK_GND", "EGKK_TWR" };
+            json["flight_rules"] = "I";
 
             PrenoteFactory factory(*this->hierarchyFactory);
             EXPECT_THROW(factory.CreateFromJson(json), std::invalid_argument);
@@ -172,6 +173,7 @@ namespace UKControllerPluginTest {
             json["type"] = "airfieldPairing";
             json["destination"] = "EGHI";
             json["recipient"] = { "EGKK_GND", "EGKK_TWR" };
+            json["flight_rules"] = "I";
 
             PrenoteFactory factory(*this->hierarchyFactory);
             EXPECT_THROW(factory.CreateFromJson(json), nlohmann::json::exception);
@@ -183,6 +185,7 @@ namespace UKControllerPluginTest {
             json["type"] = "airfieldPairing";
             json["origin"] = "EGKK";
             json["recipient"] = { "EGKK_GND", "EGKK_TWR" };
+            json["flight_rules"] = "I";
 
             PrenoteFactory factory(*this->hierarchyFactory);
             EXPECT_THROW(factory.CreateFromJson(json), nlohmann::json::exception);
@@ -196,6 +199,7 @@ namespace UKControllerPluginTest {
             json["origin"] = "EGKK";
             json["destination"] = 123;
             json["recipient"] = { "EGKK_GND", "EGKK_TWR" };
+            json["flight_rules"] = "I";
 
             PrenoteFactory factory(*this->hierarchyFactory);
             EXPECT_THROW(factory.CreateFromJson(json), std::invalid_argument);
@@ -207,6 +211,7 @@ namespace UKControllerPluginTest {
             json["type"] = "airfieldPairing";
             json["origin"] = "EGKK";
             json["destination"] = "EGHI";
+            json["flight_rules"] = "I";
 
             PrenoteFactory factory(*this->hierarchyFactory);
             EXPECT_THROW(factory.CreateFromJson(json), nlohmann::json::exception);
@@ -219,6 +224,32 @@ namespace UKControllerPluginTest {
             json["origin"] = "EGKK";
             json["destination"] = "EGHI";
             json["recipient"] = { "EGKK_GND", "EGKK_TWR", 123};
+            json["flight_rules"] = "I";
+
+            PrenoteFactory factory(*this->hierarchyFactory);
+            EXPECT_THROW(factory.CreateFromJson(json), std::invalid_argument);
+        }
+
+        TEST_F(PrenoteFactoryTest, CreateFromJsonPairingThrowsExceptionIfNoFlightRulesProvided)
+        {
+            nlohmann::json json;
+            json["type"] = "airfieldPairing";
+            json["origin"] = "EGKK";
+            json["destination"] = "EGHI";
+            json["recipient"] = { "EGKK_GND", "EGKK_TWR" };
+
+            PrenoteFactory factory(*this->hierarchyFactory);
+            EXPECT_THROW(factory.CreateFromJson(json), std::invalid_argument);
+        }
+
+        TEST_F(PrenoteFactoryTest, CreateFromJsonPairingThrowsExceptionIfFlightRulesIncorrectType)
+        {
+            nlohmann::json json;
+            json["type"] = "airfieldPairing";
+            json["origin"] = "EGKK";
+            json["destination"] = "EGHI";
+            json["recipient"] = { "EGKK_GND", "EGKK_TWR" };
+            json["flight_rules"] = 23;
 
             PrenoteFactory factory(*this->hierarchyFactory);
             EXPECT_THROW(factory.CreateFromJson(json), std::invalid_argument);
@@ -231,6 +262,7 @@ namespace UKControllerPluginTest {
             json["origin"] = "EGKK";
             json["destination"] = "EGHI";
             json["recipient"] = { "EGKK_GND", "EGKK_TWR" };
+            json["flight_rules"] = "I";
 
             PrenoteFactory factory(*this->hierarchyFactory);
             std::unique_ptr<AbstractPrenote> prenote = factory.CreateFromJson(json);
@@ -238,6 +270,29 @@ namespace UKControllerPluginTest {
             AirfieldPairingPrenote * pairing = reinterpret_cast<AirfieldPairingPrenote *>(prenote.get());
 
             EXPECT_TRUE("EGKK -> EGHI" == pairing->GetSummaryString());
+            EXPECT_TRUE("I" == pairing->GetFlightRules());
+
+            ControllerPositionHierarchy::const_iterator it = pairing->GetControllers().cbegin();
+            EXPECT_EQ(this->collection->FetchPositionByCallsign("EGKK_GND"), *it++);
+            EXPECT_EQ(this->collection->FetchPositionByCallsign("EGKK_TWR"), *it++);
+        }
+
+        TEST_F(PrenoteFactoryTest, CreateFromJsonPairingReturnsAPairingPrenoteWithNoFlightRules)
+        {
+            nlohmann::json json;
+            json["type"] = "airfieldPairing";
+            json["origin"] = "EGKK";
+            json["destination"] = "EGHI";
+            json["recipient"] = { "EGKK_GND", "EGKK_TWR" };
+            json["flight_rules"] = nlohmann::json::value_t::null;
+
+            PrenoteFactory factory(*this->hierarchyFactory);
+            std::unique_ptr<AbstractPrenote> prenote = factory.CreateFromJson(json);
+
+            AirfieldPairingPrenote * pairing = reinterpret_cast<AirfieldPairingPrenote *>(prenote.get());
+
+            EXPECT_TRUE("EGKK -> EGHI" == pairing->GetSummaryString());
+            EXPECT_TRUE(pairing->NO_FLIGHT_RULES == pairing->GetFlightRules());
 
             ControllerPositionHierarchy::const_iterator it = pairing->GetControllers().cbegin();
             EXPECT_EQ(this->collection->FetchPositionByCallsign("EGKK_GND"), *it++);
