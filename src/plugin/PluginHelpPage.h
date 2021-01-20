@@ -34,7 +34,7 @@ namespace UKControllerPlugin {
                 const std::string menuItemDescription = "UKCP Help (Opens In Web Browser)";
 
                 // URL for the help
-                const std::wstring helpUrl = L"https://ukcp.vatsim.uk/web/help";
+                const std::wstring helpUrl = L"https://github.com/VATSIM-UK/uk-controller-plugin/blob/main/docs/README.md";
 
             private:
 

@@ -51,7 +51,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PluginHelpPageTest, ProcessCommandShowsMessage)
         {
-            EXPECT_CALL(this->mockWindows, OpenWebBrowser(std::wstring(L"https://ukcp.vatsim.uk/web/help")))
+            EXPECT_CALL(this->mockWindows, OpenWebBrowser(page.helpUrl))
                 .Times(1);
 
             this->page.ProcessCommand(".ukcp help");
@@ -59,7 +59,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PluginHelpPageTest, ConfigureShowsMessage)
         {
-            EXPECT_CALL(this->mockWindows, OpenWebBrowser(std::wstring(L"https://ukcp.vatsim.uk/web/help")))
+            EXPECT_CALL(this->mockWindows, OpenWebBrowser(std::wstring(page.helpUrl)))
                 .Times(1);
 
             this->page.Configure(123, "", {});

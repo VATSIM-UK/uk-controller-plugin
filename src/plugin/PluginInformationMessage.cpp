@@ -1,8 +1,10 @@
 #include "pch/stdafx.h"
 #include "plugin/PluginInformationMessage.h"
 #include "update/PluginVersion.h"
+#include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPlugin::HelperFunctions;
 
 namespace UKControllerPlugin {
     namespace Plugin {
@@ -47,7 +49,7 @@ namespace UKControllerPlugin {
 
             std::wstring message;
             message += L"UK Controller Plugin\r\n";
-            message += L"Version " + std::wstring(PluginVersion::wideVersion) + L"\r\n";
+            message += L"Version " + HelperFunctions::ConvertToWideString(PluginVersion::version) + L"\r\n";
             message += L"Copyright \xa9 " + std::to_wstring(1900 + buf.tm_year) + L" VATSIM United Kingdom Division";
 
             this->winApi.OpenMessageBox(
