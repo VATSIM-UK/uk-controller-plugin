@@ -9,6 +9,7 @@ namespace UKControllerPlugin {
                 ControllerPositionParser();
                 std::string NormaliseCallsign(std::string callsign) const;
                 std::string ParseFacilityFromCallsign(std::string callsign) const;
+                std::string ParseTypeFromCallsign(std::string callsign) const;
                 int IsMentoringPosition(std::string callsign) const;
 
                 // Represents a position that is not affiliated with training

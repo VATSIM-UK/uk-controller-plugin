@@ -107,6 +107,11 @@ namespace UKControllerPlugin {
                 return false;
             }
 
+            if (!this->activeCallsigns.UserHasCallsign())
+            {
+                return false;
+            }
+
             if (!this->StartSquawkUpdate(flightplan)) {
                 return false;
             }

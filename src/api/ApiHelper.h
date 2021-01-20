@@ -2,7 +2,6 @@
 #include "api/ApiResponse.h"
 #include "api/ApiRequestBuilder.h"
 #include "api/ApiInterface.h"
-#include "hold/HoldProfile.h"
 
 namespace UKControllerPlugin {
     namespace Curl {
@@ -48,17 +47,28 @@ namespace UKControllerPlugin {
                 std::string GetApiKey(void) const override;
                 nlohmann::json GetDependencyList(void) const override;
                 nlohmann::json GetHoldDependency(void) const override;
-                nlohmann::json GetGenericHoldProfiles(void) const override;
-                nlohmann::json GetUserHoldProfiles(void) const override;
+                nlohmann::json GetAssignedHolds(void) const override;;
+                void AssignAircraftToHold(std::string callsign, std::string navaid) const override;
+                void UnassignAircraftHold(std::string callsign) const override;
                 nlohmann::json GetMinStackLevels(void) const override;
                 nlohmann::json GetRegionalPressures(void) const override;
                 nlohmann::json GetUri(std::string uri) const;
-                void DeleteUserHoldProfile(unsigned int profileId) const override;
-                unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const override;
-                void UpdateUserHoldProfile(
-                    unsigned int id,
-                    std::string name,
-                    std::set<unsigned int> holds
+                nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const;
+                nlohmann::json GetAssignedStands(void) const override;
+                void AssignStandToAircraft(std::string callsign, int standId) const override;
+                void DeleteStandAssignmentForAircraft(std::string callsign) const override;
+                void SendEnrouteRelease(
+                    std::string aircraftCallsign,
+                    std::string sendingController,
+                    std::string targetController,
+                    int releaseType
+                ) const override;
+                void SendEnrouteReleaseWithReleasePoint(
+                    std::string aircraftCallsign,
+                    std::string sendingController,
+                    std::string targetController,
+                    int releaseType,
+                    std::string releasePoint
                 ) const override;
                 int UpdateCheck(std::string version) const override;
                 void SetApiKey(std::string key) override;

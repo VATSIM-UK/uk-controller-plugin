@@ -65,6 +65,21 @@ namespace UKControllerPluginTest {
             CPosition nextFixPositonWest;
         };
 
+        TEST_F(IntentionCodeGeneratorTest, StartsWithNoUserControllerPosition)
+        {
+            std::vector<std::unique_ptr<AirfieldGroup>> groups;
+            IntentionCodeGenerator intention(std::move(groups), *SectorExitRepositoryFactory::Create());
+            EXPECT_EQ("", intention.GetUserControllerPosition());
+        }
+
+        TEST_F(IntentionCodeGeneratorTest, ItSetsUserControllerPosition)
+        {
+            std::vector<std::unique_ptr<AirfieldGroup>> groups;
+            IntentionCodeGenerator intention(std::move(groups), *SectorExitRepositoryFactory::Create());
+            intention.SetUserControllerPosition("BLA");
+            EXPECT_EQ("BLA", intention.GetUserControllerPosition());
+        }
+
         TEST_F(IntentionCodeGeneratorTest, ReturnsCorrectCodeNoFlightplan)
         {
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
@@ -94,6 +109,28 @@ namespace UKControllerPluginTest {
                 27000
             );
             EXPECT_TRUE(data.intentionCode == "LL");
+            EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
+        }
+
+        TEST_F(IntentionCodeGeneratorTest, IgnoresAirfieldGroupsThatArentApplicable)
+        {
+            NiceMock<MockEuroscopeExtractedRouteInterface> mockFlightPlan;
+            std::vector<std::unique_ptr<AirfieldGroup>> groups;
+            std::unique_ptr<MockAirfieldGroup> mockAirfieldGroup(new MockAirfieldGroup(false));
+
+            MockAirfieldGroup * mockGroupRaw = mockAirfieldGroup.get();
+
+            groups.push_back(std::move(mockAirfieldGroup));
+            IntentionCodeGenerator intention(std::move(groups), *SectorExitRepositoryFactory::Create());
+            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
+                "BAW123",
+                "OMDB",
+                "EGNX",
+                mockFlightPlan,
+                27000
+            );
+            EXPECT_TRUE(data.intentionCode == "EGNX");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
         }
@@ -136,6 +173,46 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(data.intentionCode == "S3");
             EXPECT_TRUE(data.exitPointValid);
             EXPECT_EQ(1, data.exitPointIndex);
+        }
+
+        TEST_F(IntentionCodeGeneratorTest, ItSkipsNonApplicableCodes)
+        {
+            NiceMock<MockEuroscopeExtractedRouteInterface> mockFlightPlan;
+            std::vector<std::unique_ptr<AirfieldGroup>> groups;
+
+            ON_CALL(mockFlightPlan, GetPointsNumber())
+                .WillByDefault(Return(3));
+
+            ON_CALL(mockFlightPlan, GetPointName(0))
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(mockFlightPlan, GetPointName(1))
+                .WillByDefault(Return("LAKEY"));
+
+            ON_CALL(mockFlightPlan, GetPointName(2))
+                .WillByDefault(Return("KFJK"));
+
+            ON_CALL(mockFlightPlan, GetPointPosition(1))
+                .WillByDefault(Return(exitPositionSouth));
+
+            ON_CALL(mockFlightPlan, GetPointPosition(2))
+                .WillByDefault(Return(nextFixPositonSouth));
+
+            ON_CALL(mockFlightPlan, GetPointDistanceInMinutes(_))
+                .WillByDefault(Return(999));
+
+            std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
+            IntentionCodeGenerator intention(std::move(groups), std::move(*exitPoints));
+            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
+                "BAW123",
+                "EGKK",
+                "KFJK",
+                mockFlightPlan,
+                24000
+            );
+            EXPECT_TRUE(data.intentionCode == "KFJK");
+            EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ(intention.invalidExitPointIndex, data.exitPointIndex);
         }
 
         TEST_F(IntentionCodeGeneratorTest, ReturnsDestinationIcaoNoMatch)

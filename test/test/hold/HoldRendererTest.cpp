@@ -2,28 +2,34 @@
 #include "euroscope/UserSetting.h"
 #include "hold/HoldRenderer.h"
 #include "hold/HoldDisplayManager.h"
-#include "hold/HoldProfileManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
-#include "hold/ManagedHold.h"
 #include "mock/MockApiInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "mock/MockUserSettingProviderInterface.h"
 #include "plugin/PopupMenuItem.h"
+#include "navaids/NavaidCollection.h"
+#include "hold/PublishedHoldCollection.h"
+#include "mock/MockTaskRunnerInterface.h"
+#include "mock/MockDialogProvider.h"
+#include "dialog/DialogManager.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::Hold::HoldDisplayManager;
 using UKControllerPlugin::Hold::HoldManager;
-using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
-using UKControllerPlugin::Hold::ManagedHold;
+using UKControllerPlugin::Hold::PublishedHoldCollection;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
+using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -35,25 +41,32 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldRendererTest()
-                    : renderer(displayManager, 1, 2), profileManager(mockApi), displayFactory(mockPlugin, holdManager),
-                    displayManager(new HoldDisplayManager(profileManager, holdManager, displayFactory)),
-                    userSetting(mockUserSettingProvider)
+                    : renderer(displayManager, 1, 2),
+                    displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager),
+                    displayManager(new HoldDisplayManager(holdManager, displayFactory)),
+                    userSetting(mockUserSettingProvider), holdManager(mockApi, mockTaskRunner),
+                    dialogManager(mockDialog)
                 {
-                    this->holdManager.AddHold(ManagedHold({ 1, "WILLO", "WILLO", 8000, 15000, 209, "left", {} }));
-                    this->holdManager.AddHold(ManagedHold({ 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left", {} }));
-                    this->profileManager.AddProfile({ 1, "Test Profile", {1, 2} });
+                    this->holds.Add({ 1, "WILLO", "WILLO", 8000, 15000, 209, "left", {} });
+                    this->holds.Add({ 2, "TIMBA", "TIMBA", 8000, 15000, 209, "left", {} });
+                    this->navaids.AddNavaid({ 1, "WILLO", EuroScopePlugIn::CPosition() });
+                    this->navaids.AddNavaid({ 2, "TIMBA", EuroScopePlugIn::CPosition() });
 
                     displayManager->AsrLoadedEvent(this->userSetting);
-                    displayManager->LoadProfile(1);
+                    displayManager->LoadSelectedHolds({"WILLO", "TIMBA"});
                 }
 
                 NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 NiceMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
                 NiceMock<MockApiInterface> mockApi;
+                NiceMock<MockTaskRunnerInterface> mockTaskRunner;
+                NiceMock<MockDialogProvider> mockDialog;
+                DialogManager dialogManager;
                 UserSetting userSetting;
                 HoldManager holdManager;
-                HoldProfileManager profileManager;
+                NavaidCollection navaids;
+                PublishedHoldCollection holds;
                 HoldDisplayFactory displayFactory;
                 std::shared_ptr<HoldDisplayManager> displayManager;
                 HoldRenderer renderer;
@@ -109,38 +122,36 @@ namespace UKControllerPluginTest {
             POINT expectedDisplay1 = { 212, 323 };
             POINT expectedDisplay2 = { 100, 100 };
 
-            this->renderer.Move({ 212, 323, 600, 600 }, "1");
-            EXPECT_EQ(expectedDisplay1.x, this->displayManager->GetDisplay(1).GetDisplayPos().x);
-            EXPECT_EQ(expectedDisplay1.y, this->displayManager->GetDisplay(1).GetDisplayPos().y);
-            EXPECT_EQ(expectedDisplay2.x, this->displayManager->GetDisplay(2).GetDisplayPos().x);
-            EXPECT_EQ(expectedDisplay2.y, this->displayManager->GetDisplay(2).GetDisplayPos().y);
+            this->renderer.Move({ 212, 323, 600, 600 }, "WILLO");
+            EXPECT_EQ(expectedDisplay1.x, this->displayManager->GetDisplay("WILLO").GetDisplayPos().x);
+            EXPECT_EQ(expectedDisplay1.y, this->displayManager->GetDisplay("WILLO").GetDisplayPos().y);
+            EXPECT_EQ(expectedDisplay2.x, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().x);
+            EXPECT_EQ(expectedDisplay2.y, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().y);
         }
 
         TEST_F(HoldRendererTest, ItHandlesInvalidMoves)
         {
             POINT expectedDisplay = { 100, 100 };
 
-            this->renderer.Move({ 212, 323, 600, 600 }, "5");
-            EXPECT_EQ(expectedDisplay.x, this->displayManager->GetDisplay(1).GetDisplayPos().x);
-            EXPECT_EQ(expectedDisplay.y, this->displayManager->GetDisplay(1).GetDisplayPos().y);
-            EXPECT_EQ(expectedDisplay.x, this->displayManager->GetDisplay(2).GetDisplayPos().x);
-            EXPECT_EQ(expectedDisplay.y, this->displayManager->GetDisplay(2).GetDisplayPos().y);
+            this->renderer.Move({ 212, 323, 600, 600 }, "MAY");
+            EXPECT_EQ(expectedDisplay.x, this->displayManager->GetDisplay("WILLO").GetDisplayPos().x);
+            EXPECT_EQ(expectedDisplay.y, this->displayManager->GetDisplay("WILLO").GetDisplayPos().y);
+            EXPECT_EQ(expectedDisplay.x, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().x);
+            EXPECT_EQ(expectedDisplay.y, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().y);
         }
 
         TEST_F(HoldRendererTest, ItHandlesLeftClicks)
         {
-            this->renderer.LeftClick(1, "1/minus", this->mockRadarScreen);
-            EXPECT_EQ(1, this->displayManager->GetDisplay(1).GetLevelsSkipped());
-            EXPECT_EQ(0, this->displayManager->GetDisplay(2).GetLevelsSkipped());
+            this->renderer.LeftClick(this->mockRadarScreen, 1, "TIMBA/minus", {}, {});
+            EXPECT_EQ(14000, this->displayManager->GetDisplay("TIMBA").GetMaximumLevel());
+            EXPECT_EQ(15000, this->displayManager->GetDisplay("WILLO").GetMaximumLevel());
         }
 
         TEST_F(HoldRendererTest, ItHandlesInvalidLeftClicks)
         {
-            this->renderer.LeftClick(1, "55/minus", this->mockRadarScreen);
-
-
-            EXPECT_EQ(0, this->displayManager->GetDisplay(1).GetLevelsSkipped());
-            EXPECT_EQ(0, this->displayManager->GetDisplay(2).GetLevelsSkipped());
+            this->renderer.LeftClick(this->mockRadarScreen, 1, "ABC/minus", {}, {});
+            EXPECT_EQ(15000, this->displayManager->GetDisplay("WILLO").GetMaximumLevel());
+            EXPECT_EQ(15000, this->displayManager->GetDisplay("TIMBA").GetMaximumLevel());
         }
 
         TEST_F(HoldRendererTest, ItResetsDisplayPositions)
@@ -152,10 +163,30 @@ namespace UKControllerPluginTest {
             this->renderer.Move({ 200, 200, 200, 200 }, "2");
 
             this->renderer.ResetPosition();
-            EXPECT_EQ(expectedDisplay1.x, this->displayManager->GetDisplay(1).GetDisplayPos().x);
-            EXPECT_EQ(expectedDisplay1.y, this->displayManager->GetDisplay(1).GetDisplayPos().y);
-            EXPECT_EQ(expectedDisplay2.x, this->displayManager->GetDisplay(2).GetDisplayPos().x);
-            EXPECT_EQ(expectedDisplay2.y, this->displayManager->GetDisplay(2).GetDisplayPos().y);
+            EXPECT_EQ(expectedDisplay1.x, this->displayManager->GetDisplay("WILLO").GetDisplayPos().x);
+            EXPECT_EQ(expectedDisplay1.y, this->displayManager->GetDisplay("WILLO").GetDisplayPos().y);
+            EXPECT_EQ(expectedDisplay2.x, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().x);
+            EXPECT_EQ(expectedDisplay2.y, this->displayManager->GetDisplay("TIMBA").GetDisplayPos().y);
+        }
+
+        TEST_F(HoldRendererTest, ItHandlesClearedLevelClicks)
+        {
+            EXPECT_CALL(
+                this->mockRadarScreen,
+                ToggleTemporaryAltitudePopupList("BAW123", PointEq(POINT({ 1, 2 })), RectEq(RECT({ 1, 2, 3, 4 })))
+            )
+                .Times(1);
+            this->renderer.LeftClick(this->mockRadarScreen, 1, "TIMBA/cleared/BAW123", {1, 2}, {1, 2, 3, 4});
+        }
+
+        TEST_F(HoldRendererTest, ItHandlesCallsignClicks)
+        {
+            EXPECT_CALL(
+                this->mockRadarScreen,
+                TogglePluginTagFunction("BAW123", 9003, PointEq(POINT({ 1, 2 })), RectEq(RECT({ 1, 2, 3, 4 })))
+            )
+                .Times(1);
+            this->renderer.LeftClick(this->mockRadarScreen, 1, "TIMBA/callsign/BAW123", { 1, 2 }, { 1, 2, 3, 4 });
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

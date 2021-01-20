@@ -32,6 +32,7 @@ namespace UKControllerPlugin {
                 void OpenWebBrowser(std::wstring url) override;
                 void PlayWave(LPCTSTR sound);
                 std::string ReadFromFile(std::wstring filename, bool relativePath = true) override;
+                bool SetPermissions(std::wstring fileOrFolder, std::filesystem::perms permissions) override;
                 void WriteToFile(std::wstring filename, std::string data, bool truncate) override;
 
                 // Inherited via DialogProviderInterface

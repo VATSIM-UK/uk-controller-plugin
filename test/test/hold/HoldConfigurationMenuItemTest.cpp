@@ -5,12 +5,13 @@
 #include "dialog/DialogData.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
-#include "hold/HoldProfile.h"
-#include "hold/HoldProfileManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "mock/MockApiInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "plugin/PopupMenuItem.h"
+#include "navaids/NavaidCollection.h"
+#include "hold/PublishedHoldCollection.h"
+#include "mock/MockTaskRunnerInterface.h"
 
 using UKControllerPlugin::Hold::HoldConfigurationMenuItem;
 using UKControllerPlugin::Dialog::DialogManager;
@@ -18,12 +19,13 @@ using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Hold::HoldDisplayManager;
 using UKControllerPlugin::Hold::HoldManager;
-using UKControllerPlugin::Hold::HoldProfile;
-using UKControllerPlugin::Hold::HoldProfileManager;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Hold::PublishedHoldCollection;
+using UKControllerPlugin::Navaids::NavaidCollection;
 using ::testing::NiceMock;
 using ::testing::Test;
 using ::testing::_;
@@ -35,21 +37,24 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldConfigurationMenuItemTest()
-                : dialogManager(mockProvider), holdProfileManager(mockApi),
-                    displayFactory(mockPlugin, holdManager), menuItem(dialogManager, displayManager, 1),
-                    displayManager(new HoldDisplayManager(holdProfileManager, holdManager, displayFactory))
+                : dialogManager(mockProvider),
+                    displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager),
+                    menuItem(dialogManager, displayManager, 1),
+                    displayManager(new HoldDisplayManager(holdManager, displayFactory)),
+                    holdManager(mockApi, mockTaskRunner)
                 {
                     this->dialogManager.AddDialog(this->dialogData);
-                    this->holdProfileManager.AddProfile({ 55, "Test Profile", {} });
                 }
 
-                DialogData dialogData = { HOLD_SELECTOR_DIALOG, "", NULL, NULL, NULL };
+                NavaidCollection navaids;
+                PublishedHoldCollection holds;
+                DialogData dialogData = { IDD_HOLD_SELECTION, "", NULL, NULL, NULL };
+                NiceMock<MockTaskRunnerInterface> mockTaskRunner;
                 NiceMock<MockApiInterface> mockApi;
                 NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
                 UKControllerPlugin::Dialog::DialogManager dialogManager;
                 NiceMock<MockDialogProvider> mockProvider;
                 HoldManager holdManager;
-                HoldProfileManager holdProfileManager;
                 HoldDisplayFactory displayFactory;
                 std::shared_ptr<HoldDisplayManager> displayManager;
                 HoldConfigurationMenuItem menuItem;
@@ -95,23 +100,10 @@ namespace UKControllerPluginTest {
             this->menuItem.ProcessCommand(".ukcp hold");
         }
 
-        TEST_F(HoldConfigurationMenuItemTest, SelectProfileSetsDisplayManagerProfile)
+        TEST_F(HoldConfigurationMenuItemTest, SelectHoldsSetsHolds)
         {
-            this->menuItem.SelectProfile(55);
-            EXPECT_EQ(55, this->displayManager->GetCurrentProfile());
-        }
-
-        TEST_F(HoldConfigurationMenuItemTest, InvalidateProfileSetsDisplayManagerProfile)
-        {
-            this->displayManager->LoadProfile(55);
-            this->menuItem.InvalidateProfile(55);
-            EXPECT_EQ(55, this->displayManager->GetCurrentProfile());
-        }
-
-        TEST_F(HoldConfigurationMenuItemTest, InvalidateProfileDoesntSetDisplayManagerProfileIfNotCurrent)
-        {
-            this->menuItem.InvalidateProfile(55);
-            EXPECT_EQ(0, this->displayManager->GetCurrentProfile());
+            this->menuItem.SelectHolds(std::vector<std::string>({ "TIMBA", "LAM" }));
+            EXPECT_EQ(std::vector<std::string>({ "TIMBA", "LAM" }), this->menuItem.GetHolds());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

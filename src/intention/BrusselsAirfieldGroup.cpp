@@ -11,6 +11,13 @@ namespace UKControllerPlugin {
             this->Initialise();
         }
 
+        bool BrusselsAirfieldGroup::AppliesToController(
+            std::string callsign,
+            EuroscopeExtractedRouteInterface& route
+        ) const {
+            return !this->ControllerIsScottish(callsign);
+        }
+
         /*
             We only recognise the airfield if it's in Brussels AND the aircraft is going via KOK.
             Other cases use the intention code determined by the sector exit point in IntentionCode.
@@ -20,7 +27,8 @@ namespace UKControllerPlugin {
             EuroscopeExtractedRouteInterface & route
         ) const {
             return airfield.compare(0, 2, "EB") == 0 &&
-                this->AirfieldInList(airfield) && this->IsViaPoint("KOK", route);
+                (this->primaryAirfields.count(airfield) || this->secondaryAirfields.count(airfield)) &&
+                this->IsViaPoint("KOK", route);
         }
 
         /*
@@ -30,7 +38,9 @@ namespace UKControllerPlugin {
             std::string airfield,
             EuroscopeExtractedRouteInterface & route
         ) const {
-            return "EB";
+            return this->primaryAirfields.count(airfield)
+                ? this->PRIMARY_CODE
+                : this->SECONDARY_CODE;
         }
 
         /*
@@ -39,14 +49,6 @@ namespace UKControllerPlugin {
         bool BrusselsAirfieldGroup::Initialise(void)
         {
             AirfieldGroup::Initialise();
-            this->AddAirfieldToList("EBBR");
-            this->AddAirfieldToList("EBCI");
-            this->AddAirfieldToList("EBAW");
-            this->AddAirfieldToList("EBKT");
-            this->AddAirfieldToList("EBMB");
-            this->AddAirfieldToList("EBCV");
-            this->AddAirfieldToList("EBLG");
-
             return true;
         }
     }  // namespace IntentionCode

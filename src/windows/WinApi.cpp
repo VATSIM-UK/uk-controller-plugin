@@ -37,7 +37,14 @@ namespace UKControllerPlugin {
             try {
                 std::filesystem::create_directory(folder);
                 return true;
-            } catch (std::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error e) {
+                std::wstring message = L"Unable to create folder: "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
                 return false;
             }
         }
@@ -50,7 +57,14 @@ namespace UKControllerPlugin {
             try {
                 std::filesystem::create_directories(folder);
                 return true;
-            } catch (std::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error e) {
+                std::wstring message = L"Unable to create folder recursively: "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
                 return false;
             }
         }
@@ -62,8 +76,16 @@ namespace UKControllerPlugin {
         {
             try {
                 std::filesystem::create_directories(this->filesDirectory + L"/" + folder);
+                this->SetPermissions(this->filesDirectory + L"/" + folder, std::filesystem::perms::all);
                 return true;
-            } catch (std::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error e) {
+                std::wstring message = L"Unable to create local folder recursively: "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
                 return false;
             }
         }
@@ -86,7 +108,14 @@ namespace UKControllerPlugin {
         {
             try {
                 return std::filesystem::exists(this->GetFullPathToLocalFile(filename));
-            } catch (std::filesystem::filesystem_error) {
+            } catch (std::filesystem::filesystem_error e) {
+                std::wstring message = L"Unable to check if file exists: "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
                 return false;
             }
         }
@@ -188,6 +217,13 @@ namespace UKControllerPlugin {
             if (file.is_open()) {
                 file << data;
                 file.close();
+            } else {
+                std::wstring message = L"File not opened for writing: " + filename;
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
             }
         }
 
@@ -198,8 +234,14 @@ namespace UKControllerPlugin {
         {
             try {
                 std::filesystem::create_directories(endFile.substr(0, endFile.find_last_of('/')));
-            } catch (std::filesystem::filesystem_error) {
-                // Do nothing
+            } catch (std::filesystem::filesystem_error e) {
+                std::wstring message = L"Error when creating directories "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
             }
         }
 
@@ -216,6 +258,24 @@ namespace UKControllerPlugin {
             );
         }
 
+        bool WinApi::SetPermissions(std::wstring fileOrFolder, std::filesystem::perms permissions)
+        {
+            try {
+                std::filesystem::permissions(fileOrFolder, permissions);
+                return true;
+            }
+            catch (std::filesystem::filesystem_error e) {
+                std::wstring message = L"Unable to set filesystem permissions on " + fileOrFolder + L" "
+                    + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
+                return false;
+            }
+        }
+
         /*
             Read from the given path, but here we don't care
             whether the string is wide or not.
@@ -229,6 +289,13 @@ namespace UKControllerPlugin {
                     (std::istreambuf_iterator<char>()));
                 file.close();
                 return data;
+            } else {
+                std::wstring message = L"File not opened for reading";
+                this->OpenMessageBox(
+                    message.c_str(),
+                    L"UKCP Filesystem Error",
+                    MB_ICONWARNING | MB_OK
+                );
             }
 
             return "";

@@ -57,7 +57,7 @@ namespace UKControllerPluginTest {
         TEST_F(DeferredFlightplanEventTest, ItHandlesMissingFlightplansGracefully)
         {
             ON_CALL(this->mockPlugin, GetFlightplanForCallsign(this->callsign))
-                .WillByDefault(Throw(std::invalid_argument("Boo!")));
+                .WillByDefault(Return(nullptr));
 
             ON_CALL(this->mockPlugin, GetRadarTargetForCallsign(this->callsign))
                 .WillByDefault(Return(this->mockRadarTarget));
@@ -71,7 +71,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(this->mockFlightplan));
 
             ON_CALL(this->mockPlugin, GetRadarTargetForCallsign(this->callsign))
-                .WillByDefault(Throw(std::invalid_argument("Boo!")));
+                .WillByDefault(Return(nullptr));
 
             EXPECT_NO_THROW(this->event.Run());
         }

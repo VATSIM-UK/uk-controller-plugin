@@ -39,7 +39,6 @@
 #include "euroscope/UserSettingAwareCollection.h"
 #include "hold/HoldSelectionMenu.h"
 #include "dialog/DialogManager.h"
-#include "hold/HoldProfileManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "setting/SettingRepository.h"
 #include "websocket/WebsocketConnection.h"
@@ -51,6 +50,11 @@
 #include "sectorfile/RunwayCollection.h"
 #include "handoff/HandoffCollection.h"
 #include "regional/RegionalPressureManager.h"
+#include "srd/SrdSearchHandler.h"
+#include "navaids/NavaidCollection.h"
+#include "hold/PublishedHoldCollection.h"
+#include "controller/HandoffEventHandlerCollection.h"
+#include "integration/ExternalMessageEventHandler.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -68,7 +72,7 @@ namespace UKControllerPlugin {
 
             // The helpers and collections
             std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
-            std::unique_ptr<UKControllerPlugin::TaskManager::TaskRunner> taskRunner;
+            std::unique_ptr<UKControllerPlugin::TaskManager::TaskRunnerInterface> taskRunner;
             std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
             std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> flightplans;
             std::unique_ptr<UKControllerPlugin::Message::UserMessager> userMessager;
@@ -90,6 +94,8 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferredHandlers;
             std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareCollection> userSettingHandlers;
             std::unique_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareCollection> runwayDialogEventHandlers;
+            std::unique_ptr<UKControllerPlugin::Controller::HandoffEventHandlerCollection> controllerHandoffHandlers;
+            std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageEventHandler> externalEventHandler;
 
             // The plugin
             std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;
@@ -105,7 +111,6 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Squawk::SquawkEventHandler> squawkEvents;
             std::unique_ptr<UKControllerPlugin::Squawk::SquawkGenerator> squawkGenerator;
             std::unique_ptr<UKControllerPlugin::Hold::HoldManager> holdManager;
-            std::unique_ptr<UKControllerPlugin::Hold::HoldProfileManager> holdProfiles;
             std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
             std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
             std::unique_ptr<UKControllerPlugin::Handoff::HandoffCollection> handoffs;
@@ -125,6 +130,8 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
             std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
             std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
+            std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
+            std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
 
             // Websocket
             std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnectionInterface> websocket;

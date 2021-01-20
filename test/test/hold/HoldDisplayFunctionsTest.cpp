@@ -2,11 +2,9 @@
 #include "hold/HoldDisplayFunctions.h"
 #include "hold/HoldingData.h"
 #include "hold/CompareHolds.h"
-#include "hold/HoldProfile.h"
 
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::CompareHolds;
-using UKControllerPlugin::Hold::HoldProfile;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -26,10 +24,16 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(L"12345", UKControllerPlugin::Hold::ConvertToTchar(12345));
         }
 
-        TEST(HoldDisplayFunctionsTest, ItReturnsCorrectDisplayLevelUnder100)
+        TEST(HoldDisplayFunctionsTest, ItReturnsCorrectDisplayLevelWithRoundingUp)
+        {
+            std::wstring expected = L"001";
+            EXPECT_TRUE(expected == UKControllerPlugin::Hold::GetLevelDisplayString(50));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsCorrectDisplayLevelUnder100RoundDown)
         {
             std::wstring expected = L"000";
-            EXPECT_TRUE(expected == UKControllerPlugin::Hold::GetLevelDisplayString(50));
+            EXPECT_TRUE(expected == UKControllerPlugin::Hold::GetLevelDisplayString(49));
         }
 
         TEST(HoldDisplayFunctionsTest, ItReturnsCorrectDisplayLevelUnder1000)
@@ -136,13 +140,39 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(L"0m" == UKControllerPlugin::Hold::GetTimeInHoldDisplayString(testTime));
         }
 
-        TEST(HoldDisplayFunctionsTest, GetSelectedHoldProfileTextReturnsText)
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionPositive)
         {
-            HoldProfile profile{ 1, "Test Profile" };
-            EXPECT_EQ(
-                L"Selected Profile: Test Profile",
-                UKControllerPlugin::Hold::GetSelectedHoldProfileText(profile)
-            );
+            EXPECT_EQ(1, UKControllerPlugin::Hold::GetVerticalSpeedDirection(500));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionPositiveBoundary)
+        {
+            EXPECT_EQ(1, UKControllerPlugin::Hold::GetVerticalSpeedDirection(300));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNoneBoundary)
+        {
+            EXPECT_EQ(0, UKControllerPlugin::Hold::GetVerticalSpeedDirection(299));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNone)
+        {
+            EXPECT_EQ(0, UKControllerPlugin::Hold::GetVerticalSpeedDirection(0));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNoneNegativeBoundary)
+        {
+            EXPECT_EQ(0, UKControllerPlugin::Hold::GetVerticalSpeedDirection(-299));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNegativeBoundary)
+        {
+            EXPECT_EQ(-1, UKControllerPlugin::Hold::GetVerticalSpeedDirection(-300));
+        }
+
+        TEST(HoldDisplayFunctionsTest, ItReturnsVerticalSpeedDirectionNegative)
+        {
+            EXPECT_EQ(-1, UKControllerPlugin::Hold::GetVerticalSpeedDirection(-500));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

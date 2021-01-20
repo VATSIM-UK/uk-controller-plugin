@@ -1,7 +1,7 @@
 #include "pch/stdafx.h"
 #include "hold/HoldModule.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "hold/HoldManagerFactory.h"
+#include "hold/PublishedHoldCollectionFactory.h"
 #include "hold/HoldEventHandler.h"
 #include "hold/HoldManager.h"
 #include "message/UserMessager.h"
@@ -16,14 +16,14 @@
 #include "hold/HoldSelectionMenu.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "dialog/DialogData.h"
-#include "hold/HoldConfigurationDialogFactory.h"
-#include "hold/HoldProfileManagerFactory.h"
 #include "hold/HoldRenderer.h"
 #include "hold/HoldConfigurationMenuItem.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "hold/HoldDisplayManager.h"
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "hold/HoldDisplayConfigurationDialog.h"
+#include "api/ApiException.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Hold::HoldEventHandler;
@@ -33,15 +33,14 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Api::ApiInterface;
+using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::HoldConfigurationDialog;
 using UKControllerPlugin::Dialog::DialogData;
-using UKControllerPlugin::Hold::CreateHoldManager;
-using UKControllerPlugin::Hold::CreateHoldConfigurationDialog;
-using UKControllerPlugin::Hold::CreateHoldProfileManager;
+using UKControllerPlugin::Hold::CreatePublishedHoldCollection;
 using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
@@ -81,13 +80,13 @@ namespace UKControllerPlugin {
                 holdDependencyKey,
                 nlohmann::json::array()
             );
-            container.holdManager = CreateHoldManager(holdDependency, container);
+            container.holdManager = std::make_unique<HoldManager>(*container.api, *container.taskRunner);
+            container.publishedHolds = CreatePublishedHoldCollection(holdDependency, container);
 
             // Create the object to manage the popup menu
             int holdSelectionCancelId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             container.holdSelectionMenu = std::make_shared<HoldSelectionMenu>(
                 *container.holdManager,
-                *container.holdProfiles,
                 *container.plugin,
                 holdSelectionCancelId
             );
@@ -108,9 +107,9 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(openHoldPopupMenu);
 
             // The selection cancel function takes the base id
-            CallbackFunction holdSelectionCancelCallback(
+            CallbackFunction holdSelectionCallback(
                 holdSelectionCancelId,
-                "Hold Selection Cancel",
+                "Hold Selection",
                 std::bind(
                     &HoldSelectionMenu::MenuItemClicked,
                     container.holdSelectionMenu,
@@ -118,38 +117,15 @@ namespace UKControllerPlugin {
                     std::placeholders::_2
                 )
             );
-            container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCancelCallback);
+            container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
 
-            // Add the hold selection callback function for each hold in the collection so we can tell between them
-            unsigned int i = 0;
-            while (i < container.holdManager->CountHolds()) {
-                CallbackFunction holdSelectionCallback(
-                    container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
-                    "Hold Selection",
-                    std::bind(
-                        &HoldSelectionMenu::MenuItemClicked,
-                        container.holdSelectionMenu,
-                        std::placeholders::_1,
-                        std::placeholders::_2
-                    )
-                );
-                container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
-                i++;
-            }
-
-            // Create the hold dialog and profile manager
-            container.holdProfiles = CreateHoldProfileManager(
-                dependencyProvider.LoadDependency(holdProfileDependencyKey, nlohmann::json::array()),
-                *container.api
-            );
-
-            std::shared_ptr<HoldConfigurationDialog> dialog = CreateHoldConfigurationDialog(
-                holdDependency,
-                *container.holdProfiles
+            // Create the hold selection dialog
+            std::shared_ptr<HoldConfigurationDialog> dialog = std::make_shared<HoldConfigurationDialog>(
+                *container.navaids
             );
             container.dialogManager->AddDialog(
                 {
-                    HOLD_SELECTOR_DIALOG,
+                    IDD_HOLD_SELECTION,
                     "Hold Configuration",
                     reinterpret_cast<DLGPROC>(dialog->WndProc),
                     reinterpret_cast<LPARAM>(dialog.get()),
@@ -157,25 +133,82 @@ namespace UKControllerPlugin {
                 }
             );
 
+            // Create the hold display configuration dialog
+            std::shared_ptr<HoldDisplayConfigurationDialog> displayDialog =
+                std::make_shared<HoldDisplayConfigurationDialog>();
+            container.dialogManager->AddDialog(
+                {
+                    IDD_HOLD_PARAMS,
+                    "Hold Parameters",
+                    reinterpret_cast<DLGPROC>(displayDialog->WndProc),
+                    reinterpret_cast<LPARAM>(displayDialog.get()),
+                    displayDialog
+                }
+            );
+
             // Create the event handler and register
             eventHandler = std::make_shared<HoldEventHandler>(
                 *container.holdManager,
+                *container.navaids,
                 *container.plugin,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
 
-            container.flightplanHandler->RegisterHandler(eventHandler);
-            container.timedHandler->RegisterEvent(eventHandler, timedEventFrequency);
             container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
-
-            // If there aren't any holds, tell the user this explicitly
-            if (container.holdManager->CountHolds() == 0) {
-                BootstrapWarningMessage warning("No holds were loaded for the hold manager");
-                userMessages.SendMessageToUser(warning);
-            }
+            container.timedHandler->RegisterEvent(eventHandler, 7);
+            container.websocketProcessors->AddProcessor(eventHandler);
 
             // Create the hold display factory
-            container.holdDisplayFactory.reset(new HoldDisplayFactory(*container.plugin, *container.holdManager));
+            container.holdDisplayFactory.reset(
+                new HoldDisplayFactory(
+                    *container.plugin,
+                    *container.holdManager,
+                    *container.navaids,
+                    *container.publishedHolds,
+                    *container.dialogManager
+                )
+            );
+
+            // Start a task to load all the already assigned holds
+            container.taskRunner->QueueAsynchronousTask([&container]() {
+                nlohmann::json assignedHolds;
+                try {
+                    assignedHolds = container.api->GetAssignedHolds();
+                } catch (ApiException exception) {
+                    LogError("Api exception thrown when loading assigned holds");
+                    return;
+                }
+
+                if (!assignedHolds.is_array()) {
+                    LogError("Assigned holds is not array");
+                    return;
+                }
+
+                for (nlohmann::json::const_iterator it = assignedHolds.cbegin(); it != assignedHolds.cend(); ++it) {
+                    if (
+                        !it->is_object() ||
+                        !it->contains("callsign") ||
+                        !it->at("callsign").is_string() ||
+                        !it->contains("navaid") ||
+                        !it->at("navaid").is_string()
+                    ) {
+                        LogError("Invalid assigned hold: " + it->dump());
+                        return;
+                    }
+
+                    container.holdManager->AssignAircraftToHold(
+                        it->at("callsign").get<std::string>(),
+                        it->at("navaid").get<std::string>(),
+                        false
+                    );
+                }
+
+                LogInfo(
+                    "Loaded " + std::to_string(container.holdManager->CountHoldingAircraft()) +
+                        " aircraft into assigned holds"
+                );
+
+            });
         }
 
         /*
@@ -190,7 +223,6 @@ namespace UKControllerPlugin {
         ) {
             // Display manager
             std::shared_ptr<HoldDisplayManager> displayManager = std::make_shared<HoldDisplayManager>(
-                *container.holdProfiles,
                 *container.holdManager,
                 *container.holdDisplayFactory
             );

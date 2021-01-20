@@ -23,6 +23,7 @@ namespace UKControllerPlugin {
     }  // namespace TaskManager
     namespace Controller {
         class ControllerStatusEventHandlerCollection;
+        class HandoffEventHandlerCollection;
     }  // namespace Controller
     namespace TimedEvent {
         class TimedEventCollection;
@@ -71,7 +72,8 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Metar::MetarEventHandlerCollection & metarHandlers,
                 const UKControllerPlugin::Plugin::FunctionCallEventHandler & functionCallHandler,
                 const UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers,
-                const UKControllerPlugin::Euroscope::RunwayDialogAwareCollection & runwayDialogHandlers
+                const UKControllerPlugin::Euroscope::RunwayDialogAwareCollection & runwayDialogHandlers,
+                const UKControllerPlugin::Controller::HandoffEventHandlerCollection & controllerHandoffHandlers
             );
             void AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item) override;
             void ChatAreaMessage(
@@ -132,6 +134,20 @@ namespace UKControllerPlugin {
             void RegisterTagFunction(int itemCode, std::string description) override;
             void RegisterTagItem(int itemCode, std::string description);
             void TriggerFlightplanUpdateForCallsign(std::string callsign);
+            void ApplyFunctionToAllFlightplans(
+                std::function<
+                void(
+                std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>,
+                std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+            )
+                > function
+            ) override;
+            void ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue) override;
+            void OnFlightPlanFlightStripPushed(
+                EuroScopePlugIn::CFlightPlan flightplan,
+                const char* sendingController,
+                const char* targetController
+            ) override;
 
             // Inherited via UserSettingProviderInterface
             std::string GetKey(std::string key) override;
@@ -177,6 +193,9 @@ namespace UKControllerPlugin {
 
             // Handles runways changing activity
             const UKControllerPlugin::Euroscope::RunwayDialogAwareCollection & runwayDialogHandlers;
+
+            // Handles handoffs between controllers
+            const UKControllerPlugin::Controller::HandoffEventHandlerCollection& controllerHandoffHandlers;
 
             // Whether or not we've initialised the plugin.
             bool initialised = false;

@@ -7,12 +7,13 @@
 #define IDD_HISTORY_TRAIL               102
 #define IDD_DIALOG2                     106
 #define IDD_GENERAL_SETTINGS            106
-#define HOLD_SELECTOR_DIALOG            109
 #define IDD_TIMER_CONFIGURATION         111
 #define IDD_MINSTACK                    113
 #define IDD_MINSTACK1                   114
 #define IDD_REGIONAL_PRESSURE           114
-#define IDD_DIALOG3                     117
+#define IDD_SRD_SEARCH                  115
+#define IDD_HOLD_PARAMS                 117
+#define IDD_HOLD_SELECTION              119
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -37,7 +38,8 @@
 #define IDC_FILTER_MAX_LABEL            1018
 #define IDC_MAX_FILTER_LABEL            1018
 #define HOLD_PROFILE_NAME_EDIT          1018
-#define IDC_HOLD_PROFILE_NAME_EDIT      1018
+#define IDC_SRD_ORIGIN                  1018
+#define IDC_HOLD_MINIMUM                1018
 #define IDC_MIN_FILTER_TEXT             1019
 #define IDC_MIN_FILTER_SPIN             1020
 #define IDC_MIN_FILTER_LABEL            1021
@@ -48,28 +50,18 @@
 #define GS_DIALOG_QNH_CHECK             1024
 #define IDC_HOLD_PROFILE_SELECT_LABEL   1025
 #define IDC_HOLD_SELECT_LOAD            1026
-#define IDC_HOLD_SELECT_DISPLAY         1026
 #define IDC_HOLD_SELECT_SAVE            1027
-#define IDC_HOLD_PROFILE_UPDATE         1027
 #define IDC_COMBO3                      1030
-#define IDC_HOLD_SELECTOR               1030
 #define IDC_HOLD_OPEN                   1031
-#define IDC_HOLD_ADD                    1031
 #define IDC_BUTTON4                     1032
 #define IDC_MINSTACK_ADD                1032
-#define HOLD_SELECTOR_OK                1033
 #define IDC_LIST1                       1034
-#define IDC_HOLD_PROFILE_LIST           1034
 #define IDC_MINSTACK_LIST               1034
-#define IDC_HOLD_REMOVE                 1035
 #define IDC_HOLD_LIST                   1036
-#define IDC_HOLD_PROFILE_STATIC         1037
-#define IDC_HOLD_SELECT_LABEL           1039
-#define IDC_HOLD_PROFILE_LABEL          1040
-#define IDC_HOLD_PROFILE_NEW            1041
-#define IDC_HOLD_PROFILE_DELETE         1042
-#define HOLD_PROFILE_NAME_STATIC        1044
 #define IDC_BUTTON2                     1046
+#define IDC_ROUTE_COPY                  1046
+#define IDC_SRD_ROUTE_COPY              1046
+#define IDC_HOLD_CLOSE                  1046
 #define TIMER1_EDIT_DURATION            1047
 #define TIMER2_EDIT_DURATION            1048
 #define IDC_TIME_FORMAT_CHECK           1048
@@ -99,14 +91,34 @@
 #define IDC_RPS_DELETE                  1071
 #define IDC_RPS_SELECT                  1072
 #define IDC_RPS_ADD                     1073
+#define IDC_SRD_ORIGIN_STATIC           1075
+#define IDC_SRD_DESTINATION             1076
+#define IDC_SRD_CRUISE                  1078
+#define IDC_STATIC_REQUIRED             1079
+#define IDC_SRD_CRUISE_STATIC           1080
+#define IDC_SRD_DESTINATION_STATIC      1081
+#define IDC_SRD_RESULTS                 1085
+#define IDC_BUTTON1                     1086
+#define IDC_SRD_SEARCH                  1086
+#define IDC_HOLDS_SAVE                  1086
+#define IDC_EDIT1                       1087
+#define IDC_SRD_NOTES                   1087
+#define IDC_NOTES_STATIC                1088
+#define IDC_HOLD_PARAMS_MIN_STATIC      1089
+#define IDC_HOLD_PARAMS_MAX_STATIC      1090
+#define IDC_HOLD_MIN_SPIN               1091
+#define IDC_HOLD_MAX                    1092
+#define IDC_HOLD_MAXIMUM                1092
+#define IDC_SPIN2                       1093
+#define IDC_HOLD_MAX_SPIN               1093
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        119
+#define _APS_NEXT_RESOURCE_VALUE        121
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1078
+#define _APS_NEXT_CONTROL_VALUE         1094
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

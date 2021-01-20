@@ -2,6 +2,7 @@
 #include "api/ApiRequestBuilder.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::Srd::SrdSearchParameters;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -15,7 +16,7 @@ namespace UKControllerPlugin {
         /*
             Adds common headers such as the auth headers.
         */
-        CurlRequest ApiRequestBuilder::AddCommonHeaders(UKControllerPlugin::Curl::CurlRequest request) const
+        CurlRequest ApiRequestBuilder::AddCommonHeaders(CurlRequest request) const
         {
             request.AddHeader("Authorization", "Bearer " + this->apiKey);
             request.AddHeader("Accept", "application/json");
@@ -44,13 +45,15 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Method for querying any API URI
+            Method for querying any API URI. On this method only we disable the
+            CURLOPT_TIMEOUT as this method is used to download dependencies and may
+            be quite big.
         */
-        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildGetUriRequest(std::string uri) const
+        CurlRequest ApiRequestBuilder::BuildGetUriRequest(std::string uri) const
         {
-            return this->AddCommonHeaders(
-                CurlRequest(uri, CurlRequest::METHOD_GET)
-            );
+            CurlRequest request(uri, CurlRequest::METHOD_GET);
+            request.SetMaxRequestTime(0L);
+            return this->AddCommonHeaders(request);
         }
 
         /*
@@ -93,7 +96,7 @@ namespace UKControllerPlugin {
         /*
             Builds a request for getting minimum stack levels.
         */
-        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildMinStackLevelRequest(void) const
+        CurlRequest ApiRequestBuilder::BuildMinStackLevelRequest(void) const
         {
             return this->AddCommonHeaders(CurlRequest(apiDomain + "/msl", CurlRequest::METHOD_GET));
         }
@@ -101,11 +104,60 @@ namespace UKControllerPlugin {
         /*
             Builds a request for all the regional pressures
         */
-        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildRegionalPressureRequest(void) const
+        CurlRequest ApiRequestBuilder::BuildRegionalPressureRequest(void) const
         {
             return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/regional-pressure",
-                CurlRequest::METHOD_GET)
+                CurlRequest(apiDomain + "/regional-pressure", CurlRequest::METHOD_GET)
+            );
+        }
+
+        /*
+            Builds a request for querying the SRD
+        */
+        CurlRequest ApiRequestBuilder::BuildSrdQueryRequest(SrdSearchParameters parameters) const
+        {
+            std::string uri = apiDomain + "/srd/route/search?";
+            uri += "origin=" + parameters.origin;
+            uri += "&destination=" + parameters.destination;
+
+            if (parameters.requestedLevel != NULL) {
+                uri += "&requestedLevel=" + std::to_string(parameters.requestedLevel);
+            }
+
+            return this->AddCommonHeaders(CurlRequest(uri, CurlRequest::METHOD_GET));
+        }
+
+        /*
+            Builds a request for getting all the stand assignments
+        */
+        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildGetStandAssignmentsRequest(void) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(apiDomain + "/stand/assignment", CurlRequest::METHOD_GET)
+            );
+        }
+
+        /*
+            Builds a request for assigning a stand to an aircraft
+        */
+        CurlRequest ApiRequestBuilder::BuildAssignStandToAircraftRequest(std::string callsign, int standId) const
+        {
+            CurlRequest request(apiDomain + "/stand/assignment", CurlRequest::METHOD_PUT);
+            nlohmann::json body;
+            body["callsign"] = callsign;
+            body["stand_id"] = standId;
+            request.SetBody(body.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
+        /*
+            Builds a request for deleting an aircrafts stand assignment
+        */
+        CurlRequest ApiRequestBuilder::BuildDeleteStandAssignmentForAircraftRequest(std::string callsign) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(apiDomain + "/stand/assignment/" + callsign, CurlRequest::METHOD_DELETE)
             );
         }
 
@@ -178,57 +230,72 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Builds a request to download all the users custom hold profiles
+            Builds a request to get all the currently assigned holds
         */
-        CurlRequest ApiRequestBuilder::BuildUserHoldProfilesRequest(void) const
+        CurlRequest ApiRequestBuilder::BuildAllAssignedHoldsRequest(void) const
         {
-            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/profile", CurlRequest::METHOD_GET));
+            return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/assigned", CurlRequest::METHOD_GET));
         }
 
         /*
-            Builds a request to delete a users custom hold profile
+            Build request to assign an aircraft to a hold
         */
-        CurlRequest ApiRequestBuilder::BuildDeleteUserHoldProfileRequest(unsigned int id) const
+        CurlRequest ApiRequestBuilder::BuildSetAssignedHoldRequest(std::string callsign, std::string navaid) const
         {
-            return this->AddCommonHeaders(
-                CurlRequest(apiDomain + "/hold/profile/" + std::to_string(id), CurlRequest::METHOD_DELETE)
-            );
-        }
-
-        /*
-            Builds a request to create a custom hold profile for a user
-        */
-        CurlRequest ApiRequestBuilder::BuildCreateUserHoldProfileRequest(
-            std::string profileName,
-            std::set<unsigned int> holdIds
-        ) const {
-            nlohmann::json body;
-            body["name"] = profileName;
-            body["holds"] = holdIds;
-
-            CurlRequest request(apiDomain + "/hold/profile", CurlRequest::METHOD_PUT);
-            request.SetBody(body.dump());
+            CurlRequest request(this->apiDomain + "/hold/assigned", CurlRequest::METHOD_PUT);
+            nlohmann::json data{
+                {"callsign", callsign},
+                {"navaid", navaid}
+            };
+            request.SetBody(data.dump());
 
             return this->AddCommonHeaders(request);
         }
 
         /*
-            Builds a request to update a users custom hold profile
+            Build request to unassign an aircraft from all holds
         */
-        CurlRequest ApiRequestBuilder::BuildUpdateUserHoldProfileRequest(
-            unsigned int profileId,
-            std::string profileName,
-            std::set<unsigned int> holdIds
-        ) const {
-            nlohmann::json body;
-            body["name"] = profileName;
-            body["holds"] = holdIds;
-
-            CurlRequest request(
-                apiDomain + "/hold/profile/" + std::to_string(profileId),
-                CurlRequest::METHOD_PUT
+        CurlRequest ApiRequestBuilder::BuildDeleteAssignedHoldRequest(std::string callsign) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(apiDomain + "/hold/assigned/" + callsign, CurlRequest::METHOD_DELETE)
             );
-            request.SetBody(body.dump());
+        }
+
+        CurlRequest ApiRequestBuilder::BuildEnrouteReleaseRequestWithReleasePoint(
+            std::string aircraftCallsign,
+            std::string sendingController,
+            std::string targetController,
+            int releaseType,
+            std::string releasePoint
+        ) const {
+            CurlRequest request(this->apiDomain + "/release/enroute", CurlRequest::METHOD_POST);
+            nlohmann::json data{
+                {"callsign", aircraftCallsign},
+                {"type", releaseType},
+                {"initiating_controller", sendingController},
+                {"target_controller", targetController},
+                {"release_point", releasePoint},
+            };
+            request.SetBody(data.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
+        CurlRequest ApiRequestBuilder::BuildEnrouteReleaseRequest(
+            std::string aircraftCallsign,
+            std::string sendingController,
+            std::string targetController,
+            int releaseType
+        ) const {
+            CurlRequest request(this->apiDomain + "/release/enroute", CurlRequest::METHOD_POST);
+            nlohmann::json data{
+                {"callsign", aircraftCallsign},
+                {"type", releaseType},
+                {"initiating_controller", sendingController},
+                {"target_controller", targetController},
+            };
+            request.SetBody(data.dump());
 
             return this->AddCommonHeaders(request);
         }

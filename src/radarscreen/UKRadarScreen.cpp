@@ -5,9 +5,12 @@
 #include "helper/HelperFunctions.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "euroscope/UserSetting.h"
+#include "update/PluginVersion.h"
 
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Plugin::PluginVersion;
+
 namespace UKControllerPlugin {
 
     UKRadarScreen::UKRadarScreen(
@@ -151,7 +154,7 @@ namespace UKControllerPlugin {
         int Button
     ) {
         if (Button == EuroScopePlugIn::BUTTON_LEFT) {
-            this->renderers.LeftClickScreenObject(ObjectType, sObjectId, *this);
+            this->renderers.LeftClickScreenObject(*this, ObjectType, sObjectId, Pt, Area);
         } else if (Button == EuroScopePlugIn::BUTTON_RIGHT) {
             this->renderers.RightClickScreenObject(ObjectType, sObjectId, *this);
         }
@@ -211,5 +214,35 @@ namespace UKControllerPlugin {
     void UKRadarScreen::ToogleMenu(RECT area, std::string title, int numColumns)
     {
         this->GetPlugIn()->OpenPopupList(area, title.c_str(), numColumns);
+    }
+
+    void UKRadarScreen::ToggleTemporaryAltitudePopupList(std::string callsign, POINT mousePos, RECT tagItemArea)
+    {
+        this->GetPlugIn()->SetASELAircraft(this->GetPlugIn()->FlightPlanSelect(callsign.c_str()));
+        this->StartTagFunction(
+            callsign.c_str(),
+            NULL,
+            EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
+            callsign.c_str(),
+            NULL,
+            EuroScopePlugIn::TAG_ITEM_FUNCTION_TEMP_ALTITUDE_POPUP,
+            mousePos,
+            tagItemArea
+        );
+    }
+
+    void UKRadarScreen::TogglePluginTagFunction(std::string callsign, int functionId, POINT mousePos, RECT tagItemArea)
+    {
+        this->GetPlugIn()->SetASELAircraft(this->GetPlugIn()->FlightPlanSelect(callsign.c_str()));
+        this->StartTagFunction(
+            callsign.c_str(),
+            NULL,
+            EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
+            callsign.c_str(),
+            PluginVersion::title,
+            functionId,
+            mousePos,
+            tagItemArea
+        );
     }
 }  // namespace UKControllerPlugin

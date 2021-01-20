@@ -121,6 +121,21 @@
     <Filter Include="test\regional">
       <UniqueIdentifier>{55d16101-3944-4b04-b2a1-d177a9fe329b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\srd">
+      <UniqueIdentifier>{7410078c-d9f2-47e3-bf42-0ff32297264e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\navaids">
+      <UniqueIdentifier>{6406bb4f-a9e7-4f19-8601-48d7f4fc81d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\stands">
+      <UniqueIdentifier>{2912fe25-720b-4cb7-97ad-099a4bd010d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\releases">
+      <UniqueIdentifier>{c322a647-fb24-42df-bb70-3dbdd857b17d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\integration">
+      <UniqueIdentifier>{edc625ab-5fc3-4fcc-9abe-29d1e9513b23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -307,9 +322,6 @@
       <Filter>test\intention</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\intention\SectorExitPointLelnaTest.cpp">
-      <Filter>test\intention</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\intention\SectorExitPointShanwickTest.cpp">
       <Filter>test\intention</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\intention\SectorExitPointTest.cpp">
@@ -527,9 +539,6 @@
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp">
       <Filter>test\squawk</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\ManagedHoldTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\hold\HoldingAircraftTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
@@ -551,31 +560,7 @@
     <ClCompile Include="..\..\test\test\hold\HoldingDataSerializerTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldManagerFactoryTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogFactoryTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldConfigurationDialogTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\hold\CompareHoldsDescriptionTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldProfileSerializerTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldProfileTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldProfileManagerTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\HoldProfileManagerFactoryTest.cpp">
-      <Filter>test\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\hold\CompareHoldProfileTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionTest.cpp">
@@ -760,6 +745,81 @@
     <ClCompile Include="..\..\test\test\plugin\PluginHelpPageTest.cpp">
       <Filter>test\plugin</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointScottishTest.cpp">
+      <Filter>test\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\datablock\DatablockFunctionsTest.cpp">
+      <Filter>test\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\srd\SrdModuleTest.cpp">
+      <Filter>test\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\srd\SrdSearchDialogTest.cpp">
+      <Filter>test\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\srd\SrdSearchHandlerTest.cpp">
+      <Filter>test\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\navaids\CompareNavaidsTest.cpp">
+      <Filter>test\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\navaids\NavaidCollectionTest.cpp">
+      <Filter>test\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\navaids\NavaidModuleTest.cpp">
+      <Filter>test\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\PublishedHoldCollectionTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\PublishedHoldCollectionFactoryTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\navaids\NavaidTest.cpp">
+      <Filter>test\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sectorfile\SectorFileCoordinatesTest.cpp">
+      <Filter>test\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\stands\CompareStandsTest.cpp">
+      <Filter>test\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\stands\StandSerializerTest.cpp">
+      <Filter>test\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\ReleaseModuleTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\EnrouteReleaseTypesSerializerTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\tag\TagDataTest.cpp">
+      <Filter>test\tag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\EnrouteReleaseEventHandlerTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\CompareEnrouteReleaseTypesTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\controller\HandoffEventHandlerCollectionTest.cpp">
+      <Filter>test\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\stands\StandEventHandlerTest.cpp">
+      <Filter>test\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\stands\StandModuleTest.cpp">
+      <Filter>test\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\integration\IntegrationModuleTest.cpp">
+      <Filter>test\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\integration\ExternalMessageEventHandlerTest.cpp">
+      <Filter>test\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\intention\SectorExitPointKonanTest.cpp">
+      <Filter>test\intention</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -866,6 +926,12 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockEuroscopeSectorFileElementInterface.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockFlightplanRadarTargetPair.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockExternalMessageHandlerInterface.h">
       <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>

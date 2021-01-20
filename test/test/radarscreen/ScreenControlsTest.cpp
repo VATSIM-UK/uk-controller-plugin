@@ -28,7 +28,7 @@ namespace UKControllerPluginTest {
             ScreenControls controls(1, configurables, brushes);
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadar;
 
-            controls.LeftClick(2, "", mockRadar);
+            controls.LeftClick(mockRadar, 2, "", {}, {});
         }
 
         TEST(ScreenControls, LeftClickOpensAPopup)
@@ -70,7 +70,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(mockRadar, AddMenuItem(PopupMenuItemEq(display2->GetConfigurationMenuItem())))
                 .Times(1);
 
-            controls.LeftClick(1, "", mockRadar);
+            controls.LeftClick(mockRadar, 1, "", {}, {});
         }
 
         TEST(ScreenControls, RightClickDoesNothingIfWrongIdPassed)

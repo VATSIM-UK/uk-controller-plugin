@@ -310,7 +310,7 @@ namespace UKControllerPluginTest {
             renderer.SetVisible(true);
 
             EXPECT_TRUE(renderer.IsVisible());
-            renderer.LeftClick(renderer.hideClickspotId, "", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.hideClickspotId, "", {}, {});
             EXPECT_FALSE(renderer.IsVisible());
         }
 
@@ -319,7 +319,7 @@ namespace UKControllerPluginTest {
             manager.AddMsl("tma.LTMA", "tma", "LTMA", 7000);
 
             EXPECT_FALSE(manager.GetMinStackLevel("tma.LTMA").IsAcknowledged());
-            renderer.LeftClick(renderer.mslClickspotId, "tma.LTMA", mockRadarScreen);
+            renderer.LeftClick(mockRadarScreen, renderer.mslClickspotId, "tma.LTMA", {}, {});
             EXPECT_TRUE(manager.GetMinStackLevel("tma.LTMA").IsAcknowledged());
         }
 

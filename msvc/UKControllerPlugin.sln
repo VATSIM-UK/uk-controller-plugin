@@ -1,16 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A892BAF0-CE86-4EE0-AE4E-ADF6CB909017}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
-		..\appveyor.yml = ..\appveyor.yml
+		..\.releaserc.json = ..\.releaserc.json
+		..\.github\workflows\build.yml = ..\.github\workflows\build.yml
 		..\CPPLINT.cfg = ..\CPPLINT.cfg
-		..\ci\install-boost.ps1 = ..\ci\install-boost.ps1
-		..\ci\run-lint.ps1 = ..\ci\run-lint.ps1
-		..\ci\run-tests.ps1 = ..\ci\run-tests.ps1
+		..\script\newclass.py = ..\script\newclass.py
+		..\docs\README.md = ..\docs\README.md
+		..\docs\TAG_FUNCTIONS.md = ..\docs\TAG_FUNCTIONS.md
+		..\docs\TAG_ITEMS.md = ..\docs\TAG_ITEMS.md
+		..\template\Template.cpp = ..\template\Template.cpp
+		..\template\Template.h = ..\template\Template.h
+		..\template\TestTemplate.cpp = ..\template\TestTemplate.cpp
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPlugin", "UKControllerPlugin\UKControllerPlugin.vcxproj", "{6F93F8C0-6773-4353-B7DD-B14DBD3F826B}"

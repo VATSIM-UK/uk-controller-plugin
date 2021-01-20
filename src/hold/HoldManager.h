@@ -4,7 +4,9 @@
 #include "hold/HoldingAircraft.h"
 #include "hold/HoldingData.h"
 #include "hold/CompareHoldingAircraft.h"
-#include "hold/ManagedHold.h"
+#include "hold/CompareHolds.h"
+#include "api/ApiInterface.h"
+#include "task/TaskRunnerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -24,31 +26,44 @@ namespace UKControllerPlugin {
         {
             public:
 
-                HoldManager(void);
-                void AddHold(UKControllerPlugin::Hold::ManagedHold hold);
-                void AddAircraftToHold(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
-                    unsigned int holdId
+                HoldManager(
+                    const UKControllerPlugin::Api::ApiInterface& api,
+                    UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner
                 );
-                size_t CountHolds(void) const;
-                UKControllerPlugin::Hold::ManagedHold * const GetAircraftHold(std::string callsign) const;
-                const UKControllerPlugin::Hold::ManagedHold * const GetManagedHold(unsigned int holdId) const;
-                void RemoveAircraftFromAnyHold(std::string callsign);
-                void HoldManager::UpdateHoldingAircraft(
-                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
+                void AddAircraftToProximityHold(
+                    std::string callsign,
+                    std::string hold
                 );
+                void AssignAircraftToHold(
+                    std::string callsign,
+                    std::string hold,
+                    bool updateApi
+                );
+                size_t CountHoldingAircraft(void) const;
+                const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>&
+                    GetAircraftForHold(std::string hold) const;
+                const std::shared_ptr<HoldingAircraft>& GetHoldingAircraft(std::string callsign);
+                void UnassignAircraftFromHold(std::string callsign, bool updateApi);
+                void RemoveAircraftFromProximityHold(std::string callsign, std::string hold);
 
-                // The value returned when the aircraft is not holding
-                const unsigned int noAircraftHold = 9999999;
+                const std::shared_ptr<HoldingAircraft> invalidAircraft = nullptr;
 
             private:
 
-                // A map of aircraft callsign -> hold id
-                std::map<std::string, unsigned int> holdingAircraft;
+                // For running async tasks
+                UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner;
 
-                // A map of hold id -> managed hold
-                std::map<unsigned int, std::unique_ptr<UKControllerPlugin::Hold::ManagedHold>> holdData;
+                // Api for syncing with the rest of the controllers
+                const UKControllerPlugin::Api::ApiInterface& api;
+
+                // All the possible holds
+                std::map<std::string, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holds;
+
+                // The hold to return if nobody is holding there
+                const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> invalidHolds;
+
+                // The aircraft in the holds
+                std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
         };
 
     }  // namespace Hold

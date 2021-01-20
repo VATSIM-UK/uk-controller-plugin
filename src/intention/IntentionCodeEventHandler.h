@@ -1,8 +1,10 @@
 #pragma once
 #include "tag/TagItemInterface.h"
+#include "controller/ControllerStatusEventHandlerInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "intention/IntentionCodeGenerator.h"
 #include "intention/IntentionCodeCache.h"
+#include "tag/TagData.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
@@ -21,7 +23,8 @@ namespace UKControllerPlugin {
         */
         class IntentionCodeEventHandler
             : public UKControllerPlugin::Tag::TagItemInterface,
-            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface
+            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
+            public UKControllerPlugin::Controller::ControllerStatusEventHandlerInterface
         {
             public:
                 IntentionCodeEventHandler(
@@ -39,11 +42,21 @@ namespace UKControllerPlugin {
                 void FlightPlanDisconnectEvent(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan
                 );
-                std::string GetTagItemDescription(void) const;
-                std::string GetTagItemData(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-                );
+                std::string GetTagItemDescription(int tagItemId) const override;
+                void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
+
+
+                // Inherited via ControllerStatusEventHandlerInterface
+                void ControllerUpdateEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller
+                ) override;
+                void ControllerDisconnectEvent(
+                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller
+                ) override;
+                void SelfDisconnectEvent(void) override;
+
+                const UKControllerPlugin::IntentionCode::IntentionCodeGenerator& GetGenerator() const;
+                const UKControllerPlugin::IntentionCode::IntentionCodeCache& GetCache() const;
 
             private:
 

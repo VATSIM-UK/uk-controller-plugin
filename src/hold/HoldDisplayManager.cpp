@@ -1,7 +1,5 @@
 #include "pch/stdafx.h"
 #include "hold/HoldDisplayManager.h"
-#include "hold/HoldProfile.h"
-#include "hold/HoldProfileManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "euroscope/UserSetting.h"
@@ -12,10 +10,9 @@ namespace UKControllerPlugin {
     namespace Hold {
 
         HoldDisplayManager::HoldDisplayManager(
-            const HoldProfileManager & profileManager,
             const HoldManager & holdManager,
             const HoldDisplayFactory & displayFactory
-        ) : profileManager(profileManager), holdManager(holdManager), displayFactory(displayFactory)
+        ) : holdManager(holdManager), displayFactory(displayFactory), userSetting(nullptr)
         {
 
         }
@@ -34,17 +31,9 @@ namespace UKControllerPlugin {
         void HoldDisplayManager::AsrLoadedEvent(UserSetting & userSetting)
         {
             this->userSetting = &userSetting;
-            this->profileId = this->userSetting->GetUnsignedIntegerEntry(
-                this->selectedProfileAsrKey,
-                this->noProfileSelectedId
-            );
-
-            if (this->profileId == this->noProfileSelectedId) {
-                return;
-            }
 
             // Load the profile
-            this->LoadProfile(this->profileId);
+            this->LoadSelectedHolds(this->userSetting->GetStringListEntry(selectedHoldsAsrKey, {}));
         }
 
         /*
@@ -52,14 +41,11 @@ namespace UKControllerPlugin {
         */
         void HoldDisplayManager::AsrClosingEvent(UserSetting & userSetting)
         {
-            // Save the selected profile
             this->userSetting->Save(
-                this->selectedProfileAsrKey,
-                this->selectedProfileAsrDescription,
-                this->profileId
+                this->selectedHoldsAsrKey,
+                this->selectedHoldsAsrDescription,
+                this->selectedHolds
             );
-
-            // Save the profiles
             this->SaveDisplaysToAsr();
         }
 
@@ -73,66 +59,52 @@ namespace UKControllerPlugin {
                 it != this->displays.cend();
                 ++it
             ) {
-                HoldProfile profile = this->profileManager.GetProfile(this->profileId);
-                if (profile == this->profileManager.invalidProfile) {
-                    return;
-                }
-                (*it)->SaveDataToAsr(*this->userSetting, this->profileId, profile.name);
+                (*it)->SaveDataToAsr(*this->userSetting);
             }
         }
 
         /*
-            Return the current profile ID
+            Return a display by hold fix
         */
-        unsigned int HoldDisplayManager::GetCurrentProfile(void) const
-        {
-            return this->profileId;
-        }
-
-        /*
-            Return a display by hold ID, mainly for testing
-        */
-        const UKControllerPlugin::Hold::HoldDisplay & HoldDisplayManager::GetDisplay(unsigned int holdId) const
+        const UKControllerPlugin::Hold::HoldDisplay & HoldDisplayManager::GetDisplay(std::string fix) const
         {
             auto display = std::find_if(
                 this->displays.cbegin(),
                 this->displays.cend(),
-                [holdId](const std::unique_ptr<HoldDisplay> & display) -> bool {
-                    return display->managedHold.GetHoldParameters().identifier == holdId;
+                [fix](const std::unique_ptr<HoldDisplay> & display) -> bool {
+                    return display->navaid.identifier == fix;
                 }
             );
 
             return **display;
         }
 
+        std::vector<std::string> HoldDisplayManager::GetSelectedHolds(void) const
+        {
+            return this->selectedHolds;
+        }
+
         /*
             Load the given hold profile
         */
-        void HoldDisplayManager::LoadProfile(unsigned int profileId)
+        void HoldDisplayManager::LoadSelectedHolds(std::vector<std::string> holds)
         {
-            HoldProfile selected = this->profileManager.GetProfile(profileId);
-            if (selected == this->profileManager.invalidProfile) {
-                LogWarning("Tried to load invalid hold profile");
-                return;
-            }
-
-            // Save the current displays ASR data and clear the displays
             this->SaveDisplaysToAsr();
             this->displays.clear();
 
             // Setup new profile
-            this->profileId = profileId;
-            for (std::set<unsigned int>::const_iterator holdIt = selected.holds.cbegin();
-                holdIt != selected.holds.cend();
+            this->selectedHolds = holds;
+            for (std::vector<std::string>::const_iterator holdIt = holds.cbegin();
+                holdIt != holds.cend();
                 ++holdIt
             ) {
                 std::unique_ptr<HoldDisplay> display = this->displayFactory.Create(*holdIt);
                 if (display == nullptr) {
-                    LogWarning("Failed to create hold display for " + std::to_string(*holdIt));
+                    LogWarning("Failed to create hold display for " + *holdIt);
                     continue;
                 }
 
-                display->LoadDataFromAsr(*this->userSetting, this->profileId);
+                display->LoadDataFromAsr(*this->userSetting);
                 this->displays.insert(std::move(display));
             }
         }

@@ -59,10 +59,18 @@ namespace UKControllerPlugin {
         {
             SetLoggerInstance(
                 std::make_shared<spdlog::logger>(
-                "null_logger",
-                std::make_shared<spdlog::sinks::null_sink_mt>()
-            )
+                    "null_logger",
+                    std::make_shared<spdlog::sinks::null_sink_mt>()
+                )
             );
+        }
+
+        /*
+         * Shuts everything down
+         */
+        void LoggerBootstrap::Shutdown(void)
+        {
+            ShutdownLogger();
         }
     }  // namespace Log
 }  // namespace UKControllerPlugin

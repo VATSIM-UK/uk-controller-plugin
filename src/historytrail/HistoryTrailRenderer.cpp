@@ -262,9 +262,11 @@ namespace UKControllerPlugin {
             They aren't clickable.
         */
         void HistoryTrailRenderer::LeftClick(
+            EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
             std::string objectDescription,
-            EuroscopeRadarLoopbackInterface & radarScreen
+            POINT mousePos,
+            RECT itemArea
         ) {
 
         }
@@ -308,27 +310,25 @@ namespace UKControllerPlugin {
 
             int roundNumber;
             // Loop through the history trails.
+
+            std::shared_ptr<EuroScopeCRadarTargetInterface> radarTarget;
             for (
                 HistoryTrailRepository::const_iterator aircraft = this->trails.cbegin();
                 aircraft != this->trails.cend();
                 ++aircraft
             ) {
-
-                try {
-                    std::shared_ptr<EuroScopeCRadarTargetInterface> radarTarget =
-                        this->plugin.GetRadarTargetForCallsign(aircraft->second->GetCallsign());
-
-                    // If they're not going fast enough or are off the screen, don't display the trail.
-                    if (radarScreen.GetGroundspeedForCallsign(aircraft->second->GetCallsign()) < this->minimumSpeed ||
-                        radarScreen.PositionOffScreen(*aircraft->second->GetTrail().begin()) ||
-                        radarTarget->GetFlightLevel() < this->minimumDisplayAltitude ||
-                        radarTarget->GetFlightLevel() > this->maximumDisplayAltitude
-                    ) {
-                        continue;
-                    }
+                // Check the radar target exists
+                radarTarget = this->plugin.GetRadarTargetForCallsign(aircraft->second->GetCallsign());
+                if (!radarTarget) {
+                    continue;
                 }
-                catch (std::invalid_argument) {
-                    // No radar target, continue.
+
+                // If they're not going fast enough or are off the screen, don't display the trail.
+                if (radarScreen.GetGroundspeedForCallsign(aircraft->second->GetCallsign()) < this->minimumSpeed ||
+                    radarScreen.PositionOffScreen(*aircraft->second->GetTrail().begin()) ||
+                    radarTarget->GetFlightLevel() < this->minimumDisplayAltitude ||
+                    radarTarget->GetFlightLevel() > this->maximumDisplayAltitude
+                    ) {
                     continue;
                 }
 

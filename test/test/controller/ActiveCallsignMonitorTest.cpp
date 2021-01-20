@@ -65,6 +65,11 @@ namespace UKControllerPluginTest {
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
+                        new ControllerPosition("EGKK_2_TWR", 199.997, "TWR", { "EGKK" })
+                    )
+                    );
+                    this->controllerCollection.AddPosition(
+                        std::unique_ptr<ControllerPosition>(
                             new ControllerPosition("EGKK_APP", 199.990, "APP", { "EGKK" })
                         )
                     );
@@ -92,6 +97,9 @@ namespace UKControllerPluginTest {
                     // Add the active callsigns
                     this->kkTwr = std::unique_ptr<ControllerPosition>(
                         new ControllerPosition("EGKK_TWR", 199.999, "TWR", { "EGKK" })
+                    );
+                    this->kkTwr2 = std::unique_ptr<ControllerPosition>(
+                        new ControllerPosition("EGKK_2_TWR", 199.997, "TWR", { "EGKK" })
                     );
                     this->kkApp = std::unique_ptr<ControllerPosition>(
                         new ControllerPosition("EGKK_APP", 199.990, "APP", { "EGKK" })
@@ -121,6 +129,7 @@ namespace UKControllerPluginTest {
 
                 // Controllers
                 std::unique_ptr<ControllerPosition> kkTwr;
+                std::unique_ptr<ControllerPosition> kkTwr2;
                 std::unique_ptr<ControllerPosition> kkApp;
                 std::unique_ptr<ControllerPosition> llTwr;
                 std::unique_ptr<ControllerPosition> llApp;
@@ -138,7 +147,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(3)
                 .WillRepeatedly(Return("EGKK_TWR"));
 
             this->handler.ControllerDisconnectEvent(euroscopeMock);
@@ -151,7 +159,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(1)
                 .WillOnce(Return("NOTAREALCALLSIGN"));
 
             this->handler.ControllerDisconnectEvent(euroscopeMock);
@@ -162,7 +169,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
                 .WillRepeatedly(Return("EGKK_TWR"));
 
             EXPECT_CALL(euroscopeMock, HasActiveFrequency())
@@ -174,12 +180,49 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->activeCallsigns.PositionActive("EGKK_TWR"));
         }
 
+        TEST_F(ActiveCallsignMonitorTest, ControllerUpdateEventHandlesFrequencyChanges)
+        {
+            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
+
+            EXPECT_CALL(euroscopeMock, GetCallsign())
+                .WillRepeatedly(Return("EGKK_TWR"));
+
+            EXPECT_CALL(euroscopeMock, GetFrequency())
+                .WillRepeatedly(Return(199.997));
+
+            EXPECT_CALL(euroscopeMock, HasActiveFrequency())
+                .Times(1)
+                .WillOnce(Return(true));
+
+            this->handler.ControllerUpdateEvent(euroscopeMock);
+            EXPECT_TRUE(this->activeCallsigns.CallsignActive("EGKK_TWR"));
+            EXPECT_EQ(*this->kkTwr2, this->activeCallsigns.GetCallsign("EGKK_TWR").GetNormalisedPosition());
+        }
+
+        TEST_F(ActiveCallsignMonitorTest, ControllerUpdateEventDoesNothingOnFrequencyChanges)
+        {
+            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
+
+            EXPECT_CALL(euroscopeMock, GetCallsign())
+                .WillRepeatedly(Return("EGKK_TWR"));
+
+            EXPECT_CALL(euroscopeMock, GetFrequency())
+                .WillRepeatedly(Return(199.999));
+
+            EXPECT_CALL(euroscopeMock, HasActiveFrequency())
+                .Times(1)
+                .WillOnce(Return(true));
+
+            this->handler.ControllerUpdateEvent(euroscopeMock);
+            EXPECT_TRUE(this->activeCallsigns.CallsignActive("EGKK_TWR"));
+            EXPECT_EQ(*this->kkTwr, this->activeCallsigns.GetCallsign("EGKK_TWR").GetNormalisedPosition());
+        }
+
         TEST_F(ActiveCallsignMonitorTest, ControllerUpdateEventAddsActiveCallsign)
         {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
                 .WillRepeatedly(Return("EGKK_DEL"));
 
             EXPECT_CALL(euroscopeMock, HasActiveFrequency())
@@ -208,7 +251,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
             EXPECT_CALL(euroscopeMock, GetCallsign())
-                .Times(4)
                 .WillRepeatedly(Return("EGKK_1-DEL"));
 
             EXPECT_CALL(euroscopeMock, HasActiveFrequency())

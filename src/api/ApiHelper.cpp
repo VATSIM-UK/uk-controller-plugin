@@ -21,6 +21,7 @@ using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPlugin::Squawk::SquawkValidator;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
+using UKControllerPlugin::Srd::SrdSearchParameters;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -219,20 +220,19 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildHoldDependencyRequest()).GetRawData();
         }
 
-        /*
-            Download the generic hold profiles JSON
-        */
-        nlohmann::json ApiHelper::GetGenericHoldProfiles(void) const
+        nlohmann::json ApiHelper::GetAssignedHolds(void) const
         {
-            return this->MakeApiRequest(this->requestBuilder.BuildUserHoldProfilesRequest()).GetRawData();
+            return this->MakeApiRequest(this->requestBuilder.BuildAllAssignedHoldsRequest()).GetRawData();
         }
 
-        /*
-            Download the user hold profiles JSON
-        */
-        nlohmann::json ApiHelper::GetUserHoldProfiles(void) const
+        void ApiHelper::AssignAircraftToHold(std::string callsign, std::string navaid) const
         {
-            return this->MakeApiRequest(this->requestBuilder.BuildUserHoldProfilesRequest()).GetRawData();
+            this->MakeApiRequest(this->requestBuilder.BuildSetAssignedHoldRequest(callsign, navaid));
+        }
+
+        void ApiHelper::UnassignAircraftHold(std::string callsign) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildDeleteAssignedHoldRequest(callsign));
         }
 
         /*
@@ -259,36 +259,58 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildGetUriRequest(uri)).GetRawData();
         }
 
-        /*
-            Delete the given user hold profile
-        */
-        void ApiHelper::DeleteUserHoldProfile(unsigned int profileId) const
+        nlohmann::json ApiHelper::SearchSrd(SrdSearchParameters params) const
         {
-            this->MakeApiRequest(this->requestBuilder.BuildDeleteUserHoldProfileRequest(profileId));
+            return this->MakeApiRequest(this->requestBuilder.BuildSrdQueryRequest(params)).GetRawData();
         }
 
-        /*
-            Create a user hold profile
-        */
-        unsigned int ApiHelper::CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const
+        nlohmann::json ApiHelper::GetAssignedStands(void) const
         {
-            nlohmann::json response = this->MakeApiRequest(
-                this->requestBuilder.BuildCreateUserHoldProfileRequest(name, holds)
-            ).GetRawData();
-
-            if (!response.count("id") || !response.at("id").is_number_integer()) {
-                throw ApiException("Invalid API response when creating a hold profile");
-            }
-
-            return response.at("id");
+            return this->MakeApiRequest(this->requestBuilder.BuildGetStandAssignmentsRequest()).GetRawData();
         }
 
-        /*
-            Update a user hold profile
-        */
-        void ApiHelper::UpdateUserHoldProfile(unsigned int id, std::string name, std::set<unsigned int> holds) const
+        void ApiHelper::AssignStandToAircraft(std::string callsign, int standId) const
         {
-            this->MakeApiRequest(this->requestBuilder.BuildUpdateUserHoldProfileRequest(id, name, holds));
+            this->MakeApiRequest(this->requestBuilder.BuildAssignStandToAircraftRequest(callsign, standId));
+        }
+
+        void ApiHelper::DeleteStandAssignmentForAircraft(std::string callsign) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildDeleteStandAssignmentForAircraftRequest(callsign));
+        }
+
+        void ApiHelper::SendEnrouteRelease(
+            std::string aircraftCallsign,
+            std::string sendingController,
+            std::string targetController,
+            int releaseType
+        ) const {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildEnrouteReleaseRequest(
+                    aircraftCallsign,
+                    sendingController,
+                    targetController,
+                    releaseType
+                )
+            );
+        }
+
+        void ApiHelper::SendEnrouteReleaseWithReleasePoint(
+            std::string aircraftCallsign,
+            std::string sendingController,
+            std::string targetController,
+            int releaseType,
+            std::string releasePoint
+        ) const {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildEnrouteReleaseRequestWithReleasePoint(
+                    aircraftCallsign,
+                    sendingController,
+                    targetController,
+                    releaseType,
+                    releasePoint
+                )
+            );
         }
 
         /*

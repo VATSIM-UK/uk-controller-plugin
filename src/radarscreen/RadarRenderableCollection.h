@@ -32,9 +32,11 @@ namespace UKControllerPlugin {
                 size_t CountScreenObjects(void) const;
                 int GetRendererIdForScreenObject(int objectId) const;
                 void LeftClickScreenObject(
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
                     int objectId,
                     std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
+                    POINT mousePos,
+                    RECT itemArea
                 ) const;
                 void MoveScreenObject(int objectId, std::string objectDescription, RECT position) const;
                 void RegisterRenderer(

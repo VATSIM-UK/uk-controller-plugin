@@ -133,6 +133,21 @@
     <Filter Include="src\regional">
       <UniqueIdentifier>{05e23cc3-415e-4bb7-8e85-0cdad310c649}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\srd">
+      <UniqueIdentifier>{5f1c7726-0075-4d0b-883b-51f257857acb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\navaids">
+      <UniqueIdentifier>{8aa7f56a-92f3-42d0-9097-63a8c0ac61a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\stands">
+      <UniqueIdentifier>{e8eedfab-3e7e-4875-9485-c7fea0d1fd40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\releases">
+      <UniqueIdentifier>{27638ea8-4c02-42f1-a831-fa2951a6b3db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\integration">
+      <UniqueIdentifier>{0acb7a6a-6973-4c79-8276-312c7e76dd17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -429,9 +444,6 @@
     <ClInclude Include="..\..\src\intention\SectorExitPointLelna.h">
       <Filter>src\intention</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\intention\SectorExitPointShanwick.h">
-      <Filter>src\intention</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\intention\SectorExitPointVeule.h">
       <Filter>src\intention</Filter>
     </ClInclude>
@@ -696,9 +708,6 @@
     <ClInclude Include="..\..\src\hold\HoldDisplayFunctions.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldDisplay.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
@@ -713,9 +722,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h">
       <Filter>src\squawk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\ManagedHold.h">
-      <Filter>src\hold</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldSelectionMenu.h">
       <Filter>src\hold</Filter>
@@ -741,28 +747,7 @@
     <ClInclude Include="..\..\src\hold\HoldingDataSerializer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldManagerFactory.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldConfigurationDialogFactory.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\CompareHoldsDescription.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfileSerializer.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfile.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfileManager.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldProfileManagerFactory.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\CompareHoldProfile.h">
       <Filter>src\hold</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\hold\AbstractHoldLevelRestriction.h">
@@ -778,9 +763,6 @@
       <Filter>src\hold</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldRenderer.h">
-      <Filter>src\hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h">
       <Filter>src\hold</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\dialog\DialogCallArgument.h">
@@ -989,6 +971,114 @@
     </ClInclude>
     <ClInclude Include="..\..\src\plugin\PluginHelpPage.h">
       <Filter>src\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdSearchParameters.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdModule.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdSearchDialog.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\srd\SrdSearchHandler.h">
+      <Filter>src\srd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\intention\SectorExitPointScottish.h">
+      <Filter>src\intention</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\datablock\DatablockFunctions.h">
+      <Filter>src\datablock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\navaids\NavaidCollection.h">
+      <Filter>src\navaids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\navaids\CompareNavaids.h">
+      <Filter>src\navaids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\navaids\Navaid.h">
+      <Filter>src\navaids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\navaids\NavaidModule.h">
+      <Filter>src\navaids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\PublishedHoldCollection.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\PublishedHoldCollectionFactory.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplayFactory.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplay.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\HoldDisplayConfigurationDialog.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sectorfile\SectorFileCoordinates.h">
+      <Filter>src\sectorfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\Stand.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\StandSerializer.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\CompareStands.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseType.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\ReleaseModule.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseTypesSerializer.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\tag\TagData.h">
+      <Filter>src\tag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteReleaseEventHandler.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\CompareEnrouteReleaseTypes.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\EnrouteRelease.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerInterface.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\controller\HandoffEventHandlerCollection.h">
+      <Filter>src\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\StandModule.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stands\StandEventHandler.h">
+      <Filter>src\stands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\ExternalMessageEventHandler.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\HiddenWindow.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\ExternalMessageHandlerInterface.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\IntegrationModule.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\wake\CacheItem.h">
+      <Filter>src\wake</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\intention\SectorExitPointKonan.h">
+      <Filter>src\intention</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1234,9 +1324,6 @@
     <ClCompile Include="..\..\src\intention\SectorExitPointLelna.cpp">
       <Filter>src\intention</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\intention\SectorExitPointShanwick.cpp">
-      <Filter>src\intention</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\intention\SectorExitPointVeule.cpp">
       <Filter>src\intention</Filter>
     </ClCompile>
@@ -1447,9 +1534,6 @@
     <ClCompile Include="..\..\src\hold\HoldDisplayFunctions.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldDisplay.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
@@ -1458,9 +1542,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp">
       <Filter>src\squawk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\ManagedHold.cpp">
-      <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldSelectionMenu.cpp">
       <Filter>src\hold</Filter>
@@ -1483,25 +1564,7 @@
     <ClCompile Include="..\..\src\hold\HoldingDataSerializer.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldManagerFactory.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldConfigurationDialogFactory.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\hold\CompareHoldsDescription.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldProfileSerializer.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldProfileManager.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldProfileManagerFactory.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\CompareHoldProfile.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\BlockedHoldLevelRestriction.cpp">
@@ -1514,9 +1577,6 @@
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldRenderer.cpp">
-      <Filter>src\hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldConfigurationMenuItem.cpp">
@@ -1683,6 +1743,93 @@
     </ClCompile>
     <ClCompile Include="..\..\src\plugin\PluginHelpPage.cpp">
       <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdModule.cpp">
+      <Filter>src\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdSearchDialog.cpp">
+      <Filter>src\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srd\SrdSearchHandler.cpp">
+      <Filter>src\srd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\intention\SectorExitPointScottish.cpp">
+      <Filter>src\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\datablock\DatablockFunctions.cpp">
+      <Filter>src\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\navaids\NavaidCollection.cpp">
+      <Filter>src\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\navaids\CompareNavaids.cpp">
+      <Filter>src\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\navaids\NavaidModule.cpp">
+      <Filter>src\navaids</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldingAircraft.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\PublishedHoldCollection.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\PublishedHoldCollectionFactory.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplayFactory.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplay.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\HoldDisplayConfigurationDialog.cpp">
+      <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sectorfile\SectorFileCoordinates.cpp">
+      <Filter>src\sectorfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\StandSerializer.cpp">
+      <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\CompareStands.cpp">
+      <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\ReleaseModule.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\EnrouteReleaseTypesSerializer.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tag\TagData.cpp">
+      <Filter>src\tag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\EnrouteReleaseEventHandler.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\CompareEnrouteReleaseTypes.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\controller\HandoffEventHandlerCollection.cpp">
+      <Filter>src\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\StandModule.cpp">
+      <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stands\StandEventHandler.cpp">
+      <Filter>src\stands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\ExternalMessageEventHandler.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\HiddenWindow.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\IntegrationModule.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\intention\SectorExitPointKonan.cpp">
+      <Filter>src\intention</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

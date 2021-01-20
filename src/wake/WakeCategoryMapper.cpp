@@ -1,4 +1,3 @@
-
 #include "pch/stdafx.h"
 #include "wake/WakeCategoryMapper.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -8,13 +7,13 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 namespace UKControllerPlugin {
     namespace Wake {
 
-        void WakeCategoryMapper::AddTypeMapping(std::string type, std::string category)
+        void WakeCategoryMapper::AddCategoryMapping(std::string type, std::string category)
         {
-            if (this->typeMap.count(type) > 0) {
+            if (this->categoryMap.count(type) > 0) {
                 return;
             }
 
-            this->typeMap[type] = category;
+            this->categoryMap[type] = category;
         }
 
         /*
@@ -22,18 +21,16 @@ namespace UKControllerPlugin {
         */
         int WakeCategoryMapper::Count(void) const
         {
-            return this->typeMap.size();
+            return this->categoryMap.size();
         }
 
-        /*
-            Maps the flightplan to a category or returns the ICAO category if no conversion.
-        */
-        std::string WakeCategoryMapper::MapFlightplanToCategory(const EuroScopeCFlightPlanInterface & flightPlan) const
+        std::string WakeCategoryMapper::GetCategoryForAircraftType(
+            std::string aircraftType
+        ) const
         {
-            return this->typeMap.count(flightPlan.GetAircraftType()) == 1 ?
-                this->typeMap.at(flightPlan.GetAircraftType()) :
-                flightPlan.GetIcaoWakeCategory();
+            return this->categoryMap.count(aircraftType) == 1
+                ? this->categoryMap.at(aircraftType)
+                : this->noCategory;
         }
-
     }  // namespace Wake
 }  // namespace UKControllerPlugin

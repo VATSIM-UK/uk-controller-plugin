@@ -74,9 +74,7 @@ namespace UKControllerPluginTest {
             this->container.windows = std::move(this->mockWinApi);
 
             HelperBootstrap::Bootstrap(this->container);
-            EXPECT_NO_THROW(this->container.taskRunner->QueueInlineTask([]() {
-                bool test = true;
-            }));
+            EXPECT_EQ(3, this->container.taskRunner->CountThreads());
         }
 
         TEST_F(HelperBootstrapTest, BootstrapApiConfigurationItemAddsToConfigurables)

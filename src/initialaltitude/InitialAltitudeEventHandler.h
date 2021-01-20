@@ -126,6 +126,9 @@ namespace UKControllerPlugin {
 
                 // Has the user enabled automatic assignments
                 bool userAutomaticAssignmentsAllowed = true;
+
+                // Map of callsigns vs which SID their altitude has been set for
+                std::map<std::string, std::string> alreadySetMap;
         };
     }  // namespace InitialAltitude
 }  // namespace UKControllerPlugin

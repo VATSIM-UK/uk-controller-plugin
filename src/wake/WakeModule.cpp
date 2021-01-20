@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
     namespace Wake {
 
         const std::string dependencyFile = "DEPENDENCY_WAKE";
-        const int tagItemId = 105;
+        const std::string recatDependencyFile = "DEPENDENCY_RECAT";
 
         /*
             Bootstrap everything
@@ -23,14 +23,27 @@ namespace UKControllerPlugin {
         {
             // Create the data
             nlohmann::json data = dependencies.LoadDependency(dependencyFile, nlohmann::json::object());
+            nlohmann::json recatData = dependencies.LoadDependency(recatDependencyFile, nlohmann::json::object());
 
             // Create handler and register
             std::shared_ptr<WakeCategoryEventHandler> handler = std::make_shared<WakeCategoryEventHandler>(
-                CreateWakeMappings(data, *container.userMessager)
+                CreateWakeMappings(
+                    data,
+                    *container.userMessager
+                ),
+                CreateWakeMappings(
+                    recatData,
+                    *container.userMessager,
+                    "RECAT"
+                )
             );
 
             container.flightplanHandler->RegisterHandler(handler);
-            container.tagHandler->RegisterTagItem(tagItemId, handler);
+            container.tagHandler->RegisterTagItem(handler->tagItemIdAircraftTypeCategory, handler);
+            container.tagHandler->RegisterTagItem(handler->tagItemIdStandaloneCategory, handler);
+            container.tagHandler->RegisterTagItem(handler->tagItemIdRecat, handler);
+            container.tagHandler->RegisterTagItem(handler->tagItemIdUkRecatCombined, handler);
+            container.tagHandler->RegisterTagItem(handler->tagItemIdAircraftTypeRecat, handler);
         }
 
     }  // namespace Wake

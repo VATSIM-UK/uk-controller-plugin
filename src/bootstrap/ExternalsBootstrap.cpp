@@ -62,6 +62,15 @@ namespace UKControllerPlugin {
                 );
                 throw std::runtime_error("Unable to create UKCP Root");
             }
+
+            if (!winApi.SetPermissions(documentsPath + L"/EuroScope/ukcp", std::filesystem::perms::all)) {
+                winApi.OpenMessageBox(
+                    L"Unable to set permissions on the UKCP root folder, please contact the VATUK Web Department.",
+                    L"UKCP Fatal Error",
+                    MB_OK | MB_ICONSTOP
+                );
+                throw std::runtime_error("Unable to set permissions on the UKCP root folder");
+            }
         }
 
         /*

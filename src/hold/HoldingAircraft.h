@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/stdafx.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -7,29 +6,40 @@ namespace UKControllerPlugin {
         /*
             Data about a holding aircraft
         */
-        typedef struct HoldingAircraft
+        class HoldingAircraft
         {
-            const std::string callsign;
-            int clearedLevel;
-            int reportedLevel;
-            int verticalSpeed;
-            const std::chrono::system_clock::time_point entryTime;
+            public:
+                HoldingAircraft(std::string callsign, std::string assignedHold);
+                HoldingAircraft(std::string callsign, std::set<std::string> proximityHolds);
 
-            void operator=(const HoldingAircraft & newItem)
-            {
-                this->clearedLevel = newItem.clearedLevel;
-                this->reportedLevel = newItem.reportedLevel;
-                this->verticalSpeed = newItem.verticalSpeed;
-            }
+                void AddProximityHold(std::string hold);
+                std::string GetAssignedHold(void) const;
+                const std::chrono::system_clock::time_point& GetAssignedHoldEntryTime(void) const;
+                std::string GetCallsign(void) const;
+                const std::set<std::string> GetProximityHolds(void) const;
+                bool IsInAnyHold(void) const;
+                bool IsInHold(std::string hold) const;
+                bool IsInHoldProximity(std::string hold) const;
+                void SetAssignedHold(std::string hold);
+                void RemoveAssignedHold(void);
+                void RemoveProximityHold(std::string hold);
 
-            bool operator== (const HoldingAircraft & compare) const {
-                return this->callsign == compare.callsign;
-            }
+                const std::string noHoldAssigned = "";
 
-            bool operator== (const std::string & compare) const {
-                return this->callsign == compare;
-            }
-        } HoldingAircraft;
+            private:
+
+                // The callsign of the aircraft
+                const std::string callsign;
+
+                // The time the aircraft entered the hold
+                std::chrono::system_clock::time_point entryTime;
+
+                // The assigned hold of the aircraft (if any)
+                std::string assignedHold = noHoldAssigned;
+
+                // The holds against which the aircraft is the the vicinity
+                std::set<std::string> proximityHolds;
+        };
 
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -14,6 +14,8 @@
 #include "update/PluginVersion.h"
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/EuroscopeSectorFileElementWrapper.h"
+#include "tag/TagData.h"
+#include "controller/HandoffEventHandlerCollection.h"
 
 using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPlugin::Windows::WinApiInterface;
@@ -37,6 +39,8 @@ using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementWrapper;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPlugin::Tag::TagData;
+using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 
 namespace UKControllerPlugin {
 
@@ -50,7 +54,8 @@ namespace UKControllerPlugin {
         const MetarEventHandlerCollection & metarHandlers,
         const FunctionCallEventHandler & functionCallHandler,
         const CommandHandlerCollection & commandHandlers,
-        const RunwayDialogAwareCollection & runwayDialogHandlers
+        const RunwayDialogAwareCollection & runwayDialogHandlers,
+        const HandoffEventHandlerCollection& controllerHandoffHandlers
     )
         : UKPlugin::CPlugIn(
             EuroScopePlugIn::COMPATIBILITY_CODE,
@@ -68,7 +73,8 @@ namespace UKControllerPlugin {
         metarHandlers(metarHandlers),
         functionCallHandler(functionCallHandler),
         commandHandlers(commandHandlers),
-        runwayDialogHandlers(runwayDialogHandlers)
+        runwayDialogHandlers(runwayDialogHandlers),
+        controllerHandoffHandlers(controllerHandoffHandlers)
     {
     }
 
@@ -261,7 +267,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CFlightPlan plan = this->FlightPlanSelect(callsign.c_str());
 
         if (!plan.IsValid()) {
-            throw std::invalid_argument("Flightplan not found");
+            return nullptr;
         }
 
         return std::make_shared<EuroScopeCFlightPlanWrapper>(plan);
@@ -275,7 +281,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CRadarTarget target = this->RadarTargetSelect(callsign.c_str());
 
         if (!target.IsValid()) {
-            throw std::invalid_argument("Target not found");
+            return nullptr;
         }
 
         return std::make_shared<EuroScopeCRadarTargetWrapper>(target);
@@ -289,7 +295,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CFlightPlan fp = this->FlightPlanSelectASEL();
 
         if (!fp.IsValid()) {
-            return NULL;
+            return nullptr;
         }
 
         return std::make_shared<EuroScopeCFlightPlanWrapper>(fp);
@@ -303,7 +309,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelectASEL();
 
         if (!rt.IsValid()) {
-            return NULL;
+            return nullptr;
         }
 
         return std::make_shared<EuroScopeCRadarTargetWrapper>(rt);
@@ -416,7 +422,7 @@ namespace UKControllerPlugin {
         EuroScopePlugIn::CFlightPlan FlightPlan,
         EuroScopePlugIn::CRadarTarget RadarTarget,
         int ItemCode,
-        int TagData,
+        int dataAvailable,
         char sItemString[16],
         int * pColorCode,
         COLORREF * pRGB,
@@ -428,12 +434,18 @@ namespace UKControllerPlugin {
 
         EuroScopeCFlightPlanWrapper flightplanWrapper(FlightPlan);
         EuroScopeCRadarTargetWrapper radarTargetWrapper(RadarTarget);
-        this->tagEvents.TagItemUpdate(
-            ItemCode,
-            sItemString,
+        TagData tagData(
             flightplanWrapper,
-            radarTargetWrapper
+            radarTargetWrapper,
+            ItemCode,
+            dataAvailable,
+            sItemString,
+            pColorCode,
+            pRGB,
+            pFontSize
         );
+
+        this->tagEvents.TagItemUpdate(tagData);
     }
 
     /*
@@ -532,6 +544,72 @@ namespace UKControllerPlugin {
         if (plan.IsValid()) {
             this->OnFlightPlanFlightPlanDataUpdate(plan);
         }
+    }
+
+    void UKPlugin::ApplyFunctionToAllFlightplans(
+        std::function<void(
+            std::shared_ptr<EuroScopeCFlightPlanInterface>,
+            std::shared_ptr<EuroScopeCRadarTargetInterface>)
+        > function)
+    {
+        EuroScopePlugIn::CFlightPlan current = this->FlightPlanSelectFirst();
+
+        // If there's nothing, stop
+        if (!current.IsValid() || strcmp(current.GetCallsign(), "") == 0) {
+            return;
+        }
+
+        // Loop through all visible flightplans
+        do {
+            if (!current.IsValid()) {
+                continue;
+            }
+
+            EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelect(current.GetCallsign());
+
+            if (!rt.IsValid()) {
+                continue;
+            }
+
+            function(
+                std::make_shared<EuroScopeCFlightPlanWrapper>(current),
+                std::make_shared<EuroScopeCRadarTargetWrapper>(rt)
+            );
+
+            this->OnFlightPlanFlightPlanDataUpdate(current);
+        } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
+    }
+
+    void UKPlugin::ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue)
+    {
+        OpenPopupEdit(editArea, callbackId, initialValue.c_str());
+    }
+
+    /*
+        Called when a handoff is initiated between controllers
+    */
+    void UKPlugin::OnFlightPlanFlightStripPushed(
+        EuroScopePlugIn::CFlightPlan flightplan,
+        const char* sendingController,
+        const char* targetController
+    ) {
+        EuroScopePlugIn::CController sender = std::string(sendingController) == this->ControllerMyself().GetCallsign()
+            ? this->ControllerMyself()
+            : this->ControllerSelect(sendingController);
+
+        EuroScopePlugIn::CController target = std::string(targetController) == this->ControllerMyself().GetCallsign()
+            ? this->ControllerMyself()
+            : this->ControllerSelect(targetController);
+
+        if (!sender.IsValid() || !target.IsValid()) {
+            return;
+        }
+
+        EuroScopeCFlightPlanWrapper flightplanWrapper(flightplan);
+        EuroScopeCControllerWrapper senderWrapper(sender, this->ControllerIsMe(sender, this->ControllerMyself()));
+        EuroScopeCControllerWrapper targetWrapper(target, this->ControllerIsMe(target, this->ControllerMyself()));
+
+        this->controllerHandoffHandlers.HandoffInitiated(flightplanWrapper, senderWrapper, targetWrapper);
     }
 
     /*

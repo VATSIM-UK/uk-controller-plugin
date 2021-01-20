@@ -1,6 +1,7 @@
 #include "pch/pch.h"
 #include "intention/IntentionCodeModule.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "controller/ControllerStatusEventHandlerCollection.h"
 #include "tag/TagItemCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 
@@ -8,32 +9,46 @@ using UKControllerPlugin::IntentionCode::IntentionCodeModule;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
+using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
 
-
-        TEST(IntentionCodeModule, BootstrapPluginRegistersFlightplanEvents)
+        class IntentionCodeModuleTest : public Test
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-            container.tagHandler.reset(new TagItemCollection);
+            public:
+                IntentionCodeModuleTest()
+                {
+                    this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+                    this->container.tagHandler.reset(new TagItemCollection);
+                    this->container.controllerHandler.reset(new ControllerStatusEventHandlerCollection);
+                }
 
-            IntentionCodeModule::BootstrapPlugin(container);
+                PersistenceContainer container;
+        };
+
+
+        TEST_F(IntentionCodeModuleTest, BootstrapPluginRegistersFlightplanEvents)
+        {
+            IntentionCodeModule::BootstrapPlugin(this->container);
 
             EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
         }
 
-        TEST(IntentionCodeModule, BootstrapPluginRegistersCorrectTagItemEvent)
+        TEST_F(IntentionCodeModuleTest, BootstrapPluginRegistersCorrectTagItemEvent)
         {
-            PersistenceContainer container;
-            container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-            container.tagHandler.reset(new TagItemCollection);
+            IntentionCodeModule::BootstrapPlugin(this->container);
 
-            IntentionCodeModule::BootstrapPlugin(container);
+            EXPECT_EQ(1, this->container.tagHandler->CountHandlers());
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(IntentionCodeModule::tagItemId));
+        }
 
-            EXPECT_EQ(1, container.tagHandler->CountHandlers());
-            EXPECT_TRUE(container.tagHandler->HasHandlerForItemId(IntentionCodeModule::tagItemId));
+        TEST_F(IntentionCodeModuleTest, BootstrapPluginRegistersForControllerUpdates)
+        {
+            IntentionCodeModule::BootstrapPlugin(this->container);
+
+            EXPECT_EQ(1, this->container.controllerHandler->CountHandlers());
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPluginTest

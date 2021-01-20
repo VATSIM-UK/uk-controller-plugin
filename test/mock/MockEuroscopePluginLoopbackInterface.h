@@ -2,6 +2,7 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
+#include "mock/MockFlightplanRadarTargetPair.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -16,6 +17,10 @@ namespace UKControllerPluginTest {
             public UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface
         {
             public:
+                void AddAllFlightplansItem(UKControllerPluginTest::Euroscope::MockFlightplanRadarTargetPair item)
+                {
+                    this->allFpRtPairs.push_back(item);
+                }
                 MOCK_METHOD1(AddItemToPopupList, void(const UKControllerPlugin::Plugin::PopupMenuItem item));
                 MOCK_CONST_METHOD0(GetEuroscopeConnectionStatus, int(void));
                 MOCK_CONST_METHOD1(GetDistanceFromUserVisibilityCentre, double(EuroScopePlugIn::CPosition position));
@@ -56,6 +61,29 @@ namespace UKControllerPluginTest {
                         bool confirm
                     )
                 );
+                MOCK_METHOD3(ShowTextEditPopup, void(RECT, int, std::string));
+
+                void ApplyFunctionToAllFlightplans(
+                    std::function<
+                    void(
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>,
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+                )
+                    > function
+                ) override
+                {
+                    for (
+                        std::list<UKControllerPluginTest::Euroscope::MockFlightplanRadarTargetPair>::const_iterator it =
+                            this->allFpRtPairs.cbegin();
+                        it != this->allFpRtPairs.cend();
+                        ++it
+                    ) {
+                        function(it->fp, it->rt);
+                    }
+                };
+
+            private:
+                std::list<UKControllerPluginTest::Euroscope::MockFlightplanRadarTargetPair> allFpRtPairs;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest

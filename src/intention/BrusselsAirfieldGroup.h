@@ -21,6 +21,10 @@ namespace UKControllerPlugin {
         {
         public:
             BrusselsAirfieldGroup(void);
+            bool AppliesToController(
+                std::string callsign,
+                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route
+            ) const override;
             bool HasAirfield(
                 std::string airfield,
                 UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route
@@ -29,8 +33,28 @@ namespace UKControllerPlugin {
                 std::string airfield,
                 UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route
             ) const;
+
+            const std::string PRIMARY_CODE = "EB";
+            const std::string SECONDARY_CODE = "EX";
+
         protected:
             bool Initialise(void);
+
+            // Airfields that should get the primary intention code
+            std::set<std::string> primaryAirfields = {
+                "EBBR",
+                "EBCI",
+                "EBAW",
+                "EBMB",
+                "EBCV",
+                "EBLG",
+            };
+
+            // Airfields that should get the secondary intention code
+            std::set<std::string> secondaryAirfields = {
+                "EBKT",
+                "EBOS"
+            };
         };
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

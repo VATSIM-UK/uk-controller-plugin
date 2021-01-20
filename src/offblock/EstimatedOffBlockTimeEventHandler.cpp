@@ -7,6 +7,7 @@
 
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Datablock::DisplayTime;
+using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin {
 namespace Datablock {
@@ -19,29 +20,29 @@ EstimatedOffBlockTimeEventHandler::EstimatedOffBlockTimeEventHandler(
 
 }
 
-std::string EstimatedOffBlockTimeEventHandler::GetTagItemDescription(void) const
+std::string EstimatedOffBlockTimeEventHandler::GetTagItemDescription(int tagItemId) const
 {
     return "Estimated Off-block Time";
 }
 
-std::string EstimatedOffBlockTimeEventHandler::GetTagItemData(
-    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-) {
-    if (!this->storedFlightplans.HasFlightplanForCallsign(flightPlan.GetCallsign())) {
-        return this->displayTime.GetUnknownTimeFormat();
+void EstimatedOffBlockTimeEventHandler::SetTagItemData(TagData& tagData)
+{
+    if (!this->storedFlightplans.HasFlightplanForCallsign(tagData.flightPlan.GetCallsign())) {
+        tagData.SetItemString(this->displayTime.GetUnknownTimeFormat());
+        return;
     }
 
     std::chrono::system_clock::time_point eobt = this->storedFlightplans
-        .GetFlightplanForCallsign(flightPlan.GetCallsign())
+        .GetFlightplanForCallsign(tagData.flightPlan.GetCallsign())
         .GetExpectedOffBlockTime();
 
     // If no valid EOBT, nothing to do
     if (eobt == (std::chrono::system_clock::time_point::max)()) {
-        return this->displayTime.GetUnknownTimeFormat();
+        tagData.SetItemString(this->displayTime.GetUnknownTimeFormat());
+        return;
     }
 
-    return this->displayTime.FromTimePoint(eobt);
+    tagData.SetItemString(this->displayTime.FromTimePoint(eobt));
 }
 
 }  // namespace Datablock

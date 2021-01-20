@@ -108,7 +108,7 @@ namespace UKControllerPluginTest {
             this->handler.AddAllocationToQueue(event2);
 
             ON_CALL(this->mockPlugin, GetFlightplanForCallsign("XXXXX"))
-                .WillByDefault(Throw(std::invalid_argument("Test")));
+                .WillByDefault(Return(nullptr));
 
             EXPECT_CALL(*this->mockFlightplan1, SetSquawk("0123"))
                 .Times(1);

@@ -54,6 +54,8 @@ namespace UKControllerPlugin {
         */
         std::wstring GetLevelDisplayString(int altitude)
         {
+            // Round altitude to nearest 100
+            altitude = ((altitude + 50) / 100) * 100;
             std::wstring altString = std::to_wstring(altitude);
             size_t stringLength = altString.size();
 
@@ -109,12 +111,13 @@ namespace UKControllerPlugin {
             return std::to_wstring(minutes) + L"m";
         }
 
-        /*
-            Get the hold profile static text
-        */
-        std::wstring GetSelectedHoldProfileText(const HoldProfile & profile)
+        int GetVerticalSpeedDirection(int verticalSpeed)
         {
-            return ConvertToTchar("Selected Profile: " + profile.name);
+            if (std::abs(verticalSpeed) < minimumVerticalSpeed) {
+                return 0;
+            }
+
+            return verticalSpeed > 0 ? 1 : -1;
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -17,6 +17,7 @@
 #include "sectorfile/SectorFileBootstrap.h"
 #include "regional/RegionalPressureModule.h"
 #include "plugin/PluginInformationBootstrap.h"
+#include "srd/SrdModule.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -114,6 +115,8 @@ namespace UKControllerPlugin {
                 commandHandlers,
                 this->persistence
             );
+
+            UKControllerPlugin::Srd::BootstrapRadarScreen(configurableDisplays);
 
             // Register command for position resets
             this->persistence.commandHandlers->RegisterHandler(

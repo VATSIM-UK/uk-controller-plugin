@@ -27,9 +27,11 @@ namespace UKControllerPlugin {
                 // Inherited via RadarRenderableInterface
                 bool IsVisible(void) const override;
                 void LeftClick(
+                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
                     int objectId,
                     std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
+                    POINT mousePos,
+                    RECT itemArea
                 ) override;
                 void RightClick(
                     int objectId,
@@ -59,7 +61,7 @@ namespace UKControllerPlugin {
                 const int screenObjectId;
 
                 // The description to show in our menu item
-                const std::string menuItemDescription = "Show Managed Holds";
+                const std::string menuItemDescription = "Display Holds";
 
                 // The ASR key for whether or not the hold displays should be visible
                 const std::string asrVisibleKey = "holdDisplayVisibility";
@@ -69,7 +71,8 @@ namespace UKControllerPlugin {
 
             private:
 
-                int GetHoldIdFromObjectDescription(std::string objectDescription) const;
+                std::string GetHoldNameFromObjectDescription(std::string objectDescription) const;
+                std::string GetCallsignFromObjectDescription(std::string objectDescription) const;
                 std::string GetButtonNameFromObjectDescription(std::string objectDescription) const;
 
                 // Should the renderer render the holds?

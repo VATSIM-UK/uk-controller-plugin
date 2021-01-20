@@ -72,7 +72,7 @@ TEST_F(PluginUpdateCheckerTest, CheckForUpdatesShowsMessageIfOutOfDate)
     EXPECT_CALL(
         winApiMock,
         OpenMessageBox(
-            StrEq(L"An update to the plugin is available."),
+            StrEq(L"An update to the plugin is available.\nReported version: 1.0"),
             StrEq(L"UKCP Update Notification"),
             MB_OK | MB_ICONINFORMATION
         ))
@@ -90,11 +90,13 @@ TEST_F(PluginUpdateCheckerTest, CheckForUpdatesShowsMessageIfVersionDeprecated)
         .Times(1)
         .WillOnce(Return(MockApiInterface::UPDATE_VERSION_DISABLED));
 
+    std::wstring expectedMessage = L"This version of the plugin has been withdrawn, ";
+    expectedMessage += L"you need to update to continue using the plugin.\nReported version: 1.0";
+
     EXPECT_CALL(
             winApiMock,
             OpenMessageBox(
-                StrEq(
-                    L"This version of the plugin has been withdrawn, you need to update to continue using the plugin."),
+                    StrEq(expectedMessage.c_str()),
                     StrEq(L"UKCP Update Notification"),
                     MB_OK | MB_ICONERROR
                 ))

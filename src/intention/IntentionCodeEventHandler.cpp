@@ -4,12 +4,15 @@
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "intention/IntentionCodeData.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
+#include "euroscope/EuroScopeCControllerInterface.h"
 
 using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::IntentionCode::IntentionCodeCache;
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
+using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin {
     namespace IntentionCode {
@@ -53,7 +56,7 @@ namespace UKControllerPlugin {
         /*
             Returns the description of the TagItem.
         */
-        std::string IntentionCodeEventHandler::GetTagItemDescription(void) const
+        std::string IntentionCodeEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "UKCP Intention Code";
         }
@@ -61,30 +64,65 @@ namespace UKControllerPlugin {
         /*
             Returns the intention code.
         */
-        std::string IntentionCodeEventHandler::GetTagItemData(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            EuroScopeCRadarTargetInterface & radarTarget
-        ) {
+        void IntentionCodeEventHandler::SetTagItemData(TagData& tagData)
+        {
             // If we have it cached, then use the cached value
-            EuroscopeExtractedRouteInterface extractedRoute = flightPlan.GetExtractedRoute();
+            EuroscopeExtractedRouteInterface extractedRoute = tagData.flightPlan.GetExtractedRoute();
             if (
-                this->codeCache.HasIntentionCodeForAircraft(flightPlan.GetCallsign()) &&
-                this->codeCache.IntentionCodeValid(flightPlan.GetCallsign(), extractedRoute)
-                ) {
-                return this->codeCache.GetIntentionCodeForAircraft(flightPlan.GetCallsign());
+                this->codeCache.HasIntentionCodeForAircraft(tagData.flightPlan.GetCallsign()) &&
+                this->codeCache.IntentionCodeValid(tagData.flightPlan.GetCallsign(), extractedRoute)
+            ) {
+                tagData.SetItemString(
+                    this->codeCache.GetIntentionCodeForAircraft(tagData.flightPlan.GetCallsign())
+                );
+                return;
             }
 
             // Generate the code and then cache it
             IntentionCodeData data = this->intention.GetIntentionCodeForFlightplan(
-                flightPlan.GetCallsign(),
-                flightPlan.GetOrigin(),
-                flightPlan.GetDestination(),
+                tagData.flightPlan.GetCallsign(),
+                tagData.flightPlan.GetOrigin(),
+                tagData.flightPlan.GetDestination(),
                 extractedRoute,
-                flightPlan.GetCruiseLevel()
+                tagData.flightPlan.GetCruiseLevel()
             );
 
-            this->codeCache.RegisterAircraft(flightPlan.GetCallsign(), data);
-            return data.intentionCode;
+            this->codeCache.RegisterAircraft(tagData.flightPlan.GetCallsign(), data);
+            tagData.SetItemString(data.intentionCode);
+        }
+
+        /*
+            Clear the code cache if the user logs on with a different controller position.
+        */
+        void IntentionCodeEventHandler::ControllerUpdateEvent(EuroScopeCControllerInterface& controller)
+        {
+            if (controller.IsCurrentUser() && controller.GetCallsign() != this->intention.GetUserControllerPosition()) {
+                this->intention.SetUserControllerPosition(controller.GetCallsign());
+                this->codeCache.Clear();
+            }
+        }
+
+        void IntentionCodeEventHandler::ControllerDisconnectEvent(EuroScopeCControllerInterface& controller)
+        {
+            // Nothing to do here, we only care about the current user
+        }
+
+        /*
+            Clear the code cache if the user disconnects
+        */
+        void IntentionCodeEventHandler::SelfDisconnectEvent(void)
+        {
+            this->codeCache.Clear();
+        }
+
+        const IntentionCodeGenerator& IntentionCodeEventHandler::GetGenerator() const
+        {
+            return this->intention;
+        }
+
+        const IntentionCodeCache& IntentionCodeEventHandler::GetCache() const
+        {
+            return this->codeCache;
         }
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

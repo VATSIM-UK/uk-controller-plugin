@@ -18,6 +18,19 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, strcmp(request.GetMethod(), CurlRequest::METHOD_GET.c_str()));
         }
 
+        TEST(CurlRequestTest, TestConstructorSetsMaxRequestTimeIfNotSpecified)
+        {
+            CurlRequest request("http://test.com/abc", CurlRequest::METHOD_GET);
+            EXPECT_EQ(10L, request.GetMaxRequestTime());
+        }
+
+        TEST(CurlRequestTest, TestMaxRequestTimeCanBeSet)
+        {
+            CurlRequest request("http://test.com/abc", CurlRequest::METHOD_GET);
+            request.SetMaxRequestTime(155L);
+            EXPECT_EQ(155L, request.GetMaxRequestTime());
+        }
+
         TEST(CurlRequestTest, TestConstructorThrowsExceptionIfInvalidMethod)
         {
             EXPECT_THROW(CurlRequest request("http://test.com/abc", "NOTAMETHOD"), std::invalid_argument);

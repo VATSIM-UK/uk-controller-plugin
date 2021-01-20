@@ -1,5 +1,6 @@
 #pragma once
 #include "squawk/ApiSquawkAllocation.h"
+#include "srd/SrdSearchParameters.h"
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -31,17 +32,28 @@ namespace UKControllerPlugin {
                 virtual std::string GetApiDomain(void) const = 0;
                 virtual std::string GetApiKey(void) const = 0;
                 virtual nlohmann::json GetHoldDependency(void) const = 0;
-                virtual nlohmann::json GetGenericHoldProfiles(void) const = 0;
-                virtual nlohmann::json GetUserHoldProfiles(void) const = 0;
+                virtual nlohmann::json GetAssignedHolds(void) const = 0;
+                virtual void AssignAircraftToHold(std::string callsign, std::string navaid) const = 0;
+                virtual void UnassignAircraftHold(std::string callsign) const = 0;
                 virtual nlohmann::json GetMinStackLevels(void) const = 0;
                 virtual nlohmann::json GetRegionalPressures(void) const = 0;
                 virtual nlohmann::json GetUri(std::string uri) const = 0;
-                virtual void DeleteUserHoldProfile(unsigned int profileId) const = 0;
-                virtual unsigned int CreateUserHoldProfile(std::string name, std::set<unsigned int> holds) const = 0;
-                virtual void UpdateUserHoldProfile(
-                    unsigned int id,
-                    std::string name,
-                    std::set<unsigned int> holds
+                virtual nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const = 0;
+                virtual nlohmann::json GetAssignedStands(void) const = 0;
+                virtual void AssignStandToAircraft(std::string callsign, int standId) const = 0;
+                virtual void DeleteStandAssignmentForAircraft(std::string callsign) const = 0;
+                virtual void SendEnrouteRelease(
+                    std::string aircraftCallsign,
+                    std::string sendingController,
+                    std::string targetController,
+                    int releaseType
+                ) const = 0;
+                virtual void SendEnrouteReleaseWithReleasePoint(
+                    std::string aircraftCallsign,
+                    std::string sendingController,
+                    std::string targetController,
+                    int releaseType,
+                    std::string releasePoint
                 ) const = 0;
                 virtual int UpdateCheck(std::string version) const = 0;
                 virtual void SetApiKey(std::string key) = 0;

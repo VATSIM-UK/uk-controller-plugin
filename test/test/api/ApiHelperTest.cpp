@@ -10,6 +10,7 @@
 #include "api/ApiNotAuthorisedException.h"
 #include "mock/MockWinApi.h"
 #include "squawk/ApiSquawkAllocation.h"
+#include "srd/SrdSearchParameters.h"
 
 using UKControllerPlugin::Api::ApiHelper;
 using UKControllerPlugin::Api::ApiResponse;
@@ -23,6 +24,7 @@ using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
+using UKControllerPlugin::Srd::SrdSearchParameters;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -442,131 +444,6 @@ TEST_F(ApiHelperTest, GetHoldDependencyReturnsJsonData)
     EXPECT_EQ(data, this->helper.GetHoldDependency());
 }
 
-TEST_F(ApiHelperTest, GetGenericHoldProfilesReturnsReturnsData)
-{
-    nlohmann::json data;
-    data["foo"] = "bar";
-    data["big"] = "small";
-
-    CurlResponse response(data.dump(), false, 200);
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_GET));
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_EQ(data, this->helper.GetGenericHoldProfiles());
-}
-
-TEST_F(ApiHelperTest, GetUserHoldProfilesReturnsReturnsData)
-{
-    nlohmann::json data;
-    data["foo"] = "bar";
-    data["big"] = "small";
-
-    CurlResponse response(data.dump(), false, 200);
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_GET));
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_EQ(data, this->helper.GetUserHoldProfiles());
-}
-
-TEST_F(ApiHelperTest, DeleteUserHoldProfileMakesRequest)
-{
-    nlohmann::json data;
-    data["foo"] = "bar";
-    data["big"] = "small";
-
-    CurlResponse response(data.dump(), false, 200);
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/1", CurlRequest::METHOD_DELETE));
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_NO_THROW(this->helper.DeleteUserHoldProfile(1));
-}
-
-TEST_F(ApiHelperTest, CreateUserHoldProfileMakesRequest)
-{
-    nlohmann::json data;
-    data["id"] = 3;
-
-    CurlResponse response(data.dump(), false, 200);
-
-    nlohmann::json expectedBody;
-    expectedBody["name"] = "Test";
-    expectedBody["holds"] = { 1, 2 };
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_PUT, expectedBody));
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_EQ(3, this->helper.CreateUserHoldProfile("Test", { 1, 2 }));
-}
-
-TEST_F(ApiHelperTest, CreateUserHoldProfileThrowsExceptionIdNotANumber)
-{
-    nlohmann::json data;
-    data["id"] = "test";
-
-    CurlResponse response(data.dump(), false, 200);
-
-    nlohmann::json expectedBody;
-    expectedBody["name"] = "Test";
-    expectedBody["holds"] = { 1, 2 };
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_PUT, expectedBody));
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_THROW(this->helper.CreateUserHoldProfile("Test", { 1, 2 }), ApiException);
-}
-
-TEST_F(ApiHelperTest, CreateUserHoldProfileThrowsExceptionNoIdReturned)
-{
-    nlohmann::json data;
-
-    CurlResponse response(data.dump(), false, 200);
-
-    nlohmann::json expectedBody;
-    expectedBody["name"] = "Test";
-    expectedBody["holds"] = { 1, 2 };
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile", CurlRequest::METHOD_PUT, expectedBody));
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_THROW(this->helper.CreateUserHoldProfile("Test", { 1, 2 }), ApiException);
-}
-
-
-TEST_F(ApiHelperTest, UpdateUserHoldProfileMakesRequest)
-{
-    nlohmann::json data;
-    data["foo"] = "bar";
-    data["big"] = "small";
-
-    CurlResponse response(data.dump(), false, 200);
-
-    nlohmann::json expectedBody;
-    expectedBody["name"] = "Test";
-    expectedBody["holds"] = { 1, 2 };
-    CurlRequest expectedRequest(GetApiCurlRequest("/hold/profile/1", CurlRequest::METHOD_PUT, expectedBody));
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_NO_THROW(this->helper.UpdateUserHoldProfile(1, "Test", { 1, 2 }));
-}
-
 TEST_F(ApiHelperTest, ItHasAUrlToSendTo)
 {
     EXPECT_TRUE(this->helper.GetApiDomain() == mockApiUrl);
@@ -725,6 +602,7 @@ TEST_F(ApiHelperTest, GetUriReturnsUriData)
             CurlRequest::METHOD_GET
         )
     );
+    expectedRequest.SetMaxRequestTime(0L);
 
     EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
         .Times(1)
@@ -740,6 +618,212 @@ TEST_F(ApiHelperTest, GetUriThrowsExceptionIfNonUkcpRoute)
         .Times(0);
 
     EXPECT_THROW(this->helper.GetUri("http://ukcp.test.org/someuri"), ApiException);
+}
+
+TEST_F(ApiHelperTest, SearchSrdReturnsData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    SrdSearchParameters params;
+    params.origin = "EGLL";
+    params.destination = "EGGD";
+    params.requestedLevel = 10000;
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/srd/route/search?origin=EGLL&destination=EGGD&requestedLevel=10000",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.SearchSrd(params));
+}
+
+TEST_F(ApiHelperTest, GetAssignedHoldsReturnsData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/hold/assigned",
+            CurlRequest::METHOD_GET
+         )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetAssignedHolds());
+}
+
+TEST_F(ApiHelperTest, AssignAircraftToHoldGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    nlohmann::json requestBody;
+    requestBody["callsign"] = "BAW123";
+    requestBody["navaid"] = "TIMBA";
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/hold/assigned",
+            CurlRequest::METHOD_PUT,
+            requestBody
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.AssignAircraftToHold("BAW123", "TIMBA"));
+}
+
+TEST_F(ApiHelperTest, UnassignAircraftHoldGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/hold/assigned/BAW123",
+            CurlRequest::METHOD_DELETE
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.UnassignAircraftHold("BAW123"));
+}
+
+TEST_F(ApiHelperTest, EnrouteReleaseGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest = GetApiCurlRequest(
+        "/release/enroute",
+        CurlRequest::METHOD_POST,
+        {
+            {"callsign", "BAW123"},
+            {"type", 1},
+            {"initiating_controller", "LON_S_CTR"},
+            {"target_controller", "LON_C_CTR"},
+        }
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.SendEnrouteRelease("BAW123", "LON_S_CTR", "LON_C_CTR", 1));
+}
+
+TEST_F(ApiHelperTest, EnrouteReleaseGeneratesRequestWithReleasePoint)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest = GetApiCurlRequest(
+        "/release/enroute",
+        CurlRequest::METHOD_POST,
+        {
+            {"callsign", "BAW123"},
+            {"type", 1},
+            {"initiating_controller", "LON_S_CTR"},
+            {"target_controller", "LON_C_CTR"},
+            {"release_point", "LAM"}
+        }
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(
+        this->helper.SendEnrouteReleaseWithReleasePoint("BAW123", "LON_S_CTR", "LON_C_CTR", 1, "LAM")
+    );
+}
+
+TEST_F(ApiHelperTest, GetAssignedStandsReturnsData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/stand/assignment",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetAssignedStands());
+}
+
+TEST_F(ApiHelperTest, AssignStandToAircraftGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    nlohmann::json requestBody;
+    requestBody["callsign"] = "BAW123";
+    requestBody["stand_id"] = 1;
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/stand/assignment",
+            CurlRequest::METHOD_PUT,
+            requestBody
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.AssignStandToAircraft("BAW123", 1));
+}
+
+TEST_F(ApiHelperTest, DeleteStandAssignmentForAircraftGeneratesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/stand/assignment/BAW123",
+            CurlRequest::METHOD_DELETE
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.DeleteStandAssignmentForAircraft("BAW123"));
 }
 }  // namespace Api
 }  // namespace UKControllerPluginTest
