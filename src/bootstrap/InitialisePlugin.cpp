@@ -161,7 +161,7 @@ namespace UKControllerPlugin {
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
         ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
-        // TODO: Remove this once the last version on old root is deprecated
+        // Remove this once the last version on old root is deprecated
         Bootstrap::CopyFilesToNewFolder(*this->container->windows);
         ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
 

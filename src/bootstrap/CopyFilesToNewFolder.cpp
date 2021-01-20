@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
                 );
             } catch (std::filesystem::filesystem_error e) {
                 windows.OpenMessageBox(
-                    L"Unable to copy UKCP files to new root, please contact the VATSIM UK Web Servics Department.",
+                    L"Unable to copy UKCP files to new root, please contact the VATSIM UK Web Services Department.",
                     L"UKCP Fatal Error",
                     MB_OK | MB_ICONSTOP
                 );
