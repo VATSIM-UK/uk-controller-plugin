@@ -1,7 +1,6 @@
 #pragma once
 #include "windows/WinApiInterface.h"
 #include "dialog/DialogProviderInterface.h"
-#include "hold/HoldConfigurationDialog.h"
 
 namespace UKControllerPlugin {
     namespace Windows {

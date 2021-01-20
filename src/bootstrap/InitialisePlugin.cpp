@@ -45,6 +45,7 @@
 #include "releases/ReleaseModule.h"
 #include "stands/StandModule.h"
 #include "integration/IntegrationModule.h"
+#include "bootstrap/CopyFilesToNewFolder.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -160,7 +161,10 @@ namespace UKControllerPlugin {
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
         ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
+        // TODO: Remove this once the last version on old root is deprecated
+        Bootstrap::CopyFilesToNewFolder(*this->container->windows);
         ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
+
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
         // User messager
