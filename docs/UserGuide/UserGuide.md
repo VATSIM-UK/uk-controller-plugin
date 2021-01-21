@@ -9,3 +9,4 @@ for example, stand allocations.
 - [Installation](Installation/Installation.md)
 - [Updating the plugin](Updating/Updating.md)
 - [Frequently asked questions](Faq/Faq.md)
+- [Getting help](GettingHelp/Help.md)
