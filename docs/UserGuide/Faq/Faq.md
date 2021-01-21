@@ -2,7 +2,8 @@
 
 1. [Local Files](#local-files)
 2. [Event Logs](#logging)
-2. [API Availability Warnings](#api-connectivity)
+3. [API Availability Warnings](#api-connectivity)
+4. [Displays Are Hidden](#windows-hidden)
 
 ## Where can I find the local files that the plugin uses?<a name="local-files"></a>
 
@@ -26,3 +27,7 @@ If the web service is not available, these checks will fail and therefore the pl
 used on the VATSIM network.
 
 If you see this warning, wait for a few moments and try restarting EuroScope, it may be a temporary blip.
+
+## I can't see some of the display windows, despite turning them on!<a name="windows-hidden"></a>
+
+Try running the `.ukcp resetvisuals` command in EuroScope - this will move everything back to default positions.
