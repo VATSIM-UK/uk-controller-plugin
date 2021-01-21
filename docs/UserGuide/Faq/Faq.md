@@ -1,7 +1,7 @@
 # Frequently Asked Questions
 
-1. Local Files(#local-files)
-2. Event Logs(#logging)
+1. [Local Files](#local-files)
+2. [Event Logs](#logging)
 2. [API Availability Warnings](#api-connectivity)
 
 ## Where can I find the local files that the plugin uses?<a name="local-files"></a>
