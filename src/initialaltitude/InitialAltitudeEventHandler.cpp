@@ -164,19 +164,21 @@ namespace UKControllerPlugin {
 
             To return true, must:
 
-            1. Be within a specified distance of the origin airport.
-            2. Be under a certain speed.
-            3. Not have a cleared altitude set.
-            4. Not be tracked by any controller.
-            5. Not be "simulated" by ES.
-            6. Have a user that has a recognised callsign.
-            7. Have the airfield of origin owned by the controller.
+            1. Be on the ground
+            2. Be within a specified distance of the origin airport.
+            3. Be under a certain speed.
+            4. Not have a cleared altitude set.
+            5. Not be tracked by any controller.
+            6. Not be "simulated" by ES.
+            7. Have a user that has a recognised callsign.
+            8. Have the airfield of origin owned by the controller.
         */
         bool InitialAltitudeEventHandler::MeetsAssignmentConditions(
             EuroScopeCFlightPlanInterface & flightPlan,
             EuroScopeCRadarTargetInterface & radarTarget
-        ) {
+        ) const {
             if (
+                radarTarget.GetFlightLevel() > this->assignmentMaxAltitude ||
                 flightPlan.GetDistanceFromOrigin() > this->assignmentMaxDistanceFromOrigin ||
                 radarTarget.GetGroundSpeed() > this->assignmentMaxSpeed ||
                 flightPlan.HasControllerClearedAltitude() ||

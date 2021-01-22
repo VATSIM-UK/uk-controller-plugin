@@ -91,6 +91,9 @@ namespace UKControllerPlugin {
                 // Then maximum speed that for assigning initial altitudes.
                 const int assignmentMaxSpeed = 40;
 
+                // Then current altitude assigning initial altitudes.
+                const int assignmentMaxAltitude = 1000;
+
                 // How long we should wait after logging in before assigning
                 const std::chrono::seconds minimumLoginTimeBeforeAssignment;
 
@@ -98,7 +101,7 @@ namespace UKControllerPlugin {
                 bool MeetsAssignmentConditions(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-                );
+                ) const;
 
                 // Used to generate initial altitudes.
                 const UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator & generator;
