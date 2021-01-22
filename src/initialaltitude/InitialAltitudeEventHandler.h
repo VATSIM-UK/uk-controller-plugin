@@ -103,6 +103,11 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 ) const;
 
+                static bool MeetsForceAssignmentConditions(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                );
+
                 // Used to generate initial altitudes.
                 const UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator & generator;
 

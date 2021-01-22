@@ -715,6 +715,9 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
+            ON_CALL(this->mockFlightPlan, IsTracked())
+                .WillByDefault(Return(false));
+
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
 
@@ -722,9 +725,6 @@ namespace UKControllerPluginTest {
                 .Times(0);
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
-                .Times(0);
-
-            EXPECT_CALL(mockFlightPlan, IsTracked())
                 .Times(0);
 
             EXPECT_CALL(mockFlightPlan, IsSimulated())
@@ -751,8 +751,57 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
 
+            ON_CALL(this->mockFlightPlan, IsTracked())
+                .WillByDefault(Return(false));
+
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000))
                 .Times(1);
+
+            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, RecycleSetsInitialAltitudeWhenTrackedByUser)
+        {
+            ON_CALL(this->mockFlightPlan, GetSidName())
+                .WillByDefault(Return("ADMAG2X"));
+
+            ON_CALL(this->mockFlightPlan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->mockFlightPlan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->mockFlightPlan, IsTracked())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->mockFlightPlan, IsTrackedByUser())
+                .WillByDefault(Return(true));
+
+            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000))
+                .Times(1);
+
+            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, RecycleDoesNothingIfAircraftTrackedByAnotherUser)
+        {
+            ON_CALL(this->mockFlightPlan, GetSidName())
+                .WillByDefault(Return("ADMAG2X"));
+
+            ON_CALL(this->mockFlightPlan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->mockFlightPlan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->mockFlightPlan, IsTracked())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->mockFlightPlan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_))
+                .Times(0);
 
             handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
@@ -767,6 +816,9 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockFlightPlan, GetCallsign())
                 .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->mockFlightPlan, IsTracked())
+                .WillByDefault(Return(false));
 
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_))
                 .Times(0);

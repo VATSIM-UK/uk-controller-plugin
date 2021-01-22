@@ -136,6 +136,11 @@ namespace UKControllerPlugin {
             std::string context,
             const POINT & mousePos
         ) {
+            if (!MeetsForceAssignmentConditions(flightplan, radarTarget))
+            {
+                return;
+            }
+
             std::string sidName = normalise.StripSidDeprecation(flightplan.GetSidName());
 
             if (!generator.HasSid(flightplan.GetOrigin(), sidName)) {
@@ -190,6 +195,19 @@ namespace UKControllerPlugin {
             }
 
             return true;
+        }
+
+        /*
+         * Force assignments are allowed if the aircraft is:
+         *
+         * 1. Not tracked
+         * 2. Tracked by the current user
+         */
+        bool InitialAltitudeEventHandler::MeetsForceAssignmentConditions(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCRadarTargetInterface& radarTarget
+        ) {
+            return !flightplan.IsTracked() || flightplan.IsTrackedByUser();
         }
 
         /*
