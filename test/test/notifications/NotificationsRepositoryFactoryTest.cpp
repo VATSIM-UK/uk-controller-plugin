@@ -33,7 +33,8 @@ namespace UKControllerPluginTest {
             public:
                 NotificationsRepositoryFactoryTest()
                 {
-                    std::unique_ptr<NiceMock<MockApiInterface>> apiMock = std::make_unique<NiceMock<MockApiInterface>>();
+                    std::unique_ptr<NiceMock<MockApiInterface>> apiMock =
+                        std::make_unique<NiceMock<MockApiInterface>>();
                     mockApi = apiMock.get();
                     container.api = std::move(apiMock);
                     container.controllerPositions = std::make_unique<ControllerPositionCollection>();
@@ -324,7 +325,6 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
         }
 
-        
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsTrueIfAllValid)
         {
             nlohmann::json notifications = {
@@ -350,7 +350,7 @@ namespace UKControllerPluginTest {
                     {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
                 },
                 {
-                    {"id", "abc"}, // Invalid id
+                    {"id", "abc"},  // Invalid id
                     {"title", "title"},
                     {"body", "body"},
                     {"valid_from", "2021-01-31 16:15:00"},

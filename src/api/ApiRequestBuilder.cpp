@@ -289,7 +289,9 @@ namespace UKControllerPlugin {
 
         CurlRequest ApiRequestBuilder::BuildGetUnreadNotificationsRequest() const
         {
-            return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/notifications/unread", CurlRequest::METHOD_GET));
+            return this->AddCommonHeaders(
+                CurlRequest(this->apiDomain + "/notifications/unread", CurlRequest::METHOD_GET)
+            );
         }
 
         CurlRequest ApiRequestBuilder::BuildReadNotificationRequest(int id) const

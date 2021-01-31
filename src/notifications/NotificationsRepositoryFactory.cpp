@@ -98,10 +98,14 @@ namespace UKControllerPlugin {
             const Controller::ControllerPositionHierarchyFactory& hierarchyFactory
         ) {
             return notifications.is_array() &&
-                std::find_if_not(notifications.cbegin(), notifications.cend(), [hierarchyFactory](const nlohmann::json& notification) -> bool
-                {
-                    return NotificationValid(notification, hierarchyFactory);
-                }) == notifications.cend();
+                std::find_if_not(
+                    notifications.cbegin(),
+                    notifications.cend(),
+                    [hierarchyFactory](const nlohmann::json& notification) -> bool
+                    {
+                        return NotificationValid(notification, hierarchyFactory);
+                    }
+                ) == notifications.cend();
         }
 
         bool NotificationValid(

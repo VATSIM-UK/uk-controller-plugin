@@ -34,8 +34,10 @@ namespace UKControllerPluginTest {
                 }
 
                 std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-                std::chrono::system_clock::time_point oneHourAgo = std::chrono::system_clock::now() - std::chrono::hours(1);
-                std::chrono::system_clock::time_point oneHoursTime = std::chrono::system_clock::now() + std::chrono::hours(1);
+                std::chrono::system_clock::time_point oneHourAgo =
+                    std::chrono::system_clock::now() - std::chrono::hours(1);
+                std::chrono::system_clock::time_point oneHoursTime =
+                    std::chrono::system_clock::now() + std::chrono::hours(1);
                 ControllerPosition position = ControllerPosition("EGKK_TWR", 124.220, "TWR", { "EGKK" });
                 ControllerPosition position2 = ControllerPosition("EGKK_APP", 126.820, "APP", { "EGKK" });
         };
@@ -64,7 +66,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_FALSE(this->GetNotification(oneHourAgo, now).Active());
         }
-        
+
         TEST_F(NotificationTest, ItIsActive)
         {
             EXPECT_TRUE(this->GetNotification(oneHourAgo, oneHoursTime).Active());
