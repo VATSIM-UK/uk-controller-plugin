@@ -45,6 +45,7 @@
 #include "releases/ReleaseModule.h"
 #include "stands/StandModule.h"
 #include "integration/IntegrationModule.h"
+#include "notifications/NotificationsModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -212,6 +213,7 @@ namespace UKControllerPlugin {
         Navaids::BootstrapPlugin(*this->container, loader);
         Releases::BootstrapPlugin(*this->container, loader);
         Stands::BootstrapPlugin(*this->container, loader);
+        Notifications::BootstrapPlugin(*this->container);
 
         Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);

@@ -70,6 +70,9 @@ namespace UKControllerPlugin {
                     int releaseType,
                     std::string releasePoint
                 ) const override;
+                nlohmann::json GetAllNotifications() const override;
+                nlohmann::json GetUnreadNotifications() const override;
+                void ReadNotification(int id) const override;
                 int UpdateCheck(std::string version) const override;
                 void SetApiKey(std::string key) override;
                 void SetApiDomain(std::string domain) override;

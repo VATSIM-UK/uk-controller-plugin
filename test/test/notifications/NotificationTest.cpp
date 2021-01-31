@@ -19,8 +19,9 @@ namespace UKControllerPluginTest {
                     std::chrono::system_clock::time_point validTo
                 )
                 {
-                    ControllerPositionHierarchy hierarchy;
-                    hierarchy.AddPosition(position);
+                    std::unique_ptr<ControllerPositionHierarchy> hierarchy =
+                        std::make_unique<ControllerPositionHierarchy>();
+                    hierarchy->AddPosition(position);
 
                     return Notification(
                         3,
@@ -28,7 +29,7 @@ namespace UKControllerPluginTest {
                         "Body",
                         validFrom,
                         validTo,
-                        hierarchy
+                        std::move(hierarchy)
                     );
                 }
 

@@ -139,6 +139,9 @@
     <Filter Include="test\notifications">
       <UniqueIdentifier>{d76273c9-9323-4f1a-bfee-6a55a67b9d4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\time">
+      <UniqueIdentifier>{a8c21e45-8d0b-4d31-9b3c-877523a291fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -816,6 +819,18 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\notifications\NotificationTest.cpp">
       <Filter>test\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\notifications\NotificationsModuleTest.cpp">
+      <Filter>test\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\notifications\NotificationsRepositoryFactoryTest.cpp">
+      <Filter>test\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\notifications\NotificationsRepositoryTest.cpp">
+      <Filter>test\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\time\ParseTimeStringsTest.cpp">
+      <Filter>test\time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

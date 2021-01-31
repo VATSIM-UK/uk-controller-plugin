@@ -9,7 +9,7 @@ namespace UKControllerPlugin {
             std::string body,
             std::chrono::system_clock::time_point validFrom,
             std::chrono::system_clock::time_point validTo,
-            Controller::ControllerPositionHierarchy controllers
+            std::unique_ptr<Controller::ControllerPositionHierarchy> controllers
         ): id(id), title(std::move(title)), body(std::move(body)), controllers(std::move(controllers)),
             validFrom(std::move(validFrom)), validTo(std::move(validTo))
         {
@@ -38,7 +38,7 @@ namespace UKControllerPlugin {
 
         bool Notification::IsRelevant(const Controller::ControllerPosition& position) const
         {
-            return this->controllers.PositionInHierarchy(position);
+            return this->controllers->PositionInHierarchy(position);
         }
 
         bool Notification::IsRead() const
@@ -46,7 +46,7 @@ namespace UKControllerPlugin {
             return this->read;
         }
 
-        bool Notification::Read()
+        void Notification::Read()
         {
             this->read = true;
         }

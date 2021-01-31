@@ -130,7 +130,7 @@ namespace UKControllerPlugin {
         /*
             Builds a request for getting all the stand assignments
         */
-        UKControllerPlugin::Curl::CurlRequest ApiRequestBuilder::BuildGetStandAssignmentsRequest(void) const
+        CurlRequest ApiRequestBuilder::BuildGetStandAssignmentsRequest(void) const
         {
             return this->AddCommonHeaders(
                 CurlRequest(apiDomain + "/stand/assignment", CurlRequest::METHOD_GET)
@@ -280,6 +280,23 @@ namespace UKControllerPlugin {
             request.SetBody(data.dump());
 
             return this->AddCommonHeaders(request);
+        }
+
+        CurlRequest ApiRequestBuilder::BuildGetAllNotificationsRequest() const
+        {
+            return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/notifications", CurlRequest::METHOD_GET));
+        }
+
+        CurlRequest ApiRequestBuilder::BuildGetUnreadNotificationsRequest() const
+        {
+            return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/notifications/unread", CurlRequest::METHOD_GET));
+        }
+
+        CurlRequest ApiRequestBuilder::BuildReadNotificationRequest(int id) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(this->apiDomain + "/notifications/read/" + std::to_string(id), CurlRequest::METHOD_PUT)
+            );
         }
 
         CurlRequest ApiRequestBuilder::BuildEnrouteReleaseRequest(

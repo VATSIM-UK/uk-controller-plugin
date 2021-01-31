@@ -215,6 +215,9 @@
     <ClInclude Include="..\..\src\navaids\NavaidCollection.h" />
     <ClInclude Include="..\..\src\navaids\NavaidModule.h" />
     <ClInclude Include="..\..\src\notifications\Notification.h" />
+    <ClInclude Include="..\..\src\notifications\NotificationsModule.h" />
+    <ClInclude Include="..\..\src\notifications\NotificationsRepository.h" />
+    <ClInclude Include="..\..\src\notifications\NotificationsRepositoryFactory.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.h" />
     <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.h" />
@@ -298,6 +301,7 @@
     <ClInclude Include="..\..\src\timedevent\DeferredEvent.h" />
     <ClInclude Include="..\..\src\timedevent\DeferredEventBootstrap.h" />
     <ClInclude Include="..\..\src\timedevent\TimedEventCollection.h" />
+    <ClInclude Include="..\..\src\time\ParseTimeStrings.h" />
     <ClInclude Include="..\..\src\update\PluginUpdateChecker.h" />
     <ClInclude Include="..\..\src\update\PluginVersion.h" />
     <ClInclude Include="..\..\src\wake\CacheItem.h" />
@@ -484,6 +488,9 @@
     <ClCompile Include="..\..\src\navaids\NavaidCollection.cpp" />
     <ClCompile Include="..\..\src\navaids\NavaidModule.cpp" />
     <ClCompile Include="..\..\src\notifications\Notification.cpp" />
+    <ClCompile Include="..\..\src\notifications\NotificationsModule.cpp" />
+    <ClCompile Include="..\..\src\notifications\NotificationsRepository.cpp" />
+    <ClCompile Include="..\..\src\notifications\NotificationsRepositoryFactory.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp" />
@@ -554,6 +561,7 @@
     <ClCompile Include="..\..\src\task\TaskRunner.cpp" />
     <ClCompile Include="..\..\src\timedevent\DeferredEventBootstrap.cpp" />
     <ClCompile Include="..\..\src\timedevent\TimedEventCollection.cpp" />
+    <ClCompile Include="..\..\src\time\ParseTimeStrings.cpp" />
     <ClCompile Include="..\..\src\update\PluginUpdateChecker.cpp" />
     <ClCompile Include="..\..\src\update\PluginVersion.cpp" />
     <ClCompile Include="..\..\src\wake\CreateWakeMappings.cpp" />
