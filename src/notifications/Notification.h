@@ -15,12 +15,14 @@ namespace UKControllerPlugin {
                     std::string body,
                     std::chrono::system_clock::time_point validFrom,
                     std::chrono::system_clock::time_point validTo,
-                    std::unique_ptr<Controller::ControllerPositionHierarchy> controllers
+                    std::unique_ptr<Controller::ControllerPositionHierarchy> controllers,
+                    std::string link
                 );
 
                 int Id() const;
                 std::string Title() const;
                 std::string Body() const;
+                std::string Link() const;
                 bool Active() const;
                 bool IsRelevant(const Controller::ControllerPosition & position) const;
                 bool IsRead() const;
@@ -36,6 +38,9 @@ namespace UKControllerPlugin {
 
                 // The body of the notification
                 const std::string body;
+
+                // The read more link for the notification
+                const std::string link;
 
                 // When the notification is valid from
                 const std::chrono::system_clock::time_point validFrom;

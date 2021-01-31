@@ -67,7 +67,8 @@ namespace UKControllerPlugin {
                     notification->at("body").get<std::string>(),
                     ParseTimeString(notification->at("valid_from")),
                     ParseTimeString(notification->at("valid_to")),
-                    hierarchyFactory.CreateFromJson(notification->at("controllers"))
+                    hierarchyFactory.CreateFromJson(notification->at("controllers")),
+                    notification->at("link").is_null() ? "" : notification->at("link").get<std::string>()
                 ));
             }
         }
@@ -127,7 +128,9 @@ namespace UKControllerPlugin {
                 notification.at("valid_to").is_string() &&
                 ParseTimeString(notification.at("valid_to").get<std::string>()) != invalidTime &&
                 notification.contains("controllers") &&
-                ControllersValid(notification.at("controllers"), hierarchyFactory);
+                ControllersValid(notification.at("controllers"), hierarchyFactory) &&
+                notification.contains("link") &&
+                (notification.at("link").is_string() || notification.at("link").is_null());
         }
 
         bool ControllersValid(

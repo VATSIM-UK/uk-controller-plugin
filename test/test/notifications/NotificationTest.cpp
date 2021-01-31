@@ -29,7 +29,8 @@ namespace UKControllerPluginTest {
                         "Body",
                         validFrom,
                         validTo,
-                        std::move(hierarchy)
+                        std::move(hierarchy),
+                        "Link"
                     );
                 }
 
@@ -55,6 +56,11 @@ namespace UKControllerPluginTest {
         TEST_F(NotificationTest, ItHasABody)
         {
             EXPECT_EQ("Body", this->GetNotification(now, now).Body());
+        }
+
+        TEST_F(NotificationTest, ItHasALink)
+        {
+            EXPECT_EQ("Link", this->GetNotification(now, now).Link());
         }
 
         TEST_F(NotificationTest, ItIsNotActiveIfItOccursInTheFuture)

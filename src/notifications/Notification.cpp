@@ -9,9 +9,10 @@ namespace UKControllerPlugin {
             std::string body,
             std::chrono::system_clock::time_point validFrom,
             std::chrono::system_clock::time_point validTo,
-            std::unique_ptr<Controller::ControllerPositionHierarchy> controllers
+            std::unique_ptr<Controller::ControllerPositionHierarchy> controllers,
+            std::string link
         ): id(id), title(std::move(title)), body(std::move(body)), controllers(std::move(controllers)),
-            validFrom(std::move(validFrom)), validTo(std::move(validTo))
+            validFrom(std::move(validFrom)), validTo(std::move(validTo)), link(std::move(link))
         {
         }
 
@@ -28,6 +29,11 @@ namespace UKControllerPlugin {
         std::string Notification::Body() const
         {
             return this->body;
+        }
+
+        std::string Notification::Link() const
+        {
+            return this->link;
         }
 
         bool Notification::Active() const

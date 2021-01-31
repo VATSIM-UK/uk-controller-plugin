@@ -138,6 +138,21 @@ namespace UKControllerPluginTest {
                 {"title", "title"},
                 {"body", "body"},
                 {"valid_from", "2021-01-31 16:15:00"},
+                {"link", "https://vatsim.uk"},
+                {"valid_to", "2021-01-31 16:20:00"},
+                {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
+            };
+            EXPECT_TRUE(NotificationValid(notification, *hierarchyFactory));
+        }
+
+        TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsTrueIfLinkNull)
+        {
+            nlohmann::json notification = {
+                {"id", 1},
+                {"title", "title"},
+                {"body", "body"},
+                {"valid_from", "2021-01-31 16:15:00"},
+                {"link", nlohmann::json::value_t::null},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
@@ -154,6 +169,7 @@ namespace UKControllerPluginTest {
             nlohmann::json notification = {
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -167,6 +183,7 @@ namespace UKControllerPluginTest {
                 {"id", "1"},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -179,6 +196,7 @@ namespace UKControllerPluginTest {
             nlohmann::json notification = {
                 {"id", 1},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -192,6 +210,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", 123},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -204,6 +223,7 @@ namespace UKControllerPluginTest {
             nlohmann::json notification = {
                 {"id", 1},
                 {"title", "title"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -217,7 +237,36 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", 123},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
+                {"valid_to", "2021-01-31 16:20:00"},
+                {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
+            };
+            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+        }
+
+        TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseIfLinkMissing)
+        {
+            nlohmann::json notification = {
+                {"id", 1},
+                {"title", "title"},
+                {"body", "body"},
+                {"valid_from", "2021-01-31 16:15:00"},
+                {"valid_to", "2021-01-31 16:20:00"},
+                {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
+            };
+            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+        }
+
+        TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseIfLinkNotString)
+        {
+            nlohmann::json notification = {
+                {"id", 1},
+                {"title", "title"},
+                {"body", "body"},
+                {"link", 123},
+                {"valid_from", "2021-01-31 16:15:00"},
+                {"link", nlohmann::json::value_t::null},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
@@ -230,6 +279,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
@@ -242,6 +292,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", 123},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -255,6 +306,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021:01:31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -268,6 +320,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
@@ -280,6 +333,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", 123},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -293,6 +347,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021:01:31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -306,6 +361,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
             };
@@ -318,6 +374,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", 123},
@@ -331,6 +388,7 @@ namespace UKControllerPluginTest {
                 {"id", 1},
                 {"title", "title"},
                 {"body", "body"},
+                {"link", "https://vatsim.uk"},
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -345,6 +403,7 @@ namespace UKControllerPluginTest {
                     {"id", 1},
                     {"title", "title"},
                     {"body", "body"},
+                    {"link", "https://vatsim.uk"},
                     {"valid_from", "2021-01-31 16:15:00"},
                     {"valid_to", "2021-01-31 16:20:00"},
                     {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -353,6 +412,7 @@ namespace UKControllerPluginTest {
                     {"id", "abc"},  // Invalid id
                     {"title", "title"},
                     {"body", "body"},
+                    {"link", "https://vatsim.uk"},
                     {"valid_from", "2021-01-31 16:15:00"},
                     {"valid_to", "2021-01-31 16:20:00"},
                     {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -409,6 +469,7 @@ namespace UKControllerPluginTest {
                     {"id", 1},
                     {"title", "title"},
                     {"body", "body"},
+                    {"link", "https://vatsim.uk/1"},
                     {"valid_from", "2021-01-31 16:15:00"},
                     {"valid_to", "2021-01-31 16:20:00"},
                     {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -417,6 +478,7 @@ namespace UKControllerPluginTest {
                     {"id", 2},
                     {"title", "title2"},
                     {"body", "body2"},
+                    {"link", "https://vatsim.uk/2"},
                     {"valid_from", "2021-01-31 16:20:00"},
                     {"valid_to", "2021-01-31 16:25:00"},
                     {"controllers", nlohmann::json::array({"EGKK_APP"})},
@@ -442,6 +504,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, notification1->Id());
             EXPECT_EQ("title", notification1->Title());
             EXPECT_EQ("body", notification1->Body());
+            EXPECT_EQ("https://vatsim.uk/1", notification1->Link());
             EXPECT_FALSE(notification1->IsRead());
             EXPECT_TRUE(notification1->IsRelevant(*position1));
             EXPECT_TRUE(notification1->IsRelevant(*position2));
@@ -451,6 +514,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(2, notification2->Id());
             EXPECT_EQ("title2", notification2->Title());
             EXPECT_EQ("body2", notification2->Body());
+            EXPECT_EQ("https://vatsim.uk/2", notification2->Link());
             EXPECT_TRUE(notification2->IsRead());
             EXPECT_FALSE(notification2->IsRelevant(*position1));
             EXPECT_FALSE(notification2->IsRelevant(*position2));
@@ -464,6 +528,7 @@ namespace UKControllerPluginTest {
                     {"id", 1},
                     {"title", "title"},
                     {"body", "body"},
+                    {"link", "https://vatsim.uk/1"},
                     {"valid_from", "2021-01-31 16:15:00"},
                     {"valid_to", "2021-01-31 16:20:00"},
                     {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
@@ -472,6 +537,7 @@ namespace UKControllerPluginTest {
                     {"id", 2},
                     {"title", "title2"},
                     {"body", "body2"},
+                    {"link", "https://vatsim.uk/2"},
                     {"valid_from", "2021-01-31 16:20:00"},
                     {"valid_to", "2021-01-31 16:25:00"},
                     {"controllers", nlohmann::json::array({"EGKK_APP"})},
@@ -493,6 +559,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(2, notification->Id());
             EXPECT_EQ("title2", notification->Title());
             EXPECT_EQ("body2", notification->Body());
+            EXPECT_EQ("https://vatsim.uk/2", notification->Link());
             EXPECT_FALSE(notification->IsRead());
             EXPECT_FALSE(notification->IsRelevant(*position1));
             EXPECT_FALSE(notification->IsRelevant(*position2));
