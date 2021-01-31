@@ -136,6 +136,9 @@
     <Filter Include="test\integration">
       <UniqueIdentifier>{edc625ab-5fc3-4fcc-9abe-29d1e9513b23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\notifications">
+      <UniqueIdentifier>{d76273c9-9323-4f1a-bfee-6a55a67b9d4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -810,6 +813,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\intention\SectorExitPointKonanTest.cpp">
       <Filter>test\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\notifications\NotificationTest.cpp">
+      <Filter>test\notifications</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

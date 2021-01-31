@@ -148,6 +148,9 @@
     <Filter Include="src\integration">
       <UniqueIdentifier>{0acb7a6a-6973-4c79-8276-312c7e76dd17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\notification">
+      <UniqueIdentifier>{fa57f24c-c6ec-4426-aa14-bed215621718}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1071,6 +1074,9 @@
     <ClInclude Include="..\..\src\intention\SectorExitPointKonan.h">
       <Filter>src\intention</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\notifications\Notification.h">
+      <Filter>src\notification</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1812,6 +1818,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\intention\SectorExitPointKonan.cpp">
       <Filter>src\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\Notification.cpp">
+      <Filter>src\notification</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
