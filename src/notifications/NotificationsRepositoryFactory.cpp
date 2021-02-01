@@ -32,6 +32,7 @@ namespace UKControllerPlugin {
             }
 
             ProcessNotifications(repository, allNotifications, hierarchyFactory);
+            LogInfo("Loaded " + std::to_string(repository.Count()) + " notifications");
 
             nlohmann::json unreadNotifications;
             try
@@ -50,6 +51,7 @@ namespace UKControllerPlugin {
             }
 
             ProcessUnreadNotifications(repository, unreadNotifications);
+            LogInfo("There are " + std::to_string(repository.CountUnread()) + " unread notifications");
             return repository;
         }
 

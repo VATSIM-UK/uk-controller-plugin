@@ -26,5 +26,20 @@ namespace UKControllerPlugin {
         {
             return this->notifications.size();
         }
+
+        /*
+         * Returns the number of unread notifications
+         */
+        int NotificationsRepository::CountUnread() const
+        {
+            return std::count_if(
+                this->notifications.cbegin(),
+                this->notifications.cend(),
+                [](const std::unique_ptr<Notification> & notification) -> bool
+                {
+                    return !notification->IsRead();
+                }
+            );
+        }
     }  // namespace Notifications
 }  // namespace UKControllerPlugin

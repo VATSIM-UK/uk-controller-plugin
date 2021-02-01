@@ -71,5 +71,39 @@ namespace UKControllerPluginTest {
             ));
             EXPECT_EQ(nullptr, repository.Get(2));
         }
+
+        TEST_F(NotificationsRepositoryTest, ItCountsUnreadNotifications)
+        {
+            repository.Add(std::make_unique<UKControllerPlugin::Notifications::Notification>(
+                1,
+                "abc",
+                "def",
+                std::chrono::system_clock::now(),
+                std::chrono::system_clock::now(),
+                std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
+                "link"
+            ));
+            repository.Add(std::make_unique<UKControllerPlugin::Notifications::Notification>(
+                2,
+                "abc",
+                "def",
+                std::chrono::system_clock::now(),
+                std::chrono::system_clock::now(),
+                std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
+                "link"
+            ));
+            repository.Add(std::make_unique<UKControllerPlugin::Notifications::Notification>(
+                3,
+                "abc",
+                "def",
+                std::chrono::system_clock::now(),
+                std::chrono::system_clock::now(),
+                std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
+                "link"
+            ));
+            repository.Get(1)->Read();
+            repository.Get(3)->Read();
+            EXPECT_EQ(1, repository.CountUnread());
+        }
     }  // namespace Notifications
 }  // namespace UKControllerPluginTest

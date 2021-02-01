@@ -13,6 +13,7 @@ namespace UKControllerPlugin {
                 void Add(std::unique_ptr<Notification> notification);
                 Notification* const Get(int id) const;
                 size_t Count() const;
+                int CountUnread() const;
 
                 // Public type definitions for a custom iterator over the class.
                 typedef std::set<std::unique_ptr<Notification>> AllNotifications;
