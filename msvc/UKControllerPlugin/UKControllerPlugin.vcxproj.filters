@@ -1098,6 +1098,12 @@
     <ClInclude Include="..\..\src\notifications\NotificationsDialog.h">
       <Filter>src\notifications</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\notifications\NotificationsEventHandler.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\UnreadNotificationsMessage.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1859,6 +1865,12 @@
       <Filter>src\notifications</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\notifications\NotificationsDialog.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\NotificationsEventHandler.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\UnreadNotificationsMessage.cpp">
       <Filter>src\notifications</Filter>
     </ClCompile>
   </ItemGroup>

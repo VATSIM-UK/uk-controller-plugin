@@ -6,9 +6,11 @@
 #include "dialog/DialogManager.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "controller/ActiveCallsignCollection.h"
 
 using testing::Test;
 using testing::NiceMock;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Notifications::BootstrapPlugin;
 using UKControllerPlugin::Notifications::BootstrapRadarScreen;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
@@ -28,6 +30,7 @@ namespace UKControllerPluginTest {
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
                     container.api.reset(new NiceMock<Api::MockApiInterface>);
                     container.dialogManager.reset(new DialogManager(dialogProvider));
+                    container.activeCallsigns.reset(new ActiveCallsignCollection);
                 }
 
                 ConfigurableDisplayCollection configurableDisplays;
@@ -53,7 +56,13 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackFunction(5000));
         }
 
-        TEST_F(NotificationsModuleTest, ItRegistersWithTheConfigurableDisplays)
+        TEST_F(NotificationsModuleTest, ItRegistersForActiveCallsignEvents)
+        {
+            BootstrapPlugin(container);
+            EXPECT_EQ(1, container.activeCallsigns->CountHandlers());
+        }
+
+        TEST_F(NotificationsModuleTest, ItRegistersWithConfigurableDisplaysOnRadarScreens)
         {
             BootstrapPlugin(container);
             BootstrapRadarScreen(configurableDisplays);

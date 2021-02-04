@@ -3,6 +3,7 @@
 #include "notifications/NotificationsRepositoryFactory.h"
 #include "notifications/NotificationsDialog.h"
 #include "notifications/NotificationsMenuItem.h"
+#include "notifications/NotificationsEventHandler.h"
 #include "euroscope/CallbackFunction.h"
 
 namespace UKControllerPlugin {
@@ -51,6 +52,13 @@ namespace UKControllerPlugin {
                 )
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(menuItemCallback);
+
+            // Create the event handler
+            std::shared_ptr<NotificationsEventHandler> eventHandler = std::make_shared<NotificationsEventHandler>(
+                repository,
+                *container.userMessager
+            );
+            container.activeCallsigns->AddHandler(eventHandler);
         }
 
         void BootstrapRadarScreen(RadarScreen::ConfigurableDisplayCollection& displays)

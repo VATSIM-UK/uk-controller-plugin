@@ -835,6 +835,12 @@
     <ClCompile Include="..\..\test\test\notifications\NotificationsMenuItemTest.cpp">
       <Filter>test\notifications</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\notifications\NotificationsEventHandlerTest.cpp">
+      <Filter>test\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\notifications\UnreadNotificationsMessageTest.cpp">
+      <Filter>test\notifications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
