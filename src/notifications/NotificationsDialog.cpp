@@ -1,5 +1,6 @@
 #include "pch/stdafx.h"
 #include "notifications/NotificationsDialog.h"
+#include "api/ApiException.h"
 #include "dialog/DialogCallArgument.h"
 #include "helper/HelperFunctions.h"
 
@@ -9,10 +10,8 @@ namespace UKControllerPlugin {
 
         NotificationsDialog::NotificationsDialog(
             std::shared_ptr<NotificationsRepository> repository,
-            const Api::ApiInterface& api,
-            const Dialog::DialogManager& dialogManager
-        ) : repository(std::move(repository)), api(api), dialogManager(dialogManager),
-                readString(L"Read"), unreadString(L"Unread")
+            const Api::ApiInterface& api
+        ) : repository(std::move(repository)), api(api), readString(L"Read"), unreadString(L"Unread")
         {
         }
 
@@ -39,6 +38,10 @@ namespace UKControllerPlugin {
                     switch (LOWORD(wParam)) {
                         case IDOK: {
                             EndDialog(hwnd, wParam);
+                            return TRUE;
+                        }
+                        case IDC_READ_NOTIFICATION: {
+                            this->MarkNotificationAsRead(hwnd);
                             return TRUE;
                         }
                         default:
@@ -121,7 +124,6 @@ namespace UKControllerPlugin {
             };
             ListView_InsertColumn(notificationsList, 1, &readColumn);
 
-
             // Add all the notifications
             int itemNumber = 0;
             std::for_each(
@@ -157,6 +159,9 @@ namespace UKControllerPlugin {
         void NotificationsDialog::SelectNotification(HWND hwnd, NMLISTVIEW * details)
         {
             if ((details->uNewState ^ details->uOldState) & LVIS_SELECTED) {
+                // Store the selected notification
+                this->selectedNotification = details->iItem;
+
                 LVITEM itemToRetrieve;
                 itemToRetrieve.iItem = details->iItem;
                 itemToRetrieve.iSubItem = 0;
@@ -193,6 +198,45 @@ namespace UKControllerPlugin {
                     ShowWindow(GetDlgItem(hwnd, IDC_NOTIFICATION_LINK), SW_SHOW);
                 }
             }
+        }
+
+        /*
+         * Mark the currently selected notification as read
+         */
+        void NotificationsDialog::MarkNotificationAsRead(HWND hwnd) const
+        {
+            if (this->selectedNotification == -1) {
+                LogWarning("Tried to mark notification as read but none selected");
+                return;
+            }
+
+            // Get the row
+            LVITEM itemToRetrieve;
+            itemToRetrieve.iItem = this->selectedNotification;
+            itemToRetrieve.iSubItem = 0;
+            itemToRetrieve.mask = LVIF_PARAM;
+            ListView_GetItem(GetDlgItem(hwnd, IDC_NOTIFICATIONS_LIST), (LPLVITEM) &itemToRetrieve);
+
+            // Mark the notification as read
+            Notification * notification = reinterpret_cast<Notification *>(itemToRetrieve.lParam);
+            notification->Read();
+
+            // Try to tell the API that has been read, but handle if it doesn't
+            try
+            {
+                this->api.ReadNotification(notification->Id());
+            } catch (Api::ApiException apiException)
+            {
+                LogError("ApiException when marking notification as read: " + std::string(apiException.what()));
+            }
+
+            // Update the notifications display to show that it's been read
+            HWND notificationsList = GetDlgItem(hwnd, IDC_NOTIFICATIONS_LIST);
+            std::wstring readText = notification->IsRead() ? this->readString : this->unreadString;
+            itemToRetrieve.mask = LVIF_TEXT;
+            itemToRetrieve.iSubItem = 1;
+            itemToRetrieve.pszText = (LPWSTR) readText.c_str();
+            ListView_SetItem(notificationsList, &itemToRetrieve);
         }
     }  // namespace Notifications
 }  // namespace UKControllerPlugin

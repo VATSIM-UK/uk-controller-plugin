@@ -18,8 +18,7 @@ namespace UKControllerPlugin {
             // Create the hold selection dialog
             std::shared_ptr<NotificationsDialog> dialog = std::make_shared<NotificationsDialog>(
                 repository,
-                *container.api,
-                *container.dialogManager
+                *container.api
             );
 
             container.dialogManager->AddDialog(

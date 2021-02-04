@@ -14,15 +14,15 @@ namespace UKControllerPlugin {
 
                 NotificationsDialog(
                     std::shared_ptr<NotificationsRepository> repository,
-                    const Api::ApiInterface& api,
-                    const Dialog::DialogManager & dialogManager
+                    const Api::ApiInterface& api
                 );
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             private:
 
                 void InitDialog(HWND hwnd, LPARAM lParam);
-                static void SelectNotification(HWND hwnd, NMLISTVIEW * details);
+                void SelectNotification(HWND hwnd, NMLISTVIEW * details);
+                void MarkNotificationAsRead(HWND hwnd) const;
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
                 // Repository containing notifications
@@ -31,12 +31,11 @@ namespace UKControllerPlugin {
                 // Api for marking notifications as read
                 const Api::ApiInterface& api;
 
-                // For loading the notification view dialog
-                const Dialog::DialogManager & dialogManager;
-
                 // Read status strings
                 const std::wstring readString;
                 const std::wstring unreadString;
+
+                size_t selectedNotification = -1;
         };
     }  // namespace Notifications
 }  // namespace UKControllerPlugin
