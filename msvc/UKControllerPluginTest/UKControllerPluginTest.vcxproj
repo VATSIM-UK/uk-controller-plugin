@@ -163,6 +163,7 @@
     <ClCompile Include="..\..\test\test\navaids\NavaidCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\navaids\NavaidModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\navaids\NavaidTest.cpp" />
+    <ClCompile Include="..\..\test\test\notifications\NotificationsMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\notifications\NotificationsModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\notifications\NotificationsRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\notifications\NotificationsRepositoryTest.cpp" />

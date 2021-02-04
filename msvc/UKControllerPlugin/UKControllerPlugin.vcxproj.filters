@@ -1092,6 +1092,12 @@
     <ClInclude Include="..\..\src\time\ParseTimeStrings.h">
       <Filter>src\time</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\notifications\NotificationsMenuItem.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\NotificationsDialog.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1848,6 +1854,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\time\ParseTimeStrings.cpp">
       <Filter>src\time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\NotificationsMenuItem.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\NotificationsDialog.cpp">
+      <Filter>src\notifications</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

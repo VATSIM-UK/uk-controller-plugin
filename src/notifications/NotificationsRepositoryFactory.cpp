@@ -10,9 +10,9 @@ using UKControllerPlugin::Time::invalidTime;
 namespace UKControllerPlugin {
     namespace Notifications {
 
-        NotificationsRepository Make(const Bootstrap::PersistenceContainer& container)
+        std::shared_ptr<NotificationsRepository> Make(const Bootstrap::PersistenceContainer& container)
         {
-            NotificationsRepository repository;
+            std::shared_ptr<NotificationsRepository> repository = std::make_unique<NotificationsRepository>();
 
             nlohmann::json allNotifications;
             try
@@ -31,8 +31,8 @@ namespace UKControllerPlugin {
                 return repository;
             }
 
-            ProcessNotifications(repository, allNotifications, hierarchyFactory);
-            LogInfo("Loaded " + std::to_string(repository.Count()) + " notifications");
+            ProcessNotifications(*repository, allNotifications, hierarchyFactory);
+            LogInfo("Loaded " + std::to_string(repository->Count()) + " notifications");
 
             nlohmann::json unreadNotifications;
             try
@@ -50,8 +50,8 @@ namespace UKControllerPlugin {
                 return repository;
             }
 
-            ProcessUnreadNotifications(repository, unreadNotifications);
-            LogInfo("There are " + std::to_string(repository.CountUnread()) + " unread notifications");
+            ProcessUnreadNotifications(*repository, unreadNotifications);
+            LogInfo("There are " + std::to_string(repository->CountUnread()) + " unread notifications");
             return repository;
         }
 

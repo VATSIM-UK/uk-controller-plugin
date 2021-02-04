@@ -5,7 +5,7 @@
 
 namespace UKControllerPlugin {
     namespace Notifications {
-        NotificationsRepository Make(const Bootstrap::PersistenceContainer& container);
+        std::shared_ptr<NotificationsRepository> Make(const Bootstrap::PersistenceContainer& container);
         void ProcessNotifications(
             NotificationsRepository & repository,
             const nlohmann::json & notifications,

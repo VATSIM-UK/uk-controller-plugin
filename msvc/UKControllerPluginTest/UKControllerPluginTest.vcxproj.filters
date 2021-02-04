@@ -832,6 +832,9 @@
     <ClCompile Include="..\..\test\test\time\ParseTimeStringsTest.cpp">
       <Filter>test\time</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\notifications\NotificationsMenuItemTest.cpp">
+      <Filter>test\notifications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

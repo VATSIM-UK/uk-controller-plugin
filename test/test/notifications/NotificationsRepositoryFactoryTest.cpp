@@ -75,7 +75,7 @@ namespace UKControllerPluginTest {
 
                 ControllerPosition * position1;
                 ControllerPosition * position2;
-               ControllerPosition * position3;
+                ControllerPosition * position3;
                 NiceMock<MockApiInterface> * mockApi;
                 std::unique_ptr<ControllerPositionHierarchyFactory> hierarchyFactory;
                 PersistenceContainer container;
@@ -431,8 +431,8 @@ namespace UKControllerPluginTest {
             ON_CALL(*mockApi, GetAllNotifications())
                 .WillByDefault(Throw(ApiException("foo")));
 
-            NotificationsRepository repo = Make(container);
-            EXPECT_EQ(0, repo.Count());
+            std::shared_ptr<NotificationsRepository> repo = Make(container);
+            EXPECT_EQ(0, repo->Count());
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, MakeHandlesInvalidNotifications)
@@ -446,8 +446,8 @@ namespace UKControllerPluginTest {
             ON_CALL(*mockApi, GetAllNotifications())
                 .WillByDefault(Return(notifications));
 
-            NotificationsRepository repo = Make(container);
-            EXPECT_EQ(0, repo.Count());
+            std::shared_ptr<NotificationsRepository> repo = Make(container);
+            EXPECT_EQ(0, repo->Count());
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, MakeHandlesExceptionFromRequestingUnreadNotifications)
@@ -458,8 +458,8 @@ namespace UKControllerPluginTest {
             ON_CALL(*mockApi, GetUnreadNotifications())
                 .WillByDefault(Throw(ApiException("foo")));
 
-            NotificationsRepository repo = Make(container);
-            EXPECT_EQ(0, repo.Count());
+            std::shared_ptr<NotificationsRepository> repo = Make(container);
+            EXPECT_EQ(0, repo->Count());
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, MakeLoadsNotificationsFromApi)
@@ -497,10 +497,10 @@ namespace UKControllerPluginTest {
             ON_CALL(*mockApi, GetUnreadNotifications())
                 .WillByDefault(Return(unreadNotifications));
 
-            NotificationsRepository repo = Make(container);
-            EXPECT_EQ(2, repo.Count());
+            std::shared_ptr<NotificationsRepository> repo = Make(container);
+            EXPECT_EQ(2, repo->Count());
 
-            Notification * const notification1 = repo.Get(1);
+            Notification * const notification1 = repo->Get(1);
             EXPECT_EQ(1, notification1->Id());
             EXPECT_EQ("title", notification1->Title());
             EXPECT_EQ("body", notification1->Body());
@@ -510,7 +510,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(notification1->IsRelevant(*position2));
             EXPECT_FALSE(notification1->IsRelevant(*position3));
 
-            Notification * const notification2 = repo.Get(2);
+            Notification * const notification2 = repo->Get(2);
             EXPECT_EQ(2, notification2->Id());
             EXPECT_EQ("title2", notification2->Title());
             EXPECT_EQ("body2", notification2->Body());
@@ -552,10 +552,10 @@ namespace UKControllerPluginTest {
             ON_CALL(*mockApi, GetUnreadNotifications())
                 .WillByDefault(Return(unreadNotifications));
 
-            NotificationsRepository repo = Make(container);
-            EXPECT_EQ(2, repo.Count());
+            std::shared_ptr<NotificationsRepository> repo = Make(container);
+            EXPECT_EQ(2, repo->Count());
 
-            Notification * const notification = repo.Get(2);
+            Notification * const notification = repo->Get(2);
             EXPECT_EQ(2, notification->Id());
             EXPECT_EQ("title2", notification->Title());
             EXPECT_EQ("body2", notification->Body());
