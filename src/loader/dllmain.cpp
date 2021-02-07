@@ -11,11 +11,11 @@ HINSTANCE dllInstance;
 void __declspec (dllexport) EuroScopePlugInInit (EuroScopePlugIn :: CPlugIn ** ppPlugInInstance)
 {
     #ifndef _DEBUG
-        DoUpdate();
+        CheckForUpdates();
     #endif
 
     // Load the library
-    dllInstance = LoadLibrary(L"UKControllerPlugin.dll");
+    dllInstance = LoadLibrary(L"UKControllerPluginLibs.dll");
 
     if (dllInstance == NULL)
     {
@@ -37,5 +37,8 @@ void __declspec (dllexport) EuroScopePlugInInit (EuroScopePlugIn :: CPlugIn ** p
 void __declspec (dllexport) EuroScopePlugInExit (void)
 {
     UnloadPlugin();
-    FreeLibrary(dllInstance);
+    if (dllInstance != NULL)
+    {
+        FreeLibrary(dllInstance);
+    }
 }
