@@ -26,6 +26,11 @@ namespace UKControllerPlugin {
                 " relevant to the position you are controlling.";
         }
 
+        /*
+            This is an alert message that we want users to be aware of as soon
+            as they log into a position, so return true on all the interface methods
+            to make it really obvious.
+        */
         bool UnreadNotificationsMessage::MessageShowHandler(void) const
         {
             return true;
