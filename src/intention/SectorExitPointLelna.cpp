@@ -28,6 +28,11 @@ namespace UKControllerPlugin {
                 {
                     return "H5";
                 }
+				
+				if (arrivalAirport == "LFRC")
+                {
+                    return "JC";
+                }
             }
 
             while (foundPointIndex < numberOfPointsInRoute) {

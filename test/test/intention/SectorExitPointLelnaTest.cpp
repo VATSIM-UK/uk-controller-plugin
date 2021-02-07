@@ -127,29 +127,22 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H5"));
         }
-
+		
         TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectIntentionCodeForCherbourgArrivals)
         {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
-            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
+            SectorExitPointLelna exitPoint("LELNA", "H5", SectorExitPointLelna::outSouth);
 
             EXPECT_CALL(routeMock, GetPointsNumber())
                 .Times(1)
                 .WillRepeatedly(Return(3));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(3)
-                .WillRepeatedly(Return("LELNA"));
-
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(3)
-                .WillRepeatedly(Return("HELLO"));
-
             EXPECT_CALL(routeMock, GetPointName(2))
-                .Times(4)
+                .Times(1)
                 .WillRepeatedly(Return("LFRC"));
 
-            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H2"));
+            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 25000).compare("JC"));
         }
+
     }  // namespace IntentionCode
 }  // namespace UKControllerPluginTest
