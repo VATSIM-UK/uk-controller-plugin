@@ -41,8 +41,9 @@ def doFile(inputFile, outputFile, className, namespace):
   outputHandle.close()
 
 # Do each template
-doFile("..\\template\\Template.h", "..\\src\\%s\\%s.h" % (folder, classname), classname, namespace)
-doFile("..\\template\\Template.cpp", "..\\src\\%s\\%s.cpp" % (folder, classname), classname, namespace)
-doFile("..\\template\\TestTemplate.cpp", "..\\test\\test\\%s\\%sTest.cpp" % (folder, classname), classname, namespace)
+sep = os.path.sep
+doFile(f"..{sep}template{sep}Template.h", f"..{sep}src{sep}{folder}{sep}{classname}.h", classname, namespace)
+doFile(f"..{sep}template{sep}Template.cpp", f"..{sep}src{sep}{folder}{sep}{classname}.cpp", classname, namespace)
+doFile(f"..{sep}template{sep}TestTemplate.cpp", f"..{sep}test{sep}test{sep}{folder}{sep}{classname}Test.cpp", classname, namespace)
 print("Done!")
 

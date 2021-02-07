@@ -31,11 +31,6 @@ namespace UKControllerPlugin {
                 throw std::invalid_argument("Json is not array");
             }
 
-            if (json.empty()) {
-                LogError("Controller hierarchy is empty: " + json.dump());
-                throw std::invalid_argument("Json empty");
-            }
-
             std::unique_ptr<ControllerPositionHierarchy> hierarchy = std::make_unique<ControllerPositionHierarchy>();
 
             for (nlohmann::json::const_iterator it = json.cbegin(); it != json.cend(); ++it) {

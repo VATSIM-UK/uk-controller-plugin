@@ -825,5 +825,65 @@ TEST_F(ApiHelperTest, DeleteStandAssignmentForAircraftGeneratesRequest)
 
     EXPECT_NO_THROW(this->helper.DeleteStandAssignmentForAircraft("BAW123"));
 }
+
+TEST_F(ApiHelperTest, GetAllNotificationsMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/notifications",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetAllNotifications());
+}
+
+TEST_F(ApiHelperTest, GetUnreadNotificationsMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/notifications/unread",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetUnreadNotifications());
+}
+
+TEST_F(ApiHelperTest, ReadNotificationMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/notifications/read/1",
+            CurlRequest::METHOD_PUT
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_NO_THROW(this->helper.ReadNotification(1));
+}
 }  // namespace Api
 }  // namespace UKControllerPluginTest
