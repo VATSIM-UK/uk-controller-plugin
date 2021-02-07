@@ -1071,6 +1071,9 @@
     <ClInclude Include="..\..\src\intention\SectorExitPointKonan.h">
       <Filter>src\intention</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\bootstrap\CopyFilesToNewFolder.h">
+      <Filter>src\bootstrap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1812,6 +1815,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\intention\SectorExitPointKonan.cpp">
       <Filter>src\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bootstrap\CopyFilesToNewFolder.cpp">
+      <Filter>src\bootstrap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
