@@ -28,8 +28,8 @@ namespace UKControllerPlugin {
                 {
                     return "H5";
                 }
-				
-				if (arrivalAirport == "LFRC")
+
+                if (arrivalAirport == "LFRC")
                 {
                     return "JC";
                 }

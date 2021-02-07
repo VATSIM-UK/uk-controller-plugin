@@ -127,7 +127,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H5"));
         }
-		
+
         TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectIntentionCodeForCherbourgArrivals)
         {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
