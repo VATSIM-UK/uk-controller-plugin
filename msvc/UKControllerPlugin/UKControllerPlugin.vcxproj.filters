@@ -148,6 +148,9 @@
     <Filter Include="src\integration">
       <UniqueIdentifier>{0acb7a6a-6973-4c79-8276-312c7e76dd17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\include">
+      <UniqueIdentifier>{42fd2e5f-0143-4b4f-836f-872d9c61dae8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1070,6 +1073,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\intention\SectorExitPointKonan.h">
       <Filter>src\intention</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\include\UKControllerPlugin.h">
+      <Filter>src\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

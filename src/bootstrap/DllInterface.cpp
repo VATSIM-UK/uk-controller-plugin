@@ -1,5 +1,8 @@
 #include "pch/stdafx.h"
 #include "bootstrap/InitialisePlugin.h"
+#include "update/PluginVersion.h"
+
+using UKControllerPlugin::Plugin::PluginVersion;
 
 // The one true app to rule them all...
 UKControllerPlugin::InitialisePlugin thePluginApp;
@@ -19,15 +22,15 @@ BOOL WINAPI DllMain(
 }
 
 /*
-    Called by Euroscope when the plugin is loaded, either on startup (if previously loaded and saved
+    Called by EuroScope when the plugin is loaded, either on startup (if previously loaded and saved
     in settings) or when manually loaded by the user.
 */
-void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** ppPlugInInstance)
+UKCP_API EuroScopePlugIn::CPlugIn * LoadPlugin(void)
 {
     // Give ES the plugin instance and run the post initialisation method.
     try {
         thePluginApp.PostInit(dllInstance);
-        *ppPlugInInstance = thePluginApp.GetPlugin();
+        return thePluginApp.GetPlugin();
     }
     catch (std::exception e) {
         std::string what = e.what();
@@ -42,7 +45,7 @@ void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** ppPlu
         message += L"LastError: " + std::to_wstring(GetLastError()) + L"\r\n";;
 
         MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
-        throw e;
+        throw;
     }
 }
 
@@ -50,7 +53,7 @@ void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn ** ppPlu
 /*
     Called by Euroscope when the plugin is unloaded, either by the user or on exit.
 */
-void __declspec(dllexport) EuroScopePlugInExit(void)
+UKCP_API void UnloadPlugin(void)
 {
     try {
         thePluginApp.EuroScopeCleanup();
@@ -63,6 +66,27 @@ void __declspec(dllexport) EuroScopePlugInExit(void)
         message += L"Message: " + std::wstring(what.cbegin(), what.cend());
 
         MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Shutdown Failed", MB_OK | MB_ICONSTOP);
-        throw e;
+        throw;
     }
+}
+
+UKCP_API const char* GetPluginVersion(void)
+{
+    return PluginVersion::version;
+}
+
+/*
+ *  Allows the plugin DLL to be loaded directly, so we don't have to worry about going via the loader.
+ */
+void __declspec (dllexport) EuroScopePlugInInit (EuroScopePlugIn :: CPlugIn ** ppPlugInInstance)
+{
+    *ppPlugInInstance = LoadPlugin();
+};
+
+/*
+ * Unload the UKControllerPlugin DLL directly, so we don't have to worry about going via the loader.
+ */
+void __declspec (dllexport) EuroScopePlugInExit (void)
+{
+    UnloadPlugin();
 }

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{26e7ee68-8296-4e79-bbb0-145c5686c543}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\loader">
+      <UniqueIdentifier>{9df25c84-816b-4a0d-9fbb-e898a4b28b0b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\loader\pch.cpp">
+      <Filter>src\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\loader\dllmain.cpp">
+      <Filter>src\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\loader\loaderfunctions.cpp">
+      <Filter>src\loader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\loader\pch.h">
+      <Filter>src\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\loader\loaderfunctions.h">
+      <Filter>src\loader</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

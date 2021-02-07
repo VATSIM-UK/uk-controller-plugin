@@ -59,3 +59,8 @@
 #include <Shobjidl.h>
 #include <Shlobj.h>
 #include <Windows.h>
+
+// Definitions for library exports
+#ifndef UKCP_API
+#define UKCP_API __declspec(dllexport)
+#endif
