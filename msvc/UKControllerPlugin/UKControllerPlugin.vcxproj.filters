@@ -148,6 +148,12 @@
     <Filter Include="src\integration">
       <UniqueIdentifier>{0acb7a6a-6973-4c79-8276-312c7e76dd17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\time">
+      <UniqueIdentifier>{30a69e36-14c8-4510-878c-078d10bcca27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\notifications">
+      <UniqueIdentifier>{fa57f24c-c6ec-4426-aa14-bed215621718}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1071,6 +1077,36 @@
     <ClInclude Include="..\..\src\intention\SectorExitPointKonan.h">
       <Filter>src\intention</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\bootstrap\CopyFilesToNewFolder.h">
+      <Filter>src\bootstrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\Notification.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\NotificationsRepositoryFactory.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\NotificationsModule.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\NotificationsRepository.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\time\ParseTimeStrings.h">
+      <Filter>src\time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\NotificationsMenuItem.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\NotificationsDialog.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\NotificationsEventHandler.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\notifications\UnreadNotificationsMessage.h">
+      <Filter>src\notifications</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1812,6 +1848,36 @@
     </ClCompile>
     <ClCompile Include="..\..\src\intention\SectorExitPointKonan.cpp">
       <Filter>src\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bootstrap\CopyFilesToNewFolder.cpp">
+      <Filter>src\bootstrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\Notification.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\NotificationsRepositoryFactory.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\NotificationsModule.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\NotificationsRepository.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\time\ParseTimeStrings.cpp">
+      <Filter>src\time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\NotificationsMenuItem.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\NotificationsDialog.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\NotificationsEventHandler.cpp">
+      <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\notifications\UnreadNotificationsMessage.cpp">
+      <Filter>src\notifications</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

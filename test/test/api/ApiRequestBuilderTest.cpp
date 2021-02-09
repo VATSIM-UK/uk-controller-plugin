@@ -365,5 +365,47 @@ namespace UKControllerPluginTest {
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildDeleteStandAssignmentForAircraftRequest("BAW123"));
         }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsGetAllNotificationsRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/notifications",
+                CurlRequest::METHOD_GET
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildGetAllNotificationsRequest());
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsGetUnreadNotificationsRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/notifications/unread",
+                CurlRequest::METHOD_GET
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildGetUnreadNotificationsRequest());
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsReadNotificationRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/notifications/read/1",
+                CurlRequest::METHOD_PUT
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildReadNotificationRequest(1));
+        }
     }  // namespace Api
 }  // namespace UKControllerPluginTest

@@ -5,10 +5,8 @@
 #include "windows/WinApi.h"
 #include "graphics/GdiplusBrushes.h"
 #include "graphics/GdiGraphicsWrapper.h"
-#include "bootstrap/LocateApiSettings.h"
 #include "euroscope/GeneralSettingsDialog.h"
 #include "dialog/DialogManager.h"
-#include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Curl::CurlApi;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -29,10 +27,9 @@ namespace UKControllerPlugin {
         void ExternalsBootstrap::Bootstrap(PersistenceContainer & persistence, HINSTANCE instance)
         {
             persistence.curl.reset(new CurlApi());
-            // All files should be relative to Documents/EuroScope
             std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(
                 instance,
-                ExternalsBootstrap::GetPluginFileRoot()
+                GetPluginFileRoot()
             );
             persistence.dialogManager.reset(new DialogManager(*winApi));
             persistence.windows = std::move(winApi);
@@ -41,11 +38,21 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Return the path to UKCP settings files location in wide format
+            Return the path to UKCP local files in wide format. This is located
+            in the Windows Local App Data known folder.
         */
         std::wstring ExternalsBootstrap::GetPluginFileRoot(void)
         {
-            return ExternalsBootstrap::GetMyDocumentsPath() + L"/EuroScope/ukcp";
+            return GetLocalAppDataPath() + L"/UKControllerPlugin";
+        }
+
+        /*
+            Return the path to UKCP local files in wide format. This is the LEGACY
+            folder and should not be used going forward.
+        */
+        std::wstring ExternalsBootstrap::GetLegacyPluginFileRoot(void)
+        {
+            return GetMyDocumentsPath() + L"/EuroScope/ukcp";
         }
 
         /*
@@ -53,8 +60,8 @@ namespace UKControllerPlugin {
         */
         void ExternalsBootstrap::SetupUkcpFolderRoot(WinApiInterface & winApi)
         {
-            std::wstring documentsPath = ExternalsBootstrap::GetMyDocumentsPath();
-            if (!winApi.CreateFolderRecursive(documentsPath + L"/EuroScope/ukcp")) {
+            std::wstring rootPath = GetPluginFileRoot();
+            if (!winApi.CreateFolderRecursive(rootPath)) {
                 winApi.OpenMessageBox(
                     L"Unable to create the UKCP root folder, please contact the VATUK Web Department.",
                     L"UKCP Fatal Error",
@@ -63,7 +70,7 @@ namespace UKControllerPlugin {
                 throw std::runtime_error("Unable to create UKCP Root");
             }
 
-            if (!winApi.SetPermissions(documentsPath + L"/EuroScope/ukcp", std::filesystem::perms::all)) {
+            if (!winApi.SetPermissions(rootPath, std::filesystem::perms::all)) {
                 winApi.OpenMessageBox(
                     L"Unable to set permissions on the UKCP root folder, please contact the VATUK Web Department.",
                     L"UKCP Fatal Error",
@@ -74,16 +81,29 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Get the My Documents path
-        */
+         * Get the My Documents path
+         */
         std::wstring ExternalsBootstrap::GetMyDocumentsPath(void)
         {
-            TCHAR * myDocumentsPath = 0;
-            HRESULT result = SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_SIMPLE_IDLIST, NULL, &myDocumentsPath);
+            return GetKnownFolderPath(FOLDERID_Documents);
+        }
 
-            std::wstring widePath(myDocumentsPath);
+        /*
+         * Get the local app data path.
+         */
+        std::wstring ExternalsBootstrap::GetLocalAppDataPath()
+        {
+            return GetKnownFolderPath(FOLDERID_LocalAppData);
+        }
+
+        std::wstring ExternalsBootstrap::GetKnownFolderPath(GUID folderId)
+        {
+            TCHAR * folderPath = 0;
+            HRESULT result = SHGetKnownFolderPath(folderId, KF_FLAG_SIMPLE_IDLIST, NULL, &folderPath);
+
+            std::wstring widePath(folderPath);
             std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
-            CoTaskMemFree(myDocumentsPath);
+            CoTaskMemFree(folderPath);
             return widePath;
         }
     }  // namespace Bootstrap

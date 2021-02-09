@@ -1,6 +1,4 @@
 #pragma once
-#include "hold/HoldingData.h"
-#include "hold/CompareHolds.h"
 #include "hold/HoldConfigurationMenuItem.h"
 #include "navaids/NavaidCollection.h"
 

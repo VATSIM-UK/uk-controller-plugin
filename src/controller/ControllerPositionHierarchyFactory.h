@@ -17,15 +17,15 @@ namespace UKControllerPlugin {
         {
             public:
                 ControllerPositionHierarchyFactory(
-                    const UKControllerPlugin::Controller::ControllerPositionCollection & controllers
+                    const ControllerPositionCollection& controllers
                 );
-                std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy> CreateFromJson(
+                std::unique_ptr<ControllerPositionHierarchy> CreateFromJson(
                     const nlohmann::json & json
                 ) const;
 
             private:
                 // All the controller positions known to the plugin
-                const UKControllerPlugin::Controller::ControllerPositionCollection & controllers;
+                const ControllerPositionCollection& controllers;
         };
     }  // namespace Controller
 }  // namespace UKControllerPlugin
