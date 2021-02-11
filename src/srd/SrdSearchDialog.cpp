@@ -133,7 +133,7 @@ namespace UKControllerPlugin {
                 case WM_INITDIALOG: {
                     this->InitDialog(hwnd, lParam);
                     return TRUE;
-                };
+                }
                 // Dialog Closed
                 case WM_CLOSE: {
                     EndDialog(hwnd, wParam);
@@ -149,7 +149,7 @@ namespace UKControllerPlugin {
                             }
                         }
                         default:
-                            break;
+                            return FALSE;
                     }
                 }
                 // Buttons pressed
@@ -172,7 +172,7 @@ namespace UKControllerPlugin {
                             return TRUE;
                         }
                         default:
-                            break;
+                            return FALSE;
                     }
                 }
             }
