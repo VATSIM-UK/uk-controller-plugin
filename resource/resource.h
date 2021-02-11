@@ -106,11 +106,9 @@
 #define IDC_OPEN_NOTIFICATION           1086
 #define IDC_EDIT1                       1087
 #define IDC_SRD_NOTES                   1087
-#define IDC_OPEN_NOTIFICATION2          1087
 #define IDC_READ_NOTIFICATION           1087
 #define IDC_NOTES_STATIC                1088
 #define IDC_HOLD_PARAMS_MIN_STATIC      1089
-#define IDC_NOTIFICATION_BODY2          1089
 #define IDC_NOTIFICATION_BODY           1089
 #define IDC_HOLD_PARAMS_MAX_STATIC      1090
 #define IDC_HOLD_MIN_SPIN               1091
@@ -118,7 +116,6 @@
 #define IDC_HOLD_MAXIMUM                1092
 #define IDC_SPIN2                       1093
 #define IDC_HOLD_MAX_SPIN               1093
-#define IDC_SYSLINK1                    1094
 #define IDC_NOTIFICATION_LINK           1094
 #define IDC_NOTIFICATION_TITLE          1095
 
