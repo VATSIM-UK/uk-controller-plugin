@@ -33,6 +33,8 @@ bool DoUpdate(const nlohmann::json& versionDetails)
     // Write the latest libs to the filesystem
 
     // Update the lockfile
+
+    // TODO: Move LibCurl to Chocolatey on build
 }
 
 
