@@ -148,6 +148,8 @@ namespace UKControllerPlugin {
                                 return TRUE;
                             }
                         }
+                        default:
+                            break;
                     }
                 }
                 // Buttons pressed
@@ -169,6 +171,8 @@ namespace UKControllerPlugin {
                             this->CopyRouteStringToClipboard(hwnd);
                             return TRUE;
                         }
+                        default:
+                            break;
                     }
                 }
             }
