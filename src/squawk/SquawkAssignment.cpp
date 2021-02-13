@@ -92,7 +92,11 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
-            if (!this->activeCallsigns.UserHasCallsign()) {
+            if (
+                !this->activeCallsigns.UserHasCallsign() ||
+                flightPlan.GetDistanceFromOrigin() == 0.0 ||
+                radarTarget.GetFlightLevel() == 0
+            ) {
                 return false;
             }
 
@@ -117,7 +121,11 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
-            if (!this->activeCallsigns.UserHasCallsign()) {
+            if (
+                !this->activeCallsigns.UserHasCallsign() ||
+                flightPlan.GetDistanceFromOrigin() == 0.0 ||
+                radarTarget.GetFlightLevel() == 0
+            ) {
                 return false;
             }
 
@@ -173,8 +181,11 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
-
-            if (!this->activeCallsigns.UserHasCallsign()) {
+            if (
+                !this->activeCallsigns.UserHasCallsign() ||
+                flightPlan.GetDistanceFromOrigin() == 0.0 ||
+                radarTarget.GetFlightLevel() == 0
+            ) {
                 return false;
             }
 
