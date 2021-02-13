@@ -182,19 +182,13 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightPlan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) const {
-            if (
-                radarTarget.GetFlightLevel() > this->assignmentMaxAltitude ||
-                flightPlan.GetDistanceFromOrigin() > this->assignmentMaxDistanceFromOrigin ||
-                radarTarget.GetGroundSpeed() > this->assignmentMaxSpeed ||
-                flightPlan.HasControllerClearedAltitude() ||
-                flightPlan.IsTracked() ||
-                flightPlan.IsSimulated() ||
-                !this->airfieldOwnership.AirfieldOwnedByUser(flightPlan.GetOrigin())
-            ) {
-                return false;
-            }
-
-            return true;
+            return radarTarget.GetFlightLevel() <= this->assignmentMaxAltitude &&
+                flightPlan.GetDistanceFromOrigin() <= this->assignmentMaxDistanceFromOrigin &&
+                radarTarget.GetGroundSpeed() <= this->assignmentMaxSpeed &&
+                !flightPlan.HasControllerClearedAltitude() &&
+                !flightPlan.IsTracked() &&
+                !flightPlan.IsSimulated() &&
+                this->airfieldOwnership.AirfieldOwnedByUser(flightPlan.GetOrigin());
         }
 
         /*
