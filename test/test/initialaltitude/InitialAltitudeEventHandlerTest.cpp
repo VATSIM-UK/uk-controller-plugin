@@ -155,7 +155,29 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
+        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfExactlyAtSeaLevel)
+        {
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel())
+                .Times(1)
+                .WillOnce(Return(0));
+
+            handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
+        }
+
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTooFarFromOrigin)
+        {
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel())
+                .Times(2)
+                .WillOnce(Return(handler.assignmentMaxAltitude));
+
+            EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
+                .Times(2)
+                .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin + 1));
+
+            handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfExactlyOnOrigin)
         {
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
                 .Times(1)
@@ -163,7 +185,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(1)
-                .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin + 1));
+                .WillOnce(Return(0));
 
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
@@ -171,11 +193,11 @@ namespace UKControllerPluginTest {
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTravellingTooFast)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockRadarTarget, GetGroundSpeed())
@@ -188,11 +210,11 @@ namespace UKControllerPluginTest {
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfAlreadyHasAClearedAltitude)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
@@ -209,11 +231,11 @@ namespace UKControllerPluginTest {
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTracked)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
@@ -234,11 +256,11 @@ namespace UKControllerPluginTest {
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfAircraftIsSimulated)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
@@ -280,11 +302,11 @@ namespace UKControllerPluginTest {
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfUserCallsignIsNotActive)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
@@ -322,11 +344,11 @@ namespace UKControllerPluginTest {
             callsigns.AddUserCallsign(userCallsign);
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
@@ -366,11 +388,11 @@ namespace UKControllerPluginTest {
             owners.RefreshOwner("EGKK");
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
@@ -414,11 +436,11 @@ namespace UKControllerPluginTest {
             owners.RefreshOwner("EGKK");
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
@@ -474,11 +496,11 @@ namespace UKControllerPluginTest {
             owners.RefreshOwner("EGKK");
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
@@ -533,11 +555,11 @@ namespace UKControllerPluginTest {
             owners.RefreshOwner("EGKK");
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(1)
+                .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
@@ -592,12 +614,12 @@ namespace UKControllerPluginTest {
             owners.RefreshOwner("EGKK");
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(2)
+                .Times(4)
                 .WillRepeatedly(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(2)
-                .WillOnce(Return(handler.assignmentMaxAltitude));
+                .Times(4)
+                .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
                 .Times(2)
@@ -657,12 +679,12 @@ namespace UKControllerPluginTest {
             owners.RefreshOwner("EGKK");
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(2)
+                .Times(4)
                 .WillRepeatedly(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
-                .Times(2)
-                .WillOnce(Return(handler.assignmentMaxAltitude));
+                .Times(4)
+                .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
                 .Times(2)
@@ -853,8 +875,8 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(mockReturnRadarTarget));
 
             EXPECT_CALL(*mockReturnFlightplan, GetDistanceFromOrigin())
-                .Times(1)
-                .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
+                .Times(2)
+                .WillRepeatedly(Return(handler.assignmentMaxDistanceFromOrigin));
 
             EXPECT_CALL(*mockReturnFlightplan, HasControllerClearedAltitude())
                 .Times(1)
@@ -890,6 +912,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*mockReturnRadarTarget, GetGroundSpeed())
                 .Times(1)
                 .WillOnce(Return(handler.assignmentMaxSpeed));
+
+            EXPECT_CALL(*mockReturnRadarTarget, GetFlightLevel())
+                .Times(2)
+                .WillRepeatedly(Return(handler.assignmentMaxSpeed));
 
             handler.ActiveCallsignAdded(userCallsign, true);
         }
