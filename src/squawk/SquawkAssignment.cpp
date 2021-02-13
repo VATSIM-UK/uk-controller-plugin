@@ -92,6 +92,10 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
+            /*
+             * We have to check for all zero's because of how ES handles flightplan events
+             * halfway across Europe.
+             */
             if (
                 !this->activeCallsigns.UserHasCallsign() ||
                 flightPlan.GetDistanceFromOrigin() == 0.0 ||
@@ -121,6 +125,10 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
+            /*
+             * We have to check for all zero's because of how ES handles flightplan events
+             * halfway across Europe.
+             */
             if (
                 !this->activeCallsigns.UserHasCallsign() ||
                 flightPlan.GetDistanceFromOrigin() == 0.0 ||
@@ -181,6 +189,10 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
+            /*
+             * We have to check for all zero's because of how ES handles flightplan events
+             * halfway across Europe.
+             */
             if (
                 !this->activeCallsigns.UserHasCallsign() ||
                 flightPlan.GetDistanceFromOrigin() == 0.0 ||
