@@ -92,15 +92,7 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
-            /*
-             * We have to check for all zero's because of how ES handles flightplan events
-             * halfway across Europe.
-             */
-            if (
-                !this->activeCallsigns.UserHasCallsign() ||
-                flightPlan.GetDistanceFromOrigin() == 0.0 ||
-                radarTarget.GetFlightLevel() == 0
-            ) {
+            if (!this->AssignmentPossible(flightPlan, radarTarget)) {
                 return false;
             }
 
@@ -125,15 +117,7 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
-            /*
-             * We have to check for all zero's because of how ES handles flightplan events
-             * halfway across Europe.
-             */
-            if (
-                !this->activeCallsigns.UserHasCallsign() ||
-                flightPlan.GetDistanceFromOrigin() == 0.0 ||
-                radarTarget.GetFlightLevel() == 0
-            ) {
+            if (!this->AssignmentPossible(flightPlan, radarTarget)) {
                 return false;
             }
 
@@ -189,15 +173,7 @@ namespace UKControllerPlugin {
             const EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
-            /*
-             * We have to check for all zero's because of how ES handles flightplan events
-             * halfway across Europe.
-             */
-            if (
-                !this->activeCallsigns.UserHasCallsign() ||
-                flightPlan.GetDistanceFromOrigin() == 0.0 ||
-                radarTarget.GetFlightLevel() == 0
-            ) {
+            if (!this->AssignmentPossible(flightPlan, radarTarget)) {
                 return false;
             }
 
@@ -205,6 +181,16 @@ namespace UKControllerPlugin {
                 this->storedFlightplans.HasFlightplanForCallsign(flightPlan.GetCallsign()) &&
                 this->storedFlightplans.GetFlightplanForCallsign(flightPlan.GetCallsign())
                     .HasPreviouslyAssignedSquawk();
+        }
+
+        bool SquawkAssignment::AssignmentPossible(
+            const EuroScopeCFlightPlanInterface& flightPlan,
+            const EuroScopeCRadarTargetInterface& radarTarget) const
+        {
+            // We have to check for all zero's because of how ES handles flightplan events  halfway across Europe.
+            return this->activeCallsigns.UserHasCallsign() &&
+                flightPlan.GetDistanceFromOrigin() != 0.0 &&
+                radarTarget.GetFlightLevel() != 0;
         }
     }  // namespace Squawk
 }  // namespace UKControllerPlugin
