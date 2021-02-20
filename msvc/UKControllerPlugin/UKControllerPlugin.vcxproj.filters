@@ -1107,6 +1107,12 @@
     <ClInclude Include="..\..\src\notifications\UnreadNotificationsMessage.h">
       <Filter>src\notifications</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\DeemedSeparatedHold.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\DeemedSeparatedHoldSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1878,6 +1884,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\notifications\UnreadNotificationsMessage.cpp">
       <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\DeemedSeparatedHoldSerializer.cpp">
+      <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

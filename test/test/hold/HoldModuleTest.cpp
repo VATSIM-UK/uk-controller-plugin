@@ -73,7 +73,8 @@ namespace UKControllerPluginTest {
                         { "maximum_altitude", 15000 },
                         { "inbound_heading", 309 },
                         { "turn_direction", "right" },
-                        { "restrictions", nlohmann::json::array()}
+                        { "restrictions", nlohmann::json::array()},
+                        { "deemed_separated_holds", nlohmann::json::array()}
                     };
 
                     nlohmann::json hold2;
@@ -85,7 +86,8 @@ namespace UKControllerPluginTest {
                         { "maximum_altitude", 15000 },
                         { "inbound_heading", 309 },
                         { "turn_direction", "right" },
-                        { "restrictions", nlohmann::json::array()}
+                        { "restrictions", nlohmann::json::array()},
+                        { "deemed_separated_holds", nlohmann::json::array()}
                     };
 
                     nlohmann::json profile1;
@@ -213,6 +215,7 @@ namespace UKControllerPluginTest {
                 15000,
                 309,
                 HoldingData::TURN_DIRECTION_RIGHT,
+                {},
                 {}
             };
 

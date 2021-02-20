@@ -10,14 +10,15 @@ namespace UKControllerPlugin {
         HoldingData::HoldingData(HoldingData && original)
             : identifier(original.identifier), fix(original.fix), description(original.description),
             minimum(original.minimum), maximum(original.maximum), turnDirection(original.turnDirection),
-            inbound(original.inbound), restrictions(std::move(original.restrictions))
+            inbound(original.inbound), restrictions(std::move(original.restrictions)),
+            deemedSeparatedHolds(std::move(original.deemedSeparatedHolds))
         {
         }
 
         /*
-            Move assignement
+            Move assignment
         */
-        HoldingData & HoldingData::operator=(HoldingData && original)
+        HoldingData & HoldingData::operator=(HoldingData && original) noexcept
         {
             if (this != &original)
             {
@@ -29,6 +30,7 @@ namespace UKControllerPlugin {
                 this->inbound = original.inbound;
                 this->turnDirection = original.turnDirection;
                 this->restrictions = std::move(original.restrictions);
+                this->deemedSeparatedHolds = std::move(original.deemedSeparatedHolds);
             }
 
             return *this;
