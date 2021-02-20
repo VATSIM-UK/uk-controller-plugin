@@ -147,6 +147,12 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
+
             EXPECT_TRUE(newGenerator.RequestGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
             EXPECT_FALSE(newGenerator.RequestGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
         }
@@ -168,6 +174,12 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, GetDestination())
                 .WillByDefault(Return("EGPF"));
 
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
+
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
@@ -184,6 +196,12 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkGeneratorTest, GeneralSquawkCreatesAssignmentIfNoneExists)
         {
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
+
             ON_CALL(*this->mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW1252"));
 
@@ -239,6 +257,12 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, GetDestination())
                 .WillByDefault(Return("EGPF"));
 
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
+
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
@@ -271,6 +295,12 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockFlightplan, GetDestination())
                 .WillByDefault(Return("EGPF"));
+
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
 
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
@@ -314,6 +344,9 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockRadarTarget, GetFlightLevel())
                 .WillByDefault(Return(1));
 
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
             ON_CALL(this->pluginLoopback, GetDistanceFromUserVisibilityCentre(_))
                 .WillByDefault(Return(1));
 
@@ -343,6 +376,9 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->pluginLoopback, GetDistanceFromUserVisibilityCentre(_))
                 .WillByDefault(Return(1));
+
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
 
             EXPECT_CALL(*this->mockFlightplan, GetFlightRules())
                 .Times(1)
@@ -389,6 +425,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return("I"));
 
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
+
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(this->generator->PROCESS_SQUAWK))
                 .WillRepeatedly(Return());
 
@@ -429,6 +471,9 @@ namespace UKControllerPluginTest {
             ON_CALL(this->pluginLoopback, GetDistanceFromUserVisibilityCentre(_))
                 .WillByDefault(Return(1));
 
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
             EXPECT_CALL(*this->mockFlightplan, GetFlightRules())
                 .Times(1)
                 .WillOnce(Return("I"));
@@ -468,6 +513,12 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
 
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
+
             EXPECT_CALL(*this->mockFlightplan, SetSquawk("2342"))
                 .Times(1);
 
@@ -482,11 +533,18 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockFlightplan, GetCallsign())
                 .WillByDefault(Return("BAW1252"));
+
             ON_CALL(*this->mockFlightplan, IsTrackedByUser())
                 .WillByDefault(Return(true));
 
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
                 .WillByDefault(Return(false));
+
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
 
             EXPECT_CALL(*this->mockFlightplan, SetSquawk("2342"))
                 .Times(1);
@@ -759,6 +817,12 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkGeneratorTest, AssignCircuitSquawkAssignsIfRequired)
         {
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
+
             ON_CALL(*this->mockFlightplan, IsVfr())
                 .WillByDefault(Return(true));
 
