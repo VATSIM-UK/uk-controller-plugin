@@ -152,6 +152,15 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
                     const int screenObjectId
                 ) const;
+                void FilterVslDisplayLevels(
+                    std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& levelMap
+                ) const;
+                bool ShouldFilterVslLevel(
+                    const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
+                ) const;
+                bool NoAircraftAssignedToHold(
+                    const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
+                ) const;
 
                 // The hold manager
                 UKControllerPlugin::Hold::HoldManager & holdManager;

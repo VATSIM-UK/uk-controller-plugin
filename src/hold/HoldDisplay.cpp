@@ -324,19 +324,64 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Maps the holding aircraft to their occupied levels
+         * Filter aircraft out of holding levels for the VSL.
+         */
+        void HoldDisplay::FilterVslDisplayLevels(
+            std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& levelMap
+        ) const
+        {
+            for (
+                auto level = levelMap.cbegin();
+                level != levelMap.cend();
+            ) {
+                if (this->ShouldFilterVslLevel(level->second)) {
+                    levelMap.erase(level++);
+                } else {
+                    ++level;
+                }
+            }
+        }
+
+        /*
+         * Determine whether or not the VSL level should be filtered out
+         */
+        bool HoldDisplay::ShouldFilterVslLevel(
+            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft) const
+        {
+            return this->NoAircraftAssignedToHold(holdingAircraft);
+        }
+
+        /*
+         * Returns true if no aircraft in the list are assigned to the
+         * holding aircraft.
+         */
+        bool HoldDisplay::NoAircraftAssignedToHold(
+            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
+        ) const
+        {
+            return std::find_if(
+                holdingAircraft.cbegin(),
+                holdingAircraft.cend(),
+                [this](const std::shared_ptr<HoldingAircraft>& aircraft) -> bool
+                {
+                    return aircraft->GetAssignedHold() == this->navaid.identifier;
+                }
+            ) == holdingAircraft.cend();
+        }
+
+        /*
+            Maps the holding aircraft to their occupied levels and filters out ones we dont
+            want to display in the VSL
         */
         std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
             HoldDisplay::MapAircraftToLevels(
                 const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft
         ) const {
-
             std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> levelMap;
             std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
 
             for (
-                std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator it =
-                    aircraft.cbegin();
+                auto it = aircraft.cbegin();
                 it != aircraft.cend();
                 ++it
             ) {
@@ -355,32 +400,8 @@ namespace UKControllerPlugin {
                 levelMap[occupied].insert(*it);
             }
 
-            // Only display holding aircraft if at least one of them is assigned to it.
-            for (
-                std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>::const_iterator it
-                = levelMap.cbegin();
-                it != levelMap.cend();
-            ) {
-                bool shouldInclude = false;
-                for (
-                    std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator levelIt =
-                        it->second.cbegin();
-                    levelIt != it->second.cend();
-                    levelIt++
-                ) {
-                    if ((*levelIt)->GetAssignedHold() == this->navaid.identifier) {
-                        shouldInclude = true;
-                        break;
-                    }
-                }
-
-                if (!shouldInclude) {
-                    levelMap.erase(it++);
-                } else {
-                    ++it;
-                }
-            }
-
+            // Filter out levels that we aren't interested in
+            this->FilterVslDisplayLevels(levelMap);
             return levelMap;
         }
 
