@@ -169,32 +169,31 @@ namespace UKControllerPlugin {
 
             To return true, must:
 
-            1. Be on the ground
-            2. Be within a specified distance of the origin airport.
-            3. Be under a certain speed.
-            4. Not have a cleared altitude set.
-            5. Not be tracked by any controller.
-            6. Not be "simulated" by ES.
-            7. Have a user that has a recognised callsign.
-            8. Have the airfield of origin owned by the controller.
+            1. Must not have a current flight level or distance from origin of exactly zero.
+               This is required because for some reason EuroScope picks up flightplan changes over the likes of
+               Austria and decides its time to do an initial altitude assignment.
+            2. Be on the ground
+            3. Be within a specified distance of the origin airport.
+            4. Be under a certain speed.
+            5. Not have a cleared altitude set.
+            6. Not be tracked by any controller.
+            7. Not be "simulated" by ES.
+            8. Have a user that has a recognised callsign.
+            9. Have the airfield of origin owned by the controller.
         */
         bool InitialAltitudeEventHandler::MeetsAssignmentConditions(
             EuroScopeCFlightPlanInterface & flightPlan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) const {
-            if (
-                radarTarget.GetFlightLevel() > this->assignmentMaxAltitude ||
-                flightPlan.GetDistanceFromOrigin() > this->assignmentMaxDistanceFromOrigin ||
-                radarTarget.GetGroundSpeed() > this->assignmentMaxSpeed ||
-                flightPlan.HasControllerClearedAltitude() ||
-                flightPlan.IsTracked() ||
-                flightPlan.IsSimulated() ||
-                !this->airfieldOwnership.AirfieldOwnedByUser(flightPlan.GetOrigin())
-            ) {
-                return false;
-            }
-
-            return true;
+            return radarTarget.GetFlightLevel() != 0 &&
+                flightPlan.GetDistanceFromOrigin() != 0.0 &&
+                radarTarget.GetFlightLevel() <= this->assignmentMaxAltitude &&
+                flightPlan.GetDistanceFromOrigin() <= this->assignmentMaxDistanceFromOrigin &&
+                radarTarget.GetGroundSpeed() <= this->assignmentMaxSpeed &&
+                !flightPlan.HasControllerClearedAltitude() &&
+                !flightPlan.IsTracked() &&
+                !flightPlan.IsSimulated() &&
+                this->airfieldOwnership.AirfieldOwnedByUser(flightPlan.GetOrigin());
         }
 
         /*
