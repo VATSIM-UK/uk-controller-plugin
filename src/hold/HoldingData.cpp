@@ -36,5 +36,9 @@ namespace UKControllerPlugin {
             return *this;
         }
 
+        bool HoldingData::LevelWithinHold(unsigned int level) const
+        {
+            return level >= this->minimum && level <= this->maximum;
+        }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

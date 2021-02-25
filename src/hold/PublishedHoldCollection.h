@@ -11,8 +11,12 @@ namespace UKControllerPlugin {
         {
             public:
                 void Add(HoldingData data);
-                const std::set<HoldingData, CompareHolds>& Get(std::string fix) const;
+                const std::set<const HoldingData*> GetForFix(std::string fix) const;
+                const HoldingData& GetById(int id) const;
                 size_t Count(void) const;
+
+                // Returns the hold with no data
+                const HoldingData noHold = {};
 
             private:
 
@@ -20,7 +24,7 @@ namespace UKControllerPlugin {
                 const std::set<HoldingData, CompareHolds> noHolds;
 
                 // All the published holds
-                std::map<std::string, std::set<HoldingData, CompareHolds>> holds;
+                std::set<HoldingData, CompareHolds> holds;
         };
     }  // namespace Hold
 }  // namespace UKControllerPlugin

@@ -3,6 +3,7 @@
 #include "hold/HoldingData.h"
 #include "hold/CompareHolds.h"
 #include "hold/CompareHoldingAircraft.h"
+#include "hold/PublishedHoldCollection.h"
 #include "dialog/DialogManager.h"
 
 namespace UKControllerPlugin {
@@ -32,11 +33,8 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     UKControllerPlugin::Hold::HoldManager & holdManager,
                     const UKControllerPlugin::Navaids::Navaid& navaid,
-                    const std::set<
-                        UKControllerPlugin::Hold::HoldingData,
-                        UKControllerPlugin::Hold::CompareHolds
-                    >& publishedHolds,
-                    const UKControllerPlugin::Dialog::DialogManager& dialogManager
+                    const PublishedHoldCollection& publishedHoldCollection,
+                    const Dialog::DialogManager& dialogManager
                 );
                 void ButtonClicked(std::string button);
                 void CallsignClicked(
@@ -119,10 +117,7 @@ namespace UKControllerPlugin {
                 const double sameLevelBoxDistance = 12.0;
 
                 // The holds that are published for this display
-                const std::set<
-                    UKControllerPlugin::Hold::HoldingData,
-                    UKControllerPlugin::Hold::CompareHolds
-                >& publishedHolds;
+                const std::set<const HoldingData*> publishedHolds;
 
             private:
 
@@ -161,6 +156,18 @@ namespace UKControllerPlugin {
                 bool NoAircraftAssignedToHold(
                     const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
                 ) const;
+                void FilterAircraftAtLevel(
+                    std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
+                ) const;
+                bool AircraftInDeemedSeparatedHold(
+                    const std::shared_ptr<HoldingAircraft>& aircraft
+                ) const;
+                bool AircraftInConflict(
+                    const std::shared_ptr<HoldingAircraft>& aircraft,
+                    const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraftAtLevel
+                ) const;
+                bool AircraftAssignedToHold(const std::shared_ptr<HoldingAircraft>& aircraft) const;
+                bool HoldHasDeemedSeparations() const;
 
                 // The hold manager
                 UKControllerPlugin::Hold::HoldManager & holdManager;
@@ -170,6 +177,9 @@ namespace UKControllerPlugin {
 
                 // For opening dialogs
                 const UKControllerPlugin::Dialog::DialogManager& dialogManager;
+
+                // Has all the published holds
+                const PublishedHoldCollection& publishedHoldCollection;
 
                 // Brushes
                 const Gdiplus::SolidBrush titleBarTextBrush;

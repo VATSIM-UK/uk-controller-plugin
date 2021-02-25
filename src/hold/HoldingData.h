@@ -24,10 +24,11 @@ namespace UKControllerPlugin {
                 inbound(inbound), turnDirection(turnDirection), restrictions(std::move(restrictions)),
                 deemedSeparatedHolds(std::move(deemedSeparatedHolds))
             {};
-            HoldingData(HoldingData const &) = delete;
-            HoldingData &operator=(HoldingData const &) = delete;
-            HoldingData(HoldingData && original);
+            HoldingData(HoldingData const&) = delete;
+            HoldingData& operator=(HoldingData const&) = delete;
+            HoldingData(HoldingData&& original);
             HoldingData &operator=(HoldingData && original) noexcept;
+            bool LevelWithinHold(unsigned int level) const;
 
             // The id for the hold
             unsigned int identifier;

@@ -104,5 +104,46 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, deemedSeparated->identifier);
         }
 
-    }  // namespace Hold
+        TEST(HoldingDataTest, LevelWithinHoldReturnsFalseBelowLowerBand)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_FALSE(hold.LevelWithinHold(6999));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueLowerBound)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(7000));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueAboveLowerBound)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(7001));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueMiddle)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(11000));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueBelowUpperBand)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(14999));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueUpperBand)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(15000));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsFalseAboveUpperBand)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_FALSE(hold.LevelWithinHold(15001));
+        }
+    } // namespace Hold
 }  // namespace UKControllerPluginTest

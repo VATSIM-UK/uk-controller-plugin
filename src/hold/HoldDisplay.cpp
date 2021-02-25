@@ -19,39 +19,41 @@ using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Dialog::DialogManager;
 
-namespace UKControllerPlugin {
-    namespace Hold {
-
+namespace UKControllerPlugin
+{
+    namespace Hold
+    {
         HoldDisplay::HoldDisplay(
-            EuroscopePluginLoopbackInterface & plugin,
-            HoldManager & holdManager,
-            const UKControllerPlugin::Navaids::Navaid& navaid,
-            const std::set<HoldingData, CompareHolds>& publishedHolds,
+            EuroscopePluginLoopbackInterface& plugin,
+            HoldManager& holdManager,
+            const Navaids::Navaid& navaid,
+            const PublishedHoldCollection& publishedHoldCollection,
             const DialogManager& dialogManager
         )
-            : plugin(plugin),
-            holdManager(holdManager),
-            dialogManager(dialogManager),
-            publishedHolds(publishedHolds),
-            titleBarBrush(Gdiplus::Color(197, 129, 214)),
-            backgroundBrush(Gdiplus::Color(58, 57, 58)),
-            titleBarTextBrush(Gdiplus::Color(227, 227, 227)),
-            fontFamily(L"EuroScope"),
-            font(&fontFamily, 12, Gdiplus::FontStyleBold, Gdiplus::UnitPixel),
-            plusFont(&fontFamily, 18, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
-            stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
-            dataBrush(Gdiplus::Color(7, 237, 7)),
-            verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f),
-            verticalSpeedDescentPen(Gdiplus::Color(7, 237, 7), 2.5f),
-            clearedLevelBrush(Gdiplus::Color(246, 181, 4)),
-            borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
-            sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f),
-            exitButtonBrush(Gdiplus::Color(0, 0, 0)),
-            blockedLevelBrush(Gdiplus::Color(123, 125, 123)),
-            dataStartHeight(0),
-            informationClickRect({}),
-            minimiseClickRect({}),
-            navaid(navaid)
+            : navaid(navaid),
+              publishedHolds(std::move(publishedHoldCollection.GetForFix(navaid.identifier))),
+              holdManager(holdManager),
+              plugin(plugin),
+              dialogManager(dialogManager),
+              publishedHoldCollection(publishedHoldCollection),
+              titleBarTextBrush(Gdiplus::Color(227, 227, 227)),
+              titleBarBrush(Gdiplus::Color(197, 129, 214)),
+              dataBrush(Gdiplus::Color(7, 237, 7)),
+              clearedLevelBrush(Gdiplus::Color(246, 181, 4)),
+              blockedLevelBrush(Gdiplus::Color(123, 125, 123)),
+              borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
+              sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f),
+              verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f),
+              verticalSpeedDescentPen(Gdiplus::Color(7, 237, 7), 2.5f),
+              exitButtonBrush(Gdiplus::Color(0, 0, 0)),
+              backgroundBrush(Gdiplus::Color(58, 57, 58)),
+              fontFamily(L"EuroScope"),
+              font(&fontFamily, 12, Gdiplus::FontStyleBold, Gdiplus::UnitPixel),
+              plusFont(&fontFamily, 18, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
+              stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
+              dataStartHeight(0),
+              minimiseClickRect({}),
+              informationClickRect({})
         {
             verticalSpeedAscentPen.SetStartCap(Gdiplus::LineCapArrowAnchor);
             verticalSpeedDescentPen.SetEndCap(Gdiplus::LineCapArrowAnchor);
@@ -76,8 +78,8 @@ namespace UKControllerPlugin {
 
                 this->maximumLevel -= 1000;
             } else if (button == "allLevels") {
-                this->minimumLevel = this->publishedHolds.size() ? this->publishedHolds.cbegin()->minimum : 7000;
-                this->maximumLevel = this->publishedHolds.size() ? this->publishedHolds.cbegin()->maximum : 15000;
+                this->minimumLevel = this->publishedHolds.size() ? (*this->publishedHolds.cbegin())->minimum : 7000;
+                this->maximumLevel = this->publishedHolds.size() ? (*this->publishedHolds.cbegin())->maximum : 15000;
             } else if (button == "add") {
                 std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
 
@@ -89,8 +91,7 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                if (!fp->IsTrackedByUser())
-                {
+                if (!fp->IsTrackedByUser()) {
                     LogInfo(
                         "Tried to add aircraft " + fp->GetCallsign() +
                         " to hold but it is not tracked by the user"
@@ -117,7 +118,8 @@ namespace UKControllerPlugin {
             EuroscopeRadarLoopbackInterface& radarScreen,
             POINT mousePos,
             RECT area
-        ) {
+        )
+        {
             radarScreen.TogglePluginTagFunction(callsign, popupMenuTagItemId, mousePos, area);
         }
 
@@ -126,7 +128,8 @@ namespace UKControllerPlugin {
             EuroscopeRadarLoopbackInterface& radarScreen,
             POINT mousePos,
             RECT area
-        ) {
+        )
+        {
             radarScreen.ToggleTemporaryAltitudePopupList(callsign, mousePos, area);
         }
 
@@ -135,12 +138,13 @@ namespace UKControllerPlugin {
         */
         Gdiplus::Rect HoldDisplay::GetHoldViewBackgroundRender(
             const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& aircraft
-        ) const {
+        ) const
+        {
             Gdiplus::Rect area{
                 this->windowPos.x,
                 this->windowPos.y,
                 this->windowWidth,
-                this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel)/1000) + 2) * this->lineHeight)
+                this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel) / 1000) + 2) * this->lineHeight)
             };
 
             for (
@@ -324,21 +328,27 @@ namespace UKControllerPlugin {
         }
 
         /*
-         * Filter aircraft out of holding levels for the VSL.
+         * Filter aircraft out of holding levels for the VSL and remove any levels that
+         * we don't want to keep.
          */
         void HoldDisplay::FilterVslDisplayLevels(
             std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& levelMap
         ) const
         {
             for (
-                auto level = levelMap.cbegin();
-                level != levelMap.cend();
+                auto level = levelMap.begin();
+                level != levelMap.end();
             ) {
+                // Filter out aircraft at each level that we don't need to keep
+                this->FilterAircraftAtLevel(level->second);
+
+                // Filter out levels that have nothing we need to display
                 if (this->ShouldFilterVslLevel(level->second)) {
-                    levelMap.erase(level++);
+                    level = levelMap.erase(level);
                 } else {
                     ++level;
                 }
+
             }
         }
 
@@ -364,9 +374,95 @@ namespace UKControllerPlugin {
                 holdingAircraft.cend(),
                 [this](const std::shared_ptr<HoldingAircraft>& aircraft) -> bool
                 {
-                    return aircraft->GetAssignedHold() == this->navaid.identifier;
+                    return this->AircraftAssignedToHold(aircraft);
                 }
             ) == holdingAircraft.cend();
+        }
+
+        /*
+         * Filters out aircraft at a given holding level that don't meeting the criteria to be
+         * kept in the VSL.
+         */
+        void HoldDisplay::FilterAircraftAtLevel(
+            std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
+        ) const
+        {
+            /*
+             * Filter out aircraft that are:
+             *
+             * - Not assigned to the hold (thus are just in proximity) AND
+             * - Are assigned to, and within the limits of, a deemed separated hold AND
+             * - Are not in direct conflict with an aircraft assigned to this hold
+             */
+            for (
+                auto aircraft = holdingAircraft.begin();
+                aircraft != holdingAircraft.end();
+            ) {
+                // Filter out levels that have nothing we need to display
+                if (
+                    !this->AircraftAssignedToHold(*aircraft) &&
+                    this->AircraftInDeemedSeparatedHold(*aircraft) &&
+                    !this->AircraftInConflict(*aircraft, holdingAircraft)
+                ) {
+                    aircraft = holdingAircraft.erase(aircraft);
+                } else {
+                    ++aircraft;
+                }
+
+            }
+        }
+
+        bool HoldDisplay::AircraftInDeemedSeparatedHold(const std::shared_ptr<HoldingAircraft>& aircraft) const
+        {
+            return std::find_if(
+                this->publishedHolds.cbegin(),
+                this->publishedHolds.cend(),
+                [&aircraft](auto publishedHold)
+                {
+                    return false;
+                }
+            ) != this->publishedHolds.cend();
+            // Get the DS hold from the HM - need to add published holds as a dependency here
+
+            // Check the aircraft is within the limits of the published hold
+
+            // Check that the conflicting aircraft is within limits of its hold?
+        }
+
+        bool HoldDisplay::AircraftInConflict(
+            const std::shared_ptr<HoldingAircraft>& aircraft,
+            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraftAtLevel
+        ) const
+        {
+            return true;
+            // Get the DS hold from the HM that applies to the aircraft
+
+            // Get the VSL insert distance
+
+            // Check if the aircraft is close enough to anything else assigned to the hold to be considered in conflict
+        }
+
+        /*
+         * Returns whether the given aircraft has been assigned to the hold.
+         */
+        bool HoldDisplay::AircraftAssignedToHold(const std::shared_ptr<HoldingAircraft>& aircraft) const
+        {
+            return aircraft->GetAssignedHold() == this->navaid.identifier;
+        }
+
+        /*
+         * Checks whether the hold has any deemed separations in place with another.
+         */
+        bool HoldDisplay::HoldHasDeemedSeparations() const
+        {
+            return std::find_if(
+                this->publishedHolds.cbegin(),
+                this->publishedHolds.cend(),
+                [](auto hold) -> bool
+                {
+                    return !hold->deemedSeparatedHolds.empty();
+                }
+            ) != this->publishedHolds.cend();
         }
 
         /*
@@ -374,9 +470,10 @@ namespace UKControllerPlugin {
             want to display in the VSL
         */
         std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
-            HoldDisplay::MapAircraftToLevels(
-                const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft
-        ) const {
+        HoldDisplay::MapAircraftToLevels(
+            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft
+        ) const
+        {
             std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> levelMap;
             std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
 
@@ -424,7 +521,7 @@ namespace UKControllerPlugin {
         /*
             Load data from an ASR
         */
-        void HoldDisplay::LoadDataFromAsr(UserSetting & userSetting)
+        void HoldDisplay::LoadDataFromAsr(UserSetting& userSetting)
         {
             this->minimised = userSetting.GetBooleanEntry(
                 "hold" + this->navaid.identifier + "Minimised",
@@ -433,12 +530,12 @@ namespace UKControllerPlugin {
 
             this->minimumLevel = userSetting.GetIntegerEntry(
                 "hold" + this->navaid.identifier + "MinLevel",
-                this->publishedHolds.size() ? this->publishedHolds.cbegin()->minimum : 7000
+                this->publishedHolds.size() ? (*this->publishedHolds.cbegin())->minimum : 7000
             );
 
             this->maximumLevel = userSetting.GetIntegerEntry(
                 "hold" + this->navaid.identifier + "MaxLevel",
-                this->publishedHolds.size() ? this->publishedHolds.cbegin()->maximum : 15000
+                this->publishedHolds.size() ? (*this->publishedHolds.cbegin())->maximum : 15000
             );
 
             this->Move(
@@ -458,7 +555,7 @@ namespace UKControllerPlugin {
         /*
             Move the display
         */
-        void HoldDisplay::Move(const POINT & pos)
+        void HoldDisplay::Move(const POINT& pos)
         {
             // General window pos
             this->windowPos = pos;
@@ -564,10 +661,11 @@ namespace UKControllerPlugin {
             Draw the rounded rectangles that form the action buttons
         */
         void HoldDisplay::DrawRoundRectangle(
-            GdiGraphicsInterface & graphics,
-            const Gdiplus::Rect & rect,
+            GdiGraphicsInterface& graphics,
+            const Gdiplus::Rect& rect,
             UINT8 radius
-        ) const {
+        ) const
+        {
             Gdiplus::GraphicsPath path;
             path.AddLine(rect.X + radius, rect.Y, rect.X + rect.Width - (radius * 2), rect.Y);
             path.AddArc(rect.X + rect.Width - (radius * 2), rect.Y, radius * 2, radius * 2, 270, 90);
@@ -578,7 +676,7 @@ namespace UKControllerPlugin {
                 rect.Y + rect.Height - (radius * 2)
             );
             path.AddArc(rect.X + rect.Width - (radius * 2), rect.Y + rect.Height - (radius * 2), radius * 2,
-                radius * 2, 0, 90);
+                        radius * 2, 0, 90);
             path.AddLine(
                 rect.X + rect.Width - (radius * 2),
                 rect.Y + rect.Height,
@@ -596,16 +694,17 @@ namespace UKControllerPlugin {
             Render textual data about the hold itself.
         */
         void HoldDisplay::RenderHoldInformation(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen,
+            GdiGraphicsInterface& graphics,
+            EuroscopeRadarLoopbackInterface& radarScreen,
             const int screenObjectId
-        ) const {
+        ) const
+        {
             // Black background and white border
             Gdiplus::Rect borderRect = {
-               this->windowPos.x,
-               this->windowPos.y,
-               this->windowWidth,
-               this->informationDisplayWindowHeight
+                this->windowPos.x,
+                this->windowPos.y,
+                this->windowWidth,
+                this->informationDisplayWindowHeight
             };
 
             graphics.FillRect(borderRect, this->backgroundBrush);
@@ -621,7 +720,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            const HoldingData& hold = *this->publishedHolds.cbegin();
+            const HoldingData* hold = *this->publishedHolds.cbegin();
 
             // Render the data
             Gdiplus::Rect dataRect = {
@@ -639,28 +738,28 @@ namespace UKControllerPlugin {
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Inbound: ") + ConvertToTchar(hold.inbound),
+                std::wstring(L"Inbound: ") + ConvertToTchar(hold->inbound),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Turn: ") + ConvertToTchar(hold.turnDirection),
+                std::wstring(L"Turn: ") + ConvertToTchar(hold->turnDirection),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Maximum: ") + ConvertToTchar(hold.maximum),
+                std::wstring(L"Maximum: ") + ConvertToTchar(hold->maximum),
                 dataRect,
                 this->dataBrush
             );
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Minimum: ") + ConvertToTchar(hold.minimum),
+                std::wstring(L"Minimum: ") + ConvertToTchar(hold->minimum),
                 dataRect,
                 this->dataBrush
             );
@@ -670,11 +769,11 @@ namespace UKControllerPlugin {
             Draw the title bar for the hold display
         */
         void HoldDisplay::RenderTitleBar(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen,
+            GdiGraphicsInterface& graphics,
+            EuroscopeRadarLoopbackInterface& radarScreen,
             const int screenObjectId
-        ) const {
-
+        ) const
+        {
             // Title bar
             radarScreen.RegisterScreenObject(
                 screenObjectId,
@@ -693,8 +792,8 @@ namespace UKControllerPlugin {
             );
             graphics.DrawLine(
                 this->borderPen,
-                { this->titleArea.X, this->titleArea.Y + this->titleArea.Height },
-                { this->titleArea.X + this->titleArea.Width, this->titleArea.Y + this->titleArea.Height }
+                {this->titleArea.X, this->titleArea.Y + this->titleArea.Height},
+                {this->titleArea.X + this->titleArea.Width, this->titleArea.Y + this->titleArea.Height}
             );
 
             // Minimise Button
@@ -734,7 +833,8 @@ namespace UKControllerPlugin {
             GdiGraphicsInterface& graphics,
             EuroscopeRadarLoopbackInterface& radarScreen,
             const int screenObjectId
-        ) const {
+        ) const
+        {
             this->DrawRoundRectangle(graphics, minusButtonRect, 5);
             graphics.DrawString(L"-", minusButtonRect, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
@@ -778,11 +878,11 @@ namespace UKControllerPlugin {
             Render the managed hold data - positions of aircraft in the hold etc
         */
         void HoldDisplay::RenderManagedHoldDisplay(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen,
+            GdiGraphicsInterface& graphics,
+            EuroscopeRadarLoopbackInterface& radarScreen,
             const int screenObjectId
-        ) const {
-
+        ) const
+        {
             // Get the aircraft in each hold level
             const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holdingAircraft =
                 this->MapAircraftToLevels(this->holdManager.GetAircraftForHold(this->navaid.identifier));
@@ -863,15 +963,14 @@ namespace UKControllerPlugin {
 
                 // Loop the published holds and check if we need to render any restrictions
                 for (
-                    std::set<HoldingData>::const_iterator publishedIt = this->publishedHolds.cbegin();
+                    std::set<const HoldingData*>::const_iterator publishedIt = this->publishedHolds.cbegin();
                     publishedIt != this->publishedHolds.cend();
-                    publishedIt++
+                    ++publishedIt
                 ) {
                     // Print the restrictions
                     for (
-                        std::set<std::unique_ptr<AbstractHoldLevelRestriction>>::const_iterator it
-                        = publishedIt->restrictions.cbegin();
-                        it != publishedIt->restrictions.cend();
+                        auto it = (*publishedIt)->restrictions.cbegin();
+                        it != (*publishedIt)->restrictions.cend();
                         ++it
                     ) {
                         if ((*it)->LevelRestricted(level)) {
@@ -915,7 +1014,7 @@ namespace UKControllerPlugin {
                     // We have holding aircraft to deal with, render them in
                     for (
                         std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator
-                            it = aircraftAtLevel.cbegin();
+                        it = aircraftAtLevel.cbegin();
                         it != aircraftAtLevel.cend();
                         ++it
                     ) {
@@ -1030,9 +1129,9 @@ namespace UKControllerPlugin {
                     if (aircraftAtLevel.size() > 1 && aircraftInProximity) {
                         Gdiplus::Rect boundingBox{
                             holdRow.X + 10,
-                            holdRow.Y - ((INT) aircraftAtLevel.size() * this->lineHeight),
+                            holdRow.Y - (static_cast<INT>(aircraftAtLevel.size()) * this->lineHeight),
                             holdRow.Width - 20,
-                            ((INT) aircraftAtLevel.size() * this->lineHeight)
+                            (static_cast<INT>(aircraftAtLevel.size()) * this->lineHeight)
                         };
                         graphics.DrawRect(boundingBox, this->sameLevelBoxPen);
                     }
@@ -1053,11 +1152,11 @@ namespace UKControllerPlugin {
         }
 
         void HoldDisplay::PaintWindow(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen,
+            GdiGraphicsInterface& graphics,
+            EuroscopeRadarLoopbackInterface& radarScreen,
             const int screenObjectId
-        ) const {
-
+        ) const
+        {
             // Minimised, just render the title bar.
             if (this->minimised) {
                 this->RenderTitleBar(graphics, radarScreen, screenObjectId);
@@ -1074,9 +1173,9 @@ namespace UKControllerPlugin {
             Save display data to the ASR
         */
         void HoldDisplay::SaveDataToAsr(
-            UserSetting & userSetting
-        ) const {
-
+            UserSetting& userSetting
+        ) const
+        {
             // Minimised window
             userSetting.Save(
                 "hold" + this->navaid.identifier + "Minimised",
@@ -1112,5 +1211,5 @@ namespace UKControllerPlugin {
                 this->maximumLevel
             );
         }
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

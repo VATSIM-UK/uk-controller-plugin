@@ -50,7 +50,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(expected, this->collection.Get("MAY"));
         }
 
-        TEST_F(PublishedHoldCollectionTest, GetReturnsHolds)
+        TEST_F(PublishedHoldCollectionTest, GetReturnsHoldsForAFix)
         {
             this->collection.Add(std::move(this->hold1));
             this->collection.Add(std::move(this->hold2));
@@ -60,6 +60,24 @@ namespace UKControllerPluginTest {
             expected.emplace(std::move(hold2));
             expected.emplace(std::move(hold3));
             EXPECT_EQ(expected, this->collection.Get("WILLO"));
+        }
+
+        TEST_F(PublishedHoldCollectionTest, GetByIdReturnsHoldById)
+        {
+            this->collection.Add(std::move(this->hold1));
+            this->collection.Add(std::move(this->hold2));
+            this->collection.Add(std::move(this->hold3));
+
+            EXPECT_EQ(this->hold1, this->collection.GetById(1));
+        }
+
+        TEST_F(PublishedHoldCollectionTest, GetByIdReturnsNoHoldIfDoesntExist)
+        {
+            this->collection.Add(std::move(this->hold1));
+            this->collection.Add(std::move(this->hold2));
+            this->collection.Add(std::move(this->hold3));
+
+            EXPECT_EQ(this->collection.noHold, this->collection.GetById(999));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest
