@@ -73,6 +73,11 @@ namespace UKControllerPluginTest {
                     );
                 }
 
+                void TearDown() override
+                {
+                    EXPECT_TRUE(testing::Mock::VerifyAndClearExpectations(mockApi));
+                }
+
                 ControllerPosition * position1;
                 ControllerPosition * position2;
                 ControllerPosition * position3;
