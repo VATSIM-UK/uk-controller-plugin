@@ -47,7 +47,17 @@ namespace UKControllerPluginTest {
 
             std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds;
             deemedSeparatedHolds.emplace(new DeemedSeparatedHold(1, 2));
-            HoldingData hold{ 1, "TIMBA", "TIMBA LOW", 7001, 15001, 51, "left", std::move(restrictions), std::move(deemedSeparatedHolds) };
+            HoldingData hold{
+                1,
+                "TIMBA",
+                "TIMBA LOW",
+                7001,
+                15001,
+                51,
+                "left",
+                std::move(restrictions),
+                std::move(deemedSeparatedHolds)
+            };
 
             HoldingData hold2(std::move(hold));
 
@@ -79,7 +89,17 @@ namespace UKControllerPluginTest {
 
             std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds;
             deemedSeparatedHolds.emplace(new DeemedSeparatedHold(1, 2));
-            HoldingData hold{ 1, "TIMBA", "TIMBA LOW", 7001, 15001, 51, "left", std::move(restrictions), std::move(deemedSeparatedHolds) };
+            HoldingData hold{
+                1,
+                "TIMBA",
+                "TIMBA LOW",
+                7001,
+                15001,
+                51,
+                "left",
+                std::move(restrictions),
+                std::move(deemedSeparatedHolds)
+            };
 
             HoldingData hold2 = std::move(hold);
 
