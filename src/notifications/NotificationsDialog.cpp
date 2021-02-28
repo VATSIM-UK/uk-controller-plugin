@@ -10,8 +10,10 @@ namespace UKControllerPlugin {
 
         NotificationsDialog::NotificationsDialog(
             std::shared_ptr<NotificationsRepository> repository,
-            const Api::ApiInterface& api
-        ) : repository(std::move(repository)), api(api), readString(L"Read"), unreadString(L"Unread")
+            const Api::ApiInterface& api,
+            const Controller::ActiveCallsignCollection& activeCallsigns
+        ) : repository(std::move(repository)), api(api), activeCallsigns(activeCallsigns), readString(L"Read"),
+            unreadString(L"Unread")
         {
         }
 
@@ -55,6 +57,7 @@ namespace UKControllerPlugin {
                                 this->SelectNotification(hwnd, reinterpret_cast<NMLISTVIEW*>((LPNMHDR)lParam));
                                 return TRUE;
                             }
+                            return FALSE;
                         }
                         case NM_CLICK: {
                             if(wParam == IDC_NOTIFICATION_LINK) {
@@ -62,6 +65,23 @@ namespace UKControllerPlugin {
                                 ShellExecute(NULL, L"open", link->item.szUrl, NULL, NULL, SW_SHOWNORMAL);
                                 return TRUE;
                             }
+                            return FALSE;
+                        }
+                        case NM_CUSTOMDRAW: {
+                            LPNMLVCUSTOMDRAW customDraw = (LPNMLVCUSTOMDRAW)lParam;
+                            if (((LPNMHDR)lParam)->idFrom == IDC_NOTIFICATIONS_LIST) {
+                                switch (customDraw->nmcd.dwDrawStage) {
+                                    case CDDS_PREPAINT:
+                                        SetWindowLongPtr(hwnd, DWLP_MSGRESULT, CDRF_NOTIFYITEMDRAW);
+                                        return CDRF_NOTIFYITEMDRAW;
+                                    case CDDS_ITEMPREPAINT:
+                                        return this->HighlightRelevantNotification(hwnd, customDraw);
+                                    default:
+                                        return FALSE;
+                                }
+                            }
+
+                            return FALSE;
                         }
                         default:
                             return FALSE;
@@ -210,12 +230,14 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            HWND notificationsList = GetDlgItem(hwnd, IDC_NOTIFICATIONS_LIST);
+
             // Get the row
             LVITEM itemToRetrieve;
             itemToRetrieve.iItem = this->selectedNotification;
             itemToRetrieve.iSubItem = 0;
             itemToRetrieve.mask = LVIF_PARAM;
-            ListView_GetItem(GetDlgItem(hwnd, IDC_NOTIFICATIONS_LIST), (LPLVITEM) &itemToRetrieve);
+            ListView_GetItem(notificationsList, (LPLVITEM) &itemToRetrieve);
 
             // Mark the notification as read
             Notification * notification = reinterpret_cast<Notification *>(itemToRetrieve.lParam);
@@ -231,12 +253,29 @@ namespace UKControllerPlugin {
             }
 
             // Update the notifications display to show that it's been read
-            HWND notificationsList = GetDlgItem(hwnd, IDC_NOTIFICATIONS_LIST);
             std::wstring readText = notification->IsRead() ? this->readString : this->unreadString;
             itemToRetrieve.mask = LVIF_TEXT;
             itemToRetrieve.iSubItem = 1;
             itemToRetrieve.pszText = (LPWSTR) readText.c_str();
             ListView_SetItem(notificationsList, &itemToRetrieve);
+
+            // Force a repaint to make sure the notifications are painted the right colour
+            RedrawWindow(notificationsList, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
+        }
+
+        HRESULT NotificationsDialog::HighlightRelevantNotification(HWND hwnd, LPNMLVCUSTOMDRAW customDraw)
+        {
+            const Notification* notification = reinterpret_cast<Notification*>(customDraw->nmcd.lItemlParam);
+
+            if (
+                activeCallsigns.UserHasCallsign() &&
+                notification->IsRelevant(activeCallsigns.GetUserCallsign().GetNormalisedPosition()) &&
+                !notification->IsRead()
+            ) {
+                customDraw->clrText = RGB(255, 0, 0);
+            }
+
+            return CDRF_NEWFONT;
         }
     }  // namespace Notifications
 }  // namespace UKControllerPlugin

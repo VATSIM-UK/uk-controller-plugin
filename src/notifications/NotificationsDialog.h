@@ -1,7 +1,7 @@
 #pragma once
 #include "notifications/NotificationsRepository.h"
 #include "api/ApiInterface.h"
-#include "dialog/DialogManager.h"
+#include "controller/ActiveCallsignCollection.h"
 
 namespace UKControllerPlugin {
     namespace Notifications {
@@ -14,7 +14,8 @@ namespace UKControllerPlugin {
 
                 NotificationsDialog(
                     std::shared_ptr<NotificationsRepository> repository,
-                    const Api::ApiInterface& api
+                    const Api::ApiInterface& api,
+                    const Controller::ActiveCallsignCollection& activeCallsigns
                 );
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -23,6 +24,7 @@ namespace UKControllerPlugin {
                 void InitDialog(HWND hwnd, LPARAM lParam);
                 void SelectNotification(HWND hwnd, NMLISTVIEW * details);
                 void MarkNotificationAsRead(HWND hwnd) const;
+                LRESULT HighlightRelevantNotification(HWND hwnd, LPNMLVCUSTOMDRAW customDraw);
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
                 // Repository containing notifications
@@ -30,6 +32,9 @@ namespace UKControllerPlugin {
 
                 // Api for marking notifications as read
                 const Api::ApiInterface& api;
+
+                // All the active callsigns
+                const Controller::ActiveCallsignCollection& activeCallsigns;
 
                 // Read status strings
                 const std::wstring readString;
