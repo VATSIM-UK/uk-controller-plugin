@@ -157,17 +157,15 @@ namespace UKControllerPlugin {
                     const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
                 ) const;
                 void FilterAircraftAtLevel(
+                    int level,
                     std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
                 ) const;
                 bool AircraftInDeemedSeparatedHold(
-                    const std::shared_ptr<HoldingAircraft>& aircraft
-                ) const;
-                bool AircraftInConflict(
+                    int level,
                     const std::shared_ptr<HoldingAircraft>& aircraft,
                     const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraftAtLevel
                 ) const;
                 bool AircraftAssignedToHold(const std::shared_ptr<HoldingAircraft>& aircraft) const;
-                bool HoldHasDeemedSeparations() const;
 
                 // The hold manager
                 UKControllerPlugin::Hold::HoldManager & holdManager;

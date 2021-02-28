@@ -340,7 +340,7 @@ namespace UKControllerPlugin
                 level != levelMap.end();
             ) {
                 // Filter out aircraft at each level that we don't need to keep
-                this->FilterAircraftAtLevel(level->second);
+                this->FilterAircraftAtLevel(level->first, level->second);
 
                 // Filter out levels that have nothing we need to display
                 if (this->ShouldFilterVslLevel(level->second)) {
@@ -384,6 +384,7 @@ namespace UKControllerPlugin
          * kept in the VSL.
          */
         void HoldDisplay::FilterAircraftAtLevel(
+            int level,
             std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
         ) const
         {
@@ -391,55 +392,114 @@ namespace UKControllerPlugin
              * Filter out aircraft that are:
              *
              * - Not assigned to the hold (thus are just in proximity) AND
-             * - Are assigned to, and within the limits of, a deemed separated hold AND
+             * - Are assigned to a deemed separated hold AND
+             * - Are within the limits of the assigned deemed separated hold AND
              * - Are not in direct conflict with an aircraft assigned to this hold
              */
             for (
-                auto aircraft = holdingAircraft.begin();
-                aircraft != holdingAircraft.end();
+                auto aircraftIt = holdingAircraft.begin();
+                aircraftIt != holdingAircraft.end();
             ) {
-                // Filter out levels that have nothing we need to display
+                const std::shared_ptr<HoldingAircraft> aircraft = *aircraftIt;
+
+                /*
+                 * Filter out the aircraft where:
+                 *
+                 * 1. The aircraft is not assigned to hold at this navaid
+                 * 2. The aircraft is assigned to hold at a different navaid
+                 * 3. The aircraft is within a published hold that is deemed separated
+                 * from all the aircraft holding within published holds at this navaid.
+                 */
                 if (
-                    !this->AircraftAssignedToHold(*aircraft) &&
-                    this->AircraftInDeemedSeparatedHold(*aircraft) &&
-                    !this->AircraftInConflict(*aircraft, holdingAircraft)
+                    !this->AircraftAssignedToHold(aircraft) &&
+                    aircraft->GetAssignedHold() != aircraft->noHoldAssigned &&
+                    this->AircraftInDeemedSeparatedHold(level, aircraft, holdingAircraft)
                 ) {
-                    aircraft = holdingAircraft.erase(aircraft);
+                    aircraftIt = holdingAircraft.erase(aircraftIt);
                 } else {
-                    ++aircraft;
+                    ++aircraftIt;
                 }
 
             }
         }
 
-        bool HoldDisplay::AircraftInDeemedSeparatedHold(const std::shared_ptr<HoldingAircraft>& aircraft) const
-        {
-            return std::find_if(
-                this->publishedHolds.cbegin(),
-                this->publishedHolds.cend(),
-                [&aircraft](auto publishedHold)
-                {
-                    return false;
-                }
-            ) != this->publishedHolds.cend();
-            // Get the DS hold from the HM - need to add published holds as a dependency here
-
-            // Check the aircraft is within the limits of the published hold
-
-            // Check that the conflicting aircraft is within limits of its hold?
-        }
-
-        bool HoldDisplay::AircraftInConflict(
+        /*
+         * Checks whether the aircraft in question is within a deemed separated hold
+         * and not conflicting with another aircraft.
+         */
+        bool HoldDisplay::AircraftInDeemedSeparatedHold(
+            int level,
             const std::shared_ptr<HoldingAircraft>& aircraft,
             const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraftAtLevel
         ) const
         {
-            return true;
-            // Get the DS hold from the HM that applies to the aircraft
+            // Make sure there's a radar target for the aircraft we're checking.
+            std::shared_ptr<EuroScopeCRadarTargetInterface> aircraftRadarTarget = this->plugin.
+                GetRadarTargetForCallsign(aircraft->GetCallsign());
 
-            // Get the VSL insert distance
+            if (!aircraftRadarTarget) {
+                return false;
+            }
 
-            // Check if the aircraft is close enough to anything else assigned to the hold to be considered in conflict
+            // Iterate each aircraft at the level
+            return std::find_if(
+                aircraftAtLevel.cbegin(),
+                aircraftAtLevel.cend(),
+                [&level, &aircraftRadarTarget, &aircraft, this](
+                const std::shared_ptr<HoldingAircraft>& conflictingAircraft) -> bool
+                {
+                    std::shared_ptr<EuroScopeCRadarTargetInterface> conflictingRadarTarget =
+                        this->plugin.GetRadarTargetForCallsign(conflictingAircraft->GetCallsign());
+
+                    /*
+                     * 1. Check that the conflicting aircraft has a radar target
+                     * 2. Check that the conflicting aircraft is actually assigned to hold here
+                     * 3. Check each of the published holds at this fix
+                     */
+                    return conflictingRadarTarget != nullptr &&
+                        this->AircraftAssignedToHold(conflictingAircraft) &&
+                        std::find_if(
+                            this->publishedHolds.cbegin(),
+                            this->publishedHolds.cend(),
+                            [this, &level, &conflictingAircraft, &conflictingRadarTarget, &aircraft,
+                                &aircraftRadarTarget](
+                            const HoldingData& publishedHold)-> bool
+                        {
+                            /*
+                             * 3a. Make sure that the level the aircraft are at is within the published hold
+                             * 3b. Check each of the deemed separated holds for this published hold
+                             */
+                            return publishedHold.LevelWithinHold(level) &&
+                                std::find_if(
+                                    publishedHold.deemedSeparatedHolds.cbegin(),
+                                    publishedHold.deemedSeparatedHolds.cend(),
+                                    [this, &level, &conflictingAircraft, &aircraft, &aircraftRadarTarget,
+                                        &conflictingRadarTarget](
+                                    const DeemedSeparatedHold& deemedSeparatedHold)-> bool
+                                    {
+                                        const HoldingData& publishedSeparatedHold =
+                                            this->publishedHoldCollection.GetById(deemedSeparatedHold.identifier);
+
+                                        /*
+                                         * 3bi. Check the deemed separated hold is published
+                                         * 3bii. Check if the level is within the deemed separated hold
+                                         * 3biii. Check if the aircraft that we're interested in is assigned to the
+                                         * deemed separated hold
+                                         * 3biv. Check that the distance between the two aircraft is greater than the
+                                         * force VSL insert distance.
+                                         */
+                                        return publishedSeparatedHold != this->publishedHoldCollection.noHold &&
+                                            publishedSeparatedHold.LevelWithinHold(level) &&
+                                            aircraft->GetAssignedHold() == publishedSeparatedHold.fix &&
+                                            aircraftRadarTarget->GetPosition().DistanceTo(
+                                                conflictingRadarTarget->GetPosition()
+                                            ) > deemedSeparatedHold.vslInsertDistance;
+                                    }
+                                ) != publishedHold.deemedSeparatedHolds.cend();
+                        }
+                    ) != publishedHolds.cend();
+                }
+            ) != aircraftAtLevel.cend();
         }
 
         /*
@@ -448,21 +508,6 @@ namespace UKControllerPlugin
         bool HoldDisplay::AircraftAssignedToHold(const std::shared_ptr<HoldingAircraft>& aircraft) const
         {
             return aircraft->GetAssignedHold() == this->navaid.identifier;
-        }
-
-        /*
-         * Checks whether the hold has any deemed separations in place with another.
-         */
-        bool HoldDisplay::HoldHasDeemedSeparations() const
-        {
-            return std::find_if(
-                this->publishedHolds.cbegin(),
-                this->publishedHolds.cend(),
-                [](auto hold) -> bool
-                {
-                    return !hold->deemedSeparatedHolds.empty();
-                }
-            ) != this->publishedHolds.cend();
         }
 
         /*

@@ -65,6 +65,14 @@ namespace UKControllerPlugin {
                 return this->identifier == compare.identifier;
             }
 
+            /*
+                Compare two holds, negatively
+            */
+            bool operator!=(const HoldingData& compare) const
+            {
+                return !this->operator==(compare);
+            }
+
             static const std::string TURN_DIRECTION_LEFT;
             static const std::string TURN_DIRECTION_RIGHT;
         } HoldingData;
