@@ -463,22 +463,22 @@ namespace UKControllerPlugin
                             this->publishedHolds.cend(),
                             [this, &level, &conflictingAircraft, &conflictingRadarTarget, &aircraft,
                                 &aircraftRadarTarget](
-                            const HoldingData& publishedHold)-> bool
+                            const HoldingData* const publishedHold)-> bool
                         {
                             /*
                              * 3a. Make sure that the level the aircraft are at is within the published hold
                              * 3b. Check each of the deemed separated holds for this published hold
                              */
-                            return publishedHold.LevelWithinHold(level) &&
+                            return publishedHold->LevelWithinHold(level) &&
                                 std::find_if(
-                                    publishedHold.deemedSeparatedHolds.cbegin(),
-                                    publishedHold.deemedSeparatedHolds.cend(),
+                                    publishedHold->deemedSeparatedHolds.cbegin(),
+                                    publishedHold->deemedSeparatedHolds.cend(),
                                     [this, &level, &conflictingAircraft, &aircraft, &aircraftRadarTarget,
                                         &conflictingRadarTarget](
-                                    const DeemedSeparatedHold& deemedSeparatedHold)-> bool
+                                    const std::unique_ptr<DeemedSeparatedHold>& deemedSeparatedHold)-> bool
                                     {
                                         const HoldingData& publishedSeparatedHold =
-                                            this->publishedHoldCollection.GetById(deemedSeparatedHold.identifier);
+                                            this->publishedHoldCollection.GetById(deemedSeparatedHold->identifier);
 
                                         /*
                                          * 3bi. Check the deemed separated hold is published
@@ -493,9 +493,9 @@ namespace UKControllerPlugin
                                             aircraft->GetAssignedHold() == publishedSeparatedHold.fix &&
                                             aircraftRadarTarget->GetPosition().DistanceTo(
                                                 conflictingRadarTarget->GetPosition()
-                                            ) > deemedSeparatedHold.vslInsertDistance;
+                                            ) > deemedSeparatedHold->vslInsertDistance;
                                     }
-                                ) != publishedHold.deemedSeparatedHolds.cend();
+                                ) != publishedHold->deemedSeparatedHolds.cend();
                         }
                     ) != publishedHolds.cend();
                 }

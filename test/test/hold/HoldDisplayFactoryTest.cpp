@@ -63,15 +63,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldDisplayFactoryTest, ItReturnsAHoldDisplayIfNavaidFound)
         {
-            std::set<
-                UKControllerPlugin::Hold::HoldingData,
-                UKControllerPlugin::Hold::CompareHolds
-            > expectedPublished;
-            expectedPublished.emplace(std::move(this->holdData));
-
             std::unique_ptr<HoldDisplay> display = this->factory.Create("TIMBA");
             EXPECT_EQ(this->navaid, display->navaid);
-            EXPECT_EQ(expectedPublished, display->publishedHolds);
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

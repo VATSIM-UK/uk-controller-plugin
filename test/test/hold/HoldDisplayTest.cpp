@@ -16,6 +16,7 @@
 #include "hold/HoldingAircraft.h"
 #include "hold/CompareHoldingAircraft.h"
 #include "hold/HoldingData.h"
+#include "hold/PublishedHoldCollection.h"
 
 using UKControllerPlugin::Hold::HoldDisplay;
 using UKControllerPlugin::Navaids::Navaid;
@@ -23,6 +24,7 @@ using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::CompareHoldingAircraft;
 using UKControllerPlugin::Hold::HoldingAircraft;
 using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Hold::PublishedHoldCollection;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -47,24 +49,16 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldDisplayTest()
-                    : display(mockPlugin, holdManager, navaid, noPublishedHolds, dialogManager),
-                    userSetting(mockUserSettingProvider), navaid({ 2, "TIMBA", EuroScopePlugIn::CPosition()}),
-                    dialogManager(mockDialogProvider), holdManager(mockApi, mockTaskRunner)
+                    : dialogManager(mockDialogProvider),
+                      userSetting(mockUserSettingProvider), navaid({ 2, "TIMBA", EuroScopePlugIn::CPosition()}),
+                      holdManager(mockApi, mockTaskRunner),
+                      display(mockPlugin, holdManager, navaid, publishedHolds, dialogManager)
                 {
-                    HoldingData data = {1, "TIMBA", "TIMBA", 2000, 3000};
-                    this->publishedHolds.insert(std::move(data));
                     this->dialogManager.AddDialog(this->holdDialogData);
                     this->navaid.coordinates.LoadFromStrings("E000.15.42.000", "N050.56.44.000");
                 }
 
-                std::set<
-                    UKControllerPlugin::Hold::HoldingData,
-                    UKControllerPlugin::Hold::CompareHolds
-                > publishedHolds;
-                std::set<
-                    UKControllerPlugin::Hold::HoldingData,
-                    UKControllerPlugin::Hold::CompareHolds
-                > noPublishedHolds;
+                PublishedHoldCollection publishedHolds;
                 DialogData holdDialogData = { IDD_HOLD_PARAMS, "Test" };
                 NiceMock<MockTaskRunnerInterface> mockTaskRunner;
                 NiceMock<MockApiInterface> mockApi;
@@ -108,6 +102,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldDisplayTest, ItLoadsMinimumLevelFromPublishedHoldIfNotInAsr)
         {
+            this->publishedHolds.Add({1, "TIMBA", "TIMBA", 2000, 3000});
+
             HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
             ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMinLevel"))
                 .WillByDefault(Return(""));
@@ -136,6 +132,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldDisplayTest, ItLoadsMaximumLevelFromPublishedHoldIfNotInAsr)
         {
+            this->publishedHolds.Add({1, "TIMBA", "TIMBA", 2000, 3000});
             HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
             ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMaxLevel"))
                 .WillByDefault(Return(""));

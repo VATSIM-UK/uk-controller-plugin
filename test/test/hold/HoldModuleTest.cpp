@@ -219,10 +219,12 @@ namespace UKControllerPluginTest {
                 {}
             };
 
-            std::set<HoldingData, CompareHolds> expectedHoldSet;
-            expectedHoldSet.emplace(std::move(expectedHold));
+            std::set<const HoldingData*> expectedHoldSet;
+            expectedHoldSet.emplace(&expectedHold);
 
-            EXPECT_EQ(expectedHoldSet, this->container.publishedHolds->Get("TIMBA"));
+            std::set<const HoldingData*> holds = this->container.publishedHolds->GetForFix("TIMBA");
+            EXPECT_EQ(1, holds.size());
+            EXPECT_EQ(expectedHold, **holds.cbegin());
         }
 
         TEST_F(HoldModuleTest, ItLoadsAssignedHolds)
