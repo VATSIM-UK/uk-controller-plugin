@@ -142,6 +142,9 @@
     <Filter Include="test\time">
       <UniqueIdentifier>{a8c21e45-8d0b-4d31-9b3c-877523a291fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\flightinformationservice">
+      <UniqueIdentifier>{7f12ba4f-8dec-4106-a0a0-13646ac57292}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -840,6 +843,12 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\notifications\UnreadNotificationsMessageTest.cpp">
       <Filter>test\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\flightinformationservice\FlightInformationServiceTagItemTest.cpp">
+      <Filter>test\flightinformationservice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\flightinformationservice\FlightInformationServiceModuleTest.cpp">
+      <Filter>test\flightinformationservice</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

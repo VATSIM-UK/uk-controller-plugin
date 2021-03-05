@@ -81,6 +81,8 @@
     <ClCompile Include="..\..\test\test\euroscope\RadarTargetEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\RunwayDialogAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightinformationservice\FlightInformationServiceModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightinformationservice\FlightInformationServiceTagItemTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightplanStorageBootstrapTest.cpp" />

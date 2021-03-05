@@ -11,6 +11,7 @@ namespace UKControllerPlugin {
         class TagItemInterface
         {
             public:
+                virtual ~TagItemInterface() = default;
                 virtual std::string GetTagItemDescription(int tagItemId) const = 0;
                 virtual void SetTagItemData(UKControllerPlugin::Tag::TagData & tagData) = 0;
         };
