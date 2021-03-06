@@ -3,12 +3,14 @@
 #include "tag/TagItemCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::FlightInformationService::BootstrapPlugin;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 
 namespace UKControllerPluginTest {
     namespace FlightInformationService {
@@ -20,6 +22,7 @@ namespace UKControllerPluginTest {
                 {
                     this->container.tagHandler.reset(new TagItemCollection);
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+                    this->container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
                 }
 
                 PersistenceContainer container;
@@ -41,6 +44,20 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container);
             EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
+        }
+
+        TEST_F(FlightInformationServiceModuleTest, BootstrapPluginRegistersSelectionMenuTagItem)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountTagFunctions());
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9009));
+        }
+
+        TEST_F(FlightInformationServiceModuleTest, BootstrapPluginRegistersUkfisSelectedCallback)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
         }
     }  // namespace FlightInformationService
 }  // namespace UKControllerPluginTest
