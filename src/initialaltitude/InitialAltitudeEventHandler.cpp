@@ -136,6 +136,11 @@ namespace UKControllerPlugin {
             std::string context,
             const POINT & mousePos
         ) {
+            if (!MeetsForceAssignmentConditions(flightplan, radarTarget))
+            {
+                return;
+            }
+
             std::string sidName = normalise.StripSidDeprecation(flightplan.GetSidName());
 
             if (!generator.HasSid(flightplan.GetOrigin(), sidName)) {
@@ -164,30 +169,44 @@ namespace UKControllerPlugin {
 
             To return true, must:
 
-            1. Be within a specified distance of the origin airport.
-            2. Be under a certain speed.
-            3. Not have a cleared altitude set.
-            4. Not be tracked by any controller.
-            5. Not be "simulated" by ES.
-            6. Have a user that has a recognised callsign.
-            7. Have the airfield of origin owned by the controller.
+            1. Must not have a current flight level or distance from origin of exactly zero.
+               This is required because for some reason EuroScope picks up flightplan changes over the likes of
+               Austria and decides its time to do an initial altitude assignment.
+            2. Be on the ground
+            3. Be within a specified distance of the origin airport.
+            4. Be under a certain speed.
+            5. Not have a cleared altitude set.
+            6. Not be tracked by any controller.
+            7. Not be "simulated" by ES.
+            8. Have a user that has a recognised callsign.
+            9. Have the airfield of origin owned by the controller.
         */
         bool InitialAltitudeEventHandler::MeetsAssignmentConditions(
             EuroScopeCFlightPlanInterface & flightPlan,
             EuroScopeCRadarTargetInterface & radarTarget
-        ) {
-            if (
-                flightPlan.GetDistanceFromOrigin() > this->assignmentMaxDistanceFromOrigin ||
-                radarTarget.GetGroundSpeed() > this->assignmentMaxSpeed ||
-                flightPlan.HasControllerClearedAltitude() ||
-                flightPlan.IsTracked() ||
-                flightPlan.IsSimulated() ||
-                !this->airfieldOwnership.AirfieldOwnedByUser(flightPlan.GetOrigin())
-            ) {
-                return false;
-            }
+        ) const {
+            return radarTarget.GetFlightLevel() != 0 &&
+                flightPlan.GetDistanceFromOrigin() != 0.0 &&
+                radarTarget.GetFlightLevel() <= this->assignmentMaxAltitude &&
+                flightPlan.GetDistanceFromOrigin() <= this->assignmentMaxDistanceFromOrigin &&
+                radarTarget.GetGroundSpeed() <= this->assignmentMaxSpeed &&
+                !flightPlan.HasControllerClearedAltitude() &&
+                !flightPlan.IsTracked() &&
+                !flightPlan.IsSimulated() &&
+                this->airfieldOwnership.AirfieldOwnedByUser(flightPlan.GetOrigin());
+        }
 
-            return true;
+        /*
+         * Force assignments are allowed if the aircraft is:
+         *
+         * 1. Not tracked
+         * 2. Tracked by the current user
+         */
+        bool InitialAltitudeEventHandler::MeetsForceAssignmentConditions(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCRadarTargetInterface& radarTarget
+        ) {
+            return !flightplan.IsTracked() || flightplan.IsTrackedByUser();
         }
 
         /*

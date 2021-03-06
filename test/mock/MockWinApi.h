@@ -1,6 +1,5 @@
 #pragma once
 #include "windows/WinApiInterface.h"
-#include "euroscope/UserSetting.h"
 
 namespace UKControllerPluginTest {
     namespace Windows {

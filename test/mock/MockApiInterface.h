@@ -52,6 +52,9 @@ namespace UKControllerPluginTest {
                     SendEnrouteReleaseWithReleasePoint,
                     void(std::string, std::string, std::string, int, std::string)
                 );
+                MOCK_CONST_METHOD0(GetAllNotifications, nlohmann::json(void));
+                MOCK_CONST_METHOD0(GetUnreadNotifications, nlohmann::json(void));
+                MOCK_CONST_METHOD1(ReadNotification, void(int));
                 MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
                 MOCK_METHOD1(SetApiDomain, void(std::string));
                 MOCK_METHOD1(SetApiKey, void(std::string));

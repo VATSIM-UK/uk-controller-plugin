@@ -14,6 +14,7 @@
 #define IDD_SRD_SEARCH                  115
 #define IDD_HOLD_PARAMS                 117
 #define IDD_HOLD_SELECTION              119
+#define IDD_NOTIFICATIONS               121
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -57,6 +58,7 @@
 #define IDC_MINSTACK_ADD                1032
 #define IDC_LIST1                       1034
 #define IDC_MINSTACK_LIST               1034
+#define IDC_NOTIFICATIONS_LIST          1034
 #define IDC_HOLD_LIST                   1036
 #define IDC_BUTTON2                     1046
 #define IDC_ROUTE_COPY                  1046
@@ -101,24 +103,29 @@
 #define IDC_BUTTON1                     1086
 #define IDC_SRD_SEARCH                  1086
 #define IDC_HOLDS_SAVE                  1086
+#define IDC_OPEN_NOTIFICATION           1086
 #define IDC_EDIT1                       1087
 #define IDC_SRD_NOTES                   1087
+#define IDC_READ_NOTIFICATION           1087
 #define IDC_NOTES_STATIC                1088
 #define IDC_HOLD_PARAMS_MIN_STATIC      1089
+#define IDC_NOTIFICATION_BODY           1089
 #define IDC_HOLD_PARAMS_MAX_STATIC      1090
 #define IDC_HOLD_MIN_SPIN               1091
 #define IDC_HOLD_MAX                    1092
 #define IDC_HOLD_MAXIMUM                1092
 #define IDC_SPIN2                       1093
 #define IDC_HOLD_MAX_SPIN               1093
+#define IDC_NOTIFICATION_LINK           1094
+#define IDC_NOTIFICATION_TITLE          1095
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        121
+#define _APS_NEXT_RESOURCE_VALUE        125
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1094
+#define _APS_NEXT_CONTROL_VALUE         1096
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

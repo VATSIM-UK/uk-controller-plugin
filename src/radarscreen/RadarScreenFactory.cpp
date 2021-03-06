@@ -16,8 +16,9 @@
 #include "bootstrap/HelperBootstrap.h"
 #include "sectorfile/SectorFileBootstrap.h"
 #include "regional/RegionalPressureModule.h"
-#include "plugin/PluginInformationBootstrap.h"
 #include "srd/SrdModule.h"
+#include "notifications/NotificationsModule.h"
+#include "plugin/PluginInformationBootstrap.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -43,7 +44,7 @@ namespace UKControllerPlugin {
         /*
             Create the RadarScreen.
         */
-        UKControllerPlugin::UKRadarScreen * RadarScreenFactory::Create(void) const
+        UKRadarScreen* RadarScreenFactory::Create(void) const
         {
             // Create the collections
             this->renderableCollections.push_back(std::make_shared<RadarRenderableCollection>());
@@ -58,7 +59,7 @@ namespace UKControllerPlugin {
                 configurableDisplays
             );
 
-            UKControllerPlugin::SectorFile::BootstrapRadarScreen(persistence, userSettingHandlers);
+            SectorFile::BootstrapRadarScreen(persistence, userSettingHandlers);
 
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
                 *persistence.pluginFunctionHandlers,
@@ -108,7 +109,7 @@ namespace UKControllerPlugin {
                 userSettingHandlers
             );
 
-            UKControllerPlugin::Hold::BootstrapRadarScreen(
+            Hold::BootstrapRadarScreen(
                 configurableDisplays,
                 renderers,
                 userSettingHandlers,
@@ -116,7 +117,8 @@ namespace UKControllerPlugin {
                 this->persistence
             );
 
-            UKControllerPlugin::Srd::BootstrapRadarScreen(configurableDisplays);
+            Srd::BootstrapRadarScreen(configurableDisplays);
+            Notifications::BootstrapRadarScreen(configurableDisplays);
 
             // Register command for position resets
             this->persistence.commandHandlers->RegisterHandler(

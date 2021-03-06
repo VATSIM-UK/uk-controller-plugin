@@ -1,6 +1,5 @@
 #pragma once
 #include "radarscreen/ConfigurableDisplayInterface.h"
-#include "euroscope/AsrEventHandlerInterface.h"
 #include "command/CommandHandlerInterface.h"
 
 namespace UKControllerPlugin {
