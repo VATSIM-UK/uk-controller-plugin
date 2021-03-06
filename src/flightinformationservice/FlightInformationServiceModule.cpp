@@ -12,6 +12,7 @@ namespace UKControllerPlugin {
 
             container.tagHandler->RegisterTagItem(tagItem->flightInformationServiceTagItem, tagItem);
             container.tagHandler->RegisterTagItem(tagItem->flightInformationServiceOrBlankTagItem, tagItem);
+            container.flightplanHandler->RegisterHandler(tagItem);
         }
     }  // namespace FlightInformationService
 }  // namespace UKControllerPlugin
