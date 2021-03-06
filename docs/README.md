@@ -7,33 +7,6 @@ the Plugin API to offer useful functionality to controllers of UK positions on t
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-## Feature List
-
-- Open Source Plugin and API Code
-- Integration with Core
-- Automatic update notifications and version control
-- Initial altitude assignment
-- Intention codes based on sector exit points
-- General and Local squawk assignment
-- History Trails
-- Minimum Stack Levels
-- Countdown Timer with more granular times
-- Variable data (Initial Altitudes, Controller Positions, SIDs) updated by VATSIM UK's Sector File Team and downloaded
-dynamically to the plugin.
-- Notification of required pre-notes
-- Expected off-block times
-- Actual off-block times
-- Estimated departure times
-- UK Wake Categories
-- QNH change notifications
-- Hold Manager, synced between controllers
-- Departure handoff indicator
-- Altimeter setting regions and regional pressures
-- SRD Search
-- Enroute releases
-- Stand assignment
-- RECAT-EU Wake Categories
-
 ## Setting Up The Project Locally
 
 - Fork the repo
