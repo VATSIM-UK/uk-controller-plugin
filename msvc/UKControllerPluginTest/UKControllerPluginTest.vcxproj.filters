@@ -841,6 +841,15 @@
     <ClCompile Include="..\..\test\test\notifications\UnreadNotificationsMessageTest.cpp">
       <Filter>test\notifications</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\plugin\PluginInformationMessageTest.cpp">
+      <Filter>test\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\plugin\PluginInformationBootstrapTest.cpp">
+      <Filter>test\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\plugin\PluginHelpPageTest.cpp">
+      <Filter>test\plugin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -959,4 +968,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+
 </Project>

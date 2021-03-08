@@ -1107,6 +1107,15 @@
     <ClInclude Include="..\..\src\notifications\UnreadNotificationsMessage.h">
       <Filter>src\notifications</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\plugin\PluginInformationMessage.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\plugin\PluginInformationBootstrap.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\plugin\PluginHelpPage.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1878,6 +1887,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\notifications\UnreadNotificationsMessage.cpp">
       <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginInformationMessage.cpp">
+      <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginInformationBootstrap.cpp">
+      <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginHelpPage.cpp">
+      <Filter>src\plugin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
