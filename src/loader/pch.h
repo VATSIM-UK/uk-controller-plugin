@@ -10,6 +10,9 @@
 // add headers that you want to pre-compile here
 #include <Windows.h>
 #include <string>
+#include <shlobj_core.h>
+#include <filesystem>
+#include <fstream>
 #include "json/json.hpp"
 #include "curl/curl.h"
 #endif //PCH_H

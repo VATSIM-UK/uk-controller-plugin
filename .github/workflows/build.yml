@@ -49,15 +49,9 @@ jobs:
 
       # If we're running on main, get the next release version
       - name: Setup Build Version
-        if: github.ref == 'refs/heads/main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          $semanticRelease = npx semantic-release@17 --dry-run | Select-String -Pattern "Published release ((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)"
-          $tagVersion = $semanticRelease.Matches.Groups[1].value
-          echo "Building version $tagVersion"
-          $versionFile = ".\\src\update\\PluginVersion.cpp"
-          (Get-Content $versionFile).replace("#VERSION_STRING#", "$tagVersion") | Set-Content $versionFile
+        run: .\\.github\\workflows\\plugin_version.ps1
       
       # Run the build and tests
       - name: Run Build

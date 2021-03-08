@@ -313,6 +313,21 @@ namespace UKControllerPlugin {
             );
         }
 
+        nlohmann::json ApiHelper::GetAllNotifications() const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildGetAllNotificationsRequest()).GetRawData();
+        }
+
+        nlohmann::json ApiHelper::GetUnreadNotifications() const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildGetUnreadNotificationsRequest()).GetRawData();
+        }
+
+        void ApiHelper::ReadNotification(int id) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildReadNotificationRequest(id));
+        }
+
         /*
             Runs an update check.
         */

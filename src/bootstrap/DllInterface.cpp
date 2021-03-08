@@ -28,6 +28,8 @@ BOOL WINAPI DllMain(
 UKCP_API EuroScopePlugIn::CPlugIn * LoadPlugin(void)
 {
     // Give ES the plugin instance and run the post initialisation method.
+    INITCOMMONCONTROLSEX common = {sizeof(INITCOMMONCONTROLSEX), ICC_LINK_CLASS};
+    HRESULT test1 = InitCommonControlsEx(&common);
     try {
         thePluginApp.PostInit(dllInstance);
         return thePluginApp.GetPlugin();

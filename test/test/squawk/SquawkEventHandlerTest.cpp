@@ -151,6 +151,9 @@ namespace UKControllerPluginTest {
                     ON_CALL(*this->mockRadarTarget, GetFlightLevel())
                         .WillByDefault(Return(this->assignmentRules.maxAssignmentAltitude + 1));
 
+                    ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                        .WillByDefault(Return(1.0));
+
                     EXPECT_CALL(*mockFlightplan, SetSquawk("7000"))
                         .Times(1);
 
@@ -188,6 +191,12 @@ namespace UKControllerPluginTest {
 
                     EXPECT_CALL(*mockFlightplan, SetSquawk("7000"))
                         .Times(1);
+
+                    ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                        .WillByDefault(Return(1.0));
+
+                    ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                        .WillByDefault(Return(1));
 
                     ApiSquawkAllocation allocation{ "BAW1252", "7261" };
                     EXPECT_CALL(this->mockApi, GetAssignedSquawk("GATWF"))
@@ -307,23 +316,29 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkEventHandlerTest, FlightplanEventReassignsOldSquawk)
         {
-           StoredFlightplan plan("BAW123", "EGKK", "EGPF");
-           plan.SetPreviouslyAssignedSquawk("3421");
-           this->plans.UpdatePlan(plan);
+            StoredFlightplan plan("BAW123", "EGKK", "EGPF");
+            plan.SetPreviouslyAssignedSquawk("3421");
+            this->plans.UpdatePlan(plan);
 
-           ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
-               .WillByDefault(Return(false));
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk())
+                .WillByDefault(Return(false));
 
-           ON_CALL(*this->mockFlightplan, IsTrackedByUser())
-               .WillByDefault(Return(true));
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser())
+                .WillByDefault(Return(true));
 
-           ON_CALL(*this->mockFlightplan, GetCallsign())
-               .WillByDefault(Return("BAW123"));
+            ON_CALL(*this->mockFlightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
 
-           EXPECT_CALL(*this->mockFlightplan, SetSquawk("3421"))
-               .Times(1);
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
 
-           this->handler.FlightPlanEvent(*this->mockFlightplan, *this->mockRadarTarget);
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel)
+                .WillByDefault(Return(1));
+
+            EXPECT_CALL(*this->mockFlightplan, SetSquawk("3421"))
+                .Times(1);
+
+            this->handler.FlightPlanEvent(*this->mockFlightplan, *this->mockRadarTarget);
         }
 
         TEST_F(SquawkEventHandlerTest, FlightplanEventAssignsLocalSquawk)
@@ -546,6 +561,9 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockRadarTarget, GetFlightLevel())
                 .WillByDefault(Return(999999));
+
+            ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
+                .WillByDefault(Return(1.0));
 
             this->expectGeneralAssignment();
             handler.ActiveCallsignAdded(this->userCallsign, true);

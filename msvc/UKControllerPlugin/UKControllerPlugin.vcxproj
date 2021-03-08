@@ -32,6 +32,7 @@
     <ClInclude Include="..\..\src\api\ApiResponseValidator.h" />
     <ClInclude Include="..\..\src\bootstrap\BootstrapWarningMessage.h" />
     <ClInclude Include="..\..\src\bootstrap\CollectionBootstrap.h" />
+    <ClInclude Include="..\..\src\bootstrap\CopyFilesToNewFolder.h" />
     <ClInclude Include="..\..\src\bootstrap\DuplicatePlugin.h" />
     <ClInclude Include="..\..\src\bootstrap\EventHandlerCollectionBootstrap.h" />
     <ClInclude Include="..\..\src\bootstrap\ExternalsBootstrap.h" />
@@ -215,6 +216,14 @@
     <ClInclude Include="..\..\src\navaids\Navaid.h" />
     <ClInclude Include="..\..\src\navaids\NavaidCollection.h" />
     <ClInclude Include="..\..\src\navaids\NavaidModule.h" />
+    <ClInclude Include="..\..\src\notifications\Notification.h" />
+    <ClInclude Include="..\..\src\notifications\NotificationsDialog.h" />
+    <ClInclude Include="..\..\src\notifications\NotificationsEventHandler.h" />
+    <ClInclude Include="..\..\src\notifications\NotificationsMenuItem.h" />
+    <ClInclude Include="..\..\src\notifications\NotificationsModule.h" />
+    <ClInclude Include="..\..\src\notifications\NotificationsRepository.h" />
+    <ClInclude Include="..\..\src\notifications\NotificationsRepositoryFactory.h" />
+    <ClInclude Include="..\..\src\notifications\UnreadNotificationsMessage.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.h" />
     <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.h" />
@@ -298,6 +307,7 @@
     <ClInclude Include="..\..\src\timedevent\DeferredEvent.h" />
     <ClInclude Include="..\..\src\timedevent\DeferredEventBootstrap.h" />
     <ClInclude Include="..\..\src\timedevent\TimedEventCollection.h" />
+    <ClInclude Include="..\..\src\time\ParseTimeStrings.h" />
     <ClInclude Include="..\..\src\update\PluginUpdateChecker.h" />
     <ClInclude Include="..\..\src\update\PluginVersion.h" />
     <ClInclude Include="..\..\src\wake\CacheItem.h" />
@@ -338,6 +348,7 @@
     <ClCompile Include="..\..\src\api\ApiResponseValidator.cpp" />
     <ClCompile Include="..\..\src\bootstrap\BootstrapWarningMessage.cpp" />
     <ClCompile Include="..\..\src\bootstrap\CollectionBootstrap.cpp" />
+    <ClCompile Include="..\..\src\bootstrap\CopyFilesToNewFolder.cpp" />
     <ClCompile Include="..\..\src\bootstrap\DllInterface.cpp" />
     <ClCompile Include="..\..\src\bootstrap\DuplicatePlugin.cpp" />
     <ClCompile Include="..\..\src\bootstrap\EventHandlerCollectionBootstrap.cpp" />
@@ -483,6 +494,14 @@
     <ClCompile Include="..\..\src\navaids\CompareNavaids.cpp" />
     <ClCompile Include="..\..\src\navaids\NavaidCollection.cpp" />
     <ClCompile Include="..\..\src\navaids\NavaidModule.cpp" />
+    <ClCompile Include="..\..\src\notifications\Notification.cpp" />
+    <ClCompile Include="..\..\src\notifications\NotificationsDialog.cpp" />
+    <ClCompile Include="..\..\src\notifications\NotificationsEventHandler.cpp" />
+    <ClCompile Include="..\..\src\notifications\NotificationsMenuItem.cpp" />
+    <ClCompile Include="..\..\src\notifications\NotificationsModule.cpp" />
+    <ClCompile Include="..\..\src\notifications\NotificationsRepository.cpp" />
+    <ClCompile Include="..\..\src\notifications\NotificationsRepositoryFactory.cpp" />
+    <ClCompile Include="..\..\src\notifications\UnreadNotificationsMessage.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp" />
@@ -553,6 +572,7 @@
     <ClCompile Include="..\..\src\task\TaskRunner.cpp" />
     <ClCompile Include="..\..\src\timedevent\DeferredEventBootstrap.cpp" />
     <ClCompile Include="..\..\src\timedevent\TimedEventCollection.cpp" />
+    <ClCompile Include="..\..\src\time\ParseTimeStrings.cpp" />
     <ClCompile Include="..\..\src\update\PluginUpdateChecker.cpp" />
     <ClCompile Include="..\..\src\update\PluginVersion.cpp" />
     <ClCompile Include="..\..\src\wake\CreateWakeMappings.cpp" />
@@ -650,7 +670,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;libssl32MDd.lib;libcrypto32MDd.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;Comctl32.lib;libssl32MDd.lib;libcrypto32MDd.lib;</AdditionalDependencies>
       <AdditionalLibraryDirectories />
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
@@ -681,7 +701,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;libssl32MD.lib;libcrypto32MD.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;Comctl32.lib;libssl32MD.lib;libcrypto32MD.lib;</AdditionalDependencies>
       <IgnoreAllDefaultLibraries />
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>

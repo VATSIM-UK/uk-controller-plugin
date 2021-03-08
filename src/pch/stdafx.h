@@ -4,6 +4,7 @@
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #define _SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING
 #define NOMINMAX 1
+#define ISOLATION_AWARE_ENABLED 1
 
 // Custom headers
 #pragma warning( push )
@@ -27,6 +28,7 @@
 // Standard headers
 #include <algorithm>
 #include <CommCtrl.h>
+#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")  // NOLINT
 #include <CommDlg.h>
 #include <shtypes.h>
 #include <filesystem>
@@ -58,6 +60,7 @@
 #include <locale>
 #include <Shobjidl.h>
 #include <Shlobj.h>
+#include <shellapi.h>
 #include <Windows.h>
 
 // Definitions for library exports

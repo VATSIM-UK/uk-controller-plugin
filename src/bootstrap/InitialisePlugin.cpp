@@ -45,6 +45,8 @@
 #include "releases/ReleaseModule.h"
 #include "stands/StandModule.h"
 #include "integration/IntegrationModule.h"
+#include "bootstrap/CopyFilesToNewFolder.h"
+#include "notifications/NotificationsModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -160,7 +162,10 @@ namespace UKControllerPlugin {
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
         ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
+        // Remove this once the last version on old root is deprecated
+        Bootstrap::CopyFilesToNewFolder(*this->container->windows);
         ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
+
         LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
 
         // User messager
@@ -212,6 +217,7 @@ namespace UKControllerPlugin {
         Navaids::BootstrapPlugin(*this->container, loader);
         Releases::BootstrapPlugin(*this->container, loader);
         Stands::BootstrapPlugin(*this->container, loader);
+        Notifications::BootstrapPlugin(*this->container);
 
         Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);

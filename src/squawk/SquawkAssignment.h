@@ -59,6 +59,10 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 ) const;
+                bool AssignmentPossible(
+                    const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
+                    const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                ) const;
 
                 // For untracked aircraft, the maximum speed for which squawks will
                 // be assigned - limits to just on the ground.

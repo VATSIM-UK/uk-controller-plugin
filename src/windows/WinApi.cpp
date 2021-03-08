@@ -3,9 +3,6 @@
 #include "historytrail/HistoryTrailDialog.h"
 #include "helper/HelperFunctions.h"
 #include "euroscope/GeneralSettingsDialog.h"
-#include "euroscope/UserSetting.h"
-#include "historytrail/HistoryTrailData.h"
-#include "hold/HoldConfigurationDialog.h"
 
 using UKControllerPlugin::HistoryTrail::HistoryTrailDialog;
 using UKControllerPlugin::HelperFunctions;
