@@ -112,6 +112,8 @@
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareCollection.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingAwareInterface.h" />
     <ClInclude Include="..\..\src\euroscope\UserSettingProviderInterface.h" />
+    <ClInclude Include="..\..\src\flightinformationservice\FlightInformationServiceModule.h" />
+    <ClInclude Include="..\..\src\flightinformationservice\FlightInformationServiceTagItem.h" />
     <ClInclude Include="..\..\src\flightplan\DeferredFlightplanEvent.h" />
     <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerInterface.h" />
@@ -407,6 +409,8 @@
     <ClCompile Include="..\..\src\euroscope\RunwayDialogAwareCollection.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSetting.cpp" />
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp" />
+    <ClCompile Include="..\..\src\flightinformationservice\FlightInformationServiceModule.cpp" />
+    <ClCompile Include="..\..\src\flightinformationservice\FlightInformationServiceTagItem.cpp" />
     <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightplanStorageBootstrap.cpp" />
