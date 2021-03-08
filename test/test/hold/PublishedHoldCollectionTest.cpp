@@ -46,20 +46,49 @@ namespace UKControllerPluginTest {
             this->collection.Add(std::move(this->hold2));
             this->collection.Add(std::move(this->hold3));
 
-            const std::set<HoldingData, CompareHolds> expected = {};
-            EXPECT_EQ(expected, this->collection.Get("MAY"));
+            const std::set<const HoldingData*> expected = {};
+            EXPECT_EQ(expected, this->collection.GetForFix("MAY"));
         }
 
-        TEST_F(PublishedHoldCollectionTest, GetReturnsHolds)
+        TEST_F(PublishedHoldCollectionTest, GetReturnsHoldsForAFix)
         {
             this->collection.Add(std::move(this->hold1));
             this->collection.Add(std::move(this->hold2));
             this->collection.Add(std::move(this->hold3));
 
-            std::set<HoldingData, CompareHolds> expected;
-            expected.emplace(std::move(hold2));
-            expected.emplace(std::move(hold3));
-            EXPECT_EQ(expected, this->collection.Get("WILLO"));
+
+            std::set<const HoldingData*> holds = this->collection.GetForFix("WILLO");
+
+            EXPECT_EQ(2, holds.size());
+            EXPECT_EQ(
+                2,
+                std::count_if(
+                    holds.cbegin(),
+                    holds.cend(),
+                    [this](auto hold) -> bool
+                    {
+                    return (*hold) == this->hold2 || (*hold) == this->hold3;
+                    }
+                )
+            );
+        }
+
+        TEST_F(PublishedHoldCollectionTest, GetByIdReturnsHoldById)
+        {
+            this->collection.Add(std::move(this->hold1));
+            this->collection.Add(std::move(this->hold2));
+            this->collection.Add(std::move(this->hold3));
+
+            EXPECT_EQ(this->hold1, this->collection.GetById(1));
+        }
+
+        TEST_F(PublishedHoldCollectionTest, GetByIdReturnsNoHoldIfDoesntExist)
+        {
+            this->collection.Add(std::move(this->hold1));
+            this->collection.Add(std::move(this->hold2));
+            this->collection.Add(std::move(this->hold3));
+
+            EXPECT_EQ(this->collection.noHold, this->collection.GetById(999));
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

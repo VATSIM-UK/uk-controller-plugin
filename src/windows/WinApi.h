@@ -28,6 +28,7 @@ namespace UKControllerPlugin {
                     const COMDLG_FILTERSPEC * fileTypes
                 ) const override;
                 int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) override;
+                void OpenWebBrowser(std::wstring url) override;
                 void PlayWave(LPCTSTR sound);
                 std::string ReadFromFile(std::wstring filename, bool relativePath = true) override;
                 bool SetPermissions(std::wstring fileOrFolder, std::filesystem::perms permissions) override;
