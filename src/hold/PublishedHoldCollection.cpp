@@ -9,37 +9,58 @@ namespace UKControllerPlugin {
         */
         void PublishedHoldCollection::Add(HoldingData data)
         {
-            if (!this->holds[data.fix].insert(std::move(data)).second) {
+            if (!this->holds.insert(std::move(data)).second) {
                 LogWarning("Attempted to add duplicate published hold: " + std::to_string(data.identifier));
             }
         }
 
         /*
-            Get all the published holds at a fix
+            Get all the published holds at a fix, this is by value so shouldn't be used directly in rendering code.
         */
-        const std::set<HoldingData, CompareHolds>& PublishedHoldCollection::Get(std::string fix) const
+        const std::set<const HoldingData*> PublishedHoldCollection::GetForFix(std::string fix) const
         {
-            return
-                this->holds.count(fix)
-                ? this->holds.at(fix)
-                : this->noHolds;
+            std::set<const HoldingData*> holds;
+
+            std::for_each(
+                this->holds.cbegin(),
+                this->holds.cend(),
+                [&fix, &holds](const HoldingData& hold)
+                {
+                    if (hold.fix != fix) {
+                        return;
+                    }
+
+                    holds.insert(&hold);
+                }
+            );
+
+            return std::move(holds);
         }
+
+        /*
+         * Get a hold by its id
+         */
+        const HoldingData& PublishedHoldCollection::GetById(int id) const
+        {
+            auto foundHold = std::find_if(
+                this->holds.cbegin(),
+                this->holds.cend(),
+                [&id](const HoldingData& hold) -> bool
+                {
+                    return hold.identifier == id;
+                }
+            );
+
+            return foundHold != this->holds.cend() ? *foundHold : this->noHold;
+        }
+
 
         /*
             Count all the published holds
         */
         size_t PublishedHoldCollection::Count(void) const
         {
-            size_t count = 0;
-            for (
-                std::map<std::string, std::set<HoldingData, CompareHolds>>::const_iterator it = this->holds.cbegin();
-                it != this->holds.cend();
-                ++it
-            ) {
-                count += it->second.size();
-            }
-
-            return count;
+            return this->holds.size();
         }
 
     }  // namespace Hold

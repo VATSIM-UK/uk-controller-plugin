@@ -1125,6 +1125,12 @@
     <ClInclude Include="..\..\src\flightinformationservice\FlightInformationServiceModule.h">
       <Filter>src\flightinformationservice</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\hold\DeemedSeparatedHold.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\DeemedSeparatedHoldSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1911,6 +1917,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\flightinformationservice\FlightInformationServiceModule.cpp">
       <Filter>src\flightinformationservice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\DeemedSeparatedHoldSerializer.cpp">
+      <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

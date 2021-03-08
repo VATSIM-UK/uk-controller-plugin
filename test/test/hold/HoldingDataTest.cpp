@@ -2,10 +2,12 @@
 #include "hold/HoldingData.h"
 #include "hold/AbstractHoldLevelRestriction.h"
 #include "hold/BlockedHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::AbstractHoldLevelRestriction;
 using UKControllerPlugin::Hold::BlockedHoldLevelRestriction;
+using UKControllerPlugin::Hold::DeemedSeparatedHold;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -34,15 +36,28 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, hold.maximum);
             EXPECT_EQ(361, hold.inbound);
             EXPECT_EQ("up", hold.turnDirection);
-            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> expectedRestrictions;
-            EXPECT_EQ(expectedRestrictions, hold.restrictions);
+            EXPECT_EQ(0, hold.restrictions.size());
+            EXPECT_EQ(0, hold.deemedSeparatedHolds.size());
         }
 
         TEST(HoldingDataTest, ItCanBeMoveConstructed)
         {
             std::set<std::unique_ptr<AbstractHoldLevelRestriction>> restrictions;
             restrictions.emplace(new BlockedHoldLevelRestriction({ 7000, 8000 }));
-            HoldingData hold{ 1, "TIMBA", "TIMBA LOW", 7001, 15001, 51, "left", std::move(restrictions) };
+
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds;
+            deemedSeparatedHolds.emplace(new DeemedSeparatedHold(1, 2));
+            HoldingData hold{
+                1,
+                "TIMBA",
+                "TIMBA LOW",
+                7001,
+                15001,
+                51,
+                "left",
+                std::move(restrictions),
+                std::move(deemedSeparatedHolds)
+            };
 
             HoldingData hold2(std::move(hold));
 
@@ -60,13 +75,31 @@ namespace UKControllerPluginTest {
 
             std::set<unsigned int> expectedLevels = { 7000, 8000 };
             EXPECT_EQ(expectedLevels, actualCast->GetLevels());
+
+            DeemedSeparatedHold * deemedSeparated =
+                dynamic_cast<DeemedSeparatedHold *>(hold2.deemedSeparatedHolds.cbegin()->get());
+
+            EXPECT_EQ(1, deemedSeparated->identifier);
         }
 
         TEST(HoldingDataTest, ItCanBeMoveAssigned)
         {
             std::set<std::unique_ptr<AbstractHoldLevelRestriction>> restrictions;
             restrictions.emplace(new BlockedHoldLevelRestriction({ 7000, 8000 }));
-            HoldingData hold{ 1, "TIMBA", "TIMBA LOW", 7001, 15001, 51, "left", std::move(restrictions) };
+
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds;
+            deemedSeparatedHolds.emplace(new DeemedSeparatedHold(1, 2));
+            HoldingData hold{
+                1,
+                "TIMBA",
+                "TIMBA LOW",
+                7001,
+                15001,
+                51,
+                "left",
+                std::move(restrictions),
+                std::move(deemedSeparatedHolds)
+            };
 
             HoldingData hold2 = std::move(hold);
 
@@ -84,7 +117,53 @@ namespace UKControllerPluginTest {
 
             std::set<unsigned int> expectedLevels = { 7000, 8000 };
             EXPECT_EQ(expectedLevels, actualCast->GetLevels());
+
+            DeemedSeparatedHold * deemedSeparated =
+                dynamic_cast<DeemedSeparatedHold *>(hold2.deemedSeparatedHolds.cbegin()->get());
+
+            EXPECT_EQ(1, deemedSeparated->identifier);
         }
 
-    }  // namespace Hold
+        TEST(HoldingDataTest, LevelWithinHoldReturnsFalseBelowLowerBand)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_FALSE(hold.LevelWithinHold(6999));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueLowerBound)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(7000));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueAboveLowerBound)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(7001));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueMiddle)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(11000));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueBelowUpperBand)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(14999));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsTrueUpperBand)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_TRUE(hold.LevelWithinHold(15000));
+        }
+
+        TEST(HoldingDataTest, LevelWithinHoldReturnsFalseAboveUpperBand)
+        {
+            HoldingData hold{1, "TIMBA", "TIMBA", 7000, 15000, 51, "left"};
+            EXPECT_FALSE(hold.LevelWithinHold(15001));
+        }
+    } // namespace Hold
 }  // namespace UKControllerPluginTest

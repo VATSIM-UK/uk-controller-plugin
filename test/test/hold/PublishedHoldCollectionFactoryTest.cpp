@@ -43,6 +43,7 @@ namespace UKControllerPluginTest {
             hold1["inbound_heading"] = 309;
             hold1["turn_direction"] = "right";
             hold1["restrictions"] = nlohmann::json::array();
+            hold1["deemed_separated_holds"] = nlohmann::json::array();
             nlohmann::json hold2;
             hold2["id"] = 2;
             hold2["description"] = "WILLO";
@@ -52,6 +53,7 @@ namespace UKControllerPluginTest {
             hold2["inbound_heading"] = 285;
             hold2["turn_direction"] = "left";
             hold2["restrictions"] = nlohmann::json::array();
+            hold2["deemed_separated_holds"] = nlohmann::json::array();
 
             data = { hold1, hold2 };
             EXPECT_EQ(2, CreatePublishedHoldCollection(data, container)->Count());

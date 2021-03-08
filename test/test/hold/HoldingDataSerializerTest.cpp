@@ -23,6 +23,11 @@ namespace UKControllerPluginTest {
                         {"levels", nlohmann::json::array({7000, 9000})}
                     };
 
+                    nlohmann::json deemedSeparatedHold = {
+                        {"hold_id", 2},
+                        {"vsl_insert_distance", 2}
+                    };
+
                     testData = {
                         {"id", 1},
                         {"fix", "TIMBA"},
@@ -31,7 +36,8 @@ namespace UKControllerPluginTest {
                         {"maximum_altitude", 15000},
                         {"inbound_heading", 309},
                         {"turn_direction", "right"},
-                        {"restrictions", nlohmann::json::array({restriction})}
+                        {"restrictions", nlohmann::json::array({restriction})},
+                        {"deemed_separated_holds", nlohmann::json::array({deemedSeparatedHold})},
                     };
                 }
 
@@ -135,6 +141,18 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(JsonValid(testData));
         }
 
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsFalseNoDeemedSeparated)
+        {
+            this->testData.erase("deemed_separated_holds");
+            EXPECT_FALSE(JsonValid(testData));
+        }
+
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsFalseDeemedSeparatedNotArray)
+        {
+            this->testData["deemed_separated_holds"] = "lol";
+            EXPECT_FALSE(JsonValid(testData));
+        }
+
         TEST_F(HoldingDataSerializerTest, ReturnsInvalidOnInvalidFromJson)
         {
             this->testData["turn_direction"] = "up";
@@ -167,6 +185,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, actual.restrictions.size());
             EXPECT_TRUE((*actual.restrictions.cbegin())->LevelRestricted(7000));
             EXPECT_TRUE((*actual.restrictions.cbegin())->LevelRestricted(9000));
+            EXPECT_EQ(2, (*actual.deemedSeparatedHolds.cbegin())->identifier);
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

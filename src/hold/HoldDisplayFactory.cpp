@@ -41,7 +41,7 @@ namespace UKControllerPlugin {
                 plugin,
                 holdManager,
                 navaidData,
-                holds.Get(navaid),
+                holds,
                 dialogManager
             );
         }

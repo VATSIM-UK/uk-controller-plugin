@@ -102,6 +102,7 @@
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldsDescriptionTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\DeemedSeparatedHoldSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldConfigurationMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldDisplayFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldDisplayManagerTest.cpp" />

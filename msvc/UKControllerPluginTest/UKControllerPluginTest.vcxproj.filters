@@ -859,6 +859,9 @@
     <ClCompile Include="..\..\test\test\flightinformationservice\FlightInformationServiceModuleTest.cpp">
       <Filter>test\flightinformationservice</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\hold\DeemedSeparatedHoldSerializerTest.cpp">
+      <Filter>test\hold</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

@@ -16,13 +16,17 @@
 #include "hold/HoldingAircraft.h"
 #include "hold/CompareHoldingAircraft.h"
 #include "hold/HoldingData.h"
+#include "hold/PublishedHoldCollection.h"
+#include "hold/DeemedSeparatedHold.h"
 
 using UKControllerPlugin::Hold::HoldDisplay;
+using UKControllerPlugin::Hold::DeemedSeparatedHold;
 using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::CompareHoldingAircraft;
 using UKControllerPlugin::Hold::HoldingAircraft;
 using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Hold::PublishedHoldCollection;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -47,24 +51,26 @@ namespace UKControllerPluginTest {
         {
             public:
                 HoldDisplayTest()
-                    : display(mockPlugin, holdManager, navaid, noPublishedHolds, dialogManager),
-                    userSetting(mockUserSettingProvider), navaid({ 2, "TIMBA", EuroScopePlugIn::CPosition()}),
-                    dialogManager(mockDialogProvider), holdManager(mockApi, mockTaskRunner)
+                    : dialogManager(mockDialogProvider),
+                      userSetting(mockUserSettingProvider), navaid({ 2, "TIMBA", EuroScopePlugIn::CPosition()}),
+                      holdManager(mockApi, mockTaskRunner),
+                      display(mockPlugin, holdManager, navaid, publishedHolds, dialogManager)
                 {
-                    HoldingData data = {1, "TIMBA", "TIMBA", 2000, 3000};
-                    this->publishedHolds.insert(std::move(data));
                     this->dialogManager.AddDialog(this->holdDialogData);
                     this->navaid.coordinates.LoadFromStrings("E000.15.42.000", "N050.56.44.000");
+
+                    this->timbaPosition.m_Latitude = 51.06722;
+                    this->timbaPosition.m_Longitude = 0.43944;
+                    this->willoPosition.m_Latitude = 50.985;
+                    this->willoPosition.m_Longitude = -0.19167;
+                    this->mayPosition.m_Latitude = 51.017200;
+                    this->mayPosition.m_Longitude = 0.116111;
                 }
 
-                std::set<
-                    UKControllerPlugin::Hold::HoldingData,
-                    UKControllerPlugin::Hold::CompareHolds
-                > publishedHolds;
-                std::set<
-                    UKControllerPlugin::Hold::HoldingData,
-                    UKControllerPlugin::Hold::CompareHolds
-                > noPublishedHolds;
+                EuroScopePlugIn::CPosition timbaPosition;
+                EuroScopePlugIn::CPosition willoPosition;
+                EuroScopePlugIn::CPosition mayPosition;
+                PublishedHoldCollection publishedHolds;
                 DialogData holdDialogData = { IDD_HOLD_PARAMS, "Test" };
                 NiceMock<MockTaskRunnerInterface> mockTaskRunner;
                 NiceMock<MockApiInterface> mockApi;
@@ -108,6 +114,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldDisplayTest, ItLoadsMinimumLevelFromPublishedHoldIfNotInAsr)
         {
+            this->publishedHolds.Add({1, "TIMBA", "TIMBA", 2000, 3000});
+
             HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
             ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMinLevel"))
                 .WillByDefault(Return(""));
@@ -136,6 +144,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldDisplayTest, ItLoadsMaximumLevelFromPublishedHoldIfNotInAsr)
         {
+            this->publishedHolds.Add({1, "TIMBA", "TIMBA", 2000, 3000});
             HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
             ON_CALL(this->mockUserSettingProvider, GetKey("holdTIMBAMaxLevel"))
                 .WillByDefault(Return(""));
@@ -639,7 +648,7 @@ namespace UKControllerPluginTest {
             ASSERT_TRUE(expected.Equals(this->display.GetHoldViewBackgroundRender(aircraft)));
         }
 
-        TEST_F(HoldDisplayTest, ItMapsAircraftToLevels)
+        TEST_F(HoldDisplayTest, ItMapsAircraftToLevelsAndFiltersThoseOutsideTheDisplayRange)
         {
             std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
             aircraft.insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
@@ -725,6 +734,503 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, mapped.count(9000));
             EXPECT_EQ(1, mapped.at(10000).size());
             EXPECT_EQ("RYR191", (*mapped.at(10000).cbegin())->GetCallsign());
+        }
+
+        TEST_F(HoldDisplayTest, MappingAircraftToLevelsFiltersOutThoseInDeemedSeparatedHolds)
+        {
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparated;
+            deemedSeparated.insert(std::make_unique<DeemedSeparatedHold>(2, 7));
+
+            this->publishedHolds.Add(
+                {
+                    1,
+                    "TIMBA",
+                    "TIMBA",
+                    7000,
+                    15000,
+                    12,
+                    "left",
+                    {},
+                    std::move(deemedSeparated)
+                }
+            );
+            this->publishedHolds.Add(
+                {
+                    2,
+                    "WILLO",
+                    "WILLO",
+                    7000,
+                    15000,
+                }
+            );
+            HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
+            display2.SetMinimumLevel(7000);
+            display2.SetMaximumLevel(15000);
+
+            std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
+            aircraft.insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
+            auto conflictingAircraft = std::make_shared<HoldingAircraft>("EZY234", std::set<std::string>({"TIMBA"}));
+            conflictingAircraft->SetAssignedHold("WILLO");
+            aircraft.insert(conflictingAircraft);
+
+
+            this->display.SetMinimumLevel(7000);
+            this->display.SetMaximumLevel(15000);
+
+            // In this scenario, both are within the confines of their holds and are sufficiently distanced.
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetBaw123 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetBaw123, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetBaw123, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
+                .WillByDefault(Return(radarTargetBaw123));
+
+            ON_CALL(*radarTargetBaw123, GetPosition())
+                .WillByDefault(Return(this->timbaPosition));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetEzy234 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetEzy234, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetEzy234, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("EZY234"))
+                .WillByDefault(Return(radarTargetEzy234));
+
+            ON_CALL(*radarTargetEzy234, GetPosition())
+                .WillByDefault(Return(this->willoPosition));
+
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> mapped =
+                display2.MapAircraftToLevels(aircraft);
+
+            EXPECT_EQ(1, mapped.size());
+            EXPECT_EQ(1, mapped.at(8000).size());
+            EXPECT_EQ("BAW123", (*mapped.at(8000).cbegin())->GetCallsign());
+        }
+
+        TEST_F(HoldDisplayTest, MappingAircraftToLevelsDoesntFilterOutAircraftBelowVslInsert)
+        {
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparated;
+            deemedSeparated.insert(std::make_unique<DeemedSeparatedHold>(2, 15));
+
+            this->publishedHolds.Add(
+                {
+                    1,
+                    "TIMBA",
+                    "TIMBA",
+                    7000,
+                    15000,
+                    12,
+                    "left",
+                    {},
+                    std::move(deemedSeparated)
+                }
+            );
+            this->publishedHolds.Add(
+                {
+                    2,
+                    "WILLO",
+                    "WILLO",
+                    7000,
+                    15000,
+                }
+            );
+            HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
+            display2.SetMinimumLevel(7000);
+            display2.SetMaximumLevel(15000);
+
+            std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
+            aircraft.insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
+            auto conflictingAircraft = std::make_shared<HoldingAircraft>("EZY234", std::set<std::string>({"TIMBA"}));
+            conflictingAircraft->SetAssignedHold("WILLO");
+            aircraft.insert(conflictingAircraft);
+
+
+            this->display.SetMinimumLevel(7000);
+            this->display.SetMaximumLevel(15000);
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetBaw123 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetBaw123, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetBaw123, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
+                .WillByDefault(Return(radarTargetBaw123));
+
+            ON_CALL(*radarTargetBaw123, GetPosition())
+                .WillByDefault(Return(this->timbaPosition));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetEzy234 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetEzy234, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetEzy234, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("EZY234"))
+                .WillByDefault(Return(radarTargetEzy234));
+
+            ON_CALL(*radarTargetEzy234, GetPosition())
+                .WillByDefault(Return(this->mayPosition));
+
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> mapped =
+                display2.MapAircraftToLevels(aircraft);
+
+            EXPECT_EQ(1, mapped.size());
+            EXPECT_EQ(2, mapped.at(8000).size());
+            EXPECT_EQ("BAW123", (*mapped.at(8000).cbegin())->GetCallsign());
+            EXPECT_EQ("EZY234", (*++mapped.at(8000).cbegin())->GetCallsign());
+        }
+
+        TEST_F(HoldDisplayTest, MappingAircraftToLevelsDoesntFilterOutAircraftOutsideAssignedHold)
+        {
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparated;
+            deemedSeparated.insert(std::make_unique<DeemedSeparatedHold>(2, 10));
+
+            this->publishedHolds.Add(
+                {
+                    1,
+                    "TIMBA",
+                    "TIMBA",
+                    7000,
+                    15000,
+                    12,
+                    "left",
+                    {},
+                    std::move(deemedSeparated)
+                }
+            );
+            // WILLO starts at 9000, so the conflicting aircraft is outside WILLO's confines
+            this->publishedHolds.Add(
+                {
+                    2,
+                    "WILLO",
+                    "WILLO",
+                    9000,
+                    15000,
+                }
+            );
+            HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
+            display2.SetMinimumLevel(7000);
+            display2.SetMaximumLevel(15000);
+
+            std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
+            aircraft.insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
+            auto conflictingAircraft = std::make_shared<HoldingAircraft>("EZY234", std::set<std::string>({"TIMBA"}));
+            conflictingAircraft->SetAssignedHold("WILLO");
+            aircraft.insert(conflictingAircraft);
+
+            this->display.SetMinimumLevel(7000);
+            this->display.SetMaximumLevel(15000);
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetBaw123 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetBaw123, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetBaw123, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
+                .WillByDefault(Return(radarTargetBaw123));
+
+            ON_CALL(*radarTargetBaw123, GetPosition())
+                .WillByDefault(Return(this->timbaPosition));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetEzy234 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetEzy234, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetEzy234, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("EZY234"))
+                .WillByDefault(Return(radarTargetEzy234));
+
+            ON_CALL(*radarTargetEzy234, GetPosition())
+                .WillByDefault(Return(this->willoPosition));
+
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> mapped =
+                display2.MapAircraftToLevels(aircraft);
+
+            EXPECT_EQ(1, mapped.size());
+            EXPECT_EQ(2, mapped.at(8000).size());
+            EXPECT_EQ("BAW123", (*mapped.at(8000).cbegin())->GetCallsign());
+            EXPECT_EQ("EZY234", (*++mapped.at(8000).cbegin())->GetCallsign());
+        }
+
+        TEST_F(HoldDisplayTest, MappingAircraftToLevelsDoesntFilterOutAircraftAssignedToHoldOutsidePublishedHold)
+        {
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparated;
+            deemedSeparated.insert(std::make_unique<DeemedSeparatedHold>(2, 10));
+
+            // TIMBA starts at 9000, so the aircraft assigned to TIMBA is outside the published hold
+            this->publishedHolds.Add(
+                {
+                    1,
+                    "TIMBA",
+                    "TIMBA",
+                    9000,
+                    15000,
+                    12,
+                    "left",
+                    {},
+                    std::move(deemedSeparated)
+                }
+            );
+
+            this->publishedHolds.Add(
+                {
+                    2,
+                    "WILLO",
+                    "WILLO",
+                    7000,
+                    15000,
+                }
+            );
+            HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
+            display2.SetMinimumLevel(7000);
+            display2.SetMaximumLevel(15000);
+
+            std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
+            aircraft.insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
+            auto conflictingAircraft = std::make_shared<HoldingAircraft>("EZY234", std::set<std::string>({"TIMBA"}));
+            conflictingAircraft->SetAssignedHold("WILLO");
+            aircraft.insert(conflictingAircraft);
+
+
+            this->display.SetMinimumLevel(7000);
+            this->display.SetMaximumLevel(15000);
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetBaw123 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetBaw123, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetBaw123, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
+                .WillByDefault(Return(radarTargetBaw123));
+
+            ON_CALL(*radarTargetBaw123, GetPosition())
+                .WillByDefault(Return(this->timbaPosition));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetEzy234 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetEzy234, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetEzy234, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("EZY234"))
+                .WillByDefault(Return(radarTargetEzy234));
+
+            ON_CALL(*radarTargetEzy234, GetPosition())
+                .WillByDefault(Return(this->willoPosition));
+
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> mapped =
+                display2.MapAircraftToLevels(aircraft);
+
+            EXPECT_EQ(1, mapped.size());
+            EXPECT_EQ(2, mapped.at(8000).size());
+            EXPECT_EQ("BAW123", (*mapped.at(8000).cbegin())->GetCallsign());
+            EXPECT_EQ("EZY234", (*++mapped.at(8000).cbegin())->GetCallsign());
+        }
+
+        TEST_F(HoldDisplayTest, MappingAircraftToLevelsDoesntFilterOutAircraftNotInADeemedSeparatedHold)
+        {
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparated;
+            deemedSeparated.insert(std::make_unique<DeemedSeparatedHold>(2, 10));
+
+            this->publishedHolds.Add(
+                {
+                    1,
+                    "TIMBA",
+                    "TIMBA",
+                    7000,
+                    15000,
+                    12,
+                    "left",
+                    {},
+                    std::move(deemedSeparated)
+                }
+            );
+            this->publishedHolds.Add(
+                {
+                    2,
+                    "WILLO",
+                    "WILLO",
+                    7000,
+                    15000,
+                }
+            );
+            this->publishedHolds.Add(
+                {
+                    3,
+                    "MAY",
+                    "MAY",
+                    7000,
+                    15000,
+                }
+            );
+            HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
+            display2.SetMinimumLevel(7000);
+            display2.SetMaximumLevel(15000);
+
+            std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
+            aircraft.insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
+            auto conflictingAircraft = std::make_shared<HoldingAircraft>("EZY234", std::set<std::string>({"TIMBA"}));
+            conflictingAircraft->SetAssignedHold("MAY");
+            aircraft.insert(conflictingAircraft);
+
+
+            this->display.SetMinimumLevel(7000);
+            this->display.SetMaximumLevel(15000);
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetBaw123 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetBaw123, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetBaw123, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
+                .WillByDefault(Return(radarTargetBaw123));
+
+            ON_CALL(*radarTargetBaw123, GetPosition())
+                .WillByDefault(Return(this->timbaPosition));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetEzy234 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetEzy234, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetEzy234, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("EZY234"))
+                .WillByDefault(Return(radarTargetEzy234));
+
+            ON_CALL(*radarTargetEzy234, GetPosition())
+                .WillByDefault(Return(this->willoPosition));
+
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> mapped =
+                display2.MapAircraftToLevels(aircraft);
+
+            EXPECT_EQ(1, mapped.size());
+            EXPECT_EQ(2, mapped.at(8000).size());
+            EXPECT_EQ("BAW123", (*mapped.at(8000).cbegin())->GetCallsign());
+            EXPECT_EQ("EZY234", (*++mapped.at(8000).cbegin())->GetCallsign());
+        }
+
+        TEST_F(HoldDisplayTest, MappingAircraftToLevelsFiltersOutAircraftThatArentAssignedToTheHold)
+        {
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparated;
+            deemedSeparated.insert(std::make_unique<DeemedSeparatedHold>(2, 10));
+
+            // TIMBA starts at 9000, so the aircraft assigned to TIMBA is outside the published hold
+            this->publishedHolds.Add(
+                {
+                    1,
+                    "TIMBA",
+                    "TIMBA",
+                    7000,
+                    15000,
+                    12,
+                    "left",
+                    {},
+                    std::move(deemedSeparated)
+                }
+            );
+
+            this->publishedHolds.Add(
+                {
+                    2,
+                    "WILLO",
+                    "WILLO",
+                    7000,
+                    15000,
+                }
+            );
+            HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager);
+            display2.SetMinimumLevel(7000);
+            display2.SetMaximumLevel(15000);
+
+            std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
+            aircraft.insert(std::make_shared<HoldingAircraft>("BAW123", "TIMBA"));
+            auto conflictingAircraft = std::make_shared<HoldingAircraft>("EZY234", std::set<std::string>({"TIMBA"}));
+            conflictingAircraft->SetAssignedHold("WILLO");
+            aircraft.insert(conflictingAircraft);
+            auto conflictingAircraft2 = std::make_shared<HoldingAircraft>("BAW012", std::set<std::string>({"TIMBA"}));
+            conflictingAircraft2->SetAssignedHold("WILLO");
+            aircraft.insert(conflictingAircraft2);
+
+
+            this->display.SetMinimumLevel(7000);
+            this->display.SetMaximumLevel(15000);
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetBaw123 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetBaw123, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetBaw123, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
+                .WillByDefault(Return(radarTargetBaw123));
+
+            ON_CALL(*radarTargetBaw123, GetPosition())
+                .WillByDefault(Return(this->timbaPosition));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetEzy234 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetEzy234, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetEzy234, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("EZY234"))
+                .WillByDefault(Return(radarTargetEzy234));
+
+            ON_CALL(*radarTargetEzy234, GetPosition())
+                .WillByDefault(Return(this->willoPosition));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> radarTargetBaw012 =
+                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+            ON_CALL(*radarTargetBaw012, GetFlightLevel())
+                .WillByDefault(Return(8000));
+
+            ON_CALL(*radarTargetBaw012, GetVerticalSpeed())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW012"))
+                .WillByDefault(Return(radarTargetBaw012));
+
+            ON_CALL(*radarTargetBaw012, GetPosition())
+                .WillByDefault(Return(this->willoPosition));
+
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> mapped =
+                display2.MapAircraftToLevels(aircraft);
+
+            EXPECT_EQ(1, mapped.size());
+            EXPECT_EQ(1, mapped.at(8000).size());
+            EXPECT_EQ("BAW123", (*mapped.at(8000).cbegin())->GetCallsign());
         }
     }  // namespace Hold
 }  // namespace UKControllerPluginTest

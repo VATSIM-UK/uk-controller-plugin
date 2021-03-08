@@ -3,6 +3,7 @@
 #include "hold/HoldingDataSerializer.h"
 #include "hold/HoldingData.h"
 #include "hold/HoldRestrictionSerializer.h"
+#include "hold/DeemedSeparatedHoldSerializer.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
@@ -46,6 +47,10 @@ namespace UKControllerPlugin {
             std::set<std::unique_ptr<AbstractHoldLevelRestriction>> restrictions;
             hold_restriction_from_json(json.at("restrictions"), std::move(restrictions), container);
             holdingData.restrictions = std::move(restrictions);
+
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds;
+            deemed_separated_from_json(json.at("deemed_separated_holds"), deemedSeparatedHolds);
+            holdingData.deemedSeparatedHolds = std::move(deemedSeparatedHolds);
         }
 
         bool JsonValid(const nlohmann::json & data)
@@ -67,7 +72,9 @@ namespace UKControllerPlugin {
                 data.at("turn_direction").is_string() &&
                 (data.at("turn_direction") == "left" || data.at("turn_direction") == "right") &&
                 data.find("restrictions") != data.end() &&
-                data.at("restrictions").is_array();
+                data.at("restrictions").is_array() &&
+                data.contains("deemed_separated_holds") &&
+                data.at("deemed_separated_holds").is_array();
         }
     }  // namespace Hold
 }  // namespace UKControllerPlugin
