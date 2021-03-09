@@ -15,3 +15,5 @@
 113 - RECAT-EU Category
 114 - UK Wake Category / RECAT-EU Category Combined
 115 - Aircraft Type / RECAT-EU Category
+116 - Flight Information Service
+117 - Flight Information Service Or Blank

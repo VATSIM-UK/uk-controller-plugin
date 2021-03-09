@@ -1,5 +1,6 @@
 #pragma once
 #include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -17,14 +18,17 @@ namespace UKControllerPlugin {
                 unsigned int maximum = 0,
                 unsigned int inbound = 361,
                 std::string turnDirection = "up",
-                std::set<std::unique_ptr<UKControllerPlugin::Hold::AbstractHoldLevelRestriction>> restrictions = {}
+                std::set<std::unique_ptr<AbstractHoldLevelRestriction>> restrictions = {},
+                std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds = {}
             ) : identifier(identifier), fix(fix), description(description), minimum(minimum), maximum(maximum),
-                inbound(inbound), turnDirection(turnDirection), restrictions(std::move(restrictions))
+                inbound(inbound), turnDirection(turnDirection), restrictions(std::move(restrictions)),
+                deemedSeparatedHolds(std::move(deemedSeparatedHolds))
             {};
-            HoldingData(HoldingData const &) = delete;
-            HoldingData &operator=(HoldingData const &) = delete;
-            HoldingData(HoldingData && original);
-            HoldingData &operator=(HoldingData && original);
+            HoldingData(HoldingData const&) = delete;
+            HoldingData& operator=(HoldingData const&) = delete;
+            HoldingData(HoldingData&& original);
+            HoldingData &operator=(HoldingData && original) noexcept;
+            bool LevelWithinHold(unsigned int level) const;
 
             // The id for the hold
             unsigned int identifier;
@@ -50,12 +54,23 @@ namespace UKControllerPlugin {
             // The restrictions in place regarding levels
             std::set<std::unique_ptr<UKControllerPlugin::Hold::AbstractHoldLevelRestriction>> restrictions;
 
+            // Holds against which this hold is deemed separated
+            std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds;
+
             /*
                 Compare two holds
             */
             bool operator== (const HoldingData & compare) const
             {
                 return this->identifier == compare.identifier;
+            }
+
+            /*
+                Compare two holds, negatively
+            */
+            bool operator!=(const HoldingData& compare) const
+            {
+                return !this->operator==(compare);
             }
 
             static const std::string TURN_DIRECTION_LEFT;

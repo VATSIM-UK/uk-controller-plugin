@@ -16,6 +16,7 @@ namespace UKControllerPluginTest {
                 )
             );
             MOCK_METHOD3(OpenMessageBox, int(LPCWSTR, LPCWSTR, int));
+            MOCK_METHOD1(OpenWebBrowser, void(std::wstring));
             MOCK_METHOD1(PlayWave, void(LPCTSTR));
             MOCK_METHOD3(WriteToFile, void(std::wstring, std::string, bool));
             MOCK_METHOD2(ReadFromFileMock, std::string(std::wstring, bool));

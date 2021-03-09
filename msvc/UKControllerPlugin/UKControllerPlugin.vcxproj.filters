@@ -157,6 +157,9 @@
     <Filter Include="src\notifications">
       <UniqueIdentifier>{fa57f24c-c6ec-4426-aa14-bed215621718}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\flightinformationservice">
+      <UniqueIdentifier>{8da5b16f-8a28-43c6-95c8-4020f0a8adf8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1113,6 +1116,27 @@
     <ClInclude Include="..\..\src\notifications\UnreadNotificationsMessage.h">
       <Filter>src\notifications</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\plugin\PluginInformationMessage.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\plugin\PluginInformationBootstrap.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\plugin\PluginHelpPage.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\flightinformationservice\FlightInformationServiceTagItem.h">
+      <Filter>src\flightinformationservice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\flightinformationservice\FlightInformationServiceModule.h">
+      <Filter>src\flightinformationservice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\DeemedSeparatedHold.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hold\DeemedSeparatedHoldSerializer.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1884,6 +1908,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\notifications\UnreadNotificationsMessage.cpp">
       <Filter>src\notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginInformationMessage.cpp">
+      <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginInformationBootstrap.cpp">
+      <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginHelpPage.cpp">
+      <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\flightinformationservice\FlightInformationServiceTagItem.cpp">
+      <Filter>src\flightinformationservice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\flightinformationservice\FlightInformationServiceModule.cpp">
+      <Filter>src\flightinformationservice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hold\DeemedSeparatedHoldSerializer.cpp">
+      <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -81,6 +81,8 @@
     <ClCompile Include="..\..\test\test\euroscope\RadarTargetEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\RunwayDialogAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightinformationservice\FlightInformationServiceModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\flightinformationservice\FlightInformationServiceTagItemTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightplanStorageBootstrapTest.cpp" />
@@ -100,6 +102,7 @@
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\BlockedHoldLevelRestrictionTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\CompareHoldsDescriptionTest.cpp" />
+    <ClCompile Include="..\..\test\test\hold\DeemedSeparatedHoldSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldConfigurationMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldDisplayFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\hold\HoldDisplayManagerTest.cpp" />
@@ -182,6 +185,9 @@
     <ClCompile Include="..\..\test\test\ownership\AirfieldsOwnedQueryMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\FunctionCallEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\plugin\PluginHelpPageTest.cpp" />
+    <ClCompile Include="..\..\test\test\plugin\PluginInformationBootstrapTest.cpp" />
+    <ClCompile Include="..\..\test\test\plugin\PluginInformationMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\PopupMenuItemTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\UkPluginBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\prenote\AbstractPrenoteTest.cpp" />

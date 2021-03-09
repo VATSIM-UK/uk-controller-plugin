@@ -73,7 +73,8 @@ namespace UKControllerPluginTest {
                         { "maximum_altitude", 15000 },
                         { "inbound_heading", 309 },
                         { "turn_direction", "right" },
-                        { "restrictions", nlohmann::json::array()}
+                        { "restrictions", nlohmann::json::array()},
+                        { "deemed_separated_holds", nlohmann::json::array()}
                     };
 
                     nlohmann::json hold2;
@@ -85,7 +86,8 @@ namespace UKControllerPluginTest {
                         { "maximum_altitude", 15000 },
                         { "inbound_heading", 309 },
                         { "turn_direction", "right" },
-                        { "restrictions", nlohmann::json::array()}
+                        { "restrictions", nlohmann::json::array()},
+                        { "deemed_separated_holds", nlohmann::json::array()}
                     };
 
                     nlohmann::json profile1;
@@ -213,13 +215,16 @@ namespace UKControllerPluginTest {
                 15000,
                 309,
                 HoldingData::TURN_DIRECTION_RIGHT,
+                {},
                 {}
             };
 
-            std::set<HoldingData, CompareHolds> expectedHoldSet;
-            expectedHoldSet.emplace(std::move(expectedHold));
+            std::set<const HoldingData*> expectedHoldSet;
+            expectedHoldSet.emplace(&expectedHold);
 
-            EXPECT_EQ(expectedHoldSet, this->container.publishedHolds->Get("TIMBA"));
+            std::set<const HoldingData*> holds = this->container.publishedHolds->GetForFix("TIMBA");
+            EXPECT_EQ(1, holds.size());
+            EXPECT_EQ(expectedHold, **holds.cbegin());
         }
 
         TEST_F(HoldModuleTest, ItLoadsAssignedHolds)
