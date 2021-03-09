@@ -38,7 +38,7 @@ namespace UKControllerPlugin {
                 persistence.settingsRepository->GetSetting("api-key")
             );
             persistence.api.reset(
-                new ApiHelper(*persistence.curl, requestBuilder, *persistence.windows)
+                new ApiHelper(*persistence.curl, requestBuilder)
             );
 
             persistence.taskRunner = std::make_unique<TaskRunner>(3);

@@ -8,7 +8,6 @@
 #include "helper/ApiRequestHelperFunctions.h"
 #include "api/ApiNotFoundException.h"
 #include "api/ApiNotAuthorisedException.h"
-#include "mock/MockWinApi.h"
 #include "squawk/ApiSquawkAllocation.h"
 #include "srd/SrdSearchParameters.h"
 
@@ -22,7 +21,6 @@ using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
-using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using UKControllerPlugin::Srd::SrdSearchParameters;
 using ::testing::Test;
@@ -38,13 +36,12 @@ class ApiHelperTest : public Test
     public:
 
         ApiHelperTest()
-            : helper(mockCurlApi, GetApiRequestBuilder(), mockWinApi)
+            : helper(mockCurlApi, GetApiRequestBuilder())
         {
 
         }
 
         ApiHelper helper;
-        NiceMock<MockWinApi> mockWinApi;
         NiceMock<MockCurlApi> mockCurlApi;
 };
 

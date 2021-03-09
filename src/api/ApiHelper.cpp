@@ -8,7 +8,6 @@
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
 #include "squawk/SquawkValidator.h"
-#include "windows/WinApiInterface.h"
 
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Curl::CurlResponse;
@@ -19,7 +18,6 @@ using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPlugin::Squawk::SquawkValidator;
-using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using UKControllerPlugin::Srd::SrdSearchParameters;
 
@@ -28,9 +26,8 @@ namespace UKControllerPlugin {
 
         ApiHelper::ApiHelper(
             CurlInterface & curlApi,
-            ApiRequestBuilder requestBuilder,
-            WinApiInterface & winApi
-        ) : curlApi(curlApi), requestBuilder(requestBuilder), winApi(winApi)
+            ApiRequestBuilder requestBuilder
+        ) : requestBuilder(requestBuilder), curlApi(curlApi)
         {
 
         }

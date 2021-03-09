@@ -24,8 +24,7 @@ namespace UKControllerPlugin {
             public:
                 ApiHelper(
                     UKControllerPlugin::Curl::CurlInterface & curlApi,
-                    UKControllerPlugin::Api::ApiRequestBuilder requestBuilder,
-                    UKControllerPlugin::Windows::WinApiInterface & winApi
+                    ApiRequestBuilder requestBuilder
                 );
 
                 UKControllerPlugin::Squawk::ApiSquawkAllocation CreateGeneralSquawkAssignment(
@@ -99,9 +98,6 @@ namespace UKControllerPlugin {
                     const ApiResponse response,
                     std::string callsign
                 ) const;
-
-                // For doing things on the filesystem, if we really need to
-                UKControllerPlugin::Windows::WinApiInterface & winApi;
 
                 // The API request builder, that builds our CurlRequests
                 UKControllerPlugin::Api::ApiRequestBuilder requestBuilder;
