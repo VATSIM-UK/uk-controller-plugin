@@ -34,7 +34,7 @@ namespace UKControllerPlugin {
             UKControllerPlugin::Bootstrap::LocateApiSettings(*persistence.windows, *persistence.settingsRepository);
 
             ApiRequestBuilder requestBuilder(
-                persistence.settingsRepository->GetSetting("api-url"),
+                persistence.settingsRepository->GetSetting("api-url", "https://ukcp.vatsim.uk"),
                 persistence.settingsRepository->GetSetting("api-key")
             );
             persistence.api.reset(

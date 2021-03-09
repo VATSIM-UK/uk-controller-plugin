@@ -145,12 +145,20 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(repo.GetSetting("test1") == "testValue1");
         }
 
-        TEST(SettingRepository, GetSettingReturnsEmptyStringIfNotSet)
+        TEST(SettingRepository, GetSettingReturnsEmptyStringByDefaultIfNotSet)
         {
             StrictMock<MockWinApi> winApiMock;
 
             SettingRepository repo(winApiMock);
             EXPECT_TRUE("" == repo.GetSetting("test"));
+        }
+
+        TEST(SettingRepository, GetSettingReturnsDefaultvalueIfProvided)
+        {
+            StrictMock<MockWinApi> winApiMock;
+
+            SettingRepository repo(winApiMock);
+            EXPECT_TRUE("test2" == repo.GetSetting("test", "test2"));
         }
 
         TEST(SettingRepository, UpdateSettingChangesSettingValue)

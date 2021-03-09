@@ -87,11 +87,11 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Returns the value for a given setting, or empty satring if not found.
+            Returns the value for a given setting, or empty string if not found.
         */
-        std::string SettingRepository::GetSetting(std::string setting) const
+        std::string SettingRepository::GetSetting(std::string setting, std::string defaultValue) const
         {
-            return (this->HasSetting(setting)) ? this->settings.at(setting).value : "";
+            return (this->HasSetting(setting)) ? this->settings.at(setting).value : defaultValue;
         }
 
         /*

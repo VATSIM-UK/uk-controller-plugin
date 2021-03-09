@@ -6,7 +6,6 @@ using UKControllerPlugin::Srd::SrdSearchParameters;
 
 namespace UKControllerPlugin {
     namespace Api {
-
         ApiRequestBuilder::ApiRequestBuilder(std::string apiDomain, std::string apiKey)
             : apiDomain(apiDomain), apiKey(apiKey)
         {
