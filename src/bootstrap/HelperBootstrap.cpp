@@ -5,7 +5,7 @@
 #include "setting/SettingRepositoryFactory.h"
 #include "task/TaskRunner.h"
 #include "api/ApiHelper.h"
-#include "bootstrap/LocateApiSettings.h"
+#include "api/LocateApiSettings.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "api/ApiConfigurationMenuItem.h"
 #include "euroscope/CallbackFunction.h"
@@ -31,7 +31,7 @@ namespace UKControllerPlugin {
             persistence.settingsRepository = SettingRepositoryFactory::Create(*persistence.windows);
 
             // Prompt for a settings file, if one isn't there.
-            UKControllerPlugin::Bootstrap::LocateApiSettings(*persistence.windows, *persistence.settingsRepository);
+            Api::LocateApiSettings(*persistence.windows, *persistence.settingsRepository);
 
             ApiRequestBuilder requestBuilder(
                 persistence.settingsRepository->GetSetting("api-url", "https://ukcp.vatsim.uk"),

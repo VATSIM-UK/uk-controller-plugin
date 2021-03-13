@@ -1,6 +1,6 @@
 #include "pch/stdafx.h"
 #include "api/ApiConfigurationMenuItem.h"
-#include "bootstrap/LocateApiSettings.h"
+#include "api/LocateApiSettings.h"
 
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Windows::WinApiInterface;
@@ -15,7 +15,7 @@ namespace UKControllerPlugin {
 
         void ApiConfigurationMenuItem::Configure(int functionId, std::string subject, RECT area)
         {
-            UKControllerPlugin::Bootstrap::UserRequestedKeyUpdate(this->winApi);
+            UserRequestedKeyUpdate(this->winApi);
         }
 
         /*

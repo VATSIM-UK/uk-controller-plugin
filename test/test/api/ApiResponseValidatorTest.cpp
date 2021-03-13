@@ -1,9 +1,9 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "api/ApiResponseValidator.h"
 
 using UKControllerPlugin::Api::ApiResponseValidator;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Api {
 
         TEST(ApiResponseValidator, ValidateSchemaFailsDataNotObject)
@@ -93,4 +93,4 @@ namespace UKControllerPluginTest {
             );
         }
     }  // namespace Api
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

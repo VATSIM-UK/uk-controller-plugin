@@ -9,7 +9,7 @@ namespace UKControllerPlugin {
         class ApiNotAuthorisedException : public ApiException
         {
             public:
-                ApiNotAuthorisedException::ApiNotAuthorisedException(std::string message)
+                ApiNotAuthorisedException(std::string message)
                     : ApiException("ApiNotAuthorisedException: " + message) {}
         };
     }  // namespace Api

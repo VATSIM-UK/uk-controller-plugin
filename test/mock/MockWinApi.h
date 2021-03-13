@@ -1,4 +1,5 @@
 #pragma once
+#include "pch/testingutilspch.h"
 #include "windows/WinApiInterface.h"
 
 namespace UKControllerPluginTest {

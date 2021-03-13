@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "squawk/SquawkValidator.h"
 
 using UKControllerPlugin::Squawk::SquawkValidator;

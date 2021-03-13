@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "api/ApiAuthChecker.h"
 #include "mock/MockWinApi.h"
 #include "mock/MockApiInterface.h"
@@ -18,7 +18,7 @@ using ::testing::Throw;
 using ::testing::Return;
 using ::testing::_;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Api {
 
         class ApiAuthCheckerTest : public Test
@@ -162,4 +162,4 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(ApiAuthChecker::IsAuthorised(this->mockApi, this->mockWindows, this->settingRepo));
         }
     }  // namespace Api
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

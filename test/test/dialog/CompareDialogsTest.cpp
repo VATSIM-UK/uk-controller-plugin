@@ -1,5 +1,5 @@
 #pragma once
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "dialog/DialogData.h"
 #include "dialog/CompareDialogs.h"
 
@@ -7,7 +7,7 @@ using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Dialog::CompareDialogs;
 using ::testing::Test;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Dialog {
 
         class CompareDialogsTest : public Test
@@ -35,4 +35,4 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(compare(dialog1, dialog2));
         }
     }  // namespace Dialog
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

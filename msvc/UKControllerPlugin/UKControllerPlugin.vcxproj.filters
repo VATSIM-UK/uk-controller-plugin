@@ -10,9 +10,6 @@
     <Filter Include="src">
       <UniqueIdentifier>{419d2044-2e6b-4662-aa66-fdd08d87b626}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\api">
-      <UniqueIdentifier>{06dad765-ac6f-4471-bff6-ae3d219af1c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\bootstrap">
       <UniqueIdentifier>{19b653e5-905c-4107-8932-8ab7740d7351}</UniqueIdentifier>
     </Filter>
@@ -24,9 +21,6 @@
     </Filter>
     <Filter Include="src\countdown">
       <UniqueIdentifier>{7bb15eb7-9ade-4537-a73a-a579c6bca3bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\curl">
-      <UniqueIdentifier>{c41768cd-5eb1-4c76-9dfc-dd9757a621cd}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\datablock">
       <UniqueIdentifier>{77c6b71e-4000-40a9-a30c-c0ee6ba26c44}</UniqueIdentifier>
@@ -42,9 +36,6 @@
     </Filter>
     <Filter Include="src\graphics">
       <UniqueIdentifier>{66e5515e-02e7-4a41-afc3-5b4e52cdbd0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\helper">
-      <UniqueIdentifier>{613ccc33-94e4-4c36-947f-c644e4375526}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\historytrail">
       <UniqueIdentifier>{3215e3ee-02bf-41c7-aced-e8d1c75f97f8}</UniqueIdentifier>
@@ -79,9 +70,6 @@
     <Filter Include="src\radarscreen">
       <UniqueIdentifier>{4187ca71-9d6d-42ce-a54a-b640e858be1e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\setting">
-      <UniqueIdentifier>{73c4624a-c18b-4e39-a696-96ffe34fc6a1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\squawk">
       <UniqueIdentifier>{9c29be6e-3c16-4613-b5f2-3a5c27c2eea5}</UniqueIdentifier>
     </Filter>
@@ -97,14 +85,8 @@
     <Filter Include="src\update">
       <UniqueIdentifier>{6b827c2d-97be-4c9d-859f-37928ad019fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\windows">
-      <UniqueIdentifier>{f86572dd-4a54-4796-b3d6-3f5fa88fc067}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resource\sound">
       <UniqueIdentifier>{682d614a-f88f-4651-82b3-3255fe71008a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\log">
-      <UniqueIdentifier>{286593d0-cf38-4b6a-912f-950d9f1baa19}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\pch">
       <UniqueIdentifier>{8ad4886f-3d76-45d7-94cd-95efb3211f25}</UniqueIdentifier>
@@ -114,9 +96,6 @@
     </Filter>
     <Filter Include="src\hold">
       <UniqueIdentifier>{93c29766-c3d5-47e0-8cfd-5d71d115cd0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\dialog">
-      <UniqueIdentifier>{e0f95056-2640-4e39-bc95-a21844516f05}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\websocket">
       <UniqueIdentifier>{a390fff4-5510-4260-9be4-51f0438acefa}</UniqueIdentifier>
@@ -160,6 +139,9 @@
     <Filter Include="src\flightinformationservice">
       <UniqueIdentifier>{8da5b16f-8a28-43c6-95c8-4020f0a8adf8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\api">
+      <UniqueIdentifier>{91dce47e-ea92-4c1b-b1ed-5a792baecff7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -170,36 +152,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\airfield\NormaliseSid.h">
       <Filter>src\airfield</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiAuthChecker.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiException.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiHelper.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiInterface.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiNotAuthorisedException.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiNotFoundException.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiRequestBuilder.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiResponse.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiResponseFactory.h">
-      <Filter>src\api</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiResponseValidator.h">
-      <Filter>src\api</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bootstrap\BootstrapWarningMessage.h">
       <Filter>src\bootstrap</Filter>
@@ -269,21 +221,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\countdown\CountdownTimer.h">
       <Filter>src\countdown</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\curl\CurlApi.h">
-      <Filter>src\curl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\curl\CurlInterface.h">
-      <Filter>src\curl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\curl\CurlRequest.h">
-      <Filter>src\curl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\curl\CurlResponse.h">
-      <Filter>src\curl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\curl\HttpException.h">
-      <Filter>src\curl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\datablock\DisplayTime.h">
       <Filter>src\datablock</Filter>
@@ -377,9 +314,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\GdiplusBrushes.h">
       <Filter>src\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\helper\HelperFunctions.h">
-      <Filter>src\helper</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\historytrail\AircraftHistoryTrail.h">
       <Filter>src\historytrail</Filter>
@@ -570,15 +504,6 @@
     <ClInclude Include="..\..\src\radarscreen\UKRadarScreen.h">
       <Filter>src\radarscreen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\setting\SettingRepository.h">
-      <Filter>src\setting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h">
-      <Filter>src\setting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\setting\SettingValue.h">
-      <Filter>src\setting</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\squawk\SquawkAssignment.h">
       <Filter>src\squawk</Filter>
     </ClInclude>
@@ -589,9 +514,6 @@
       <Filter>src\squawk</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\squawk\SquawkModule.h">
-      <Filter>src\squawk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\squawk\SquawkValidator.h">
       <Filter>src\squawk</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\tag\TagFunction.h">
@@ -621,12 +543,6 @@
     <ClInclude Include="..\..\src\update\PluginVersion.h">
       <Filter>src\update</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windows\WinApi.h">
-      <Filter>src\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windows\WinApiInterface.h">
-      <Filter>src\windows</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
@@ -635,9 +551,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.h">
       <Filter>src\offblock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bootstrap\LocateApiSettings.h">
-      <Filter>src\bootstrap</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bootstrap\DuplicatePlugin.h">
       <Filter>src\bootstrap</Filter>
@@ -660,14 +573,8 @@
     <ClInclude Include="..\..\resource\resource.h">
       <Filter>resource</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\log\LoggerFunctions.h">
-      <Filter>src\log</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\pch\stdafx.h">
       <Filter>src\pch</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\log\LoggerBootstrap.h">
-      <Filter>src\log</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.h">
       <Filter>src\offblock</Filter>
@@ -744,18 +651,6 @@
     <ClInclude Include="..\..\src\hold\HoldConfigurationDialog.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dialog\DialogManager.h">
-      <Filter>src\dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dialog\DialogData.h">
-      <Filter>src\dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dialog\CompareDialogs.h">
-      <Filter>src\dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dialog\DialogProviderInterface.h">
-      <Filter>src\dialog</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldingDataSerializer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -777,9 +672,6 @@
     <ClInclude Include="..\..\src\hold\HoldRenderer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\dialog\DialogCallArgument.h">
-      <Filter>src\dialog</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldConfigurationMenuItem.h">
       <Filter>src\hold</Filter>
     </ClInclude>
@@ -797,9 +689,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\metar\PressureMonitorBootstrap.h">
       <Filter>src\metar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h">
-      <Filter>src\api</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h">
       <Filter>src\websocket</Filter>
@@ -975,9 +864,6 @@
     <ClInclude Include="..\..\src\regional\RegionalPressureManagerFactory.h">
       <Filter>src\regional</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\srd\SrdSearchParameters.h">
-      <Filter>src\srd</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\srd\SrdModule.h">
       <Filter>src\srd</Filter>
     </ClInclude>
@@ -1137,6 +1023,9 @@
     <ClInclude Include="..\..\src\hold\DeemedSeparatedHoldSerializer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h">
+      <Filter>src\api</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1158,24 +1047,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\airfield\NormaliseSid.cpp">
       <Filter>src\airfield</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\api\ApiAuthChecker.cpp">
-      <Filter>src\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\api\ApiHelper.cpp">
-      <Filter>src\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\api\ApiRequestBuilder.cpp">
-      <Filter>src\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\api\ApiResponse.cpp">
-      <Filter>src\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\api\ApiResponseFactory.cpp">
-      <Filter>src\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\api\ApiResponseValidator.cpp">
-      <Filter>src\api</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bootstrap\BootstrapWarningMessage.cpp">
       <Filter>src\bootstrap</Filter>
@@ -1240,15 +1111,6 @@
     <ClCompile Include="..\..\src\countdown\CountdownTimer.cpp">
       <Filter>src\countdown</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\curl\CurlApi.cpp">
-      <Filter>src\curl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\curl\CurlRequest.cpp">
-      <Filter>src\curl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\curl\CurlResponse.cpp">
-      <Filter>src\curl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\datablock\DisplayTime.cpp">
       <Filter>src\datablock</Filter>
     </ClCompile>
@@ -1308,9 +1170,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\GdiGraphicsWrapper.cpp">
       <Filter>src\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\helper\HelperFunctions.cpp">
-      <Filter>src\helper</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\historytrail\AircraftHistoryTrail.cpp">
       <Filter>src\historytrail</Filter>
@@ -1480,12 +1339,6 @@
     <ClCompile Include="..\..\src\radarscreen\UKRadarScreen.cpp">
       <Filter>src\radarscreen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\setting\SettingRepository.cpp">
-      <Filter>src\setting</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp">
-      <Filter>src\setting</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\squawk\SquawkAssignment.cpp">
       <Filter>src\squawk</Filter>
     </ClCompile>
@@ -1496,9 +1349,6 @@
       <Filter>src\squawk</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\squawk\SquawkModule.cpp">
-      <Filter>src\squawk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\squawk\SquawkValidator.cpp">
       <Filter>src\squawk</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\tag\TagFunction.cpp">
@@ -1519,14 +1369,8 @@
     <ClCompile Include="..\..\src\update\PluginVersion.cpp">
       <Filter>src\update</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\windows\WinApi.cpp">
-      <Filter>src\windows</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp">
       <Filter>src\euroscope</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bootstrap\LocateApiSettings.cpp">
-      <Filter>src\bootstrap</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bootstrap\DuplicatePlugin.cpp">
       <Filter>src\bootstrap</Filter>
@@ -1540,14 +1384,8 @@
     <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp">
       <Filter>src\flightplan</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\log\LoggerFunctions.cpp">
-      <Filter>src\log</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\pch\stdafx.cpp">
       <Filter>src\pch</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\log\LoggerBootstrap.cpp">
-      <Filter>src\log</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\offblock\EstimatedDepartureTimeEventHandler.cpp">
       <Filter>src\offblock</Filter>
@@ -1609,12 +1447,6 @@
     <ClCompile Include="..\..\src\hold\HoldConfigurationDialog.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\dialog\DialogManager.cpp">
-      <Filter>src\dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\dialog\CompareDialogs.cpp">
-      <Filter>src\dialog</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\hold\HoldingData.cpp">
       <Filter>src\hold</Filter>
     </ClCompile>
@@ -1653,9 +1485,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\metar\PressureMonitorBootstrap.cpp">
       <Filter>src\metar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp">
-      <Filter>src\api</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\countdown\TimerConfigurationManager.cpp">
       <Filter>src\countdown</Filter>
@@ -1926,6 +1755,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\hold\DeemedSeparatedHoldSerializer.cpp">
       <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp">
+      <Filter>src\api</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -11,7 +11,8 @@ namespace UKControllerPlugin {
 
 
 namespace UKControllerPlugin {
-namespace Bootstrap {
+    namespace Api
+    {
 
     void LocateApiSettings(
         UKControllerPlugin::Windows::WinApiInterface & winApi,
@@ -24,6 +25,5 @@ namespace Bootstrap {
     );
     bool ReplaceApiSettings(UKControllerPlugin::Windows::WinApiInterface & winApi);
     void UserRequestedKeyUpdate(UKControllerPlugin::Windows::WinApiInterface & winApi);
-
-}  // namespace Bootstrap
+    } // namespace Api
 }  // namespace UKControllerPlugin

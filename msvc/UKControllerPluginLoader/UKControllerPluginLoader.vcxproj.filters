@@ -19,7 +19,7 @@
     <ClCompile Include="..\..\src\loader\dllmain.cpp">
       <Filter>src\loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\loader\loaderfunctions.cpp">
+    <ClCompile Include="..\..\src\loader\loader.cpp">
       <Filter>src\loader</Filter>
     </ClCompile>
   </ItemGroup>
@@ -27,7 +27,7 @@
     <ClInclude Include="..\..\src\loader\pch.h">
       <Filter>src\loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\loader\loaderfunctions.h">
+    <ClInclude Include="..\..\src\loader\loader.h">
       <Filter>src\loader</Filter>
     </ClInclude>
   </ItemGroup>

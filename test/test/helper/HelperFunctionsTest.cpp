@@ -1,9 +1,9 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::HelperFunctions;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
 
     TEST(HelperFunctions, IsAnIntegerReturnsTrueIfInteger)
     {
@@ -312,4 +312,4 @@ namespace UKControllerPluginTest {
         std::vector<std::string> values = { "moo", "cluck", "bell" };
         EXPECT_TRUE("moo;cluck;bell" == HelperFunctions::VectorToDelimetedString(values, ";"));
     }
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

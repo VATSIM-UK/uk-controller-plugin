@@ -1,5 +1,5 @@
-#include "pch/stdafx.h"
-#include "bootstrap/LocateApiSettings.h"
+#include "utils/pch.h"
+#include "api/LocateApiSettings.h"
 #include "windows/WinApiInterface.h"
 #include "setting/SettingRepository.h"
 
@@ -7,7 +7,8 @@ using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Setting::SettingRepository;
 
 namespace UKControllerPlugin {
-namespace Bootstrap {
+    namespace Api
+    {
 
     void LocateApiSettings(WinApiInterface & winApi, SettingRepository & settings)
     {
@@ -108,5 +109,5 @@ namespace Bootstrap {
             MB_OK | MB_ICONINFORMATION
         );
     }
-}  // namespace Bootstrap
+    } // namespace Api
 }  // namespace UKControllerPlugin

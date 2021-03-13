@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "setting/SettingRepository.h"
 #include "setting/SettingValue.h"
 #include "mock/MockWinApi.h"
@@ -10,7 +10,7 @@ using ::testing::StrictMock;
 using ::testing::Return;
 using ::testing::Throw;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Setting {
 
         TEST(SettingRepository, AddSettingValueAddsSetting)
@@ -277,4 +277,4 @@ namespace UKControllerPluginTest {
             repo.WriteSettingsToFile();
         }
     }  // namespace Setting
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

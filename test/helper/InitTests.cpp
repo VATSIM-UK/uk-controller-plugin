@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/testingutilspch.h"
 #include "helper/TestEnvironment.h"
 
 int main(int argc, char** argv) {

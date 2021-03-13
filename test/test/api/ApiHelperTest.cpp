@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "api/ApiHelper.h"
 #include "curl/CurlInterface.h"
 #include "api/ApiException.h"
@@ -28,7 +28,7 @@ using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::_;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
 namespace Api {
 
 class ApiHelperTest : public Test
@@ -883,4 +883,4 @@ TEST_F(ApiHelperTest, ReadNotificationMakesRequest)
     EXPECT_NO_THROW(this->helper.ReadNotification(1));
 }
 }  // namespace Api
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

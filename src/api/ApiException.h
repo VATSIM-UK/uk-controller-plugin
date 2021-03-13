@@ -10,7 +10,7 @@ namespace UKControllerPlugin {
         class ApiException : public std::runtime_error
         {
             public:
-                ApiException::ApiException(std::string message) : runtime_error(message) {}
+                ApiException(std::string message) : runtime_error(message) {}
         };
     }  // namespace Api
 }  // namespace UKControllerPlugin

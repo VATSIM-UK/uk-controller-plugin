@@ -25,9 +25,6 @@
     <Filter Include="test\countdown">
       <UniqueIdentifier>{750778a5-a6e2-4471-9c4c-3776dd242e0c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test\curl">
-      <UniqueIdentifier>{693a502f-de1a-4147-b261-d449532e009d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="test\datablock">
       <UniqueIdentifier>{57203cf0-bbc6-46fe-b5f2-db30b201a92c}</UniqueIdentifier>
     </Filter>
@@ -39,9 +36,6 @@
     </Filter>
     <Filter Include="test\flightplan">
       <UniqueIdentifier>{04b8bd42-777a-40b6-af2b-c503b63d15be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="test\helper">
-      <UniqueIdentifier>{4c7591f8-1857-4f75-ba6e-7e325eac6c7a}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\historytrail">
       <UniqueIdentifier>{f9758cb1-b448-466e-a343-431527c3126c}</UniqueIdentifier>
@@ -76,9 +70,6 @@
     <Filter Include="test\radarscreen">
       <UniqueIdentifier>{ad80bef2-1452-4ae1-81b8-a9e397696f93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test\setting">
-      <UniqueIdentifier>{b519b079-25dd-4126-be2c-bc2fb0f215a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="test\squawk">
       <UniqueIdentifier>{e9f7c4c9-d182-4ae7-9f2b-371af399afad}</UniqueIdentifier>
     </Filter>
@@ -99,12 +90,6 @@
     </Filter>
     <Filter Include="test\hold">
       <UniqueIdentifier>{d5e45187-7853-49f0-b2f3-fdeee1d265e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="test\dialog">
-      <UniqueIdentifier>{9c9e30c3-8415-4c15-8a92-488c9f36449f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="test\log">
-      <UniqueIdentifier>{93ae7490-c342-4194-8991-248b16db9733}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\websocket">
       <UniqueIdentifier>{40896d78-9aef-49a7-a041-e9c79d8e4150}</UniqueIdentifier>
@@ -162,24 +147,6 @@
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp">
       <Filter>test\airfield</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp">
-      <Filter>test\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\api\ApiHelperTest.cpp">
-      <Filter>test\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\api\ApiRequestBuilderTest.cpp">
-      <Filter>test\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\api\ApiResponseFactoryTest.cpp">
-      <Filter>test\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\api\ApiResponseTest.cpp">
-      <Filter>test\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\api\ApiResponseValidatorTest.cpp">
-      <Filter>test\api</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\bootstrap\BootstrapWarningMessageTest.cpp">
       <Filter>test\bootstrap</Filter>
     </ClCompile>
@@ -231,12 +198,6 @@
     <ClCompile Include="..\..\test\test\countdown\CountdownTimerTest.cpp">
       <Filter>test\countdown</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\curl\CurlRequestTest.cpp">
-      <Filter>test\curl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\curl\CurlResponseTest.cpp">
-      <Filter>test\curl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\datablock\DisplayTimeTest.cpp">
       <Filter>test\datablock</Filter>
     </ClCompile>
@@ -272,9 +233,6 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanTest.cpp">
       <Filter>test\flightplan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\helper\HelperFunctionsTest.cpp">
-      <Filter>test\helper</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\historytrail\AircraftHistoryTrailTest.cpp">
       <Filter>test\historytrail</Filter>
@@ -426,12 +384,6 @@
     <ClCompile Include="..\..\test\test\radarscreen\ScreenControlsTest.cpp">
       <Filter>test\radarscreen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp">
-      <Filter>test\setting</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp">
-      <Filter>test\setting</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\squawk\SquawkAssignmentTest.cpp">
       <Filter>test\squawk</Filter>
     </ClCompile>
@@ -475,9 +427,6 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventBootstrapTest.cpp">
       <Filter>test\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\bootstrap\LocateApiSettingsTest.cpp">
-      <Filter>test\bootstrap</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp">
       <Filter>test\flightplan</Filter>
@@ -557,15 +506,6 @@
     <ClCompile Include="..\..\test\test\controller\TranslateFrequencyAbbreviationTest.cpp">
       <Filter>test\controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\dialog\CompareDialogsTest.cpp">
-      <Filter>test\dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\dialog\DialogDataTest.cpp">
-      <Filter>test\dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp">
-      <Filter>test\dialog</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\hold\HoldingDataSerializerTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
@@ -613,9 +553,6 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp">
       <Filter>test\api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp">
-      <Filter>test\log</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\countdown\TimerConfigurationTest.cpp">
       <Filter>test\countdown</Filter>
@@ -980,5 +917,4 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-
 </Project>

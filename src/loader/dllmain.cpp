@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "include/UKControllerPlugin.h"
 #include "euroscope/EuroScopePlugIn.h"
-#include "loader/loaderfunctions.h"
+#include "loader/loader.h"
 
 HINSTANCE dllInstance;
 
@@ -11,6 +11,7 @@ HINSTANCE dllInstance;
 void __declspec (dllexport) EuroScopePlugInInit (EuroScopePlugIn :: CPlugIn ** ppPlugInInstance)
 {
     #ifndef _DEBUG
+
         CheckForUpdates();
     #endif
 

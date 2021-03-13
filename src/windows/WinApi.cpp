@@ -1,16 +1,8 @@
-#include "pch/stdafx.h"
-#include <shellapi.h>
+#include "utils/pch.h"
 #include "windows/WinApi.h"
-#include "historytrail/HistoryTrailDialog.h"
 #include "helper/HelperFunctions.h"
-#include "euroscope/GeneralSettingsDialog.h"
 
-using UKControllerPlugin::HistoryTrail::HistoryTrailDialog;
 using UKControllerPlugin::HelperFunctions;
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
-using UKControllerPlugin::HistoryTrail::HistoryTrailData;
-using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Dialog::DialogCallArgument;
 

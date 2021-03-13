@@ -1,9 +1,9 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "api/ApiResponse.h"
 
 using UKControllerPlugin::Api::ApiResponse;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Api {
         TEST(ApiResponse, GetResponseMessageReturnsMessage)
         {
@@ -96,4 +96,4 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(418, response.GetStatusCode());
         }
     }  // namespace Api
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

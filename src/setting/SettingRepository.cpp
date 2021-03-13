@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "utils/pch.h"
 #include "setting/SettingRepository.h"
 #include "windows/WinApiInterface.h"
 #include "helper/HelperFunctions.h"
@@ -6,15 +6,15 @@
 using UKControllerPlugin::Setting::SettingValue;
 using UKControllerPlugin::Windows::WinApiInterface;
 
-namespace UKControllerPlugin {
-    namespace Setting {
-
+namespace UKControllerPlugin
+{
+    namespace Setting
+    {
         SettingRepository::SettingRepository(
-            WinApiInterface & winApi
+            WinApiInterface& winApi
         )
             : winApi(winApi)
-        {
-        }
+        { }
 
         /*
             Read a JSON file and creates settings from it.
@@ -69,7 +69,7 @@ namespace UKControllerPlugin {
         /*
             Adds a setting to the repo
         */
-        void SettingRepository::AddSettingValue(UKControllerPlugin::Setting::SettingValue setting)
+        void SettingRepository::AddSettingValue(SettingValue setting)
         {
             if (this->HasSetting(setting.setting)) {
                 return;
@@ -139,10 +139,8 @@ namespace UKControllerPlugin {
                         this->settingFolder + L"/" + widePath, nlohmann::json(it->second).dump(4),
                         true
                     );
-                } catch (std::ifstream::failure) {
-
-                }
+                } catch (std::ifstream::failure) { }
             }
         }
-    }  // namespace Setting
-}  // namespace UKControllerPlugin
+    } // namespace Setting
+} // namespace UKControllerPlugin

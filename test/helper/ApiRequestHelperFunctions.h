@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 #include "curl/CurlRequest.h"
 #include "api/ApiRequestBuilder.h"
 

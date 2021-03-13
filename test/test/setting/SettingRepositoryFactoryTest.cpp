@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "setting/SettingRepositoryFactory.h"
 #include "setting/SettingRepository.h"
 #include "mock/MockWinApi.h"
@@ -9,7 +9,7 @@ using UKControllerPluginTest::Windows::MockWinApi;
 using ::testing::StrictMock;
 using ::testing::Return;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Setting {
 
         TEST(SettingRepositoryFactory, CreateLoadsApiConfigSettings)
@@ -28,4 +28,4 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE("testkey" == repo->GetSetting("api-key"));
         }
     }  // namespace Setting
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

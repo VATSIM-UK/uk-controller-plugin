@@ -1,12 +1,6 @@
 #pragma once
 
 namespace UKControllerPlugin {
-    namespace Euroscope {
-        class UserSetting;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
-
-namespace UKControllerPlugin {
     namespace Windows {
         /*
             Interface between the plugin and the Windows API.

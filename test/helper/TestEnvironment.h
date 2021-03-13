@@ -1,5 +1,6 @@
 #pragma once
-#include "pch/pch.h"
+#include "pch/testingutilspch.h"
+#include "log/LoggerFunctions.h"
 
 
 class TestEnvironment : public ::testing::Environment
@@ -20,7 +21,7 @@ class TestEnvironment : public ::testing::Environment
 
             // Start up GDI so we can use its functions, even though not drawing to screen.
             Gdiplus::GdiplusStartupInput gdiStartup;
-            Gdiplus::GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
+            GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
         }
 
         virtual void TearDown()

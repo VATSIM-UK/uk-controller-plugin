@@ -10,6 +10,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UKControllerPluginTestingUtils\UKControllerPluginTestingUtils.vcxproj">
+      <Project>{098f2947-0522-4b20-8f55-66c9336efc0f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\UKControllerPluginUtils\UKControllerPluginUtils.vcxproj">
+      <Project>{141124e6-d339-464a-a759-0589a331b366}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\UKControllerPlugin\UKControllerPlugin.vcxproj">
       <Project>{6f93f8c0-6773-4353-b7dd-b14dbd3f826b}</Project>
     </ProjectReference>
@@ -30,13 +36,7 @@
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\AirfieldModelTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiHelperTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiRequestBuilderTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiResponseFactoryTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiResponseTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiResponseValidatorTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\BootstrapWarningMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\CollectionBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\EventHandlerCollectionBootstrapTest.cpp" />
@@ -62,16 +62,11 @@
     <ClCompile Include="..\..\test\test\countdown\GlobalCountdownSettingsFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\TimerConfigurationManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\TimerConfigurationTest.cpp" />
-    <ClCompile Include="..\..\test\test\curl\CurlRequestTest.cpp" />
-    <ClCompile Include="..\..\test\test\curl\CurlResponseTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DatablockBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DatablockFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DisplayTimeTest.cpp" />
     <ClCompile Include="..\..\test\test\dependency\DependencyLoaderTest.cpp" />
     <ClCompile Include="..\..\test\test\dependency\UpdateDependenciesTest.cpp" />
-    <ClCompile Include="..\..\test\test\dialog\CompareDialogsTest.cpp" />
-    <ClCompile Include="..\..\test\test\dialog\DialogDataTest.cpp" />
-    <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\AsrEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\CallbackFunctionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\CompareFunctionsTest.cpp" />
@@ -93,7 +88,6 @@
     <ClCompile Include="..\..\test\test\handoff\HandoffCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\handoff\HandoffEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\handoff\HandoffModuleTest.cpp" />
-    <ClCompile Include="..\..\test\test\helper\HelperFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\AircraftHistoryTrailTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailModuleTest.cpp" />
@@ -149,7 +143,6 @@
     <ClCompile Include="..\..\test\test\intention\ShannonAirfieldGroupTest.cpp" />
     <ClCompile Include="..\..\test\test\login\LoginModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\login\LoginTest.cpp" />
-    <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp" />
@@ -217,8 +210,6 @@
     <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileCoordinatesTest.cpp" />
-    <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
-    <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\SquawkAssignmentTest.cpp" />
@@ -294,7 +285,6 @@
     <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />
-    <ClCompile Include="..\..\test\test\bootstrap\LocateApiSettingsTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\DuplicatePluginTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp" />
   </ItemGroup>

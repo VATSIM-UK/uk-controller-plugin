@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "log/LoggerBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "mock/MockWinApi.h"
@@ -12,32 +12,28 @@ using testing::StrEq;
 using testing::Return;
 using testing::_;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Log {
 
         class LoggerBootstrapTest : public Test
         {
             public:
-                PersistenceContainer container;
+                NiceMock<MockWinApi> windows;
         };
 
         TEST_F(LoggerBootstrapTest, ItNotifiesTheUserIfLogsFolderCannotBeCreated)
         {
-            std::unique_ptr<NiceMock<MockWinApi>> mockWindows(new NiceMock<MockWinApi>);
-
             std::wstring expected = L"Unable to create logs folder, please contact the VATSIM UK Web Department.\n\n";
             expected += L"Plugin events will not be logged.";
 
-            ON_CALL(*mockWindows, CreateLocalFolderRecursive)
+            ON_CALL(windows, CreateLocalFolderRecursive)
                 .WillByDefault(Return(false));
 
-            EXPECT_CALL(*mockWindows, OpenMessageBox(StrEq(expected.c_str()), _, _))
+            EXPECT_CALL(windows, OpenMessageBox(StrEq(expected.c_str()), _, _))
                 .Times(1);
 
-            container.windows = std::move(mockWindows);
-
-            LoggerBootstrap::Bootstrap(container, false);
+            LoggerBootstrap::Bootstrap(windows, L"foo");
         }
 
     }  // namespace Log
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

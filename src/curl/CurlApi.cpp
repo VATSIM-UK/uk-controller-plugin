@@ -1,7 +1,6 @@
-#include "pch/stdafx.h"
+#include "utils/pch.h"
 #include "curl/CurlApi.h"
 #include "curl/CurlRequest.h"
-#include "curl/curl.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;

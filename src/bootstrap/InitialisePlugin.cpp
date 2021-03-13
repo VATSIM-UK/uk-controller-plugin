@@ -167,7 +167,7 @@ namespace UKControllerPlugin {
         Bootstrap::CopyFilesToNewFolder(*this->container->windows);
         ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
 
-        LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
+        LoggerBootstrap::Bootstrap(*this->container->windows, L"plugin");
 
         // User messager
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
