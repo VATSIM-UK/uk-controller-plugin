@@ -5,8 +5,8 @@
 using UKControllerPlugin::Windows::WinApiInterface;
 namespace UKControllerPlugin {
     namespace Log {
+        const int logfilesToKeep = 5;
         const std::wstring logsFolder = L"logs";
-        const int logfilesToKeep = 7;
 
         /*
             Bootstrap the logger.
@@ -20,14 +20,9 @@ namespace UKControllerPlugin {
             }
             PruneLogs(windows, logfilePrefix);
 
-            std::shared_ptr<spdlog::sinks::rotating_file_sink_mt> rotatingSink =
-                std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
-                    windows.GetFullPathToLocalFile(GetLogfileName(logfilePrefix)),
-                1024 * 1024,
-                3
+            std::shared_ptr<spdlog::logger> logger = spdlog::basic_logger_mt(
+                "logger", GetLogFilePath(GetLogfileName(logfilePrefix))
             );
-
-            std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("rotating logger", rotatingSink);
             logger->set_pattern("%Y-%m-%d %T [%l] - %v");
 
 #ifdef _DEBUG
@@ -39,7 +34,7 @@ namespace UKControllerPlugin {
 #endif  // DEBUG
 
             SetLoggerInstance(logger);
-            LogInfo("Log opened");
+            LogInfo("Logfile opened");
         }
 
         /*
@@ -69,7 +64,7 @@ namespace UKControllerPlugin {
         bool LoggerBootstrap::CreateLogsFolder(WinApiInterface& windows)
         {
             // Create us a logger, for now we log everything that happens.
-            if (!windows.CreateLocalFolderRecursive(L"logs")) {
+            if (!windows.CreateLocalFolderRecursive(logsFolder)) {
                 std::wstring msg = L"Unable to create logs folder, please contact the VATSIM UK Web Department.\n\n";
                 msg += L"Plugin events will not be logged.";
                 windows.OpenMessageBox(
@@ -84,17 +79,69 @@ namespace UKControllerPlugin {
         }
 
         /**
-         * Prune all the logs matching the prefix, so we only keep a certain amount
+         * Prune all the logs matching the prefix, so we only keep a certain amount.
          */
         void LoggerBootstrap::PruneLogs(WinApiInterface& windows, std::wstring logfilePrefix)
-        { }
+        {
+            std::set<std::wstring> allFilesInLogFolder = GetExistingLogs(windows, logfilePrefix);
+            const int logFilesToDelete = allFilesInLogFolder.size() - logfilesToKeep;
+
+            int logFilesDeleted = 0;
+            for (
+                auto log = allFilesInLogFolder.cbegin();
+                log != allFilesInLogFolder.cend();
+                ++log
+            ) {
+                if (logFilesDeleted == logFilesToDelete) {
+                    break;
+                }
+
+                windows.DeleteGivenFile(GetLogFilePath(*log));
+                logFilesDeleted++;
+            }
+        }
 
         /*
-         *
+         * Get all the existing logs that match the log prefix
+         */
+        std::set<std::wstring> LoggerBootstrap::GetExistingLogs(
+            WinApiInterface& windows,
+            std::wstring logFilePrefix
+        )
+        {
+            std::set<std::wstring> allFilesInLogFolder = windows.ListAllFilenamesInDirectory(logsFolder);
+            std::wregex logsRegex(L"^" + logFilePrefix + L"-[0-9]+\\.log$");
+            for (
+                auto log = allFilesInLogFolder.begin();
+                log != allFilesInLogFolder.end();
+            ) {
+                if (!std::regex_match(*log, logsRegex)) {
+                    log = allFilesInLogFolder.erase(log);
+                } else {
+                    ++log;
+                }
+            }
+
+            return std::move(allFilesInLogFolder);
+        }
+
+        /*
+         * Get the name of a given logfile
          */
         std::wstring LoggerBootstrap::GetLogfileName(std::wstring logFilePrefix)
         {
-            return L"";
+            const auto timeNow = std::chrono::system_clock::now();
+            return logFilePrefix + L"-" + std::to_wstring(
+                std::chrono::duration_cast<std::chrono::seconds>(timeNow.time_since_epoch()).count()
+            ) + L".log";
+        }
+
+        /*
+         * Get the path for a given logfile
+         */
+        std::wstring LoggerBootstrap::GetLogFilePath(std::wstring name)
+        {
+            return logsFolder + L"/" + name;
         }
     }  // namespace Log
 }  // namespace UKControllerPlugin

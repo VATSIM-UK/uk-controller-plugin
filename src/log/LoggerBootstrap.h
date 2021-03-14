@@ -28,11 +28,16 @@ namespace UKControllerPlugin {
                 static void Shutdown(void);
                 static bool CreateLogsFolder(Windows::WinApiInterface& windows);
                 static void PruneLogs(Windows::WinApiInterface& windows, std::wstring logFilePrefix);
+                static std::set<std::wstring> GetExistingLogs(
+                    Windows::WinApiInterface& windows,
+                    std::wstring logFilePrefix
+                );
                 static std::wstring GetLogfileName(std::wstring logFilePrefix);
-
+            
             private:
 
+                static std::wstring GetLogFilePath(std::wstring logname);
                 static void CreateNullLogger();
-        };        
+        };
     }  // namespace Log
 }  // namespace UKControllerPlugin

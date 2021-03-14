@@ -28,3 +28,4 @@
 #include <shobjidl_core.h>
 #include <set>
 #include <stdexcept>
+#include <regex>

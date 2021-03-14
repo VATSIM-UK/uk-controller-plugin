@@ -84,10 +84,8 @@ namespace UKControllerPlugin {
         */
         bool WinApi::DeleteGivenFile(std::wstring filename)
         {
-            std::wstring fileWide(filename.length(), L' ');
-            std::copy(filename.begin(), filename.end(), fileWide.begin());
-
-            return (DeleteFile(fileWide.c_str()) == TRUE) ? true : false;
+            std::wstring fullPath = this->GetFullPathToLocalFile(filename);
+            return (DeleteFile(fullPath.c_str()) == TRUE) ? true : false;
         }
 
         /*
@@ -160,6 +158,25 @@ namespace UKControllerPlugin {
             }
 
             return result.str();
+        }
+
+        /*
+         * List all filesnames in the directory
+         */
+        std::set<std::wstring> WinApi::ListAllFilenamesInDirectory(
+            std::wstring relativePath
+        ) const
+        {
+            std::set<std::wstring> files;
+            for (auto& p : std::filesystem::directory_iterator(GetFullPathToLocalFile(relativePath))) {
+                if (p.is_directory()) {
+                    continue;
+                }
+
+                files.insert(p.path());
+            }
+
+            return files;
         }
 
         /*

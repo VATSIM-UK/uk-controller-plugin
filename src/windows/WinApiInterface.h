@@ -27,6 +27,9 @@ namespace UKControllerPlugin {
                 return this->dllInstance;
             }
             virtual std::wstring GetFullPathToLocalFile(std::wstring relativePath) const = 0;
+            virtual std::set<std::wstring> ListAllFilenamesInDirectory(
+                std::wstring relativePath
+            ) const = 0;
             virtual int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) = 0;
             virtual void OpenWebBrowser(std::wstring url) = 0;
             virtual void PlayWave(LPCTSTR sound) = 0;
