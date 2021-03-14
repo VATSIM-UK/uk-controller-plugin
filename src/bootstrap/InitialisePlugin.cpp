@@ -167,7 +167,23 @@ namespace UKControllerPlugin {
         Bootstrap::CopyFilesToNewFolder(*this->container->windows);
         ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
 
-        LoggerBootstrap::Bootstrap(*this->container->windows, L"plugin");
+        // Bootstrap the logger
+        if (this->duplicatePlugin->Duplicate()) {
+            LoggerBootstrap::Bootstrap(
+                *this->container->windows,
+                L"plugin-secondary"
+            );
+            LogInfo(
+                std::string("Another instance of UKCP has been detected, automated actions such as squawk assignments ")
+                + "will be performed by the primary plugin instance."
+            );
+        } else {
+            LoggerBootstrap::Bootstrap(
+                *this->container->windows,
+                L"plugin"
+            );
+            LogInfo("Plugin loaded as primary instance");
+        }
 
         // User messager
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
