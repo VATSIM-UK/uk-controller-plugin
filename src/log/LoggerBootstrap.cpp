@@ -1,5 +1,6 @@
 #include "utils/pch.h"
 #include "log/LoggerBootstrap.h"
+#include "helper/HelperFunctions.h"
 #include "windows/WinApiInterface.h"
 
 using UKControllerPlugin::Windows::WinApiInterface;
@@ -130,9 +131,8 @@ namespace UKControllerPlugin {
          */
         std::wstring LoggerBootstrap::GetLogfileName(std::wstring logFilePrefix)
         {
-            const auto timeNow = std::chrono::system_clock::now();
-            return logFilePrefix + L"-" + std::to_wstring(
-                std::chrono::duration_cast<std::chrono::seconds>(timeNow.time_since_epoch()).count()
+            return logFilePrefix + L"-" + HelperFunctions::ConvertToWideString(
+                date::format("%Y%m%d%H%M%S", std::chrono::system_clock::now())
             ) + L".log";
         }
 

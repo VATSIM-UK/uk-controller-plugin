@@ -12,6 +12,7 @@
 #include "spdlog/include/spdlog/sinks/file_sinks.h"
 #include "spdlog/include/spdlog/sinks/null_sink.h"
 #include "curl/curl.h"
+#include <date/include/date/date.h>
 #include "log/LoggerFunctions.h"
 
 #include <CommCtrl.h>
