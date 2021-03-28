@@ -34,8 +34,15 @@ namespace UKControllerPluginTest {
         TEST_F(OceanicModuleTest, BootstrapPluginRegistersUpdateEventEverySixtySeconds)
         {
             BootstrapPlugin(this->container);
-            EXPECT_TRUE(1, this->container.timedHandler->CountHandlers());
-            EXPECT_TRUE(1, this->container.timedHandler->CountHandlersForFrequency(60));
+            EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
+            EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(60));
+        }
+
+        TEST_F(OceanicModuleTest, BootstrapPluginRegistersClearanceIndicatorTagItem)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_EQ(1, this->container.tagHandler->CountHandlers());
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(118));
         }
     } // namespace Oceanic
 }  // namespace UKControllerPluginTest

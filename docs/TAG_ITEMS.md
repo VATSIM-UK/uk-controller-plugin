@@ -17,3 +17,4 @@
 115 - Aircraft Type / RECAT-EU Category
 116 - Flight Information Service
 117 - Flight Information Service Or Blank
+118 - Nattrak Oceanic Clearance Indicator

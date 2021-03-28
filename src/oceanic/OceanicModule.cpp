@@ -14,6 +14,7 @@ namespace UKControllerPlugin {
             );
 
             container.timedHandler->RegisterEvent(handler, 60);
+            container.tagHandler->RegisterTagItem(118, handler);
         }
     } // namespace Oceanic
 } // namespace UKControllerPlugin

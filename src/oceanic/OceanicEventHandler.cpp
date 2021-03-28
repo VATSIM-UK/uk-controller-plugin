@@ -9,6 +9,7 @@ namespace UKControllerPlugin {
     namespace Oceanic {
 
         const std::string nattrakUrl = "https://nattrak.vatsim.net/pluginapi.php";
+        const std::regex nattrakLevelRegex("^\\d{2,3}$");
 
         OceanicEventHandler::OceanicEventHandler(
             Curl::CurlInterface& curl,
@@ -91,6 +92,7 @@ namespace UKControllerPlugin {
                 clearance.at("fix").is_string() &&
                 clearance.contains("level") &&
                 clearance.at("level").is_string() &&
+                this->NattrakLevelValid(clearance.at("level").get<std::string>()) &&
                 clearance.contains("mach") &&
                 clearance.at("mach").is_string() &&
                 clearance.contains("estimating_time") &&
@@ -110,6 +112,55 @@ namespace UKControllerPlugin {
         {
             auto clearance = this->clearances.find(callsign);
             return clearance == this->clearances.cend() ? this->invalidClearance : clearance->second;
+        }
+
+        std::string OceanicEventHandler::GetTagItemDescription(int tagItemId) const
+        {
+            return "Nattrak Oceanic Clearance Indicator";
+        }
+
+        void OceanicEventHandler::SetTagItemData(Tag::TagData& tagData)
+        {
+            auto clearance = this->clearances.find(tagData.flightPlan.GetCallsign());
+
+            if (clearance == this->clearances.cend()) {
+                return;
+            }
+
+            // Work out the colour of the item based on whether the controller needs to do something
+            COLORREF tagItemColour;
+            if (clearance->second.status == clearance->second.CLEARANCE_STATUS_CLEARED) {
+                int clearedAltitude = tagData.flightPlan.GetClearedAltitude();
+                int cruisingLevel = tagData.flightPlan.GetCruiseLevel();
+                int nattrakLevel = this->ConvertNattrakLevelToEuroscope(clearance->second.flightLevel);
+
+                tagItemColour = clearedAltitude != 0
+                                    ? this->GetClearedTagItemColour(nattrakLevel, clearedAltitude)
+                                    : this->GetClearedTagItemColour(nattrakLevel, cruisingLevel);
+            } else {
+                tagItemColour = RGB(255, 153, 255);
+            }
+
+            // Set the item
+            tagData.SetItemString("OCA");
+            tagData.SetTagColour(tagItemColour);
+        }
+
+        int OceanicEventHandler::ConvertNattrakLevelToEuroscope(std::string level) const
+        {
+            return std::stoi(level) * 100;
+        }
+
+        bool OceanicEventHandler::NattrakLevelValid(std::string level) const
+        {
+            return std::regex_match(level, nattrakLevelRegex);
+        }
+
+        COLORREF OceanicEventHandler::GetClearedTagItemColour(int clearedLevel, int currentLevel) const
+        {
+            return clearedLevel == currentLevel
+                       ? this->clearanceIndicatorOk
+                       : this->clearanceIndicatorActionRequired;
         }
     }  // namespace Oceanic
 }  // namespace UKControllerPlugin

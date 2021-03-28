@@ -4,6 +4,9 @@
 #include "mock/MockTaskRunnerInterface.h"
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
+#include "mock/MockEuroScopeCFlightplanInterface.h"
+#include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "tag/TagData.h"
 
 using ::testing::Test;
 using testing::NiceMock;
@@ -12,6 +15,9 @@ using UKControllerPlugin::Oceanic::OceanicEventHandler;
 using UKControllerPlugin::Oceanic::Clearance;
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;
+using UKControllerPlugin::Tag::TagData;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 
 namespace UKControllerPluginTest {
     namespace Oceanic {
@@ -21,7 +27,10 @@ namespace UKControllerPluginTest {
             public:
                 OceanicEventHandlerTest()
                     : handler(mockCurl, mockTaskRunner)
-                { }
+                {
+                    ON_CALL(this->flightplan, GetCallsign())
+                        .WillByDefault(testing::Return("BAW123"));
+                }
 
                 void SimulateNattrakCall(bool curlError, uint64_t statusCode, std::string body)
                 {
@@ -36,6 +45,27 @@ namespace UKControllerPluginTest {
                     this->handler.TimedEventTrigger();
                 }
 
+
+                TagData GetTagData()
+                {
+                    return TagData(
+                        flightplan,
+                        radarTarget,
+                        118,
+                        EuroScopePlugIn::TAG_DATA_CORRELATED,
+                        itemString,
+                        &euroscopeColourCode,
+                        &tagColour,
+                        &fontSize
+                    );
+                }
+
+                double fontSize = 24.1;
+                COLORREF tagColour = RGB(255, 255, 255);
+                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+                char itemString[16] = "Foooooo";
+                NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+                NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
                 NiceMock<Curl::MockCurlApi> mockCurl;
                 TaskManager::MockTaskRunnerInterface mockTaskRunner;
                 OceanicEventHandler handler;
@@ -337,6 +367,23 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->handler.NattrakClearanceValid(clearanceData));
         }
 
+        TEST_F(OceanicEventHandlerTest, ClearanceValidReturnsFalseLevelNotValid)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "CLEARED"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "123abc"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            EXPECT_FALSE(this->handler.NattrakClearanceValid(clearanceData));
+        }
+
         TEST_F(OceanicEventHandlerTest, ClearanceValidReturnsFalseMissingMach)
         {
             nlohmann::json clearanceData = {
@@ -467,6 +514,154 @@ namespace UKControllerPluginTest {
             };
 
             EXPECT_FALSE(this->handler.NattrakClearanceValid(clearanceData));
+        }
+
+        TEST_F(OceanicEventHandlerTest, ItHasTheClearanceIndicatorTagItem)
+        {
+            EXPECT_EQ("Nattrak Oceanic Clearance Indicator", this->handler.GetTagItemDescription(118));
+        }
+
+        TEST_F(OceanicEventHandlerTest, TagItemIsUnsetForNoNattrakData)
+        {
+            TagData data = this->GetTagData();
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("Foooooo", data.GetItemString());
+            EXPECT_EQ(RGB(255, 255, 255), data.GetTagColour());
+        }
+
+        TEST_F(OceanicEventHandlerTest, TagItemIsSetForPendingClearance)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "PENDING"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
+
+
+            TagData data = this->GetTagData();
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("OCA", data.GetItemString());
+            EXPECT_EQ(this->handler.clearanceIndicatorPending, data.GetTagColour());
+        }
+
+        TEST_F(OceanicEventHandlerTest, TagItemIsSetForClearedWhenClearedLevelIsEqualToCurrentControllerAssignedLevel)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "CLEARED"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
+
+            ON_CALL(this->flightplan, GetClearedAltitude())
+                .WillByDefault(Return(32000));
+
+            ON_CALL(this->flightplan, GetCruiseLevel())
+                .WillByDefault(Return(35000));
+
+            TagData data = this->GetTagData();
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("OCA", data.GetItemString());
+            EXPECT_EQ(this->handler.clearanceIndicatorOk, data.GetTagColour());
+        }
+
+        TEST_F(OceanicEventHandlerTest, TagItemIsSetForClearedWhenClearedLevelIsEqualToRequestedFlightLevel)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "CLEARED"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
+
+            ON_CALL(this->flightplan, GetClearedAltitude())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->flightplan, GetCruiseLevel())
+                .WillByDefault(Return(32000));
+
+            TagData data = this->GetTagData();
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("OCA", data.GetItemString());
+            EXPECT_EQ(this->handler.clearanceIndicatorOk, data.GetTagColour());
+        }
+
+        TEST_F(OceanicEventHandlerTest, TagItemIsSetForActionRequiredWhenClearedLevelIsDifferentToControllerAssigned)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "CLEARED"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
+
+            ON_CALL(this->flightplan, GetClearedAltitude())
+                .WillByDefault(Return(31000));
+
+            ON_CALL(this->flightplan, GetCruiseLevel())
+                .WillByDefault(Return(32000));
+
+            TagData data = this->GetTagData();
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("OCA", data.GetItemString());
+            EXPECT_EQ(this->handler.clearanceIndicatorActionRequired, data.GetTagColour());
+        }
+
+        TEST_F(OceanicEventHandlerTest, TagItemIsSetForActionRequiredWhenClearedLevelIsDifferentToRequested)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "CLEARED"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
+
+            ON_CALL(this->flightplan, GetClearedAltitude())
+                .WillByDefault(Return(0));
+
+            ON_CALL(this->flightplan, GetCruiseLevel())
+                .WillByDefault(Return(31000));
+
+            TagData data = this->GetTagData();
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("OCA", data.GetItemString());
+            EXPECT_EQ(this->handler.clearanceIndicatorActionRequired, data.GetTagColour());
         }
     }  // namespace Oceanic
 }  // namespace UKControllerPluginTest
