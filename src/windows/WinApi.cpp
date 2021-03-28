@@ -180,6 +180,27 @@ namespace UKControllerPlugin {
         }
 
         /*
+         * Load a library from the UKCP folder.
+         */
+        HINSTANCE WinApi::LoadLibraryRelative(std::wstring relativePath) const
+        {
+            std::wstring fullPath = this->GetFullPathToLocalFile(relativePath);
+            return LoadLibrary(fullPath.c_str());
+        }
+
+        /*
+         * Unload a library handle
+         */
+        void WinApi::UnloadLibrary(HINSTANCE handle) const
+        {
+            if (handle == nullptr) {
+                return;
+            }
+
+            FreeLibrary(handle);
+        }
+
+        /*
             Gets the full path to a given file
         */
         std::wstring WinApi::GetFullPathToLocalFile(std::wstring relativePath) const

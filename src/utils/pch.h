@@ -6,6 +6,8 @@
 #define NOMINMAX 1
 
 // add headers that you want to pre-compile here
+#pragma warning( push )
+#pragma warning( disable : 26495 26451)
 #include "json/json.hpp"
 #include "spdlog/include/spdlog/spdlog.h"
 #include "spdlog/include/spdlog/logger.h"
@@ -14,6 +16,7 @@
 #include "curl/curl.h"
 #include <date/include/date/date.h>
 #include "log/LoggerFunctions.h"
+#pragma warning( pop )
 
 #include <CommCtrl.h>
 #pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")  // NOLINT
@@ -30,3 +33,5 @@
 #include <set>
 #include <stdexcept>
 #include <regex>
+#include <memory>
+#include <shlobj_core.h>

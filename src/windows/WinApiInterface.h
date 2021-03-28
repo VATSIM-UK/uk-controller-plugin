@@ -1,4 +1,5 @@
 #pragma once
+#include "utils/pch.h"
 
 namespace UKControllerPlugin {
     namespace Windows {
@@ -12,7 +13,7 @@ namespace UKControllerPlugin {
                 : dllInstance(dllInstance)
             {
             };
-            virtual ~WinApiInterface(void) {}  // namespace Windows
+            virtual ~WinApiInterface() = default; // namespace Windows
             virtual bool CreateFolder(std::wstring folder) = 0;
             virtual bool CreateFolderRecursive(std::wstring folder) = 0;
             virtual bool CreateLocalFolderRecursive(std::wstring folder) = 0;
@@ -30,6 +31,8 @@ namespace UKControllerPlugin {
             virtual std::set<std::wstring> ListAllFilenamesInDirectory(
                 std::wstring relativePath
             ) const = 0;
+            virtual HINSTANCE LoadLibraryRelative(std::wstring relativePath) const = 0;
+            virtual void UnloadLibrary(HINSTANCE handle) const = 0;
             virtual int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) = 0;
             virtual void OpenWebBrowser(std::wstring url) = 0;
             virtual void PlayWave(LPCTSTR sound) = 0;

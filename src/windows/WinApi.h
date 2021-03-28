@@ -33,6 +33,8 @@ namespace UKControllerPlugin {
                 std::set<std::wstring> ListAllFilenamesInDirectory(
                     std::wstring relativePath
                 ) const override;
+                HINSTANCE LoadLibraryRelative(std::wstring relativePath) const override;
+                void UnloadLibrary(HINSTANCE handle) const override;
                 int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) override;
                 void OpenWebBrowser(std::wstring url) override;
                 void PlayWave(LPCTSTR sound) override;

@@ -31,6 +31,9 @@
     <Filter Include="curl">
       <UniqueIdentifier>{4722456a-342e-49cf-a06e-dd7e88032023}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{2dfec82f-06e2-4c84-9af1-d5500400ccca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utils\pch.h">
@@ -132,6 +135,15 @@
     <ClInclude Include="..\..\src\curl\CurlInterface.h">
       <Filter>curl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\api\ApiBootstrap.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\windows\WinApiBootstrap.h">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\data\PluginDataLocations.h">
+      <Filter>data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\pch.cpp">
@@ -193,6 +205,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\curl\CurlRequest.cpp">
       <Filter>curl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\api\ApiBootstrap.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\windows\WinApiBootstrap.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\data\PluginDataLocations.cpp">
+      <Filter>data</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

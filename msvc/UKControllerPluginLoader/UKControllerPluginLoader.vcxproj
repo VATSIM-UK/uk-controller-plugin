@@ -21,15 +21,18 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\loader\dllmain.cpp" />
     <ClCompile Include="..\..\src\loader\loader.cpp" />
-    <ClCompile Include="..\..\src\loader\pch.cpp" />
+    <ClCompile Include="..\..\src\loader\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">loader\pch.h</PrecompiledHeaderFile>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\loader\loader.h" />
     <ClInclude Include="..\..\src\loader\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UKControllerPlugin\UKControllerPlugin.vcxproj">
-      <Project>{6f93f8c0-6773-4353-b7dd-b14dbd3f826b}</Project>
+    <ProjectReference Include="..\UKControllerPluginUtils\UKControllerPluginUtils.vcxproj">
+      <Project>{141124e6-d339-464a-a759-0589a331b366}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -131,8 +134,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Create</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>loader\pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)..\src;$(SolutionDir)..\third_party;$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>

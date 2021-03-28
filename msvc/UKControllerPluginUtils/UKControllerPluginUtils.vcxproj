@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\api\ApiAuthChecker.h" />
+    <ClInclude Include="..\..\src\api\ApiBootstrap.h" />
     <ClInclude Include="..\..\src\api\ApiException.h" />
     <ClInclude Include="..\..\src\api\ApiHelper.h" />
     <ClInclude Include="..\..\src\api\ApiInterface.h" />
@@ -35,6 +36,7 @@
     <ClInclude Include="..\..\src\curl\CurlRequest.h" />
     <ClInclude Include="..\..\src\curl\CurlResponse.h" />
     <ClInclude Include="..\..\src\curl\HttpException.h" />
+    <ClInclude Include="..\..\src\data\PluginDataLocations.h" />
     <ClInclude Include="..\..\src\dialog\CompareDialogs.h" />
     <ClInclude Include="..\..\src\dialog\DialogCallArgument.h" />
     <ClInclude Include="..\..\src\dialog\DialogData.h" />
@@ -51,10 +53,12 @@
     <ClInclude Include="..\..\src\srd\SrdSearchParameters.h" />
     <ClInclude Include="..\..\src\utils\pch.h" />
     <ClInclude Include="..\..\src\windows\WinApi.h" />
+    <ClInclude Include="..\..\src\windows\WinApiBootstrap.h" />
     <ClInclude Include="..\..\src\windows\WinApiInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\api\ApiAuthChecker.cpp" />
+    <ClCompile Include="..\..\src\api\ApiBootstrap.cpp" />
     <ClCompile Include="..\..\src\api\ApiHelper.cpp" />
     <ClCompile Include="..\..\src\api\ApiRequestBuilder.cpp" />
     <ClCompile Include="..\..\src\api\ApiResponse.cpp" />
@@ -67,6 +71,7 @@
     <ClCompile Include="..\..\src\curl\CurlApi.cpp" />
     <ClCompile Include="..\..\src\curl\CurlRequest.cpp" />
     <ClCompile Include="..\..\src\curl\CurlResponse.cpp" />
+    <ClCompile Include="..\..\src\data\PluginDataLocations.cpp" />
     <ClCompile Include="..\..\src\dialog\CompareDialogs.cpp" />
     <ClCompile Include="..\..\src\dialog\DialogManager.cpp" />
     <ClCompile Include="..\..\src\helper\HelperFunctions.cpp" />
@@ -80,6 +85,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\src\windows\WinApi.cpp" />
+    <ClCompile Include="..\..\src\windows\WinApiBootstrap.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
