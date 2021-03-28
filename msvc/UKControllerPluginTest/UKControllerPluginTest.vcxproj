@@ -173,6 +173,8 @@
     <ClCompile Include="..\..\test\test\notifications\NotificationsRepositoryTest.cpp" />
     <ClCompile Include="..\..\test\test\notifications\NotificationTest.cpp" />
     <ClCompile Include="..\..\test\test\notifications\UnreadNotificationsMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\oceanic\OceanicEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\oceanic\OceanicModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\ActualOffBlockTimeEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\offblock\EstimatedDepartureTimeBootstrapTest.cpp" />

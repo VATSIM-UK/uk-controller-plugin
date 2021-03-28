@@ -145,6 +145,9 @@
     <Filter Include="test\flightinformationservice">
       <UniqueIdentifier>{7f12ba4f-8dec-4106-a0a0-13646ac57292}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\oceanic">
+      <UniqueIdentifier>{782d80f4-69f9-44ce-b72e-fb7c027c5b4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -862,6 +865,12 @@
     <ClCompile Include="..\..\test\test\hold\DeemedSeparatedHoldSerializerTest.cpp">
       <Filter>test\hold</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\oceanic\OceanicEventHandlerTest.cpp">
+      <Filter>test\oceanic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\oceanic\OceanicModuleTest.cpp">
+      <Filter>test\oceanic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -980,5 +989,4 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-
 </Project>

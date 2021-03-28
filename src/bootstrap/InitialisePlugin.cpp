@@ -48,6 +48,7 @@
 #include "bootstrap/CopyFilesToNewFolder.h"
 #include "notifications/NotificationsModule.h"
 #include "flightinformationservice/FlightInformatioNServiceModule.h"
+#include "oceanic/OceanicModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -220,6 +221,7 @@ namespace UKControllerPlugin {
         Stands::BootstrapPlugin(*this->container, loader);
         Notifications::BootstrapPlugin(*this->container);
         FlightInformationService::BootstrapPlugin(*this->container);
+        Oceanic::BootstrapPlugin(*this->container);
 
         Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);
