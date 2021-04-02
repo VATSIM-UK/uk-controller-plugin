@@ -43,6 +43,19 @@ namespace UKControllerPlugin {
                 return this->callsign == compare.callsign;
             }
 
+            void operator=(const Clearance& compare)
+            {
+                this->callsign = compare.callsign;
+                this->status = compare.status;
+                this->track = compare.track;
+                this->entryFix = compare.entryFix;
+                this->flightLevel = compare.flightLevel;
+                this->mach = compare.mach;
+                this->entryTime = compare.entryTime;
+                this->clearanceIssued = compare.clearanceIssued;
+                this->extra = compare.extra;
+            }
+
             const std::string CLEARANCE_STATUS_CLEARED = "CLEARED";
             const std::string CLEARANCE_STATUS_PENDING = "PENDING";
         } Clearance;

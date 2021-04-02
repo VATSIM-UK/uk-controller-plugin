@@ -7,10 +7,14 @@
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
+#include "dialog/DialogManager.h"
+#include "dialog/DialogData.h"
+#include "mock/MockDialogProvider.h"
 
 using ::testing::Test;
 using testing::NiceMock;
 using testing::Return;
+using testing::_;
 using UKControllerPlugin::Oceanic::OceanicEventHandler;
 using UKControllerPlugin::Oceanic::Clearance;
 using UKControllerPlugin::Curl::CurlRequest;
@@ -18,6 +22,9 @@ using UKControllerPlugin::Curl::CurlResponse;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 
 namespace UKControllerPluginTest {
     namespace Oceanic {
@@ -26,10 +33,12 @@ namespace UKControllerPluginTest {
         {
             public:
                 OceanicEventHandlerTest()
-                    : handler(mockCurl, mockTaskRunner)
+                    : dialog(dialogProvider), handler(mockCurl, mockTaskRunner, dialog)
                 {
+                    dialog.AddDialog(this->dialogData);
+
                     ON_CALL(this->flightplan, GetCallsign())
-                        .WillByDefault(testing::Return("BAW123"));
+                        .WillByDefault(Return("BAW123"));
                 }
 
                 void SimulateNattrakCall(bool curlError, uint64_t statusCode, std::string body)
@@ -60,6 +69,9 @@ namespace UKControllerPluginTest {
                     );
                 }
 
+                DialogData dialogData = {IDD_OCEANIC_CLEARANCE, "Test"};
+                NiceMock<MockDialogProvider> dialogProvider;
+                DialogManager dialog;
                 double fontSize = 24.1;
                 COLORREF tagColour = RGB(255, 255, 255);
                 int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
@@ -662,6 +674,36 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(data);
             EXPECT_EQ("OCA", data.GetItemString());
             EXPECT_EQ(this->handler.clearanceIndicatorActionRequired, data.GetTagColour());
+        }
+
+        TEST_F(OceanicEventHandlerTest, TestItOpensDialogWithValidClearance)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "CLEARED"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
+
+            EXPECT_CALL(this->dialogProvider, OpenDialog(this->dialogData, _))
+                .Times(1);
+
+            this->handler.TagFunction(this->flightplan, NiceMock<MockEuroScopeCRadarTargetInterface>(), "", {});
+        }
+
+        TEST_F(OceanicEventHandlerTest, TestItOpensDialogWithNoValidClearance)
+        {
+            EXPECT_CALL(this->dialogProvider, OpenDialog(this->dialogData, _))
+                .Times(1);
+
+            this->handler.TagFunction(this->flightplan, NiceMock<MockEuroScopeCRadarTargetInterface>(), "", {});
         }
     }  // namespace Oceanic
 }  // namespace UKControllerPluginTest

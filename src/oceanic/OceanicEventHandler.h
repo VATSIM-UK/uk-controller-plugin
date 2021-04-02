@@ -13,6 +13,10 @@ namespace UKControllerPlugin {
         class TaskRunnerInterface;
     } // namespace TaskManager
 
+    namespace Dialog {
+        class DialogManager;
+    } // namespace Dialog
+
     namespace Oceanic {
         /*
             Handles events over the ocean
@@ -22,18 +26,25 @@ namespace UKControllerPlugin {
             public:
                 OceanicEventHandler(
                     Curl::CurlInterface& curl,
-                    TaskManager::TaskRunnerInterface& taskRunner
+                    TaskManager::TaskRunnerInterface& taskRunner,
+                    Dialog::DialogManager& dialogManager
                 );
 
                 void TimedEventTrigger() override;
                 bool NattrakClearanceValid(const nlohmann::json& clearance) const;
                 size_t CountClearances() const;
                 const Clearance& GetClearanceForCallsign(std::string callsign) const;
-
                 std::string GetTagItemDescription(int tagItemId) const override;
+                void TagFunction(
+                    Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string context,
+                    const POINT& mousePos
+                );
                 void SetTagItemData(Tag::TagData& tagData) override;
-                const Clearance& invalidClearance{"NOTAVALIDCLEARANCESORRY"};
 
+
+                const Clearance invalidClearance{"NOTAVALIDCLEARANCESORRY"};
                 const COLORREF clearanceIndicatorOk = RGB(36, 138, 73);
                 const COLORREF clearanceIndicatorActionRequired = RGB(255, 128, 0);
                 const COLORREF clearanceIndicatorPending = RGB(255, 153, 255);
@@ -52,6 +63,12 @@ namespace UKControllerPlugin {
 
                 // All the clearances
                 std::map<std::string, Clearance> clearances;
+
+                // Dialog manager
+                Dialog::DialogManager& dialogManager;
+
+                // Currently selected Clearance
+                Clearance currentlySelectedClearance = this->invalidClearance;
         };
-    }  // namespace Oceanic
-}  // namespace UKControllerPlugin
+    } // namespace Oceanic
+} // namespace UKControllerPlugin

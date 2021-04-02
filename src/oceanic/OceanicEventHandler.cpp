@@ -3,6 +3,7 @@
 #include "curl/CurlInterface.h"
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
+#include "dialog/DialogManager.h"
 #include "task/TaskRunnerInterface.h"
 
 namespace UKControllerPlugin {
@@ -13,8 +14,9 @@ namespace UKControllerPlugin {
 
         OceanicEventHandler::OceanicEventHandler(
             Curl::CurlInterface& curl,
-            TaskManager::TaskRunnerInterface& taskRunner
-        ): curl(curl), taskRunner(taskRunner) {}
+            TaskManager::TaskRunnerInterface& taskRunner,
+            Dialog::DialogManager& dialogManager
+        ): curl(curl), taskRunner(taskRunner), dialogManager(dialogManager) {}
 
         void OceanicEventHandler::TimedEventTrigger()
         {
@@ -117,6 +119,24 @@ namespace UKControllerPlugin {
         std::string OceanicEventHandler::GetTagItemDescription(int tagItemId) const
         {
             return "Nattrak Oceanic Clearance Indicator";
+        }
+
+        void OceanicEventHandler::TagFunction(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        )
+        {
+            auto storedClearance = this->clearances.find(flightplan.GetCallsign());
+            this->currentlySelectedClearance = storedClearance != this->clearances.cend()
+                                                   ? storedClearance->second
+                                                   : Clearance{flightplan.GetCallsign()};
+
+            this->dialogManager.OpenDialog(
+                IDD_OCEANIC_CLEARANCE,
+                reinterpret_cast<LPARAM>(&this->currentlySelectedClearance)
+            );
         }
 
         void OceanicEventHandler::SetTagItemData(Tag::TagData& tagData)

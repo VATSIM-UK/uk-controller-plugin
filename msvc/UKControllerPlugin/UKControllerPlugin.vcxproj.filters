@@ -1143,6 +1143,9 @@
     <ClInclude Include="..\..\src\oceanic\OceanicModule.h">
       <Filter>src\oceanic</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\oceanic\OceanicClearanceDialog.h">
+      <Filter>src\oceanic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1937,6 +1940,9 @@
       <Filter>src\oceanic</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\oceanic\OceanicModule.cpp">
+      <Filter>src\oceanic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oceanic\OceanicClearanceDialog.cpp">
       <Filter>src\oceanic</Filter>
     </ClCompile>
   </ItemGroup>
