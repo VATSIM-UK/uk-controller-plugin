@@ -14,6 +14,9 @@ namespace UKControllerPlugin {
             private:
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
                 void InitDialog(HWND hwnd, LPARAM lParam);
+
+                static std::wstring ConvertItemForDialog(std::string item);
+                static void SetDialogItem(HWND hwnd, int itemId, std::wstring value);
         };
     } // namespace Oceanic
 }  // namespace UKControllerPlugin
