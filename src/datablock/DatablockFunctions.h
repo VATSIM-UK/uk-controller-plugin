@@ -5,5 +5,6 @@ namespace UKControllerPlugin {
 
         int ConvertAltitudeToFlightLevel(int altitude);
         int ConvertFlightLevelToAltitude(int flightLevel);
+        int NormaliseFlightLevelFromString(std::string level);
     }  // namespace Datablock
 }  // namespace UKControllerPlugin

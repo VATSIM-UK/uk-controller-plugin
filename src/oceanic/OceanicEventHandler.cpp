@@ -5,12 +5,12 @@
 #include "curl/CurlResponse.h"
 #include "dialog/DialogManager.h"
 #include "task/TaskRunnerInterface.h"
+#include "datablock/DatablockFunctions.h"
 
 namespace UKControllerPlugin {
     namespace Oceanic {
 
         const std::string nattrakUrl = "https://nattrak.vatsim.net/pluginapi.php";
-        const std::regex nattrakLevelRegex("^\\d{2,3}$");
 
         OceanicEventHandler::OceanicEventHandler(
             Curl::CurlInterface& curl,
@@ -64,7 +64,10 @@ namespace UKControllerPlugin {
                                 clearance->at("status").get<std::string>(),
                                 clearance->at("nat").get<std::string>(),
                                 clearance->at("fix").get<std::string>(),
-                                clearance->at("level").get<std::string>(),
+                                std::to_string(
+                                    Datablock::NormaliseFlightLevelFromString(
+                                        clearance->at("level").get<std::string>())
+                                ),
                                 clearance->at("mach").get<std::string>(),
                                 clearance->at("estimating_time").get<std::string>(),
                                 clearance->at("clearance_issued").is_null()
@@ -173,7 +176,7 @@ namespace UKControllerPlugin {
 
         bool OceanicEventHandler::NattrakLevelValid(std::string level) const
         {
-            return std::regex_match(level, nattrakLevelRegex);
+            return Datablock::NormaliseFlightLevelFromString(level) != -1;
         }
 
         COLORREF OceanicEventHandler::GetClearedTagItemColour(int clearedLevel, int currentLevel) const

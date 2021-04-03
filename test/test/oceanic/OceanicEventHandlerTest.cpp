@@ -196,6 +196,23 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->handler.NattrakClearanceValid(clearanceData));
         }
 
+        TEST_F(OceanicEventHandlerTest, ClearanceValidReturnsTrueWithFlightLevelPrefix)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "CLEARED"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "FL320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            EXPECT_TRUE(this->handler.NattrakClearanceValid(clearanceData));
+        }
+
         TEST_F(OceanicEventHandlerTest, ClearanceValidReturnsTrueWithNulls)
         {
             nlohmann::json clearanceData = {
@@ -526,6 +543,24 @@ namespace UKControllerPluginTest {
             };
 
             EXPECT_FALSE(this->handler.NattrakClearanceValid(clearanceData));
+        }
+
+        TEST_F(OceanicEventHandlerTest, ItHandlesFlightLevelsWithPrefix)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "PENDING"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "FL320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
+            EXPECT_EQ("320", this->handler.GetClearanceForCallsign("BAW123").flightLevel);
         }
 
         TEST_F(OceanicEventHandlerTest, ItHasTheClearanceIndicatorTagItem)
