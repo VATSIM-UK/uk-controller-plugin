@@ -50,6 +50,9 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(openOceanicClearanceDialog);
             container.timedHandler->RegisterEvent(handler, 60);
             container.tagHandler->RegisterTagItem(118, handler);
+            container.tagHandler->RegisterTagItem(119, handler);
+            container.tagHandler->RegisterTagItem(120, handler);
+            container.tagHandler->RegisterTagItem(121, handler);
         }
     } // namespace Oceanic
 } // namespace UKControllerPlugin

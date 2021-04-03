@@ -54,6 +54,10 @@ namespace UKControllerPlugin {
                 int ConvertNattrakLevelToEuroscope(std::string level) const;
                 bool NattrakLevelValid(std::string level) const;
                 COLORREF GetClearedTagItemColour(int clearedLevel, int currentLevel) const;
+                void SetClearanceIndicatorTagItem(Tag::TagData& tagData, const Clearance& clearance) const;
+                void SetClearedLevelTagItem(Tag::TagData& tagData, const Clearance& clearance) const;
+                static void SetClearedMachNumberTagItem(Tag::TagData& tagData, const Clearance& clearance);
+                static void SetClearedEntryPointTagItem(Tag::TagData& tagData, const Clearance& clearance);
 
                 // For making curl requests
                 Curl::CurlInterface& curl;

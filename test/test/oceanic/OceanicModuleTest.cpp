@@ -44,11 +44,34 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(60));
         }
 
+        TEST_F(OceanicModuleTest, BootstrapPluginRegistersCorrectNumberOfTagItems)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_EQ(4, this->container.tagHandler->CountHandlers());
+        }
+
         TEST_F(OceanicModuleTest, BootstrapPluginRegistersClearanceIndicatorTagItem)
         {
             BootstrapPlugin(this->container);
-            EXPECT_EQ(1, this->container.tagHandler->CountHandlers());
             EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(118));
+        }
+
+        TEST_F(OceanicModuleTest, BootstrapPluginRegistersClearanceClearedLevelTagItem)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(119));
+        }
+
+        TEST_F(OceanicModuleTest, BootstrapPluginRegistersClearanceMachNumberTagItem)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(120));
+        }
+
+        TEST_F(OceanicModuleTest, BootstrapPluginRegistersClearanceEntryPointTagItem)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(121));
         }
 
         TEST_F(OceanicModuleTest, BootstrapPluginRegistersOpenClearanceDialogTagFunction)

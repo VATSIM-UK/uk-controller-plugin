@@ -121,7 +121,18 @@ namespace UKControllerPlugin {
 
         std::string OceanicEventHandler::GetTagItemDescription(int tagItemId) const
         {
-            return "Nattrak Oceanic Clearance Indicator";
+            switch (tagItemId) {
+                case 118:
+                    return "Nattrak Oceanic Clearance Indicator";
+                case 119:
+                    return "Nattrak Oceanic Clearance Level";
+                case 120:
+                    return "Nattrak Oceanic Clearance Mach Number";
+                case 121:
+                    return "Nattrak Oceanic Clearance Entry Point";
+            }
+
+            return "";
         }
 
         void OceanicEventHandler::TagFunction(
@@ -150,23 +161,20 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // Work out the colour of the item based on whether the controller needs to do something
-            COLORREF tagItemColour;
-            if (clearance->second.status == clearance->second.CLEARANCE_STATUS_CLEARED) {
-                int clearedAltitude = tagData.flightPlan.GetClearedAltitude();
-                int cruisingLevel = tagData.flightPlan.GetCruiseLevel();
-                int nattrakLevel = this->ConvertNattrakLevelToEuroscope(clearance->second.flightLevel);
-
-                tagItemColour = clearedAltitude != 0
-                                    ? this->GetClearedTagItemColour(nattrakLevel, clearedAltitude)
-                                    : this->GetClearedTagItemColour(nattrakLevel, cruisingLevel);
-            } else {
-                tagItemColour = RGB(255, 153, 255);
+            switch (tagData.itemCode) {
+                case 118:
+                    this->SetClearanceIndicatorTagItem(tagData, clearance->second);
+                    break;
+                case 119:
+                    this->SetClearedLevelTagItem(tagData, clearance->second);
+                    break;
+                case 120:
+                    this->SetClearedMachNumberTagItem(tagData, clearance->second);
+                    break;
+                case 121:
+                    this->SetClearedEntryPointTagItem(tagData, clearance->second);
+                    break;
             }
-
-            // Set the item
-            tagData.SetItemString("OCA");
-            tagData.SetTagColour(tagItemColour);
         }
 
         int OceanicEventHandler::ConvertNattrakLevelToEuroscope(std::string level) const
@@ -184,6 +192,50 @@ namespace UKControllerPlugin {
             return clearedLevel == currentLevel
                        ? this->clearanceIndicatorOk
                        : this->clearanceIndicatorActionRequired;
+        }
+
+        void OceanicEventHandler::SetClearanceIndicatorTagItem(Tag::TagData& tagData, const Clearance& clearance) const
+        {
+            // Work out the colour of the item based on whether the controller needs to do something
+            COLORREF tagItemColour;
+            if (clearance.status == clearance.CLEARANCE_STATUS_CLEARED) {
+                int clearedAltitude = tagData.flightPlan.GetClearedAltitude();
+                int cruisingLevel = tagData.flightPlan.GetCruiseLevel();
+                int nattrakLevel = this->ConvertNattrakLevelToEuroscope(clearance.flightLevel);
+
+                tagItemColour = clearedAltitude != 0
+                                    ? this->GetClearedTagItemColour(nattrakLevel, clearedAltitude)
+                                    : this->GetClearedTagItemColour(nattrakLevel, cruisingLevel);
+            } else {
+                tagItemColour = RGB(255, 153, 255);
+            }
+
+            // Set the item
+            tagData.SetItemString("OCA");
+            tagData.SetTagColour(tagItemColour);
+        }
+
+        void OceanicEventHandler::SetClearedLevelTagItem(Tag::TagData& tagData, const Clearance& clearance) const
+        {
+            int clearedAltitude = tagData.flightPlan.GetClearedAltitude();
+            int cruisingLevel = tagData.flightPlan.GetCruiseLevel();
+            int nattrakLevel = this->ConvertNattrakLevelToEuroscope(clearance.flightLevel);
+            tagData.SetTagColour(
+                clearedAltitude != 0
+                    ? this->GetClearedTagItemColour(nattrakLevel, clearedAltitude)
+                    : this->GetClearedTagItemColour(nattrakLevel, cruisingLevel)
+            );
+            tagData.SetItemString(clearance.flightLevel);
+        }
+
+        void OceanicEventHandler::SetClearedMachNumberTagItem(Tag::TagData& tagData, const Clearance& clearance)
+        {
+            tagData.SetItemString(clearance.mach);
+        }
+
+        void OceanicEventHandler::SetClearedEntryPointTagItem(Tag::TagData& tagData, const Clearance& clearance)
+        {
+            tagData.SetItemString(clearance.entryFix);
         }
     }  // namespace Oceanic
 }  // namespace UKControllerPlugin
