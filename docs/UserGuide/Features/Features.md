@@ -24,3 +24,4 @@ dynamically to the plugin.
 - Enroute releases
 - Stand assignment
 - RECAT-EU Wake Categories
+- [VATSIM Nattrak Integration](Nattrak.md)
