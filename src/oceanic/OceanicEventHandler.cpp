@@ -46,36 +46,32 @@ namespace UKControllerPlugin {
 
                 // Loop the clearances and update local data
                 this->clearances.clear();
-                for (
-                    auto clearance = clearanceData.cbegin();
-                    clearance != clearanceData.cend();
-                    ++clearance
-                ) {
-                    if (!NattrakClearanceValid(*clearance)) {
+                for (const nlohmann::json clearance : clearanceData) {
+                    if (!NattrakClearanceValid(clearance)) {
                         LogWarning("Invalid clearance received from Nattrak");
                         continue;
                     }
 
-                    clearances.insert(
+                    this->clearances.insert(
                         std::pair<std::string, Clearance>(
-                            clearance->at("callsign").get<std::string>(),
+                            clearance.at("callsign").get<std::string>(),
                             {
-                                clearance->at("callsign").get<std::string>(),
-                                clearance->at("status").get<std::string>(),
-                                clearance->at("nat").get<std::string>(),
-                                clearance->at("fix").get<std::string>(),
+                                clearance.at("callsign").get<std::string>(),
+                                clearance.at("status").get<std::string>(),
+                                clearance.at("nat").get<std::string>(),
+                                clearance.at("fix").get<std::string>(),
                                 std::to_string(
                                     Datablock::NormaliseFlightLevelFromString(
-                                        clearance->at("level").get<std::string>())
+                                        clearance.at("level").get<std::string>())
                                 ),
-                                clearance->at("mach").get<std::string>(),
-                                clearance->at("estimating_time").get<std::string>(),
-                                clearance->at("clearance_issued").is_null()
+                                clearance.at("mach").get<std::string>(),
+                                clearance.at("estimating_time").get<std::string>(),
+                                clearance.at("clearance_issued").is_null()
                                     ? ""
-                                    : clearance->at("clearance_issued").get<std::string>(),
-                                clearance->at("extra_info").is_null()
+                                    : clearance.at("clearance_issued").get<std::string>(),
+                                clearance.at("extra_info").is_null()
                                     ? ""
-                                    : clearance->at("extra_info").get<std::string>(),
+                                    : clearance.at("extra_info").get<std::string>(),
                             }
                         )
                     );

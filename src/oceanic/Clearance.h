@@ -60,5 +60,4 @@ namespace UKControllerPlugin {
             const std::string CLEARANCE_STATUS_PENDING = "PENDING";
         } Clearance;
     } // namespace Oceanic
-
 } // namespace UKControllerPlugin
