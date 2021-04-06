@@ -157,6 +157,9 @@
     <Filter Include="src\flightinformationservice">
       <UniqueIdentifier>{8da5b16f-8a28-43c6-95c8-4020f0a8adf8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\oceanic">
+      <UniqueIdentifier>{627b4719-ef1f-450d-a4b1-929ec242b990}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1131,6 +1134,18 @@
     <ClInclude Include="..\..\src\hold\DeemedSeparatedHoldSerializer.h">
       <Filter>src\hold</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\oceanic\Clearance.h">
+      <Filter>src\oceanic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oceanic\OceanicEventHandler.h">
+      <Filter>src\oceanic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oceanic\OceanicModule.h">
+      <Filter>src\oceanic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\oceanic\OceanicClearanceDialog.h">
+      <Filter>src\oceanic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1920,6 +1935,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\hold\DeemedSeparatedHoldSerializer.cpp">
       <Filter>src\hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oceanic\OceanicEventHandler.cpp">
+      <Filter>src\oceanic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oceanic\OceanicModule.cpp">
+      <Filter>src\oceanic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\oceanic\OceanicClearanceDialog.cpp">
+      <Filter>src\oceanic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

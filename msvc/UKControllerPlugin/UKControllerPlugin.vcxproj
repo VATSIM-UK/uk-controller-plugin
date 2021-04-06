@@ -227,6 +227,10 @@
     <ClInclude Include="..\..\src\notifications\NotificationsRepository.h" />
     <ClInclude Include="..\..\src\notifications\NotificationsRepositoryFactory.h" />
     <ClInclude Include="..\..\src\notifications\UnreadNotificationsMessage.h" />
+    <ClInclude Include="..\..\src\oceanic\Clearance.h" />
+    <ClInclude Include="..\..\src\oceanic\OceanicClearanceDialog.h" />
+    <ClInclude Include="..\..\src\oceanic\OceanicEventHandler.h" />
+    <ClInclude Include="..\..\src\oceanic\OceanicModule.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.h" />
     <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.h" />
@@ -511,6 +515,9 @@
     <ClCompile Include="..\..\src\notifications\NotificationsRepository.cpp" />
     <ClCompile Include="..\..\src\notifications\NotificationsRepositoryFactory.cpp" />
     <ClCompile Include="..\..\src\notifications\UnreadNotificationsMessage.cpp" />
+    <ClCompile Include="..\..\src\oceanic\OceanicClearanceDialog.cpp" />
+    <ClCompile Include="..\..\src\oceanic\OceanicEventHandler.cpp" />
+    <ClCompile Include="..\..\src\oceanic\OceanicModule.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp" />
