@@ -1160,6 +1160,60 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(2, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
+        TEST_F(StandEventHandlerTest, StandAssignmentsAreCaseInsensitive)
+        {
+            // Trigger the menu first to set the last airport
+            ON_CALL(this->flightplan, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->flightplan, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            ON_CALL(this->flightplan, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->flightplan, GetOrigin())
+                .WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->flightplan, GetDistanceFromOrigin())
+                .WillByDefault(Return(4));
+
+            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
+            EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 1))
+                .Times(1);
+
+            this->handler.StandSelected(1, "1l", {});
+            EXPECT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+
         TEST_F(StandEventHandlerTest, ItHandlesApiExceptionOnStandAssignment)
         {
             // Trigger the menu first to set the last airport
@@ -1700,6 +1754,41 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             EXPECT_TRUE(this->handler.ProcessMessage("STANDS:BAW123:EGKK:55"));
+        }
+
+        TEST_F(StandEventHandlerTest, StandAssignmentsFromExternalMessagesAreCaseInsensitive)
+        {
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
+            EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 1))
+                .Times(1);
+
+            EXPECT_TRUE(this->handler.ProcessMessage("STANDS:BAW123:EGKK:1l"));
         }
 
         TEST_F(StandEventHandlerTest, ItHandlesInvalidFlightplanOnExternalMessage)

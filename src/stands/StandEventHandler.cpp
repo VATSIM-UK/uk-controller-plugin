@@ -67,6 +67,14 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            // Uppercase any identifiers
+            std::transform(
+                identifier.begin(),
+                identifier.end(),
+                identifier.begin(),
+                [](unsigned char c) { return std::toupper(c); }
+            );
+
             std::string callsign = aircraft->GetCallsign();
             // If no stand is selected, delete the current assignment if there is one
             if (
