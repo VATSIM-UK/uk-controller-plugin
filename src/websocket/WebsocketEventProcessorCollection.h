@@ -18,6 +18,7 @@ namespace UKControllerPlugin {
                 );
                 size_t CountProcessorsForChannel(std::string event) const;
                 size_t CountProcessorsForEvent(std::string event) const;
+                size_t CountProcessorsForAll() const;
                 std::set<std::string> GetChannelSubscriptions(void) const;
                 void ProcessEvent(const UKControllerPlugin::Websocket::WebsocketMessage & message) const;
 
@@ -33,6 +34,9 @@ namespace UKControllerPlugin {
                     std::string,
                     std::set<std::shared_ptr<UKControllerPlugin::Websocket::WebsocketEventProcessorInterface>>
                 > eventMap;
+
+                // Processors that care about every event
+                std::set<std::shared_ptr<WebsocketEventProcessorInterface>> allEventProcessors;
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

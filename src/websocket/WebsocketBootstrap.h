@@ -5,7 +5,8 @@ namespace UKControllerPlugin {
     namespace Websocket {
 
         void BootstrapPlugin(
-            UKControllerPlugin::Bootstrap::PersistenceContainer & container
+            Bootstrap::PersistenceContainer& container,
+            bool duplicatePlugin
         );
 
     }  // namespace Websocket

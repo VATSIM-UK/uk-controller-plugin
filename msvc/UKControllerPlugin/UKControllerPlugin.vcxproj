@@ -337,6 +337,9 @@
     <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorInterface.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketMessage.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketProxyConnection.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketProxyHandler.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketProxyWindow.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h" />
     <ClInclude Include="..\..\src\windows\WinApi.h" />
     <ClInclude Include="..\..\src\windows\WinApiInterface.h" />
@@ -607,6 +610,9 @@
     <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketProxyConnection.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketProxyHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketProxyWindow.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp" />
     <ClCompile Include="..\..\src\windows\WinApi.cpp" />
     <ClInclude Include="..\..\src\timedevent\DeferredEventHandler.h" />

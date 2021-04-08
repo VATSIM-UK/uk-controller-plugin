@@ -1,4 +1,3 @@
-#pragma once
 #include "pch/stdafx.h"
 #include "websocket/WebsocketConnection.h"
 #include "update/PluginVersion.h"
@@ -248,7 +247,7 @@ namespace UKControllerPlugin {
 
             LogDebug("Incoming websocket message: " + boost::beast::buffers_to_string(this->incomingBuffer.data()));
             std::lock_guard<std::mutex> lock(this->inboundMessageQueueGuard);
-            this->inboundMessages.push(boost::beast::buffers_to_string(this->incomingBuffer.data()));
+            this->inboundMessages.push(buffers_to_string(this->incomingBuffer.data()));
             this->incomingBuffer.consume(bytes_transferred);
             this->asyncReadInProgress = false;
             this->lastActivityTime = std::chrono::system_clock::now();
