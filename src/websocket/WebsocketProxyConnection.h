@@ -1,5 +1,4 @@
 #pragma once
-#include "integration/ExternalMessageHandlerInterface.h"
 #include "websocket/WebsocketConnectionInterface.h"
 #include "websocket/WebsocketProxyWindow.h"
 
@@ -11,7 +10,7 @@ namespace UKControllerPlugin {
         class WebsocketProxyConnection : public WebsocketConnectionInterface
         {
             public:
-                explicit WebsocketProxyConnection();
+                WebsocketProxyConnection();
                 ~WebsocketProxyConnection() override;
 
                 void AddMessageToQueue(std::string message);
