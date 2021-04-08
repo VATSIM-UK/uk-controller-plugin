@@ -107,7 +107,7 @@ namespace UKControllerPlugin {
                 bool asyncWriteInProgress = false;
 
                 // The last time something happened
-                std::chrono::system_clock::time_point lastActivityTime;
+                std::chrono::system_clock::time_point lastActivityTime = std::chrono::system_clock::now();
 
                 // The next time to try reconnecting
                 std::chrono::system_clock::time_point nextReconnectAttempt =

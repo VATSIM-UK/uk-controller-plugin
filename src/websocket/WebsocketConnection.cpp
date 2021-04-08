@@ -194,6 +194,17 @@ namespace UKControllerPlugin {
                     this->outboundMessages.pop();
                 }
 
+                // This is a mitigation for ongoing websocket issues while we look to fix things,
+                // if there's been no activity for a while, reset the websocket
+                if (
+                    this->connected &&
+                    std::chrono::system_clock::now() - this->lastActivityTime > std::chrono::minutes(5)
+                ) {
+                    boost::system::error_code ec;
+                    this->websocket->close(boost::beast::websocket::close_code::normal, ec);
+                    this->ResetWebsocket();
+                }
+
                 // Sleep for a bit to give the CPU a break
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             }
