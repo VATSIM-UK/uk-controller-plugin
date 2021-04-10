@@ -35,7 +35,7 @@ namespace UKControllerPlugin {
 
                 // URL for the help
                 const std::wstring helpUrl =
-                    L"https://github.com/VATSIM-UK/uk-controller-plugin/blob/main/docs/UserGuide/UserGuide.md";
+                    L"https://vatsim-uk.github.io/uk-controller-plugin/";
 
             private:
 
