@@ -203,8 +203,16 @@ namespace UKControllerPlugin {
                 ) {
                     LogInfo("Restarting websocket due to inactivity.");
                     boost::beast::error_code ec;
-                    this->websocket->next_layer().next_layer().cancel();
-                    this->websocket->close(boost::beast::websocket::close_code::normal, ec);
+
+                    try {
+                        this->websocket->next_layer().next_layer().cancel();
+                        this->websocket->next_layer().next_layer().close();
+                        this->websocket->next_layer().shutdown(ec);
+                        this->websocket->close(boost::beast::websocket::close_code::normal, ec);
+                    } catch (boost::system::system_error) {
+                        LogInfo("Exception thrown when trying to close websocket");
+                    }
+
                     this->ResetWebsocket();
                 }
 
