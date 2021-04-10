@@ -6,8 +6,8 @@ for example, stand allocations.
 
 ## Contents
 
-- [Installation](Installation/Installation.md)
-- [Updating the plugin](Updating/Updating.md)
-- [Features](Features/Features.md)
-- [Frequently asked questions](Faq/Faq.md)
-- [Getting help](GettingHelp/Help.md)
+- [Installation](UserGuide/Installation/Installation.md)
+- [Updating the plugin](UserGuide/Updating/Updating.md)
+- [Features](UserGuide/Features/Features.md)
+- [Frequently asked questions](UserGuide/Faq/Faq.md)
+- [Getting help](UserGuide/GettingHelp/Help.md)
