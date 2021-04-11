@@ -323,6 +323,18 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(this->requestBuilder.BuildGetUnreadNotificationsRequest()).GetRawData();
         }
 
+        nlohmann::json ApiHelper::SyncPluginEvents() const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildPluginEventSyncRequest()).GetRawData();
+        }
+
+        nlohmann::json ApiHelper::GetLatestPluginEvents(int lastEventId) const
+        {
+            return this->MakeApiRequest(
+                this->requestBuilder.BuildGetLatestPluginEventsRequest(lastEventId)
+            ).GetRawData();
+        }
+
         void ApiHelper::ReadNotification(int id) const
         {
             this->MakeApiRequest(this->requestBuilder.BuildReadNotificationRequest(id));
