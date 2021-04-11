@@ -200,8 +200,18 @@ namespace UKControllerPlugin {
                     this->connected &&
                     std::chrono::system_clock::now() - this->lastActivityTime > std::chrono::minutes(5)
                 ) {
-                    boost::system::error_code ec;
-                    this->websocket->close(boost::beast::websocket::close_code::normal, ec);
+                    LogInfo("Restarting websocket due to inactivity.");
+                    boost::beast::error_code ec;
+
+                    try {
+                        this->websocket->next_layer().next_layer().cancel();
+                        this->websocket->next_layer().next_layer().close();
+                        this->websocket->next_layer().shutdown(ec);
+                        this->websocket->close(boost::beast::websocket::close_code::normal, ec);
+                    } catch (boost::system::system_error) {
+                        LogInfo("Exception thrown when trying to close websocket");
+                    }
+
                     this->ResetWebsocket();
                 }
 
