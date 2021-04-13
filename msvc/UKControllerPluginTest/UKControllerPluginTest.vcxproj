@@ -256,6 +256,8 @@
     <ClCompile Include="..\..\test\test\websocket\PusherPingEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\websocket\PusherWebsocketProtocolHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\websocket\WebsocketEventProcessorCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\WebsocketProxyConnetionTest.cpp" />
+    <ClCompile Include="..\..\test\test\websocket\WebsocketProxyHandlerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h" />

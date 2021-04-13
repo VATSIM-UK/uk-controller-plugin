@@ -53,6 +53,7 @@ namespace UKControllerPluginTest {
                 "pusher:connection_established",
                 "none",
                 nlohmann::json({{"activity_timeout", 20}}),
+                "",
                 true
             };
             this->handler.ProcessWebsocketMessage(message);
@@ -67,6 +68,7 @@ namespace UKControllerPluginTest {
                 "pusher:connection_established",
                 "none",
                 nlohmann::json({{"activity_timeout", 9999999}}),
+                "",
                 true
             };
             this->handler.ProcessWebsocketMessage(message);

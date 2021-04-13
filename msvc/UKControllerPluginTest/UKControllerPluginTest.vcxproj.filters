@@ -871,6 +871,12 @@
     <ClCompile Include="..\..\test\test\oceanic\OceanicModuleTest.cpp">
       <Filter>test\oceanic</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\WebsocketProxyConnetionTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\websocket\WebsocketProxyHandlerTest.cpp">
+      <Filter>test\websocket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

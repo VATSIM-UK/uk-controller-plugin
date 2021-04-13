@@ -37,6 +37,7 @@ WebsocketMessage InterpretPusherMessage(std::string message)
         messageJson.at("event"),
         messageJson.count("channel") && messageJson.at("channel").is_string() ? messageJson.at("channel") : "none",
         dataJson,
+        message,
         messageJson.at("event").get<std::string>().substr(0, 6) == "pusher"
     };
 }

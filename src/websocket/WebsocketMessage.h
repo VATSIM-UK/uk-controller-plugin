@@ -19,6 +19,9 @@ namespace UKControllerPlugin {
             // The data associated with the message
             const nlohmann::json data;
 
+            // The raw message
+            const std::string raw;
+
             // Is the message to do with the protocol and should therefore not be processed outside the connection
             const bool protocolMessage;
 

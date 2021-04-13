@@ -98,6 +98,7 @@ namespace UKControllerPluginTest {
                 "App\\Events\\MinStacksUpdatedEvent",
                 "private-minstack-updates",
                 mslData,
+                "",
                 false
             };
 
@@ -120,6 +121,7 @@ namespace UKControllerPluginTest {
                 "App\\Events\\MinStacksUpdatedEvent",
                 "private-minstack-updates",
                 mslData,
+                "",
                 false
             };
 

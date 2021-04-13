@@ -23,12 +23,21 @@ namespace UKControllerPlugin {
                     }
 
                     continue;
-                } else if (it->IsEventSubscription()) {
-                    if (!this->eventMap[it->subTarget].insert(processor).second) {
-                        LogWarning("Attemped to add processor for duplicate event: " + it->subTarget);
-                    }
+                } else {
+                    if (it->IsEventSubscription()) {
+                        if (!this->eventMap[it->subTarget].insert(processor).second) {
+                            LogWarning("Attemped to add processor for duplicate event: " + it->subTarget);
+                        }
 
-                    continue;
+                        continue;
+                    }
+                    if (it->IsAllSubscription()) {
+                        if (!this->allEventProcessors.insert(processor).second) {
+                            LogWarning("Attemped to add processor for duplicate all: " + it->subTarget);
+                        }
+
+                        continue;
+                    }
                 }
 
                 LogWarning("Unknown subscription type " + it->subType);
@@ -43,6 +52,11 @@ namespace UKControllerPlugin {
         size_t WebsocketEventProcessorCollection::CountProcessorsForEvent(std::string event) const
         {
             return this->eventMap.count(event) ? this->eventMap.at(event).size() : 0;
+        }
+
+        size_t WebsocketEventProcessorCollection::CountProcessorsForAll() const
+        {
+            return this->allEventProcessors.size();
         }
 
         /*
@@ -104,6 +118,21 @@ namespace UKControllerPlugin {
                     calledProcessors.insert(*it);
                     (*it)->ProcessWebsocketMessage(message);
                 }
+            }
+
+            // Send the event to processors that want to know about everything
+            for (
+                std::set<std::shared_ptr<WebsocketEventProcessorInterface>>::const_iterator it
+                    = this->allEventProcessors.cbegin();
+                it != this->allEventProcessors.cend();
+                ++it
+            ) {
+                if (calledProcessors.count(*it)) {
+                    continue;
+                }
+
+                calledProcessors.insert(*it);
+                (*it)->ProcessWebsocketMessage(message);
             }
         }
     }  // namespace Websocket

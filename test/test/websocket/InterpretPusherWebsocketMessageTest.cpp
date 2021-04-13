@@ -38,6 +38,7 @@ TEST(InterpretPusherMessageTest, ItHandlesMissingChannel)
         "test-event",
         "none",
         { {"test", "lol"} },
+        message.dump(),
         false
     };
 
@@ -55,6 +56,7 @@ TEST(InterpretPusherMessageTest, ItHandlesNonStringChannel)
         "test-event",
         "none",
         { {"test", "lol"} },
+        message.dump(),
         false
     };
 
@@ -71,6 +73,7 @@ TEST(InterpretPusherMessageTest, ItHandlesMissingData)
         "test-event",
         "test-channel",
         {},
+        message.dump(),
         false
     };
 
@@ -88,6 +91,7 @@ TEST(InterpretPusherMessageTest, ItHandlesNonObjectData)
         "test-event",
         "test-channel",
         {},
+        message.dump(),
         false
     };
 
@@ -105,6 +109,7 @@ TEST(InterpretPusherMessageTest, ItDetectsProtocolMessages)
         "pusher:test",
         "test-channel",
         { {"test", "lol"} },
+        message.dump(),
         true
     };
 

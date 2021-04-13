@@ -6,6 +6,8 @@
 #include "websocket/PusherErrorEventHandler.h"
 #include "websocket/PusherPingEventHandler.h"
 #include "websocket/PusherWebsocketProtocolHandler.h"
+#include "websocket/WebsocketProxyConnection.h"
+#include "websocket/WebsocketProxyHandler.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
@@ -15,7 +17,7 @@ namespace UKControllerPlugin {
         /*
             Bootstrap up the websocket.
         */
-        void BootstrapPlugin(PersistenceContainer & container)
+        void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin)
         {
             // Connect to websocket
             std::string wsHost = container.settingsRepository->HasSetting("websocket_host")
@@ -26,15 +28,18 @@ namespace UKControllerPlugin {
                 ? container.settingsRepository->GetSetting("websocket_port")
                 : "6001";
 
-            container.websocket.reset(
-                new WebsocketConnection(
-                    wsHost,
-                    wsPort
-                )
-            );
-
             // Set up handler collection
             container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
+
+            // Create a websocket connection depending on whether we're the main plugin
+            if (duplicatePlugin) {
+                container.websocket.reset(new WebsocketProxyConnection());
+            } else {
+                container.websocket.reset(new WebsocketConnection(wsHost, wsPort));
+                container.websocketProcessors->AddProcessor(
+                    std::make_shared<WebsocketProxyHandler>()
+                );
+            }
 
             // Set up handlers that look after the websocket protocol
             container.websocketProcessors->AddProcessor(

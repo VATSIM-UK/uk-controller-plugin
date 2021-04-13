@@ -101,6 +101,7 @@ namespace UKControllerPluginTest {
                 "App\\Events\\RegionalPressuresUpdatedEvent",
                 "private-rps-updates",
                 pressureData,
+                "",
                 false
             };
 
@@ -125,6 +126,7 @@ namespace UKControllerPluginTest {
                 "App\\Events\\RegionalPressuresUpdatedEvent",
                 "private-rps-updates",
                 pressureData,
+                "",
                 false
             };
 

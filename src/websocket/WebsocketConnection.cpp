@@ -1,4 +1,3 @@
-#pragma once
 #include "pch/stdafx.h"
 #include "websocket/WebsocketConnection.h"
 #include "update/PluginVersion.h"
@@ -141,7 +140,7 @@ namespace UKControllerPlugin {
         {
             while (this->threadsRunning) {
 
-                std::lock_guard<std::mutex>(this->eventGuard);
+                std::lock_guard<std::mutex> lockGuard(this->eventGuard);
 
                 // If not connected, try and connect
                 if (!this->connected) {

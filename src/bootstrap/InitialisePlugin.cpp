@@ -175,7 +175,7 @@ namespace UKControllerPlugin {
 
         // API + Websocket
         HelperBootstrap::Bootstrap(*this->container);
-        Websocket::BootstrapPlugin(*this->container);
+        Websocket::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
         // Datetime
         Datablock::BootstrapPlugin(*this->container);
