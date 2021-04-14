@@ -148,6 +148,9 @@
     <Filter Include="test\oceanic">
       <UniqueIdentifier>{782d80f4-69f9-44ce-b72e-fb7c027c5b4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\sid">
+      <UniqueIdentifier>{ece313f8-4cfe-4135-9d52-6e1d268e00a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -876,6 +879,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\websocket\WebsocketProxyHandlerTest.cpp">
       <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sid\StandardInstrumentDepartureTest.cpp">
+      <Filter>test\sid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

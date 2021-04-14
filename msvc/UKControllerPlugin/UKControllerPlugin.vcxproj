@@ -289,6 +289,7 @@
     <ClInclude Include="..\..\src\setting\SettingRepository.h" />
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
     <ClInclude Include="..\..\src\setting\SettingValue.h" />
+    <ClInclude Include="..\..\src\sid\StandardInstrumentDeparture.h" />
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h" />
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h" />
     <ClInclude Include="..\..\src\squawk\SquawkAssignment.h" />
@@ -570,6 +571,7 @@
     <ClCompile Include="..\..\src\sectorfile\SectorFileCoordinates.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
+    <ClCompile Include="..\..\src\sid\StandardInstrumentDeparture.cpp" />
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkAssignment.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkEventHandler.cpp" />

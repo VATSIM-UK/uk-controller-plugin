@@ -160,6 +160,9 @@
     <Filter Include="src\oceanic">
       <UniqueIdentifier>{627b4719-ef1f-450d-a4b1-929ec242b990}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\sid">
+      <UniqueIdentifier>{af24d112-0445-4640-a5de-9e8cc640aceb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1155,6 +1158,9 @@
     <ClInclude Include="..\..\src\websocket\WebsocketProxyHandler.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\sid\StandardInstrumentDeparture.h">
+      <Filter>src\sid</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1962,6 +1968,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\WebsocketProxyHandler.cpp">
       <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sid\StandardInstrumentDeparture.cpp">
+      <Filter>src\sid</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
