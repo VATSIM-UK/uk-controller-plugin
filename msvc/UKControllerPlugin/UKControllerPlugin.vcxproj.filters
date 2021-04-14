@@ -1161,6 +1161,9 @@
     <ClInclude Include="..\..\src\sid\StandardInstrumentDeparture.h">
       <Filter>src\sid</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\sid\SidCollection.h">
+      <Filter>src\sid</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1970,6 +1973,9 @@
       <Filter>src\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sid\StandardInstrumentDeparture.cpp">
+      <Filter>src\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sid\SidCollection.cpp">
       <Filter>src\sid</Filter>
     </ClCompile>
   </ItemGroup>

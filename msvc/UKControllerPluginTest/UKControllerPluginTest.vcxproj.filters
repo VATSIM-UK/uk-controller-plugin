@@ -883,6 +883,9 @@
     <ClCompile Include="..\..\test\test\sid\StandardInstrumentDepartureTest.cpp">
       <Filter>test\sid</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\sid\SidCollectionTest.cpp">
+      <Filter>test\sid</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
