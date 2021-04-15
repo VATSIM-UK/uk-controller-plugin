@@ -36,12 +36,6 @@ namespace UKControllerPluginTest {
                 NiceMock<MockDependencyLoader> dependency;
         };
 
-        TEST_F(InitialAltitudeModuleTest, BootstrapPluginCreatesInitialAltitudes)
-        {
-            InitialAltitudeModule::BootstrapPlugin(this->dependency, this->container);
-            EXPECT_NO_THROW(container.initialAltitudes->HasSid("EGLL", "DET2G"));
-        }
-
         TEST_F(InitialAltitudeModuleTest, BootstrapPluginRegistersFlightplanEvents)
         {
             InitialAltitudeModule::BootstrapPlugin(this->dependency, this->container);

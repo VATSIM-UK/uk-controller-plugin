@@ -300,12 +300,6 @@
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeEventHandlerTest.cpp">
       <Filter>test\initialaltitude</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeGeneratorFactoryTest.cpp">
-      <Filter>test\initialaltitude</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeGeneratorTest.cpp">
-      <Filter>test\initialaltitude</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeModuleTest.cpp">
       <Filter>test\initialaltitude</Filter>
     </ClCompile>
@@ -511,12 +505,6 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\squawk\SquawkRequestTest.cpp">
       <Filter>test\squawk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\initialaltitude\CompareInitialAltitudesTest.cpp">
-      <Filter>test\initialaltitude</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp">
-      <Filter>test\initialaltitude</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\hold\HoldingDataTest.cpp">
       <Filter>test\hold</Filter>

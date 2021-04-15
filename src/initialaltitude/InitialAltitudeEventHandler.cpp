@@ -4,16 +4,18 @@
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "initialaltitude/InitialAltitudeGenerator.h"
 #include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
 #include "flightplan/DeferredFlightplanEvent.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/GeneralSettingsEntries.h"
+#include "sid/SidCollection.h"
+#include "sid/StandardInstrumentDeparture.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
-using UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator;
+using UKControllerPlugin::Sid::SidCollection;
+using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
@@ -29,7 +31,7 @@ namespace UKControllerPlugin {
     namespace InitialAltitude {
 
         InitialAltitudeEventHandler::InitialAltitudeEventHandler(
-            const InitialAltitudeGenerator & generator,
+            const SidCollection& sids,
             const ActiveCallsignCollection & activeCallsigns,
             const AirfieldOwnershipManager & airfieldOwnership,
             const Login & login,
@@ -37,9 +39,9 @@ namespace UKControllerPlugin {
             EuroscopePluginLoopbackInterface & plugin,
             const StoredFlightplanCollection& storedFlightplans
         )
-            : generator(generator), activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership),
-            minimumLoginTimeBeforeAssignment(5), login(login), deferredEvents(deferredEvents), plugin(plugin),
-            storedFlightplans(storedFlightplans)
+            : minimumLoginTimeBeforeAssignment(5), sids(sids), activeCallsigns(activeCallsigns),
+              airfieldOwnership(airfieldOwnership), deferredEvents(deferredEvents), login(login), storedFlightplans(storedFlightplans),
+              plugin(plugin)
         {
 
         }
@@ -82,27 +84,25 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // Remove deprecation marks from the SID name.
-            std::string sidName = normalise.StripSidDeprecation(flightPlan.GetSidName());
-
             // Make sure the SID exists.
-            if (!generator.HasSid(flightPlan.GetOrigin(), sidName)) {
+            std::shared_ptr<StandardInstrumentDeparture> matchedSid = this->GetSidForFlight(flightPlan);
+
+            if (!matchedSid) {
                 return;
             }
 
             // Doesn't assign an init altitude if cruise level is less than the initial altitude of the SID.
-            const int initialAltitude = generator.GetInitialAltitudeForDeparture(flightPlan.GetOrigin(), sidName);
-            if (flightPlan.GetCruiseLevel() < initialAltitude) {
+            if (flightPlan.GetCruiseLevel() < matchedSid->InitialAltitude()) {
                 return;
             }
 
             // Set the IA and record it
             LogInfo(
-                "Set initial altitude for " + flightPlan.GetCallsign() +
-                " (" + flightPlan.GetOrigin() + ", " + sidName + ")"
+                "Set initial altitude of " + std::to_string(matchedSid->InitialAltitude()) + " for " +
+                flightPlan.GetCallsign() + " (" + flightPlan.GetOrigin() + ", " + matchedSid->Identifier() + ")"
             );
-            flightPlan.SetClearedAltitude(initialAltitude);
-            this->alreadySetMap[flightPlan.GetCallsign()] = sidName;
+            flightPlan.SetClearedAltitude(matchedSid->InitialAltitude());
+            this->alreadySetMap[flightPlan.GetCallsign()] = flightPlan.GetSidName();
         }
 
         InitialAltitudeEventHandler::~InitialAltitudeEventHandler(void)
@@ -141,19 +141,19 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            std::string sidName = normalise.StripSidDeprecation(flightplan.GetSidName());
+            // Make sure the SID exists.
+            std::shared_ptr<StandardInstrumentDeparture> matchedSid = this->GetSidForFlight(flightplan);
 
-            if (!generator.HasSid(flightplan.GetOrigin(), sidName)) {
+            if (!matchedSid) {
                 return;
             }
-            flightplan.SetClearedAltitude(
-                this->generator.GetInitialAltitudeForDeparture(flightplan.GetOrigin(), sidName)
-            );
+
+            flightplan.SetClearedAltitude(matchedSid->InitialAltitude());
             LogInfo(
-                "Recycled initial altitude for " + flightplan.GetCallsign() +
-                    " (" + flightplan.GetOrigin() + ", " + sidName + ")"
+                "Recycled initial altitude of " + std::to_string(matchedSid->InitialAltitude()) + " for " +
+                flightplan.GetCallsign() + " (" + flightplan.GetOrigin() + ", " + matchedSid->Identifier() + ")"
             );
-            this->alreadySetMap[flightplan.GetCallsign()] = sidName;
+            this->alreadySetMap[flightplan.GetCallsign()] = flightplan.GetSidName();
         }
 
         /*
@@ -207,6 +207,15 @@ namespace UKControllerPlugin {
             EuroScopeCRadarTargetInterface& radarTarget
         ) {
             return !flightplan.IsTracked() || flightplan.IsTrackedByUser();
+        }
+
+        std::shared_ptr<StandardInstrumentDeparture> InitialAltitudeEventHandler::GetSidForFlight(
+            EuroScopeCFlightPlanInterface& flightplan)
+        {
+            return this->sids.GetByAirfieldAndIdentifier(
+                flightplan.GetOrigin(),
+                normalise.StripSidDeprecation(flightplan.GetSidName())
+            );
         }
 
         /*

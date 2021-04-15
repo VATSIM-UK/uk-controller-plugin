@@ -1,7 +1,6 @@
 #pragma once
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "airfield/NormaliseSid.h"
-#include "initialaltitude/InitialAltitudeGenerator.h"
 #include "timedevent/DeferredEventHandler.h"
 #include "euroscope/UserSettingAwareInterface.h"
 #include "controller/ActiveCallsignEventHandlerInterface.h"
@@ -21,9 +20,10 @@ namespace UKControllerPlugin {
         class ActiveCallsignCollection;
         class Login;
     }  // namespace Controller
-    namespace InitialAltitude {
-        class InitialAltitudeGenerator;
-    }  // namespace InitialAltitude
+    namespace Sid {
+        class SidCollection;
+        class StandardInstrumentDeparture;
+    } // namespace Sid
     namespace TimedEvent {
         class DeferredEventHandler;
     }  // namespace TimedEvent
@@ -44,7 +44,7 @@ namespace UKControllerPlugin {
         {
             public:
                 InitialAltitudeEventHandler(
-                    const UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator & generator,
+                    const Sid::SidCollection& sids,
                     const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
                     const UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership,
                     const UKControllerPlugin::Controller::Login & login,
@@ -99,8 +99,8 @@ namespace UKControllerPlugin {
 
             private:
                 bool MeetsAssignmentConditions(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget
                 ) const;
 
                 static bool MeetsForceAssignmentConditions(
@@ -108,8 +108,12 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
                 );
 
+                std::shared_ptr<Sid::StandardInstrumentDeparture> GetSidForFlight(
+                    Euroscope::EuroScopeCFlightPlanInterface& flightplan
+                );
+
                 // Used to generate initial altitudes.
-                const UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator & generator;
+                const Sid::SidCollection& sids;
 
                 // Used to find out the users callsign.
                 const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns;

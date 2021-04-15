@@ -408,12 +408,6 @@
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h">
       <Filter>src\initialaltitude</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGenerator.h">
-      <Filter>src\initialaltitude</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.h">
-      <Filter>src\initialaltitude</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeModule.h">
       <Filter>src\initialaltitude</Filter>
     </ClInclude>
@@ -692,12 +686,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\squawk\SquawkRequest.h">
       <Filter>src\squawk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h">
-      <Filter>src\initialaltitude</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h">
-      <Filter>src\initialaltitude</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldingData.h">
       <Filter>src\hold</Filter>
@@ -1366,12 +1354,6 @@
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp">
       <Filter>src\initialaltitude</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp">
-      <Filter>src\initialaltitude</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.cpp">
-      <Filter>src\initialaltitude</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeModule.cpp">
       <Filter>src\initialaltitude</Filter>
     </ClCompile>
@@ -1602,9 +1584,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\squawk\SquawkRequest.cpp">
       <Filter>src\squawk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp">
-      <Filter>src\initialaltitude</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\CompareHolds.cpp">
       <Filter>src\hold</Filter>

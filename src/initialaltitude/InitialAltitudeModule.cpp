@@ -1,12 +1,10 @@
 #include "pch/stdafx.h"
 #include "initialaltitude/InitialAltitudeModule.h"
 #include "initialaltitude/InitialAltitudeEventHandler.h"
-#include "initialaltitude/InitialAltitudeGeneratorFactory.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "tag/TagFunction.h"
 
-using UKControllerPlugin::InitialAltitude::InitialAltitudeGeneratorFactory;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
@@ -23,10 +21,9 @@ namespace UKControllerPlugin {
             DependencyLoaderInterface & dependency,
             PersistenceContainer & persistence
         ) {
-            persistence.initialAltitudes = InitialAltitudeGeneratorFactory::Create(dependency);
             std::shared_ptr<InitialAltitudeEventHandler> initialAltitudeEventHandler(
                 new InitialAltitudeEventHandler(
-                    *persistence.initialAltitudes,
+                    *persistence.sids,
                     *persistence.activeCallsigns,
                     *persistence.airfieldOwnership,
                     *persistence.login,
@@ -43,7 +40,7 @@ namespace UKControllerPlugin {
 
 
             TagFunction recycleFunction(
-                InitialAltitudeModule::recycleFunctionId,
+                recycleFunctionId,
                 "Recycle Initial Altitude",
                 std::bind(
                     &InitialAltitudeEventHandler::RecycleInitialAltitude,

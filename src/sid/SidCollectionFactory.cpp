@@ -28,6 +28,7 @@ namespace UKControllerPlugin {
                 );
             }
 
+            LogInfo("Loaded " + std::to_string(sids->CountSids()) + " standard instrument departures");
             return std::move(sids);
         }
 
