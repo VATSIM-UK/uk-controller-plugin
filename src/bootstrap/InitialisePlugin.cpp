@@ -49,6 +49,7 @@
 #include "notifications/NotificationsModule.h"
 #include "flightinformationservice/FlightInformatioNServiceModule.h"
 #include "oceanic/OceanicModule.h"
+#include "sid/SidModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -216,6 +217,7 @@ namespace UKControllerPlugin {
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
+        Sid::BootstrapPlugin(*this->container, loader);
         Navaids::BootstrapPlugin(*this->container, loader);
         Releases::BootstrapPlugin(*this->container, loader);
         Stands::BootstrapPlugin(*this->container, loader);

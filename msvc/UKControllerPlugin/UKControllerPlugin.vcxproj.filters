@@ -1164,6 +1164,12 @@
     <ClInclude Include="..\..\src\sid\SidCollection.h">
       <Filter>src\sid</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\sid\SidCollectionFactory.h">
+      <Filter>src\sid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sid\SidModule.h">
+      <Filter>src\sid</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1976,6 +1982,12 @@
       <Filter>src\sid</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sid\SidCollection.cpp">
+      <Filter>src\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sid\SidCollectionFactory.cpp">
+      <Filter>src\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sid\SidModule.cpp">
       <Filter>src\sid</Filter>
     </ClCompile>
   </ItemGroup>

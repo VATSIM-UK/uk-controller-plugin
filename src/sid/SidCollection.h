@@ -12,7 +12,6 @@ namespace UKControllerPlugin {
         {
             public:
 
-                SidCollection();
                 void AddSid(std::shared_ptr<StandardInstrumentDeparture> sid);
                 size_t CountSids() const;
                 const std::shared_ptr<StandardInstrumentDeparture> GetByAirfieldAndIdentifier(

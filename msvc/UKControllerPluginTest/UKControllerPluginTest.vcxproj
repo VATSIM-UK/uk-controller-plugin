@@ -221,7 +221,9 @@
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileCoordinatesTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\sid\SidCollectionFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\sid\SidCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\sid\SidModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\sid\StandardInstrumentDepartureTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\ApiSquawkAllocationHandlerTest.cpp" />

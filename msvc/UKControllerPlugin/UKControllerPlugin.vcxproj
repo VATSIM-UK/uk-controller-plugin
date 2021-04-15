@@ -290,6 +290,8 @@
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
     <ClInclude Include="..\..\src\setting\SettingValue.h" />
     <ClInclude Include="..\..\src\sid\SidCollection.h" />
+    <ClInclude Include="..\..\src\sid\SidCollectionFactory.h" />
+    <ClInclude Include="..\..\src\sid\SidModule.h" />
     <ClInclude Include="..\..\src\sid\StandardInstrumentDeparture.h" />
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h" />
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h" />
@@ -573,6 +575,8 @@
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
     <ClCompile Include="..\..\src\sid\SidCollection.cpp" />
+    <ClCompile Include="..\..\src\sid\SidCollectionFactory.cpp" />
+    <ClCompile Include="..\..\src\sid\SidModule.cpp" />
     <ClCompile Include="..\..\src\sid\StandardInstrumentDeparture.cpp" />
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkAssignment.cpp" />
