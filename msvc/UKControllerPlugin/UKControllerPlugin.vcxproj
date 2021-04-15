@@ -167,6 +167,8 @@
     <ClInclude Include="..\..\src\hold\PublishedHoldCollection.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeModule.h" />
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingEventHandler.h" />
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingModule.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageEventHandler.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageHandlerInterface.h" />
     <ClInclude Include="..\..\src\integration\HiddenWindow.h" />
@@ -466,6 +468,8 @@
     <ClCompile Include="..\..\src\hold\PublishedHoldCollection.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeModule.cpp" />
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingEventHandler.cpp" />
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingModule.cpp" />
     <ClCompile Include="..\..\src\integration\ExternalMessageEventHandler.cpp" />
     <ClCompile Include="..\..\src\integration\HiddenWindow.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationModule.cpp" />

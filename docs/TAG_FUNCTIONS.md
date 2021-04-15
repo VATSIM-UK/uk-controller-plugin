@@ -11,3 +11,4 @@
 9008 - Open Stand Assignment Edit Box
 9009 - Open UK Flight Information Services Menu
 9010 - Open Oceanic Clearance Diaog
+9011 - Recycle Initial Heading

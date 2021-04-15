@@ -18,7 +18,7 @@ namespace UKControllerPluginTest {
                     this->sid2.reset(new StandardInstrumentDeparture("EGLL", "TEST1B", 3, 4));
                     this->sid3.reset(new StandardInstrumentDeparture("EGBB", "TEST1A", 5, 6));
                 }
-                
+
 
                 std::shared_ptr<StandardInstrumentDeparture> sid1;
                 std::shared_ptr<StandardInstrumentDeparture> sid2;

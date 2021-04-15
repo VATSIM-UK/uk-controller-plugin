@@ -151,6 +151,9 @@
     <Filter Include="test\sid">
       <UniqueIdentifier>{ece313f8-4cfe-4135-9d52-6e1d268e00a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\initialheading">
+      <UniqueIdentifier>{1f6bc603-4f77-4a4d-8364-2b8e739fce7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -879,6 +882,12 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\sid\SidModuleTest.cpp">
       <Filter>test\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\initialheading\InitialHeadingModuleTest.cpp">
+      <Filter>test\initialheading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\initialheading\InitialHeadingEventHandlerTest.cpp">
+      <Filter>test\initialheading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

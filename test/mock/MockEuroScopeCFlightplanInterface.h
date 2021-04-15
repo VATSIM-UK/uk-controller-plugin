@@ -29,6 +29,7 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(GetSidName, const std::string(void));
                 MOCK_CONST_METHOD0(GetAssignedSquawk, std::string(void));
                 MOCK_CONST_METHOD0(HasControllerClearedAltitude, const bool(void));
+                MOCK_CONST_METHOD0(HasControllerAssignedHeading, const bool(void));
                 MOCK_CONST_METHOD0(HasAssignedSquawk, bool(void));
                 MOCK_CONST_METHOD0(HasSid, bool(void));
                 MOCK_CONST_METHOD0(IsSimulated, bool(void));
@@ -37,6 +38,7 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD0(IsValid, bool(void));
                 MOCK_CONST_METHOD0(IsVfr, bool(void));
                 MOCK_METHOD1(SetClearedAltitude, void(int));
+                MOCK_METHOD1(SetHeading, void(int));
                 MOCK_METHOD1(SetSquawk, void(std::string));
         };
     }  // namespace Euroscope

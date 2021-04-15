@@ -125,6 +125,8 @@
     <ClCompile Include="..\..\test\test\hold\PublishedHoldCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\initialheading\InitialHeadingEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\initialheading\InitialHeadingModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\ExternalMessageEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\IntegrationModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\AmsterdamAirfieldGroupTest.cpp" />

@@ -31,6 +31,7 @@ namespace UKControllerPlugin {
                 const std::string GetSidName(void) const;
                 bool HasAssignedSquawk(void) const;
                 const bool HasControllerClearedAltitude(void) const;
+                const bool HasControllerAssignedHeading(void) const override;
                 bool HasSid(void) const;
                 bool IsSimulated(void) const;
                 const bool IsTracked(void) const;
@@ -38,6 +39,7 @@ namespace UKControllerPlugin {
                 bool IsValid(void) const;
                 bool IsVfr(void) const override;
                 void SetClearedAltitude(int cleared);
+                void SetHeading(int heading) override;
                 void SetSquawk(std::string squawk);
 
                 // The callsign that will be returned by GetTrackingControllerCallsign if untracked.

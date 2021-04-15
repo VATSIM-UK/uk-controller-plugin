@@ -118,6 +118,11 @@ namespace UKControllerPlugin {
                 this->euroScopeNoControllerClearedAltitude;
         }
 
+        const bool EuroScopeCFlightPlanWrapper::HasControllerAssignedHeading() const
+        {
+            return this->originalData.GetControllerAssignedData().GetAssignedHeading() != 0;
+        }
+
         bool EuroScopeCFlightPlanWrapper::HasSid(void) const
         {
             return this->originalData.GetFlightPlanData().GetSidName() != "";
@@ -129,6 +134,11 @@ namespace UKControllerPlugin {
         void EuroScopeCFlightPlanWrapper::SetClearedAltitude(int cleared)
         {
             this->originalData.GetControllerAssignedData().SetClearedAltitude(cleared);
+        }
+
+        void EuroScopeCFlightPlanWrapper::SetHeading(int heading)
+        {
+            this->originalData.GetControllerAssignedData().SetAssignedHeading(heading);
         }
 
         void EuroScopeCFlightPlanWrapper::SetSquawk(std::string squawk)

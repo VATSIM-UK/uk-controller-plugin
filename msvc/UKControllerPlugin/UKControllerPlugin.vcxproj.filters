@@ -163,6 +163,9 @@
     <Filter Include="src\sid">
       <UniqueIdentifier>{af24d112-0445-4640-a5de-9e8cc640aceb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\initialheading">
+      <UniqueIdentifier>{a732eccf-1336-457a-8597-2f558558027c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1158,6 +1161,12 @@
     <ClInclude Include="..\..\src\sid\SidModule.h">
       <Filter>src\sid</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingEventHandler.h">
+      <Filter>src\initialheading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingModule.h">
+      <Filter>src\initialheading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1968,6 +1977,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\sid\SidModule.cpp">
       <Filter>src\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingModule.cpp">
+      <Filter>src\initialheading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingEventHandler.cpp">
+      <Filter>src\initialheading</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
