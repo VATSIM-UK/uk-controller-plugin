@@ -43,6 +43,12 @@ namespace UKControllerPlugin {
 
             CheckDlgButton(
                 hwnd,
+                GS_DIALOG_IH_CHECK,
+                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::initialHeadingToggleSettingsKey)
+            );
+
+            CheckDlgButton(
+                hwnd,
                 GS_DIALOG_SQUAWK_CHECK,
                 this->GetCheckboxStateFromSettings(GeneralSettingsEntries::squawkToggleSettingsKey)
             );
@@ -78,6 +84,13 @@ namespace UKControllerPlugin {
                 GeneralSettingsEntries::initialAltitudeToggleSettingsKey,
                 GeneralSettingsEntries::initialAltitudeToggleSettingsDescription,
                 this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_IA_CHECK)
+            );
+
+            // Initial Headings Toggle
+            this->userSettings.Save(
+                GeneralSettingsEntries::initialHeadingToggleSettingsKey,
+                GeneralSettingsEntries::initialHeadingToggleSettingsDescription,
+                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_IH_CHECK)
             );
 
             // Squawk Toggle
