@@ -909,5 +909,57 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(data);
             EXPECT_EQ("MALOT", data.GetItemString());
         }
+
+        TEST_F(OceanicEventHandlerTest, ItHasTheTrackIdentifierTagItem)
+        {
+            EXPECT_EQ("Nattrak Oceanic Clearance Track Identifier", this->handler.GetTagItemDescription(122));
+        }
+
+        TEST_F(OceanicEventHandlerTest, TestItSetsTrackIdentifierTagItem)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "CLEARED"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-03-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
+
+            TagData data = this->GetTagData(122);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("A", data.GetItemString());
+        }
+
+        TEST_F(OceanicEventHandlerTest, ItHasTheEntryTimeTagItem)
+        {
+            EXPECT_EQ("Nattrak Oceanic Clearance Entry Estimate", this->handler.GetTagItemDescription(123));
+        }
+
+        TEST_F(OceanicEventHandlerTest, TestItSetsTheEntryEstimate)
+        {
+            nlohmann::json clearanceData = {
+                {"callsign", "BAW123"},
+                {"status", "CLEARED"},
+                {"nat", "A"},
+                {"fix", "MALOT"},
+                {"level", "320"},
+                {"mach", ".85"},
+                {"estimating_time", "01:25"},
+                {"clearance_issued", "2021-01-28 11:12:34"},
+                {"extra_info", "More info"},
+            };
+
+            this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
+
+            TagData data = this->GetTagData(123);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("01:25", data.GetItemString());
+        }
     }  // namespace Oceanic
 }  // namespace UKControllerPluginTest

@@ -126,6 +126,10 @@ namespace UKControllerPlugin {
                     return "Nattrak Oceanic Clearance Mach Number";
                 case 121:
                     return "Nattrak Oceanic Clearance Entry Point";
+                case 122:
+                    return "Nattrak Oceanic Clearance Track Identifier";
+                case 123:
+                    return "Nattrak Oceanic Clearance Entry Estimate";
             }
 
             return "";
@@ -169,6 +173,12 @@ namespace UKControllerPlugin {
                     break;
                 case 121:
                     this->SetClearedEntryPointTagItem(tagData, clearance->second);
+                    break;
+                case 122:
+                    this->SetClearedTrackIdentifierTagItem(tagData, clearance->second);
+                    break;
+                case 123:
+                    this->SetClearedEntryTimeTagItem(tagData, clearance->second);
                     break;
             }
         }
@@ -232,6 +242,16 @@ namespace UKControllerPlugin {
         void OceanicEventHandler::SetClearedEntryPointTagItem(Tag::TagData& tagData, const Clearance& clearance)
         {
             tagData.SetItemString(clearance.entryFix);
+        }
+
+        void OceanicEventHandler::SetClearedTrackIdentifierTagItem(Tag::TagData& tagData, const Clearance& clearance)
+        {
+            tagData.SetItemString(clearance.track);
+        }
+
+        void OceanicEventHandler::SetClearedEntryTimeTagItem(Tag::TagData& tagData, const Clearance& clearance)
+        {
+            tagData.SetItemString(clearance.entryTime);
         }
     }  // namespace Oceanic
 }  // namespace UKControllerPlugin

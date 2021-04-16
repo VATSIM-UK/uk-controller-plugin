@@ -58,6 +58,8 @@ namespace UKControllerPlugin {
                 void SetClearedLevelTagItem(Tag::TagData& tagData, const Clearance& clearance) const;
                 static void SetClearedMachNumberTagItem(Tag::TagData& tagData, const Clearance& clearance);
                 static void SetClearedEntryPointTagItem(Tag::TagData& tagData, const Clearance& clearance);
+                static void SetClearedTrackIdentifierTagItem(Tag::TagData& tagData, const Clearance& clearance);
+                static void SetClearedEntryTimeTagItem(Tag::TagData& tagData, const Clearance& clearance);
 
                 // For making curl requests
                 Curl::CurlInterface& curl;

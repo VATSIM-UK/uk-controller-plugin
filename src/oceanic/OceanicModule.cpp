@@ -53,6 +53,8 @@ namespace UKControllerPlugin {
             container.tagHandler->RegisterTagItem(119, handler);
             container.tagHandler->RegisterTagItem(120, handler);
             container.tagHandler->RegisterTagItem(121, handler);
+            container.tagHandler->RegisterTagItem(122, handler);
+            container.tagHandler->RegisterTagItem(123, handler);
         }
     } // namespace Oceanic
 } // namespace UKControllerPlugin
