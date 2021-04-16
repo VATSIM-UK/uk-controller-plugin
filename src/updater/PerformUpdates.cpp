@@ -1,13 +1,21 @@
 #include "pch.h"
-#include "loader/loaderfunctions.h"
+#include "updater/PerformUpdates.h"
 #include "helper/HelperFunctions.h"
+#include "api/ApiInterface.h"
+#include "windows/WinApiInterface.h"
+#include "curl/CurlInterface.h"
+#include "update/UpdateBinaries.h"
 
 using UKControllerPlugin::HelperFunctions;
 
-void CheckForUpdates()
+void CheckForUpdates(
+    const UKControllerPlugin::Api::ApiInterface& api,
+    UKControllerPlugin::Windows::WinApiInterface& windows,
+    UKControllerPlugin::Curl::CurlInterface& curl
+)
 {
     try {
-        const nlohmann::json versionDetails = GetUpdateDetails();
+        const nlohmann::json versionDetails = UKControllerPlugin::GetUpdateData(api);
         if (UpdateRequired(versionDetails)) {
             PerformUpdates(versionDetails);
         }
@@ -47,7 +55,7 @@ std::string GetLibsDownload(const nlohmann::json& versionDetails)
             ).c_str()
         );
     }
-    if(responseCode != 200) {
+    if (responseCode != 200) {
         throw std::exception(
             std::string("An error occurred when downloading the UKCP libraries binary, response code: "
                 + std::to_string(downloadCurlCode)
@@ -89,13 +97,11 @@ std::string GetLoaderDownload(const nlohmann::json& versionDetails)
 
 bool UpdateRequired(const nlohmann::json& versionDetails)
 {
-    if (versionDetails.is_null())
-    {
+    if (versionDetails.is_null()) {
         return false;
     }
 
-    if (!VersionDetailsValid(versionDetails))
-    {
+    if (!VersionDetailsValid(versionDetails)) {
         throw std::exception("Unable to check for UK Controller Plugin updates. Invalid JSON returned.");
     }
 
@@ -153,8 +159,7 @@ nlohmann::json ParseUpdateResponse(const std::string& responseData, const uint64
     }
 
     // Parse the json response
-    try
-    {
+    try {
         return nlohmann::json::parse(responseData);
     } catch (...) {
         throw std::exception("Unable to check for UK Controller Plugin updates, response was not JSON.");
@@ -185,7 +190,7 @@ CURLcode PerformWebRequest(const std::string url, std::string& response, uint64_
     return result;
 }
 
-size_t CurlWriteFunction(void *contents, size_t size, size_t nmemb, void *outString)
+size_t CurlWriteFunction(void* contents, size_t size, size_t nmemb, void* outString)
 {
     // For Curl, we should assume that the data is not null terminated, so add a null terminator on the end
     static_cast<std::string*>(outString)->append(reinterpret_cast<char*>(contents) + '\0', size * nmemb);

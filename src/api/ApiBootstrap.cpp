@@ -1,6 +1,6 @@
 #include "utils/pch.h"
 #include "api/ApiBootstrap.h"
-#include "ApiHelper.h"
+#include "api/ApiHelper.h"
 #include "api/ApiRequestBuilder.h"
 #include "curl/CurlApi.h"
 #include "setting/SettingRepository.h"

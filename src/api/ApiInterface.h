@@ -11,6 +11,8 @@ namespace UKControllerPlugin {
         class ApiInterface
         {
             public:
+                ApiInterface() {};
+                virtual ~ApiInterface() {};
                 virtual UKControllerPlugin::Squawk::ApiSquawkAllocation CreateGeneralSquawkAssignment(
                     std::string callsign,
                     std::string origin,
@@ -59,6 +61,7 @@ namespace UKControllerPlugin {
                 virtual nlohmann::json GetUnreadNotifications() const = 0;
                 virtual void ReadNotification(int id) const = 0;
                 virtual int UpdateCheck(std::string version) const = 0;
+                virtual nlohmann::json GetUpdateDetails() const = 0;
                 virtual void SetApiKey(std::string key) = 0;
                 virtual void SetApiDomain(std::string domain) = 0;
 

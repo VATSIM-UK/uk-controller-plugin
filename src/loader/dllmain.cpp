@@ -31,11 +31,11 @@ void __declspec (dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlu
         *settings,
         curl
     );
-    FirstTimeDownloadUpdater(
-        *api,
-        *windows
-    );
-    RunUpdater(*windows);
+
+    // Perform a first time download, or run the updater
+    if (!FirstTimeDownload(*api, *windows, curl)) {
+        RunUpdater(*windows);
+    }
 
     // Load the core plugin library
     pluginDllInstance = LoadPluginLibrary(*windows);

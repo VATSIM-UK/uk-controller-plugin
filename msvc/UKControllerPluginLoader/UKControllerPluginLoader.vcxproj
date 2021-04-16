@@ -31,8 +31,14 @@
     <ClInclude Include="..\..\src\loader\pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UKControllerPluginUpdater\UKControllerPluginUpdater.vcxproj">
+      <Project>{a7d1d345-7c9d-44e4-9337-b8c265d0ce1e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\UKControllerPluginUtils\UKControllerPluginUtils.vcxproj">
       <Project>{141124e6-d339-464a-a759-0589a331b366}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\UKControllerPlugin\UKControllerPlugin.vcxproj">
+      <Project>{6f93f8c0-6773-4353-b7dd-b14dbd3f826b}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -112,7 +118,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -123,7 +129,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;libcurl_a.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,7 +139,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>loader\pch.h</PrecompiledHeaderFile>
@@ -145,7 +152,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;libcurl_a.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

@@ -1,28 +1,39 @@
 #include "pch.h"
 #include "loader/loader.h"
-#include "helper/HelperFunctions.h"
 #include "api/ApiInterface.h"
 #include "windows/WinApiInterface.h"
+#include "curl/CurlInterface.h"
 #include "data/PluginDataLocations.h"
-
-using UKControllerPlugin::HelperFunctions;
+#include "update/UpdateBinaries.h"
+#include "updater/UKControllerPluginUpdater.h"
 
 
 void RunUpdater(
-    const UKControllerPlugin::Windows::WinApiInterface& windows
+    UKControllerPlugin::Windows::WinApiInterface& windows
 )
 {
-    windows.LoadLibraryRelative(GetUpdaterBinaryRelativePath());
+    HINSTANCE updaterHandle = windows.LoadLibraryRelative(GetUpdaterBinaryRelativePath());
+
+    if (!updaterHandle) {
+        std::wstring message = L"Unable to load updater binary.\r\n";
+        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+
+        windows.OpenMessageBox(message.c_str(), L"UKCP Update Failed", MB_OK | MB_ICONSTOP);
+        throw std::exception("UKCP broke");
+    }
+
+    PerformUpdates();
+    windows.UnloadLibrary(updaterHandle);
 }
 
-HINSTANCE LoadPlugin(
+HINSTANCE LoadPluginLibrary(
     const UKControllerPlugin::Windows::WinApiInterface& windows
 )
 {
     return windows.LoadLibraryRelative(GetCoreBinaryRelativePath());
 }
 
-void UnloadPlugin(
+void UnloadPluginLibrary(
     HINSTANCE instance,
     const UKControllerPlugin::Windows::WinApiInterface& windows
 )
@@ -34,8 +45,23 @@ void UnloadPlugin(
     windows.UnloadLibrary(instance);
 }
 
-void FirstTimeDownloadUpdater(
+bool FirstTimeDownload(
     const UKControllerPlugin::Api::ApiInterface& api,
-    const UKControllerPlugin::Windows::WinApiInterface& windows
+    UKControllerPlugin::Windows::WinApiInterface& windows,
+    UKControllerPlugin::Curl::CurlInterface& curl
 )
-{ }
+{
+    if (windows.FileExists(GetUpdaterBinaryRelativePath())) {
+        return false;
+    }
+
+    if (!UKControllerPlugin::UpdateBinaries(UKControllerPlugin::GetUpdateData(api), windows, curl)) {
+        std::wstring message = L"Unable to perform first time download of the UKCP binaries.\r\n";
+        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+
+        windows.OpenMessageBox(message.c_str(), L"UKCP Update Failed", MB_OK | MB_ICONSTOP);
+        throw std::exception("UKCP broke");
+    }
+
+    return true;
+}

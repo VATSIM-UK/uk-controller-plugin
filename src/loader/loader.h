@@ -6,18 +6,23 @@ namespace UKControllerPlugin
     namespace Api
     {
         class ApiInterface;
-    }
+    } // namespace Api
 
     namespace Windows
     {
         class WinApiInterface;
-    }
+    } // namespace Windows
+
+    namespace Curl {
+        class CurlInterface;
+    } // namespace Curl
 }
 
-void RunUpdater(const UKControllerPlugin::Windows::WinApiInterface& windows);
+void RunUpdater(UKControllerPlugin::Windows::WinApiInterface& windows);
 HINSTANCE LoadPluginLibrary(const UKControllerPlugin::Windows::WinApiInterface& windows);
 void UnloadPluginLibrary(HINSTANCE instance, const UKControllerPlugin::Windows::WinApiInterface& windows);
-void FirstTimeDownloadUpdater(
+bool FirstTimeDownload(
     const UKControllerPlugin::Api::ApiInterface& api,
-    const UKControllerPlugin::Windows::WinApiInterface& windows
+    UKControllerPlugin::Windows::WinApiInterface& windows,
+    UKControllerPlugin::Curl::CurlInterface& curl
 );

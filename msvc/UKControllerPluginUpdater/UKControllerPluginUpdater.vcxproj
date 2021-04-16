@@ -26,11 +26,12 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\updater\dllmain.cpp" />
     <ClCompile Include="..\..\src\updater\pch.cpp" />
-    <ClCompile Include="..\..\src\updater\updateplugin.cpp" />
+    <ClCompile Include="..\..\src\updater\PerformUpdates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\updater\pch.h" />
-    <ClInclude Include="..\..\src\updater\updateplugin.h" />
+    <ClInclude Include="..\..\src\updater\PerformUpdates.h" />
+    <ClInclude Include="..\..\src\updater\UKControllerPluginUpdater.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -34,6 +34,9 @@
     <Filter Include="data">
       <UniqueIdentifier>{2dfec82f-06e2-4c84-9af1-d5500400ccca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="update">
+      <UniqueIdentifier>{e02f14a9-4982-47dc-8ac3-77c039ee27e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utils\pch.h">
@@ -144,6 +147,9 @@
     <ClInclude Include="..\..\src\data\PluginDataLocations.h">
       <Filter>data</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\update\UpdateBinaries.h">
+      <Filter>update</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\pch.cpp">
@@ -214,6 +220,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\data\PluginDataLocations.cpp">
       <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\update\UpdateBinaries.cpp">
+      <Filter>update</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

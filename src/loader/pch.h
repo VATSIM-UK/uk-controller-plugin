@@ -8,9 +8,13 @@
 #pragma warning( disable : 26495 26451)
 #include "json/json.hpp"
 #include "curl/curl.h"
+#include "spdlog/include/spdlog/logger.h"
+#include "spdlog/include/spdlog/sinks/file_sinks.h"
+#include "spdlog/include/spdlog/sinks/null_sink.h"
 #include "log/LoggerFunctions.h"
 #pragma warning( pop )
 
+#include <set>
 #include <string>
 #include <shlobj_core.h>
 #include <filesystem>

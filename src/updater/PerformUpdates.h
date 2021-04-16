@@ -1,6 +1,26 @@
 #pragma once
 
-void CheckForUpdates();
+
+// Forward declarations
+namespace UKControllerPlugin {
+    namespace Api {
+        class ApiInterface;
+    } // namespace Api
+
+    namespace Windows {
+        class WinApiInterface;
+    } // namespace Windows
+
+    namespace Curl {
+        class CurlInterface;
+    } // namespace Curl
+}
+
+void CheckForUpdates(
+    const UKControllerPlugin::Api::ApiInterface& api,
+    UKControllerPlugin::Windows::WinApiInterface& windows,
+    UKControllerPlugin::Curl::CurlInterface& curl
+);
 bool UpdateRequired(const nlohmann::json& versionDetails);
 bool LockfileOutdated(std::string latestVersion);
 bool VersionDetailsValid(const nlohmann::json& versionDetails);

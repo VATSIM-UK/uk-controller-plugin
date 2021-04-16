@@ -8,6 +8,7 @@
 #define PCH_H
 
 // add headers that you want to pre-compile here
+#include "log/LoggerBootstrap.h"
 #include <Windows.h>
 #include <string>
 #include <shlobj_core.h>

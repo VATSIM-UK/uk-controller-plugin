@@ -2,17 +2,17 @@
 #include "data/PluginDataLocations.h"
 #include "windows/WinApiInterface.h"
 
-std::wstring GetUpdaterLibraryRelativePath()
+std::wstring GetUpdaterBinaryRelativePath()
 {
     return GetBinariesFolderRelativePath() + L"/UKControllerPluginUpdater.dll";
 }
 
-std::wstring GetPluginLibraryRelativePath()
+std::wstring GetCoreBinaryRelativePath()
 {
     return GetBinariesFolderRelativePath() + L"/UKControllerPluginCore.dll";
 }
 
-std::wstring GetPluginDataRoot(void)
+std::wstring GetFullPluginDataRoot(void)
 {
     TCHAR* folderPath = nullptr;
     HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_SIMPLE_IDLIST, nullptr, &folderPath);
@@ -30,7 +30,7 @@ std::wstring GetBinariesFolderRelativePath()
 
 void CreatePluginDataRoot(UKControllerPlugin::Windows::WinApiInterface& windows)
 {
-    std::wstring rootPath = GetPluginDataRoot();
+    std::wstring rootPath = GetFullPluginDataRoot();
     if (!windows.CreateFolderRecursive(rootPath)) {
         windows.OpenMessageBox(
             L"Unable to create the UKCP root folder, please contact the VATUK Web Department.",

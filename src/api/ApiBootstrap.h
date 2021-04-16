@@ -1,4 +1,5 @@
 #pragma once
+#include "api/ApiInterface.h"
 
 namespace UKControllerPlugin {
     namespace Setting {
@@ -9,8 +10,6 @@ namespace UKControllerPlugin {
     }  // namespace Curl
 
     namespace Api {
-        // Forward declare
-        class ApiInterface;
 
         std::unique_ptr<ApiInterface> Bootstrap(
             const Setting::SettingRepository& settings,
