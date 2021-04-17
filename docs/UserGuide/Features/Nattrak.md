@@ -38,3 +38,11 @@ The mach number at which the aircraft has been cleared to cross the ocean.
 ### Oceanic Clearance Entry Point
 
 The oceanic entry point.
+
+### Oceanic Clearance Track Identifier
+
+The oceanic track identifier.
+
+### Oceanic Clearance Estimating Time
+
+The estimated time of Oceanic entry. Note, this is based on the requested clearance, not on actual estimates from EuroScope.
