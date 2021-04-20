@@ -1,5 +1,5 @@
 #include "pch/pch.h"
-#include "initialaltitude/InitialAltitudeEventHandler.h"
+#include "initialheading/InitialHeadingEventHandler.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "ownership/AirfieldOwnershipManager.h"
@@ -20,7 +20,7 @@
 #include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 
-using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
+using UKControllerPlugin::InitialHeading::InitialHeadingEventHandler;
 using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -49,11 +49,12 @@ using ::testing::Throw;
 using ::testing::_;
 
 namespace UKControllerPluginTest {
-    namespace InitialAltitude {
+    namespace InitialHeading {
 
-        class InitialAltitudeEventHandlerTest : public Test {
+        class InitialHeadingEventHandlerTest : public Test
+        {
             public:
-                InitialAltitudeEventHandlerTest()
+                InitialHeadingEventHandlerTest()
                     :  owners(airfields, callsigns),
                     login(plugin, ControllerStatusEventHandlerCollection()),
                     handler(sids, callsigns, owners, login, deferredEvents, plugin, flightplans)
@@ -64,8 +65,9 @@ namespace UKControllerPluginTest {
                 virtual void SetUp() {
                     // Pretend we've been logged in a while
                     login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::minutes(15));
-                    sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 0));
-                    sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "CLN3X", 5000, 0));
+                    sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 125));
+                    sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "CLN3X", 5000, 200));
+                    sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "DAGGA1X", 5000, 0));
 
                     ON_CALL(mockFlightPlan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
@@ -81,38 +83,38 @@ namespace UKControllerPluginTest {
                 ActiveCallsignCollection callsigns;
                 AirfieldOwnershipManager owners;
                 SidCollection sids;
-                InitialAltitudeEventHandler handler;
+                InitialHeadingEventHandler handler;
         };
 
-        TEST_F(InitialAltitudeEventHandlerTest, TestItDefaultsUserSettingToEnabled)
+        TEST_F(InitialHeadingEventHandlerTest, TestItDefaultsUserSettingToEnabled)
         {
             EXPECT_TRUE(this->handler.UserAutomaticAssignmentsAllowed());
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, TestItSetsEnabledFromUserSettings)
+        TEST_F(InitialHeadingEventHandlerTest, TestItSetsEnabledFromUserSettings)
         {
             NiceMock<MockUserSettingProviderInterface> mockUserSettings;
             UserSetting userSetting(mockUserSettings);
 
-            ON_CALL(mockUserSettings, GetKey(GeneralSettingsEntries::initialAltitudeToggleSettingsKey))
+            ON_CALL(mockUserSettings, GetKey(GeneralSettingsEntries::initialHeadingToggleSettingsKey))
                 .WillByDefault(Return("0"));
 
             this->handler.UserSettingsUpdated(userSetting);
             EXPECT_FALSE(this->handler.UserAutomaticAssignmentsAllowed());
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, TestItDefaultsToEnabledIfNoSettingPresent)
+        TEST_F(InitialHeadingEventHandlerTest, TestItDefaultsToEnabledIfNoSettingPresent)
         {
             NiceMock<MockUserSettingProviderInterface> mockUserSettings;
             UserSetting userSetting(mockUserSettings);
 
-            ON_CALL(mockUserSettings, GetKey(GeneralSettingsEntries::initialAltitudeToggleSettingsKey))
+            ON_CALL(mockUserSettings, GetKey(GeneralSettingsEntries::initialHeadingToggleSettingsKey))
                 .WillByDefault(Return("0"));
 
             NiceMock<MockUserSettingProviderInterface> mockUserSettingsNoSetting;
             UserSetting userSettingNoSetting(mockUserSettingsNoSetting);
 
-            ON_CALL(mockUserSettingsNoSetting, GetKey(GeneralSettingsEntries::initialAltitudeToggleSettingsKey))
+            ON_CALL(mockUserSettingsNoSetting, GetKey(GeneralSettingsEntries::initialHeadingToggleSettingsKey))
                 .WillByDefault(Return(""));
 
             this->handler.UserSettingsUpdated(userSetting);
@@ -121,12 +123,12 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->handler.UserAutomaticAssignmentsAllowed());
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNothingIfUserSettingDisabled)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNothingIfUserSettingDisabled)
         {
             NiceMock<MockUserSettingProviderInterface> mockUserSettings;
             UserSetting userSetting(mockUserSettings);
 
-            ON_CALL(mockUserSettings, GetKey(GeneralSettingsEntries::initialAltitudeToggleSettingsKey))
+            ON_CALL(mockUserSettings, GetKey(GeneralSettingsEntries::initialHeadingToggleSettingsKey))
                 .WillByDefault(Return("0"));
 
             this->handler.UserSettingsUpdated(userSetting);
@@ -136,7 +138,7 @@ namespace UKControllerPluginTest {
             EXPECT_NO_THROW(this->handler.FlightPlanEvent(mockFp, mockRt));
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDefersIfNotLoggedInLongEnough)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDefersIfNotLoggedInLongEnough)
         {
             login.SetLoginTime(std::chrono::system_clock::now() + std::chrono::minutes(15));
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
@@ -149,7 +151,7 @@ namespace UKControllerPluginTest {
             EXPECT_GT(seconds, 3);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTooHigh)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfTooHigh)
         {
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
                 .Times(1)
@@ -158,7 +160,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfExactlyAtSeaLevel)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfExactlyAtSeaLevel)
         {
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
                 .Times(1)
@@ -167,7 +169,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTooFarFromOrigin)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfTooFarFromOrigin)
         {
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
                 .Times(2)
@@ -180,7 +182,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfExactlyOnOrigin)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfExactlyOnOrigin)
         {
             EXPECT_CALL(mockRadarTarget, GetFlightLevel())
                 .Times(1)
@@ -193,7 +195,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTravellingTooFast)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfTravellingTooFast)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -210,7 +212,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfAlreadyHasAClearedAltitude)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfAlreadyHasAnAssignedHeading)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -220,7 +222,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(true));
 
@@ -231,7 +233,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTracked)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfTracked)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -241,7 +243,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -256,7 +258,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfAircraftIsSimulated)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfAircraftIsSimulated)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -266,7 +268,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -285,24 +287,45 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfCruiseIsLessThanInitialAltitude)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfSidHasNoInitialHeading)
         {
+            EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
+                .Times(2)
+                .WillOnce(Return(handler.assignmentMaxDistanceFromOrigin));
+
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel())
+                .Times(2)
+                .WillOnce(Return(handler.assignmentMaxAltitude));
+
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
+                .Times(1)
+                .WillOnce(Return(false));
+
+            EXPECT_CALL(mockFlightPlan, IsTracked())
+                .Times(1)
+                .WillOnce(Return(false));
+
+            EXPECT_CALL(mockFlightPlan, IsSimulated())
+                .Times(1)
+                .WillOnce(Return(true));
+
+            EXPECT_CALL(mockRadarTarget, GetGroundSpeed())
+                .Times(1)
+                .WillOnce(Return(handler.assignmentMaxSpeed));
+
             ON_CALL(mockFlightPlan, GetOrigin())
                 .WillByDefault(Return("EGKK"));
 
-            ON_CALL(mockFlightPlan, GetCruiseLevel())
-                .WillByDefault(Return(3000));
-
             ON_CALL(mockFlightPlan, GetSidName())
-                .WillByDefault(Return("ADMAG2X"));
+                .WillByDefault(Return("DAGGA1X"));
 
-            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(_))
+            EXPECT_CALL(mockFlightPlan, SetHeading(_))
                 .Times(0);
 
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfUserCallsignIsNotActive)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfUserCallsignIsNotActive)
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -312,7 +335,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -335,7 +358,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfAirfieldIsNotOwnedByUser)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfAirfieldIsNotOwnedByUser)
         {
             ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign userCallsign(
@@ -354,7 +377,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillOnce(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -377,7 +400,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfSidNotFound)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfSidNotFound)
         {
             ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign userCallsign(
@@ -398,7 +421,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -425,7 +448,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfAlreadyAssignedOnSameSid)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfAlreadyAssignedOnSameSid)
         {
             ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign userCallsign(
@@ -446,7 +469,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -470,11 +493,7 @@ namespace UKControllerPluginTest {
                 .Times(5)
                 .WillRepeatedly(Return("BAW123"));
 
-            EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
-                .Times(1)
-                .WillOnce(Return(6000));
-
-            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
+            EXPECT_CALL(mockFlightPlan, SetHeading(125))
                 .Times(1);
 
             EXPECT_CALL(mockRadarTarget, GetGroundSpeed())
@@ -485,7 +504,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventAssignsIfSidFound)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventAssignsIfSidFound)
         {
             ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign userCallsign(
@@ -506,7 +525,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -530,11 +549,7 @@ namespace UKControllerPluginTest {
                 .Times(3)
                 .WillRepeatedly(Return("BAW123"));
 
-            EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
-                .Times(1)
-                .WillOnce(Return(6000));
-
-            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
+            EXPECT_CALL(mockFlightPlan, SetHeading(125))
                 .Times(1);
 
             EXPECT_CALL(mockRadarTarget, GetGroundSpeed())
@@ -544,7 +559,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventAcceptsDeprecatedSids)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventAcceptsDeprecatedSids)
         {
             ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign userCallsign(
@@ -565,7 +580,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -589,11 +604,7 @@ namespace UKControllerPluginTest {
                 .Times(3)
                 .WillRepeatedly(Return("BAW123"));
 
-            EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
-                .Times(1)
-                .WillOnce(Return(6000));
-
-            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
+            EXPECT_CALL(mockFlightPlan, SetHeading(125))
                 .Times(1);
 
             EXPECT_CALL(mockRadarTarget, GetGroundSpeed())
@@ -603,7 +614,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesAssignIfDifferentSid)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesAssignIfDifferentSid)
         {
             ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign userCallsign(
@@ -624,7 +635,7 @@ namespace UKControllerPluginTest {
                 .Times(4)
                 .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(2)
                 .WillRepeatedly(Return(false));
 
@@ -652,14 +663,10 @@ namespace UKControllerPluginTest {
                 .Times(7)
                 .WillRepeatedly(Return("BAW123"));
 
-            EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
-                .Times(2)
-                .WillRepeatedly(Return(6000));
-
-            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(5000))
+            EXPECT_CALL(mockFlightPlan, SetHeading(125))
                 .Times(1);
 
-            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
+            EXPECT_CALL(mockFlightPlan, SetHeading(200))
                 .Times(1);
 
             EXPECT_CALL(mockRadarTarget, GetGroundSpeed())
@@ -670,7 +677,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesAssignAfterDisconnect)
+        TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesAssignAfterDisconnect)
         {
             ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign userCallsign(
@@ -691,7 +698,7 @@ namespace UKControllerPluginTest {
                 .Times(4)
                 .WillRepeatedly(Return(handler.assignmentMaxAltitude));
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(2)
                 .WillRepeatedly(Return(false));
 
@@ -715,11 +722,7 @@ namespace UKControllerPluginTest {
                 .Times(7)
                 .WillRepeatedly(Return("BAW123"));
 
-            EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
-                .Times(2)
-                .WillRepeatedly(Return(6000));
-
-            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
+            EXPECT_CALL(mockFlightPlan, SetHeading(125))
                 .Times(2);
 
             EXPECT_CALL(mockRadarTarget, GetGroundSpeed())
@@ -731,7 +734,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, RecycleMarksAsAlreadyAssigned)
+        TEST_F(InitialHeadingEventHandlerTest, RecycleMarksAsAlreadyAssigned)
         {
             ON_CALL(this->mockFlightPlan, GetSidName())
                 .WillByDefault(Return("ADMAG2X"));
@@ -745,29 +748,26 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, IsTracked())
                 .WillByDefault(Return(false));
 
-            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000))
+            EXPECT_CALL(this->mockFlightPlan, SetHeading(125))
                 .Times(1);
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(0);
 
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude())
+            EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading())
                 .Times(0);
 
             EXPECT_CALL(mockFlightPlan, IsSimulated())
                 .Times(0);
 
-            EXPECT_CALL(mockFlightPlan, GetCruiseLevel())
-                .Times(0);
-
             EXPECT_CALL(mockRadarTarget, GetGroundSpeed())
                 .Times(0);
 
-            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+            handler.RecycleInitialHeading(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, RecycleSetsInitialAltitude)
+        TEST_F(InitialHeadingEventHandlerTest, RecycleSetsInitialHeading)
         {
             ON_CALL(this->mockFlightPlan, GetSidName())
                 .WillByDefault(Return("ADMAG2X"));
@@ -781,13 +781,13 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, IsTracked())
                 .WillByDefault(Return(false));
 
-            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000))
+            EXPECT_CALL(this->mockFlightPlan, SetHeading(125))
                 .Times(1);
 
-            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+            handler.RecycleInitialHeading(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, RecycleSetsInitialAltitudeWhenTrackedByUser)
+        TEST_F(InitialHeadingEventHandlerTest, RecycleSetsInitialHeadingWhenTrackedByUser)
         {
             ON_CALL(this->mockFlightPlan, GetSidName())
                 .WillByDefault(Return("ADMAG2X"));
@@ -804,13 +804,13 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, IsTrackedByUser())
                 .WillByDefault(Return(true));
 
-            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000))
+            EXPECT_CALL(this->mockFlightPlan, SetHeading(125))
                 .Times(1);
 
-            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+            handler.RecycleInitialHeading(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, RecycleDoesNothingIfAircraftTrackedByAnotherUser)
+        TEST_F(InitialHeadingEventHandlerTest, RecycleDoesNothingIfAircraftTrackedByAnotherUser)
         {
             ON_CALL(this->mockFlightPlan, GetSidName())
                 .WillByDefault(Return("ADMAG2X"));
@@ -827,13 +827,13 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, IsTrackedByUser())
                 .WillByDefault(Return(false));
 
-            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_))
+            EXPECT_CALL(this->mockFlightPlan, SetHeading(_))
                 .Times(0);
 
-            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+            handler.RecycleInitialHeading(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, RecycleDoesNothingIfNoSidFound)
+        TEST_F(InitialHeadingEventHandlerTest, RecycleDoesNothingIfNoSidFound)
         {
             ON_CALL(this->mockFlightPlan, GetSidName())
                 .WillByDefault(Return("ADMAG3X"));
@@ -847,13 +847,13 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, IsTracked())
                 .WillByDefault(Return(false));
 
-            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_))
+            EXPECT_CALL(this->mockFlightPlan, SetHeading(_))
                 .Times(0);
 
-            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+            handler.RecycleInitialHeading(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, NewActiveCallsignAssignsIfUserCallsign)
+        TEST_F(InitialHeadingEventHandlerTest, NewActiveCallsignAssignsIfUserCallsign)
         {
             ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign userCallsign(
@@ -883,7 +883,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(handler.assignmentMaxDistanceFromOrigin));
 
-            EXPECT_CALL(*mockReturnFlightplan, HasControllerClearedAltitude())
+            EXPECT_CALL(*mockReturnFlightplan, HasControllerAssignedHeading())
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -907,11 +907,7 @@ namespace UKControllerPluginTest {
                 .Times(3)
                 .WillRepeatedly(Return("BAW123"));
 
-            EXPECT_CALL(*mockReturnFlightplan, GetCruiseLevel())
-                .Times(1)
-                .WillOnce(Return(6000));
-
-            EXPECT_CALL(*mockReturnFlightplan, SetClearedAltitude(6000))
+            EXPECT_CALL(*mockReturnFlightplan, SetHeading(125))
                 .Times(1);
 
             EXPECT_CALL(*mockReturnRadarTarget, GetGroundSpeed())
@@ -925,7 +921,7 @@ namespace UKControllerPluginTest {
             handler.ActiveCallsignAdded(userCallsign, true);
         }
 
-        TEST_F(InitialAltitudeEventHandlerTest, NewActiveCallsignDoesNotAssignIfNotUserCallsign)
+        TEST_F(InitialHeadingEventHandlerTest, NewActiveCallsignDoesNotAssignIfNotUserCallsign)
         {
             ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign userCallsign(
@@ -938,10 +934,10 @@ namespace UKControllerPluginTest {
             owners.RefreshOwner("EGKK");
             this->flightplans.UpdatePlan(StoredFlightplan("BAW123", "EGKK", "EGPF"));
 
-            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000))
+            EXPECT_CALL(mockFlightPlan, SetHeading(6000))
                 .Times(0);
 
             handler.ActiveCallsignAdded(userCallsign, false);
         }
-    }  // namespace InitialAltitude
+    }  // namespace InitialHeading
 }  // namespace UKControllerPluginTest

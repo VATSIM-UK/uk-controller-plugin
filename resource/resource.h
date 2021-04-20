@@ -51,6 +51,8 @@
 #define GS_QNH_CHANGE_CHECK             1024
 #define GS_DIALOG_QNH_CHECK             1024
 #define IDC_HOLD_PROFILE_SELECT_LABEL   1025
+#define GS_DIALOG_IA_CHECK2             1025
+#define GS_DIALOG_IH_CHECK              1025
 #define IDC_HOLD_SELECT_LOAD            1026
 #define IDC_HOLD_SELECT_SAVE            1027
 #define IDC_COMBO3                      1030

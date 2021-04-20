@@ -24,7 +24,6 @@
 #include "graphics/GdiGraphicsWrapper.h"
 #include "countdown/CountdownTimer.h"
 #include "minstack/MinStackManager.h"
-#include "initialaltitude/InitialAltitudeGenerator.h"
 #include "squawk/SquawkAssignment.h"
 #include "squawk/SquawkEventHandler.h"
 #include "squawk/SquawkGenerator.h"
@@ -50,11 +49,11 @@
 #include "sectorfile/RunwayCollection.h"
 #include "handoff/HandoffCollection.h"
 #include "regional/RegionalPressureManager.h"
-#include "srd/SrdSearchHandler.h"
 #include "navaids/NavaidCollection.h"
 #include "hold/PublishedHoldCollection.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "integration/ExternalMessageEventHandler.h"
+#include "sid/SidCollection.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -124,7 +123,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Windows::GdiGraphicsWrapper> graphics;
 
             // Large collections that we don't want to go onto the stack
-            std::unique_ptr<const UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator> initialAltitudes;
+            std::unique_ptr<Sid::SidCollection> sids;
             std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
             std::unique_ptr<UKControllerPlugin::Ownership::AirfieldOwnershipManager> airfieldOwnership;
             std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;

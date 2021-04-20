@@ -148,6 +148,12 @@
     <Filter Include="test\oceanic">
       <UniqueIdentifier>{782d80f4-69f9-44ce-b72e-fb7c027c5b4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\sid">
+      <UniqueIdentifier>{ece313f8-4cfe-4135-9d52-6e1d268e00a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\initialheading">
+      <UniqueIdentifier>{1f6bc603-4f77-4a4d-8364-2b8e739fce7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -295,12 +301,6 @@
       <Filter>test\historytrail</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeEventHandlerTest.cpp">
-      <Filter>test\initialaltitude</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeGeneratorFactoryTest.cpp">
-      <Filter>test\initialaltitude</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeGeneratorTest.cpp">
       <Filter>test\initialaltitude</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeModuleTest.cpp">
@@ -508,12 +508,6 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\squawk\SquawkRequestTest.cpp">
       <Filter>test\squawk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\initialaltitude\CompareInitialAltitudesTest.cpp">
-      <Filter>test\initialaltitude</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\initialaltitude\InitialAltitudeDataTest.cpp">
-      <Filter>test\initialaltitude</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\hold\HoldingDataTest.cpp">
       <Filter>test\hold</Filter>
@@ -879,6 +873,24 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\websocket\PollingWebsocketConnectionTest.cpp">
       <Filter>test\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sid\StandardInstrumentDepartureTest.cpp">
+      <Filter>test\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sid\SidCollectionTest.cpp">
+      <Filter>test\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sid\SidCollectionFactoryTest.cpp">
+      <Filter>test\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\sid\SidModuleTest.cpp">
+      <Filter>test\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\initialheading\InitialHeadingModuleTest.cpp">
+      <Filter>test\initialheading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\initialheading\InitialHeadingEventHandlerTest.cpp">
+      <Filter>test\initialheading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

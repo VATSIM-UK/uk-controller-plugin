@@ -32,8 +32,10 @@ namespace UKControllerPlugin {
                 virtual std::string GetIcaoWakeCategory(void) const = 0;
                 virtual bool HasAssignedSquawk(void) const = 0;
                 virtual const bool HasControllerClearedAltitude(void) const = 0;
+                virtual const bool HasControllerAssignedHeading(void) const = 0;
                 virtual bool HasSid(void) const = 0;
                 virtual void SetClearedAltitude(int cleared) = 0;
+                virtual void SetHeading(int heading) = 0;
                 virtual void SetSquawk(std::string squawk) = 0;
                 virtual bool IsSimulated(void) const = 0;
                 virtual const bool IsTracked(void) const = 0;
