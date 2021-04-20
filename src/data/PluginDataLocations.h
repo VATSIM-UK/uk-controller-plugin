@@ -8,6 +8,7 @@ namespace UKControllerPlugin {
 
 std::wstring GetUpdaterBinaryRelativePath();
 std::wstring GetCoreBinaryRelativePath();
+std::wstring GetOldUpdaterBinaryRelativePath();
 std::wstring GetBinariesFolderRelativePath();
 std::wstring GetFullPluginDataRoot();
 void CreatePluginDataRoot(UKControllerPlugin::Windows::WinApiInterface& windows);

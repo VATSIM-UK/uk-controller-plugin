@@ -52,7 +52,7 @@ namespace UKControllerPlugin {
                 nlohmann::json GetMinStackLevels(void) const override;
                 nlohmann::json GetRegionalPressures(void) const override;
                 nlohmann::json GetUri(std::string uri) const;
-                nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const;
+                nlohmann::json SearchSrd(Srd::SrdSearchParameters params) const override;
                 nlohmann::json GetAssignedStands(void) const override;
                 void AssignStandToAircraft(std::string callsign, int standId) const override;
                 void DeleteStandAssignmentForAircraft(std::string callsign) const override;
@@ -69,6 +69,7 @@ namespace UKControllerPlugin {
                     int releaseType,
                     std::string releasePoint
                 ) const override;
+                nlohmann::json GetUpdateDetails() const override;
                 nlohmann::json GetAllNotifications() const override;
                 nlohmann::json GetUnreadNotifications() const override;
                 void ReadNotification(int id) const override;

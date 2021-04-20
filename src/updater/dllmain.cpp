@@ -25,5 +25,5 @@ void PerformUpdates(void)
         *settings,
         curl
     );
-    CheckForUpdates();
+    CheckForUpdates(*api, *windows, curl);
 }

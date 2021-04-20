@@ -55,13 +55,26 @@ bool FirstTimeDownload(
         return false;
     }
 
-    if (!UKControllerPlugin::UpdateBinaries(UKControllerPlugin::GetUpdateData(api), windows, curl)) {
-        std::wstring message = L"Unable to perform first time download of the UKCP binaries.\r\n";
-        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+    nlohmann::json updateData;
+    try {
+        nlohmann::json updateData = UKControllerPlugin::GetUpdateData(api);
+    } catch (std::exception) {
+        DisplayFirstTimeDownloadFailedMessage(windows);
+        return false;
+    }
 
-        windows.OpenMessageBox(message.c_str(), L"UKCP Update Failed", MB_OK | MB_ICONSTOP);
-        throw std::exception("UKCP broke");
+    if (!UKControllerPlugin::DownloadUpdater(updateData, windows, curl)) {
+        DisplayFirstTimeDownloadFailedMessage(windows);
+        return false;
     }
 
     return true;
+}
+
+void DisplayFirstTimeDownloadFailedMessage(UKControllerPlugin::Windows::WinApiInterface& windows)
+{
+    std::wstring message = L"Unable to perform first time download of the UKCP updater.\r\n";
+    message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+
+    windows.OpenMessageBox(message.c_str(), L"UKCP Update Failed", MB_OK | MB_ICONSTOP);
 }

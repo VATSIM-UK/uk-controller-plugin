@@ -15,7 +15,13 @@ namespace UKControllerPlugin {
         class CurlRequest;
     } // namespace Curl
 
-    bool UpdateBinaries(
+    bool DownloadUpdater(
+        nlohmann::json updateData,
+        Windows::WinApiInterface& windows,
+        Curl::CurlInterface& curl
+    );
+
+    bool DownloadCoreLibrary(
         nlohmann::json updateData,
         Windows::WinApiInterface& windows,
         Curl::CurlInterface& curl

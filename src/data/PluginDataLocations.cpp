@@ -12,6 +12,11 @@ std::wstring GetCoreBinaryRelativePath()
     return GetBinariesFolderRelativePath() + L"/UKControllerPluginCore.dll";
 }
 
+std::wstring GetOldUpdaterBinaryRelativePath()
+{
+    return GetUpdaterBinaryRelativePath() + L".old";
+}
+
 std::wstring GetFullPluginDataRoot(void)
 {
     TCHAR* folderPath = nullptr;

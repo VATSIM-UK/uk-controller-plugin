@@ -310,6 +310,11 @@ namespace UKControllerPlugin {
             );
         }
 
+        nlohmann::json ApiHelper::GetUpdateDetails() const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildLatestGithubVersionRequest()).GetRawData();
+        }
+
         nlohmann::json ApiHelper::GetAllNotifications() const
         {
             return this->MakeApiRequest(this->requestBuilder.BuildGetAllNotificationsRequest()).GetRawData();

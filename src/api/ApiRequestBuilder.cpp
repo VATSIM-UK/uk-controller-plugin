@@ -300,6 +300,13 @@ namespace UKControllerPlugin {
             );
         }
 
+        CurlRequest ApiRequestBuilder::BuildLatestGithubVersionRequest() const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(this->apiDomain + "/version/latest/github", CurlRequest::METHOD_GET)
+            );
+        }
+
         CurlRequest ApiRequestBuilder::BuildEnrouteReleaseRequest(
             std::string aircraftCallsign,
             std::string sendingController,

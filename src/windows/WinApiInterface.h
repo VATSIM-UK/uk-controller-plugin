@@ -32,6 +32,7 @@ namespace UKControllerPlugin {
                 std::wstring relativePath
             ) const = 0;
             virtual HINSTANCE LoadLibraryRelative(std::wstring relativePath) const = 0;
+            virtual bool MoveFileToNewLocation(std::wstring oldName, std::wstring newName) = 0;
             virtual void UnloadLibrary(HINSTANCE handle) const = 0;
             virtual int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) = 0;
             virtual void OpenWebBrowser(std::wstring url) = 0;

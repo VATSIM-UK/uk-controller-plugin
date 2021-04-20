@@ -26,3 +26,5 @@ bool FirstTimeDownload(
     UKControllerPlugin::Windows::WinApiInterface& windows,
     UKControllerPlugin::Curl::CurlInterface& curl
 );
+
+void DisplayFirstTimeDownloadFailedMessage(UKControllerPlugin::Windows::WinApiInterface& windows);

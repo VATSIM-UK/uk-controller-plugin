@@ -16,39 +16,36 @@ using UKControllerPlugin::HelperFunctions;
 
 namespace UKControllerPlugin {
 
-    bool UKControllerPlugin::UpdateBinaries(
-        nlohmann::json updateData,
-        Windows::WinApiInterface& windows,
-        Curl::CurlInterface& curl
-    )
+    bool DownloadUpdater(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
     {
-        if (!UpdateDataValid(updateData)) {
-            LogError("Unable to update binaries, update data was invalid.");
-            return false;
-        }
-
-        CurlRequest coreRequest(
-            updateData.at("core_download_url").get<std::string>(),
-            CurlRequest::METHOD_GET
-        );
-        bool coreUpdated = UpdateBinary(curl, coreRequest, windows, GetCoreBinaryRelativePath());
-
         CurlRequest updaterRequest(
             updateData.at("updater_download_url").get<std::string>(),
             CurlRequest::METHOD_GET
         );
-        bool updaterUpdated = UpdateBinary(curl, coreRequest, windows, GetCoreBinaryRelativePath());
+        return UpdateBinary(curl, updaterRequest, windows, GetUpdaterBinaryRelativePath());
+    }
 
-        return coreUpdated && updaterUpdated;
+    bool DownloadCoreLibrary(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
+    {
+        CurlRequest coreRequest(
+            updateData.at("core_download_url").get<std::string>(),
+            CurlRequest::METHOD_GET
+        );
+        return UpdateBinary(curl, coreRequest, windows, GetCoreBinaryRelativePath());
     }
 
     nlohmann::json GetUpdateData(const Api::ApiInterface& api)
     {
         try {
-            return api.GetUpdateDetails();
+            nlohmann::json updateData = api.GetUpdateDetails();
+            if (!UpdateDataValid(updateData)) {
+                LogError("Unable to get update data, update data was invalid.");
+                throw std::exception();
+            }
+            return updateData;
         } catch (ApiException apiException) {
             LogError("Unable to download update for binaries: " + std::string(apiException.what()));
-            return nlohmann::json::object();
+            throw (apiException);
         }
     }
 

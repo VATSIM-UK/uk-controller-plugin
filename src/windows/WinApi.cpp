@@ -229,6 +229,19 @@ namespace UKControllerPlugin {
             PlaySound(sound, this->dllInstance, SND_ASYNC | SND_RESOURCE);
         }
 
+        bool WinApi::MoveFileToNewLocation(std::wstring oldName, std::wstring newName)
+        {
+            std::wstring oldFilePath = this->GetFullPathToLocalFile(oldName);
+            std::wstring newFilePath = this->GetFullPathToLocalFile(newName);
+
+            try {
+                std::filesystem::rename(oldFilePath, newFilePath);
+                return true;
+            } catch (std::filesystem::filesystem_error) {
+                return false;
+            }
+        }
+
         /*
             Write a given string into a file.
         */
