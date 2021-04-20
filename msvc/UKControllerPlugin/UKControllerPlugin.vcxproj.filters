@@ -1155,6 +1155,9 @@
     <ClInclude Include="..\..\src\websocket\WebsocketProxyHandler.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PollingWebsocketConnection.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1961,6 +1964,9 @@
       <Filter>src\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\WebsocketProxyHandler.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PollingWebsocketConnection.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
   </ItemGroup>

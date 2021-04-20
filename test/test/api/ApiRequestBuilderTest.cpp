@@ -407,5 +407,33 @@ namespace UKControllerPluginTest {
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildReadNotificationRequest(1));
         }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsPluginEventsSyncRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/plugin-events/sync",
+                CurlRequest::METHOD_GET
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildPluginEventSyncRequest());
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsGetLastestPluginEventsTest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/plugin-events/recent?previous=5",
+                CurlRequest::METHOD_GET
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildGetLatestPluginEventsRequest(5));
+        }
     }  // namespace Api
 }  // namespace UKControllerPluginTest

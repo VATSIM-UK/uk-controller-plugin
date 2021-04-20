@@ -134,7 +134,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
 
             // Websocket
-            std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnectionInterface> websocket;
+            std::shared_ptr<Websocket::WebsocketConnectionInterface> websocket;
             std::shared_ptr<UKControllerPlugin::Websocket::WebsocketEventProcessorCollection> websocketProcessors;
 
         } PersistenceContainer;
