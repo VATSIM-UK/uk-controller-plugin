@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "updater/pch.h"
 #include "updater/PerformUpdates.h"
 #include "helper/HelperFunctions.h"
 #include "api/ApiInterface.h"

@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "loader/pch.h"
 #include "loader/loader.h"
 #include "api/ApiInterface.h"
 #include "windows/WinApiInterface.h"

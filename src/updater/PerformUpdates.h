@@ -29,5 +29,5 @@ void PerformUpdates(
 );
 void MoveOldUpdaterBinary(UKControllerPlugin::Windows::WinApiInterface& windows);
 std::wstring GetVersionLockfileLocation();
-void UpdateLockfile(UKControllerPlugin::Windows::WinApiInterface& windows, const nlohmann::json& versionDetails);
+void UpdateLockfile(UKControllerPlugin::Windows::WinApiInterface& windows, std::string version);
 std::string GetVersionFromJson(const nlohmann::json& versionDetails);

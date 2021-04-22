@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "updater/pch.h"
 #include "updater/UKControllerPluginUpdater.h"
 #include "updater/PerformUpdates.h"
 #include "windows/WinApiInterface.h"
@@ -6,6 +6,7 @@
 #include "api/ApiBootstrap.h"
 #include "setting/SettingRepositoryFactory.h"
 #include "curl/CurlApi.h"
+#include "log/LoggerBootstrap.h"
 
 HINSTANCE dllInstance;
 
