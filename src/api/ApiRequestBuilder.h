@@ -73,6 +73,8 @@ namespace UKControllerPlugin {
                 Curl::CurlRequest BuildGetAllNotificationsRequest() const;
                 Curl::CurlRequest BuildGetUnreadNotificationsRequest() const;
                 Curl::CurlRequest BuildReadNotificationRequest(int id) const;
+                Curl::CurlRequest BuildPluginEventSyncRequest() const;
+                Curl::CurlRequest BuildGetLatestPluginEventsRequest(int lastEventId) const;
                 std::string GetApiDomain(void) const;
                 std::string GetApiKey(void) const;
                 void SetApiDomain(std::string domain);

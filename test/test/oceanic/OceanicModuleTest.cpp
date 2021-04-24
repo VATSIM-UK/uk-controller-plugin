@@ -47,7 +47,7 @@ namespace UKControllerPluginTest {
         TEST_F(OceanicModuleTest, BootstrapPluginRegistersCorrectNumberOfTagItems)
         {
             BootstrapPlugin(this->container);
-            EXPECT_EQ(4, this->container.tagHandler->CountHandlers());
+            EXPECT_EQ(6, this->container.tagHandler->CountHandlers());
         }
 
         TEST_F(OceanicModuleTest, BootstrapPluginRegistersClearanceIndicatorTagItem)
@@ -72,6 +72,18 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container);
             EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(121));
+        }
+
+        TEST_F(OceanicModuleTest, BootstrapPluginRegistersClearanceTrackIdentifierTagItem)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(122));
+        }
+
+        TEST_F(OceanicModuleTest, BootstrapPluginRegistersClearanceEntryEstimateTagItem)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(123));
         }
 
         TEST_F(OceanicModuleTest, BootstrapPluginRegistersOpenClearanceDialogTagFunction)

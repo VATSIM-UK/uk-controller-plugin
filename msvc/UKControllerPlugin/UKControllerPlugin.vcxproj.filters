@@ -160,6 +160,12 @@
     <Filter Include="src\oceanic">
       <UniqueIdentifier>{627b4719-ef1f-450d-a4b1-929ec242b990}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\sid">
+      <UniqueIdentifier>{af24d112-0445-4640-a5de-9e8cc640aceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\initialheading">
+      <UniqueIdentifier>{a732eccf-1336-457a-8597-2f558558027c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -403,12 +409,6 @@
       <Filter>src\historytrail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h">
-      <Filter>src\initialaltitude</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGenerator.h">
-      <Filter>src\initialaltitude</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.h">
       <Filter>src\initialaltitude</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeModule.h">
@@ -689,12 +689,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\squawk\SquawkRequest.h">
       <Filter>src\squawk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h">
-      <Filter>src\initialaltitude</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h">
-      <Filter>src\initialaltitude</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\hold\HoldingData.h">
       <Filter>src\hold</Filter>
@@ -1155,6 +1149,27 @@
     <ClInclude Include="..\..\src\websocket\WebsocketProxyHandler.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\websocket\PollingWebsocketConnection.h">
+      <Filter>src\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sid\StandardInstrumentDeparture.h">
+      <Filter>src\sid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sid\SidCollection.h">
+      <Filter>src\sid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sid\SidCollectionFactory.h">
+      <Filter>src\sid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sid\SidModule.h">
+      <Filter>src\sid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingEventHandler.h">
+      <Filter>src\initialheading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingModule.h">
+      <Filter>src\initialheading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1349,12 +1364,6 @@
       <Filter>src\historytrail</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp">
-      <Filter>src\initialaltitude</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp">
-      <Filter>src\initialaltitude</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.cpp">
       <Filter>src\initialaltitude</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeModule.cpp">
@@ -1587,9 +1596,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\squawk\SquawkRequest.cpp">
       <Filter>src\squawk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp">
-      <Filter>src\initialaltitude</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\hold\CompareHolds.cpp">
       <Filter>src\hold</Filter>
@@ -1962,6 +1968,27 @@
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\WebsocketProxyHandler.cpp">
       <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\websocket\PollingWebsocketConnection.cpp">
+      <Filter>src\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sid\StandardInstrumentDeparture.cpp">
+      <Filter>src\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sid\SidCollection.cpp">
+      <Filter>src\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sid\SidCollectionFactory.cpp">
+      <Filter>src\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sid\SidModule.cpp">
+      <Filter>src\sid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingModule.cpp">
+      <Filter>src\initialheading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingEventHandler.cpp">
+      <Filter>src\initialheading</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

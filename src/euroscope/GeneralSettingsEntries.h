@@ -27,6 +27,10 @@ namespace UKControllerPlugin {
             // TIME FORMAT
             static const std::string unknownTimeFormatBlankKey;
             static const std::string unknownTimeFormatBlankDescription;
+
+            // Initial Headings
+            static const std::string initialHeadingToggleSettingsKey;
+            static const std::string initialHeadingToggleSettingsDescription;
         } GeneralSettingsEntries;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

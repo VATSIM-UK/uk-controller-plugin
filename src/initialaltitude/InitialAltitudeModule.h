@@ -2,9 +2,6 @@
 
 // Forward declarations
 namespace UKControllerPlugin {
-    namespace Dependency {
-        class DependencyLoaderInterface;
-    }  // namespace Dependency
     namespace EventHandler {
         class FlightPlanEventHandlerCollection;
     }  // namespace EventHandler
@@ -25,8 +22,7 @@ namespace UKControllerPlugin {
         {
             public:
                 static void BootstrapPlugin(
-                    UKControllerPlugin::Dependency::DependencyLoaderInterface & dependency,
-                    UKControllerPlugin::Bootstrap::PersistenceContainer & persistence
+                    Bootstrap::PersistenceContainer& persistence
                 );
 
                 // The function id for the recycle initial altitude function

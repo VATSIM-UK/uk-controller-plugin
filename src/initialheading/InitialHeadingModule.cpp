@@ -1,26 +1,29 @@
 #include "pch/stdafx.h"
-#include "initialaltitude/InitialAltitudeModule.h"
-#include "initialaltitude/InitialAltitudeEventHandler.h"
+#include "initialheading/InitialHeadingModule.h"
+#include "initialheading/InitialHeadingEventHandler.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "tag/TagFunction.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
+using UKControllerPlugin::InitialHeading::InitialHeadingEventHandler;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagFunction;
 namespace UKControllerPlugin {
-    namespace InitialAltitude {
+    namespace InitialHeading {
+
+        // The function id for the recycle initial heading function
+        const int recycleFunctionId = 9011;
 
         /*
             Initialises the initial altitude module. Gets the altitudes from the dependency cache
             and registers the event handler to receive flightplan events.
         */
-        void InitialAltitudeModule::BootstrapPlugin(
-            PersistenceContainer& persistence
+        void BootstrapPlugin(
+            PersistenceContainer & persistence
         ) {
-            std::shared_ptr<InitialAltitudeEventHandler> initialAltitudeEventHandler(
-                new InitialAltitudeEventHandler(
+            std::shared_ptr<InitialHeadingEventHandler> handler(
+                new InitialHeadingEventHandler(
                     *persistence.sids,
                     *persistence.activeCallsigns,
                     *persistence.airfieldOwnership,
@@ -30,19 +33,17 @@ namespace UKControllerPlugin {
                     *persistence.flightplans
                 )
             );
-
-            persistence.initialAltitudeEvents = initialAltitudeEventHandler;
-            persistence.userSettingHandlers->RegisterHandler(initialAltitudeEventHandler);
-            persistence.flightplanHandler->RegisterHandler(initialAltitudeEventHandler);
-            persistence.activeCallsigns->AddHandler(initialAltitudeEventHandler);
+            persistence.userSettingHandlers->RegisterHandler(handler);
+            persistence.flightplanHandler->RegisterHandler(handler);
+            persistence.activeCallsigns->AddHandler(handler);
 
 
             TagFunction recycleFunction(
                 recycleFunctionId,
-                "Recycle Initial Altitude",
+                "Recycle Initial Heading",
                 std::bind(
-                    &InitialAltitudeEventHandler::RecycleInitialAltitude,
-                    *initialAltitudeEventHandler,
+                    &InitialHeadingEventHandler::RecycleInitialHeading,
+                    handler,
                     std::placeholders::_1,
                     std::placeholders::_2,
                     std::placeholders::_3,
@@ -51,5 +52,5 @@ namespace UKControllerPlugin {
             );
             persistence.pluginFunctionHandlers->RegisterFunctionCall(recycleFunction);
         }
-    }  // namespace InitialAltitude
+    } // namespace InitialHeading
 }  // namespace UKControllerPlugin

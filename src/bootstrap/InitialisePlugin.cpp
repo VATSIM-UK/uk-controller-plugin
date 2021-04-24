@@ -49,6 +49,8 @@
 #include "notifications/NotificationsModule.h"
 #include "flightinformationservice/FlightInformatioNServiceModule.h"
 #include "oceanic/OceanicModule.h"
+#include "sid/SidModule.h"
+#include "initialheading/InitialHeadingModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -216,6 +218,7 @@ namespace UKControllerPlugin {
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
+        Sid::BootstrapPlugin(*this->container, loader);
         Navaids::BootstrapPlugin(*this->container, loader);
         Releases::BootstrapPlugin(*this->container, loader);
         Stands::BootstrapPlugin(*this->container, loader);
@@ -237,13 +240,14 @@ namespace UKControllerPlugin {
 
         // Bootstrap the modules
 
-        // Only load initial altitudes if we know the plugin version is ok (as this modifies flightplans)
+        // Only load initial altitudes or headings if we know the plugin version is ok (as this modifies flightplans)
         // Don't load it if the plugin is a duplicate, leave that to the main one.
         if (
             this->updateStatus == PluginUpdateChecker::versionAllowed &&
             !this->duplicatePlugin->Duplicate()
         ) {
-            InitialAltitudeModule::BootstrapPlugin(loader, *this->container);
+            InitialAltitudeModule::BootstrapPlugin(*this->container);
+            InitialHeading::BootstrapPlugin(*this->container);
         }
 
         Srd::BootstrapPlugin(*this->container);

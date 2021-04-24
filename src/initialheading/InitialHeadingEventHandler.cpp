@@ -1,5 +1,5 @@
 #include "pch/stdafx.h"
-#include "initialaltitude/InitialAltitudeEventHandler.h"
+#include "initialheading/InitialHeadingEventHandler.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "ownership/AirfieldOwnershipManager.h"
@@ -28,31 +28,31 @@ using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
 namespace UKControllerPlugin {
-    namespace InitialAltitude {
+    namespace InitialHeading {
 
-        InitialAltitudeEventHandler::InitialAltitudeEventHandler(
+        InitialHeadingEventHandler::InitialHeadingEventHandler(
             const SidCollection& sids,
-            const ActiveCallsignCollection & activeCallsigns,
-            const AirfieldOwnershipManager & airfieldOwnership,
-            const Login & login,
-            DeferredEventHandler & deferredEvents,
-            EuroscopePluginLoopbackInterface & plugin,
+            const ActiveCallsignCollection& activeCallsigns,
+            const AirfieldOwnershipManager& airfieldOwnership,
+            const Login& login,
+            DeferredEventHandler& deferredEvents,
+            EuroscopePluginLoopbackInterface& plugin,
             const StoredFlightplanCollection& storedFlightplans
         )
             : minimumLoginTimeBeforeAssignment(5), sids(sids), activeCallsigns(activeCallsigns),
               airfieldOwnership(airfieldOwnership), deferredEvents(deferredEvents), login(login),
-              storedFlightplans(storedFlightplans), plugin(plugin)
-        {
-
-        }
+              storedFlightplans(storedFlightplans),
+              plugin(plugin)
+        { }
 
         /*
             Handle events regarding when a flightplan changes.
         */
-        void InitialAltitudeEventHandler::FlightPlanEvent(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            EuroScopeCRadarTargetInterface & radarTarget
-        ) {
+        void InitialHeadingEventHandler::FlightPlanEvent(
+            EuroScopeCFlightPlanInterface& flightPlan,
+            EuroScopeCRadarTargetInterface& radarTarget
+        )
+        {
             if (!this->userAutomaticAssignmentsAllowed) {
                 return;
             }
@@ -60,7 +60,7 @@ namespace UKControllerPlugin {
             // If we've not been logged in for long, wait a bit
             if (this->login.GetSecondsLoggedIn() < this->minimumLoginTimeBeforeAssignment) {
                 LogDebug(
-                    "Deferring initial altitude assignment for " + flightPlan.GetCallsign()
+                    "Deferring initial heading assignment for " + flightPlan.GetCallsign()
                 );
                 this->deferredEvents.DeferFor(
                     std::make_unique<DeferredFlightPlanEvent>(*this, this->plugin, flightPlan.GetCallsign()),
@@ -69,7 +69,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // The aircraft has already had it's initial altitude set once, so don't double set
+            // The aircraft has already had it's initial heading set once, so don't double set
             // it for the same SID
             if (
                 this->alreadySetMap.count(flightPlan.GetCallsign()) &&
@@ -87,32 +87,27 @@ namespace UKControllerPlugin {
             // Make sure the SID exists.
             std::shared_ptr<StandardInstrumentDeparture> matchedSid = this->GetSidForFlight(flightPlan);
 
-            if (!matchedSid) {
+
+            if (!matchedSid || matchedSid->InitialHeading() == 0) {
                 return;
             }
 
-            // Doesn't assign an init altitude if cruise level is less than the initial altitude of the SID.
-            if (flightPlan.GetCruiseLevel() < matchedSid->InitialAltitude()) {
-                return;
-            }
-
-            // Set the IA and record it
+            // Set the heading and record it
             LogInfo(
-                "Set initial altitude of " + std::to_string(matchedSid->InitialAltitude()) + " for " +
+                "Set initial heading of " + std::to_string(matchedSid->InitialHeading()) + " for " +
                 flightPlan.GetCallsign() + " (" + flightPlan.GetOrigin() + ", " + matchedSid->Identifier() + ")"
             );
-            flightPlan.SetClearedAltitude(matchedSid->InitialAltitude());
+            flightPlan.SetHeading(matchedSid->InitialHeading());
             this->alreadySetMap[flightPlan.GetCallsign()] = flightPlan.GetSidName();
         }
 
-        InitialAltitudeEventHandler::~InitialAltitudeEventHandler(void)
-        {
-        }
+        InitialHeadingEventHandler::~InitialHeadingEventHandler(void)
+        { }
 
         /*
             Handle events regarding when a flightplan disconnects.
         */
-        void InitialAltitudeEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface & flightPlan)
+        void InitialHeadingEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
         {
             this->alreadySetMap.erase(flightPlan.GetCallsign());
         }
@@ -120,37 +115,38 @@ namespace UKControllerPlugin {
         /*
             Handle events regarding controller data being changed (directs etc).
         */
-        void InitialAltitudeEventHandler::ControllerFlightPlanDataEvent(
-            EuroScopeCFlightPlanInterface & flightPlan,
+        void InitialHeadingEventHandler::ControllerFlightPlanDataEvent(
+            EuroScopeCFlightPlanInterface& flightPlan,
             int dataType
-        ) {
+        )
+        {
             // Nothing to do here
         }
 
         /*
-            Reset the initial altitude for the given callsign.
+            Reset the initial heading for the given callsign.
         */
-        void InitialAltitudeEventHandler::RecycleInitialAltitude(
-            EuroScopeCFlightPlanInterface & flightplan,
-            EuroScopeCRadarTargetInterface & radarTarget,
+        void InitialHeadingEventHandler::RecycleInitialHeading(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCRadarTargetInterface& radarTarget,
             std::string context,
-            const POINT & mousePos
-        ) {
-            if (!MeetsForceAssignmentConditions(flightplan, radarTarget))
-            {
+            const POINT& mousePos
+        )
+        {
+            if (!MeetsForceAssignmentConditions(flightplan, radarTarget)) {
                 return;
             }
 
             // Make sure the SID exists.
             std::shared_ptr<StandardInstrumentDeparture> matchedSid = this->GetSidForFlight(flightplan);
 
-            if (!matchedSid) {
+            if (!matchedSid || matchedSid->InitialHeading() == 0) {
                 return;
             }
 
-            flightplan.SetClearedAltitude(matchedSid->InitialAltitude());
+            flightplan.SetHeading(matchedSid->InitialHeading());
             LogInfo(
-                "Recycled initial altitude of " + std::to_string(matchedSid->InitialAltitude()) + " for " +
+                "Recycled initial heading of " + std::to_string(matchedSid->InitialHeading()) + " for " +
                 flightplan.GetCallsign() + " (" + flightplan.GetOrigin() + ", " + matchedSid->Identifier() + ")"
             );
             this->alreadySetMap[flightplan.GetCallsign()] = flightplan.GetSidName();
@@ -159,38 +155,39 @@ namespace UKControllerPlugin {
         /*
             Returns whether or not the user has allowed automatic assignments.
         */
-        bool InitialAltitudeEventHandler::UserAutomaticAssignmentsAllowed(void) const
+        bool InitialHeadingEventHandler::UserAutomaticAssignmentsAllowed(void) const
         {
             return this->userAutomaticAssignmentsAllowed;
         }
 
         /*
-            Returns true if the aircraft meets the prerequisites for initial altitude assignment.
+            Returns true if the aircraft meets the prerequisites for initial heading assignment.
 
             To return true, must:
 
             1. Must not have a current flight level or distance from origin of exactly zero.
                This is required because for some reason EuroScope picks up flightplan changes over the likes of
-               Austria and decides its time to do an initial altitude assignment.
+               Austria and decides its time to do an initial heading assignment.
             2. Be on the ground
             3. Be within a specified distance of the origin airport.
             4. Be under a certain speed.
-            5. Not have a cleared altitude set.
+            5. Not have an assigned heading set.
             6. Not be tracked by any controller.
             7. Not be "simulated" by ES.
             8. Have a user that has a recognised callsign.
             9. Have the airfield of origin owned by the controller.
         */
-        bool InitialAltitudeEventHandler::MeetsAssignmentConditions(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            EuroScopeCRadarTargetInterface & radarTarget
-        ) const {
+        bool InitialHeadingEventHandler::MeetsAssignmentConditions(
+            EuroScopeCFlightPlanInterface& flightPlan,
+            EuroScopeCRadarTargetInterface& radarTarget
+        ) const
+        {
             return radarTarget.GetFlightLevel() != 0 &&
                 flightPlan.GetDistanceFromOrigin() != 0.0 &&
                 radarTarget.GetFlightLevel() <= this->assignmentMaxAltitude &&
                 flightPlan.GetDistanceFromOrigin() <= this->assignmentMaxDistanceFromOrigin &&
                 radarTarget.GetGroundSpeed() <= this->assignmentMaxSpeed &&
-                !flightPlan.HasControllerClearedAltitude() &&
+                !flightPlan.HasControllerAssignedHeading() &&
                 !flightPlan.IsTracked() &&
                 !flightPlan.IsSimulated() &&
                 this->airfieldOwnership.AirfieldOwnedByUser(flightPlan.GetOrigin());
@@ -202,14 +199,15 @@ namespace UKControllerPlugin {
          * 1. Not tracked
          * 2. Tracked by the current user
          */
-        bool InitialAltitudeEventHandler::MeetsForceAssignmentConditions(
+        bool InitialHeadingEventHandler::MeetsForceAssignmentConditions(
             EuroScopeCFlightPlanInterface& flightplan,
             EuroScopeCRadarTargetInterface& radarTarget
-        ) {
+        )
+        {
             return !flightplan.IsTracked() || flightplan.IsTrackedByUser();
         }
 
-        std::shared_ptr<StandardInstrumentDeparture> InitialAltitudeEventHandler::GetSidForFlight(
+        std::shared_ptr<StandardInstrumentDeparture> InitialHeadingEventHandler::GetSidForFlight(
             EuroScopeCFlightPlanInterface& flightplan)
         {
             return this->sids.GetByAirfieldAndIdentifier(
@@ -221,14 +219,14 @@ namespace UKControllerPlugin {
         /*
             If its the user, do some updates
         */
-        void InitialAltitudeEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+        void InitialHeadingEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
         {
             if (!userCallsign) {
                 return;
             }
 
 
-            LogInfo("Mass assigning initial altitudes");
+            LogInfo("Mass assigning initial headings");
 
             std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
             std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
@@ -251,30 +249,26 @@ namespace UKControllerPlugin {
         /*
             Nothing to see here
         */
-        void InitialAltitudeEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
-        {
-
-        }
+        void InitialHeadingEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+        { }
 
         /*
             Nothing to see here
         */
-        void InitialAltitudeEventHandler::CallsignsFlushed(void)
-        {
-
-        }
+        void InitialHeadingEventHandler::CallsignsFlushed(void)
+        { }
 
         /*
             Called when user settings get updated.
         */
-        void InitialAltitudeEventHandler::UserSettingsUpdated(
-            UKControllerPlugin::Euroscope::UserSetting & userSettings
+        void InitialHeadingEventHandler::UserSettingsUpdated(
+            Euroscope::UserSetting& userSettings
         )
         {
             this->userAutomaticAssignmentsAllowed = userSettings.GetBooleanEntry(
-                GeneralSettingsEntries::initialAltitudeToggleSettingsKey,
+                GeneralSettingsEntries::initialHeadingToggleSettingsKey,
                 true
             );
         }
-    }  // namespace InitialAltitude
-}  // namespace UKControllerPlugin
+    } // namespace InitialHeading
+} // namespace UKControllerPlugin

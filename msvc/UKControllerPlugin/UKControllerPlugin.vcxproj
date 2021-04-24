@@ -165,12 +165,10 @@
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h" />
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\hold\PublishedHoldCollection.h" />
-    <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGenerator.h" />
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeModule.h" />
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingEventHandler.h" />
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingModule.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageEventHandler.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageHandlerInterface.h" />
     <ClInclude Include="..\..\src\integration\HiddenWindow.h" />
@@ -289,6 +287,10 @@
     <ClInclude Include="..\..\src\setting\SettingRepository.h" />
     <ClInclude Include="..\..\src\setting\SettingRepositoryFactory.h" />
     <ClInclude Include="..\..\src\setting\SettingValue.h" />
+    <ClInclude Include="..\..\src\sid\SidCollection.h" />
+    <ClInclude Include="..\..\src\sid\SidCollectionFactory.h" />
+    <ClInclude Include="..\..\src\sid\SidModule.h" />
+    <ClInclude Include="..\..\src\sid\StandardInstrumentDeparture.h" />
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h" />
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h" />
     <ClInclude Include="..\..\src\squawk\SquawkAssignment.h" />
@@ -326,6 +328,7 @@
     <ClInclude Include="..\..\src\wake\WakeCategoryMapper.h" />
     <ClInclude Include="..\..\src\wake\WakeModule.h" />
     <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h" />
+    <ClInclude Include="..\..\src\websocket\PollingWebsocketConnection.h" />
     <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h" />
     <ClInclude Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.h" />
     <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h" />
@@ -464,11 +467,10 @@
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestriction.cpp" />
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\PublishedHoldCollection.cpp" />
-    <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp" />
-    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp" />
-    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeModule.cpp" />
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingEventHandler.cpp" />
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingModule.cpp" />
     <ClCompile Include="..\..\src\integration\ExternalMessageEventHandler.cpp" />
     <ClCompile Include="..\..\src\integration\HiddenWindow.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationModule.cpp" />
@@ -570,6 +572,10 @@
     <ClCompile Include="..\..\src\sectorfile\SectorFileCoordinates.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepository.cpp" />
     <ClCompile Include="..\..\src\setting\SettingRepositoryFactory.cpp" />
+    <ClCompile Include="..\..\src\sid\SidCollection.cpp" />
+    <ClCompile Include="..\..\src\sid\SidCollectionFactory.cpp" />
+    <ClCompile Include="..\..\src\sid\SidModule.cpp" />
+    <ClCompile Include="..\..\src\sid\StandardInstrumentDeparture.cpp" />
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkAssignment.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkEventHandler.cpp" />
@@ -602,6 +608,7 @@
     <ClCompile Include="..\..\src\wake\WakeCategoryMapper.cpp" />
     <ClCompile Include="..\..\src\wake\WakeModule.cpp" />
     <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp" />
+    <ClCompile Include="..\..\src\websocket\PollingWebsocketConnection.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp" />

@@ -1,12 +1,12 @@
 #include "pch/pch.h"
-#include "initialaltitude/InitialAltitudeModule.h"
+#include "initialheading/InitialHeadingModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/ActiveCallsignCollection.h"
 
-using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
+using UKControllerPlugin::InitialHeading::BootstrapPlugin;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
@@ -16,9 +16,9 @@ using ::testing::Test;
 using ::testing::NiceMock;
 
 namespace UKControllerPluginTest {
-    namespace InitialAltitude {
+    namespace InitialHeading {
 
-        class InitialAltitudeModuleTest : public Test
+        class InitialHeadingModuleTest : public Test
         {
             public:
 
@@ -33,29 +33,29 @@ namespace UKControllerPluginTest {
                 PersistenceContainer container;
         };
 
-        TEST_F(InitialAltitudeModuleTest, BootstrapPluginRegistersFlightplanEvents)
+        TEST_F(InitialHeadingModuleTest, BootstrapPluginRegistersFlightplanEvents)
         {
-            InitialAltitudeModule::BootstrapPlugin(this->container);
+            BootstrapPlugin(this->container);
             EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
         }
 
-        TEST_F(InitialAltitudeModuleTest, BootstrapPluginRegistersActiveCallsignEvents)
+        TEST_F(InitialHeadingModuleTest, BootstrapPluginRegistersActiveCallsignEvents)
         {
-            InitialAltitudeModule::BootstrapPlugin(this->container);
+            BootstrapPlugin(this->container);
             EXPECT_EQ(1, container.activeCallsigns->CountHandlers());
         }
 
-        TEST_F(InitialAltitudeModuleTest, BootstrapPluginRegistersRecycleTagFunction)
+        TEST_F(InitialHeadingModuleTest, BootstrapPluginRegistersRecycleTagFunction)
         {
-            InitialAltitudeModule::BootstrapPlugin(this->container);
+            BootstrapPlugin(this->container);
             EXPECT_EQ(1, container.pluginFunctionHandlers->CountTagFunctions());
-            EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9002));
+            EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9011));
         }
 
-        TEST_F(InitialAltitudeModuleTest, BootstrapPluginRegistersUserSettingsEvents)
+        TEST_F(InitialHeadingModuleTest, BootstrapPluginRegistersUserSettingsEvents)
         {
-            InitialAltitudeModule::BootstrapPlugin(this->container);
+            BootstrapPlugin(this->container);
             EXPECT_EQ(1, container.userSettingHandlers->Count());
         }
-    }  // namespace InitialAltitude
+    } // namespace InitialHeading
 }  // namespace UKControllerPluginTest

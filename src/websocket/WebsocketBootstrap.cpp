@@ -1,18 +1,20 @@
 #include "pch/stdafx.h"
 #include "websocket/WebsocketBootstrap.h"
-#include "websocket/WebsocketConnection.h"
 #include "websocket/PusherActivityTimeoutEventHandler.h"
 #include "websocket/PusherConnectionChannelSubscriptionEventHandler.h"
 #include "websocket/PusherErrorEventHandler.h"
 #include "websocket/PusherPingEventHandler.h"
 #include "websocket/PusherWebsocketProtocolHandler.h"
 #include "websocket/WebsocketProxyConnection.h"
+#include "websocket/PollingWebsocketConnection.h"
 #include "websocket/WebsocketProxyHandler.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
 namespace UKControllerPlugin {
     namespace Websocket {
+
+        std::shared_ptr<PollingWebsocketConnection> pollingConnection;
 
         /*
             Bootstrap up the websocket.
@@ -35,10 +37,12 @@ namespace UKControllerPlugin {
             if (duplicatePlugin) {
                 container.websocket.reset(new WebsocketProxyConnection());
             } else {
-                container.websocket.reset(new WebsocketConnection(wsHost, wsPort));
+                pollingConnection = std::make_shared<PollingWebsocketConnection>(*container.api, *container.taskRunner);
+                container.websocket = pollingConnection;
                 container.websocketProcessors->AddProcessor(
                     std::make_shared<WebsocketProxyHandler>()
                 );
+                container.timedHandler->RegisterEvent(pollingConnection, 1);
             }
 
             // Set up handlers that look after the websocket protocol
