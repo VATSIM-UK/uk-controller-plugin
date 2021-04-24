@@ -606,6 +606,7 @@
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <TargetName>UKControllerPluginCore</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -613,6 +614,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
     <IntDir>$(SolutionDir)..\obj\plugin\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
+    <TargetName>UKControllerPluginCore</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
