@@ -68,7 +68,19 @@ jobs:
         run: cpplint --quiet --recursive src/ test/
       
       # Upload artifacts
-      - name: Upload Plugin DLL As Artifact
+      - name: Upload Core Binary As Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: UKControllerPluginCore.dll
+          path: ".\\bin\\Release\\UKControllerPluginCore.dll"
+
+      - name: Upload Updater Binary As Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: UKControllerPluginUpdater.dll
+          path: ".\\bin\\Release\\UKControllerPluginUpdater.dll"
+
+      - name: Upload Loader Binary As Artifact
         uses: actions/upload-artifact@v2
         with:
           name: UKControllerPlugin.dll
