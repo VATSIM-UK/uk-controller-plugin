@@ -17,7 +17,7 @@ using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using ::testing::Test;
 
-namespace UKControllerPluginModuleTest {
+namespace UKControllerPluginTest {
     namespace Squawk {
 
         class SquawkModuleTest : public Test
@@ -91,4 +91,4 @@ namespace UKControllerPluginModuleTest {
             EXPECT_TRUE(this->container.squawkEvents->automaticAssignmentDisabled);
         }
     }  // namespace Squawk
-}  // namespace UKControllerPluginModuleTest
+} // namespace UKControllerPluginTest

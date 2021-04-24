@@ -10,7 +10,7 @@ using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using ::testing::StrictMock;
 using ::testing::Ref;
 
-namespace UKControllerPlugin {
+namespace UKControllerPluginTest {
     namespace Euroscope {
 
         TEST(AsrEventHandlerCollection, AsrLoadedEventCallsCorrectHandlerMethod)
@@ -83,4 +83,4 @@ namespace UKControllerPlugin {
             EXPECT_EQ(1, collection.CountHandlers());
         }
     }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPluginTest
