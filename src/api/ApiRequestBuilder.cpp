@@ -303,7 +303,7 @@ namespace UKControllerPlugin {
         CurlRequest ApiRequestBuilder::BuildLatestGithubVersionRequest() const
         {
             return this->AddCommonHeaders(
-                CurlRequest(this->apiDomain + "/version/latest/github", CurlRequest::METHOD_GET)
+                CurlRequest(this->apiDomain + "/version/latest", CurlRequest::METHOD_GET)
             );
         }
 

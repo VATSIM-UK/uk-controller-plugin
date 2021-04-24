@@ -25,6 +25,9 @@
     <Filter Include="test\curl">
       <UniqueIdentifier>{d1824c16-4c4d-4170-878b-5b1a508e233f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\update">
+      <UniqueIdentifier>{20d9b212-c79e-4943-98fb-84548e113762}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp">
@@ -77,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\curl\CurlRequestTest.cpp">
       <Filter>test\curl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\update\UpdateBinariesTest.cpp">
+      <Filter>test\update</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

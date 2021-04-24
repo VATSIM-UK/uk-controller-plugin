@@ -407,5 +407,19 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildReadNotificationRequest(1));
         }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsLatestVersionDetailsRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/version/latest",
+                CurlRequest::METHOD_GET
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildLatestGithubVersionRequest());
+        }
     }  // namespace Api
 }  // namespace UKControllerPluginUtilsTest

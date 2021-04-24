@@ -16,21 +16,29 @@ using UKControllerPlugin::HelperFunctions;
 
 namespace UKControllerPlugin {
 
+    /*
+     * Download and update the Updater binary. Do this without a cURL time limit.
+     */
     bool DownloadUpdater(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
     {
         CurlRequest updaterRequest(
             updateData.at("updater_download_url").get<std::string>(),
             CurlRequest::METHOD_GET
         );
+        updaterRequest.SetMaxRequestTime(0);
         return UpdateBinary(curl, updaterRequest, windows, GetUpdaterBinaryRelativePath());
     }
 
+    /*
+     * Download and update the Core binary. Do this without a cURL time limit.
+     */
     bool DownloadCoreLibrary(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
     {
         CurlRequest coreRequest(
             updateData.at("core_download_url").get<std::string>(),
             CurlRequest::METHOD_GET
         );
+        coreRequest.SetMaxRequestTime(0);
         return UpdateBinary(curl, coreRequest, windows, GetCoreBinaryRelativePath());
     }
 
@@ -40,7 +48,7 @@ namespace UKControllerPlugin {
             nlohmann::json updateData = api.GetUpdateDetails();
             if (!UpdateDataValid(updateData)) {
                 LogError("Unable to get update data, update data was invalid.");
-                throw std::exception();
+                throw std::exception("Update data response invalid");
             }
             return updateData;
         } catch (ApiException apiException) {

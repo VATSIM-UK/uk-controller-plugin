@@ -882,5 +882,25 @@ TEST_F(ApiHelperTest, ReadNotificationMakesRequest)
 
     EXPECT_NO_THROW(this->helper.ReadNotification(1));
 }
+
+TEST_F(ApiHelperTest, GetUpdateDetailsReturnsData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/version/latest",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetUpdateDetails());
+}
 }  // namespace Api
 }  // namespace UKControllerPluginUtilsTest

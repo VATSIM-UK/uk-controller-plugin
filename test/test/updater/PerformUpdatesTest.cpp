@@ -177,6 +177,7 @@ namespace UKControllerPluginUpdaterTest {
                 "bar",
                 CurlRequest::METHOD_GET
             );
+            expectedCoreRequest.SetMaxRequestTime(0);
 
             CurlResponse coreResponse("3.0.1.core", false, 200);
 
@@ -195,6 +196,7 @@ namespace UKControllerPluginUpdaterTest {
                 "foo",
                 CurlRequest::METHOD_GET
             );
+            expectedUpdaterRequest.SetMaxRequestTime(0);
 
             CurlResponse updaterResponse("3.0.1.updater", false, 200);
 
@@ -250,6 +252,7 @@ namespace UKControllerPluginUpdaterTest {
                 "bar",
                 CurlRequest::METHOD_GET
             );
+            expectedCoreRequest.SetMaxRequestTime(0);
 
             CurlResponse coreResponse("3.0.1.core", false, 200);
 
@@ -268,6 +271,7 @@ namespace UKControllerPluginUpdaterTest {
                 "foo",
                 CurlRequest::METHOD_GET
             );
+            expectedUpdaterRequest.SetMaxRequestTime(0);
 
             CurlResponse updaterResponse("3.0.1.updater", true, 200);
 
@@ -330,6 +334,7 @@ namespace UKControllerPluginUpdaterTest {
                 "bar",
                 CurlRequest::METHOD_GET
             );
+            expectedCoreRequest.SetMaxRequestTime(0);
 
             CurlResponse coreResponse("3.0.1.core", true, 200);
 
@@ -348,6 +353,7 @@ namespace UKControllerPluginUpdaterTest {
                 "foo",
                 CurlRequest::METHOD_GET
             );
+            expectedUpdaterRequest.SetMaxRequestTime(0);
 
             CurlResponse updaterResponse("3.0.1.updater", true, 200);
 

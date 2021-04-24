@@ -30,6 +30,7 @@
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
     <ClCompile Include="..\..\test\test\squawk\SquawkValidatorTest.cpp" />
+    <ClCompile Include="..\..\test\test\update\UpdateBinariesTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\pch\utilstestpch.h" />
