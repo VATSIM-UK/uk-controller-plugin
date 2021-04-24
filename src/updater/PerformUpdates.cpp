@@ -24,7 +24,11 @@ void CheckForUpdates(
         std::wstring message = std::wstring(HelperFunctions::ConvertToWideString(exception.what())) + L"\r\n";
         message += L"Plugin will attempt to load with previously downloaded version.";
 
-        MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Automatic Update Failed", MB_OK | MB_ICONSTOP);
+        windows.OpenMessageBox(
+            message.c_str(),
+            L"UKCP Automatic Update Failed",
+            MB_OK | MB_ICONSTOP
+        );
     }
 }
 
@@ -35,9 +39,14 @@ void PerformUpdates(
 )
 {
     MoveOldUpdaterBinary(windows);
-    UKControllerPlugin::DownloadCoreLibrary(versionDetails, windows, curl);
-    UKControllerPlugin::DownloadUpdater(versionDetails, windows, curl);
-    UpdateLockfile(windows, versionDetails);
+    bool updatedSuccessfully = UKControllerPlugin::DownloadCoreLibrary(versionDetails, windows, curl) &&
+        UKControllerPlugin::DownloadUpdater(versionDetails, windows, curl);
+
+    if (!updatedSuccessfully) {
+        throw std::exception("Failed to update UKCP binaries.");
+    }
+
+    UpdateLockfile(windows, GetVersionFromJson(versionDetails));
 }
 
 bool UpdateRequired(UKControllerPlugin::Windows::WinApiInterface& windows, const nlohmann::json& versionDetails)

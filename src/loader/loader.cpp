@@ -15,7 +15,7 @@ void RunUpdater(
     HINSTANCE updaterHandle = windows.LoadLibraryRelative(GetUpdaterBinaryRelativePath());
 
     if (!updaterHandle) {
-        std::wstring message = L"Unable to load updater binary.\r\n";
+        std::wstring message = L"Unable to start updater.\r\n";
         message += L"Please contact the VATSIM UK Web Services Department.\r\n";
 
         windows.OpenMessageBox(message.c_str(), L"UKCP Update Failed", MB_OK | MB_ICONSTOP);
@@ -57,7 +57,7 @@ bool FirstTimeDownload(
 
     nlohmann::json updateData;
     try {
-        nlohmann::json updateData = UKControllerPlugin::GetUpdateData(api);
+        updateData = UKControllerPlugin::GetUpdateData(api);
     } catch (std::exception) {
         DisplayFirstTimeDownloadFailedMessage(windows);
         return false;

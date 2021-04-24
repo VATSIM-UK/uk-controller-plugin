@@ -74,6 +74,8 @@ namespace UKControllerPlugin {
             updateData.contains("updater_download_url") &&
             updateData.at("updater_download_url").is_string() &&
             updateData.contains("core_download_url") &&
-            updateData.at("core_download_url").is_string();
+            updateData.at("core_download_url").is_string() &&
+            updateData.contains("loader_download_url") &&
+            updateData.at("loader_download_url").is_string();
     }
 } // namespace UKControllerPlugin

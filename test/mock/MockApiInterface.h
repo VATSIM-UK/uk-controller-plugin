@@ -58,6 +58,7 @@ namespace UKControllerPluginTest {
                 MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
                 MOCK_METHOD1(SetApiDomain, void(std::string));
                 MOCK_METHOD1(SetApiKey, void(std::string));
+                MOCK_CONST_METHOD0(GetUpdateDetails, nlohmann::json(void));
         };
     }  // namespace Api
 }  // namespace UKControllerPluginTest
