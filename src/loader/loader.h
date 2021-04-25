@@ -16,7 +16,7 @@ namespace UKControllerPlugin
     namespace Curl {
         class CurlInterface;
     } // namespace Curl
-}
+} // namespace UKControllerPlugin
 
 void RunUpdater(UKControllerPlugin::Windows::WinApiInterface& windows);
 HINSTANCE LoadPluginLibrary(const UKControllerPlugin::Windows::WinApiInterface& windows);

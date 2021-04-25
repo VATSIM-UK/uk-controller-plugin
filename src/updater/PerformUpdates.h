@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
     namespace Curl {
         class CurlInterface;
     } // namespace Curl
-}
+} // namespace UKControllerPlugin
 
 void CheckForUpdates(
     const UKControllerPlugin::Api::ApiInterface& api,

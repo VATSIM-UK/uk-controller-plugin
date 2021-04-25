@@ -25,7 +25,6 @@
 #include <string>
 #include <shellapi.h>
 #include <filesystem>
-#include <stdexcept>
 #include <playsoundapi.h>
 #include <fstream>
 #include <shtypes.h>

@@ -33,7 +33,7 @@ namespace UKControllerPlugin {
                     std::wstring logFilePrefix
                 );
                 static std::wstring GetLogfileName(std::wstring logFilePrefix);
-            
+
             private:
 
                 static std::wstring GetLogFilePath(std::wstring logname);

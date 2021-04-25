@@ -11,8 +11,8 @@ namespace UKControllerPlugin {
         class ApiInterface
         {
             public:
-                ApiInterface() {};
-                virtual ~ApiInterface() {};
+                ApiInterface() {}
+                virtual ~ApiInterface() {}
                 virtual UKControllerPlugin::Squawk::ApiSquawkAllocation CreateGeneralSquawkAssignment(
                     std::string callsign,
                     std::string origin,

@@ -198,5 +198,5 @@ namespace UKControllerPluginLoaderTest {
 
             EXPECT_FALSE(FirstTimeDownload(this->mockApi, this->mockWindows, this->mockCurl));
         }
-    } // namespace Updater
-} // namespace UKControllerPluginUpdaterTest
+    } // namespace Loader
+} // namespace UKControllerPluginLoaderTest

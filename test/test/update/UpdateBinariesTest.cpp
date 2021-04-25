@@ -377,5 +377,5 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_FALSE(UKControllerPlugin::DownloadUpdater(updateData, this->mockWindows, this->mockCurl));
         }
-    } // namespace Updater
-} // namespace UKControllerPluginUpdaterTest
+    } // namespace Update
+} // namespace UKControllerPluginUtilsTest
