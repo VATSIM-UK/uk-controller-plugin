@@ -39,8 +39,10 @@ void __declspec (dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlu
     }
 
     // Load the core plugin library
+    LogInfo("Loading plugin binary");
     pluginDllInstance = LoadPluginLibrary(*windows);
     if (pluginDllInstance == nullptr) {
+        LogError("Failed to load plugin binary");
         UnloadPluginLibrary(pluginDllInstance, *windows);
         std::wstring message = L"Unable to load the UKControllerPluginCore DLL.\r\n";
         message += L"Please contact the VATSIM UK Web Services Department.\r\n";
@@ -51,6 +53,7 @@ void __declspec (dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlu
 
     // Load the plugin
     *ppPlugInInstance = LoadPlugin();
+    LogInfo("Plugin binary loaded successfully");
 };
 
 /*

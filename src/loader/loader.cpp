@@ -15,6 +15,7 @@ void RunUpdater(
     HINSTANCE updaterHandle = windows.LoadLibraryRelative(GetUpdaterBinaryRelativePath());
 
     if (!updaterHandle) {
+        LogInfo("Unable to run the updater, binary does not exist");
         std::wstring message = L"Unable to start updater.\r\n";
         message += L"Please contact the VATSIM UK Web Services Department.\r\n";
 
@@ -22,7 +23,9 @@ void RunUpdater(
         throw std::exception("UKCP broke");
     }
 
+    LogInfo("Performing updates, please refer to the updater log for more information");
     PerformUpdates();
+    LogInfo("Updates complete");
     windows.UnloadLibrary(updaterHandle);
 }
 
@@ -52,22 +55,27 @@ bool FirstTimeDownload(
 )
 {
     if (windows.FileExists(GetUpdaterBinaryRelativePath())) {
+        LogInfo("Updater binary exists in filesystem, skipping first time download");
         return true;
     }
 
+    LogInfo("Performing first time download of updater");
     nlohmann::json updateData;
     try {
         updateData = UKControllerPlugin::GetUpdateData(api);
     } catch (std::exception) {
+        LogError("Failed to get first time update data");
         DisplayFirstTimeDownloadFailedMessage(windows);
         return false;
     }
 
     if (!UKControllerPlugin::DownloadUpdater(updateData, windows, curl)) {
+        LogError("Failed to perform first time updater download");
         DisplayFirstTimeDownloadFailedMessage(windows);
         return false;
     }
 
+    LogInfo("First time download of updater successful");
     return true;
 }
 
