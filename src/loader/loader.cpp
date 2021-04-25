@@ -52,7 +52,7 @@ bool FirstTimeDownload(
 )
 {
     if (windows.FileExists(GetUpdaterBinaryRelativePath())) {
-        return false;
+        return true;
     }
 
     nlohmann::json updateData;

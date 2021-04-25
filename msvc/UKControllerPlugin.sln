@@ -38,6 +38,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginTestingUt
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUpdaterTest", "UKControllerPluginUpdaterTest\UKControllerPluginUpdaterTest.vcxproj", "{6180D883-D208-48BE-9CFD-45602FC5D2E0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginLoaderTest", "UKControllerPluginLoaderTest\UKControllerPluginLoaderTest.vcxproj", "{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -102,13 +104,21 @@ Global
 		{6180D883-D208-48BE-9CFD-45602FC5D2E0}.Release|x64.Build.0 = Release|x64
 		{6180D883-D208-48BE-9CFD-45602FC5D2E0}.Release|x86.ActiveCfg = Release|Win32
 		{6180D883-D208-48BE-9CFD-45602FC5D2E0}.Release|x86.Build.0 = Release|Win32
+		{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}.Debug|x64.ActiveCfg = Debug|x64
+		{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}.Debug|x64.Build.0 = Debug|x64
+		{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}.Debug|x86.ActiveCfg = Debug|Win32
+		{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}.Debug|x86.Build.0 = Debug|Win32
+		{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}.Release|x64.ActiveCfg = Release|x64
+		{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}.Release|x64.Build.0 = Release|x64
+		{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}.Release|x86.ActiveCfg = Release|Win32
+		{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {E66A8B71-97BA-4E8F-BBF1-625958342CB5}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution
 		PrimaryVersionType = AssemblyInfoVersionAttribute

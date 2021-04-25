@@ -13,6 +13,7 @@
 HINSTANCE pluginDllInstance;
 
 std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
+
 /*
  *  Update and load the UKControllerPlugin DLL
  */
@@ -32,8 +33,8 @@ void __declspec (dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlu
         curl
     );
 
-    // Perform a first time download, or run the updater
-    if (!FirstTimeDownload(*api, *windows, curl)) {
+    // Perform a first time download if required, then run the updater
+    if (FirstTimeDownload(*api, *windows, curl)) {
         RunUpdater(*windows);
     }
 
