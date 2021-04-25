@@ -22,7 +22,6 @@
     <ClInclude Include="..\..\src\api\ApiConfigurationMenuItem.h" />
     <ClInclude Include="..\..\src\bootstrap\BootstrapWarningMessage.h" />
     <ClInclude Include="..\..\src\bootstrap\CollectionBootstrap.h" />
-    <ClInclude Include="..\..\src\bootstrap\CopyFilesToNewFolder.h" />
     <ClInclude Include="..\..\src\bootstrap\DuplicatePlugin.h" />
     <ClInclude Include="..\..\src\bootstrap\EventHandlerCollectionBootstrap.h" />
     <ClInclude Include="..\..\src\bootstrap\ExternalsBootstrap.h" />
@@ -318,7 +317,6 @@
     <ClCompile Include="..\..\src\api\ApiConfigurationMenuItem.cpp" />
     <ClCompile Include="..\..\src\bootstrap\BootstrapWarningMessage.cpp" />
     <ClCompile Include="..\..\src\bootstrap\CollectionBootstrap.cpp" />
-    <ClCompile Include="..\..\src\bootstrap\CopyFilesToNewFolder.cpp" />
     <ClCompile Include="..\..\src\bootstrap\DllInterface.cpp" />
     <ClCompile Include="..\..\src\bootstrap\DuplicatePlugin.cpp" />
     <ClCompile Include="..\..\src\bootstrap\EventHandlerCollectionBootstrap.cpp" />

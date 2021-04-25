@@ -972,9 +972,6 @@
     <ClInclude Include="..\..\src\include\UKControllerPlugin.h">
       <Filter>src\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\bootstrap\CopyFilesToNewFolder.h">
-      <Filter>src\bootstrap</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\notifications\Notification.h">
       <Filter>src\notifications</Filter>
     </ClInclude>
@@ -1707,9 +1704,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\intention\SectorExitPointKonan.cpp">
       <Filter>src\intention</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bootstrap\CopyFilesToNewFolder.cpp">
-      <Filter>src\bootstrap</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\notifications\Notification.cpp">
       <Filter>src\notifications</Filter>
