@@ -217,6 +217,13 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
+            // Update message
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONINFORMATION)
+            )
+                .Times(1);
+
             CheckForUpdates(mockApi, mockWindows, mockCurl);
         }
 

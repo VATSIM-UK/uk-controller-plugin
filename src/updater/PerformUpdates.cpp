@@ -8,17 +8,23 @@
 #include "data/PluginDataLocations.h"
 
 using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Api::ApiInterface;
+using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPlugin::Curl::CurlInterface;
 
 void CheckForUpdates(
-    const UKControllerPlugin::Api::ApiInterface& api,
-    UKControllerPlugin::Windows::WinApiInterface& windows,
-    UKControllerPlugin::Curl::CurlInterface& curl
+    const ApiInterface& api,
+    WinApiInterface& windows,
+    CurlInterface& curl
 )
 {
     try {
         const nlohmann::json versionDetails = UKControllerPlugin::GetUpdateData(api);
         if (UpdateRequired(windows, versionDetails)) {
             PerformUpdates(curl, windows, versionDetails);
+            DisplayUpdateNotification(
+                windows, HelperFunctions::ConvertToWideString(GetVersionFromJson(versionDetails))
+            );
         }
     } catch (std::exception exception) {
         std::wstring message = std::wstring(HelperFunctions::ConvertToWideString(exception.what())) + L"\r\n";
@@ -33,8 +39,8 @@ void CheckForUpdates(
 }
 
 void PerformUpdates(
-    UKControllerPlugin::Curl::CurlInterface& curl,
-    UKControllerPlugin::Windows::WinApiInterface& windows,
+    CurlInterface& curl,
+    WinApiInterface& windows,
     const nlohmann::json& versionDetails
 )
 {
@@ -49,13 +55,13 @@ void PerformUpdates(
     UpdateLockfile(windows, GetVersionFromJson(versionDetails));
 }
 
-bool UpdateRequired(UKControllerPlugin::Windows::WinApiInterface& windows, const nlohmann::json& versionDetails)
+bool UpdateRequired(WinApiInterface& windows, const nlohmann::json& versionDetails)
 {
     return !windows.FileExists(GetVersionLockfileLocation()) ||
         windows.ReadFromFile(GetVersionLockfileLocation()) != GetVersionFromJson(versionDetails);
 }
 
-void MoveOldUpdaterBinary(UKControllerPlugin::Windows::WinApiInterface& windows)
+void MoveOldUpdaterBinary(WinApiInterface& windows)
 {
     windows.MoveFileToNewLocation(GetUpdaterBinaryRelativePath(), GetOldUpdaterBinaryRelativePath());
 }
@@ -70,12 +76,24 @@ std::string GetVersionFromJson(const nlohmann::json& versionDetails)
     return versionDetails.at("version").get<std::string>();
 }
 
+void DisplayUpdateNotification(WinApiInterface& windows, std::wstring version)
+{
+    std::wstring message = L"The UK Controller Plugin has been automatically updated to version " + version + L".\r\n";
+    message += L"Please consult the changelog (available through the OP menu) for more details";
+
+    windows.OpenMessageBox(
+        message.c_str(),
+        L"UKCP Automatic Update Complete",
+        MB_OK | MB_ICONINFORMATION
+    );
+}
+
 std::wstring GetOldUpdaterLocation()
 {
     return GetBinariesFolderRelativePath() + L"/UKControllerPluginUpdater.dll.old";
 }
 
-void UpdateLockfile(UKControllerPlugin::Windows::WinApiInterface& windows, std::string version)
+void UpdateLockfile(WinApiInterface& windows, std::string version)
 {
     windows.WriteToFile(GetVersionLockfileLocation(), version, true);
 }
