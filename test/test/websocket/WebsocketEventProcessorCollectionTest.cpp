@@ -27,12 +27,12 @@ namespace UKControllerPluginTest {
                 }
 
                 std::shared_ptr<NiceMock<MockWebsocketEventProcessor>> eventProcessor;
-                std::shared_ptr<NiceMock<MockWebsocketEventProcessor>> eventProcessor2;
 
                 WebsocketSubscription subChannel1 = { WebsocketSubscription::SUB_TYPE_CHANNEL, "channel1" };
                 WebsocketSubscription subChannel2 = { WebsocketSubscription::SUB_TYPE_CHANNEL, "channel2" };
                 WebsocketSubscription subEvent1 = { WebsocketSubscription::SUB_TYPE_EVENT, "event1" };
                 WebsocketSubscription subEvent2 = { WebsocketSubscription::SUB_TYPE_EVENT, "event2" };
+                WebsocketSubscription subAll = {WebsocketSubscription::SUB_TYPE_ALL};
 
                 WebsocketEventProcessorCollection collection;
         };
@@ -96,10 +96,36 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(expectedChannels, this->collection.GetChannelSubscriptions());
         }
 
+        TEST_F(WebsocketEventProcessorCollectionTest, ItAddsEventProcessorsToAllSubscriptions)
+        {
+            std::set<WebsocketSubscription> events = {subAll};
+
+            ON_CALL(*this->eventProcessor, GetSubscriptions)
+                .WillByDefault(Return(events));
+
+            this->collection.AddProcessor(this->eventProcessor);
+            EXPECT_EQ(1, this->collection.CountProcessorsForAll());
+        }
+
         TEST_F(WebsocketEventProcessorCollectionTest, ItSendsChannelMessagesToRegisteredProcessors)
         {
             const WebsocketMessage message = { "event1", "channel1" };
             std::set<WebsocketSubscription> channels = { subChannel1, subChannel2 };
+
+            ON_CALL(*this->eventProcessor, GetSubscriptions)
+                .WillByDefault(Return(channels));
+
+            EXPECT_CALL(*this->eventProcessor, ProcessWebsocketMessage(message))
+                .Times(1);
+
+            this->collection.AddProcessor(this->eventProcessor);
+            this->collection.ProcessEvent(message);
+        }
+
+        TEST_F(WebsocketEventProcessorCollectionTest, ItSendsChannelMessagesToAllSubscriptions)
+        {
+            const WebsocketMessage message = {"event1", "channel1"};
+            std::set<WebsocketSubscription> channels = {subAll};
 
             ON_CALL(*this->eventProcessor, GetSubscriptions)
                 .WillByDefault(Return(channels));
@@ -141,10 +167,25 @@ namespace UKControllerPluginTest {
             this->collection.ProcessEvent(message);
         }
 
+        TEST_F(WebsocketEventProcessorCollectionTest, ItSendsEventMessagesToAllProcessors)
+        {
+            const WebsocketMessage message = {"event1", "channel1"};
+            std::set<WebsocketSubscription> events = {subAll};
+
+            ON_CALL(*this->eventProcessor, GetSubscriptions)
+                .WillByDefault(Return(events));
+
+            EXPECT_CALL(*this->eventProcessor, ProcessWebsocketMessage(message))
+                .Times(1);
+
+            this->collection.AddProcessor(this->eventProcessor);
+            this->collection.ProcessEvent(message);
+        }
+
         TEST_F(WebsocketEventProcessorCollectionTest, ItDoesntSendTheMessageToSameProcessorTwice)
         {
             const WebsocketMessage message = { "event1", "channel1" };
-            std::set<WebsocketSubscription> events = { subChannel1, subEvent1 };
+            std::set<WebsocketSubscription> events = {subChannel1, subEvent1, subAll};
 
             ON_CALL(*this->eventProcessor, GetSubscriptions)
                 .WillByDefault(Return(events));

@@ -26,5 +26,10 @@ namespace UKControllerPlugin {
         // TIME FORMAT
         const std::string GeneralSettingsEntries::unknownTimeFormatBlankKey = "useBlankForUnknownTimes";
         const std::string GeneralSettingsEntries::unknownTimeFormatBlankDescription = "Display Unknown Times As Blank";
+
+        // Initial Headings
+        const std::string GeneralSettingsEntries::initialHeadingToggleSettingsKey = "autoAssignInitialHeadings";
+        const std::string GeneralSettingsEntries::initialHeadingToggleSettingsDescription =
+            "Automatically assign initial headings";
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

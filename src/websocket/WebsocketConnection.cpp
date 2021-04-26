@@ -1,4 +1,3 @@
-#pragma once
 #include "pch/stdafx.h"
 #include "websocket/WebsocketConnection.h"
 #include "update/PluginVersion.h"
@@ -141,7 +140,7 @@ namespace UKControllerPlugin {
         {
             while (this->threadsRunning) {
 
-                std::lock_guard<std::mutex>(this->eventGuard);
+                std::lock_guard<std::mutex> lockGuard(this->eventGuard);
 
                 // If not connected, try and connect
                 if (!this->connected) {
@@ -193,6 +192,27 @@ namespace UKControllerPlugin {
                     );
                     LogDebug("Sending websocket message: " + this->outboundMessages.front());
                     this->outboundMessages.pop();
+                }
+
+                // This is a mitigation for ongoing websocket issues while we look to fix things,
+                // if there's been no activity for a while, reset the websocket
+                if (
+                    this->connected &&
+                    std::chrono::system_clock::now() - this->lastActivityTime > std::chrono::minutes(5)
+                ) {
+                    LogInfo("Restarting websocket due to inactivity.");
+                    boost::beast::error_code ec;
+
+                    try {
+                        this->websocket->next_layer().next_layer().cancel();
+                        this->websocket->next_layer().next_layer().close();
+                        this->websocket->next_layer().shutdown(ec);
+                        this->websocket->close(boost::beast::websocket::close_code::normal, ec);
+                    } catch (boost::system::system_error) {
+                        LogInfo("Exception thrown when trying to close websocket");
+                    }
+
+                    this->ResetWebsocket();
                 }
 
                 // Sleep for a bit to give the CPU a break
@@ -248,7 +268,7 @@ namespace UKControllerPlugin {
 
             LogDebug("Incoming websocket message: " + boost::beast::buffers_to_string(this->incomingBuffer.data()));
             std::lock_guard<std::mutex> lock(this->inboundMessageQueueGuard);
-            this->inboundMessages.push(boost::beast::buffers_to_string(this->incomingBuffer.data()));
+            this->inboundMessages.push(buffers_to_string(this->incomingBuffer.data()));
             this->incomingBuffer.consume(bytes_transferred);
             this->asyncReadInProgress = false;
             this->lastActivityTime = std::chrono::system_clock::now();

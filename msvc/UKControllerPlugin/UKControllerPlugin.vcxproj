@@ -146,9 +146,9 @@
     <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGenerator.h" />
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeModule.h" />
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingEventHandler.h" />
+    <ClInclude Include="..\..\src\initialheading\InitialHeadingModule.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageEventHandler.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageHandlerInterface.h" />
     <ClInclude Include="..\..\src\integration\HiddenWindow.h" />
@@ -203,6 +203,10 @@
     <ClInclude Include="..\..\src\notifications\NotificationsRepository.h" />
     <ClInclude Include="..\..\src\notifications\NotificationsRepositoryFactory.h" />
     <ClInclude Include="..\..\src\notifications\UnreadNotificationsMessage.h" />
+    <ClInclude Include="..\..\src\oceanic\Clearance.h" />
+    <ClInclude Include="..\..\src\oceanic\OceanicClearanceDialog.h" />
+    <ClInclude Include="..\..\src\oceanic\OceanicEventHandler.h" />
+    <ClInclude Include="..\..\src\oceanic\OceanicModule.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.h" />
     <ClInclude Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.h" />
     <ClInclude Include="..\..\src\offblock\EstimatedDepartureTimeBootstrap.h" />
@@ -258,6 +262,10 @@
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileCoordinates.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileProviderInterface.h" />
+    <ClInclude Include="..\..\src\sid\SidCollection.h" />
+    <ClInclude Include="..\..\src\sid\SidCollectionFactory.h" />
+    <ClInclude Include="..\..\src\sid\SidModule.h" />
+    <ClInclude Include="..\..\src\sid\StandardInstrumentDeparture.h" />
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocation.h" />
     <ClInclude Include="..\..\src\squawk\ApiSquawkAllocationHandler.h" />
     <ClInclude Include="..\..\src\squawk\SquawkAssignment.h" />
@@ -293,6 +301,7 @@
     <ClInclude Include="..\..\src\wake\WakeCategoryMapper.h" />
     <ClInclude Include="..\..\src\wake\WakeModule.h" />
     <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h" />
+    <ClInclude Include="..\..\src\websocket\PollingWebsocketConnection.h" />
     <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h" />
     <ClInclude Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.h" />
     <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h" />
@@ -304,6 +313,9 @@
     <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorInterface.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketMessage.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketProxyConnection.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketProxyHandler.h" />
+    <ClInclude Include="..\..\src\websocket\WebsocketProxyWindow.h" />
     <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h" />
   </ItemGroup>
   <ItemGroup>
@@ -412,11 +424,10 @@
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestriction.cpp" />
     <ClCompile Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.cpp" />
     <ClCompile Include="..\..\src\hold\PublishedHoldCollection.cpp" />
-    <ClCompile Include="..\..\src\initialaltitude\CompareInitialAltitudes.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.cpp" />
-    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGenerator.cpp" />
-    <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeGeneratorFactory.cpp" />
     <ClCompile Include="..\..\src\initialaltitude\InitialAltitudeModule.cpp" />
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingEventHandler.cpp" />
+    <ClCompile Include="..\..\src\initialheading\InitialHeadingModule.cpp" />
     <ClCompile Include="..\..\src\integration\ExternalMessageEventHandler.cpp" />
     <ClCompile Include="..\..\src\integration\HiddenWindow.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationModule.cpp" />
@@ -464,6 +475,9 @@
     <ClCompile Include="..\..\src\notifications\NotificationsRepository.cpp" />
     <ClCompile Include="..\..\src\notifications\NotificationsRepositoryFactory.cpp" />
     <ClCompile Include="..\..\src\notifications\UnreadNotificationsMessage.cpp" />
+    <ClCompile Include="..\..\src\oceanic\OceanicClearanceDialog.cpp" />
+    <ClCompile Include="..\..\src\oceanic\OceanicEventHandler.cpp" />
+    <ClCompile Include="..\..\src\oceanic\OceanicModule.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeBootstrap.cpp" />
     <ClCompile Include="..\..\src\offblock\ActualOffBlockTimeEventHandler.cpp" />
     <ClCompile Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.cpp" />
@@ -511,6 +525,10 @@
     <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileCoordinates.cpp" />
+    <ClCompile Include="..\..\src\sid\SidCollection.cpp" />
+    <ClCompile Include="..\..\src\sid\SidCollectionFactory.cpp" />
+    <ClCompile Include="..\..\src\sid\SidModule.cpp" />
+    <ClCompile Include="..\..\src\sid\StandardInstrumentDeparture.cpp" />
     <ClCompile Include="..\..\src\squawk\ApiSquawkAllocationHandler.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkAssignment.cpp" />
     <ClCompile Include="..\..\src\squawk\SquawkEventHandler.cpp" />
@@ -542,6 +560,7 @@
     <ClCompile Include="..\..\src\wake\WakeCategoryMapper.cpp" />
     <ClCompile Include="..\..\src\wake\WakeModule.cpp" />
     <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp" />
+    <ClCompile Include="..\..\src\websocket\PollingWebsocketConnection.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.cpp" />
     <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp" />
@@ -550,6 +569,9 @@
     <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketProxyConnection.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketProxyHandler.cpp" />
+    <ClCompile Include="..\..\src\websocket\WebsocketProxyWindow.cpp" />
     <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp" />
     <ClInclude Include="..\..\src\timedevent\DeferredEventHandler.h" />
     <ClCompile Include="..\..\src\timedevent\DeferredEventHandler.cpp" />

@@ -28,7 +28,7 @@ namespace UKControllerPlugin {
                 reinterpret_cast<LPVOID>(this)
             );
 
-            if (GetLastError() != S_OK) {
+            if (this->hiddenWindow == NULL) {
                 LogError("Unable to create external message handler");
             }
         }
@@ -37,6 +37,7 @@ namespace UKControllerPlugin {
         {
             if (this->hiddenWindow != NULL) {
                 DestroyWindow(this->hiddenWindow);
+                UnregisterClass(L"UKControllerPluginHiddenWindowClass", GetModuleHandle(nullptr));
             }
         }
 

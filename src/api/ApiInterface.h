@@ -59,6 +59,8 @@ namespace UKControllerPlugin {
                 ) const = 0;
                 virtual nlohmann::json GetAllNotifications() const = 0;
                 virtual nlohmann::json GetUnreadNotifications() const = 0;
+                virtual nlohmann::json SyncPluginEvents() const = 0;
+                virtual nlohmann::json GetLatestPluginEvents(int lastEventId) const = 0;
                 virtual void ReadNotification(int id) const = 0;
                 virtual int UpdateCheck(std::string version) const = 0;
                 virtual nlohmann::json GetUpdateDetails() const = 0;

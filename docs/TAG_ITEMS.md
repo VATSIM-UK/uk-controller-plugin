@@ -17,3 +17,9 @@
 115 - Aircraft Type / RECAT-EU Category
 116 - Flight Information Service
 117 - Flight Information Service Or Blank
+118 - Nattrak Oceanic Clearance Indicator
+119 - Nattrak Oceanic Clearance Level
+120 - Nattrak Oceanic Clearance Mach Number
+121 - Nattrak Oceanic Clearance Entry Point
+122 - Nattrak Oceanic Clearance Track Identifier
+123 - Nattrak Oceanic Clearance Entry Estimate

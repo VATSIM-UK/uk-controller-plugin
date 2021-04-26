@@ -15,6 +15,7 @@
 #define IDD_HOLD_PARAMS                 117
 #define IDD_HOLD_SELECTION              119
 #define IDD_NOTIFICATIONS               121
+#define IDD_OCEANIC_CLEARANCE           125
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -50,6 +51,8 @@
 #define GS_QNH_CHANGE_CHECK             1024
 #define GS_DIALOG_QNH_CHECK             1024
 #define IDC_HOLD_PROFILE_SELECT_LABEL   1025
+#define GS_DIALOG_IA_CHECK2             1025
+#define GS_DIALOG_IH_CHECK              1025
 #define IDC_HOLD_SELECT_LOAD            1026
 #define IDC_HOLD_SELECT_SAVE            1027
 #define IDC_COMBO3                      1030
@@ -118,14 +121,34 @@
 #define IDC_HOLD_MAX_SPIN               1093
 #define IDC_NOTIFICATION_LINK           1094
 #define IDC_NOTIFICATION_TITLE          1095
+#define ID_OK                           1096
+#define IDC_OCEANIC_STATIC_CALLSIGN     1097
+#define IDC_OCEANIC_STATIC_STATUS       1098
+#define IDC_OCEANIC_STATIC_TRACK        1099
+#define IDC_OCEANIC_STATIC_FIX          1100
+#define IDC_OCEANIC_STATIC_LEVEL        1101
+#define IDC_OCEANIC_STATIC_MACH         1102
+#define IDC_OCEANIC_STATIC_ENTRY        1103
+#define IDC_OCEANIC_STATIC_ISSUED       1104
+#define IDC_OCEANIC_STATIC_EXTRA        1105
+#define IDC_OCEANIC_STATIC_CALLSIGN_DATA 1106
+#define IDC_OCEANIC_STATIC_STATUS_DATA  1107
+#define IDC_OCEANIC_STATIC_TRACK_DATA   1108
+#define IDC_OCEANIC_STATIC_FIX_DATA     1109
+#define IDC_OCEANIC_STATIC_LEVEL_DATA   1110
+#define IDC_OCEANIC_STATIC_MACH_DATA    1111
+#define IDC_OCEANIC_STATIC_ENTRY_DATA   1112
+#define IDC_OCEANIC_STATIC_ISSUED_DATA  1114
+#define IDC_OCEANIC_STATIC_ISSUED_DATA2 1115
+#define IDC_OCEANIC_STATIC_EXTRA_DATA   1115
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        125
+#define _APS_NEXT_RESOURCE_VALUE        127
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1096
+#define _APS_NEXT_CONTROL_VALUE         1110
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

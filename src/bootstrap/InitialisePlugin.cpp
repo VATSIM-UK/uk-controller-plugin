@@ -2,7 +2,6 @@
 #include "bootstrap/InitialisePlugin.h"
 #include "api/ApiAuthChecker.h"
 #include "bootstrap/CollectionBootstrap.h"
-#include "bootstrap/CopyFilesToNewFolder.h"
 #include "bootstrap/DuplicatePlugin.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
@@ -48,6 +47,12 @@
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
 #include "websocket/WebsocketBootstrap.h"
+#include "integration/IntegrationModule.h"
+#include "notifications/NotificationsModule.h"
+#include "flightinformationservice/FlightInformatioNServiceModule.h"
+#include "oceanic/OceanicModule.h"
+#include "sid/SidModule.h"
+#include "initialheading/InitialHeadingModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -163,8 +168,6 @@ namespace UKControllerPlugin {
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
         ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
-        // Remove this once the last version on old root is deprecated
-        Bootstrap::CopyFilesToNewFolder(*this->container->windows);
         ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
 
         // Bootstrap the logger
@@ -190,7 +193,7 @@ namespace UKControllerPlugin {
 
         // API + Websocket
         HelperBootstrap::Bootstrap(*this->container);
-        Websocket::BootstrapPlugin(*this->container);
+        Websocket::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
         // Datetime
         Datablock::BootstrapPlugin(*this->container);
@@ -231,11 +234,13 @@ namespace UKControllerPlugin {
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
+        Sid::BootstrapPlugin(*this->container, loader);
         Navaids::BootstrapPlugin(*this->container, loader);
         Releases::BootstrapPlugin(*this->container, loader);
         Stands::BootstrapPlugin(*this->container, loader);
         Notifications::BootstrapPlugin(*this->container);
         FlightInformationService::BootstrapPlugin(*this->container);
+        Oceanic::BootstrapPlugin(*this->container);
 
         Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);
@@ -251,13 +256,14 @@ namespace UKControllerPlugin {
 
         // Bootstrap the modules
 
-        // Only load initial altitudes if we know the plugin version is ok (as this modifies flightplans)
+        // Only load initial altitudes or headings if we know the plugin version is ok (as this modifies flightplans)
         // Don't load it if the plugin is a duplicate, leave that to the main one.
         if (
             this->updateStatus == PluginUpdateChecker::versionAllowed &&
             !this->duplicatePlugin->Duplicate()
         ) {
-            InitialAltitudeModule::BootstrapPlugin(loader, *this->container);
+            InitialAltitudeModule::BootstrapPlugin(*this->container);
+            InitialHeading::BootstrapPlugin(*this->container);
         }
 
         Srd::BootstrapPlugin(*this->container);

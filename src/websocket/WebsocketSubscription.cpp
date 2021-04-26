@@ -1,4 +1,3 @@
-#pragma once
 #include "pch/stdafx.h"
 #include "websocket/WebsocketSubscription.h"
 
@@ -7,6 +6,7 @@ namespace UKControllerPlugin {
 
         const std::string WebsocketSubscription::SUB_TYPE_CHANNEL = "channel";
         const std::string WebsocketSubscription::SUB_TYPE_EVENT = "event";
+        const std::string WebsocketSubscription::SUB_TYPE_ALL = "all";
 
         bool WebsocketSubscription::operator==(const WebsocketSubscription & compare) const
         {
@@ -28,6 +28,11 @@ namespace UKControllerPlugin {
         bool WebsocketSubscription::IsChannelSubscription(void) const
         {
             return this->subType == this->SUB_TYPE_CHANNEL;
+        }
+
+        bool WebsocketSubscription::IsAllSubscription(void) const
+        {
+            return this->subType == this->SUB_TYPE_ALL;
         }
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

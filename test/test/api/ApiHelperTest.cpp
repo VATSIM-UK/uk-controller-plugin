@@ -883,6 +883,46 @@ TEST_F(ApiHelperTest, ReadNotificationMakesRequest)
     EXPECT_NO_THROW(this->helper.ReadNotification(1));
 }
 
+TEST_F(ApiHelperTest, SyncPluginEventsMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/plugin-events/sync",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.SyncPluginEvents());
+}
+
+TEST_F(ApiHelperTest, GetLatestPluginEventsMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/plugin-events/recent?previous=5",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetLatestPluginEvents(5));
+}
+
 TEST_F(ApiHelperTest, GetUpdateDetailsReturnsData)
 {
     nlohmann::json responseData;

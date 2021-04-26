@@ -1,21 +1,25 @@
 #include "pch/stdafx.h"
 #include "websocket/WebsocketBootstrap.h"
-#include "websocket/WebsocketConnection.h"
 #include "websocket/PusherActivityTimeoutEventHandler.h"
 #include "websocket/PusherConnectionChannelSubscriptionEventHandler.h"
 #include "websocket/PusherErrorEventHandler.h"
 #include "websocket/PusherPingEventHandler.h"
 #include "websocket/PusherWebsocketProtocolHandler.h"
+#include "websocket/WebsocketProxyConnection.h"
+#include "websocket/PollingWebsocketConnection.h"
+#include "websocket/WebsocketProxyHandler.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
 namespace UKControllerPlugin {
     namespace Websocket {
 
+        std::shared_ptr<PollingWebsocketConnection> pollingConnection;
+
         /*
             Bootstrap up the websocket.
         */
-        void BootstrapPlugin(PersistenceContainer & container)
+        void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin)
         {
             // Connect to websocket
             std::string wsHost = container.settingsRepository->HasSetting("websocket_host")
@@ -26,15 +30,20 @@ namespace UKControllerPlugin {
                 ? container.settingsRepository->GetSetting("websocket_port")
                 : "6001";
 
-            container.websocket.reset(
-                new WebsocketConnection(
-                    wsHost,
-                    wsPort
-                )
-            );
-
             // Set up handler collection
             container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
+
+            // Create a websocket connection depending on whether we're the main plugin
+            if (duplicatePlugin) {
+                container.websocket.reset(new WebsocketProxyConnection());
+            } else {
+                pollingConnection = std::make_shared<PollingWebsocketConnection>(*container.api, *container.taskRunner);
+                container.websocket = pollingConnection;
+                container.websocketProcessors->AddProcessor(
+                    std::make_shared<WebsocketProxyHandler>()
+                );
+                container.timedHandler->RegisterEvent(pollingConnection, 1);
+            }
 
             // Set up handlers that look after the websocket protocol
             container.websocketProcessors->AddProcessor(

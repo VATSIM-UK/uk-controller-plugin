@@ -306,6 +306,23 @@ namespace UKControllerPlugin {
                 CurlRequest(this->apiDomain + "/version/latest", CurlRequest::METHOD_GET)
             );
         }
+        
+        CurlRequest ApiRequestBuilder::BuildPluginEventSyncRequest() const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(this->apiDomain + "/plugin-events/sync", CurlRequest::METHOD_GET)
+            );
+        }
+
+        CurlRequest ApiRequestBuilder::BuildGetLatestPluginEventsRequest(int lastEventId) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(
+                    this->apiDomain + "/plugin-events/recent?previous=" + std::to_string(lastEventId),
+                    CurlRequest::METHOD_GET
+                )
+            );
+        }
 
         CurlRequest ApiRequestBuilder::BuildEnrouteReleaseRequest(
             std::string aircraftCallsign,

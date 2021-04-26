@@ -83,6 +83,7 @@ namespace UKControllerPluginTest {
                 "pusher:connection_established",
                 "none",
                 nlohmann::json({{"socket_id", "abc"}}),
+                "",
                 true
             };
 
@@ -116,6 +117,7 @@ namespace UKControllerPluginTest {
                 "pusher:connection_established",
                 "none",
                 nlohmann::json({{"socket_id", "abc"}}),
+                "",
                 true
             };
 
@@ -154,6 +156,7 @@ namespace UKControllerPluginTest {
                 "pusher:connection_established",
                 "none",
                 nlohmann::json({{"socket_id", "abc"}}),
+                "",
                 true
             };
 

@@ -72,6 +72,8 @@ namespace UKControllerPlugin {
                 nlohmann::json GetUpdateDetails() const override;
                 nlohmann::json GetAllNotifications() const override;
                 nlohmann::json GetUnreadNotifications() const override;
+                nlohmann::json SyncPluginEvents() const override;
+                nlohmann::json GetLatestPluginEvents(int lastEventId) const override;
                 void ReadNotification(int id) const override;
                 int UpdateCheck(std::string version) const override;
                 void SetApiKey(std::string key) override;

@@ -13,14 +13,17 @@
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "initialaltitude/InitialAltitudeEventHandler.h"
-#include "initialaltitude/InitialAltitudeGenerator.h"
 #include "mock/MockSquawkEventHandler.h"
 #include "flightplan/StoredFlightplan.h"
 #include "message/UserMessager.h"
 #include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
+#include "sid/SidCollection.h"
+#include "sid/StandardInstrumentDeparture.h"
 
+using UKControllerPlugin::Sid::SidCollection;
+using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 using UKControllerPlugin::Ownership::AirfieldOwnershipHandler;
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldModel;
@@ -35,7 +38,6 @@ using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
-using UKControllerPlugin::InitialAltitude::InitialAltitudeGenerator;
 using UKControllerPluginTest::Squawk::MockSquawkEventHandler;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Message::UserMessager;
@@ -59,7 +61,7 @@ namespace UKControllerPluginTest {
                     login(plugin, ControllerStatusEventHandlerCollection()),
                     initialAltitudes(
                         new InitialAltitudeEventHandler(
-                            this->generator,
+                            this->sids,
                             this->activeCallsigns,
                             this->ownership,
                             this->login,
@@ -164,7 +166,7 @@ namespace UKControllerPluginTest {
                     this->ownership.RefreshOwner("EGKK");
 
                     // Create a dummy initial altitude
-                    this->generator.AddSid("EGKK", "ADMAG2X", 6000);
+                    sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 0));
                     this->login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::minutes(15));
                 }
 
@@ -172,7 +174,7 @@ namespace UKControllerPluginTest {
                 ControllerPositionCollection controllerCollection;
                 AirfieldOwnershipManager ownership;
                 StoredFlightplanCollection flightplans;
-                InitialAltitudeGenerator generator;
+                SidCollection sids;
                 std::shared_ptr<InitialAltitudeEventHandler> initialAltitudes;
                 NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 Login login;
