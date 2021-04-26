@@ -22,7 +22,8 @@ namespace UKControllerPlugin {
             PruneLogs(windows, logfilePrefix);
 
             std::shared_ptr<spdlog::logger> logger = spdlog::basic_logger_mt(
-                "logger", GetLogFilePath(GetLogfileName(logfilePrefix))
+                "logger",
+                windows.GetFullPathToLocalFile(GetLogFilePath(GetLogfileName(logfilePrefix)))
             );
             logger->set_pattern("%Y-%m-%d %T [%l] - %v");
 
@@ -132,7 +133,7 @@ namespace UKControllerPlugin {
         std::wstring LoggerBootstrap::GetLogfileName(std::wstring logFilePrefix)
         {
             return logFilePrefix + L"-" + HelperFunctions::ConvertToWideString(
-                date::format("%Y%m%d%H%M%S", std::chrono::system_clock::now())
+                date::format("%Y%m%d%H%M%S", date::floor<std::chrono::seconds>(std::chrono::system_clock::now()))
             ) + L".log";
         }
 

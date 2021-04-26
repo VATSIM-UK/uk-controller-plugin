@@ -17,7 +17,7 @@ std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
 /*
  *  Update and load the UKControllerPlugin DLL
  */
-void __declspec (dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
+void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
 {
     // Boot up the windows API, create the root folder and create the logger
     windows = UKControllerPlugin::Windows::Bootstrap(nullptr);
@@ -59,7 +59,7 @@ void __declspec (dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlu
 /*
  * Unload the UKControllerPlugin DLL and free the library
  */
-void __declspec (dllexport) EuroScopePlugInExit(void)
+void __declspec(dllexport) EuroScopePlugInExit(void)
 {
     UnloadPluginLibrary(pluginDllInstance, *windows);
 }
