@@ -14,7 +14,6 @@ void RunUpdater(
 )
 {
     HINSTANCE updaterHandle = windows.LoadLibraryRelative(GetUpdaterBinaryRelativePath());
-    DWORD lastError = GetLastError();
     if (!updaterHandle) {
         LogInfo("Unable to run the updater, binary does not exist");
         std::wstring message = L"Unable to start updater.\r\n";

@@ -20,15 +20,21 @@ void CheckForUpdates(
 {
     try {
         const nlohmann::json versionDetails = UKControllerPlugin::GetUpdateData(api);
+        std::string version = GetVersionFromJson(versionDetails);
         if (UpdateRequired(windows, versionDetails)) {
+            LogInfo("Plugin update available, newest version " + version);
             PerformUpdates(curl, windows, versionDetails);
             DisplayUpdateNotification(
-                windows, HelperFunctions::ConvertToWideString(GetVersionFromJson(versionDetails))
+                windows,
+                HelperFunctions::ConvertToWideString(version)
             );
+        } else {
+            LogInfo("Plugin is up to date at version " + version);
         }
     } catch (std::exception exception) {
         std::wstring message = std::wstring(HelperFunctions::ConvertToWideString(exception.what())) + L"\r\n";
         message += L"Plugin will attempt to load with previously downloaded version.";
+        LogError("Exception when performing updates, message: " + std::string(exception.what()));
 
         windows.OpenMessageBox(
             message.c_str(),
@@ -49,6 +55,7 @@ void PerformUpdates(
         UKControllerPlugin::DownloadUpdater(versionDetails, windows, curl);
 
     if (!updatedSuccessfully) {
+        LogError("Error when updating plugin binaries");
         throw std::exception("Failed to update UKCP binaries.");
     }
 
@@ -58,11 +65,13 @@ void PerformUpdates(
 bool UpdateRequired(WinApiInterface& windows, const nlohmann::json& versionDetails)
 {
     return !windows.FileExists(GetVersionLockfileLocation()) ||
-        windows.ReadFromFile(GetVersionLockfileLocation()) != GetVersionFromJson(versionDetails);
+        windows.ReadFromFile(GetVersionLockfileLocation()) != GetVersionFromJson(versionDetails) ||
+        !windows.FileExists(GetCoreBinaryRelativePath());
 }
 
 void MoveOldUpdaterBinary(WinApiInterface& windows)
 {
+    LogInfo("Moving updater binary to old version");
     windows.MoveFileToNewLocation(GetUpdaterBinaryRelativePath(), GetOldUpdaterBinaryRelativePath());
 }
 
@@ -78,8 +87,9 @@ std::string GetVersionFromJson(const nlohmann::json& versionDetails)
 
 void DisplayUpdateNotification(WinApiInterface& windows, std::wstring version)
 {
-    std::wstring message = L"The UK Controller Plugin has been automatically updated to version " + version + L".\r\n";
-    message += L"Please consult the changelog (available through the OP menu) for more details";
+    std::wstring message = L"The UK Controller Plugin has been automatically updated to version " + version +
+        L".\r\n\r\n";
+    message += L"Please consult the changelog (available through the OP menu) for more details.";
 
     windows.OpenMessageBox(
         message.c_str(),
@@ -95,5 +105,6 @@ std::wstring GetOldUpdaterLocation()
 
 void UpdateLockfile(WinApiInterface& windows, std::string version)
 {
-    windows.WriteToFile(GetVersionLockfileLocation(), version, true);
+    LogInfo("Updating version lockfile");
+    windows.WriteToFile(GetVersionLockfileLocation(), version, true, false);
 }

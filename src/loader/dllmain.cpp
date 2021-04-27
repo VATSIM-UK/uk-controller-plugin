@@ -34,7 +34,7 @@ BOOL WINAPI DllMain(
 /*
  *  Update and load the UKControllerPlugin DLL
  */
-void UKCP_LOADER_API EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
+UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
 {
     // Boot up the windows API, create the root folder and create the logger
     windows = UKControllerPlugin::Windows::Bootstrap(loaderDllInstance);
@@ -77,7 +77,7 @@ void UKCP_LOADER_API EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
 /*
  * Unload the UKControllerPlugin DLL and free the library
  */
-void UKCP_LOADER_API EuroScopePlugInExit(void)
+UKCP_LOADER_API void EuroScopePlugInExit(void)
 {
     UNLOADPLUGINLIBRARY UnloadPlugin = reinterpret_cast<UNLOADPLUGINLIBRARY>(
         GetProcAddress(pluginDllInstance, "UnloadPlugin")

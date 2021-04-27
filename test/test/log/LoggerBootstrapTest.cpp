@@ -40,7 +40,7 @@ namespace UKControllerPluginUtilsTest {
             EXPECT_TRUE(
                 std::regex_match(
                     LoggerBootstrap::GetLogfileName(L"plugin"),
-                    std::wregex(L"^plugin-[0-9]{4}[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{2}\\.[0-9]+\\.log$")
+                    std::wregex(L"^plugin-[0-9]{4}[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{2}\\.log$")
                 )
             );
         }

@@ -8,7 +8,7 @@
 #include "log/LoggerBootstrap.h"
 
 #ifndef UKCP_UPDATER_API
-#define UKCP_UPDATER_API __declspec(dllexport)
+#define UKCP_UPDATER_API extern "C" __declspec(dllexport)
 #endif
 
 HINSTANCE dllInstance;
@@ -24,7 +24,7 @@ BOOL WINAPI DllMain(
     return TRUE;
 }
 
-void UKCP_UPDATER_API PerformUpdates()
+UKCP_UPDATER_API void PerformUpdates()
 {
     // Boot up the windows API, create the root folder and create the logger
     windows = UKControllerPlugin::Windows::Bootstrap(dllInstance);

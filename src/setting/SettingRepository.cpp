@@ -136,8 +136,10 @@ namespace UKControllerPlugin
                 try {
                     std::wstring widePath = HelperFunctions::ConvertToWideString(it->first);
                     winApi.WriteToFile(
-                        this->settingFolder + L"/" + widePath, nlohmann::json(it->second).dump(4),
-                        true
+                        this->settingFolder + L"/" + widePath,
+                        nlohmann::json(it->second).dump(4),
+                        true,
+                        false
                     );
                 } catch (std::ifstream::failure) { }
             }

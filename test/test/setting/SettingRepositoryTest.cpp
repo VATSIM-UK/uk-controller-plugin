@@ -204,7 +204,7 @@ namespace UKControllerPluginUtilsTest {
                 winApiMock,
                 WriteToFile(
                     std::wstring(L"settings/test/test.json"),
-                    "{\n    \"test1\": \"testValue1\",\n    \"test2\": \"testValue2\"\n}", true
+                    "{\n    \"test1\": \"testValue1\",\n    \"test2\": \"testValue2\"\n}", true, false
                 ))
                 .Times(1);
 
@@ -229,7 +229,7 @@ namespace UKControllerPluginUtilsTest {
                 winApiMock,
                 WriteToFile(
                     std::wstring(L"settings/test/test.json"),
-                    "{\n    \"test1\": \"notTestValue1\",\n    \"test2\": \"testValue2\"\n}", true
+                    "{\n    \"test1\": \"notTestValue1\",\n    \"test2\": \"testValue2\"\n}", true, false
                 ))
                 .Times(1);
 
@@ -261,13 +261,13 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_CALL(
                 winApiMock,
-                WriteToFile(std::wstring(L"settings/test/test1.json"), "{\n    \"test1\": \"testValue1\"\n}", true)
+                WriteToFile(std::wstring(L"settings/test/test1.json"), "{\n    \"test1\": \"testValue1\"\n}", true, false)
                 )
                 .Times(1);
 
             EXPECT_CALL(
                 winApiMock,
-                WriteToFile(std::wstring(L"settings/test/test2.json"), "{\n    \"test2\": \"testValue2\"\n}", true)
+                WriteToFile(std::wstring(L"settings/test/test2.json"), "{\n    \"test2\": \"testValue2\"\n}", true, false)
                 )
                 .Times(1);
 

@@ -19,7 +19,8 @@ namespace UKControllerPluginTest {
             MOCK_METHOD3(OpenMessageBox, int(LPCWSTR, LPCWSTR, int));
             MOCK_METHOD1(OpenWebBrowser, void(std::wstring));
             MOCK_METHOD1(PlayWave, void(LPCTSTR));
-            MOCK_METHOD3(WriteToFile, void(std::wstring, std::string, bool));
+            MOCK_METHOD4(WriteToFile, void(std::wstring, std::string, bool, bool));
+            MOCK_METHOD4(WriteToFileMock, void(std::wstring, std::string, bool, bool));
             MOCK_METHOD2(ReadFromFileMock, std::string(std::wstring, bool));
             MOCK_METHOD1(FileExists, bool(std::wstring));
             MOCK_METHOD1(CreateFolder, bool(std::wstring folder));
@@ -34,7 +35,7 @@ namespace UKControllerPluginTest {
             MOCK_METHOD2(MoveFileToNewLocation, bool(std::wstring, std::wstring));
 
 
-            std::string ReadFromFile(std::wstring path, bool relative = true)
+            std::string ReadFromFile(std::wstring path, bool relative) override
             {
                 return ReadFromFileMock(path, relative);
             }

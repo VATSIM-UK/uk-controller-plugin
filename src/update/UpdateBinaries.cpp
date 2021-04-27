@@ -21,6 +21,7 @@ namespace UKControllerPlugin {
      */
     bool DownloadUpdater(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
     {
+        LogInfo("Downloading updater library");
         CurlRequest updaterRequest(
             updateData.at("updater_download_url").get<std::string>(),
             CurlRequest::METHOD_GET
@@ -34,6 +35,7 @@ namespace UKControllerPlugin {
      */
     bool DownloadCoreLibrary(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
     {
+        LogInfo("Downloading core library");
         CurlRequest coreRequest(
             updateData.at("core_download_url").get<std::string>(),
             CurlRequest::METHOD_GET
@@ -67,10 +69,12 @@ namespace UKControllerPlugin {
         CurlResponse response = curl.MakeCurlRequest(request);
 
         if (response.IsCurlError() || response.GetStatusCode() != 200L) {
+            LogError("Error when downloading binary");
             return false;
         }
 
-        windows.WriteToFile(targetFile, response.GetResponse(), true);
+        windows.WriteToFile(targetFile, response.GetResponse(), true, true);
+        LogInfo("Binary updated successfully");
         return true;
     }
 

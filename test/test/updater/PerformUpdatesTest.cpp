@@ -54,6 +54,9 @@ namespace UKControllerPluginUpdaterTest {
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
                 .WillByDefault(testing::Return(false));
 
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(true));
+
             EXPECT_TRUE(UpdateRequired(mockWindows, version));
         }
 
@@ -70,6 +73,28 @@ namespace UKControllerPluginUpdaterTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
                 .WillByDefault(testing::Return("3.0.0"));
 
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(true));
+
+            EXPECT_TRUE(UpdateRequired(mockWindows, version));
+        }
+
+        TEST_F(PerformUpdatesTest, UpdateIsRequiredIfCoreBinaryMissing)
+        {
+            nlohmann::json version{
+                {"version", "3.0.1"},
+                {"not_version", "3.0.2"}
+            };
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
+                .WillByDefault(testing::Return(true));
+
+            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
+                .WillByDefault(testing::Return("3.0.1"));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(false));
+
             EXPECT_TRUE(UpdateRequired(mockWindows, version));
         }
 
@@ -85,6 +110,9 @@ namespace UKControllerPluginUpdaterTest {
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
                 .WillByDefault(testing::Return("3.0.1"));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(true));
 
             EXPECT_FALSE(UpdateRequired(mockWindows, version));
         }
@@ -134,6 +162,9 @@ namespace UKControllerPluginUpdaterTest {
                 .WillByDefault(testing::Return(apiData));
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
+                .WillByDefault(testing::Return(true));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
                 .WillByDefault(testing::Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
@@ -187,7 +218,7 @@ namespace UKControllerPluginUpdaterTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
             )
                 .Times(1);
 
@@ -206,14 +237,14 @@ namespace UKControllerPluginUpdaterTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
             )
                 .Times(1);
 
             // Lockfile update
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true)
+                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true, false)
             )
                 .Times(1);
 
@@ -269,7 +300,7 @@ namespace UKControllerPluginUpdaterTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
             )
                 .Times(1);
 
@@ -288,14 +319,14 @@ namespace UKControllerPluginUpdaterTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
             )
                 .Times(0);
 
             // Lockfile update
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true)
+                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true, false)
             )
                 .Times(0);
 
@@ -351,7 +382,7 @@ namespace UKControllerPluginUpdaterTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
             )
                 .Times(0);
 
@@ -370,14 +401,14 @@ namespace UKControllerPluginUpdaterTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
             )
                 .Times(0);
 
             // Lockfile update
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true)
+                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true, false)
             )
                 .Times(0);
 

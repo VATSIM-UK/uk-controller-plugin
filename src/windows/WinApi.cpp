@@ -245,13 +245,23 @@ namespace UKControllerPlugin {
         /*
             Write a given string into a file.
         */
-        void WinApi::WriteToFile(std::wstring filename, std::string data, bool truncate)
+        void WinApi::WriteToFile(std::wstring filename, std::string data, bool truncate, bool binary)
         {
             std::wstring newFilename = this->GetFullPathToLocalFile(filename);
             this->CreateMissingDirectories(newFilename);
+
+            // Set the output mode
+            std::ofstream::openmode mode = std::ofstream::out;
+            mode = mode | (truncate ? std::ofstream::trunc : std::ofstream::app);
+
+            if (binary) {
+                mode = mode | std::ofstream::binary;
+            }
+
+            // Open file and write
             std::ofstream file(
                 newFilename,
-                std::ofstream::out | ((truncate) ? std::ofstream::trunc : std::ofstream::app)
+                mode
             );
             file.exceptions(std::ofstream::badbit);
             if (file.is_open()) {

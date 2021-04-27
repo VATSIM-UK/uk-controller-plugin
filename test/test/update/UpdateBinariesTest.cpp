@@ -201,7 +201,7 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
             )
                 .Times(1);
 
@@ -235,7 +235,7 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
             )
                 .Times(0);
 
@@ -269,7 +269,7 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
             )
                 .Times(0);
 
@@ -303,7 +303,7 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
             )
                 .Times(1);
 
@@ -337,7 +337,7 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true, true)
             )
                 .Times(0);
 
@@ -371,7 +371,7 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true, true)
             )
                 .Times(0);
 

@@ -110,7 +110,7 @@ namespace UKControllerPluginLoaderTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
             )
                 .Times(1);
 
@@ -151,7 +151,7 @@ namespace UKControllerPluginLoaderTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
             )
                 .Times(0);
 
@@ -186,7 +186,7 @@ namespace UKControllerPluginLoaderTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true)
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
             )
                 .Times(0);
 

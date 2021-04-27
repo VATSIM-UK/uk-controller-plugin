@@ -266,7 +266,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockApi, GetDependencyList())
                 .WillByDefault(Throw(ApiException("nah")));
 
-            EXPECT_CALL(this->mockWindows, WriteToFile(_, _, _))
+            EXPECT_CALL(this->mockWindows, WriteToFile(_, _, _, _))
                 .Times(0);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
@@ -322,19 +322,19 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true)
+                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true, false)
             )
                 .Times(1);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true)
+                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true, false)
             )
                 .Times(1);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/test2.json"), this->dependency2.dump(), true)
+                WriteToFile(std::wstring(L"dependencies/test2.json"), this->dependency2.dump(), true, false)
             )
                 .Times(1);
 
@@ -397,13 +397,13 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true)
+                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true, false)
             )
                 .Times(1);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true)
+                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true, false)
             )
                 .Times(1);
 
@@ -467,7 +467,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true)
+                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true, false)
             )
                 .Times(1);
 
@@ -530,21 +530,24 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), "[]", true)
+                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), "[]", true, false)
             )
                 .Times(1);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true)
+                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true, false)
             )
                 .Times(0);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/test2.json"),
-                this->dependency2.dump(),
-                true)
+                WriteToFile(
+                    std::wstring(L"dependencies/test2.json"),
+                    this->dependency2.dump(),
+                    true,
+                    false
+                )
             )
                 .Times(0);
 
@@ -597,7 +600,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), "[]", true)
+                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), "[]", true, false)
             )
                 .Times(1);
 
