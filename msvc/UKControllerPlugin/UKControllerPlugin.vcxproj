@@ -142,7 +142,6 @@
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h" />
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\hold\PublishedHoldCollection.h" />
-    <ClInclude Include="..\..\src\include\UKControllerPlugin.h" />
     <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />

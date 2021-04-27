@@ -1,7 +1,6 @@
 #include "loader/pch.h"
 #include "loader/loader.h"
 #include "log/LoggerBootstrap.h"
-#include "include/UKControllerPlugin.h"
 #include "euroscope/EuroScopePlugIn.h"
 #include "windows/WinApiInterface.h"
 #include "windows/WinApiBootstrap.h"
@@ -10,17 +9,35 @@
 #include "curl/CurlApi.h"
 #include "data/PluginDataLocations.h"
 
-HINSTANCE pluginDllInstance;
+#ifndef UKCP_LOADER_API
+#define UKCP_LOADER_API __declspec(dllexport)
+#endif
 
+HINSTANCE pluginDllInstance;
+HINSTANCE loaderDllInstance;
 std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
+
+// Define the functions in the core DLL that we will need to call to load and unload the plugin
+typedef EuroScopePlugIn::CPlugIn* (CALLBACK* LOADPLUGINLIBRARY)();
+typedef void (CALLBACK* UNLOADPLUGINLIBRARY)();
+
+BOOL WINAPI DllMain(
+    HINSTANCE hinstDLL,
+    DWORD fdwReason,
+    LPVOID lpReserved
+)
+{
+    loaderDllInstance = hinstDLL;
+    return TRUE;
+}
 
 /*
  *  Update and load the UKControllerPlugin DLL
  */
-void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
+void UKCP_LOADER_API EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
 {
     // Boot up the windows API, create the root folder and create the logger
-    windows = UKControllerPlugin::Windows::Bootstrap(nullptr);
+    windows = UKControllerPlugin::Windows::Bootstrap(loaderDllInstance);
     CreatePluginDataRoot(*windows);
     UKControllerPlugin::Log::LoggerBootstrap::Bootstrap(*windows, L"loader");
 
@@ -52,6 +69,7 @@ void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlug
     }
 
     // Load the plugin
+    LOADPLUGINLIBRARY LoadPlugin = reinterpret_cast<LOADPLUGINLIBRARY>(GetProcAddress(pluginDllInstance, "LoadPlugin"));
     *ppPlugInInstance = LoadPlugin();
     LogInfo("Plugin binary loaded successfully");
 };
@@ -59,7 +77,11 @@ void __declspec(dllexport) EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlug
 /*
  * Unload the UKControllerPlugin DLL and free the library
  */
-void __declspec(dllexport) EuroScopePlugInExit(void)
+void UKCP_LOADER_API EuroScopePlugInExit(void)
 {
+    UNLOADPLUGINLIBRARY UnloadPlugin = reinterpret_cast<UNLOADPLUGINLIBRARY>(
+        GetProcAddress(pluginDllInstance, "UnloadPlugin")
+    );
+    UnloadPlugin();
     UnloadPluginLibrary(pluginDllInstance, *windows);
 }

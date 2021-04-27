@@ -2,6 +2,11 @@
 #include "bootstrap/InitialisePlugin.h"
 #include "update/PluginVersion.h"
 
+#ifndef UKCP_CORE_API
+#define UKCP_CORE_API __declspec(dllexport)
+#endif
+
+
 using UKControllerPlugin::Plugin::PluginVersion;
 
 // The one true app to rule them all...
@@ -25,7 +30,7 @@ BOOL WINAPI DllMain(
     Called by EuroScope when the plugin is loaded, either on startup (if previously loaded and saved
     in settings) or when manually loaded by the user.
 */
-UKCP_API EuroScopePlugIn::CPlugIn * LoadPlugin(void)
+EuroScopePlugIn::CPlugIn UKCP_CORE_API* LoadPlugin(void)
 {
     // Give ES the plugin instance and run the post initialisation method.
     INITCOMMONCONTROLSEX common = {sizeof(INITCOMMONCONTROLSEX), ICC_LINK_CLASS};
@@ -55,7 +60,7 @@ UKCP_API EuroScopePlugIn::CPlugIn * LoadPlugin(void)
 /*
     Called by Euroscope when the plugin is unloaded, either by the user or on exit.
 */
-UKCP_API void UnloadPlugin(void)
+void UKCP_CORE_API UnloadPlugin(void)
 {
     try {
         thePluginApp.EuroScopeCleanup();
@@ -72,15 +77,10 @@ UKCP_API void UnloadPlugin(void)
     }
 }
 
-UKCP_API const char* GetPluginVersion(void)
-{
-    return PluginVersion::version;
-}
-
 /*
  *  Allows the plugin DLL to be loaded directly, so we don't have to worry about going via the loader.
  */
-void __declspec (dllexport) EuroScopePlugInInit (EuroScopePlugIn :: CPlugIn ** ppPlugInInstance)
+void UKCP_CORE_API EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
 {
     *ppPlugInInstance = LoadPlugin();
 };
@@ -88,7 +88,7 @@ void __declspec (dllexport) EuroScopePlugInInit (EuroScopePlugIn :: CPlugIn ** p
 /*
  * Unload the UKControllerPlugin DLL directly, so we don't have to worry about going via the loader.
  */
-void __declspec (dllexport) EuroScopePlugInExit (void)
+void UKCP_CORE_API EuroScopePlugInExit(void)
 {
     UnloadPlugin();
 }

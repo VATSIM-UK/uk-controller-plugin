@@ -20,9 +20,6 @@
     <ClInclude Include="..\..\src\updater\pch.h">
       <Filter>updater</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\updater\UKControllerPluginUpdater.h">
-      <Filter>updater</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\updater\PerformUpdates.h">
       <Filter>updater</Filter>
     </ClInclude>

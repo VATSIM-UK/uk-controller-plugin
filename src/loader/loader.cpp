@@ -5,15 +5,16 @@
 #include "curl/CurlInterface.h"
 #include "data/PluginDataLocations.h"
 #include "update/UpdateBinaries.h"
-#include "updater/UKControllerPluginUpdater.h"
 
+// Define the function we need to run from the updater library
+typedef void (CALLBACK* PERFORMUPDATES)();
 
 void RunUpdater(
     UKControllerPlugin::Windows::WinApiInterface& windows
 )
 {
     HINSTANCE updaterHandle = windows.LoadLibraryRelative(GetUpdaterBinaryRelativePath());
-
+    DWORD lastError = GetLastError();
     if (!updaterHandle) {
         LogInfo("Unable to run the updater, binary does not exist");
         std::wstring message = L"Unable to start updater.\r\n";
@@ -24,6 +25,7 @@ void RunUpdater(
     }
 
     LogInfo("Performing updates, please refer to the updater log for more information");
+    PERFORMUPDATES PerformUpdates = reinterpret_cast<PERFORMUPDATES>(GetProcAddress(updaterHandle, "PerformUpdates"));
     PerformUpdates();
     LogInfo("Updates complete");
     windows.UnloadLibrary(updaterHandle);

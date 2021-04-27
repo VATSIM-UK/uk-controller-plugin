@@ -127,9 +127,6 @@
     <Filter Include="src\integration">
       <UniqueIdentifier>{0acb7a6a-6973-4c79-8276-312c7e76dd17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\include">
-      <UniqueIdentifier>{42fd2e5f-0143-4b4f-836f-872d9c61dae8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\time">
       <UniqueIdentifier>{30a69e36-14c8-4510-878c-078d10bcca27}</UniqueIdentifier>
     </Filter>
@@ -966,9 +963,6 @@
     <ClInclude Include="..\..\src\intention\SectorExitPointKonan.h">
       <Filter>src\intention</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\include\UKControllerPlugin.h">
-      <Filter>src\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\notifications\Notification.h">
       <Filter>src\notifications</Filter>
     </ClInclude>
@@ -1062,6 +1056,8 @@
     <ClInclude Include="..\..\src\initialheading\InitialHeadingModule.h">
       <Filter>src\initialheading</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
+    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">

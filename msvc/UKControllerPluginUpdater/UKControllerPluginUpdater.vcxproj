@@ -22,9 +22,6 @@
     <ProjectReference Include="..\UKControllerPluginUtils\UKControllerPluginUtils.vcxproj">
       <Project>{141124e6-d339-464a-a759-0589a331b366}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\UKControllerPlugin\UKControllerPlugin.vcxproj">
-      <Project>{6f93f8c0-6773-4353-b7dd-b14dbd3f826b}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\updater\dllmain.cpp">
@@ -42,7 +39,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\updater\pch.h" />
     <ClInclude Include="..\..\src\updater\PerformUpdates.h" />
-    <ClInclude Include="..\..\src\updater\UKControllerPluginUpdater.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
