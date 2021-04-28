@@ -540,9 +540,6 @@
     <ClInclude Include="..\..\src\update\PluginUpdateChecker.h">
       <Filter>src\update</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\update\PluginVersion.h">
-      <Filter>src\update</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
@@ -1390,9 +1387,6 @@
       <Filter>src\timedevent</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\update\PluginUpdateChecker.cpp">
-      <Filter>src\update</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\update\PluginVersion.cpp">
       <Filter>src\update</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp">

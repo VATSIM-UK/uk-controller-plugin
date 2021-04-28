@@ -8,6 +8,7 @@
 #include "setting/SettingRepositoryFactory.h"
 #include "curl/CurlApi.h"
 #include "data/PluginDataLocations.h"
+#include "update/PluginVersion.h"
 
 #ifndef UKCP_LOADER_API
 #define UKCP_LOADER_API __declspec(dllexport)
@@ -49,6 +50,8 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
         *settings,
         curl
     );
+
+    LogInfo("Loader build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
 
     // Perform a first time download if required, then run the updater
     if (FirstTimeDownload(*api, *windows, curl)) {

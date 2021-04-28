@@ -829,6 +829,8 @@
     <ClCompile Include="..\..\test\test\initialheading\InitialHeadingEventHandlerTest.cpp">
       <Filter>test\initialheading</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
+    <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

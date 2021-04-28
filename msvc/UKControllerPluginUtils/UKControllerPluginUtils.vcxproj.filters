@@ -150,6 +150,9 @@
     <ClInclude Include="..\..\src\update\UpdateBinaries.h">
       <Filter>update</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\update\PluginVersion.h">
+      <Filter>update</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\pch.cpp">
@@ -222,6 +225,9 @@
       <Filter>data</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\update\UpdateBinaries.cpp">
+      <Filter>update</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\update\PluginVersion.cpp">
       <Filter>update</Filter>
     </ClCompile>
   </ItemGroup>

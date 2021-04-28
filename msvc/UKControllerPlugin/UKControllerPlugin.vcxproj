@@ -293,7 +293,6 @@
     <ClInclude Include="..\..\src\timedevent\TimedEventCollection.h" />
     <ClInclude Include="..\..\src\time\ParseTimeStrings.h" />
     <ClInclude Include="..\..\src\update\PluginUpdateChecker.h" />
-    <ClInclude Include="..\..\src\update\PluginVersion.h" />
     <ClInclude Include="..\..\src\wake\CacheItem.h" />
     <ClInclude Include="..\..\src\wake\CreateWakeMappings.h" />
     <ClInclude Include="..\..\src\wake\WakeCategoryEventHandler.h" />
@@ -553,7 +552,6 @@
     <ClCompile Include="..\..\src\timedevent\TimedEventCollection.cpp" />
     <ClCompile Include="..\..\src\time\ParseTimeStrings.cpp" />
     <ClCompile Include="..\..\src\update\PluginUpdateChecker.cpp" />
-    <ClCompile Include="..\..\src\update\PluginVersion.cpp" />
     <ClCompile Include="..\..\src\wake\CreateWakeMappings.cpp" />
     <ClCompile Include="..\..\src\wake\WakeCategoryEventHandler.cpp" />
     <ClCompile Include="..\..\src\wake\WakeCategoryMapper.cpp" />
