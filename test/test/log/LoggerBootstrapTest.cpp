@@ -48,10 +48,10 @@ namespace UKControllerPluginUtilsTest {
         TEST_F(LoggerBootstrapTest, ItReturnsExistingLogsMatchingAPrefix)
         {
             const std::set<std::wstring> windowsReturnedFiles = {
-                L"plugin-1.log", // Should not be included, no dots
-                L"plugin-2.log", // Should not be included, no dots
-                L"plugin-3.1.log",
-                L"plugin-20210314162200.1.log",
+                L"plugin.log", // Should not be included, no timestamp
+                L"plugin-2.3.log", // Should not be included, has dots
+                L"plugin-3.log",
+                L"plugin-20210314162200.log",
                 L"plugin-3.1.2.log", // Should not be included, too many dots
                 L"someextra/plugin-25.log", // Should not be included, has a folder
                 L"plugin-2.logs", // Should not be included, different extension
@@ -71,26 +71,26 @@ namespace UKControllerPluginUtilsTest {
             std::set<std::wstring> matchingLogs = LoggerBootstrap::GetExistingLogs(this->windows, L"plugin");
             EXPECT_EQ(2, matchingLogs.size());
 
-            EXPECT_NE(matchingLogs.cend(), matchingLogs.find(L"plugin-3.1.log"));
-            EXPECT_NE(matchingLogs.cend(), matchingLogs.find(L"plugin-20210314162200.1.log"));
+            EXPECT_NE(matchingLogs.cend(), matchingLogs.find(L"plugin-3.log"));
+            EXPECT_NE(matchingLogs.cend(), matchingLogs.find(L"plugin-20210314162200.log"));
         }
 
         TEST_F(LoggerBootstrapTest, ItPrunesLogfiles)
         {
             const std::set<std::wstring> windowsReturnedFiles = {
-                L"plugin-1.1.log",
-                L"plugin-1.2.log",
-                L"plugin-2.0.log",
-                L"plugin-3.1.log",
-                L"plugin-4.1.log",
-                L"plugin-5.1.log",
-                L"plugin-6.1.log",
-                L"plugin-7.1.log",
-                L"loader-1.1.log",
-                L"loader-2.1.log",
-                L"loader-3.1.log",
-                L"loader-4.1.log",
-                L"updater-1.1.log",
+                L"plugin-1.log",
+                L"plugin-2.log",
+                L"plugin-3.log",
+                L"plugin-4.log",
+                L"plugin-5.log",
+                L"plugin-6.log",
+                L"plugin-7.log",
+                L"plugin-8.log",
+                L"loader-9.log",
+                L"loader-10.log",
+                L"loader-11.log",
+                L"loader-12.log",
+                L"updater-13.log",
             };
 
             std::wstring logsFolder = L"logs";
@@ -98,13 +98,13 @@ namespace UKControllerPluginUtilsTest {
                 .Times(1)
                 .WillOnce(Return(windowsReturnedFiles));
 
-            EXPECT_CALL(this->windows, DeleteGivenFile(std::wstring(L"logs/plugin-1.1.log")))
+            EXPECT_CALL(this->windows, DeleteGivenFile(std::wstring(L"logs/plugin-1.log")))
                 .Times(1);
 
-            EXPECT_CALL(this->windows, DeleteGivenFile(std::wstring(L"logs/plugin-1.2.log")))
+            EXPECT_CALL(this->windows, DeleteGivenFile(std::wstring(L"logs/plugin-2.log")))
                 .Times(1);
 
-            EXPECT_CALL(this->windows, DeleteGivenFile(std::wstring(L"logs/plugin-2.0.log")))
+            EXPECT_CALL(this->windows, DeleteGivenFile(std::wstring(L"logs/plugin-3.log")))
                 .Times(1);
 
             LoggerBootstrap::PruneLogs(this->windows, L"plugin");

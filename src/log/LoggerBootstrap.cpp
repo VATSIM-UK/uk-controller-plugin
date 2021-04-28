@@ -57,6 +57,7 @@ namespace UKControllerPlugin {
          */
         void LoggerBootstrap::Shutdown(void)
         {
+            LogInfo("Logfile closed");
             ShutdownLogger();
         }
 
@@ -101,6 +102,8 @@ namespace UKControllerPlugin {
                 windows.DeleteGivenFile(GetLogFilePath(*log));
                 logFilesDeleted++;
             }
+
+            LogInfo("Pruned " + std::to_string(logFilesDeleted) + " log files");
         }
 
         /*
@@ -112,7 +115,7 @@ namespace UKControllerPlugin {
         )
         {
             std::set<std::wstring> allFilesInLogFolder = windows.ListAllFilenamesInDirectory(logsFolder);
-            std::wregex logsRegex(L"^" + logFilePrefix + L"-[0-9]+\\.[0-9]+\\.log$");
+            std::wregex logsRegex(L"^" + logFilePrefix + L"-[0-9]+\\.log$");
             for (
                 auto log = allFilesInLogFolder.begin();
                 log != allFilesInLogFolder.end();

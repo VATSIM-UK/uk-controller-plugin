@@ -173,7 +173,7 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                files.insert(p.path());
+                files.insert(p.path().filename());
             }
 
             return files;
