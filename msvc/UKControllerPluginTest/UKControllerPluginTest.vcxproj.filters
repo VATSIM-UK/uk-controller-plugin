@@ -79,9 +79,6 @@
     <Filter Include="test\timedevent">
       <UniqueIdentifier>{03c0475f-5886-44ea-a482-3f281a801f5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test\update">
-      <UniqueIdentifier>{585b4a05-d160-4049-b6aa-0d6da7226b1b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mock">
       <UniqueIdentifier>{bd23a687-c4cc-4aef-9df9-08eb74ef4f97}</UniqueIdentifier>
     </Filter>
@@ -410,9 +407,6 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\timedevent\TimedEventCollectionTest.cpp">
       <Filter>test\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\update\PluginUpdateCheckerTest.cpp">
-      <Filter>test\update</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\pch\pch.cpp" />
     <ClCompile Include="..\..\test\test\task\TaskRunnerTest.cpp" />

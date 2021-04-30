@@ -29,11 +29,10 @@ namespace UKControllerPlugin {
             const StoredFlightplanCollection & storedFlightplans,
             EuroscopePluginLoopbackInterface & plugin,
             const AirfieldOwnershipManager & airfieldOwnership,
-            const ActiveCallsignCollection & activeCallsigns,
-            const bool disabled
+            const ActiveCallsignCollection& activeCallsigns
         )
             : storedFlightplans(storedFlightplans), plugin(plugin), airfieldOwnership(airfieldOwnership),
-            activeCallsigns(activeCallsigns), disabled(disabled)
+              activeCallsigns(activeCallsigns)
         {
 
         }

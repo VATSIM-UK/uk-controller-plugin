@@ -43,7 +43,6 @@
 #include "srd/SrdModule.h"
 #include "stands/StandModule.h"
 #include "timedevent/DeferredEventBootstrap.h"
-#include "update/PluginUpdateChecker.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
 #include "websocket/WebsocketBootstrap.h"
@@ -67,7 +66,6 @@ using UKControllerPlugin::IntentionCode::IntentionCodeModule;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::Controller::LoginModule;
 using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
-using UKControllerPlugin::Update::PluginUpdateChecker;
 using UKControllerPlugin::Countdown::CountdownModule;
 using UKControllerPlugin::MinStack::MinStackModule;
 using UKControllerPlugin::Regional::RegionalPressureModule;
@@ -87,21 +85,6 @@ using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Dependency::DependencyLoader;
 
 namespace UKControllerPlugin {
-
-    void InitialisePlugin::CheckForUpdates(const PersistenceContainer & container)
-    {
-        // If we're running a testing build of the plugin, skip the check for updates.
-        #if defined (DISABLE_VERSION_CHECK)
-                this->updateStatus = PluginUpdateChecker::versionAllowed;
-        #else
-                this->updateStatus = PluginUpdateChecker::CheckForUpdates(
-                    PluginVersion::version,
-                    *container.windows,
-                    *container.api
-                );
-        #endif  // DISABLE_VERSION_CHECK
-    }
-
     /*
         Creates a dummy plugin to fill the spot.
     */
@@ -139,10 +122,6 @@ namespace UKControllerPlugin {
     */
     EuroScopePlugIn::CPlugIn * InitialisePlugin::GetPlugin(void)
     {
-        if (this->updateStatus == PluginUpdateChecker::unsupportedVersion) {
-            return this->fallbackPlugin.get();
-        }
-
         return this->container->plugin.get();
     }
 
@@ -205,19 +184,6 @@ namespace UKControllerPlugin {
             *this->container->settingsRepository
         );
 
-        // Check for updates, but only if the API is either authorised
-        this->updateStatus = PluginUpdateChecker::statusUnknown;
-        if (apiAuthorised) {
-            this->CheckForUpdates(*this->container);
-
-            // If the plugin isn't an allowed version, stop here and put a dummy in place.
-            if (this->updateStatus == PluginUpdateChecker::unsupportedVersion) {
-                LogCritical("Deprecated plugin version, please download the latest update");
-                this->CreateDummy();
-                return;
-            }
-        }
-
         // Dependency loading can happen regardless of plugin version or API status.
         Dependency::UpdateDependencies(
             *this->container->api,
@@ -255,17 +221,8 @@ namespace UKControllerPlugin {
         );
 
         // Bootstrap the modules
-
-        // Only load initial altitudes or headings if we know the plugin version is ok (as this modifies flightplans)
-        // Don't load it if the plugin is a duplicate, leave that to the main one.
-        if (
-            this->updateStatus == PluginUpdateChecker::versionAllowed &&
-            !this->duplicatePlugin->Duplicate()
-        ) {
-            InitialAltitudeModule::BootstrapPlugin(*this->container);
-            InitialHeading::BootstrapPlugin(*this->container);
-        }
-
+        InitialAltitudeModule::BootstrapPlugin(*this->container);
+        InitialHeading::BootstrapPlugin(*this->container);
         Srd::BootstrapPlugin(*this->container);
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
@@ -291,12 +248,9 @@ namespace UKControllerPlugin {
             *this->container->userMessager
         );
 
-        // Due to flightplan modifications and API interactions, only enable the squawk module
-        // if the API is authorised and the plugin is an allowed version. Also, dont allow automatic
-        // squawk assignment if the plugin is deemed to be a duplicate
+        // Don't allow automatic squawk assignment if the plugin is deemed to be a duplicate
         SquawkModule::BootstrapPlugin(
             *this->container,
-            this->updateStatus != PluginUpdateChecker::versionAllowed,
             this->duplicatePlugin->Duplicate()
         );
 

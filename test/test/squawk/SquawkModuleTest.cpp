@@ -1,7 +1,6 @@
 #include "pch/pch.h"
 #include "squawk/SquawkModule.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "flightplan/StoredFlightplanCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "timedevent/TimedEventCollection.h"
 #include "squawk/SquawkEventHandler.h"
@@ -38,13 +37,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkModuleTest, BootstrapPluginRegistersForFlightplanEvents)
         {
-            SquawkModule::BootstrapPlugin(container, false, false);
+            SquawkModule::BootstrapPlugin(container, false);
             EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
         }
 
         TEST_F(SquawkModuleTest, BootstrapPluginRegistersForTimedEvents)
         {
-            SquawkModule::BootstrapPlugin(container, false, false);
+            SquawkModule::BootstrapPlugin(container, false);
             EXPECT_EQ(
                 1,
                 container.timedHandler->CountHandlersForFrequency(SquawkModule::allocationCheckFrequency)
@@ -53,7 +52,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkModuleTest, BootstrapPluginRegistersEventHandlerForTimedEvents)
         {
-            SquawkModule::BootstrapPlugin(container, false, false);
+            SquawkModule::BootstrapPlugin(container, false);
             EXPECT_EQ(
                 1,
                 this->container.timedHandler->CountHandlersForFrequency(SquawkModule::trackedAircraftCheckFrequency)
@@ -62,32 +61,26 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkModuleTest, BootstrapPluginRegistersEventHandlerForActiveCallsignEvents)
         {
-            SquawkModule::BootstrapPlugin(container, false, false);
+            SquawkModule::BootstrapPlugin(container, false);
             EXPECT_EQ(1, this->container.activeCallsigns->CountHandlers());
         }
 
         TEST_F(SquawkModuleTest, BootstrapPluginRegistersFunctionCallbacks)
         {
-            SquawkModule::BootstrapPlugin(container, false, false);
+            SquawkModule::BootstrapPlugin(container, false);
             EXPECT_EQ(2, this->container.pluginFunctionHandlers->CountTagFunctions());
             EXPECT_EQ(0, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
         TEST_F(SquawkModuleTest, BootstrapPluginRegistersForUserSettingsEvents)
         {
-            SquawkModule::BootstrapPlugin(container, false, false);
+            SquawkModule::BootstrapPlugin(container, false);
             EXPECT_EQ(1, this->container.userSettingHandlers->Count());
-        }
-
-        TEST_F(SquawkModuleTest, BootstrapPluginDisablesSquawksWhereInstructed)
-        {
-            SquawkModule::BootstrapPlugin(container, true, false);
-            EXPECT_TRUE(this->container.squawkAssignmentRules->disabled);
         }
 
         TEST_F(SquawkModuleTest, BootstrapPluginDisablesAutomaticGenerationWhereRequired)
         {
-            SquawkModule::BootstrapPlugin(container, false, true);
+            SquawkModule::BootstrapPlugin(container, true);
             EXPECT_TRUE(this->container.squawkEvents->automaticAssignmentDisabled);
         }
     }  // namespace Squawk

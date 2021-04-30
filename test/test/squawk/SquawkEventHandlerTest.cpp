@@ -84,8 +84,7 @@ namespace UKControllerPluginTest {
                         this->plans,
                         this->pluginLoopback,
                         this->airfieldOwnership,
-                        this->activeCallsigns,
-                        false
+                        this->activeCallsigns
                     ),
                     generator(
                         this->mockApi,

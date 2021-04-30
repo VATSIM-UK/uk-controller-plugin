@@ -82,9 +82,6 @@
     <Filter Include="src\timedevent">
       <UniqueIdentifier>{6dd0046b-4623-4dfc-9ee7-8462a077796c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\update">
-      <UniqueIdentifier>{6b827c2d-97be-4c9d-859f-37928ad019fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resource\sound">
       <UniqueIdentifier>{682d614a-f88f-4651-82b3-3255fe71008a}</UniqueIdentifier>
     </Filter>
@@ -536,9 +533,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\timedevent\TimedEventCollection.h">
       <Filter>src\timedevent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\update\PluginUpdateChecker.h">
-      <Filter>src\update</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.h">
       <Filter>src\euroscope</Filter>
@@ -1385,9 +1379,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\timedevent\TimedEventCollection.cpp">
       <Filter>src\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\update\PluginUpdateChecker.cpp">
-      <Filter>src\update</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp">
       <Filter>src\euroscope</Filter>

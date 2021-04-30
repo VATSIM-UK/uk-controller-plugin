@@ -19,7 +19,6 @@ namespace UKControllerPlugin {
         */
         void SquawkModule::BootstrapPlugin(
             UKControllerPlugin::Bootstrap::PersistenceContainer & container,
-            bool disabled,
             bool automaticAssignmentDisabled
         ) {
             // API allocation handler
@@ -34,8 +33,7 @@ namespace UKControllerPlugin {
                 *container.flightplans,
                 *container.plugin,
                 *container.airfieldOwnership,
-                *container.activeCallsigns,
-                disabled
+                *container.activeCallsigns
             )
             );
             container.squawkGenerator = std::make_unique<SquawkGenerator>(

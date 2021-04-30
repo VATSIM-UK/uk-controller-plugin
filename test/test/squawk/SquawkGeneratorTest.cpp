@@ -67,8 +67,7 @@ namespace UKControllerPluginTest {
                         this->flightplans,
                         this->pluginLoopback,
                         *this->airfieldOwnership,
-                        this->activeCallsigns,
-                        false
+                        this->activeCallsigns
                     );
                     this->generator = std::make_unique<SquawkGenerator>(
                         this->api,
@@ -677,132 +676,6 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->generator->ForceLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
             EXPECT_TRUE(allocation == this->squawkAllocationHandler->First());
             EXPECT_EQ(1, this->squawkAllocationHandler->Count());
-        }
-
-        TEST_F(SquawkGeneratorTest, ReassignPreviousSquawkStopsIfSquawksDisabled)
-        {
-            SquawkAssignment disabledRules(
-                this->flightplans,
-                this->pluginLoopback,
-                *this->airfieldOwnership,
-                this->activeCallsigns,
-                true
-            );
-            SquawkGenerator newGenerator(
-                this->api,
-                &this->taskRunner,
-                disabledRules,
-                this->activeCallsigns,
-                this->flightplans,
-                this->squawkAllocationHandler
-            );
-
-            EXPECT_FALSE(newGenerator.ReassignPreviousSquawkToAircraft(*this->mockFlightplan, *this->mockRadarTarget));
-        }
-
-        TEST_F(SquawkGeneratorTest, ForceGeneralSquawkForAircraftStopsIfSquawksDisabled)
-        {
-            SquawkAssignment disabledRules(
-                this->flightplans,
-                this->pluginLoopback,
-                *this->airfieldOwnership,
-                this->activeCallsigns,
-                true
-            );
-            SquawkGenerator newGenerator(
-                this->api,
-                &this->taskRunner,
-                disabledRules,
-                this->activeCallsigns,
-                this->flightplans,
-                this->squawkAllocationHandler
-            );
-
-            EXPECT_FALSE(newGenerator.ForceGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
-        }
-
-        TEST_F(SquawkGeneratorTest, ForceLocalSquawkForAircraftStopsIfSquawksDisabled)
-        {
-            SquawkAssignment disabledRules(
-                this->flightplans,
-                this->pluginLoopback,
-                *this->airfieldOwnership,
-                this->activeCallsigns,
-                true
-            );
-            SquawkGenerator newGenerator(
-                this->api,
-                &this->taskRunner,
-                disabledRules,
-                this->activeCallsigns,
-                this->flightplans,
-                this->squawkAllocationHandler
-            );
-
-            EXPECT_FALSE(newGenerator.ForceLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
-        }
-
-        TEST_F(SquawkGeneratorTest, RequestGeneralSquawkForAircraftStopsIfSquawksDisabled)
-        {
-            SquawkAssignment disabledRules(
-                this->flightplans,
-                this->pluginLoopback,
-                *this->airfieldOwnership,
-                this->activeCallsigns,
-                true
-            );
-            SquawkGenerator newGenerator(
-                this->api,
-                &this->taskRunner,
-                disabledRules,
-                this->activeCallsigns,
-                this->flightplans,
-                this->squawkAllocationHandler
-            );
-
-            EXPECT_FALSE(newGenerator.RequestGeneralSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
-        }
-
-        TEST_F(SquawkGeneratorTest, RequestLocalSquawkForAircraftStopsIfSquawksDisabled)
-        {
-            SquawkAssignment disabledRules(
-                this->flightplans,
-                this->pluginLoopback,
-                *this->airfieldOwnership,
-                this->activeCallsigns,
-                true
-            );
-            SquawkGenerator newGenerator(
-                this->api,
-                &this->taskRunner,
-                disabledRules,
-                this->activeCallsigns,
-                this->flightplans,
-                this->squawkAllocationHandler
-            );
-
-            EXPECT_FALSE(newGenerator.RequestLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
-        }
-
-        TEST_F(SquawkGeneratorTest, AssignCircuitSquawkForAircraftStopsIfSquawksDisabled)
-        {
-            SquawkAssignment disabledRules(
-                this->flightplans,
-                this->pluginLoopback,
-                *this->airfieldOwnership,
-                this->activeCallsigns,
-                true
-            );
-            SquawkGenerator newGenerator(
-                this->api,
-                &this->taskRunner,
-                disabledRules,
-                this->activeCallsigns,
-                this->flightplans,
-                this->squawkAllocationHandler
-            );
-
-            EXPECT_FALSE(newGenerator.AssignCircuitSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
         TEST_F(SquawkGeneratorTest, AssignCircuitSquawkStopsIfAssignmentNotRequired)

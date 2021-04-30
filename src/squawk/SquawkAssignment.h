@@ -31,8 +31,7 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     const UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership,
-                    const UKControllerPlugin::Controller::ActiveCallsignCollection & activeCallsigns,
-                    const bool disabled
+                    const Controller::ActiveCallsignCollection& activeCallsigns
                 );
                 bool CircuitAssignmentNeeded(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
@@ -78,9 +77,6 @@ namespace UKControllerPlugin {
 
                 // For tracked aircraft, the maximum altitude for which to assign local squawks.
                 const int maxAssignmentAltitude = 6000;
-
-                // Whether or not squawk assignment is disabled
-                const bool disabled = true;
 
             private:
                 bool NeedsLocalSquawkTracked(
