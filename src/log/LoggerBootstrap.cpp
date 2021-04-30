@@ -102,8 +102,6 @@ namespace UKControllerPlugin {
                 windows.DeleteGivenFile(GetLogFilePath(*log));
                 logFilesDeleted++;
             }
-
-            LogInfo("Pruned " + std::to_string(logFilesDeleted) + " log files");
         }
 
         /*
