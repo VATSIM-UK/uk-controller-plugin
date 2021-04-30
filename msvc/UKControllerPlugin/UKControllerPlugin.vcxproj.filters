@@ -1049,6 +1049,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
+    <ClInclude Include="..\..\src\plugin\PluginChangelog.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1802,6 +1805,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\initialheading\InitialHeadingEventHandler.cpp">
       <Filter>src\initialheading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\PluginChangelog.cpp">
+      <Filter>src\plugin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

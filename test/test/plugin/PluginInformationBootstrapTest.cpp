@@ -34,19 +34,19 @@ namespace UKControllerPluginTest {
         TEST_F(PluginInformationBootstrapTest, ItRegistersConfigurableDisplays)
         {
             BootstrapPluginInformationMessage(this->container, this->configurableDisplays);
-            EXPECT_EQ(2, this->configurableDisplays.CountDisplays());
+            EXPECT_EQ(3, this->configurableDisplays.CountDisplays());
         }
 
         TEST_F(PluginInformationBootstrapTest, ItRegistersCommandHandlers)
         {
             BootstrapPluginInformationMessage(this->container, this->configurableDisplays);
-            EXPECT_EQ(2, this->container.commandHandlers->CountHandlers());
+            EXPECT_EQ(3, this->container.commandHandlers->CountHandlers());
         }
 
         TEST_F(PluginInformationBootstrapTest, ItRegistersFunctionCallHandlers)
         {
             BootstrapPluginInformationMessage(this->container, this->configurableDisplays);
-            EXPECT_EQ(2, this->container.pluginFunctionHandlers->CountCallbacks());
+            EXPECT_EQ(3, this->container.pluginFunctionHandlers->CountCallbacks());
         }
     }  // namespace Plugin
 }  // namespace UKControllerPluginTest
