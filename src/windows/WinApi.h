@@ -34,6 +34,7 @@ namespace UKControllerPlugin {
                     std::wstring relativePath
                 ) const override;
                 HINSTANCE LoadLibraryRelative(std::wstring relativePath) const override;
+                FARPROC GetFunctionPointerFromLibrary(HINSTANCE libraryHandle, std::string functionName) const override;
                 void UnloadLibrary(HINSTANCE handle) const override;
                 int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) override;
                 void OpenWebBrowser(std::wstring url) override;

@@ -30,6 +30,7 @@ namespace UKControllerPluginTest {
             MOCK_METHOD2(SetPermissions, bool(std::wstring, std::filesystem::perms));
             MOCK_CONST_METHOD1(ListAllFilenamesInDirectory, std::set<std::wstring>(std::wstring));
             MOCK_CONST_METHOD1(LoadLibraryRelative, HINSTANCE(std::wstring relativePath));
+            MOCK_CONST_METHOD2(GetFunctionPointerFromLibrary, FARPROC(HINSTANCE, std::string));
             MOCK_CONST_METHOD1(UnloadLibrary, void(HINSTANCE handle));
             MOCK_METHOD2(MoveFileToNewLocation, bool(std::wstring, std::wstring));
 

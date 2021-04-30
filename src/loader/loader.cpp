@@ -5,14 +5,18 @@
 #include "curl/CurlInterface.h"
 #include "data/PluginDataLocations.h"
 #include "update/UpdateBinaries.h"
+#include "euroscope/EuroScopePlugIn.h"
 
-// Define the function we need to run from the updater library
+// Define the functions we need from the various libraries
 typedef void (CALLBACK* PERFORMUPDATES)();
+typedef EuroScopePlugIn::CPlugIn* (CALLBACK* LOADPLUGINLIBRARY)();
+typedef void (CALLBACK* UNLOADPLUGINLIBRARY)();
 
 void RunUpdater(
     UKControllerPlugin::Windows::WinApiInterface& windows
 )
 {
+    LogInfo("Loading updater library");
     HINSTANCE updaterHandle = windows.LoadLibraryRelative(GetUpdaterBinaryRelativePath());
     if (!updaterHandle) {
         LogInfo("Unable to run the updater, binary does not exist");
@@ -24,28 +28,86 @@ void RunUpdater(
     }
 
     LogInfo("Performing updates, please refer to the updater log for more information");
-    PERFORMUPDATES PerformUpdates = reinterpret_cast<PERFORMUPDATES>(GetProcAddress(updaterHandle, "PerformUpdates"));
+    PERFORMUPDATES PerformUpdates = reinterpret_cast<PERFORMUPDATES>(
+        windows.GetFunctionPointerFromLibrary(updaterHandle, "PerformUpdates")
+    );
     PerformUpdates();
     LogInfo("Updates complete");
     windows.UnloadLibrary(updaterHandle);
 }
 
 HINSTANCE LoadPluginLibrary(
-    const UKControllerPlugin::Windows::WinApiInterface& windows
+    UKControllerPlugin::Windows::WinApiInterface& windows
 )
 {
+    LogInfo("Loading core plugin library");
     return windows.LoadLibraryRelative(GetCoreBinaryRelativePath());
+}
+
+EuroScopePlugIn::CPlugIn* LoadPlugin(
+    HINSTANCE pluginLibraryHandle,
+    UKControllerPlugin::Windows::WinApiInterface& windows
+)
+{
+    if (pluginLibraryHandle == nullptr) {
+        LogInfo("Not loading core plugin, library handle is null");
+        return nullptr;
+    }
+
+    LOADPLUGINLIBRARY LoadPlugin = reinterpret_cast<LOADPLUGINLIBRARY>(
+        windows.GetFunctionPointerFromLibrary(pluginLibraryHandle, "LoadPlugin")
+    );
+
+    if (!LoadPlugin) {
+        LogError("Cannot find LoadPlugin function in Core binary");
+        std::wstring message = L"Unable find UnloadPlugin function in Core Binary.\r\n\r\n";
+        message += L"Please contact the Web Services Department.";
+        DisplayLoaderError(windows, message);
+        return nullptr;
+    }
+
+
+    LogInfo("Performing core plugin load");
+    return LoadPlugin();
+}
+
+void UnloadPlugin(
+    HINSTANCE pluginLibraryHandle,
+    UKControllerPlugin::Windows::WinApiInterface& windows
+)
+{
+    if (pluginLibraryHandle == nullptr) {
+        LogInfo("Not unloading core plugin, library handle is null");
+        return;
+    }
+
+    UNLOADPLUGINLIBRARY UnloadPlugin = reinterpret_cast<UNLOADPLUGINLIBRARY>(
+        windows.GetFunctionPointerFromLibrary(pluginLibraryHandle, "UnloadPlugin")
+    );
+
+    if (!UnloadPlugin) {
+        LogError("Cannot find UnloadPlugin function in Core binary");
+        std::wstring message = L"Unable find UnloadPlugin function in Core Binary.\r\n\r\n";
+        message += L"Please contact the Web Services Department.";
+        DisplayLoaderError(windows, message);
+        return;
+    }
+
+    LogInfo("Performing core plugin shutdown");
+    UnloadPlugin();
 }
 
 void UnloadPluginLibrary(
     HINSTANCE instance,
-    const UKControllerPlugin::Windows::WinApiInterface& windows
+    UKControllerPlugin::Windows::WinApiInterface& windows
 )
 {
     if (instance == nullptr) {
+        LogInfo("Not unloading core library, was never loaded");
         return;
     }
 
+    LogInfo("Unloading core library");
     windows.UnloadLibrary(instance);
 }
 
@@ -85,5 +147,10 @@ void DisplayFirstTimeDownloadFailedMessage(UKControllerPlugin::Windows::WinApiIn
     std::wstring message = L"Unable to perform first time download of the UKCP updater.\r\n";
     message += L"Please contact the VATSIM UK Web Services Department.\r\n";
 
-    windows.OpenMessageBox(message.c_str(), L"UKCP Update Failed", MB_OK | MB_ICONSTOP);
+    DisplayLoaderError(windows, message);
+}
+
+void DisplayLoaderError(UKControllerPlugin::Windows::WinApiInterface& windows, std::wstring message)
+{
+    windows.OpenMessageBox(message.c_str(), L"UKCP Loader Error", MB_OK | MB_ICONSTOP);
 }

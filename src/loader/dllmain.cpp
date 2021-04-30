@@ -18,10 +18,6 @@ HINSTANCE pluginDllInstance;
 HINSTANCE loaderDllInstance;
 std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
 
-// Define the functions in the core DLL that we will need to call to load and unload the plugin
-typedef EuroScopePlugIn::CPlugIn* (CALLBACK* LOADPLUGINLIBRARY)();
-typedef void (CALLBACK* UNLOADPLUGINLIBRARY)();
-
 BOOL WINAPI DllMain(
     HINSTANCE hinstDLL,
     DWORD fdwReason,
@@ -59,7 +55,6 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
     }
 
     // Load the core plugin library
-    LogInfo("Loading plugin binary");
     pluginDllInstance = LoadPluginLibrary(*windows);
     if (pluginDllInstance == nullptr) {
         LogError("Failed to load plugin binary");
@@ -72,9 +67,15 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
     }
 
     // Load the plugin
-    LOADPLUGINLIBRARY LoadPlugin = reinterpret_cast<LOADPLUGINLIBRARY>(GetProcAddress(pluginDllInstance, "LoadPlugin"));
-    *ppPlugInInstance = LoadPlugin();
-    LogInfo("Plugin binary loaded successfully");
+    EuroScopePlugIn::CPlugIn* pluginInstance = LoadPlugin(pluginDllInstance, *windows);
+    if (!pluginInstance) {
+        std::wstring message = L"Unable to load the plugin from the core binary.\r\n";
+        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+
+        MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
+        throw std::exception("UKCP broke");
+    }
+    *ppPlugInInstance = pluginInstance;
 };
 
 /*
@@ -82,9 +83,6 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
  */
 UKCP_LOADER_API void EuroScopePlugInExit(void)
 {
-    UNLOADPLUGINLIBRARY UnloadPlugin = reinterpret_cast<UNLOADPLUGINLIBRARY>(
-        GetProcAddress(pluginDllInstance, "UnloadPlugin")
-    );
-    UnloadPlugin();
+    UnloadPlugin(pluginDllInstance, *windows);
     UnloadPluginLibrary(pluginDllInstance, *windows);
 }

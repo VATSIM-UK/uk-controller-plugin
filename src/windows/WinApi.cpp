@@ -188,6 +188,11 @@ namespace UKControllerPlugin {
             return LoadLibrary(fullPath.c_str());
         }
 
+        FARPROC WinApi::GetFunctionPointerFromLibrary(HINSTANCE libraryHandle, std::string functionName) const
+        {
+            return GetProcAddress(libraryHandle, functionName.c_str());
+        }
+
         /*
          * Unload a library handle
          */

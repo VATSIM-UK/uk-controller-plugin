@@ -18,13 +18,22 @@ namespace UKControllerPlugin
     } // namespace Curl
 } // namespace UKControllerPlugin
 
+namespace EuroScopePlugIn {
+    class CPlugIn;
+} // namespace EuroScopePlugIn
+
 void RunUpdater(UKControllerPlugin::Windows::WinApiInterface& windows);
-HINSTANCE LoadPluginLibrary(const UKControllerPlugin::Windows::WinApiInterface& windows);
-void UnloadPluginLibrary(HINSTANCE instance, const UKControllerPlugin::Windows::WinApiInterface& windows);
+HINSTANCE LoadPluginLibrary(UKControllerPlugin::Windows::WinApiInterface& windows);
+EuroScopePlugIn::CPlugIn* LoadPlugin(
+    HINSTANCE pluginLibraryHandle,
+    UKControllerPlugin::Windows::WinApiInterface& windows
+);
+void UnloadPlugin(HINSTANCE pluginLibraryHandle, UKControllerPlugin::Windows::WinApiInterface& windows);
+void UnloadPluginLibrary(HINSTANCE instance, UKControllerPlugin::Windows::WinApiInterface& windows);
 bool FirstTimeDownload(
     const UKControllerPlugin::Api::ApiInterface& api,
     UKControllerPlugin::Windows::WinApiInterface& windows,
     UKControllerPlugin::Curl::CurlInterface& curl
 );
-
 void DisplayFirstTimeDownloadFailedMessage(UKControllerPlugin::Windows::WinApiInterface& windows);
+void DisplayLoaderError(UKControllerPlugin::Windows::WinApiInterface& windows, std::wstring message);
