@@ -11,17 +11,17 @@ namespace UKControllerPlugin {
             users web browser to load the UKCP changelog.
         */
         class PluginChangelog : public RadarScreen::ConfigurableDisplayInterface,
-                                public UKControllerPlugin::Command::CommandHandlerInterface
+                                public Command::CommandHandlerInterface
         {
             public:
                 PluginChangelog(
-                    UKControllerPlugin::Windows::WinApiInterface& winApi,
+                    Windows::WinApiInterface& winApi,
                     int menuCallbackId
                 );
 
                 // Inherited via ConfigurableDisplayInterface
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
-                UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
+                PopupMenuItem GetConfigurationMenuItem(void) const override;
 
                 // Inherited via CommandHandlerInterface
                 bool ProcessCommand(std::string command) override;
@@ -32,19 +32,15 @@ namespace UKControllerPlugin {
                 // The description of the menu item
                 const std::string menuItemDescription = "UKCP Changelog (Opens In Web Browser)";
 
-                // URL for the help
-                const std::wstring changelogUrl =
-                    L"https://vatsim-uk.github.io/uk-controller-plugin/UserGuide/Changelog/Changelog.html";
-
             private:
 
-                void ShowChangelog();
+                void ShowChangelog() const;
 
                 // The ID of the callback
                 const int menuCallbackId;
 
                 // To windows so we can do the message
-                UKControllerPlugin::Windows::WinApiInterface& winApi;
+                Windows::WinApiInterface& winApi;
         };
     }  // namespace Plugin
 }  // namespace UKControllerPlugin

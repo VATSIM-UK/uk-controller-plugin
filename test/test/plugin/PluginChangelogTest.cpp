@@ -2,6 +2,7 @@
 #include "plugin/PluginChangelog.h"
 #include "plugin/PopupMenuItem.h"
 #include "mock/MockWinApi.h"
+#include "update/LoadChangelog.h"
 
 using UKControllerPlugin::Plugin::PluginChangelog;
 using UKControllerPlugin::Plugin::PopupMenuItem;
@@ -51,7 +52,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PluginChangelogTest, ProcessCommandShowsChangelog)
         {
-            EXPECT_CALL(this->mockWindows, OpenWebBrowser(page.changelogUrl))
+            EXPECT_CALL(this->mockWindows, OpenWebBrowser(UKControllerPlugin::Update::changelogUrl))
                 .Times(1);
 
             this->page.ProcessCommand(".ukcp changelog");
@@ -59,7 +60,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PluginChangelogTest, ConfigureShowsChangelog)
         {
-            EXPECT_CALL(this->mockWindows, OpenWebBrowser(std::wstring(page.changelogUrl)))
+            EXPECT_CALL(this->mockWindows, OpenWebBrowser(UKControllerPlugin::Update::changelogUrl))
                 .Times(1);
 
             this->page.Configure(123, "", {});

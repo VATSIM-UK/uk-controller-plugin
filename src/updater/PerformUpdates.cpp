@@ -6,6 +6,7 @@
 #include "curl/CurlInterface.h"
 #include "update/UpdateBinaries.h"
 #include "data/PluginDataLocations.h"
+#include "update/LoadChangelog.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Api::ApiInterface;
@@ -89,13 +90,19 @@ void DisplayUpdateNotification(WinApiInterface& windows, std::wstring version)
 {
     std::wstring message = L"The UK Controller Plugin has been automatically updated to version " + version +
         L".\r\n\r\n";
-    message += L"Please consult the changelog (available through the OP menu) for more details.";
+    message +=
+        L"You can view the changelog at any time by opening the OP menu and selecting the relevant item.\r\n\r\n";
+    message += L"Would you like to view the changelog now?";
 
-    windows.OpenMessageBox(
+    int gotoChangelog = windows.OpenMessageBox(
         message.c_str(),
         L"UKCP Automatic Update Complete",
-        MB_OK | MB_ICONINFORMATION
+        MB_YESNO | MB_ICONINFORMATION
     );
+
+    if (gotoChangelog == IDYES) {
+        UKControllerPlugin::Update::LoadChangelog(windows);
+    }
 }
 
 std::wstring GetOldUpdaterLocation()

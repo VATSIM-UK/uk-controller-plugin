@@ -153,6 +153,9 @@
     <ClInclude Include="..\..\src\update\PluginVersion.h">
       <Filter>update</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\update\LoadChangelog.h">
+      <Filter>update</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\pch.cpp">
@@ -228,6 +231,9 @@
       <Filter>update</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\update\PluginVersion.cpp">
+      <Filter>update</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\update\LoadChangelog.cpp">
       <Filter>update</Filter>
     </ClCompile>
   </ItemGroup>

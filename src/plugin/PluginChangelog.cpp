@@ -1,5 +1,6 @@
 #include "pch/stdafx.h"
 #include "plugin/PluginChangelog.h"
+#include "update/LoadChangelog.h"
 
 using UKControllerPlugin::Windows::WinApiInterface;
 
@@ -38,9 +39,9 @@ namespace UKControllerPlugin {
             return true;
         }
 
-        void PluginChangelog::ShowChangelog()
+        void PluginChangelog::ShowChangelog() const
         {
-            this->winApi.OpenWebBrowser(this->changelogUrl);
+            Update::LoadChangelog(this->winApi);
         }
     }  // namespace Plugin
 }  // namespace UKControllerPlugin
