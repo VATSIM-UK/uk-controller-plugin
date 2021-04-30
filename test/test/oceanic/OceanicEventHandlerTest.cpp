@@ -143,7 +143,7 @@ namespace UKControllerPluginTest {
             nlohmann::json clearanceTwo = {
                 {"callsign", "BAW456"},
                 {"status", "PENDING"},
-                {"nat", "A"},
+                {"nat", nlohmann::json::value_t::null},
                 {"fix", "MALOT"},
                 {"level", "320"},
                 {"mach", ".85"},
@@ -170,7 +170,7 @@ namespace UKControllerPluginTest {
             const Clearance& nattrakClearanceTwo = this->handler.GetClearanceForCallsign("BAW456");
             EXPECT_EQ("BAW456", nattrakClearanceTwo.callsign);
             EXPECT_EQ("PENDING", nattrakClearanceTwo.status);
-            EXPECT_EQ("A", nattrakClearanceTwo.track);
+            EXPECT_EQ("", nattrakClearanceTwo.track);
             EXPECT_EQ("MALOT", nattrakClearanceTwo.entryFix);
             EXPECT_EQ("320", nattrakClearanceTwo.flightLevel);
             EXPECT_EQ(".85", nattrakClearanceTwo.mach);
@@ -218,7 +218,7 @@ namespace UKControllerPluginTest {
             nlohmann::json clearanceData = {
                 {"callsign", "BAW123"},
                 {"status", "PENDING"},
-                {"nat", "A"},
+                {"nat", nlohmann::json::value_t::null},
                 {"fix", "MALOT"},
                 {"level", "320"},
                 {"mach", ".85"},
