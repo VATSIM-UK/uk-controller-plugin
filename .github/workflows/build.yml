@@ -79,7 +79,7 @@ jobs:
             nmake /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}
 
       - name: Build cURL
-      - uses: ilammy/msvc-dev-cmd@v1
+        uses: ilammy/msvc-dev-cmd@v1
         if: steps.cache-curl.outputs.cache-hit != 'true'
         run: |
             cd "C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\winbuild"
