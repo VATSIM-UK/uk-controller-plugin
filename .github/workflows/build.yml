@@ -65,7 +65,6 @@ jobs:
 
       - name: Install cURL
         if: steps.cache-curl.outputs.cache-hit != 'true'
-        uses: ilammy/msvc-dev-cmd@v1
         env:
           CURL_DOWNLOAD_URL: "https://github.com/curl/curl/releases/download/curl-7_76_1/curl-7.76.1.zip"
         run: |
