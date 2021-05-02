@@ -76,7 +76,7 @@ jobs:
             7z x curl.zip
             Remove-Item curl.zip
             Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\winbuild"
-            Invoke-Expression "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}"
+            Invoke-Expression '& "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\nmake.exe /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}"'
 
       - name: Setup cURL Environment
         run: |
