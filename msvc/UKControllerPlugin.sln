@@ -122,8 +122,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E66A8B71-97BA-4E8F-BBF1-625958342CB5}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {E66A8B71-97BA-4E8F-BBF1-625958342CB5}
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution
 		PrimaryVersionType = AssemblyInfoVersionAttribute
