@@ -79,11 +79,12 @@ jobs:
             nmake /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}
 
       - name: Build cURL
-        uses: ilammy/msvc-dev-cmd@v1
         if: steps.cache-curl.outputs.cache-hit != 'true'
+        shell: cmd
         run: |
-            cd "C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\winbuild"
-            nmake /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}
+            call "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Visual Studio 2019\Visual Studio Tools\Developer Command Prompt for VS 2019.lnk"
+            call cd "C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\winbuild"
+            call nmake /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}
 
       - name: Setup cURL Environment
         run: |
