@@ -68,14 +68,12 @@ jobs:
         env:
           CURL_DOWNLOAD_URL: "https://github.com/curl/curl/releases/download/curl-7_76_1/curl-7.76.1.zip"
         run: |
-            echo ${env:CURL_DOWNLOAD_URL}
-            echo ${env:OPENSSL_PATH}
             New-Item -Path "C:\\hostedtoolcache\\windows" -Name "libcurl" -ItemType "directory"
             $WebClient = New-Object System.Net.WebClient
-            $WebClient.DownloadFile(${env:CURL_DOWNLOAD_URL}, "C:\\hostedtoolcache\\windows\\libcurl")
+            $WebClient.DownloadFile(${env:CURL_DOWNLOAD_URL}, "C:\\hostedtoolcache\\windows\\libcurl\\curl.zip")
             Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl"
-            7z x curl-7.76.1.zip
-            Remove-Item curl-7.76.1.zip
+            7z x curl.zip
+            Remove-Item curl.zip
             Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl\\winbuild"
             Invoke-Expression "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}"
 
