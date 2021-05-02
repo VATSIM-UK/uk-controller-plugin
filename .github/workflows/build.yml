@@ -20,6 +20,11 @@ jobs:
         with:
          vs-version: '16.5'
 
+      - name: Setup Visual Studio Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+
       - name: Cache Boost
         id: cache-boost
         uses: actions/cache@v2.1.3
@@ -63,7 +68,7 @@ jobs:
           path: "C:\\hostedtoolcache\\windows\\libcurl"
           key: "ukcp-curl"
 
-      - name: Download cURL
+      - name: Download and Build cURL
         if: steps.cache-curl.outputs.cache-hit != 'true'
         env:
           CURL_DOWNLOAD_URL: "https://github.com/curl/curl/releases/download/curl-7_76_1/curl-7.76.1.zip"
@@ -75,14 +80,8 @@ jobs:
             Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl"
             7z x curl.zip
             Remove-Item curl.zip
-
-      - name: Build cURL
-        if: steps.cache-curl.outputs.cache-hit != 'true'
-        shell: cmd
-        run: |
-            call "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Visual Studio 2019\Visual Studio Tools\Developer Command Prompt for VS 2019.lnk"
-            call cd "C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\winbuild"
-            call nmake /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}
+            Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\winbuild"
+            nmake /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}
 
       - name: Setup cURL Environment
         run: |
