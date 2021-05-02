@@ -75,8 +75,6 @@ jobs:
             Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl"
             7z x curl.zip
             Remove-Item curl.zip
-            Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\winbuild"
-            nmake /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}
 
       - name: Build cURL
         if: steps.cache-curl.outputs.cache-hit != 'true'
