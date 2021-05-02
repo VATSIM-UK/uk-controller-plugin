@@ -84,7 +84,7 @@ jobs:
             nmake /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}
             echo "CURL_INCLUDEDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
             echo "CURL_LIBRARYDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ssl-static-ipv6-sspi-obj-lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            dir C:\\hostedtoolcache\\windows\\libcurl\\curl-7.76.1\\include
+            dir C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\include
 
       - name: Restore Nuget Packages
         run: |
