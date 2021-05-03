@@ -78,6 +78,7 @@ UKCP_CORE_API void UnloadPlugin(void)
     }
 }
 
+#ifdef _DEBUG
 /*
  *  Allows the plugin DLL to be loaded directly, so we don't have to worry about going via the loader.
  */
@@ -93,3 +94,6 @@ UKCP_CORE_DIRECT_API void EuroScopePlugInExit(void)
 {
     UnloadPlugin();
 }
+#endif
+
+
