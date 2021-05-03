@@ -100,9 +100,8 @@ jobs:
       # Run the build and tests
       - name: Run Build
         run: |
-          dir ${env:CURL_INCLUDEDIR}
-          dir ${env:CURL_LIBRARYDIR}
-          msbuild msvc/UKControllerPlugin.sln /verbosity:quiet /property:Configuration=Release -m
+          dir ${env:CURL_INCLUDEDIR}/curl
+          msbuild msvc/UKControllerPlugin.sln /property:Configuration=Release -m
 
       - name: Run Tests
         run: ".\\bin\\Release\\UKControllerPluginTest.exe"
