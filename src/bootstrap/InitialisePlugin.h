@@ -1,6 +1,6 @@
 #pragma once
 #include "bootstrap/PersistenceContainer.h"
-#include "bootstrap/DuplicatePlugin.h"
+#include "duplicate/DuplicatePlugin.h"
 
 // Forward Declarations
 namespace EuroScopePlugIn {
@@ -39,7 +39,7 @@ namespace UKControllerPlugin {
             const std::string apiRoot = "http://ukcp.devapp";
 
             // Whether or not the plugin has already been loaded - indicating this is a second ES window
-            std::unique_ptr<UKControllerPlugin::Bootstrap::DuplicatePlugin> duplicatePlugin;
+            std::unique_ptr<Duplicate::DuplicatePlugin> duplicatePlugin;
 
             // Gdiplus initialisation token.
             ULONG_PTR gdiPlusToken;

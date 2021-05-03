@@ -28,6 +28,9 @@
     <Filter Include="test\update">
       <UniqueIdentifier>{20d9b212-c79e-4943-98fb-84548e113762}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\duplicate">
+      <UniqueIdentifier>{a2b7eb07-1364-4d45-9612-b2e62a542df4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp">
@@ -83,6 +86,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\update\UpdateBinariesTest.cpp">
       <Filter>test\update</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\duplicate\DuplicatePluginTest.cpp">
+      <Filter>test\duplicate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

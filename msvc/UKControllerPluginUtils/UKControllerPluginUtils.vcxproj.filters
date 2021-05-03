@@ -37,6 +37,9 @@
     <Filter Include="update">
       <UniqueIdentifier>{e02f14a9-4982-47dc-8ac3-77c039ee27e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="duplicate">
+      <UniqueIdentifier>{2e91c81e-5b35-4bf3-9430-b2dc6020d6c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utils\pch.h">
@@ -156,6 +159,9 @@
     <ClInclude Include="..\..\src\update\LoadChangelog.h">
       <Filter>update</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\duplicate\DuplicatePlugin.h">
+      <Filter>duplicate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\pch.cpp">
@@ -235,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\update\LoadChangelog.cpp">
       <Filter>update</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\duplicate\DuplicatePlugin.cpp">
+      <Filter>duplicate</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

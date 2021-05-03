@@ -1,10 +1,10 @@
-#include "pch/pch.h"
-#include "bootstrap/DuplicatePlugin.h"
+#include "pch/utilstestpch.h"
+#include "duplicate/DuplicatePlugin.h"
 
-using UKControllerPlugin::Bootstrap::DuplicatePlugin;
+using UKControllerPlugin::Duplicate::DuplicatePlugin;
 
-namespace UKControllerPluginTest {
-    namespace Bootstrap {
+namespace UKControllerPluginUtilsTest {
+    namespace Duplicate {
 
         TEST(DuplicatePluginTest, FirstPluginIsNotADuplicate)
         {
@@ -34,5 +34,5 @@ namespace UKControllerPluginTest {
             DuplicatePlugin plugin3;
             EXPECT_FALSE(plugin3.Duplicate());
         }
-    }  // namespace Bootstrap
-}  // namespace UKControllerPluginTest
+    } // namespace Duplicate
+} // namespace UKControllerPluginUtilsTest

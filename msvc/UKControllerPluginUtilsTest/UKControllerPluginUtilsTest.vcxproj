@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\test\test\dialog\CompareDialogsTest.cpp" />
     <ClCompile Include="..\..\test\test\dialog\DialogDataTest.cpp" />
     <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp" />
+    <ClCompile Include="..\..\test\test\duplicate\DuplicatePluginTest.cpp" />
     <ClCompile Include="..\..\test\test\helper\HelperFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />

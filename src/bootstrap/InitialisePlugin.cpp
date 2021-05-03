@@ -2,7 +2,7 @@
 #include "bootstrap/InitialisePlugin.h"
 #include "api/ApiAuthChecker.h"
 #include "bootstrap/CollectionBootstrap.h"
-#include "bootstrap/DuplicatePlugin.h"
+#include "duplicate/DuplicatePlugin.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
 #include "bootstrap/HelperBootstrap.h"
@@ -75,7 +75,7 @@ using UKControllerPlugin::Datablock::EstimatedOffBlockTimeBootstrap;
 using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::Message::UserMessagerBootstrap;
 using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
-using UKControllerPlugin::Bootstrap::DuplicatePlugin;
+using UKControllerPlugin::Duplicate::DuplicatePlugin;
 using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;

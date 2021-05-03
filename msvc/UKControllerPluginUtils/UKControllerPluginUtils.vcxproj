@@ -42,6 +42,7 @@
     <ClInclude Include="..\..\src\dialog\DialogData.h" />
     <ClInclude Include="..\..\src\dialog\DialogManager.h" />
     <ClInclude Include="..\..\src\dialog\DialogProviderInterface.h" />
+    <ClInclude Include="..\..\src\duplicate\DuplicatePlugin.h" />
     <ClInclude Include="..\..\src\helper\HelperFunctions.h" />
     <ClInclude Include="..\..\src\log\LoggerBootstrap.h" />
     <ClInclude Include="..\..\src\log\LoggerFunctions.h" />
@@ -77,6 +78,7 @@
     <ClCompile Include="..\..\src\data\PluginDataLocations.cpp" />
     <ClCompile Include="..\..\src\dialog\CompareDialogs.cpp" />
     <ClCompile Include="..\..\src\dialog\DialogManager.cpp" />
+    <ClCompile Include="..\..\src\duplicate\DuplicatePlugin.cpp" />
     <ClCompile Include="..\..\src\helper\HelperFunctions.cpp" />
     <ClCompile Include="..\..\src\log\LoggerBootstrap.cpp" />
     <ClCompile Include="..\..\src\log\LoggerFunctions.cpp" />

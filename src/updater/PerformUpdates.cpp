@@ -16,9 +16,15 @@ using UKControllerPlugin::Curl::CurlInterface;
 void CheckForUpdates(
     const ApiInterface& api,
     WinApiInterface& windows,
-    CurlInterface& curl
+    CurlInterface& curl,
+    bool duplicatePlugin
 )
 {
+    if (duplicatePlugin) {
+        LogInfo("Skipping updates as plugin is duplicate");
+        return;
+    }
+
     try {
         const nlohmann::json versionDetails = UKControllerPlugin::GetUpdateData(api);
         std::string version = GetVersionFromJson(versionDetails);

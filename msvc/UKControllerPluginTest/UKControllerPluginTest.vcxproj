@@ -294,7 +294,6 @@
     <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />
-    <ClCompile Include="..\..\test\test\bootstrap\DuplicatePluginTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp" />
   </ItemGroup>
   <ItemGroup>

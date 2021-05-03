@@ -7,6 +7,7 @@
 #include "curl/CurlApi.h"
 #include "log/LoggerBootstrap.h"
 #include "update/PluginVersion.h"
+#include "duplicate/DuplicatePlugin.h"
 
 #ifndef UKCP_UPDATER_API
 #define UKCP_UPDATER_API extern "C" __declspec(dllexport)
@@ -39,6 +40,8 @@ UKCP_UPDATER_API void PerformUpdates()
         *settings,
         curl
     );
+
     LogInfo("Updater build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
-    CheckForUpdates(*api, *windows, curl);
+    UKControllerPlugin::Duplicate::DuplicatePlugin duplicatePlugin;
+    CheckForUpdates(*api, *windows, curl, duplicatePlugin.Duplicate());
 }

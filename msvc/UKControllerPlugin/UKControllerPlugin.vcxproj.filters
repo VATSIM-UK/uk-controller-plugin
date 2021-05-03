@@ -543,9 +543,6 @@
     <ClInclude Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.h">
       <Filter>src\offblock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\bootstrap\DuplicatePlugin.h">
-      <Filter>src\bootstrap</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\timedevent\DeferredEventHandler.h">
       <Filter>src\timedevent</Filter>
     </ClInclude>
@@ -1385,9 +1382,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp">
       <Filter>src\euroscope</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bootstrap\DuplicatePlugin.cpp">
-      <Filter>src\bootstrap</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\timedevent\DeferredEventHandler.cpp">
       <Filter>src\timedevent</Filter>

@@ -1,7 +1,7 @@
 #pragma once
 
 namespace UKControllerPlugin {
-    namespace Bootstrap {
+    namespace Duplicate {
 
         /*
             Class for recognising when a duplicate plugin
@@ -28,5 +28,5 @@ namespace UKControllerPlugin {
                 // The buffersize for the flag
                 const DWORD buffSize = 256;
         };
-    }  // namespace Bootstrap
+    } // namespace Duplicate
 }  // namespace UKControllerPlugin

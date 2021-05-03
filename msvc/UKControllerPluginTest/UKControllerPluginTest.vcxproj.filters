@@ -413,9 +413,6 @@
     <ClCompile Include="..\..\test\test\offblock\EstimatedOffBlockTimeBootstrapTest.cpp">
       <Filter>test\offblock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\bootstrap\DuplicatePluginTest.cpp">
-      <Filter>test\bootstrap</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp">
       <Filter>test\timedevent</Filter>
     </ClCompile>

@@ -1,8 +1,8 @@
-#include "pch/stdafx.h"
-#include "bootstrap/DuplicatePlugin.h"
+#include "utils/pch.h"
+#include "duplicate/DuplicatePlugin.h"
 
 namespace UKControllerPlugin {
-    namespace Bootstrap {
+    namespace Duplicate {
 
         DuplicatePlugin::DuplicatePlugin()
         {

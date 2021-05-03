@@ -118,6 +118,14 @@ namespace UKControllerPluginUpdaterTest {
             EXPECT_FALSE(UpdateRequired(mockWindows, version));
         }
 
+        TEST_F(PerformUpdatesTest, ItDoesntDoUpdateIfPluginIsDuplicate)
+        {
+            EXPECT_CALL(this->mockApi, GetUpdateDetails)
+                .Times(0);
+
+            CheckForUpdates(mockApi, mockWindows, mockCurl, true);
+        }
+
         TEST_F(PerformUpdatesTest, ItHandlesApiExceptionsWhenGettingUpdateDetails)
         {
             ON_CALL(this->mockApi, GetUpdateDetails)
@@ -129,7 +137,7 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl);
+            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
         }
 
         TEST_F(PerformUpdatesTest, ItHandlesInvalidApiDataWhenGettingUpdateDetails)
@@ -147,7 +155,7 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl);
+            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
         }
 
         TEST_F(PerformUpdatesTest, ItDoesntDoUpdateIfNoUpdateRequired)
@@ -174,7 +182,7 @@ namespace UKControllerPluginUpdaterTest {
             EXPECT_CALL(this->mockWindows, MoveFileToNewLocation(testing::_, testing::_))
                 .Times(0);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl);
+            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
         }
 
         TEST_F(PerformUpdatesTest, ItPerformsUpdatesWithNoChangelog)
@@ -263,7 +271,7 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(0);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl);
+            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
         }
 
         TEST_F(PerformUpdatesTest, ItPerformsUpdatesWithChangelog)
@@ -352,7 +360,7 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl);
+            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
         }
 
         TEST_F(PerformUpdatesTest, ItHandlesFailedUpdaterDownloads)
@@ -434,7 +442,7 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl);
+            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
         }
 
         TEST_F(PerformUpdatesTest, ItHandlesFailedCoreDownloads)
@@ -516,7 +524,7 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl);
+            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
         }
     } // namespace Updater
 } // namespace UKControllerPluginUpdaterTest
