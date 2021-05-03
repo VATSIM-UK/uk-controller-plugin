@@ -12,8 +12,7 @@ namespace UKControllerPlugin {
         /*
             Performs a CURL request to the specified URL with the specified post params.
         */
-        CurlResponse CurlApi::MakeCurlRequest(const CurlRequest& request)
-        {
+        UKControllerPlugin::Curl::CurlResponse CurlApi::MakeCurlRequest(const CurlRequest & request) {
             CURL * curlObject;
             CURLcode result;
             struct curl_slist *curlHeaders = NULL;
