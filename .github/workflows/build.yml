@@ -82,8 +82,13 @@ jobs:
             Remove-Item curl.zip
             Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\winbuild"
             nmake /f Makefile.vc mode=static WITH_SSL=static WITH_DEVEL=${env:OPENSSL_PATH}
-            echo "CURL_INCLUDEDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ssl-static-ipv6-sspi\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            echo "CURL_LIBRARYDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ssl-static-ipv6-sspi\\lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup cURL Environment
+        env:
+          CURL_VERSION: 7.76.1
+        run: |
+          echo "CURL_INCLUDEDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ssl-static-ipv6-sspi\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "CURL_LIBRARYDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ssl-static-ipv6-sspi\\lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Restore Nuget Packages
         run: |
