@@ -83,7 +83,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(LibraryPath);</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_DEBUG_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
@@ -92,7 +92,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(LibraryPath);</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -118,7 +118,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;libssl32MDd.lib;libcrypto32MDd.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;crypt32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a_debug.lib;Winmm.lib;dbghelp.lib;libssl32MDd.lib;libcrypto32MDd.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile />
       <AdditionalOptions>
@@ -148,7 +148,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePluginDll.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl32MD.lib;libcrypto32MD.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;crypt32.lib;%(AdditionalDependencies);EuroScopePluginDll.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl32MD.lib;libcrypto32MD.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
       <AdditionalOptions>

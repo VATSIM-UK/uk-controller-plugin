@@ -617,7 +617,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_DEBUG_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
     <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
@@ -657,11 +657,11 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;Comctl32.lib;libssl32MDd.lib;libcrypto32MDd.lib;libcurl_a.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;Comctl32.lib;libssl32MDd.lib;libcrypto32MDd.lib;libcurl_a_debug.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories />
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>LIBCMT;MSVCRT;</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;</IgnoreSpecificDefaultLibraries>
       <FullProgramDatabaseFile>false</FullProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
@@ -691,7 +691,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;Comctl32.lib;libssl32MD.lib;libcrypto32MD.lib;libcurl_a.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries />
-      <IgnoreSpecificDefaultLibraries>LIBCMT;MSVCRT;</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
