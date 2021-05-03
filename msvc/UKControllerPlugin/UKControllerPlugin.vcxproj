@@ -628,7 +628,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(CURL_INCLUDEDIR);$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <TargetName>UKControllerPluginCore</TargetName>
