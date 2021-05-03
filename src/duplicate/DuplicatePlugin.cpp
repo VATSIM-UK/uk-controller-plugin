@@ -48,5 +48,5 @@ namespace UKControllerPlugin {
             return this->isDuplicate;
         }
 
-    }  // namespace Bootstrap
+    } // namespace Duplicate
 }  // namespace UKControllerPlugin
