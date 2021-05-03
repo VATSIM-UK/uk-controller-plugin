@@ -306,7 +306,7 @@ namespace UKControllerPlugin {
                 CurlRequest(this->apiDomain + "/version/latest", CurlRequest::METHOD_GET)
             );
         }
-        
+
         CurlRequest ApiRequestBuilder::BuildPluginEventSyncRequest() const
         {
             return this->AddCommonHeaders(
