@@ -95,7 +95,7 @@ namespace UKControllerPlugin {
                 log != allFilesInLogFolder.cend();
                 ++log
             ) {
-                if (logFilesDeleted == logFilesToDelete) {
+                if (logFilesDeleted >= logFilesToDelete) {
                     break;
                 }
 

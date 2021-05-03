@@ -135,5 +135,24 @@ namespace UKControllerPluginUtilsTest {
 
             LoggerBootstrap::PruneLogs(this->windows, L"plugin");
         }
+
+        TEST_F(LoggerBootstrapTest, ItDoesntPruneLogFilesIfNotEnoughToPrune)
+        {
+            const std::set<std::wstring> windowsReturnedFiles = {
+                L"plugin-1.txt",
+                L"plugin-2.txt",
+                L"plugin-3.txt"
+            };
+
+            std::wstring logsFolder = L"logs";
+            EXPECT_CALL(this->windows, ListAllFilenamesInDirectory(logsFolder))
+                .Times(1)
+                .WillOnce(Return(windowsReturnedFiles));
+
+            EXPECT_CALL(this->windows, DeleteGivenFile(testing::_))
+                .Times(0);
+
+            LoggerBootstrap::PruneLogs(this->windows, L"plugin");
+        }
     }  // namespace Log
 }  // namespace UKControllerPluginUtilsTest
