@@ -113,7 +113,7 @@ namespace UKControllerPlugin {
         )
         {
             std::set<std::wstring> allFilesInLogFolder = windows.ListAllFilenamesInDirectory(logsFolder);
-            std::wregex logsRegex(L"^" + logFilePrefix + L"-[0-9]+\\.log$");
+            std::wregex logsRegex(L"^" + logFilePrefix + L"-[0-9]+\\.txt");
             for (
                 auto log = allFilesInLogFolder.begin();
                 log != allFilesInLogFolder.end();
@@ -135,7 +135,7 @@ namespace UKControllerPlugin {
         {
             return logFilePrefix + L"-" + HelperFunctions::ConvertToWideString(
                 date::format("%Y%m%d%H%M%S", date::floor<std::chrono::seconds>(std::chrono::system_clock::now()))
-            ) + L".log";
+            ) + L".txt";
         }
 
         /*
