@@ -53,15 +53,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-         * Shuts everything down
-         */
-        void LoggerBootstrap::Shutdown(void)
-        {
-            LogInfo("Logfile closed");
-            ShutdownLogger();
-        }
-
-        /*
          * Create the logs folder
          */
         bool LoggerBootstrap::CreateLogsFolder(WinApiInterface& windows)

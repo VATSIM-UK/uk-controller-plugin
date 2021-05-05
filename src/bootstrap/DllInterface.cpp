@@ -53,6 +53,7 @@ UKCP_CORE_API EuroScopePlugIn::CPlugIn* LoadPlugin(void)
         message += L"LastError: " + std::to_wstring(GetLastError()) + L"\r\n";;
 
         MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
+        ShutdownLogger();
     }
 
     return nullptr;
@@ -75,6 +76,7 @@ UKCP_CORE_API void UnloadPlugin(void)
         message += L"Message: " + std::wstring(what.cbegin(), what.cend());
 
         MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Shutdown Failed", MB_OK | MB_ICONSTOP);
+        ShutdownLogger();
     }
 }
 

@@ -111,7 +111,7 @@ namespace UKControllerPlugin {
         // Shut down GDI
         Gdiplus::GdiplusShutdown(this->gdiPlusToken);
         LogInfo("Plugin shutdown");
-        LoggerBootstrap::Shutdown();
+        ShutdownLogger();
     }
 
     /*

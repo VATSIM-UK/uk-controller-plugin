@@ -25,7 +25,6 @@ namespace UKControllerPlugin {
                     Windows::WinApiInterface& windows,
                     std::wstring logfilePrefix
                 );
-                static void Shutdown(void);
                 static bool CreateLogsFolder(Windows::WinApiInterface& windows);
                 static void PruneLogs(Windows::WinApiInterface& windows, std::wstring logFilePrefix);
                 static std::set<std::wstring> GetExistingLogs(

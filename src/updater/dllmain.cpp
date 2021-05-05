@@ -44,4 +44,5 @@ UKCP_UPDATER_API void PerformUpdates()
     LogInfo("Updater build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
     UKControllerPlugin::Duplicate::DuplicatePlugin duplicatePlugin;
     CheckForUpdates(*api, *windows, curl, duplicatePlugin.Duplicate());
+    ShutdownLogger();
 }

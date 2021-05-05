@@ -43,6 +43,7 @@ void ShutdownLogger(void)
         return;
     }
 
+    LogInfo("Logger shutdown");
     spdlog::drop_all();
     logger.reset();
 }

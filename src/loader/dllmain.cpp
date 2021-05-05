@@ -33,49 +33,55 @@ BOOL WINAPI DllMain(
  */
 UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
 {
-    // Boot up the windows API, create the root folder and create the logger
-    windows = UKControllerPlugin::Windows::Bootstrap(loaderDllInstance);
-    CreatePluginDataRoot(*windows);
-    UKControllerPlugin::Log::LoggerBootstrap::Bootstrap(*windows, L"loader");
+    try {
+        // Boot up the windows API, create the root folder and create the logger
+        windows = UKControllerPlugin::Windows::Bootstrap(loaderDllInstance);
+        CreatePluginDataRoot(*windows);
+        UKControllerPlugin::Log::LoggerBootstrap::Bootstrap(*windows, L"loader");
 
-    // Bootstrap the API, download the updater if we don't have it already and run it
-    UKControllerPlugin::Curl::CurlApi curl;
-    std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settings =
-        UKControllerPlugin::Setting::SettingRepositoryFactory::Create(*windows);
-    std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api = UKControllerPlugin::Api::Bootstrap(
-        *settings,
-        curl
-    );
+        // Bootstrap the API, download the updater if we don't have it already and run it
+        UKControllerPlugin::Curl::CurlApi curl;
+        std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settings =
+            UKControllerPlugin::Setting::SettingRepositoryFactory::Create(*windows);
+        std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api = UKControllerPlugin::Api::Bootstrap(
+            *settings,
+            curl
+        );
 
-    LogInfo("Loader build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
+        LogInfo("Loader build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
+        throw std::exception("foo");
 
-    // Perform a first time download if required, then run the updater
-    if (FirstTimeDownload(*api, *windows, curl)) {
-        RunUpdater(*windows);
+        // Perform a first time download if required, then run the updater
+        if (FirstTimeDownload(*api, *windows, curl)) {
+            RunUpdater(*windows);
+        }
+
+        // Load the core plugin library
+        pluginDllInstance = LoadPluginLibrary(*windows);
+        if (pluginDllInstance == nullptr) {
+            LogError("Failed to load plugin binary");
+            UnloadPluginLibrary(pluginDllInstance, *windows);
+            std::wstring message = L"Unable to load the UKControllerPluginCore DLL.\r\n";
+            message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+
+            MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
+            throw std::exception("UKCP broke");
+        }
+
+        // Load the plugin
+        EuroScopePlugIn::CPlugIn* pluginInstance = LoadPlugin(pluginDllInstance, *windows);
+        if (!pluginInstance) {
+            std::wstring message = L"Unable to load the plugin from the core binary.\r\n";
+            message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+
+            MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
+            throw std::exception("UKCP broke");
+        }
+        *ppPlugInInstance = pluginInstance;
+    } catch (std::exception e) {
+        ShutdownLogger();
+        throw;
     }
-
-    // Load the core plugin library
-    pluginDllInstance = LoadPluginLibrary(*windows);
-    if (pluginDllInstance == nullptr) {
-        LogError("Failed to load plugin binary");
-        UnloadPluginLibrary(pluginDllInstance, *windows);
-        std::wstring message = L"Unable to load the UKControllerPluginCore DLL.\r\n";
-        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
-
-        MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
-        throw std::exception("UKCP broke");
-    }
-
-    // Load the plugin
-    EuroScopePlugIn::CPlugIn* pluginInstance = LoadPlugin(pluginDllInstance, *windows);
-    if (!pluginInstance) {
-        std::wstring message = L"Unable to load the plugin from the core binary.\r\n";
-        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
-
-        MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
-        throw std::exception("UKCP broke");
-    }
-    *ppPlugInInstance = pluginInstance;
 };
 
 /*
@@ -85,4 +91,5 @@ UKCP_LOADER_API void EuroScopePlugInExit(void)
 {
     UnloadPlugin(pluginDllInstance, *windows);
     UnloadPluginLibrary(pluginDllInstance, *windows);
+    ShutdownLogger();
 }
