@@ -22,7 +22,7 @@ namespace UKControllerPlugin {
             PruneLogs(windows, logfilePrefix);
 
             std::shared_ptr<spdlog::logger> logger = spdlog::basic_logger_mt(
-                "logger",
+                HelperFunctions::ConvertToRegularString(logfilePrefix) + "-logger",
                 windows.GetFullPathToLocalFile(GetLogFilePath(GetLogfileName(logfilePrefix)))
             );
             logger->set_pattern("%Y-%m-%d %T [%l] - %v");
