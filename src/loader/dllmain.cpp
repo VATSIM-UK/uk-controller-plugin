@@ -49,7 +49,6 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
         );
 
         LogInfo("Loader build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
-        throw std::exception("foo");
 
         // Perform a first time download if required, then run the updater
         if (FirstTimeDownload(*api, *windows, curl)) {
