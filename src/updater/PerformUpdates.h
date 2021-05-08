@@ -16,7 +16,7 @@ namespace UKControllerPlugin {
     } // namespace Curl
 } // namespace UKControllerPlugin
 
-void CheckForUpdates(
+bool CheckForUpdates(
     const UKControllerPlugin::Api::ApiInterface& api,
     UKControllerPlugin::Windows::WinApiInterface& windows,
     UKControllerPlugin::Curl::CurlInterface& curl,
@@ -32,4 +32,5 @@ void MoveOldUpdaterBinary(UKControllerPlugin::Windows::WinApiInterface& windows)
 std::wstring GetOldUpdaterLocation();
 void UpdateLockfile(UKControllerPlugin::Windows::WinApiInterface& windows, std::string version);
 std::string GetVersionFromJson(const nlohmann::json& versionDetails);
-void DisplayUpdateNotification(UKControllerPlugin::Windows::WinApiInterface& windows, std::wstring version);
+void DisplayPostUpdateNotification(UKControllerPlugin::Windows::WinApiInterface& windows, std::wstring version);
+bool DisplayPreUpdateConsentNotification(UKControllerPlugin::Windows::WinApiInterface& windows, std::wstring version);

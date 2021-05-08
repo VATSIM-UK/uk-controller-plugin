@@ -118,7 +118,7 @@ namespace UKControllerPluginUpdaterTest {
             EXPECT_CALL(this->mockApi, GetUpdateDetails)
                 .Times(0);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl, true);
+            EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, true));
         }
 
         TEST_F(PerformUpdatesTest, ItHandlesApiExceptionsWhenGettingUpdateDetails)
@@ -132,7 +132,7 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
+            EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
         }
 
         TEST_F(PerformUpdatesTest, ItHandlesInvalidApiDataWhenGettingUpdateDetails)
@@ -150,7 +150,7 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
+            EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
         }
 
         TEST_F(PerformUpdatesTest, ItDoesntDoUpdateIfNoUpdateRequired)
@@ -177,7 +177,45 @@ namespace UKControllerPluginUpdaterTest {
             EXPECT_CALL(this->mockWindows, MoveFileToNewLocation(testing::_, testing::_))
                 .Times(0);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
+            EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        }
+
+        TEST_F(PerformUpdatesTest, ItDoesntUpdateIfUserDoesntConsent)
+        {
+            nlohmann::json apiData{
+                {"version", "3.0.1"},
+                {"updater_download_url", "foo"},
+                {"core_download_url", "bar"},
+                {"loader_download_url", "baz"},
+            };
+
+            ON_CALL(this->mockApi, GetUpdateDetails)
+                .WillByDefault(testing::Return(apiData));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
+            .WillByDefault(testing::Return(false));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION)
+            )
+                .Times(1)
+                .WillOnce(testing::Return(IDNO));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONEXCLAMATION)
+            )
+                .Times(1)
+                .WillOnce(testing::Return(IDNO));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                MoveFileToNewLocation(testing::_, testing::_)
+            )
+                .Times(0);
+
+            EXPECT_FALSE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
         }
 
         TEST_F(PerformUpdatesTest, ItPerformsUpdatesWithNoChangelog)
@@ -200,6 +238,14 @@ namespace UKControllerPluginUpdaterTest {
 
             EXPECT_CALL(
                 this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION)
+            )
+                .Times(2)
+                .WillOnce(testing::Return(IDYES))
+                .WillOnce(testing::Return(IDNO));
+
+            EXPECT_CALL(
+                this->mockWindows,
                 MoveFileToNewLocation(
                     std::wstring(L"bin/UKControllerPluginUpdater.dll"),
                     std::wstring(L"bin/UKControllerPluginUpdater.dll.old")
@@ -252,21 +298,14 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            // Update message
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION)
-            )
-                .Times(1)
-                .WillOnce(testing::Return(IDNO));
-
+            // Changelog
             EXPECT_CALL(
                 this->mockWindows,
                 OpenWebBrowser(testing::_)
             )
                 .Times(0);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
+            EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
         }
 
         TEST_F(PerformUpdatesTest, ItPerformsUpdatesWithChangelog)
@@ -289,6 +328,14 @@ namespace UKControllerPluginUpdaterTest {
 
             EXPECT_CALL(
                 this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION)
+            )
+                .Times(2)
+                .WillOnce(testing::Return(IDYES))
+                .WillOnce(testing::Return(IDYES));
+
+            EXPECT_CALL(
+                this->mockWindows,
                 MoveFileToNewLocation(
                     std::wstring(L"bin/UKControllerPluginUpdater.dll"),
                     std::wstring(L"bin/UKControllerPluginUpdater.dll.old")
@@ -341,21 +388,15 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            // Update message
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION)
-            )
-                .Times(1)
-                .WillOnce(testing::Return(IDYES));
 
+            // View changelog
             EXPECT_CALL(
                 this->mockWindows,
                 OpenWebBrowser(UKControllerPlugin::Update::changelogUrl)
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
+            EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
         }
 
         TEST_F(PerformUpdatesTest, ItHandlesFailedUpdaterDownloads)
@@ -375,6 +416,13 @@ namespace UKControllerPluginUpdaterTest {
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
                 .WillByDefault(testing::Return("3.0.0"));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION)
+            )
+                .Times(1)
+                .WillOnce(testing::Return(IDYES));
 
             EXPECT_CALL(
                 this->mockWindows,
@@ -437,7 +485,7 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
+            EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
         }
 
         TEST_F(PerformUpdatesTest, ItHandlesFailedCoreDownloads)
@@ -457,6 +505,13 @@ namespace UKControllerPluginUpdaterTest {
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
                 .WillByDefault(testing::Return("3.0.0"));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION)
+            )
+                .Times(1)
+                .WillOnce(testing::Return(IDYES));
 
             EXPECT_CALL(
                 this->mockWindows,
@@ -519,7 +574,104 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            CheckForUpdates(mockApi, mockWindows, mockCurl, false);
+            EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        }
+
+        TEST_F(PerformUpdatesTest, ItPerformsUpdatesOnSecondPrompt)
+        {
+            nlohmann::json apiData{
+                {"version", "3.0.1"},
+                {"updater_download_url", "foo"},
+                {"core_download_url", "bar"},
+                {"loader_download_url", "baz"},
+            };
+
+            ON_CALL(this->mockApi, GetUpdateDetails)
+                .WillByDefault(testing::Return(apiData));
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
+                .WillByDefault(testing::Return(true));
+
+            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
+                .WillByDefault(testing::Return("3.0.0"));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION)
+            )
+                .Times(2)
+                .WillOnce(testing::Return(IDNO))
+                .WillOnce(testing::Return(IDNO));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONWARNING)
+            )
+                .Times(1)
+                .WillOnce(testing::Return(IDYES));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                MoveFileToNewLocation(
+                    std::wstring(L"bin/UKControllerPluginUpdater.dll"),
+                    std::wstring(L"bin/UKControllerPluginUpdater.dll.old")
+                )
+            )
+                .Times(1);
+
+            // Core things
+            CurlRequest expectedCoreRequest(
+                "bar",
+                CurlRequest::METHOD_GET
+            );
+            expectedCoreRequest.SetMaxRequestTime(0);
+
+            CurlResponse coreResponse("3.0.1.core", false, 200);
+
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedCoreRequest))
+                .Times(1)
+                .WillOnce(testing::Return(coreResponse));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
+            )
+                .Times(1);
+
+            // Updater things
+            CurlRequest expectedUpdaterRequest(
+                "foo",
+                CurlRequest::METHOD_GET
+            );
+            expectedUpdaterRequest.SetMaxRequestTime(0);
+
+            CurlResponse updaterResponse("3.0.1.updater", false, 200);
+
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedUpdaterRequest))
+                .Times(1)
+                .WillOnce(testing::Return(updaterResponse));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
+            )
+                .Times(1);
+
+            // Lockfile update
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true, false)
+            )
+                .Times(1);
+
+            // Changelog
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenWebBrowser(testing::_)
+            )
+                .Times(0);
+
+            EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
         }
     } // namespace Updater
 } // namespace UKControllerPluginUpdaterTest

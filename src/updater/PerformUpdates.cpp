@@ -13,7 +13,7 @@ using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Curl::CurlInterface;
 
-void CheckForUpdates(
+bool CheckForUpdates(
     const ApiInterface& api,
     WinApiInterface& windows,
     CurlInterface& curl,
@@ -22,18 +22,23 @@ void CheckForUpdates(
 {
     if (duplicatePlugin) {
         LogInfo("Skipping updates as plugin is duplicate");
-        return;
+        return true;
     }
 
     try {
         const nlohmann::json versionDetails = UKControllerPlugin::GetUpdateData(api);
         std::string version = GetVersionFromJson(versionDetails);
+        std::wstring wideVersion = HelperFunctions::ConvertToWideString(version);
         if (UpdateRequired(windows, versionDetails)) {
+            if (!DisplayPreUpdateConsentNotification(windows, wideVersion)) {
+                return false;
+            }
+
             LogInfo("Plugin update available, newest version " + version);
             PerformUpdates(curl, windows, versionDetails);
-            DisplayUpdateNotification(
+            DisplayPostUpdateNotification(
                 windows,
-                HelperFunctions::ConvertToWideString(version)
+                wideVersion
             );
         } else {
             LogInfo("Plugin is up to date at version " + version);
@@ -49,6 +54,8 @@ void CheckForUpdates(
             MB_OK | MB_ICONSTOP
         );
     }
+
+    return true;
 }
 
 void PerformUpdates(
@@ -87,9 +94,9 @@ std::string GetVersionFromJson(const nlohmann::json& versionDetails)
     return versionDetails.at("version").get<std::string>();
 }
 
-void DisplayUpdateNotification(WinApiInterface& windows, std::wstring version)
+void DisplayPostUpdateNotification(WinApiInterface& windows, std::wstring version)
 {
-    std::wstring message = L"The UK Controller Plugin has been automatically updated to version " + version +
+    std::wstring message = L"The UK Controller Plugin has been updated to version " + version +
         L".\r\n\r\n";
     message +=
         L"You can view the changelog at any time by opening the OP menu and selecting the relevant item.\r\n\r\n";
@@ -104,6 +111,35 @@ void DisplayUpdateNotification(WinApiInterface& windows, std::wstring version)
     if (gotoChangelog == IDYES) {
         UKControllerPlugin::Update::LoadChangelog(windows);
     }
+}
+
+bool DisplayPreUpdateConsentNotification(WinApiInterface& windows, std::wstring version)
+{
+    std::wstring message = L"A new version of the UK Controller Plugin, version " + version +
+        L", is available.\r\n\r\n";
+    message += L"Would you like to update now?";
+
+    int updateNow = windows.OpenMessageBox(
+        message.c_str(),
+        L"UKCP Automatic Update",
+        MB_YESNO | MB_ICONINFORMATION
+    ) == IDYES;
+
+    if (updateNow == IDOK) {
+        return true;
+    }
+
+    std::wstring warning = L"In order to use the UK Controller Plugin, you must update to the latest version.\r\n\r\n";
+    warning +=
+        L"This is because old or buggy versions of the plugin can adversely affect the experience for users ";
+    warning += L"of the VATSIM network.\r\n\r\n";
+    warning += L"Select yes to update now, or no to disable the plugin.";
+
+    return windows.OpenMessageBox(
+        warning.c_str(),
+        L"UKCP Automatic Update",
+        MB_YESNO | MB_ICONEXCLAMATION
+    ) == IDYES;
 }
 
 std::wstring GetOldUpdaterLocation()

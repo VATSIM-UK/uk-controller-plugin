@@ -8,7 +8,7 @@
 #include "euroscope/EuroScopePlugIn.h"
 
 // Define the functions we need from the various libraries
-typedef void (CALLBACK* PERFORMUPDATES)();
+typedef bool (CALLBACK* PERFORMUPDATES)();
 typedef EuroScopePlugIn::CPlugIn* (CALLBACK* LOADPLUGINLIBRARY)();
 typedef void (CALLBACK* UNLOADPLUGINLIBRARY)();
 
@@ -31,7 +31,10 @@ void RunUpdater(
     PERFORMUPDATES PerformUpdates = reinterpret_cast<PERFORMUPDATES>(
         windows.GetFunctionPointerFromLibrary(updaterHandle, "PerformUpdates")
     );
-    PerformUpdates();
+    if (!PerformUpdates()) {
+        windows.UnloadLibrary(updaterHandle);
+        throw std::exception();
+    }
     LogInfo("Updates complete");
     windows.UnloadLibrary(updaterHandle);
 }

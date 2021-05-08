@@ -26,7 +26,7 @@ BOOL WINAPI DllMain(
     return TRUE;
 }
 
-UKCP_UPDATER_API void PerformUpdates()
+UKCP_UPDATER_API bool PerformUpdates()
 {
     // Boot up the windows API, create the root folder and create the logger
     windows = UKControllerPlugin::Windows::Bootstrap(dllInstance);
@@ -43,6 +43,7 @@ UKCP_UPDATER_API void PerformUpdates()
 
     LogInfo("Updater build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
     UKControllerPlugin::Duplicate::DuplicatePlugin duplicatePlugin;
-    CheckForUpdates(*api, *windows, curl, duplicatePlugin.Duplicate());
+    const bool updatePeformed = CheckForUpdates(*api, *windows, curl, duplicatePlugin.Duplicate());
     ShutdownLogger();
+    return updatePeformed;
 }
