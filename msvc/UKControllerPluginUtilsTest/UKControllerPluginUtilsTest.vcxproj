@@ -22,6 +22,7 @@
     <ClCompile Include="..\..\test\test\api\ApiResponseValidatorTest.cpp" />
     <ClCompile Include="..\..\test\test\curl\CurlRequestTest.cpp" />
     <ClCompile Include="..\..\test\test\curl\CurlResponseTest.cpp" />
+    <ClCompile Include="..\..\test\test\data\PluginDataLocationsTest.cpp" />
     <ClCompile Include="..\..\test\test\dialog\CompareDialogsTest.cpp" />
     <ClCompile Include="..\..\test\test\dialog\DialogDataTest.cpp" />
     <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp" />

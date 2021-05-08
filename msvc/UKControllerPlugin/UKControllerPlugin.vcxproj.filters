@@ -1049,6 +1049,9 @@
     <ClInclude Include="..\..\src\plugin\PluginChangelog.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\plugin\ForceUpdate.h">
+      <Filter>src\plugin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1801,6 +1804,9 @@
       <Filter>src\initialheading</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\plugin\PluginChangelog.cpp">
+      <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plugin\ForceUpdate.cpp">
       <Filter>src\plugin</Filter>
     </ClCompile>
   </ItemGroup>

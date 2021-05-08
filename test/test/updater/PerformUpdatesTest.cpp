@@ -31,11 +31,6 @@ namespace UKControllerPluginUpdaterTest {
             EXPECT_EQ(L"bin/UKControllerPluginUpdater.dll.old", GetOldUpdaterLocation());
         }
 
-        TEST_F(PerformUpdatesTest, ItHasAVersionLockfileLocation)
-        {
-            EXPECT_EQ(L"version.lock", GetVersionLockfileLocation());
-        }
-
         TEST_F(PerformUpdatesTest, ItGetsVersionFromJson)
         {
             nlohmann::json version{

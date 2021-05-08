@@ -825,6 +825,9 @@
     <ClCompile Include="..\..\test\test\plugin\PluginChangelogTest.cpp">
       <Filter>test\plugin</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\plugin\ForceUpdateTest.cpp">
+      <Filter>test\plugin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

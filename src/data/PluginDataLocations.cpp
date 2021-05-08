@@ -54,3 +54,8 @@ void CreatePluginDataRoot(UKControllerPlugin::Windows::WinApiInterface& windows)
         throw std::runtime_error("Unable to set permissions on the UKCP root folder");
     }
 }
+
+std::wstring GetVersionLockfileLocation()
+{
+    return L"version.lock";
+}

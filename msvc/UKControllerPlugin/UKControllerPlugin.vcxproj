@@ -216,6 +216,7 @@
     <ClInclude Include="..\..\src\ownership\AirfieldOwnershipModule.h" />
     <ClInclude Include="..\..\src\ownership\AirfieldsOwnedQueryMessage.h" />
     <ClInclude Include="..\..\src\ownership\AirfieldOwnershipHandler.h" />
+    <ClInclude Include="..\..\src\plugin\ForceUpdate.h" />
     <ClInclude Include="..\..\src\plugin\FunctionCallEventHandler.h" />
     <ClInclude Include="..\..\src\plugin\PluginChangelog.h" />
     <ClInclude Include="..\..\src\plugin\PluginHelpPage.h" />
@@ -485,6 +486,7 @@
     <ClCompile Include="..\..\src\ownership\AirfieldOwnershipModule.cpp" />
     <ClCompile Include="..\..\src\ownership\AirfieldsOwnedQueryMessage.cpp" />
     <ClCompile Include="..\..\src\ownership\AirfieldOwnershipHandler.cpp" />
+    <ClCompile Include="..\..\src\plugin\ForceUpdate.cpp" />
     <ClCompile Include="..\..\src\plugin\FunctionCallEventHandler.cpp" />
     <ClCompile Include="..\..\src\plugin\PluginChangelog.cpp" />
     <ClCompile Include="..\..\src\plugin\PluginHelpPage.cpp" />

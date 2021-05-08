@@ -82,11 +82,6 @@ void MoveOldUpdaterBinary(WinApiInterface& windows)
     windows.MoveFileToNewLocation(GetUpdaterBinaryRelativePath(), GetOldUpdaterBinaryRelativePath());
 }
 
-std::wstring GetVersionLockfileLocation()
-{
-    return L"version.lock";
-}
-
 std::string GetVersionFromJson(const nlohmann::json& versionDetails)
 {
     return versionDetails.at("version").get<std::string>();

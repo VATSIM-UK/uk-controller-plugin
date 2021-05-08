@@ -31,6 +31,9 @@
     <Filter Include="test\duplicate">
       <UniqueIdentifier>{a2b7eb07-1364-4d45-9612-b2e62a542df4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\data">
+      <UniqueIdentifier>{b6e5cdbb-acdc-4a2c-abdc-24c720bb3a87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp">
@@ -89,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\duplicate\DuplicatePluginTest.cpp">
       <Filter>test\duplicate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\data\PluginDataLocationsTest.cpp">
+      <Filter>test\data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
