@@ -35,5 +35,6 @@ bool FirstTimeDownload(
     UKControllerPlugin::Windows::WinApiInterface& windows,
     UKControllerPlugin::Curl::CurlInterface& curl
 );
+bool DisplayFirstTimeDownloadMessage(UKControllerPlugin::Windows::WinApiInterface& windows);
 void DisplayFirstTimeDownloadFailedMessage(UKControllerPlugin::Windows::WinApiInterface& windows);
 void DisplayLoaderError(UKControllerPlugin::Windows::WinApiInterface& windows, std::wstring message);

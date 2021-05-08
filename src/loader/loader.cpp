@@ -19,7 +19,7 @@ void RunUpdater(
     LogInfo("Loading updater library");
     HINSTANCE updaterHandle = windows.LoadLibraryRelative(GetUpdaterBinaryRelativePath());
     if (!updaterHandle) {
-        LogInfo("Unable to run the updater, binary does not exist");
+        LogInfo("Unable to run the updater, binary does not exist.");
         std::wstring message = L"Unable to start updater.\r\n";
         message += L"Please contact the VATSIM UK Web Services Department.\r\n";
 
@@ -122,6 +122,11 @@ bool FirstTimeDownload(
         return true;
     }
 
+    if (!DisplayFirstTimeDownloadMessage(windows)) {
+        LogWarning("User did not consent to first-time download.");
+        return false;
+    }
+
     LogInfo("Performing first time download of updater");
     nlohmann::json updateData;
     try {
@@ -140,6 +145,15 @@ bool FirstTimeDownload(
 
     LogInfo("First time download of updater successful");
     return true;
+}
+
+bool DisplayFirstTimeDownloadMessage(UKControllerPlugin::Windows::WinApiInterface& windows)
+{
+    std::wstring message = L"Performing first time download. This will download and run the UKCP Updater ";
+    message += L"to install the core plugin.\r\n\r\n";
+    message += L"Select OK to continue.";
+    return windows.OpenMessageBox(message.c_str(), L"UKCP First Time Download", MB_OKCANCEL | MB_ICONINFORMATION) ==
+        IDOK;
 }
 
 void DisplayFirstTimeDownloadFailedMessage(UKControllerPlugin::Windows::WinApiInterface& windows)

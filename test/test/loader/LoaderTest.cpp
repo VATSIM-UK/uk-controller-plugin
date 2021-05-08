@@ -183,6 +183,25 @@ namespace UKControllerPluginLoaderTest {
                 .Times(1)
             .WillOnce(Return(true));
 
+            EXPECT_FALSE(FirstTimeDownload(this->mockApi, this->mockWindows, this->mockCurl));
+        }
+
+        TEST_F(LoaderTest, FirstTimeDownloadDoesNothingIfUserDoesNotConsent)
+        {
+            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+                .Times(1)
+                .WillOnce(Return(false));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION)
+            )
+                .Times(1)
+                .WillOnce(Return(IDCANCEL));
+
+            EXPECT_CALL(this->mockApi, GetUpdateDetails())
+                .Times(0);
+
             EXPECT_TRUE(FirstTimeDownload(this->mockApi, this->mockWindows, this->mockCurl));
         }
 
@@ -191,6 +210,13 @@ namespace UKControllerPluginLoaderTest {
             EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
             .WillOnce(Return(false));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION)
+            )
+                .Times(1)
+                .WillOnce(Return(IDOK));
 
 
             nlohmann::json apiData{
@@ -232,6 +258,13 @@ namespace UKControllerPluginLoaderTest {
             EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
             .WillOnce(Return(false));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION)
+            )
+                .Times(1)
+                .WillOnce(Return(IDOK));
 
 
             nlohmann::json apiData{
@@ -278,6 +311,13 @@ namespace UKControllerPluginLoaderTest {
             EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
             .WillOnce(Return(false));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION)
+            )
+                .Times(1)
+                .WillOnce(Return(IDOK));
 
             nlohmann::json apiData{
                 {"version", 123}, // Bad version
