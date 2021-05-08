@@ -80,12 +80,21 @@ UKCP_CORE_API void UnloadPlugin(void)
     }
 }
 
-#ifdef _DEBUG
 /*
  *  Allows the plugin DLL to be loaded directly, so we don't have to worry about going via the loader.
  */
 UKCP_CORE_DIRECT_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
 {
+    if (PluginVersion::version != "#VERSION_STRING#" && PluginVersion::version != "non-release-build") {
+        MessageBox(
+            GetActiveWindow(),
+            L"Core binary cannot be loaded directly in release versions.",
+            L"UKCP Load Failed",
+            MB_OK | MB_ICONSTOP
+        );
+        return;
+    }
+
     *ppPlugInInstance = LoadPlugin();
 };
 
@@ -94,8 +103,9 @@ UKCP_CORE_DIRECT_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugI
  */
 UKCP_CORE_DIRECT_API void EuroScopePlugInExit(void)
 {
+    if (PluginVersion::version != "#VERSION_STRING#" && PluginVersion::version != "non-release-build") {
+        return;
+    }
+
     UnloadPlugin();
 }
-#endif
-
-
