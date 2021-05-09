@@ -76,6 +76,21 @@ namespace UKControllerPlugin {
                 Curl::CurlRequest BuildLatestGithubVersionRequest() const;
                 Curl::CurlRequest BuildPluginEventSyncRequest() const;
                 Curl::CurlRequest BuildGetLatestPluginEventsRequest(int lastEventId) const;
+                Curl::CurlRequest
+                BuildAcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const;
+                Curl::CurlRequest BuildRejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const;
+                Curl::CurlRequest BuildApproveDepartureReleaseRequest(
+                    int releaseId,
+                    int controllerPositionId,
+                    std::chrono::system_clock::time_point releasedAt,
+                    int expiresInSeconds
+                ) const;
+                Curl::CurlRequest BuildDepartureReleaseRequest(
+                    std::string callsign,
+                    int requestingControllerId,
+                    std::set<int> targetControllers,
+                    int expiresInSeconds
+                ) const;
                 std::string GetApiDomain(void) const;
                 std::string GetApiKey(void) const;
                 void SetApiDomain(std::string domain);

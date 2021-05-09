@@ -9,6 +9,7 @@ namespace UKControllerPlugin {
         const std::string CurlRequest::METHOD_GET = "GET";
         const std::string CurlRequest::METHOD_POST = "POST";
         const std::string CurlRequest::METHOD_PUT = "PUT";
+        const std::string CurlRequest::METHOD_PATCH = "PATCH";
         const std::string CurlRequest::nobody = "";
 
         CurlRequest::CurlRequest(std::string uri, std::string method)
@@ -96,7 +97,8 @@ namespace UKControllerPlugin {
             if (method != this->METHOD_PUT &&
                 method != this->METHOD_GET &&
                 method != this->METHOD_POST &&
-                method != this->METHOD_DELETE
+                method != this->METHOD_DELETE &&
+                method != this->METHOD_PATCH
             ) {
                 throw std::invalid_argument("Invalid HTTP method");
             }
