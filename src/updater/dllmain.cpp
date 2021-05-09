@@ -26,6 +26,10 @@ BOOL WINAPI DllMain(
     return TRUE;
 }
 
+/*
+ * Return false to indicate the the user is not allowing the plugin to be updated and thus
+ * it should be disabled.
+ */
 UKCP_UPDATER_API bool PerformUpdates()
 {
     // Boot up the windows API, create the root folder and create the logger

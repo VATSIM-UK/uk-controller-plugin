@@ -31,6 +31,11 @@ void RunUpdater(
     PERFORMUPDATES PerformUpdates = reinterpret_cast<PERFORMUPDATES>(
         windows.GetFunctionPointerFromLibrary(updaterHandle, "PerformUpdates")
     );
+
+    /*
+     * If the updater returns false, it means the user wouldn't let it update.
+     * Stop them here.
+     */
     if (!PerformUpdates || !PerformUpdates()) {
         windows.UnloadLibrary(updaterHandle);
         throw std::exception();
