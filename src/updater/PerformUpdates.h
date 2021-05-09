@@ -30,7 +30,6 @@ void PerformUpdates(
 );
 void MoveOldUpdaterBinary(UKControllerPlugin::Windows::WinApiInterface& windows);
 std::wstring GetOldUpdaterLocation();
-void UpdateLockfile(UKControllerPlugin::Windows::WinApiInterface& windows, std::string version);
 std::string GetVersionFromJson(const nlohmann::json& versionDetails);
 void DisplayPostUpdateNotification(UKControllerPlugin::Windows::WinApiInterface& windows, std::wstring version);
 bool DisplayPreUpdateConsentNotification(UKControllerPlugin::Windows::WinApiInterface& windows, std::wstring version);

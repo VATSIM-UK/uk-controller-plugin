@@ -31,7 +31,7 @@ void RunUpdater(
     PERFORMUPDATES PerformUpdates = reinterpret_cast<PERFORMUPDATES>(
         windows.GetFunctionPointerFromLibrary(updaterHandle, "PerformUpdates")
     );
-    if (!PerformUpdates()) {
+    if (!PerformUpdates || !PerformUpdates()) {
         windows.UnloadLibrary(updaterHandle);
         throw std::exception();
     }

@@ -21,10 +21,29 @@ namespace UKControllerPluginUpdaterTest {
         class PerformUpdatesTest : public Test
         {
             public:
+                void SetUp() override
+                {
+                    this->version = "3.0.0";
+                    this->versionFunctionCalled = false;
+                }
+
+                static const char* VersionFunctionCalled()
+                {
+                    versionFunctionCalled = true;
+                    return version;
+                }
+
+                inline static bool versionFunctionCalled;
+                inline static const char* version;
                 NiceMock<MockWinApi> mockWindows;
                 NiceMock<MockApiInterface> mockApi;
                 NiceMock<MockCurlApi> mockCurl;
         };
+
+        const char* VersionFunction()
+        {
+            return PerformUpdatesTest::VersionFunctionCalled();
+        }
 
         TEST_F(PerformUpdatesTest, ItHasAnOldUpdaterLocation)
         {
@@ -40,53 +59,12 @@ namespace UKControllerPluginUpdaterTest {
             EXPECT_EQ("3.0.1", GetVersionFromJson(version));
         }
 
-        TEST_F(PerformUpdatesTest, UpdateIsRequiredIfNoLockfile)
+        TEST_F(PerformUpdatesTest, UpdateIsRequiredIfNoCoreBinary)
         {
             nlohmann::json version{
                 {"version", "3.0.1"},
                 {"not_version", "3.0.2"}
             };
-
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(false));
-
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
-                .WillByDefault(testing::Return(true));
-
-            EXPECT_TRUE(UpdateRequired(mockWindows, version));
-        }
-
-        TEST_F(PerformUpdatesTest, UpdateIsRequiredIfLockfileDoesntMatchVersion)
-        {
-            nlohmann::json version{
-                {"version", "3.0.1"},
-                {"not_version", "3.0.2"}
-            };
-
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(true));
-
-            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
-                .WillByDefault(testing::Return("3.0.0"));
-
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
-                .WillByDefault(testing::Return(true));
-
-            EXPECT_TRUE(UpdateRequired(mockWindows, version));
-        }
-
-        TEST_F(PerformUpdatesTest, UpdateIsRequiredIfCoreBinaryMissing)
-        {
-            nlohmann::json version{
-                {"version", "3.0.1"},
-                {"not_version", "3.0.2"}
-            };
-
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(true));
-
-            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
-                .WillByDefault(testing::Return("3.0.1"));
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
                 .WillByDefault(testing::Return(false));
@@ -94,23 +72,99 @@ namespace UKControllerPluginUpdaterTest {
             EXPECT_TRUE(UpdateRequired(mockWindows, version));
         }
 
-        TEST_F(PerformUpdatesTest, UpdateIsNotRequiredIfLockfileMatchesVersion)
+        TEST_F(PerformUpdatesTest, UpdateIsRequiredIfCoreBinaryCantBeLoaded)
         {
             nlohmann::json version{
                 {"version", "3.0.1"},
                 {"not_version", "3.0.2"}
             };
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(true));
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+            .WillByDefault(testing::Return(true));
 
-            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
-                .WillByDefault(testing::Return("3.0.1"));
+            HINSTANCE handle = nullptr;
+            EXPECT_CALL(this->mockWindows, LoadLibraryRelative(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .Times(1)
+                .WillOnce(testing::Return(handle));
+
+            EXPECT_TRUE(UpdateRequired(mockWindows, version));
+        }
+
+        TEST_F(PerformUpdatesTest, UpdateIsRequiredIfVersionFunctionCantBeFoundInCoreBinary)
+        {
+            nlohmann::json version{
+                {"version", "3.0.1"},
+                {"not_version", "3.0.2"}
+            };
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
                 .WillByDefault(testing::Return(true));
+
+            HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
+            EXPECT_CALL(this->mockWindows, LoadLibraryRelative(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .Times(1)
+                .WillOnce(testing::Return(handle));
+
+            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "GetPluginVersion"))
+                .Times(1)
+            .WillOnce(testing::Return(nullptr));
+
+            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle))
+                .Times(1);
+
+            EXPECT_TRUE(UpdateRequired(mockWindows, version));
+        }
+
+        TEST_F(PerformUpdatesTest, UpdateIsRequiredIfVersionOfCoreBinaryIsNotLatest)
+        {
+            nlohmann::json version{
+                {"version", "3.0.1"},
+                {"not_version", "3.0.2"}
+            };
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(true));
+
+            HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
+            EXPECT_CALL(this->mockWindows, LoadLibraryRelative(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .Times(1)
+                .WillOnce(testing::Return(handle));
+
+            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "GetPluginVersion"))
+                .Times(1)
+                .WillOnce(testing::Return(reinterpret_cast<FARPROC>(VersionFunction)));
+
+            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle))
+                .Times(1);
+
+            EXPECT_TRUE(UpdateRequired(mockWindows, version));
+            EXPECT_TRUE(this->versionFunctionCalled);
+        }
+
+        TEST_F(PerformUpdatesTest, UpdateIsNotRequiredIfVersionOfCoreBinaryIsLatest)
+        {
+            nlohmann::json version{
+                {"version", "3.0.0"},
+                {"not_version", "3.0.2"}
+            };
+
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(true));
+
+            HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
+            EXPECT_CALL(this->mockWindows, LoadLibraryRelative(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .Times(1)
+                .WillOnce(testing::Return(handle));
+
+            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "GetPluginVersion"))
+                .Times(1)
+                .WillOnce(testing::Return(reinterpret_cast<FARPROC>(VersionFunction)));
+
+            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle))
+                .Times(1);
 
             EXPECT_FALSE(UpdateRequired(mockWindows, version));
+            EXPECT_TRUE(this->versionFunctionCalled);
         }
 
         TEST_F(PerformUpdatesTest, ItDoesntDoUpdateIfPluginIsDuplicate)
@@ -156,7 +210,7 @@ namespace UKControllerPluginUpdaterTest {
         TEST_F(PerformUpdatesTest, ItDoesntDoUpdateIfNoUpdateRequired)
         {
             nlohmann::json apiData{
-                {"version", "3.0.1"},
+                {"version", "3.0.0"},
                 {"updater_download_url", "foo"},
                 {"core_download_url", "bar"},
                 {"loader_download_url", "baz"},
@@ -165,14 +219,20 @@ namespace UKControllerPluginUpdaterTest {
             ON_CALL(this->mockApi, GetUpdateDetails)
                 .WillByDefault(testing::Return(apiData));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(true));
-
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
                 .WillByDefault(testing::Return(true));
 
-            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
-                .WillByDefault(testing::Return("3.0.1"));
+            HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
+            EXPECT_CALL(this->mockWindows, LoadLibraryRelative(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .Times(1)
+                .WillOnce(testing::Return(handle));
+
+            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "GetPluginVersion"))
+                .Times(1)
+                .WillOnce(testing::Return(reinterpret_cast<FARPROC>(VersionFunction)));
+
+            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle))
+                .Times(1);
 
             EXPECT_CALL(this->mockWindows, MoveFileToNewLocation(testing::_, testing::_))
                 .Times(0);
@@ -192,8 +252,8 @@ namespace UKControllerPluginUpdaterTest {
             ON_CALL(this->mockApi, GetUpdateDetails)
                 .WillByDefault(testing::Return(apiData));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-            .WillByDefault(testing::Return(false));
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(false));
 
             EXPECT_CALL(
                 this->mockWindows,
@@ -230,11 +290,8 @@ namespace UKControllerPluginUpdaterTest {
             ON_CALL(this->mockApi, GetUpdateDetails)
                 .WillByDefault(testing::Return(apiData));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(true));
-
-            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
-                .WillByDefault(testing::Return("3.0.0"));
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(false));
 
             EXPECT_CALL(
                 this->mockWindows,
@@ -291,13 +348,6 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            // Lockfile update
-            EXPECT_CALL(
-                this->mockWindows,
-                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true, false)
-            )
-                .Times(1);
-
             // Changelog
             EXPECT_CALL(
                 this->mockWindows,
@@ -320,11 +370,8 @@ namespace UKControllerPluginUpdaterTest {
             ON_CALL(this->mockApi, GetUpdateDetails)
                 .WillByDefault(testing::Return(apiData));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(true));
-
-            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
-                .WillByDefault(testing::Return("3.0.0"));
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(false));
 
             EXPECT_CALL(
                 this->mockWindows,
@@ -381,14 +428,6 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(1);
 
-            // Lockfile update
-            EXPECT_CALL(
-                this->mockWindows,
-                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true, false)
-            )
-                .Times(1);
-
-
             // View changelog
             EXPECT_CALL(
                 this->mockWindows,
@@ -411,11 +450,8 @@ namespace UKControllerPluginUpdaterTest {
             ON_CALL(this->mockApi, GetUpdateDetails)
                 .WillByDefault(testing::Return(apiData));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(true));
-
-            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
-                .WillByDefault(testing::Return("3.0.0"));
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(false));
 
             EXPECT_CALL(
                 this->mockWindows,
@@ -471,13 +507,6 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(0);
 
-            // Lockfile update
-            EXPECT_CALL(
-                this->mockWindows,
-                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true, false)
-            )
-                .Times(0);
-
             // Messagebox
             EXPECT_CALL(
                 this->mockWindows,
@@ -500,11 +529,8 @@ namespace UKControllerPluginUpdaterTest {
             ON_CALL(this->mockApi, GetUpdateDetails)
                 .WillByDefault(testing::Return(apiData));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(true));
-
-            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
-                .WillByDefault(testing::Return("3.0.0"));
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(false));
 
             EXPECT_CALL(
                 this->mockWindows,
@@ -560,13 +586,6 @@ namespace UKControllerPluginUpdaterTest {
             )
                 .Times(0);
 
-            // Lockfile update
-            EXPECT_CALL(
-                this->mockWindows,
-                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true, false)
-            )
-                .Times(0);
-
             // Messagebox
             EXPECT_CALL(
                 this->mockWindows,
@@ -589,11 +608,8 @@ namespace UKControllerPluginUpdaterTest {
             ON_CALL(this->mockApi, GetUpdateDetails)
                 .WillByDefault(testing::Return(apiData));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"version.lock")))
-                .WillByDefault(testing::Return(true));
-
-            ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"version.lock"), true))
-                .WillByDefault(testing::Return("3.0.0"));
+            ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(false));
 
             EXPECT_CALL(
                 this->mockWindows,
@@ -654,13 +670,6 @@ namespace UKControllerPluginUpdaterTest {
             EXPECT_CALL(
                 this->mockWindows,
                 WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
-            )
-                .Times(1);
-
-            // Lockfile update
-            EXPECT_CALL(
-                this->mockWindows,
-                WriteToFile(std::wstring(L"version.lock"), "3.0.1", true, false)
             )
                 .Times(1);
 

@@ -34,6 +34,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginLoader", 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUpdater", "UKControllerPluginUpdater\UKControllerPluginUpdater.vcxproj", "{A7D1D345-7C9D-44E4-9337-B8C265D0CE1E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F93F8C0-6773-4353-B7DD-B14DBD3F826B} = {6F93F8C0-6773-4353-B7DD-B14DBD3F826B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUtils", "UKControllerPluginUtils\UKControllerPluginUtils.vcxproj", "{141124E6-D339-464A-A759-0589A331B366}"
 EndProject
@@ -122,8 +125,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {E66A8B71-97BA-4E8F-BBF1-625958342CB5}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution
 		PrimaryVersionType = AssemblyInfoVersionAttribute

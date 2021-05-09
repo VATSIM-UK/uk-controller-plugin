@@ -36,11 +36,6 @@ namespace UKControllerPluginUtilsTest {
                 NiceMock<MockWinApi> mockWindows;
         };
 
-        TEST_F(PluginDataLocationsTest, ItHasAVersionLockfileLocation)
-        {
-            EXPECT_EQ(L"version.lock", GetVersionLockfileLocation());
-        }
-
         TEST_F(PluginDataLocationsTest, ItHasABinaryFolder)
         {
             EXPECT_EQ(L"bin", GetBinariesFolderRelativePath());
@@ -59,6 +54,11 @@ namespace UKControllerPluginUtilsTest {
         TEST_F(PluginDataLocationsTest, TheCoreBinaryHasARelativePath)
         {
             EXPECT_EQ(L"bin/UKControllerPluginCore.dll", GetCoreBinaryRelativePath());
+        }
+
+        TEST_F(PluginDataLocationsTest, TheOldCoreBinaryHasARelativePath)
+        {
+            EXPECT_EQ(L"bin/UKControllerPluginCore.dll.old", GetOldCoreBinaryRelativePath());
         }
 
         TEST_F(PluginDataLocationsTest, ItHasAPluginDataRoot)

@@ -12,6 +12,11 @@ std::wstring GetCoreBinaryRelativePath()
     return GetBinariesFolderRelativePath() + L"/UKControllerPluginCore.dll";
 }
 
+std::wstring GetOldCoreBinaryRelativePath()
+{
+    return GetCoreBinaryRelativePath() + L".old";
+}
+
 std::wstring GetOldUpdaterBinaryRelativePath()
 {
     return GetUpdaterBinaryRelativePath() + L".old";
@@ -55,7 +60,7 @@ void CreatePluginDataRoot(UKControllerPlugin::Windows::WinApiInterface& windows)
     }
 }
 
-std::wstring GetVersionLockfileLocation()
+std::wstring GetForceUpdateFileLocation()
 {
-    return L"version.lock";
+    return L"force.update.txt";
 }

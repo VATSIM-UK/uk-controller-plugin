@@ -13,6 +13,8 @@ using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Curl::CurlInterface;
 
+typedef const char* (CALLBACK* GETPLUGINVERSION)();
+
 bool CheckForUpdates(
     const ApiInterface& api,
     WinApiInterface& windows,
@@ -72,15 +74,32 @@ void PerformUpdates(
         LogError("Error when updating plugin binaries");
         throw std::exception("Failed to update UKCP binaries.");
     }
-
-    UpdateLockfile(windows, GetVersionFromJson(versionDetails));
 }
 
 bool UpdateRequired(WinApiInterface& windows, const nlohmann::json& versionDetails)
 {
-    return !windows.FileExists(GetVersionLockfileLocation()) ||
-        windows.ReadFromFile(GetVersionLockfileLocation()) != GetVersionFromJson(versionDetails) ||
-        !windows.FileExists(GetCoreBinaryRelativePath());
+    if (!windows.FileExists(GetCoreBinaryRelativePath())) {
+        return true;
+    }
+
+    HINSTANCE coreBinaryHandle = windows.LoadLibraryRelative(GetCoreBinaryRelativePath());
+    if (!coreBinaryHandle) {
+        return true;
+    }
+
+    GETPLUGINVERSION PluginVersion = reinterpret_cast<GETPLUGINVERSION>(
+        windows.GetFunctionPointerFromLibrary(coreBinaryHandle, "GetPluginVersion")
+    );
+
+    if (!PluginVersion) {
+        windows.UnloadLibrary(coreBinaryHandle);
+        return true;
+    }
+
+    const std::string coreBinaryVersion = PluginVersion();
+    windows.UnloadLibrary(coreBinaryHandle);
+
+    return GetVersionFromJson(versionDetails) != coreBinaryVersion;
 }
 
 void MoveOldUpdaterBinary(WinApiInterface& windows)
@@ -145,10 +164,4 @@ bool DisplayPreUpdateConsentNotification(WinApiInterface& windows, std::wstring 
 std::wstring GetOldUpdaterLocation()
 {
     return GetBinariesFolderRelativePath() + L"/UKControllerPluginUpdater.dll.old";
-}
-
-void UpdateLockfile(WinApiInterface& windows, std::string version)
-{
-    LogInfo("Updating version lockfile");
-    windows.WriteToFile(GetVersionLockfileLocation(), version, true, false);
 }

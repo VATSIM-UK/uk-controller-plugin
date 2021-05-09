@@ -81,6 +81,14 @@ UKCP_CORE_API void UnloadPlugin(void)
 }
 
 /*
+ * Returns the version of the plugin in use
+ */
+UKCP_CORE_API const char* GetPluginVersion()
+{
+    return PluginVersion::version;
+}
+
+/*
  *  Allows the plugin DLL to be loaded directly, so we don't have to worry about going via the loader.
  */
 UKCP_CORE_DIRECT_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)

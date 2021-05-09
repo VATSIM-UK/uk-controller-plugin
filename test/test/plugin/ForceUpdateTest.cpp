@@ -67,17 +67,67 @@ namespace UKControllerPluginTest {
             this->forceUpdate.Configure(123, "", {});
         }
 
-        TEST_F(ForceUpdateTest, FilesAreDeletedIfUserSelectsYes)
+        TEST_F(ForceUpdateTest, FilesAreMovedIfUserSelectsYes)
         {
             EXPECT_CALL(this->mockWindows, OpenMessageBox(::testing::_, ::testing::_, MB_YESNO | MB_ICONEXCLAMATION))
                 .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-            EXPECT_CALL(this->mockWindows, DeleteGivenFile(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            .Times(1)
+            .WillOnce(testing::Return(true));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                MoveFileToNewLocation(
+                    std::wstring(L"bin/UKControllerPluginUpdater.dll"),
+                    std::wstring(L"bin/UKControllerPluginUpdater.dll.old")
+                )
+            )
                 .Times(1);
 
-            EXPECT_CALL(this->mockWindows, DeleteGivenFile(std::wstring(L"version.lock")))
+            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .Times(1)
+                .WillOnce(testing::Return(true));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                MoveFileToNewLocation(
+                    std::wstring(L"bin/UKControllerPluginCore.dll"),
+                    std::wstring(L"bin/UKControllerPluginCore.dll.old")
+                )
+            )
                 .Times(1);
+
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(::testing::_, ::testing::_, MB_OK | MB_ICONINFORMATION))
+                .Times(1)
+                .WillOnce(testing::Return(IDOK));
+
+            this->forceUpdate.Configure(123, "", {});
+        }
+
+        TEST_F(ForceUpdateTest, FilesAreNotMovedIfNotPresentToBeMoved)
+        {
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(::testing::_, ::testing::_, MB_YESNO | MB_ICONEXCLAMATION))
+                .Times(1)
+                .WillOnce(testing::Return(IDYES));
+
+            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+                .Times(1)
+                .WillOnce(testing::Return(false));
+
+            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .Times(1)
+                .WillOnce(testing::Return(false));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                MoveFileToNewLocation(
+                    testing::_,
+                    testing::_
+                )
+            )
+                .Times(0);
 
             EXPECT_CALL(this->mockWindows, OpenMessageBox(::testing::_, ::testing::_, MB_OK | MB_ICONINFORMATION))
                 .Times(1)

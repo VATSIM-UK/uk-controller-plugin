@@ -51,10 +51,20 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            this->winApi.DeleteGivenFile(GetUpdaterBinaryRelativePath());
-            this->winApi.DeleteGivenFile(GetVersionLockfileLocation());
+            // Move the updater binary
+            if (this->winApi.FileExists(GetUpdaterBinaryRelativePath())) {
+                this->winApi.MoveFileToNewLocation(GetUpdaterBinaryRelativePath(), GetOldUpdaterBinaryRelativePath());
+            }
+
+            // Move the core binary
+            if (this->winApi.FileExists(GetCoreBinaryRelativePath())) {
+                this->winApi.MoveFileToNewLocation(GetCoreBinaryRelativePath(), GetOldCoreBinaryRelativePath());
+            }
+
+            std::wstring message = L"The plugin will force an update next time it is loaded, ";
+            message += L"please close all EuroScope instances and re-open.";
             this->winApi.OpenMessageBox(
-                L"The plugin will force an update next time it is loaded, provided no other instances are running.",
+                message.c_str(),
                 L"UKCP Update Information",
                 MB_OK | MB_ICONINFORMATION
             );
