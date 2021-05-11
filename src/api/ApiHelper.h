@@ -74,6 +74,21 @@ namespace UKControllerPlugin {
                 nlohmann::json GetUnreadNotifications() const override;
                 nlohmann::json SyncPluginEvents() const override;
                 nlohmann::json GetLatestPluginEvents(int lastEventId) const override;
+                void AcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const override;
+                void RejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const override;
+                void ApproveDepartureReleaseRequest(
+                    int releaseId,
+                    int controllerPositionId,
+                    std::chrono::system_clock::time_point releasedAt,
+                    int expiresInSeconds
+                ) const override;
+                nlohmann::json RequestDepartureRelease(
+                    std::string callsign,
+                    int requestingControllerId,
+                    int targetControllerId,
+                    int expiresInSeconds
+                ) const override;
+                void CancelDepartureReleaseRequest(int releaseId) const override;
                 void ReadNotification(int id) const override;
                 int UpdateCheck(std::string version) const override;
                 void SetApiKey(std::string key) override;

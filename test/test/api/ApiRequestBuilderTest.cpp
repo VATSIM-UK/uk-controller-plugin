@@ -464,12 +464,12 @@ namespace UKControllerPluginUtilsTest {
             nlohmann::json expectedData;
             expectedData["callsign"] = "BAW123";
             expectedData["requesting_controller_id"] = 1;
-            expectedData["target_controller_ids"] = std::set<int>{3, 4};
+            expectedData["target_controller_id"] = 3;
             expectedData["expires_in_seconds"] = 54;
             expectedRequest.SetBody(expectedData.dump());
 
             EXPECT_TRUE(
-                expectedRequest == this->builder.BuildDepartureReleaseRequest("BAW123", 1, std::set<int>{3, 4}, 54)
+                expectedRequest == this->builder.BuildDepartureReleaseRequest("BAW123", 1, 3, 54)
             );
         }
 
@@ -536,6 +536,22 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_TRUE(
                 expectedRequest == this->builder.BuildAcknowledgeDepartureReleaseRequest(1, 2)
+            );
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsCancelDepartureReleaseRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/departure/release/request/1",
+                CurlRequest::METHOD_DELETE
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildCancelReleaseRequest(1)
             );
         }
     }  // namespace Api

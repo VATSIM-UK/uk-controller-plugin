@@ -379,7 +379,7 @@ namespace UKControllerPlugin {
         CurlRequest ApiRequestBuilder::BuildDepartureReleaseRequest(
             std::string callsign,
             int requestingControllerId,
-            std::set<int> targetControllers,
+            int targetController,
             int expiresInSeconds
         ) const
         {
@@ -388,11 +388,21 @@ namespace UKControllerPlugin {
             nlohmann::json body;
             body["callsign"] = callsign;
             body["requesting_controller_id"] = requestingControllerId;
-            body["target_controller_ids"] = targetControllers;
+            body["target_controller_id"] = targetController;
             body["expires_in_seconds"] = expiresInSeconds;
             request.SetBody(body.dump());
 
             return this->AddCommonHeaders(request);
+        }
+
+        CurlRequest ApiRequestBuilder::BuildCancelReleaseRequest(int releaseId) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(
+                    this->apiDomain + "/departure/release/request/" + std::to_string(releaseId),
+                    CurlRequest::METHOD_DELETE
+                )
+            );
         }
 
         CurlRequest ApiRequestBuilder::BuildEnrouteReleaseRequest(

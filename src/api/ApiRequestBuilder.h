@@ -88,9 +88,10 @@ namespace UKControllerPlugin {
                 Curl::CurlRequest BuildDepartureReleaseRequest(
                     std::string callsign,
                     int requestingControllerId,
-                    std::set<int> targetControllers,
+                    int targetControllerId,
                     int expiresInSeconds
                 ) const;
+                Curl::CurlRequest BuildCancelReleaseRequest(int releaseId) const;
                 std::string GetApiDomain(void) const;
                 std::string GetApiKey(void) const;
                 void SetApiDomain(std::string domain);
