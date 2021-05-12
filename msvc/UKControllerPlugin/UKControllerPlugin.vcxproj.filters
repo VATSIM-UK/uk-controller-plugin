@@ -1052,6 +1052,9 @@
     <ClInclude Include="..\..\src\plugin\ForceUpdate.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseRequest.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1808,6 +1811,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\plugin\ForceUpdate.cpp">
       <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseRequest.cpp">
+      <Filter>src\releases</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
