@@ -12,6 +12,7 @@ namespace UKControllerPlugin {
         class WebsocketEventProcessorInterface
         {
             public:
+                virtual ~WebsocketEventProcessorInterface() = default;
 
                 /*
                     Process a message
