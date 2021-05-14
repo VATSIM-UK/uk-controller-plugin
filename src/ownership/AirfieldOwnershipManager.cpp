@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
         )
             : airfields(airfields),
             activeCallsigns(activeCallsigns),
-            notFoundControllerPosition("", 199.998, "XXX", {}),
+            notFoundControllerPosition(-1, "", 199.998, {}, true, false),
             notFoundCallsign("", "", this->notFoundControllerPosition)
         {
 

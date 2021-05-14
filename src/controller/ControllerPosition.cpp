@@ -4,35 +4,40 @@
 namespace UKControllerPlugin {
     namespace Controller {
         ControllerPosition::ControllerPosition(
+            int id,
             std::string callsign,
             double frequency,
-            std::string type,
-            std::vector<std::string> topdown
-        ) {
-            this->callsign = callsign;
-            this->frequency = frequency;
-            this->type = type;
-            this->topdown = topdown;
+            std::vector<std::string> topdown,
+            bool requestsDepartureReleases,
+            bool receivesDepartureReleases
+        ): id(id), requestsDepartureReleases(requestsDepartureReleases),
+           receivesDepartureReleases(receivesDepartureReleases), callsign(callsign),
+           frequency(frequency), topdown(std::move(topdown))
+        { }
+
+        int ControllerPosition::GetId() const
+        {
+            return this->id;
         }
 
-        std::string ControllerPosition::GetUnit(void) const
+        std::string ControllerPosition::GetUnit() const
         {
             return this->callsign.substr(0, this->callsign.find('_'));
         }
 
-        std::string ControllerPosition::GetCallsign(void) const
+        std::string ControllerPosition::GetCallsign() const
         {
             return this->callsign;
         }
 
-        double ControllerPosition::GetFrequency(void) const
+        double ControllerPosition::GetFrequency() const
         {
             return this->frequency;
         }
 
-        std::string ControllerPosition::GetType(void) const
+        std::string ControllerPosition::GetType() const
         {
-            return this->type;
+            return callsign.substr(this->callsign.size() - 3, this->callsign.size());
         }
 
         bool ControllerPosition::HasTopdownAirfield(std::string icao) const
@@ -44,16 +49,26 @@ namespace UKControllerPlugin {
             ) != this->topdown.cend();
         }
 
-        std::vector<std::string> ControllerPosition::GetTopdown(void) const
+        bool ControllerPosition::RequestsDepartureReleases() const
+        {
+            return this->requestsDepartureReleases;
+        }
+
+        bool ControllerPosition::ReceivesDepartureReleases() const
+        {
+            return this->receivesDepartureReleases;
+        }
+
+        std::vector<std::string> ControllerPosition::GetTopdown() const
         {
             return this->topdown;
         }
 
-        bool ControllerPosition::operator==(const ControllerPosition & position) const
+        bool ControllerPosition::operator==(const ControllerPosition& position) const
         {
-            return fabs(this->frequency - position.GetFrequency()) < 0.001 &&
-                this->callsign.compare(position.GetCallsign()) == 0 &&
-                this->type.compare(position.GetType()) == 0;
+            return this->GetId() == position.GetId() &&
+                fabs(this->frequency - position.GetFrequency()) < 0.001 &&
+                this->callsign.compare(position.GetCallsign()) == 0;
         }
     }  // namespace Controller
 }  // namespace UKControllerPlugin

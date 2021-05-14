@@ -31,7 +31,7 @@ namespace UKControllerPluginTest {
             public:
                 PressureMonitorTest()
                     : userSetting(mockUserSettingProvider), messager(mockPlugin), monitor(messager, activeCallsigns),
-                    gatwickTower("EGKK_TWR", 124.22, "TWR", {"EGKK"})
+                      gatwickTower(1, "EGKK_TWR", 124.22, {"EGKK"}, true, false)
                 {
                     this->activeCallsigns.AddUserCallsign(
                         ActiveCallsign(

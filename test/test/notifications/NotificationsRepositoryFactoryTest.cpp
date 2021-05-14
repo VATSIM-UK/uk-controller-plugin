@@ -41,26 +41,32 @@ namespace UKControllerPluginTest {
                     std::vector<std::string> handoffs = { "EGKK" };
 
                     std::unique_ptr<ControllerPosition>position1 = std::make_unique<ControllerPosition>(
+                        1,
                         "EGKK_DEL",
                         121.950,
-                        "DEL",
-                        handoffs
+                        handoffs,
+                        true,
+                        false
                     );
                     this->position1 = position1.get();
 
                     std::unique_ptr<ControllerPosition>position2 = std::make_unique<ControllerPosition>(
+                        2,
                         "EGKK_TWR",
                         124.220,
-                        "TWR",
-                        handoffs
+                        handoffs,
+                        true,
+                        false
                     );
                     this->position2 = position2.get();
 
                     std::unique_ptr<ControllerPosition> position3 = std::make_unique<ControllerPosition>(
+                        3,
                         "EGKK_APP",
                         126.820,
-                        "APP",
-                        handoffs
+                        handoffs,
+                        true,
+                        false
                     );
                     this->position3 = position3.get();
 
