@@ -1,5 +1,6 @@
 #pragma once
 #include "websocket/WebsocketEventProcessorInterface.h"
+#include "timedevent/AbstractTimedEvent.h"
 
 namespace UKControllerPlugin {
     namespace Controller {
@@ -13,7 +14,8 @@ namespace UKControllerPlugin {
         /*
             Handles events relating to departure releases.
         */
-        class DepartureReleaseEventHandler : public Websocket::WebsocketEventProcessorInterface
+        class DepartureReleaseEventHandler : public Websocket::WebsocketEventProcessorInterface,
+                                             public TimedEvent::AbstractTimedEvent
         {
             public:
                 explicit DepartureReleaseEventHandler(const Controller::ControllerPositionCollection& controllers);
@@ -21,6 +23,7 @@ namespace UKControllerPlugin {
                 std::set<Websocket::WebsocketSubscription> GetSubscriptions() const override;
                 void AddReleaseRequest(std::shared_ptr<DepartureReleaseRequest> request);
                 std::shared_ptr<DepartureReleaseRequest> GetReleaseRequest(int id) const;
+                void TimedEventTrigger() override;
 
             private:
                 void ProcessDepartureReleaseRequestedMessage(const nlohmann::json& data);
@@ -34,6 +37,7 @@ namespace UKControllerPlugin {
                 bool DepartureReleaseRejectedMessageValid(const nlohmann::json& data) const;
                 bool DepartureReleaseApprovedMessageValid(const nlohmann::json& data) const;
                 bool DepartureReleaseCancelMessageValid(const nlohmann::json& data) const;
+                bool ReleaseShouldBeRemoved(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest);
 
                 // Release requests in progress
                 std::map<int, std::shared_ptr<DepartureReleaseRequest>> releaseRequests;

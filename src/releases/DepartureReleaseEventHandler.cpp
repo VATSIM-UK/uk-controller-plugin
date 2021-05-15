@@ -106,6 +106,26 @@ namespace UKControllerPlugin {
             return this->DepartureReleaseAcknowledgedMessageValid(data);
         }
 
+        /*
+         * Whether releases should be removed from the lists.
+         */
+        bool DepartureReleaseEventHandler::ReleaseShouldBeRemoved(
+            const std::shared_ptr<DepartureReleaseRequest>& releaseRequest
+        )
+        {
+            if (releaseRequest->Approved()) {
+                return releaseRequest->ReleaseExpiryTime() + std::chrono::seconds(90) <
+                    std::chrono::system_clock::now();
+            }
+
+            if (releaseRequest->Rejected()) {
+                return releaseRequest->RejectedAtTime() + std::chrono::seconds(90) <
+                    std::chrono::system_clock::now();
+            }
+
+            return releaseRequest->RequestExpiryTime() < std::chrono::system_clock::now();
+        }
+
         /**
          * Create a new departure release request.
          */
@@ -178,6 +198,24 @@ namespace UKControllerPlugin {
             }
 
             this->releaseRequests.erase(data.at("id").get<int>());
+        }
+
+        /*
+         * Remove releases that have expired and no longer need
+         * to be displayed.
+         */
+        void DepartureReleaseEventHandler::TimedEventTrigger()
+        {
+            for (
+                auto release = this->releaseRequests.cbegin();
+                release != this->releaseRequests.cend();
+            ) {
+                if (this->ReleaseShouldBeRemoved(release->second)) {
+                    release = this->releaseRequests.erase(release);
+                } else {
+                    ++release;
+                }
+            }
         }
     }  // namespace Releases
 }  // namespace UKControllerPlugin

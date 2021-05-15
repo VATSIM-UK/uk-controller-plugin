@@ -6,6 +6,7 @@
 #include "time/ParseTimeStrings.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
+#include "time/SystemClock.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
@@ -52,6 +53,7 @@ namespace UKControllerPluginTest {
                         )
                     );
                     handler.AddReleaseRequest(request);
+                    UKControllerPlugin::Time::SetTestNow(std::chrono::system_clock::now());
                 }
 
                 ControllerPositionCollection controllers;
@@ -777,6 +779,103 @@ namespace UKControllerPluginTest {
 
             handler.ProcessWebsocketMessage(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntRemovePendingReleases)
+        {
+            std::shared_ptr<DepartureReleaseRequest> relevantRelease = std::make_shared<DepartureReleaseRequest>(
+                4,
+                "BAW999",
+                5,
+                6,
+                UKControllerPlugin::Time::TimeNow() + std::chrono::minutes(5)
+            );
+            handler.AddReleaseRequest(relevantRelease);
+            handler.TimedEventTrigger();
+            EXPECT_EQ(relevantRelease, handler.GetReleaseRequest(4));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItRemovesPendingReleasesThatHaveExpired)
+        {
+            std::shared_ptr<DepartureReleaseRequest> relevantRelease = std::make_shared<DepartureReleaseRequest>(
+                4,
+                "BAW999",
+                5,
+                6,
+                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(5)
+            );
+            handler.AddReleaseRequest(relevantRelease);
+            handler.TimedEventTrigger();
+            EXPECT_EQ(nullptr, handler.GetReleaseRequest(4));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntRemoveRecentlyExpiredApprovals)
+        {
+            std::shared_ptr<DepartureReleaseRequest> relevantRelease = std::make_shared<DepartureReleaseRequest>(
+                4,
+                "BAW999",
+                5,
+                6,
+                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(1)
+            );
+            relevantRelease->Approve(
+                std::chrono::system_clock::now(),
+                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(80)
+            );
+            handler.AddReleaseRequest(relevantRelease);
+            handler.TimedEventTrigger();
+            EXPECT_EQ(relevantRelease, handler.GetReleaseRequest(4));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItExpiresRemovesThatHaveApprovalExpired)
+        {
+            std::shared_ptr<DepartureReleaseRequest> relevantRelease = std::make_shared<DepartureReleaseRequest>(
+                4,
+                "BAW999",
+                5,
+                6,
+                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(1)
+            );
+            relevantRelease->Approve(
+                std::chrono::system_clock::now(),
+                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(91)
+            );
+            handler.AddReleaseRequest(relevantRelease);
+            handler.TimedEventTrigger();
+            EXPECT_EQ(nullptr, handler.GetReleaseRequest(4));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntRemoveRecentlyRejectedReleases)
+        {
+            std::shared_ptr<DepartureReleaseRequest> relevantRelease = std::make_shared<DepartureReleaseRequest>(
+                4,
+                "BAW999",
+                5,
+                6,
+                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(1)
+            );
+            relevantRelease->Reject();
+            handler.AddReleaseRequest(relevantRelease);
+            handler.TimedEventTrigger();
+            EXPECT_EQ(relevantRelease, handler.GetReleaseRequest(4));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItExpiresReleasesThatHaveRejectionExpired)
+        {
+            std::shared_ptr<DepartureReleaseRequest> relevantRelease = std::make_shared<DepartureReleaseRequest>(
+                4,
+                "BAW999",
+                5,
+                6,
+                UKControllerPlugin::Time::TimeNow() + std::chrono::seconds(5)
+            );
+            relevantRelease->Approve(
+                std::chrono::system_clock::now(),
+                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(91)
+            );
+            handler.AddReleaseRequest(relevantRelease);
+            handler.TimedEventTrigger();
+            EXPECT_EQ(nullptr, handler.GetReleaseRequest(4));
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

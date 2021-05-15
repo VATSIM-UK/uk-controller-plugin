@@ -6,11 +6,13 @@
 #include "releases/EnrouteReleaseTypesSerializer.h"
 #include "tag/TagFunction.h"
 #include "euroscope/CallbackFunction.h"
+#include "releases/DepartureReleaseEventHandler.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Tag::TagFunction;
+using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -21,7 +23,7 @@ namespace UKControllerPlugin {
 
         void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
         {
-            // Load the release types
+            // Load everything to do with ENROUTE releases
             std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes;
             from_json(
                 dependencies.LoadDependency(enrouteReleaseTypesDependency, nlohmann::json::array()),
@@ -101,6 +103,16 @@ namespace UKControllerPlugin {
             container.tagHandler->RegisterTagItem(handler->enrouteReleasePointOrBlankTagItemId, handler);
             container.timedHandler->RegisterEvent(handler, 10);
             container.controllerHandoffHandlers->RegisterHandler(handler);
+
+
+            // Everything to do with DEPARTURE releases
+            std::shared_ptr<DepartureReleaseEventHandler> departureHandler =
+                std::make_shared<DepartureReleaseEventHandler>(
+                    *container.controllerPositions
+                );
+
+            // Add to handlers
+            container.timedHandler->RegisterEvent(departureHandler, 15);
         }
     }  // namespace Releases
 }  // namespace UKControllerPlugin

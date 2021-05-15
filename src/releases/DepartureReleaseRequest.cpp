@@ -1,5 +1,6 @@
 #include "pch/stdafx.h"
 #include "releases/DepartureReleaseRequest.h"
+#include "time/SystemClock.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -18,12 +19,12 @@ namespace UKControllerPlugin {
 
         void DepartureReleaseRequest::Acknowledge()
         {
-            this->acknowledgedAtTime = std::chrono::system_clock::now();
+            this->acknowledgedAtTime = Time::TimeNow();
         }
 
         void DepartureReleaseRequest::Reject()
         {
-            this->rejectedAtTime = std::chrono::system_clock::now();
+            this->rejectedAtTime = Time::TimeNow();
         }
 
         void DepartureReleaseRequest::Approve(

@@ -95,8 +95,9 @@ namespace UKControllerPluginTest {
         TEST_F(ReleaseModuleTest, ItRegistersForTimedEvents)
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
-            EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
+            EXPECT_EQ(2, this->container.timedHandler->CountHandlers());
             EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(10));
+            EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(15));
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersForHandoffEvents)
