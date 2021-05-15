@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "api/ApiHelper.h"
 #include "curl/CurlInterface.h"
 #include "api/ApiException.h"
@@ -8,7 +8,6 @@
 #include "helper/ApiRequestHelperFunctions.h"
 #include "api/ApiNotFoundException.h"
 #include "api/ApiNotAuthorisedException.h"
-#include "mock/MockWinApi.h"
 #include "squawk/ApiSquawkAllocation.h"
 #include "srd/SrdSearchParameters.h"
 
@@ -22,7 +21,6 @@ using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
-using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using UKControllerPlugin::Srd::SrdSearchParameters;
 using ::testing::Test;
@@ -30,7 +28,7 @@ using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::_;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
 namespace Api {
 
 class ApiHelperTest : public Test
@@ -38,13 +36,12 @@ class ApiHelperTest : public Test
     public:
 
         ApiHelperTest()
-            : helper(mockCurlApi, GetApiRequestBuilder(), mockWinApi)
+            : helper(mockCurlApi, GetApiRequestBuilder())
         {
 
         }
 
         ApiHelper helper;
-        NiceMock<MockWinApi> mockWinApi;
         NiceMock<MockCurlApi> mockCurlApi;
 };
 
@@ -925,5 +922,25 @@ TEST_F(ApiHelperTest, GetLatestPluginEventsMakesRequest)
 
     EXPECT_EQ(responseData, this->helper.GetLatestPluginEvents(5));
 }
+
+TEST_F(ApiHelperTest, GetUpdateDetailsReturnsData)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiGetUriCurlRequest(
+            "http://ukcp.test.com/version/latest",
+            CurlRequest::METHOD_GET
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.GetUpdateDetails());
+}
 }  // namespace Api
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

@@ -45,7 +45,7 @@ namespace UKControllerPluginTest {
                     : kkApp("EGKK_APP", 126.820, "APP", { "EGKK" }),
                     lonS("LON_S_CTR", 129.420, "CTR", { "EGLL" }),
                     airfieldOwnership(this->airfields, this->activeCallsigns),
-                    assignment(this->plans, this->pluginLoopback, this->airfieldOwnership, this->activeCallsigns, false)
+                    assignment(this->plans, this->pluginLoopback, this->airfieldOwnership, this->activeCallsigns)
                 {
 
                 };
@@ -939,11 +939,6 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(true));
 
             EXPECT_TRUE(this->assignment.ForceAssignmentOrNoSquawkAssigned(*this->mockFlightplan));
-        }
-
-        TEST_F(SquawkAssignmentTest, ItKnowsWhetherSquawksAreDisabled)
-        {
-            EXPECT_FALSE(this->assignment.disabled);
         }
 
         TEST_F(SquawkAssignmentTest, CircuitAssignmentReturnsFalseOnNotVfr)

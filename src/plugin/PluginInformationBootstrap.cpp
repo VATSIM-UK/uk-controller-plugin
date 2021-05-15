@@ -2,6 +2,8 @@
 #include "plugin/PluginInformationBootstrap.h"
 #include "plugin/PluginInformationMessage.h"
 #include "plugin/PluginHelpPage.h"
+#include "plugin/PluginChangelog.h"
+#include "plugin/ForceUpdate.h"
 #include "euroscope/CallbackFunction.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -22,7 +24,7 @@ namespace UKControllerPlugin {
                 helpCallbackId
                 );
 
-                // Create callback
+            // Create callback
             CallbackFunction helpCallback(
                 helpCallbackId,
                 "Plugin Help Page",
@@ -39,6 +41,56 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(helpCallback);
             container.commandHandlers->RegisterHandler(helpPage);
             displays.RegisterDisplay(helpPage);
+
+            // Create the force update toggle
+            int forceUpdateCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+            std::shared_ptr<ForceUpdate> forceUpdate = std::make_shared<ForceUpdate>(
+                *container.windows,
+                forceUpdateCallbackId
+            );
+
+            // Create callback
+            CallbackFunction forceUpdateCallback(
+                forceUpdateCallbackId,
+                "Plugin Force Update",
+                std::bind(
+                    &ForceUpdate::Configure,
+                    forceUpdate,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+
+            // Register with handlers
+            container.pluginFunctionHandlers->RegisterFunctionCall(forceUpdateCallback);
+            container.commandHandlers->RegisterHandler(forceUpdate);
+            displays.RegisterDisplay(forceUpdate);
+
+            // Create the plugin help page toggle
+            int changelogCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+            std::shared_ptr<PluginChangelog> changeLog = std::make_shared<PluginChangelog>(
+                *container.windows,
+                changelogCallbackId
+            );
+
+            // Create callback
+            CallbackFunction changelogCallback(
+                changelogCallbackId,
+                "Plugin Changelog",
+                std::bind(
+                    &PluginChangelog::Configure,
+                    changeLog,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+
+            // Register with handlers
+            container.pluginFunctionHandlers->RegisterFunctionCall(changelogCallback);
+            container.commandHandlers->RegisterHandler(changeLog);
+            displays.RegisterDisplay(changeLog);
 
             // Create the plugin information message box
             int informationCallback = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();

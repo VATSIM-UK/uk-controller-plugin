@@ -1,9 +1,10 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "curl/CurlRequest.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest
+{
     namespace Curl {
 
         TEST(CurlRequestTest, TestConstructorSetsUri)
@@ -146,4 +147,4 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(request1 == request2);
         }
     }  // namespace Curl
-}  // namespace UKControllerPluginTest
+} // namespace UKControllerPluginUtilsTest

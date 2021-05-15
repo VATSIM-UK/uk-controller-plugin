@@ -10,6 +10,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UKControllerPluginTestingUtils\UKControllerPluginTestingUtils.vcxproj">
+      <Project>{098f2947-0522-4b20-8f55-66c9336efc0f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\UKControllerPluginUtils\UKControllerPluginUtils.vcxproj">
+      <Project>{141124e6-d339-464a-a759-0589a331b366}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\UKControllerPlugin\UKControllerPlugin.vcxproj">
       <Project>{6f93f8c0-6773-4353-b7dd-b14dbd3f826b}</Project>
     </ProjectReference>
@@ -30,13 +36,7 @@
     <ClCompile Include="..\..\test\test\airfield\AirfieldCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\AirfieldModelTest.cpp" />
     <ClCompile Include="..\..\test\test\airfield\NormaliseSidTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp" />
     <ClCompile Include="..\..\test\test\api\ApiConfigurationMenuItemTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiHelperTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiRequestBuilderTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiResponseFactoryTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiResponseTest.cpp" />
-    <ClCompile Include="..\..\test\test\api\ApiResponseValidatorTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\BootstrapWarningMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\CollectionBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\EventHandlerCollectionBootstrapTest.cpp" />
@@ -62,16 +62,11 @@
     <ClCompile Include="..\..\test\test\countdown\GlobalCountdownSettingsFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\TimerConfigurationManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\countdown\TimerConfigurationTest.cpp" />
-    <ClCompile Include="..\..\test\test\curl\CurlRequestTest.cpp" />
-    <ClCompile Include="..\..\test\test\curl\CurlResponseTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DatablockBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DatablockFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\datablock\DisplayTimeTest.cpp" />
     <ClCompile Include="..\..\test\test\dependency\DependencyLoaderTest.cpp" />
     <ClCompile Include="..\..\test\test\dependency\UpdateDependenciesTest.cpp" />
-    <ClCompile Include="..\..\test\test\dialog\CompareDialogsTest.cpp" />
-    <ClCompile Include="..\..\test\test\dialog\DialogDataTest.cpp" />
-    <ClCompile Include="..\..\test\test\dialog\DialogManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\AsrEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\CallbackFunctionTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\CompareFunctionsTest.cpp" />
@@ -93,7 +88,6 @@
     <ClCompile Include="..\..\test\test\handoff\HandoffCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\handoff\HandoffEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\handoff\HandoffModuleTest.cpp" />
-    <ClCompile Include="..\..\test\test\helper\HelperFunctionsTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\AircraftHistoryTrailTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\historytrail\HistoryTrailModuleTest.cpp" />
@@ -147,7 +141,6 @@
     <ClCompile Include="..\..\test\test\intention\ShannonAirfieldGroupTest.cpp" />
     <ClCompile Include="..\..\test\test\login\LoginModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\login\LoginTest.cpp" />
-    <ClCompile Include="..\..\test\test\log\LoggerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\message\UserMessagerTest.cpp" />
     <ClCompile Include="..\..\test\test\euroscope\UserSettingTest.cpp" />
@@ -184,7 +177,9 @@
     <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\ownership\AirfieldsOwnedQueryMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\ownership\AirfieldOwnershipHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\plugin\ForceUpdateTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\FunctionCallEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\plugin\PluginChangelogTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\PluginHelpPageTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\PluginInformationBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\PluginInformationMessageTest.cpp" />
@@ -246,7 +241,6 @@
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\TimedEventCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\time\ParseTimeStringsTest.cpp" />
-    <ClCompile Include="..\..\test\test\update\PluginUpdateCheckerTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\CreateWakeMappingsTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryMapperTest.cpp" />
@@ -301,8 +295,6 @@
     <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />
-    <ClCompile Include="..\..\test\test\bootstrap\LocateApiSettingsTest.cpp" />
-    <ClCompile Include="..\..\test\test\bootstrap\DuplicatePluginTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -345,18 +337,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(LibraryPath);</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_DEBUG_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\obj\test\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(LibraryPath);</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(CURL_INCLUDEDIR);$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\obj\test\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -380,10 +372,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl32MDd.lib;libcrypto32MDd.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;libssl32MDd.lib;libcrypto32MDd.lib;libcurl_a_debug.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile />
-      <AdditionalOptions>"$(SolutionDir)..\obj\plugin\$(Configuration)\*.obj"</AdditionalOptions>
+      <AdditionalOptions>"$(SolutionDir)..\obj\UKControllerPlugin\$(Configuration)\*.obj"</AdditionalOptions>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
@@ -396,7 +388,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\third_party;$(BOOST_ROOT);$(OPENSSL_ROOT);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\lib\plugin\include;$(SolutionDir)..\test;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\third_party;$(BOOST_ROOT);$(OPENSSL_ROOT);$(CURL_INCLUDEDIR)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ForcedIncludeFiles>pch/pch.h</ForcedIncludeFiles>
@@ -409,10 +401,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePluginDll.lib;libcurl_a.lib;Winmm.lib;dbghelp.lib;gdiplus.lib;libssl32MD.lib;libcrypto32MD.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;Winmm.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePluginDll.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;libssl32MD.lib;libcrypto32MD.lib;libcurl_a.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>$(SolutionDir)..\lib\test;</AdditionalLibraryDirectories>
-      <AdditionalOptions>"$(SolutionDir)..\obj\plugin\$(Configuration)\*.obj"</AdditionalOptions>
+      <AdditionalOptions>"$(SolutionDir)..\obj\UKControllerPlugin\$(Configuration)\*.obj"</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

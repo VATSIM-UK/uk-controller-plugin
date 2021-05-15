@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "utils/pch.h"
 #include "api/ApiHelper.h"
 #include "curl/CurlInterface.h"
 #include "api/ApiException.h"
@@ -8,7 +8,6 @@
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
 #include "squawk/SquawkValidator.h"
-#include "windows/WinApiInterface.h"
 
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Curl::CurlResponse;
@@ -19,7 +18,6 @@ using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
 using UKControllerPlugin::Squawk::SquawkValidator;
-using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using UKControllerPlugin::Srd::SrdSearchParameters;
 
@@ -28,9 +26,8 @@ namespace UKControllerPlugin {
 
         ApiHelper::ApiHelper(
             CurlInterface & curlApi,
-            ApiRequestBuilder requestBuilder,
-            WinApiInterface & winApi
-        ) : curlApi(curlApi), requestBuilder(requestBuilder), winApi(winApi)
+            ApiRequestBuilder requestBuilder
+        ) : requestBuilder(requestBuilder), curlApi(curlApi)
         {
 
         }
@@ -311,6 +308,11 @@ namespace UKControllerPlugin {
                     releasePoint
                 )
             );
+        }
+
+        nlohmann::json ApiHelper::GetUpdateDetails() const
+        {
+            return this->MakeApiRequest(this->requestBuilder.BuildLatestGithubVersionRequest()).GetRawData();
         }
 
         nlohmann::json ApiHelper::GetAllNotifications() const

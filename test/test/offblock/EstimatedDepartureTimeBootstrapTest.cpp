@@ -10,7 +10,7 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using ::testing::Test;
 
-namespace UKControllerPlugin {
+namespace UKControllerPluginTest {
     namespace Datablock {
 
         class EstimatedDepartureTimeBootstrapTest : public Test
@@ -44,4 +44,4 @@ namespace UKControllerPlugin {
             EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
         }
     }  // namespace Datablock
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPluginTest

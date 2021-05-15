@@ -24,8 +24,7 @@ namespace UKControllerPlugin {
             public:
                 ApiHelper(
                     UKControllerPlugin::Curl::CurlInterface & curlApi,
-                    UKControllerPlugin::Api::ApiRequestBuilder requestBuilder,
-                    UKControllerPlugin::Windows::WinApiInterface & winApi
+                    ApiRequestBuilder requestBuilder
                 );
 
                 UKControllerPlugin::Squawk::ApiSquawkAllocation CreateGeneralSquawkAssignment(
@@ -53,7 +52,7 @@ namespace UKControllerPlugin {
                 nlohmann::json GetMinStackLevels(void) const override;
                 nlohmann::json GetRegionalPressures(void) const override;
                 nlohmann::json GetUri(std::string uri) const;
-                nlohmann::json SearchSrd(UKControllerPlugin::Srd::SrdSearchParameters params) const;
+                nlohmann::json SearchSrd(Srd::SrdSearchParameters params) const override;
                 nlohmann::json GetAssignedStands(void) const override;
                 void AssignStandToAircraft(std::string callsign, int standId) const override;
                 void DeleteStandAssignmentForAircraft(std::string callsign) const override;
@@ -70,6 +69,7 @@ namespace UKControllerPlugin {
                     int releaseType,
                     std::string releasePoint
                 ) const override;
+                nlohmann::json GetUpdateDetails() const override;
                 nlohmann::json GetAllNotifications() const override;
                 nlohmann::json GetUnreadNotifications() const override;
                 nlohmann::json SyncPluginEvents() const override;
@@ -101,9 +101,6 @@ namespace UKControllerPlugin {
                     const ApiResponse response,
                     std::string callsign
                 ) const;
-
-                // For doing things on the filesystem, if we really need to
-                UKControllerPlugin::Windows::WinApiInterface & winApi;
 
                 // The API request builder, that builds our CurlRequests
                 UKControllerPlugin::Api::ApiRequestBuilder requestBuilder;

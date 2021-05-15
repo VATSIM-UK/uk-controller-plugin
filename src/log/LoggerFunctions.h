@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/stdafx.h"
 
 void LogCritical(std::string message);
 void LogDebug(std::string message);

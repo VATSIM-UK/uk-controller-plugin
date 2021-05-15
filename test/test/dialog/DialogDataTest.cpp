@@ -1,9 +1,9 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "dialog/DialogData.h"
 
 using UKControllerPlugin::Dialog::DialogData;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Dialog {
 
         TEST(DialogDataTest, EqualityReturnsTrueBothEqual)
@@ -20,4 +20,4 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(dialog1 == dialog2);
         }
     }  // namespace Dialog
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

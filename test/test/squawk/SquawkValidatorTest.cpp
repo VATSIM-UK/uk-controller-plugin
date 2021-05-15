@@ -1,9 +1,9 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "squawk/SquawkValidator.h"
 
 using UKControllerPlugin::Squawk::SquawkValidator;
 
-namespace UKControllerPlugin {
+namespace UKControllerPluginTest {
     namespace Squawk {
         TEST(SquawkValidator, ValidSquawkReturnsFalseTooShort)
         {
@@ -80,4 +80,4 @@ namespace UKControllerPlugin {
             EXPECT_FALSE(SquawkValidator::AllowedSquawk("0200"));
         }
     }  // namespace Squawk
-}  // namespace UKControllerPlugin
+}  // namespace UKControllerPluginTest

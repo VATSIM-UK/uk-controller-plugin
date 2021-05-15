@@ -1,11 +1,10 @@
-#include "pch/stdafx.h"
+#include "utils/pch.h"
 #include "api/ApiAuthChecker.h"
 #include "api/ApiInterface.h"
 #include "api/ApiResponse.h"
-#include "api/ApiRequestBuilder.h"
 #include "windows/WinApiInterface.h"
 #include "api/ApiNotAuthorisedException.h"
-#include "bootstrap/LocateApiSettings.h"
+#include "api/LocateApiSettings.h"
 #include "setting/SettingRepository.h"
 
 using UKControllerPlugin::Api::ApiInterface;
@@ -13,7 +12,7 @@ using UKControllerPlugin::Api::ApiResponse;
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
-using UKControllerPlugin::Bootstrap::UserRequestedKeyUpdateNoPrompts;
+using UKControllerPlugin::Api::UserRequestedKeyUpdateNoPrompts;
 using UKControllerPlugin::Setting::SettingRepository;
 
 namespace UKControllerPlugin {

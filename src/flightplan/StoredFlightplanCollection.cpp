@@ -51,7 +51,7 @@ namespace UKControllerPlugin {
                 it != this->flightplans.end();
             ) {
                 if (it->second->HasTimedOut()) {
-                    LogInfo("Stored flightplan for " + it->second->GetCallsign() + " has timed out");
+                    LogDebug("Stored flightplan for " + it->second->GetCallsign() + " has timed out");
                     this->flightplans.erase(it++);
                 } else {
                     ++it;
@@ -65,7 +65,7 @@ namespace UKControllerPlugin {
         void StoredFlightplanCollection::UpdatePlan(StoredFlightplan flightplan)
         {
             if (!this->HasFlightplanForCallsign(flightplan.GetCallsign())) {
-                LogInfo("Now tracking flightplan data for " + flightplan.GetCallsign());
+                LogDebug("Now tracking flightplan data for " + flightplan.GetCallsign());
                 this->flightplans[flightplan.GetCallsign()] = std::make_unique<StoredFlightplan>(flightplan);
                 return;
             }

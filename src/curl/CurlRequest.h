@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
 
                 CurlRequest(std::string uri, std::string method);
                 void AddHeader(std::string key, std::string value);
-                const char * const GetBody(void) const;
+                const char* const GetBody(void) const;
                 const char * const GetMethod(void) const;
                 const char * const GetUri(void) const;
                 bool operator==(const CurlRequest & compare) const;

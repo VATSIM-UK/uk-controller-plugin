@@ -17,7 +17,6 @@ namespace UKControllerPlugin {
             public:
                 static void BootstrapPlugin(
                     UKControllerPlugin::Bootstrap::PersistenceContainer & container,
-                    bool disabled,
                     bool automaticAssignmentDisabled
                 );
 

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "utils/pch.h"
 #include "api/ApiRequestBuilder.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
@@ -6,7 +6,6 @@ using UKControllerPlugin::Srd::SrdSearchParameters;
 
 namespace UKControllerPlugin {
     namespace Api {
-
         ApiRequestBuilder::ApiRequestBuilder(std::string apiDomain, std::string apiKey)
             : apiDomain(apiDomain), apiKey(apiKey)
         {
@@ -298,6 +297,13 @@ namespace UKControllerPlugin {
         {
             return this->AddCommonHeaders(
                 CurlRequest(this->apiDomain + "/notifications/read/" + std::to_string(id), CurlRequest::METHOD_PUT)
+            );
+        }
+
+        CurlRequest ApiRequestBuilder::BuildLatestGithubVersionRequest() const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(this->apiDomain + "/version/latest", CurlRequest::METHOD_GET)
             );
         }
 

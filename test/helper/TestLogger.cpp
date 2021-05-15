@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/testingutilspch.h"
 #include "helper/TestLogger.h"
 
 std::shared_ptr<spdlog::logger> testLogger;

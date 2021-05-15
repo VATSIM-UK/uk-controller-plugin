@@ -1,7 +1,7 @@
-#include "pch/stdafx.h"
+#include "utils/pch.h"
 #include "curl/CurlApi.h"
 #include "curl/CurlRequest.h"
-#include "curl/curl.h"
+#include "curl/CurlResponse.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;
@@ -12,7 +12,8 @@ namespace UKControllerPlugin {
         /*
             Performs a CURL request to the specified URL with the specified post params.
         */
-        UKControllerPlugin::Curl::CurlResponse CurlApi::MakeCurlRequest(const CurlRequest & request) {
+        CurlResponse CurlApi::MakeCurlRequest(const CurlRequest& request)
+        {
             CURL * curlObject;
             CURLcode result;
             struct curl_slist *curlHeaders = NULL;

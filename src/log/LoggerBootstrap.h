@@ -2,9 +2,10 @@
 
 // Forward declarations
 namespace UKControllerPlugin {
-    namespace Bootstrap {
-        struct PersistenceContainer;
-    }  // namespace Bootstrap
+    namespace Windows
+    {
+        class WinApiInterface;
+    } // namespace Windows
 }  // namespace UKControllerPlugin
 // END
 
@@ -21,14 +22,21 @@ namespace UKControllerPlugin {
         {
             public:
                 static void Bootstrap(
-                    UKControllerPlugin::Bootstrap::PersistenceContainer & persistence,
-                    bool nullLogger
+                    Windows::WinApiInterface& windows,
+                    std::wstring logfilePrefix
                 );
-                static void Shutdown(void);
+                static bool CreateLogsFolder(Windows::WinApiInterface& windows);
+                static void PruneLogs(Windows::WinApiInterface& windows, std::wstring logFilePrefix);
+                static std::set<std::wstring> GetExistingLogs(
+                    Windows::WinApiInterface& windows,
+                    std::wstring logFilePrefix
+                );
+                static std::wstring GetLogfileName(std::wstring logFilePrefix);
 
             private:
 
-                static void CreateNullLogger(void);
+                static std::wstring GetLogFilePath(std::wstring logname);
+                static void CreateNullLogger();
         };
     }  // namespace Log
 }  // namespace UKControllerPlugin

@@ -1,5 +1,4 @@
-#include "pch/stdafx.h"
-#include "spdlog/spdlog.h"
+#include "utils/pch.h"
 #include "log/LoggerFunctions.h"
 
 std::shared_ptr<spdlog::logger> logger;
@@ -44,6 +43,7 @@ void ShutdownLogger(void)
         return;
     }
 
+    LogInfo("Logger shutdown");
     spdlog::drop_all();
     logger.reset();
 }

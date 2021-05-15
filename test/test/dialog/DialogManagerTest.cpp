@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "dialog/DialogManager.h"
 #include "mock/MockDialogProvider.h"
 #include "dialog/DialogData.h"
@@ -10,7 +10,7 @@ using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::_;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Dialog {
 
         class DialogManagerTest : public Test
@@ -79,4 +79,4 @@ namespace UKControllerPluginTest {
             this->manager.OpenDialog(1, reinterpret_cast<LPARAM>(&this->testContextArg));
         }
     }  // namespace Dialog
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

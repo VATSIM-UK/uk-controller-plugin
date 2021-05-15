@@ -8,6 +8,9 @@ namespace UKControllerPlugin {
         /*
             A concrete implementation of the WinApiInterface. Provides a wrapper
             around certain WindowsFunctions such as opening dialog boxes and playing sounds.
+
+            This class is restricted purely to operations within the UKCP root folder, to prevent
+            spurious activity across the filesystem...
         */
         class WinApi : public WinApiInterface, public UKControllerPlugin::Dialog::DialogProviderInterface
         {
@@ -27,12 +30,19 @@ namespace UKControllerPlugin {
                     UINT numFileTypes,
                     const COMDLG_FILTERSPEC * fileTypes
                 ) const override;
+                std::set<std::wstring> ListAllFilenamesInDirectory(
+                    std::wstring relativePath
+                ) const override;
+                HINSTANCE LoadLibraryRelative(std::wstring relativePath) const override;
+                FARPROC GetFunctionPointerFromLibrary(HINSTANCE libraryHandle, std::string functionName) const override;
+                void UnloadLibrary(HINSTANCE handle) const override;
                 int OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) override;
                 void OpenWebBrowser(std::wstring url) override;
-                void PlayWave(LPCTSTR sound);
+                void PlayWave(LPCTSTR sound) override;
+                bool MoveFileToNewLocation(std::wstring oldName, std::wstring newName) override;
                 std::string ReadFromFile(std::wstring filename, bool relativePath = true) override;
                 bool SetPermissions(std::wstring fileOrFolder, std::filesystem::perms permissions) override;
-                void WriteToFile(std::wstring filename, std::string data, bool truncate) override;
+                void WriteToFile(std::wstring filename, std::string data, bool truncate, bool binary) override;
 
                 // Inherited via DialogProviderInterface
                 void OpenDialog(

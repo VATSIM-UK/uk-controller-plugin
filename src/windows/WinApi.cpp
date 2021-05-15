@@ -1,16 +1,8 @@
-#include "pch/stdafx.h"
-#include <shellapi.h>
+#include "utils/pch.h"
 #include "windows/WinApi.h"
-#include "historytrail/HistoryTrailDialog.h"
 #include "helper/HelperFunctions.h"
-#include "euroscope/GeneralSettingsDialog.h"
 
-using UKControllerPlugin::HistoryTrail::HistoryTrailDialog;
 using UKControllerPlugin::HelperFunctions;
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
-using UKControllerPlugin::HistoryTrail::HistoryTrailData;
-using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Dialog::DialogCallArgument;
 
@@ -92,10 +84,8 @@ namespace UKControllerPlugin {
         */
         bool WinApi::DeleteGivenFile(std::wstring filename)
         {
-            std::wstring fileWide(filename.length(), L' ');
-            std::copy(filename.begin(), filename.end(), fileWide.begin());
-
-            return (DeleteFile(fileWide.c_str()) == TRUE) ? true : false;
+            std::wstring fullPath = this->GetFullPathToLocalFile(filename);
+            return (DeleteFile(fullPath.c_str()) == TRUE) ? true : false;
         }
 
         /*
@@ -171,6 +161,51 @@ namespace UKControllerPlugin {
         }
 
         /*
+         * List all filesnames in the directory
+         */
+        std::set<std::wstring> WinApi::ListAllFilenamesInDirectory(
+            std::wstring relativePath
+        ) const
+        {
+            std::set<std::wstring> files;
+            for (auto& p : std::filesystem::directory_iterator(GetFullPathToLocalFile(relativePath))) {
+                if (p.is_directory()) {
+                    continue;
+                }
+
+                files.insert(p.path().filename());
+            }
+
+            return files;
+        }
+
+        /*
+         * Load a library from the UKCP folder.
+         */
+        HINSTANCE WinApi::LoadLibraryRelative(std::wstring relativePath) const
+        {
+            std::wstring fullPath = this->GetFullPathToLocalFile(relativePath);
+            return LoadLibrary(fullPath.c_str());
+        }
+
+        FARPROC WinApi::GetFunctionPointerFromLibrary(HINSTANCE libraryHandle, std::string functionName) const
+        {
+            return GetProcAddress(libraryHandle, functionName.c_str());
+        }
+
+        /*
+         * Unload a library handle
+         */
+        void WinApi::UnloadLibrary(HINSTANCE handle) const
+        {
+            if (handle == nullptr) {
+                return;
+            }
+
+            FreeLibrary(handle);
+        }
+
+        /*
             Gets the full path to a given file
         */
         std::wstring WinApi::GetFullPathToLocalFile(std::wstring relativePath) const
@@ -199,16 +234,39 @@ namespace UKControllerPlugin {
             PlaySound(sound, this->dllInstance, SND_ASYNC | SND_RESOURCE);
         }
 
+        bool WinApi::MoveFileToNewLocation(std::wstring oldName, std::wstring newName)
+        {
+            std::wstring oldFilePath = this->GetFullPathToLocalFile(oldName);
+            std::wstring newFilePath = this->GetFullPathToLocalFile(newName);
+
+            try {
+                std::filesystem::rename(oldFilePath, newFilePath);
+                return true;
+            } catch (std::filesystem::filesystem_error) {
+                return false;
+            }
+        }
+
         /*
             Write a given string into a file.
         */
-        void WinApi::WriteToFile(std::wstring filename, std::string data, bool truncate)
+        void WinApi::WriteToFile(std::wstring filename, std::string data, bool truncate, bool binary)
         {
             std::wstring newFilename = this->GetFullPathToLocalFile(filename);
             this->CreateMissingDirectories(newFilename);
+
+            // Set the output mode
+            std::ofstream::openmode mode = std::ofstream::out;
+            mode = mode | (truncate ? std::ofstream::trunc : std::ofstream::app);
+
+            if (binary) {
+                mode = mode | std::ofstream::binary;
+            }
+
+            // Open file and write
             std::ofstream file(
                 newFilename,
-                std::ofstream::out | ((truncate) ? std::ofstream::trunc : std::ofstream::app)
+                mode
             );
             file.exceptions(std::ofstream::badbit);
             if (file.is_open()) {

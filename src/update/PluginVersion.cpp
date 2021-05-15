@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "utils/pch.h"
 #include "update/PluginVersion.h"
 
 namespace UKControllerPlugin {

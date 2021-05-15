@@ -24,7 +24,7 @@ namespace UKControllerPlugin {
                 void AddSettingsFromJsonFile(std::string relativePath, bool overwrite = false);
                 void AddSettingValue(UKControllerPlugin::Setting::SettingValue setting);
                 size_t SettingsCount(void) const;
-                std::string GetSetting(std::string setting) const;
+                std::string GetSetting(std::string setting, std::string defaultValue = "") const;
                 bool HasSetting(std::string setting) const;
                 void UpdateSetting(std::string setting, std::string value);
                 void WriteSettingsToFile(void);

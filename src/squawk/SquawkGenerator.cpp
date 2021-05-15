@@ -52,7 +52,7 @@ namespace UKControllerPlugin {
             EuroScopeCRadarTargetInterface & radarTarget
         ) const
         {
-            if (this->assignmentRules.disabled || !assignmentRules.CircuitAssignmentNeeded(flightplan, radarTarget)) {
+            if (!assignmentRules.CircuitAssignmentNeeded(flightplan, radarTarget)) {
                 return false;
             }
 
@@ -68,10 +68,6 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightplan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
-            if (this->assignmentRules.disabled) {
-                return false;
-            }
-
             if (!this->assignmentRules.ForceAssignmentAllowed(flightplan)) {
                 return false;
             }
@@ -99,10 +95,6 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightplan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
-            if (this->assignmentRules.disabled) {
-                return false;
-            }
-
             if (!this->assignmentRules.ForceAssignmentAllowed(flightplan)) {
                 return false;
             }
@@ -136,10 +128,6 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightplan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) const {
-            if (this->assignmentRules.disabled) {
-                return false;
-            }
-
             if (!this->assignmentRules.PreviousSquawkNeedsReassignment(flightplan, radarTarget)) {
                 return false;
             }
@@ -161,10 +149,6 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightplan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
-            if (this->assignmentRules.disabled) {
-                return false;
-            }
-
             if (!this->assignmentRules.GeneralAssignmentNeeded(flightplan, radarTarget)) {
                 return false;
             }
@@ -205,10 +189,6 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface & flightplan,
             EuroScopeCRadarTargetInterface & radarTarget
         ) {
-            if (this->assignmentRules.disabled) {
-                return false;
-            }
-
             if (!this->assignmentRules.LocalAssignmentNeeded(flightplan, radarTarget)) {
                 return false;
             }

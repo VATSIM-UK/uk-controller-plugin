@@ -1,9 +1,10 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "curl/CurlResponse.h"
 
 using UKControllerPlugin::Curl::CurlResponse;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest
+{
     namespace Curl {
 
         TEST(CurlResponse, GetResponseReturnsResponse)
@@ -39,4 +40,4 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(response2.IsCurlError());
         }
     }  // namespace Curl
-}  // namespace UKControllerPluginTest
+} // namespace UKControllerPluginUtilsTest

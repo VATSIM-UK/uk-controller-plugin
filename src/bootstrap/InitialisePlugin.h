@@ -1,6 +1,6 @@
 #pragma once
 #include "bootstrap/PersistenceContainer.h"
-#include "bootstrap/DuplicatePlugin.h"
+#include "duplicate/DuplicatePlugin.h"
 
 // Forward Declarations
 namespace EuroScopePlugIn {
@@ -27,7 +27,6 @@ namespace UKControllerPlugin {
 
         private:
 
-            void CheckForUpdates(const UKControllerPlugin::Bootstrap::PersistenceContainer & container);
             void CreateDummy(void);
 
 
@@ -39,11 +38,8 @@ namespace UKControllerPlugin {
             // The api root domain.
             const std::string apiRoot = "http://ukcp.devapp";
 
-            // The status of our updates.
-            int updateStatus;
-
             // Whether or not the plugin has already been loaded - indicating this is a second ES window
-            std::unique_ptr<UKControllerPlugin::Bootstrap::DuplicatePlugin> duplicatePlugin;
+            std::unique_ptr<Duplicate::DuplicatePlugin> duplicatePlugin;
 
             // Gdiplus initialisation token.
             ULONG_PTR gdiPlusToken;

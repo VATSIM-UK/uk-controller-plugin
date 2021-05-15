@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "api/ApiRequestBuilder.h"
 #include "srd/SrdSearchParameters.h"
 
@@ -7,7 +7,7 @@ using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Srd::SrdSearchParameters;
 using ::testing::Test;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Api {
 
         class ApiRequestBuilderTest : public Test
@@ -408,6 +408,20 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedRequest == this->builder.BuildReadNotificationRequest(1));
         }
 
+        TEST_F(ApiRequestBuilderTest, ItBuildsLatestVersionDetailsRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/version/latest",
+                CurlRequest::METHOD_GET
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(expectedRequest == this->builder.BuildLatestGithubVersionRequest());
+        }
+
         TEST_F(ApiRequestBuilderTest, ItBuildsPluginEventsSyncRequest)
         {
             CurlRequest expectedRequest(
@@ -436,4 +450,4 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expectedRequest == this->builder.BuildGetLatestPluginEventsRequest(5));
         }
     }  // namespace Api
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

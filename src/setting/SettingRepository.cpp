@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "utils/pch.h"
 #include "setting/SettingRepository.h"
 #include "windows/WinApiInterface.h"
 #include "helper/HelperFunctions.h"
@@ -6,15 +6,15 @@
 using UKControllerPlugin::Setting::SettingValue;
 using UKControllerPlugin::Windows::WinApiInterface;
 
-namespace UKControllerPlugin {
-    namespace Setting {
-
+namespace UKControllerPlugin
+{
+    namespace Setting
+    {
         SettingRepository::SettingRepository(
-            WinApiInterface & winApi
+            WinApiInterface& winApi
         )
             : winApi(winApi)
-        {
-        }
+        { }
 
         /*
             Read a JSON file and creates settings from it.
@@ -69,7 +69,7 @@ namespace UKControllerPlugin {
         /*
             Adds a setting to the repo
         */
-        void SettingRepository::AddSettingValue(UKControllerPlugin::Setting::SettingValue setting)
+        void SettingRepository::AddSettingValue(SettingValue setting)
         {
             if (this->HasSetting(setting.setting)) {
                 return;
@@ -87,11 +87,11 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Returns the value for a given setting, or empty satring if not found.
+            Returns the value for a given setting, or empty string if not found.
         */
-        std::string SettingRepository::GetSetting(std::string setting) const
+        std::string SettingRepository::GetSetting(std::string setting, std::string defaultValue) const
         {
-            return (this->HasSetting(setting)) ? this->settings.at(setting).value : "";
+            return (this->HasSetting(setting)) ? this->settings.at(setting).value : defaultValue;
         }
 
         /*
@@ -136,13 +136,13 @@ namespace UKControllerPlugin {
                 try {
                     std::wstring widePath = HelperFunctions::ConvertToWideString(it->first);
                     winApi.WriteToFile(
-                        this->settingFolder + L"/" + widePath, nlohmann::json(it->second).dump(4),
-                        true
+                        this->settingFolder + L"/" + widePath,
+                        nlohmann::json(it->second).dump(4),
+                        true,
+                        false
                     );
-                } catch (std::ifstream::failure) {
-
-                }
+                } catch (std::ifstream::failure) { }
             }
         }
-    }  // namespace Setting
-}  // namespace UKControllerPlugin
+    } // namespace Setting
+} // namespace UKControllerPlugin

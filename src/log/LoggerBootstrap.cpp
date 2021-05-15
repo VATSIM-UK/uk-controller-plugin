@@ -1,43 +1,30 @@
-#include "pch/stdafx.h"
+#include "utils/pch.h"
 #include "log/LoggerBootstrap.h"
-#include "bootstrap/PersistenceContainer.h"
+#include "helper/HelperFunctions.h"
 #include "windows/WinApiInterface.h"
 
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Windows::WinApiInterface;
 namespace UKControllerPlugin {
     namespace Log {
+        const int logfilesToKeep = 5;
+        const std::wstring logsFolder = L"logs";
 
         /*
             Bootstrap the logger.
         */
-        void LoggerBootstrap::Bootstrap(PersistenceContainer & persistence, bool nullLogger)
+        void LoggerBootstrap::Bootstrap(WinApiInterface& windows, std::wstring logfilePrefix)
         {
-            if (nullLogger) {
-                LoggerBootstrap::CreateNullLogger();
-                return;
-            }
-
             // Create us a logger, for now we log everything that happens.
-            if (!persistence.windows->CreateLocalFolderRecursive(L"logs")) {
-                std::wstring msg = L"Unable to create logs folder, please contact the VATSIM UK Web Department.\n\n";
-                msg += L"Plugin events will not be logged.";
-                persistence.windows->OpenMessageBox(
-                    msg.c_str(),
-                    L"UKCP Error",
-                    MB_OK | MB_ICONSTOP
-                );
-                LoggerBootstrap::CreateNullLogger();
+            if (!CreateLogsFolder(windows)) {
+                CreateNullLogger();
                 return;
             }
+            PruneLogs(windows, logfilePrefix);
 
-            std::shared_ptr<spdlog::sinks::rotating_file_sink_mt> rotatingSink =
-                std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
-                persistence.windows->GetFullPathToLocalFile(L"logs/eventlog.txt"),
-                1024 * 1024,
-                3
+            std::shared_ptr<spdlog::logger> logger = spdlog::basic_logger_mt(
+                HelperFunctions::ConvertToRegularString(logfilePrefix) + "-logger",
+                windows.GetFullPathToLocalFile(GetLogFilePath(GetLogfileName(logfilePrefix)))
             );
-
-            std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("rotating logger", rotatingSink);
             logger->set_pattern("%Y-%m-%d %T [%l] - %v");
 
 #ifdef _DEBUG
@@ -49,7 +36,7 @@ namespace UKControllerPlugin {
 #endif  // DEBUG
 
             SetLoggerInstance(logger);
-            LogInfo("Log opened");
+            LogInfo("Logfile opened");
         }
 
         /*
@@ -66,11 +53,88 @@ namespace UKControllerPlugin {
         }
 
         /*
-         * Shuts everything down
+         * Create the logs folder
          */
-        void LoggerBootstrap::Shutdown(void)
+        bool LoggerBootstrap::CreateLogsFolder(WinApiInterface& windows)
         {
-            ShutdownLogger();
+            // Create us a logger, for now we log everything that happens.
+            if (!windows.CreateLocalFolderRecursive(logsFolder)) {
+                std::wstring msg = L"Unable to create logs folder, please contact the VATSIM UK Web Department.\n\n";
+                msg += L"Plugin events will not be logged.";
+                windows.OpenMessageBox(
+                    msg.c_str(),
+                    L"UKCP Error",
+                    MB_OK | MB_ICONSTOP
+                );
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Prune all the logs matching the prefix, so we only keep a certain amount.
+         */
+        void LoggerBootstrap::PruneLogs(WinApiInterface& windows, std::wstring logfilePrefix)
+        {
+            std::set<std::wstring> allFilesInLogFolder = GetExistingLogs(windows, logfilePrefix);
+            const int logFilesToDelete = allFilesInLogFolder.size() - logfilesToKeep;
+
+            int logFilesDeleted = 0;
+            for (
+                auto log = allFilesInLogFolder.cbegin();
+                log != allFilesInLogFolder.cend();
+                ++log
+            ) {
+                if (logFilesDeleted >= logFilesToDelete) {
+                    break;
+                }
+
+                windows.DeleteGivenFile(GetLogFilePath(*log));
+                logFilesDeleted++;
+            }
+        }
+
+        /*
+         * Get all the existing logs that match the log prefix
+         */
+        std::set<std::wstring> LoggerBootstrap::GetExistingLogs(
+            WinApiInterface& windows,
+            std::wstring logFilePrefix
+        )
+        {
+            std::set<std::wstring> allFilesInLogFolder = windows.ListAllFilenamesInDirectory(logsFolder);
+            std::wregex logsRegex(L"^" + logFilePrefix + L"-[0-9]+\\.txt");
+            for (
+                auto log = allFilesInLogFolder.begin();
+                log != allFilesInLogFolder.end();
+            ) {
+                if (!std::regex_match(*log, logsRegex)) {
+                    log = allFilesInLogFolder.erase(log);
+                } else {
+                    ++log;
+                }
+            }
+
+            return std::move(allFilesInLogFolder);
+        }
+
+        /*
+         * Get the name of a given logfile
+         */
+        std::wstring LoggerBootstrap::GetLogfileName(std::wstring logFilePrefix)
+        {
+            return logFilePrefix + L"-" + HelperFunctions::ConvertToWideString(
+                date::format("%Y%m%d%H%M%S", date::floor<std::chrono::seconds>(std::chrono::system_clock::now()))
+            ) + L".txt";
+        }
+
+        /*
+         * Get the path for a given logfile
+         */
+        std::wstring LoggerBootstrap::GetLogFilePath(std::wstring name)
+        {
+            return logsFolder + L"/" + name;
         }
     }  // namespace Log
 }  // namespace UKControllerPlugin

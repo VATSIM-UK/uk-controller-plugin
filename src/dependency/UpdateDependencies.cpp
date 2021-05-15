@@ -104,7 +104,8 @@ namespace UKControllerPlugin {
                     filesystem.WriteToFile(
                         L"dependencies/" + widePath,
                         api.GetUri(it->second.at("uri").get<std::string>()).dump(),
-                        true
+                        true,
+                        false
                     );
                     dependencyListToSave.push_back(it->second);
                     LogInfo("New version of dependency " + it->first + " has been downloaded");
@@ -115,7 +116,7 @@ namespace UKControllerPlugin {
                 }
             }
 
-            filesystem.WriteToFile(dependencyListFile, dependencyListToSave.dump(), true);
+            filesystem.WriteToFile(dependencyListFile, dependencyListToSave.dump(), true, false);
             LogInfo("Finished downloading dependency files");
         }
 

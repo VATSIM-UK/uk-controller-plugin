@@ -11,7 +11,7 @@ using ::testing::NiceMock;
 using ::testing::Ref;
 using ::testing::Test;
 
-namespace UKControllerPlugin {
+namespace UKControllerPluginTest {
     namespace Euroscope {
 
         class UserSettingAwareCollectionTest : public Test
@@ -55,4 +55,4 @@ namespace UKControllerPlugin {
             this->collection.UserSettingsUpdateEvent(this->userSetting);
         }
     }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPluginTest

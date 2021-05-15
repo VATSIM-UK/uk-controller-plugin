@@ -6,6 +6,7 @@
 # Tools output
 tools/output/
 tools/input/
+msvc/enc_temp_folder
 
 # User-specific files
 *.suo

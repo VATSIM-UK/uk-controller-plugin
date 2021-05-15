@@ -11,3 +11,4 @@ for example, stand allocations.
 - [Features](Features/Features.md)
 - [Frequently asked questions](Faq/Faq.md)
 - [Getting help](GettingHelp/Help.md)
+- [Changelog](Changelog/Changelog.md)

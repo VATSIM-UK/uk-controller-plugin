@@ -10,7 +10,7 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using ::testing::Test;
 
-namespace UKControllerPlugin {
+namespace UKControllerPluginTest {
     namespace Datablock {
 
         class EstimatedOffBlockTimeBootstrapTest : public Test
@@ -38,4 +38,4 @@ namespace UKControllerPlugin {
             EXPECT_TRUE(container.tagHandler->HasHandlerForItemId(EstimatedOffBlockTimeBootstrap::tagItemId));
         }
     }  // namespace Datablock
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPluginTest

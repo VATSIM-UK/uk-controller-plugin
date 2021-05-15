@@ -1,53 +1,51 @@
 #include "pch/stdafx.h"
 #include "bootstrap/InitialisePlugin.h"
-#include "plugin/UKPlugin.h"
+#include "api/ApiAuthChecker.h"
+#include "bootstrap/CollectionBootstrap.h"
+#include "duplicate/DuplicatePlugin.h"
+#include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
 #include "bootstrap/HelperBootstrap.h"
-#include "log/LoggerBootstrap.h"
-#include "bootstrap/CollectionBootstrap.h"
-#include "bootstrap/EventHandlerCollectionBootstrap.h"
-#include "plugin/UkPluginBootstrap.h"
-#include "initialaltitude/InitialAltitudeModule.h"
-#include "intention/IntentionCodeModule.h"
-#include "historytrail/HistoryTrailModule.h"
-#include "login/LoginModule.h"
-#include "ownership/AirfieldOwnershipModule.h"
-#include "update/PluginUpdateChecker.h"
-#include "countdown/CountdownModule.h"
-#include "minstack/MinStackModule.h"
 #include "bootstrap/PostInit.h"
-#include "update/PluginVersion.h"
-#include "squawk/SquawkModule.h"
-#include "flightplan/FlightplanStorageBootstrap.h"
-#include "offblock/ActualOffBlockTimeBootstrap.h"
-#include "offblock/EstimatedOffBlockTimeBootstrap.h"
-#include "prenote/PrenoteModule.h"
-#include "message/UserMessagerBootstrap.h"
-#include "euroscope/PluginUserSettingBootstrap.h"
-#include "api/ApiAuthChecker.h"
-#include "bootstrap/DuplicatePlugin.h"
-#include "timedevent/DeferredEventBootstrap.h"
-#include "offblock/EstimatedDepartureTimeBootstrap.h"
-#include "wake/WakeModule.h"
-#include "hold/HoldModule.h"
-#include "metar/PressureMonitorBootstrap.h"
-#include "euroscope/GeneralSettingsConfigurationBootstrap.h"
-#include "datablock/DatablockBoostrap.h"
-#include "websocket/WebsocketBootstrap.h"
-#include "sectorfile/SectorFileBootstrap.h"
-#include "dependency/UpdateDependencies.h"
-#include "dependency/DependencyLoader.h"
-#include "handoff/HandoffModule.h"
 #include "controller/ControllerBootstrap.h"
-#include "regional/RegionalPressureModule.h"
-#include "srd/SrdModule.h"
-#include "navaids/NavaidModule.h"
-#include "releases/ReleaseModule.h"
-#include "stands/StandModule.h"
+#include "countdown/CountdownModule.h"
+#include "datablock/DatablockBoostrap.h"
+#include "dependency/DependencyLoader.h"
+#include "dependency/UpdateDependencies.h"
+#include "euroscope/GeneralSettingsConfigurationBootstrap.h"
+#include "euroscope/PluginUserSettingBootstrap.h"
+#include "flightinformationservice/FlightInformationServiceModule.h"
+#include "flightplan/FlightplanStorageBootstrap.h"
+#include "handoff/HandoffModule.h"
+#include "historytrail/HistoryTrailModule.h"
+#include "hold/HoldModule.h"
+#include "initialaltitude/InitialAltitudeModule.h"
 #include "integration/IntegrationModule.h"
-#include "bootstrap/CopyFilesToNewFolder.h"
+#include "intention/IntentionCodeModule.h"
+#include "log/LoggerBootstrap.h"
+#include "login/LoginModule.h"
+#include "message/UserMessagerBootstrap.h"
+#include "metar/PressureMonitorBootstrap.h"
+#include "minstack/MinStackModule.h"
+#include "navaids/NavaidModule.h"
 #include "notifications/NotificationsModule.h"
-#include "flightinformationservice/FlightInformatioNServiceModule.h"
+#include "offblock/ActualOffBlockTimeBootstrap.h"
+#include "offblock/EstimatedDepartureTimeBootstrap.h"
+#include "offblock/EstimatedOffBlockTimeBootstrap.h"
+#include "ownership/AirfieldOwnershipModule.h"
+#include "plugin/UKPlugin.h"
+#include "plugin/UkPluginBootstrap.h"
+#include "prenote/PrenoteModule.h"
+#include "regional/RegionalPressureModule.h"
+#include "releases/ReleaseModule.h"
+#include "sectorfile/SectorFileBootstrap.h"
+#include "squawk/SquawkModule.h"
+#include "srd/SrdModule.h"
+#include "stands/StandModule.h"
+#include "timedevent/DeferredEventBootstrap.h"
+#include "update/PluginVersion.h"
+#include "wake/WakeModule.h"
+#include "websocket/WebsocketBootstrap.h"
 #include "oceanic/OceanicModule.h"
 #include "sid/SidModule.h"
 #include "initialheading/InitialHeadingModule.h"
@@ -65,7 +63,6 @@ using UKControllerPlugin::IntentionCode::IntentionCodeModule;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::Controller::LoginModule;
 using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
-using UKControllerPlugin::Update::PluginUpdateChecker;
 using UKControllerPlugin::Countdown::CountdownModule;
 using UKControllerPlugin::MinStack::MinStackModule;
 using UKControllerPlugin::Regional::RegionalPressureModule;
@@ -78,28 +75,13 @@ using UKControllerPlugin::Datablock::EstimatedOffBlockTimeBootstrap;
 using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::Message::UserMessagerBootstrap;
 using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
-using UKControllerPlugin::Bootstrap::DuplicatePlugin;
+using UKControllerPlugin::Duplicate::DuplicatePlugin;
 using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Dependency::DependencyLoader;
 
 namespace UKControllerPlugin {
-
-    void InitialisePlugin::CheckForUpdates(const PersistenceContainer & container)
-    {
-        // If we're running a testing build of the plugin, skip the check for updates.
-        #if defined (DISABLE_VERSION_CHECK)
-                this->updateStatus = PluginUpdateChecker::versionAllowed;
-        #else
-                this->updateStatus = PluginUpdateChecker::CheckForUpdates(
-                    PluginVersion::version,
-                    *container.windows,
-                    *container.api
-                );
-        #endif  // DISABLE_VERSION_CHECK
-    }
-
     /*
         Creates a dummy plugin to fill the spot.
     */
@@ -129,7 +111,7 @@ namespace UKControllerPlugin {
         // Shut down GDI
         Gdiplus::GdiplusShutdown(this->gdiPlusToken);
         LogInfo("Plugin shutdown");
-        LoggerBootstrap::Shutdown();
+        ShutdownLogger();
     }
 
     /*
@@ -137,10 +119,6 @@ namespace UKControllerPlugin {
     */
     EuroScopePlugIn::CPlugIn * InitialisePlugin::GetPlugin(void)
     {
-        if (this->updateStatus == PluginUpdateChecker::unsupportedVersion) {
-            return this->fallbackPlugin.get();
-        }
-
         return this->container->plugin.get();
     }
 
@@ -166,11 +144,25 @@ namespace UKControllerPlugin {
         PluginUserSettingBootstrap::BootstrapPlugin(*this->container);
 
         ExternalsBootstrap::Bootstrap(*this->container, dllInstance);
-        // Remove this once the last version on old root is deprecated
-        Bootstrap::CopyFilesToNewFolder(*this->container->windows);
         ExternalsBootstrap::SetupUkcpFolderRoot(*this->container->windows);
 
-        LoggerBootstrap::Bootstrap(*this->container, this->duplicatePlugin->Duplicate());
+        // Bootstrap the logger
+        if (this->duplicatePlugin->Duplicate()) {
+            LoggerBootstrap::Bootstrap(
+                *this->container->windows,
+                L"plugin-secondary"
+            );
+            LogInfo(
+                std::string("Another instance of UKCP has been detected, automated actions such as squawk assignments ")
+                + "will be performed by the primary plugin instance."
+            );
+        } else {
+            LoggerBootstrap::Bootstrap(
+                *this->container->windows,
+                L"plugin"
+            );
+            LogInfo("Plugin loaded as primary instance");
+        }
 
         // User messager
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
@@ -188,19 +180,6 @@ namespace UKControllerPlugin {
             *this->container->windows,
             *this->container->settingsRepository
         );
-
-        // Check for updates, but only if the API is either authorised
-        this->updateStatus = PluginUpdateChecker::statusUnknown;
-        if (apiAuthorised) {
-            this->CheckForUpdates(*this->container);
-
-            // If the plugin isn't an allowed version, stop here and put a dummy in place.
-            if (this->updateStatus == PluginUpdateChecker::unsupportedVersion) {
-                LogCritical("Deprecated plugin version, please download the latest update");
-                this->CreateDummy();
-                return;
-            }
-        }
 
         // Dependency loading can happen regardless of plugin version or API status.
         Dependency::UpdateDependencies(
@@ -239,17 +218,8 @@ namespace UKControllerPlugin {
         );
 
         // Bootstrap the modules
-
-        // Only load initial altitudes or headings if we know the plugin version is ok (as this modifies flightplans)
-        // Don't load it if the plugin is a duplicate, leave that to the main one.
-        if (
-            this->updateStatus == PluginUpdateChecker::versionAllowed &&
-            !this->duplicatePlugin->Duplicate()
-        ) {
-            InitialAltitudeModule::BootstrapPlugin(*this->container);
-            InitialHeading::BootstrapPlugin(*this->container);
-        }
-
+        InitialAltitudeModule::BootstrapPlugin(*this->container);
+        InitialHeading::BootstrapPlugin(*this->container);
         Srd::BootstrapPlugin(*this->container);
         IntentionCodeModule::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
@@ -275,12 +245,9 @@ namespace UKControllerPlugin {
             *this->container->userMessager
         );
 
-        // Due to flightplan modifications and API interactions, only enable the squawk module
-        // if the API is authorised and the plugin is an allowed version. Also, dont allow automatic
-        // squawk assignment if the plugin is deemed to be a duplicate
+        // Don't allow automatic squawk assignment if the plugin is deemed to be a duplicate
         SquawkModule::BootstrapPlugin(
             *this->container,
-            this->updateStatus != PluginUpdateChecker::versionAllowed,
             this->duplicatePlugin->Duplicate()
         );
 

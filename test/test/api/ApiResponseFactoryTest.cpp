@@ -1,4 +1,4 @@
-#include "pch/pch.h"
+#include "pch/utilstestpch.h"
 #include "api/ApiResponseFactory.h"
 #include "api/ApiResponse.h"
 #include "curl/CurlResponse.h"
@@ -7,7 +7,7 @@ using UKControllerPlugin::Api::ApiResponseFactory;
 using UKControllerPlugin::Api::ApiResponse;
 using UKControllerPlugin::Curl::CurlResponse;
 
-namespace UKControllerPluginTest {
+namespace UKControllerPluginUtilsTest {
     namespace Api {
 
         TEST(ApiResponseFactory, CreateReturnsCorrectlyIfResponseNotJson)
@@ -58,4 +58,4 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(200L, ApiResponseFactory::Create(curl).GetStatusCode());
         }
     }  // namespace Api
-}  // namespace UKControllerPluginTest
+}  // namespace UKControllerPluginUtilsTest

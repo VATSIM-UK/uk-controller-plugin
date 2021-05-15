@@ -9,7 +9,7 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 
-namespace UKControllerPlugin {
+namespace UKControllerPluginTest {
     namespace Flightplan {
 
         TEST(FlightplanStorageBootstrap, BootstrapPluginAddsHandlerToTimedEvents)
@@ -40,4 +40,4 @@ namespace UKControllerPlugin {
             );
         }
     }  // namespace Flightplan
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPluginTest

@@ -44,8 +44,16 @@
         {
           "assets": [
             {
+              "path": "bin/Release/UKControllerPluginCore.dll",
+              "label": "Core Binary"
+            },
+            {
+              "path": "bin/Release/UKControllerPluginUpdater.dll",
+              "label": "Updater Binary"
+            },
+            {
               "path": "bin/Release/UKControllerPlugin.dll",
-              "label":  "Plugin DLL" 
+              "label": "Loader Binary"
             }
           ] 
         }

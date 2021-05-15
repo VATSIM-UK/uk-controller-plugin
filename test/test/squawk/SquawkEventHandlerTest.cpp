@@ -3,7 +3,6 @@
 #include "squawk/SquawkGenerator.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "curl/CurlResponse.h"
-#include "spdlog/sinks/null_sink.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "flightplan/StoredFlightplanCollection.h"
@@ -84,8 +83,7 @@ namespace UKControllerPluginTest {
                         this->plans,
                         this->pluginLoopback,
                         this->airfieldOwnership,
-                        this->activeCallsigns,
-                        false
+                        this->activeCallsigns
                     ),
                     generator(
                         this->mockApi,

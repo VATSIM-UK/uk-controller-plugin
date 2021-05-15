@@ -1,5 +1,5 @@
 #pragma once
-#include "pch/pch.h"
+#include "pch/testingutilspch.h"
 #include "dialog/DialogProviderInterface.h"
 #include "dialog/DialogData.h"
 #include "dialog/DialogCallArgument.h"
