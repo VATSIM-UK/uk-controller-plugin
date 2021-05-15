@@ -79,7 +79,7 @@ namespace UKControllerPluginTest {
                         int requestingControllerId,
                         int targetControllerId,
                         int expiresInSeconds
-                    ) 
+                    )
                 );
                 MOCK_CONST_METHOD1(CancelDepartureReleaseRequest, void(int releaseId));
         };

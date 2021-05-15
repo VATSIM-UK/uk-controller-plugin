@@ -13,9 +13,7 @@ namespace UKControllerPlugin {
             std::chrono::system_clock::time_point requestExpiresAt
         ): id(id), callsign(std::move(callsign)), requestingController(requestingController),
            targetController(targetController), requestExpiresAt(requestExpiresAt)
-        {
-            
-        }
+        {}
 
         void DepartureReleaseRequest::Acknowledge()
         {
