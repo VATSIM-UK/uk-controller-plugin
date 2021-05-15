@@ -32,7 +32,7 @@ namespace UKControllerPlugin {
 
             for (auto controllerPosition : controllerPositions) {
                 collection->AddPosition(
-                    std::make_unique<ControllerPosition>(
+                    std::make_shared<ControllerPosition>(
                         controllerPosition.at("id").get<int>(),
                         controllerPosition.at("callsign").get<std::string>(),
                         controllerPosition.at("frequency").get<double>(),

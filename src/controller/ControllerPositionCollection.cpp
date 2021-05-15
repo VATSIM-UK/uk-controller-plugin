@@ -11,9 +11,19 @@ namespace UKControllerPlugin {
         /*
             Inserts a position into the collection, if the callsign isn't already added.
         */
-        bool ControllerPositionCollection::AddPosition(std::unique_ptr<ControllerPosition> position)
+        bool ControllerPositionCollection::AddPosition(std::shared_ptr<ControllerPosition> position)
         {
-            return this->positions.insert({ position->GetCallsign(), std::move(position) }).second;
+            return this->positions.insert({position->GetCallsign(), position}).second &&
+                this->positionsById.insert({position->GetId(), position}).second;
+        }
+
+        /*
+         * Fetch a position by id
+         */
+        const std::shared_ptr<ControllerPosition> ControllerPositionCollection::FetchPositionById(int id) const
+        {
+            auto position = this->positionsById.find(id);
+            return position == this->positionsById.end() ? nullptr : position->second;
         }
 
         /*
@@ -43,7 +53,8 @@ namespace UKControllerPlugin {
             // Iterate through the positions and try to match.
             auto position = std::find_if(this->positions.begin(), this->positions.end(),
                 [facility, frequency, type]
-                (std::pair<std::string, const std::unique_ptr<ControllerPosition> &> position) -> bool {
+            (std::pair<std::string, const std::shared_ptr<ControllerPosition>&> position) -> bool
+                {
 
                 // Frequency matching is done to 4dp, because floating points.
                 return fabs(frequency - position.second->GetFrequency()) < 0.001 &&

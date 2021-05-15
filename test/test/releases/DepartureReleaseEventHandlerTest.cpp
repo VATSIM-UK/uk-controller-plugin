@@ -4,11 +4,15 @@
 #include "websocket/WebsocketSubscription.h"
 #include "websocket/WebsocketMessage.h"
 #include "time/ParseTimeStrings.h"
+#include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionCollection.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::DepartureReleaseRequest;
 using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Time::ParseTimeString;
 
 namespace UKControllerPluginTest {
@@ -18,6 +22,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 DepartureReleaseEventHandlerTest()
+                    : handler(controllers)
                 {
                     request = std::make_shared<DepartureReleaseRequest>(
                         1,
@@ -26,9 +31,30 @@ namespace UKControllerPluginTest {
                         3,
                         std::chrono::system_clock::now()
                     );
+                    controllers.AddPosition(
+                        std::make_shared<ControllerPosition>(
+                            2,
+                            "EGFF_APP",
+                            125.850,
+                            std::vector<std::string>{"EGGD", "EGFF"},
+                            true,
+                            false
+                        )
+                    );
+                    controllers.AddPosition(
+                        std::make_shared<ControllerPosition>(
+                            3,
+                            "EGFF_TWR",
+                            123.450,
+                            std::vector<std::string>{"EGGD", "EGFF"},
+                            true,
+                            false
+                        )
+                    );
                     handler.AddReleaseRequest(request);
                 }
 
+                ControllerPositionCollection controllers;
                 std::shared_ptr<DepartureReleaseRequest> request;
                 DepartureReleaseEventHandler handler;
         };
@@ -608,6 +634,25 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
+        TEST_F(DepartureReleaseEventHandlerTest, ItHandlesRequestingControllerNotARealControllerInCreateMessage)
+        {
+            nlohmann::json data;
+            data["id"] = 2;
+            data["callsign"] = "BAW123";
+            data["requesting_controller"] = 456;
+            data["target_controller"] = 3;
+            data["expires_at"] = "2021-05-12 19:55:00";
+
+            WebsocketMessage message{
+                "departure_release.approved",
+                "private-departure-releases",
+                data
+            };
+
+            handler.ProcessWebsocketMessage(message);
+            EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
+        }
+
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesTargetControllerMissingInCreateMessage)
         {
             nlohmann::json data;
@@ -633,6 +678,25 @@ namespace UKControllerPluginTest {
             data["callsign"] = "BAW123";
             data["requesting_controller"] = 2;
             data["target_controller"] = "abc";
+            data["expires_at"] = "2021-05-12 19:55:00";
+
+            WebsocketMessage message{
+                "departure_release.approved",
+                "private-departure-releases",
+                data
+            };
+
+            handler.ProcessWebsocketMessage(message);
+            EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItHandlesTargetControllerNotARealControllerInCreateMessage)
+        {
+            nlohmann::json data;
+            data["id"] = 2;
+            data["callsign"] = "BAW123";
+            data["requesting_controller"] = 2;
+            data["target_controller"] = 456;
             data["expires_at"] = "2021-05-12 19:55:00";
 
             WebsocketMessage message{

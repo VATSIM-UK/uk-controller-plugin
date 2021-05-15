@@ -1,10 +1,15 @@
 #include "pch/stdafx.h"
 #include "releases/DepartureReleaseEventHandler.h"
+
+#include "controller/ControllerPositionCollection.h"
 #include "releases/DepartureReleaseRequest.h"
 #include "time/ParseTimeStrings.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
+
+        DepartureReleaseEventHandler::DepartureReleaseEventHandler(
+            const Controller::ControllerPositionCollection& controllers): controllers(controllers) {}
 
         void DepartureReleaseEventHandler::ProcessWebsocketMessage(const Websocket::WebsocketMessage& message)
         {
@@ -42,9 +47,8 @@ namespace UKControllerPlugin {
             return request == this->releaseRequests.cend() ? nullptr : request->second;
         }
 
-        bool DepartureReleaseEventHandler::DepartureReleaseRequestedMessageValid(const nlohmann::json& data)
+        bool DepartureReleaseEventHandler::DepartureReleaseRequestedMessageValid(const nlohmann::json& data) const
         {
-            //TODO: Check Target/Requesting is valid controller
             return data.is_object() &&
                 data.contains("id") &&
                 data.at("id").is_number_integer() &&
@@ -52,8 +56,10 @@ namespace UKControllerPlugin {
                 data.at("callsign").is_string() &&
                 data.contains("requesting_controller") &&
                 data.at("requesting_controller").is_number_integer() &&
+                this->controllers.FetchPositionById(data.at("requesting_controller").get<int>()) != nullptr &&
                 data.contains("target_controller") &&
                 data.at("target_controller").is_number_integer() &&
+                this->controllers.FetchPositionById(data.at("target_controller").get<int>()) != nullptr &&
                 data.contains("expires_at") &&
                 data.at("expires_at").is_string() &&
                 Time::ParseTimeString(data.at("expires_at").get<std::string>()) != Time::invalidTime;
