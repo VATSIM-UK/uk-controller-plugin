@@ -58,7 +58,9 @@ namespace UKControllerPlugin {
                             {
                                 clearance.at("callsign").get<std::string>(),
                                 clearance.at("status").get<std::string>(),
-                                clearance.at("nat").get<std::string>(),
+                                clearance.at("nat").is_null()
+                                    ? ""
+                                    : clearance.at("nat").get<std::string>(),
                                 clearance.at("fix").get<std::string>(),
                                 std::to_string(
                                     Datablock::NormaliseFlightLevelFromString(
@@ -88,7 +90,7 @@ namespace UKControllerPlugin {
                 clearance.contains("status") &&
                 clearance.at("status").is_string() &&
                 clearance.contains("nat") &&
-                clearance.at("nat").is_string() &&
+                (clearance.at("nat").is_null() || clearance.at("nat").is_string()) &&
                 clearance.contains("fix") &&
                 clearance.at("fix").is_string() &&
                 clearance.contains("level") &&
