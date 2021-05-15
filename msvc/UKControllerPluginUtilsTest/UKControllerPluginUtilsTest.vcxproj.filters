@@ -34,6 +34,9 @@
     <Filter Include="test\data">
       <UniqueIdentifier>{b6e5cdbb-acdc-4a2c-abdc-24c720bb3a87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\time">
+      <UniqueIdentifier>{64275624-ee9d-4965-8484-c4694d3c9bac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\test\api\ApiAuthCheckerTest.cpp">
@@ -95,6 +98,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\data\PluginDataLocationsTest.cpp">
       <Filter>test\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\time\SystemClockTest.cpp">
+      <Filter>test\time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
