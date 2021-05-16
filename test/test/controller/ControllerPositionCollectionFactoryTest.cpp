@@ -55,11 +55,11 @@ namespace UKControllerPluginTest {
                 {
                     {"id", 2},
                     {"callsign", "EGAA_TWR"},
-                    {"frequency", 123.000},
+                    {"frequency", 123},
                     {"top_down", nlohmann::json::array({"EGAA"})},
                     {"requests_departure_releases", true},
                     {"receives_departure_releases", false},
-                }, // Frequency ending with all zeros
+                }, // Frequency ending with all zeros - comes out as integer in dependency
                 {
                     {"id", 3},
                     {"callsign", "EGAA_GND"},
