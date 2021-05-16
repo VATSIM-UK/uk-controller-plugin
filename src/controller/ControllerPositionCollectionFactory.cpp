@@ -63,7 +63,7 @@ namespace UKControllerPlugin {
                             position.contains("callsign") &&
                             position.at("callsign").is_string() &&
                             position.contains("frequency") &&
-                            position.at("frequency").is_number_float() &&
+                            position.at("frequency").is_number() &&  // Required as EGNX_TWR comes out as 124 in dependency
                             position.contains("top_down") &&
                             position.at("top_down").is_array() &&
                             std::find_if_not(
