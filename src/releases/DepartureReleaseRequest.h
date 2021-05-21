@@ -21,12 +21,14 @@ namespace UKControllerPlugin {
                 );
 
                 int Id() const;
+                bool RequiresDecision() const;
                 std::string Callsign() const;
                 int RequestingController() const;
                 int TargetController() const;
                 bool Acknowledged() const;
                 bool Rejected() const;
                 bool Approved() const;
+                bool RequestExpired() const;
                 std::chrono::system_clock::time_point RequestExpiryTime() const;
                 std::chrono::system_clock::time_point ReleaseExpiryTime() const;
                 std::chrono::system_clock::time_point ReleasedAtTime() const;

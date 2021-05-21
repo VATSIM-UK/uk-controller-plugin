@@ -57,6 +57,9 @@ class EuroscopePluginLoopbackInterface
                 )
             > function
         ) = 0;
+        virtual void ApplyFunctionToAllControllers(
+            std::function<void(std::shared_ptr<EuroScopeCControllerInterface>)> function
+        ) = 0;
         virtual void ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue) = 0;
 };
 }  // namespace Euroscope

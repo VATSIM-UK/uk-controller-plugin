@@ -12,3 +12,5 @@
 9009 - Open UK Flight Information Services Menu
 9010 - Open Oceanic Clearance Diaog
 9011 - Recycle Initial Heading
+9012 - Open Request Departure Release Dialog
+9013 - Open Departure Release Decision Menu

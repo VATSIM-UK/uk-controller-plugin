@@ -1,15 +1,36 @@
 #include "pch/stdafx.h"
 #include "releases/DepartureReleaseEventHandler.h"
-
+#include "api/ApiException.h"
+#include "api/ApiInterface.h"
+#include "controller/ActiveCallsignCollection.h"
+#include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
+#include "dialog/DialogManager.h"
 #include "releases/DepartureReleaseRequest.h"
 #include "time/ParseTimeStrings.h"
+#include "time/SystemClock.h"
+#include "plugin/PopupMenuItem.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "task/TaskRunnerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
 
         DepartureReleaseEventHandler::DepartureReleaseEventHandler(
-            const Controller::ControllerPositionCollection& controllers): controllers(controllers) {}
+            const Api::ApiInterface& api,
+            TaskManager::TaskRunnerInterface& taskRunner,
+            Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            const Controller::ControllerPositionCollection& controllers,
+            const Controller::ActiveCallsignCollection& activeCallsigns,
+            const Dialog::DialogManager& dialogManager,
+            const int triggerRequestDialogFunctionId,
+            const int triggerDecisionMenuFunctionId,
+            const int releaseDecisionCallbackId
+        ): triggerRequestDialogFunctionId(triggerRequestDialogFunctionId),
+           triggerDecisionMenuFunctionId(triggerDecisionMenuFunctionId),
+           releaseDecisionCallbackId(releaseDecisionCallbackId),
+           controllers(controllers), plugin(plugin), dialogManager(dialogManager), api(api), taskRunner(taskRunner),
+           activeCallsigns(activeCallsigns) {}
 
         void DepartureReleaseEventHandler::ProcessWebsocketMessage(const Websocket::WebsocketMessage& message)
         {
@@ -38,6 +59,7 @@ namespace UKControllerPlugin {
 
         void DepartureReleaseEventHandler::AddReleaseRequest(std::shared_ptr<DepartureReleaseRequest> request)
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             this->releaseRequests[request->Id()] = request;
         }
 
@@ -126,6 +148,31 @@ namespace UKControllerPlugin {
             return releaseRequest->RequestExpiryTime() < std::chrono::system_clock::now();
         }
 
+        std::string DepartureReleaseEventHandler::GetTagItemDescription(int tagItemId) const
+        {
+            return "";
+        }
+
+        void DepartureReleaseEventHandler::SetTagItemData(Tag::TagData& tagData)
+        { }
+
+        const std::shared_ptr<DepartureReleaseRequest>
+        DepartureReleaseEventHandler::FindReleaseRequiringDecisionForCallsign(
+            std::string callsign
+        ) const
+        {
+            auto release = std::find_if(
+                this->releaseRequests.cbegin(),
+                this->releaseRequests.cend(),
+                [&callsign](const std::pair<int, std::shared_ptr<DepartureReleaseRequest>>& release) -> bool
+                {
+                    return release.second->Callsign() == callsign && release.second->RequiresDecision();
+                }
+            );
+
+            return release != this->releaseRequests.cend() ? release->second : nullptr;
+        }
+
         /**
          * Create a new departure release request.
          */
@@ -206,6 +253,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::TimedEventTrigger()
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             for (
                 auto release = this->releaseRequests.cbegin();
                 release != this->releaseRequests.cend();
@@ -217,5 +265,198 @@ namespace UKControllerPlugin {
                 }
             }
         }
-    }  // namespace Releases
+
+        /*
+         * Open the departure release request dialog to start requesting a new
+         * release.
+         */
+        void DepartureReleaseEventHandler::OpenRequestDialog(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        )
+        {
+            if (
+                !this->activeCallsigns.UserHasCallsign() ||
+                !this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().RequestsDepartureReleases()
+            ) {
+                LogWarning("Not opening departure release request dialog, user cannot request releases");
+                //return;
+            }
+
+            std::string callsign = flightplan.GetCallsign();
+            this->dialogManager.OpenDialog(IDD_DEPARTURE_RELEASE_REQUEST, reinterpret_cast<LPARAM>(callsign.c_str()));
+        }
+
+        /*
+         * Open the decision popup menu for a particular departure release.
+         */
+        void DepartureReleaseEventHandler::OpenDecisionMenu(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        )
+        {
+            // TODO: Make it not allow this if
+            if (this->FindReleaseRequiringDecisionForCallsign(flightplan.GetCallsign())) {
+                return;
+            }
+
+            // Create the list in place
+            RECT popupArea = {
+                mousePos.x,
+                mousePos.y,
+                mousePos.x + 400,
+                mousePos.y + 600
+            };
+
+            this->plugin.TriggerPopupList(
+                popupArea,
+                "Departure Release Decision",
+                1
+            );
+
+            Plugin::PopupMenuItem menuItem;
+            menuItem.firstValue = "";
+            menuItem.secondValue = "";
+            menuItem.callbackFunctionId = this->releaseDecisionCallbackId;
+            menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItem.disabled = false;
+            menuItem.fixedPosition = false;
+
+            menuItem.firstValue = "Approve";
+            this->plugin.AddItemToPopupList(menuItem);
+            menuItem.firstValue = "Reject";
+            this->plugin.AddItemToPopupList(menuItem);
+            menuItem.firstValue = "Acknowledge";
+            this->plugin.AddItemToPopupList(menuItem);
+        }
+
+        /*
+         * Departure release decision has been made, process that decision.
+         */
+        void DepartureReleaseEventHandler::ReleaseDecisionMade(int functionId, std::string context, RECT)
+        {
+            // Check we can make this decision
+            auto fp = this->plugin.GetSelectedFlightplan();
+            if (!fp) {
+                LogWarning("Cannot make release decision, no callsign selected");
+                return;
+            }
+
+            auto release = this->FindReleaseRequiringDecisionForCallsign(fp->GetCallsign());
+            if (!release) {
+                LogWarning("Cannot make release decision, no release available");
+                return;
+            }
+
+            if (!this->activeCallsigns.UserHasCallsign()) {
+                LogWarning("Cannot make release decision, controller does not have active callsign");
+                return;
+            }
+            auto controller = this->activeCallsigns.GetUserCallsign();
+
+            std::string callsign = release->Callsign();
+            // Release has been approved
+            if (context == "Approve") {
+                this->dialogManager.OpenDialog(
+                    IDD_DEPARTURE_RELEASE_APPROVE,
+                    reinterpret_cast<LPARAM>(callsign.c_str())
+                );
+                return;
+            }
+
+            // Release has been rejected
+            if (context == "Reject") {
+                this->taskRunner.QueueAsynchronousTask([this, &release, controller]()
+                {
+                    try {
+                        this->api.RejectDepartureReleaseRequest(
+                            release->Id(),
+                            controller.GetNormalisedPosition().GetId()
+                        );
+                        LogInfo("Rejected departure release id " + std::to_string(release->Id()));
+                    } catch (Api::ApiException apiException) {
+                        LogError("ApiException when rejecting departure release: "
+                            + std::string(apiException.what()));
+                    }
+                });
+                return;
+            }
+
+            // Release has been acknowledged
+            this->taskRunner.QueueAsynchronousTask([this, &release, controller]()
+            {
+                try {
+                    this->api.AcknowledgeDepartureReleaseRequest(
+                        release->Id(),
+                        controller.GetNormalisedPosition().GetId()
+                    );
+                    LogInfo("Acknowledged departure release id " + std::to_string(release->Id()));
+                } catch (Api::ApiException apiException) {
+                    LogError("ApiException when acknowledging departure release: "
+                        + std::string(apiException.what()));
+                }
+            });
+        }
+
+        /*
+         * Given a callsign and a target controller, check that releases can be peformed
+         * and perform the request. Create the request locally once we have an id to
+         * tide us over until the next event update.
+         */
+        void DepartureReleaseEventHandler::RequestRelease(std::string callsign, int targetControllerId)
+        {
+            this->taskRunner.QueueAsynchronousTask([this, callsign, targetControllerId]()
+            {
+                auto controller = this->controllers.FetchPositionById(targetControllerId);
+                if (!controller || controller->ReceivesDepartureReleases()) {
+                    LogError("Cannot request release, target controller is invalid");
+                    return;
+                }
+
+                if (
+                    !this->activeCallsigns.UserHasCallsign() ||
+                    !this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().RequestsDepartureReleases()
+                ) {
+                    LogError("Cannot request release, controller position cannot request releases");
+                    return;
+                }
+
+                int userPositionId = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId();
+
+                try {
+                    nlohmann::json response = this->api.RequestDepartureRelease(
+                        callsign,
+                        this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId(),
+                        targetControllerId,
+                        300
+                    );
+
+                    if (!response.contains("id") || !response.at("id").is_number_integer()) {
+                        LogError("Api returned invalid departure release id");
+                        return;
+                    }
+
+                    this->AddReleaseRequest(
+                        std::make_shared<DepartureReleaseRequest>(
+                            response.at("id").get<int>(),
+                            callsign,
+                            userPositionId,
+                            targetControllerId,
+                            Time::TimeNow() + std::chrono::seconds(300)
+                        )
+                    );
+                    LogInfo(
+                        "Requested departure release id " + std::to_string(response.at("id").get<int>())
+                        + " for " + callsign
+                    );
+                } catch (Api::ApiException apiException) {
+                    LogError("ApiException when requesting departure release");
+                }
+            });
+        }
+    } // namespace Releases
 }  // namespace UKControllerPlugin

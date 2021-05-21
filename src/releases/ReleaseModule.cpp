@@ -7,12 +7,16 @@
 #include "tag/TagFunction.h"
 #include "euroscope/CallbackFunction.h"
 #include "releases/DepartureReleaseEventHandler.h"
+#include "releases/ApproveDepartureReleaseDialog.h"
+#include "releases/RequestDepartureReleaseDialog.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
+using UKControllerPlugin::Releases::ApproveDepartureReleaseDialog;
+using UKControllerPlugin::Releases::RequestDepartureReleaseDialog;
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -20,6 +24,8 @@ namespace UKControllerPlugin {
         const std::string enrouteReleaseTypesDependency = "DEPENDENCY_ENROUTE_RELEASE_TYPES";
         const unsigned int enrouteReleaseTypeTagItemId = 9005;
         const unsigned int enrouteReleasePointTagItemId = 9006;
+        const unsigned int departureReleaseRequestDialogTriggerFunctionId = 9012;
+        const unsigned int departureReleaseDecisionMenuTriggerFunctionId = 9013;
 
         void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
         {
@@ -106,10 +112,96 @@ namespace UKControllerPlugin {
 
 
             // Everything to do with DEPARTURE releases
+            const int releaseDecisionCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             std::shared_ptr<DepartureReleaseEventHandler> departureHandler =
                 std::make_shared<DepartureReleaseEventHandler>(
-                    *container.controllerPositions
+                    *container.api,
+                    *container.taskRunner,
+                    *container.plugin,
+                    *container.controllerPositions,
+                    *container.activeCallsigns,
+                    *container.dialogManager,
+                    departureReleaseRequestDialogTriggerFunctionId,
+                    departureReleaseDecisionMenuTriggerFunctionId,
+                    releaseDecisionCallbackId
                 );
+
+            // Callback for when a release decision is made
+            CallbackFunction releaseDecisionCallback(
+                releaseDecisionCallbackId,
+                "Departure Release Decision Made",
+                std::bind(
+                    &DepartureReleaseEventHandler::ReleaseDecisionMade,
+                    departureHandler,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(releaseDecisionCallback);
+
+            // TAG function to trigger the request dialog
+            TagFunction openDepartureReleaseRequestDialog(
+                departureReleaseRequestDialogTriggerFunctionId,
+                "Open Departure Release Request Dialog",
+                std::bind(
+                    &DepartureReleaseEventHandler::OpenRequestDialog,
+                    departureHandler.get(),
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseRequestDialog);
+
+
+            // TAG function to trigger the decision menu
+            TagFunction openDepartureReleaseDecisionMenu(
+                departureReleaseDecisionMenuTriggerFunctionId,
+                "Open Departure Release Decision Menu",
+                std::bind(
+                    &DepartureReleaseEventHandler::OpenDecisionMenu,
+                    departureHandler.get(),
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseDecisionMenu);
+
+            // Dialog for requesting departure releases
+            std::shared_ptr<RequestDepartureReleaseDialog> requestDialog =
+                std::make_shared<RequestDepartureReleaseDialog>(
+                    departureHandler,
+                    *container.activeCallsigns,
+                    *container.plugin
+                );
+
+            container.dialogManager->AddDialog(
+                {
+                    IDD_DEPARTURE_RELEASE_REQUEST,
+                    "Request Departure Releases",
+                    reinterpret_cast<DLGPROC>(requestDialog->WndProc),
+                    reinterpret_cast<LPARAM>(requestDialog.get()),
+                    requestDialog
+                }
+            );
+
+            // Dialog for approving departure releases
+            std::shared_ptr<ApproveDepartureReleaseDialog> approveDialog = std::make_shared<
+                ApproveDepartureReleaseDialog>();
+
+            container.dialogManager->AddDialog(
+                {
+                    IDD_DEPARTURE_RELEASE_APPROVE,
+                    "Approve Departure Releases",
+                    reinterpret_cast<DLGPROC>(approveDialog->WndProc),
+                    reinterpret_cast<LPARAM>(approveDialog.get()),
+                    approveDialog
+                }
+            );
 
             // Add to handlers
             container.timedHandler->RegisterEvent(departureHandler, 15);

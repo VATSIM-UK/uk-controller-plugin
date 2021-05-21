@@ -213,6 +213,31 @@ namespace UKControllerPlugin {
         return std::move(elements);
     }
 
+    void UKPlugin::ApplyFunctionToAllControllers(
+        std::function<void(std::shared_ptr<EuroScopeCControllerInterface>)> function)
+    {
+        EuroScopePlugIn::CController current = this->ControllerSelectFirst();
+
+        // If there's nothing, stop
+        if (!current.IsValid() || strcmp(current.GetCallsign(), "") == 0) {
+            return;
+        }
+
+        // Loop through all visible controllers
+        do {
+            if (!current.IsValid()) {
+                continue;
+            }
+
+            function(
+                std::make_shared<EuroScopeCControllerWrapper>(
+                    current,
+                    this->ControllerIsMe(current, this->ControllerMyself())
+                )
+            );
+        } while (strcmp((current = this->ControllerSelectNext(current)).GetCallsign(), "") != 0);
+    }
+
     /*
         Gets a given key from user settings.
     */
@@ -576,7 +601,6 @@ namespace UKControllerPlugin {
                 std::make_shared<EuroScopeCRadarTargetWrapper>(rt)
             );
 
-            this->OnFlightPlanFlightPlanDataUpdate(current);
         } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
     }
 

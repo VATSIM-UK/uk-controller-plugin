@@ -39,6 +39,13 @@ namespace UKControllerPlugin {
             return this->id;
         }
 
+        bool DepartureReleaseRequest::RequiresDecision() const
+        {
+            return !this->Rejected() &&
+                !this->RequestExpired() &&
+                !this->Approved();
+        }
+
         std::string DepartureReleaseRequest::Callsign() const
         {
             return this->callsign;
@@ -67,6 +74,11 @@ namespace UKControllerPlugin {
         bool DepartureReleaseRequest::Approved() const
         {
             return this->releaseExpiresAt != this->noTime;
+        }
+
+        bool DepartureReleaseRequest::RequestExpired() const
+        {
+            return this->requestExpiresAt < Time::TimeNow();
         }
 
         std::chrono::system_clock::time_point DepartureReleaseRequest::RequestExpiryTime() const

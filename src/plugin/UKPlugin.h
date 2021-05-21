@@ -158,6 +158,10 @@ namespace UKControllerPlugin {
             std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>>
                 GetAllElementsByType(int type) override;
 
+            void ApplyFunctionToAllControllers(
+                std::function<void(std::shared_ptr<Euroscope::EuroScopeCControllerInterface>)> function
+            ) override;
+
         private:
 
             bool ControllerIsMe(EuroScopePlugIn::CController controller, EuroScopePlugIn::CController me);

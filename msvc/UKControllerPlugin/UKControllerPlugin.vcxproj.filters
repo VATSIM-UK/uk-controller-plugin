@@ -1058,6 +1058,15 @@
     <ClInclude Include="..\..\src\releases\DepartureReleaseEventHandler.h">
       <Filter>src\releases</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\ApproveDepartureReleaseDialog.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\RequestDepartureReleaseDialog.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1819,6 +1828,12 @@
       <Filter>src\releases</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\releases\DepartureReleaseEventHandler.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\ApproveDepartureReleaseDialog.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\RequestDepartureReleaseDialog.cpp">
       <Filter>src\releases</Filter>
     </ClCompile>
   </ItemGroup>

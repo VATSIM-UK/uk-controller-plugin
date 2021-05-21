@@ -7,6 +7,8 @@
 #include "timedevent/TimedEventCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/HandoffEventHandlerCollection.h"
+#include "dialog/DialogManager.h"
+#include "mock/MockDialogProvider.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -19,6 +21,8 @@ using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
+using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -34,6 +38,7 @@ namespace UKControllerPluginTest {
                     container.timedHandler.reset(new TimedEventCollection);
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
                     container.controllerHandoffHandlers.reset(new HandoffEventHandlerCollection);
+                    container.dialogManager.reset(new DialogManager(this->dialogProvider));
 
                     nlohmann::json dependency = nlohmann::json::array();
                     dependency.push_back(
@@ -58,6 +63,7 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return(dependency));
                 }
 
+                NiceMock<MockDialogProvider> dialogProvider;
                 NiceMock<MockDependencyLoader> dependencyLoader;
                 PersistenceContainer container;
         };
@@ -118,6 +124,27 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9006));
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5001));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersDialogs)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_DEPARTURE_RELEASE_APPROVE));
+            EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_DEPARTURE_RELEASE_REQUEST));
+            EXPECT_EQ(2, this->container.dialogManager->CountDialogs());
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersOpenRequestDialogTagFunction)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9012));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersOpenDecisionMenuTagFunction)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9013));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5002));
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

@@ -1,6 +1,7 @@
 #pragma once
 #include "pch/pch.h"
 #include "releases/DepartureReleaseRequest.h"
+#include "time/SystemClock.h"
 
 using UKControllerPlugin::Releases::DepartureReleaseRequest;
 using testing::Test;
@@ -108,6 +109,40 @@ namespace UKControllerPluginTest {
                 std::chrono::minutes(2);
             request.Approve(releasedAt, releaseExpiresAt);
             EXPECT_EQ(releaseExpiresAt, request.ReleaseExpiryTime());
+        }
+
+        TEST_F(DepartureReleaseRequestTest, RequestNotExpiredIfTimeHasNotPassed)
+        {
+            EXPECT_FALSE(this->request.RequestExpired());
+        }
+
+        TEST_F(DepartureReleaseRequestTest, RequestExpiredIfTimePassed)
+        {
+            UKControllerPlugin::Time::SetTestNow(std::chrono::system_clock::now() + std::chrono::minutes(4));
+            EXPECT_TRUE(this->request.RequestExpired());
+        }
+
+        TEST_F(DepartureReleaseRequestTest, RequestRequiresDecision)
+        {
+            EXPECT_TRUE(this->request.RequiresDecision());
+        }
+
+        TEST_F(DepartureReleaseRequestTest, RequestDoesNotRequireDecisionIfExpired)
+        {
+            UKControllerPlugin::Time::SetTestNow(std::chrono::system_clock::now() + std::chrono::minutes(4));
+            EXPECT_FALSE(this->request.RequiresDecision());
+        }
+
+        TEST_F(DepartureReleaseRequestTest, RequestDoesNotRequireDecisionIfAlreadyApproved)
+        {
+            request.Approve(std::chrono::system_clock::now(), std::chrono::system_clock::now());
+            EXPECT_FALSE(this->request.RequiresDecision());
+        }
+
+        TEST_F(DepartureReleaseRequestTest, RequestDoesNotRequireDecisionIfAlreadyRejected)
+        {
+            request.Reject();
+            EXPECT_FALSE(this->request.RequiresDecision());
         }
     } // namespace Releases
 } // namespace UKControllerPluginTest
