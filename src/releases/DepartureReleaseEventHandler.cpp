@@ -63,8 +63,9 @@ namespace UKControllerPlugin {
             this->releaseRequests[request->Id()] = request;
         }
 
-        std::shared_ptr<DepartureReleaseRequest> DepartureReleaseEventHandler::GetReleaseRequest(int id) const
+        std::shared_ptr<DepartureReleaseRequest> DepartureReleaseEventHandler::GetReleaseRequest(int id)
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             auto request = this->releaseRequests.find(id);
             return request == this->releaseRequests.cend() ? nullptr : request->second;
         }
@@ -146,6 +147,26 @@ namespace UKControllerPlugin {
             }
 
             return releaseRequest->RequestExpiryTime() < std::chrono::system_clock::now();
+        }
+
+        bool DepartureReleaseEventHandler::ControllerCanMakeReleaseDecision(
+            const std::shared_ptr<DepartureReleaseRequest>& release
+        ) const
+        {
+            if (!release) {
+                LogError("Cannot approve release, release not found");
+                return false;
+            }
+
+            if (
+                !this->activeCallsigns.UserHasCallsign() ||
+                this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() != release->TargetController()
+            ) {
+                LogError("Cannot approve release, user not authorised to approve");
+                return false;
+            }
+
+            return true;
         }
 
         std::string DepartureReleaseEventHandler::GetTagItemDescription(int tagItemId) const
@@ -282,7 +303,7 @@ namespace UKControllerPlugin {
                 !this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().RequestsDepartureReleases()
             ) {
                 LogWarning("Not opening departure release request dialog, user cannot request releases");
-                //return;
+                return;
             }
 
             std::string callsign = flightplan.GetCallsign();
@@ -299,8 +320,22 @@ namespace UKControllerPlugin {
             const POINT& mousePos
         )
         {
-            // TODO: Make it not allow this if
-            if (this->FindReleaseRequiringDecisionForCallsign(flightplan.GetCallsign())) {
+            this->AddReleaseRequest(
+                std::make_shared<DepartureReleaseRequest>(
+                    1,
+                    "BAW30K",
+                    1,
+                    2,
+                    Time::TimeNow() + std::chrono::seconds(300)
+                )
+            );
+
+            auto release = this->FindReleaseRequiringDecisionForCallsign(flightplan.GetCallsign());
+            if (
+                !release ||
+                !this->activeCallsigns.UserHasCallsign() ||
+                this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() != release->TargetController()
+            ) {
                 return;
             }
 
@@ -347,36 +382,29 @@ namespace UKControllerPlugin {
             }
 
             auto release = this->FindReleaseRequiringDecisionForCallsign(fp->GetCallsign());
-            if (!release) {
-                LogWarning("Cannot make release decision, no release available");
+            if (!this->ControllerCanMakeReleaseDecision(release)) {
                 return;
             }
 
-            if (!this->activeCallsigns.UserHasCallsign()) {
-                LogWarning("Cannot make release decision, controller does not have active callsign");
-                return;
-            }
-            auto controller = this->activeCallsigns.GetUserCallsign();
-
-            std::string callsign = release->Callsign();
             // Release has been approved
             if (context == "Approve") {
                 this->dialogManager.OpenDialog(
                     IDD_DEPARTURE_RELEASE_APPROVE,
-                    reinterpret_cast<LPARAM>(callsign.c_str())
+                    reinterpret_cast<LPARAM>(&release)
                 );
                 return;
             }
 
             // Release has been rejected
             if (context == "Reject") {
-                this->taskRunner.QueueAsynchronousTask([this, &release, controller]()
+                this->taskRunner.QueueAsynchronousTask([this, &release]()
                 {
                     try {
                         this->api.RejectDepartureReleaseRequest(
                             release->Id(),
-                            controller.GetNormalisedPosition().GetId()
+                            release->TargetController()
                         );
+                        release->Reject();
                         LogInfo("Rejected departure release id " + std::to_string(release->Id()));
                     } catch (Api::ApiException apiException) {
                         LogError("ApiException when rejecting departure release: "
@@ -387,13 +415,14 @@ namespace UKControllerPlugin {
             }
 
             // Release has been acknowledged
-            this->taskRunner.QueueAsynchronousTask([this, &release, controller]()
+            this->taskRunner.QueueAsynchronousTask([this, &release]()
             {
                 try {
                     this->api.AcknowledgeDepartureReleaseRequest(
                         release->Id(),
-                        controller.GetNormalisedPosition().GetId()
+                        release->TargetController()
                     );
+                    release->Acknowledge();
                     LogInfo("Acknowledged departure release id " + std::to_string(release->Id()));
                 } catch (Api::ApiException apiException) {
                     LogError("ApiException when acknowledging departure release: "
@@ -455,6 +484,42 @@ namespace UKControllerPlugin {
                     );
                 } catch (Api::ApiException apiException) {
                     LogError("ApiException when requesting departure release");
+                }
+            });
+        }
+
+        /*
+         * Given a release id, approve it.
+         */
+        void DepartureReleaseEventHandler::ApproveRelease(
+            int releaseId,
+            std::chrono::system_clock::time_point releasedAt,
+            int expiresInSeconds
+        )
+        {
+            auto release = this->GetReleaseRequest(releaseId);
+            if (!release) {
+                LogError("Cannot approve release, release not found");
+                return;
+            }
+
+            if (!this->ControllerCanMakeReleaseDecision(release)) {
+                return;
+            }
+
+            this->taskRunner.QueueAsynchronousTask([this, release, releasedAt, expiresInSeconds]()
+            {
+                try {
+                    this->api.ApproveDepartureReleaseRequest(
+                        release->Id(),
+                        release->TargetController(),
+                        releasedAt,
+                        expiresInSeconds
+                    );
+                    release->Approve(releasedAt, releasedAt + std::chrono::seconds(expiresInSeconds));
+                    LogInfo("Approved departure release id " + std::to_string(release->Id()));
+                } catch (Api::ApiException) {
+                    LogError("ApiException approving departure release " + std::to_string(release->Id()));
                 }
             });
         }

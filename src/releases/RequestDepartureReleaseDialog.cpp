@@ -1,6 +1,5 @@
 #include "pch/stdafx.h"
 #include "releases/RequestDepartureReleaseDialog.h"
-
 #include "DepartureReleaseEventHandler.h"
 #include "dialog/DialogCallArgument.h"
 #include "controller/ActiveCallsignCollection.h"
@@ -43,6 +42,7 @@ namespace UKControllerPlugin {
                 case WM_COMMAND: {
                     switch (LOWORD(wParam)) {
                         case IDOK: {
+                            this->RequestRelease(hwnd);
                             EndDialog(hwnd, wParam);
                             return TRUE;
                         }

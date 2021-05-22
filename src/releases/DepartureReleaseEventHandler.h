@@ -49,7 +49,7 @@ namespace UKControllerPlugin {
                 void ProcessWebsocketMessage(const Websocket::WebsocketMessage& message) override;
                 std::set<Websocket::WebsocketSubscription> GetSubscriptions() const override;
                 void AddReleaseRequest(std::shared_ptr<DepartureReleaseRequest> request);
-                std::shared_ptr<DepartureReleaseRequest> GetReleaseRequest(int id) const;
+                std::shared_ptr<DepartureReleaseRequest> GetReleaseRequest(int id);
                 void TimedEventTrigger() override;
                 void OpenRequestDialog(
                     Euroscope::EuroScopeCFlightPlanInterface& flightplan,
@@ -65,6 +65,11 @@ namespace UKControllerPlugin {
                 );
                 void ReleaseDecisionMade(int functionId, std::string context, RECT);
                 void RequestRelease(std::string callsign, int targetControllerId);
+                void ApproveRelease(
+                    int releaseId,
+                    std::chrono::system_clock::time_point releasedAt,
+                    int expiresInSeconds
+                );
 
             private:
                 void ProcessDepartureReleaseRequestedMessage(const nlohmann::json& data);
@@ -79,6 +84,9 @@ namespace UKControllerPlugin {
                 bool DepartureReleaseApprovedMessageValid(const nlohmann::json& data) const;
                 bool DepartureReleaseCancelMessageValid(const nlohmann::json& data) const;
                 bool ReleaseShouldBeRemoved(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest);
+                bool ControllerCanMakeReleaseDecision(
+                    const std::shared_ptr<DepartureReleaseRequest>& releaseRequest
+                ) const;
                 std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(Tag::TagData& tagData) override;
                 const std::shared_ptr<DepartureReleaseRequest> FindReleaseRequiringDecisionForCallsign(

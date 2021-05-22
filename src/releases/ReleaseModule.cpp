@@ -191,7 +191,8 @@ namespace UKControllerPlugin {
 
             // Dialog for approving departure releases
             std::shared_ptr<ApproveDepartureReleaseDialog> approveDialog = std::make_shared<
-                ApproveDepartureReleaseDialog>();
+                ApproveDepartureReleaseDialog
+            >(departureHandler);
 
             container.dialogManager->AddDialog(
                 {
