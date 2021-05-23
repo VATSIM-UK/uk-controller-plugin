@@ -320,22 +320,8 @@ namespace UKControllerPlugin {
             const POINT& mousePos
         )
         {
-            this->AddReleaseRequest(
-                std::make_shared<DepartureReleaseRequest>(
-                    1,
-                    "BAW30K",
-                    1,
-                    2,
-                    Time::TimeNow() + std::chrono::seconds(300)
-                )
-            );
-
             auto release = this->FindReleaseRequiringDecisionForCallsign(flightplan.GetCallsign());
-            if (
-                !release ||
-                !this->activeCallsigns.UserHasCallsign() ||
-                this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() != release->TargetController()
-            ) {
+            if (!this->ControllerCanMakeReleaseDecision(release)) {
                 return;
             }
 
@@ -441,7 +427,7 @@ namespace UKControllerPlugin {
             this->taskRunner.QueueAsynchronousTask([this, callsign, targetControllerId]()
             {
                 auto controller = this->controllers.FetchPositionById(targetControllerId);
-                if (!controller || controller->ReceivesDepartureReleases()) {
+                if (!controller || !controller->ReceivesDepartureReleases()) {
                     LogError("Cannot request release, target controller is invalid");
                     return;
                 }
@@ -498,11 +484,6 @@ namespace UKControllerPlugin {
         )
         {
             auto release = this->GetReleaseRequest(releaseId);
-            if (!release) {
-                LogError("Cannot approve release, release not found");
-                return;
-            }
-
             if (!this->ControllerCanMakeReleaseDecision(release)) {
                 return;
             }

@@ -125,6 +125,7 @@ namespace UKControllerPlugin {
                     departureReleaseDecisionMenuTriggerFunctionId,
                     releaseDecisionCallbackId
                 );
+            container.websocketProcessors->AddProcessor(departureHandler);
 
             // Callback for when a release decision is made
             CallbackFunction releaseDecisionCallback(

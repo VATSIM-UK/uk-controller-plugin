@@ -68,7 +68,7 @@ namespace UKControllerPluginTest {
                 PersistenceContainer container;
         };
 
-        TEST_F(ReleaseModuleTest, ItRegistersForWebsocketEvents)
+        TEST_F(ReleaseModuleTest, ItRegistersForEnrouteWebsocketEvents)
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-enroute-releases"));
@@ -145,6 +145,12 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9013));
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5002));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersForDepartureWebsocketEvents)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-departure-releases"));
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest
