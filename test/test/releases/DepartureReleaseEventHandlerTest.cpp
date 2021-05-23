@@ -7,14 +7,22 @@
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "time/SystemClock.h"
+#include "mock/MockApiInterface.h"
+#include "mock/MockTaskRunnerInterface.h"
+#include "mock/MockEuroscopePluginLoopbackInterface.h"
+#include "controller/ActiveCallsignCollection.h"
+#include "dialog/DialogManager.h"
+#include "mock/MockDialogProvider.h"
 
 using ::testing::Test;
+using testing::NiceMock;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::DepartureReleaseRequest;
 using UKControllerPlugin::Websocket::WebsocketMessage;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Time::ParseTimeString;
+using UKControllerPlugin::Controller::ActiveCallsign;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -23,7 +31,8 @@ namespace UKControllerPluginTest {
         {
             public:
                 DepartureReleaseEventHandlerTest()
-                    : handler(controllers)
+                    : dialogManager(dialogProvider),
+                      handler(api, mockTaskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, 1, 2, 3)
                 {
                     request = std::make_shared<DepartureReleaseRequest>(
                         1,
@@ -32,30 +41,52 @@ namespace UKControllerPluginTest {
                         3,
                         std::chrono::system_clock::now()
                     );
-                    controllers.AddPosition(
-                        std::make_shared<ControllerPosition>(
-                            2,
-                            "EGFF_APP",
-                            125.850,
-                            std::vector<std::string>{"EGGD", "EGFF"},
-                            true,
-                            false
-                        )
+
+                    // Add position 1
+                    position1 = std::make_shared<ControllerPosition>(
+                        2,
+                        "EGFF_APP",
+                        125.850,
+                        std::vector<std::string>{"EGGD", "EGFF"},
+                        true,
+                        false
                     );
-                    controllers.AddPosition(
-                        std::make_shared<ControllerPosition>(
+                    controllers.AddPosition(position1);
+                    controller1Callsign = std::make_shared<ActiveCallsign>(
+                        "EGFF_APP",
+                        "Test 1",
+                        *position1
+                    );
+
+                    // Add position 2
+                    position2 = std::make_shared<ControllerPosition>(
                             3,
                             "EGFF_TWR",
                             123.450,
                             std::vector<std::string>{"EGGD", "EGFF"},
                             true,
                             false
-                        )
                     );
-                    handler.AddReleaseRequest(request);
+                    controllers.AddPosition(position2);
+                    controller2Callsign = std::make_shared<ActiveCallsign>(
+                        "EGFF_TWR",
+                        "Test 2",
+                        *position2
+                    );
+
                     UKControllerPlugin::Time::SetTestNow(std::chrono::system_clock::now());
                 }
 
+                NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
+                std::shared_ptr<ControllerPosition> position1;
+                std::shared_ptr<ControllerPosition> position2;
+                std::shared_ptr<ActiveCallsign> controller1Callsign;
+                std::shared_ptr<ActiveCallsign> controller2Callsign;
+                UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
+                TaskManager::MockTaskRunnerInterface mockTaskRunner;
+                NiceMock<Dialog::MockDialogProvider> dialogProvider;
+                NiceMock<Api::MockApiInterface> api;
+                UKControllerPlugin::Dialog::DialogManager dialogManager;
                 ControllerPositionCollection controllers;
                 std::shared_ptr<DepartureReleaseRequest> request;
                 DepartureReleaseEventHandler handler;
@@ -74,6 +105,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseEventHandlerTest, ItAcknowledgesTheRequestFromMessage)
         {
+            handler.AddReleaseRequest(request);
             nlohmann::json data;
             data["id"] = 1;
 
@@ -148,6 +180,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseEventHandlerTest, ItRejectsTheRequestFromMessage)
         {
+            handler.AddReleaseRequest(request);
             nlohmann::json data;
             data["id"] = 1;
 
@@ -222,6 +255,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseEventHandlerTest, ItCancelsTheRequestFromMessage)
         {
+            handler.AddReleaseRequest(request);
             nlohmann::json data;
             data["id"] = 1;
 
@@ -237,6 +271,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesMissingIdInCancelMessage)
         {
+            handler.AddReleaseRequest(request);
             nlohmann::json data;
             data["not_id"] = 1;
 
@@ -252,6 +287,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesIdNotAnIntegerInCancelMessage)
         {
+            handler.AddReleaseRequest(request);
             nlohmann::json data;
             data["id"] = "abc";
 
@@ -267,6 +303,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesIdNotValidInCancelMessage)
         {
+            handler.AddReleaseRequest(request);
             nlohmann::json data;
             data["id"] = 2;
 
@@ -282,6 +319,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesCancelMessageNotAnObject)
         {
+            handler.AddReleaseRequest(request);
             nlohmann::json data = nlohmann::json::array();
 
             WebsocketMessage message{
@@ -296,6 +334,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseEventHandlerTest, ItApprovesTheRequestFromMessage)
         {
+            handler.AddReleaseRequest(request);
             nlohmann::json data;
             data["id"] = 1;
             data["expires_at"] = "2021-05-12 20:00:00";

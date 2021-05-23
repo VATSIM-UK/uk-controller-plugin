@@ -15,7 +15,9 @@ namespace UKControllerPluginTest {
                 DepartureReleaseRequestTest()
                     : requestExpiresAt(std::chrono::system_clock::now() + std::chrono::minutes(3)),
                       request(1, "BAW123", 2, 3, requestExpiresAt)
-                { }
+                {
+                    UKControllerPlugin::Time::SetTestNow(std::chrono::system_clock::now());
+                }
 
                 std::chrono::system_clock::time_point requestExpiresAt;
                 DepartureReleaseRequest request;
