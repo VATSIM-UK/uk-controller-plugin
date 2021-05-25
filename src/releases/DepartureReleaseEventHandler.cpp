@@ -12,6 +12,7 @@
 #include "plugin/PopupMenuItem.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "task/TaskRunnerInterface.h"
+#include "releases/DepartureReleaseColours.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -171,11 +172,24 @@ namespace UKControllerPlugin {
 
         std::string DepartureReleaseEventHandler::GetTagItemDescription(int tagItemId) const
         {
-            return "";
+            switch (tagItemId) {
+                case 124:
+                    return "Departure Release Status Indicator";
+                default:
+                    return "";
+            }
         }
 
         void DepartureReleaseEventHandler::SetTagItemData(Tag::TagData& tagData)
-        { }
+        {
+            switch (tagData.itemCode) {
+                case 124:
+                    this->SetReleaseStatusIndicatorTagData(tagData);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         const std::shared_ptr<DepartureReleaseRequest>
         DepartureReleaseEventHandler::FindReleaseRequiringDecisionForCallsign(
@@ -192,6 +206,77 @@ namespace UKControllerPlugin {
             );
 
             return release != this->releaseRequests.cend() ? release->second : nullptr;
+        }
+
+        void DepartureReleaseEventHandler::SetReleaseStatusIndicatorTagData(Tag::TagData& tagData) const
+        {
+            /*
+             * Go through all the release requests and find the most recent one for each target controller.
+             */
+            std::map<int, std::shared_ptr<DepartureReleaseRequest>> relevantReleases;
+            int approvals = 0;
+            int rejections = 0;
+            int expiries = 0;
+            int awaitingReleasedAtTime = 0;
+            for (
+                auto releaseRequest = this->releaseRequests.rbegin();
+                releaseRequest != this->releaseRequests.rend();
+                ++releaseRequest
+
+            ) {
+                if (releaseRequest->second->Callsign() != tagData.flightPlan.GetCallsign()) {
+                    continue;
+                }
+
+                if (relevantReleases.count(releaseRequest->second->TargetController())) {
+                    continue;
+                }
+
+                if (releaseRequest->second->Approved()) {
+                    approvals++;
+                    if (releaseRequest->second->ApprovalExpired()) {
+                        expiries++;
+                    }
+
+                    if (releaseRequest->second->AwaitingReleasedTime()) {
+                        awaitingReleasedAtTime++;
+                    }
+                } else if (releaseRequest->second->Rejected()) {
+                    rejections++;
+                } else if (releaseRequest->second->RequestExpired()) {
+                    expiries++;
+                }
+
+                relevantReleases[releaseRequest->second->TargetController()] = releaseRequest->second;
+            }
+
+            // No releases, nothing to do
+            if (relevantReleases.empty()) {
+                return;
+            }
+
+            /*
+             * Set the indicator colour and text.
+             *
+             * If any release request is rejected: display rejected colour.
+             * If all outstanding requests are approved:
+             * - Show released colour if all releases have passed release time
+             * - Show pending time colour if still waiting for release time to pass
+             * - Show expired colour if release has expired
+             * Otherwise: display pending
+             */
+            COLORREF indicatorColour = statusIndicatorReleasePending;
+            if (rejections != 0) {
+                indicatorColour = statusIndicatorReleaseRejected;
+            } else if (expiries != 0) {
+                indicatorColour = statusIndicatorReleaseExpired;
+            } else if (approvals == relevantReleases.size()) {
+                indicatorColour = awaitingReleasedAtTime != 0
+                                      ? statusIndicatorReleasedAwaitingTime
+                                      : statusIndicatorReleased;
+            }
+            tagData.SetItemString(std::to_string(approvals - expiries) + "/" + std::to_string(relevantReleases.size()));
+            tagData.SetTagColour(indicatorColour);
         }
 
         /**

@@ -81,6 +81,16 @@ namespace UKControllerPlugin {
             return this->requestExpiresAt < Time::TimeNow();
         }
 
+        bool DepartureReleaseRequest::ApprovalExpired() const
+        {
+            return this->releaseExpiresAt < Time::TimeNow();
+        }
+
+        bool DepartureReleaseRequest::AwaitingReleasedTime() const
+        {
+            return this->releasedAtTime > Time::TimeNow();
+        }
+
         std::chrono::system_clock::time_point DepartureReleaseRequest::RequestExpiryTime() const
         {
             return this->requestExpiresAt;

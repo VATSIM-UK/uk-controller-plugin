@@ -70,8 +70,11 @@ namespace UKControllerPlugin {
                     std::chrono::system_clock::time_point releasedAt,
                     int expiresInSeconds
                 );
+                std::string GetTagItemDescription(int tagItemId) const override;
+                void SetTagItemData(Tag::TagData& tagData) override;
 
             private:
+
                 void ProcessDepartureReleaseRequestedMessage(const nlohmann::json& data);
                 void ProcessRequestAcknowledgedMessage(const nlohmann::json& data);
                 void ProcessRequestRejectedMessage(const nlohmann::json& data);
@@ -87,11 +90,10 @@ namespace UKControllerPlugin {
                 bool ControllerCanMakeReleaseDecision(
                     const std::shared_ptr<DepartureReleaseRequest>& releaseRequest
                 ) const;
-                std::string GetTagItemDescription(int tagItemId) const override;
-                void SetTagItemData(Tag::TagData& tagData) override;
                 const std::shared_ptr<DepartureReleaseRequest> FindReleaseRequiringDecisionForCallsign(
                     std::string callsign
                 ) const;
+                void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData) const;
 
                 // A guard on the map to allow async operations
                 std::mutex releaseMapGuard;

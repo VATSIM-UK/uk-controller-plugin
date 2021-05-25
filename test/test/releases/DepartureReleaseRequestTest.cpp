@@ -146,5 +146,25 @@ namespace UKControllerPluginTest {
             request.Reject();
             EXPECT_FALSE(this->request.RequiresDecision());
         }
+
+        TEST_F(DepartureReleaseRequestTest, RequestsCanBePendingReleasedAtTime)
+        {
+            std::chrono::system_clock::time_point releasedAt = std::chrono::system_clock::now() +
+                std::chrono::minutes(1);
+            std::chrono::system_clock::time_point releaseExpiresAt = std::chrono::system_clock::now() +
+                std::chrono::minutes(2);
+            request.Approve(releasedAt, releaseExpiresAt);
+            EXPECT_TRUE(this->request.AwaitingReleasedTime());
+        }
+
+        TEST_F(DepartureReleaseRequestTest, RequestsCanBeReadyToGo)
+        {
+            std::chrono::system_clock::time_point releasedAt = std::chrono::system_clock::now() -
+                std::chrono::minutes(1);
+            std::chrono::system_clock::time_point releaseExpiresAt = std::chrono::system_clock::now() +
+                std::chrono::minutes(2);
+            request.Approve(releasedAt, releaseExpiresAt);
+            EXPECT_FALSE(this->request.AwaitingReleasedTime());
+        }
     } // namespace Releases
 } // namespace UKControllerPluginTest

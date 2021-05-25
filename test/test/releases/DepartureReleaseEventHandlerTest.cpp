@@ -17,6 +17,7 @@
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "dialog/DialogData.h"
+#include "releases/DepartureReleaseColours.h"
 
 using ::testing::Test;
 using testing::NiceMock;
@@ -28,6 +29,7 @@ using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Time::ParseTimeString;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPlugin::Time::TimeNow;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -105,6 +107,24 @@ namespace UKControllerPluginTest {
                     this->dialogManager.AddDialog(this->dialogDataApprove);
                 }
 
+                UKControllerPlugin::Tag::TagData GetTagData(int tagItemid)
+                {
+                    return UKControllerPlugin::Tag::TagData(
+                        this->mockFlightplan,
+                        this->mockRadarTarget,
+                        tagItemid,
+                        EuroScopePlugIn::TAG_DATA_CORRELATED,
+                        this->itemString,
+                        &this->euroscopeColourCode,
+                        &this->tagColour,
+                        &this->fontSize
+                    );
+                }
+
+                double fontSize = 24.1;
+                COLORREF tagColour = RGB(255, 255, 255);
+                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+                char itemString[16] = "";
                 DialogData dialogDataRequest = {IDD_DEPARTURE_RELEASE_REQUEST, "", nullptr, NULL, nullptr};
                 DialogData dialogDataApprove = {IDD_DEPARTURE_RELEASE_APPROVE, "", nullptr, NULL, nullptr};
                 NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;
@@ -123,6 +143,7 @@ namespace UKControllerPluginTest {
                 UKControllerPlugin::Dialog::DialogManager dialogManager;
                 ControllerPositionCollection controllers;
                 std::shared_ptr<DepartureReleaseRequest> request;
+                std::shared_ptr<DepartureReleaseRequest> request2;
                 DepartureReleaseEventHandler handler;
         };
 
@@ -1340,6 +1361,188 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(release->Approved());
             EXPECT_EQ(UKControllerPlugin::Time::TimeNow(), release->ReleasedAtTime());
             EXPECT_EQ(UKControllerPlugin::Time::TimeNow() + std::chrono::seconds(60), release->ReleaseExpiryTime());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusIndicatorHasATagItemDescription)
+        {
+            EXPECT_EQ("Departure Release Status Indicator", this->handler.GetTagItemDescription(124));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusIndicatorReturnsNormalIfNoReleases)
+        {
+            this->handler.AddReleaseRequest(
+                std::make_shared<DepartureReleaseRequest>(
+                    1,
+                    "BAW456",
+                    3,
+                    2,
+                    std::chrono::system_clock::now() + std::chrono::minutes(5)
+                )
+            );
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("", data.GetItemString());
+            EXPECT_EQ(this->tagColour, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusIndicatorReturnsPendingIfReleaseOutstanding)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+            request2->Approve(
+                TimeNow(),
+                TimeNow() + std::chrono::seconds(25)
+            );
+
+
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("1/2", data.GetItemString());
+            EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleasePending, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusIndicatorReturnsApprovedIfAllRequestsApproved)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+            request2->Approve(
+                TimeNow(),
+                TimeNow() + std::chrono::seconds(25)
+            );
+            request->Approve(
+                TimeNow(),
+                TimeNow() + std::chrono::seconds(25)
+            );
+
+
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("2/2", data.GetItemString());
+            EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleased, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest,
+               DepartureReleaseStatusIndicatorReturnsPendingTimeIfWaitingForReleaseTime)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+            request2->Approve(
+                TimeNow(),
+                TimeNow() + std::chrono::seconds(25)
+            );
+            request->Approve(
+                TimeNow() + std::chrono::seconds(5),
+                TimeNow() + std::chrono::seconds(25)
+            );
+
+
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("2/2", data.GetItemString());
+            EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleasedAwaitingTime, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusIndicatorReturnsExpiredIfAReleaseHasExpired)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+            request2->Approve(
+                TimeNow(),
+                TimeNow() + std::chrono::seconds(25)
+            );
+            request->Approve(
+                TimeNow() - std::chrono::seconds(35),
+                TimeNow() - std::chrono::seconds(25)
+            );
+
+
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("1/2", data.GetItemString());
+            EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleaseExpired, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest,
+               DepartureReleaseStatusIndicatorReturnsExpiredIfAReleaseRequestHasExpired)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() - std::chrono::minutes(5)
+            );
+            request->Approve(
+                TimeNow() + std::chrono::seconds(15),
+                TimeNow() + std::chrono::seconds(25)
+            );
+
+
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("0/2", data.GetItemString());
+            EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleaseExpired, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest,
+               DepartureReleaseStatusIndicatorReturnsRejectedIfAReleaseHasBeenRejected)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+            request2->Approve(
+                TimeNow(),
+                TimeNow() + std::chrono::seconds(25)
+            );
+            request->Reject();
+
+
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("1/2", data.GetItemString());
+            EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleaseRejected, data.GetTagColour());
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

@@ -29,6 +29,8 @@ namespace UKControllerPlugin {
                 bool Rejected() const;
                 bool Approved() const;
                 bool RequestExpired() const;
+                bool ApprovalExpired() const;
+                bool AwaitingReleasedTime() const;
                 std::chrono::system_clock::time_point RequestExpiryTime() const;
                 std::chrono::system_clock::time_point ReleaseExpiryTime() const;
                 std::chrono::system_clock::time_point ReleasedAtTime() const;
