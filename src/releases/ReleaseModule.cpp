@@ -26,6 +26,8 @@ namespace UKControllerPlugin {
         const unsigned int enrouteReleasePointTagItemId = 9006;
         const unsigned int departureReleaseRequestDialogTriggerFunctionId = 9012;
         const unsigned int departureReleaseDecisionMenuTriggerFunctionId = 9013;
+        const unsigned int departureReleaseStatusIndicatorTagItemId = 124;
+        const unsigned int departureReleaseCountdownTimerTagItemId = 125;
 
         void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
         {
@@ -126,6 +128,8 @@ namespace UKControllerPlugin {
                     releaseDecisionCallbackId
                 );
             container.websocketProcessors->AddProcessor(departureHandler);
+            container.tagHandler->RegisterTagItem(departureReleaseStatusIndicatorTagItemId, departureHandler);
+            container.tagHandler->RegisterTagItem(departureReleaseCountdownTimerTagItemId, departureHandler);
 
             // Callback for when a release decision is made
             CallbackFunction releaseDecisionCallback(

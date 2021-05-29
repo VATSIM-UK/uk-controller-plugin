@@ -1,6 +1,5 @@
 #include "pch/stdafx.h"
 #include "countdown/CountdownTimer.h"
-#include "helper/HelperFunctions.h"
 #include "windows/WinApiInterface.h"
 
 using UKControllerPlugin::Windows::WinApiInterface;

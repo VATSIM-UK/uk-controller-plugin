@@ -145,6 +145,9 @@
     <Filter Include="src\initialheading">
       <UniqueIdentifier>{a732eccf-1336-457a-8597-2f558558027c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\timer">
+      <UniqueIdentifier>{5f074d1d-e169-4098-b825-4c94fbbe0848}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1070,6 +1073,9 @@
     <ClInclude Include="..\..\src\releases\DepartureReleaseColours.h">
       <Filter>src\releases</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\timer\TimerDisplay.h">
+      <Filter>src\timer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1838,6 +1844,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\releases\RequestDepartureReleaseDialog.cpp">
       <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\timer\TimerDisplay.cpp">
+      <Filter>src\timer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

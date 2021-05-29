@@ -242,6 +242,7 @@
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\TimedEventCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp" />
     <ClCompile Include="..\..\test\test\time\ParseTimeStringsTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\CreateWakeMappingsTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryEventHandlerTest.cpp" />

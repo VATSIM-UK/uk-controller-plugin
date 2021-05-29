@@ -94,6 +94,7 @@ namespace UKControllerPlugin {
                     std::string callsign
                 ) const;
                 void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData) const;
+                void SetReleaseCountdownTagData(Tag::TagData& tagData) const;
 
                 // A guard on the map to allow async operations
                 std::mutex releaseMapGuard;

@@ -136,6 +136,9 @@
     <Filter Include="test\initialheading">
       <UniqueIdentifier>{1f6bc603-4f77-4a4d-8364-2b8e739fce7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\timer">
+      <UniqueIdentifier>{4474e02c-cf8d-4eb5-b19a-f42569698ebe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -833,6 +836,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\releases\DepartureReleaseEventHandlerTest.cpp">
       <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp">
+      <Filter>test\timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -298,6 +298,7 @@
     <ClInclude Include="..\..\src\timedevent\DeferredEvent.h" />
     <ClInclude Include="..\..\src\timedevent\DeferredEventBootstrap.h" />
     <ClInclude Include="..\..\src\timedevent\TimedEventCollection.h" />
+    <ClInclude Include="..\..\src\timer\TimerDisplay.h" />
     <ClInclude Include="..\..\src\time\ParseTimeStrings.h" />
     <ClInclude Include="..\..\src\wake\CacheItem.h" />
     <ClInclude Include="..\..\src\wake\CreateWakeMappings.h" />
@@ -561,6 +562,7 @@
     <ClCompile Include="..\..\src\task\TaskRunner.cpp" />
     <ClCompile Include="..\..\src\timedevent\DeferredEventBootstrap.cpp" />
     <ClCompile Include="..\..\src\timedevent\TimedEventCollection.cpp" />
+    <ClCompile Include="..\..\src\timer\TimerDisplay.cpp" />
     <ClCompile Include="..\..\src\time\ParseTimeStrings.cpp" />
     <ClCompile Include="..\..\src\wake\CreateWakeMappings.cpp" />
     <ClCompile Include="..\..\src\wake\WakeCategoryEventHandler.cpp" />

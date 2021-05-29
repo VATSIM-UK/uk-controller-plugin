@@ -95,7 +95,7 @@ namespace UKControllerPluginTest {
         TEST_F(ReleaseModuleTest, ItRegistersAllTagItems)
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
-            EXPECT_EQ(3, this->container.tagHandler->CountHandlers());
+            EXPECT_EQ(5, this->container.tagHandler->CountHandlers());
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersForTimedEvents)
@@ -151,6 +151,18 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-departure-releases"));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersTagItemForDepartureReleaseStatusIndicator)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.tagHandler->HasHandlerForItemId(124));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersTagItemForDepartureReleaseCountdownTimer)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.tagHandler->HasHandlerForItemId(125));
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

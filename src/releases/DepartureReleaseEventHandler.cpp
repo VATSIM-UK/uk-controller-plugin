@@ -13,6 +13,7 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "task/TaskRunnerInterface.h"
 #include "releases/DepartureReleaseColours.h"
+#include "timer/TimerDisplay.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -175,6 +176,8 @@ namespace UKControllerPlugin {
             switch (tagItemId) {
                 case 124:
                     return "Departure Release Status Indicator";
+                case 125:
+                    return "Departure Release Countdown";
                 default:
                     return "";
             }
@@ -185,6 +188,9 @@ namespace UKControllerPlugin {
             switch (tagData.itemCode) {
                 case 124:
                     this->SetReleaseStatusIndicatorTagData(tagData);
+                    break;
+                case 125:
+                    this->SetReleaseCountdownTagData(tagData);
                     break;
                 default:
                     break;
@@ -277,6 +283,90 @@ namespace UKControllerPlugin {
             }
             tagData.SetItemString(std::to_string(approvals - expiries) + "/" + std::to_string(relevantReleases.size()));
             tagData.SetTagColour(indicatorColour);
+        }
+
+        /*
+         * Get the release countdown timer.
+         */
+        void DepartureReleaseEventHandler::SetReleaseCountdownTagData(Tag::TagData& tagData) const
+        {
+            std::map<int, std::shared_ptr<DepartureReleaseRequest>> relevantReleases;
+            int releasesPendingReleaseTime = 0;
+            for (
+                auto releaseRequest = this->releaseRequests.rbegin();
+                releaseRequest != this->releaseRequests.rend();
+                ++releaseRequest
+            ) {
+                if (releaseRequest->second->Callsign() != tagData.flightPlan.GetCallsign()) {
+                    continue;
+                }
+
+                if (relevantReleases.count(releaseRequest->second->TargetController())) {
+                    continue;
+                }
+
+                // If we find a release that isn't approved or approval has expired, do nothing
+                if (
+                    !releaseRequest->second->Approved() ||
+                    (releaseRequest->second->Approved() && releaseRequest->second->ApprovalExpired())
+                ) {
+                    return;
+                }
+
+                if (releaseRequest->second->AwaitingReleasedTime()) {
+                    releasesPendingReleaseTime++;
+                }
+
+                relevantReleases[releaseRequest->second->TargetController()] = releaseRequest->second;
+            }
+
+            // No releases, nothing to do
+            if (relevantReleases.empty()) {
+                return;
+            }
+
+            std::chrono::system_clock::time_point countdownTime;
+            if (releasesPendingReleaseTime != 0) {
+                // Find the release that has a released at time that is furthest away
+                std::chrono::system_clock::time_point furthestPendingRelease = (
+                    std::chrono::system_clock::time_point::min)();
+
+                for (auto relevantRelease : relevantReleases) {
+                    if (relevantRelease.second->ReleasedAtTime() > furthestPendingRelease) {
+                        furthestPendingRelease = relevantRelease.second->ReleasedAtTime();
+                    }
+                }
+
+                countdownTime = furthestPendingRelease;
+                tagData.SetTagColour(statusIndicatorReleasedAwaitingTime);
+            } else {
+                // Find the release that has the closest expiry time
+                std::chrono::system_clock::time_point closestReleaseExpiry = (
+                    std::chrono::system_clock::time_point::max)();
+
+                for (auto relevantRelease : relevantReleases) {
+                    if (relevantRelease.second->ReleaseExpiryTime() < closestReleaseExpiry) {
+                        closestReleaseExpiry = relevantRelease.second->ReleaseExpiryTime();
+                    }
+                }
+                countdownTime = closestReleaseExpiry;
+
+                // Set timer colour depending on time left
+                int64_t secondsRemaining = std::chrono::duration_cast<std::chrono::seconds>(
+                    closestReleaseExpiry - Time::TimeNow()
+                ).count();
+
+                if (secondsRemaining > 30) {
+                    tagData.SetTagColour(releaseTimerPlentyOfTime);
+                } else if (secondsRemaining > 10) {
+                    tagData.SetTagColour(releaseTimerClose);
+                } else {
+                    tagData.SetTagColour(releaseTimerExpired);
+                }
+            }
+
+            // Set the timer display
+            tagData.SetItemString(Timer::GetTimerDisplay(countdownTime));
         }
 
         /**
