@@ -9,6 +9,7 @@
 #include "controller/HandoffEventHandlerCollection.h"
 #include "dialog/DialogManager.h"
 #include "mock/MockDialogProvider.h"
+#include "radarscreen/RadarRenderableCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -17,12 +18,14 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Releases::BootstrapPlugin;
+using UKControllerPlugin::Releases::BootstrapRadarScreen;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -163,6 +166,19 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_EQ(1, this->container.tagHandler->HasHandlerForItemId(125));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersTheStatusViewTagFunction)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9014));
+        }
+
+        TEST_F(ReleaseModuleTest, RadarScreenAddsRenderable)
+        {
+            RadarRenderableCollection renderables;
+            BootstrapRadarScreen(this->container, renderables);
+            EXPECT_EQ(1, renderables.CountRenderers());
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

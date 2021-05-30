@@ -3,13 +3,22 @@
 #include "dependency/DependencyLoaderInterface.h"
 
 namespace UKControllerPlugin {
+    namespace RadarScreen {
+        class RadarRenderableCollection;
+    } // namespace RadarScreen
+
     namespace Releases {
 
         extern const std::string enrouteReleaseTypesDependency;
 
         void BootstrapPlugin(
-            UKControllerPlugin::Bootstrap::PersistenceContainer& container,
+            Bootstrap::PersistenceContainer& container,
             UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies
+        );
+
+        void BootstrapRadarScreen(
+            const Bootstrap::PersistenceContainer& container,
+            RadarScreen::RadarRenderableCollection& renderables
         );
     }  // namespace Releases
 }  // namespace UKControllerPlugin

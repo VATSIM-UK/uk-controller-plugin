@@ -1076,6 +1076,12 @@
     <ClInclude Include="..\..\src\timer\TimerDisplay.h">
       <Filter>src\timer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseRequestView.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseCountdownColours.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1847,6 +1853,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\timer\TimerDisplay.cpp">
       <Filter>src\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseRequestView.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseCountdownColours.cpp">
+      <Filter>src\releases</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

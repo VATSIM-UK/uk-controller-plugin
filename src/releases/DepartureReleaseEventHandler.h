@@ -72,6 +72,13 @@ namespace UKControllerPlugin {
                 );
                 std::string GetTagItemDescription(int tagItemId) const override;
                 void SetTagItemData(Tag::TagData& tagData) override;
+                void ShowStatusDisplay(
+                    Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string context,
+                    const POINT& mousePos
+                );
+                const std::set<std::shared_ptr<DepartureReleaseRequest>>& GetReleasesToDisplay() const;
 
             private:
 
@@ -92,9 +99,9 @@ namespace UKControllerPlugin {
                 ) const;
                 const std::shared_ptr<DepartureReleaseRequest> FindReleaseRequiringDecisionForCallsign(
                     std::string callsign
-                ) const;
-                void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData) const;
-                void SetReleaseCountdownTagData(Tag::TagData& tagData) const;
+                );
+                void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData);
+                void SetReleaseCountdownTagData(Tag::TagData& tagData);
 
                 // A guard on the map to allow async operations
                 std::mutex releaseMapGuard;
@@ -128,6 +135,9 @@ namespace UKControllerPlugin {
 
                 // All the active controllers
                 const Controller::ActiveCallsignCollection& activeCallsigns;
+
+                // A set of releases to display in the view
+                std::set<std::shared_ptr<DepartureReleaseRequest>> releasesToDisplay;
         };
     }  // namespace Releases
 }  // namespace UKControllerPlugin

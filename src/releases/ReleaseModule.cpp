@@ -9,6 +9,7 @@
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/ApproveDepartureReleaseDialog.h"
 #include "releases/RequestDepartureReleaseDialog.h"
+#include "releases/DepartureReleaseRequestView.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
@@ -17,6 +18,7 @@ using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::ApproveDepartureReleaseDialog;
 using UKControllerPlugin::Releases::RequestDepartureReleaseDialog;
+using UKControllerPlugin::Releases::DepartureReleaseRequestView;
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -26,8 +28,10 @@ namespace UKControllerPlugin {
         const unsigned int enrouteReleasePointTagItemId = 9006;
         const unsigned int departureReleaseRequestDialogTriggerFunctionId = 9012;
         const unsigned int departureReleaseDecisionMenuTriggerFunctionId = 9013;
+        const unsigned int departureReleaseStatusViewTriggerFunctionId = 9014;
         const unsigned int departureReleaseStatusIndicatorTagItemId = 124;
         const unsigned int departureReleaseCountdownTimerTagItemId = 125;
+        std::shared_ptr<DepartureReleaseEventHandler> departureHandler;
 
         void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
         {
@@ -115,7 +119,7 @@ namespace UKControllerPlugin {
 
             // Everything to do with DEPARTURE releases
             const int releaseDecisionCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            std::shared_ptr<DepartureReleaseEventHandler> departureHandler =
+            departureHandler =
                 std::make_shared<DepartureReleaseEventHandler>(
                     *container.api,
                     *container.taskRunner,
@@ -176,6 +180,21 @@ namespace UKControllerPlugin {
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseDecisionMenu);
 
+            // TAG function to trigger the status view
+            TagFunction openDepartureReleaseStatusView(
+                departureReleaseStatusViewTriggerFunctionId,
+                "Show Departure Release Request Status View",
+                std::bind(
+                    &DepartureReleaseEventHandler::ShowStatusDisplay,
+                    departureHandler.get(),
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseStatusView);
+
             // Dialog for requesting departure releases
             std::shared_ptr<RequestDepartureReleaseDialog> requestDialog =
                 std::make_shared<RequestDepartureReleaseDialog>(
@@ -211,6 +230,20 @@ namespace UKControllerPlugin {
 
             // Add to handlers
             container.timedHandler->RegisterEvent(departureHandler, 15);
+        }
+
+        void BootstrapRadarScreen(
+            const PersistenceContainer& container,
+            RadarScreen::RadarRenderableCollection& renderables
+        )
+        {
+            const int rendererId = renderables.ReserveRendererIdentifier();
+            auto releaseRequestView = std::make_shared<DepartureReleaseRequestView>(
+                *departureHandler,
+                *container.controllerPositions,
+                rendererId
+            );
+            renderables.RegisterRenderer(rendererId, releaseRequestView, renderables.afterLists);
         }
     }  // namespace Releases
 }  // namespace UKControllerPlugin

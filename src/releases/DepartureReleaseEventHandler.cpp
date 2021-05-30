@@ -12,8 +12,10 @@
 #include "plugin/PopupMenuItem.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "task/TaskRunnerInterface.h"
+#include "releases/DepartureReleaseCountdownColours.h"
 #include "releases/DepartureReleaseColours.h"
 #include "timer/TimerDisplay.h"
+#include "releases/DepartureReleaseRequestView.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -32,7 +34,20 @@ namespace UKControllerPlugin {
            triggerDecisionMenuFunctionId(triggerDecisionMenuFunctionId),
            releaseDecisionCallbackId(releaseDecisionCallbackId),
            controllers(controllers), plugin(plugin), dialogManager(dialogManager), api(api), taskRunner(taskRunner),
-           activeCallsigns(activeCallsigns) {}
+           activeCallsigns(activeCallsigns)
+        {
+            this->releaseRequests[1] = std::make_shared<DepartureReleaseRequest>(
+                1,
+                "BAW326",
+                1,
+                25,
+                Time::TimeNow() + std::chrono::minutes(5)
+            );
+            this->releaseRequests[1]->Approve(
+                Time::TimeNow() + std::chrono::seconds(90),
+                Time::TimeNow() + std::chrono::seconds(180)
+            );
+        }
 
         void DepartureReleaseEventHandler::ProcessWebsocketMessage(const Websocket::WebsocketMessage& message)
         {
@@ -197,11 +212,53 @@ namespace UKControllerPlugin {
             }
         }
 
+        void DepartureReleaseEventHandler::ShowStatusDisplay(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        )
+        {
+            std::string callsign = flightplan.GetCallsign();
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::set<std::shared_ptr<DepartureReleaseRequest>> releasesForCallsign;
+            std::for_each(
+                this->releaseRequests.cbegin(),
+                this->releaseRequests.cend(),
+                [callsign, &releasesForCallsign](
+                const std::pair<int, std::shared_ptr<DepartureReleaseRequest>>& release)
+                {
+                    if (release.second->Callsign() == callsign) {
+                        releasesForCallsign.insert(release.second);
+                    }
+                }
+            );
+
+            // Dont continue if nothing to display
+            if (releasesForCallsign.empty()) {
+                return;
+            }
+
+            // Replace the display list
+            this->releasesToDisplay = releasesForCallsign;
+
+            // Setup the displays time and position
+            DepartureReleaseRequestView::MoveAllInstances(mousePos);
+            DepartureReleaseRequestView::DisplayFor(std::chrono::seconds(3));
+        }
+
+        const std::set<std::shared_ptr<DepartureReleaseRequest>>& DepartureReleaseEventHandler::
+        GetReleasesToDisplay() const
+        {
+            return this->releasesToDisplay;
+        }
+
         const std::shared_ptr<DepartureReleaseRequest>
         DepartureReleaseEventHandler::FindReleaseRequiringDecisionForCallsign(
             std::string callsign
-        ) const
+        )
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             auto release = std::find_if(
                 this->releaseRequests.cbegin(),
                 this->releaseRequests.cend(),
@@ -214,8 +271,10 @@ namespace UKControllerPlugin {
             return release != this->releaseRequests.cend() ? release->second : nullptr;
         }
 
-        void DepartureReleaseEventHandler::SetReleaseStatusIndicatorTagData(Tag::TagData& tagData) const
+        void DepartureReleaseEventHandler::SetReleaseStatusIndicatorTagData(Tag::TagData& tagData)
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+
             /*
              * Go through all the release requests and find the most recent one for each target controller.
              */
@@ -288,8 +347,10 @@ namespace UKControllerPlugin {
         /*
          * Get the release countdown timer.
          */
-        void DepartureReleaseEventHandler::SetReleaseCountdownTagData(Tag::TagData& tagData) const
+        void DepartureReleaseEventHandler::SetReleaseCountdownTagData(Tag::TagData& tagData)
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+
             std::map<int, std::shared_ptr<DepartureReleaseRequest>> relevantReleases;
             int releasesPendingReleaseTime = 0;
             for (
@@ -338,7 +399,7 @@ namespace UKControllerPlugin {
                 }
 
                 countdownTime = furthestPendingRelease;
-                tagData.SetTagColour(statusIndicatorReleasedAwaitingTime);
+                tagData.SetTagColour(PendingReleaseTimeColour());
             } else {
                 // Find the release that has the closest expiry time
                 std::chrono::system_clock::time_point closestReleaseExpiry = (
@@ -350,19 +411,7 @@ namespace UKControllerPlugin {
                     }
                 }
                 countdownTime = closestReleaseExpiry;
-
-                // Set timer colour depending on time left
-                int64_t secondsRemaining = std::chrono::duration_cast<std::chrono::seconds>(
-                    closestReleaseExpiry - Time::TimeNow()
-                ).count();
-
-                if (secondsRemaining > 30) {
-                    tagData.SetTagColour(releaseTimerPlentyOfTime);
-                } else if (secondsRemaining > 10) {
-                    tagData.SetTagColour(releaseTimerClose);
-                } else {
-                    tagData.SetTagColour(releaseTimerExpired);
-                }
+                tagData.SetTagColour(TimeUntilExpiryColour(closestReleaseExpiry));
             }
 
             // Set the timer display
@@ -440,6 +489,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             this->releaseRequests.erase(data.at("id").get<int>());
         }
 

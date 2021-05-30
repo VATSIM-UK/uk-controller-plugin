@@ -19,6 +19,7 @@
 #include "srd/SrdModule.h"
 #include "notifications/NotificationsModule.h"
 #include "plugin/PluginInformationBootstrap.h"
+#include "releases/ReleaseModule.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -119,6 +120,7 @@ namespace UKControllerPlugin {
 
             Srd::BootstrapRadarScreen(configurableDisplays);
             Notifications::BootstrapRadarScreen(configurableDisplays);
+            Releases::BootstrapRadarScreen(this->persistence, renderers);
 
             // Register command for position resets
             this->persistence.commandHandlers->RegisterHandler(

@@ -18,6 +18,7 @@
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "dialog/DialogData.h"
 #include "releases/DepartureReleaseColours.h"
+#include "releases/DepartureReleaseRequestView.h"
 
 using ::testing::Test;
 using testing::NiceMock;
@@ -1762,6 +1763,44 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(data);
             EXPECT_EQ("", data.GetItemString());
             EXPECT_EQ(tagColour, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItTriggersTheRequestView)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW456",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            this->handler.ShowStatusDisplay(this->mockFlightplan, this->mockRadarTarget, "", {101, 202});
+            EXPECT_EQ(1, this->handler.GetReleasesToDisplay().size());
+            EXPECT_EQ(1, (*this->handler.GetReleasesToDisplay().cbegin())->Id());
+            EXPECT_TRUE(UKControllerPlugin::Releases::DepartureReleaseRequestView::ShouldDisplay());
+            auto coords = UKControllerPlugin::Releases::DepartureReleaseRequestView::GetCoordinates();
+            EXPECT_EQ(101, coords.x);
+            EXPECT_EQ(202, coords.y);
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesNothingIfNoReleasesToDisplay)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW456",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+
+            this->handler.AddReleaseRequest(request2);
+
+            this->handler.ShowStatusDisplay(this->mockFlightplan, this->mockRadarTarget, "", {101, 202});
+            EXPECT_EQ(0, this->handler.GetReleasesToDisplay().size());
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest
