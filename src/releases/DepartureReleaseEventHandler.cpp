@@ -278,11 +278,11 @@ namespace UKControllerPlugin {
             /*
              * Go through all the release requests and find the most recent one for each target controller.
              */
-            std::map<int, std::shared_ptr<DepartureReleaseRequest>> relevantReleases;
             int approvals = 0;
             int rejections = 0;
             int expiries = 0;
             int awaitingReleasedAtTime = 0;
+            int relevant = 0;
             for (
                 auto releaseRequest = this->releaseRequests.rbegin();
                 releaseRequest != this->releaseRequests.rend();
@@ -293,9 +293,6 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                if (relevantReleases.count(releaseRequest->second->TargetController())) {
-                    continue;
-                }
 
                 if (releaseRequest->second->Approved()) {
                     approvals++;
@@ -312,11 +309,11 @@ namespace UKControllerPlugin {
                     expiries++;
                 }
 
-                relevantReleases[releaseRequest->second->TargetController()] = releaseRequest->second;
+                relevant++;
             }
 
             // No releases, nothing to do
-            if (relevantReleases.empty()) {
+            if (relevant == 0) {
                 return;
             }
 
@@ -335,12 +332,12 @@ namespace UKControllerPlugin {
                 indicatorColour = statusIndicatorReleaseRejected;
             } else if (expiries != 0) {
                 indicatorColour = statusIndicatorReleaseExpired;
-            } else if (approvals == relevantReleases.size()) {
+            } else if (approvals == relevant) {
                 indicatorColour = awaitingReleasedAtTime != 0
                                       ? statusIndicatorReleasedAwaitingTime
                                       : statusIndicatorReleased;
             }
-            tagData.SetItemString(std::to_string(approvals - expiries) + "/" + std::to_string(relevantReleases.size()));
+            tagData.SetItemString(std::to_string(approvals - expiries) + "/" + std::to_string(relevant));
             tagData.SetTagColour(indicatorColour);
         }
 
@@ -351,7 +348,7 @@ namespace UKControllerPlugin {
         {
             std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
 
-            std::map<int, std::shared_ptr<DepartureReleaseRequest>> relevantReleases;
+            std::set<std::shared_ptr<DepartureReleaseRequest>> relevantReleases;
             int releasesPendingReleaseTime = 0;
             for (
                 auto releaseRequest = this->releaseRequests.rbegin();
@@ -359,10 +356,6 @@ namespace UKControllerPlugin {
                 ++releaseRequest
             ) {
                 if (releaseRequest->second->Callsign() != tagData.flightPlan.GetCallsign()) {
-                    continue;
-                }
-
-                if (relevantReleases.count(releaseRequest->second->TargetController())) {
                     continue;
                 }
 
@@ -378,7 +371,7 @@ namespace UKControllerPlugin {
                     releasesPendingReleaseTime++;
                 }
 
-                relevantReleases[releaseRequest->second->TargetController()] = releaseRequest->second;
+                relevantReleases.insert(releaseRequest->second);
             }
 
             // No releases, nothing to do
@@ -393,8 +386,8 @@ namespace UKControllerPlugin {
                     std::chrono::system_clock::time_point::min)();
 
                 for (auto relevantRelease : relevantReleases) {
-                    if (relevantRelease.second->ReleasedAtTime() > furthestPendingRelease) {
-                        furthestPendingRelease = relevantRelease.second->ReleasedAtTime();
+                    if (relevantRelease->ReleasedAtTime() > furthestPendingRelease) {
+                        furthestPendingRelease = relevantRelease->ReleasedAtTime();
                     }
                 }
 
@@ -406,8 +399,8 @@ namespace UKControllerPlugin {
                     std::chrono::system_clock::time_point::max)();
 
                 for (auto relevantRelease : relevantReleases) {
-                    if (relevantRelease.second->ReleaseExpiryTime() < closestReleaseExpiry) {
-                        closestReleaseExpiry = relevantRelease.second->ReleaseExpiryTime();
+                    if (relevantRelease->ReleaseExpiryTime() < closestReleaseExpiry) {
+                        closestReleaseExpiry = relevantRelease->ReleaseExpiryTime();
                     }
                 }
                 countdownTime = closestReleaseExpiry;
@@ -428,13 +421,33 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            // Add the release
+            int releaseRequestId = data.at("id").get<int>();
+            int targetController = data.at("target_controller").get<int>();
+            std::string callsign = data.at("callsign").get<std::string>();
             this->releaseRequests[data.at("id").get<int>()] = std::make_shared<DepartureReleaseRequest>(
-                data.at("id").get<int>(),
-                data.at("callsign").get<std::string>(),
+                releaseRequestId,
+                callsign,
                 data.at("requesting_controller").get<int>(),
-                data.at("target_controller").get<int>(),
+                targetController,
                 Time::ParseTimeString(data.at("expires_at").get<std::string>())
             );
+
+            // Remove any others for the same callsign and controller
+            for (
+                auto releaseRequest = this->releaseRequests.begin();
+                releaseRequest != this->releaseRequests.end();
+            ) {
+                if (
+                    releaseRequest->second->Callsign() == callsign &&
+                    releaseRequest->second->TargetController() == targetController &&
+                    releaseRequest->second->Id() != releaseRequestId
+                ) {
+                    releaseRequest = this->releaseRequests.erase(releaseRequest);
+                } else {
+                    ++releaseRequest;
+                }
+            }
         }
 
         /**

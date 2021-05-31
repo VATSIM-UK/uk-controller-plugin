@@ -620,6 +620,66 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(ParseTimeString("2021-05-12 19:55:00"), release->RequestExpiryTime());
         }
 
+        TEST_F(DepartureReleaseEventHandlerTest, ItRemovesReleasesForSameControllerAndCallsignOnRequest)
+        {
+            nlohmann::json data;
+            data["id"] = 2;
+            data["callsign"] = "BAW123";
+            data["requesting_controller"] = 3;
+            data["target_controller"] = 2;
+            data["expires_at"] = "2021-05-12 19:55:00";
+
+            WebsocketMessage message{
+                "departure_release.requested",
+                "private-departure-releases",
+                data
+            };
+            handler.AddReleaseRequest(this->request);
+
+            handler.ProcessWebsocketMessage(message);
+            EXPECT_EQ(nullptr, handler.GetReleaseRequest(1));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntRemoveReleaseOnRequestIfDifferentTargetController)
+        {
+            nlohmann::json data;
+            data["id"] = 2;
+            data["callsign"] = "BAW123";
+            data["requesting_controller"] = 2;
+            data["target_controller"] = 3;
+            data["expires_at"] = "2021-05-12 19:55:00";
+
+            WebsocketMessage message{
+                "departure_release.requested",
+                "private-departure-releases",
+                data
+            };
+            handler.AddReleaseRequest(this->request);
+
+            handler.ProcessWebsocketMessage(message);
+            EXPECT_NE(nullptr, handler.GetReleaseRequest(1));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntRemoveReleaseOnRequestIfDifferentCallsign)
+        {
+            nlohmann::json data;
+            data["id"] = 2;
+            data["callsign"] = "BAW456";
+            data["requesting_controller"] = 3;
+            data["target_controller"] = 2;
+            data["expires_at"] = "2021-05-12 19:55:00";
+
+            WebsocketMessage message{
+                "departure_release.requested",
+                "private-departure-releases",
+                data
+            };
+            handler.AddReleaseRequest(this->request);
+
+            handler.ProcessWebsocketMessage(message);
+            EXPECT_NE(nullptr, handler.GetReleaseRequest(1));
+        }
+
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesMissingIdInCreateMessage)
         {
             nlohmann::json data;
@@ -1544,31 +1604,6 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(data);
             EXPECT_EQ("1/2", data.GetItemString());
             EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleaseRejected, data.GetTagColour());
-        }
-
-        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusIndicatorPrefersMoreRecentReleases)
-        {
-            auto request2 = std::make_shared<DepartureReleaseRequest>(
-                2,
-                "BAW123",
-                3,
-                2,
-                TimeNow() + std::chrono::minutes(5)
-            );
-            request2->Approve(
-                TimeNow(),
-                TimeNow() + std::chrono::seconds(25)
-            );
-            request->Reject();
-
-
-            this->handler.AddReleaseRequest(request);
-            this->handler.AddReleaseRequest(request2);
-
-            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
-            this->handler.SetTagItemData(data);
-            EXPECT_EQ("1/1", data.GetItemString());
-            EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleased, data.GetTagColour());
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusCountdownTimerHasATagItemDescription)
