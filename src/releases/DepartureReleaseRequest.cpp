@@ -34,6 +34,11 @@ namespace UKControllerPlugin {
             this->releaseExpiresAt = releaseExpiresAt;
         }
 
+        void DepartureReleaseRequest::Approve(std::chrono::system_clock::time_point releasedAtTime)
+        {
+            this->releasedAtTime = releasedAtTime;
+        }
+
         int DepartureReleaseRequest::Id() const
         {
             return this->id;
@@ -73,7 +78,7 @@ namespace UKControllerPlugin {
 
         bool DepartureReleaseRequest::Approved() const
         {
-            return this->releaseExpiresAt != this->noTime;
+            return this->releasedAtTime != this->noTime;
         }
 
         bool DepartureReleaseRequest::RequestExpired() const
@@ -89,6 +94,11 @@ namespace UKControllerPlugin {
         bool DepartureReleaseRequest::AwaitingReleasedTime() const
         {
             return this->releasedAtTime > Time::TimeNow();
+        }
+
+        bool DepartureReleaseRequest::ApprovedWithNoExpiry() const
+        {
+            return this->Approved() && this->releaseExpiresAt == this->noTimeMax;
         }
 
         std::chrono::system_clock::time_point DepartureReleaseRequest::RequestExpiryTime() const

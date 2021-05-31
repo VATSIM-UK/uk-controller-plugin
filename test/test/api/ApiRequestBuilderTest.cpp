@@ -499,6 +499,32 @@ namespace UKControllerPluginUtilsTest {
             );
         }
 
+        TEST_F(ApiRequestBuilderTest, ItBuildsApproveDepartureReleaseRequestWithNoExpiry)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/departure/release/request/1/approve",
+                CurlRequest::METHOD_PATCH
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            nlohmann::json expectedData;
+            expectedData["controller_position_id"] = 2;
+            expectedData["released_at"] = "2021-05-09 12:31:00";
+            expectedData["expires_in_seconds"] = nlohmann::json::value_t::null;
+            expectedRequest.SetBody(expectedData.dump());
+
+            std::chrono::system_clock::time_point timePoint;
+            std::istringstream inputStream("2021-05-09 12:31:00");
+            inputStream >> date::parse("%Y-%m-%d %H:%M:%S", timePoint);
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildApproveDepartureReleaseRequest(1, 2, timePoint, -1)
+            );
+        }
+
         TEST_F(ApiRequestBuilderTest, ItBuildsRejectDepartureReleaseRequest)
         {
             CurlRequest expectedRequest(

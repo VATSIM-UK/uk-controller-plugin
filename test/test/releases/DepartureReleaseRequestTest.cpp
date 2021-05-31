@@ -91,6 +91,14 @@ namespace UKControllerPluginTest {
         {
             request.Approve(std::chrono::system_clock::now(), std::chrono::system_clock::now());
             EXPECT_TRUE(request.Approved());
+            EXPECT_FALSE(request.ApprovedWithNoExpiry());
+        }
+
+        TEST_F(DepartureReleaseRequestTest, ItCanBeApprovedWithNoExpiryTime)
+        {
+            request.Approve(std::chrono::system_clock::now(), std::chrono::system_clock::now());
+            EXPECT_TRUE(request.Approved());
+            EXPECT_FALSE(request.ApprovedWithNoExpiry());
         }
 
         TEST_F(DepartureReleaseRequestTest, ApprovingTheRequestSetsReleasedAtTime)

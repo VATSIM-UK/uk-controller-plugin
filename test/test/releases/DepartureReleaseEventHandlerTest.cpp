@@ -403,8 +403,28 @@ namespace UKControllerPluginTest {
 
             handler.ProcessWebsocketMessage(message);
             EXPECT_TRUE(request->Approved());
+            EXPECT_FALSE(request->ApprovedWithNoExpiry());
             EXPECT_EQ(ParseTimeString("2021-05-12 19:55:00"), request->ReleasedAtTime());
             EXPECT_EQ(ParseTimeString("2021-05-12 20:00:00"), request->ReleaseExpiryTime());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItApprovesTheRequestFromMessageWithNoExpiry)
+        {
+            handler.AddReleaseRequest(request);
+            nlohmann::json data;
+            data["id"] = 1;
+            data["expires_at"] = nlohmann::json::value_t::null;
+            data["released_at"] = "2021-05-12 19:55:00";
+
+            WebsocketMessage message{
+                "departure_release.approved",
+                "private-departure-releases",
+                data
+            };
+
+            handler.ProcessWebsocketMessage(message);
+            EXPECT_TRUE(request->ApprovedWithNoExpiry());
+            EXPECT_EQ(ParseTimeString("2021-05-12 19:55:00"), request->ReleasedAtTime());
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesMissingIdInApproveMessage)
@@ -1419,8 +1439,23 @@ namespace UKControllerPluginTest {
             this->handler.ApproveRelease(1, UKControllerPlugin::Time::TimeNow(), 60);
             auto release = this->handler.GetReleaseRequest(1);
             EXPECT_TRUE(release->Approved());
+            EXPECT_FALSE(release->ApprovedWithNoExpiry());
             EXPECT_EQ(UKControllerPlugin::Time::TimeNow(), release->ReleasedAtTime());
             EXPECT_EQ(UKControllerPlugin::Time::TimeNow() + std::chrono::seconds(60), release->ReleaseExpiryTime());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItApprovesReleasesWithNoExpiry)
+        {
+            this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+            this->handler.AddReleaseRequest(this->request);
+            EXPECT_CALL(this->api, ApproveDepartureReleaseRequest(1, 2, UKControllerPlugin::Time::TimeNow(), -1))
+                .Times(1);
+
+            this->handler.ApproveRelease(1, TimeNow(), -1);
+            auto release = this->handler.GetReleaseRequest(1);
+            EXPECT_TRUE(release->Approved());
+            EXPECT_TRUE(release->ApprovedWithNoExpiry());
+            EXPECT_EQ(UKControllerPlugin::Time::TimeNow(), release->ReleasedAtTime());
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusIndicatorHasATagItemDescription)
@@ -1676,6 +1711,49 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(data);
             EXPECT_EQ("0:25", data.GetItemString());
             EXPECT_EQ(UKControllerPlugin::Releases::releaseTimerClose, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusCountdownTimerIgnoresNonExpiringApprovals)
+        {
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(125);
+            request->Approve(
+                TimeNow(),
+                TimeNow() + std::chrono::seconds(90)
+            );
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+            request2->Approve(TimeNow());
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("1:30", data.GetItemString());
+            EXPECT_EQ(UKControllerPlugin::Releases::releaseTimerPlentyOfTime, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusCountdownTimerDisplaysNothingIfNoExpires)
+        {
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(125);
+            request->Approve(TimeNow());
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+            request2->Approve(TimeNow());
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("", data.GetItemString());
+            EXPECT_EQ(this->tagColour, data.GetTagColour());
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusCountdownTimerDisplaysTimeUntilRelease)

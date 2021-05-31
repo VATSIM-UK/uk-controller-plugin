@@ -356,6 +356,9 @@ namespace UKControllerPlugin {
             return this->AddCommonHeaders(request);
         }
 
+        /*
+         * Build an approve departure release request, pass -1 seconds for never expires.
+         */
         CurlRequest ApiRequestBuilder::BuildApproveDepartureReleaseRequest(
             int releaseId,
             int controllerPositionId,
@@ -366,7 +369,11 @@ namespace UKControllerPlugin {
             nlohmann::json body;
             body["controller_position_id"] = controllerPositionId;
             body["released_at"] = date::format("%Y-%m-%d %H:%M:%S", date::floor<std::chrono::seconds>(releasedAt));
-            body["expires_in_seconds"] = expiresInSeconds;
+            if (expiresInSeconds == -1) {
+                body["expires_in_seconds"] = nlohmann::json::value_t::null;
+            } else {
+                body["expires_in_seconds"] = expiresInSeconds;
+            }
 
             CurlRequest request(
                 this->apiDomain + "/departure/release/request/" + std::to_string(releaseId) + "/approve",

@@ -149,7 +149,7 @@ namespace UKControllerPlugin {
                         },
                         brushForTimer
                     );
-                } else {
+                } else if (!release->ApprovedWithNoExpiry()) {
                     graphics.DrawString(
                         Timer::GetTimerDisplayWide(release->ReleaseExpiryTime()),
                         RECT{

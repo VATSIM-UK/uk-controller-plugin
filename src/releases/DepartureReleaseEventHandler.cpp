@@ -132,8 +132,8 @@ namespace UKControllerPlugin {
                 data.at("id").is_number_integer() &&
                 this->releaseRequests.find(data.at("id").get<int>()) != this->releaseRequests.cend() &&
                 data.contains("expires_at") &&
-                data.at("expires_at").is_string() &&
-                Time::ParseTimeString(data.at("expires_at").get<std::string>()) != Time::invalidTime &&
+                (data.at("expires_at").is_null() || (data.at("expires_at").is_string() &&
+                    Time::ParseTimeString(data.at("expires_at").get<std::string>()) != Time::invalidTime)) &&
                 data.contains("released_at") &&
                 data.at("released_at").is_string() &&
                 Time::ParseTimeString(data.at("released_at").get<std::string>()) != Time::invalidTime;
@@ -500,14 +500,21 @@ namespace UKControllerPlugin {
                 tagData.SetTagColour(PendingReleaseTimeColour());
             } else {
                 // Find the release that has the closest expiry time
-                std::chrono::system_clock::time_point closestReleaseExpiry = (
-                    std::chrono::system_clock::time_point::max)();
+                std::chrono::system_clock::time_point closestReleaseExpiry =
+                    (std::chrono::system_clock::time_point::max)();
 
                 for (auto relevantRelease : relevantReleases) {
-                    if (relevantRelease->ReleaseExpiryTime() < closestReleaseExpiry) {
+                    if (!relevantRelease->ApprovedWithNoExpiry() && relevantRelease->ReleaseExpiryTime() <
+                        closestReleaseExpiry) {
                         closestReleaseExpiry = relevantRelease->ReleaseExpiryTime();
                     }
                 }
+
+                // If no releases have an expiry point, no countdown to display
+                if (closestReleaseExpiry == (std::chrono::system_clock::time_point::max)()) {
+                    return;
+                }
+
                 countdownTime = closestReleaseExpiry;
                 tagData.SetTagColour(TimeUntilExpiryColour(closestReleaseExpiry));
             }
@@ -521,6 +528,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::ProcessDepartureReleaseRequestedMessage(const nlohmann::json& data)
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             if (!DepartureReleaseRequestedMessageValid(data)) {
                 LogError("Invalid departure release requested message");
                 return;
@@ -560,6 +568,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::ProcessRequestAcknowledgedMessage(const nlohmann::json& data)
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             if (!DepartureReleaseAcknowledgedMessageValid(data)) {
                 LogError("Invalid departure release acknowledged message");
                 return;
@@ -573,6 +582,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::ProcessRequestRejectedMessage(const nlohmann::json& data)
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             if (!DepartureReleaseRejectedMessageValid(data)) {
                 LogError("Invalid departure release rejected message");
                 return;
@@ -586,15 +596,22 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::ProcessRequestApprovedMessage(const nlohmann::json& data)
         {
+            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             if (!DepartureReleaseApprovedMessageValid(data)) {
                 LogError("Invalid departure release approved message");
                 return;
             }
 
-            this->releaseRequests.find(data.at("id").get<int>())->second->Approve(
-                Time::ParseTimeString(data.at("released_at").get<std::string>()),
-                Time::ParseTimeString(data.at("expires_at").get<std::string>())
-            );
+            if (data.at("expires_at").is_null()) {
+                this->releaseRequests.find(data.at("id").get<int>())->second->Approve(
+                    Time::ParseTimeString(data.at("released_at").get<std::string>())
+                );
+            } else {
+                this->releaseRequests.find(data.at("id").get<int>())->second->Approve(
+                    Time::ParseTimeString(data.at("released_at").get<std::string>()),
+                    Time::ParseTimeString(data.at("expires_at").get<std::string>())
+                );
+            }
         }
 
         /**
@@ -840,7 +857,12 @@ namespace UKControllerPlugin {
                         releasedAt,
                         expiresInSeconds
                     );
-                    release->Approve(releasedAt, releasedAt + std::chrono::seconds(expiresInSeconds));
+
+                    if (expiresInSeconds == -1) {
+                        release->Approve(releasedAt);
+                    } else {
+                        release->Approve(releasedAt, releasedAt + std::chrono::seconds(expiresInSeconds));
+                    }
                     LogInfo("Approved departure release id " + std::to_string(release->Id()));
                 } catch (Api::ApiException) {
                     LogError("ApiException approving departure release " + std::to_string(release->Id()));

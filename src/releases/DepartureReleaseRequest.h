@@ -20,6 +20,10 @@ namespace UKControllerPlugin {
                     std::chrono::system_clock::time_point releaseExpiresAt
                 );
 
+                void Approve(
+                    std::chrono::system_clock::time_point releasedAtTime
+                );
+
                 int Id() const;
                 bool RequiresDecision() const;
                 std::string Callsign() const;
@@ -31,6 +35,7 @@ namespace UKControllerPlugin {
                 bool RequestExpired() const;
                 bool ApprovalExpired() const;
                 bool AwaitingReleasedTime() const;
+                bool ApprovedWithNoExpiry() const;
                 std::chrono::system_clock::time_point RequestExpiryTime() const;
                 std::chrono::system_clock::time_point ReleaseExpiryTime() const;
                 std::chrono::system_clock::time_point ReleasedAtTime() const;
@@ -41,6 +46,10 @@ namespace UKControllerPlugin {
 
                 static inline const std::chrono::system_clock::time_point noTime = (
                     std::chrono::system_clock::time_point::min
+                )();
+
+                static inline const std::chrono::system_clock::time_point noTimeMax = (
+                    std::chrono::system_clock::time_point::max
                 )();
 
                 // The id of the request
@@ -68,7 +77,7 @@ namespace UKControllerPlugin {
                 std::chrono::system_clock::time_point releasedAtTime = noTime;
 
                 // The time that the release expires
-                std::chrono::system_clock::time_point releaseExpiresAt = noTime;
+                std::chrono::system_clock::time_point releaseExpiresAt = noTimeMax;
         };
 
     } // namespace Releases
