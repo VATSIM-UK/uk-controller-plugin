@@ -20,7 +20,7 @@
 #include "releases/DepartureReleaseColours.h"
 #include "releases/DepartureReleaseRequestView.h"
 
-using ::testing::Test;
+using testing::Test;
 using testing::NiceMock;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::DepartureReleaseRequest;
@@ -962,7 +962,7 @@ namespace UKControllerPluginTest {
                 "BAW999",
                 5,
                 6,
-                UKControllerPlugin::Time::TimeNow() + std::chrono::minutes(5)
+                TimeNow() + std::chrono::minutes(5)
             );
             handler.AddReleaseRequest(relevantRelease);
             handler.TimedEventTrigger();
@@ -976,7 +976,7 @@ namespace UKControllerPluginTest {
                 "BAW999",
                 5,
                 6,
-                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(5)
+                TimeNow() - std::chrono::seconds(5)
             );
             handler.AddReleaseRequest(relevantRelease);
             handler.TimedEventTrigger();
@@ -990,11 +990,11 @@ namespace UKControllerPluginTest {
                 "BAW999",
                 5,
                 6,
-                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(1)
+                TimeNow() - std::chrono::seconds(1)
             );
             relevantRelease->Approve(
                 std::chrono::system_clock::now(),
-                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(80)
+                TimeNow() - std::chrono::seconds(80)
             );
             handler.AddReleaseRequest(relevantRelease);
             handler.TimedEventTrigger();
@@ -1008,11 +1008,11 @@ namespace UKControllerPluginTest {
                 "BAW999",
                 5,
                 6,
-                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(1)
+                TimeNow() - std::chrono::seconds(1)
             );
             relevantRelease->Approve(
                 std::chrono::system_clock::now(),
-                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(91)
+                TimeNow() - std::chrono::seconds(91)
             );
             handler.AddReleaseRequest(relevantRelease);
             handler.TimedEventTrigger();
@@ -1026,7 +1026,7 @@ namespace UKControllerPluginTest {
                 "BAW999",
                 5,
                 6,
-                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(1)
+                TimeNow() - std::chrono::seconds(1)
             );
             relevantRelease->Reject();
             handler.AddReleaseRequest(relevantRelease);
@@ -1041,11 +1041,11 @@ namespace UKControllerPluginTest {
                 "BAW999",
                 5,
                 6,
-                UKControllerPlugin::Time::TimeNow() + std::chrono::seconds(5)
+                TimeNow() + std::chrono::seconds(5)
             );
             relevantRelease->Approve(
                 std::chrono::system_clock::now(),
-                UKControllerPlugin::Time::TimeNow() - std::chrono::seconds(91)
+                TimeNow() - std::chrono::seconds(91)
             );
             handler.AddReleaseRequest(relevantRelease);
             handler.TimedEventTrigger();
@@ -1395,7 +1395,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->api, ApproveDepartureReleaseRequest)
                 .Times(0);
 
-            this->handler.ApproveRelease(1, UKControllerPlugin::Time::TimeNow(), 60);
+            this->handler.ApproveRelease(1, TimeNow(), 60);
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, ItDoesntApproveReleasesIfNoUserCallsign)
@@ -1404,7 +1404,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->api, ApproveDepartureReleaseRequest)
                 .Times(0);
 
-            this->handler.ApproveRelease(1, UKControllerPlugin::Time::TimeNow(), 60);
+            this->handler.ApproveRelease(1, TimeNow(), 60);
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, ItDoesntApproveReleasesIfUserCallsignCantApproveReleases)
@@ -1414,7 +1414,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->api, ApproveDepartureReleaseRequest)
                 .Times(0);
 
-            this->handler.ApproveRelease(1, UKControllerPlugin::Time::TimeNow(), 60);
+            this->handler.ApproveRelease(1, TimeNow(), 60);
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesApiExceptionApprovingReleases)
@@ -1425,7 +1425,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(testing::Throw(UKControllerPlugin::Api::ApiException("foo")));
 
-            this->handler.ApproveRelease(1, UKControllerPlugin::Time::TimeNow(), 60);
+            this->handler.ApproveRelease(1, TimeNow(), 60);
             EXPECT_FALSE(this->handler.GetReleaseRequest(1)->Approved());
         }
 
@@ -1436,7 +1436,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->api, ApproveDepartureReleaseRequest(1, 2, UKControllerPlugin::Time::TimeNow(), 60))
                 .Times(1);
 
-            this->handler.ApproveRelease(1, UKControllerPlugin::Time::TimeNow(), 60);
+            this->handler.ApproveRelease(1, TimeNow(), 60);
             auto release = this->handler.GetReleaseRequest(1);
             EXPECT_TRUE(release->Approved());
             EXPECT_FALSE(release->ApprovedWithNoExpiry());
