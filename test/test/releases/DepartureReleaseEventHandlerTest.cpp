@@ -40,7 +40,7 @@ namespace UKControllerPluginTest {
             public:
                 DepartureReleaseEventHandlerTest()
                     : dialogManager(dialogProvider),
-                      handler(api, mockTaskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, 1, 2, 3)
+                      handler(api, mockTaskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, 1, 2, 3, 4)
                 {
                     request = std::make_shared<DepartureReleaseRequest>(
                         1,
@@ -144,7 +144,6 @@ namespace UKControllerPluginTest {
                 UKControllerPlugin::Dialog::DialogManager dialogManager;
                 ControllerPositionCollection controllers;
                 std::shared_ptr<DepartureReleaseRequest> request;
-                std::shared_ptr<DepartureReleaseRequest> request2;
                 DepartureReleaseEventHandler handler;
         };
 
@@ -1836,6 +1835,157 @@ namespace UKControllerPluginTest {
 
             this->handler.ShowStatusDisplay(this->mockFlightplan, this->mockRadarTarget, "", {101, 202});
             EXPECT_EQ(0, this->handler.GetReleasesToDisplay().size());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntDisplayCancellationListIfUserDoesNotHaveActiveCallsign)
+        {
+            EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, testing::_, testing::_))
+                .Times(0);
+
+            this->handler.AddReleaseRequest(request);
+
+            this->handler.SelectReleaseRequestToCancel(this->mockFlightplan, this->mockRadarTarget, "", {101, 202});
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDisplaysTheCancellationList)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                3,
+                "BAW456",
+                3,
+                4,
+                TimeNow() + std::chrono::minutes(5)
+            ); // Wont show, wrong callsign
+
+
+            auto request3 = std::make_shared<DepartureReleaseRequest>(
+                4,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            ); // Wont show, wrong requesting controller
+
+            auto request4 = std::make_shared<DepartureReleaseRequest>(
+                5,
+                "BAW123",
+                3,
+                4,
+                TimeNow() + std::chrono::minutes(5)
+            ); // Will show
+
+            this->handler.AddReleaseRequest(request4);
+            this->handler.AddReleaseRequest(request3);
+            this->handler.AddReleaseRequest(request2);
+            this->handler.AddReleaseRequest(request);
+
+            this->activeCallsigns.AddUserCallsign(*this->controller2Callsign);
+
+            UKControllerPlugin::Plugin::PopupMenuItem menuItemCardiffRadar;
+            menuItemCardiffRadar.firstValue = "EGFF_APP";
+            menuItemCardiffRadar.secondValue = "";
+            menuItemCardiffRadar.callbackFunctionId = 4;
+            menuItemCardiffRadar.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItemCardiffRadar.disabled = false;
+            menuItemCardiffRadar.fixedPosition = false;
+
+            UKControllerPlugin::Plugin::PopupMenuItem menuItemLondonControl;
+            menuItemLondonControl.firstValue = "LON_W_CTR";
+            menuItemLondonControl.secondValue = "";
+            menuItemLondonControl.callbackFunctionId = 4;
+            menuItemLondonControl.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+            menuItemLondonControl.disabled = false;
+            menuItemLondonControl.fixedPosition = false;
+
+            RECT expectedArea = {0, 0, 400, 600};
+            EXPECT_CALL(this->mockPlugin, TriggerPopupList(RectEq(expectedArea), "Cancel Departure Release", 1))
+                .Times(1);
+
+            EXPECT_CALL(this->mockPlugin, AddItemToPopupList(menuItemCardiffRadar))
+                .Times(1);
+
+            EXPECT_CALL(this->mockPlugin, AddItemToPopupList(menuItemLondonControl))
+                .Times(1);
+
+            this->handler.SelectReleaseRequestToCancel(this->mockFlightplan, this->mockRadarTarget, "", {0, 0});
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntCancelTheRequestIfNoSelectedFlightplan)
+        {
+            EXPECT_CALL(this->api, CancelDepartureReleaseRequest(testing::_))
+                .Times(0);
+
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan)
+                .WillByDefault(testing::Return(nullptr));
+
+            this->handler.AddReleaseRequest(request);
+            this->activeCallsigns.AddUserCallsign(*this->controller2Callsign);
+            this->handler.RequestCancelled(4, "EGFF_APP", {});
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntCancelTheRequestIfWrongCallsign)
+        {
+            EXPECT_CALL(this->api, CancelDepartureReleaseRequest(testing::_))
+                .Times(0);
+
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan)
+                .WillByDefault(Return(this->pluginReturnedFlightplan));
+
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW456",
+                3,
+                2,
+                TimeNow() + std::chrono::minutes(5)
+            );
+
+            this->handler.AddReleaseRequest(request2);
+            this->activeCallsigns.AddUserCallsign(*this->controller2Callsign);
+            this->handler.RequestCancelled(4, "EGFF_APP", {});
+            EXPECT_NE(nullptr, this->handler.GetReleaseRequest(1));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntCancelTheRequestIfWrongController)
+        {
+            EXPECT_CALL(this->api, CancelDepartureReleaseRequest(testing::_))
+                .Times(0);
+
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan)
+                .WillByDefault(Return(this->pluginReturnedFlightplan));
+
+            this->handler.AddReleaseRequest(request);
+            this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+            this->handler.RequestCancelled(4, "LON_W_CTR", {});
+            EXPECT_NE(nullptr, this->handler.GetReleaseRequest(1));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItCancelsTheRequest)
+        {
+            EXPECT_CALL(this->api, CancelDepartureReleaseRequest(1))
+                .Times(1);
+
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan)
+                .WillByDefault(Return(this->pluginReturnedFlightplan));
+
+            this->handler.AddReleaseRequest(request);
+            this->activeCallsigns.AddUserCallsign(*this->controller2Callsign);
+            this->handler.RequestCancelled(4, "EGFF_APP", {});
+            EXPECT_EQ(nullptr, this->handler.GetReleaseRequest(1));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItHandlesApiExceptionWhenCancellingTheRequest)
+        {
+            EXPECT_CALL(this->api, CancelDepartureReleaseRequest(1))
+                .Times(1)
+                .WillOnce(testing::Throw(UKControllerPlugin::Api::ApiException("foo")));
+
+            ON_CALL(this->mockPlugin, GetSelectedFlightplan)
+                .WillByDefault(Return(this->pluginReturnedFlightplan));
+
+            this->handler.AddReleaseRequest(request);
+            this->activeCallsigns.AddUserCallsign(*this->controller2Callsign);
+            this->handler.RequestCancelled(4, "EGFF_APP", {});
+            EXPECT_NE(nullptr, this->handler.GetReleaseRequest(1));
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

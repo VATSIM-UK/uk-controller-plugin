@@ -44,7 +44,8 @@ namespace UKControllerPlugin {
                     const Dialog::DialogManager& dialogManager,
                     int triggerRequestDialogFunctionId,
                     int triggerDecisionMenuFunctionId,
-                    int releaseDecisionCallbackId
+                    int releaseDecisionCallbackId,
+                    int releaseCancellationCallbackId
                 );
                 void ProcessWebsocketMessage(const Websocket::WebsocketMessage& message) override;
                 std::set<Websocket::WebsocketSubscription> GetSubscriptions() const override;
@@ -79,6 +80,13 @@ namespace UKControllerPlugin {
                     const POINT& mousePos
                 );
                 const std::set<std::shared_ptr<DepartureReleaseRequest>>& GetReleasesToDisplay() const;
+                void SelectReleaseRequestToCancel(
+                    Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                    std::string context,
+                    const POINT& mousePos
+                );
+                void RequestCancelled(int functionId, std::string context, RECT);
 
             private:
 
@@ -114,6 +122,9 @@ namespace UKControllerPlugin {
 
                 // Callback for when a release decision is made
                 const int releaseDecisionCallbackId;
+
+                // Callback for when a release request is cancelled
+                const int releaseCancellationCallbackId;
 
                 // Release requests in progress
                 std::map<int, std::shared_ptr<DepartureReleaseRequest>> releaseRequests;

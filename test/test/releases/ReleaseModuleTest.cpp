@@ -180,5 +180,12 @@ namespace UKControllerPluginTest {
             BootstrapRadarScreen(this->container, renderables);
             EXPECT_EQ(1, renderables.CountRenderers());
         }
+
+        TEST_F(ReleaseModuleTest, ItRegistersTheCancelRequestFunctions)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9015));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5003));
+        }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

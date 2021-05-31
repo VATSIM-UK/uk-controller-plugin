@@ -29,12 +29,13 @@ namespace UKControllerPlugin {
             const Dialog::DialogManager& dialogManager,
             const int triggerRequestDialogFunctionId,
             const int triggerDecisionMenuFunctionId,
-            const int releaseDecisionCallbackId
+            const int releaseDecisionCallbackId,
+            int releaseCancellationCallbackId
         ): triggerRequestDialogFunctionId(triggerRequestDialogFunctionId),
            triggerDecisionMenuFunctionId(triggerDecisionMenuFunctionId),
            releaseDecisionCallbackId(releaseDecisionCallbackId),
            controllers(controllers), plugin(plugin), dialogManager(dialogManager), api(api), taskRunner(taskRunner),
-           activeCallsigns(activeCallsigns)
+           activeCallsigns(activeCallsigns), releaseCancellationCallbackId(releaseCancellationCallbackId)
         {
             this->releaseRequests[1] = std::make_shared<DepartureReleaseRequest>(
                 1,
@@ -251,6 +252,102 @@ namespace UKControllerPlugin {
         GetReleasesToDisplay() const
         {
             return this->releasesToDisplay;
+        }
+
+        /*
+         * Opens a list of controllers that have pending releases for the given callsign
+         * so that one can be selected for cancellation.
+         */
+        void DepartureReleaseEventHandler::SelectReleaseRequestToCancel(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            std::string context,
+            const POINT& mousePos
+        )
+        {
+            if (!this->activeCallsigns.UserHasCallsign()) {
+                return;
+            }
+
+            bool menuTriggered = false;
+            int userControllerId = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId();
+            for (auto release : this->releaseRequests) {
+                if (
+                    release.second->RequestingController() != userControllerId ||
+                    release.second->Callsign() != flightplan.GetCallsign()
+                ) {
+                    continue;
+                }
+
+                // Trigger menu if not yet triggered
+                if (!menuTriggered) {
+                    RECT popupArea = {
+                        mousePos.x,
+                        mousePos.y,
+                        mousePos.x + 400,
+                        mousePos.y + 600
+                    };
+
+                    this->plugin.TriggerPopupList(
+                        popupArea,
+                        "Cancel Departure Release",
+                        1
+                    );
+                    menuTriggered = true;
+                }
+
+                // Add an item to the menu
+                Plugin::PopupMenuItem menuItem;
+                menuItem.firstValue = this->controllers.FetchPositionById(
+                    release.second->TargetController()
+                )->GetCallsign();
+                menuItem.secondValue = "";
+                menuItem.callbackFunctionId = this->releaseCancellationCallbackId;
+                menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+                menuItem.disabled = false;
+                menuItem.fixedPosition = false;
+                this->plugin.AddItemToPopupList(menuItem);
+            }
+        }
+
+        /*
+         * EuroScope callback function where a release request has been cancelled
+         * via the cancellation menu. Finds the release, then polls the API to cancel it.
+         */
+        void DepartureReleaseEventHandler::RequestCancelled(int functionId, std::string context, RECT)
+        {
+            auto fp = this->plugin.GetSelectedFlightplan();
+            if (!fp) {
+                LogWarning("Cannot cancel release request, no flightplan selected");
+                return;
+            }
+
+            auto releaseToCancel = std::find_if(
+                this->releaseRequests.cbegin(),
+                this->releaseRequests.cend(),
+                [fp, this, context](auto releaseRequest) -> bool
+                {
+                    return fp->GetCallsign() == releaseRequest.second->Callsign() &&
+                        this->controllers.FetchPositionByCallsign(context).GetId() == releaseRequest.second->
+                        TargetController();
+                }
+            );
+
+            if (releaseToCancel == this->releaseRequests.cend()) {
+                return;
+            }
+
+            this->taskRunner.QueueAsynchronousTask(
+                [&releaseToCancel, this]()
+                {
+                    try {
+                        this->api.CancelDepartureReleaseRequest(releaseToCancel->second->Id());
+                        this->releaseRequests.erase(releaseToCancel->second->Id());
+                    } catch (Api::ApiException api) {
+                        LogError("ApiException whilst cancelling release request");
+                    }
+                }
+            );
         }
 
         const std::shared_ptr<DepartureReleaseRequest>

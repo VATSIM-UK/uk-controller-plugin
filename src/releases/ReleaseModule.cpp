@@ -29,6 +29,7 @@ namespace UKControllerPlugin {
         const unsigned int departureReleaseRequestDialogTriggerFunctionId = 9012;
         const unsigned int departureReleaseDecisionMenuTriggerFunctionId = 9013;
         const unsigned int departureReleaseStatusViewTriggerFunctionId = 9014;
+        const unsigned int departureReleaseCancelMenuFunctionId = 9015;
         const unsigned int departureReleaseStatusIndicatorTagItemId = 124;
         const unsigned int departureReleaseCountdownTimerTagItemId = 125;
         std::shared_ptr<DepartureReleaseEventHandler> departureHandler;
@@ -119,6 +120,7 @@ namespace UKControllerPlugin {
 
             // Everything to do with DEPARTURE releases
             const int releaseDecisionCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+            const int releaseCancellationCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             departureHandler =
                 std::make_shared<DepartureReleaseEventHandler>(
                     *container.api,
@@ -129,7 +131,8 @@ namespace UKControllerPlugin {
                     *container.dialogManager,
                     departureReleaseRequestDialogTriggerFunctionId,
                     departureReleaseDecisionMenuTriggerFunctionId,
-                    releaseDecisionCallbackId
+                    releaseDecisionCallbackId,
+                    releaseCancellationCallbackId
                 );
             container.websocketProcessors->AddProcessor(departureHandler);
             container.tagHandler->RegisterTagItem(departureReleaseStatusIndicatorTagItemId, departureHandler);
@@ -194,6 +197,35 @@ namespace UKControllerPlugin {
                 )
             );
             container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseStatusView);
+
+            // TAG function to trigger the cancellation menu
+            TagFunction openDepartureReleaseCancellationMenu(
+                departureReleaseCancelMenuFunctionId,
+                "Open Departure Release Request Cancellation Menu",
+                std::bind(
+                    &DepartureReleaseEventHandler::SelectReleaseRequestToCancel,
+                    departureHandler.get(),
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseCancellationMenu);
+
+            // Callback for when a release decision is made
+            CallbackFunction releaseCancelledCallback(
+                releaseCancellationCallbackId,
+                "Departure Release Request Cancelled",
+                std::bind(
+                    &DepartureReleaseEventHandler::RequestCancelled,
+                    departureHandler,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+            container.pluginFunctionHandlers->RegisterFunctionCall(releaseCancelledCallback);
 
             // Dialog for requesting departure releases
             std::shared_ptr<RequestDepartureReleaseDialog> requestDialog =

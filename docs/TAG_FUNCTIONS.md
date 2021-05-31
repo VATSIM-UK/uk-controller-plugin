@@ -15,3 +15,4 @@
 9012 - Open Request Departure Release Dialog
 9013 - Open Departure Release Decision Menu
 9014 - Open Departure Release Request Status View
+9015 - Open Departure Release Cancellation Menu
