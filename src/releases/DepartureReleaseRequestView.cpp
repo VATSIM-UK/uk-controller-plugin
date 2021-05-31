@@ -18,8 +18,8 @@ namespace UKControllerPlugin {
             const DepartureReleaseEventHandler& handler,
             const Controller::ControllerPositionCollection& controllers,
             const int screenObjectId
-        ) : handler(handler), screenObjectId(screenObjectId), backgroundBrush(Gdiplus::Color(58, 57, 58)),
-            titleBarTextBrush(Gdiplus::Color(227, 227, 227)), controllers(controllers)
+        ) : handler(handler), controllers(controllers), screenObjectId(screenObjectId),
+            backgroundBrush(Gdiplus::Color(58, 57, 58)), titleBarTextBrush(Gdiplus::Color(227, 227, 227))
         {}
 
         void DepartureReleaseRequestView::DisplayFor(std::chrono::seconds seconds)
@@ -106,11 +106,11 @@ namespace UKControllerPlugin {
             int rowMultiplier = 1;
             for (auto release : releasesToDisplay) {
 
-                std::wstring controller = HelperFunctions::ConvertToWideString(
+                const std::wstring controller = HelperFunctions::ConvertToWideString(
                     this->controllers.FetchPositionById(release->TargetController())->GetCallsign()
                 );
 
-                auto controllerColour = this->GetControllerColour(release);
+                const auto controllerColour = this->GetControllerColour(release);
                 auto brushForRow = Gdiplus::SolidBrush(
                     Gdiplus::Color(GetRValue(controllerColour), GetGValue(controllerColour),
                                    GetBValue(controllerColour))
@@ -132,7 +132,7 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                auto timerColour = this->GetTimerColour(release);
+                const auto timerColour = this->GetTimerColour(release);
                 auto brushForTimer = Gdiplus::SolidBrush(
                     Gdiplus::Color(GetRValue(timerColour), GetGValue(timerColour), GetBValue(timerColour))
                 );

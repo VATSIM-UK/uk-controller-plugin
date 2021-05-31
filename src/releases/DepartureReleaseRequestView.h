@@ -40,8 +40,8 @@ namespace UKControllerPlugin {
 
             private:
 
-                COLORREF GetControllerColour(std::shared_ptr<DepartureReleaseRequest> request);
-                COLORREF GetTimerColour(std::shared_ptr<DepartureReleaseRequest> request);
+                static COLORREF GetControllerColour(std::shared_ptr<DepartureReleaseRequest> request);
+                static COLORREF GetTimerColour(std::shared_ptr<DepartureReleaseRequest> request);
 
                 // The width of the menu
                 const int baseWidth = 230;
