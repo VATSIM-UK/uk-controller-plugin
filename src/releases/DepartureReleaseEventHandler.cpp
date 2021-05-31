@@ -258,13 +258,21 @@ namespace UKControllerPlugin {
             std::string callsign
         )
         {
+            if (!this->activeCallsigns.UserHasCallsign()) {
+                return nullptr;
+            }
+
+            int userControllerId = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId();
             std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
             auto release = std::find_if(
                 this->releaseRequests.cbegin(),
                 this->releaseRequests.cend(),
-                [&callsign](const std::pair<int, std::shared_ptr<DepartureReleaseRequest>>& release) -> bool
+                [&callsign, userControllerId]
+            (const std::pair<int, std::shared_ptr<DepartureReleaseRequest>>& release) -> bool
                 {
-                    return release.second->Callsign() == callsign && release.second->RequiresDecision();
+                    return release.second->Callsign() == callsign &&
+                        release.second->RequiresDecision() &&
+                        userControllerId == release.second->TargetController();
                 }
             );
 
@@ -559,7 +567,7 @@ namespace UKControllerPlugin {
         )
         {
             auto release = this->FindReleaseRequiringDecisionForCallsign(flightplan.GetCallsign());
-            if (!this->ControllerCanMakeReleaseDecision(release)) {
+            if (!release) {
                 return;
             }
 
@@ -606,7 +614,7 @@ namespace UKControllerPlugin {
             }
 
             auto release = this->FindReleaseRequiringDecisionForCallsign(fp->GetCallsign());
-            if (!this->ControllerCanMakeReleaseDecision(release)) {
+            if (!release) {
                 return;
             }
 
