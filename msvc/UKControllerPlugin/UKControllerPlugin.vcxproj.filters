@@ -1082,6 +1082,9 @@
     <ClInclude Include="..\..\src\releases\DepartureReleaseCountdownColours.h">
       <Filter>src\releases</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1859,6 +1862,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\releases\DepartureReleaseCountdownColours.cpp">
       <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.cpp">
+      <Filter>src\euroscope</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

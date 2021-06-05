@@ -42,6 +42,7 @@ namespace UKControllerPlugin {
                 virtual const bool IsTrackedByUser(void) const = 0;
                 virtual bool IsValid(void) const = 0;
                 virtual bool IsVfr(void) const = 0;
+                virtual EuroScopePlugIn::CFlightPlan GetEuroScopeObject() const = 0;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
