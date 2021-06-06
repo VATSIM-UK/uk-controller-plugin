@@ -77,7 +77,7 @@ namespace UKControllerPluginTest {
                     );
                     controllers.AddPosition(position2);
                     controller2Callsign = std::make_shared<ActiveCallsign>(
-                        "EGFF_TWR",
+                        "EGFF_1_TWR",
                         "Test 2",
                         *position2
                     );
@@ -1640,7 +1640,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleaseRejected, data.GetTagColour());
         }
 
-        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusCountdownTimerHasATagItemDescription)
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseCountdownTimerHasATagItemDescription)
         {
             EXPECT_EQ("Departure Release Countdown", this->handler.GetTagItemDescription(125));
         }
@@ -2064,6 +2064,54 @@ namespace UKControllerPluginTest {
             this->activeCallsigns.AddUserCallsign(*this->controller2Callsign);
             this->handler.RequestCancelled(4, "EGFF_APP", {});
             EXPECT_NE(nullptr, this->handler.GetReleaseRequest(1));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseRequestingControllerATagItemDescription)
+        {
+            EXPECT_EQ("Departure Release Requesting Controller", this->handler.GetTagItemDescription(126));
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseRequestingControllerSetsLeadControllerCallsign)
+        {
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(126);
+            this->handler.AddReleaseRequest(request);
+            this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+            this->activeCallsigns.AddCallsign(*this->controller2Callsign);
+
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("EGFF_1_TWR", data.GetItemString());
+            EXPECT_EQ(tagColour, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseRequestingControllerSetsFallbackCallsign)
+        {
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(126);
+            this->handler.AddReleaseRequest(request);
+            this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("EGFF_TWR", data.GetItemString());
+            EXPECT_EQ(tagColour, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseRequestingControllerDoesNothingIfNoUserCallsign)
+        {
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(126);
+            this->handler.AddReleaseRequest(request);
+
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("", data.GetItemString());
+            EXPECT_EQ(tagColour, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseRequestingControllerDoesNothingIfNoRelease)
+        {
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(126);
+            this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("", data.GetItemString());
+            EXPECT_EQ(tagColour, data.GetTagColour());
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

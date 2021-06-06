@@ -194,6 +194,8 @@ namespace UKControllerPlugin {
                     return "Departure Release Status Indicator";
                 case 125:
                     return "Departure Release Countdown";
+                case 126:
+                    return "Departure Release Requesting Controller";
                 default:
                     return "";
             }
@@ -207,6 +209,9 @@ namespace UKControllerPlugin {
                     break;
                 case 125:
                     this->SetReleaseCountdownTagData(tagData);
+                    break;
+                case 126:
+                    this->SetRequestingControllerTagData(tagData);
                     break;
                 default:
                     break;
@@ -521,6 +526,27 @@ namespace UKControllerPlugin {
 
             // Set the timer display
             tagData.SetItemString(Timer::GetTimerDisplay(countdownTime));
+        }
+
+        /*
+         * Set the requesting controller tag data.
+         */
+        void DepartureReleaseEventHandler::SetRequestingControllerTagData(Tag::TagData& tagData)
+        {
+            auto release = this->FindReleaseRequiringDecisionForCallsign(tagData.flightPlan.GetCallsign());
+            if (!release) {
+                return;
+            }
+
+            std::string requestingControllerCallsign = this->controllers.FetchPositionById(
+                release->RequestingController()
+            )->GetCallsign();
+
+            tagData.SetItemString(
+                this->activeCallsigns.PositionActive(requestingControllerCallsign)
+                    ? this->activeCallsigns.GetLeadCallsignForPosition(requestingControllerCallsign).GetCallsign()
+                    : requestingControllerCallsign
+            );
         }
 
         /**

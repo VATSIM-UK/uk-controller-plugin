@@ -32,6 +32,7 @@ namespace UKControllerPlugin {
         const unsigned int departureReleaseCancelMenuFunctionId = 9015;
         const unsigned int departureReleaseStatusIndicatorTagItemId = 124;
         const unsigned int departureReleaseCountdownTimerTagItemId = 125;
+        const unsigned int departureReleaseRequestingControllerTagItemId = 126;
         std::shared_ptr<DepartureReleaseEventHandler> departureHandler;
 
         void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
@@ -137,6 +138,7 @@ namespace UKControllerPlugin {
             container.websocketProcessors->AddProcessor(departureHandler);
             container.tagHandler->RegisterTagItem(departureReleaseStatusIndicatorTagItemId, departureHandler);
             container.tagHandler->RegisterTagItem(departureReleaseCountdownTimerTagItemId, departureHandler);
+            container.tagHandler->RegisterTagItem(departureReleaseRequestingControllerTagItemId, departureHandler);
 
             // Callback for when a release decision is made
             CallbackFunction releaseDecisionCallback(

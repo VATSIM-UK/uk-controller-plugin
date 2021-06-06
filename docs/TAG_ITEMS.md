@@ -25,3 +25,4 @@
 123 - Nattrak Oceanic Clearance Entry Estimate
 124 - Departure Release Status Indicator
 125 - Departure Release Countdown
+126 - Departure Release Requesting Controller

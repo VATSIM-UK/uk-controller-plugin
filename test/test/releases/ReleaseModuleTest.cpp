@@ -98,7 +98,7 @@ namespace UKControllerPluginTest {
         TEST_F(ReleaseModuleTest, ItRegistersAllTagItems)
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
-            EXPECT_EQ(5, this->container.tagHandler->CountHandlers());
+            EXPECT_EQ(6, this->container.tagHandler->CountHandlers());
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersForTimedEvents)
@@ -186,6 +186,12 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9015));
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5003));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersTagItemForDepartureReleaseRequestingController)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(1, this->container.tagHandler->HasHandlerForItemId(126));
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

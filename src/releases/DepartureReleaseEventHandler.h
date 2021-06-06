@@ -110,6 +110,7 @@ namespace UKControllerPlugin {
                 );
                 void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData);
                 void SetReleaseCountdownTagData(Tag::TagData& tagData);
+                void SetRequestingControllerTagData(Tag::TagData& tagData);
 
                 // A guard on the map to allow async operations
                 std::mutex releaseMapGuard;
