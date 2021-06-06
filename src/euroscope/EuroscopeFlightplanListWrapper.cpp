@@ -1,8 +1,6 @@
-#pragma once
 #include "pch/stdafx.h"
 #include "euroscope/EuroscopeFlightplanListWrapper.h"
-
-#include "EuroScopeCFlightPlanInterface.h"
+#include "euroscope/EuroScopeCFlightPlanInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {

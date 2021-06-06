@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/stdafx.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {

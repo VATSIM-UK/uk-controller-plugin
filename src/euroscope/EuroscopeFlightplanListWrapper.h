@@ -7,11 +7,11 @@ namespace UKControllerPlugin {
         /*
          * Implements a wrapper around EuroScopes flight plan list.
          */
-        class EuroscopeFlightplanListWrapper : EuroscopeFlightplanListInterface
+        class EuroscopeFlightplanListWrapper : public EuroscopeFlightplanListInterface
         {
             public:
                 explicit EuroscopeFlightplanListWrapper(EuroScopePlugIn::CFlightPlanList original);
-                ~EuroscopeFlightplanListWrapper() override {};
+                ~EuroscopeFlightplanListWrapper() override = default;
                 int NumberOfColumns() override;
                 void AddColumn(std::string title, int width, bool centered, std::string tagItemProvider,
                                int tagItemId, std::string leftMouseFunctionProvider,

@@ -6,6 +6,9 @@ namespace UKControllerPlugin {
     namespace RadarScreen {
         class RadarRenderableCollection;
     } // namespace RadarScreen
+    namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
+    } // namespace Euroscope
 
     namespace Releases {
 
@@ -13,6 +16,7 @@ namespace UKControllerPlugin {
 
         void BootstrapPlugin(
             Bootstrap::PersistenceContainer& container,
+            Euroscope::EuroscopePluginLoopbackInterface& plugin,
             UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies
         );
 

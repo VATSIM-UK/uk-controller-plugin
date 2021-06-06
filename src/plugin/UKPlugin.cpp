@@ -16,6 +16,8 @@
 #include "euroscope/EuroscopeSectorFileElementWrapper.h"
 #include "tag/TagData.h"
 #include "controller/HandoffEventHandlerCollection.h"
+#include "euroscope/EuroscopeFlightplanListWrapper.h"
+#include "euroscope/EuroscopeFlightplanListInterface.h"
 
 using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPlugin::Windows::WinApiInterface;
@@ -39,6 +41,8 @@ using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementWrapper;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPlugin::Euroscope::EuroscopeFlightplanListWrapper;
+using UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 
@@ -236,6 +240,12 @@ namespace UKControllerPlugin {
                 )
             );
         } while (strcmp((current = this->ControllerSelectNext(current)).GetCallsign(), "") != 0);
+    }
+
+    std::shared_ptr<EuroscopeFlightplanListInterface> UKPlugin::RegisterFlightplanList(std::string name)
+    {
+        EuroScopePlugIn::CFlightPlanList list = this->RegisterFpList(name.c_str());
+        return std::make_shared<EuroscopeFlightplanListWrapper>(list);
     }
 
     /*

@@ -2,6 +2,7 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
+#include "euroscope/EuroscopeFlightplanListInterface.h"
 #include "mock/MockFlightplanRadarTargetPair.h"
 #include "mock/MockEuroScopeCControllerInterface.h"
 
@@ -9,6 +10,7 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
+        class EuroscopeFlightplanListInterface;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
@@ -70,6 +72,12 @@ namespace UKControllerPluginTest {
                     )
                 );
                 MOCK_METHOD3(ShowTextEditPopup, void(RECT, int, std::string));
+                MOCK_METHOD(
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface>,
+                    RegisterFlightplanList,
+                    (std::string),
+                    (override)
+                );
 
                 void ApplyFunctionToAllFlightplans(
                     std::function<

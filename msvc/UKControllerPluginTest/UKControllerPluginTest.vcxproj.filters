@@ -840,6 +840,9 @@
     <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp">
       <Filter>test\timer</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\mock\MockEuroscopeFlightplanList.h">
+      <Filter>mock</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

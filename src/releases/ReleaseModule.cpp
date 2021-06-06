@@ -10,10 +10,14 @@
 #include "releases/ApproveDepartureReleaseDialog.h"
 #include "releases/RequestDepartureReleaseDialog.h"
 #include "releases/DepartureReleaseRequestView.h"
+#include "euroscope/EuroscopeFlightplanListInterface.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Euroscope::CallbackFunction;
+using UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::ApproveDepartureReleaseDialog;
@@ -34,8 +38,13 @@ namespace UKControllerPlugin {
         const unsigned int departureReleaseCountdownTimerTagItemId = 125;
         const unsigned int departureReleaseRequestingControllerTagItemId = 126;
         std::shared_ptr<DepartureReleaseEventHandler> departureHandler;
+        std::shared_ptr<EuroscopeFlightplanListInterface> releaseRequestsList;
 
-        void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
+        void BootstrapPlugin(
+            PersistenceContainer& container,
+            EuroscopePluginLoopbackInterface& plugin,
+            DependencyLoaderInterface& dependencies
+        )
         {
             // Load everything to do with ENROUTE releases
             std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes;
@@ -120,6 +129,67 @@ namespace UKControllerPlugin {
 
 
             // Everything to do with DEPARTURE releases
+
+            // Create the release requests list and register items.
+            releaseRequestsList = plugin.RegisterFlightplanList("Departure Release Requests");
+
+            if (releaseRequestsList && releaseRequestsList->NumberOfColumns() == 0) {
+                // Callsign
+                releaseRequestsList->AddColumn(
+                    "C/S",
+                    7,
+                    false,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
+                    EuroscopeFlightplanListInterface::UKCP_PROVIDER,
+                    departureReleaseDecisionMenuTriggerFunctionId,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO
+                );
+
+                // Departure Airport
+                releaseRequestsList->AddColumn(
+                    "Dept",
+                    4,
+                    true,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_TYPE_ORIGIN,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO
+                );
+
+                // Departure
+                releaseRequestsList->AddColumn(
+                    "SID",
+                    7,
+                    false,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_TYPE_ASSIGNED_SID,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO
+                );
+
+                // Requesting Controller
+                releaseRequestsList->AddColumn(
+                    "Req Ctrl",
+                    10,
+                    false,
+                    EuroscopeFlightplanListInterface::UKCP_PROVIDER,
+                    departureReleaseRequestingControllerTagItemId,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO,
+                    EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
+                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO
+                );
+            }
+
+            releaseRequestsList->Show();
+
+            // Create the event handler
             const int releaseDecisionCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             const int releaseCancellationCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             departureHandler =

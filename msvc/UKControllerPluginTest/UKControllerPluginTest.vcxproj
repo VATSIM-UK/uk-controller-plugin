@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\test\helper\InitTests.cpp" />
     <ClCompile Include="..\..\test\helper\TestingFunctions.cpp" />
     <ClCompile Include="..\..\test\mock\MockActiveCallsignEventHandler.h" />
+    <ClCompile Include="..\..\test\mock\MockEuroscopeFlightplanList.h" />
     <ClCompile Include="..\..\test\mock\MockRunwayDialogAwareInterface.h" />
     <ClCompile Include="..\..\test\mock\MockSectorFileProviderInterface.h" />
     <ClCompile Include="..\..\test\mock\MockWebsocketEventProcessor.h" />
