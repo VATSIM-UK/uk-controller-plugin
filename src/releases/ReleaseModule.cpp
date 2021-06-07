@@ -201,6 +201,7 @@ namespace UKControllerPlugin {
                     *container.controllerPositions,
                     *container.activeCallsigns,
                     *container.dialogManager,
+                    *releaseRequestsList,
                     departureReleaseRequestDialogTriggerFunctionId,
                     departureReleaseDecisionMenuTriggerFunctionId,
                     releaseDecisionCallbackId,

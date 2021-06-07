@@ -27,6 +27,7 @@ namespace UKControllerPlugin {
             const Controller::ControllerPositionCollection& controllers,
             const Controller::ActiveCallsignCollection& activeCallsigns,
             const Dialog::DialogManager& dialogManager,
+            Euroscope::EuroscopeFlightplanListInterface& releaseRequestList,
             const int triggerRequestDialogFunctionId,
             const int triggerDecisionMenuFunctionId,
             const int releaseDecisionCallbackId,
@@ -35,7 +36,8 @@ namespace UKControllerPlugin {
            triggerDecisionMenuFunctionId(triggerDecisionMenuFunctionId),
            releaseDecisionCallbackId(releaseDecisionCallbackId),
            controllers(controllers), plugin(plugin), dialogManager(dialogManager), api(api), taskRunner(taskRunner),
-           activeCallsigns(activeCallsigns), releaseCancellationCallbackId(releaseCancellationCallbackId)
+           activeCallsigns(activeCallsigns), releaseCancellationCallbackId(releaseCancellationCallbackId),
+           releaseRequestList(releaseRequestList)
         {
             this->releaseRequests[1] = std::make_shared<DepartureReleaseRequest>(
                 1,

@@ -15,6 +15,7 @@ namespace UKControllerPlugin {
         class EuroscopePluginLoopbackInterface;
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
+        class EuroscopeFlightplanListInterface;
     } // namespace Euroscope
     namespace TaskManager {
         class TaskRunnerInterface;
@@ -42,6 +43,7 @@ namespace UKControllerPlugin {
                     const Controller::ControllerPositionCollection& controllers,
                     const Controller::ActiveCallsignCollection& activeCallsigns,
                     const Dialog::DialogManager& dialogManager,
+                    Euroscope::EuroscopeFlightplanListInterface& releaseRequestList,
                     int triggerRequestDialogFunctionId,
                     int triggerDecisionMenuFunctionId,
                     int releaseDecisionCallbackId,
@@ -150,6 +152,9 @@ namespace UKControllerPlugin {
 
                 // A set of releases to display in the view
                 std::set<std::shared_ptr<DepartureReleaseRequest>> releasesToDisplay;
+
+                // The release request list
+                Euroscope::EuroscopeFlightplanListInterface& releaseRequestList;
         };
     }  // namespace Releases
 }  // namespace UKControllerPlugin

@@ -17,6 +17,7 @@
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "dialog/DialogData.h"
+#include "mock/MockEuroscopeFlightplanList.h"
 #include "releases/DepartureReleaseColours.h"
 #include "releases/DepartureReleaseRequestView.h"
 
@@ -40,7 +41,19 @@ namespace UKControllerPluginTest {
             public:
                 DepartureReleaseEventHandlerTest()
                     : dialogManager(dialogProvider),
-                      handler(api, mockTaskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, 1, 2, 3, 4)
+                      handler(
+                          api,
+                          mockTaskRunner,
+                          mockPlugin,
+                          controllers,
+                          activeCallsigns,
+                          dialogManager,
+                          mockEuroscopeList,
+                          1,
+                          2,
+                          3,
+                          4
+                      )
                 {
                     request = std::make_shared<DepartureReleaseRequest>(
                         1,
@@ -132,6 +145,7 @@ namespace UKControllerPluginTest {
                 NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface> mockRadarTarget;
                 std::shared_ptr<NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>> pluginReturnedFlightplan;
                 NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
+                NiceMock<Euroscope::MockEuroscopeFlightplanList> mockEuroscopeList;
                 std::shared_ptr<ControllerPosition> position1;
                 std::shared_ptr<ControllerPosition> position2;
                 std::shared_ptr<ControllerPosition> position3;
