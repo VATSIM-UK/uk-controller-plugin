@@ -11,6 +11,7 @@ namespace UKControllerPlugin {
         class ConfigurableDisplayInterface
         {
             public:
+                virtual ~ConfigurableDisplayInterface() = default;
 
                 /*
                     When this method is called, the module should provide some method of configuring it -

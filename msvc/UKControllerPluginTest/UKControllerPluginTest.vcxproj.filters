@@ -843,6 +843,9 @@
     <ClCompile Include="..\..\test\mock\MockEuroscopeFlightplanList.h">
       <Filter>mock</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseRequestListTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

@@ -1085,6 +1085,9 @@
     <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\ToggleDepartureReleaseRequestList.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1865,6 +1868,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.cpp">
       <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\ToggleDepartureReleaseRequestList.cpp">
+      <Filter>src\releases</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -12,6 +12,7 @@
 #include "radarscreen/RadarRenderableCollection.h"
 #include "mock/MockEuroscopeFlightplanList.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -30,6 +31,7 @@ using UKControllerPluginTest::Euroscope::MockEuroscopeFlightplanList;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
+using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -83,6 +85,8 @@ namespace UKControllerPluginTest {
                 NiceMock<MockDialogProvider> dialogProvider;
                 NiceMock<MockDependencyLoader> dependencyLoader;
                 PersistenceContainer container;
+                RadarRenderableCollection renderables;
+                ConfigurableDisplayCollection configurables;
         };
 
         TEST_F(ReleaseModuleTest, ItRegistersForEnrouteWebsocketEvents)
@@ -190,9 +194,15 @@ namespace UKControllerPluginTest {
 
         TEST_F(ReleaseModuleTest, RadarScreenAddsRenderable)
         {
-            RadarRenderableCollection renderables;
-            BootstrapRadarScreen(this->container, renderables);
+            BootstrapRadarScreen(this->container, renderables, configurables);
             EXPECT_EQ(1, renderables.CountRenderers());
+        }
+
+        TEST_F(ReleaseModuleTest, RadarScreenAddsReleaseRequestShowOption)
+        {
+            BootstrapRadarScreen(this->container, renderables, configurables);
+            EXPECT_EQ(1, configurables.CountDisplays());
+            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersTheCancelRequestFunctions)

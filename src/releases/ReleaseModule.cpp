@@ -12,6 +12,8 @@
 #include "releases/DepartureReleaseRequestView.h"
 #include "euroscope/EuroscopeFlightplanListInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "releases/ToggleDepartureReleaseRequestList.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
@@ -23,6 +25,7 @@ using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::ApproveDepartureReleaseDialog;
 using UKControllerPlugin::Releases::RequestDepartureReleaseDialog;
 using UKControllerPlugin::Releases::DepartureReleaseRequestView;
+using UKControllerPlugin::Releases::ToggleDepartureReleaseRequestList;
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -187,8 +190,6 @@ namespace UKControllerPlugin {
                 );
             }
 
-            releaseRequestsList->Show();
-
             // Create the event handler
             const int releaseDecisionCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
             const int releaseCancellationCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
@@ -338,9 +339,11 @@ namespace UKControllerPlugin {
 
         void BootstrapRadarScreen(
             const PersistenceContainer& container,
-            RadarScreen::RadarRenderableCollection& renderables
+            RadarScreen::RadarRenderableCollection& renderables,
+            RadarScreen::ConfigurableDisplayCollection& configurables
         )
         {
+            // Create the request view renderer
             const int rendererId = renderables.ReserveRendererIdentifier();
             auto releaseRequestView = std::make_shared<DepartureReleaseRequestView>(
                 *departureHandler,
@@ -348,6 +351,29 @@ namespace UKControllerPlugin {
                 rendererId
             );
             renderables.RegisterRenderer(rendererId, releaseRequestView, renderables.afterLists);
+
+            // Create the configuration list item
+            const int requestListShowCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+            auto listItem = std::make_shared<ToggleDepartureReleaseRequestList>(
+                *releaseRequestsList,
+                requestListShowCallbackId
+            );
+
+            CallbackFunction showReleaseRequestListCallback(
+                requestListShowCallbackId,
+                "Departure Release Request Cancelled",
+                std::bind(
+                    &ToggleDepartureReleaseRequestList::Configure,
+                    listItem,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3
+                )
+            );
+
+            container.pluginFunctionHandlers->RegisterFunctionCall(showReleaseRequestListCallback);
+            configurables.RegisterDisplay(listItem);
+
         }
     }  // namespace Releases
 }  // namespace UKControllerPlugin

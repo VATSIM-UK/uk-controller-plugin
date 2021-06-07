@@ -211,6 +211,7 @@
     <ClCompile Include="..\..\test\test\releases\EnrouteReleaseEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\EnrouteReleaseTypesSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\ReleaseModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseRequestListTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp" />

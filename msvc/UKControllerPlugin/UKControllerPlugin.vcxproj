@@ -266,6 +266,7 @@
     <ClInclude Include="..\..\src\releases\EnrouteReleaseTypesSerializer.h" />
     <ClInclude Include="..\..\src\releases\ReleaseModule.h" />
     <ClInclude Include="..\..\src\releases\RequestDepartureReleaseDialog.h" />
+    <ClInclude Include="..\..\src\releases\ToggleDepartureReleaseRequestList.h" />
     <ClInclude Include="..\..\src\sectorfile\Runway.h" />
     <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
@@ -537,6 +538,7 @@
     <ClCompile Include="..\..\src\releases\EnrouteReleaseTypesSerializer.cpp" />
     <ClCompile Include="..\..\src\releases\ReleaseModule.cpp" />
     <ClCompile Include="..\..\src\releases\RequestDepartureReleaseDialog.cpp" />
+    <ClCompile Include="..\..\src\releases\ToggleDepartureReleaseRequestList.cpp" />
     <ClCompile Include="..\..\src\sectorfile\Runway.cpp" />
     <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
