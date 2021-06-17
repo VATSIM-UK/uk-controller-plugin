@@ -14,6 +14,7 @@ namespace UKControllerPlugin {
         class GdiGraphicsInterface
         {
             public:
+                virtual ~GdiGraphicsInterface() = default;
                 virtual void DrawRect(const Gdiplus::RectF & area, const Gdiplus::Pen & pen) = 0;
                 virtual void DrawRect(const Gdiplus::Rect & area, const Gdiplus::Pen & pen) = 0;
                 virtual void DrawRect(const RECT & area, const Gdiplus::Pen & pen) = 0;
@@ -42,6 +43,14 @@ namespace UKControllerPlugin {
                 virtual void FillRect(const RECT & area, const Gdiplus::Brush & brush) = 0;
                 virtual void SetAntialias(bool setting) = 0;
                 virtual void SetDeviceHandle(HDC & handle) = 0;
+                virtual void Clipped(Gdiplus::Region& clipRegion, std::function<void()> drawFunction) = 0;
+                virtual void Translated(Gdiplus::REAL x, Gdiplus::REAL y, std::function<void()> drawFunction) = 0;
+                virtual std::shared_ptr<Gdiplus::Matrix> GetTransform() = 0;
+                virtual Gdiplus::RectF GetClipBounds() = 0;
+                virtual void Scaled(Gdiplus::REAL x, Gdiplus::REAL y, std::function<void()> drawFunction) = 0;
+                virtual void Rotated(Gdiplus::REAL angle, std::function<void()> drawFunction) = 0;
+                virtual void FillPolygon(Gdiplus::Point* points, const Gdiplus::Brush& brush, int numPoints) = 0;
+
         };
     }  // namespace Windows
 }  // namespace UKControllerPlugin

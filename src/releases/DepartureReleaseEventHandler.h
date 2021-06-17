@@ -43,7 +43,6 @@ namespace UKControllerPlugin {
                     const Controller::ControllerPositionCollection& controllers,
                     const Controller::ActiveCallsignCollection& activeCallsigns,
                     const Dialog::DialogManager& dialogManager,
-                    Euroscope::EuroscopeFlightplanListInterface& releaseRequestList,
                     int triggerRequestDialogFunctionId,
                     int triggerDecisionMenuFunctionId,
                     int releaseDecisionCallbackId,
@@ -82,6 +81,8 @@ namespace UKControllerPlugin {
                     const POINT& mousePos
                 );
                 const std::set<std::shared_ptr<DepartureReleaseRequest>>& GetReleasesToDisplay() const;
+                std::set<std::shared_ptr<const DepartureReleaseRequest>>
+                GetReleasesRequiringUsersDecision() const;
                 void SelectReleaseRequestToCancel(
                     Euroscope::EuroScopeCFlightPlanInterface& flightplan,
                     Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
@@ -152,9 +153,6 @@ namespace UKControllerPlugin {
 
                 // A set of releases to display in the view
                 std::set<std::shared_ptr<DepartureReleaseRequest>> releasesToDisplay;
-
-                // The release request list
-                Euroscope::EuroscopeFlightplanListInterface& releaseRequestList;
         };
     }  // namespace Releases
 }  // namespace UKControllerPlugin

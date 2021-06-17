@@ -27,7 +27,6 @@ namespace UKControllerPlugin {
             const Controller::ControllerPositionCollection& controllers,
             const Controller::ActiveCallsignCollection& activeCallsigns,
             const Dialog::DialogManager& dialogManager,
-            Euroscope::EuroscopeFlightplanListInterface& releaseRequestList,
             const int triggerRequestDialogFunctionId,
             const int triggerDecisionMenuFunctionId,
             const int releaseDecisionCallbackId,
@@ -36,8 +35,7 @@ namespace UKControllerPlugin {
            triggerDecisionMenuFunctionId(triggerDecisionMenuFunctionId),
            releaseDecisionCallbackId(releaseDecisionCallbackId),
            controllers(controllers), plugin(plugin), dialogManager(dialogManager), api(api), taskRunner(taskRunner),
-           activeCallsigns(activeCallsigns), releaseCancellationCallbackId(releaseCancellationCallbackId),
-           releaseRequestList(releaseRequestList)
+           activeCallsigns(activeCallsigns), releaseCancellationCallbackId(releaseCancellationCallbackId)
         {
             this->releaseRequests[1] = std::make_shared<DepartureReleaseRequest>(
                 1,
@@ -259,6 +257,24 @@ namespace UKControllerPlugin {
         GetReleasesToDisplay() const
         {
             return this->releasesToDisplay;
+        }
+
+        std::set<std::shared_ptr<const DepartureReleaseRequest>> DepartureReleaseEventHandler::
+        GetReleasesRequiringUsersDecision() const
+        {
+            if (!this->activeCallsigns.UserHasCallsign()) {
+                return {};
+            }
+
+            std::set<std::shared_ptr<const DepartureReleaseRequest>> releases;
+            auto controllerId = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId();
+            for (auto release : this->releaseRequests) {
+                if (release.second->TargetController() == controllerId && release.second->RequiresDecision()) {
+                    releases.insert(release.second);
+                }
+            }
+
+            return releases;
         }
 
         /*

@@ -1,6 +1,6 @@
 #pragma once
 #include "pch/pch.h"
-#include "releases/ToggleDepartureReleaseRequestList.h"
+#include "releases/ToggleDepartureReleaseDecisionList.h"
 #include "mock/MockEuroscopeFlightplanList.h"
 #include "plugin/PopupMenuItem.h"
 

@@ -148,6 +148,9 @@
     <Filter Include="src\timer">
       <UniqueIdentifier>{5f074d1d-e169-4098-b825-4c94fbbe0848}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\components">
+      <UniqueIdentifier>{17a1f91f-b8da-410c-8f45-ff95e81ad8c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1085,8 +1088,23 @@
     <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.h">
       <Filter>src\euroscope</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\releases\ToggleDepartureReleaseRequestList.h">
+    <ClInclude Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.h">
       <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseDecisionList.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\TitleBar.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\Button.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ClickableArea.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\StandardButtons.h">
+      <Filter>src\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1869,8 +1887,23 @@
     <ClCompile Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\releases\ToggleDepartureReleaseRequestList.cpp">
+    <ClCompile Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.cpp">
       <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseDecisionList.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\TitleBar.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\Button.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\ClickableArea.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\StandardButtons.cpp">
+      <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

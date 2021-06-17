@@ -7,24 +7,27 @@ namespace UKControllerPlugin {
     } // namespace Euroscope
 
     namespace Releases {
+        class DepartureReleaseDecisionList;
 
         /*
          * A class for the configuration menu that toggles
          * the departure release request list.
          */
-        class ToggleDepartureReleaseRequestList : public RadarScreen::ConfigurableDisplayInterface
+        class ToggleDepartureReleaseDecisionList : public RadarScreen::ConfigurableDisplayInterface
         {
             public:
-                ToggleDepartureReleaseRequestList(
-                    Euroscope::EuroscopeFlightplanListInterface& list,
+                ToggleDepartureReleaseDecisionList(
+                    std::shared_ptr<DepartureReleaseDecisionList> list,
                     int callbackId
                 );
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 Plugin::PopupMenuItem GetConfigurationMenuItem() const override;
 
             private:
-                Euroscope::EuroscopeFlightplanListInterface& list;
+                // The list
+                std::shared_ptr<DepartureReleaseDecisionList> list;
 
+                // Callback for the list
                 const int callbackId;
         };
     } // namespace Releases

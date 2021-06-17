@@ -30,6 +30,10 @@
     <ClInclude Include="..\..\src\bootstrap\PostInit.h" />
     <ClInclude Include="..\..\src\command\CommandHandlerCollection.h" />
     <ClInclude Include="..\..\src\command\CommandHandlerInterface.h" />
+    <ClInclude Include="..\..\src\components\Button.h" />
+    <ClInclude Include="..\..\src\components\ClickableArea.h" />
+    <ClInclude Include="..\..\src\components\StandardButtons.h" />
+    <ClInclude Include="..\..\src\components\TitleBar.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsign.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignCollection.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignEventHandlerInterface.h" />
@@ -257,6 +261,7 @@
     <ClInclude Include="..\..\src\releases\CompareEnrouteReleaseTypes.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseColours.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseCountdownColours.h" />
+    <ClInclude Include="..\..\src\releases\DepartureReleaseDecisionList.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseEventHandler.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseRequest.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseRequestView.h" />
@@ -266,7 +271,7 @@
     <ClInclude Include="..\..\src\releases\EnrouteReleaseTypesSerializer.h" />
     <ClInclude Include="..\..\src\releases\ReleaseModule.h" />
     <ClInclude Include="..\..\src\releases\RequestDepartureReleaseDialog.h" />
-    <ClInclude Include="..\..\src\releases\ToggleDepartureReleaseRequestList.h" />
+    <ClInclude Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.h" />
     <ClInclude Include="..\..\src\sectorfile\Runway.h" />
     <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
@@ -345,6 +350,10 @@
     <ClCompile Include="..\..\src\bootstrap\InitialisePlugin.cpp" />
     <ClCompile Include="..\..\src\bootstrap\PostInit.cpp" />
     <ClCompile Include="..\..\src\command\CommandHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\components\Button.cpp" />
+    <ClCompile Include="..\..\src\components\ClickableArea.cpp" />
+    <ClCompile Include="..\..\src\components\StandardButtons.cpp" />
+    <ClCompile Include="..\..\src\components\TitleBar.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsign.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsignCollection.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsignMonitor.cpp" />
@@ -531,6 +540,7 @@
     <ClCompile Include="..\..\src\releases\ApproveDepartureReleaseDialog.cpp" />
     <ClCompile Include="..\..\src\releases\CompareEnrouteReleaseTypes.cpp" />
     <ClCompile Include="..\..\src\releases\DepartureReleaseCountdownColours.cpp" />
+    <ClCompile Include="..\..\src\releases\DepartureReleaseDecisionList.cpp" />
     <ClCompile Include="..\..\src\releases\DepartureReleaseEventHandler.cpp" />
     <ClCompile Include="..\..\src\releases\DepartureReleaseRequest.cpp" />
     <ClCompile Include="..\..\src\releases\DepartureReleaseRequestView.cpp" />
@@ -538,7 +548,7 @@
     <ClCompile Include="..\..\src\releases\EnrouteReleaseTypesSerializer.cpp" />
     <ClCompile Include="..\..\src\releases\ReleaseModule.cpp" />
     <ClCompile Include="..\..\src\releases\RequestDepartureReleaseDialog.cpp" />
-    <ClCompile Include="..\..\src\releases\ToggleDepartureReleaseRequestList.cpp" />
+    <ClCompile Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.cpp" />
     <ClCompile Include="..\..\src\sectorfile\Runway.cpp" />
     <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
