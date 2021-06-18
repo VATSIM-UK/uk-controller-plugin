@@ -843,7 +843,7 @@
     <ClCompile Include="..\..\test\mock\MockEuroscopeFlightplanList.h">
       <Filter>mock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseRequestListTest.cpp">
+    <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseDecisionListTest.cpp">
       <Filter>test\releases</Filter>
     </ClCompile>
   </ItemGroup>

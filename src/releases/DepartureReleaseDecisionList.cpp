@@ -28,9 +28,9 @@ namespace UKControllerPlugin {
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             const Controller::ControllerPositionCollection& controllers,
             const int screenObjectId
-        ): handler(handler), plugin(plugin), textBrush(Gdiplus::Color(227, 227, 227)), screenObjectId(screenObjectId),
-           visible(false),
-           contentCollapsed(false), controllers(controllers)
+        ): controllers(controllers), handler(handler), plugin(plugin), textBrush(Gdiplus::Color(227, 227, 227)),
+           screenObjectId(screenObjectId),
+           visible(false), contentCollapsed(false)
         {
             this->brushSwitcher = Components::BrushSwitcher::Create(
                     std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(197, 129, 214)),

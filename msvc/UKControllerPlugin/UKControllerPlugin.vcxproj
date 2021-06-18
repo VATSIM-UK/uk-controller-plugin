@@ -259,6 +259,7 @@
     <ClInclude Include="..\..\src\regional\RegionalPressureRendererConfiguration.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressure.h" />
     <ClInclude Include="..\..\src\releases\ApproveDepartureReleaseDialog.h" />
+    <ClInclude Include="..\..\src\releases\CompareDepartureReleases.h" />
     <ClInclude Include="..\..\src\releases\CompareEnrouteReleaseTypes.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseColours.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseCountdownColours.h" />
@@ -540,6 +541,7 @@
     <ClCompile Include="..\..\src\regional\RegionalPressureRenderer.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureRendererConfiguration.cpp" />
     <ClCompile Include="..\..\src\releases\ApproveDepartureReleaseDialog.cpp" />
+    <ClCompile Include="..\..\src\releases\CompareDepartureReleases.cpp" />
     <ClCompile Include="..\..\src\releases\CompareEnrouteReleaseTypes.cpp" />
     <ClCompile Include="..\..\src\releases\DepartureReleaseCountdownColours.cpp" />
     <ClCompile Include="..\..\src\releases\DepartureReleaseDecisionList.cpp" />

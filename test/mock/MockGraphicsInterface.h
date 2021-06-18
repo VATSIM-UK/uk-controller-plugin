@@ -26,6 +26,30 @@ namespace UKControllerPluginTest {
                 MOCK_METHOD2(FillRect, void(const RECT &, const Gdiplus::Brush &));
                 MOCK_METHOD1(SetAntialias, void(bool));
                 MOCK_METHOD1(SetDeviceHandle, void(HDC &));
+
+                void Clipped(Gdiplus::Region&, std::function<void()> func) override
+                {
+                    func();
+                }
+
+                void Translated(Gdiplus::REAL, Gdiplus::REAL, std::function<void()> func) override
+                {
+                    func();
+                }
+
+                void Scaled(Gdiplus::REAL, Gdiplus::REAL, std::function<void()> func) override
+                {
+                    func();
+                }
+
+                void Rotated(Gdiplus::REAL, std::function<void()> func) override
+                {
+                    func();
+                }
+
+                MOCK_METHOD(std::shared_ptr<Gdiplus::Matrix>, GetTransform, (), (override));
+                MOCK_METHOD(Gdiplus::RectF, GetClipBounds, (), (override));
+                MOCK_METHOD(void, FillPolygon, (Gdiplus::Point*, const Gdiplus::Brush&, int), (override));
         };
     }  // namespace Windows
 }  // namespace UKControllerPluginTest

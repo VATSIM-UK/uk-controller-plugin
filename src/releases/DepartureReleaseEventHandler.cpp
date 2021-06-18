@@ -65,13 +65,13 @@ namespace UKControllerPlugin {
 
         void DepartureReleaseEventHandler::AddReleaseRequest(std::shared_ptr<DepartureReleaseRequest> request)
         {
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             this->releaseRequests[request->Id()] = request;
         }
 
         std::shared_ptr<DepartureReleaseRequest> DepartureReleaseEventHandler::GetReleaseRequest(int id)
         {
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             auto request = this->releaseRequests.find(id);
             return request == this->releaseRequests.cend() ? nullptr : request->second;
         }
@@ -214,7 +214,7 @@ namespace UKControllerPlugin {
         )
         {
             std::string callsign = flightplan.GetCallsign();
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             std::set<std::shared_ptr<DepartureReleaseRequest>> releasesForCallsign;
             std::for_each(
                 this->releaseRequests.cbegin(),
@@ -247,15 +247,17 @@ namespace UKControllerPlugin {
             return this->releasesToDisplay;
         }
 
-        std::set<std::shared_ptr<const DepartureReleaseRequest>> DepartureReleaseEventHandler::
-        GetReleasesRequiringUsersDecision() const
+        std::set<std::shared_ptr<DepartureReleaseRequest>, CompareDepartureReleases>
+        DepartureReleaseEventHandler::GetReleasesRequiringUsersDecision() 
         {
             if (!this->activeCallsigns.UserHasCallsign()) {
                 return {};
             }
 
-            std::set<std::shared_ptr<const DepartureReleaseRequest>> releases;
+            std::set<std::shared_ptr<DepartureReleaseRequest>, CompareDepartureReleases> releases;
             auto controllerId = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId();
+
+            std::lock_guard queueLock(this->releaseMapGuard);
             for (auto release : this->releaseRequests) {
                 if (release.second->TargetController() == controllerId && release.second->RequiresDecision()) {
                     releases.insert(release.second);
@@ -282,6 +284,7 @@ namespace UKControllerPlugin {
 
             bool menuTriggered = false;
             int userControllerId = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId();
+            std::set<std::shared_ptr<const DepartureReleaseRequest>> releases;
             for (auto release : this->releaseRequests) {
                 if (
                     release.second->RequestingController() != userControllerId ||
@@ -371,7 +374,7 @@ namespace UKControllerPlugin {
             }
 
             int userControllerId = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId();
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             auto release = std::find_if(
                 this->releaseRequests.cbegin(),
                 this->releaseRequests.cend(),
@@ -389,7 +392,7 @@ namespace UKControllerPlugin {
 
         void DepartureReleaseEventHandler::SetReleaseStatusIndicatorTagData(Tag::TagData& tagData)
         {
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
 
             /*
              * Go through all the release requests and find the most recent one for each target controller.
@@ -462,7 +465,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::SetReleaseCountdownTagData(Tag::TagData& tagData)
         {
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
 
             std::set<std::shared_ptr<DepartureReleaseRequest>> relevantReleases;
             int releasesPendingReleaseTime = 0;
@@ -560,7 +563,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::ProcessDepartureReleaseRequestedMessage(const nlohmann::json& data)
         {
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             if (!DepartureReleaseRequestedMessageValid(data)) {
                 LogError("Invalid departure release requested message");
                 return;
@@ -600,7 +603,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::ProcessRequestAcknowledgedMessage(const nlohmann::json& data)
         {
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             if (!DepartureReleaseAcknowledgedMessageValid(data)) {
                 LogError("Invalid departure release acknowledged message");
                 return;
@@ -614,7 +617,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::ProcessRequestRejectedMessage(const nlohmann::json& data)
         {
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             if (!DepartureReleaseRejectedMessageValid(data)) {
                 LogError("Invalid departure release rejected message");
                 return;
@@ -628,7 +631,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::ProcessRequestApprovedMessage(const nlohmann::json& data)
         {
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             if (!DepartureReleaseApprovedMessageValid(data)) {
                 LogError("Invalid departure release approved message");
                 return;
@@ -656,7 +659,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             this->releaseRequests.erase(data.at("id").get<int>());
         }
 
@@ -666,7 +669,7 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::TimedEventTrigger()
         {
-            std::lock_guard<std::mutex> queueLock(this->releaseMapGuard);
+            std::lock_guard queueLock(this->releaseMapGuard);
             for (
                 auto release = this->releaseRequests.cbegin();
                 release != this->releaseRequests.cend();

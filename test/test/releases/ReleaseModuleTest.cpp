@@ -8,9 +8,9 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "dialog/DialogManager.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 #include "mock/MockDialogProvider.h"
 #include "radarscreen/RadarRenderableCollection.h"
-#include "mock/MockEuroscopeFlightplanList.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 
@@ -27,7 +27,6 @@ using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
-using UKControllerPluginTest::Euroscope::MockEuroscopeFlightplanList;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
@@ -70,23 +69,15 @@ namespace UKControllerPluginTest {
                         LoadDependency("DEPENDENCY_ENROUTE_RELEASE_TYPES", nlohmann::json::array())
                     )
                         .WillByDefault(Return(dependency));
-
-
-                    this->mockFlightplanList = std::make_shared<NiceMock<MockEuroscopeFlightplanList>>();
-                    ON_CALL(*this->mockFlightplanList, NumberOfColumns)
-                        .WillByDefault(Return(3));
-
-                    ON_CALL(this->plugin, RegisterFlightplanList("Departure Release Requests"))
-                        .WillByDefault(Return(this->mockFlightplanList));
                 }
 
-                std::shared_ptr<NiceMock<MockEuroscopeFlightplanList>> mockFlightplanList;
                 NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 NiceMock<MockDialogProvider> dialogProvider;
                 NiceMock<MockDependencyLoader> dependencyLoader;
                 PersistenceContainer container;
                 RadarRenderableCollection renderables;
                 ConfigurableDisplayCollection configurables;
+                UKControllerPlugin::Euroscope::AsrEventHandlerCollection asr;
         };
 
         TEST_F(ReleaseModuleTest, ItRegistersForEnrouteWebsocketEvents)
@@ -194,13 +185,19 @@ namespace UKControllerPluginTest {
 
         TEST_F(ReleaseModuleTest, RadarScreenAddsRenderable)
         {
-            BootstrapRadarScreen(this->container, renderables, configurables);
+            BootstrapRadarScreen(this->container, renderables, configurables, asr);
             EXPECT_EQ(1, renderables.CountRenderers());
+        }
+
+        TEST_F(ReleaseModuleTest, RadarScreenAddsToAsr)
+        {
+            BootstrapRadarScreen(this->container, renderables, configurables, asr);
+            EXPECT_EQ(1, asr.CountHandlers());
         }
 
         TEST_F(ReleaseModuleTest, RadarScreenAddsReleaseRequestShowOption)
         {
-            BootstrapRadarScreen(this->container, renderables, configurables);
+            BootstrapRadarScreen(this->container, renderables, configurables, asr);
             EXPECT_EQ(1, configurables.CountDisplays());
             EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
         }
@@ -217,94 +214,5 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
             EXPECT_EQ(1, this->container.tagHandler->HasHandlerForItemId(126));
         }
-
-        TEST_F(ReleaseModuleTest, ItAddsColumnsToTheListIfThereAreNone)
-        {
-            ON_CALL(*this->mockFlightplanList, NumberOfColumns())
-                .WillByDefault(Return(0));
-
-            EXPECT_CALL(
-                *this->mockFlightplanList,
-                AddColumn(
-                    "C/S",
-                    7,
-                    false,
-                    MockEuroscopeFlightplanList::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
-                    UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface::UKCP_PROVIDER,
-                    9013,
-                    UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO
-                )
-            ).Times(1);
-
-            EXPECT_CALL(
-                *this->mockFlightplanList,
-                AddColumn(
-                    "Dept",
-                    4,
-                    true,
-                    MockEuroscopeFlightplanList::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_TYPE_ORIGIN,
-                    UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO,
-                    UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO
-                )
-            ).Times(1);
-
-            EXPECT_CALL(
-                *this->mockFlightplanList,
-                AddColumn(
-                    "SID",
-                    7,
-                    false,
-                    MockEuroscopeFlightplanList::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_TYPE_ASSIGNED_SID,
-                    UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO,
-                    UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO
-                )
-            ).Times(1);
-
-            EXPECT_CALL(
-                *this->mockFlightplanList,
-                AddColumn(
-                    "Req Ctrl",
-                    10,
-                    false,
-                    MockEuroscopeFlightplanList::UKCP_PROVIDER,
-                    126,
-                    UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO,
-                    UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface::EUROSCOPE_PROVIDER,
-                    EuroScopePlugIn::TAG_ITEM_FUNCTION_NO
-                )
-            ).Times(1);
-
-            BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
-
-        }
-
-        TEST_F(ReleaseModuleTest, ItDoesntAddColumnsIfPredefined)
-        {
-            EXPECT_CALL(
-                *this->mockFlightplanList,
-                AddColumn(
-                    testing::_,
-                    testing::_,
-                    testing::_,
-                    testing::_,
-                    testing::_,
-                    testing::_,
-                    testing::_,
-                    testing::_,
-                    testing::_
-                )
-            ).Times(0);
-
-            BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
-        }
-    }  // namespace Releases
+    } // namespace Releases
 }  // namespace UKControllerPluginTest

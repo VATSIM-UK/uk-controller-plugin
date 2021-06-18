@@ -1109,6 +1109,9 @@
     <ClInclude Include="..\..\src\components\BrushSwitcher.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\CompareDepartureReleases.h">
+      <Filter>src\hold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1910,6 +1913,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\components\BrushSwitcher.cpp">
       <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\CompareDepartureReleases.cpp">
+      <Filter>src\hold</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

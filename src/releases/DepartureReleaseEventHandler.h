@@ -2,6 +2,7 @@
 #include "websocket/WebsocketEventProcessorInterface.h"
 #include "timedevent/AbstractTimedEvent.h"
 #include "tag/TagItemInterface.h"
+#include "releases/CompareDepartureReleases.h"
 
 namespace UKControllerPlugin {
     namespace Controller {
@@ -81,8 +82,8 @@ namespace UKControllerPlugin {
                     const POINT& mousePos
                 );
                 const std::set<std::shared_ptr<DepartureReleaseRequest>>& GetReleasesToDisplay() const;
-                std::set<std::shared_ptr<const DepartureReleaseRequest>>
-                GetReleasesRequiringUsersDecision() const;
+                std::set<std::shared_ptr<DepartureReleaseRequest>, CompareDepartureReleases>
+                GetReleasesRequiringUsersDecision();
                 void SelectReleaseRequestToCancel(
                     Euroscope::EuroScopeCFlightPlanInterface& flightplan,
                     Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
