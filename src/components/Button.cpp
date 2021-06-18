@@ -10,7 +10,7 @@ namespace UKControllerPlugin::Components {
         Gdiplus::Rect area,
         int screenObjectId,
         std::string screenObjectDescription,
-        std::function<void(Windows::GdiGraphicsInterface& graphics)>
+        std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
         customDraw
     )
     {
@@ -30,19 +30,12 @@ namespace UKControllerPlugin::Components {
         Euroscope::EuroscopeRadarLoopbackInterface& radarScreen
     ) const
     {
-        Gdiplus::Region region(this->area);
-        graphics.Clipped(
-            region,
-            [&graphics, this]()
+        graphics.Translated(
+            static_cast<Gdiplus::REAL>(this->area.X),
+            static_cast<Gdiplus::REAL>(this->area.Y),
+            [&graphics, this]
             {
-                graphics.Translated(
-                    static_cast<Gdiplus::REAL>(this->area.X),
-                    static_cast<Gdiplus::REAL>(this->area.Y),
-                    [&graphics, this]
-                    {
-                        this->customDraw(graphics);
-                    }
-                );
+                this->customDraw(graphics, this->area);
             }
         );
         this->clickableArea->Apply(graphics, radarScreen);
@@ -52,7 +45,7 @@ namespace UKControllerPlugin::Components {
         Gdiplus::Rect area,
         int screenObjectId,
         std::string screenObjectDescription,
-        std::function<void(Windows::GdiGraphicsInterface& graphics)> customDraw):
+        std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw):
         screenObjectDescription(screenObjectDescription), customDraw(std::move(customDraw)), area(area),
         screenObjectId(screenObjectId)
     {

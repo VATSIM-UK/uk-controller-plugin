@@ -23,7 +23,7 @@ namespace UKControllerPlugin::Components {
                 Gdiplus::Rect area,
                 int screenObjectId,
                 std::string screenObjectDescription,
-                std::function<void(Windows::GdiGraphicsInterface& graphics)> customDraw
+                std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw
             );
             void WithPosition(Gdiplus::Rect area);
             void Draw(
@@ -36,12 +36,12 @@ namespace UKControllerPlugin::Components {
                 Gdiplus::Rect area,
                 int screenObjectId,
                 std::string screenObjectDescription,
-                std::function<void(Windows::GdiGraphicsInterface& graphics)> customDraw
+                std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw
             );
 
         private:
             std::string screenObjectDescription;
-            std::function<void(Windows::GdiGraphicsInterface& graphics)> customDraw;
+            const std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw;
             Gdiplus::Rect area;
             int screenObjectId;
             std::shared_ptr<ClickableArea> clickableArea;

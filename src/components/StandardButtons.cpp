@@ -6,74 +6,49 @@
 namespace UKControllerPlugin::Components {
 
     // Coordinates of the close cross
-    Gdiplus::Point closeTopLeft = {0, 0};
-    Gdiplus::Point closeBottomRight = {10, 10};
-    Gdiplus::Point closeBottomLeft = {0, 10};
-    Gdiplus::Point closeTopRight = {10, 0};
+    Gdiplus::Point closeTopLeft = {-5, -5};
+    Gdiplus::Point closeBottomRight = {5, 5};
+    Gdiplus::Point closeBottomLeft = {-5, 5};
+    Gdiplus::Point closeTopRight = {5, -5};
 
     // Coordinates of the collapse triangle
-    Gdiplus::Point collapsePoints[3] = {Gdiplus::Point(5, 0), Gdiplus::Point(0, 10), Gdiplus::Point(10, 10)};
+    Gdiplus::Point collapsePoints[3] = {Gdiplus::Point(0, -5), Gdiplus::Point(5, 5), Gdiplus::Point(-5, 5)};
 
-    // Area of the bounding RECTs
-    Gdiplus::Rect boundary = {0, 0, 10, 10};
+    // The standard button sizing
+    Gdiplus::REAL buttonSize(10);
 
-    std::function<void(Windows::GdiGraphicsInterface& graphics)> CloseButton(Gdiplus::Color colour)
+    /*
+     * Draws a standard X-shaped close button of the specified colour.
+     */
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> CloseButton(Gdiplus::Color colour)
     {
-        auto pen = std::make_shared<Gdiplus::Pen>(colour);
-        return [pen](Windows::GdiGraphicsInterface& graphics)
+        auto pen = std::make_shared<Gdiplus::Pen>(colour, 2.0f);
+        return [pen](Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& drawArea)
         {
-            Gdiplus::RectF bounds = graphics.GetClipBounds();
-            graphics.Scaled(
-                bounds.Width / 10,
-                bounds.Height / 10,
-                [&graphics, &pen]()
-                {
-                    graphics.DrawLine(
-                        *pen,
-                        closeTopLeft,
-                        closeBottomRight
-                    );
-                    graphics.DrawLine(
-                        *pen,
-                        closeBottomLeft,
-                        closeTopRight
-                    );
-                    graphics.DrawRect(boundary, *pen);
-                }
-            );
-        };
-    }
+            Gdiplus::REAL scaleX = drawArea.Width / buttonSize;
+            Gdiplus::REAL scaleY = drawArea.Height / buttonSize;
+            ScalePen(pen, scaleX, scaleY);
 
-    std::function<void(Windows::GdiGraphicsInterface& graphics)> CloseButton()
-    {
-        return CloseButton(Gdiplus::Color(227, 227, 227));
-    }
-
-    std::function<void(Windows::GdiGraphicsInterface& graphics)> CollapseButton(
-        Gdiplus::Color colour,
-        std::function<bool()> stateFunction
-    )
-    {
-        auto brush = std::make_shared<Gdiplus::SolidBrush>(colour);
-        auto pen = std::make_shared<Gdiplus::Pen>(colour);
-        return [brush, stateFunction, pen](Windows::GdiGraphicsInterface& graphics)
-        {
-            graphics.Rotated(
-                stateFunction() ? static_cast<Gdiplus::REAL>(180) : static_cast<Gdiplus::REAL>(0),
-                [&graphics, &brush, &pen]()
+            graphics.Translated(
+                static_cast<Gdiplus::REAL>(5) * scaleX,
+                static_cast<Gdiplus::REAL>(5) * scaleY,
+                [&graphics, &pen, &drawArea, &scaleX, &scaleY]
                 {
-                    Gdiplus::RectF bounds = graphics.GetClipBounds();
                     graphics.Scaled(
-                        bounds.Width / 10,
-                        bounds.Height / 10,
-                        [&graphics, &brush, &bounds, &pen]()
+                        scaleX,
+                        scaleY,
+                        [&graphics, &pen]()
                         {
-                            graphics.FillPolygon(
-                                collapsePoints,
-                                *brush,
-                                3
+                            graphics.DrawLine(
+                                *pen,
+                                closeTopLeft,
+                                closeBottomRight
                             );
-                            graphics.DrawRect(boundary, *pen);
+                            graphics.DrawLine(
+                                *pen,
+                                closeBottomLeft,
+                                closeTopRight
+                            );
                         }
                     );
                 }
@@ -81,8 +56,65 @@ namespace UKControllerPlugin::Components {
         };
     }
 
-    std::function<void(Windows::GdiGraphicsInterface& graphics)> CollapseButton(std::function<bool()> stateFunction)
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> CloseButton()
+    {
+        return CloseButton(Gdiplus::Color(227, 227, 227));
+    }
+
+    /*
+     * Draws a standard triangle shaped collapse button of the specified colour.
+     *
+     * The state function tells the button whether it is collapsed or not.
+     */
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> CollapseButton(
+        Gdiplus::Color colour,
+        std::function<bool()> stateFunction
+    )
+    {
+        auto brush = std::make_shared<Gdiplus::SolidBrush>(colour);
+        return [brush, stateFunction](Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& drawArea)
+        {
+            Gdiplus::REAL scaleX = drawArea.Width / buttonSize;
+            Gdiplus::REAL scaleY = drawArea.Height / buttonSize;
+
+            graphics.Translated(
+                static_cast<Gdiplus::REAL>(5) * scaleX,
+                static_cast<Gdiplus::REAL>(5) * scaleY,
+                [&graphics, &stateFunction, &brush, &drawArea, &scaleX, &scaleY]
+                {
+                    graphics.Rotated(
+                        stateFunction() ? static_cast<Gdiplus::REAL>(180) : static_cast<Gdiplus::REAL>(0),
+                        [&graphics, &brush, &drawArea, &scaleX, &scaleY]()
+                        {
+                            graphics.Scaled(
+                                scaleX,
+                                scaleY,
+                                [&graphics, &brush, &drawArea]()
+                                {
+                                    graphics.FillPolygon(
+                                        collapsePoints,
+                                        *brush,
+                                        3
+                                    );
+                                }
+                            );
+                        }
+                    );
+                }
+            );
+        };
+    }
+
+    std::function<void(Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect&)> CollapseButton(
+        std::function<bool()> stateFunction
+    )
     {
         return CollapseButton(Gdiplus::Color(227, 227, 227), stateFunction);
+    }
+
+    void ScalePen(std::shared_ptr<Gdiplus::Pen> pen, Gdiplus::REAL& scaleX, Gdiplus::REAL& scaleY)
+    {
+        pen->ResetTransform();
+        pen->ScaleTransform(1 / scaleX, 1 / scaleY);
     }
 } // namespace UKControllerPlugin::Components
