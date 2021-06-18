@@ -302,6 +302,7 @@ namespace UKControllerPlugin {
             const auto decisionList = std::make_shared<DepartureReleaseDecisionList>(
                 *departureHandler,
                 *container.plugin,
+                *container.controllerPositions,
                 renderables.ReserveScreenObjectIdentifier(decisionListRenderedId)
             );
             renderables.RegisterRenderer(decisionListRenderedId, decisionList, renderables.afterLists);

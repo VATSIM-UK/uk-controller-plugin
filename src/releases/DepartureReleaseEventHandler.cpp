@@ -36,19 +36,7 @@ namespace UKControllerPlugin {
            releaseDecisionCallbackId(releaseDecisionCallbackId),
            controllers(controllers), plugin(plugin), dialogManager(dialogManager), api(api), taskRunner(taskRunner),
            activeCallsigns(activeCallsigns), releaseCancellationCallbackId(releaseCancellationCallbackId)
-        {
-            this->releaseRequests[1] = std::make_shared<DepartureReleaseRequest>(
-                1,
-                "BAW326",
-                1,
-                25,
-                Time::TimeNow() + std::chrono::minutes(5)
-            );
-            this->releaseRequests[1]->Approve(
-                Time::TimeNow() + std::chrono::seconds(90),
-                Time::TimeNow() + std::chrono::seconds(180)
-            );
-        }
+        { }
 
         void DepartureReleaseEventHandler::ProcessWebsocketMessage(const Websocket::WebsocketMessage& message)
         {

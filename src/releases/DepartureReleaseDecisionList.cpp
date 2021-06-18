@@ -11,6 +11,9 @@
 #include "components/Button.h"
 #include "components/StandardButtons.h"
 #include "components/ClickableArea.h"
+#include "components/BrushSwitcher.h"
+#include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionCollection.h"
 
 namespace UKControllerPlugin {
 
@@ -23,11 +26,18 @@ namespace UKControllerPlugin {
         DepartureReleaseDecisionList::DepartureReleaseDecisionList(
             DepartureReleaseEventHandler& handler,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            const Controller::ControllerPositionCollection& controllers,
             const int screenObjectId
         ): handler(handler), plugin(plugin), textBrush(Gdiplus::Color(227, 227, 227)), screenObjectId(screenObjectId),
            visible(false),
-           contentCollapsed(false)
+           contentCollapsed(false), controllers(controllers)
         {
+            this->brushSwitcher = Components::BrushSwitcher::Create(
+                    std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(197, 129, 214)),
+                    std::chrono::seconds(2)
+                )
+                ->AdditionalBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(255, 97, 93)));
+
             this->titleBar = Components::TitleBar::Create(
                                  L"Departure Release Requests",
                                  {0, 0, this->titleBarWidth, this->titleBarHeight}
@@ -38,14 +48,14 @@ namespace UKControllerPlugin {
                              ->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(227, 227, 227)));
 
             this->closeButton = Components::Button::Create(
-                {385, 5, 10, 10},
+                {325, 5, 10, 10},
                 this->screenObjectId,
                 "closeButton",
                 Components::CloseButton()
             );
 
             this->collapseButton = Components::Button::Create(
-                {370, 5, 10, 10},
+                {310, 5, 10, 10},
                 this->screenObjectId,
                 "collapseButton",
                 Components::CollapseButton([this]() -> bool { return this->contentCollapsed; })
@@ -72,7 +82,7 @@ namespace UKControllerPlugin {
 
             auto fp = this->plugin.GetFlightplanForCallsign(objectDescription);
             auto rt = this->plugin.GetRadarTargetForCallsign(objectDescription);
-            if (!fp || rt) {
+            if (!fp || !rt) {
                 return;
             }
 
@@ -105,35 +115,47 @@ namespace UKControllerPlugin {
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen
         )
         {
+            auto decisions = this->handler.GetReleasesRequiringUsersDecision();
+            if (decisions.empty()) {
+                this->titleBar->WithBackgroundBrush(this->brushSwitcher->Base());
+            } else {
+                this->titleBar->WithBackgroundBrush(this->brushSwitcher->Next());
+            }
+
             // Translate to content position
             graphics.Translated(
                 this->position.X,
                 this->position.Y + this->titleBarHeight,
-                [this, &graphics, &radarScreen]
+                [this, &graphics, &radarScreen, &decisions]
                 {
                     if (this->contentCollapsed) {
                         return;
                     }
 
                     // Draw column headers
-                    graphics.DrawString(L"Controller", this->callsignColumnHeader, this->textBrush);
+                    graphics.DrawString(L"Callsign", this->callsignColumnHeader, this->textBrush);
+                    graphics.DrawString(L"Controller", this->controllerColumnHeader, this->textBrush);
                     graphics.DrawString(L"Dept", this->airportColumnHeader, this->textBrush);
                     graphics.DrawString(L"SID", this->sidColumnHeader, this->textBrush);
 
                     // Draw each aircraft that we care about
                     Gdiplus::Rect callsignColumn = this->callsignColumnHeader;
-                    callsignColumn.Y += 25;
+                    Gdiplus::Rect controllerColumn = this->controllerColumnHeader;
                     Gdiplus::Rect airportColumn = this->airportColumnHeader;
-                    airportColumn.Y += 25;
                     Gdiplus::Rect sidColumn = this->sidColumnHeader;
-                    sidColumn.Y += 25;
 
                     // Draw each decision
-                    for (const auto decision : this->handler.GetReleasesRequiringUsersDecision()) {
+                    for (const auto decision : decisions) {
                         auto fp = this->plugin.GetFlightplanForCallsign(decision->Callsign());
                         if (!fp) {
                             continue;
                         }
+
+                        // Shift the cols
+                        callsignColumn.Y += 25;
+                        controllerColumn.Y += 25;
+                        airportColumn.Y += 25;
+                        sidColumn.Y += 25;
 
                         graphics.DrawString(
                             HelperFunctions::ConvertToWideString(decision->Callsign()),
@@ -148,6 +170,15 @@ namespace UKControllerPlugin {
                                 false
                             );
                         callsignClickspot->Apply(graphics, radarScreen);
+
+                        const std::wstring controller = HelperFunctions::ConvertToWideString(
+                            this->controllers.FetchPositionById(decision->TargetController())->GetCallsign()
+                        );
+                        graphics.DrawString(
+                            controller,
+                            controllerColumn,
+                            this->textBrush
+                        );
 
                         graphics.DrawString(
                             HelperFunctions::ConvertToWideString(fp->GetOrigin()),
