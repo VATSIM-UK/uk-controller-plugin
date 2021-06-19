@@ -863,9 +863,6 @@
     <ClInclude Include="..\..\test\mock\MockAirfieldGroup.h">
       <Filter>mock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockApiInterface.h">
-      <Filter>mock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\test\mock\MockAsrEventHandlerInterface.h">
       <Filter>mock</Filter>
     </ClInclude>
@@ -873,9 +870,6 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockControllerStatusEventHandlerInterface.h">
-      <Filter>mock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockCurlApi.h">
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockDependencyLoader.h">
@@ -930,9 +924,6 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h">
-      <Filter>mock</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockWinApi.h">
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\pch\pch.h" />

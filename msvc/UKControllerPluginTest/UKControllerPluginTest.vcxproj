@@ -268,11 +268,9 @@
     <ClInclude Include="..\..\test\helper\TestingFunctions.h" />
     <ClInclude Include="..\..\test\mock\MockAbstractTimedEvent.h" />
     <ClInclude Include="..\..\test\mock\MockAirfieldGroup.h" />
-    <ClInclude Include="..\..\test\mock\MockApiInterface.h" />
     <ClInclude Include="..\..\test\mock\MockAsrEventHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockConfigurableDisplay.h" />
     <ClInclude Include="..\..\test\mock\MockControllerStatusEventHandlerInterface.h" />
-    <ClInclude Include="..\..\test\mock\MockCurlApi.h" />
     <ClInclude Include="..\..\test\mock\MockDeferredEventRunner.h" />
     <ClInclude Include="..\..\test\mock\MockDependencyLoader.h" />
     <ClInclude Include="..\..\test\mock\MockDialogProvider.h" />
@@ -298,7 +296,6 @@
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h" />
     <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h" />
-    <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp" />
   </ItemGroup>
