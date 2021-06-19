@@ -186,7 +186,7 @@ namespace UKControllerPluginTest {
         TEST_F(ReleaseModuleTest, RadarScreenAddsRenderable)
         {
             BootstrapRadarScreen(this->container, renderables, configurables, asr);
-            EXPECT_EQ(1, renderables.CountRenderers());
+            EXPECT_EQ(2, renderables.CountRenderers());
         }
 
         TEST_F(ReleaseModuleTest, RadarScreenAddsToAsr)

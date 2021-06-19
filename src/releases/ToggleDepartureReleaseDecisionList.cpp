@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
         Plugin::PopupMenuItem ToggleDepartureReleaseDecisionList::GetConfigurationMenuItem() const
         {
             return {
-                "Show Departure Release Decision List",
+                "Toggle Departure Release Decision List",
                 "",
                 this->callbackId,
                 this->list->IsVisible()

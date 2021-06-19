@@ -2031,7 +2031,7 @@ namespace UKControllerPluginTest {
             this->handler.AddReleaseRequest(request2);
             this->activeCallsigns.AddUserCallsign(*this->controller2Callsign);
             this->handler.RequestCancelled(4, "EGFF_APP", {});
-            EXPECT_NE(nullptr, this->handler.GetReleaseRequest(1));
+            EXPECT_NE(nullptr, this->handler.GetReleaseRequest(2));
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, ItDoesntCancelTheRequestIfWrongController)

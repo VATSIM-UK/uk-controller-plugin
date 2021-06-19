@@ -73,13 +73,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(ToggleDepartureReleaseDecisionListTest, ItReturnsAConfigurationItemNotToggled)
         {
-            ToggleDepartureReleaseDecisionList list = GetList(false);
+            const ToggleDepartureReleaseDecisionList list = GetList(true);
 
             UKControllerPlugin::Plugin::PopupMenuItem expected{
                 "Toggle Departure Release Decision List",
                 "",
                 2,
-                EuroScopePlugIn::POPUP_ELEMENT_UNCHECKED,
+                EuroScopePlugIn::POPUP_ELEMENT_CHECKED,
                 false,
                 false
             };
@@ -89,13 +89,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(ToggleDepartureReleaseDecisionListTest, ItReturnsAConfigurationItemToggled)
         {
-            ToggleDepartureReleaseDecisionList list = GetList(true);
+            const ToggleDepartureReleaseDecisionList list = GetList(false);
 
             UKControllerPlugin::Plugin::PopupMenuItem expected{
                 "Toggle Departure Release Decision List",
                 "",
                 2,
-                EuroScopePlugIn::POPUP_ELEMENT_CHECKED,
+                EuroScopePlugIn::POPUP_ELEMENT_UNCHECKED,
                 false,
                 false
             };
