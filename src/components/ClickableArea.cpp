@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "pch/stdafx.h"
 #include "components/ClickableArea.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
@@ -13,7 +15,7 @@ namespace UKControllerPlugin::Components {
     )
     {
         return std::shared_ptr<ClickableArea>(
-            new ClickableArea(area, screenObjectId, screenObjectDescription, draggable)
+            new ClickableArea(area, screenObjectId, std::move(screenObjectDescription), draggable)
         );
     }
 

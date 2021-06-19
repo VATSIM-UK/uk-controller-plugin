@@ -44,6 +44,7 @@
     <ClCompile Include="..\..\test\test\bootstrap\ExternalsBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\HelperBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\command\CommandHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\components\ClickableAreaTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignMonitorTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignTest.cpp" />

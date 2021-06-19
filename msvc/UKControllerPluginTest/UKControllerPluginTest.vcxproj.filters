@@ -139,6 +139,9 @@
     <Filter Include="test\timer">
       <UniqueIdentifier>{4474e02c-cf8d-4eb5-b19a-f42569698ebe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\components">
+      <UniqueIdentifier>{7fc38e8a-7044-4d4c-b2bd-b668bb6403fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -845,6 +848,9 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseDecisionListTest.cpp">
       <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\ClickableAreaTest.cpp">
+      <Filter>test\components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
