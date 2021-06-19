@@ -936,9 +936,6 @@
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h">
       <Filter>mock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockDialogProvider.h">
-      <Filter>mock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h">
       <Filter>mock</Filter>
     </ClInclude>

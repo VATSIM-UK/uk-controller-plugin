@@ -273,7 +273,6 @@
     <ClInclude Include="..\..\test\mock\MockControllerStatusEventHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockDeferredEventRunner.h" />
     <ClInclude Include="..\..\test\mock\MockDependencyLoader.h" />
-    <ClInclude Include="..\..\test\mock\MockDialogProvider.h" />
     <ClInclude Include="..\..\test\mock\MockEuroScopeCControllerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroScopeCFlightplanInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroScopeCRadarTargetInterface.h" />
