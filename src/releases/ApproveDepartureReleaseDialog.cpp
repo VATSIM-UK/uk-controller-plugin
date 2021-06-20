@@ -236,7 +236,7 @@ namespace UKControllerPlugin {
             tm.tm_mday = releasedAtTime.wDay;
             tm.tm_mon = releasedAtTime.wMonth - 1;
             tm.tm_year = releasedAtTime.wYear - 1900;
-            tm.tm_isdst = -1;
+            tm.tm_isdst = 0;
             eventHandler->ApproveRelease(
                 this->selectedRelease->Id(),
                 std::chrono::system_clock::from_time_t(std::mktime(&tm)),
