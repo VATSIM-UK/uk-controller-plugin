@@ -48,6 +48,8 @@ namespace UKControllerPlugin {
                 void AsrLoadedEvent(Euroscope::UserSetting& userSetting) override;
                 void AsrClosingEvent(Euroscope::UserSetting& userSetting) override;
                 void ToggleVisible();
+                bool ContentCollapsed() const;
+                Gdiplus::PointF Position() const;
 
             private:
                 static std::string GetAsrKey(std::string item);

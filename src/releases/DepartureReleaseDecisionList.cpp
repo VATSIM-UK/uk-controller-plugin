@@ -263,19 +263,29 @@ namespace UKControllerPlugin {
             userSetting.Save(
                 GetAsrKey("XPosition"),
                 GetAsrDescription("X Position"),
-                this->position.X
+                static_cast<int>(this->position.X)
             );
 
             userSetting.Save(
                 GetAsrKey("YPosition"),
                 GetAsrDescription("Y Position"),
-                this->position.Y
+                static_cast<int>(this->position.Y)
             );
         }
 
         void DepartureReleaseDecisionList::ToggleVisible()
         {
             this->visible = !this->visible;
+        }
+
+        bool DepartureReleaseDecisionList::ContentCollapsed() const
+        {
+            return this->contentCollapsed;
+        }
+
+        Gdiplus::PointF DepartureReleaseDecisionList::Position() const
+        {
+            return this->position;
         }
 
         std::string DepartureReleaseDecisionList::GetAsrKey(std::string item)

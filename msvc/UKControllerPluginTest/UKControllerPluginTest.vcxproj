@@ -211,6 +211,8 @@
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\CompareDepartureReleasesTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\CompareEnrouteReleaseTypesTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseCountdownColoursTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseDecisionListTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\DepartureReleaseEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\DepartureReleaseRequestTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\EnrouteReleaseEventHandlerTest.cpp" />

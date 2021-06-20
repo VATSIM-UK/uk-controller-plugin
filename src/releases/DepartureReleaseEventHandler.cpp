@@ -710,8 +710,8 @@ namespace UKControllerPlugin {
          */
         void DepartureReleaseEventHandler::OpenDecisionMenu(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-            std::string context,
+            Euroscope::EuroScopeCRadarTargetInterface&,
+            std::string,
             const POINT& mousePos
         )
         {

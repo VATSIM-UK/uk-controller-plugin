@@ -864,6 +864,12 @@
     <ClCompile Include="..\..\test\test\releases\CompareDepartureReleasesTest.cpp">
       <Filter>test\releases</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseCountdownColoursTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseDecisionListTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
