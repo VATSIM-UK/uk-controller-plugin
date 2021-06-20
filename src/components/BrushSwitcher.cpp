@@ -29,8 +29,8 @@ namespace UKControllerPlugin::Components {
             return this->Base();
         }
 
-        if (this->lastSwitch < Time::TimeNow()) {
-            this->lastSwitch = Time::TimeNow() + this->phase;
+        if (this->nextSwitch < Time::TimeNow()) {
+            this->nextSwitch = Time::TimeNow() + this->phase;
 
             if (this->brushIndex == this->brushes.size() - 1) {
                 this->brushIndex = 0;

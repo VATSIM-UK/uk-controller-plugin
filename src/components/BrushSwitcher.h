@@ -43,7 +43,7 @@ namespace UKControllerPlugin::Components {
             int brushIndex = 0;
 
             // Last time colours were switched
-            std::chrono::system_clock::time_point lastSwitch = (std::chrono::system_clock::time_point::min)();
+            std::chrono::system_clock::time_point nextSwitch = (std::chrono::system_clock::time_point::min)();
 
             // How often to switch colours
             const std::chrono::seconds phase;

@@ -39,9 +39,9 @@ namespace UKControllerPlugin::Components {
 
     std::shared_ptr<TitleBar> TitleBar::WithPosition(Gdiplus::Rect area)
     {
-        this->area = area;
+        this->area = std::move(area);
         if (this->clickableArea != nullptr) {
-            this->clickableArea->WithPosition(area);
+            this->clickableArea->WithPosition(this->area);
         }
         return shared_from_this();
     }

@@ -852,6 +852,15 @@
     <ClCompile Include="..\..\test\test\components\ClickableAreaTest.cpp">
       <Filter>test\components</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\components\BrushSwitcherTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\TitleBarTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\ButtonTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

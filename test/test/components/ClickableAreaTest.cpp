@@ -44,7 +44,7 @@ namespace UKControllerPluginTest::Components {
             Gdiplus::Rect{50, 90, 55, 55},
             1,
             "test",
-            true
+            false
         );
         area->WithPosition(Gdiplus::Rect{10, 20, 100, 100});
 
@@ -52,7 +52,7 @@ namespace UKControllerPluginTest::Components {
             .WillByDefault(testing::Return(transform));
 
         RECT expectedRect = {60, 120, 160, 220};
-        EXPECT_CALL(this->mockRadarScreen, RegisterScreenObject(1, "test", RectEq(expectedRect), true))
+        EXPECT_CALL(this->mockRadarScreen, RegisterScreenObject(1, "test", RectEq(expectedRect), false))
             .Times(1);
 
         area->Apply(this->mockGraphics, this->mockRadarScreen);
