@@ -351,12 +351,13 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            auto release = releaseToCancel->second;
             this->taskRunner.QueueAsynchronousTask(
-                [&releaseToCancel, this]()
+                [release, this]()
                 {
                     try {
-                        this->api.CancelDepartureReleaseRequest(releaseToCancel->second->Id());
-                        this->releaseRequests.erase(releaseToCancel->second->Id());
+                        this->api.CancelDepartureReleaseRequest(release->Id());
+                        this->releaseRequests.erase(release->Id());
                     } catch (Api::ApiException api) {
                         LogError("ApiException whilst cancelling release request");
                     }
