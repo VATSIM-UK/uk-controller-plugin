@@ -61,7 +61,7 @@ namespace UKControllerPlugin {
 
                 // All the controllers
                 const Controller::ControllerPositionCollection& controllers;
-                
+
                 const int screenObjectId;
 
                 // Brushes

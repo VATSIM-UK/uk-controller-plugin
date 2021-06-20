@@ -49,6 +49,10 @@ namespace UKControllerPlugin {
             return collection;
         }
 
+        /*
+         * The frequency being a number is required, because positions such as EGNX_TWR have a frequency
+         * of 124.000. In the dependency this comes out as 124.
+         */
         bool ControllerPositionCollectionFactory::DependencyDataValid(nlohmann::json& data)
         {
             return data.is_array() &&
@@ -63,7 +67,7 @@ namespace UKControllerPlugin {
                             position.contains("callsign") &&
                             position.at("callsign").is_string() &&
                             position.contains("frequency") &&
-                            position.at("frequency").is_number() &&  // Required as EGNX_TWR comes out as 124 in dependency
+                            position.at("frequency").is_number() &&
                             position.contains("top_down") &&
                             position.at("top_down").is_array() &&
                             std::find_if_not(

@@ -1,5 +1,5 @@
 #include "pch/stdafx.h"
-#include "components/Titlebar.h"
+#include "components/TitleBar.h"
 #include "euroscope/EuroScopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "components/ClickableArea.h"

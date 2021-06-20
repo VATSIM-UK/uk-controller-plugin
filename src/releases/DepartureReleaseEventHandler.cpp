@@ -248,7 +248,7 @@ namespace UKControllerPlugin {
         }
 
         std::set<std::shared_ptr<DepartureReleaseRequest>, CompareDepartureReleases>
-        DepartureReleaseEventHandler::GetReleasesRequiringUsersDecision() 
+        DepartureReleaseEventHandler::GetReleasesRequiringUsersDecision()
         {
             if (!this->activeCallsigns.UserHasCallsign()) {
                 return {};

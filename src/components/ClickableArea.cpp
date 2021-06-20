@@ -38,10 +38,10 @@ namespace UKControllerPlugin::Components {
             this->screenObjectId,
             this->screenObjectDescription,
             RECT{
-                static_cast<long>(this->area.GetLeft() + transform->OffsetX()),
-                static_cast<long>(this->area.GetTop() + transform->OffsetY()),
-                static_cast<long>(this->area.GetRight() + transform->OffsetX()),
-                static_cast<long>(this->area.GetBottom() + transform->OffsetY()),
+                static_cast<LONG>(this->area.GetLeft() + transform->OffsetX()),
+                static_cast<LONG>(this->area.GetTop() + transform->OffsetY()),
+                static_cast<LONG>(this->area.GetRight() + transform->OffsetX()),
+                static_cast<LONG>(this->area.GetBottom() + transform->OffsetY()),
             },
             this->draggable
         );
