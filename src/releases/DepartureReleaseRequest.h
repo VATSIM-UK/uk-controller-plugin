@@ -50,7 +50,7 @@ namespace UKControllerPlugin {
 
                 static inline const std::chrono::system_clock::time_point noTimeMax = (
                     std::chrono::system_clock::time_point::max
-                )();
+                )() - std::chrono::hours(500);
 
                 // The id of the request
                 int id;
