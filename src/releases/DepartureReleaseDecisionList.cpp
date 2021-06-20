@@ -172,7 +172,7 @@ namespace UKControllerPlugin {
                         callsignClickspot->Apply(graphics, radarScreen);
 
                         const std::wstring controller = HelperFunctions::ConvertToWideString(
-                            this->controllers.FetchPositionById(decision->TargetController())->GetCallsign()
+                            this->controllers.FetchPositionById(decision->RequestingController())->GetCallsign()
                         );
                         graphics.DrawString(
                             controller,
