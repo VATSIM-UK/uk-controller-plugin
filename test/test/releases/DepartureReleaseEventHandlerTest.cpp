@@ -19,11 +19,13 @@
 #include "dialog/DialogData.h"
 #include "releases/DepartureReleaseColours.h"
 #include "releases/DepartureReleaseRequestView.h"
+#include "releases/CompareDepartureReleases.h"
 
 using testing::Test;
 using testing::NiceMock;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::DepartureReleaseRequest;
+using UKControllerPlugin::Releases::CompareDepartureReleases;
 using UKControllerPlugin::Websocket::WebsocketMessage;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
@@ -2123,6 +2125,70 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(data);
             EXPECT_EQ("", data.GetItemString());
             EXPECT_EQ(tagColour, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ReleasesRequiringUserDecisionReturnsNothingIfUserNotActive)
+        {
+            EXPECT_TRUE(this->handler.GetReleasesRequiringUsersDecision().empty());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ReleasesRequiringUserDecisionReturnsNothingIfNoReleases)
+        {
+            this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+            EXPECT_TRUE(this->handler.GetReleasesRequiringUsersDecision().empty());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ReleasesRequiringUserIgnoresDecidedReleases)
+        {
+            this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+            this->handler.AddReleaseRequest(request);
+            this->request->Reject();
+
+            EXPECT_TRUE(this->handler.GetReleasesRequiringUsersDecision().empty());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ReleasesRequiringUserIgnoresReleasesForOtherControllers)
+        {
+            this->activeCallsigns.AddUserCallsign(*this->controller2Callsign);
+            this->handler.AddReleaseRequest(request);
+
+            EXPECT_TRUE(this->handler.GetReleasesRequiringUsersDecision().empty());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ReleasesRequiringUserReturnsReleasesInOrder)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                3,
+                "BAW456",
+                3,
+                2,
+                TimeNow() + std::chrono::minutes(5)
+            );
+
+            auto request3 = std::make_shared<DepartureReleaseRequest>(
+                5,
+                "BAW789",
+                3,
+                2,
+                TimeNow() + std::chrono::minutes(5)
+            );
+
+            this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+            this->handler.AddReleaseRequest(request3);
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            const auto releasesRequringUser = this->handler.GetReleasesRequiringUsersDecision();
+            EXPECT_EQ(3, releasesRequringUser.size());
+            auto it = releasesRequringUser.cbegin();
+            EXPECT_EQ(1, (*it)->Id());
+            EXPECT_EQ("BAW123", (*it)->Callsign());
+            ++it;
+            EXPECT_EQ(3, (*it)->Id());
+            EXPECT_EQ("BAW456", (*it)->Callsign());
+            ++it;
+            EXPECT_EQ(5, (*it)->Id());
+            EXPECT_EQ("BAW789", (*it)->Callsign());
         }
     }  // namespace Releases
 }  // namespace UKControllerPluginTest

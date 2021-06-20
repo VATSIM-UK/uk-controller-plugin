@@ -813,7 +813,7 @@ namespace UKControllerPlugin {
         }
 
         /*
-         * Given a callsign and a target controller, check that releases can be peformed
+         * Given a callsign and a target controller, check that releases can be performed
          * and perform the request. Create the request locally once we have an id to
          * tide us over until the next event update.
          */
