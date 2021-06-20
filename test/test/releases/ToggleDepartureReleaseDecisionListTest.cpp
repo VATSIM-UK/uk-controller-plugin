@@ -43,7 +43,6 @@ namespace UKControllerPluginTest {
                           )
                       ),
                       dialogManager(dialogProvider)
-                       
                 { }
 
                 ToggleDepartureReleaseDecisionList GetList(bool alreadyToggled)
