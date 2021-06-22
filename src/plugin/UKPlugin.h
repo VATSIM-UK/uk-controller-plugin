@@ -13,6 +13,7 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCRadarTargetInterface;
         class EuroScopeCFlightPlanInterface;
+        class EuroscopeFlightplanListInterface;
         class AsrEventHandlerCollection;
         class RadarTargetEventHandlerCollection;
         class RadarTargetEventHandlerInterface;
@@ -57,25 +58,25 @@ namespace UKControllerPlugin {
         and events.
     */
     class UKPlugin : public EuroScopePlugIn::CPlugIn,
-        public UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface,
-        public UKControllerPlugin::Euroscope::UserSettingProviderInterface,
-        public UKControllerPlugin::SectorFile::SectorFileProviderInterface
+                     public Euroscope::EuroscopePluginLoopbackInterface,
+                     public Euroscope::UserSettingProviderInterface,
+                     public SectorFile::SectorFileProviderInterface
     {
         public:
             UKPlugin(
-                const UKControllerPlugin::Euroscope::RadarTargetEventHandlerCollection & radarTargetEventHandler,
-                const UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection & flightplanEventHandler,
-                const UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection & statusEventHandler,
-                const UKControllerPlugin::TimedEvent::TimedEventCollection & timedEvents,
-                const UKControllerPlugin::Tag::TagItemCollection & tagEvents,
-                const UKControllerPlugin::RadarScreen::RadarScreenFactory & radarScreenFactory,
-                const UKControllerPlugin::Metar::MetarEventHandlerCollection & metarHandlers,
-                const UKControllerPlugin::Plugin::FunctionCallEventHandler & functionCallHandler,
-                const UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers,
-                const UKControllerPlugin::Euroscope::RunwayDialogAwareCollection & runwayDialogHandlers,
-                const UKControllerPlugin::Controller::HandoffEventHandlerCollection & controllerHandoffHandlers
+                const Euroscope::RadarTargetEventHandlerCollection& radarTargetEventHandler,
+                const Flightplan::FlightPlanEventHandlerCollection& flightplanEventHandler,
+                const Controller::ControllerStatusEventHandlerCollection& statusEventHandler,
+                const TimedEvent::TimedEventCollection& timedEvents,
+                const Tag::TagItemCollection& tagEvents,
+                const RadarScreen::RadarScreenFactory& radarScreenFactory,
+                const Metar::MetarEventHandlerCollection& metarHandlers,
+                const Plugin::FunctionCallEventHandler& functionCallHandler,
+                const Command::CommandHandlerCollection& commandHandlers,
+                const Euroscope::RunwayDialogAwareCollection& runwayDialogHandlers,
+                const Controller::HandoffEventHandlerCollection& controllerHandoffHandlers
             );
-            void AddItemToPopupList(const UKControllerPlugin::Plugin::PopupMenuItem item) override;
+            void AddItemToPopupList(Plugin::PopupMenuItem item) override;
             void ChatAreaMessage(
                 std::string handler,
                 std::string sender,
@@ -88,18 +89,18 @@ namespace UKControllerPlugin {
             ) override;
             double GetDistanceFromUserVisibilityCentre(EuroScopePlugIn::CPosition position) const;
             int GetEuroscopeConnectionStatus(void) const;
-            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> GetUserControllerObject(
+            std::shared_ptr<Euroscope::EuroScopeCControllerInterface> GetUserControllerObject(
                 void
             ) const override;
-            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> GetFlightplanForCallsign(
+            std::shared_ptr<Euroscope::EuroScopeCFlightPlanInterface> GetFlightplanForCallsign(
                 std::string callsign
-            ) const;
-            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface> GetRadarTargetForCallsign(
+            ) const override;
+            std::shared_ptr<Euroscope::EuroScopeCRadarTargetInterface> GetRadarTargetForCallsign(
                 std::string callsign
-            ) const;
-            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>
+            ) const override;
+            std::shared_ptr<Euroscope::EuroScopeCFlightPlanInterface>
                 GetSelectedFlightplan()const override;
-            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+            std::shared_ptr<Euroscope::EuroScopeCRadarTargetInterface>
                 GetSelectedRadarTarget() const override;
             bool OnCompileCommand ( const char * sCommandLine );
             void OnControllerDisconnect(EuroScopePlugIn::CController Controller);
@@ -137,8 +138,8 @@ namespace UKControllerPlugin {
             void ApplyFunctionToAllFlightplans(
                 std::function<
                 void(
-                std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>,
-                std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>
+                    std::shared_ptr<Euroscope::EuroScopeCFlightPlanInterface>,
+                    std::shared_ptr<Euroscope::EuroScopeCRadarTargetInterface>
             )
                 > function
             ) override;
@@ -155,8 +156,14 @@ namespace UKControllerPlugin {
             void SetKey(std::string key, std::string description, std::string value) override;
 
             // Inherited via SectorFileProviderInterface
-            std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>>
+            std::set<std::shared_ptr<Euroscope::EuroscopeSectorFileElementInterface>>
                 GetAllElementsByType(int type) override;
+
+            void ApplyFunctionToAllControllers(
+                std::function<void(std::shared_ptr<Euroscope::EuroScopeCControllerInterface>)> function
+            ) override;
+            std::shared_ptr<Euroscope::EuroscopeFlightplanListInterface>
+            RegisterFlightplanList(std::string name) override;
 
         private:
 
@@ -165,37 +172,37 @@ namespace UKControllerPlugin {
             void DoInitialFlightplanLoad(void);
 
             // An event handler for RadarTarget events
-            const UKControllerPlugin::Euroscope::RadarTargetEventHandlerCollection & radarTargetEventHandler;
+            const Euroscope::RadarTargetEventHandlerCollection& radarTargetEventHandler;
 
             // An event handler for FlightPlan events
-            const UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection & flightplanEventHandler;
+            const Flightplan::FlightPlanEventHandlerCollection& flightplanEventHandler;
 
             // An event handler for controller status
-            const UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection & statusEventHandler;
+            const Controller::ControllerStatusEventHandlerCollection& statusEventHandler;
 
             // Timed events
-            const UKControllerPlugin::TimedEvent::TimedEventCollection & timedEvents;
+            const TimedEvent::TimedEventCollection& timedEvents;
 
             // Factory for creating radar screens
-            const UKControllerPlugin::RadarScreen::RadarScreenFactory radarScreenFactory;
+            const RadarScreen::RadarScreenFactory radarScreenFactory;
 
             // Events involving tag items
-            const UKControllerPlugin::Tag::TagItemCollection & tagEvents;
+            const Tag::TagItemCollection& tagEvents;
 
             // Collection of handlers for METAR events
-            const UKControllerPlugin::Metar::MetarEventHandlerCollection & metarHandlers;
+            const Metar::MetarEventHandlerCollection& metarHandlers;
 
             // Handler for function calls
-            const UKControllerPlugin::Plugin::FunctionCallEventHandler & functionCallHandler;
+            const Plugin::FunctionCallEventHandler& functionCallHandler;
 
             // Handles user dot commands
-            const UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers;
+            const Command::CommandHandlerCollection& commandHandlers;
 
             // Handles runways changing activity
-            const UKControllerPlugin::Euroscope::RunwayDialogAwareCollection & runwayDialogHandlers;
+            const Euroscope::RunwayDialogAwareCollection& runwayDialogHandlers;
 
             // Handles handoffs between controllers
-            const UKControllerPlugin::Controller::HandoffEventHandlerCollection& controllerHandoffHandlers;
+            const Controller::HandoffEventHandlerCollection& controllerHandoffHandlers;
 
             // Whether or not we've initialised the plugin.
             bool initialised = false;
