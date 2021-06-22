@@ -1052,6 +1052,12 @@
     <ClInclude Include="..\..\src\plugin\ForceUpdate.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1808,6 +1814,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\plugin\ForceUpdate.cpp">
       <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.cpp">
+      <Filter>src\euroscope</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
