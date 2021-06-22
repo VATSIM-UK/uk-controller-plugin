@@ -139,6 +139,9 @@
     <Filter Include="test\components">
       <UniqueIdentifier>{f1bcb9fd-718e-4080-8b9e-faee181caa40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\timer">
+      <UniqueIdentifier>{ca735e2e-aae4-42c9-88af-8c82006b8942}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -842,6 +845,12 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\components\BrushSwitcherTest.cpp">
       <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\time\SystemClockTest.cpp">
+      <Filter>test\time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp">
+      <Filter>test\timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
