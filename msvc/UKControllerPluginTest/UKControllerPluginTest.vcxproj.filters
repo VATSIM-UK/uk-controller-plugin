@@ -136,6 +136,9 @@
     <Filter Include="test\initialheading">
       <UniqueIdentifier>{1f6bc603-4f77-4a4d-8364-2b8e739fce7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\components">
+      <UniqueIdentifier>{f1bcb9fd-718e-4080-8b9e-faee181caa40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\test\helper\ApiRequestHelperFunctions.cpp">
@@ -827,6 +830,18 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\plugin\ForceUpdateTest.cpp">
       <Filter>test\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\ButtonTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\ClickableAreaTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\TitleBarTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\BrushSwitcherTest.cpp">
+      <Filter>test\components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

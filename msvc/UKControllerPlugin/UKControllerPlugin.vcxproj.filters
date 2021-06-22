@@ -145,6 +145,9 @@
     <Filter Include="src\initialheading">
       <UniqueIdentifier>{a732eccf-1336-457a-8597-2f558558027c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\components">
+      <UniqueIdentifier>{bb7c490c-3f8f-4f8f-b927-0c6fd6683ffd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\airfield\AirfieldCollection.h">
@@ -1052,6 +1055,21 @@
     <ClInclude Include="..\..\src\plugin\ForceUpdate.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\components\ClickableArea.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\StandardButtons.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\TitleBar.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\BrushSwitcher.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\Button.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1808,6 +1826,21 @@
     </ClCompile>
     <ClCompile Include="..\..\src\plugin\ForceUpdate.cpp">
       <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\ClickableArea.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\StandardButtons.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\TitleBar.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\BrushSwitcher.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\Button.cpp">
+      <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
