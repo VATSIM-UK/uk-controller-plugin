@@ -111,52 +111,54 @@ namespace UKControllerPluginTest {
                     // Add the controllers
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGKK_DEL", 199.998, "DEL", { "EGKK" })
+                            new ControllerPosition(1, "EGKK_DEL", 199.998, {"EGKK"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGKK_TWR", 199.999, "TWR", { "EGKK" })
+                            new ControllerPosition(2, "EGKK_TWR", 199.999, {"EGKK"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGKK_APP", 199.990, "APP", { "EGKK" })
+                            new ControllerPosition(3, "EGKK_APP", 199.990, {"EGKK"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGLL_S_TWR", 199.998, "TWR", { "EGLL" })
+                            new ControllerPosition(4, "EGLL_S_TWR", 199.998, {"EGLL"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGLL_N_APP", 199.998, "APP", { "EGLL" })
+                            new ControllerPosition(5, "EGLL_N_APP", 199.998, {"EGLL"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
                             new ControllerPosition(
+                                6,
                                 "LTC_S_CTR",
                                 134.120,
-                                "CTR",
-                                { "EGLL", "EGKK", "EGLC", "EGKA", "EGKB", "EGMC", "EGMD" }
+                                {"EGLL", "EGKK", "EGLC", "EGKA", "EGKB", "EGMC", "EGMD"},
+                                true,
+                                false
                             )
                         )
                     );
 
                     // Add the active callsigns
                     this->kkTwr = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_TWR", 199.999, "TWR", { "EGKK" })
+                        new ControllerPosition(2, "EGKK_TWR", 199.999, {"EGKK"}, true, false)
                     );
                     this->kkApp = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_APP", 199.990, "APP", { "EGKK" })
+                        new ControllerPosition(3, "EGKK_APP", 199.990, {"EGKK"}, true, false)
                     );
                     this->llTwr = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGLL_S_TWR", 199.998, "TWR", { "EGLL" })
+                        new ControllerPosition(4, "EGLL_S_TWR", 199.998, {"EGLL"}, true, false)
                     );
                     this->llApp = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGLL_N_APP", 199.998, "APP", { "EGLL" })
+                        new ControllerPosition(5, "EGLL_N_APP", 199.998, {"EGLL"}, true, false)
                     );
 
                     this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *kkTwr));
@@ -273,7 +275,7 @@ namespace UKControllerPluginTest {
             ActiveCallsignDisconnectResetsOwnerToOtherCallsignIfPositionStillActive
         ) {
             // Add the spare controller
-            ControllerPosition pos("EGKK_TWR", 199.998, "TWR", { "EGKK" });
+            ControllerPosition pos(1, "EGKK_TWR", 199.998, {"EGKK"}, true, false);
             this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_1_TWR", "Another Guy", pos));
 
             ActiveCallsign gatwick = this->activeCallsigns.GetCallsign("EGKK_TWR");

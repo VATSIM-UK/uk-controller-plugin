@@ -14,20 +14,20 @@ namespace UKControllerPlugin {
         class ControllerPositionCollection
         {
         public:
-            bool AddPosition(std::unique_ptr<ControllerPosition> position);
-            const ControllerPosition & FetchPositionByCallsign(std::string callsign) const;
-            const ControllerPosition & FetchPositionByFacilityTypeAndFrequency(
-                std::string facility,
-                std::string type,
-                double frequency
-            ) const;
-            size_t GetSize(void) const;
-            bool HasPosition(std::string callsign) const;
+                bool AddPosition(std::shared_ptr<ControllerPosition> position);
+                const std::shared_ptr<ControllerPosition> FetchPositionById(int id) const;
+                const ControllerPosition& FetchPositionByCallsign(std::string callsign) const;
+                const ControllerPosition& FetchPositionByFacilityTypeAndFrequency(
+                    std::string facility,
+                    std::string type,
+                    double frequency
+                ) const;
+                size_t GetSize(void) const;
+                bool HasPosition(std::string callsign) const;
 
         private:
-            std::map<std::string, std::unique_ptr<ControllerPosition>> positions;
-            bool IsPossibleAirfieldPosition(std::string facility) const;
-            bool IsPossibleAreaPosition(std::string facility) const;
+                std::map<std::string, std::shared_ptr<ControllerPosition>> positions;
+                std::map<int, std::shared_ptr<ControllerPosition>> positionsById;
         };
     }  // namespace Controller
 }  // namespace UKControllerPlugin

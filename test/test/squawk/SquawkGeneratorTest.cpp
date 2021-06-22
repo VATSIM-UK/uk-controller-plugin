@@ -79,7 +79,7 @@ namespace UKControllerPluginTest {
                     );
 
                     this->controller = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_APP", 126.820, "APP", { "EGKK" })
+                        new ControllerPosition(1, "EGKK_APP", 126.820, {"EGKK"}, true, false)
                     );
                     this->activeCallsigns.AddUserCallsign(
                         ActiveCallsign(

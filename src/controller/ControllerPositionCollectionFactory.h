@@ -16,8 +16,9 @@ namespace UKControllerPlugin {
         {
             public:
                 static std::unique_ptr<ControllerPositionCollection> Create(
-                    UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
+                    Dependency::DependencyLoaderInterface& dependency
                 );
+                static bool DependencyDataValid(nlohmann::json& data);
                 static const std::string requiredDependency;
         };
     }  // namespace Controller

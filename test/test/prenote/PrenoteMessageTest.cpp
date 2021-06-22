@@ -31,7 +31,7 @@ namespace UKControllerPluginTest {
                         new ActiveCallsign(
                             "LTC_SE_CTR",
                             "Testy McTestface",
-                            ControllerPosition("LTC_SE_CTR", 121.225, "CTR", {})
+                            ControllerPosition(1, "LTC_SE_CTR", 121.225, {}, true, false)
                         )
                     );
                     departurePrenote.reset(new DeparturePrenote(NULL, "EGKK", "BIG2X"));

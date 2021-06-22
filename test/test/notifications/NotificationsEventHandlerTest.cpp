@@ -31,16 +31,20 @@ namespace UKControllerPluginTest {
                 }
 
                 std::shared_ptr<ControllerPosition> controller1 = std::make_shared<ControllerPosition>(
+                    1,
                     "EGLL_N_APP",
                     199.998,
-                    "APP",
-                    topDown
+                    topDown,
+                    true,
+                    false
                 );
                 std::shared_ptr<ControllerPosition> controller2 = std::make_shared<ControllerPosition>(
+                    2,
                     "EGLL_S_TWR",
                     199.998,
-                    "APP",
-                    topDown
+                    topDown,
+                    true,
+                    false
                 );
                 std::vector<std::string> topDown = {"EGLL"};
                 ActiveCallsign callsign = ActiveCallsign("EGLL_S_TWR", "Bobby", *controller1);

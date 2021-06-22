@@ -8,39 +8,46 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 namespace UKControllerPluginTest {
     namespace Controller {
 
-        TEST(ControllerPositionHierarchy, AddPositionAddsToHierarchy)
+        class ControllerPositionHierarchyTest : public testing::Test
         {
-            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
+            public:
+                ControllerPositionHierarchyTest()
+                    : position1(1, "EGKK_DEL", 121.950, {"EGKK"}, true, false),
+                      position2(2, "EGKK_GND", 121.800, {"EGKK"}, true, false),
+                      position3(3, "EGKK_TWR", 124.220, {"EGKK"}, true, false)
+                { }
+
+                ControllerPosition position1;
+                ControllerPosition position2;
+                ControllerPosition position3;
+        };
+
+        TEST_F(ControllerPositionHierarchyTest, AddPositionAddsToHierarchy)
+        {
             ControllerPositionHierarchy hierarchy;
 
-            hierarchy.AddPosition(position);
+            hierarchy.AddPosition(position1);
             EXPECT_EQ(1, hierarchy.CountPositions());
         }
 
-        TEST(ControllerPositionHierarchy, PositionInHierarchyReturnsTrueIfInHierarchy)
+        TEST_F(ControllerPositionHierarchyTest, PositionInHierarchyReturnsTrueIfInHierarchy)
         {
-            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
             ControllerPositionHierarchy hierarchy;
 
-            hierarchy.AddPosition(position);
-            EXPECT_TRUE(hierarchy.PositionInHierarchy(position));
+            hierarchy.AddPosition(position1);
+            EXPECT_TRUE(hierarchy.PositionInHierarchy(position1));
         }
 
-        TEST(ControllerPositionHierarchy, PositionInHierarchyReturnsFalseIfNotInHierarchy)
+        TEST_F(ControllerPositionHierarchyTest, PositionInHierarchyReturnsFalseIfNotInHierarchy)
         {
-            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
-            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
             ControllerPositionHierarchy hierarchy;
 
-            hierarchy.AddPosition(position);
+            hierarchy.AddPosition(position1);
             EXPECT_FALSE(hierarchy.PositionInHierarchy(position2));
         }
 
-        TEST(ControllerPositionHierarchy, OrderIsDeterminedByFIFO)
+        TEST_F(ControllerPositionHierarchyTest, OrderIsDeterminedByFIFO)
         {
-            ControllerPosition position1("EGKK_DEL", 121.950, "DEL", { "EGKK" });
-            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
-            ControllerPosition position3("EGKK_TWR", 124.220, "TWR", { "EGKK" });
             ControllerPositionHierarchy hierarchy;
 
             hierarchy.AddPosition(position1);
@@ -53,53 +60,45 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(it++->get(), position3);
         }
 
-        TEST(ControllerPositionHierarchy, EqualityReturnsFalseIfDifferentSizes)
+        TEST_F(ControllerPositionHierarchyTest, EqualityReturnsFalseIfDifferentSizes)
         {
-            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
-            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
             ControllerPositionHierarchy hierarchy1;
             ControllerPositionHierarchy hierarchy2;
 
-            hierarchy1.AddPosition(position);
+            hierarchy1.AddPosition(position1);
             EXPECT_FALSE(hierarchy1 == hierarchy2);
         }
 
-        TEST(ControllerPositionHierarchy, EqualityReturnsFalseIfPositions)
+        TEST_F(ControllerPositionHierarchyTest, EqualityReturnsFalseIfPositions)
         {
-            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
-            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
             ControllerPositionHierarchy hierarchy1;
             ControllerPositionHierarchy hierarchy2;
 
-            hierarchy1.AddPosition(position);
+            hierarchy1.AddPosition(position1);
             hierarchy2.AddPosition(position2);
             EXPECT_FALSE(hierarchy1 == hierarchy2);
         }
 
-        TEST(ControllerPositionHierarchy, EqualityReturnsFalseIfWrongOrder)
+        TEST_F(ControllerPositionHierarchyTest, EqualityReturnsFalseIfWrongOrder)
         {
-            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
-            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
             ControllerPositionHierarchy hierarchy1;
             ControllerPositionHierarchy hierarchy2;
 
-            hierarchy1.AddPosition(position);
+            hierarchy1.AddPosition(position1);
             hierarchy1.AddPosition(position2);
             hierarchy2.AddPosition(position2);
-            hierarchy2.AddPosition(position);
+            hierarchy2.AddPosition(position1);
             EXPECT_FALSE(hierarchy1 == hierarchy2);
         }
 
-        TEST(ControllerPositionHierarchy, EqualityReturnsTrueIfEqual)
+        TEST_F(ControllerPositionHierarchyTest, EqualityReturnsTrueIfEqual)
         {
-            ControllerPosition position("EGKK_DEL", 121.950, "DEL", { "EGKK" });
-            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
             ControllerPositionHierarchy hierarchy1;
             ControllerPositionHierarchy hierarchy2;
 
-            hierarchy1.AddPosition(position);
+            hierarchy1.AddPosition(position1);
             hierarchy1.AddPosition(position2);
-            hierarchy2.AddPosition(position);
+            hierarchy2.AddPosition(position1);
             hierarchy2.AddPosition(position2);
             EXPECT_TRUE(hierarchy1 == hierarchy2);
         }
