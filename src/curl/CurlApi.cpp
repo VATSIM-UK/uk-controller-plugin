@@ -2,12 +2,15 @@
 #include "curl/CurlApi.h"
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
+#include "update/PluginVersion.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;
 
 namespace UKControllerPlugin {
     namespace Curl {
+
+        const std::string userAgent = "UK Controller Plugin/" + std::string(Plugin::PluginVersion::version);
 
         /*
             Performs a CURL request to the specified URL with the specified post params.
@@ -39,6 +42,7 @@ namespace UKControllerPlugin {
             curl_easy_setopt(curlObject, CURLOPT_TIMEOUT, request.GetMaxRequestTime());
             curl_easy_setopt(curlObject, CURLOPT_WRITEDATA, &outBuffer);
             curl_easy_setopt(curlObject, CURLOPT_WRITEFUNCTION, &CurlApi::WriteFunction);
+            curl_easy_setopt(curlObject, CURLOPT_USERAGENT, userAgent.c_str());
 
             result = curl_easy_perform(curlObject);
 
