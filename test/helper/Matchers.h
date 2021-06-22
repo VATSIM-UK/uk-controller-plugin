@@ -23,6 +23,12 @@ MATCHER_P(RectEq, rect, "")
         arg.right == rect.right;
 }
 
+// Matches Two Gdiplus Rects
+MATCHER_P(GdiRectEq, rect, "")
+{
+    return rect.Equals(arg);
+}
+
 // Matches Two POINTS
 MATCHER_P(PointEq, point, "")
 {
