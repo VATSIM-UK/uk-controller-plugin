@@ -1,6 +1,6 @@
 #pragma once
 #include "timedevent/AbstractTimedEvent.h"
-#include "websocket/WebsocketConnection.h"
+#include "websocket/WebsocketConnectionInterface.h"
 #include "websocket/WebsocketEventProcessorCollection.h"
 #include "api/ApiInterface.h"
 #include "task/TaskRunnerInterface.h"
@@ -12,12 +12,12 @@ namespace UKControllerPlugin {
             Handles the pusher websocket protocol
             and processes incoming messages.
         */
-        class PusherWebsocketProtocolHandler : public UKControllerPlugin::TimedEvent::AbstractTimedEvent
+        class PusherWebsocketProtocolHandler : public TimedEvent::AbstractTimedEvent
         {
             public:
                 PusherWebsocketProtocolHandler(
-                    UKControllerPlugin::Websocket::WebsocketConnectionInterface & websocket,
-                    UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & processors
+                    WebsocketConnectionInterface& websocket,
+                    WebsocketEventProcessorCollection& processors
                 );
 
                 // Inherited via AbstractTimedEvent
@@ -26,10 +26,10 @@ namespace UKControllerPlugin {
             private:
 
                 // The websocket itself
-                UKControllerPlugin::Websocket::WebsocketConnectionInterface & websocket;
+                WebsocketConnectionInterface& websocket;
 
                 // Process websocket events
-                UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & processors;
+                WebsocketEventProcessorCollection& processors;
         };
     }  // namespace Websocket
 }  // namespace UKControllerPlugin

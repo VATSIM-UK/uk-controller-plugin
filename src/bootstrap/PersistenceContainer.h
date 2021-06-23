@@ -40,7 +40,6 @@
 #include "dialog/DialogManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "setting/SettingRepository.h"
-#include "websocket/WebsocketConnection.h"
 #include "countdown/TimerConfigurationManager.h"
 #include "datablock/DisplayTime.h"
 #include "websocket/WebsocketConnectionInterface.h"
@@ -67,7 +66,6 @@ namespace UKControllerPlugin {
             // The useful things
             std::unique_ptr<UKControllerPlugin::Curl::CurlInterface> curl;
             std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
-            std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnection> websocketConnection;
 
             // The helpers and collections
             std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;

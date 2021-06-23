@@ -1,9 +1,5 @@
 #include "pch/stdafx.h"
 #include "websocket/WebsocketBootstrap.h"
-#include "websocket/PusherActivityTimeoutEventHandler.h"
-#include "websocket/PusherConnectionChannelSubscriptionEventHandler.h"
-#include "websocket/PusherErrorEventHandler.h"
-#include "websocket/PusherPingEventHandler.h"
 #include "websocket/PusherWebsocketProtocolHandler.h"
 #include "websocket/WebsocketProxyConnection.h"
 #include "websocket/PollingWebsocketConnection.h"
@@ -44,31 +40,6 @@ namespace UKControllerPlugin {
                 );
                 container.timedHandler->RegisterEvent(pollingConnection, 1);
             }
-
-            // Set up handlers that look after the websocket protocol
-            container.websocketProcessors->AddProcessor(
-                std::make_shared<PusherErrorEventHandler>()
-            );
-
-            container.websocketProcessors->AddProcessor(
-                std::make_shared<PusherPingEventHandler>(*container.websocket)
-            );
-
-            std::shared_ptr<PusherActivityTimeoutEventHandler> timeoutHandler =
-                std::make_shared<PusherActivityTimeoutEventHandler>(*container.websocket);
-
-            container.websocketProcessors->AddProcessor(
-                timeoutHandler
-            );
-
-            container.websocketProcessors->AddProcessor(
-                std::make_shared<PusherConnectionChannelSubscriptionEventHandler>(
-                    *container.websocket,
-                    *container.websocketProcessors,
-                    *container.api,
-                    *container.taskRunner
-                )
-            );
 
             container.timedHandler->RegisterEvent(
                 std::make_shared<PusherWebsocketProtocolHandler>(*container.websocket, *container.websocketProcessors),

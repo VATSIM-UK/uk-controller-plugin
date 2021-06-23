@@ -696,9 +696,6 @@
     <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketConnection.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\websocket\PusherWebsocketProtocolHandler.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
@@ -712,18 +709,6 @@
       <Filter>src\websocket</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PusherPingEventHandler.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h">
       <Filter>src\websocket</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\websocket\WebsocketBootstrap.h">
@@ -1515,9 +1500,6 @@
     <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\websocket\PusherWebsocketProtocolHandler.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
@@ -1525,18 +1507,6 @@
       <Filter>src\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PusherPingEventHandler.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp">
       <Filter>src\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp">

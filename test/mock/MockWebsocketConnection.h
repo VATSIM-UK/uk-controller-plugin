@@ -1,6 +1,6 @@
 #pragma once
 #include "pch/pch.h"
-#include "websocket/WebsocketConnection.h"
+#include "websocket/WebsocketConnectionInterface.h"
 
 namespace UKControllerPluginTest {
     namespace Websocket {

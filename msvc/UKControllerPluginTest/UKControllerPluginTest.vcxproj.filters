@@ -569,18 +569,6 @@
     <ClCompile Include="..\..\test\test\websocket\PusherWebsocketProtocolHandlerTest.cpp">
       <Filter>test\websocket</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PusherPingEventHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PusherErrorEventHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PusherActivityTimeoutEventHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PusherConnectionChannelSubscriptionEventHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\minstack\MinStackRendererConfigurationTest.cpp">
       <Filter>test\minstack</Filter>
     </ClCompile>
