@@ -1,5 +1,5 @@
 #pragma once
-#include "websocket/WebsocketEventProcessorInterface.h"
+#include "push/PushEventProcessorInterface.h"
 #include "minstack/MinStackLevel.h"
 
 // Forward declarations
@@ -18,7 +18,7 @@ namespace UKControllerPlugin {
             Class for handling Minimum Stack Level Calculations
             and display.
         */
-        class MinStackManager : public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
+        class MinStackManager : public Push::PushEventProcessorInterface
         {
             public:
                 void AcknowledgeMsl(std::string key);
@@ -31,10 +31,8 @@ namespace UKControllerPlugin {
                 int ProcessMetar(std::string metar);
                 void SetMinStackLevel(std::string key, unsigned int msl);
                 void UpdateAllMsls(nlohmann::json mslData);
-
-                // Inherited via WebsocketEventProcessorInterface
-                void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage & message) override;
-                std::set<UKControllerPlugin::Websocket::WebsocketSubscription> GetSubscriptions(void) const override;
+                void ProcessWebsocketMessage(const Push::PushEvent& message) override;
+                std::set<Push::PushEventSubscription> GetSubscriptions(void) const override;
 
                 // What to return if an MSL is invalid
                 const UKControllerPlugin::MinStack::MinStackLevel invalidMsl = {};

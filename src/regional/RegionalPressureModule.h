@@ -27,9 +27,9 @@ namespace UKControllerPlugin {
     namespace Curl {
         class CurlInterface;
     }  // namespace Curl
-    namespace Websocket {
-        class WebsocketEventProcessorCollection;
-    }  // namespace Websocket
+    namespace Push {
+        class PushEventProcessorCollection;
+    } // namespace Push
 }  // namespace UKControllerPlugin
 // END
 
@@ -47,7 +47,7 @@ namespace UKControllerPlugin {
                     std::shared_ptr<UKControllerPlugin::Regional::RegionalPressureManager> & regional,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface & taskManager,
                     UKControllerPlugin::Api::ApiInterface & api,
-                    UKControllerPlugin::Websocket::WebsocketEventProcessorCollection & websocketProcessors,
+                    Push::PushEventProcessorCollection& websocketProcessors,
                     UKControllerPlugin::Dialog::DialogManager & dialogManager,
                     UKControllerPlugin::Dependency::DependencyLoaderInterface & dependency
                 );

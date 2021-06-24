@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "pch/stdafx.h"
 #include "releases/EnrouteReleaseEventHandler.h"
 #include "plugin/PopupMenuItem.h"
@@ -7,8 +5,8 @@
 
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiException;
-using UKControllerPlugin::Websocket::WebsocketMessage;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Push::PushEvent;
+using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
@@ -67,7 +65,7 @@ namespace UKControllerPlugin {
             return this->releaseTypes;
         }
 
-        void EnrouteReleaseEventHandler::ProcessWebsocketMessage(const WebsocketMessage& message)
+        void EnrouteReleaseEventHandler::ProcessWebsocketMessage(const PushEvent& message)
         {
             if (message.event != "App\\Events\\EnrouteReleaseEvent") {
                 return;
@@ -96,11 +94,11 @@ namespace UKControllerPlugin {
             };
         }
 
-        std::set<WebsocketSubscription> EnrouteReleaseEventHandler::GetSubscriptions(void) const
+        std::set<PushEventSubscription> EnrouteReleaseEventHandler::GetSubscriptions(void) const
         {
             return {
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-enroute-releases"
                 }
             };

@@ -27,7 +27,7 @@
     <ClCompile Include="..\..\test\mock\MockActiveCallsignEventHandler.h" />
     <ClCompile Include="..\..\test\mock\MockRunwayDialogAwareInterface.h" />
     <ClCompile Include="..\..\test\mock\MockSectorFileProviderInterface.h" />
-    <ClCompile Include="..\..\test\mock\MockWebsocketEventProcessor.h" />
+    <ClCompile Include="..\..\test\mock\MockPushEventProcessor.h" />
     <ClCompile Include="..\..\test\pch\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -194,6 +194,12 @@
     <ClCompile Include="..\..\test\test\prenote\PrenoteModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\prenote\PrenoteServiceFactoryTest.cpp" />
     <ClCompile Include="..\..\test\test\prenote\PrenoteServiceTest.cpp" />
+    <ClCompile Include="..\..\test\test\push\InterpretPushEventTest.cpp" />
+    <ClCompile Include="..\..\test\test\push\PollingPushEventConnectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\push\PushEventProtocolHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\push\PushEventProcessorCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\push\PushEventProxyConnetionTest.cpp" />
+    <ClCompile Include="..\..\test\test\push\PushEventProxyHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\ConfigurableDisplayCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\PositionResetCommandTest.cpp" />
     <ClCompile Include="..\..\test\test\radarscreen\RadarRenderableCollectionTest.cpp" />
@@ -245,12 +251,6 @@
     <ClCompile Include="..\..\test\test\wake\WakeCategoryEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryMapperTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeModuleTest.cpp" />
-    <ClCompile Include="..\..\test\test\websocket\InterpretPusherWebsocketMessageTest.cpp" />
-    <ClCompile Include="..\..\test\test\websocket\PollingWebsocketConnectionTest.cpp" />
-    <ClCompile Include="..\..\test\test\websocket\PusherWebsocketProtocolHandlerTest.cpp" />
-    <ClCompile Include="..\..\test\test\websocket\WebsocketEventProcessorCollectionTest.cpp" />
-    <ClCompile Include="..\..\test\test\websocket\WebsocketProxyConnetionTest.cpp" />
-    <ClCompile Include="..\..\test\test\websocket\WebsocketProxyHandlerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h" />
@@ -288,7 +288,7 @@
     <ClInclude Include="..\..\test\mock\MockTaskRunnerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingProviderInterface.h" />
-    <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h" />
+    <ClInclude Include="..\..\test\mock\MockPushEventConnection.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp" />

@@ -2,7 +2,7 @@
 #include "releases/ReleaseModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "mock/MockDependencyLoader.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
@@ -17,7 +17,7 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Releases::BootstrapPlugin;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
-using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
+using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 
 namespace UKControllerPluginTest {
@@ -29,7 +29,7 @@ namespace UKControllerPluginTest {
 
                 ReleaseModuleTest()
                 {
-                    container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
+                    container.pushEventProcessors.reset(new PushEventProcessorCollection);
                     container.tagHandler.reset(new TagItemCollection);
                     container.timedHandler.reset(new TimedEventCollection);
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
@@ -65,7 +65,7 @@ namespace UKControllerPluginTest {
         TEST_F(ReleaseModuleTest, ItRegistersForWebsocketEvents)
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
-            EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-enroute-releases"));
+            EXPECT_EQ(1, this->container.pushEventProcessors->CountProcessorsForChannel("private-enroute-releases"));
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersTagItemForEnrouteReleaseType)

@@ -6,8 +6,8 @@
 #include "hold/HoldManager.h"
 #include "plugin/PopupMenuItem.h"
 #include "euroscope/EuroscopeSectorFileElementInterface.h"
-#include "websocket/WebsocketMessage.h"
-#include "websocket/WebsocketSubscription.h"
+#include "push/PushEvent.h"
+#include "push/PushEventSubscription.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -16,8 +16,8 @@ using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Navaids::NavaidCollection;
-using UKControllerPlugin::Websocket::WebsocketMessage;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Push::PushEvent;
+using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin {
@@ -81,7 +81,7 @@ namespace UKControllerPlugin {
             );
         }
 
-        void HoldEventHandler::ProcessWebsocketMessage(const WebsocketMessage& message)
+        void HoldEventHandler::ProcessWebsocketMessage(const PushEvent& message)
         {
             if (message.event == "App\\Events\\HoldAssignedEvent") {
                 if (
@@ -108,11 +108,11 @@ namespace UKControllerPlugin {
             }
         }
 
-        std::set<WebsocketSubscription> HoldEventHandler::GetSubscriptions(void) const
+        std::set<PushEventSubscription> HoldEventHandler::GetSubscriptions(void) const
         {
             return {
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-hold-assignments"
                 }
             };

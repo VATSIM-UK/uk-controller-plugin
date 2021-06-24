@@ -1,13 +1,13 @@
 #include "pch/pch.h"
 #include "minstack/MinStackManager.h"
 #include "minstack/MinStackLevel.h"
-#include "websocket/WebsocketSubscription.h"
-#include "websocket/WebsocketMessage.h"
+#include "push/PushEventSubscription.h"
+#include "push/PushEvent.h"
 
 using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::MinStack::MinStackLevel;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEventSubscription;
+using UKControllerPlugin::Push::PushEvent;
 using ::testing::StrictMock;
 using ::testing::Return;
 using ::testing::Test;
@@ -65,11 +65,11 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(minStack.IsAcknowledged());
         }
 
-        TEST_F(MinStackManagerTest, ItHasWebsocketSubscriptions)
+        TEST_F(MinStackManagerTest, ItHasPushEventSubscriptions)
         {
-            std::set<WebsocketSubscription> expected = {
+            std::set<PushEventSubscription> expected = {
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-minstack-updates"
                 }
             };
@@ -94,12 +94,11 @@ namespace UKControllerPluginTest {
                 {"MTMA", 6000}
             };
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\MinStacksUpdatedEvent",
                 "private-minstack-updates",
                 mslData,
-                "",
-                false
+                ""
             };
 
             this->msl.ProcessWebsocketMessage(message);
@@ -117,12 +116,11 @@ namespace UKControllerPluginTest {
                 {"MTMA", nullptr}
             };
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\MinStacksUpdatedEvent",
                 "private-minstack-updates",
                 mslData,
-                "",
-                false
+                ""
             };
 
             this->msl.ProcessWebsocketMessage(message);

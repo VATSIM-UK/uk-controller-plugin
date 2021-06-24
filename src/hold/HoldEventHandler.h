@@ -1,10 +1,8 @@
 #pragma once
-#include "radarscreen/ConfigurableDisplayInterface.h"
-#include "command/CommandHandlerInterface.h"
 #include "tag/TagItemInterface.h"
 #include "timedevent/AbstractTimedEvent.h"
 #include "navaids/NavaidCollection.h"
-#include "websocket/WebsocketEventProcessorInterface.h"
+#include "push/PushEventProcessorInterface.h"
 #include "tag/TagData.h"
 
 namespace UKControllerPlugin {
@@ -25,7 +23,7 @@ namespace UKControllerPlugin {
         */
         class HoldEventHandler : public UKControllerPlugin::Tag::TagItemInterface,
             public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
-            public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
+            public Push::PushEventProcessorInterface
         {
             public:
                 HoldEventHandler(
@@ -44,9 +42,9 @@ namespace UKControllerPlugin {
 
                 // Inherited via WebsocketEventProcessorInterface
                 void ProcessWebsocketMessage(
-                    const UKControllerPlugin::Websocket::WebsocketMessage& message
+                    const Push::PushEvent& message
                 ) override;
-                std::set<UKControllerPlugin::Websocket::WebsocketSubscription>
+                std::set<Push::PushEventSubscription>
                     GetSubscriptions(void) const override;
 
 

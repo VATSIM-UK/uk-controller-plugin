@@ -6,8 +6,8 @@
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroScopeCControllerInterface.h"
 #include "tag/TagData.h"
-#include "websocket/WebsocketSubscription.h"
-#include "websocket/WebsocketMessage.h"
+#include "push/PushEventSubscription.h"
+#include "push/PushEvent.h"
 #include "mock/MockApiInterface.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
@@ -21,14 +21,14 @@ using UKControllerPlugin::Stands::CompareStands;
 using UKControllerPlugin::Stands::Stand;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEvent;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Throw;
@@ -103,16 +103,16 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItSubscribesToChannels)
         {
-            std::set<WebsocketSubscription> expectedSubscriptions;
+            std::set<PushEventSubscription> expectedSubscriptions;
             expectedSubscriptions.insert(
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-stand-assignments"
                 }
             );
             expectedSubscriptions.insert(
                 {
-                    WebsocketSubscription::SUB_TYPE_EVENT,
+                    PushEventSubscription::SUB_TYPE_EVENT,
                     "pusher:connection_established"
                 }
             );
@@ -121,7 +121,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItAssignsStandsFromWebsocketMessage)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -145,7 +145,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItHandlesNoFlightplanForAnnotations)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -164,7 +164,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfNoCallsign)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -178,7 +178,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfCallsignInvalid)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -193,7 +193,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfNoStandId)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -207,7 +207,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfStandIdInvalid)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -222,7 +222,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfStandIdNotRealStand)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -238,7 +238,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItHandlesNoFlightplanForUnassignmentRemovalOfAnnotations)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -256,7 +256,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItUnassignsStandsFromWebsocketMessage)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -280,7 +280,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromWebsocketMessageIfCallsignMissing)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -295,7 +295,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromWebsocketMessageIfCallsignInvalid)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -309,7 +309,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItHandlesUnassignStandFromWebsocketMessageIfStandNotAssigned)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -332,7 +332,7 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
                 {"stand_id", 2},
             });
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),
@@ -372,7 +372,7 @@ namespace UKControllerPluginTest {
                 {"callsign", "BAW123"},
                 {"stand_id", 1},
             });
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),
@@ -390,7 +390,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItHandlesNonArrayStandAssignments)
         {
             nlohmann::json assignments = nlohmann::json::object();
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),
@@ -413,7 +413,7 @@ namespace UKControllerPluginTest {
                 {"stand_id", 1},
             });
             assignments.push_back(nlohmann::json::object());
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),
@@ -447,7 +447,7 @@ namespace UKControllerPluginTest {
             assignments.push_back({
                 {"stand_id", 2},
             });
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),
@@ -482,7 +482,7 @@ namespace UKControllerPluginTest {
                 {"callsign", 123},
                 {"stand_id", 2},
             });
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),
@@ -516,7 +516,7 @@ namespace UKControllerPluginTest {
             assignments.push_back({
                 {"callsign", "VIR245"},
             });
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),
@@ -551,7 +551,7 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
                 {"stand_id", "2"},
             });
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),
@@ -586,7 +586,7 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
                 {"stand_id", -55},
             });
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),
@@ -612,7 +612,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItHandlesApiExceptionsWhenFetchingStandsOnWebsocketConnection)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "pusher:connection_established",
                 "bla",
                 nlohmann::json(),

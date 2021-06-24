@@ -42,8 +42,7 @@
 #include "setting/SettingRepository.h"
 #include "countdown/TimerConfigurationManager.h"
 #include "datablock/DisplayTime.h"
-#include "websocket/WebsocketConnectionInterface.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "sectorfile/RunwayCollection.h"
 #include "handoff/HandoffCollection.h"
@@ -130,9 +129,8 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
             std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
 
-            // Websocket
-            std::shared_ptr<Websocket::WebsocketConnectionInterface> websocket;
-            std::shared_ptr<UKControllerPlugin::Websocket::WebsocketEventProcessorCollection> websocketProcessors;
+            // Push events
+            std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;
 
         } PersistenceContainer;
     }  // namespace Bootstrap

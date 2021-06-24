@@ -1,11 +1,11 @@
 #include "pch/stdafx.h"
 #include "stands/StandEventHandler.h"
-#include "websocket/WebsocketSubscription.h"
+#include "push/PushEventSubscription.h"
 #include "api/ApiException.h"
 #include "plugin/PopupMenuItem.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
 
-using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Plugin::PopupMenuItem;
@@ -403,7 +403,7 @@ namespace UKControllerPlugin {
         /*
             Process messages from the websocket.
         */
-        void StandEventHandler::ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message)
+        void StandEventHandler::ProcessWebsocketMessage(const Push::PushEvent& message)
         {
             if (message.event == "pusher:connection_established") {
                 // On connection to the websocket, download all the live stand assignments
@@ -473,15 +473,15 @@ namespace UKControllerPlugin {
             }
         }
 
-        std::set<UKControllerPlugin::Websocket::WebsocketSubscription> StandEventHandler::GetSubscriptions(void) const
+        std::set<PushEventSubscription> StandEventHandler::GetSubscriptions(void) const
         {
             return {
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-stand-assignments"
                 },
                 {
-                    WebsocketSubscription::SUB_TYPE_EVENT,
+                    PushEventSubscription::SUB_TYPE_EVENT,
                     "pusher:connection_established"
                 }
             };

@@ -1,13 +1,13 @@
 #include "pch/pch.h"
 #include "regional/RegionalPressureManager.h"
 #include "regional/RegionalPressure.h"
-#include "websocket/WebsocketSubscription.h"
-#include "websocket/WebsocketMessage.h"
+#include "push/PushEventSubscription.h"
+#include "push/PushEvent.h"
 
 using UKControllerPlugin::Regional::RegionalPressureManager;
 using UKControllerPlugin::Regional::RegionalPressure;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEventSubscription;
+using UKControllerPlugin::Push::PushEvent;
 using ::testing::StrictMock;
 using ::testing::Return;
 using ::testing::Test;
@@ -70,11 +70,11 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(pressure.IsAcknowledged());
         }
 
-        TEST_F(RegionalPressureManagerTest, ItHasWebsocketSubscriptions)
+        TEST_F(RegionalPressureManagerTest, ItHasPushEventSubscriptions)
         {
-            std::set<WebsocketSubscription> expected = {
+            std::set<PushEventSubscription> expected = {
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-rps-updates"
                 }
             };
@@ -97,12 +97,11 @@ namespace UKControllerPluginTest {
                 {"ASR_SCOTTISH", 1014}
             };
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\RegionalPressuresUpdatedEvent",
                 "private-rps-updates",
                 pressureData,
-                "",
-                false
+                ""
             };
 
             this->regional.ProcessWebsocketMessage(message);
@@ -122,12 +121,11 @@ namespace UKControllerPluginTest {
                 {"ASR_SCOTTISH", nullptr}
             };
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\RegionalPressuresUpdatedEvent",
                 "private-rps-updates",
                 pressureData,
-                "",
-                false
+                ""
             };
 
             this->regional.ProcessWebsocketMessage(message);

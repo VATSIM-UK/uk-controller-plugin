@@ -9,8 +9,8 @@
 #include "hold/HoldingData.h"
 #include "mock/MockApiInterface.h"
 #include "mock/MockTaskRunnerInterface.h"
-#include "websocket/WebsocketSubscription.h"
-#include "websocket/WebsocketMessage.h"
+#include "push/PushEventSubscription.h"
+#include "push/PushEvent.h"
 #include "sectorfile/SectorFileCoordinates.h"
 #include "mock/MockFlightplanRadarTargetPair.h"
 #include "tag/TagData.h"
@@ -27,8 +27,8 @@ using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPlugin::Hold::HoldEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEventSubscription;
+using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::SectorFile::ParseSectorFileCoordinates;
 using ::testing::Return;
 using ::testing::NiceMock;
@@ -141,12 +141,12 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(this->handler.noHold, this->tagData.GetItemString());
         }
 
-        TEST_F(HoldEventHandlerTest, ItHasSubscriptionsToWebsocketEvents)
+        TEST_F(HoldEventHandlerTest, ItHasSubscriptionsToPushEvents)
         {
-            std::set<WebsocketSubscription> expectedSubscriptions;
+            std::set<PushEventSubscription> expectedSubscriptions;
             expectedSubscriptions.insert(
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-hold-assignments"
                 }
             );
@@ -155,7 +155,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItAssignsHoldsOnEvent)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldAssignedEvent",
                 "private-hold-assignments",
                 {
@@ -176,7 +176,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItDoesNotAssignIfCallsignMissing)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldAssignedEvent",
                 "private-hold-assignments",
                 {
@@ -196,7 +196,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItDoesNotAssignIfCallsignNotString)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldAssignedEvent",
                 "private-hold-assignments",
                 {
@@ -217,7 +217,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItDoesNotAssignIfNavaidMissing)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldAssignedEvent",
                 "private-hold-assignments",
                 {
@@ -237,7 +237,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItDoesNotAssignIfNavaidNotString)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldAssignedEvent",
                 "private-hold-assignments",
                 {
@@ -258,7 +258,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItDoesNotAssignIfDataNotObject)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldAssignedEvent",
                 "private-hold-assignments",
                 nlohmann::json::array({"callsign", "BAW123", "navaid", "WILLO"}),
@@ -276,7 +276,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItUnassignsHoldsOnEvent)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldUnassignedEvent",
                 "private-hold-assignments",
                 {
@@ -296,7 +296,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItDoesntUnassignHoldOnMissingCallsign)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldUnassignedEvent",
                 "private-hold-assignments",
                 {
@@ -315,7 +315,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItDoesntUnassignHoldOnCallsignNotString)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldUnassignedEvent",
                 "private-hold-assignments",
                 {
@@ -335,7 +335,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItDoesntUnassignHoldOnDataNotObject)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\HoldUnassignedEvent",
                 "private-hold-assignments",
                 nlohmann::json::array({"callsign", "BAW123"})
@@ -353,7 +353,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldEventHandlerTest, ItHandlesInvalidEvent)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\Uwut",
                 "private-hold-assignments",
                 {
