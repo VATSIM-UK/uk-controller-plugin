@@ -86,7 +86,7 @@ namespace UKControllerPlugin {
         /*
             We've received some new MSLs from the web API, update them locally
         */
-        void RegionalPressureManager::ProcessWebsocketMessage(const PushEvent& message)
+        void RegionalPressureManager::ProcessPushEvent(const PushEvent& message)
         {
             if (message.event != "App\\Events\\RegionalPressuresUpdatedEvent") {
                 return;
@@ -99,7 +99,7 @@ namespace UKControllerPlugin {
             this->UpdateAllPressures(message.data.at("pressures"));
         }
 
-        std::set<PushEventSubscription> RegionalPressureManager::GetSubscriptions(void) const
+        std::set<PushEventSubscription> RegionalPressureManager::GetPushEventSubscriptions(void) const
         {
             return {
                 {

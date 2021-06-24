@@ -83,7 +83,7 @@ namespace UKControllerPlugin {
         /*
             We've received some new MSLs from the web API, update them locally
         */
-        void MinStackManager::ProcessWebsocketMessage(const PushEvent& message)
+        void MinStackManager::ProcessPushEvent(const PushEvent& message)
         {
             if (message.event != "App\\Events\\MinStacksUpdatedEvent") {
                 return;
@@ -92,7 +92,7 @@ namespace UKControllerPlugin {
             this->UpdateAllMsls(message.data);
         }
 
-        std::set<PushEventSubscription> MinStackManager::GetSubscriptions(void) const
+        std::set<PushEventSubscription> MinStackManager::GetPushEventSubscriptions(void) const
         {
             return {
                 {

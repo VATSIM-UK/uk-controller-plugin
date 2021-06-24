@@ -17,7 +17,7 @@ namespace UKControllerPlugin {
                 /*
                     Process a message
                 */
-                virtual void ProcessWebsocketMessage(
+                virtual void ProcessPushEvent(
                     const PushEvent& message
                 ) = 0;
 
@@ -25,7 +25,7 @@ namespace UKControllerPlugin {
                     Return the channels that we want to subscribe to with this processor
                 */
                 virtual std::set<PushEventSubscription>
-                    GetSubscriptions(void) const = 0;
+                GetPushEventSubscriptions(void) const = 0;
         };
     } // namespace Push
 }  // namespace UKControllerPlugin

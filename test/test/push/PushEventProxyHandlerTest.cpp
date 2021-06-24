@@ -24,7 +24,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            EXPECT_EQ(expected, this->handler.GetSubscriptions());
+            EXPECT_EQ(expected, this->handler.GetPushEventSubscriptions());
         }
     } // namespace Push
 }  // namespace UKControllerPluginTest

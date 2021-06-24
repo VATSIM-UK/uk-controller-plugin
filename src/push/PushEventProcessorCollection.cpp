@@ -15,7 +15,7 @@ namespace UKControllerPlugin {
             std::shared_ptr<PushEventProcessorInterface> processor
         )
         {
-            std::set<PushEventSubscription> events = processor->GetSubscriptions();
+            std::set<PushEventSubscription> events = processor->GetPushEventSubscriptions();
 
 
             for (auto it = events.cbegin(); it != events.cend(); ++it) {
@@ -101,7 +101,7 @@ namespace UKControllerPlugin {
                     }
 
                     calledProcessors.insert(*it);
-                    (*it)->ProcessWebsocketMessage(message);
+                    (*it)->ProcessPushEvent(message);
                 }
             }
 
@@ -118,7 +118,7 @@ namespace UKControllerPlugin {
                     }
 
                     calledProcessors.insert(*it);
-                    (*it)->ProcessWebsocketMessage(message);
+                    (*it)->ProcessPushEvent(message);
                 }
             }
 
@@ -134,7 +134,7 @@ namespace UKControllerPlugin {
                 }
 
                 calledProcessors.insert(*it);
-                (*it)->ProcessWebsocketMessage(message);
+                (*it)->ProcessPushEvent(message);
             }
         }
     } // namespace Push

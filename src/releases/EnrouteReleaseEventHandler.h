@@ -68,8 +68,8 @@ namespace UKControllerPlugin {
                 void EditReleasePoint(int functionId, std::string context, RECT);
 
                 // Inherited via WebsocketEventProcessorInterface
-                void ProcessWebsocketMessage(const Push::PushEvent& message) override;
-                std::set<Push::PushEventSubscription> GetSubscriptions(void) const override;
+                void ProcessPushEvent(const Push::PushEvent& message) override;
+                std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;

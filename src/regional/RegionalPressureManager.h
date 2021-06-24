@@ -30,8 +30,8 @@ namespace UKControllerPlugin {
                 std::string GetNameFromKey(std::string key) const;
                 void SetPressure(std::string key, unsigned int pressure);
                 void UpdateAllPressures(nlohmann::json pressureData);
-                void ProcessWebsocketMessage(const Push::PushEvent& message) override;
-                std::set<Push::PushEventSubscription> GetSubscriptions(void) const override;
+                void ProcessPushEvent(const Push::PushEvent& message) override;
+                std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
 
                 // What to return if an RPS is invalid
                 const UKControllerPlugin::Regional::RegionalPressure invalidPressure = {};

@@ -403,7 +403,7 @@ namespace UKControllerPlugin {
         /*
             Process messages from the websocket.
         */
-        void StandEventHandler::ProcessWebsocketMessage(const Push::PushEvent& message)
+        void StandEventHandler::ProcessPushEvent(const Push::PushEvent& message)
         {
             if (message.event == "pusher:connection_established") {
                 // On connection to the websocket, download all the live stand assignments
@@ -473,7 +473,7 @@ namespace UKControllerPlugin {
             }
         }
 
-        std::set<PushEventSubscription> StandEventHandler::GetSubscriptions(void) const
+        std::set<PushEventSubscription> StandEventHandler::GetPushEventSubscriptions(void) const
         {
             return {
                 {

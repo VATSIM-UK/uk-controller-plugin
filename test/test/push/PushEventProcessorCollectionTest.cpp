@@ -41,7 +41,7 @@ namespace UKControllerPluginTest {
         {
             std::set channels = {subChannel1, subChannel2};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(channels));
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -53,7 +53,7 @@ namespace UKControllerPluginTest {
         {
             std::set channels = {subChannel1, subChannel1};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(channels));
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -64,7 +64,7 @@ namespace UKControllerPluginTest {
         {
             std::set events = {subEvent1, subEvent1};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(events));
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -76,7 +76,7 @@ namespace UKControllerPluginTest {
         {
             std::set events = {subEvent1, subEvent1};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(events));
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -87,7 +87,7 @@ namespace UKControllerPluginTest {
         {
             std::set channels = {subChannel1, subChannel2};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(channels));
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -100,7 +100,7 @@ namespace UKControllerPluginTest {
         {
             std::set events = {subAll};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(events));
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -112,10 +112,10 @@ namespace UKControllerPluginTest {
             const UKControllerPlugin::Push::PushEvent message = {"event1", "channel1"};
             std::set channels = {subChannel1, subChannel2};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(channels));
 
-            EXPECT_CALL(*this->eventProcessor, ProcessWebsocketMessage(message))
+            EXPECT_CALL(*this->eventProcessor, ProcessPushEvent(message))
                 .Times(1);
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -127,10 +127,10 @@ namespace UKControllerPluginTest {
             const UKControllerPlugin::Push::PushEvent message = {"event1", "channel1"};
             std::set channels = {subAll};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(channels));
 
-            EXPECT_CALL(*this->eventProcessor, ProcessWebsocketMessage(message))
+            EXPECT_CALL(*this->eventProcessor, ProcessPushEvent(message))
                 .Times(1);
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -142,10 +142,10 @@ namespace UKControllerPluginTest {
             const UKControllerPlugin::Push::PushEvent message = {"channel3", "event1"};
             std::set channels = {subChannel1, subChannel2};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(channels));
 
-            EXPECT_CALL(*this->eventProcessor, ProcessWebsocketMessage(_))
+            EXPECT_CALL(*this->eventProcessor, ProcessPushEvent(_))
                 .Times(0);
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -157,10 +157,10 @@ namespace UKControllerPluginTest {
             const UKControllerPlugin::Push::PushEvent message = {"event1", "channel1"};
             std::set events = {subEvent1, subEvent2};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(events));
 
-            EXPECT_CALL(*this->eventProcessor, ProcessWebsocketMessage(message))
+            EXPECT_CALL(*this->eventProcessor, ProcessPushEvent(message))
                 .Times(1);
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -172,10 +172,10 @@ namespace UKControllerPluginTest {
             const UKControllerPlugin::Push::PushEvent message = {"event1", "channel1"};
             std::set events = {subAll};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(events));
 
-            EXPECT_CALL(*this->eventProcessor, ProcessWebsocketMessage(message))
+            EXPECT_CALL(*this->eventProcessor, ProcessPushEvent(message))
                 .Times(1);
 
             this->collection.AddProcessor(this->eventProcessor);
@@ -187,10 +187,10 @@ namespace UKControllerPluginTest {
             const UKControllerPlugin::Push::PushEvent message = {"event1", "channel1"};
             std::set events = {subChannel1, subEvent1, subAll};
 
-            ON_CALL(*this->eventProcessor, GetSubscriptions)
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
                 .WillByDefault(Return(events));
 
-            EXPECT_CALL(*this->eventProcessor, ProcessWebsocketMessage(message))
+            EXPECT_CALL(*this->eventProcessor, ProcessPushEvent(message))
                 .Times(1);
 
             this->collection.AddProcessor(this->eventProcessor);

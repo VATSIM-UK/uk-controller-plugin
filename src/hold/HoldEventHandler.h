@@ -41,11 +41,11 @@ namespace UKControllerPlugin {
                 void TimedEventTrigger(void) override;
 
                 // Inherited via WebsocketEventProcessorInterface
-                void ProcessWebsocketMessage(
+                void ProcessPushEvent(
                     const Push::PushEvent& message
                 ) override;
                 std::set<Push::PushEventSubscription>
-                    GetSubscriptions(void) const override;
+                GetPushEventSubscriptions(void) const override;
 
 
                 // The string to display when an aircraft is not holding

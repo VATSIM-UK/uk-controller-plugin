@@ -150,7 +150,7 @@ namespace UKControllerPluginTest {
                     "private-hold-assignments"
                 }
             );
-            EXPECT_EQ(expectedSubscriptions, this->handler.GetSubscriptions());
+            EXPECT_EQ(expectedSubscriptions, this->handler.GetPushEventSubscriptions());
         }
 
         TEST_F(HoldEventHandlerTest, ItAssignsHoldsOnEvent)
@@ -170,7 +170,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("WILLO", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
@@ -190,7 +190,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
@@ -211,7 +211,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
@@ -231,7 +231,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
@@ -252,7 +252,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
@@ -270,7 +270,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
@@ -290,7 +290,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, UnassignAircraftHold(_))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ(this->manager.invalidAircraft, this->manager.GetHoldingAircraft("BAW123"));
         }
 
@@ -309,7 +309,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, UnassignAircraftHold(_))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
@@ -329,7 +329,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, UnassignAircraftHold(_))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
@@ -347,7 +347,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, UnassignAircraftHold(_))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 
@@ -368,7 +368,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _))
                 .Times(0);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ("TIMBA", this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
         }
 

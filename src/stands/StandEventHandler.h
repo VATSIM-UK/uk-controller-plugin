@@ -54,8 +54,8 @@ namespace UKControllerPlugin {
                     std::string context,
                     const POINT& mousePos
                 );
-                void ProcessWebsocketMessage(const Push::PushEvent& message) override;
-                std::set<Push::PushEventSubscription> GetSubscriptions(void) const override;
+                void ProcessPushEvent(const Push::PushEvent& message) override;
+                std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;

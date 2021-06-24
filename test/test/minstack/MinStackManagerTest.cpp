@@ -73,7 +73,7 @@ namespace UKControllerPluginTest {
                     "private-minstack-updates"
                 }
             };
-            EXPECT_EQ(expected, this->msl.GetSubscriptions());
+            EXPECT_EQ(expected, this->msl.GetPushEventSubscriptions());
         }
 
         TEST_F(MinStackManagerTest, ItAllowsManualMinStackUpdates)
@@ -101,7 +101,7 @@ namespace UKControllerPluginTest {
                 ""
             };
 
-            this->msl.ProcessWebsocketMessage(message);
+            this->msl.ProcessPushEvent(message);
             EXPECT_EQ(7000, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")).msl);
             EXPECT_EQ(6000, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")).msl);
         }
@@ -123,7 +123,7 @@ namespace UKControllerPluginTest {
                 ""
             };
 
-            this->msl.ProcessWebsocketMessage(message);
+            this->msl.ProcessPushEvent(message);
             EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")));
             EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")));
         }

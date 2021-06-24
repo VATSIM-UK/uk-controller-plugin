@@ -31,8 +31,8 @@ namespace UKControllerPlugin {
                 int ProcessMetar(std::string metar);
                 void SetMinStackLevel(std::string key, unsigned int msl);
                 void UpdateAllMsls(nlohmann::json mslData);
-                void ProcessWebsocketMessage(const Push::PushEvent& message) override;
-                std::set<Push::PushEventSubscription> GetSubscriptions(void) const override;
+                void ProcessPushEvent(const Push::PushEvent& message) override;
+                std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
 
                 // What to return if an MSL is invalid
                 const UKControllerPlugin::MinStack::MinStackLevel invalidMsl = {};

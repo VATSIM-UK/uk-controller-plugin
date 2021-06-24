@@ -81,7 +81,7 @@ namespace UKControllerPlugin {
             );
         }
 
-        void HoldEventHandler::ProcessWebsocketMessage(const PushEvent& message)
+        void HoldEventHandler::ProcessPushEvent(const PushEvent& message)
         {
             if (message.event == "App\\Events\\HoldAssignedEvent") {
                 if (
@@ -108,7 +108,7 @@ namespace UKControllerPlugin {
             }
         }
 
-        std::set<PushEventSubscription> HoldEventHandler::GetSubscriptions(void) const
+        std::set<PushEventSubscription> HoldEventHandler::GetPushEventSubscriptions(void) const
         {
             return {
                 {

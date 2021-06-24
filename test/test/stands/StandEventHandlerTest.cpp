@@ -116,7 +116,7 @@ namespace UKControllerPluginTest {
                     "pusher:connection_established"
                 }
             );
-            EXPECT_EQ(expectedSubscriptions, this->handler.GetSubscriptions());
+            EXPECT_EQ(expectedSubscriptions, this->handler.GetPushEventSubscriptions());
         }
 
         TEST_F(StandEventHandlerTest, ItAssignsStandsFromWebsocketMessage)
@@ -139,7 +139,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -158,7 +158,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(nullptr));
 
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -172,7 +172,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -187,7 +187,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -201,7 +201,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -216,7 +216,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -231,7 +231,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -249,7 +249,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
                 .WillByDefault(Return(nullptr));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -273,7 +273,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
                 .Times(1);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -288,7 +288,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(3, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -303,7 +303,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(3, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -317,7 +317,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
@@ -360,7 +360,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(2, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
@@ -383,7 +383,7 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(assignments));
 
             this->handler.SetAssignedStand("RYR234", 3);
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("RYR234"));
         }
 
@@ -400,7 +400,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
@@ -432,7 +432,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
@@ -466,7 +466,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
@@ -501,7 +501,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
@@ -535,7 +535,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
@@ -570,7 +570,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
@@ -605,7 +605,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
@@ -622,7 +622,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Throw(ApiException("Foo")));
 
-            EXPECT_NO_THROW(this->handler.ProcessWebsocketMessage(message));
+            EXPECT_NO_THROW(this->handler.ProcessPushEvent(message));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }

@@ -73,7 +73,7 @@ namespace UKControllerPluginTest {
                     "private-enroute-releases"
                 }
             );
-            EXPECT_EQ(expectedSubscriptions, this->handler.GetSubscriptions());
+            EXPECT_EQ(expectedSubscriptions, this->handler.GetPushEventSubscriptions());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItChecksIfTheMessageIsValid)
@@ -274,7 +274,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
 
             const EnrouteRelease& incomingRelease = this->handler.GetIncomingRelease("BAW123");
             EXPECT_EQ(1, incomingRelease.releaseType);
@@ -308,7 +308,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
 
             const EnrouteRelease& incomingRelease = this->handler.GetIncomingRelease("BAW123");
             EXPECT_EQ(1, incomingRelease.releaseType);
@@ -342,7 +342,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
         }
 
@@ -363,7 +363,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
         }
 
@@ -380,7 +380,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
 
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
         }
@@ -399,7 +399,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
 
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
         }

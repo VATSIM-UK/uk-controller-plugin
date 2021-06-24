@@ -28,7 +28,7 @@ namespace UKControllerPluginTest {
 
                     std::set channelSubs = {subChannel1, subChannel2};
 
-                    ON_CALL(*this->mockEventProcessor, GetSubscriptions())
+                    ON_CALL(*this->mockEventProcessor, GetPushEventSubscriptions())
                         .WillByDefault(Return(channelSubs));
 
                     this->processorCollection.AddProcessor(this->mockEventProcessor);
@@ -46,7 +46,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PushEventProtocolHandlerTest, ItDoesNothingOnNoMessage)
         {
-            EXPECT_CALL(*this->mockEventProcessor, ProcessWebsocketMessage(_))
+            EXPECT_CALL(*this->mockEventProcessor, ProcessPushEvent(_))
                 .Times(0);
 
             ON_CALL(this->pushEvent, GetNextMessage)
@@ -57,7 +57,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PushEventProtocolHandlerTest, ItDoesNothingOnInvalidMessage)
         {
-            EXPECT_CALL(*this->mockEventProcessor, ProcessWebsocketMessage(_))
+            EXPECT_CALL(*this->mockEventProcessor, ProcessPushEvent(_))
                 .Times(0);
 
             EXPECT_CALL(this->pushEvent, GetNextMessage)
@@ -70,7 +70,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PushEventProtocolHandlerTest, ItHandlesMessages)
         {
-            EXPECT_CALL(*this->mockEventProcessor, ProcessWebsocketMessage(_))
+            EXPECT_CALL(*this->mockEventProcessor, ProcessPushEvent(_))
                 .Times(1);
 
             nlohmann::json eventMessage;

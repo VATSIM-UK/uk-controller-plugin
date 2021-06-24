@@ -65,7 +65,7 @@ namespace UKControllerPlugin {
             return this->releaseTypes;
         }
 
-        void EnrouteReleaseEventHandler::ProcessWebsocketMessage(const PushEvent& message)
+        void EnrouteReleaseEventHandler::ProcessPushEvent(const PushEvent& message)
         {
             if (message.event != "App\\Events\\EnrouteReleaseEvent") {
                 return;
@@ -94,7 +94,7 @@ namespace UKControllerPlugin {
             };
         }
 
-        std::set<PushEventSubscription> EnrouteReleaseEventHandler::GetSubscriptions(void) const
+        std::set<PushEventSubscription> EnrouteReleaseEventHandler::GetPushEventSubscriptions(void) const
         {
             return {
                 {

@@ -8,9 +8,9 @@ namespace UKControllerPluginTest {
         class MockPushEventProcessor : public UKControllerPlugin::Push::PushEventProcessorInterface
         {
             public:
-                MOCK_METHOD1(ProcessWebsocketMessage, void(const UKControllerPlugin::Push::PushEvent &));
+                MOCK_METHOD1(ProcessPushEvent, void(const UKControllerPlugin::Push::PushEvent &));
                 MOCK_CONST_METHOD0(
-                    GetSubscriptions,
+                    GetPushEventSubscriptions,
                     std::set<UKControllerPlugin::Push::PushEventSubscription>(void)
                 );
         };

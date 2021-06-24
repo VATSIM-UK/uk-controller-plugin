@@ -78,7 +78,7 @@ namespace UKControllerPluginTest {
                     "private-rps-updates"
                 }
             };
-            EXPECT_EQ(expected, this->regional.GetSubscriptions());
+            EXPECT_EQ(expected, this->regional.GetPushEventSubscriptions());
         }
 
         TEST_F(RegionalPressureManagerTest, ItAllowsManualMinStackUpdates)
@@ -104,7 +104,7 @@ namespace UKControllerPluginTest {
                 ""
             };
 
-            this->regional.ProcessWebsocketMessage(message);
+            this->regional.ProcessPushEvent(message);
             EXPECT_EQ(1013, this->regional.GetRegionalPressure("ASR_LONDON").pressure);
             EXPECT_EQ("ASR_LONDON", this->regional.GetRegionalPressure("ASR_LONDON").key);
             EXPECT_EQ("London", this->regional.GetRegionalPressure("ASR_LONDON").name);
@@ -128,7 +128,7 @@ namespace UKControllerPluginTest {
                 ""
             };
 
-            this->regional.ProcessWebsocketMessage(message);
+            this->regional.ProcessPushEvent(message);
             EXPECT_EQ(
                 this->regional.invalidPressure,
                 this->regional.GetRegionalPressure("ASR_LONDON")

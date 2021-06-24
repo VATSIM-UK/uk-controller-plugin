@@ -8,7 +8,7 @@ namespace UKControllerPlugin {
         /*
             Handle the ping messages by responding with pong.
         */
-        void PushEventProxyHandler::ProcessWebsocketMessage(const PushEvent& message)
+        void PushEventProxyHandler::ProcessPushEvent(const PushEvent& message)
         {
             // Proxy the push event to any proxies listening - in regular string
             COPYDATASTRUCT cds;
@@ -41,7 +41,7 @@ namespace UKControllerPlugin {
         /*
             Subscribe to pusher ping messages.
         */
-        std::set<PushEventSubscription> PushEventProxyHandler::GetSubscriptions(void) const
+        std::set<PushEventSubscription> PushEventProxyHandler::GetPushEventSubscriptions(void) const
         {
             return {
                 {
