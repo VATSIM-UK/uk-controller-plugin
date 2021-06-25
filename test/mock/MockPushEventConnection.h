@@ -9,7 +9,6 @@ namespace UKControllerPluginTest {
             public:
                 MOCK_METHOD1(WriteMessage, void(std::string));
                 MOCK_METHOD0(GetNextMessage, std::string(void));
-                MOCK_METHOD1(SetIdleTimeout, void(std::chrono::seconds timeout));
         };
     } // namespace Push
 }  // namespace UKControllerPluginTest

@@ -27,7 +27,6 @@ namespace UKControllerPlugin {
                 // Inherited from WebsocketConnectionInterface
                 void WriteMessage(std::string message) override;
                 std::string GetNextMessage() override;
-                void SetIdleTimeout(std::chrono::seconds timeout) override;
                 void TimedEventTrigger() override;
 
                 static bool SyncResponseValid(const nlohmann::json& response);

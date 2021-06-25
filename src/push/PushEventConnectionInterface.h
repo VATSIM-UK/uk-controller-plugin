@@ -14,7 +14,6 @@ namespace UKControllerPlugin {
                 virtual ~PushEventConnectionInterface(void) {}
                 virtual void WriteMessage(std::string message) = 0;
                 virtual std::string GetNextMessage(void) = 0;
-                virtual void SetIdleTimeout(std::chrono::seconds timeout) = 0;
 
                 // Returned when there are no messages in the queue to be processed
                 const std::string noMessage = "";

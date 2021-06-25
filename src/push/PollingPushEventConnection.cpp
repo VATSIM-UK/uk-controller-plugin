@@ -30,11 +30,6 @@ namespace UKControllerPlugin {
             return message;
         }
 
-        void PollingPushEventConnection::SetIdleTimeout(std::chrono::seconds timeout)
-        {
-            // Nothing to do here
-        }
-
         void PollingPushEventConnection::TimedEventTrigger()
         {
             // We've polled recently for something, so let's not do it again.
