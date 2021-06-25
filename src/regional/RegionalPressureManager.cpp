@@ -109,6 +109,11 @@ namespace UKControllerPlugin {
             };
         }
 
+        void RegionalPressureManager::PluginEventsSynced()
+        {
+            // Nothing here
+        }
+
         /*
             Set the MSL for the given key
         */

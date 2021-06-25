@@ -15,11 +15,17 @@ namespace UKControllerPlugin {
                 virtual ~PushEventProcessorInterface() = default;
 
                 /*
-                    Process a message
+                    Process a single push event message
                 */
                 virtual void ProcessPushEvent(
                     const PushEvent& message
                 ) = 0;
+
+                /*
+                    When the initial sync of plugin events is made, let processors know
+                    so that they can pre-load initial data, etc.
+                */
+                virtual void PluginEventsSynced() = 0;
 
                 /*
                     Return the channels that we want to subscribe to with this processor

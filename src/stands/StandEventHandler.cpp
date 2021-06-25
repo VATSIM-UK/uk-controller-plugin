@@ -400,48 +400,51 @@ namespace UKControllerPlugin {
             // Nothing to do
         }
 
+        void StandEventHandler::PluginEventsSynced()
+        {
+            this->taskRunner.QueueAsynchronousTask([this]()
+            {
+                try {
+                    nlohmann::json standAssignments = this->api.GetAssignedStands();
+
+                    if (!standAssignments.is_array()) {
+                        LogWarning("Invalid stand assignment data");
+                        return;
+                    }
+
+                    // Delete all existing assignments
+                    this->standAssignments.clear();
+
+                    for (
+                        auto assignment = standAssignments.cbegin();
+                        assignment != standAssignments.cend();
+                        ++assignment
+                    ) {
+                        if (!this->AssignmentMessageValid(*assignment)) {
+                            LogWarning("Invalid stand assignment message on mass assignment " + assignment->dump());
+                            continue;
+                        }
+
+                        this->AnnotateFlightStrip(
+                            assignment->at("callsign").get<std::string>(),
+                            assignment->at("stand_id").get<int>()
+                        );
+                        this->standAssignments[assignment->at("callsign").get<std::string>()] =
+                            assignment->at("stand_id").get<int>();
+                    }
+                    LogInfo("Loaded " + std::to_string(this->standAssignments.size()) + " stand assignments");
+                } catch (ApiException e) {
+                    LogError("Unable to load stand assignment data");
+                }
+            });
+        }
+
         /*
             Process messages from the websocket.
         */
         void StandEventHandler::ProcessPushEvent(const Push::PushEvent& message)
         {
-            if (message.event == "pusher:connection_established") {
-                // On connection to the websocket, download all the live stand assignments
-                this->taskRunner.QueueAsynchronousTask([this]() {
-                    try {
-                        nlohmann::json standAssignments = this->api.GetAssignedStands();
-
-                        if (!standAssignments.is_array()) {
-                            LogWarning("Invalid stand assignment data");
-                            return;
-                        }
-
-                        // Delete all existing assignments
-                        this->standAssignments.clear();
-
-                        for (
-                            auto assignment = standAssignments.cbegin();
-                            assignment != standAssignments.cend();
-                            ++assignment
-                        ) {
-                            if (!this->AssignmentMessageValid(*assignment)) {
-                                LogWarning("Invalid stand assignment message on mass assignment " + assignment->dump());
-                                continue;
-                            }
-
-                            this->AnnotateFlightStrip(
-                                assignment->at("callsign").get<std::string>(),
-                                assignment->at("stand_id").get<int>()
-                            );
-                            this->standAssignments[assignment->at("callsign").get<std::string>()] =
-                                assignment->at("stand_id").get<int>();
-                        }
-                        LogInfo("Loaded " + std::to_string(this->standAssignments.size()) + " stand assignments");
-                    } catch (ApiException e) {
-                        LogError("Unable to load stand assignment data");
-                    }
-                });
-            } else if (message.event == "App\\Events\\StandAssignedEvent") {
+            if (message.event == "App\\Events\\StandAssignedEvent") {
                 // If a stand has been assigned, assign it here
                 if (!AssignmentMessageValid(message.data)) {
                     LogWarning("Invalid stand assignment message " + message.data.dump());
@@ -479,10 +482,6 @@ namespace UKControllerPlugin {
                 {
                     PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-stand-assignments"
-                },
-                {
-                    PushEventSubscription::SUB_TYPE_EVENT,
-                    "pusher:connection_established"
                 }
             };
         }

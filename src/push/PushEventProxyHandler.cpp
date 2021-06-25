@@ -49,5 +49,7 @@ namespace UKControllerPlugin {
                 }
             };
         }
+
+        void PushEventProxyHandler::PluginEventsSynced() {}
     } // namespace Push
 } // namespace UKControllerPlugin

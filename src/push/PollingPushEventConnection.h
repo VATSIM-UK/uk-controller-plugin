@@ -13,6 +13,9 @@ namespace UKControllerPlugin {
     } // namespace TaskManager
 
     namespace Push {
+
+        class PushEventProcessorCollection;
+
         /*
             A class that imitates the pushed events connection through regular interval polling.
         */
@@ -21,7 +24,8 @@ namespace UKControllerPlugin {
             public:
                 PollingPushEventConnection(
                     const Api::ApiInterface& api,
-                    TaskManager::TaskRunnerInterface& taskRunner
+                    TaskManager::TaskRunnerInterface& taskRunner,
+                    const PushEventProcessorCollection& pushEventHandlers
                 );
 
                 // Inherited from WebsocketConnectionInterface
@@ -71,6 +75,9 @@ namespace UKControllerPlugin {
 
                 // Protects the inbound messages queue
                 std::mutex inboundMessageQueueGuard;
+
+                // Push event handlers
+                const PushEventProcessorCollection& pushEventHandlers;
         };
     } // namespace Push
 } // namespace UKControllerPlugin

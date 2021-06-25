@@ -24,9 +24,13 @@ namespace UKControllerPluginTest {
                 void SetUp()
                 {
                     this->eventProcessor.reset(new NiceMock<MockPushEventProcessor>);
+                    this->eventProcessor2.reset(new NiceMock<MockPushEventProcessor>);
+                    this->eventProcessor3.reset(new NiceMock<MockPushEventProcessor>);
                 }
 
                 std::shared_ptr<NiceMock<MockPushEventProcessor>> eventProcessor;
+                std::shared_ptr<NiceMock<MockPushEventProcessor>> eventProcessor2;
+                std::shared_ptr<NiceMock<MockPushEventProcessor>> eventProcessor3;
 
                 PushEventSubscription subChannel1 = {PushEventSubscription::SUB_TYPE_CHANNEL, "channel1"};
                 PushEventSubscription subChannel2 = {PushEventSubscription::SUB_TYPE_CHANNEL, "channel2"};
@@ -195,6 +199,36 @@ namespace UKControllerPluginTest {
 
             this->collection.AddProcessor(this->eventProcessor);
             this->collection.ProcessEvent(message);
+        }
+
+        TEST_F(PushEventEventProcessorCollectionTest, ItNotifiesAllHandlersThatEventsHaveBeenSycned)
+        {
+            std::set channels1 = {subChannel1, subChannel2};
+            std::set channels2 = {subChannel1, subEvent1};
+            std::set channels3 = {subAll};
+
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
+                .WillByDefault(Return(channels1));
+
+            ON_CALL(*this->eventProcessor2, GetPushEventSubscriptions)
+                .WillByDefault(Return(channels2));
+
+            ON_CALL(*this->eventProcessor3, GetPushEventSubscriptions)
+                .WillByDefault(Return(channels3));
+
+            EXPECT_CALL(*this->eventProcessor, PluginEventsSynced)
+                .Times(1);
+
+            EXPECT_CALL(*this->eventProcessor2, PluginEventsSynced)
+                .Times(1);
+
+            EXPECT_CALL(*this->eventProcessor3, PluginEventsSynced)
+                .Times(1);
+
+            this->collection.AddProcessor(this->eventProcessor);
+            this->collection.AddProcessor(this->eventProcessor2);
+            this->collection.AddProcessor(this->eventProcessor3);
+            this->collection.PluginEventsSynced();
         }
     } // namespace PushEvent
 }  // namespace UKControllerPluginTest

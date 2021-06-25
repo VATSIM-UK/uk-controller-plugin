@@ -1,6 +1,9 @@
 #include "pch/pch.h"
 #include "push/PollingPushEventConnection.h"
+#include "push/PushEventProcessorCollection.h"
+#include "push/PushEventSubscription.h"
 #include "mock/MockTaskRunnerInterface.h"
+#include "mock/MockPushEventProcessor.h"
 #include "mock/MockApiInterface.h"
 #include "api/ApiException.h"
 
@@ -9,20 +12,27 @@ using testing::NiceMock;
 using testing::Return;
 using testing::Throw;
 using UKControllerPlugin::Push::PollingPushEventConnection;
+using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
+using UKControllerPlugin::Push::PushEventProcessorCollection;
+using UKControllerPluginTest::Push::MockPushEventProcessor;
 using UKControllerPlugin::Api::ApiException;
 
 namespace UKControllerPluginTest {
-    namespace Websocket {
+    namespace Push {
 
         class PollingPushEventConnectionTest : public Test
         {
             public:
                 PollingPushEventConnectionTest()
-                    : connection(mockApi, mockTaskRunner)
-                { }
+                    : connection(mockApi, mockTaskRunner, collection)
+                {
+                    this->eventProcessor.reset(new NiceMock<MockPushEventProcessor>);
+                }
 
+                std::shared_ptr<NiceMock<MockPushEventProcessor>> eventProcessor;
+                PushEventProcessorCollection collection;
                 MockTaskRunnerInterface mockTaskRunner;
                 NiceMock<MockApiInterface> mockApi;
                 PollingPushEventConnection connection;
@@ -169,8 +179,18 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(connection.LastPollTime() < std::chrono::system_clock::now() - connection.pollInterval);
         }
 
-        TEST_F(PollingPushEventConnectionTest, ItPushesAConnectionEstablishedMessageWhenSyncComplete)
+        TEST_F(PollingPushEventConnectionTest, ItTriggersASyncedEventWhenSyncComplete)
         {
+            std::set<PushEventSubscription> subs = {{PushEventSubscription::SUB_TYPE_CHANNEL, "channel1"}};
+
+            ON_CALL(*this->eventProcessor, GetPushEventSubscriptions)
+                .WillByDefault(Return(subs));
+
+            EXPECT_CALL(*this->eventProcessor, PluginEventsSynced)
+                .Times(1);
+
+            this->collection.AddProcessor(this->eventProcessor);
+
             nlohmann::json syncResponse{
                 {"event_id", 55}
             };
@@ -180,13 +200,6 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(syncResponse));
 
             connection.TimedEventTrigger();
-
-            std::string expectedMessage = nlohmann::json({
-                {"event", "pusher:connection_established"},
-                {"data", nlohmann::json({{"socket_id", "abc.def"}, {"activity_timeout", 30}}).dump()}
-            }).dump();
-            EXPECT_EQ(expectedMessage, connection.GetNextMessage());
-            EXPECT_EQ("", connection.GetNextMessage());
         }
 
         TEST_F(PollingPushEventConnectionTest, ItDoesntSyncIfSyncInProgress)
@@ -305,7 +318,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(std::chrono::system_clock::now() - connection.LastPollTime() < std::chrono::seconds(2));
         }
 
-        TEST_F(PollingPushEventConnectionTest, TestItProcessesWebsocketMessages)
+        TEST_F(PollingPushEventConnectionTest, TestItProcessesPushEventMessages)
         {
             nlohmann::json response = nlohmann::json::array({
                 {
@@ -375,5 +388,5 @@ namespace UKControllerPluginTest {
 
             connection.TimedEventTrigger();
         }
-    }  // namespace Websocket
+    } // namespace Push
 }  // namespace UKControllerPluginTest

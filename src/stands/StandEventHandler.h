@@ -27,6 +27,7 @@ namespace UKControllerPlugin {
                     std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
                     int standSelectedCallbackId
                 );
+                ~StandEventHandler() override = default;
 
                 void AnnotateFlightStrip(std::string callsign, int standId) const;
                 void DoStandAssignment(
@@ -73,6 +74,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
                     int dataType
                 ) override;
+                void PluginEventsSynced() override;
 
                 // Inherited via ExternalMessageHandlerInterface
                 bool ProcessMessage(std::string message) override;

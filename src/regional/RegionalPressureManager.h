@@ -20,7 +20,8 @@ namespace UKControllerPlugin {
         class RegionalPressureManager : public Push::PushEventProcessorInterface
         {
             public:
-                RegionalPressureManager(void);
+                RegionalPressureManager();
+                ~RegionalPressureManager() override = default;
                 explicit RegionalPressureManager(std::map<std::string, std::string> keyMap);
                 void AcknowledgePressure(std::string key);
                 void AddRegionalPressure(std::string key, std::string name, unsigned int pressure);
@@ -32,7 +33,7 @@ namespace UKControllerPlugin {
                 void UpdateAllPressures(nlohmann::json pressureData);
                 void ProcessPushEvent(const Push::PushEvent& message) override;
                 std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
-
+                void PluginEventsSynced() override;
                 // What to return if an RPS is invalid
                 const UKControllerPlugin::Regional::RegionalPressure invalidPressure = {};
 

@@ -263,6 +263,11 @@ namespace UKControllerPlugin {
             this->outgoingReleases.at(callsign).clearTime = std::chrono::system_clock::now() + std::chrono::minutes(3);
         }
 
+        void EnrouteReleaseEventHandler::PluginEventsSynced()
+        {
+            // Nothing to do here
+        }
+
         bool EnrouteReleaseEventHandler::ReleaseMessageValid(const nlohmann::json& message) const
         {
             return message.contains("callsign") &&

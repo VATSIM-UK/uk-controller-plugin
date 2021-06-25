@@ -102,6 +102,11 @@ namespace UKControllerPlugin {
             };
         }
 
+        void MinStackManager::PluginEventsSynced()
+        {
+            // Nothing here
+        }
+
         /*
             When we receive a new metar, process it in tokens until we get the QNH.
         */

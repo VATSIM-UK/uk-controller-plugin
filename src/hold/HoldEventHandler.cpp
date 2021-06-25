@@ -117,5 +117,10 @@ namespace UKControllerPlugin {
                 }
             };
         }
+
+        void HoldEventHandler::PluginEventsSynced()
+        {
+            // Nothing here
+        }
     }  // namespace Hold
 }  // namespace UKControllerPlugin

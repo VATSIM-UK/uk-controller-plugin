@@ -13,6 +13,7 @@ namespace UKControllerPluginTest {
                     GetPushEventSubscriptions,
                     std::set<UKControllerPlugin::Push::PushEventSubscription>(void)
                 );
+                MOCK_METHOD(void, PluginEventsSynced, (), (override));
         };
     } // namespace Push
 }  // namespace UKControllerPluginTest

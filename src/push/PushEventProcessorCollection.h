@@ -22,9 +22,9 @@ namespace UKControllerPlugin {
                 size_t CountProcessorsForAll() const;
                 std::set<std::string> GetChannelSubscriptions(void) const;
                 void ProcessEvent(const PushEvent& message) const;
+                void PluginEventsSynced() const;
 
             private:
-
                 std::map<
                     std::string,
                     std::set<std::shared_ptr<PushEventProcessorInterface>>
@@ -37,6 +37,9 @@ namespace UKControllerPlugin {
                 > eventMap;
 
                 // Processors that care about every event
+                std::set<std::shared_ptr<PushEventProcessorInterface>> globalEventProcessors;
+
+                // All the registered processors
                 std::set<std::shared_ptr<PushEventProcessorInterface>> allEventProcessors;
         };
     } // namespace Push

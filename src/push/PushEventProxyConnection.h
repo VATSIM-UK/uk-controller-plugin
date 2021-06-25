@@ -16,7 +16,6 @@ namespace UKControllerPlugin {
                 void AddMessageToQueue(std::string message);
                 void WriteMessage(std::string message) override {} // We dont need to implement this
                 std::string GetNextMessage() override;
-                void SetIdleTimeout(std::chrono::seconds timeout) override {} // We dont need to implement this
 
             private:
                 // Lock for the message queue

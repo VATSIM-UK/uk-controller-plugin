@@ -24,9 +24,10 @@ namespace UKControllerPlugin {
             if (duplicatePlugin) {
                 pushEvents = std::make_shared<PushEventProxyConnection>();
             } else {
-                auto pollingEvents = std::make_shared<PollingPushEventConnection>(
+                const auto pollingEvents = std::make_shared<PollingPushEventConnection>(
                     *container.api,
-                    *container.taskRunner
+                    *container.taskRunner,
+                    *container.pushEventProcessors
                 );
                 pushEvents = pollingEvents;
                 container.pushEventProcessors->AddProcessor(std::make_shared<PushEventProxyHandler>());

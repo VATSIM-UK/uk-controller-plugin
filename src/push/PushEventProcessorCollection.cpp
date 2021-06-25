@@ -35,7 +35,7 @@ namespace UKControllerPlugin {
                     continue;
                 }
                 if (it->IsAllSubscription()) {
-                    if (!this->allEventProcessors.insert(processor).second) {
+                    if (!this->globalEventProcessors.insert(processor).second) {
                         LogWarning("Attemped to add processor for duplicate all: " + it->subTarget);
                     }
 
@@ -44,6 +44,8 @@ namespace UKControllerPlugin {
 
                 LogWarning("Unknown subscription type " + it->subType);
             }
+
+            this->allEventProcessors.insert(processor);
         }
 
         size_t PushEventProcessorCollection::CountProcessorsForChannel(std::string event) const
@@ -58,7 +60,7 @@ namespace UKControllerPlugin {
 
         size_t PushEventProcessorCollection::CountProcessorsForAll() const
         {
-            return this->allEventProcessors.size();
+            return this->globalEventProcessors.size();
         }
 
         /*
@@ -125,8 +127,8 @@ namespace UKControllerPlugin {
             // Send the event to processors that want to know about everything
             for (
                 auto it
-                    = this->allEventProcessors.cbegin();
-                it != this->allEventProcessors.cend();
+                    = this->globalEventProcessors.cbegin();
+                it != this->globalEventProcessors.cend();
                 ++it
             ) {
                 if (calledProcessors.count(*it)) {
@@ -135,6 +137,20 @@ namespace UKControllerPlugin {
 
                 calledProcessors.insert(*it);
                 (*it)->ProcessPushEvent(message);
+            }
+        }
+
+        /*
+         * Let everyone know that the plugin events have been synced
+         */
+        void PushEventProcessorCollection::PluginEventsSynced() const
+        {
+            for (
+                auto it = this->allEventProcessors.cbegin();
+                it != this->allEventProcessors.cend();
+                ++it
+            ) {
+                (*it)->PluginEventsSynced();
             }
         }
     } // namespace Push

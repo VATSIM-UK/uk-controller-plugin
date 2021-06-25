@@ -1,5 +1,7 @@
 #include "pch/stdafx.h"
 #include "push/PollingPushEventConnection.h"
+
+#include "PushEventProcessorCollection.h"
 #include "api/ApiInterface.h"
 #include "task/TaskRunnerInterface.h"
 #include "api/ApiException.h"
@@ -9,8 +11,9 @@ namespace UKControllerPlugin {
 
         PollingPushEventConnection::PollingPushEventConnection(
             const Api::ApiInterface& api,
-            TaskManager::TaskRunnerInterface& taskRunner
-        ): api(api), taskRunner(taskRunner) { }
+            TaskManager::TaskRunnerInterface& taskRunner,
+            const PushEventProcessorCollection& pushEventHandlers
+        ): api(api), taskRunner(taskRunner), pushEventHandlers(pushEventHandlers) { }
 
         void PollingPushEventConnection::WriteMessage(std::string message)
         {
@@ -71,13 +74,8 @@ namespace UKControllerPlugin {
                         this->lastEventId = syncResponse.at("event_id").get<int>();
                         LogInfo("Plugin events synced at id " + std::to_string(this->lastEventId));
 
-                        // Put a fake connection established message on the message queue so it's picked up by handlers
-                        this->inboundMessages.push(
-                            nlohmann::json({
-                                {"event", "pusher:connection_established"},
-                                {"data", nlohmann::json({{"socket_id", "abc.def"}, {"activity_timeout", 30}}).dump()}
-                            }).dump()
-                        );
+                        // Let everyone know that events are synced
+                        this->pushEventHandlers.PluginEventsSynced();
                     } catch (Api::ApiException apiException) {
                         LogError("ApiException when syncing plugin events: -" + std::string(apiException.what()));
                         this->lastPollTime = std::chrono::system_clock::now();

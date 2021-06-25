@@ -8,8 +8,10 @@ namespace UKControllerPlugin {
         class PushEventProxyHandler : public PushEventProcessorInterface
         {
             public:
+                ~PushEventProxyHandler() override = default;
                 void ProcessPushEvent(const PushEvent& message) override;
                 std::set<PushEventSubscription> GetPushEventSubscriptions(void) const override;
+                void PluginEventsSynced() override;
         };
 
     } // namespace Push

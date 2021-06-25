@@ -32,6 +32,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     const int popupMenuItemId
                 );
+                ~HoldEventHandler() override = default;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;
@@ -47,6 +48,7 @@ namespace UKControllerPlugin {
                 std::set<Push::PushEventSubscription>
                 GetPushEventSubscriptions(void) const override;
 
+                void PluginEventsSynced() override;
 
                 // The string to display when an aircraft is not holding
                 const std::string noHold = "NOHOLD";

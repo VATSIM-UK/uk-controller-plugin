@@ -21,6 +21,7 @@ namespace UKControllerPlugin {
         class MinStackManager : public Push::PushEventProcessorInterface
         {
             public:
+                ~MinStackManager() override = default;
                 void AcknowledgeMsl(std::string key);
                 void AddMsl(std::string key, std::string type, std::string name, unsigned int msl);
                 std::set<std::string> GetAllMslKeys(void) const;
@@ -33,7 +34,7 @@ namespace UKControllerPlugin {
                 void UpdateAllMsls(nlohmann::json mslData);
                 void ProcessPushEvent(const Push::PushEvent& message) override;
                 std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
-
+                void PluginEventsSynced() override;
                 // What to return if an MSL is invalid
                 const UKControllerPlugin::MinStack::MinStackLevel invalidMsl = {};
 

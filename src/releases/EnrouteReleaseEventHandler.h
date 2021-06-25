@@ -33,6 +33,7 @@ namespace UKControllerPlugin {
                     const int releaseTypeSelectedCallbackId,
                     const int editReleasePointCallbackId
                 );
+                ~EnrouteReleaseEventHandler() override = default;
                 void AddIncomingRelease(
                     const std::string callsign,
                     UKControllerPlugin::Releases::EnrouteRelease release
@@ -84,6 +85,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& transferringController,
                     UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& targetController
                 ) override;
+                void PluginEventsSynced() override;
 
                 // Colours
                 const COLORREF outgoingItemColour = RGB(255, 255, 0);

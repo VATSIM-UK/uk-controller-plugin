@@ -110,12 +110,6 @@ namespace UKControllerPluginTest {
                     "private-stand-assignments"
                 }
             );
-            expectedSubscriptions.insert(
-                {
-                    PushEventSubscription::SUB_TYPE_EVENT,
-                    "pusher:connection_established"
-                }
-            );
             EXPECT_EQ(expectedSubscriptions, this->handler.GetPushEventSubscriptions());
         }
 
@@ -321,7 +315,7 @@ namespace UKControllerPluginTest {
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
-        TEST_F(StandEventHandlerTest, ItLoadsAssignmentsOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItLoadsAssignmentsOnPluginEventsSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -332,11 +326,6 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
                 {"stand_id", 2},
             });
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp1
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -360,52 +349,42 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessPushEvent(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(2, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItClearsPreviousAssignmentsOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItClearsPreviousAssignmentsOnPluginEventsSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
                 {"callsign", "BAW123"},
                 {"stand_id", 1},
             });
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
 
             this->handler.SetAssignedStand("RYR234", 3);
-            this->handler.ProcessPushEvent(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("RYR234"));
         }
 
         TEST_F(StandEventHandlerTest, ItHandlesNonArrayStandAssignments)
         {
             nlohmann::json assignments = nlohmann::json::object();
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessPushEvent(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesNonArrayAssignmentsOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesNonArrayAssignmentsOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -413,11 +392,6 @@ namespace UKControllerPluginTest {
                 {"stand_id", 1},
             });
             assignments.push_back(nlohmann::json::object());
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -432,12 +406,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessPushEvent(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingCallsignOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingCallsignOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -447,11 +421,6 @@ namespace UKControllerPluginTest {
             assignments.push_back({
                 {"stand_id", 2},
             });
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -466,12 +435,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessPushEvent(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidCallsignOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidCallsignOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -482,11 +451,6 @@ namespace UKControllerPluginTest {
                 {"callsign", 123},
                 {"stand_id", 2},
             });
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -501,12 +465,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessPushEvent(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingStandOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingStandOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -516,11 +480,6 @@ namespace UKControllerPluginTest {
             assignments.push_back({
                 {"callsign", "VIR245"},
             });
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -535,12 +494,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessPushEvent(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidStandOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidStandOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -551,11 +510,6 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
                 {"stand_id", "2"},
             });
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -570,12 +524,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessPushEvent(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithNonExistentStandOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithNonExistentStandOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -586,11 +540,6 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
                 {"stand_id", -55},
             });
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -605,24 +554,18 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessPushEvent(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesApiExceptionsWhenFetchingStandsOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesApiExceptionsWhenFetchingStandsOnPluginEventSync)
         {
-            PushEvent message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
-
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Throw(ApiException("Foo")));
 
-            EXPECT_NO_THROW(this->handler.ProcessPushEvent(message));
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
