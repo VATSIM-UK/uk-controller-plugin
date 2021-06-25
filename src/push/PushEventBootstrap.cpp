@@ -17,15 +17,6 @@ namespace UKControllerPlugin {
         */
         void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin)
         {
-            // Connect to websocket
-            std::string wsHost = container.settingsRepository->HasSetting("websocket_host")
-                                     ? container.settingsRepository->GetSetting("websocket_host")
-                                     : "ukcp.vatsim.uk";
-
-            std::string wsPort = container.settingsRepository->HasSetting("websocket_port")
-                                     ? container.settingsRepository->GetSetting("websocket_port")
-                                     : "6001";
-
             // Set up handler collection
             container.pushEventProcessors.reset(new PushEventProcessorCollection);
 

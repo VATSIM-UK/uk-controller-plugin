@@ -196,6 +196,7 @@
     <ClCompile Include="..\..\test\test\prenote\PrenoteServiceTest.cpp" />
     <ClCompile Include="..\..\test\test\push\InterpretPushEventTest.cpp" />
     <ClCompile Include="..\..\test\test\push\PollingPushEventConnectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\push\PushEventBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\push\PushEventProtocolHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\push\PushEventProcessorCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\push\PushEventProxyConnetionTest.cpp" />

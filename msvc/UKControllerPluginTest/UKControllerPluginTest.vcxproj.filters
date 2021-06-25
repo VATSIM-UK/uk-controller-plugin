@@ -816,6 +816,9 @@
     <ClCompile Include="..\..\test\test\push\PollingPushEventConnectionTest.cpp">
       <Filter>test\push</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\push\PushEventBootstrapTest.cpp">
+      <Filter>test\push</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
