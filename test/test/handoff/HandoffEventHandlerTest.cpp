@@ -31,18 +31,19 @@ namespace UKControllerPluginTest {
         {
             public:
                 HandoffEventHandlerTest()
-                    : handler(handoffs, activeCallsigns), position1("LON_S_CTR", 129.420, "CTR", {}),
-                    position2("LON_SC_CTR", 132.6, "CTR", {}),
-                    tagData(
-                        mockFlightplan,
-                        mockRadarTarget,
-                        1,
-                        EuroScopePlugIn::TAG_DATA_CORRELATED,
-                        itemString,
-                        &euroscopeColourCode,
-                        &tagColour,
-                        &fontSize
-                    )
+                    : position1(1, "LON_S_CTR", 129.420, {}, true, false),
+                      position2(2, "LON_SC_CTR", 132.6, {}, true, false),
+                      tagData(
+                          mockFlightplan,
+                          mockRadarTarget,
+                          1,
+                          EuroScopePlugIn::TAG_DATA_CORRELATED,
+                          itemString,
+                          &euroscopeColourCode,
+                          &tagColour,
+                          &fontSize
+                      ),
+                      handler(handoffs, activeCallsigns)
                 {
                     ON_CALL(this->mockFlightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));

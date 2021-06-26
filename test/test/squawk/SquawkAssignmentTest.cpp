@@ -42,10 +42,10 @@ namespace UKControllerPluginTest {
         {
             public:
                 SquawkAssignmentTest(void)
-                    : kkApp("EGKK_APP", 126.820, "APP", { "EGKK" }),
-                    lonS("LON_S_CTR", 129.420, "CTR", { "EGLL" }),
-                    airfieldOwnership(this->airfields, this->activeCallsigns),
-                    assignment(this->plans, this->pluginLoopback, this->airfieldOwnership, this->activeCallsigns)
+                    : airfieldOwnership(this->airfields, this->activeCallsigns),
+                      kkApp(1, "EGKK_APP", 126.820, {"EGKK"}, true, false),
+                      lonS(2, "LON_S_CTR", 129.420, { "EGLL" }, true, false),
+                      assignment(this->plans, this->pluginLoopback, this->airfieldOwnership, this->activeCallsigns)
                 {
 
                 };
@@ -339,7 +339,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(this->assignment.maxAssignmentAltitude + 1));
 
             this->activeCallsigns.Flush();
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGLL" });
+            ControllerPosition controller(55, "LON_S_CTR", 129.420, {"EGLL"}, true, false);
             this->activeCallsigns.AddUserCallsign(
                 ActiveCallsign(
                     "LON_S_CTR",

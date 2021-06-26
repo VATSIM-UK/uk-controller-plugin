@@ -39,8 +39,8 @@ namespace UKControllerPluginTest {
                     std::chrono::system_clock::now() - std::chrono::hours(1);
                 std::chrono::system_clock::time_point oneHoursTime =
                     std::chrono::system_clock::now() + std::chrono::hours(1);
-                ControllerPosition position = ControllerPosition("EGKK_TWR", 124.220, "TWR", { "EGKK" });
-                ControllerPosition position2 = ControllerPosition("EGKK_APP", 126.820, "APP", { "EGKK" });
+                ControllerPosition position = ControllerPosition(1, "EGKK_TWR", 124.220, {"EGKK"}, true, false);
+                ControllerPosition position2 = ControllerPosition(2, "EGKK_APP", 126.820, {"EGKK"}, true, false);
         };
 
         TEST_F(NotificationTest, ItHasAnId)

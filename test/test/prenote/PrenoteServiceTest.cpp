@@ -76,13 +76,13 @@ namespace UKControllerPluginTest {
 
                     // Add controllers
                     this->controllerUser = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_GND", 121.800, "GND", { "EGKK" })
+                        new ControllerPosition(1, "EGKK_GND", 121.800, {"EGKK"}, true, false)
                     );
                     this->controllerOther = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_APP", 126.820, "APP", { "EGKK" })
+                        new ControllerPosition(2, "EGKK_APP", 126.820, {"EGKK"}, true, false)
                     );
                     this->controllerNoLondon = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("LON_S_CTR", 129.420, "CTR", { "EGKK" })
+                        new ControllerPosition(3, "LON_S_CTR", 129.420, {"EGKK"}, true, false)
                     );
                     this->activeCallsigns.AddUserCallsign(
                         ActiveCallsign(

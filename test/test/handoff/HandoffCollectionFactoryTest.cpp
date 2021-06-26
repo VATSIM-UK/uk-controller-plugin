@@ -22,10 +22,10 @@ namespace UKControllerPluginTest {
                 {
                     std::vector<std::string> handoffs = { "EGKK" };
                     controllers.AddPosition(
-                        std::make_unique<ControllerPosition>("EGKK_APP", 126.820, "APP", handoffs)
+                        std::make_unique<ControllerPosition>(1, "EGKK_APP", 126.820, handoffs, true, false)
                     );
                     controllers.AddPosition(
-                        std::make_unique<ControllerPosition>("LON_S_CTR", 129.420, "CTR", handoffs)
+                        std::make_unique<ControllerPosition>(2, "LON_S_CTR", 129.420, handoffs, true, false)
                     );
                 }
 
