@@ -43,6 +43,10 @@
     <ClCompile Include="..\..\test\test\bootstrap\ExternalsBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\HelperBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\command\CommandHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\components\BrushSwitcherTest.cpp" />
+    <ClCompile Include="..\..\test\test\components\ButtonTest.cpp" />
+    <ClCompile Include="..\..\test\test\components\ClickableAreaTest.cpp" />
+    <ClCompile Include="..\..\test\test\components\TitleBarTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignMonitorTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignTest.cpp" />
@@ -240,7 +244,9 @@
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\TimedEventCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp" />
     <ClCompile Include="..\..\test\test\time\ParseTimeStringsTest.cpp" />
+    <ClCompile Include="..\..\test\test\time\SystemClockTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\CreateWakeMappingsTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryMapperTest.cpp" />

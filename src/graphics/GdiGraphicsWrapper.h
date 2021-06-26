@@ -17,6 +17,7 @@ namespace UKControllerPlugin {
         {
             public:
                 GdiGraphicsWrapper(void);
+                explicit GdiGraphicsWrapper(std::unique_ptr<Gdiplus::Graphics> graphics);
                 ~GdiGraphicsWrapper(void);
                 void DrawRect(const Gdiplus::RectF & area, const Gdiplus::Pen & pen) override;
                 void DrawRect(const Gdiplus::Rect & area, const Gdiplus::Pen & pen) override;
@@ -38,6 +39,13 @@ namespace UKControllerPlugin {
                 void FillRect(const RECT & area, const Gdiplus::Brush & brush) override;
                 void SetAntialias(bool setting) override;
                 void SetDeviceHandle(HDC & handle) override;
+                void Clipped(Gdiplus::Region& clipRegion, std::function<void()> drawFunction) override;
+                void Translated(Gdiplus::REAL x, Gdiplus::REAL y, std::function<void()> drawFunction) override;
+                void Scaled(Gdiplus::REAL x, Gdiplus::REAL y, std::function<void()> drawFunction) override;
+                std::shared_ptr<Gdiplus::Matrix> GetTransform() override;
+                Gdiplus::RectF GetClipBounds() override;
+                void Rotated(Gdiplus::REAL angle, std::function<void()> drawFunction) override;
+                void FillPolygon(Gdiplus::Point* points, const Gdiplus::Brush& brush, int numPoints) override;
 
             private:
                 std::unique_ptr<Gdiplus::Graphics> api;
@@ -50,6 +58,7 @@ namespace UKControllerPlugin {
 
                 // The font to use - raw Windows
                 HFONT font;
+                std::unique_ptr<Gdiplus::Graphics> graphics;
         };
     }  // namespace Windows
 }  // namespace UKControllerPlugin
