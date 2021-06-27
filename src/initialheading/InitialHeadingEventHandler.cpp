@@ -53,7 +53,7 @@ namespace UKControllerPlugin {
             EuroScopeCRadarTargetInterface& radarTarget
         )
         {
-            if (!this->userAutomaticAssignmentsAllowed) {
+            if (!this->userAutomaticAssignmentsAllowed || this->login.GetLoginStatus() != this->login.loggedIn) {
                 return;
             }
 

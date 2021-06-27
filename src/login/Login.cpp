@@ -128,7 +128,6 @@ namespace UKControllerPlugin {
             if (this->HasLoggedIn(previous, current)) {
                 LogInfo("User has connected to VATSIM");
                 this->loginTime = std::chrono::system_clock::now();
-                return;
             } else if (this->HasLoggedOut(previous, current)) {
                 LogInfo("User has disconnected from VATSIM");
                 this->loginTime = this->defaultLoginTime;

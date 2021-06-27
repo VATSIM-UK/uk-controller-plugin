@@ -63,6 +63,7 @@ namespace UKControllerPluginTest {
 
                 virtual void SetUp() {
                     // Pretend we've been logged in a while
+                    login.SetLoginStatus(EuroScopePlugIn::CONNECTION_TYPE_DIRECT);
                     login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::minutes(15));
                     sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 0));
                     sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "CLN3X", 5000, 0));
@@ -130,6 +131,15 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return("0"));
 
             this->handler.UserSettingsUpdated(userSetting);
+
+            StrictMock<MockEuroScopeCFlightPlanInterface> mockFp;
+            StrictMock<MockEuroScopeCRadarTargetInterface> mockRt;
+            EXPECT_NO_THROW(this->handler.FlightPlanEvent(mockFp, mockRt));
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNothingOnProxies)
+        {
+            this->login.SetLoginStatus(EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY);
 
             StrictMock<MockEuroScopeCFlightPlanInterface> mockFp;
             StrictMock<MockEuroScopeCRadarTargetInterface> mockRt;
