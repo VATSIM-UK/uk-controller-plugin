@@ -327,7 +327,7 @@ namespace UKControllerPluginTest {
                         "event",
                         nlohmann::json{
                             {"channel", "foo"},
-                            {"data", nlohmann::json{{"bar", "baz"}}}
+                            {"data", {{"bar", "baz"}}}
                         }
                     }
                 },
@@ -337,7 +337,7 @@ namespace UKControllerPluginTest {
                         "event",
                         nlohmann::json{
                             {"channel", "bish"},
-                            {"data", nlohmann::json{{"bash", "bosh"}}}
+                            {"data", {{"bash", "bosh"}}}
                         }
                     }
                 }
@@ -354,13 +354,13 @@ namespace UKControllerPluginTest {
 
             std::string firstExpectedMessage = nlohmann::json{
                 {"channel", "foo"},
-                {"data", nlohmann::json{{"bar", "baz"}}.dump()}
+                {"data", {{"bar", "baz"}}}
             }.dump();
             EXPECT_EQ(firstExpectedMessage, connection.GetNextMessage());
 
             std::string secondExpectedMessage = nlohmann::json{
                 {"channel", "bish"},
-                {"data", nlohmann::json{{"bash", "bosh"}}.dump()}
+                {"data", {{"bash", "bosh"}}}
             }.dump();
             EXPECT_EQ(secondExpectedMessage, connection.GetNextMessage());
 

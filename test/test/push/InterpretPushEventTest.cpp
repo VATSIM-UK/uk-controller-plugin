@@ -32,7 +32,7 @@ TEST(InterpretPushEventTest, ItHandlesMissingChannel)
 {
     nlohmann::json message;
     message["event"] = "test-event";
-    message["data"] = nlohmann::json({{"test", "lol"}}).dump();
+    message["data"] = {{"test", "lol"}};
 
     PushEvent expectedMessage = {
         "test-event",
@@ -49,7 +49,7 @@ TEST(InterpretPushEventTest, ItHandlesNonStringChannel)
     nlohmann::json message;
     message["event"] = "test-event";
     message["channel"] = 1;
-    message["data"] = nlohmann::json({{"test", "lol"}}).dump();
+    message["data"] = {{"test", "lol"}};
 
     PushEvent expectedMessage = {
         "test-event",
@@ -67,14 +67,7 @@ TEST(InterpretPushEventTest, ItHandlesMissingData)
     message["event"] = "test-event";
     message["channel"] = "test-channel";
 
-    PushEvent expectedMessage = {
-        "test-event",
-        "test-channel",
-        {},
-        message.dump()
-    };
-
-    EXPECT_EQ(expectedMessage, InterpretPushedEvent(message.dump()));
+    EXPECT_EQ(invalidMessage, InterpretPushedEvent(message.dump()));
 }
 
 TEST(InterpretPushEventTest, ItHandlesNonObjectData)
@@ -82,14 +75,7 @@ TEST(InterpretPushEventTest, ItHandlesNonObjectData)
     nlohmann::json message;
     message["event"] = "test-event";
     message["channel"] = "test-channel";
-    message["data"] = nlohmann::json({1, 2, 3}).dump();
+    message["data"] = nlohmann::json::array({1, 2, 3});
 
-    PushEvent expectedMessage = {
-        "test-event",
-        "test-channel",
-        {},
-        message.dump()
-    };
-
-    EXPECT_EQ(expectedMessage, InterpretPushedEvent(message.dump()));
+    EXPECT_EQ(invalidMessage, InterpretPushedEvent(message.dump()));
 }

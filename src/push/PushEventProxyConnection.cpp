@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
                 NULL,
                 NULL,
                 GetModuleHandle(NULL),
-                reinterpret_cast<LPVOID>(this)
+                this
             );
 
             if (this->hiddenWindow == nullptr) {
@@ -37,14 +37,14 @@ namespace UKControllerPlugin {
 
         void PushEventProxyConnection::AddMessageToQueue(std::string message)
         {
-            std::lock_guard<std::mutex> lock(this->messageLock);
+            std::lock_guard lock(this->messageLock);
             this->messages.push(message);
             LogDebug("Recieved proxy push event message: " + message);
         }
 
         std::string PushEventProxyConnection::GetNextMessage()
         {
-            std::lock_guard<std::mutex> lock(this->messageLock);
+            std::lock_guard lock(this->messageLock);
             if (this->messages.empty()) {
                 return this->noMessage;
             }

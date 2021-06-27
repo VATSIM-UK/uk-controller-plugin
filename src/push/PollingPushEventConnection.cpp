@@ -101,28 +101,23 @@ namespace UKControllerPlugin {
                     try {
                         nlohmann::json latestEventsResponse = this->api.GetLatestPluginEvents(this->lastEventId);
 
-                        if (!this->LatestPluginEventsResponseValid(latestEventsResponse)) {
+                        if (!LatestPluginEventsResponseValid(latestEventsResponse)) {
                             LogWarning("Invalid plugin events response from API");
                             this->lastPollTime = std::chrono::system_clock::now();
                             return;
                         }
 
-                        std::lock_guard<std::mutex> lock(this->inboundMessageQueueGuard);
-
-                        // Pusher does a thing where the data is JSON encoded within JSON
-                        // For now, mimic this behaviour.
-                        // TODO(AndyTWF): Once we're happy with this implementation, remove the old and refactor this.
+                        // Push the event to the inbound message queue
+                        std::lock_guard lock(this->inboundMessageQueueGuard);
                         for (
-                            auto eventIterator = latestEventsResponse.begin();
-                            eventIterator != latestEventsResponse.end();
+                            auto eventIterator = latestEventsResponse.cbegin();
+                            eventIterator != latestEventsResponse.cend();
                             ++eventIterator
                         ) {
-                            eventIterator->at("event").at("data") = eventIterator->at("event").at("data").dump();
                             this->inboundMessages.push(eventIterator->at("event").dump());
 
-                            int eventId = eventIterator->at("id").get<int>();
-                            if (eventId > this->lastEventId) {
-                                this->lastEventId = eventId;
+                            if (eventIterator->at("id").get<int>() > this->lastEventId) {
+                                this->lastEventId = eventIterator->at("id").get<int>();
                             }
 
                             LogDebug("Received websocket message: " + eventIterator->dump());

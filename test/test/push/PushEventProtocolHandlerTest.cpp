@@ -76,6 +76,7 @@ namespace UKControllerPluginTest {
             nlohmann::json eventMessage;
             eventMessage["channel"] = "channel1";
             eventMessage["event"] = "test-event";
+            eventMessage["data"] = {{"foo", "bar"}};
 
             EXPECT_CALL(this->pushEvent, GetNextMessage)
                 .Times(2)
