@@ -1052,6 +1052,9 @@
     <ClInclude Include="..\..\src\plugin\ForceUpdate.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\integration\OutboundMessageInterface.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
