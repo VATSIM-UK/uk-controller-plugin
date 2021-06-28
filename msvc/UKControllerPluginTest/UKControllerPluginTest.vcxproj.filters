@@ -828,6 +828,9 @@
     <ClCompile Include="..\..\test\test\plugin\ForceUpdateTest.cpp">
       <Filter>test\plugin</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\integration\OutboundMessageTargetTest.cpp">
+      <Filter>test\integration</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

@@ -1055,6 +1055,12 @@
     <ClInclude Include="..\..\src\integration\OutboundMessageInterface.h">
       <Filter>src\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\integration\OutboundMessageHandler.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\OutboundMessageTarget.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1811,6 +1817,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\plugin\ForceUpdate.cpp">
       <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\OutboundMessageTarget.cpp">
+      <Filter>src\integration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

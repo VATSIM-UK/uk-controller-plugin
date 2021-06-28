@@ -151,7 +151,9 @@
     <ClInclude Include="..\..\src\integration\ExternalMessageHandlerInterface.h" />
     <ClInclude Include="..\..\src\integration\HiddenWindow.h" />
     <ClInclude Include="..\..\src\integration\IntegrationModule.h" />
+    <ClInclude Include="..\..\src\integration\OutboundMessageHandler.h" />
     <ClInclude Include="..\..\src\integration\OutboundMessageInterface.h" />
+    <ClInclude Include="..\..\src\integration\OutboundMessageTarget.h" />
     <ClInclude Include="..\..\src\intention\AirfieldGroup.h" />
     <ClInclude Include="..\..\src\intention\AmsterdamAirfieldGroup.h" />
     <ClInclude Include="..\..\src\intention\BrusselsAirfieldGroup.h" />
@@ -429,6 +431,7 @@
     <ClCompile Include="..\..\src\integration\ExternalMessageEventHandler.cpp" />
     <ClCompile Include="..\..\src\integration\HiddenWindow.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationModule.cpp" />
+    <ClCompile Include="..\..\src\integration\OutboundMessageTarget.cpp" />
     <ClCompile Include="..\..\src\intention\AirfieldGroup.cpp" />
     <ClCompile Include="..\..\src\intention\AmsterdamAirfieldGroup.cpp" />
     <ClCompile Include="..\..\src\intention\BrusselsAirfieldGroup.cpp" />
