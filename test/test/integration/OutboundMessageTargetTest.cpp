@@ -48,4 +48,16 @@ namespace UKControllerPluginTest::Integration {
     {
         EXPECT_FALSE(target.InterestedInMessage("test5"));
     }
+
+    TEST_F(OutboundMessageTargetTest, ItIsEqualForSameIdentifier)
+    {
+        OutboundMessageTarget target2(windowName, 1111, {"abc"});
+        EXPECT_EQ(target, target2);
+    }
+
+    TEST_F(OutboundMessageTargetTest, ItIsNotEqualForSameIdentifier)
+    {
+        OutboundMessageTarget target2(L"notthiswindow", 1111, {"abc"});
+        EXPECT_NE(target, target2);
+    }
 } // namespace UKControllerPluginTest::Integration

@@ -35,4 +35,9 @@ namespace UKControllerPlugin::Integration {
     {
         return this->interestedMessages.find(message) != this->interestedMessages.cend();
     }
+
+    bool OutboundMessageTarget::operator==(const OutboundMessageTarget& compare) const
+    {
+        return this->Identifier() == compare.Identifier();
+    }
 } // namespace UKControllerPlugin::Integration

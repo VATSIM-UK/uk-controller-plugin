@@ -20,6 +20,8 @@ namespace UKControllerPlugin::Integration {
             const std::set<std::string> InterestedMessages() const;
             bool InterestedInMessage(std::string message) const;
 
+            bool operator==(const OutboundMessageTarget& compare) const;
+
         private:
             // The the name of the window that we're looking to send messages to
             const std::wstring windowName;
