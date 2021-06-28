@@ -27,4 +27,4 @@ namespace UKControllerPlugin::Integration {
              */
             virtual std::string GetMessageType() const = 0;
     };
-} // namespace Integration
+} // namespace UKControllerPlugin::Integration
