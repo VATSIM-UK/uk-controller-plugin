@@ -34,13 +34,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_DEBUG_LIBRARYDIR);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\lib;$(CURL_DEBUG_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)..\testing\include;$(SolutionDir)..\third_party\spdlog\include;$(CURL_INCLUDEDIR);$(IncludePath)</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)..\lib;$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -98,7 +98,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>Winmm.lib;Shell32.lib;Ole32.lib;User32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;libssl32MDd.lib;libcrypto32MDd.lib;libcurl_a_debug.lib</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;Shell32.lib;Ole32.lib;User32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;libcurl_a_debug.lib</AdditionalDependencies>
       <AdditionalOptions>"$(SolutionDir)..\obj\UKControllerPluginLoader\$(Configuration)\*.obj" %(AdditionalOptions)</AdditionalOptions>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
@@ -135,7 +135,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>Winmm.lib;Shell32.lib;Ole32.lib;User32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;libssl32MD.lib;libcrypto32MD.lib;libcurl_a.lib</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;Shell32.lib;Ole32.lib;User32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;libcurl_a.lib</AdditionalDependencies>
       <AdditionalOptions>"$(SolutionDir)..\obj\UKControllerPluginLoader\$(Configuration)\*.obj" /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
