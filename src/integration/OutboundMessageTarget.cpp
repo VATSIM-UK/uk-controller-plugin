@@ -1,12 +1,13 @@
 #include "pch/stdafx.h"
 #include "integration/OutboundMessageTarget.h"
+#include "integration/MessageType.h"
 
 namespace UKControllerPlugin::Integration {
 
     OutboundMessageTarget::OutboundMessageTarget(
         std::wstring windowName,
         ULONG_PTR messageDataTypeIdentifier,
-        std::set<std::string> interestedMessages
+        std::set<MessageType> interestedMessages
     ): windowName(std::move(windowName)), messageDataTypeIdentifier(messageDataTypeIdentifier),
        interestedMessages(std::move(interestedMessages))
     {}
@@ -26,12 +27,12 @@ namespace UKControllerPlugin::Integration {
         return this->messageDataTypeIdentifier;
     }
 
-    const std::set<std::string> OutboundMessageTarget::InterestedMessages() const
+    const std::set<MessageType>& OutboundMessageTarget::InterestedMessages() const
     {
         return this->interestedMessages;
     }
 
-    bool OutboundMessageTarget::InterestedInMessage(std::string message) const
+    bool OutboundMessageTarget::InterestedInMessage(const MessageType& message) const
     {
         return this->interestedMessages.find(message) != this->interestedMessages.cend();
     }

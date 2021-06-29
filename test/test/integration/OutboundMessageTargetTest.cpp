@@ -1,8 +1,10 @@
 #include "pch/pch.h"
 #include "integration/OutboundMessageTarget.h"
+#include "integration/MessageType.h"
 
 using testing::Test;
 using UKControllerPlugin::Integration::OutboundMessageTarget;
+using UKControllerPlugin::Integration::MessageType;
 
 namespace UKControllerPluginTest::Integration {
 
@@ -15,7 +17,7 @@ namespace UKControllerPluginTest::Integration {
 
             std::wstring windowName = L"TestWindow";
             ULONG_PTR messageDataTypeIdentifier = 1234;
-            std::set<std::string> interestedMessages = {"test1", "test2", "test3"};
+            std::set<MessageType> interestedMessages = {{"test1", 1}, {"test2", 2}};
             OutboundMessageTarget target;
     };
 
@@ -41,23 +43,23 @@ namespace UKControllerPluginTest::Integration {
 
     TEST_F(OutboundMessageTargetTest, ItIsInterestedInAMessage)
     {
-        EXPECT_TRUE(target.InterestedInMessage("test1"));
+        EXPECT_TRUE(target.InterestedInMessage({"test1", 1}));
     }
 
     TEST_F(OutboundMessageTargetTest, ItIsNotInterestedInAMessage)
     {
-        EXPECT_FALSE(target.InterestedInMessage("test5"));
+        EXPECT_FALSE(target.InterestedInMessage({"test2", 1}));
     }
 
     TEST_F(OutboundMessageTargetTest, ItIsEqualForSameIdentifier)
     {
-        OutboundMessageTarget target2(windowName, 1111, {"abc"});
+        OutboundMessageTarget target2(windowName, 1111, this->interestedMessages);
         EXPECT_EQ(target, target2);
     }
 
     TEST_F(OutboundMessageTargetTest, ItIsNotEqualForSameIdentifier)
     {
-        OutboundMessageTarget target2(L"notthiswindow", 1111, {"abc"});
+        OutboundMessageTarget target2(L"notthiswindow", 1111, this->interestedMessages);
         EXPECT_NE(target, target2);
     }
 } // namespace UKControllerPluginTest::Integration

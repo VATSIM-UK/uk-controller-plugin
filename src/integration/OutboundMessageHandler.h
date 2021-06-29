@@ -2,12 +2,16 @@
 
 namespace UKControllerPlugin::Integration {
 
+    class MessageInterface;
+
     /*
      * Handles outbound messages from the plugin
      * to other sources via a given channel - e.g. window to window.
      */
     class OutboundMessageHandler
     {
-        virtual void Send(std::string message, )
+        public:
+            virtual ~OutboundMessageHandler() = default;
+            virtual void Send(std::shared_ptr<MessageInterface> message) = 0;
     };
 } // namespace UKControllerPlugin::Integration

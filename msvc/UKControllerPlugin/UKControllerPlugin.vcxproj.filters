@@ -1052,13 +1052,16 @@
     <ClInclude Include="..\..\src\plugin\ForceUpdate.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\integration\OutboundMessageInterface.h">
+    <ClInclude Include="..\..\src\integration\MessageInterface.h">
       <Filter>src\integration</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\integration\OutboundMessageHandler.h">
       <Filter>src\integration</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\integration\OutboundMessageTarget.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\MessageType.h">
       <Filter>src\integration</Filter>
     </ClInclude>
   </ItemGroup>

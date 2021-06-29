@@ -2,6 +2,8 @@
 
 namespace UKControllerPlugin::Integration {
 
+    struct MessageType;
+
     /*
      * Stores information about the target of an outbound message.
      */
@@ -11,14 +13,14 @@ namespace UKControllerPlugin::Integration {
             OutboundMessageTarget(
                 std::wstring windowName,
                 ULONG_PTR messageDataTypeIdentifier,
-                std::set<std::string> interestedMessages
+                std::set<MessageType> interestedMessages
             );
 
             const std::wstring& Identifier() const;
             const std::wstring& WindowName() const;
             const ULONG_PTR& MessageDataTypeIdentifier() const;
-            const std::set<std::string> InterestedMessages() const;
-            bool InterestedInMessage(std::string message) const;
+            const std::set<MessageType>& InterestedMessages() const;
+            bool InterestedInMessage(const MessageType& message) const;
 
             bool operator==(const OutboundMessageTarget& compare) const;
 
@@ -30,6 +32,6 @@ namespace UKControllerPlugin::Integration {
             const ULONG_PTR messageDataTypeIdentifier;
 
             // The messages that this target is interested in receiving
-            const std::set<std::string> interestedMessages;
+            const std::set<MessageType> interestedMessages;
     };
 } // namespace UKControllerPlugin::Integration
