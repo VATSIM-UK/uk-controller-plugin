@@ -29,6 +29,7 @@ namespace UKControllerPlugin {
                 static const std::string METHOD_POST;
                 static const std::string METHOD_PUT;
                 static const std::string METHOD_DELETE;
+                static const std::string METHOD_PATCH;
 
                 typedef std::map<std::string, std::string> HttpHeaders;
                 typedef HttpHeaders::const_iterator const_iterator;

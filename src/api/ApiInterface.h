@@ -61,6 +61,21 @@ namespace UKControllerPlugin {
                 virtual nlohmann::json GetUnreadNotifications() const = 0;
                 virtual nlohmann::json SyncPluginEvents() const = 0;
                 virtual nlohmann::json GetLatestPluginEvents(int lastEventId) const = 0;
+                virtual void AcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const = 0;
+                virtual void RejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const = 0;
+                virtual void ApproveDepartureReleaseRequest(
+                    int releaseId,
+                    int controllerPositionId,
+                    std::chrono::system_clock::time_point releasedAt,
+                    int expiresInSeconds
+                ) const = 0;
+                virtual nlohmann::json RequestDepartureRelease(
+                    std::string callsign,
+                    int requestingControllerId,
+                    int targetControllerId,
+                    int expiresInSeconds
+                ) const = 0;
+                virtual void CancelDepartureReleaseRequest(int releaseId) const = 0;
                 virtual void ReadNotification(int id) const = 0;
                 virtual int UpdateCheck(std::string version) const = 0;
                 virtual nlohmann::json GetUpdateDetails() const = 0;
