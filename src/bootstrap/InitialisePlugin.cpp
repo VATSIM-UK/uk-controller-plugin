@@ -199,7 +199,7 @@ namespace UKControllerPlugin {
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         Sid::BootstrapPlugin(*this->container, loader);
         Navaids::BootstrapPlugin(*this->container, loader);
-        Releases::BootstrapPlugin(*this->container, loader);
+        Releases::BootstrapPlugin(*this->container, *this->container->plugin, loader);
         Stands::BootstrapPlugin(*this->container, loader);
         Notifications::BootstrapPlugin(*this->container);
         FlightInformationService::BootstrapPlugin(*this->container);
