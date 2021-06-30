@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "pch/stdafx.h"
 #include "releases/EnrouteReleaseEventHandler.h"
 #include "plugin/PopupMenuItem.h"
