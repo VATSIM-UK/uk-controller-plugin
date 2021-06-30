@@ -40,6 +40,13 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "docs/UserGuide/Changelog/Changelog.md",
+          "changelogTitle": "UK Controller Plugin Changelog"
+        }
+      ],
+      [
         "@semantic-release/github",
         {
           "assets": [
