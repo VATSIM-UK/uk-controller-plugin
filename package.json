@@ -9,6 +9,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
     "cz-conventional-changelog": "^3.3.0"
   },
   "repository": {
@@ -34,7 +35,9 @@
   },
   "release": {
     "repositoryUrl": "https://github.com/VATSIM-UK/uk-controller-plugin",
-    "branches": ["main"],
+    "branches": [
+      "main"
+    ],
     "tagFormat": "${version}",
     "plugins": [
       "@semantic-release/commit-analyzer",
@@ -62,7 +65,7 @@
               "path": "bin/Release/UKControllerPlugin.dll",
               "label": "Loader Binary"
             }
-          ] 
+          ]
         }
       ]
     ]
