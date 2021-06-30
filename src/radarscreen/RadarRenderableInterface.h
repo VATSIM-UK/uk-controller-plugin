@@ -25,6 +25,7 @@ namespace UKControllerPlugin {
         class RadarRenderableInterface
         {
             public:
+                virtual ~RadarRenderableInterface() = default;
 
                 /*
                     Returns true if the object should be rendered.
