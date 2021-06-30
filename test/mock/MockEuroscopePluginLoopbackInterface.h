@@ -2,12 +2,15 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
+#include "euroscope/EuroscopeFlightplanListInterface.h"
 #include "mock/MockFlightplanRadarTargetPair.h"
+#include "mock/MockEuroScopeCControllerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
+        class EuroscopeFlightplanListInterface;
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin
 
@@ -21,6 +24,13 @@ namespace UKControllerPluginTest {
                 {
                     this->allFpRtPairs.push_back(item);
                 }
+
+                void AddAllControllersItem(
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> item)
+                {
+                    this->allControllers.push_back(item);
+                }
+
                 MOCK_METHOD1(AddItemToPopupList, void(const UKControllerPlugin::Plugin::PopupMenuItem item));
                 MOCK_CONST_METHOD0(GetEuroscopeConnectionStatus, int(void));
                 MOCK_CONST_METHOD1(GetDistanceFromUserVisibilityCentre, double(EuroScopePlugIn::CPosition position));
@@ -62,6 +72,12 @@ namespace UKControllerPluginTest {
                     )
                 );
                 MOCK_METHOD3(ShowTextEditPopup, void(RECT, int, std::string));
+                MOCK_METHOD(
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface>,
+                    RegisterFlightplanList,
+                    (std::string),
+                    (override)
+                );
 
                 void ApplyFunctionToAllFlightplans(
                     std::function<
@@ -82,8 +98,27 @@ namespace UKControllerPluginTest {
                     }
                 };
 
+                void ApplyFunctionToAllControllers(
+                    std::function<
+                        void(
+                            std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface>)
+                    > function
+                ) override
+                {
+                    for (
+                        auto it = this->allControllers.cbegin();
+                        it != this->allControllers.cend();
+                        ++it
+                    ) {
+                        function(*it);
+                    }
+                };
+
             private:
-                std::list<UKControllerPluginTest::Euroscope::MockFlightplanRadarTargetPair> allFpRtPairs;
+                std::list<MockFlightplanRadarTargetPair> allFpRtPairs;
+                std::list<
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface>
+                > allControllers;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest

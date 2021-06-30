@@ -1058,6 +1058,12 @@
     <ClInclude Include="..\..\src\plugin\ForceUpdate.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\components\ClickableArea.h">
       <Filter>src\components</Filter>
     </ClInclude>
@@ -1832,6 +1838,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\plugin\ForceUpdate.cpp">
       <Filter>src\plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.cpp">
+      <Filter>src\euroscope</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\components\ClickableArea.cpp">
       <Filter>src\components</Filter>
