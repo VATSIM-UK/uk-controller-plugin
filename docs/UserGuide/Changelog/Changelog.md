@@ -2,6 +2,10 @@
 
 This changelog contains user-friendly details of any updates performed to the UK Controller Plugin.
 
+## Version 3.0.1
+
+- Fix a bug where initial altitudes updates are repeatedly triggered on plugins running on a proxy EuroScope connection.
+
 ## Version 3.0.0
 
 - The UK Controller Plugin is now self-updating.
