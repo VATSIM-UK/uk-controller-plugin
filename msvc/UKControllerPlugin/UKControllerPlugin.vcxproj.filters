@@ -1082,6 +1082,33 @@
     <ClInclude Include="..\..\src\timer\TimerDisplay.h">
       <Filter>src\timer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\releases\CompareDepartureReleases.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\ApproveDepartureReleaseDialog.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseRequest.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseRequestView.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseCountdownColours.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseDecisionList.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseEventHandler.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\RequestDepartureReleaseDialog.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1859,6 +1886,33 @@
     </ClCompile>
     <ClCompile Include="..\..\src\timer\TimerDisplay.cpp">
       <Filter>src\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\ApproveDepartureReleaseDialog.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\CompareDepartureReleases.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseRequest.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseRequestView.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseDecisionList.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseEventHandler.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\RequestDepartureReleaseDialog.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseCountdownColours.cpp">
+      <Filter>src\releases</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
