@@ -34,9 +34,9 @@ namespace UKControllerPluginTest {
 
         TEST(AbstractPrenote, GetControllersReturnsControllerHierarchy)
         {
-            ControllerPosition position1("EGKK_DEL", 121.950, "DEL", { "EGKK" });
-            ControllerPosition position2("EGKK_GND", 121.800, "GND", { "EGKK" });
-            ControllerPosition position3("EGKK_TWR", 124.220, "TWR", { "EGKK" });
+            ControllerPosition position1(1, "EGKK_DEL", 121.950, {"EGKK"}, true, false);
+            ControllerPosition position2(2, "EGKK_GND", 121.800, {"EGKK"}, true, false);
+            ControllerPosition position3(3, "EGKK_TWR", 124.220, {"EGKK"}, true, false);
             std::unique_ptr<ControllerPositionHierarchy> hierarchy = std::make_unique<ControllerPositionHierarchy>();
 
             hierarchy->AddPosition(position1);

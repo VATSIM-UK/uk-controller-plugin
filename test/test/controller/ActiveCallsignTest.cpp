@@ -8,107 +8,104 @@ using UKControllerPlugin::Controller::ControllerPosition;
 namespace UKControllerPluginTest {
     namespace Controller {
 
-        TEST(ActiveCallsign, LessThanOperatorReturnsTrueIfCallsignLess)
+        class ActiveCallsignTest : public testing::Test
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
+            public:
+                ActiveCallsignTest()
+                    : controller(1, "LON_S_CTR", 129.420, {"EGKK"}, true, false),
+                      controller2(2, "LON_C_CTR", 127.100, {"EGSS"}, true, false)
+                { }
+
+                ControllerPosition controller;
+                ControllerPosition controller2;
+        };
+
+        TEST_F(ActiveCallsignTest, LessThanOperatorReturnsTrueIfCallsignLess)
+        {
             ActiveCallsign pos1("LON_S1_CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller);
             EXPECT_TRUE(pos1 < pos2);
         }
 
-        TEST(ActiveCallsign, LessThanOperatorReturnsFalseIfCallsignSame)
+        TEST_F(ActiveCallsignTest, LessThanOperatorReturnsFalseIfCallsignSame)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller);
             EXPECT_FALSE(pos1 < pos2);
         }
 
-        TEST(ActiveCallsign, LessThanOperatorReturnsFalseIfCallsignMore)
+        TEST_F(ActiveCallsignTest, LessThanOperatorReturnsFalseIfCallsignMore)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S__CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller);
             EXPECT_FALSE(pos1 < pos2);
         }
 
-        TEST(ActiveCallsign, GreaterThanOperatorReturnsFalseIfCallsignLess)
+        TEST_F(ActiveCallsignTest, GreaterThanOperatorReturnsFalseIfCallsignLess)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S1_CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller);
             EXPECT_FALSE(pos1 > pos2);
         }
 
-        TEST(ActiveCallsign, GreaterThanOperatorReturnsFalseIfCallsignSame)
+        TEST_F(ActiveCallsignTest, GreaterThanOperatorReturnsFalseIfCallsignSame)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller);
             EXPECT_FALSE(pos1 > pos2);
         }
 
-        TEST(ActiveCallsign, GreaterThanOperatorReturnsTrueIfCallsignMore)
+        TEST_F(ActiveCallsignTest, GreaterThanOperatorReturnsTrueIfCallsignMore)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S__CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller);
             EXPECT_TRUE(pos1 > pos2);
         }
 
-        TEST(ActiveCallsign, EqualityOperatorReturnsTrueIfAllEqual)
+        TEST_F(ActiveCallsignTest, EqualityOperatorReturnsTrueIfAllEqual)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller);
             EXPECT_TRUE(pos1 == pos2);
         }
 
-        TEST(ActiveCallsign, EqualityOperatorReturnsFalseIfCallsignDifferent)
+        TEST_F(ActiveCallsignTest, EqualityOperatorReturnsFalseIfCallsignDifferent)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S__CTR", "Testy McTest", controller);
             EXPECT_FALSE(pos1 == pos2);
         }
 
-        TEST(ActiveCallsign, EqualityOperatorReturnsFalseIfControllerDifferent)
+        TEST_F(ActiveCallsignTest, EqualityOperatorReturnsFalseIfControllerDifferent)
         {
-            ControllerPosition controller1("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ControllerPosition controller2("LON_C_CTR", 127.100, "CTR", { "EGSS" });
-            ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller1);
+            ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller2);
             EXPECT_FALSE(pos1 == pos2);
         }
 
-        TEST(ActiveCallsign, InequalityOperatorReturnsFalseIfAllSame)
+        TEST_F(ActiveCallsignTest, InequalityOperatorReturnsFalseIfAllSame)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller);
             EXPECT_FALSE(pos1 != pos2);
         }
 
-        TEST(ActiveCallsign, InequalityOperatorReturnsTrueIfCallsignNotSame)
+        TEST_F(ActiveCallsignTest, InequalityOperatorReturnsTrueIfCallsignNotSame)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S__CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller);
             EXPECT_TRUE(pos1 != pos2);
         }
 
-        TEST(ActiveCallsign, InequalityOperatorReturnsTrueIfControllerDifferent)
+        TEST_F(ActiveCallsignTest, InequalityOperatorReturnsTrueIfControllerDifferent)
         {
-            ControllerPosition controller1("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ControllerPosition controller2("LON_C_CTR", 127.100, "CTR", { "EGSS" });
-            ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller1);
+            ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller);
             ActiveCallsign pos2("LON_S_CTR", "Testy McTest", controller2);
             EXPECT_TRUE(pos1 != pos2);
         }
 
-        TEST(ActiveCallsign, CopyConstructorCopiesAllItems)
+        TEST_F(ActiveCallsignTest, CopyConstructorCopiesAllItems)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
             ActiveCallsign pos1("LON_S_CTR", "Testy McTest", controller);
             ActiveCallsign pos2 = pos1;
             EXPECT_TRUE(pos1 == pos2);

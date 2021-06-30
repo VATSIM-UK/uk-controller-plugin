@@ -40,6 +40,9 @@
     <Filter Include="duplicate">
       <UniqueIdentifier>{2e91c81e-5b35-4bf3-9430-b2dc6020d6c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="time">
+      <UniqueIdentifier>{e4bbf668-1c32-4538-ac99-c46b8f2d2124}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\utils\pch.h">
@@ -162,6 +165,9 @@
     <ClInclude Include="..\..\src\duplicate\DuplicatePlugin.h">
       <Filter>duplicate</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\time\SystemClock.h">
+      <Filter>time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\utils\pch.cpp">
@@ -244,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\duplicate\DuplicatePlugin.cpp">
       <Filter>duplicate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\time\SystemClock.cpp">
+      <Filter>time</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

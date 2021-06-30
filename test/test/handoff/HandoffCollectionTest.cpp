@@ -17,7 +17,7 @@ namespace UKControllerPluginTest {
             public:
 
                 HandoffCollectionTest()
-                    : position(new ControllerPosition("EGKK_GND", 122.8, "GND", {"EGKK"}))
+                    : position(new ControllerPosition(1, "EGKK_GND", 122.8, {"EGKK"}, true, false))
                 {
                     this->hierarchy1.reset(new ControllerPositionHierarchy);
                     this->hierarchy1->AddPosition(*this->position);

@@ -57,7 +57,9 @@ namespace UKControllerPluginTest {
                 InitialHeadingEventHandlerTest()
                     :  owners(airfields, callsigns),
                     login(plugin, ControllerStatusEventHandlerCollection()),
-                    handler(sids, callsigns, owners, login, deferredEvents, plugin, flightplans)
+                    handler(sids, callsigns, owners, login, deferredEvents, plugin, flightplans),
+                    controller(1, "LON_S_CTR", 129.420, {"EGKK"}, true, false),
+                    userCallsign("LON_S_CTR", "Test", controller)
                 {
 
                 }
@@ -73,6 +75,9 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return("BAW123"));
                 }
 
+
+                ControllerPosition controller;
+                ActiveCallsign userCallsign;
                 AirfieldCollection airfields;
                 DeferredEventHandler deferredEvents;
                 NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightPlan;
@@ -360,13 +365,6 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfAirfieldIsNotOwnedByUser)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ActiveCallsign userCallsign(
-                "LON_S_CTR",
-                "Test",
-                controller
-            );
-
             callsigns.AddUserCallsign(userCallsign);
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
@@ -402,12 +400,6 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfSidNotFound)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ActiveCallsign userCallsign(
-                "LON_S_CTR",
-                "Test",
-                controller
-            );
             callsigns.AddUserCallsign(userCallsign);
 
             airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "LON_S_CTR" })));
@@ -450,12 +442,6 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesNotAssignIfAlreadyAssignedOnSameSid)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ActiveCallsign userCallsign(
-                "LON_S_CTR",
-                "Test",
-                controller
-            );
             callsigns.AddUserCallsign(userCallsign);
 
             airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "LON_S_CTR" })));
@@ -506,12 +492,6 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventAssignsIfSidFound)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ActiveCallsign userCallsign(
-                "LON_S_CTR",
-                "Test",
-                controller
-            );
             callsigns.AddUserCallsign(userCallsign);
 
             airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "LON_S_CTR" })));
@@ -561,12 +541,6 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventAcceptsDeprecatedSids)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ActiveCallsign userCallsign(
-                "LON_S_CTR",
-                "Test",
-                controller
-            );
             callsigns.AddUserCallsign(userCallsign);
 
             airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "LON_S_CTR" })));
@@ -616,12 +590,6 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesAssignIfDifferentSid)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ActiveCallsign userCallsign(
-                "LON_S_CTR",
-                "Test",
-                controller
-            );
             callsigns.AddUserCallsign(userCallsign);
 
             airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "LON_S_CTR" })));
@@ -679,12 +647,6 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, FlightPlanEventDoesAssignAfterDisconnect)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ActiveCallsign userCallsign(
-                "LON_S_CTR",
-                "Test",
-                controller
-            );
             callsigns.AddUserCallsign(userCallsign);
 
             airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "LON_S_CTR" })));
@@ -855,12 +817,6 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, NewActiveCallsignAssignsIfUserCallsign)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ActiveCallsign userCallsign(
-                "LON_S_CTR",
-                "Test",
-                controller
-            );
             callsigns.AddUserCallsign(userCallsign);
 
             airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "LON_S_CTR" })));
@@ -923,12 +879,6 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, NewActiveCallsignDoesNotAssignIfNotUserCallsign)
         {
-            ControllerPosition controller("LON_S_CTR", 129.420, "CTR", { "EGKK" });
-            ActiveCallsign userCallsign(
-                "LON_S_CTR",
-                "Test",
-                controller
-            );
             callsigns.AddCallsign(userCallsign);
             airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", { "LON_S_CTR" })));
             owners.RefreshOwner("EGKK");

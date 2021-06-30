@@ -30,6 +30,11 @@
     <ClInclude Include="..\..\src\bootstrap\PostInit.h" />
     <ClInclude Include="..\..\src\command\CommandHandlerCollection.h" />
     <ClInclude Include="..\..\src\command\CommandHandlerInterface.h" />
+    <ClInclude Include="..\..\src\components\BrushSwitcher.h" />
+    <ClInclude Include="..\..\src\components\Button.h" />
+    <ClInclude Include="..\..\src\components\ClickableArea.h" />
+    <ClInclude Include="..\..\src\components\StandardButtons.h" />
+    <ClInclude Include="..\..\src\components\TitleBar.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsign.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignCollection.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignEventHandlerInterface.h" />
@@ -294,6 +299,7 @@
     <ClInclude Include="..\..\src\timedevent\DeferredEvent.h" />
     <ClInclude Include="..\..\src\timedevent\DeferredEventBootstrap.h" />
     <ClInclude Include="..\..\src\timedevent\TimedEventCollection.h" />
+    <ClInclude Include="..\..\src\timer\TimerDisplay.h" />
     <ClInclude Include="..\..\src\time\ParseTimeStrings.h" />
     <ClInclude Include="..\..\src\wake\CacheItem.h" />
     <ClInclude Include="..\..\src\wake\CreateWakeMappings.h" />
@@ -336,6 +342,11 @@
     <ClCompile Include="..\..\src\bootstrap\InitialisePlugin.cpp" />
     <ClCompile Include="..\..\src\bootstrap\PostInit.cpp" />
     <ClCompile Include="..\..\src\command\CommandHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\components\BrushSwitcher.cpp" />
+    <ClCompile Include="..\..\src\components\Button.cpp" />
+    <ClCompile Include="..\..\src\components\ClickableArea.cpp" />
+    <ClCompile Include="..\..\src\components\StandardButtons.cpp" />
+    <ClCompile Include="..\..\src\components\TitleBar.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsign.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsignCollection.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsignMonitor.cpp" />
@@ -554,6 +565,7 @@
     <ClCompile Include="..\..\src\task\TaskRunner.cpp" />
     <ClCompile Include="..\..\src\timedevent\DeferredEventBootstrap.cpp" />
     <ClCompile Include="..\..\src\timedevent\TimedEventCollection.cpp" />
+    <ClCompile Include="..\..\src\timer\TimerDisplay.cpp" />
     <ClCompile Include="..\..\src\time\ParseTimeStrings.cpp" />
     <ClCompile Include="..\..\src\wake\CreateWakeMappings.cpp" />
     <ClCompile Include="..\..\src\wake\WakeCategoryEventHandler.cpp" />

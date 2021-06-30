@@ -37,10 +37,10 @@ namespace UKControllerPluginTest {
                 {
                     this->collection = std::make_unique<ControllerPositionCollection>();
                     this->collection->AddPosition(std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_GND", 121.800, "GND", { "EGKK" }))
+                            new ControllerPosition(1, "EGKK_GND", 121.800, {"EGKK"}, true, false))
                     );
                     this->collection->AddPosition(std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_TWR", 124.220, "TWR", { "EGKK" }))
+                            new ControllerPosition(2, "EGKK_TWR", 124.220, {"EGKK"}, true, false))
                     );
                     this->hierarchyFactory = std::make_unique<ControllerPositionHierarchyFactory>(
                         *this->collection

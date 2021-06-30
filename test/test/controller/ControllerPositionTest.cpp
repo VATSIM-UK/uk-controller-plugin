@@ -6,89 +6,118 @@ using UKControllerPlugin::Controller::ControllerPosition;
 namespace UKControllerPluginTest {
     namespace Controller {
 
-        TEST(ControllerPosition, GetCallsignReturnsCallsign)
+        class ControllerPositionTest : public testing::Test
         {
-            ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD, EGFF"});
+            public:
+
+                ControllerPositionTest()
+                    : controller(1, "EGFF_APP", 125.850, std::vector<std::string>{"EGGD", "EGFF"}, true, false)
+                { }
+
+                ControllerPosition controller;
+        };
+
+        TEST_F(ControllerPositionTest, GetIdReturnsId)
+        {
+            EXPECT_EQ(1, controller.GetId());
+        }
+
+        TEST_F(ControllerPositionTest, GetCallsignReturnsCallsign)
+        {
             EXPECT_EQ(0, controller.GetCallsign().compare("EGFF_APP"));
         }
 
-        TEST(ControllerPosition, GetFrequencyReturnsFrequency)
+        TEST_F(ControllerPositionTest, GetFrequencyReturnsFrequency)
         {
-            ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD, EGFF"});
             EXPECT_EQ(125.850, controller.GetFrequency());
         }
 
-        TEST(ControllerPosition, GetTypeReturnsType)
+        TEST_F(ControllerPositionTest, GetTypeReturnsType)
         {
-            ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD, EGFF"});
             EXPECT_EQ(0, controller.GetType().compare("APP"));
         }
 
-        TEST(ControllerPosition, GetTopdownReturnsTopdown)
+        TEST_F(ControllerPositionTest, GetTopdownReturnsTopdown)
         {
-            ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            std::vector<std::string> expected = { "EGGD", "EGFF" };
+            std::vector<std::string> expected = {"EGGD", "EGFF"};
             EXPECT_EQ(expected, controller.GetTopdown());
         }
 
-        TEST(ControllerPosition, ComparisonOperatorReturnsTrueIfSame)
+        TEST_F(ControllerPositionTest, RequestsDepartureReleasesReturnsWhetherItCan)
         {
-            ControllerPosition controller1("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            ControllerPosition controller2("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            EXPECT_TRUE(controller1 == controller2);
+            EXPECT_TRUE(controller.RequestsDepartureReleases());
         }
 
-        TEST(ControllerPosition, ComparisonOperatorReturnsTrueIfSameFrequencyDelta)
+        TEST_F(ControllerPositionTest, ReceivesDepartureReleasesReturnsWhetherItCan)
         {
-            ControllerPosition controller1("EGFF_APP", 125.8502, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            ControllerPosition controller2("EGFF_APP", 125.8501, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            EXPECT_TRUE(controller1 == controller2);
+            EXPECT_FALSE(controller.ReceivesDepartureReleases());
         }
 
-        TEST(ControllerPosition, ComparisonOperatorReturnsFalseIfDifferentCallsign)
+        TEST_F(ControllerPositionTest, ComparisonOperatorReturnsTrueIfSame)
         {
-            ControllerPosition controller1("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            ControllerPosition controller2("EGFF_R_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            EXPECT_FALSE(controller1 == controller2);
+            ControllerPosition controller2(
+                1,
+                "EGFF_APP",
+                125.850,
+                std::vector<std::string>{"EGGD", "EGFF"},
+                true,
+                false
+            );
+            EXPECT_TRUE(controller == controller2);
         }
 
-        TEST(ControllerPosition, ComparisonOperatorReturnsFalseIfDifferentFrequency)
+        TEST_F(ControllerPositionTest, ComparisonOperatorReturnsTrueIfSameFrequencyDelta)
         {
-            ControllerPosition controller1("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            ControllerPosition controller2("EGFF_APP", 125.650, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            EXPECT_FALSE(controller1 == controller2);
+            ControllerPosition controller2(
+                1,
+                "EGFF_APP",
+                125.8501,
+                std::vector<std::string>{"EGGD", "EGFF"},
+                true,
+                false
+            );
+            EXPECT_TRUE(controller == controller2);
         }
 
-        TEST(ControllerPosition, ComparisonOperatorReturnsFalseIfDifferentBoundary)
+        TEST_F(ControllerPositionTest, ComparisonOperatorReturnsFalseIfDifferentCallsign)
         {
-            ControllerPosition controller1("EGFF_APP", 125.851, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            ControllerPosition controller2("EGFF_APP", 125.650, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            EXPECT_FALSE(controller1 == controller2);
+            ControllerPosition controller2(
+                1,
+                "EGFF_R_APP",
+                125.850,
+                std::vector<std::string>{"EGGD", "EGFF"},
+                true,
+                false
+            );
+            EXPECT_FALSE(controller == controller2);
         }
 
-        TEST(ControllerPosition, ComparisonOperatorReturnsFalseIfDifferentType)
+        TEST_F(ControllerPositionTest, ComparisonOperatorReturnsFalseIfDifferentFrequency)
         {
-            ControllerPosition controller1("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
-            ControllerPosition controller2("EGFF_APP", 125.850, "CTR", std::vector<std::string> {"EGGD", "EGFF"});
-            EXPECT_FALSE(controller1 == controller2);
+            ControllerPosition controller2(
+                1,
+                "EGFF_APP",
+                125.650,
+                std::vector<std::string>{"EGGD", "EGFF"},
+                true,
+                false
+            );
+            EXPECT_FALSE(controller == controller2);
         }
 
-        TEST(ControllerPosition, GetUnitReturnsTheAirfieldOrAreaUnit)
+        TEST_F(ControllerPositionTest, GetUnitReturnsTheAirfieldOrAreaUnit)
         {
-            ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
             EXPECT_TRUE("EGFF" == controller.GetUnit());
         }
 
-        TEST(ControllerPosition, ItReturnsTrueOnTopdownAirfield)
+        TEST_F(ControllerPositionTest, ItReturnsTrueOnTopdownAirfield)
         {
-            ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
             EXPECT_TRUE(controller.HasTopdownAirfield("EGFF"));
             EXPECT_TRUE(controller.HasTopdownAirfield("EGGD"));
         }
 
-        TEST(ControllerPosition, ItReturnsFalseOnNoTopdownAirfield)
+        TEST_F(ControllerPositionTest, ItReturnsFalseOnNoTopdownAirfield)
         {
-            ControllerPosition controller("EGFF_APP", 125.850, "APP", std::vector<std::string> {"EGGD", "EGFF"});
             EXPECT_FALSE(controller.HasTopdownAirfield("EGLL"));
         }
     }  // namespace Controller
