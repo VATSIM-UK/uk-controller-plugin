@@ -1,5 +1,5 @@
 #pragma once
-#include "websocket/WebsocketEventProcessorInterface.h"
+#include "push/PushEventProcessorInterface.h"
 #include "regional/RegionalPressure.h"
 
 // Forward declarations
@@ -17,10 +17,11 @@ namespace UKControllerPlugin {
         /*
             Class for storing of regional pressure settingsd
         */
-        class RegionalPressureManager : public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
+        class RegionalPressureManager : public Push::PushEventProcessorInterface
         {
             public:
-                RegionalPressureManager(void);
+                RegionalPressureManager();
+                ~RegionalPressureManager() override = default;
                 explicit RegionalPressureManager(std::map<std::string, std::string> keyMap);
                 void AcknowledgePressure(std::string key);
                 void AddRegionalPressure(std::string key, std::string name, unsigned int pressure);
@@ -30,11 +31,9 @@ namespace UKControllerPlugin {
                 std::string GetNameFromKey(std::string key) const;
                 void SetPressure(std::string key, unsigned int pressure);
                 void UpdateAllPressures(nlohmann::json pressureData);
-
-                // Inherited via WebsocketEventProcessorInterface
-                void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage & message) override;
-                std::set<UKControllerPlugin::Websocket::WebsocketSubscription> GetSubscriptions(void) const override;
-
+                void ProcessPushEvent(const Push::PushEvent& message) override;
+                std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
+                void PluginEventsSynced() override;
                 // What to return if an RPS is invalid
                 const UKControllerPlugin::Regional::RegionalPressure invalidPressure = {};
 

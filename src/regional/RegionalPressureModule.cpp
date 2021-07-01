@@ -9,7 +9,7 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "task/TaskRunnerInterface.h"
 #include "euroscope/CallbackFunction.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "api/ApiException.h"
 #include "regional/RegionalPressureConfigurationDialog.h"
 #include "regional/RegionalPressureManagerFactory.h"
@@ -21,7 +21,7 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::Euroscope::CallbackFunction;
-using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
+using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Dialog::DialogManager;
@@ -36,12 +36,12 @@ namespace UKControllerPlugin {
             std::shared_ptr<RegionalPressureManager> & regional,
             TaskRunnerInterface & taskManager,
             ApiInterface & api,
-            WebsocketEventProcessorCollection & websocketProcessors,
+            PushEventProcessorCollection& pushEventProcessors,
             DialogManager & dialogManager,
             UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
         ) {
             regional = UKControllerPlugin::Regional::Create(dependency);
-            websocketProcessors.AddProcessor(regional);
+            pushEventProcessors.AddProcessor(regional);
 
             // Create the dialog for configuration
             std::shared_ptr<RegionalPressureConfigurationDialog> dialog =

@@ -1,13 +1,13 @@
 #include "pch/pch.h"
 #include "minstack/MinStackManager.h"
 #include "minstack/MinStackLevel.h"
-#include "websocket/WebsocketSubscription.h"
-#include "websocket/WebsocketMessage.h"
+#include "push/PushEventSubscription.h"
+#include "push/PushEvent.h"
 
 using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::MinStack::MinStackLevel;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEventSubscription;
+using UKControllerPlugin::Push::PushEvent;
 using ::testing::StrictMock;
 using ::testing::Return;
 using ::testing::Test;
@@ -65,15 +65,15 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(minStack.IsAcknowledged());
         }
 
-        TEST_F(MinStackManagerTest, ItHasWebsocketSubscriptions)
+        TEST_F(MinStackManagerTest, ItHasPushEventSubscriptions)
         {
-            std::set<WebsocketSubscription> expected = {
+            std::set<PushEventSubscription> expected = {
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-minstack-updates"
                 }
             };
-            EXPECT_EQ(expected, this->msl.GetSubscriptions());
+            EXPECT_EQ(expected, this->msl.GetPushEventSubscriptions());
         }
 
         TEST_F(MinStackManagerTest, ItAllowsManualMinStackUpdates)
@@ -94,15 +94,14 @@ namespace UKControllerPluginTest {
                 {"MTMA", 6000}
             };
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\MinStacksUpdatedEvent",
                 "private-minstack-updates",
                 mslData,
-                "",
-                false
+                ""
             };
 
-            this->msl.ProcessWebsocketMessage(message);
+            this->msl.ProcessPushEvent(message);
             EXPECT_EQ(7000, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")).msl);
             EXPECT_EQ(6000, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")).msl);
         }
@@ -117,15 +116,14 @@ namespace UKControllerPluginTest {
                 {"MTMA", nullptr}
             };
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\MinStacksUpdatedEvent",
                 "private-minstack-updates",
                 mslData,
-                "",
-                false
+                ""
             };
 
-            this->msl.ProcessWebsocketMessage(message);
+            this->msl.ProcessPushEvent(message);
             EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")));
             EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")));
         }

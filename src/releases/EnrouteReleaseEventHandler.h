@@ -1,5 +1,5 @@
 #pragma once
-#include "websocket/WebsocketEventProcessorInterface.h"
+#include "push/PushEventProcessorInterface.h"
 #include "api/ApiInterface.h"
 #include "releases/EnrouteReleaseType.h"
 #include "releases/CompareEnrouteReleaseTypes.h"
@@ -16,10 +16,10 @@ namespace UKControllerPlugin {
         /*
             Handles events around enroute releases
         */
-        class EnrouteReleaseEventHandler: public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface,
-            public UKControllerPlugin::Tag::TagItemInterface,
-            public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
-            public UKControllerPlugin::Controller::HandoffEventHandlerInterface
+        class EnrouteReleaseEventHandler : public Push::PushEventProcessorInterface,
+                                           public UKControllerPlugin::Tag::TagItemInterface,
+                                           public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
+                                           public UKControllerPlugin::Controller::HandoffEventHandlerInterface
         {
             public:
                 EnrouteReleaseEventHandler(
@@ -33,6 +33,7 @@ namespace UKControllerPlugin {
                     const int releaseTypeSelectedCallbackId,
                     const int editReleasePointCallbackId
                 );
+                ~EnrouteReleaseEventHandler() override = default;
                 void AddIncomingRelease(
                     const std::string callsign,
                     UKControllerPlugin::Releases::EnrouteRelease release
@@ -68,8 +69,8 @@ namespace UKControllerPlugin {
                 void EditReleasePoint(int functionId, std::string context, RECT);
 
                 // Inherited via WebsocketEventProcessorInterface
-                void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message) override;
-                std::set<UKControllerPlugin::Websocket::WebsocketSubscription> GetSubscriptions(void) const override;
+                void ProcessPushEvent(const Push::PushEvent& message) override;
+                std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;
@@ -84,6 +85,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& transferringController,
                     UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& targetController
                 ) override;
+                void PluginEventsSynced() override;
 
                 // Colours
                 const COLORREF outgoingItemColour = RGB(255, 255, 0);

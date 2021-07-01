@@ -10,7 +10,7 @@
 #include "graphics/GdiplusBrushes.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "curl/CurlRequest.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "mock/MockDialogProvider.h"
 #include "dialog/DialogProviderInterface.h"
 #include "mock/MockDependencyLoader.h"
@@ -26,7 +26,7 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Curl::CurlRequest;
-using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
+using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
@@ -50,7 +50,7 @@ namespace UKControllerPluginTest {
                 // For the plugin tests
                 NiceMock<MockApiInterface> mockApi;
                 MockTaskRunnerInterface mockRunner;
-                WebsocketEventProcessorCollection websockets;
+                PushEventProcessorCollection pushEvents;
                 std::shared_ptr<RegionalPressureManager> manager;
 
                 // For the radar screen tests
@@ -80,7 +80,7 @@ namespace UKControllerPluginTest {
                 this->manager,
                 this->mockRunner,
                 this->mockApi,
-                this->websockets,
+                this->pushEvents,
                 this->dialogManager,
                 dependency
             );
@@ -102,11 +102,11 @@ namespace UKControllerPluginTest {
                 this->manager,
                 this->mockRunner,
                 this->mockApi,
-                this->websockets,
+                this->pushEvents,
                 this->dialogManager,
                 dependency
             );
-            EXPECT_EQ(1, websockets.CountProcessorsForChannel("private-rps-updates"));
+            EXPECT_EQ(1, pushEvents.CountProcessorsForChannel("private-rps-updates"));
         }
 
         TEST_F(RegionalPressureModuleTest, BootstrapPluginRegistersDialog)
@@ -124,7 +124,7 @@ namespace UKControllerPluginTest {
                 this->manager,
                 this->mockRunner,
                 this->mockApi,
-                this->websockets,
+                this->pushEvents,
                 this->dialogManager,
                 dependency
             );

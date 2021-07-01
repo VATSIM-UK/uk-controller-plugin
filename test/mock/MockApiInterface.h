@@ -25,7 +25,6 @@ namespace UKControllerPluginTest {
                         std::string
                     )
                 );
-                MOCK_CONST_METHOD2(AuthoriseWebsocketChannel, std::string(std::string socketId, std::string channel));
                 MOCK_CONST_METHOD0(CheckApiAuthorisation, bool(void));
                 MOCK_CONST_METHOD1(DeleteSquawkAssignment, void(std::string));
                 MOCK_CONST_METHOD0(GetDependencyList, nlohmann::json(void));
