@@ -215,10 +215,16 @@
     <ClCompile Include="..\..\test\test\regional\RegionalPressureModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\CompareDepartureReleasesTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\CompareEnrouteReleaseTypesTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseCountdownColoursTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseDecisionListTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseRequestTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\EnrouteReleaseEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\EnrouteReleaseTypesSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\ReleaseModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseDecisionListTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp" />

@@ -820,6 +820,24 @@
     <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp">
       <Filter>test\timer</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseDecisionListTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseEventHandlerTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseRequestTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseDecisionListTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\CompareDepartureReleasesTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseCountdownColoursTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\test\test\push\PushEventProtocolHandlerTest.cpp">
       <Filter>test\push</Filter>
     </ClCompile>
