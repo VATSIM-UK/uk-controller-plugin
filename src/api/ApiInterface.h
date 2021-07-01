@@ -23,7 +23,6 @@ namespace UKControllerPlugin {
                     std::string unit,
                     std::string flightRules
                 ) const = 0;
-                virtual std::string AuthoriseWebsocketChannel(std::string socketId, std::string channel) const = 0;
                 virtual bool CheckApiAuthorisation(void) const = 0;
                 virtual void DeleteSquawkAssignment(std::string callsign) const = 0;
                 virtual nlohmann::json GetDependencyList(void) const = 0;

@@ -16,6 +16,9 @@
     "type": "git",
     "url": "git+https://github.com/VATSIM-UK/uk-controller-plugin.git"
   },
+  "scripts": {
+    "commit": "cz"
+  },
   "keywords": [
     "vatsim",
     "vatsim-uk",

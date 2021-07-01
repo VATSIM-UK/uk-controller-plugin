@@ -10,6 +10,7 @@ namespace UKControllerPlugin {
         class AbstractTimedEvent
         {
             public:
+                virtual ~AbstractTimedEvent() = default;
                 virtual void TimedEventTrigger(void) = 0;
         };
     }  // namespace TimedEvent

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="resource">
@@ -94,8 +94,8 @@
     <Filter Include="src\hold">
       <UniqueIdentifier>{93c29766-c3d5-47e0-8cfd-5d71d115cd0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\websocket">
-      <UniqueIdentifier>{a390fff4-5510-4260-9be4-51f0438acefa}</UniqueIdentifier>
+    <Filter Include="src\push">
+      <UniqueIdentifier>{ae5b89fa-f548-48d4-9a2a-f651295aeeb4}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\sectorfile">
       <UniqueIdentifier>{61c300dc-1834-4381-b018-2c7380756930}</UniqueIdentifier>
@@ -678,9 +678,6 @@
     <ClInclude Include="..\..\src\metar\PressureMonitorBootstrap.h">
       <Filter>src\metar</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\countdown\TimerConfigurationManager.h">
       <Filter>src\countdown</Filter>
     </ClInclude>
@@ -698,42 +695,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\radarscreen\PositionResetCommand.h">
       <Filter>src\radarscreen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketConnection.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PusherWebsocketProtocolHandler.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketMessage.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorInterface.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorCollection.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PusherPingEventHandler.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketBootstrap.h">
-      <Filter>src\websocket</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\minstack\MinStackLevel.h">
       <Filter>src\minstack</Filter>
@@ -1020,18 +981,6 @@
     <ClInclude Include="..\..\src\oceanic\OceanicClearanceDialog.h">
       <Filter>src\oceanic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketProxyWindow.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketProxyConnection.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\WebsocketProxyHandler.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\websocket\PollingWebsocketConnection.h">
-      <Filter>src\websocket</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\sid\StandardInstrumentDeparture.h">
       <Filter>src\sid</Filter>
     </ClInclude>
@@ -1081,6 +1030,42 @@
     </ClInclude>
     <ClInclude Include="..\..\src\timer\TimerDisplay.h">
       <Filter>src\timer</Filter>
+    </ClInclude>
+        <ClInclude Include="..\..\src\push\PushEventProcessorCollection.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PushEventProcessorInterface.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PushEvent.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PushEventProxyConnection.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PushEventProxyHandler.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PushEventProxyWindow.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PushEventSubscription.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\InterpretPushEvent.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PollingPushEventConnection.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PushEventProtocolHandler.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PushEventBootstrap.h">
+      <Filter>src\push</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\push\PushEventConnectionInterface.h">
+      <Filter>src\push</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1542,36 +1527,6 @@
     <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp">
       <Filter>src\radarscreen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PusherWebsocketProtocolHandler.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PusherPingEventHandler.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\minstack\MinStackRendererConfiguration.cpp">
       <Filter>src\minstack</Filter>
     </ClCompile>
@@ -1803,18 +1758,6 @@
     <ClCompile Include="..\..\src\oceanic\OceanicClearanceDialog.cpp">
       <Filter>src\oceanic</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\websocket\WebsocketProxyWindow.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\WebsocketProxyConnection.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\WebsocketProxyHandler.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\websocket\PollingWebsocketConnection.cpp">
-      <Filter>src\websocket</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\sid\StandardInstrumentDeparture.cpp">
       <Filter>src\sid</Filter>
     </ClCompile>
@@ -1859,6 +1802,33 @@
     </ClCompile>
     <ClCompile Include="..\..\src\timer\TimerDisplay.cpp">
       <Filter>src\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\push\PushEventProxyConnection.cpp">
+      <Filter>src\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\push\PushEventProxyHandler.cpp">
+      <Filter>src\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\push\PushEventProxyWindow.cpp">
+      <Filter>src\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\push\PushEventSubscription.cpp">
+      <Filter>src\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\push\InterpretPushEvent.cpp">
+      <Filter>src\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\push\PollingPushEventConnection.cpp">
+      <Filter>src\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\push\PushEventProtocolHandler.cpp">
+      <Filter>src\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\push\PushEventBootstrap.cpp">
+      <Filter>src\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\push\PushEventProcessorCollection.cpp">
+      <Filter>src\push</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

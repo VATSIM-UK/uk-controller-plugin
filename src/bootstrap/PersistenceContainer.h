@@ -40,11 +40,9 @@
 #include "dialog/DialogManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "setting/SettingRepository.h"
-#include "websocket/WebsocketConnection.h"
 #include "countdown/TimerConfigurationManager.h"
 #include "datablock/DisplayTime.h"
-#include "websocket/WebsocketConnectionInterface.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "sectorfile/RunwayCollection.h"
 #include "handoff/HandoffCollection.h"
@@ -67,7 +65,6 @@ namespace UKControllerPlugin {
             // The useful things
             std::unique_ptr<UKControllerPlugin::Curl::CurlInterface> curl;
             std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
-            std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnection> websocketConnection;
 
             // The helpers and collections
             std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
@@ -132,9 +129,8 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
             std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
 
-            // Websocket
-            std::shared_ptr<Websocket::WebsocketConnectionInterface> websocket;
-            std::shared_ptr<UKControllerPlugin::Websocket::WebsocketEventProcessorCollection> websocketProcessors;
+            // Push events
+            std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;
 
         } PersistenceContainer;
     }  // namespace Bootstrap

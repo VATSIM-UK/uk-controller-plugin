@@ -45,7 +45,7 @@
 #include "timedevent/DeferredEventBootstrap.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
-#include "websocket/WebsocketBootstrap.h"
+#include "push/PushEventBootstrap.h"
 #include "oceanic/OceanicModule.h"
 #include "sid/SidModule.h"
 #include "initialheading/InitialHeadingModule.h"
@@ -169,7 +169,7 @@ namespace UKControllerPlugin {
 
         // API + Websocket
         HelperBootstrap::Bootstrap(*this->container);
-        Websocket::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
+        Push::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
         // Datetime
         Datablock::BootstrapPlugin(*this->container);
@@ -228,14 +228,14 @@ namespace UKControllerPlugin {
             this->container->minStack,
             *this->container->taskRunner,
             *this->container->api,
-            *this->container->websocketProcessors,
+            *this->container->pushEventProcessors,
             *this->container->dialogManager
         );
         RegionalPressureModule::BootstrapPlugin(
             this->container->regionalPressureManager,
             *this->container->taskRunner,
             *this->container->api,
-            *this->container->websocketProcessors,
+            *this->container->pushEventProcessors,
             *this->container->dialogManager,
             loader
         );

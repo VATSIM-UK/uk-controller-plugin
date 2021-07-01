@@ -75,24 +75,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Build a request to authorise a websocket connection to a channel.
-        */
-        CurlRequest ApiRequestBuilder::BuildWebsocketChannelAuthRequest(
-            std::string socketId,
-            std::string channel
-        ) const {
-            CurlRequest request(apiDomain + "/broadcasting/auth", CurlRequest::METHOD_POST);
-
-            nlohmann::json body;
-            body["socket_id"] = socketId;
-            body["channel_name"] = channel;
-
-            request.SetBody(body.dump());
-
-            return this->AddCommonHeaders(request);
-        }
-
-        /*
             Builds a request for getting minimum stack levels.
         */
         CurlRequest ApiRequestBuilder::BuildMinStackLevelRequest(void) const
