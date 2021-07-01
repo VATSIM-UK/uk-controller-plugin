@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
 
                 // The valid times for releases
                 const std::map<int, std::wstring> releaseValidForTimes = {
-                    {-1, L"Never"},
+                    {-1, L"Indefinite"},
                     {60, L"1 Minute"},
                     {90, L"90 Seconds"},
                     {120, L"2 Minutes"},
