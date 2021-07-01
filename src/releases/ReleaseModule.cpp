@@ -124,7 +124,7 @@ namespace UKControllerPlugin {
             container.pluginFunctionHandlers->RegisterFunctionCall(editReleaseTypeCallback);
 
             // Add to events
-            container.websocketProcessors->AddProcessor(handler);
+            container.pushEventProcessors->AddProcessor(handler);
             container.tagHandler->RegisterTagItem(handler->enrouteReleaseTypeTagItemId, handler);
             container.tagHandler->RegisterTagItem(handler->enrouteReleasePointTagItemId, handler);
             container.tagHandler->RegisterTagItem(handler->enrouteReleasePointOrBlankTagItemId, handler);
@@ -150,7 +150,7 @@ namespace UKControllerPlugin {
                     releaseDecisionCallbackId,
                     releaseCancellationCallbackId
                 );
-            container.websocketProcessors->AddProcessor(departureHandler);
+            container.pushEventProcessors->AddProcessor(departureHandler);
             container.tagHandler->RegisterTagItem(departureReleaseStatusIndicatorTagItemId, departureHandler);
             container.tagHandler->RegisterTagItem(departureReleaseCountdownTimerTagItemId, departureHandler);
             container.tagHandler->RegisterTagItem(departureReleaseRequestingControllerTagItemId, departureHandler);

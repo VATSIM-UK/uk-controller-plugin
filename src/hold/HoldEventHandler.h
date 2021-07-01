@@ -1,10 +1,8 @@
 #pragma once
-#include "radarscreen/ConfigurableDisplayInterface.h"
-#include "command/CommandHandlerInterface.h"
 #include "tag/TagItemInterface.h"
 #include "timedevent/AbstractTimedEvent.h"
 #include "navaids/NavaidCollection.h"
-#include "websocket/WebsocketEventProcessorInterface.h"
+#include "push/PushEventProcessorInterface.h"
 #include "tag/TagData.h"
 
 namespace UKControllerPlugin {
@@ -25,7 +23,7 @@ namespace UKControllerPlugin {
         */
         class HoldEventHandler : public UKControllerPlugin::Tag::TagItemInterface,
             public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
-            public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface
+            public Push::PushEventProcessorInterface
         {
             public:
                 HoldEventHandler(
@@ -34,6 +32,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
                     const int popupMenuItemId
                 );
+                ~HoldEventHandler() override = default;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;
@@ -43,12 +42,13 @@ namespace UKControllerPlugin {
                 void TimedEventTrigger(void) override;
 
                 // Inherited via WebsocketEventProcessorInterface
-                void ProcessWebsocketMessage(
-                    const UKControllerPlugin::Websocket::WebsocketMessage& message
+                void ProcessPushEvent(
+                    const Push::PushEvent& message
                 ) override;
-                std::set<UKControllerPlugin::Websocket::WebsocketSubscription>
-                    GetSubscriptions(void) const override;
+                std::set<Push::PushEventSubscription>
+                GetPushEventSubscriptions(void) const override;
 
+                void PluginEventsSynced() override;
 
                 // The string to display when an aircraft is not holding
                 const std::string noHold = "NOHOLD";

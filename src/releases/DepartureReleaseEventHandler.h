@@ -1,5 +1,5 @@
 #pragma once
-#include "websocket/WebsocketEventProcessorInterface.h"
+#include "push/PushEventProcessorInterface.h"
 #include "timedevent/AbstractTimedEvent.h"
 #include "tag/TagItemInterface.h"
 #include "releases/CompareDepartureReleases.h"
@@ -32,7 +32,7 @@ namespace UKControllerPlugin {
         /*
             Handles events relating to departure releases.
         */
-        class DepartureReleaseEventHandler : public Websocket::WebsocketEventProcessorInterface,
+        class DepartureReleaseEventHandler : public Push::PushEventProcessorInterface,
                                              public TimedEvent::AbstractTimedEvent,
                                              public Tag::TagItemInterface
         {
@@ -49,8 +49,10 @@ namespace UKControllerPlugin {
                     int releaseDecisionCallbackId,
                     int releaseCancellationCallbackId
                 );
-                void ProcessWebsocketMessage(const Websocket::WebsocketMessage& message) override;
-                std::set<Websocket::WebsocketSubscription> GetSubscriptions() const override;
+                ~DepartureReleaseEventHandler() override = default;
+                void ProcessPushEvent(const Push::PushEvent& message) override;
+                std::set<Push::PushEventSubscription> GetPushEventSubscriptions() const override;
+                void PluginEventsSynced() override {};
                 void AddReleaseRequest(std::shared_ptr<DepartureReleaseRequest> request);
                 std::shared_ptr<DepartureReleaseRequest> GetReleaseRequest(int id);
                 void TimedEventTrigger() override;
@@ -93,7 +95,6 @@ namespace UKControllerPlugin {
                 void RequestCancelled(int functionId, std::string context, RECT);
 
             private:
-
                 void ProcessDepartureReleaseRequestedMessage(const nlohmann::json& data);
                 void ProcessRequestAcknowledgedMessage(const nlohmann::json& data);
                 void ProcessRequestRejectedMessage(const nlohmann::json& data);
@@ -116,6 +117,7 @@ namespace UKControllerPlugin {
                 void SetReleaseCountdownTagData(Tag::TagData& tagData);
                 void SetRequestingControllerTagData(Tag::TagData& tagData);
 
+            private:
                 // A guard on the map to allow async operations
                 std::mutex releaseMapGuard;
 
@@ -155,5 +157,5 @@ namespace UKControllerPlugin {
                 // A set of releases to display in the view
                 std::set<std::shared_ptr<DepartureReleaseRequest>> releasesToDisplay;
         };
-    }  // namespace Releases
-}  // namespace UKControllerPlugin
+    } // namespace Releases
+} // namespace UKControllerPlugin

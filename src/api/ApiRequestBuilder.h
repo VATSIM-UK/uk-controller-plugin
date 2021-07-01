@@ -39,11 +39,7 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Curl::CurlRequest BuildDeleteAssignedHoldRequest(std::string callsign) const;
                 UKControllerPlugin::Curl::CurlRequest BuildRemoteFileRequest(std::string uri) const;
                 UKControllerPlugin::Curl::CurlRequest BuildVersionCheckRequest(std::string versionString) const;
-                UKControllerPlugin::Curl::CurlRequest BuildWebsocketChannelAuthRequest(
-                    std::string socketId,
-                    std::string channel
-                ) const;
-                UKControllerPlugin::Curl::CurlRequest BuildMinStackLevelRequest(void) const;
+                Curl::CurlRequest BuildMinStackLevelRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildRegionalPressureRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildSrdQueryRequest(
                     UKControllerPlugin::Srd::SrdSearchParameters parameters

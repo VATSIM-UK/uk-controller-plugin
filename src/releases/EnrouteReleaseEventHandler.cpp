@@ -5,8 +5,8 @@
 
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiException;
-using UKControllerPlugin::Websocket::WebsocketMessage;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Push::PushEvent;
+using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
@@ -65,7 +65,7 @@ namespace UKControllerPlugin {
             return this->releaseTypes;
         }
 
-        void EnrouteReleaseEventHandler::ProcessWebsocketMessage(const WebsocketMessage& message)
+        void EnrouteReleaseEventHandler::ProcessPushEvent(const PushEvent& message)
         {
             if (message.event != "App\\Events\\EnrouteReleaseEvent") {
                 return;
@@ -94,11 +94,11 @@ namespace UKControllerPlugin {
             };
         }
 
-        std::set<WebsocketSubscription> EnrouteReleaseEventHandler::GetSubscriptions(void) const
+        std::set<PushEventSubscription> EnrouteReleaseEventHandler::GetPushEventSubscriptions(void) const
         {
             return {
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-enroute-releases"
                 }
             };
@@ -261,6 +261,11 @@ namespace UKControllerPlugin {
 
             // Set a clear time for us, so it disappears in a while
             this->outgoingReleases.at(callsign).clearTime = std::chrono::system_clock::now() + std::chrono::minutes(3);
+        }
+
+        void EnrouteReleaseEventHandler::PluginEventsSynced()
+        {
+            // Nothing to do here
         }
 
         bool EnrouteReleaseEventHandler::ReleaseMessageValid(const nlohmann::json& message) const

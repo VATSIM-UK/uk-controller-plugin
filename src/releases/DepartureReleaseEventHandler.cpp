@@ -38,7 +38,7 @@ namespace UKControllerPlugin {
            activeCallsigns(activeCallsigns), releaseCancellationCallbackId(releaseCancellationCallbackId)
         { }
 
-        void DepartureReleaseEventHandler::ProcessWebsocketMessage(const Websocket::WebsocketMessage& message)
+        void DepartureReleaseEventHandler::ProcessPushEvent(const Push::PushEvent& message)
         {
             if (message.event == "departure_release.requested") {
                 this->ProcessDepartureReleaseRequestedMessage(message.data);
@@ -53,11 +53,11 @@ namespace UKControllerPlugin {
             }
         }
 
-        std::set<Websocket::WebsocketSubscription> DepartureReleaseEventHandler::GetSubscriptions() const
+        std::set<Push::PushEventSubscription> DepartureReleaseEventHandler::GetPushEventSubscriptions() const
         {
             return {
                 {
-                    Websocket::WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    Push::PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-departure-releases"
                 }
             };

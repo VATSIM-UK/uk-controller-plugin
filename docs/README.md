@@ -13,10 +13,6 @@ the Plugin API to offer useful functionality to controllers of UK positions on t
 - Clone the project
 - Open the project, we suggest you either use Visual Studio Community Edition or Visual Studio Code (both free)
 - You will need to ensure that you have the libraries containing mitigation for the Spectre exploit, information on how to install them may be found in the [installation guide](https://docs.microsoft.com/en-us/cpp/build/reference/qspectre?view=vs-2017)
-- Download and build [Boost](https://www.boost.org/users/download/)
-- Set your `BOOST_ROOT` and `BOOST_LIBRARYDIR` environment variables in Windows.
-- Download [OpenSSL](https://slproweb.com/products/Win32OpenSSL.html)
-- Set your `OPENSSL_ROOT` AND `OPENSSL_LIBRARYDIR` environment variables in Windows.
 
 ### Compiling
 
@@ -25,7 +21,7 @@ There are two build configurations available:
 - Debug: Compile with all debugging symbols for development. Results in decreased performance and an inflated DLL
 - Release: Compile in release mode
 
-Both Visual Studio and Visual Studio Code have build tasks set up for each of the above configurations.
+Compiling may be achieved using MSBuild, or by using Visual Studio 2019.
 
 ### Running Tests
 

@@ -2,8 +2,8 @@
 #include "pch/pch.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
-#include "websocket/WebsocketSubscription.h"
-#include "websocket/WebsocketMessage.h"
+#include "push/PushEventSubscription.h"
+#include "push/PushEvent.h"
 #include "time/ParseTimeStrings.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
@@ -26,7 +26,7 @@ using testing::NiceMock;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::DepartureReleaseRequest;
 using UKControllerPlugin::Releases::CompareDepartureReleases;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Time::ParseTimeString;
@@ -162,13 +162,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseEventHandlerTest, ItHasEventSubscriptions)
         {
-            std::set<UKControllerPlugin::Websocket::WebsocketSubscription> expected = {
+            std::set<UKControllerPlugin::Push::PushEventSubscription> expected = {
                 {
-                    UKControllerPlugin::Websocket::WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    UKControllerPlugin::Push::PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-departure-releases"
                 }
             };
-            EXPECT_EQ(expected, handler.GetSubscriptions());
+            EXPECT_EQ(expected, handler.GetPushEventSubscriptions());
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, ItAcknowledgesTheRequestFromMessage)
@@ -177,13 +177,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["id"] = 1;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.acknowledged",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_TRUE(request->Acknowledged());
         }
 
@@ -192,13 +192,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["not_id"] = 1;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.acknowledged",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Acknowledged());
         }
 
@@ -207,13 +207,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["id"] = "abc";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.acknowledged",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Acknowledged());
         }
 
@@ -222,13 +222,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["id"] = 2;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.acknowledged",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Acknowledged());
         }
 
@@ -236,13 +236,13 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = nlohmann::json::array();
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.acknowledged",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Acknowledged());
         }
 
@@ -252,13 +252,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["id"] = 1;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.rejected",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_TRUE(request->Rejected());
         }
 
@@ -267,13 +267,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["not_id"] = 1;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.rejected",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Rejected());
         }
 
@@ -282,13 +282,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["id"] = "abc";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.rejected",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Rejected());
         }
 
@@ -297,13 +297,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["id"] = 2;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.rejected",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Rejected());
         }
 
@@ -311,13 +311,13 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = nlohmann::json::array();
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.rejected",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Rejected());
         }
 
@@ -327,13 +327,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["id"] = 1;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.request_cancelled",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(1));
         }
 
@@ -343,13 +343,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["not_id"] = 1;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.request_cancelled",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_NE(nullptr, handler.GetReleaseRequest(1));
         }
 
@@ -359,13 +359,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["id"] = "abc";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.request_cancelled",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_NE(nullptr, handler.GetReleaseRequest(1));
         }
 
@@ -375,13 +375,13 @@ namespace UKControllerPluginTest {
             nlohmann::json data;
             data["id"] = 2;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.request_cancelled",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_NE(nullptr, handler.GetReleaseRequest(1));
         }
 
@@ -390,13 +390,13 @@ namespace UKControllerPluginTest {
             handler.AddReleaseRequest(request);
             nlohmann::json data = nlohmann::json::array();
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.request_cancelled",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_NE(nullptr, handler.GetReleaseRequest(1));
         }
 
@@ -408,13 +408,13 @@ namespace UKControllerPluginTest {
             data["expires_at"] = "2021-05-12 20:00:00";
             data["released_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_TRUE(request->Approved());
             EXPECT_FALSE(request->ApprovedWithNoExpiry());
             EXPECT_EQ(ParseTimeString("2021-05-12 19:55:00"), request->ReleasedAtTime());
@@ -429,13 +429,13 @@ namespace UKControllerPluginTest {
             data["expires_at"] = nlohmann::json::value_t::null;
             data["released_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_TRUE(request->ApprovedWithNoExpiry());
             EXPECT_EQ(ParseTimeString("2021-05-12 19:55:00"), request->ReleasedAtTime());
         }
@@ -446,13 +446,13 @@ namespace UKControllerPluginTest {
             data["expires_at"] = "2021-05-12 20:00:00";
             data["released_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -463,13 +463,13 @@ namespace UKControllerPluginTest {
             data["expires_at"] = "2021-05-12 20:00:00";
             data["released_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -480,13 +480,13 @@ namespace UKControllerPluginTest {
             data["expires_at"] = "2021-05-12 20:00:00";
             data["released_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -496,13 +496,13 @@ namespace UKControllerPluginTest {
             data["id"] = 1;
             data["released_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -513,13 +513,13 @@ namespace UKControllerPluginTest {
             data["expires_at"] = 123;
             data["released_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -530,13 +530,13 @@ namespace UKControllerPluginTest {
             data["expires_at"] = "abc";
             data["released_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -546,13 +546,13 @@ namespace UKControllerPluginTest {
             data["id"] = 1;
             data["expires_at"] = "2021-05-12 20:00:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -563,13 +563,13 @@ namespace UKControllerPluginTest {
             data["expires_at"] = "2021-05-12 20:00:00";
             data["released_at"] = 123;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -580,13 +580,13 @@ namespace UKControllerPluginTest {
             data["expires_at"] = "2021-05-12 20:00:00";
             data["released_at"] = "abc";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -594,13 +594,13 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = nlohmann::json::array();
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_FALSE(request->Approved());
         }
 
@@ -613,13 +613,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.requested",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             auto release = handler.GetReleaseRequest(2);
             EXPECT_EQ(2, release->Id());
             EXPECT_EQ("BAW123", release->Callsign());
@@ -637,13 +637,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.requested",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             auto release = handler.GetReleaseRequest(1);
             EXPECT_EQ(1, release->Id());
             EXPECT_EQ("BAW123", release->Callsign());
@@ -661,14 +661,14 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 2;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.requested",
                 "private-departure-releases",
                 data
             };
             handler.AddReleaseRequest(this->request);
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(1));
         }
 
@@ -681,14 +681,14 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.requested",
                 "private-departure-releases",
                 data
             };
             handler.AddReleaseRequest(this->request);
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_NE(nullptr, handler.GetReleaseRequest(1));
         }
 
@@ -701,14 +701,14 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 2;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.requested",
                 "private-departure-releases",
                 data
             };
             handler.AddReleaseRequest(this->request);
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_NE(nullptr, handler.GetReleaseRequest(1));
         }
 
@@ -720,13 +720,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.requested",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -739,13 +739,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.requested",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -757,13 +757,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -776,13 +776,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -794,13 +794,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -813,13 +813,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -832,13 +832,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -850,13 +850,13 @@ namespace UKControllerPluginTest {
             data["requesting_controller"] = 2;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -869,13 +869,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = "abc";
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -888,13 +888,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 456;
             data["expires_at"] = "2021-05-12 19:55:00";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -906,13 +906,13 @@ namespace UKControllerPluginTest {
             data["requesting_controller"] = 2;
             data["target_controller"] = 3;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -925,13 +925,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = 123;
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -944,13 +944,13 @@ namespace UKControllerPluginTest {
             data["target_controller"] = 3;
             data["expires_at"] = "abc";
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 
@@ -958,13 +958,13 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data = nlohmann::json::array();
 
-            WebsocketMessage message{
+            PushEvent message{
                 "departure_release.approved",
                 "private-departure-releases",
                 data
             };
 
-            handler.ProcessWebsocketMessage(message);
+            handler.ProcessPushEvent(message);
             EXPECT_EQ(nullptr, handler.GetReleaseRequest(2));
         }
 

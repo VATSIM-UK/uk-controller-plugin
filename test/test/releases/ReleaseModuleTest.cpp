@@ -2,7 +2,7 @@
 #include "releases/ReleaseModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "mock/MockDependencyLoader.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
@@ -24,7 +24,7 @@ using UKControllerPlugin::Releases::BootstrapPlugin;
 using UKControllerPlugin::Releases::BootstrapRadarScreen;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
-using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
+using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -41,7 +41,7 @@ namespace UKControllerPluginTest {
 
                 ReleaseModuleTest()
                 {
-                    container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
+                    container.pushEventProcessors.reset(new PushEventProcessorCollection);
                     container.tagHandler.reset(new TagItemCollection);
                     container.timedHandler.reset(new TimedEventCollection);
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
@@ -80,10 +80,10 @@ namespace UKControllerPluginTest {
                 UKControllerPlugin::Euroscope::AsrEventHandlerCollection asr;
         };
 
-        TEST_F(ReleaseModuleTest, ItRegistersForEnrouteWebsocketEvents)
+        TEST_F(ReleaseModuleTest, ItRegistersForEnroutePushEvents)
         {
             BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
-            EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-enroute-releases"));
+            EXPECT_EQ(1, this->container.pushEventProcessors->CountProcessorsForChannel("private-enroute-releases"));
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersTagItemForEnrouteReleaseType)
@@ -159,10 +159,10 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5002));
         }
 
-        TEST_F(ReleaseModuleTest, ItRegistersForDepartureWebsocketEvents)
+        TEST_F(ReleaseModuleTest, ItRegistersForDeparturePushEvents)
         {
             BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
-            EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-departure-releases"));
+            EXPECT_EQ(1, this->container.pushEventProcessors->CountProcessorsForChannel("private-departure-releases"));
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersTagItemForDepartureReleaseStatusIndicator)

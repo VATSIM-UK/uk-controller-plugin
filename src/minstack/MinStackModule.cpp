@@ -10,7 +10,7 @@
 #include "task/TaskRunnerInterface.h"
 #include "metar/MetarEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "api/ApiException.h"
 #include "minstack/MinStackConfigurationDialog.h"
 
@@ -24,7 +24,7 @@ using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
-using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
+using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Dialog::DialogManager;
@@ -39,11 +39,11 @@ namespace UKControllerPlugin {
             std::shared_ptr<MinStackManager> & msl,
             TaskRunnerInterface & taskManager,
             ApiInterface & api,
-            WebsocketEventProcessorCollection & websocketProcessors,
+            PushEventProcessorCollection& pushEventProcessors,
             DialogManager & dialogManager
         ) {
             msl.reset(new MinStackManager);
-            websocketProcessors.AddProcessor(msl);
+            pushEventProcessors.AddProcessor(msl);
 
             // Create the dialog for configuration
             std::shared_ptr<MinStackConfigurationDialog> dialog = std::make_shared<MinStackConfigurationDialog>(*msl);

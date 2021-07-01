@@ -136,23 +136,6 @@ namespace UKControllerPluginUtilsTest {
             EXPECT_TRUE(expectedRequest == this->builder.BuildHoldDependencyRequest());
         }
 
-        TEST_F(ApiRequestBuilderTest, ItBuildsAWebsocketChannelAuthRequest)
-        {
-            CurlRequest expectedRequest("http://testurl.com/broadcasting/auth", CurlRequest::METHOD_POST);
-            expectedRequest.AddHeader("Authorization", "Bearer apikey");
-            expectedRequest.AddHeader("Accept", "application/json");
-            expectedRequest.AddHeader("Content-Type", "application/json");
-
-            nlohmann::json expectedData;
-            expectedData["socket_id"] = "somesocket";
-            expectedData["channel_name"] = "somelovelychannel";
-            expectedRequest.SetBody(expectedData.dump());
-
-            EXPECT_TRUE(
-                expectedRequest == this->builder.BuildWebsocketChannelAuthRequest("somesocket", "somelovelychannel")
-            );
-        }
-
         TEST_F(ApiRequestBuilderTest, ItBuildsAMinStackRequest)
         {
             CurlRequest expectedRequest("http://testurl.com/msl", CurlRequest::METHOD_GET);

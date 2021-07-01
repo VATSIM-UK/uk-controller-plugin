@@ -129,7 +129,8 @@ namespace UKControllerPlugin {
                 );
 
                 if (!release->Approved()) {
-                    return;
+                    rowMultiplier++;
+                    continue;
                 }
 
                 const auto timerColour = this->GetTimerColour(release);
