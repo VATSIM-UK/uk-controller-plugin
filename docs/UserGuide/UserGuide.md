@@ -12,3 +12,4 @@ for example, stand allocations.
 - [Frequently asked questions](Faq/Faq.md)
 - [Getting help](GettingHelp/Help.md)
 - [Changelog](Changelog/Changelog.md)
+- [Web API Changelog](https://github.com/VATSIM-UK/uk-controller-api/blob/main/docs/CHANGELOG.md)
