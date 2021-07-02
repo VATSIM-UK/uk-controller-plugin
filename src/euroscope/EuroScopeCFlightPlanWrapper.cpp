@@ -146,6 +146,11 @@ namespace UKControllerPlugin {
             this->originalData.GetControllerAssignedData().SetSquawk(squawk.c_str());
         }
 
+        EuroScopePlugIn::CFlightPlan EuroScopeCFlightPlanWrapper::GetEuroScopeObject() const
+        {
+            return this->originalData;
+        }
+
         /*
             Returns true if its actually real and not Euroscope pretending.
         */

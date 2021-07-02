@@ -43,6 +43,10 @@
     <ClCompile Include="..\..\test\test\bootstrap\ExternalsBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\bootstrap\HelperBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\command\CommandHandlerCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\components\BrushSwitcherTest.cpp" />
+    <ClCompile Include="..\..\test\test\components\ButtonTest.cpp" />
+    <ClCompile Include="..\..\test\test\components\ClickableAreaTest.cpp" />
+    <ClCompile Include="..\..\test\test\components\TitleBarTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignMonitorTest.cpp" />
     <ClCompile Include="..\..\test\test\controller\ActiveCallsignTest.cpp" />
@@ -211,10 +215,16 @@
     <ClCompile Include="..\..\test\test\regional\RegionalPressureModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererConfigurationTest.cpp" />
     <ClCompile Include="..\..\test\test\regional\RegionalPressureRendererTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\CompareDepartureReleasesTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\CompareEnrouteReleaseTypesTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseCountdownColoursTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseDecisionListTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseRequestTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\EnrouteReleaseEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\EnrouteReleaseTypesSerializerTest.cpp" />
     <ClCompile Include="..\..\test\test\releases\ReleaseModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseDecisionListTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\RunwayTest.cpp" />
     <ClCompile Include="..\..\test\test\sectorfile\SectorFileBootstrapTest.cpp" />
@@ -245,7 +255,9 @@
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\DeferredEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\TimedEventCollectionTest.cpp" />
+    <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp" />
     <ClCompile Include="..\..\test\test\time\ParseTimeStringsTest.cpp" />
+    <ClCompile Include="..\..\test\test\time\SystemClockTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\CreateWakeMappingsTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\wake\WakeCategoryMapperTest.cpp" />
@@ -270,6 +282,7 @@
     <ClInclude Include="..\..\test\mock\MockEuroScopeCFlightplanInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroScopeCRadarTargetInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopeExtractedRouteInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockEuroscopeFlightplanList.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopePluginLoopbackInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopeRadarScreenLoopbackInterface.h" />
     <ClInclude Include="..\..\test\mock\MockEuroscopeSectorFileElementInterface.h" />

@@ -306,6 +306,94 @@ namespace UKControllerPlugin {
             );
         }
 
+        CurlRequest ApiRequestBuilder::BuildAcknowledgeDepartureReleaseRequest(
+            int releaseId,
+            int controllerPositionId
+        ) const
+        {
+            nlohmann::json body;
+            body["controller_position_id"] = controllerPositionId;
+
+            CurlRequest request(
+                this->apiDomain + "/departure/release/request/" + std::to_string(releaseId) + "/acknowledge",
+                CurlRequest::METHOD_PATCH
+            );
+            request.SetBody(body.dump());
+            return this->AddCommonHeaders(request);
+        }
+
+        CurlRequest ApiRequestBuilder::BuildRejectDepartureReleaseRequest(
+            int releaseId,
+            int controllerPositionId
+        ) const
+        {
+            nlohmann::json body;
+            body["controller_position_id"] = controllerPositionId;
+
+            CurlRequest request(
+                this->apiDomain + "/departure/release/request/" + std::to_string(releaseId) + "/reject",
+                CurlRequest::METHOD_PATCH
+            );
+            request.SetBody(body.dump());
+            return this->AddCommonHeaders(request);
+        }
+
+        /*
+         * Build an approve departure release request, pass -1 seconds for never expires.
+         */
+        CurlRequest ApiRequestBuilder::BuildApproveDepartureReleaseRequest(
+            int releaseId,
+            int controllerPositionId,
+            std::chrono::system_clock::time_point releasedAt,
+            int expiresInSeconds
+        ) const
+        {
+            nlohmann::json body;
+            body["controller_position_id"] = controllerPositionId;
+            body["released_at"] = date::format("%Y-%m-%d %H:%M:%S", date::floor<std::chrono::seconds>(releasedAt));
+            if (expiresInSeconds == -1) {
+                body["expires_in_seconds"] = nlohmann::json::value_t::null;
+            } else {
+                body["expires_in_seconds"] = expiresInSeconds;
+            }
+
+            CurlRequest request(
+                this->apiDomain + "/departure/release/request/" + std::to_string(releaseId) + "/approve",
+                CurlRequest::METHOD_PATCH
+            );
+            request.SetBody(body.dump());
+            return this->AddCommonHeaders(request);
+        }
+
+        CurlRequest ApiRequestBuilder::BuildDepartureReleaseRequest(
+            std::string callsign,
+            int requestingControllerId,
+            int targetController,
+            int expiresInSeconds
+        ) const
+        {
+            CurlRequest request(this->apiDomain + "/departure/release/request", CurlRequest::METHOD_POST);
+
+            nlohmann::json body;
+            body["callsign"] = callsign;
+            body["requesting_controller_id"] = requestingControllerId;
+            body["target_controller_id"] = targetController;
+            body["expires_in_seconds"] = expiresInSeconds;
+            request.SetBody(body.dump());
+
+            return this->AddCommonHeaders(request);
+        }
+
+        CurlRequest ApiRequestBuilder::BuildCancelReleaseRequest(int releaseId) const
+        {
+            return this->AddCommonHeaders(
+                CurlRequest(
+                    this->apiDomain + "/departure/release/request/" + std::to_string(releaseId),
+                    CurlRequest::METHOD_DELETE
+                )
+            );
+        }
+
         CurlRequest ApiRequestBuilder::BuildEnrouteReleaseRequest(
             std::string aircraftCallsign,
             std::string sendingController,

@@ -321,6 +321,59 @@ namespace UKControllerPlugin {
             ).GetRawData();
         }
 
+        void ApiHelper::AcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const
+        {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildAcknowledgeDepartureReleaseRequest(releaseId, controllerPositionId)
+            );
+        }
+
+        void ApiHelper::RejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const
+        {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildRejectDepartureReleaseRequest(releaseId, controllerPositionId)
+            );
+        }
+
+        void ApiHelper::ApproveDepartureReleaseRequest(
+            int releaseId,
+            int controllerPositionId,
+            std::chrono::system_clock::time_point releasedAt,
+            int expiresInSeconds
+        ) const
+        {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildApproveDepartureReleaseRequest(
+                    releaseId,
+                    controllerPositionId,
+                    releasedAt,
+                    expiresInSeconds
+                )
+            );
+        }
+
+        nlohmann::json ApiHelper::RequestDepartureRelease(
+            std::string callsign,
+            int requestingControllerId,
+            int targetControllerId,
+            int expiresInSeconds
+        ) const
+        {
+            return this->MakeApiRequest(
+                this->requestBuilder.BuildDepartureReleaseRequest(
+                    callsign,
+                    requestingControllerId,
+                    targetControllerId,
+                    expiresInSeconds
+                )
+            ).GetRawData();
+        }
+
+        void ApiHelper::CancelDepartureReleaseRequest(int releaseId) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildCancelReleaseRequest(releaseId));
+        }
+
         void ApiHelper::ReadNotification(int id) const
         {
             this->MakeApiRequest(this->requestBuilder.BuildReadNotificationRequest(id));

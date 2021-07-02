@@ -25,3 +25,4 @@ dynamically to the plugin.
 - Stand assignment
 - RECAT-EU Wake Categories
 - [VATSIM Nattrak Integration](Nattrak.md)
+- [Electronic Departure Releases](DepartureReleases.md)

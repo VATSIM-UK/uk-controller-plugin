@@ -77,7 +77,7 @@ namespace UKControllerPluginTest {
                 SquawkEventHandlerTest()
                     : apiSquawkAllocations(new ApiSquawkAllocationHandler(this->pluginLoopback)),
                     login(this->pluginLoopback, ControllerStatusEventHandlerCollection()),
-                    controller("EGKK_APP", 126.820, "APP", { "EGKK" }),
+                    controller(1, "EGKK_APP", 126.820, {"EGKK"}, true, false),
                     airfieldOwnership(this->airfields, this->activeCallsigns),
                     assignmentRules(
                         this->plans,

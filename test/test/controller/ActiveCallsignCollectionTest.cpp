@@ -21,8 +21,8 @@ namespace UKControllerPluginTest {
             public:
 
                 ActiveCallsignCollectionTest()
-                    : testPosition("LON_S_CTR", 129.420, "CTR", {}),
-                    testCallsign("LON_S_CTR", "Testy Boi", testPosition)
+                    : testPosition(1, "LON_S_CTR", 129.420, {}, true, false),
+                      testCallsign("LON_S_CTR", "Testy Boi", testPosition)
                 {
                     handler1.reset(new NiceMock<MockActiveCallsignEventHandler>());
                     handler2.reset(new NiceMock<MockActiveCallsignEventHandler>());
@@ -240,9 +240,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(ActiveCallsignCollectionTest, FlushEmptiesTheCollection)
         {
-            ControllerPosition controller1("LON_S_CTR", 129.420, "CTR", {});
-            ControllerPosition controller2("LON_C_CTR", 127.100, "CTR", {});
-            ControllerPosition controller3("LON_E_CTR", 121.200, "CTR", {});
+            ControllerPosition controller1(1, "LON_S_CTR", 129.420, {}, true, false);
+            ControllerPosition controller2(2, "LON_C_CTR", 127.100, {}, true, false);
+            ControllerPosition controller3(3, "LON_E_CTR", 121.200, {}, true, false);
             ActiveCallsign cs1("LON_S_CTR", "Bob Jones", controller1);
             ActiveCallsign cs2("LON_C_CTR", "Jones Bob", controller2);
             ActiveCallsign cs3("LON_E_CTR", "Jimbob Jump", controller3);
@@ -288,7 +288,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ActiveCallsignCollectionTest, RemoveCallsignDoesNotChangeUserIfNotUserLoggingOff)
         {
-            ControllerPosition pos2("LON_E_CTR", 121.220, "CTR", { });
+            ControllerPosition pos2(2, "LON_E_CTR", 121.220, {}, true, false);
             ActiveCallsign callsign2("LON_E_CTR", "Testy McTestingon", pos2);
             collection.AddUserCallsign(this->testCallsign);
             collection.AddCallsign(callsign2);
@@ -299,8 +299,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(ActiveCallsignCollectionTest, CorrectlyHandlesMismatchingCallsigns)
         {
-            ControllerPosition pos("LON_S_CTR", 129.420, "CTR", { "EGKK", "EGLL", "EGLC" });
-            ControllerPosition pos2("LON_N_CTR", 133.700, "CTR", {"EGCC", "EGGP"});
+            ControllerPosition pos(1, "LON_S_CTR", 129.420, { "EGKK", "EGLL", "EGLC" }, true, false);
+            ControllerPosition pos2(2, "LON_N_CTR", 133.700, {"EGCC", "EGGP"}, true, false);
             ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos2);
             ActiveCallsign callsign2("LON_S_CTR", "Testy McTest", pos2);
             collection.AddUserCallsign(callsign);

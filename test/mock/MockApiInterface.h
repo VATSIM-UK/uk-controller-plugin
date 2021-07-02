@@ -60,6 +60,27 @@ namespace UKControllerPluginTest {
                 MOCK_METHOD1(SetApiDomain, void(std::string));
                 MOCK_METHOD1(SetApiKey, void(std::string));
                 MOCK_CONST_METHOD0(GetUpdateDetails, nlohmann::json(void));
+                MOCK_CONST_METHOD2(AcknowledgeDepartureReleaseRequest, void(int releaseId, int controllerPositionId));
+                MOCK_CONST_METHOD2(RejectDepartureReleaseRequest, void(int releaseId, int controllerPositionId));
+                MOCK_CONST_METHOD4(
+                    ApproveDepartureReleaseRequest,
+                    void(
+                        int releaseId,
+                        int controllerPositionId,
+                        std::chrono::system_clock::time_point releasedAt,
+                        int expiresInSeconds
+                    )
+                );
+                MOCK_CONST_METHOD4(
+                    RequestDepartureRelease,
+                    nlohmann::json(
+                        std::string callsign,
+                        int requestingControllerId,
+                        int targetControllerId,
+                        int expiresInSeconds
+                    )
+                );
+                MOCK_CONST_METHOD1(CancelDepartureReleaseRequest, void(int releaseId));
         };
     }  // namespace Api
 }  // namespace UKControllerPluginTest

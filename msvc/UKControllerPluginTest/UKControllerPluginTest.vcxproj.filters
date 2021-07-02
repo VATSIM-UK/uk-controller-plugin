@@ -133,6 +133,12 @@
     <Filter Include="test\initialheading">
       <UniqueIdentifier>{1f6bc603-4f77-4a4d-8364-2b8e739fce7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\components">
+      <UniqueIdentifier>{f1bcb9fd-718e-4080-8b9e-faee181caa40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\timer">
+      <UniqueIdentifier>{ca735e2e-aae4-42c9-88af-8c82006b8942}</UniqueIdentifier>
+    </Filter>
     <Filter Include="test\push">
       <UniqueIdentifier>{83e0dc64-52da-4353-9dc2-375e76d00366}</UniqueIdentifier>
     </Filter>
@@ -796,6 +802,42 @@
     <ClCompile Include="..\..\test\test\plugin\ForceUpdateTest.cpp">
       <Filter>test\plugin</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\components\ButtonTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\ClickableAreaTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\TitleBarTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\BrushSwitcherTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\time\SystemClockTest.cpp">
+      <Filter>test\time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp">
+      <Filter>test\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseDecisionListTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseEventHandlerTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseRequestTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseDecisionListTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\CompareDepartureReleasesTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseCountdownColoursTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\test\test\push\PushEventProtocolHandlerTest.cpp">
       <Filter>test\push</Filter>
     </ClCompile>
@@ -929,6 +971,9 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockExternalMessageHandlerInterface.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockEuroscopeFlightplanList.h">
       <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="resource">
@@ -94,6 +94,9 @@
     <Filter Include="src\hold">
       <UniqueIdentifier>{93c29766-c3d5-47e0-8cfd-5d71d115cd0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\push">
+      <UniqueIdentifier>{ae5b89fa-f548-48d4-9a2a-f651295aeeb4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\sectorfile">
       <UniqueIdentifier>{61c300dc-1834-4381-b018-2c7380756930}</UniqueIdentifier>
     </Filter>
@@ -142,8 +145,11 @@
     <Filter Include="src\initialheading">
       <UniqueIdentifier>{a732eccf-1336-457a-8597-2f558558027c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\push">
-      <UniqueIdentifier>{ae5b89fa-f548-48d4-9a2a-f651295aeeb4}</UniqueIdentifier>
+    <Filter Include="src\components">
+      <UniqueIdentifier>{bb7c490c-3f8f-4f8f-b927-0c6fd6683ffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\timer">
+      <UniqueIdentifier>{6450b077-67f8-46e3-a43d-2fbe69517379}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1001,7 +1007,31 @@
     <ClInclude Include="..\..\src\plugin\ForceUpdate.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\push\PushEventProcessorCollection.h">
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListInterface.h">
+      <Filter>src\euroscope</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\ClickableArea.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\StandardButtons.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\TitleBar.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\BrushSwitcher.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\components\Button.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\timer\TimerDisplay.h">
+      <Filter>src\timer</Filter>
+    </ClInclude>
+        <ClInclude Include="..\..\src\push\PushEventProcessorCollection.h">
       <Filter>src\push</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\push\PushEventProcessorInterface.h">
@@ -1036,6 +1066,33 @@
     </ClInclude>
     <ClInclude Include="..\..\src\push\PushEventConnectionInterface.h">
       <Filter>src\push</Filter>
+    </ClInclude>
+        <ClInclude Include="..\..\src\releases\CompareDepartureReleases.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\ApproveDepartureReleaseDialog.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseRequest.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseRequestView.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseCountdownColours.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseDecisionList.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\DepartureReleaseEventHandler.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\RequestDepartureReleaseDialog.h">
+      <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.h">
+      <Filter>src\releases</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1752,6 +1809,27 @@
     <ClCompile Include="..\..\src\plugin\ForceUpdate.cpp">
       <Filter>src\plugin</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.cpp">
+      <Filter>src\euroscope</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\ClickableArea.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\StandardButtons.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\TitleBar.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\BrushSwitcher.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\components\Button.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\timer\TimerDisplay.cpp">
+      <Filter>src\timer</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\push\PushEventProxyConnection.cpp">
       <Filter>src\push</Filter>
     </ClCompile>
@@ -1778,6 +1856,33 @@
     </ClCompile>
     <ClCompile Include="..\..\src\push\PushEventProcessorCollection.cpp">
       <Filter>src\push</Filter>
+    </ClCompile>
+        <ClCompile Include="..\..\src\releases\ApproveDepartureReleaseDialog.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\CompareDepartureReleases.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseRequest.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseRequestView.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseDecisionList.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseEventHandler.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\RequestDepartureReleaseDialog.cpp">
+      <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\releases\DepartureReleaseCountdownColours.cpp">
+      <Filter>src\releases</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

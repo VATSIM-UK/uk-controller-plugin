@@ -16,6 +16,8 @@
 #include "euroscope/EuroscopeSectorFileElementWrapper.h"
 #include "tag/TagData.h"
 #include "controller/HandoffEventHandlerCollection.h"
+#include "euroscope/EuroscopeFlightplanListWrapper.h"
+#include "euroscope/EuroscopeFlightplanListInterface.h"
 
 using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPlugin::Windows::WinApiInterface;
@@ -39,6 +41,8 @@ using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementWrapper;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPlugin::Euroscope::EuroscopeFlightplanListWrapper;
+using UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 
@@ -211,6 +215,37 @@ namespace UKControllerPlugin {
         }
 
         return std::move(elements);
+    }
+
+    void UKPlugin::ApplyFunctionToAllControllers(
+        std::function<void(std::shared_ptr<EuroScopeCControllerInterface>)> function)
+    {
+        EuroScopePlugIn::CController current = this->ControllerSelectFirst();
+
+        // If there's nothing, stop
+        if (!current.IsValid() || strcmp(current.GetCallsign(), "") == 0) {
+            return;
+        }
+
+        // Loop through all visible controllers
+        do {
+            if (!current.IsValid()) {
+                continue;
+            }
+
+            function(
+                std::make_shared<EuroScopeCControllerWrapper>(
+                    current,
+                    this->ControllerIsMe(current, this->ControllerMyself())
+                )
+            );
+        } while (strcmp((current = this->ControllerSelectNext(current)).GetCallsign(), "") != 0);
+    }
+
+    std::shared_ptr<EuroscopeFlightplanListInterface> UKPlugin::RegisterFlightplanList(std::string name)
+    {
+        EuroScopePlugIn::CFlightPlanList list = this->RegisterFpList(name.c_str());
+        return std::make_shared<EuroscopeFlightplanListWrapper>(list);
     }
 
     /*
@@ -576,7 +611,6 @@ namespace UKControllerPlugin {
                 std::make_shared<EuroScopeCRadarTargetWrapper>(rt)
             );
 
-            this->OnFlightPlanFlightPlanDataUpdate(current);
         } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
     }
 
