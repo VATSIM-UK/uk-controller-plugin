@@ -110,4 +110,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           GH_TOKEN: ${{ secrets.PAT }}
-        run: npx -p @semantic-release/changelog -p @semantic-release/git -p semantic-release@17 semantic-release
+        run: |
+          npx -p @semantic-release/changelog -p @semantic-release/git -p semantic-release@17 semantic-release
