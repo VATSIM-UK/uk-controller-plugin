@@ -11,5 +11,5 @@ for example, stand allocations.
 - [Features](UserGuide/Features/Features.md)
 - [Frequently asked questions](UserGuide/Faq/Faq.md)
 - [Getting help](UserGuide/GettingHelp/Help.md)
-- [Changelog](Changelog/Changelog.md)
+- [Changelog](UserGuide/Changelog/Changelog.md)
 - [Web API Changelog](https://github.com/VATSIM-UK/uk-controller-api/blob/main/docs/CHANGELOG.md)
