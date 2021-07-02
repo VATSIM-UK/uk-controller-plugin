@@ -107,7 +107,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [build]
     concurrency:
-      group: ukcp-release-${{ github.ref }}
+      group: ukcp-release
       cancel-in-progress: false
     steps:
       - name: Checkout
