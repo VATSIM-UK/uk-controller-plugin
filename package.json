@@ -49,7 +49,7 @@
         "@semantic-release/changelog",
         {
           "changelogFile": "docs/UserGuide/Changelog/Changelog.md",
-          "changelogTitle": "UK Controller Plugin Changelog"
+          "changelogTitle": "# UK Controller Plugin Changelog"
         }
       ],
       [
@@ -69,6 +69,12 @@
               "label": "Loader Binary"
             }
           ]
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": ["docs/UserGuide/Changelog/Changelog.md"]
         }
       ]
     ]

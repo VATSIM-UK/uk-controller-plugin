@@ -16,6 +16,8 @@ jobs:
     steps:       
       - name: Checkout Code
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
       # Environment things
       - name: Add Msbuild To PATH
@@ -102,9 +104,10 @@ jobs:
           name: UKControllerPlugin.dll
           path: ".\\bin\\Release\\UKControllerPlugin.dll"
 
-      # If we're building on main, lets do a release'
+      # If we're building on main, lets do a release
       - name: Create Release
         if: github.ref == 'refs/heads/main'
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx -p @semantic-release/changelog -p semantic-release@17 semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: npx -p @semantic-release/changelog -p @semantic-release/git -p semantic-release@17 semantic-release
