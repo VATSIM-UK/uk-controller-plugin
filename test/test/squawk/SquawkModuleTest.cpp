@@ -55,7 +55,7 @@ namespace UKControllerPluginTest {
             SquawkModule::BootstrapPlugin(container, false);
             EXPECT_EQ(
                 1,
-                this->container.timedHandler->CountHandlersForFrequency(SquawkModule::trackedAircraftCheckFrequency)
+                this->container.timedHandler->CountHandlersForFrequency(SquawkModule::squawkAssignmentsCheckFrequency)
             );
         }
 

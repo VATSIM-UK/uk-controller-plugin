@@ -32,7 +32,6 @@
 #include "message/UserMessager.h"
 #include "euroscope/UserSetting.h"
 #include "command/CommandHandlerCollection.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
 #include "hold/HoldManager.h"
 #include "euroscope/UserSettingAwareCollection.h"
@@ -87,8 +86,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Metar::MetarEventHandlerCollection> metarEventHandler;
             std::unique_ptr<UKControllerPlugin::RadarScreen::ScreenControls> screenControls;
             std::unique_ptr<UKControllerPlugin::Command::CommandHandlerCollection> commandHandlers;
-            std::shared_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferredHandlers;
-            std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareCollection> userSettingHandlers;
+            std::shared_ptr<Euroscope::UserSettingAwareCollection> userSettingHandlers;
             std::unique_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareCollection> runwayDialogEventHandlers;
             std::unique_ptr<UKControllerPlugin::Controller::HandoffEventHandlerCollection> controllerHandoffHandlers;
             std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageEventHandler> externalEventHandler;

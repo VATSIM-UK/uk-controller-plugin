@@ -4,9 +4,7 @@
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
-#include "flightplan/DeferredFlightplanEvent.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/GeneralSettingsEntries.h"
 #include "sid/SidCollection.h"
@@ -20,10 +18,7 @@ using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Airfield::NormaliseSid;
-using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Controller::Login;
-using UKControllerPlugin::Flightplan::DeferredFlightPlanEvent;
-using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
@@ -35,13 +30,10 @@ namespace UKControllerPlugin {
             const ActiveCallsignCollection & activeCallsigns,
             const AirfieldOwnershipManager & airfieldOwnership,
             const Login & login,
-            DeferredEventHandler & deferredEvents,
-            EuroscopePluginLoopbackInterface & plugin,
-            const StoredFlightplanCollection& storedFlightplans
+            EuroscopePluginLoopbackInterface& plugin
         )
             : minimumLoginTimeBeforeAssignment(5), sids(sids), activeCallsigns(activeCallsigns),
-              airfieldOwnership(airfieldOwnership), deferredEvents(deferredEvents), login(login),
-              storedFlightplans(storedFlightplans), plugin(plugin)
+              airfieldOwnership(airfieldOwnership), login(login), plugin(plugin)
         {
 
         }
@@ -60,11 +52,8 @@ namespace UKControllerPlugin {
             // If we've not been logged in for long, wait a bit
             if (this->login.GetSecondsLoggedIn() < this->minimumLoginTimeBeforeAssignment) {
                 LogDebug(
-                    "Deferring initial altitude assignment for " + flightPlan.GetCallsign()
-                );
-                this->deferredEvents.DeferFor(
-                    std::make_unique<DeferredFlightPlanEvent>(*this, this->plugin, flightPlan.GetCallsign()),
-                    this->minimumLoginTimeBeforeAssignment
+                    "Deferring initial altitude assignment for " + flightPlan.GetCallsign() +
+                    " for now, user has only recently logged in"
                 );
                 return;
             }
@@ -103,10 +92,6 @@ namespace UKControllerPlugin {
             );
             flightPlan.SetClearedAltitude(matchedSid->InitialAltitude());
             this->alreadySetMap[flightPlan.GetCallsign()] = flightPlan.GetSidName();
-        }
-
-        InitialAltitudeEventHandler::~InitialAltitudeEventHandler(void)
-        {
         }
 
         /*
@@ -228,24 +213,8 @@ namespace UKControllerPlugin {
             }
 
 
-            LogInfo("Mass assigning initial altitudes");
-
-            std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
-            std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
-            for (
-                StoredFlightplanCollection::const_iterator it = this->storedFlightplans.cbegin();
-                it != this->storedFlightplans.cend();
-                ++it
-            ) {
-                fp = this->plugin.GetFlightplanForCallsign(it->second->GetCallsign());
-                rt = this->plugin.GetRadarTargetForCallsign(it->second->GetCallsign());
-
-                if (!fp || !rt) {
-                    continue;
-                }
-
-                this->FlightPlanEvent(*fp, *rt);
-            }
+            LogInfo("User now active, mass assigning initial altitudes");
+            this->CheckAllFlightplansForAssignment();
         }
 
         /*
@@ -265,11 +234,38 @@ namespace UKControllerPlugin {
         }
 
         /*
+         * Periodically, check all flightplans to see if they need an initial altitude update.
+         */
+        void InitialAltitudeEventHandler::TimedEventTrigger()
+        {
+            if (!this->activeCallsigns.UserHasCallsign()) {
+                return;
+            }
+
+            this->CheckAllFlightplansForAssignment();
+        }
+
+        /*
+         * Loop all the flightplans and check if they need an assignment.
+         */
+        void InitialAltitudeEventHandler::CheckAllFlightplansForAssignment()
+        {
+            this->plugin.ApplyFunctionToAllFlightplans(
+                [this]
+            (
+                std::shared_ptr<EuroScopeCFlightPlanInterface> fp,
+                std::shared_ptr<EuroScopeCRadarTargetInterface> rt
+            )
+                {
+                    this->FlightPlanEvent(*fp, *rt);
+                }
+            );
+        }
+
+        /*
             Called when user settings get updated.
         */
-        void InitialAltitudeEventHandler::UserSettingsUpdated(
-            UKControllerPlugin::Euroscope::UserSetting & userSettings
-        )
+        void InitialAltitudeEventHandler::UserSettingsUpdated(Euroscope::UserSetting& userSettings)
         {
             this->userAutomaticAssignmentsAllowed = userSettings.GetBooleanEntry(
                 GeneralSettingsEntries::initialAltitudeToggleSettingsKey,

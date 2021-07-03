@@ -419,18 +419,6 @@
     <ClCompile Include="..\..\test\test\offblock\EstimatedOffBlockTimeBootstrapTest.cpp">
       <Filter>test\offblock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp">
-      <Filter>test\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\timedevent\DeferredEventHandlerTest.cpp">
-      <Filter>test\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\timedevent\DeferredEventBootstrapTest.cpp">
-      <Filter>test\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp">
-      <Filter>test\flightplan</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\helper\InitTests.cpp">
       <Filter>helper</Filter>
     </ClCompile>
@@ -924,9 +912,6 @@
     <ClInclude Include="..\..\test\mock\MockHistoryTrailRepository.h">
       <Filter>mock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockInitialAltitudeEventHandler.h">
-      <Filter>mock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\test\mock\MockMinStack.h">
       <Filter>mock</Filter>
     </ClInclude>
@@ -949,9 +934,6 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\pch\pch.h" />
-    <ClInclude Include="..\..\test\mock\MockDeferredEventRunner.h">
-      <Filter>mock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\test\helper\TestEnvironment.h">
       <Filter>helper</Filter>
     </ClInclude>

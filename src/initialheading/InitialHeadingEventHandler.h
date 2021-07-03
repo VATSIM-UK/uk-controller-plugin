@@ -1,10 +1,9 @@
 #pragma once
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "airfield/NormaliseSid.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "euroscope/UserSettingAwareInterface.h"
 #include "controller/ActiveCallsignEventHandlerInterface.h"
-#include "flightplan/StoredFlightplanCollection.h"
+#include "timedevent/AbstractTimedEvent.h"
 
 // Forward declarations
 
@@ -24,9 +23,6 @@ namespace UKControllerPlugin {
         class SidCollection;
         class StandardInstrumentDeparture;
     } // namespace Sid
-    namespace TimedEvent {
-        class DeferredEventHandler;
-    }  // namespace TimedEvent
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
     }  // namespace Euroscope
@@ -40,7 +36,8 @@ namespace UKControllerPlugin {
         */
         class InitialHeadingEventHandler : public Flightplan::FlightPlanEventHandlerInterface,
                                            public Euroscope::UserSettingAwareInterface,
-                                           public Controller::ActiveCallsignEventHandlerInterface
+                                           public Controller::ActiveCallsignEventHandlerInterface,
+                                           public TimedEvent::AbstractTimedEvent
         {
             public:
                 InitialHeadingEventHandler(
@@ -48,15 +45,13 @@ namespace UKControllerPlugin {
                     const Controller::ActiveCallsignCollection& activeCallsigns,
                     const Ownership::AirfieldOwnershipManager& airfieldOwnership,
                     const Controller::Login& login,
-                    TimedEvent::DeferredEventHandler& deferredEvents,
-                    Euroscope::EuroscopePluginLoopbackInterface& plugin,
-                    const Flightplan::StoredFlightplanCollection& storedFlightplans
+                    Euroscope::EuroscopePluginLoopbackInterface& plugin
                 );
+                ~InitialHeadingEventHandler() override = default;
                 void FlightPlanEvent(
                     Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
                     Euroscope::EuroScopeCRadarTargetInterface& radarTarget
                 ) override;
-                ~InitialHeadingEventHandler(void);
                 void FlightPlanDisconnectEvent(
                     Euroscope::EuroScopeCFlightPlanInterface& flightPlan
                 ) override;
@@ -83,6 +78,7 @@ namespace UKControllerPlugin {
                     bool userCallsign
                 ) override;
                 void CallsignsFlushed(void) override;
+                void TimedEventTrigger() override;
 
                 // The maximum distance from the airfield that an aircraft can be untracked
                 // to be considered for an heading update.
@@ -98,6 +94,7 @@ namespace UKControllerPlugin {
                 const std::chrono::seconds minimumLoginTimeBeforeAssignment;
 
             private:
+                void CheckAllFlightplansForAssignment();
                 bool MeetsAssignmentConditions(
                     Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
                     Euroscope::EuroScopeCRadarTargetInterface& radarTarget
@@ -121,17 +118,11 @@ namespace UKControllerPlugin {
                 // Used to find out if the user owns a particular airfield.
                 const Ownership::AirfieldOwnershipManager& airfieldOwnership;
 
-                // So we can defer loading IAs on first login
-                TimedEvent::DeferredEventHandler& deferredEvents;
-
                 // For checking how long we've been logged in
                 const Controller::Login& login;
 
                 // Class for parsing SIDs and removing deprecation warnings.
                 const Airfield::NormaliseSid normalise;
-
-                // Stored flightplans
-                const Flightplan::StoredFlightplanCollection& storedFlightplans;
 
                 // So we can get flightplans after deferred events
                 Euroscope::EuroscopePluginLoopbackInterface& plugin;

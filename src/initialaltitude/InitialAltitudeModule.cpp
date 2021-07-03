@@ -25,9 +25,7 @@ namespace UKControllerPlugin {
                     *persistence.activeCallsigns,
                     *persistence.airfieldOwnership,
                     *persistence.login,
-                    *persistence.deferredHandlers,
-                    *persistence.plugin,
-                    *persistence.flightplans
+                    *persistence.plugin
                 )
             );
 
@@ -35,6 +33,7 @@ namespace UKControllerPlugin {
             persistence.userSettingHandlers->RegisterHandler(initialAltitudeEventHandler);
             persistence.flightplanHandler->RegisterHandler(initialAltitudeEventHandler);
             persistence.activeCallsigns->AddHandler(initialAltitudeEventHandler);
+            persistence.timedHandler->RegisterEvent(initialAltitudeEventHandler, 10);
 
 
             TagFunction recycleFunction(

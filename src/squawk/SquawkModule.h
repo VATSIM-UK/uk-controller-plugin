@@ -21,7 +21,7 @@ namespace UKControllerPlugin {
                 );
 
                 // How often to check for tracked aircraft that don't have squawks.
-                static const int trackedAircraftCheckFrequency = 5;
+                static const int squawkAssignmentsCheckFrequency = 5;
 
                 // How often to check for new API allocations
                 static const int allocationCheckFrequency = 3;

@@ -88,6 +88,10 @@ namespace UKControllerPluginTest {
                     > function
                 ) override
                 {
+                    if (this->expectFlightplanLoopNoFire) {
+                        throw std::logic_error("Was not expecting the flightplan loop");
+                    }
+
                     for (
                         std::list<UKControllerPluginTest::Euroscope::MockFlightplanRadarTargetPair>::const_iterator it =
                             this->allFpRtPairs.cbegin();
@@ -114,11 +118,18 @@ namespace UKControllerPluginTest {
                     }
                 };
 
+                void ExpectNoFlightplanLoop()
+                {
+                    this->expectFlightplanLoopNoFire = true;
+                }
+
             private:
                 std::list<MockFlightplanRadarTargetPair> allFpRtPairs;
                 std::list<
                     std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface>
                 > allControllers;
+
+                bool expectFlightplanLoopNoFire = false;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPluginTest

@@ -10,7 +10,6 @@
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "flightplan/StoredFlightplan.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 
@@ -26,7 +25,6 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Controller::Login;
-using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 
 using ::testing::Test;
@@ -125,7 +123,6 @@ namespace UKControllerPluginTest {
                 StoredFlightplanCollection flightplans;
                 NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 Login login;
-                DeferredEventHandler deferredEvents;
                 ActiveCallsignCollection activeCallsigns;
                 ActiveCallsignMonitor handler;
 

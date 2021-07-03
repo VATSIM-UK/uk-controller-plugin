@@ -16,7 +16,6 @@
 #include "mock/MockSquawkEventHandler.h"
 #include "flightplan/StoredFlightplan.h"
 #include "message/UserMessager.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "sid/SidCollection.h"
@@ -42,7 +41,6 @@ using UKControllerPluginTest::Squawk::MockSquawkEventHandler;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Controller::Login;
-using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 
 using ::testing::Test;
@@ -65,9 +63,7 @@ namespace UKControllerPluginTest {
                             this->activeCallsigns,
                             this->ownership,
                             this->login,
-                            this->deferredEvents,
-                            this->plugin,
-                            this->flightplans
+                            this->plugin
                         )
                     ),
                     userMessager(this->plugin),
@@ -180,7 +176,6 @@ namespace UKControllerPluginTest {
                 std::shared_ptr<InitialAltitudeEventHandler> initialAltitudes;
                 NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 Login login;
-                DeferredEventHandler deferredEvents;
                 ActiveCallsignCollection activeCallsigns;
                 UserMessager userMessager;
                 AirfieldOwnershipHandler handler;
