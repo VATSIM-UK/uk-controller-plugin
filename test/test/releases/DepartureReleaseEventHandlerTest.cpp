@@ -1097,6 +1097,9 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, testing::_, testing::_))
                 .Times(0);
 
+            EXPECT_CALL(this->mockPlugin, SetEuroscopeSelectedFlightplanReference(testing::_))
+                .Times(0);
+
             handler.OpenDecisionMenu(this->mockFlightplan, this->mockRadarTarget, "", {});
         }
 
@@ -1109,6 +1112,9 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, testing::_, testing::_))
                 .Times(0);
 
+            EXPECT_CALL(this->mockPlugin, SetEuroscopeSelectedFlightplanReference(testing::_))
+                .Times(0);
+
             handler.OpenDecisionMenu(this->mockFlightplan, this->mockRadarTarget, "", {});
         }
 
@@ -1117,6 +1123,9 @@ namespace UKControllerPluginTest {
             this->handler.AddReleaseRequest(this->request);
 
             EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, testing::_, testing::_))
+                .Times(0);
+
+            EXPECT_CALL(this->mockPlugin, SetEuroscopeSelectedFlightplanReference(testing::_))
                 .Times(0);
 
             handler.OpenDecisionMenu(this->mockFlightplan, this->mockRadarTarget, "", {});
@@ -1130,6 +1139,9 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, testing::_, testing::_))
                 .Times(0);
 
+            EXPECT_CALL(this->mockPlugin, SetEuroscopeSelectedFlightplanReference(testing::_))
+                .Times(0);
+
             handler.OpenDecisionMenu(this->mockFlightplan, this->mockRadarTarget, "", {});
         }
 
@@ -1137,6 +1149,9 @@ namespace UKControllerPluginTest {
         {
             this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
             this->handler.AddReleaseRequest(this->request);
+
+            EXPECT_CALL(this->mockPlugin, SetEuroscopeSelectedFlightplanReference(testing::Ref(this->mockFlightplan)))
+                .Times(1);
 
             UKControllerPlugin::Plugin::PopupMenuItem menuItemApprove;
             menuItemApprove.firstValue = "Approve";

@@ -21,6 +21,7 @@ namespace Euroscope {
 class EuroscopePluginLoopbackInterface
 {
     public:
+        virtual ~EuroscopePluginLoopbackInterface() = default;
         virtual void AddItemToPopupList(Plugin::PopupMenuItem item) = 0;
         virtual void ChatAreaMessage(
             std::string handler,
@@ -63,6 +64,8 @@ class EuroscopePluginLoopbackInterface
         ) = 0;
         virtual void ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue) = 0;
         virtual std::shared_ptr<EuroscopeFlightplanListInterface> RegisterFlightplanList(std::string name) = 0;
+        virtual void SetEuroscopeSelectedFlightplan(std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan) = 0;
+        virtual void SetEuroscopeSelectedFlightplan(const EuroScopeCFlightPlanInterface& flightplan) = 0;
 };
 }  // namespace Euroscope
 }  // namespace UKControllerPlugin

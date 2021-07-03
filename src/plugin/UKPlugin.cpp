@@ -647,6 +647,23 @@ namespace UKControllerPlugin {
     }
 
     /*
+     * Set the ASEL flightplan
+     */
+    void UKPlugin::SetEuroscopeSelectedFlightplan(std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan)
+    {
+        if (flightplan == nullptr) {
+            return;
+        }
+
+        this->SetEuroscopeSelectedFlightplan(*flightplan);
+    }
+
+    void UKPlugin::SetEuroscopeSelectedFlightplan(const EuroScopeCFlightPlanInterface& flightplan)
+    {
+        this->SetASELAircraft(flightplan.GetEuroScopeObject());
+    }
+
+    /*
         Called on a timer by EuroScope.
     */
     void UKPlugin::OnTimer(int time)

@@ -721,6 +721,8 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            this->plugin.SetEuroscopeSelectedFlightplan(flightplan);
+
             // Create the list in place
             RECT popupArea = {
                 mousePos.x,
