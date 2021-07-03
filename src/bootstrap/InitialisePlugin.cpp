@@ -42,7 +42,6 @@
 #include "squawk/SquawkModule.h"
 #include "srd/SrdModule.h"
 #include "stands/StandModule.h"
-#include "timedevent/DeferredEventBootstrap.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
 #include "push/PushEventBootstrap.h"
@@ -76,7 +75,6 @@ using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::Message::UserMessagerBootstrap;
 using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Duplicate::DuplicatePlugin;
-using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Dependency::DependencyLoader;
@@ -207,7 +205,6 @@ namespace UKControllerPlugin {
 
         Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);
-        DeferredEventBootstrap(*this->container->timedHandler);
         SectorFile::BootstrapPlugin(*this->container);
 
         // General settings config bootstrap

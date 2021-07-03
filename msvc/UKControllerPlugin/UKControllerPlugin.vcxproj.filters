@@ -549,21 +549,6 @@
     <ClInclude Include="..\..\src\offblock\EstimatedOffBlockTimeBootstrap.h">
       <Filter>src\offblock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\timedevent\DeferredEventHandler.h">
-      <Filter>src\timedevent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\timedevent\DeferredEventBootstrap.h">
-      <Filter>src\timedevent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\timedevent\DeferredEventRunnerInterface.h">
-      <Filter>src\timedevent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\timedevent\DeferredEvent.h">
-      <Filter>src\timedevent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\flightplan\DeferredFlightplanEvent.h">
-      <Filter>src\flightplan</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\resource\resource.h">
       <Filter>resource</Filter>
     </ClInclude>
@@ -1031,7 +1016,7 @@
     <ClInclude Include="..\..\src\timer\TimerDisplay.h">
       <Filter>src\timer</Filter>
     </ClInclude>
-        <ClInclude Include="..\..\src\push\PushEventProcessorCollection.h">
+    <ClInclude Include="..\..\src\push\PushEventProcessorCollection.h">
       <Filter>src\push</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\push\PushEventProcessorInterface.h">
@@ -1067,7 +1052,7 @@
     <ClInclude Include="..\..\src\push\PushEventConnectionInterface.h">
       <Filter>src\push</Filter>
     </ClInclude>
-        <ClInclude Include="..\..\src\releases\CompareDepartureReleases.h">
+    <ClInclude Include="..\..\src\releases\CompareDepartureReleases.h">
       <Filter>src\releases</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\releases\ApproveDepartureReleaseDialog.h">
@@ -1427,15 +1412,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\euroscope\RadarTargetEventHandlerCollection.cpp">
       <Filter>src\euroscope</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\timedevent\DeferredEventHandler.cpp">
-      <Filter>src\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\timedevent\DeferredEventBootstrap.cpp">
-      <Filter>src\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp">
-      <Filter>src\flightplan</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pch\stdafx.cpp">
       <Filter>src\pch</Filter>
@@ -1857,7 +1833,7 @@
     <ClCompile Include="..\..\src\push\PushEventProcessorCollection.cpp">
       <Filter>src\push</Filter>
     </ClCompile>
-        <ClCompile Include="..\..\src\releases\ApproveDepartureReleaseDialog.cpp">
+    <ClCompile Include="..\..\src\releases\ApproveDepartureReleaseDialog.cpp">
       <Filter>src\releases</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\releases\CompareDepartureReleases.cpp">

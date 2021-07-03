@@ -82,7 +82,6 @@
     <ClCompile Include="..\..\test\test\euroscope\UserSettingAwareCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightinformationservice\FlightInformationServiceModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\flightinformationservice\FlightInformationServiceTagItemTest.cpp" />
-    <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightPlanEventHandlerCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\FlightplanStorageBootstrapTest.cpp" />
     <ClCompile Include="..\..\test\test\flightplan\StoredFlightplanCollectionTest.cpp" />
@@ -252,8 +251,6 @@
     <ClCompile Include="..\..\test\test\tag\TagFunctionTest.cpp" />
     <ClCompile Include="..\..\test\test\tag\TagItemCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\task\TaskRunnerTest.cpp" />
-    <ClCompile Include="..\..\test\test\timedevent\DeferredEventBootstrapTest.cpp" />
-    <ClCompile Include="..\..\test\test\timedevent\DeferredEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\timedevent\TimedEventCollectionTest.cpp" />
     <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp" />
     <ClCompile Include="..\..\test\test\time\ParseTimeStringsTest.cpp" />
@@ -275,7 +272,6 @@
     <ClInclude Include="..\..\test\mock\MockConfigurableDisplay.h" />
     <ClInclude Include="..\..\test\mock\MockControllerStatusEventHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockCurlApi.h" />
-    <ClInclude Include="..\..\test\mock\MockDeferredEventRunner.h" />
     <ClInclude Include="..\..\test\mock\MockDependencyLoader.h" />
     <ClInclude Include="..\..\test\mock\MockDialogProvider.h" />
     <ClInclude Include="..\..\test\mock\MockEuroScopeCControllerInterface.h" />
@@ -292,7 +288,6 @@
     <ClInclude Include="..\..\test\mock\MockGraphicsInterface.h" />
     <ClInclude Include="..\..\test\mock\MockHistoryTrailDialog.h" />
     <ClInclude Include="..\..\test\mock\MockHistoryTrailRepository.h" />
-    <ClInclude Include="..\..\test\mock\MockInitialAltitudeEventHandler.h" />
     <ClInclude Include="..\..\test\mock\MockMinStack.h" />
     <ClInclude Include="..\..\test\mock\MockRadarRendererableInterface.h" />
     <ClInclude Include="..\..\test\mock\MockRadarTargetEventHandlerInterface.h" />
@@ -303,7 +298,6 @@
     <ClInclude Include="..\..\test\mock\MockPushEventConnection.h" />
     <ClInclude Include="..\..\test\mock\MockWinApi.h" />
     <ClInclude Include="..\..\test\pch\pch.h" />
-    <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

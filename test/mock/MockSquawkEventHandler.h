@@ -7,7 +7,6 @@
 #include "squawk/SquawkAssignment.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "login/Login.h"
-#include "timedevent/DeferredEventHandler.h"
 
 namespace UKControllerPluginTest {
     namespace Squawk {

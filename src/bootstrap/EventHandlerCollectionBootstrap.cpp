@@ -9,7 +9,6 @@
 #include "timedevent/TimedEventCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "metar/MetarEventHandlerCollection.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "plugin/UKPlugin.h"
 #include "command/CommandHandlerCollection.h"
@@ -23,7 +22,6 @@ using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
-using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
@@ -44,11 +42,9 @@ namespace UKControllerPlugin {
             persistence.timedHandler.reset(new TimedEventCollection);
             persistence.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
             persistence.metarEventHandler.reset(new MetarEventHandlerCollection);
-            persistence.deferredHandlers.reset(new DeferredEventHandler);
             persistence.userSettingHandlers.reset(new UserSettingAwareCollection);
             persistence.commandHandlers.reset(new CommandHandlerCollection);
             persistence.runwayDialogEventHandlers.reset(new RunwayDialogAwareCollection);
-            persistence.timedHandler->RegisterEvent(persistence.deferredHandlers, 3);
             persistence.controllerHandoffHandlers.reset(new HandoffEventHandlerCollection);
         }
     }  // namespace Bootstrap
