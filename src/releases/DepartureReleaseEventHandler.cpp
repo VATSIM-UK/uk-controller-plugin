@@ -781,7 +781,7 @@ namespace UKControllerPlugin {
 
             // Release has been rejected
             if (context == "Reject") {
-                this->taskRunner.QueueAsynchronousTask([this, &release]()
+                this->taskRunner.QueueAsynchronousTask([this, release]()
                 {
                     try {
                         this->api.RejectDepartureReleaseRequest(
@@ -799,7 +799,7 @@ namespace UKControllerPlugin {
             }
 
             // Release has been acknowledged
-            this->taskRunner.QueueAsynchronousTask([this, &release]()
+            this->taskRunner.QueueAsynchronousTask([this, release]()
             {
                 try {
                     this->api.AcknowledgeDepartureReleaseRequest(
