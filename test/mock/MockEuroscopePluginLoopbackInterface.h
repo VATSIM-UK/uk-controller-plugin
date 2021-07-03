@@ -20,7 +20,7 @@ namespace UKControllerPluginTest {
             public UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface
         {
             public:
-                void AddAllFlightplansItem(UKControllerPluginTest::Euroscope::MockFlightplanRadarTargetPair item)
+                void AddAllFlightplansItem(MockFlightplanRadarTargetPair item)
                 {
                     this->allFpRtPairs.push_back(item);
                 }
@@ -89,7 +89,7 @@ namespace UKControllerPluginTest {
                 ) override
                 {
                     for (
-                        std::list<UKControllerPluginTest::Euroscope::MockFlightplanRadarTargetPair>::const_iterator it =
+                        auto it =
                             this->allFpRtPairs.cbegin();
                         it != this->allFpRtPairs.cend();
                         ++it
@@ -112,7 +112,29 @@ namespace UKControllerPluginTest {
                     ) {
                         function(*it);
                     }
-                };
+                }
+
+                MOCK_METHOD(void, SetEuroscopeSelectedFlightplanPointer,
+                            (std::shared_ptr<UKControllerPlugin::Euroscope::
+                                EuroScopeCFlightPlanInterface>));
+
+                MOCK_METHOD(void,
+                            SetEuroscopeSelectedFlightplanReference,
+                            (const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&));
+
+                void SetEuroscopeSelectedFlightplan(
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> flightplan
+                ) override
+                {
+                    this->SetEuroscopeSelectedFlightplanPointer(flightplan);
+                }
+
+                void SetEuroscopeSelectedFlightplan(
+                    const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan
+                ) override
+                {
+                    this->SetEuroscopeSelectedFlightplanReference(flightplan);
+                }
 
             private:
                 std::list<MockFlightplanRadarTargetPair> allFpRtPairs;

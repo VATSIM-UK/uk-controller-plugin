@@ -149,6 +149,10 @@ namespace UKControllerPlugin {
                 const char* sendingController,
                 const char* targetController
             ) override;
+            void SetEuroscopeSelectedFlightplan(
+                std::shared_ptr<Euroscope::EuroScopeCFlightPlanInterface> flightplan
+            ) override;
+            void SetEuroscopeSelectedFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) override;
 
             // Inherited via UserSettingProviderInterface
             std::string GetKey(std::string key) override;
