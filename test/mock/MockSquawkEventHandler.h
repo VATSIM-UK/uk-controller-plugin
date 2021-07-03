@@ -21,7 +21,6 @@ namespace UKControllerPluginTest {
                     *plans,
                     *pluginLoopback,
                     *login,
-                    *deferred,
                     false
                 ) {
                 }
@@ -48,7 +47,6 @@ namespace UKControllerPluginTest {
                 std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> plans;
                 std::unique_ptr<UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface> pluginLoopback;
                 std::unique_ptr<UKControllerPlugin::Controller::Login> login;
-                std::unique_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferred;
         };
     }  // namespace Squawk
 }  // namespace UKControllerPluginTest

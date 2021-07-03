@@ -1,6 +1,5 @@
 #include "pch/stdafx.h"
 #include "squawk/SquawkEventHandler.h"
-#include "controller/ControllerPosition.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
@@ -9,8 +8,6 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "squawk/SquawkGenerator.h"
 #include "login/Login.h"
-#include "timedevent/DeferredEventHandler.h"
-#include "flightplan/DeferredFlightplanEvent.h"
 #include "euroscope/GeneralSettingsEntries.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
@@ -24,8 +21,6 @@ using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Squawk::SquawkAssignment;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Controller::Login;
-using UKControllerPlugin::TimedEvent::DeferredEventHandler;
-using UKControllerPlugin::Flightplan::DeferredFlightPlanEvent;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
@@ -38,17 +33,11 @@ namespace UKControllerPlugin {
             const StoredFlightplanCollection & storedFlightplans,
             EuroscopePluginLoopbackInterface & pluginLoopback,
             const Login & login,
-            DeferredEventHandler & deferredEvents,
             bool automaticAssignmentDisabled
         )
             : generator(generator), activeCallsigns(activeCallsigns), storedFlightplans(storedFlightplans),
-            pluginLoopback(pluginLoopback), login(login), deferredEvents(deferredEvents),
-            automaticAssignmentDisabled(automaticAssignmentDisabled), minAutomaticAssignmentLoginTime(15)
-        {
-
-        }
-
-        SquawkEventHandler::~SquawkEventHandler()
+              pluginLoopback(pluginLoopback), login(login), automaticAssignmentDisabled(automaticAssignmentDisabled),
+              minAutomaticAssignmentLoginTime(15)
         {
 
         }
@@ -65,25 +54,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // If we haven't been logged in more than a certain time, defer squawk assignments
-            // to give EuroScope a chance to process controllers logged in / preexisting squawk assignments
-            // We defer by the wait time to space out the subsequent events.
-            if (this->login.GetSecondsLoggedIn() < this->minAutomaticAssignmentLoginTime) {
-                LogDebug(
-                    "Deferring squawk assignment for " + flightplan.GetCallsign() +
-                    " as only recently logged in"
-                );
-                this->deferredEvents.DeferFor(
-                    std::make_unique<DeferredFlightPlanEvent>(*this, this->pluginLoopback, flightplan.GetCallsign()),
-                    this->minAutomaticAssignmentLoginTime
-                );
-                return;
-            }
-
-            this->generator.AssignCircuitSquawkForAircraft(flightplan, radarTarget) ||
-                this->generator.ReassignPreviousSquawkToAircraft(flightplan, radarTarget) ||
-                this->generator.RequestLocalSquawkForAircraft(flightplan, radarTarget) ||
-                this->generator.RequestGeneralSquawkForAircraft(flightplan, radarTarget);
+            this->AttemptAssignment(flightplan, radarTarget);
         }
 
         /*
@@ -151,28 +122,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
-            std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
-            for (
-                StoredFlightplanCollection::const_iterator it = this->storedFlightplans.cbegin();
-                it != this->storedFlightplans.cend();
-                ++it
-            ) {
-                fp = this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign());
-                rt = this->pluginLoopback.GetRadarTargetForCallsign(it->second->GetCallsign());
-
-                if (!fp || !rt) {
-                    continue;
-                }
-
-                if (fp->HasAssignedSquawk() || !fp->IsTrackedByUser()) {
-                    continue;
-                }
-
-                if (!this->generator.RequestLocalSquawkForAircraft(*fp, *rt)) {
-                    this->generator.RequestGeneralSquawkForAircraft(*fp, *rt);
-                }
-            }
+            this->AttemptAssignSquawksToAllAircraft();
         }
 
         /*
@@ -204,24 +154,8 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            LogInfo("Mass assigning squawks");
-
-            std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
-            std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
-            for (
-                StoredFlightplanCollection::const_iterator it = this->storedFlightplans.cbegin();
-                it != this->storedFlightplans.cend();
-                ++it
-            ) {
-                fp = this->pluginLoopback.GetFlightplanForCallsign(it->second->GetCallsign());
-                rt = this->pluginLoopback.GetRadarTargetForCallsign(it->second->GetCallsign());
-
-                if (!fp || !rt) {
-                    continue;
-                }
-
-                this->FlightPlanEvent(*fp, *rt);
-            }
+            LogInfo("User is now an active callsign, mass assigning squawks");
+            this->AttemptAssignSquawksToAllAircraft();
         }
 
         /*
@@ -237,6 +171,43 @@ namespace UKControllerPlugin {
         */
         void SquawkEventHandler::CallsignsFlushed(void)
         {
+        }
+
+        void SquawkEventHandler::AttemptAssignment(
+            EuroScopeCFlightPlanInterface& flightplan,
+            EuroScopeCRadarTargetInterface& radarTarget
+        ) const
+        {
+            if (this->login.GetSecondsLoggedIn() < this->minAutomaticAssignmentLoginTime) {
+                LogDebug(
+                    "Skipping squawk assignment for " + flightplan.GetCallsign() +
+                    " for now, as only recently logged in"
+                );
+                return;
+            }
+
+            this->generator.AssignCircuitSquawkForAircraft(flightplan, radarTarget) ||
+                this->generator.ReassignPreviousSquawkToAircraft(flightplan, radarTarget) ||
+                this->generator.RequestLocalSquawkForAircraft(flightplan, radarTarget) ||
+                this->generator.RequestGeneralSquawkForAircraft(flightplan, radarTarget);
+        }
+
+        void SquawkEventHandler::AttemptAssignSquawksToAllAircraft() const
+        {
+            this->pluginLoopback.ApplyFunctionToAllFlightplans(
+                [this]
+            (
+                std::shared_ptr<EuroScopeCFlightPlanInterface> fp,
+                std::shared_ptr<EuroScopeCRadarTargetInterface> rt
+            )
+                {
+                    if (fp->HasAssignedSquawk() || fp->IsTracked() && !fp->IsTrackedByUser()) {
+                        return;
+                    }
+
+                    this->AttemptAssignment(*fp, *rt);
+                }
+            );
         }
     }  // namespace Squawk
 }  // namespace UKControllerPlugin

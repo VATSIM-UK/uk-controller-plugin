@@ -5,6 +5,7 @@
 #include "euroscope/UserSettingAwareCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/ActiveCallsignCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::InitialHeading::BootstrapPlugin;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -12,6 +13,7 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
+using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using ::testing::Test;
 using ::testing::NiceMock;
 
@@ -28,6 +30,7 @@ namespace UKControllerPluginTest {
                     container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
                     container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
                     container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+                    container.timedHandler = std::make_unique<TimedEventCollection>();
                 }
 
                 PersistenceContainer container;
@@ -56,6 +59,13 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container);
             EXPECT_EQ(1, container.userSettingHandlers->Count());
+        }
+
+        TEST_F(InitialHeadingModuleTest, BootstrapPluginRegistersForTimedEvents)
+        {
+            BootstrapPlugin(this->container);
+            EXPECT_EQ(1, container.timedHandler->CountHandlers());
+            EXPECT_EQ(1, container.timedHandler->CountHandlersForFrequency(10));
         }
     } // namespace InitialHeading
 }  // namespace UKControllerPluginTest

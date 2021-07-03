@@ -16,7 +16,7 @@ namespace UKControllerPlugin {
         const int recycleFunctionId = 9011;
 
         /*
-            Initialises the initial altitude module. Gets the altitudes from the dependency cache
+            Initialises the initial heading module. Gets the headings from the dependency cache
             and registers the event handler to receive flightplan events.
         */
         void BootstrapPlugin(
@@ -28,14 +28,13 @@ namespace UKControllerPlugin {
                     *persistence.activeCallsigns,
                     *persistence.airfieldOwnership,
                     *persistence.login,
-                    *persistence.deferredHandlers,
-                    *persistence.plugin,
-                    *persistence.flightplans
+                    *persistence.plugin
                 )
             );
             persistence.userSettingHandlers->RegisterHandler(handler);
             persistence.flightplanHandler->RegisterHandler(handler);
             persistence.activeCallsigns->AddHandler(handler);
+            persistence.timedHandler->RegisterEvent(handler, 10);
 
 
             TagFunction recycleFunction(
