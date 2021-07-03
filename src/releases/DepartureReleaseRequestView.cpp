@@ -181,11 +181,11 @@ namespace UKControllerPlugin {
             }
 
             if (request->RequestExpired()) {
-                return statusIndicatorReleaseAcknowledged;
+                return statusIndicatorReleaseExpired;
             }
 
             if (request->Acknowledged()) {
-                return statusIndicatorReleased;
+                return statusIndicatorReleaseAcknowledged;
             }
 
             return statusIndicatorReleasePending;

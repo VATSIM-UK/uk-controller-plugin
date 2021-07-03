@@ -37,6 +37,18 @@ There are two options for viewing the status of releases that you have requested
 and Countdown TAG items described below, or you can use the `Open Departure Release Status View` TAG function to popup
 a temporary display for a given aircrafts releases.
 
+The `Departure Release Status View` displays the callsigns of controllers that have been targeted for release, the time
+until the release becomes active, if the release has been approved and has a conditional released at time, and the time until the release
+approval expires if the release is approved and has an expiry.
+
+The controller callsign indicates the status of the release:
+
+- Green = Approved
+- Red = Rejected
+- Orange = Request has expired and another one should be made
+- Blue = Acknowledged
+- White = Pending
+
 ## How Do I Respond To A Release Request?
 
 If you are the target of a release request, you can use the `Departure Release Decision List` to make decisions on individual

@@ -272,6 +272,7 @@
     <ClInclude Include="..\..\src\releases\ApproveDepartureReleaseDialog.h" />
     <ClInclude Include="..\..\src\releases\CompareDepartureReleases.h" />
     <ClInclude Include="..\..\src\releases\CompareEnrouteReleaseTypes.h" />
+    <ClInclude Include="..\..\src\releases\DepartureReleaseColours.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseCountdownColours.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseDecisionList.h" />
     <ClInclude Include="..\..\src\releases\DepartureReleaseEventHandler.h" />
