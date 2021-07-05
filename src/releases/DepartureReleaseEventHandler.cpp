@@ -403,6 +403,7 @@ namespace UKControllerPlugin {
             int expiries = 0;
             int awaitingReleasedAtTime = 0;
             int relevant = 0;
+            int acknowledgements = 0;
             for (
                 auto releaseRequest = this->releaseRequests.rbegin();
                 releaseRequest != this->releaseRequests.rend();
@@ -427,6 +428,8 @@ namespace UKControllerPlugin {
                     rejections++;
                 } else if (releaseRequest->second->RequestExpired()) {
                     expiries++;
+                } else if (releaseRequest->second->Acknowledged()) {
+                    acknowledgements++;
                 }
 
                 relevant++;
@@ -452,6 +455,8 @@ namespace UKControllerPlugin {
                 indicatorColour = statusIndicatorReleaseRejected;
             } else if (expiries != 0) {
                 indicatorColour = statusIndicatorReleaseExpired;
+            } else if (acknowledgements == relevant) {
+                indicatorColour = statusIndicatorReleaseAcknowledged;
             } else if (approvals == relevant) {
                 indicatorColour = awaitingReleasedAtTime != 0
                                       ? statusIndicatorReleasedAwaitingTime
