@@ -1560,6 +1560,36 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleased, data.GetTagColour());
         }
 
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusIndicatorPrefersApprovedOverAcknowledged)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+            request2->Approve(
+                TimeNow(),
+                TimeNow() + std::chrono::seconds(25)
+            );
+            request2->Acknowledge();
+            request->Acknowledge();
+            request->Approve(
+                TimeNow(),
+                TimeNow() + std::chrono::seconds(25)
+            );
+
+
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("2/2", data.GetItemString());
+            EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleased, data.GetTagColour());
+        }
+
         TEST_F(DepartureReleaseEventHandlerTest,
                DepartureReleaseStatusIndicatorReturnsPendingTimeIfWaitingForReleaseTime)
         {
@@ -1615,6 +1645,28 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(data);
             EXPECT_EQ("1/2", data.GetItemString());
             EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleaseExpired, data.GetTagColour());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, DepartureReleaseStatusIndicatorDisplaysAcknowledgedIfAllAcknowledged)
+        {
+            auto request2 = std::make_shared<DepartureReleaseRequest>(
+                2,
+                "BAW123",
+                2,
+                3,
+                TimeNow() + std::chrono::minutes(5)
+            );
+            request2->Acknowledge();
+            request->Acknowledge();
+
+
+            this->handler.AddReleaseRequest(request);
+            this->handler.AddReleaseRequest(request2);
+
+            UKControllerPlugin::Tag::TagData data = this->GetTagData(124);
+            this->handler.SetTagItemData(data);
+            EXPECT_EQ("0/2", data.GetItemString());
+            EXPECT_EQ(UKControllerPlugin::Releases::statusIndicatorReleaseAcknowledged, data.GetTagColour());
         }
 
         TEST_F(DepartureReleaseEventHandlerTest,
