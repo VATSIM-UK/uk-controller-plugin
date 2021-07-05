@@ -228,8 +228,8 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            // Approve the release request
-            std::tm tm;
+            // Get the released at time as a timepoint
+            std::tm tm{};
             tm.tm_sec = releasedAtTime.wSecond;
             tm.tm_min = releasedAtTime.wMinute;
             tm.tm_hour = releasedAtTime.wHour;
@@ -237,9 +237,19 @@ namespace UKControllerPlugin {
             tm.tm_mon = releasedAtTime.wMonth - 1;
             tm.tm_year = releasedAtTime.wYear - 1900;
             tm.tm_isdst = 0;
+            const auto releasedAtTimepoint = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+
+            /*
+             * Approve the request. If the released at time is prior to now,
+             * then make the release time exactly now. This caters for people
+             * taking their time to fill in the dialog / releases halfway between minutes
+             * etc.
+             */
             eventHandler->ApproveRelease(
                 this->selectedRelease->Id(),
-                std::chrono::system_clock::from_time_t(std::mktime(&tm)),
+                releasedAtTimepoint < std::chrono::system_clock::now()
+                    ? std::chrono::system_clock::now()
+                    : releasedAtTimepoint,
                 durationSeconds
             );
         }
