@@ -4,9 +4,7 @@
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
-#include "flightplan/DeferredFlightplanEvent.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/GeneralSettingsEntries.h"
 #include "sid/SidCollection.h"
@@ -20,10 +18,7 @@ using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Airfield::NormaliseSid;
-using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Controller::Login;
-using UKControllerPlugin::Flightplan::DeferredFlightPlanEvent;
-using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 
@@ -35,14 +30,10 @@ namespace UKControllerPlugin {
             const ActiveCallsignCollection& activeCallsigns,
             const AirfieldOwnershipManager& airfieldOwnership,
             const Login& login,
-            DeferredEventHandler& deferredEvents,
-            EuroscopePluginLoopbackInterface& plugin,
-            const StoredFlightplanCollection& storedFlightplans
+            EuroscopePluginLoopbackInterface& plugin
         )
             : minimumLoginTimeBeforeAssignment(5), sids(sids), activeCallsigns(activeCallsigns),
-              airfieldOwnership(airfieldOwnership), deferredEvents(deferredEvents), login(login),
-              storedFlightplans(storedFlightplans),
-              plugin(plugin)
+              airfieldOwnership(airfieldOwnership), login(login), plugin(plugin)
         { }
 
         /*
@@ -53,7 +44,7 @@ namespace UKControllerPlugin {
             EuroScopeCRadarTargetInterface& radarTarget
         )
         {
-            if (!this->userAutomaticAssignmentsAllowed) {
+            if (!this->userAutomaticAssignmentsAllowed || this->login.GetLoginStatus() != this->login.loggedIn) {
                 return;
             }
 
@@ -61,10 +52,7 @@ namespace UKControllerPlugin {
             if (this->login.GetSecondsLoggedIn() < this->minimumLoginTimeBeforeAssignment) {
                 LogDebug(
                     "Deferring initial heading assignment for " + flightPlan.GetCallsign()
-                );
-                this->deferredEvents.DeferFor(
-                    std::make_unique<DeferredFlightPlanEvent>(*this, this->plugin, flightPlan.GetCallsign()),
-                    this->minimumLoginTimeBeforeAssignment
+                    + " for now, as user only just logged in"
                 );
                 return;
             }
@@ -100,9 +88,6 @@ namespace UKControllerPlugin {
             flightPlan.SetHeading(matchedSid->InitialHeading());
             this->alreadySetMap[flightPlan.GetCallsign()] = flightPlan.GetSidName();
         }
-
-        InitialHeadingEventHandler::~InitialHeadingEventHandler(void)
-        { }
 
         /*
             Handle events regarding when a flightplan disconnects.
@@ -160,6 +145,19 @@ namespace UKControllerPlugin {
             return this->userAutomaticAssignmentsAllowed;
         }
 
+        void InitialHeadingEventHandler::CheckAllFlightplansForAssignment()
+        {
+            this->plugin.ApplyFunctionToAllFlightplans(
+                [this]
+            (
+                std::shared_ptr<EuroScopeCFlightPlanInterface> fp,
+                std::shared_ptr<EuroScopeCRadarTargetInterface> rt
+            )
+                {
+                    this->FlightPlanEvent(*fp, *rt);
+                }
+            );
+        }
         /*
             Returns true if the aircraft meets the prerequisites for initial heading assignment.
 
@@ -225,25 +223,8 @@ namespace UKControllerPlugin {
                 return;
             }
 
-
-            LogInfo("Mass assigning initial headings");
-
-            std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
-            std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
-            for (
-                StoredFlightplanCollection::const_iterator it = this->storedFlightplans.cbegin();
-                it != this->storedFlightplans.cend();
-                ++it
-            ) {
-                fp = this->plugin.GetFlightplanForCallsign(it->second->GetCallsign());
-                rt = this->plugin.GetRadarTargetForCallsign(it->second->GetCallsign());
-
-                if (!fp || !rt) {
-                    continue;
-                }
-
-                this->FlightPlanEvent(*fp, *rt);
-            }
+            LogInfo("User now active, mass assigning initial headings");
+            this->CheckAllFlightplansForAssignment();
         }
 
         /*
@@ -257,6 +238,15 @@ namespace UKControllerPlugin {
         */
         void InitialHeadingEventHandler::CallsignsFlushed(void)
         { }
+
+        void InitialHeadingEventHandler::TimedEventTrigger()
+        {
+            if (!this->activeCallsigns.UserHasCallsign()) {
+                return;
+            }
+
+            this->CheckAllFlightplansForAssignment();
+        }
 
         /*
             Called when user settings get updated.

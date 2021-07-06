@@ -89,7 +89,7 @@ namespace UKControllerPlugin {
             // Assign to handlers
             container.flightplanHandler->RegisterHandler(eventHandler);
             container.tagHandler->RegisterTagItem(assignedStandTagItemId, eventHandler);
-            container.websocketProcessors->AddProcessor(eventHandler);
+            container.pushEventProcessors->AddProcessor(eventHandler);
             container.externalEventHandler->AddHandler(eventHandler);
         }
     }  // namespace Stands

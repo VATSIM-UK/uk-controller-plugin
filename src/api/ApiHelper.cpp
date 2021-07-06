@@ -135,22 +135,6 @@ namespace UKControllerPlugin {
         }
 
         /*
-            Authorise connection to a websocket channel and return the authorisation code.
-        */
-        std::string ApiHelper::AuthoriseWebsocketChannel(std::string socketId, std::string channel) const
-        {
-            nlohmann::json response = this->MakeApiRequest(
-                this->requestBuilder.BuildWebsocketChannelAuthRequest(socketId, channel)
-            ).GetRawData();
-
-            if (!response.count("auth") || !response.at("auth").is_string()) {
-                throw ApiException("Authorsation response missing valid token");
-            }
-
-            return response.at("auth");
-        }
-
-        /*
             Hits the API root to find out whether we're allowed in.
         */
         bool ApiHelper::CheckApiAuthorisation(void) const
@@ -335,6 +319,59 @@ namespace UKControllerPlugin {
             return this->MakeApiRequest(
                 this->requestBuilder.BuildGetLatestPluginEventsRequest(lastEventId)
             ).GetRawData();
+        }
+
+        void ApiHelper::AcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const
+        {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildAcknowledgeDepartureReleaseRequest(releaseId, controllerPositionId)
+            );
+        }
+
+        void ApiHelper::RejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const
+        {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildRejectDepartureReleaseRequest(releaseId, controllerPositionId)
+            );
+        }
+
+        void ApiHelper::ApproveDepartureReleaseRequest(
+            int releaseId,
+            int controllerPositionId,
+            std::chrono::system_clock::time_point releasedAt,
+            int expiresInSeconds
+        ) const
+        {
+            this->MakeApiRequest(
+                this->requestBuilder.BuildApproveDepartureReleaseRequest(
+                    releaseId,
+                    controllerPositionId,
+                    releasedAt,
+                    expiresInSeconds
+                )
+            );
+        }
+
+        nlohmann::json ApiHelper::RequestDepartureRelease(
+            std::string callsign,
+            int requestingControllerId,
+            int targetControllerId,
+            int expiresInSeconds
+        ) const
+        {
+            return this->MakeApiRequest(
+                this->requestBuilder.BuildDepartureReleaseRequest(
+                    callsign,
+                    requestingControllerId,
+                    targetControllerId,
+                    expiresInSeconds
+                )
+            ).GetRawData();
+        }
+
+        void ApiHelper::CancelDepartureReleaseRequest(int releaseId) const
+        {
+            this->MakeApiRequest(this->requestBuilder.BuildCancelReleaseRequest(releaseId));
         }
 
         void ApiHelper::ReadNotification(int id) const

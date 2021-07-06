@@ -42,10 +42,9 @@
 #include "squawk/SquawkModule.h"
 #include "srd/SrdModule.h"
 #include "stands/StandModule.h"
-#include "timedevent/DeferredEventBootstrap.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
-#include "websocket/WebsocketBootstrap.h"
+#include "push/PushEventBootstrap.h"
 #include "oceanic/OceanicModule.h"
 #include "sid/SidModule.h"
 #include "initialheading/InitialHeadingModule.h"
@@ -76,7 +75,6 @@ using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::Message::UserMessagerBootstrap;
 using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Duplicate::DuplicatePlugin;
-using UKControllerPlugin::TimedEvent::DeferredEventBootstrap;
 using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Dependency::DependencyLoader;
@@ -169,7 +167,7 @@ namespace UKControllerPlugin {
 
         // API + Websocket
         HelperBootstrap::Bootstrap(*this->container);
-        Websocket::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
+        Push::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
         // Datetime
         Datablock::BootstrapPlugin(*this->container);
@@ -199,7 +197,7 @@ namespace UKControllerPlugin {
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         Sid::BootstrapPlugin(*this->container, loader);
         Navaids::BootstrapPlugin(*this->container, loader);
-        Releases::BootstrapPlugin(*this->container, loader);
+        Releases::BootstrapPlugin(*this->container, *this->container->plugin, loader);
         Stands::BootstrapPlugin(*this->container, loader);
         Notifications::BootstrapPlugin(*this->container);
         FlightInformationService::BootstrapPlugin(*this->container);
@@ -207,7 +205,6 @@ namespace UKControllerPlugin {
 
         Wake::BootstrapPlugin(*this->container, loader);
         LoginModule::BootstrapPlugin(*this->container);
-        DeferredEventBootstrap(*this->container->timedHandler);
         SectorFile::BootstrapPlugin(*this->container);
 
         // General settings config bootstrap
@@ -228,14 +225,14 @@ namespace UKControllerPlugin {
             this->container->minStack,
             *this->container->taskRunner,
             *this->container->api,
-            *this->container->websocketProcessors,
+            *this->container->pushEventProcessors,
             *this->container->dialogManager
         );
         RegionalPressureModule::BootstrapPlugin(
             this->container->regionalPressureManager,
             *this->container->taskRunner,
             *this->container->api,
-            *this->container->websocketProcessors,
+            *this->container->pushEventProcessors,
             *this->container->dialogManager,
             loader
         );

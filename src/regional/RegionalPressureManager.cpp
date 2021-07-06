@@ -1,12 +1,10 @@
 #include "pch/stdafx.h"
 #include "regional/RegionalPressureManager.h"
-#include "helper/HelperFunctions.h"
-#include "task/TaskRunner.h"
 
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::HelperFunctions;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEventSubscription;
+using UKControllerPlugin::Push::PushEvent;
 
 namespace UKControllerPlugin {
     namespace Regional {
@@ -88,7 +86,7 @@ namespace UKControllerPlugin {
         /*
             We've received some new MSLs from the web API, update them locally
         */
-        void RegionalPressureManager::ProcessWebsocketMessage(const WebsocketMessage & message)
+        void RegionalPressureManager::ProcessPushEvent(const PushEvent& message)
         {
             if (message.event != "App\\Events\\RegionalPressuresUpdatedEvent") {
                 return;
@@ -101,14 +99,19 @@ namespace UKControllerPlugin {
             this->UpdateAllPressures(message.data.at("pressures"));
         }
 
-        std::set<WebsocketSubscription> RegionalPressureManager::GetSubscriptions(void) const
+        std::set<PushEventSubscription> RegionalPressureManager::GetPushEventSubscriptions(void) const
         {
             return {
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-rps-updates"
                 }
             };
+        }
+
+        void RegionalPressureManager::PluginEventsSynced()
+        {
+            // Nothing here
         }
 
         /*

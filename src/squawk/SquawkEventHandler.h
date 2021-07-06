@@ -24,10 +24,7 @@ namespace UKControllerPlugin {
     namespace Squawk {
         class SquawkGenerator;
     }  // namespace Squawk
-    namespace TimedEvent {
-        class DeferredEventHandler;
-    }  // namespace TimedEvent
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin
 
 
 namespace UKControllerPlugin {
@@ -45,10 +42,9 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & pluginLoopback,
                     const UKControllerPlugin::Controller::Login & login,
-                    UKControllerPlugin::TimedEvent::DeferredEventHandler & deferredEvents,
                     bool automaticAssignmentAllowed
                 );
-                ~SquawkEventHandler();
+                ~SquawkEventHandler() override = default;
                 void FlightPlanEvent(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
@@ -97,6 +93,12 @@ namespace UKControllerPlugin {
                 const bool automaticAssignmentDisabled = true;
 
             private:
+                void AttemptAssignment(
+                    Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget
+                ) const;
+
+                void AttemptAssignSquawksToAllAircraft() const;
 
                 // Generates squawks
                 UKControllerPlugin::Squawk::SquawkGenerator & generator;
@@ -109,9 +111,6 @@ namespace UKControllerPlugin {
 
                 // Handles requests to the plugin core.
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & pluginLoopback;
-
-                // If an event needs deferring, put it here.
-                UKControllerPlugin::TimedEvent::DeferredEventHandler & deferredEvents;
 
                 // Duration we have to be logged in to start doing automatic squawk assignments.
                 const std::chrono::seconds minAutomaticAssignmentLoginTime;

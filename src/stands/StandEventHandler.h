@@ -4,7 +4,7 @@
 #include "tag/TagItemInterface.h"
 #include "api/ApiInterface.h"
 #include "task/TaskRunnerInterface.h"
-#include "websocket/WebsocketEventProcessorInterface.h"
+#include "push/PushEventProcessorInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "integration/ExternalMessageHandlerInterface.h"
@@ -15,7 +15,7 @@ namespace UKControllerPlugin {
             A new class
         */
         class StandEventHandler: public UKControllerPlugin::Tag::TagItemInterface,
-            public UKControllerPlugin::Websocket::WebsocketEventProcessorInterface,
+                                 public Push::PushEventProcessorInterface,
             public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
             public UKControllerPlugin::Integration::ExternalMessageHandlerInterface
         {
@@ -27,6 +27,7 @@ namespace UKControllerPlugin {
                     std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
                     int standSelectedCallbackId
                 );
+                ~StandEventHandler() override = default;
 
                 void AnnotateFlightStrip(std::string callsign, int standId) const;
                 void DoStandAssignment(
@@ -54,10 +55,8 @@ namespace UKControllerPlugin {
                     std::string context,
                     const POINT& mousePos
                 );
-
-                // Inherited via WebsocketEventProcessorInterface
-                void ProcessWebsocketMessage(const UKControllerPlugin::Websocket::WebsocketMessage& message) override;
-                std::set<UKControllerPlugin::Websocket::WebsocketSubscription> GetSubscriptions(void) const override;
+                void ProcessPushEvent(const Push::PushEvent& message) override;
+                std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;
@@ -75,6 +74,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
                     int dataType
                 ) override;
+                void PluginEventsSynced() override;
 
                 // Inherited via ExternalMessageHandlerInterface
                 bool ProcessMessage(std::string message) override;

@@ -10,5 +10,9 @@
 9007 - Open Stand Assignment Selection Menu
 9008 - Open Stand Assignment Edit Box
 9009 - Open UK Flight Information Services Menu
-9010 - Open Oceanic Clearance Diaog
+9010 - Open Oceanic Clearance Dialog
 9011 - Recycle Initial Heading
+9012 - Open Request Departure Release Dialog
+9013 - Open Departure Release Decision Menu
+9014 - Open Departure Release Request Status View
+9015 - Open Departure Release Cancellation Menu

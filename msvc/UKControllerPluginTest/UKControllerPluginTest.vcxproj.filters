@@ -88,9 +88,6 @@
     <Filter Include="test\hold">
       <UniqueIdentifier>{d5e45187-7853-49f0-b2f3-fdeee1d265e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test\websocket">
-      <UniqueIdentifier>{40896d78-9aef-49a7-a041-e9c79d8e4150}</UniqueIdentifier>
-    </Filter>
     <Filter Include="test\sectorfile">
       <UniqueIdentifier>{2b17f35f-90d1-4f2d-9826-0618a260c1f5}</UniqueIdentifier>
     </Filter>
@@ -135,6 +132,15 @@
     </Filter>
     <Filter Include="test\initialheading">
       <UniqueIdentifier>{1f6bc603-4f77-4a4d-8364-2b8e739fce7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\components">
+      <UniqueIdentifier>{f1bcb9fd-718e-4080-8b9e-faee181caa40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\timer">
+      <UniqueIdentifier>{ca735e2e-aae4-42c9-88af-8c82006b8942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\push">
+      <UniqueIdentifier>{83e0dc64-52da-4353-9dc2-375e76d00366}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -413,18 +419,6 @@
     <ClCompile Include="..\..\test\test\offblock\EstimatedOffBlockTimeBootstrapTest.cpp">
       <Filter>test\offblock</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\timedevent\DeferredEventTest.cpp">
-      <Filter>test\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\timedevent\DeferredEventHandlerTest.cpp">
-      <Filter>test\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\timedevent\DeferredEventBootstrapTest.cpp">
-      <Filter>test\timedevent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\flightplan\DeferredFlightplanEventTest.cpp">
-      <Filter>test\flightplan</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\helper\InitTests.cpp">
       <Filter>helper</Filter>
     </ClCompile>
@@ -557,29 +551,8 @@
     <ClCompile Include="..\..\test\test\radarscreen\PositionResetCommandTest.cpp">
       <Filter>test\radarscreen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\InterpretPusherWebsocketMessageTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\WebsocketEventProcessorCollectionTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\mock\MockWebsocketEventProcessor.h">
+    <ClCompile Include="..\..\test\mock\MockPushEventProcessor.h">
       <Filter>mock</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PusherWebsocketProtocolHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PusherPingEventHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PusherErrorEventHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PusherActivityTimeoutEventHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PusherConnectionChannelSubscriptionEventHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
     </ClCompile>
     <ClCompile Include="..\..\test\test\minstack\MinStackRendererConfigurationTest.cpp">
       <Filter>test\minstack</Filter>
@@ -793,15 +766,6 @@
     <ClCompile Include="..\..\test\test\oceanic\OceanicModuleTest.cpp">
       <Filter>test\oceanic</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\WebsocketProxyConnetionTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\WebsocketProxyHandlerTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\test\websocket\PollingWebsocketConnectionTest.cpp">
-      <Filter>test\websocket</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\sid\StandardInstrumentDepartureTest.cpp">
       <Filter>test\sid</Filter>
     </ClCompile>
@@ -820,8 +784,6 @@
     <ClCompile Include="..\..\test\test\initialheading\InitialHeadingEventHandlerTest.cpp">
       <Filter>test\initialheading</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\setting\SettingRepositoryFactoryTest.cpp" />
-    <ClCompile Include="..\..\test\test\setting\SettingRepositoryTest.cpp" />
     <ClCompile Include="..\..\test\test\plugin\PluginChangelogTest.cpp">
       <Filter>test\plugin</Filter>
     </ClCompile>
@@ -833,6 +795,63 @@
     </ClCompile>
     <ClCompile Include="..\..\test\test\integration\MessageTypeTest.cpp">
       <Filter>test\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\ButtonTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\ClickableAreaTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\TitleBarTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\components\BrushSwitcherTest.cpp">
+      <Filter>test\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\time\SystemClockTest.cpp">
+      <Filter>test\time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\timer\TimerDisplayTest.cpp">
+      <Filter>test\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseDecisionListTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseEventHandlerTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseRequestTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\ToggleDepartureReleaseDecisionListTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\CompareDepartureReleasesTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\releases\DepartureReleaseCountdownColoursTest.cpp">
+      <Filter>test\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\push\PushEventProtocolHandlerTest.cpp">
+      <Filter>test\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\push\PushEventProcessorCollectionTest.cpp">
+      <Filter>test\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\push\PushEventProxyConnetionTest.cpp">
+      <Filter>test\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\push\PushEventProxyHandlerTest.cpp">
+      <Filter>test\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\push\InterpretPushEventTest.cpp">
+      <Filter>test\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\push\PollingPushEventConnectionTest.cpp">
+      <Filter>test\push</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\push\PushEventBootstrapTest.cpp">
+      <Filter>test\push</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -899,9 +918,6 @@
     <ClInclude Include="..\..\test\mock\MockHistoryTrailRepository.h">
       <Filter>mock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockInitialAltitudeEventHandler.h">
-      <Filter>mock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\test\mock\MockMinStack.h">
       <Filter>mock</Filter>
     </ClInclude>
@@ -924,9 +940,6 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\pch\pch.h" />
-    <ClInclude Include="..\..\test\mock\MockDeferredEventRunner.h">
-      <Filter>mock</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\test\helper\TestEnvironment.h">
       <Filter>helper</Filter>
     </ClInclude>
@@ -936,7 +949,7 @@
     <ClInclude Include="..\..\test\mock\MockDialogProvider.h">
       <Filter>mock</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\mock\MockWebsocketConnection.h">
+    <ClInclude Include="..\..\test\mock\MockPushEventConnection.h">
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockEuroscopeSectorFileElementInterface.h">
@@ -946,6 +959,9 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockExternalMessageHandlerInterface.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockEuroscopeFlightplanList.h">
       <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>

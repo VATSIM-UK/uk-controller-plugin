@@ -10,7 +10,6 @@
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "flightplan/StoredFlightplan.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 
@@ -26,7 +25,6 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Controller::Login;
-using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 
 using ::testing::Test;
@@ -55,60 +53,62 @@ namespace UKControllerPluginTest {
                     // Add the controllers
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGKK_DEL", 199.998, "DEL", { "EGKK" })
+                            new ControllerPosition(1, "EGKK_DEL", 199.998, {"EGKK"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGKK_TWR", 199.999, "TWR", { "EGKK" })
+                            new ControllerPosition(2, "EGKK_TWR", 199.999, {"EGKK"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_2_TWR", 199.997, "TWR", { "EGKK" })
+                            new ControllerPosition(3, "EGKK_2_TWR", 199.997, {"EGKK"}, true, false)
                     )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGKK_APP", 199.990, "APP", { "EGKK" })
+                            new ControllerPosition(4, "EGKK_APP", 199.990, {"EGKK"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGLL_S_TWR", 199.998, "TWR", { "EGLL" })
+                            new ControllerPosition(5, "EGLL_S_TWR", 199.998, {"EGLL"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
-                            new ControllerPosition("EGLL_N_APP", 199.998, "APP", { "EGLL" })
+                            new ControllerPosition(6, "EGLL_N_APP", 199.998, {"EGLL"}, true, false)
                         )
                     );
                     this->controllerCollection.AddPosition(
                         std::unique_ptr<ControllerPosition>(
                             new ControllerPosition(
+                                5,
                                 "LTC_S_CTR",
                                 134.120,
-                                "CTR",
-                                { "EGLL", "EGKK", "EGLC", "EGKA", "EGKB", "EGMC", "EGMD" }
+                                {"EGLL", "EGKK", "EGLC", "EGKA", "EGKB", "EGMC", "EGMD"},
+                                true,
+                                false
                             )
                         )
                     );
 
                     // Add the active callsigns
                     this->kkTwr = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_TWR", 199.999, "TWR", { "EGKK" })
+                        new ControllerPosition(2, "EGKK_TWR", 199.999, {"EGKK"}, true, false)
                     );
                     this->kkTwr2 = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_2_TWR", 199.997, "TWR", { "EGKK" })
+                        new ControllerPosition(3, "EGKK_2_TWR", 199.997, {"EGKK"}, true, false)
                     );
                     this->kkApp = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGKK_APP", 199.990, "APP", { "EGKK" })
+                        new ControllerPosition(4, "EGKK_APP", 199.990, {"EGKK"}, true, false)
                     );
                     this->llTwr = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGLL_S_TWR", 199.998, "TWR", { "EGLL" })
+                        new ControllerPosition(5, "EGLL_S_TWR", 199.998, {"EGLL"}, true, false)
                     );
                     this->llApp = std::unique_ptr<ControllerPosition>(
-                        new ControllerPosition("EGLL_N_APP", 199.998, "APP", { "EGLL" })
+                        new ControllerPosition(6, "EGLL_N_APP", 199.998, {"EGLL"}, true, false)
                     );
 
                     this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *kkTwr));
@@ -123,7 +123,6 @@ namespace UKControllerPluginTest {
                 StoredFlightplanCollection flightplans;
                 NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 Login login;
-                DeferredEventHandler deferredEvents;
                 ActiveCallsignCollection activeCallsigns;
                 ActiveCallsignMonitor handler;
 

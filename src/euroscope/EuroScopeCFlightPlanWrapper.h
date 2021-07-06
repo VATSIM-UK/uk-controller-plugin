@@ -41,6 +41,7 @@ namespace UKControllerPlugin {
                 void SetClearedAltitude(int cleared);
                 void SetHeading(int heading) override;
                 void SetSquawk(std::string squawk);
+                EuroScopePlugIn::CFlightPlan GetEuroScopeObject() const override;
 
                 // The callsign that will be returned by GetTrackingControllerCallsign if untracked.
                 const std::string notTrackedControllerCallsign = "";

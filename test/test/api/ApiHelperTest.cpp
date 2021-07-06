@@ -463,90 +463,6 @@ TEST_F(ApiHelperTest, ItCanUpdateTheKey)
     EXPECT_TRUE(this->helper.GetApiKey() == "notthekey");
 }
 
-TEST_F(ApiHelperTest, AuthoriseWebsocketChannelReturnsTheAuthCode)
-{
-    nlohmann::json responseData;
-    responseData["auth"] = "someauthcode";
-
-    CurlResponse response(responseData.dump(), false, 200);
-    CurlRequest expectedRequest(
-        GetApiCurlRequest(
-            "/broadcasting/auth",
-            CurlRequest::METHOD_POST,
-            { {"socket_id", "somesocket"}, {"channel_name", "somechannel"} }
-        )
-    );
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_EQ("someauthcode", this->helper.AuthoriseWebsocketChannel("somesocket", "somechannel"));
-}
-
-TEST_F(ApiHelperTest, AuthoriseWebsocketChannelThrowsExceptionIfAuthCodeMissing)
-{
-    nlohmann::json responseData;
-
-    CurlResponse response(responseData.dump(), false, 200);
-    CurlRequest expectedRequest(
-        GetApiCurlRequest(
-            "/broadcasting/auth",
-            CurlRequest::METHOD_POST,
-            { {"socket_id", "somesocket"}, {"channel_name", "somechannel"} }
-        )
-    );
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_THROW(this->helper.AuthoriseWebsocketChannel("somesocket", "somechannel"), ApiException);
-}
-
-TEST_F(ApiHelperTest, AuthoriseWebsocketChannelThrowsExceptionIfAuthCodeNotString)
-{
-    nlohmann::json responseData;
-    responseData["auth"] = 12345;
-
-    CurlResponse response(responseData.dump(), false, 200);
-    CurlRequest expectedRequest(
-        GetApiCurlRequest(
-            "/broadcasting/auth",
-            CurlRequest::METHOD_POST,
-            { {"socket_id", "somesocket"}, {"channel_name", "somechannel"} }
-        )
-    );
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_THROW(this->helper.AuthoriseWebsocketChannel("somesocket", "somechannel"), ApiException);
-}
-
-
-TEST_F(ApiHelperTest, AuthoriseWebsocketChannelThrowsExceptionIfNotAuthorised)
-{
-    nlohmann::json responseData;
-    responseData["auth"] = "someauthcode";
-
-    CurlResponse response(responseData.dump(), false, 403);
-    CurlRequest expectedRequest(
-        GetApiCurlRequest(
-            "/broadcasting/auth",
-            CurlRequest::METHOD_POST,
-            { {"socket_id", "somesocket"}, {"channel_name", "somechannel"} }
-        )
-    );
-
-    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
-        .Times(1)
-        .WillOnce(Return(response));
-
-    EXPECT_THROW(this->helper.AuthoriseWebsocketChannel("somesocket", "somechannel"), ApiNotAuthorisedException);
-}
-
 TEST_F(ApiHelperTest, GetMinStackLevelsReturnsMinStackData)
 {
     nlohmann::json responseData;
@@ -941,6 +857,131 @@ TEST_F(ApiHelperTest, GetUpdateDetailsReturnsData)
         .WillOnce(Return(response));
 
     EXPECT_EQ(responseData, this->helper.GetUpdateDetails());
+}
+
+TEST_F(ApiHelperTest, RequestDepartureReleaseMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    nlohmann::json expectedData;
+    expectedData["callsign"] = "BAW123";
+    expectedData["requesting_controller_id"] = 1;
+    expectedData["target_controller_id"] = 3;
+    expectedData["expires_in_seconds"] = 54;
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/departure/release/request",
+            CurlRequest::METHOD_POST,
+            expectedData
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    EXPECT_EQ(responseData, this->helper.RequestDepartureRelease("BAW123", 1, 3, 54));
+}
+
+TEST_F(ApiHelperTest, ApproveDepartureReleaseMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    nlohmann::json expectedData;
+    expectedData["controller_position_id"] = 2;
+    expectedData["released_at"] = "2021-05-09 12:31:00";
+    expectedData["expires_in_seconds"] = 120;
+
+    std::chrono::system_clock::time_point timePoint;
+    std::istringstream inputStream("2021-05-09 12:31:00");
+    inputStream >> date::parse("%Y-%m-%d %H:%M:%S", timePoint);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/departure/release/request/1/approve",
+            CurlRequest::METHOD_PATCH,
+            expectedData
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    this->helper.ApproveDepartureReleaseRequest(1, 2, timePoint, 120);
+}
+
+TEST_F(ApiHelperTest, RejectDepartureReleaseMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    nlohmann::json expectedData;
+    expectedData["controller_position_id"] = 2;
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/departure/release/request/1/reject",
+            CurlRequest::METHOD_PATCH,
+            expectedData
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    this->helper.RejectDepartureReleaseRequest(1, 2);
+}
+
+TEST_F(ApiHelperTest, AcknowledgeDepartureReleaseMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    nlohmann::json expectedData;
+    expectedData["controller_position_id"] = 2;
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/departure/release/request/1/acknowledge",
+            CurlRequest::METHOD_PATCH,
+            expectedData
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    this->helper.AcknowledgeDepartureReleaseRequest(1, 2);
+}
+
+TEST_F(ApiHelperTest, CancelDepartureReleaseMakesRequest)
+{
+    nlohmann::json responseData;
+    responseData["bla"] = "bla";
+    CurlResponse response(responseData.dump(), false, 200);
+
+    CurlRequest expectedRequest(
+        GetApiCurlRequest(
+            "/departure/release/request/1",
+            CurlRequest::METHOD_DELETE
+        )
+    );
+
+    EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest))
+        .Times(1)
+        .WillOnce(Return(response));
+
+    this->helper.CancelDepartureReleaseRequest(1);
 }
 }  // namespace Api
 }  // namespace UKControllerPluginUtilsTest

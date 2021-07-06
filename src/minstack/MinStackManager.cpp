@@ -1,12 +1,11 @@
 #include "pch/stdafx.h"
 #include "minstack/MinStackManager.h"
 #include "helper/HelperFunctions.h"
-#include "task/TaskRunner.h"
 
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::HelperFunctions;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEventSubscription;
+using UKControllerPlugin::Push::PushEvent;
 
 namespace UKControllerPlugin {
     namespace MinStack {
@@ -84,7 +83,7 @@ namespace UKControllerPlugin {
         /*
             We've received some new MSLs from the web API, update them locally
         */
-        void MinStackManager::ProcessWebsocketMessage(const WebsocketMessage & message)
+        void MinStackManager::ProcessPushEvent(const PushEvent& message)
         {
             if (message.event != "App\\Events\\MinStacksUpdatedEvent") {
                 return;
@@ -93,14 +92,19 @@ namespace UKControllerPlugin {
             this->UpdateAllMsls(message.data);
         }
 
-        std::set<WebsocketSubscription> MinStackManager::GetSubscriptions(void) const
+        std::set<PushEventSubscription> MinStackManager::GetPushEventSubscriptions(void) const
         {
             return {
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-minstack-updates"
                 }
             };
+        }
+
+        void MinStackManager::PluginEventsSynced()
+        {
+            // Nothing here
         }
 
         /*

@@ -156,7 +156,7 @@ namespace UKControllerPlugin {
 
             container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
             container.timedHandler->RegisterEvent(eventHandler, 7);
-            container.websocketProcessors->AddProcessor(eventHandler);
+            container.pushEventProcessors->AddProcessor(eventHandler);
 
             // Create the hold display factory
             container.holdDisplayFactory.reset(

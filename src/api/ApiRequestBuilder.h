@@ -39,11 +39,7 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Curl::CurlRequest BuildDeleteAssignedHoldRequest(std::string callsign) const;
                 UKControllerPlugin::Curl::CurlRequest BuildRemoteFileRequest(std::string uri) const;
                 UKControllerPlugin::Curl::CurlRequest BuildVersionCheckRequest(std::string versionString) const;
-                UKControllerPlugin::Curl::CurlRequest BuildWebsocketChannelAuthRequest(
-                    std::string socketId,
-                    std::string channel
-                ) const;
-                UKControllerPlugin::Curl::CurlRequest BuildMinStackLevelRequest(void) const;
+                Curl::CurlRequest BuildMinStackLevelRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildRegionalPressureRequest(void) const;
                 UKControllerPlugin::Curl::CurlRequest BuildSrdQueryRequest(
                     UKControllerPlugin::Srd::SrdSearchParameters parameters
@@ -76,6 +72,22 @@ namespace UKControllerPlugin {
                 Curl::CurlRequest BuildLatestGithubVersionRequest() const;
                 Curl::CurlRequest BuildPluginEventSyncRequest() const;
                 Curl::CurlRequest BuildGetLatestPluginEventsRequest(int lastEventId) const;
+                Curl::CurlRequest
+                BuildAcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const;
+                Curl::CurlRequest BuildRejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const;
+                Curl::CurlRequest BuildApproveDepartureReleaseRequest(
+                    int releaseId,
+                    int controllerPositionId,
+                    std::chrono::system_clock::time_point releasedAt,
+                    int expiresInSeconds
+                ) const;
+                Curl::CurlRequest BuildDepartureReleaseRequest(
+                    std::string callsign,
+                    int requestingControllerId,
+                    int targetControllerId,
+                    int expiresInSeconds
+                ) const;
+                Curl::CurlRequest BuildCancelReleaseRequest(int releaseId) const;
                 std::string GetApiDomain(void) const;
                 std::string GetApiKey(void) const;
                 void SetApiDomain(std::string domain);

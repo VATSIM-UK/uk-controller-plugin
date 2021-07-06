@@ -1,7 +1,6 @@
 #include "pch/pch.h"
 #include "hold/HoldModule.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "timedevent/TimedEventCollection.h"
 #include "hold/HoldingData.h"
 #include "message/UserMessager.h"
@@ -20,7 +19,7 @@
 #include "radarscreen/RadarRenderableCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "hold/CompareHolds.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "api/ApiException.h"
 
@@ -48,7 +47,7 @@ using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Dialog::DialogData;
-using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
+using UKControllerPlugin::Push::PushEventProcessorCollection;
 using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -119,7 +118,7 @@ namespace UKControllerPluginTest {
                     this->container.windows.reset(new NiceMock<MockWinApi>);
                     this->container.tagHandler.reset(new TagItemCollection);
                     this->container.dialogManager.reset(new DialogManager(this->mockDialogProvider));
-                    this->container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
+                    this->container.pushEventProcessors.reset(new PushEventProcessorCollection);
                     this->container.taskRunner.reset(new NiceMock<MockTaskRunnerInterface>);
 
 
@@ -181,7 +180,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldModuleTest, ItAddsToWebsocketHandlers)
         {
             BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
-            EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-hold-assignments"));
+            EXPECT_EQ(1, this->container.pushEventProcessors->CountProcessorsForChannel("private-hold-assignments"));
         }
 
         TEST_F(HoldModuleTest, ItInitialisesHoldDisplayFactory)

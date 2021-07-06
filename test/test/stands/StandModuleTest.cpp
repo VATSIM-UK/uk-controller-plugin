@@ -2,7 +2,7 @@
 #include "stands/StandModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "mock/MockDependencyLoader.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "tag/TagItemCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/HandoffEventHandlerCollection.h"
@@ -18,7 +18,7 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Stands::BootstrapPlugin;
 using UKControllerPlugin::Tag::TagItemCollection;
-using UKControllerPlugin::Websocket::WebsocketEventProcessorCollection;
+using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Integration::ExternalMessageEventHandler;
 
@@ -30,7 +30,7 @@ namespace UKControllerPluginTest {
             public:
                 StandModuleTest()
                 {
-                    container.websocketProcessors.reset(new WebsocketEventProcessorCollection);
+                    container.pushEventProcessors.reset(new PushEventProcessorCollection);
                     container.tagHandler.reset(new TagItemCollection);
                     container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
@@ -82,7 +82,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandModuleTest, ItRegistersForWebsocketEvents)
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
-            EXPECT_EQ(1, this->container.websocketProcessors->CountProcessorsForChannel("private-stand-assignments"));
+            EXPECT_EQ(1, this->container.pushEventProcessors->CountProcessorsForChannel("private-stand-assignments"));
         }
 
         TEST_F(StandModuleTest, ItRegistersForFlightplanEvents)

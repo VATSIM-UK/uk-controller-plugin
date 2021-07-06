@@ -30,6 +30,11 @@
     <ClInclude Include="..\..\src\bootstrap\PostInit.h" />
     <ClInclude Include="..\..\src\command\CommandHandlerCollection.h" />
     <ClInclude Include="..\..\src\command\CommandHandlerInterface.h" />
+    <ClInclude Include="..\..\src\components\BrushSwitcher.h" />
+    <ClInclude Include="..\..\src\components\Button.h" />
+    <ClInclude Include="..\..\src\components\ClickableArea.h" />
+    <ClInclude Include="..\..\src\components\StandardButtons.h" />
+    <ClInclude Include="..\..\src\components\TitleBar.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsign.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignCollection.h" />
     <ClInclude Include="..\..\src\controller\ActiveCallsignEventHandlerInterface.h" />
@@ -70,6 +75,8 @@
     <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetPositionDataInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroScopeCRadarTargetWrapper.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListInterface.h" />
+    <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.h" />
     <ClInclude Include="..\..\src\euroscope\EuroscopeSectorFileElementInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroscopeExtractedRouteInterface.h" />
     <ClInclude Include="..\..\src\euroscope\EuroscopePluginLoopbackInterface.h" />
@@ -91,7 +98,6 @@
     <ClInclude Include="..\..\src\euroscope\UserSettingProviderInterface.h" />
     <ClInclude Include="..\..\src\flightinformationservice\FlightInformationServiceModule.h" />
     <ClInclude Include="..\..\src\flightinformationservice\FlightInformationServiceTagItem.h" />
-    <ClInclude Include="..\..\src\flightplan\DeferredFlightplanEvent.h" />
     <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.h" />
     <ClInclude Include="..\..\src\flightplan\FlightPlanEventHandlerInterface.h" />
     <ClInclude Include="..\..\src\flightplan\FlightplanStorageBootstrap.h" />
@@ -238,6 +244,18 @@
     <ClInclude Include="..\..\src\prenote\PrenoteModule.h" />
     <ClInclude Include="..\..\src\prenote\PrenoteService.h" />
     <ClInclude Include="..\..\src\prenote\PrenoteServiceFactory.h" />
+    <ClInclude Include="..\..\src\push\InterpretPushEvent.h" />
+    <ClInclude Include="..\..\src\push\PollingPushEventConnection.h" />
+    <ClInclude Include="..\..\src\push\PushEventProtocolHandler.h" />
+    <ClInclude Include="..\..\src\push\PushEventBootstrap.h" />
+    <ClInclude Include="..\..\src\push\PushEventConnectionInterface.h" />
+    <ClInclude Include="..\..\src\push\PushEventProcessorCollection.h" />
+    <ClInclude Include="..\..\src\push\PushEventProcessorInterface.h" />
+    <ClInclude Include="..\..\src\push\PushEvent.h" />
+    <ClInclude Include="..\..\src\push\PushEventProxyConnection.h" />
+    <ClInclude Include="..\..\src\push\PushEventProxyHandler.h" />
+    <ClInclude Include="..\..\src\push\PushEventProxyWindow.h" />
+    <ClInclude Include="..\..\src\push\PushEventSubscription.h" />
     <ClInclude Include="..\..\src\radarscreen\ConfigurableDisplayCollection.h" />
     <ClInclude Include="..\..\src\radarscreen\ConfigurableDisplayInterface.h" />
     <ClInclude Include="..\..\src\radarscreen\PositionResetCommand.h" />
@@ -255,12 +273,22 @@
     <ClInclude Include="..\..\src\regional\RegionalPressureRenderer.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressureRendererConfiguration.h" />
     <ClInclude Include="..\..\src\regional\RegionalPressure.h" />
+    <ClInclude Include="..\..\src\releases\ApproveDepartureReleaseDialog.h" />
+    <ClInclude Include="..\..\src\releases\CompareDepartureReleases.h" />
     <ClInclude Include="..\..\src\releases\CompareEnrouteReleaseTypes.h" />
+    <ClInclude Include="..\..\src\releases\DepartureReleaseColours.h" />
+    <ClInclude Include="..\..\src\releases\DepartureReleaseCountdownColours.h" />
+    <ClInclude Include="..\..\src\releases\DepartureReleaseDecisionList.h" />
+    <ClInclude Include="..\..\src\releases\DepartureReleaseEventHandler.h" />
+    <ClInclude Include="..\..\src\releases\DepartureReleaseRequest.h" />
+    <ClInclude Include="..\..\src\releases\DepartureReleaseRequestView.h" />
     <ClInclude Include="..\..\src\releases\EnrouteRelease.h" />
     <ClInclude Include="..\..\src\releases\EnrouteReleaseEventHandler.h" />
     <ClInclude Include="..\..\src\releases\EnrouteReleaseType.h" />
     <ClInclude Include="..\..\src\releases\EnrouteReleaseTypesSerializer.h" />
     <ClInclude Include="..\..\src\releases\ReleaseModule.h" />
+    <ClInclude Include="..\..\src\releases\RequestDepartureReleaseDialog.h" />
+    <ClInclude Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.h" />
     <ClInclude Include="..\..\src\sectorfile\Runway.h" />
     <ClInclude Include="..\..\src\sectorfile\RunwayCollection.h" />
     <ClInclude Include="..\..\src\sectorfile\SectorFileBootstrap.h" />
@@ -293,32 +321,14 @@
     <ClInclude Include="..\..\src\task\TaskRunner.h" />
     <ClInclude Include="..\..\src\task\TaskRunnerInterface.h" />
     <ClInclude Include="..\..\src\timedevent\AbstractTimedEvent.h" />
-    <ClInclude Include="..\..\src\timedevent\DeferredEvent.h" />
-    <ClInclude Include="..\..\src\timedevent\DeferredEventBootstrap.h" />
     <ClInclude Include="..\..\src\timedevent\TimedEventCollection.h" />
+    <ClInclude Include="..\..\src\timer\TimerDisplay.h" />
     <ClInclude Include="..\..\src\time\ParseTimeStrings.h" />
     <ClInclude Include="..\..\src\wake\CacheItem.h" />
     <ClInclude Include="..\..\src\wake\CreateWakeMappings.h" />
     <ClInclude Include="..\..\src\wake\WakeCategoryEventHandler.h" />
     <ClInclude Include="..\..\src\wake\WakeCategoryMapper.h" />
     <ClInclude Include="..\..\src\wake\WakeModule.h" />
-    <ClInclude Include="..\..\src\websocket\InterpretPusherWebsocketMessage.h" />
-    <ClInclude Include="..\..\src\websocket\PollingWebsocketConnection.h" />
-    <ClInclude Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.h" />
-    <ClInclude Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.h" />
-    <ClInclude Include="..\..\src\websocket\PusherErrorEventHandler.h" />
-    <ClInclude Include="..\..\src\websocket\PusherPingEventHandler.h" />
-    <ClInclude Include="..\..\src\websocket\PusherWebsocketProtocolHandler.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketBootstrap.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorCollection.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketConnection.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketConnectionInterface.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketEventProcessorInterface.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketMessage.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketProxyConnection.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketProxyHandler.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketProxyWindow.h" />
-    <ClInclude Include="..\..\src\websocket\WebsocketSubscription.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc" />
@@ -338,6 +348,11 @@
     <ClCompile Include="..\..\src\bootstrap\InitialisePlugin.cpp" />
     <ClCompile Include="..\..\src\bootstrap\PostInit.cpp" />
     <ClCompile Include="..\..\src\command\CommandHandlerCollection.cpp" />
+    <ClCompile Include="..\..\src\components\BrushSwitcher.cpp" />
+    <ClCompile Include="..\..\src\components\Button.cpp" />
+    <ClCompile Include="..\..\src\components\ClickableArea.cpp" />
+    <ClCompile Include="..\..\src\components\StandardButtons.cpp" />
+    <ClCompile Include="..\..\src\components\TitleBar.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsign.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsignCollection.cpp" />
     <ClCompile Include="..\..\src\controller\ActiveCallsignMonitor.cpp" />
@@ -369,6 +384,7 @@
     <ClCompile Include="..\..\src\euroscope\EuroScopeCFlightPlanWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\EuroScopeCRadarTargetWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\EuroscopeExtractedRouteInterface.cpp" />
+    <ClCompile Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\EuroscopeSectorFileElementWrapper.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfiguration.cpp" />
     <ClCompile Include="..\..\src\euroscope\GeneralSettingsConfigurationBootstrap.cpp" />
@@ -382,7 +398,6 @@
     <ClCompile Include="..\..\src\euroscope\UserSettingAwareCollection.cpp" />
     <ClCompile Include="..\..\src\flightinformationservice\FlightInformationServiceModule.cpp" />
     <ClCompile Include="..\..\src\flightinformationservice\FlightInformationServiceTagItem.cpp" />
-    <ClCompile Include="..\..\src\flightplan\DeferredFlightplanEvent.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightPlanEventHandlerCollection.cpp" />
     <ClCompile Include="..\..\src\flightplan\FlightplanStorageBootstrap.cpp" />
     <ClCompile Include="..\..\src\flightplan\StoredFlightplan.cpp" />
@@ -508,6 +523,15 @@
     <ClCompile Include="..\..\src\prenote\PrenoteModule.cpp" />
     <ClCompile Include="..\..\src\prenote\PrenoteService.cpp" />
     <ClCompile Include="..\..\src\prenote\PrenoteServiceFactory.cpp" />
+    <ClCompile Include="..\..\src\push\InterpretPushEvent.cpp" />
+    <ClCompile Include="..\..\src\push\PollingPushEventConnection.cpp" />
+    <ClCompile Include="..\..\src\push\PushEventProtocolHandler.cpp" />
+    <ClCompile Include="..\..\src\push\PushEventBootstrap.cpp" />
+    <ClCompile Include="..\..\src\push\PushEventProcessorCollection.cpp" />
+    <ClCompile Include="..\..\src\push\PushEventProxyConnection.cpp" />
+    <ClCompile Include="..\..\src\push\PushEventProxyHandler.cpp" />
+    <ClCompile Include="..\..\src\push\PushEventProxyWindow.cpp" />
+    <ClCompile Include="..\..\src\push\PushEventSubscription.cpp" />
     <ClCompile Include="..\..\src\radarscreen\ConfigurableDisplayCollection.cpp" />
     <ClCompile Include="..\..\src\radarscreen\PositionResetCommand.cpp" />
     <ClCompile Include="..\..\src\radarscreen\RadarRenderableCollection.cpp" />
@@ -521,10 +545,19 @@
     <ClCompile Include="..\..\src\regional\RegionalPressureModule.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureRenderer.cpp" />
     <ClCompile Include="..\..\src\regional\RegionalPressureRendererConfiguration.cpp" />
+    <ClCompile Include="..\..\src\releases\ApproveDepartureReleaseDialog.cpp" />
+    <ClCompile Include="..\..\src\releases\CompareDepartureReleases.cpp" />
     <ClCompile Include="..\..\src\releases\CompareEnrouteReleaseTypes.cpp" />
+    <ClCompile Include="..\..\src\releases\DepartureReleaseCountdownColours.cpp" />
+    <ClCompile Include="..\..\src\releases\DepartureReleaseDecisionList.cpp" />
+    <ClCompile Include="..\..\src\releases\DepartureReleaseEventHandler.cpp" />
+    <ClCompile Include="..\..\src\releases\DepartureReleaseRequest.cpp" />
+    <ClCompile Include="..\..\src\releases\DepartureReleaseRequestView.cpp" />
     <ClCompile Include="..\..\src\releases\EnrouteReleaseEventHandler.cpp" />
     <ClCompile Include="..\..\src\releases\EnrouteReleaseTypesSerializer.cpp" />
     <ClCompile Include="..\..\src\releases\ReleaseModule.cpp" />
+    <ClCompile Include="..\..\src\releases\RequestDepartureReleaseDialog.cpp" />
+    <ClCompile Include="..\..\src\releases\ToggleDepartureReleaseDecisionList.cpp" />
     <ClCompile Include="..\..\src\sectorfile\Runway.cpp" />
     <ClCompile Include="..\..\src\sectorfile\RunwayCollection.cpp" />
     <ClCompile Include="..\..\src\sectorfile\SectorFileBootstrap.cpp" />
@@ -554,30 +587,13 @@
     <ClCompile Include="..\..\src\tag\TagFunction.cpp" />
     <ClCompile Include="..\..\src\tag\TagItemCollection.cpp" />
     <ClCompile Include="..\..\src\task\TaskRunner.cpp" />
-    <ClCompile Include="..\..\src\timedevent\DeferredEventBootstrap.cpp" />
     <ClCompile Include="..\..\src\timedevent\TimedEventCollection.cpp" />
+    <ClCompile Include="..\..\src\timer\TimerDisplay.cpp" />
     <ClCompile Include="..\..\src\time\ParseTimeStrings.cpp" />
     <ClCompile Include="..\..\src\wake\CreateWakeMappings.cpp" />
     <ClCompile Include="..\..\src\wake\WakeCategoryEventHandler.cpp" />
     <ClCompile Include="..\..\src\wake\WakeCategoryMapper.cpp" />
     <ClCompile Include="..\..\src\wake\WakeModule.cpp" />
-    <ClCompile Include="..\..\src\websocket\InterpretPusherWebsocketMessage.cpp" />
-    <ClCompile Include="..\..\src\websocket\PollingWebsocketConnection.cpp" />
-    <ClCompile Include="..\..\src\websocket\PusherActivityTimeoutEventHandler.cpp" />
-    <ClCompile Include="..\..\src\websocket\PusherConnectionChannelSubscriptionEventHandler.cpp" />
-    <ClCompile Include="..\..\src\websocket\PusherErrorEventHandler.cpp" />
-    <ClCompile Include="..\..\src\websocket\PusherPingEventHandler.cpp" />
-    <ClCompile Include="..\..\src\websocket\PusherWebsocketProtocolHandler.cpp" />
-    <ClCompile Include="..\..\src\websocket\WebsocketBootstrap.cpp" />
-    <ClCompile Include="..\..\src\websocket\WebsocketEventProcessorCollection.cpp" />
-    <ClCompile Include="..\..\src\websocket\WebsocketConnection.cpp" />
-    <ClCompile Include="..\..\src\websocket\WebsocketProxyConnection.cpp" />
-    <ClCompile Include="..\..\src\websocket\WebsocketProxyHandler.cpp" />
-    <ClCompile Include="..\..\src\websocket\WebsocketProxyWindow.cpp" />
-    <ClCompile Include="..\..\src\websocket\WebsocketSubscription.cpp" />
-    <ClInclude Include="..\..\src\timedevent\DeferredEventHandler.h" />
-    <ClCompile Include="..\..\src\timedevent\DeferredEventHandler.cpp" />
-    <ClInclude Include="..\..\src\timedevent\DeferredEventRunnerInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UKControllerPluginUtils\UKControllerPluginUtils.vcxproj">
@@ -622,7 +638,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_DEBUG_LIBRARYDIR);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(CURL_DEBUG_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(IncludePath);</IncludePath>
     <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
@@ -632,7 +648,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(BOOST_LIBRARYDIR);$(OPENSSL_LIBRARYDIR);$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\lib;$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)..\lib\include;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party\spdlog\include;$(CURL_INCLUDEDIR);$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
@@ -645,7 +661,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);DISABLE_VERSION_CHECK;CURL_STATICLIB;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;$(BOOST_ROOT);$(OPENSSL_ROOT);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -662,7 +678,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;Comctl32.lib;libssl32MDd.lib;libcrypto32MDd.lib;libcurl_a_debug.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;Comctl32.lib;libcurl_a_debug.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories />
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
@@ -679,7 +695,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);CURL_STATICLIB;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;$(BOOST_ROOT);$(OPENSSL_ROOT);$(CURL_INCLUDEDIR)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)..\include;$(SolutionDir)..\src;$(SolutionDir)..\resource;$(SolutionDir)..\spike;$(SolutionDir)..\third_party;$(CURL_INCLUDEDIR)</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -694,7 +710,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;Comctl32.lib;libssl32MD.lib;libcrypto32MD.lib;libcurl_a.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;Dwmapi.lib;gdiplus.lib;Comctl32.lib;libcurl_a.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries />
       <IgnoreSpecificDefaultLibraries>LIBCMT;</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>

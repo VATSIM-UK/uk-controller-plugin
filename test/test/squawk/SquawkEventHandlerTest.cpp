@@ -21,7 +21,6 @@
 #include "squawk/SquawkAssignment.h"
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "euroscope/UserSetting.h"
 #include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/GeneralSettingsEntries.h"
@@ -53,7 +52,6 @@ using UKControllerPluginTest::Windows::MockWinApi;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Controller::Login;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
-using UKControllerPlugin::TimedEvent::DeferredEventHandler;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
@@ -77,7 +75,7 @@ namespace UKControllerPluginTest {
                 SquawkEventHandlerTest()
                     : apiSquawkAllocations(new ApiSquawkAllocationHandler(this->pluginLoopback)),
                     login(this->pluginLoopback, ControllerStatusEventHandlerCollection()),
-                    controller("EGKK_APP", 126.820, "APP", { "EGKK" }),
+                    controller(1, "EGKK_APP", 126.820, {"EGKK"}, true, false),
                     airfieldOwnership(this->airfields, this->activeCallsigns),
                     assignmentRules(
                         this->plans,
@@ -99,7 +97,6 @@ namespace UKControllerPluginTest {
                         this->plans,
                         this->pluginLoopback,
                         this->login,
-                        this->deferredEvents,
                         false
                     ),
                     userCallsign("EGKK_APP", "Testy McTestface", this->controller)
@@ -205,6 +202,12 @@ namespace UKControllerPluginTest {
                         .WillByDefault(Return(mockFlightplan));
                 }
 
+                void ExpectNoAssignment()
+                {
+                    EXPECT_CALL(*this->mockFlightplan, SetSquawk(_))
+                        .Times(0);
+                }
+
                 void AssertGeneralAssignment()
                 {
                     ApiSquawkAllocation allocation{ "BAW1252", "1423" };
@@ -219,7 +222,6 @@ namespace UKControllerPluginTest {
                     EXPECT_TRUE(allocation == this->apiSquawkAllocations->First());
                 }
 
-                DeferredEventHandler deferredEvents;
                 Login login;
                 NiceMock<MockEuroscopePluginLoopbackInterface> pluginLoopback;
                 std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplan;
@@ -295,21 +297,14 @@ namespace UKControllerPluginTest {
             EXPECT_NO_THROW(this->handler.FlightPlanEvent(mockFp, mockRt));
         }
 
-        TEST_F(SquawkEventHandlerTest, FlightplanEventDefersFor10SecondsIfNotLoggedInLongEnough)
+        TEST_F(SquawkEventHandlerTest, FlightplanEventDefersIfNotLoggedInLongEnough)
         {
-            ON_CALL(*this->mockFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            EXPECT_CALL(*this->mockFlightplan, GetCallsign())
+                .Times(1)
+                .WillOnce(Return("BAW123"));
 
             this->login.SetLoginTime(std::chrono::system_clock::now());
             this->handler.FlightPlanEvent(*this->mockFlightplan, *this->mockRadarTarget);
-
-            EXPECT_EQ(1, this->deferredEvents.Count());
-            int64_t seconds = std::chrono::duration_cast<std::chrono::seconds> (
-                this->deferredEvents.NextEventTime() - std::chrono::system_clock::now()
-            )
-                .count();
-            EXPECT_LE(seconds, 15);
-            EXPECT_GT(seconds, 13);
         }
 
         TEST_F(SquawkEventHandlerTest, FlightplanEventReassignsOldSquawk)
@@ -455,16 +450,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkEventHandlerTest, TimedEventTriggerDoesNothingIfUserNotActive)
         {
-           this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
-           ON_CALL(this->pluginLoopback, GetFlightplanForCallsign(_))
-               .WillByDefault(Throw(std::exception("test")));
+            this->pluginLoopback.ExpectNoFlightplanLoop();
            SquawkEventHandler handler(
                this->generator,
                ActiveCallsignCollection(),
                this->plans,
                this->pluginLoopback,
                this->login,
-               this->deferredEvents,
                true
            );
            EXPECT_NO_THROW(handler.TimedEventTrigger());
@@ -472,16 +464,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkEventHandlerTest, TimedEventTriggerDoesNothingIfAutoAssignDisabled)
         {
-           this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
-           ON_CALL(this->pluginLoopback, GetFlightplanForCallsign(_))
-               .WillByDefault(Throw(std::exception("test")));
+            this->pluginLoopback.ExpectNoFlightplanLoop();
            SquawkEventHandler handler(
                this->generator,
                this->activeCallsigns,
                this->plans,
                this->pluginLoopback,
                this->login,
-               this->deferredEvents,
                true
            );
            EXPECT_NO_THROW(handler.TimedEventTrigger());
@@ -496,9 +485,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return("0"));
 
-            this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
-            ON_CALL(this->pluginLoopback, GetFlightplanForCallsign(_))
-                .WillByDefault(Throw(std::exception("test")));
+            this->pluginLoopback.ExpectNoFlightplanLoop();
 
             this->handler.UserSettingsUpdated(userSetting);
             EXPECT_NO_THROW(handler.TimedEventTrigger());
@@ -509,34 +496,56 @@ namespace UKControllerPluginTest {
            ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
                .WillByDefault(Return(true));
 
-           ON_CALL(this->pluginLoopback, GetFlightplanForCallsign)
-               .WillByDefault(Return(this->mockFlightplan));
+           this->pluginLoopback.AddAllFlightplansItem({this->mockFlightplan, this->mockRadarTarget});
 
            EXPECT_NO_THROW(handler.TimedEventTrigger());
         }
 
-        TEST_F(SquawkEventHandlerTest, TimedEventTriggerDoesNothingIfFlightplanNotTrackedByUser)
+        TEST_F(SquawkEventHandlerTest, TimedEventTriggerDoesNothingIfAircraftTrackedByAnotherController)
         {
-           ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
                .WillByDefault(Return(false));
 
-           ON_CALL(*this->mockFlightplan, IsTrackedByUser)
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser)
                .WillByDefault(Return(false));
 
-           ON_CALL(this->pluginLoopback, GetFlightplanForCallsign)
-               .WillByDefault(Return(this->mockFlightplan));
+            ON_CALL(*this->mockFlightplan, IsTracked)
+               .WillByDefault(Return(true));
 
-           EXPECT_NO_THROW(handler.TimedEventTrigger());
+            this->pluginLoopback.AddAllFlightplansItem({this->mockFlightplan, this->mockRadarTarget});
+
+            EXPECT_NO_THROW(handler.TimedEventTrigger());
         }
 
-        TEST_F(SquawkEventHandlerTest, TimedEventTriggerDoesSquawkAssignmentWhereAppropriate)
+        TEST_F(SquawkEventHandlerTest, TimedEventTriggerDoesSquawkAssignmentForTrackedByUserAircraft)
         {
-           this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
+            this->pluginLoopback.AddAllFlightplansItem({this->mockFlightplan, this->mockRadarTarget});
+
+            ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
+               .WillByDefault(Return(false));
+
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser)
+               .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockFlightplan, IsTracked)
+               .WillByDefault(Return(true));
+
+            ON_CALL(*this->mockRadarTarget, GetFlightLevel())
+               .WillByDefault(Return(999999));
+
+            this->expectGeneralAssignment();
+            handler.TimedEventTrigger();
+            this->AssertGeneralAssignment();
+        }
+
+        TEST_F(SquawkEventHandlerTest, TimedEventTriggerDoesSquawkAssignmentForUntrackedAircraft)
+        {
+            this->pluginLoopback.AddAllFlightplansItem({this->mockFlightplan, this->mockRadarTarget});
 
            ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
                .WillByDefault(Return(false));
 
-           ON_CALL(*this->mockFlightplan, IsTrackedByUser)
+            ON_CALL(*this->mockFlightplan, IsTracked)
                .WillByDefault(Return(true));
 
            ON_CALL(*this->mockRadarTarget, GetFlightLevel())
@@ -549,7 +558,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkEventHandlerTest, ActiveCallsignAddedAssignsAllSquawksWhenUserLogsOn)
         {
-            this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
+            this->pluginLoopback.AddAllFlightplansItem({this->mockFlightplan, this->mockRadarTarget});
 
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
                 .WillByDefault(Return(false));
@@ -563,6 +572,9 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, GetDistanceFromOrigin)
                 .WillByDefault(Return(1.0));
 
+            EXPECT_CALL(*this->mockFlightplan, SetSquawk(testing::_))
+                .Times(0);
+
             this->expectGeneralAssignment();
             handler.ActiveCallsignAdded(this->userCallsign, true);
             this->AssertGeneralAssignment();
@@ -570,7 +582,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(SquawkEventHandlerTest, ActiveCallsignAddedDoesntAssignSquawkIfNotUserLogsOn)
         {
-            this->plans.UpdatePlan(StoredFlightplan("BAW1252", "EGKK", "EGPF"));
+            this->pluginLoopback.AddAllFlightplansItem({this->mockFlightplan, this->mockRadarTarget});
 
             ON_CALL(*this->mockFlightplan, HasAssignedSquawk)
                 .WillByDefault(Return(false));
@@ -580,6 +592,8 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockRadarTarget, GetFlightLevel())
                 .WillByDefault(Return(999999));
+
+            this->ExpectNoAssignment();
 
             handler.ActiveCallsignAdded(this->userCallsign, false);
         }

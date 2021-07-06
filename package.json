@@ -9,11 +9,15 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
     "cz-conventional-changelog": "^3.3.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/VATSIM-UK/uk-controller-plugin.git"
+  },
+  "scripts": {
+    "commit": "cz"
   },
   "keywords": [
     "vatsim",
@@ -34,11 +38,20 @@
   },
   "release": {
     "repositoryUrl": "https://github.com/VATSIM-UK/uk-controller-plugin",
-    "branches": ["main"],
+    "branches": [
+      "main"
+    ],
     "tagFormat": "${version}",
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "docs/UserGuide/Changelog/Changelog.md",
+          "changelogTitle": "# UK Controller Plugin Changelog"
+        }
+      ],
       [
         "@semantic-release/github",
         {
@@ -55,7 +68,13 @@
               "path": "bin/Release/UKControllerPlugin.dll",
               "label": "Loader Binary"
             }
-          ] 
+          ]
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": ["docs/UserGuide/Changelog/Changelog.md"]
         }
       ]
     ]

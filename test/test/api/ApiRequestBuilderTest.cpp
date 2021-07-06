@@ -136,23 +136,6 @@ namespace UKControllerPluginUtilsTest {
             EXPECT_TRUE(expectedRequest == this->builder.BuildHoldDependencyRequest());
         }
 
-        TEST_F(ApiRequestBuilderTest, ItBuildsAWebsocketChannelAuthRequest)
-        {
-            CurlRequest expectedRequest("http://testurl.com/broadcasting/auth", CurlRequest::METHOD_POST);
-            expectedRequest.AddHeader("Authorization", "Bearer apikey");
-            expectedRequest.AddHeader("Accept", "application/json");
-            expectedRequest.AddHeader("Content-Type", "application/json");
-
-            nlohmann::json expectedData;
-            expectedData["socket_id"] = "somesocket";
-            expectedData["channel_name"] = "somelovelychannel";
-            expectedRequest.SetBody(expectedData.dump());
-
-            EXPECT_TRUE(
-                expectedRequest == this->builder.BuildWebsocketChannelAuthRequest("somesocket", "somelovelychannel")
-            );
-        }
-
         TEST_F(ApiRequestBuilderTest, ItBuildsAMinStackRequest)
         {
             CurlRequest expectedRequest("http://testurl.com/msl", CurlRequest::METHOD_GET);
@@ -448,6 +431,137 @@ namespace UKControllerPluginUtilsTest {
             expectedRequest.AddHeader("Content-Type", "application/json");
 
             EXPECT_TRUE(expectedRequest == this->builder.BuildGetLatestPluginEventsRequest(5));
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsDepartureReleaseRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/departure/release/request",
+                CurlRequest::METHOD_POST
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            nlohmann::json expectedData;
+            expectedData["callsign"] = "BAW123";
+            expectedData["requesting_controller_id"] = 1;
+            expectedData["target_controller_id"] = 3;
+            expectedData["expires_in_seconds"] = 54;
+            expectedRequest.SetBody(expectedData.dump());
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildDepartureReleaseRequest("BAW123", 1, 3, 54)
+            );
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsApproveDepartureReleaseRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/departure/release/request/1/approve",
+                CurlRequest::METHOD_PATCH
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            nlohmann::json expectedData;
+            expectedData["controller_position_id"] = 2;
+            expectedData["released_at"] = "2021-05-09 12:31:00";
+            expectedData["expires_in_seconds"] = 120;
+            expectedRequest.SetBody(expectedData.dump());
+
+            std::chrono::system_clock::time_point timePoint;
+            std::istringstream inputStream("2021-05-09 12:31:00");
+            inputStream >> date::parse("%Y-%m-%d %H:%M:%S", timePoint);
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildApproveDepartureReleaseRequest(1, 2, timePoint, 120)
+            );
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsApproveDepartureReleaseRequestWithNoExpiry)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/departure/release/request/1/approve",
+                CurlRequest::METHOD_PATCH
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            nlohmann::json expectedData;
+            expectedData["controller_position_id"] = 2;
+            expectedData["released_at"] = "2021-05-09 12:31:00";
+            expectedData["expires_in_seconds"] = nlohmann::json::value_t::null;
+            expectedRequest.SetBody(expectedData.dump());
+
+            std::chrono::system_clock::time_point timePoint;
+            std::istringstream inputStream("2021-05-09 12:31:00");
+            inputStream >> date::parse("%Y-%m-%d %H:%M:%S", timePoint);
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildApproveDepartureReleaseRequest(1, 2, timePoint, -1)
+            );
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsRejectDepartureReleaseRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/departure/release/request/1/reject",
+                CurlRequest::METHOD_PATCH
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            nlohmann::json expectedData;
+            expectedData["controller_position_id"] = 2;
+            expectedRequest.SetBody(expectedData.dump());
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildRejectDepartureReleaseRequest(1, 2)
+            );
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsAcknowledgeDepartureReleaseRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/departure/release/request/1/acknowledge",
+                CurlRequest::METHOD_PATCH
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            nlohmann::json expectedData;
+            expectedData["controller_position_id"] = 2;
+            expectedRequest.SetBody(expectedData.dump());
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildAcknowledgeDepartureReleaseRequest(1, 2)
+            );
+        }
+
+        TEST_F(ApiRequestBuilderTest, ItBuildsCancelDepartureReleaseRequest)
+        {
+            CurlRequest expectedRequest(
+                "http://testurl.com/departure/release/request/1",
+                CurlRequest::METHOD_DELETE
+            );
+
+            expectedRequest.AddHeader("Authorization", "Bearer apikey");
+            expectedRequest.AddHeader("Accept", "application/json");
+            expectedRequest.AddHeader("Content-Type", "application/json");
+
+            EXPECT_TRUE(
+                expectedRequest == this->builder.BuildCancelReleaseRequest(1)
+            );
         }
     }  // namespace Api
 }  // namespace UKControllerPluginUtilsTest

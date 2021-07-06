@@ -6,8 +6,8 @@
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroScopeCControllerInterface.h"
 #include "tag/TagData.h"
-#include "websocket/WebsocketSubscription.h"
-#include "websocket/WebsocketMessage.h"
+#include "push/PushEventSubscription.h"
+#include "push/PushEvent.h"
 #include "mock/MockApiInterface.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
@@ -21,14 +21,14 @@ using UKControllerPlugin::Stands::CompareStands;
 using UKControllerPlugin::Stands::Stand;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEvent;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Throw;
@@ -103,25 +103,19 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItSubscribesToChannels)
         {
-            std::set<WebsocketSubscription> expectedSubscriptions;
+            std::set<PushEventSubscription> expectedSubscriptions;
             expectedSubscriptions.insert(
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-stand-assignments"
                 }
             );
-            expectedSubscriptions.insert(
-                {
-                    WebsocketSubscription::SUB_TYPE_EVENT,
-                    "pusher:connection_established"
-                }
-            );
-            EXPECT_EQ(expectedSubscriptions, this->handler.GetSubscriptions());
+            EXPECT_EQ(expectedSubscriptions, this->handler.GetPushEventSubscriptions());
         }
 
         TEST_F(StandEventHandlerTest, ItAssignsStandsFromWebsocketMessage)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -139,13 +133,13 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItHandlesNoFlightplanForAnnotations)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -158,13 +152,13 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(nullptr));
 
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfNoCallsign)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -172,13 +166,13 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfCallsignInvalid)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -187,13 +181,13 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfNoStandId)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -201,13 +195,13 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfStandIdInvalid)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -216,13 +210,13 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromWebsocketMessageIfStandIdNotRealStand)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandAssignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -231,14 +225,14 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItHandlesNoFlightplanForUnassignmentRemovalOfAnnotations)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -249,14 +243,14 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
                 .WillByDefault(Return(nullptr));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItUnassignsStandsFromWebsocketMessage)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -273,14 +267,14 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
                 .Times(1);
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromWebsocketMessageIfCallsignMissing)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -288,14 +282,14 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(3, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromWebsocketMessageIfCallsignInvalid)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -303,13 +297,13 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(3, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
         TEST_F(StandEventHandlerTest, ItHandlesUnassignStandFromWebsocketMessageIfStandNotAssigned)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\StandUnassignedEvent",
                 "private-stand-assignments",
                 nlohmann::json {
@@ -317,11 +311,11 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
 
-        TEST_F(StandEventHandlerTest, ItLoadsAssignmentsOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItLoadsAssignmentsOnPluginEventsSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -332,11 +326,6 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
                 {"stand_id", 2},
             });
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp1
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -360,52 +349,42 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(2, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItClearsPreviousAssignmentsOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItClearsPreviousAssignmentsOnPluginEventsSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
                 {"callsign", "BAW123"},
                 {"stand_id", 1},
             });
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
 
             this->handler.SetAssignedStand("RYR234", 3);
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("RYR234"));
         }
 
         TEST_F(StandEventHandlerTest, ItHandlesNonArrayStandAssignments)
         {
             nlohmann::json assignments = nlohmann::json::object();
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesNonArrayAssignmentsOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesNonArrayAssignmentsOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -413,11 +392,6 @@ namespace UKControllerPluginTest {
                 {"stand_id", 1},
             });
             assignments.push_back(nlohmann::json::object());
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -432,12 +406,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingCallsignOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingCallsignOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -447,11 +421,6 @@ namespace UKControllerPluginTest {
             assignments.push_back({
                 {"stand_id", 2},
             });
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -466,12 +435,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidCallsignOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidCallsignOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -482,11 +451,6 @@ namespace UKControllerPluginTest {
                 {"callsign", 123},
                 {"stand_id", 2},
             });
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -501,12 +465,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingStandOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithMissingStandOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -516,11 +480,6 @@ namespace UKControllerPluginTest {
             assignments.push_back({
                 {"callsign", "VIR245"},
             });
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -535,12 +494,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidStandOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithInvalidStandOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -551,11 +510,6 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
                 {"stand_id", "2"},
             });
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -570,12 +524,12 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithNonExistentStandOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesAssignmentsWithNonExistentStandOnPluginEventSync)
         {
             nlohmann::json assignments = nlohmann::json::array();
             assignments.push_back({
@@ -586,11 +540,6 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
                 {"stand_id", -55},
             });
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
 
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
@@ -605,24 +554,18 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(assignments));
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }
 
-        TEST_F(StandEventHandlerTest, ItHandlesApiExceptionsWhenFetchingStandsOnWebsocketConnection)
+        TEST_F(StandEventHandlerTest, ItHandlesApiExceptionsWhenFetchingStandsOnPluginEventSync)
         {
-            WebsocketMessage message{
-                "pusher:connection_established",
-                "bla",
-                nlohmann::json(),
-            };
-
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Throw(ApiException("Foo")));
 
-            EXPECT_NO_THROW(this->handler.ProcessWebsocketMessage(message));
+            this->handler.PluginEventsSynced();
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("VIR245"));
         }

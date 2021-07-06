@@ -37,7 +37,6 @@ namespace UKControllerPlugin {
                     std::string unit,
                     std::string flightRules
                 ) const override;
-                std::string AuthoriseWebsocketChannel(std::string socketId, std::string channel) const override;
                 bool CheckApiAuthorisation(void) const override;
                 void DeleteSquawkAssignment(std::string callsign) const override;
                 std::string FetchRemoteFile(std::string uri) const override;
@@ -74,6 +73,21 @@ namespace UKControllerPlugin {
                 nlohmann::json GetUnreadNotifications() const override;
                 nlohmann::json SyncPluginEvents() const override;
                 nlohmann::json GetLatestPluginEvents(int lastEventId) const override;
+                void AcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const override;
+                void RejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const override;
+                void ApproveDepartureReleaseRequest(
+                    int releaseId,
+                    int controllerPositionId,
+                    std::chrono::system_clock::time_point releasedAt,
+                    int expiresInSeconds
+                ) const override;
+                nlohmann::json RequestDepartureRelease(
+                    std::string callsign,
+                    int requestingControllerId,
+                    int targetControllerId,
+                    int expiresInSeconds
+                ) const override;
+                void CancelDepartureReleaseRequest(int releaseId) const override;
                 void ReadNotification(int id) const override;
                 int UpdateCheck(std::string version) const override;
                 void SetApiKey(std::string key) override;

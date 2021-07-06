@@ -53,14 +53,13 @@ namespace UKControllerPlugin {
                     *container.flightplans,
                     *container.plugin,
                     *container.login,
-                    *container.deferredHandlers,
                     automaticAssignmentDisabled
                 )
             );
 
             container.squawkEvents = eventHandler;
             container.flightplanHandler->RegisterHandler(eventHandler);
-            container.timedHandler->RegisterEvent(eventHandler, SquawkModule::trackedAircraftCheckFrequency);
+            container.timedHandler->RegisterEvent(eventHandler, squawkAssignmentsCheckFrequency);
             container.userSettingHandlers->RegisterHandler(eventHandler);
             container.activeCallsigns->AddHandler(eventHandler);
 

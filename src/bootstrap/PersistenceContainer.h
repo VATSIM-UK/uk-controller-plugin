@@ -32,7 +32,6 @@
 #include "message/UserMessager.h"
 #include "euroscope/UserSetting.h"
 #include "command/CommandHandlerCollection.h"
-#include "timedevent/DeferredEventHandler.h"
 #include "login/Login.h"
 #include "hold/HoldManager.h"
 #include "euroscope/UserSettingAwareCollection.h"
@@ -40,11 +39,9 @@
 #include "dialog/DialogManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "setting/SettingRepository.h"
-#include "websocket/WebsocketConnection.h"
 #include "countdown/TimerConfigurationManager.h"
 #include "datablock/DisplayTime.h"
-#include "websocket/WebsocketConnectionInterface.h"
-#include "websocket/WebsocketEventProcessorCollection.h"
+#include "push/PushEventProcessorCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "sectorfile/RunwayCollection.h"
 #include "handoff/HandoffCollection.h"
@@ -67,7 +64,6 @@ namespace UKControllerPlugin {
             // The useful things
             std::unique_ptr<UKControllerPlugin::Curl::CurlInterface> curl;
             std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
-            std::unique_ptr<UKControllerPlugin::Websocket::WebsocketConnection> websocketConnection;
 
             // The helpers and collections
             std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
@@ -90,8 +86,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Metar::MetarEventHandlerCollection> metarEventHandler;
             std::unique_ptr<UKControllerPlugin::RadarScreen::ScreenControls> screenControls;
             std::unique_ptr<UKControllerPlugin::Command::CommandHandlerCollection> commandHandlers;
-            std::shared_ptr<UKControllerPlugin::TimedEvent::DeferredEventHandler> deferredHandlers;
-            std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareCollection> userSettingHandlers;
+            std::shared_ptr<Euroscope::UserSettingAwareCollection> userSettingHandlers;
             std::unique_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareCollection> runwayDialogEventHandlers;
             std::unique_ptr<UKControllerPlugin::Controller::HandoffEventHandlerCollection> controllerHandoffHandlers;
             std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageEventHandler> externalEventHandler;
@@ -132,9 +127,8 @@ namespace UKControllerPlugin {
             std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
             std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
 
-            // Websocket
-            std::shared_ptr<Websocket::WebsocketConnectionInterface> websocket;
-            std::shared_ptr<UKControllerPlugin::Websocket::WebsocketEventProcessorCollection> websocketProcessors;
+            // Push events
+            std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;
 
         } PersistenceContainer;
     }  // namespace Bootstrap

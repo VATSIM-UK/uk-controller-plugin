@@ -1,11 +1,11 @@
 #include "pch/pch.h"
 #include "releases/EnrouteReleaseEventHandler.h"
 #include "mock/MockApiInterface.h"
-#include "websocket/WebsocketSubscription.h"
+#include "push/PushEventSubscription.h"
 #include "releases/EnrouteReleaseType.h"
 #include "releases/EnrouteRelease.h"
 #include "releases/CompareEnrouteReleaseTypes.h"
-#include "websocket/WebsocketMessage.h"
+#include "push/PushEvent.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
@@ -21,7 +21,7 @@ using ::testing::Return;
 using ::testing::Throw;
 using ::testing::_;
 using UKControllerPlugin::Releases::EnrouteReleaseEventHandler;
-using UKControllerPlugin::Websocket::WebsocketSubscription;
+using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
@@ -30,7 +30,7 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::Releases::CompareEnrouteReleaseTypes;
 using UKControllerPlugin::Releases::EnrouteReleaseType;
 using UKControllerPlugin::Releases::EnrouteRelease;
-using UKControllerPlugin::Websocket::WebsocketMessage;
+using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Api::ApiException;
@@ -66,14 +66,14 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItSubscribesToChannels)
         {
-            std::set<WebsocketSubscription> expectedSubscriptions;
+            std::set<PushEventSubscription> expectedSubscriptions;
             expectedSubscriptions.insert(
                 {
-                    WebsocketSubscription::SUB_TYPE_CHANNEL,
+                    PushEventSubscription::SUB_TYPE_CHANNEL,
                     "private-enroute-releases"
                 }
             );
-            EXPECT_EQ(expectedSubscriptions, this->handler.GetSubscriptions());
+            EXPECT_EQ(expectedSubscriptions, this->handler.GetPushEventSubscriptions());
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItChecksIfTheMessageIsValid)
@@ -262,7 +262,7 @@ namespace UKControllerPluginTest {
             ON_CALL(*myController, GetCallsign())
                 .WillByDefault(Return("LON_C_CTR"));
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
                 nlohmann::json {
@@ -274,7 +274,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
 
             const EnrouteRelease& incomingRelease = this->handler.GetIncomingRelease("BAW123");
             EXPECT_EQ(1, incomingRelease.releaseType);
@@ -296,7 +296,7 @@ namespace UKControllerPluginTest {
             ON_CALL(*myController, GetCallsign())
                 .WillByDefault(Return("LON_C_CTR"));
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
                 nlohmann::json {
@@ -308,7 +308,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
 
             const EnrouteRelease& incomingRelease = this->handler.GetIncomingRelease("BAW123");
             EXPECT_EQ(1, incomingRelease.releaseType);
@@ -330,7 +330,7 @@ namespace UKControllerPluginTest {
             ON_CALL(*myController, GetCallsign())
                 .WillByDefault(Return("LON_D_CTR"));
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
                 nlohmann::json {
@@ -342,7 +342,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
         }
 
@@ -351,7 +351,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->plugin, GetUserControllerObject)
                 .WillByDefault(Return(nullptr));
 
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
                 nlohmann::json {
@@ -363,13 +363,13 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItRejectsInvalidReleaseMessages)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
                 nlohmann::json {
@@ -380,14 +380,14 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
 
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItIgnoresIncorrectEvents)
         {
-            WebsocketMessage message{
+            PushEvent message{
                 "App\\Events\\NotEnrouteReleaseEvent",
                 "private-enroute-releases",
                 nlohmann::json {
@@ -399,7 +399,7 @@ namespace UKControllerPluginTest {
                 }
             };
 
-            this->handler.ProcessWebsocketMessage(message);
+            this->handler.ProcessPushEvent(message);
 
             EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
         }
