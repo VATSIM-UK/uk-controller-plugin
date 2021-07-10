@@ -56,3 +56,5 @@
 #include <Shlobj.h>
 #include <shellapi.h>
 #include <Windows.h>
+#include <ws2def.h>
+#include <ws2tcpip.h>

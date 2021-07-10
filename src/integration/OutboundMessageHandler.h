@@ -2,6 +2,7 @@
 
 namespace UKControllerPlugin::Integration {
 
+    class OutboundMessageTarget;
     class MessageInterface;
 
     /*
@@ -12,6 +13,9 @@ namespace UKControllerPlugin::Integration {
     {
         public:
             virtual ~OutboundMessageHandler() = default;
-            virtual void Send(std::shared_ptr<MessageInterface> message) = 0;
+            virtual void Send(
+                std::shared_ptr<MessageInterface> message,
+                std::shared_ptr<OutboundMessageTarget> target
+            ) = 0;
     };
 } // namespace UKControllerPlugin::Integration

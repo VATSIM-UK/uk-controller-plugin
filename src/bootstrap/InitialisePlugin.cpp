@@ -106,6 +106,12 @@ namespace UKControllerPlugin {
         this->container.reset();
         this->duplicatePlugin.reset();
 
+        // Shut down winsock
+        if (this->winsockInitialised) {
+            LogInfo("Performing winsock cleanup");
+            WSACleanup();
+        }
+
         // Shut down GDI
         Gdiplus::GdiplusShutdown(this->gdiPlusToken);
         LogInfo("Plugin shutdown");
@@ -188,7 +194,18 @@ namespace UKControllerPlugin {
             *this->container->windows
         );
 
-        Integration::BootstrapPlugin(*this->container, duplicatePlugin->Duplicate());
+        // Integration module and winsock
+        WSADATA winsockData;
+        int winsockStartupResult = WSAStartup(MAKEWORD(2, 2), &winsockData);
+        if (winsockStartupResult != 0) {
+            winsockInitialised = false;
+            LogError("Error initialising winsock for integration server: " + std::to_string(winsockStartupResult));
+        } else {
+            LogInfo("Initialised winsock for integration server, version: " + std::to_string(winsockData.wVersion));
+            winsockInitialised = true;
+        }
+
+        Integration::BootstrapPlugin(*this->container, duplicatePlugin->Duplicate(), winsockInitialised);
 
         // Boostrap all the modules at a plugin level
         Controller::BootstrapPlugin(*this->container, loader);

@@ -13,7 +13,15 @@ namespace UKControllerPlugin::Integration {
         const std::string type;
 
         // What version of the message is being broadcast
-        const unsigned int version;
+        const int version;
+
+        nlohmann::json ToJson() const
+        {
+            return nlohmann::json::object({
+                {"type", this->type},
+                {"version", this->version}
+            });
+        }
 
         bool operator==(const MessageType& compare) const
         {

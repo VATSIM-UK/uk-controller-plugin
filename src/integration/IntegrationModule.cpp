@@ -7,7 +7,7 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 namespace UKControllerPlugin {
     namespace Integration {
 
-        void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin)
+        void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin, bool winsockInitialised)
         {
             // Create handler and add to other handlers
             container.externalEventHandler = std::make_shared<ExternalMessageEventHandler>(duplicatePlugin);

@@ -156,7 +156,12 @@
     <ClInclude Include="..\..\src\integration\ExternalMessageEventHandler.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageHandlerInterface.h" />
     <ClInclude Include="..\..\src\integration\HiddenWindow.h" />
+    <ClInclude Include="..\..\src\integration\InboundMessage.h" />
+    <ClInclude Include="..\..\src\integration\InboundMessageHandler.h" />
+    <ClInclude Include="..\..\src\integration\IntegrationClient.h" />
+    <ClInclude Include="..\..\src\integration\IntegrationConnection.h" />
     <ClInclude Include="..\..\src\integration\IntegrationModule.h" />
+    <ClInclude Include="..\..\src\integration\IntegrationServer.h" />
     <ClInclude Include="..\..\src\integration\MessageType.h" />
     <ClInclude Include="..\..\src\integration\OutboundMessageHandler.h" />
     <ClInclude Include="..\..\src\integration\MessageInterface.h" />
@@ -446,7 +451,9 @@
     <ClCompile Include="..\..\src\initialheading\InitialHeadingModule.cpp" />
     <ClCompile Include="..\..\src\integration\ExternalMessageEventHandler.cpp" />
     <ClCompile Include="..\..\src\integration\HiddenWindow.cpp" />
+    <ClCompile Include="..\..\src\integration\IntegrationClient.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationModule.cpp" />
+    <ClCompile Include="..\..\src\integration\IntegrationServer.cpp" />
     <ClCompile Include="..\..\src\integration\OutboundMessageTarget.cpp" />
     <ClCompile Include="..\..\src\intention\AirfieldGroup.cpp" />
     <ClCompile Include="..\..\src\intention\AmsterdamAirfieldGroup.cpp" />

@@ -8,7 +8,7 @@ There is currently one communication channel available for integration.
 
 ### Windows Sockets
 
-The UK Controller Plugin listens for connecting integrations via **UDP port 52814** using Windows Sockets. Once a client
+The UK Controller Plugin listens for connecting integrations via **TCP port 52814** using Windows Sockets. Once a client
 has connected, the plugin expects to receive an initialisation message (covered later in this guide) which lets it
 know what events the integration wishes to receive.
 
@@ -29,6 +29,7 @@ This is the basic format of a message:
 }
 ```
 
-## Maximum Message Sizes
+## Message Delimitation
 
-Messages are limited to 65535 bytes of payload.
+The boundary between each message should be terminated with `#UKCPMSG#`, which will allow both ends of the connection to identify
+where a message terminates.

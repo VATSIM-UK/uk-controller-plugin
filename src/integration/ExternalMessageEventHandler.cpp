@@ -1,6 +1,8 @@
 #include "pch/stdafx.h"
 #include "integration/ExternalMessageEventHandler.h"
 #include "integration//ExternalMessageHandlerInterface.h"
+#include "integration/MessageInterface.h"
+#include "integration/InboundMessageHandler.h"
 
 namespace UKControllerPlugin {
     namespace Integration {
@@ -54,6 +56,12 @@ namespace UKControllerPlugin {
             this->messages.push(message);
         }
 
+        void ExternalMessageEventHandler::AddMessageToQueue(std::shared_ptr<MessageInterface> message)
+        {
+            std::lock_guard<std::mutex> lock(this->messageLock);
+            this->parsedMessages.push(message);
+        }
+
         size_t ExternalMessageEventHandler::CountHandlers(void) const
         {
             return this->eventHandlers.size();
@@ -63,7 +71,7 @@ namespace UKControllerPlugin {
         {
             std::lock_guard<std::mutex> lock(this->messageLock);
 
-            // Process any incoming messages
+            // Process any legacy incoming messages
             while (this->messages.size() != 0) {
                 for (
                     auto handlerIt = this->eventHandlers.cbegin();
@@ -75,7 +83,28 @@ namespace UKControllerPlugin {
                     }
 
                 }
-                LogWarning("Unable to handle external message: " + this->messages.front());
+                LogWarning("Unable to handle legacy external message: " + this->messages.front());
+                this->messages.pop();
+            }
+
+            // Process any new messages
+            while (!this->parsedMessages.empty()) {
+                bool messageProcessed = false;
+                for (
+                    auto handlerIt = this->messageHandlers.cbegin();
+                    handlerIt != this->messageHandlers.cend();
+                    ++handlerIt
+                ) {
+                    if ((*handlerIt)->HandleMessage(this->parsedMessages.front())) {
+                        messageProcessed = true;
+                        break;
+                    }
+
+                }
+
+                if (!messageProcessed) {
+                    LogWarning("Unable to handle external message: " + this->messages.front());
+                }
                 this->messages.pop();
             }
         }
