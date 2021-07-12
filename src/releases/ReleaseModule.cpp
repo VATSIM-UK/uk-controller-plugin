@@ -145,6 +145,7 @@ namespace UKControllerPlugin {
                     *container.controllerPositions,
                     *container.activeCallsigns,
                     *container.dialogManager,
+                    *container.windows,
                     departureReleaseRequestDialogTriggerFunctionId,
                     departureReleaseDecisionMenuTriggerFunctionId,
                     releaseDecisionCallbackId,

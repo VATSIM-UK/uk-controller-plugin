@@ -20,6 +20,7 @@
 #include "releases/DepartureReleaseColours.h"
 #include "releases/DepartureReleaseRequestView.h"
 #include "releases/CompareDepartureReleases.h"
+#include "mock/MockWinApi.h"
 
 using testing::Test;
 using testing::NiceMock;
@@ -49,6 +50,7 @@ namespace UKControllerPluginTest {
                           controllers,
                           activeCallsigns,
                           dialogManager,
+                          windows,
                           1,
                           2,
                           3,
@@ -154,6 +156,7 @@ namespace UKControllerPluginTest {
                 TaskManager::MockTaskRunnerInterface mockTaskRunner;
                 NiceMock<Dialog::MockDialogProvider> dialogProvider;
                 NiceMock<Api::MockApiInterface> api;
+                NiceMock<Windows::MockWinApi> windows;
                 UKControllerPlugin::Dialog::DialogManager dialogManager;
                 ControllerPositionCollection controllers;
                 std::shared_ptr<DepartureReleaseRequest> request;

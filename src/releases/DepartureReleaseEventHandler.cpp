@@ -27,6 +27,7 @@ namespace UKControllerPlugin {
             const Controller::ControllerPositionCollection& controllers,
             const Controller::ActiveCallsignCollection& activeCallsigns,
             const Dialog::DialogManager& dialogManager,
+            Windows::WinApiInterface& windows,
             const int triggerRequestDialogFunctionId,
             const int triggerDecisionMenuFunctionId,
             const int releaseDecisionCallbackId,
@@ -35,7 +36,8 @@ namespace UKControllerPlugin {
            triggerDecisionMenuFunctionId(triggerDecisionMenuFunctionId),
            releaseDecisionCallbackId(releaseDecisionCallbackId),
            controllers(controllers), plugin(plugin), dialogManager(dialogManager), api(api), taskRunner(taskRunner),
-           activeCallsigns(activeCallsigns), releaseCancellationCallbackId(releaseCancellationCallbackId)
+           activeCallsigns(activeCallsigns), windows(windows),
+           releaseCancellationCallbackId(releaseCancellationCallbackId)
         { }
 
         void DepartureReleaseEventHandler::ProcessPushEvent(const Push::PushEvent& message)
