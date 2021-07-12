@@ -1093,6 +1093,15 @@
       <Filter>resource\sound</Filter>
     </Media>
     <Media Include="..\..\..\resource\sound\beep.wav" />
+    <Media Include="..\..\resource\sound\departure_release_requested.wav">
+      <Filter>resource\sound</Filter>
+    </Media>
+    <Media Include="..\..\resource\sound\departure_release_accepted.wav">
+      <Filter>resource\sound</Filter>
+    </Media>
+    <Media Include="..\..\resource\sound\departure_release_rejected.wav">
+      <Filter>resource\sound</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\airfield\AirfieldCollection.cpp">

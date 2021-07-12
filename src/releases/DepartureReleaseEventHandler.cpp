@@ -16,6 +16,7 @@
 #include "releases/DepartureReleaseColours.h"
 #include "timer/TimerDisplay.h"
 #include "releases/DepartureReleaseRequestView.h"
+#include "windows/WinApiInterface.h"
 
 namespace UKControllerPlugin {
     namespace Releases {
@@ -566,6 +567,15 @@ namespace UKControllerPlugin {
             );
         }
 
+        bool DepartureReleaseEventHandler::UserRequestedRelease(
+            const std::shared_ptr<DepartureReleaseRequest>& request
+        ) const
+        {
+            return this->activeCallsigns.UserHasCallsign() &&
+                this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId()
+                == request->RequestingController();
+        }
+
         /**
          * Create a new departure release request.
          */
@@ -604,6 +614,14 @@ namespace UKControllerPlugin {
                     ++releaseRequest;
                 }
             }
+
+            // Play a sound to alert the controller if we are the target
+            if (
+                this->activeCallsigns.UserHasCallsign() &&
+                this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() == targetController
+            ) {
+                this->windows.PlayWave(nullptr);
+            }
         }
 
         /**
@@ -631,7 +649,13 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            this->releaseRequests.find(data.at("id").get<int>())->second->Reject();
+            auto release = this->releaseRequests.find(data.at("id").get<int>())->second;
+            release->Reject();
+
+            // Play a sound to alert the controller if we requested it
+            if (this->UserRequestedRelease(release)) {
+                this->windows.PlayWave(nullptr);
+            }
         }
 
         /**
@@ -645,15 +669,19 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            auto release = this->releaseRequests.find(data.at("id").get<int>())->second;
             if (data.at("expires_at").is_null()) {
-                this->releaseRequests.find(data.at("id").get<int>())->second->Approve(
-                    Time::ParseTimeString(data.at("released_at").get<std::string>())
-                );
+                release->Approve(Time::ParseTimeString(data.at("released_at").get<std::string>()));
             } else {
-                this->releaseRequests.find(data.at("id").get<int>())->second->Approve(
+                release->Approve(
                     Time::ParseTimeString(data.at("released_at").get<std::string>()),
                     Time::ParseTimeString(data.at("expires_at").get<std::string>())
                 );
+            }
+
+            // Play a sound to alert the controller if we requested it
+            if (this->UserRequestedRelease(release)) {
+                this->windows.PlayWave(nullptr);
             }
         }
 

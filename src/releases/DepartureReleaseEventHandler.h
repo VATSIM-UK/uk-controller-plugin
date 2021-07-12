@@ -120,8 +120,8 @@ namespace UKControllerPlugin {
                 void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData);
                 void SetReleaseCountdownTagData(Tag::TagData& tagData);
                 void SetRequestingControllerTagData(Tag::TagData& tagData);
+                bool UserRequestedRelease(const std::shared_ptr<DepartureReleaseRequest>& request) const;
 
-            private:
                 // A guard on the map to allow async operations
                 std::mutex releaseMapGuard;
 
