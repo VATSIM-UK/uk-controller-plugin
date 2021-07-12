@@ -620,7 +620,7 @@ namespace UKControllerPlugin {
                 this->activeCallsigns.UserHasCallsign() &&
                 this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() == targetController
             ) {
-                this->windows.PlayWave(nullptr);
+                this->windows.PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_REQ));
             }
         }
 
@@ -654,7 +654,7 @@ namespace UKControllerPlugin {
 
             // Play a sound to alert the controller if we requested it
             if (this->UserRequestedRelease(release)) {
-                this->windows.PlayWave(nullptr);
+                this->windows.PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_REJ));
             }
         }
 
@@ -681,7 +681,7 @@ namespace UKControllerPlugin {
 
             // Play a sound to alert the controller if we requested it
             if (this->UserRequestedRelease(release)) {
-                this->windows.PlayWave(nullptr);
+                this->windows.PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_ACCEPT));
             }
         }
 

@@ -18,10 +18,9 @@
 #define IDD_OCEANIC_CLEARANCE           125
 #define IDD_DEPARTURE_RELEASE_REQUEST   127
 #define IDD_DEPARTURE_RELEASE_APPROVE   129
-#define IDR_WAVE2                       131
-#define IDR_WAVE3                       132
-#define IDR_WAVE4                       133
-#define IDR_WAVE5                       134
+#define WAVE_DEP_RLS_ACCEPT             131
+#define WAVE_DEP_RLS_REJ                132
+#define WAVE_DEP_RLS_REQ                133
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -158,17 +157,14 @@
 #define IDC_DATETIMEPICKER1             1116
 #define IDC_DEPARTURE_RELEASE_APPROVE_RELEASED_AT 1116
 #define IDC_DEPARTURE_RELEASE_APPROVE_RELEASED_AT_STATIC 1117
-#define IDR_WAVE3 1118
-#define IDR_WAVE3 1119
-#define IDR_WAVE3 1120
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        135
+#define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1121
+#define _APS_NEXT_CONTROL_VALUE         1118
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
