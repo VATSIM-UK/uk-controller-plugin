@@ -1,9 +1,15 @@
 #include "pch/stdafx.h"
 #include "integration/IntegrationServer.h"
 
+#include "IntegrationClientManager.h"
+#include "integration/SocketConnection.h"
+#include "integration/IntegrationClient.h"
+
 namespace UKControllerPlugin::Integration {
 
-    IntegrationServer::IntegrationServer()
+    IntegrationServer::IntegrationServer(
+        std::shared_ptr<IntegrationClientManager> manager
+    ): manager(std::move(manager))
     {
         struct addrinfo *addressInfo = nullptr, *ptr = nullptr, hints;
         ZeroMemory(&hints, sizeof (hints));
@@ -47,13 +53,33 @@ namespace UKControllerPlugin::Integration {
         }
 
         this->initialised = true;
+        this->acceptThread = std::make_shared<std::thread>(&IntegrationServer::AcceptLoop, this);
     }
 
     IntegrationServer::~IntegrationServer()
     {
         if (this->initialised) {
+            this->acceptingConnections = false;
             closesocket(this->serverSocket);
             LogInfo("Closed integration server socket");
+        }
+    }
+
+    void IntegrationServer::AcceptLoop() const
+    {
+        while (this->acceptingConnections) {
+            SOCKET integrationSocket = accept(integrationSocket, nullptr, nullptr);
+            if (integrationSocket == INVALID_SOCKET) {
+                LogError("Failed to accept integration server connection: " + std::to_string(WSAGetLastError()));
+                closesocket(integrationSocket);
+                continue;
+            }
+
+            this->manager->AddClient(
+                std::make_shared<IntegrationClient>(
+                    std::make_shared<TcpSocketConnection>(integrationSocket)
+                )
+            );
         }
     }
 } // namespace UKControllerPlugin::Integration

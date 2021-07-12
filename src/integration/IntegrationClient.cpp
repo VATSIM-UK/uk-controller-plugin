@@ -1,10 +1,23 @@
 #include "pch/stdafx.h"
 #include "integration/IntegrationClient.h"
 #include "integration/IntegrationConnection.h"
-#include "integration/InboundMessage.h"
 #include "integration/MessageType.h"
 
 namespace UKControllerPlugin::Integration {
+    IntegrationClient::IntegrationClient(
+        std::string integrationName,
+        std::string integrationVersion,
+        std::shared_ptr<IntegrationConnection> connection
+    ): integrationName(std::move(integrationName)), integrationVersion(std::move(integrationVersion)),
+       connection(std::move(connection))
+    {
+        LogInfo("Initialised integration: " + this->GetIntegrationString());
+    }
+
+    IntegrationClient::~IntegrationClient()
+    {
+        LogInfo("Shutting down integration: " + this->GetIntegrationString());
+    }
 
     const std::set<const std::shared_ptr<MessageType>>& IntegrationClient::InterestedMessages() const
     {
@@ -33,57 +46,13 @@ namespace UKControllerPlugin::Integration {
         this->interestedMessages.insert(message);
     }
 
-    void IntegrationClient::Send(const std::shared_ptr<MessageInterface> message) const
+    const std::shared_ptr<IntegrationConnection> IntegrationClient::Connection() const
     {
-        auto messageData = message->GetMessageType().ToJson();
-        messageData.update(message->GetMessageData());
-        this->connection->Send(messageData.dump());
-    }
-
-    bool IntegrationClient::Active() const
-    {
-        return this->connection->Active();
+        return this->connection;
     }
 
     std::string IntegrationClient::GetIntegrationString() const
     {
         return this->integrationName + "/" + this->integrationVersion;
-    }
-
-    bool IntegrationClient::MessageFormatValid(const nlohmann::json& message)
-    {
-        return message.contains("type") &&
-            message.at("type").is_string() &&
-            message.contains("version") &&
-            message.at("version").is_number_integer() &&
-            message.contains("data") &&
-            message.at("data").is_object();
-    }
-
-    std::shared_ptr<MessageInterface> IntegrationClient::Receive()
-    {
-        auto nextMessage = this->connection->Receive();
-        if (nextMessage == this->connection->NO_MESSAGES_PENDING) {
-            return nullptr;
-        }
-
-        try {
-            nlohmann::json messageData = nlohmann::json::parse(nextMessage);
-            if (!MessageFormatValid(messageData)) {
-                LogError("Invalid message from integration " + this->GetIntegrationString() + ": " + nextMessage);
-                return nullptr;
-            }
-
-            return std::make_shared<InboundMessage>(
-                MessageType{
-                    messageData.at("type").get<std::string>(),
-                    messageData.at("version").get<int>()
-                },
-                messageData.at("data")
-            );
-        } catch (nlohmann::json::exception&) {
-            LogError("Bad JSON from integration " + this->GetIntegrationString() + ": " + nextMessage);
-            return nullptr;
-        }
     }
 } // namespace UKControllerPlugin::Integration

@@ -1109,6 +1109,21 @@
     <ClInclude Include="..\..\src\integration\IntegrationServer.h">
       <Filter>src\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\integration\SocketConnection.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\IntegrationClientManager.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\ClientInitialisationManager.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\Connection.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\DelimitedStreamParser.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1897,6 +1912,24 @@
       <Filter>src\integration</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\integration\IntegrationServer.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\SocketConnection.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\IntegrationClientManager.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\ClientInitialisationManager.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\IntegrationConnection.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\InboundMessage.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\DelimitedStreamParser.cpp">
       <Filter>src\integration</Filter>
     </ClCompile>
   </ItemGroup>

@@ -12,23 +12,26 @@ namespace UKControllerPlugin::Integration {
     class IntegrationClient
     {
         public:
+            IntegrationClient(
+                std::string integrationName,
+                std::string integrationVersion,
+                std::shared_ptr<IntegrationConnection> connection
+            );
+            ~IntegrationClient();
             const std::set<const std::shared_ptr<MessageType>>& InterestedMessages() const;
             bool InterestedInMessage(const MessageType& message) const;
             void ClearInterestedMessages();
             void AddInterestedMessage(std::shared_ptr<MessageType> message);
-            void Send(std::shared_ptr<MessageInterface> message) const;
-            std::shared_ptr<MessageInterface> Receive();
-            bool Active() const;
+            const std::shared_ptr<IntegrationConnection> Connection() const;
 
         private:
             std::string GetIntegrationString() const;
-            static bool MessageFormatValid(const nlohmann::json& message);
 
             // Name of the integration
-            std::string integrationName;
+            std::string integrationName = "Unknown";
 
             // Version of the integration
-            std::string integrationVersion;
+            std::string integrationVersion = "Unknown";
 
             // The messages that this target is interested in receiving
             std::set<const std::shared_ptr<MessageType>> interestedMessages;

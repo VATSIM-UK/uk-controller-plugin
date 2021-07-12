@@ -1,7 +1,8 @@
 #pragma once
-#include "pch/stdafx.h"
 
 namespace UKControllerPlugin::Integration {
+    class MessageInterface;
+    class Connection;
 
     /*
      * Represents the connection between an external integration and the plugin.
@@ -12,11 +13,13 @@ namespace UKControllerPlugin::Integration {
     class IntegrationConnection
     {
         public:
-            virtual ~IntegrationConnection() = default;
-            virtual bool Send(std::string message) = 0;
-            virtual std::string Receive() = 0;
-            virtual bool Active() const = 0;
+            IntegrationConnection(std::shared_ptr<Connection> connection);
+            void Send(std::shared_ptr<MessageInterface> message);
+            std::shared_ptr<MessageInterface> Receive() const;
+            bool Active() const;
 
-            static inline const std::string NO_MESSAGES_PENDING = "";
+        private:
+            // The raw connection
+            std::shared_ptr<Connection> connection;
     };
 } // namespace UKControllerPlugin::Integration
