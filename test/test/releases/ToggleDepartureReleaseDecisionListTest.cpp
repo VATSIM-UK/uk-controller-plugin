@@ -11,6 +11,7 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "releases/DepartureReleaseEventHandler.h"
+#include "mock/MockWinApi.h"
 
 using testing::Test;
 using UKControllerPlugin::Releases::ToggleDepartureReleaseDecisionList;
@@ -29,6 +30,7 @@ namespace UKControllerPluginTest {
                           controllers,
                           activeCallsigns,
                           dialogManager,
+                          windows,
                           101,
                           102,
                           103,
@@ -66,6 +68,7 @@ namespace UKControllerPluginTest {
                 UKControllerPlugin::Controller::ControllerPositionCollection controllers;
                 testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
                 testing::NiceMock<Api::MockApiInterface> mockApi;
+                testing::NiceMock<Windows::MockWinApi> windows;
                 TaskManager::MockTaskRunnerInterface taskRunner;
 
         };

@@ -16,6 +16,7 @@
 #include "mock/MockUserSettingProviderInterface.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
+#include "mock/MockWinApi.h"
 
 using testing::Test;
 
@@ -33,6 +34,7 @@ namespace UKControllerPluginTest {
                           controllers,
                           activeCallsigns,
                           dialogManager,
+                          windows,
                           101,
                           102,
                           103,
@@ -95,6 +97,7 @@ namespace UKControllerPluginTest {
                 UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
                 testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;
                 testing::NiceMock<Api::MockApiInterface> api;
+                testing::NiceMock<Windows::MockWinApi> windows;
                 UKControllerPlugin::Dialog::DialogManager dialogManager;
                 UKControllerPlugin::Controller::ControllerPositionCollection controllers;
                 testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;

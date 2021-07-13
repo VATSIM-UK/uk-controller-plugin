@@ -20,6 +20,7 @@
 #include "releases/DepartureReleaseColours.h"
 #include "releases/DepartureReleaseRequestView.h"
 #include "releases/CompareDepartureReleases.h"
+#include "mock/MockWinApi.h"
 
 using testing::Test;
 using testing::NiceMock;
@@ -49,6 +50,7 @@ namespace UKControllerPluginTest {
                           controllers,
                           activeCallsigns,
                           dialogManager,
+                          windows,
                           1,
                           2,
                           3,
@@ -154,6 +156,7 @@ namespace UKControllerPluginTest {
                 TaskManager::MockTaskRunnerInterface mockTaskRunner;
                 NiceMock<Dialog::MockDialogProvider> dialogProvider;
                 NiceMock<Api::MockApiInterface> api;
+                NiceMock<Windows::MockWinApi> windows;
                 UKControllerPlugin::Dialog::DialogManager dialogManager;
                 ControllerPositionCollection controllers;
                 std::shared_ptr<DepartureReleaseRequest> request;
@@ -260,6 +263,62 @@ namespace UKControllerPluginTest {
 
             handler.ProcessPushEvent(message);
             EXPECT_TRUE(request->Rejected());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntPlayASoundOnRejectionIfUserNotActive)
+        {
+            handler.AddReleaseRequest(request);
+            nlohmann::json data;
+            data["id"] = 1;
+
+            PushEvent message{
+                "departure_release.rejected",
+                "private-departure-releases",
+                data
+            };
+
+            EXPECT_CALL(this->windows, PlayWave(testing::_))
+                .Times(0);
+
+            handler.ProcessPushEvent(message);
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntPlayASoundOnRejectionIfUserIsNotRequestingController)
+        {
+            activeCallsigns.AddUserCallsign(*controller1Callsign);
+            handler.AddReleaseRequest(request);
+            nlohmann::json data;
+            data["id"] = 1;
+
+            PushEvent message{
+                "departure_release.rejected",
+                "private-departure-releases",
+                data
+            };
+
+            EXPECT_CALL(this->windows, PlayWave(testing::_))
+                .Times(0);
+
+            handler.ProcessPushEvent(message);
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItPlaysASoundOnRejectionIfUserIsRequestingController)
+        {
+            activeCallsigns.AddUserCallsign(*controller2Callsign);
+            handler.AddReleaseRequest(request);
+            nlohmann::json data;
+            data["id"] = 1;
+
+            PushEvent message{
+                "departure_release.rejected",
+                "private-departure-releases",
+                data
+            };
+
+            EXPECT_CALL(this->windows, PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_REJ)))
+                .Times(1);
+
+            handler.ProcessPushEvent(message);
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesMissingIdInRejectedMessage)
@@ -438,6 +497,68 @@ namespace UKControllerPluginTest {
             handler.ProcessPushEvent(message);
             EXPECT_TRUE(request->ApprovedWithNoExpiry());
             EXPECT_EQ(ParseTimeString("2021-05-12 19:55:00"), request->ReleasedAtTime());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntPlayASoundOnApproveIfUserNotActive)
+        {
+            handler.AddReleaseRequest(request);
+            nlohmann::json data;
+            data["id"] = 1;
+            data["expires_at"] = "2021-05-12 20:00:00";
+            data["released_at"] = "2021-05-12 19:55:00";
+
+            PushEvent message{
+                "departure_release.approved",
+                "private-departure-releases",
+                data
+            };
+
+            EXPECT_CALL(this->windows, PlayWave(testing::_))
+                .Times(0);
+
+            handler.ProcessPushEvent(message);
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntPlayASoundOnApproveIfUserNotRequestingController)
+        {
+            activeCallsigns.AddUserCallsign(*controller1Callsign);
+            handler.AddReleaseRequest(request);
+            nlohmann::json data;
+            data["id"] = 1;
+            data["expires_at"] = "2021-05-12 20:00:00";
+            data["released_at"] = "2021-05-12 19:55:00";
+
+            PushEvent message{
+                "departure_release.approved",
+                "private-departure-releases",
+                data
+            };
+
+            EXPECT_CALL(this->windows, PlayWave(testing::_))
+                .Times(0);
+
+            handler.ProcessPushEvent(message);
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItPlaysASoundOnApproveIfUserRequestingController)
+        {
+            activeCallsigns.AddUserCallsign(*controller2Callsign);
+            handler.AddReleaseRequest(request);
+            nlohmann::json data;
+            data["id"] = 1;
+            data["expires_at"] = "2021-05-12 20:00:00";
+            data["released_at"] = "2021-05-12 19:55:00";
+
+            PushEvent message{
+                "departure_release.approved",
+                "private-departure-releases",
+                data
+            };
+
+            EXPECT_CALL(this->windows, PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_ACCEPT)))
+                .Times(1);
+
+            handler.ProcessPushEvent(message);
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, ItHandlesMissingIdInApproveMessage)
@@ -626,6 +747,71 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(2, release->RequestingController());
             EXPECT_EQ(3, release->TargetController());
             EXPECT_EQ(ParseTimeString("2021-05-12 19:55:00"), release->RequestExpiryTime());
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntPlaySoundOnRequestIfUserNotActive)
+        {
+            nlohmann::json data;
+            data["id"] = 2;
+            data["callsign"] = "BAW123";
+            data["requesting_controller"] = 2;
+            data["target_controller"] = 3;
+            data["expires_at"] = "2021-05-12 19:55:00";
+
+            PushEvent message{
+                "departure_release.requested",
+                "private-departure-releases",
+                data
+            };
+
+            EXPECT_CALL(this->windows, PlayWave(testing::_))
+                .Times(0);
+
+            handler.ProcessPushEvent(message);
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItDoesntPlaySoundOnRequestIfUserNotTargetController)
+        {
+            activeCallsigns.AddUserCallsign(*controller1Callsign);
+            nlohmann::json data;
+            data["id"] = 2;
+            data["callsign"] = "BAW123";
+            data["requesting_controller"] = 2;
+            data["target_controller"] = 3;
+            data["expires_at"] = "2021-05-12 19:55:00";
+
+            PushEvent message{
+                "departure_release.requested",
+                "private-departure-releases",
+                data
+            };
+
+            EXPECT_CALL(this->windows, PlayWave(testing::_))
+                .Times(0);
+
+            handler.ProcessPushEvent(message);
+        }
+
+        TEST_F(DepartureReleaseEventHandlerTest, ItPlaysSoundOnRequestIfUserIsTargetController)
+        {
+            activeCallsigns.AddUserCallsign(*controller2Callsign);
+            nlohmann::json data;
+            data["id"] = 2;
+            data["callsign"] = "BAW123";
+            data["requesting_controller"] = 2;
+            data["target_controller"] = 3;
+            data["expires_at"] = "2021-05-12 19:55:00";
+
+            PushEvent message{
+                "departure_release.requested",
+                "private-departure-releases",
+                data
+            };
+
+            EXPECT_CALL(this->windows, PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_REQ)))
+                .Times(1);
+
+            handler.ProcessPushEvent(message);
         }
 
         TEST_F(DepartureReleaseEventHandlerTest, ItUpdatesAReleaseFromMessage)
