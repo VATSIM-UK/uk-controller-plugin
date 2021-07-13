@@ -24,6 +24,9 @@ namespace UKControllerPlugin {
     namespace Api {
         class ApiInterface;
     } // namespace Api
+    namespace Windows {
+        class WinApiInterface;
+    } // namespace Windows
 
     namespace Releases {
 
@@ -44,6 +47,7 @@ namespace UKControllerPlugin {
                     const Controller::ControllerPositionCollection& controllers,
                     const Controller::ActiveCallsignCollection& activeCallsigns,
                     const Dialog::DialogManager& dialogManager,
+                    Windows::WinApiInterface& windows,
                     int triggerRequestDialogFunctionId,
                     int triggerDecisionMenuFunctionId,
                     int releaseDecisionCallbackId,
@@ -116,8 +120,8 @@ namespace UKControllerPlugin {
                 void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData);
                 void SetReleaseCountdownTagData(Tag::TagData& tagData);
                 void SetRequestingControllerTagData(Tag::TagData& tagData);
+                bool UserRequestedRelease(const std::shared_ptr<DepartureReleaseRequest>& request) const;
 
-            private:
                 // A guard on the map to allow async operations
                 std::mutex releaseMapGuard;
 
@@ -156,6 +160,9 @@ namespace UKControllerPlugin {
 
                 // A set of releases to display in the view
                 std::set<std::shared_ptr<DepartureReleaseRequest>> releasesToDisplay;
+
+                // Windows api interface for playing sounds
+                Windows::WinApiInterface& windows;
         };
     } // namespace Releases
 } // namespace UKControllerPlugin

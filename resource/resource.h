@@ -18,6 +18,9 @@
 #define IDD_OCEANIC_CLEARANCE           125
 #define IDD_DEPARTURE_RELEASE_REQUEST   127
 #define IDD_DEPARTURE_RELEASE_APPROVE   129
+#define WAVE_DEP_RLS_ACCEPT             131
+#define WAVE_DEP_RLS_REJ                132
+#define WAVE_DEP_RLS_REQ                133
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -159,7 +162,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        131
+#define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1118
 #define _APS_NEXT_SYMED_VALUE           101

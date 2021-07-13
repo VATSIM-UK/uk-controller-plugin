@@ -12,6 +12,9 @@
   <ItemGroup>
     <Media Include="..\..\..\resource\sound\beep.wav" />
     <Media Include="..\..\resource\sound\beep.wav" />
+    <Media Include="..\..\resource\sound\departure_release_accepted.wav" />
+    <Media Include="..\..\resource\sound\departure_release_rejected.wav" />
+    <Media Include="..\..\resource\sound\departure_release_requested.wav" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\resource\resource.h" />
