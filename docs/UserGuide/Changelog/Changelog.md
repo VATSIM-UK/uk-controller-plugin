@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [3.2.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.1.4...3.2.0) (2021-07-13)
+
+
+### Features
+
+* **departure-release:** Play sound on new request, accept and reject ([#301](https://github.com/VATSIM-UK/uk-controller-plugin/issues/301)) ([dd594c2](https://github.com/VATSIM-UK/uk-controller-plugin/commit/dd594c2c4415a4b9cbacf01ec7709f2be1071502)), closes [#300](https://github.com/VATSIM-UK/uk-controller-plugin/issues/300)
+
 ## [3.1.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.1.3...3.1.4) (2021-07-05)
 
 
