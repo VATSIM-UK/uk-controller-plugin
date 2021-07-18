@@ -17,13 +17,13 @@ namespace UKControllerPlugin::Integration {
             static std::shared_ptr<InboundMessage> FromJson(const nlohmann::json& json);
 
         protected:
-            InboundMessage(MessageType type, nlohmann::json data): type(type), data(data) {}
+            InboundMessage(MessageType type, nlohmann::json::object_t data): type(type), data(data) {}
 
         private:
             // The type of message
             MessageType type;
 
             // Data about the message
-            nlohmann::json data;
+            nlohmann::json::object_t data;
     };
 } // namespace UKControllerPlugin::Integration

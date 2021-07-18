@@ -1118,6 +1118,9 @@
     <ClInclude Include="..\..\src\integration\SocketWrapper.h">
       <Filter>src\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\integration\InitialistionSuccessMessage.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1930,6 +1933,9 @@
       <Filter>src\integration</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\integration\SocketWrapper.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\InitialistionSuccessMessage.cpp">
       <Filter>src\integration</Filter>
     </ClCompile>
   </ItemGroup>

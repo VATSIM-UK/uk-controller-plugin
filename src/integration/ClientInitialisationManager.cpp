@@ -1,5 +1,6 @@
 #include "pch/stdafx.h"
 #include "integration/ClientInitialisationManager.h"
+#include "integration/InitialistionSuccessMessage.h"
 #include "integration/IntegrationClient.h"
 #include "integration/MessageInterface.h"
 #include "integration/IntegrationConnection.h"
@@ -28,7 +29,7 @@ namespace UKControllerPlugin::Integration {
             connection != this->connections.end();
         ) {
             // If it's taken too long to initialise, then kill the connection
-            if (Time::TimeNow() < connection->second + std::chrono::seconds(10)) {
+            if (Time::TimeNow() > connection->second + std::chrono::seconds(10)) {
                 LogInfo("Integration has not initialised in time");
                 this->connections.erase(connection++);
                 continue;
@@ -50,15 +51,10 @@ namespace UKControllerPlugin::Integration {
                     continue;
                 }
 
-                auto data = incomingMessages.front()->GetMessageData();
-                this->clientManager->AddClient(
-                    std::make_shared<IntegrationClient>(
-                        data.at("integration_name"),
-                        data.at("integration_version"),
-                        connection->first
-                    )
-                );
+                this->UpgradeToClient(connection->first, incomingMessages.front());
+                this->SendInitialisationSuccessMessage(connection->first);
                 this->connections.erase(connection++);
+                break;
             }
         }
     }
@@ -88,5 +84,27 @@ namespace UKControllerPlugin::Integration {
                         subscription.at("version").is_number_integer();
                 }
             ) == messageData.at("event_subscriptions").cend();
+    }
+
+    void ClientInitialisationManager::UpgradeToClient(
+        std::shared_ptr<IntegrationConnection> connection,
+        std::shared_ptr<MessageInterface> initialisationMessage
+    )
+    {
+        auto data = initialisationMessage->GetMessageData();
+        this->clientManager->AddClient(
+            std::make_shared<IntegrationClient>(
+                data.at("integration_name").get<std::string>(),
+                data.at("integration_version").get<std::string>(),
+                connection
+            )
+        );
+    }
+
+    void ClientInitialisationManager::SendInitialisationSuccessMessage(
+        std::shared_ptr<IntegrationConnection> connection
+    ) const
+    {
+        connection->Send(std::make_shared<InitialisationSuccessMessage>());
     }
 } // namespace UKControllerPlugin::Integration

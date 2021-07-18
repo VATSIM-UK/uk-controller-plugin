@@ -24,6 +24,7 @@ namespace UKControllerPlugin::Integration {
         while (!messages.empty()) {
             try {
                 parsedMessages.push(InboundMessage::FromJson(nlohmann::json::parse(messages.front())));
+                messages.pop();
             } catch (nlohmann::json::exception&) {
                 LogError("Invalid JSON received from integration: " + messages.front());
             }

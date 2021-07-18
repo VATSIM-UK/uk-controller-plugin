@@ -11,7 +11,7 @@ namespace UKControllerPlugin::Integration {
         std::shared_ptr<ClientInitialisationManager> initialisationManager
     ): initialisationManager(std::move(initialisationManager))
     {
-        struct addrinfo *addressInfo = nullptr, *ptr = nullptr, hints;
+        struct addrinfo *addressInfo = nullptr, hints;
         ZeroMemory(&hints, sizeof (hints));
         hints.ai_family = AF_INET;
         hints.ai_socktype = SOCK_STREAM;

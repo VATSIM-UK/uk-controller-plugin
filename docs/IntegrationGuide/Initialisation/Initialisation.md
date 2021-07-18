@@ -42,6 +42,9 @@ After a successful initialisation, the following response will be returned.
 {
     "type": "initialisation_success",
     "version": 1,
+    "data": {
+        "ukcp_version": "string"
+    }
 }
 ```
 

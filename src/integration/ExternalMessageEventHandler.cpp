@@ -2,7 +2,6 @@
 #include "integration/ExternalMessageEventHandler.h"
 #include "integration//ExternalMessageHandlerInterface.h"
 #include "integration/MessageInterface.h"
-#include "integration/InboundMessageHandler.h"
 
 namespace UKControllerPlugin {
     namespace Integration {
@@ -84,27 +83,6 @@ namespace UKControllerPlugin {
 
                 }
                 LogWarning("Unable to handle legacy external message: " + this->messages.front());
-                this->messages.pop();
-            }
-
-            // Process any new messages
-            while (!this->parsedMessages.empty()) {
-                bool messageProcessed = false;
-                for (
-                    auto handlerIt = this->messageHandlers.cbegin();
-                    handlerIt != this->messageHandlers.cend();
-                    ++handlerIt
-                ) {
-                    if ((*handlerIt)->HandleMessage(this->parsedMessages.front())) {
-                        messageProcessed = true;
-                        break;
-                    }
-
-                }
-
-                if (!messageProcessed) {
-                    LogWarning("Unable to handle external message: " + this->messages.front());
-                }
                 this->messages.pop();
             }
         }

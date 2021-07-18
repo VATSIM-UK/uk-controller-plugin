@@ -14,12 +14,13 @@ namespace UKControllerPlugin::Integration {
             virtual ~MessageInterface() = default;
 
             /*
-             * Get the data to go in the message. Return the null
-             * type if there is no data.
+             * Get the data to go in the message, this gets merged
+             * with the message type information to make a complete
+             * message.
              */
             virtual nlohmann::json GetMessageData() const
             {
-                return NONE;
+                return nlohmann::json::object();
             }
 
             /*
@@ -28,37 +29,18 @@ namespace UKControllerPlugin::Integration {
             virtual MessageType GetMessageType() const = 0;
 
             /*
-             * Get the errors from the message. Return null type
-             * if there are none.
-             */
-            virtual nlohmann::json GetErrorData() const
-            {
-                return NONE;
-            }
-
-            /*
              * Convert the message to JSON
              */
             nlohmann::json ToJson() const
             {
-                nlohmann::json data = this->GetMessageType().ToJson();
-                if (this->GetMessageData() != NONE) {
-                    data["data"] = this->GetMessageData();
-                }
-
-                if (this->GetErrorData() != NONE) {
-                    data["errors"] = this->GetErrorData();
-                }
-
+                nlohmann::json data = this->GetMessageData();
+                data.update(this->GetMessageType().ToJson());
                 return data;
             }
 
             bool operator==(const MessageInterface& compare) const
             {
-                return this->GetMessageType() == compare.GetMessageType() &&
-                    this->GetMessageData() == compare.GetMessageData();
+                return this->ToJson() == compare.ToJson();
             }
-
-            inline static const nlohmann::json NONE = nlohmann::json::value_t::null;
     };
 } // namespace UKControllerPlugin::Integration

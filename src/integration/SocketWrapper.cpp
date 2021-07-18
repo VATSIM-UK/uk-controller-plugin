@@ -54,13 +54,13 @@ namespace UKControllerPlugin::Integration {
     void SocketWrapper::ReadLoop()
     {
         int bytesReceived;
-        char receiveBuffer[4096];
+        std::array<char, 4096> receiveBuffer;
         do {
-            bytesReceived = recv(this->socket, receiveBuffer, 4096, 0);
+            bytesReceived = recv(this->socket, &receiveBuffer[0], 4096, 0);
 
             if (bytesReceived > 0) {
                 auto lock = this->LockReadStream();
-                this->readStream << std::string(receiveBuffer);
+                this->readStream << std::string(&receiveBuffer[0], &receiveBuffer[bytesReceived]);
             } else if (bytesReceived == 0) {
                 LogInfo("Integration connection closing");
                 this->active = false;

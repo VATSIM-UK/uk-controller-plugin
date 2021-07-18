@@ -21,6 +21,11 @@ namespace UKControllerPlugin::Integration {
 
         private:
             static bool InitialisationMessageValid(std::shared_ptr<MessageInterface> message);
+            void UpgradeToClient(
+                std::shared_ptr<IntegrationConnection> connection,
+                std::shared_ptr<MessageInterface> initialisationMessage
+            );
+            void SendInitialisationSuccessMessage(std::shared_ptr<IntegrationConnection> connection) const;
 
             // Manages clients once fully initialised
             std::shared_ptr<IntegrationClientManager> clientManager;

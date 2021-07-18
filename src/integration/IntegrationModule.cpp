@@ -13,13 +13,14 @@ namespace UKControllerPlugin {
         std::shared_ptr<IntegrationServer> server;
         std::shared_ptr<ClientInitialisationManager> initialisationManager;
         std::shared_ptr<IntegrationClientManager> clientManager;
+        std::shared_ptr<std::thread> testThread;
 
         void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin, bool winsockInitialised)
         {
             // Create handler and add to other handlers
             container.externalEventHandler = std::make_shared<ExternalMessageEventHandler>(duplicatePlugin);
 
-            if (duplicatePlugin) {
+            if (duplicatePlugin || !winsockInitialised) {
                 return;
             }
 
@@ -30,6 +31,7 @@ namespace UKControllerPlugin {
             clientManager = std::make_shared<IntegrationClientManager>();
             initialisationManager = std::make_shared<ClientInitialisationManager>(clientManager);
             server = std::make_shared<IntegrationServer>(initialisationManager);
+            container.timedHandler->RegisterEvent(initialisationManager, 1);
         }
     }  // namespace Integration
 }  // namespace UKControllerPlugin
