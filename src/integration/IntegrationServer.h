@@ -1,7 +1,7 @@
 #pragma once
 
 namespace UKControllerPlugin::Integration {
-    class IntegrationClientManager;
+    class ClientInitialisationManager;
     /*
      * A class that listens for connections on the integration and responds
      * accordingly
@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Integration {
     class IntegrationServer
     {
         public:
-            IntegrationServer(std::shared_ptr<IntegrationClientManager> manager);
+            IntegrationServer(std::shared_ptr<ClientInitialisationManager> initialisationManager);
             ~IntegrationServer();
             void AcceptLoop() const;
 
@@ -27,6 +27,6 @@ namespace UKControllerPlugin::Integration {
             bool acceptingConnections;
 
             // The connection manager
-            std::shared_ptr<IntegrationClientManager> manager;
+            std::shared_ptr<ClientInitialisationManager> initialisationManager;
     };
 } // namespace UKControllerPlugin::Integration

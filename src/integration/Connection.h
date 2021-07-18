@@ -13,10 +13,20 @@ namespace UKControllerPlugin::Integration {
     {
         public:
             virtual ~Connection() = default;
-            virtual void Send(std::string message) = 0;
-            virtual std::string Receive() = 0;
-            virtual bool Active() const = 0;
 
-            static inline const std::string NO_MESSAGE = "";
+            /*
+             * Send a single message over the connection.
+             */
+            virtual void Send(std::string message) = 0;
+
+            /*
+             * Receive a sequence of queued messages.
+             */
+            virtual std::queue<std::string> Receive() = 0;
+
+            /*
+             * Is the connection still active
+             */
+            virtual bool Active() const = 0;
     };
 } // namespace UKControllerPlugin::Integration

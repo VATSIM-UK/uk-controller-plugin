@@ -18,7 +18,7 @@ namespace UKControllerPlugin::Integration {
                 std::shared_ptr<IntegrationConnection> connection
             );
             ~IntegrationClient();
-            const std::set<const std::shared_ptr<MessageType>>& InterestedMessages() const;
+            const std::set<std::shared_ptr<MessageType>>& InterestedMessages() const;
             bool InterestedInMessage(const MessageType& message) const;
             void ClearInterestedMessages();
             void AddInterestedMessage(std::shared_ptr<MessageType> message);
@@ -34,7 +34,7 @@ namespace UKControllerPlugin::Integration {
             std::string integrationVersion = "Unknown";
 
             // The messages that this target is interested in receiving
-            std::set<const std::shared_ptr<MessageType>> interestedMessages;
+            std::set<std::shared_ptr<MessageType>> interestedMessages;
 
             // The connection for this client
             const std::shared_ptr<IntegrationConnection> connection;

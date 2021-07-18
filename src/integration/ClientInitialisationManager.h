@@ -4,6 +4,7 @@
 namespace UKControllerPlugin::Integration {
     class IntegrationConnection;
     class IntegrationClientManager;
+    class MessageInterface;
 
     /*
      * Manages the initialisation of clients and
@@ -19,6 +20,8 @@ namespace UKControllerPlugin::Integration {
             void TimedEventTrigger() override;
 
         private:
+            static bool InitialisationMessageValid(std::shared_ptr<MessageInterface> message);
+
             // Manages clients once fully initialised
             std::shared_ptr<IntegrationClientManager> clientManager;
 

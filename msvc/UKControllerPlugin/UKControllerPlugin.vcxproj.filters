@@ -995,12 +995,6 @@
     <ClInclude Include="..\..\src\integration\MessageInterface.h">
       <Filter>src\integration</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\integration\OutboundMessageHandler.h">
-      <Filter>src\integration</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\integration\OutboundMessageTarget.h">
-      <Filter>src\integration</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\integration\MessageType.h">
       <Filter>src\integration</Filter>
     </ClInclude>
@@ -1094,9 +1088,6 @@
     <ClInclude Include="..\..\src\releases\DepartureReleaseColours.h">
       <Filter>src\releases</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\integration\InboundMessageHandler.h">
-      <Filter>src\integration</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\integration\IntegrationClient.h">
       <Filter>src\integration</Filter>
     </ClInclude>
@@ -1121,7 +1112,10 @@
     <ClInclude Include="..\..\src\integration\Connection.h">
       <Filter>src\integration</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\integration\DelimitedStreamParser.h">
+    <ClInclude Include="..\..\src\integration\SocketInterface.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\SocketWrapper.h">
       <Filter>src\integration</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1839,9 +1833,6 @@
     <ClCompile Include="..\..\src\plugin\ForceUpdate.cpp">
       <Filter>src\plugin</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\integration\OutboundMessageTarget.cpp">
-      <Filter>src\integration</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
@@ -1938,7 +1929,7 @@
     <ClCompile Include="..\..\src\integration\InboundMessage.cpp">
       <Filter>src\integration</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\integration\DelimitedStreamParser.cpp">
+    <ClCompile Include="..\..\src\integration\SocketWrapper.cpp">
       <Filter>src\integration</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,7 +1,9 @@
 #pragma once
 #include "integration/Connection.h"
+#include "integration/SocketInterface.h"
 
 namespace UKControllerPlugin::Integration {
+    class MessageInterface;
 
     /*
      * A connection for integrations via a socket
@@ -9,39 +11,22 @@ namespace UKControllerPlugin::Integration {
     class SocketConnection : public Connection
     {
         public:
-            SocketConnection(SOCKET socket);
-            ~SocketConnection() override;
+            SocketConnection(std::shared_ptr<SocketInterface> socket);
+            ~SocketConnection() override = default;
 
             bool Active() const override;
-            std::string Receive() override;
+            std::queue<std::string> Receive() override;
             void Send(std::string message) override;
 
         private:
-            std::lock_guard<std::mutex> LockQueue();
-            void ReceiveLoop();
-            void ProcessReceivedData(std::vector<char>& data);
+            std::queue<std::string> ProcessReceivedData();
 
-            static inline const char MESSAGE_DELIMITER = '\0x1f';
+            static inline const char MESSAGE_DELIMITER[1] = {'\x1F'};
 
             // The socket
-            SOCKET socket;
-
-            // Are we active
-            bool active = true;
-
-            // Protects the message queue
-            std::mutex queueLock;
+            std::shared_ptr<SocketInterface> socket;
 
             // Data that is inbound, but not yet part of a message
             std::stringstream incomingData;
-
-            // The inbound message receiving thread
-            std::shared_ptr<std::thread> receiveThread;
-
-            // Are we expecting some length
-            bool expectingLength = true;
-
-            // Messages
-            std::queue<std::string> messages;
     };
 } // namespace UKControllerPlugin::Integration

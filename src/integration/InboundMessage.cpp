@@ -42,12 +42,14 @@ namespace UKControllerPlugin::Integration {
             return nullptr;
         }
 
-        return std::make_shared<InboundMessage>(
-            MessageType{
-                json.at("type").get<std::string>(),
-                json.at("version").get<int>()
-            },
-            json.at("data")
+        return std::shared_ptr<InboundMessage>(
+            new InboundMessage(
+                MessageType{
+                    json.at("type").get<std::string>(),
+                    json.at("version").get<int>()
+                },
+                json.at("data")
+            )
         );
     }
 } // namespace UKControllerPlugin::Integration

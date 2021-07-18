@@ -14,8 +14,8 @@ namespace UKControllerPlugin::Integration {
     {
         public:
             IntegrationConnection(std::shared_ptr<Connection> connection);
-            void Send(std::shared_ptr<MessageInterface> message);
-            std::shared_ptr<MessageInterface> Receive() const;
+            void Send(std::shared_ptr<MessageInterface> message) const;
+            std::queue<std::shared_ptr<MessageInterface>> Receive() const;
             bool Active() const;
 
         private:

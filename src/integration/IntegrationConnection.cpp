@@ -7,26 +7,30 @@
 namespace UKControllerPlugin::Integration {
 
     IntegrationConnection::IntegrationConnection(std::shared_ptr<Connection> connection): connection(
-        std::move(connection)) { }
+        std::move(connection))
+    {
+        LogInfo("Initialising new integration connection");
+    }
 
-    void IntegrationConnection::Send(std::shared_ptr<MessageInterface> message)
+    void IntegrationConnection::Send(std::shared_ptr<MessageInterface> message) const
     {
         this->connection->Send(message->ToJson().dump());
     }
 
-    std::shared_ptr<MessageInterface> IntegrationConnection::Receive() const
+    std::queue<std::shared_ptr<MessageInterface>> IntegrationConnection::Receive() const
     {
-        std::string receivedMessage = this->connection->Receive();
-        if (receivedMessage == this->connection->NO_MESSAGE) {
-            return nullptr;
+        std::queue<std::string> messages = this->connection->Receive();
+        std::queue<std::shared_ptr<MessageInterface>> parsedMessages;
+        while (!messages.empty()) {
+            try {
+                parsedMessages.push(InboundMessage::FromJson(nlohmann::json::parse(messages.front())));
+            } catch (nlohmann::json::exception&) {
+                LogError("Invalid JSON received from integration: " + messages.front());
+            }
+
         }
 
-        try {
-            return InboundMessage::FromJson(nlohmann::json::parse(receivedMessage));
-        } catch (nlohmann::json::exception&) {
-            LogError("Invalid JSON received from integration: " + receivedMessage);
-            return nullptr;
-        }
+        return parsedMessages;
     }
 
     bool IntegrationConnection::Active() const

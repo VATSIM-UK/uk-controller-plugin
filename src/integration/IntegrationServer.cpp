@@ -1,15 +1,15 @@
 #include "pch/stdafx.h"
 #include "integration/IntegrationServer.h"
-
-#include "IntegrationClientManager.h"
+#include "integration/SocketWrapper.h"
+#include "integration/ClientInitialisationManager.h"
 #include "integration/SocketConnection.h"
-#include "integration/IntegrationClient.h"
+#include "integration/IntegrationConnection.h"
 
 namespace UKControllerPlugin::Integration {
 
     IntegrationServer::IntegrationServer(
-        std::shared_ptr<IntegrationClientManager> manager
-    ): manager(std::move(manager))
+        std::shared_ptr<ClientInitialisationManager> initialisationManager
+    ): initialisationManager(std::move(initialisationManager))
     {
         struct addrinfo *addressInfo = nullptr, *ptr = nullptr, hints;
         ZeroMemory(&hints, sizeof (hints));
@@ -53,6 +53,7 @@ namespace UKControllerPlugin::Integration {
         }
 
         this->initialised = true;
+        LogInfo("Successfully initialised integration server");
         this->acceptThread = std::make_shared<std::thread>(&IntegrationServer::AcceptLoop, this);
     }
 
@@ -68,16 +69,19 @@ namespace UKControllerPlugin::Integration {
     void IntegrationServer::AcceptLoop() const
     {
         while (this->acceptingConnections) {
-            SOCKET integrationSocket = accept(integrationSocket, nullptr, nullptr);
+
+            SOCKET integrationSocket = accept(this->serverSocket, nullptr, nullptr);
             if (integrationSocket == INVALID_SOCKET) {
                 LogError("Failed to accept integration server connection: " + std::to_string(WSAGetLastError()));
                 closesocket(integrationSocket);
                 continue;
             }
 
-            this->manager->AddClient(
-                std::make_shared<IntegrationClient>(
-                    std::make_shared<TcpSocketConnection>(integrationSocket)
+            this->initialisationManager->AddConnection(
+                std::make_shared<IntegrationConnection>(
+                    std::make_shared<SocketConnection>(
+                        std::make_shared<SocketWrapper>(integrationSocket)
+                    )
                 )
             );
         }

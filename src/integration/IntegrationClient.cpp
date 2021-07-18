@@ -19,7 +19,7 @@ namespace UKControllerPlugin::Integration {
         LogInfo("Shutting down integration: " + this->GetIntegrationString());
     }
 
-    const std::set<const std::shared_ptr<MessageType>>& IntegrationClient::InterestedMessages() const
+    const std::set<std::shared_ptr<MessageType>>& IntegrationClient::InterestedMessages() const
     {
         return this->interestedMessages;
     }

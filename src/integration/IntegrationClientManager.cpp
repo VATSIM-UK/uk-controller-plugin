@@ -6,9 +6,6 @@ namespace UKControllerPlugin::Integration {
     IntegrationClientManager::~IntegrationClientManager()
     {
         LogInfo("Shutting down integration clients");
-        for (const auto client : this->clients) {
-            client->Shutdown();
-        }
     }
 
     void IntegrationClientManager::AddClient(std::shared_ptr<IntegrationClient> client)

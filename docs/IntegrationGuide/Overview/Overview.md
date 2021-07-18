@@ -2,16 +2,6 @@
 
 The integration protocol consists of JSON messages, passed back and forth over communication channels.
 
-## Communication Channels
-
-There is currently one communication channel available for integration.
-
-### Windows Sockets
-
-The UK Controller Plugin listens for connecting integrations via **TCP port 52814** using Windows Sockets. Once a client
-has connected, the plugin expects to receive an initialisation message (covered later in this guide) which lets it
-know what events the integration wishes to receive.
-
 ## Message Format
 
 All messages follow the same basic JSON format, containing a message type and a version. Some messages will also require
@@ -29,7 +19,18 @@ This is the basic format of a message:
 }
 ```
 
-## Message Delimitation
+## Communication Channels
 
-The boundary between each message should be terminated with `#UKCPMSG#`, which will allow both ends of the connection to identify
-where a message terminates.
+There is currently one communication channel available for integration.
+
+### Windows Sockets
+
+The UK Controller Plugin listens for connecting integrations via **TCP port 52814** using Windows Sockets. Once a client
+has connected, the plugin expects to receive an initialisation message (covered later in this guide) which lets it
+know what events the integration wishes to receive.
+
+As TCP can break up any messages into arbitrary sized chunks for the purpose of transmission, it is necessary for each
+message to be delimited with a special character so that the boundaries of each message can be determined.
+
+As control characters are not valid in well-formed JSON, the Unit Separator character `\0x1F` is used to delimited
+individual JSON messages.
