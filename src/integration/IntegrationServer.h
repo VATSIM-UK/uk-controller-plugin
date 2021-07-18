@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Integration {
     class IntegrationServer
     {
         public:
-            IntegrationServer(std::shared_ptr<ClientInitialisationManager> initialisationManager);
+            explicit IntegrationServer(std::shared_ptr<ClientInitialisationManager> initialisationManager);
             ~IntegrationServer();
             void AcceptLoop() const;
 

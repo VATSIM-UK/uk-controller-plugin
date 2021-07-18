@@ -13,7 +13,7 @@ namespace UKControllerPlugin::Integration {
     class IntegrationConnection
     {
         public:
-            IntegrationConnection(std::shared_ptr<Connection> connection);
+            explicit IntegrationConnection(std::shared_ptr<Connection> connection);
             void Send(std::shared_ptr<MessageInterface> message) const;
             std::queue<std::shared_ptr<MessageInterface>> Receive() const;
             bool Active() const;

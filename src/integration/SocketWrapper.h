@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Integration {
     class SocketWrapper : public SocketInterface
     {
         public:
-            SocketWrapper(SOCKET socket);
+            explicit SocketWrapper(SOCKET socket);
             ~SocketWrapper() override;
             bool Active() const override;
             SocketInterface& operator<<(std::string& message) override;

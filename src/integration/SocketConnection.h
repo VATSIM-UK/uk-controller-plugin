@@ -1,9 +1,9 @@
 #pragma once
 #include "integration/Connection.h"
-#include "integration/SocketInterface.h"
 
 namespace UKControllerPlugin::Integration {
     class MessageInterface;
+    class SocketInterface;
 
     /*
      * A connection for integrations via a socket
@@ -11,7 +11,7 @@ namespace UKControllerPlugin::Integration {
     class SocketConnection : public Connection
     {
         public:
-            SocketConnection(std::shared_ptr<SocketInterface> socket);
+            explicit SocketConnection(std::shared_ptr<SocketInterface> socket);
             ~SocketConnection() override = default;
 
             bool Active() const override;
