@@ -30,7 +30,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(IntegrationModuleTest, ItDoesNothingIfDuplicatePlugin)
         {
-            BootstrapPlugin(container, true);
+            BootstrapPlugin(container, true, true);
             EXPECT_EQ(0, container.externalEventHandler->CountHandlers());
             EXPECT_EQ(0, container.commandHandlers->CountHandlers());
             EXPECT_EQ(0, container.timedHandler->CountHandlers());
@@ -38,19 +38,19 @@ namespace UKControllerPluginTest {
 
         TEST_F(IntegrationModuleTest, ItSetsUpExternalEventHandler)
         {
-            BootstrapPlugin(container, true);
+            BootstrapPlugin(container, true, true);
             EXPECT_EQ(0, container.externalEventHandler->CountHandlers());
         }
 
         TEST_F(IntegrationModuleTest, ItRegistersForCommands)
         {
-            BootstrapPlugin(container, false);
+            BootstrapPlugin(container, true, true);
             EXPECT_EQ(1, container.commandHandlers->CountHandlers());
         }
 
         TEST_F(IntegrationModuleTest, ItRegistersForTimedEventsEverySecond)
         {
-            BootstrapPlugin(container, false);
+            BootstrapPlugin(container, true, true);
             EXPECT_EQ(1, container.timedHandler->CountHandlers());
             EXPECT_EQ(1, container.timedHandler->CountHandlersForFrequency(1));
         }

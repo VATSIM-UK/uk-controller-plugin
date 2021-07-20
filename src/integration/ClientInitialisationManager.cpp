@@ -94,6 +94,7 @@ namespace UKControllerPlugin::Integration {
         auto data = initialisationMessage->GetMessageData();
         this->clientManager->AddClient(
             std::make_shared<IntegrationClient>(
+                this->nextIntegrationId++,
                 data.at("integration_name").get<std::string>(),
                 data.at("integration_version").get<std::string>(),
                 connection

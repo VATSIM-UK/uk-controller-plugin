@@ -32,5 +32,8 @@ namespace UKControllerPlugin::Integration {
 
             // Clients that are fully initialised
             std::map<std::shared_ptr<IntegrationConnection>, std::chrono::system_clock::time_point> connections;
+
+            // The next unique id for the integration
+            int nextIntegrationId = 1;
     };
 } // namespace UKControllerPlugin::Integration

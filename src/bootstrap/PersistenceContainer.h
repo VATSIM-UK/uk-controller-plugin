@@ -51,6 +51,7 @@
 #include "controller/HandoffEventHandlerCollection.h"
 #include "integration/ExternalMessageEventHandler.h"
 #include "sid/SidCollection.h"
+#include "integration/InboundIntegrationMessageHandler.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -90,6 +91,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareCollection> runwayDialogEventHandlers;
             std::unique_ptr<UKControllerPlugin::Controller::HandoffEventHandlerCollection> controllerHandoffHandlers;
             std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageEventHandler> externalEventHandler;
+            std::shared_ptr<Integration::InboundIntegrationMessageHandler> integrationMessageHandlers;
 
             // The plugin
             std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;

@@ -161,6 +161,8 @@
     <ClInclude Include="..\..\src\integration\ExternalMessageEventHandler.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageHandlerInterface.h" />
     <ClInclude Include="..\..\src\integration\HiddenWindow.h" />
+    <ClInclude Include="..\..\src\integration\InboundIntegrationMessageHandler.h" />
+    <ClInclude Include="..\..\src\integration\InboundIntegrationMessageProcessor.h" />
     <ClInclude Include="..\..\src\integration\InboundMessage.h" />
     <ClInclude Include="..\..\src\integration\InitialistionSuccessMessage.h" />
     <ClInclude Include="..\..\src\integration\IntegrationClient.h" />
@@ -170,6 +172,7 @@
     <ClInclude Include="..\..\src\integration\IntegrationServer.h" />
     <ClInclude Include="..\..\src\integration\MessageType.h" />
     <ClInclude Include="..\..\src\integration\MessageInterface.h" />
+    <ClInclude Include="..\..\src\integration\OutboundIntegrationMessageHandler.h" />
     <ClInclude Include="..\..\src\integration\SocketConnection.h" />
     <ClInclude Include="..\..\src\integration\SocketInterface.h" />
     <ClInclude Include="..\..\src\integration\SocketWrapper.h" />
@@ -459,6 +462,7 @@
     <ClCompile Include="..\..\src\integration\ClientInitialisationManager.cpp" />
     <ClCompile Include="..\..\src\integration\ExternalMessageEventHandler.cpp" />
     <ClCompile Include="..\..\src\integration\HiddenWindow.cpp" />
+    <ClCompile Include="..\..\src\integration\InboundIntegrationMessageHandler.cpp" />
     <ClCompile Include="..\..\src\integration\InboundMessage.cpp" />
     <ClCompile Include="..\..\src\integration\InitialistionSuccessMessage.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationClient.cpp" />
@@ -466,6 +470,7 @@
     <ClCompile Include="..\..\src\integration\IntegrationConnection.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationModule.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationServer.cpp" />
+    <ClCompile Include="..\..\src\integration\OutboundIntegrationMessageHandler.cpp" />
     <ClCompile Include="..\..\src\integration\SocketConnection.cpp" />
     <ClCompile Include="..\..\src\integration\SocketWrapper.cpp" />
     <ClCompile Include="..\..\src\intention\AirfieldGroup.cpp" />
