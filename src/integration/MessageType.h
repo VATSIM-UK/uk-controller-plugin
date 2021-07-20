@@ -31,5 +31,16 @@ namespace UKControllerPlugin::Integration {
             return this->type == compare.type &&
                 this->version == compare.version;
         }
+
+        bool operator!=(const MessageType& compare) const
+        {
+            return !(*this == compare);
+        }
+
+        bool operator<(const MessageType& compare) const
+        {
+            return this->type < compare.type ||
+                this->version < compare.version;
+        }
     };
 } // namespace UKControllerPlugin::Integration

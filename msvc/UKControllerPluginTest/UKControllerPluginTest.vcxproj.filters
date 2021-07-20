@@ -790,9 +790,6 @@
     <ClCompile Include="..\..\test\test\plugin\ForceUpdateTest.cpp">
       <Filter>test\plugin</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\integration\OutboundMessageTargetTest.cpp">
-      <Filter>test\integration</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\test\test\integration\MessageTypeTest.cpp">
       <Filter>test\integration</Filter>
     </ClCompile>

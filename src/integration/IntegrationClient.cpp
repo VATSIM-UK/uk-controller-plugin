@@ -5,10 +5,11 @@
 
 namespace UKControllerPlugin::Integration {
     IntegrationClient::IntegrationClient(
+        int id,
         std::string integrationName,
         std::string integrationVersion,
         std::shared_ptr<IntegrationConnection> connection
-    ): integrationName(std::move(integrationName)), integrationVersion(std::move(integrationVersion)),
+    ): id(id), integrationName(std::move(integrationName)), integrationVersion(std::move(integrationVersion)),
        connection(std::move(connection))
     {
         LogInfo("Initialised integration: " + this->GetIntegrationString());
@@ -49,6 +50,11 @@ namespace UKControllerPlugin::Integration {
     const std::shared_ptr<IntegrationConnection> IntegrationClient::Connection() const
     {
         return this->connection;
+    }
+
+    int IntegrationClient::Id() const
+    {
+        return this->id;
     }
 
     std::string IntegrationClient::GetIntegrationString() const
