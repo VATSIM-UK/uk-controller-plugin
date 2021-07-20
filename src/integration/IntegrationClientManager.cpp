@@ -19,7 +19,7 @@ namespace UKControllerPlugin::Integration {
 
     void IntegrationClientManager::SendMessageToInterestedClients(std::shared_ptr<MessageInterface> message)
     {
-        for (auto client : this->clients) {
+        for (const auto& client : this->clients) {
             if (client->InterestedInMessage(message->GetMessageType())) {
                 client->Connection()->Send(message);
             }
