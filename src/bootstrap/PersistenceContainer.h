@@ -2,7 +2,6 @@
 #include "curl/CurlInterface.h"
 #include "windows/WinApiInterface.h"
 #include "api/ApiInterface.h"
-#include "task/TaskRunner.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "airfield/AirfieldCollection.h"
 #include "ownership/AirfieldOwnershipManager.h"
@@ -51,7 +50,7 @@
 #include "controller/HandoffEventHandlerCollection.h"
 #include "integration/ExternalMessageEventHandler.h"
 #include "sid/SidCollection.h"
-#include "integration/InboundIntegrationMessageHandler.h"
+#include "integration/IntegrationPersistenceContainer.h"
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -91,7 +90,7 @@ namespace UKControllerPlugin {
             std::unique_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareCollection> runwayDialogEventHandlers;
             std::unique_ptr<UKControllerPlugin::Controller::HandoffEventHandlerCollection> controllerHandoffHandlers;
             std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageEventHandler> externalEventHandler;
-            std::shared_ptr<Integration::InboundIntegrationMessageHandler> integrationMessageHandlers;
+            std::unique_ptr<Integration::IntegrationPersistenceContainer> integrationModuleContainer;
 
             // The plugin
             std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;

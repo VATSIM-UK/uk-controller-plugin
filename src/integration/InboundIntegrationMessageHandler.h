@@ -18,6 +18,7 @@ namespace UKControllerPlugin::Integration {
             ~InboundIntegrationMessageHandler() override = default;
             void AddProcessor(std::shared_ptr<InboundIntegrationMessageProcessor> processor);
             void TimedEventTrigger() override;
+            size_t CountProcessors() const;
 
         private:
             void ProcessInboundMessagesForClient(std::shared_ptr<IntegrationClient> client);

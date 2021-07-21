@@ -62,6 +62,7 @@ namespace UKControllerPlugin::Integration {
         if (this->initialised) {
             this->acceptingConnections = false;
             closesocket(this->serverSocket);
+            this->acceptThread->join();
             LogInfo("Closed integration server socket");
         }
     }
@@ -72,7 +73,9 @@ namespace UKControllerPlugin::Integration {
 
             SOCKET integrationSocket = accept(this->serverSocket, nullptr, nullptr);
             if (integrationSocket == INVALID_SOCKET) {
-                LogError("Failed to accept integration server connection: " + std::to_string(WSAGetLastError()));
+                if (!this->acceptingConnections) {
+                    LogError("Failed to accept integration server connection: " + std::to_string(WSAGetLastError()));
+                }
                 closesocket(integrationSocket);
                 continue;
             }

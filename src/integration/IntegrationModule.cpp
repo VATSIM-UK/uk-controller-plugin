@@ -11,33 +11,38 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 namespace UKControllerPlugin {
     namespace Integration {
 
-        std::shared_ptr<IntegrationServer> server;
-        std::shared_ptr<ClientInitialisationManager> initialisationManager;
-        std::shared_ptr<IntegrationClientManager> clientManager;
-        std::shared_ptr<OutboundIntegrationMessageHandler> outboundHandler;
-
         void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin, bool winsockInitialised)
         {
             // Create handler and add to other handlers
             container.externalEventHandler = std::make_shared<ExternalMessageEventHandler>(duplicatePlugin);
+            auto clientManager = std::make_shared<IntegrationClientManager>();
+            auto inboundMessageProcessors = std::make_shared<InboundIntegrationMessageHandler>(clientManager);
 
             if (duplicatePlugin || !winsockInitialised) {
+                container.integrationModuleContainer.reset(new IntegrationPersistenceContainer{
+                    nullptr,
+                    std::move(inboundMessageProcessors),
+                    nullptr
+                }); 
                 return;
             }
 
+            container.timedHandler->RegisterEvent(clientManager, 5);
+            container.timedHandler->RegisterEvent(inboundMessageProcessors, 1);
             container.commandHandlers->RegisterHandler(container.externalEventHandler);
             container.timedHandler->RegisterEvent(container.externalEventHandler, 1);
 
             // Setup the new server
-            clientManager = std::make_shared<IntegrationClientManager>();
-            container.timedHandler->RegisterEvent(clientManager, 5);
-            initialisationManager = std::make_shared<ClientInitialisationManager>(clientManager);
-            server = std::make_shared<IntegrationServer>(initialisationManager);
-            outboundHandler = std::make_shared<OutboundIntegrationMessageHandler>(clientManager);
+            auto initialisationManager = std::make_shared<ClientInitialisationManager>(clientManager);
+            auto server = std::make_unique<IntegrationServer>(initialisationManager);
             container.timedHandler->RegisterEvent(initialisationManager, 1);
+            auto outboundHandler = std::make_unique<OutboundIntegrationMessageHandler>(clientManager);
 
-            container.integrationMessageHandlers = std::make_shared<InboundIntegrationMessageHandler>(clientManager);
-            container.timedHandler->RegisterEvent(container.integrationMessageHandlers, 1);
+            container.integrationModuleContainer.reset(new IntegrationPersistenceContainer{
+                std::move(outboundHandler),
+                std::move(inboundMessageProcessors),
+                std::move(server)
+            }); 
         }
     }  // namespace Integration
 }  // namespace UKControllerPlugin

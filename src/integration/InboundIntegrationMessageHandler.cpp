@@ -1,9 +1,8 @@
 #include "pch/stdafx.h"
 #include "integration/InboundIntegrationMessageHandler.h"
-
-#include "IntegrationClient.h"
-#include "IntegrationConnection.h"
-#include "MessageInterface.h"
+#include "integration/IntegrationClient.h"
+#include "integration/IntegrationConnection.h"
+#include "integration/MessageInterface.h"
 #include "integration/IntegrationClientManager.h"
 #include "integration/InboundIntegrationMessageProcessor.h"
 
@@ -36,6 +35,11 @@ namespace UKControllerPlugin::Integration {
         }
     }
 
+    size_t InboundIntegrationMessageHandler::CountProcessors() const
+    {
+        return this->messageProcessors.size();
+    }
+
     /*
      * For a given client, process all their inbound messages
      */
@@ -50,7 +54,7 @@ namespace UKControllerPlugin::Integration {
                 continue;
             }
 
-            this->messageProcessors[message->GetMessageType()]->ProcessMessage(message);
+            this->messageProcessors[message->GetMessageType()]->ProcessMessage(client->Id(), message);
             messages.pop();
         }
     }

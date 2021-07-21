@@ -33,26 +33,57 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(container, true, true);
             EXPECT_EQ(0, container.externalEventHandler->CountHandlers());
             EXPECT_EQ(0, container.commandHandlers->CountHandlers());
-            EXPECT_EQ(0, container.timedHandler->CountHandlers());
         }
 
-        TEST_F(IntegrationModuleTest, ItSetsUpExternalEventHandler)
+        TEST_F(IntegrationModuleTest, ItDoesNothingIfWinsockNotInitialised)
+        {
+            BootstrapPlugin(container, false, false);
+            EXPECT_EQ(0, container.externalEventHandler->CountHandlers());
+            EXPECT_EQ(0, container.commandHandlers->CountHandlers());
+        }
+
+        TEST_F(IntegrationModuleTest, ItSetsUpIntegrationMessageProcessorsRegardlessOfDuplicatePlugin)
+        {
+            BootstrapPlugin(container, true, true);
+            EXPECT_EQ(0, container.integrationModuleContainer->inboundMessageHandler->CountProcessors());
+        }
+
+        TEST_F(IntegrationModuleTest, ItSetsUpExternalEventHandlerRegardlessOfDuplicatePlugin)
         {
             BootstrapPlugin(container, true, true);
             EXPECT_EQ(0, container.externalEventHandler->CountHandlers());
         }
 
+        TEST_F(IntegrationModuleTest, ItSetsUpIntegrationMessageProcessorsRegardlessOfWinsockInitialisation)
+        {
+            BootstrapPlugin(container, false, false);
+            EXPECT_EQ(0, container.integrationModuleContainer->inboundMessageHandler->CountProcessors());
+        }
+
+        TEST_F(IntegrationModuleTest, ItSetsUpExternalEventHandlerRegardlessOfWinsockInitialisation)
+        {
+            BootstrapPlugin(container, false, false);
+            EXPECT_EQ(0, container.externalEventHandler->CountHandlers());
+        }
+
         TEST_F(IntegrationModuleTest, ItRegistersForCommands)
         {
-            BootstrapPlugin(container, true, true);
+            BootstrapPlugin(container, false, true);
             EXPECT_EQ(1, container.commandHandlers->CountHandlers());
         }
 
-        TEST_F(IntegrationModuleTest, ItRegistersForTimedEventsEverySecond)
+        TEST_F(IntegrationModuleTest, ItRegistersForNonTimeCriticalTimeEvents)
         {
-            BootstrapPlugin(container, true, true);
-            EXPECT_EQ(1, container.timedHandler->CountHandlers());
-            EXPECT_EQ(1, container.timedHandler->CountHandlersForFrequency(1));
+            BootstrapPlugin(container, false, true);
+            EXPECT_EQ(4, container.timedHandler->CountHandlers());
+            EXPECT_EQ(1, container.timedHandler->CountHandlersForFrequency(5));
+        }
+
+        TEST_F(IntegrationModuleTest, ItRegistersForTimeCriticalTimeEvents)
+        {
+            BootstrapPlugin(container, false, true);
+            EXPECT_EQ(4, container.timedHandler->CountHandlers());
+            EXPECT_EQ(3, container.timedHandler->CountHandlersForFrequency(1));
         }
     }  // namespace Integration
 }  // namespace UKControllerPluginTest

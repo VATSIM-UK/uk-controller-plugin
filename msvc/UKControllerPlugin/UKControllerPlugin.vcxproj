@@ -169,6 +169,7 @@
     <ClInclude Include="..\..\src\integration\IntegrationClientManager.h" />
     <ClInclude Include="..\..\src\integration\IntegrationConnection.h" />
     <ClInclude Include="..\..\src\integration\IntegrationModule.h" />
+    <ClInclude Include="..\..\src\integration\IntegrationPersistenceContainer.h" />
     <ClInclude Include="..\..\src\integration\IntegrationServer.h" />
     <ClInclude Include="..\..\src\integration\MessageType.h" />
     <ClInclude Include="..\..\src\integration\MessageInterface.h" />

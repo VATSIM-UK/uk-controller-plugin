@@ -12,6 +12,9 @@ namespace UKControllerPlugin::Integration {
         public:
             virtual ~InboundIntegrationMessageProcessor();
             virtual MessageType MessageToProcess() const = 0;
-            virtual void ProcessMessage(std::shared_ptr<MessageInterface> message) = 0;
+            virtual void ProcessMessage(
+                int connectionId,
+                std::shared_ptr<MessageInterface> message
+            ) = 0;
     };
 } // namespace UKControllerPlugin::Integration

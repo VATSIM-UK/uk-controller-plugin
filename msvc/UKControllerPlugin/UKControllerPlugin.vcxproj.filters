@@ -1130,6 +1130,9 @@
     <ClInclude Include="..\..\src\integration\InboundIntegrationMessageProcessor.h">
       <Filter>src\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\integration\IntegrationPersistenceContainer.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
