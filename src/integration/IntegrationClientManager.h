@@ -26,7 +26,7 @@ namespace UKControllerPlugin::Integration {
 
         private:
             void RemoveInactiveClients();
-            
+
             // Clients that are fully initialised
             std::set<std::shared_ptr<IntegrationClient>> clients;
     };

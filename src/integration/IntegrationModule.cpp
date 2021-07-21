@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
                     nullptr,
                     std::move(inboundMessageProcessors),
                     nullptr
-                }); 
+                });
                 return;
             }
 
@@ -42,7 +42,7 @@ namespace UKControllerPlugin {
                 std::move(outboundHandler),
                 std::move(inboundMessageProcessors),
                 std::move(server)
-            }); 
+            });
         }
     }  // namespace Integration
 }  // namespace UKControllerPlugin

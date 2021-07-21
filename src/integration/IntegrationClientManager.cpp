@@ -56,7 +56,7 @@ namespace UKControllerPlugin::Integration {
                 continue;
             }
 
-            ++ client;
+            ++client;
         }
     }
 } // namespace UKControllerPlugin::Integration

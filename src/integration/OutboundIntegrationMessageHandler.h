@@ -11,7 +11,7 @@ namespace UKControllerPlugin::Integration {
     class OutboundIntegrationMessageHandler
     {
         public:
-            OutboundIntegrationMessageHandler(std::shared_ptr<IntegrationClientManager> clientManager);
+            explicit OutboundIntegrationMessageHandler(std::shared_ptr<IntegrationClientManager> clientManager);
             void SendOutboundMessage(std::shared_ptr<MessageInterface> message);
             void SendOutboundMessage(std::shared_ptr<MessageInterface> message, int clientId) const;
 
