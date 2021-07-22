@@ -201,7 +201,9 @@ namespace UKControllerPlugin {
             winsockInitialised = false;
             LogError("Error initialising winsock for integration server: " + std::to_string(winsockStartupResult));
         } else {
-            LogInfo("Initialised winsock for integration server, version: " + std::to_string(winsockData.wVersion));
+            LogInfo("Initialised winsock for integration server, version: "
+                + std::to_string(winsockData.wVersion & 0xff) + "." + std::to_string(winsockData.wVersion >> 8 & 0xff)
+            );
             winsockInitialised = true;
         }
 

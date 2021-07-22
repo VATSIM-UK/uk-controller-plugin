@@ -23,7 +23,12 @@ namespace UKControllerPlugin::Integration {
         std::queue<std::shared_ptr<MessageInterface>> parsedMessages;
         while (!messages.empty()) {
             try {
-                parsedMessages.push(InboundMessage::FromJson(nlohmann::json::parse(messages.front())));
+                auto message = InboundMessage::FromJson(nlohmann::json::parse(messages.front()));
+                if (!message) {
+                    LogError("Invalid message received from integration: " + messages.front());
+                } else {
+                    parsedMessages.push(message);
+                }
                 messages.pop();
             } catch (nlohmann::json::exception&) {
                 LogError("Invalid JSON received from integration: " + messages.front());

@@ -23,6 +23,7 @@ namespace UKControllerPlugin::Integration {
             using const_iterator = IntegrationClients::const_iterator;
             const_iterator cbegin() const { return clients.cbegin(); }
             const_iterator cend() const { return clients.cend(); }
+            size_t CountClients() const;
 
         private:
             void RemoveInactiveClients();

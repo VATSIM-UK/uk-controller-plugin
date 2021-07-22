@@ -45,6 +45,11 @@ namespace UKControllerPlugin::Integration {
         return client == this->clients.cend() ? nullptr : *client;
     }
 
+    size_t IntegrationClientManager::CountClients() const
+    {
+        return this->clients.size();
+    }
+
     void IntegrationClientManager::RemoveInactiveClients()
     {
         for (

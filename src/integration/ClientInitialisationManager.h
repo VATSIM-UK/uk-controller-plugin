@@ -18,8 +18,13 @@ namespace UKControllerPlugin::Integration {
             ~ClientInitialisationManager() override = default;
             void AddConnection(std::shared_ptr<IntegrationConnection> connection);
             void TimedEventTrigger() override;
+            size_t CountConnections() const;
 
         private:
+            bool AttemptInitialisation(
+                std::shared_ptr<IntegrationConnection> connection,
+                std::queue<std::shared_ptr<MessageInterface>> incomingMessages
+            );
             static bool InitialisationMessageValid(std::shared_ptr<MessageInterface> message);
             void UpgradeToClient(
                 std::shared_ptr<IntegrationConnection> connection,

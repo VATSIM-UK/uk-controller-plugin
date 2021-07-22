@@ -42,21 +42,39 @@ namespace UKControllerPlugin::Integration {
                 continue;
             }
 
-            while (!incomingMessages.empty()) {
-                if (!InitialisationMessageValid(incomingMessages.front())) {
-                    LogError(
-                        "Invalid integration initialisation message: " + incomingMessages.front()->ToJson().dump()
-                    );
-                    incomingMessages.pop();
-                    continue;
-                }
-
-                this->UpgradeToClient(connection->first, incomingMessages.front());
-                this->SendInitialisationSuccessMessage(connection->first);
+            if (this->AttemptInitialisation(connection->first, incomingMessages)) {
                 this->connections.erase(connection++);
-                break;
+            } else {
+                ++connection;
             }
         }
+    }
+
+    size_t ClientInitialisationManager::CountConnections() const
+    {
+        return this->connections.size();
+    }
+
+    bool ClientInitialisationManager::AttemptInitialisation(
+        std::shared_ptr<IntegrationConnection> connection,
+        std::queue<std::shared_ptr<MessageInterface>> incomingMessages
+    )
+    {
+        while (!incomingMessages.empty()) {
+            if (!InitialisationMessageValid(incomingMessages.front())) {
+                LogError(
+                    "Invalid integration initialisation message: " + incomingMessages.front()->ToJson().dump()
+                );
+                incomingMessages.pop();
+                continue;
+            }
+
+            this->UpgradeToClient(connection, incomingMessages.front());
+            this->SendInitialisationSuccessMessage(connection);
+            return true;
+        }
+
+        return false;
     }
 
     bool ClientInitialisationManager::InitialisationMessageValid(std::shared_ptr<MessageInterface> message)
@@ -92,14 +110,21 @@ namespace UKControllerPlugin::Integration {
     )
     {
         auto data = initialisationMessage->GetMessageData();
-        this->clientManager->AddClient(
-            std::make_shared<IntegrationClient>(
-                this->nextIntegrationId++,
-                data.at("integration_name").get<std::string>(),
-                data.at("integration_version").get<std::string>(),
-                connection
-            )
+        auto client = std::make_shared<IntegrationClient>(
+            this->nextIntegrationId++,
+            data.at("integration_name").get<std::string>(),
+            data.at("integration_version").get<std::string>(),
+            connection
         );
+        for (const auto& interestedEvent : data.at("event_subscriptions")) {
+            client->AddInterestedMessage(
+                std::make_shared<MessageType>(MessageType{
+                    interestedEvent.at("type").get<std::string>(),
+                    interestedEvent.at("version").get<int>()
+                })
+            );
+        }
+        this->clientManager->AddClient(client);
     }
 
     void ClientInitialisationManager::SendInitialisationSuccessMessage(
