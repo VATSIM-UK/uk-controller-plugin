@@ -10,7 +10,7 @@ namespace UKControllerPlugin::Integration {
     class InboundIntegrationMessageProcessor
     {
         public:
-            virtual ~InboundIntegrationMessageProcessor();
+            virtual ~InboundIntegrationMessageProcessor() = default;
             virtual MessageType MessageToProcess() const = 0;
             virtual void ProcessMessage(
                 int connectionId,

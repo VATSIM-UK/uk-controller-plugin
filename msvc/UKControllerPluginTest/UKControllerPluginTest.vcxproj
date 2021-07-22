@@ -126,6 +126,7 @@
     <ClCompile Include="..\..\test\test\initialheading\InitialHeadingModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\ClientInitialisationManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\ExternalMessageEventHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\InboundIntegrationMessageHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\IntegrationModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\MessageTypeTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\AmsterdamAirfieldGroupTest.cpp" />
@@ -291,6 +292,7 @@
     <ClInclude Include="..\..\test\mock\MockHistoryTrailDialog.h" />
     <ClInclude Include="..\..\test\mock\MockHistoryTrailRepository.h" />
     <ClInclude Include="..\..\test\mock\MockConnection.h" />
+    <ClInclude Include="..\..\test\mock\MockInboundIntegrationMessageProcessor.h" />
     <ClInclude Include="..\..\test\mock\MockMinStack.h" />
     <ClInclude Include="..\..\test\mock\MockRadarRendererableInterface.h" />
     <ClInclude Include="..\..\test\mock\MockRadarTargetEventHandlerInterface.h" />
