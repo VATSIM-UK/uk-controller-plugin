@@ -1,7 +1,6 @@
 #include "pch/stdafx.h"
 #include "integration/ExternalMessageEventHandler.h"
-#include "integration//ExternalMessageHandlerInterface.h"
-#include "integration/MessageInterface.h"
+#include "integration/ExternalMessageHandlerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Integration {
@@ -53,12 +52,6 @@ namespace UKControllerPlugin {
         {
             std::lock_guard<std::mutex> lock(this->messageLock);
             this->messages.push(message);
-        }
-
-        void ExternalMessageEventHandler::AddMessageToQueue(std::shared_ptr<MessageInterface> message)
-        {
-            std::lock_guard<std::mutex> lock(this->messageLock);
-            this->parsedMessages.push(message);
         }
 
         size_t ExternalMessageEventHandler::CountHandlers(void) const
