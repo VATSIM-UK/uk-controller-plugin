@@ -36,6 +36,8 @@ The message id is a string that identifies this message to the plugin, which wil
 
 ## The initialisation response
 
+### Success
+
 After a successful initialisation, the following response will be returned.
 
 ```JSON
@@ -51,3 +53,16 @@ After a successful initialisation, the following response will be returned.
 Note, that until this response has been sent, the plugin will not action any other messages received from the integration.
 
 **Any messages received before the initialisation response has been sent will be ignored**.
+
+### Failure
+
+After a failed initialisation, the following response will be returned.
+```JSON
+{
+    "type": "initialisation_failure",
+    "version": 1,
+    "errors": [
+        "string"
+    ]
+}
+```
