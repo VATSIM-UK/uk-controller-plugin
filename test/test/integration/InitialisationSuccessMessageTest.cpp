@@ -23,6 +23,6 @@ namespace UKControllerPluginTest::Integration {
             {"version", 1},
             {"data", {{"ukcp_version", PluginVersion::version}}}
         };
-        EXPECT_EQ(expected, InitialisationSuccessMessage().ToJson());
+        EXPECT_EQ(expected, message.ToJson());
     }
 } // namespace UKControllerPluginTest::Integration

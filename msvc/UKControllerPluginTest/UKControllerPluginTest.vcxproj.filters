@@ -877,6 +877,9 @@
     <ClCompile Include="..\..\test\test\integration\SocketConnectionTest.cpp">
       <Filter>test\integration</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\integration\InitialisationFailureMessageTest.cpp">
+      <Filter>test\integration</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">

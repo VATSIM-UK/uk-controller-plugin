@@ -162,6 +162,7 @@
     <ClInclude Include="..\..\src\integration\InboundIntegrationMessageHandler.h" />
     <ClInclude Include="..\..\src\integration\InboundIntegrationMessageProcessor.h" />
     <ClInclude Include="..\..\src\integration\InboundMessage.h" />
+    <ClInclude Include="..\..\src\integration\InitialisationFailureMessage.h" />
     <ClInclude Include="..\..\src\integration\InitialisationSuccessMessage.h" />
     <ClInclude Include="..\..\src\integration\IntegrationClient.h" />
     <ClInclude Include="..\..\src\integration\IntegrationClientManager.h" />
@@ -463,6 +464,7 @@
     <ClCompile Include="..\..\src\integration\HiddenWindow.cpp" />
     <ClCompile Include="..\..\src\integration\InboundIntegrationMessageHandler.cpp" />
     <ClCompile Include="..\..\src\integration\InboundMessage.cpp" />
+    <ClCompile Include="..\..\src\integration\InitialisationFailureMessage.cpp" />
     <ClCompile Include="..\..\src\integration\InitialisationSuccessMessage.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationClient.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationClientManager.cpp" />

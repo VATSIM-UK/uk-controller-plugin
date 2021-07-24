@@ -1,6 +1,7 @@
 #include "pch/stdafx.h"
 #include "integration/ClientInitialisationManager.h"
 #include "integration/InitialisationSuccessMessage.h"
+#include "integration/InitialisationFailureMessage.h"
 #include "integration/IntegrationClient.h"
 #include "integration/MessageInterface.h"
 #include "integration/IntegrationConnection.h"
@@ -61,10 +62,12 @@ namespace UKControllerPlugin::Integration {
     )
     {
         while (!incomingMessages.empty()) {
-            if (!InitialisationMessageValid(incomingMessages.front())) {
+            auto validationErrors = ValidateMessage(incomingMessages.front());
+            if (!validationErrors.empty()) {
                 LogError(
                     "Invalid integration initialisation message: " + incomingMessages.front()->ToJson().dump()
                 );
+                connection->Send(std::make_shared<InitialisationFailureMessage>(validationErrors));
                 incomingMessages.pop();
                 continue;
             }
@@ -77,31 +80,85 @@ namespace UKControllerPlugin::Integration {
         return false;
     }
 
-    bool ClientInitialisationManager::InitialisationMessageValid(std::shared_ptr<MessageInterface> message)
+    std::vector<std::string> ClientInitialisationManager::ValidateMessage(std::shared_ptr<MessageInterface> message)
     {
-        auto messageType = message->GetMessageType();
-        auto messageData = message->GetMessageData();
+        auto errors = ValidateMessageType(message);
+        auto dataErrors = ValidateMessageData(message);
+        errors.insert(
+            errors.end(),
+            std::make_move_iterator(dataErrors.cbegin()),
+            std::make_move_iterator(dataErrors.cend())
+        );
 
-        return messageType.type == "initialise" &&
-            messageType.version == 1 &&
-            messageData.contains("integration_name") &&
-            messageData.at("integration_name").is_string() &&
-            messageData.contains("integration_version") &&
-            messageData.at("integration_version").is_string() &&
-            messageData.contains("event_subscriptions") &&
-            messageData.at("event_subscriptions").is_array() &&
-            std::find_if_not(
-                messageData.at("event_subscriptions").cbegin(),
-                messageData.at("event_subscriptions").cend(),
-                [](const nlohmann::json& subscription) -> bool
-                {
-                    return subscription.is_object() &&
-                        subscription.contains("type") &&
-                        subscription.at("type").is_string() &&
-                        subscription.contains("version") &&
-                        subscription.at("version").is_number_integer();
-                }
-            ) == messageData.at("event_subscriptions").cend();
+        return errors;
+    }
+
+    std::vector<std::string> ClientInitialisationManager::ValidateMessageType(std::shared_ptr<MessageInterface> message)
+    {
+        std::vector<std::string> errors;
+        auto messageType = message->GetMessageType();
+        if (messageType.type != "initialise") {
+            errors.push_back(VALIDATION_ERROR_INVALID_TYPE);
+        }
+
+        if (messageType.version != 1) {
+            errors.push_back(VALIDATION_ERROR_INVALID_VERSION);
+        }
+
+        return errors;
+    }
+
+    std::vector<std::string> ClientInitialisationManager::ValidateMessageData(std::shared_ptr<MessageInterface> message)
+    {
+        auto messageData = message->GetMessageData();
+        std::vector<std::string> errors = ValidateIntegrationDetails(messageData);
+        auto eventSubscriptionErrors = ValidateEventSubscriptions(messageData);
+        errors.insert(
+            errors.end(),
+            std::make_move_iterator(eventSubscriptionErrors.cbegin()),
+            std::make_move_iterator(eventSubscriptionErrors.cend())
+        );
+        return errors;
+    }
+
+    std::vector<std::string> ClientInitialisationManager::ValidateIntegrationDetails(const nlohmann::json& data)
+    {
+        std::vector<std::string> errors;
+        if (!data.contains("integration_name") || !data.at("integration_name").is_string()) {
+            errors.push_back(VALIDATION_ERROR_INVALID_INTEGRATION_NAME);
+        }
+
+        if (!data.contains("integration_version") || !data.at("integration_version").is_string()) {
+            errors.push_back(VALIDATION_ERROR_INVALID_INTEGRATION_VERSION);
+        }
+
+        return errors;
+    }
+
+    std::vector<std::string> ClientInitialisationManager::ValidateEventSubscriptions(const nlohmann::json& data)
+    {
+        std::vector<std::string> errors;
+        if (!data.contains("event_subscriptions") || !data.at("event_subscriptions").is_array()) {
+            errors.push_back(VALIDATION_ERROR_INVALID_SUBSCRIPTIONS);
+            return errors;
+        }
+
+        for (const auto& subscription : data.at("event_subscriptions")) {
+            if (!subscription.is_object()) {
+                errors.push_back(VALIDATION_ERROR_INVALID_SUBSCRIPTION);
+                continue;
+            }
+
+            if (!subscription.contains("type") || !subscription.at("type").is_string()) {
+                errors.push_back(VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE);
+            }
+
+            if (!subscription.contains("version") || !subscription.at("version").is_number_integer()) {
+                errors.push_back(VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION);
+            }
+        }
+
+        return errors;
     }
 
     void ClientInitialisationManager::UpgradeToClient(

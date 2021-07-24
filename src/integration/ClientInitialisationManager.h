@@ -20,12 +20,40 @@ namespace UKControllerPlugin::Integration {
             void TimedEventTrigger() override;
             size_t CountConnections() const;
 
+            const inline static std::string VALIDATION_ERROR_INVALID_TYPE =
+                "Initialisation messages must have type \"initialise\"";
+
+            const inline static std::string VALIDATION_ERROR_INVALID_VERSION =
+                "Initialisation messages must have version 1";
+
+            const inline static std::string VALIDATION_ERROR_INVALID_INTEGRATION_NAME =
+                "Invalid integration name";
+
+            const inline static std::string VALIDATION_ERROR_INVALID_INTEGRATION_VERSION =
+                "Invalid integration version";
+
+            const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTIONS =
+                "Expected array of integration subscription";
+
+            const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTION =
+                "Invalid subscription - must be an object";
+
+            const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE =
+                "Invalid subscription type";
+
+            const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION =
+                "Invalid subscription version";
+
         private:
             bool AttemptInitialisation(
                 std::shared_ptr<IntegrationConnection> connection,
                 std::queue<std::shared_ptr<MessageInterface>> incomingMessages
             );
-            static bool InitialisationMessageValid(std::shared_ptr<MessageInterface> message);
+            static std::vector<std::string> ValidateMessage(std::shared_ptr<MessageInterface> message);
+            static std::vector<std::string> ValidateMessageType(std::shared_ptr<MessageInterface> message);
+            static std::vector<std::string> ValidateMessageData(std::shared_ptr<MessageInterface> message);
+            static std::vector<std::string> ValidateIntegrationDetails(const nlohmann::json& data);
+            static std::vector<std::string> ValidateEventSubscriptions(const nlohmann::json& data);
             void UpgradeToClient(
                 std::shared_ptr<IntegrationConnection> connection,
                 std::shared_ptr<MessageInterface> initialisationMessage

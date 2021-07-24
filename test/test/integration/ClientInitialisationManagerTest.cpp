@@ -1,6 +1,7 @@
 #include "pch/pch.h"
 #include "integration/ClientInitialisationManager.h"
 #include "integration/InitialisationSuccessMessage.h"
+#include "integration/InitialisationFailureMessage.h"
 #include "integration/IntegrationClient.h"
 #include "integration/IntegrationClientManager.h"
 #include "integration/IntegrationConnection.h"
@@ -10,6 +11,7 @@
 
 using UKControllerPlugin::Integration::IntegrationClientManager;
 using UKControllerPlugin::Integration::ClientInitialisationManager;
+using UKControllerPlugin::Integration::InitialisationFailureMessage;
 using UKControllerPlugin::Time::SetTestNow;
 
 namespace UKControllerPluginTest::Integration {
@@ -33,6 +35,11 @@ namespace UKControllerPluginTest::Integration {
             void SetUp() override
             {
                 SetTestNow(std::chrono::system_clock::now());
+            }
+
+            static std::string ExpectedFailureMessage(std::string message)
+            {
+                return InitialisationFailureMessage(std::vector<std::string>{message}).ToJson().dump();
             }
 
             std::shared_ptr<UKControllerPlugin::Integration::IntegrationConnection> integration1;
@@ -340,6 +347,44 @@ namespace UKControllerPluginTest::Integration {
         EXPECT_EQ(1, this->initialisationManager.CountConnections());
     }
 
+    TEST_F(ClientInitialisationManagerTest, ItRejectsIniitialisationMessageWithInvalidType)
+    {
+        initialisationManager.AddConnection(integration1);
+
+        nlohmann::json integrationMessage = {
+            {"type", "not_this"},
+            {"version", 1},
+            {
+                "data", nlohmann::json::object({
+                    {"integration_name", "UKCPTEST"},
+                    {"integration_version", "1.5"},
+                    {
+                        "event_subscriptions", nlohmann::json::array({
+                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
+                        })
+                    }
+                })
+            }
+        };
+
+        std::queue<std::string> returnedMessages;
+        returnedMessages.push(integrationMessage.dump());
+        EXPECT_CALL(*this->mockConnection1, Receive)
+            .Times(1)
+            .WillOnce(testing::Return(returnedMessages));
+
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_TYPE))
+        )
+            .Times(1);
+
+        initialisationManager.TimedEventTrigger();
+        EXPECT_EQ(0, this->clientManager->CountClients());
+        EXPECT_EQ(1, this->initialisationManager.CountConnections());
+    }
+
     TEST_F(ClientInitialisationManagerTest, ItRejectsIniitialisationMessageWithNoVersion)
     {
         initialisationManager.AddConnection(integration1);
@@ -397,6 +442,44 @@ namespace UKControllerPluginTest::Integration {
         EXPECT_CALL(*this->mockConnection1, Receive)
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
+
+        initialisationManager.TimedEventTrigger();
+        EXPECT_EQ(0, this->clientManager->CountClients());
+        EXPECT_EQ(1, this->initialisationManager.CountConnections());
+    }
+
+    TEST_F(ClientInitialisationManagerTest, ItRejectsIniitialisationMessageWithInvalidVersion)
+    {
+        initialisationManager.AddConnection(integration1);
+
+        nlohmann::json integrationMessage = {
+            {"type", "initialise"},
+            {"version", 2},
+            {
+                "data", nlohmann::json::object({
+                    {"integration_name", "UKCPTEST"},
+                    {"integration_version", "1.5"},
+                    {
+                        "event_subscriptions", nlohmann::json::array({
+                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
+                        })
+                    }
+                })
+            }
+        };
+
+        std::queue<std::string> returnedMessages;
+        returnedMessages.push(integrationMessage.dump());
+        EXPECT_CALL(*this->mockConnection1, Receive)
+            .Times(1)
+            .WillOnce(testing::Return(returnedMessages));
+
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_VERSION))
+        )
+            .Times(1);
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -473,6 +556,12 @@ namespace UKControllerPluginTest::Integration {
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
 
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_NAME))
+        )
+            .Times(1);
+
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
         EXPECT_EQ(1, this->initialisationManager.CountConnections());
@@ -505,6 +594,12 @@ namespace UKControllerPluginTest::Integration {
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
 
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_NAME))
+        )
+            .Times(1);
+
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
         EXPECT_EQ(1, this->initialisationManager.CountConnections());
@@ -535,6 +630,12 @@ namespace UKControllerPluginTest::Integration {
         EXPECT_CALL(*this->mockConnection1, Receive)
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
+
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_VERSION))
+        )
+            .Times(1);
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -568,6 +669,12 @@ namespace UKControllerPluginTest::Integration {
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
 
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_VERSION))
+        )
+            .Times(1);
+
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
         EXPECT_EQ(1, this->initialisationManager.CountConnections());
@@ -593,6 +700,12 @@ namespace UKControllerPluginTest::Integration {
         EXPECT_CALL(*this->mockConnection1, Receive)
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
+
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTIONS))
+        )
+            .Times(1);
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -622,6 +735,12 @@ namespace UKControllerPluginTest::Integration {
         EXPECT_CALL(*this->mockConnection1, Receive)
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
+
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTIONS))
+        )
+            .Times(1);
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -655,6 +774,12 @@ namespace UKControllerPluginTest::Integration {
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
 
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE))
+        )
+            .Times(1);
+
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
         EXPECT_EQ(1, this->initialisationManager.CountConnections());
@@ -686,6 +811,12 @@ namespace UKControllerPluginTest::Integration {
         EXPECT_CALL(*this->mockConnection1, Receive)
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
+
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE))
+        )
+            .Times(1);
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -719,6 +850,12 @@ namespace UKControllerPluginTest::Integration {
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
 
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION))
+        )
+            .Times(1);
+
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
         EXPECT_EQ(1, this->initialisationManager.CountConnections());
@@ -750,6 +887,12 @@ namespace UKControllerPluginTest::Integration {
         EXPECT_CALL(*this->mockConnection1, Receive)
             .Times(1)
             .WillOnce(testing::Return(returnedMessages));
+
+        EXPECT_CALL(
+            *this->mockConnection1,
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION))
+        )
+            .Times(1);
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());

@@ -1131,6 +1131,9 @@
     <ClInclude Include="..\..\src\integration\IntegrationPersistenceContainer.h">
       <Filter>src\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\integration\InitialisationFailureMessage.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1952,6 +1955,9 @@
       <Filter>src\integration</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\integration\InboundIntegrationMessageHandler.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\InitialisationFailureMessage.cpp">
       <Filter>src\integration</Filter>
     </ClCompile>
   </ItemGroup>
