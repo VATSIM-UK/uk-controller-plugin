@@ -29,11 +29,11 @@ namespace UKControllerPlugin::Integration {
                 } else {
                     parsedMessages.push(message);
                 }
-                messages.pop();
             } catch (nlohmann::json::exception&) {
                 LogError("Invalid JSON received from integration: " + messages.front());
             }
 
+            messages.pop();
         }
 
         return parsedMessages;

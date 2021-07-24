@@ -4,19 +4,16 @@
 namespace UKControllerPlugin::Integration {
     class IntegrationClient;
     class IntegrationConnection;
-    class MessageInterface;
 
     /*
-     * Manages the lifetime of and messages to
-     * integration clients.
+     * Manages the lifetime of integration clients
      */
     class IntegrationClientManager : public TimedEvent::AbstractTimedEvent
     {
         public:
             IntegrationClientManager() = default;
-            ~IntegrationClientManager();
+            ~IntegrationClientManager() override;
             void AddClient(std::shared_ptr<IntegrationClient> client);
-            void SendMessageToInterestedClients(std::shared_ptr<MessageInterface> message);
             void TimedEventTrigger() override;
             std::shared_ptr<IntegrationClient> GetById(int id) const;
             using IntegrationClients = std::set<std::shared_ptr<IntegrationClient>>;

@@ -17,15 +17,6 @@ namespace UKControllerPlugin::Integration {
         }
     }
 
-    void IntegrationClientManager::SendMessageToInterestedClients(std::shared_ptr<MessageInterface> message)
-    {
-        for (const auto& client : this->clients) {
-            if (client->InterestedInMessage(message->GetMessageType())) {
-                client->Connection()->Send(message);
-            }
-        }
-    }
-
     void IntegrationClientManager::TimedEventTrigger()
     {
         this->RemoveInactiveClients();

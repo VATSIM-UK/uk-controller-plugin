@@ -24,7 +24,9 @@ namespace UKControllerPlugin::Integration {
      */
     bool InboundMessage::MessageFormatValid(const nlohmann::json& message)
     {
-        return message.contains("type") &&
+        return
+            message.is_object() &&
+            message.contains("type") &&
             message.at("type").is_string() &&
             message.contains("version") &&
             message.at("version").is_number_integer() &&

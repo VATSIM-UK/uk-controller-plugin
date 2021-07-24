@@ -127,8 +127,15 @@
     <ClCompile Include="..\..\test\test\integration\ClientInitialisationManagerTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\ExternalMessageEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\InboundIntegrationMessageHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\InboundMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\IntegrationClientManagerTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\IntegrationClientTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\InitialisationSuccessMessageTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\IntegrationConnectionTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\IntegrationModuleTest.cpp" />
     <ClCompile Include="..\..\test\test\integration\MessageTypeTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\OutboundIntegrationMessageHandlerTest.cpp" />
+    <ClCompile Include="..\..\test\test\integration\SocketConnectionTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\AmsterdamAirfieldGroupTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\BrusselsAirfieldGroupTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\DublinAirfieldGroupTest.cpp" />
@@ -296,6 +303,7 @@
     <ClInclude Include="..\..\test\mock\MockMinStack.h" />
     <ClInclude Include="..\..\test\mock\MockRadarRendererableInterface.h" />
     <ClInclude Include="..\..\test\mock\MockRadarTargetEventHandlerInterface.h" />
+    <ClInclude Include="..\..\test\mock\MockSocket.h" />
     <ClInclude Include="..\..\test\mock\MockSquawkEventHandler.h" />
     <ClInclude Include="..\..\test\mock\MockTaskRunnerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockUserSettingAwareInterface.h" />

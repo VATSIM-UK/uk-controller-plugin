@@ -14,13 +14,21 @@ namespace UKControllerPlugin::Integration {
             virtual ~MessageInterface() = default;
 
             /*
-             * Get the data to go in the message, this gets merged
-             * with the message type information to make a complete
-             * message.
+             * Get the data to go in the message, which is merged
+             * into the message under the "data" key.
              */
             virtual nlohmann::json GetMessageData() const
             {
                 return nlohmann::json::object();
+            }
+
+            /*
+             * Get the errors associated with the message, which is merged
+             * in under the "errors" key.
+             */
+            virtual nlohmann::json GetErrorData() const
+            {
+                return nlohmann::json::array();
             }
 
             /*
@@ -33,9 +41,18 @@ namespace UKControllerPlugin::Integration {
              */
             nlohmann::json ToJson() const
             {
-                nlohmann::json data = this->GetMessageData();
-                data.update(this->GetMessageType().ToJson());
-                return data;
+                nlohmann::json baseMessage = this->GetMessageType().ToJson();
+                auto data = this->GetMessageData();
+                if (!data.empty()) {
+                    baseMessage["data"] = data;
+                }
+
+                auto errors = this->GetErrorData();
+                if (!errors.empty()) {
+                    baseMessage["errors"] = errors;
+                }
+
+                return baseMessage;
             }
 
             bool operator==(const MessageInterface& compare) const

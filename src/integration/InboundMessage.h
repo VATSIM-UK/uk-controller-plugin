@@ -13,10 +13,10 @@ namespace UKControllerPlugin::Integration {
             ~InboundMessage() override = default;
             nlohmann::json GetMessageData() const override;
             MessageType GetMessageType() const override;
-            static bool MessageFormatValid(const nlohmann::json& message);
             static std::shared_ptr<InboundMessage> FromJson(const nlohmann::json& json);
 
         protected:
+            static bool MessageFormatValid(const nlohmann::json& message);
             InboundMessage(MessageType type, nlohmann::json::object_t data): type(type), data(data) {}
 
         private:

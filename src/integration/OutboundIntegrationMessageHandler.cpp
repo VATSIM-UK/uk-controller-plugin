@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Integration {
     OutboundIntegrationMessageHandler::OutboundIntegrationMessageHandler(
         std::shared_ptr<IntegrationClientManager> clientManager): clientManager(std::move(clientManager)) {}
 
-    void OutboundIntegrationMessageHandler::SendOutboundMessage(std::shared_ptr<MessageInterface> message)
+    void OutboundIntegrationMessageHandler::SendOutboundMessage(std::shared_ptr<MessageInterface> message) const
     {
         std::for_each(
             this->clientManager->cbegin(),
@@ -26,7 +26,7 @@ namespace UKControllerPlugin::Integration {
     }
 
     void OutboundIntegrationMessageHandler::SendOutboundMessage(
-        std::shared_ptr<MessageInterface> message,
+        const std::shared_ptr<MessageInterface> message,
         int clientId
     ) const
     {

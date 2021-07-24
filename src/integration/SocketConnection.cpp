@@ -41,6 +41,7 @@ namespace UKControllerPlugin::Integration {
 
         // Put any incomplete messages back on the stream for later
         if (!streamData.empty()) {
+            this->incomingData = std::stringstream();
             this->incomingData << streamData;
         }
 

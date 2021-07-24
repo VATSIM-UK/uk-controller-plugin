@@ -984,8 +984,6 @@
     <ClInclude Include="..\..\src\initialheading\InitialHeadingModule.h">
       <Filter>src\initialheading</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\plugin\PluginChangelog.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
@@ -1118,7 +1116,7 @@
     <ClInclude Include="..\..\src\integration\SocketWrapper.h">
       <Filter>src\integration</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\integration\InitialistionSuccessMessage.h">
+    <ClInclude Include="..\..\src\integration\InitialisationSuccessMessage.h">
       <Filter>src\integration</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\integration\OutboundIntegrationMessageHandler.h">
@@ -1947,7 +1945,7 @@
     <ClCompile Include="..\..\src\integration\SocketWrapper.cpp">
       <Filter>src\integration</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\integration\InitialistionSuccessMessage.cpp">
+    <ClCompile Include="..\..\src\integration\InitialisationSuccessMessage.cpp">
       <Filter>src\integration</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\integration\OutboundIntegrationMessageHandler.cpp">

@@ -1,6 +1,6 @@
 #include "pch/pch.h"
 #include "integration/ClientInitialisationManager.h"
-#include "integration/InitialistionSuccessMessage.h"
+#include "integration/InitialisationSuccessMessage.h"
 #include "integration/IntegrationClient.h"
 #include "integration/IntegrationClientManager.h"
 #include "integration/IntegrationConnection.h"

@@ -150,8 +150,6 @@
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestriction.h" />
     <ClInclude Include="..\..\src\hold\MinStackHoldLevelRestrictionSerializer.h" />
     <ClInclude Include="..\..\src\hold\PublishedHoldCollection.h" />
-    <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeEventHandler.h" />
     <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeModule.h" />
     <ClInclude Include="..\..\src\initialheading\InitialHeadingEventHandler.h" />
@@ -164,7 +162,7 @@
     <ClInclude Include="..\..\src\integration\InboundIntegrationMessageHandler.h" />
     <ClInclude Include="..\..\src\integration\InboundIntegrationMessageProcessor.h" />
     <ClInclude Include="..\..\src\integration\InboundMessage.h" />
-    <ClInclude Include="..\..\src\integration\InitialistionSuccessMessage.h" />
+    <ClInclude Include="..\..\src\integration\InitialisationSuccessMessage.h" />
     <ClInclude Include="..\..\src\integration\IntegrationClient.h" />
     <ClInclude Include="..\..\src\integration\IntegrationClientManager.h" />
     <ClInclude Include="..\..\src\integration\IntegrationConnection.h" />
@@ -465,7 +463,7 @@
     <ClCompile Include="..\..\src\integration\HiddenWindow.cpp" />
     <ClCompile Include="..\..\src\integration\InboundIntegrationMessageHandler.cpp" />
     <ClCompile Include="..\..\src\integration\InboundMessage.cpp" />
-    <ClCompile Include="..\..\src\integration\InitialistionSuccessMessage.cpp" />
+    <ClCompile Include="..\..\src\integration\InitialisationSuccessMessage.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationClient.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationClientManager.cpp" />
     <ClCompile Include="..\..\src\integration\IntegrationConnection.cpp" />
