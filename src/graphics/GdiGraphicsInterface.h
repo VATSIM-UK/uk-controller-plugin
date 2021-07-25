@@ -26,6 +26,11 @@ namespace UKControllerPlugin {
                     const Gdiplus::Point & start,
                     const Gdiplus::Point & end
                 ) = 0;
+                virtual void DrawLine(
+                    const Gdiplus::Pen& pen,
+                    const Gdiplus::PointF& start,
+                    const Gdiplus::PointF& end
+                ) = 0;
                 virtual void DrawPath(const Gdiplus::GraphicsPath & path, const Gdiplus::Pen & pen) = 0;
                 virtual void DrawString(
                     std::wstring text,

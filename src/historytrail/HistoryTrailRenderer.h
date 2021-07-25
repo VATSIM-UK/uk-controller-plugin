@@ -153,6 +153,9 @@ namespace UKControllerPlugin {
                 // Circle trail type
                 const int trailTypeCircle = 2;
 
+                // Line trail type
+                const int trailTypeLine = 3;
+
                 // Default minimum altitude for altitude filter
                 const int defaultMinAltitude = 0;
 

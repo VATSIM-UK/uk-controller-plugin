@@ -174,11 +174,21 @@ namespace UKControllerPlugin {
                 reinterpret_cast<LPARAM>(L"Circle")
             );
 
+            // Trail type - line
+            SendDlgItemMessage(
+                hwnd,
+                IDC_TRAIL_TYPE,
+                CB_INSERTSTRING,
+                this->trailTypeLine,
+                reinterpret_cast<LPARAM>(L"Line")
+            );
+
             // Set trail type position
             if (
                 *this->data->type == this->trailTypeDiamond ||
                 *this->data->type == this->trailTypeCircle ||
-                *this->data->type == this->trailTypeSquare
+                *this->data->type == this->trailTypeSquare ||
+                *this->data->type == this->trailTypeLine
             ) {
                 SendDlgItemMessage(
                     hwnd,

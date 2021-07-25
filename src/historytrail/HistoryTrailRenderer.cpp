@@ -169,6 +169,12 @@ namespace UKControllerPlugin {
                 graphics.DrawDiamond(area, pen);
             } else if (this->historyTrailType == this->trailTypeCircle) {
                 graphics.DrawCircle(area, pen);
+            } else if (this->historyTrailType == this->trailTypeLine) {
+                graphics.DrawLine(
+                    pen,
+                    Gdiplus::PointF{area.GetLeft(), area.GetTop()},
+                    Gdiplus::PointF{area.GetRight(), area.GetBottom()}
+                );
             } else {
                 graphics.DrawRect(area, pen);
             }

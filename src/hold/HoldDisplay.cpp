@@ -837,8 +837,8 @@ namespace UKControllerPlugin
             );
             graphics.DrawLine(
                 this->borderPen,
-                {this->titleArea.X, this->titleArea.Y + this->titleArea.Height},
-                {this->titleArea.X + this->titleArea.Width, this->titleArea.Y + this->titleArea.Height}
+                Gdiplus::Point{this->titleArea.X, this->titleArea.Y + this->titleArea.Height},
+                Gdiplus::Point{this->titleArea.X + this->titleArea.Width, this->titleArea.Y + this->titleArea.Height}
             );
 
             // Minimise Button

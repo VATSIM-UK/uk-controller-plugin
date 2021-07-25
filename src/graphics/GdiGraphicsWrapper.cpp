@@ -104,6 +104,15 @@ namespace UKControllerPlugin {
             this->api->DrawLine(&pen, start, end);
         }
 
+        void GdiGraphicsWrapper::DrawLine(
+            const Gdiplus::Pen& pen,
+            const Gdiplus::PointF& start,
+            const Gdiplus::PointF& end
+        )
+        {
+            this->api->DrawLine(&pen, start, end);
+        }
+
         void GdiGraphicsWrapper::DrawPath(const Gdiplus::GraphicsPath& path, const Gdiplus::Pen& pen)
         {
             this->api->DrawPath(&pen, &path);
