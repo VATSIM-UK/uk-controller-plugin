@@ -114,6 +114,7 @@
     <ClInclude Include="..\..\src\handoff\HandoffCollection.h" />
     <ClInclude Include="..\..\src\handoff\HandoffCollectionFactory.h" />
     <ClInclude Include="..\..\src\handoff\HandoffEventHandler.h" />
+    <ClInclude Include="..\..\src\handoff\HandoffFrequencyUpdatedMessage.h" />
     <ClInclude Include="..\..\src\handoff\HandoffModule.h" />
     <ClInclude Include="..\..\src\historytrail\AircraftHistoryTrail.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailData.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="..\..\src\initialheading\InitialHeadingModule.h" />
     <ClInclude Include="..\..\src\integration\ClientInitialisationManager.h" />
     <ClInclude Include="..\..\src\integration\Connection.h" />
+    <ClInclude Include="..\..\src\integration\DummyOutboundIntegrationMessageHandler.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageEventHandler.h" />
     <ClInclude Include="..\..\src\integration\ExternalMessageHandlerInterface.h" />
     <ClInclude Include="..\..\src\integration\HiddenWindow.h" />
@@ -424,6 +426,7 @@
     <ClCompile Include="..\..\src\handoff\HandoffCollection.cpp" />
     <ClCompile Include="..\..\src\handoff\HandoffCollectionFactory.cpp" />
     <ClCompile Include="..\..\src\handoff\HandoffEventHandler.cpp" />
+    <ClCompile Include="..\..\src\handoff\HandoffFrequencyUpdatedMessage.cpp" />
     <ClCompile Include="..\..\src\handoff\HandoffModule.cpp" />
     <ClCompile Include="..\..\src\historytrail\AircraftHistoryTrail.cpp" />
     <ClCompile Include="..\..\src\historytrail\HistoryTrailDialog.cpp" />
@@ -462,6 +465,7 @@
     <ClCompile Include="..\..\src\initialheading\InitialHeadingEventHandler.cpp" />
     <ClCompile Include="..\..\src\initialheading\InitialHeadingModule.cpp" />
     <ClCompile Include="..\..\src\integration\ClientInitialisationManager.cpp" />
+    <ClCompile Include="..\..\src\integration\DummyOutboundIntegrationMessageHandler.cpp" />
     <ClCompile Include="..\..\src\integration\ExternalMessageEventHandler.cpp" />
     <ClCompile Include="..\..\src\integration\HiddenWindow.cpp" />
     <ClCompile Include="..\..\src\integration\InboundIntegrationMessageHandler.cpp" />

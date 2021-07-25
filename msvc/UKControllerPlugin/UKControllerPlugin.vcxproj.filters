@@ -1140,6 +1140,12 @@
     <ClInclude Include="..\..\src\integration\OutboundIntegrationEventHandler.h">
       <Filter>src\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\handoff\HandoffFrequencyUpdatedMessage.h">
+      <Filter>src\handoff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\DummyOutboundIntegrationMessageHandler.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1968,6 +1974,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\intention\IntentionCodeUpdatedMessage.cpp">
       <Filter>src\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\handoff\HandoffFrequencyUpdatedMessage.cpp">
+      <Filter>src\handoff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\DummyOutboundIntegrationMessageHandler.cpp">
+      <Filter>src\integration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

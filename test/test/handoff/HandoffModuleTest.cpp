@@ -5,6 +5,7 @@
 #include "tag/TagItemCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "controller/ActiveCallsignCollection.h"
+#include "integration/IntegrationPersistenceContainer.h"
 
 using UKControllerPlugin::Handoff::BootstrapPlugin;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
@@ -12,6 +13,7 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
+using UKControllerPlugin::Integration::IntegrationPersistenceContainer;
 using ::testing::Test;
 using ::testing::NiceMock;
 
@@ -26,6 +28,7 @@ namespace UKControllerPluginTest {
                     this->container.tagHandler.reset(new TagItemCollection);
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     this->container.activeCallsigns.reset(new ActiveCallsignCollection);
+                    this->container.integrationModuleContainer.reset(new IntegrationPersistenceContainer);
                 }
 
                 PersistenceContainer container;

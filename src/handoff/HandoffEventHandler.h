@@ -7,6 +7,7 @@
 #include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "controller/ActiveCallsign.h"
 #include "tag/TagData.h"
+#include "integration/OutboundIntegrationEventHandler.h"
 
 namespace UKControllerPlugin {
     namespace Handoff {
@@ -15,15 +16,16 @@ namespace UKControllerPlugin {
             Handles handoff events
         */
         class HandoffEventHandler
-            : public UKControllerPlugin::Tag::TagItemInterface,
-            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-            public UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface
+            : public Tag::TagItemInterface,
+              public Flightplan::FlightPlanEventHandlerInterface,
+              public Controller::ActiveCallsignEventHandlerInterface
         {
             public:
 
                 HandoffEventHandler(
-                    const UKControllerPlugin::Handoff::HandoffCollection& handoffs,
-                    const UKControllerPlugin::Controller::ActiveCallsignCollection& callsigns
+                    const HandoffCollection& handoffs,
+                    const Controller::ActiveCallsignCollection& callsigns,
+                    Integration::OutboundIntegrationEventHandler& outboundEvent
                 );
                 void AddCachedItem(std::string callsign, CachedHandoff handoff);
                 size_t CountCachedItems(void) const;
@@ -31,28 +33,28 @@ namespace UKControllerPlugin {
 
                 // Inherited via TagItemInterface
                 std::string GetTagItemDescription(int tagItemId) const override;
-                void SetTagItemData(UKControllerPlugin::Tag::TagData & tagData) override;
+                void SetTagItemData(Tag::TagData& tagData) override;
 
                 // Inherited via FlightPlanEventHandlerInterface
                 void FlightPlanEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget
+                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget
                 ) override;
                 void FlightPlanDisconnectEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan
+                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan
                 ) override;
                 void ControllerFlightPlanDataEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
                     int dataType
                 ) override;
 
                 // Inherited via ActiveCallsignEventHandlerInterface
                 void ActiveCallsignAdded(
-                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    const Controller::ActiveCallsign& callsign,
                     bool userCallsign
                 ) override;
                 void ActiveCallsignRemoved(
-                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
+                    const Controller::ActiveCallsign& callsign,
                     bool userCallsign
                 ) override;
                 void CallsignsFlushed(void) override;
@@ -62,16 +64,19 @@ namespace UKControllerPlugin {
                 const CachedHandoff UNICOM_TAG_VALUE = CachedHandoff("122.800", "");
 
             private:
+                void FireHandoffUpdatedEvent(std::string callsign);
 
                 // The handoffs
-                const UKControllerPlugin::Handoff::HandoffCollection& handoffs;
+                const HandoffCollection& handoffs;
 
                 // The active callsigns
-                const UKControllerPlugin::Controller::ActiveCallsignCollection& callsigns;
+                const Controller::ActiveCallsignCollection& callsigns;
 
                 // Maps callsign -> result so we can cache it.
-                std::map<std::string, UKControllerPlugin::Handoff::CachedHandoff> cache;
-        };
+                std::map<std::string, CachedHandoff> cache;
 
-    }  // namespace Handoff
+                // Allows us to push events to integrations
+                Integration::OutboundIntegrationEventHandler& outboundEvent;
+        };
+    } // namespace Handoff
 }  // namespace UKControllerPlugin
