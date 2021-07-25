@@ -5,6 +5,7 @@
 #include "integration/IntegrationServer.h"
 #include "integration/ClientInitialisationManager.h"
 #include "integration/IntegrationClientManager.h"
+#include "integration/DummyOutboundIntegrationMessageHandler.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
@@ -20,7 +21,7 @@ namespace UKControllerPlugin {
 
             if (duplicatePlugin || !winsockInitialised) {
                 container.integrationModuleContainer.reset(new IntegrationPersistenceContainer{
-                    nullptr,
+                    std::make_shared<DummyOutboundIntegrationMessageHandler>(),
                     std::move(inboundMessageProcessors),
                     nullptr
                 });
@@ -36,10 +37,10 @@ namespace UKControllerPlugin {
             auto initialisationManager = std::make_shared<ClientInitialisationManager>(clientManager);
             auto server = std::make_unique<IntegrationServer>(initialisationManager);
             container.timedHandler->RegisterEvent(initialisationManager, 1);
-            auto outboundHandler = std::make_unique<OutboundIntegrationMessageHandler>(clientManager);
+            const auto outboundHandler = std::make_shared<OutboundIntegrationMessageHandler>(clientManager);
 
             container.integrationModuleContainer.reset(new IntegrationPersistenceContainer{
-                std::move(outboundHandler),
+                outboundHandler,
                 std::move(inboundMessageProcessors),
                 std::move(server)
             });

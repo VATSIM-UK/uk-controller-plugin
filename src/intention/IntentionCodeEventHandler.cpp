@@ -5,8 +5,11 @@
 #include "intention/IntentionCodeData.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
+#include "integration/OutboundIntegrationEventHandler.h"
+#include "intention/IntentionCodeUpdatedMessage.h"
 
 using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
+using UKControllerPlugin::IntentionCode::IntentionCodeUpdatedMessage;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::IntentionCode::IntentionCodeCache;
@@ -18,12 +21,11 @@ namespace UKControllerPlugin {
     namespace IntentionCode {
         IntentionCodeEventHandler::IntentionCodeEventHandler(
             IntentionCodeGenerator intention,
-            IntentionCodeCache codeCache
+            IntentionCodeCache codeCache,
+            Integration::OutboundIntegrationEventHandler& outboundEvent
         )
-            : intention(std::move(intention)), codeCache(codeCache)
-        {
-
-        }
+            : intention(std::move(intention)), codeCache(codeCache), outboundEvent(outboundEvent)
+        { }
 
         /*
             Nothing to do here.
@@ -89,6 +91,13 @@ namespace UKControllerPlugin {
 
             this->codeCache.RegisterAircraft(tagData.flightPlan.GetCallsign(), data);
             tagData.SetItemString(data.intentionCode);
+            outboundEvent.SendEvent(
+                std::make_shared<IntentionCodeUpdatedMessage>(
+                    tagData.flightPlan.GetCallsign(),
+                    data.exitPoint,
+                    data.intentionCode
+                )
+            );
         }
 
         /*

@@ -880,6 +880,12 @@
     <ClCompile Include="..\..\test\test\integration\InitialisationFailureMessageTest.cpp">
       <Filter>test\integration</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\test\intention\IntentionCodeUpdatedMessageTest.cpp">
+      <Filter>test\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\test\handoff\HandoffFrequencyUpdatedEventTest.cpp">
+      <Filter>test\handoff</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\helper\ApiRequestHelperFunctions.h">
@@ -998,6 +1004,9 @@
       <Filter>mock</Filter>
     </ClInclude>
     <ClInclude Include="..\..\test\mock\MockSocket.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\mock\MockOutboundIntegrationEventHandler.h">
       <Filter>mock</Filter>
     </ClInclude>
   </ItemGroup>

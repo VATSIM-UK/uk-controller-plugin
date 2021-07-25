@@ -52,3 +52,8 @@ MATCHER_P(PopupMenuItemEq, item, "")
         arg.disabled == item.disabled &&
         arg.fixedPosition == item.fixedPosition;
 }
+
+MATCHER_P(MatchMessageInterface, message, "")
+{
+    return *arg == *message;
+}

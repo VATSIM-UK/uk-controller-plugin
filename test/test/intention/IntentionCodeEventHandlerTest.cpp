@@ -7,8 +7,10 @@
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroScopeCControllerInterface.h"
 #include "mock/MockEuroscopeExtractedRouteInterface.h"
+#include "mock/MockOutboundIntegrationEventHandler.h"
 #include "intention/SectorExitRepositoryFactory.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "intention/IntentionCodeUpdatedMessage.h"
 #include "tag/TagData.h"
 
 using UKControllerPlugin::Tag::TagData;
@@ -16,14 +18,16 @@ using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
 using UKControllerPlugin::IntentionCode::IntentionCodeEventHandler;
 using UKControllerPlugin::IntentionCode::IntentionCodeFactory;
 using UKControllerPlugin::IntentionCode::IntentionCodeCache;
+using UKControllerPluginTest::Integration::MockOutboundIntegrationEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPlugin::IntentionCode::SectorExitRepositoryFactory;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using ::testing::StrictMock;
-using ::testing::NiceMock;
+using UKControllerPlugin::IntentionCode::IntentionCodeUpdatedMessage;
+using testing::NiceMock;
+using testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
 
@@ -36,11 +40,12 @@ namespace UKControllerPluginTest {
                 void SetUp()
                 {
                     IntentionCodeCache cache;
-                    cache.RegisterAircraft("BAW456", {"KK", false, -1});
+                    cache.RegisterAircraft("BAW456", {"KK", false, -1, ""});
                     PersistenceContainer container;
                     this->handler = std::unique_ptr<IntentionCodeEventHandler>(new IntentionCodeEventHandler(
                         std::move(*IntentionCodeFactory::Create(std::move(*SectorExitRepositoryFactory::Create()))),
-                        cache
+                        cache,
+                        mockIntegration
                     ));
                 };
 
@@ -48,6 +53,7 @@ namespace UKControllerPluginTest {
                 COLORREF tagColour = RGB(255, 255, 255);
                 int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
                 char itemString[16] = "Foooooo";
+                NiceMock<MockOutboundIntegrationEventHandler> mockIntegration;
                 std::unique_ptr<IntentionCodeEventHandler> handler;
         };
 
@@ -58,9 +64,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(IntentionCodeEventHandlerTest, GetTagItemDataGeneratesIntentionCodeIfNonePresent)
         {
-            StrictMock<MockEuroscopeExtractedRouteInterface> route;
-            StrictMock<MockEuroScopeCFlightPlanInterface> flightplan;
-            StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            NiceMock<MockEuroscopeExtractedRouteInterface> route;
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+            NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
             TagData tagData(
                 flightplan,
                 radarTarget,
@@ -76,9 +82,8 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(ByRef(route)));
 
-            EXPECT_CALL(flightplan, GetCallsign())
-                .Times(3)
-                .WillRepeatedly(Return("BAW123"));
+            ON_CALL(flightplan, GetCallsign)
+                .WillByDefault(Return("BAW123"));
 
             EXPECT_CALL(flightplan, GetOrigin())
                 .Times(1)
@@ -92,15 +97,21 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(8000));
 
+            std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
+                std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "", "LL");
+
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             handler->SetTagItemData(tagData);
             EXPECT_EQ("LL", tagData.GetItemString());
         }
 
         TEST_F(IntentionCodeEventHandlerTest, GetTagItemDataCachesCodeAndReusesIt)
         {
-            StrictMock<MockEuroscopeExtractedRouteInterface> route;
-            StrictMock<MockEuroScopeCFlightPlanInterface> flightplan;
-            StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            NiceMock<MockEuroscopeExtractedRouteInterface> route;
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+            NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
             TagData tagData(
                 flightplan,
                 radarTarget,
@@ -116,9 +127,8 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(ByRef(route)));
 
-            EXPECT_CALL(flightplan, GetCallsign())
-                .Times(6)
-                .WillRepeatedly(Return("BAW123"));
+            ON_CALL(flightplan, GetCallsign)
+                .WillByDefault(Return("BAW123"));
 
             EXPECT_CALL(flightplan, GetOrigin())
                 .Times(1)
@@ -131,6 +141,12 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(flightplan, GetCruiseLevel())
                 .Times(1)
                 .WillOnce(Return(8000));
+
+            std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
+                std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "", "LL");
+
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
 
             handler->SetTagItemData(tagData);
             EXPECT_EQ("LL", tagData.GetItemString());
@@ -141,9 +157,9 @@ namespace UKControllerPluginTest {
         // These two tests proves that the cache drops a code if it becomes invalid.
         TEST_F(IntentionCodeEventHandlerTest, FlightplanEventClearsCache)
         {
-            StrictMock<MockEuroscopeExtractedRouteInterface> route;
-            StrictMock<MockEuroScopeCFlightPlanInterface> flightplan;
-            StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            NiceMock<MockEuroscopeExtractedRouteInterface> route;
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+            NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
             TagData tagData(
                 flightplan,
                 radarTarget,
@@ -159,9 +175,8 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(ByRef(route)));
 
-            EXPECT_CALL(flightplan, GetCallsign())
-                .Times(7)
-                .WillRepeatedly(Return("BAW123"));
+            ON_CALL(flightplan, GetCallsign)
+                .WillByDefault(Return("BAW123"));
 
             EXPECT_CALL(flightplan, GetOrigin())
                 .Times(2)
@@ -185,9 +200,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(IntentionCodeEventHandlerTest, FlightplanDisconnectEventClearsCache)
         {
-            StrictMock<MockEuroscopeExtractedRouteInterface> route;
-            StrictMock<MockEuroScopeCFlightPlanInterface> flightplan;
-            StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            NiceMock<MockEuroscopeExtractedRouteInterface> route;
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+            NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
             TagData tagData(
                 flightplan,
                 radarTarget,
@@ -203,9 +218,9 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(ByRef(route)));
 
-            EXPECT_CALL(flightplan, GetCallsign())
-                .Times(7)
-                .WillRepeatedly(Return("BAW123"));
+
+            ON_CALL(flightplan, GetCallsign)
+                .WillByDefault(Return("BAW123"));
 
             EXPECT_CALL(flightplan, GetOrigin())
                 .Times(2)

@@ -86,7 +86,7 @@ namespace UKControllerPlugin {
         ) {
             // No flightplan filed, so we'll kill this one here.
             if (source.compare("") == 0) {
-                return IntentionCodeData(this->invalidCode, false, this->invalidExitPointIndex);
+                return IntentionCodeData(this->invalidCode, false, this->invalidExitPointIndex, "");
             }
 
             // Go through the airfield groups, to see if we can find a match.
@@ -103,7 +103,8 @@ namespace UKControllerPlugin {
                     return IntentionCodeData(
                         (*group)->GetIntentionCodeForGroup(destination, route),
                         false,
-                        this->invalidExitPointIndex
+                        this->invalidExitPointIndex,
+                        ""
                     );
                 }
             }
@@ -118,7 +119,8 @@ namespace UKControllerPlugin {
                     return IntentionCodeData(
                         destination,
                         false,
-                        this->invalidExitPointIndex
+                        this->invalidExitPointIndex,
+                        ""
                     );
                 }
 
@@ -126,7 +128,8 @@ namespace UKControllerPlugin {
                     this->exitPoints.GetSectorExitPoint(
                         route.GetPointName(exitIndex)).GetIntentionCode(route, exitIndex, cruiseLevel),
                     true,
-                    exitIndex
+                    exitIndex,
+                    route.GetPointName(exitIndex)
                 );
             }
 
@@ -134,7 +137,8 @@ namespace UKControllerPlugin {
             return IntentionCodeData(
                 destination,
                 false,
-                this->invalidExitPointIndex
+                this->invalidExitPointIndex,
+                ""
             );
         }
 
