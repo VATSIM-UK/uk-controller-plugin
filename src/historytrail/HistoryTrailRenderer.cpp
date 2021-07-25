@@ -416,6 +416,11 @@ namespace UKControllerPlugin {
                     ++position
                 ) {
 
+                    // Skip the first dot, that's the aircrafts current position
+                    if (position == aircraft->second->GetTrail().begin()) {
+                        continue;
+                    }
+
                     // Translate to screen location
                     POINT dotCoordinates = radarScreen.ConvertCoordinateToScreenPoint(position->position);
                     graphics.Translated(
