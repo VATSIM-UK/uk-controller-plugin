@@ -13,7 +13,7 @@ namespace UKControllerPlugin {
         /*
             Wrapper around the Windows GDI API.
         */
-        class GdiGraphicsWrapper : public UKControllerPlugin::Windows::GdiGraphicsInterface
+        class GdiGraphicsWrapper : public GdiGraphicsInterface
         {
             public:
                 GdiGraphicsWrapper(void);
@@ -51,6 +51,8 @@ namespace UKControllerPlugin {
                 Gdiplus::RectF GetClipBounds() override;
                 void Rotated(Gdiplus::REAL angle, std::function<void()> drawFunction) override;
                 void FillPolygon(Gdiplus::Point* points, const Gdiplus::Brush& brush, int numPoints) override;
+                void FillCircle(const Gdiplus::RectF& area, const Gdiplus::Brush& brush) override;
+                void FillDiamond(const Gdiplus::RectF& area, const Gdiplus::Brush& brush) override;
 
             private:
                 std::unique_ptr<Gdiplus::Graphics> api;

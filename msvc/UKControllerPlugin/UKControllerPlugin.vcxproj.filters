@@ -1102,6 +1102,9 @@
     <Media Include="..\..\resource\sound\departure_release_rejected.wav">
       <Filter>resource\sound</Filter>
     </Media>
+    <Media Include="..\..\..\resource\sound\departure_release_accepted.wav" />
+    <Media Include="..\..\..\resource\sound\departure_release_rejected.wav" />
+    <Media Include="..\..\..\resource\sound\departure_release_requested.wav" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\airfield\AirfieldCollection.cpp">

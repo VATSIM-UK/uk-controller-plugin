@@ -37,24 +37,24 @@ namespace UKControllerPlugin {
             A class for rendering history trails to the screen.
         */
         class HistoryTrailRenderer :
-            public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
-            public UKControllerPlugin::RadarScreen::RadarRenderableInterface,
-            public UKControllerPlugin::Euroscope::AsrEventHandlerInterface,
-            public UKControllerPlugin::Command::CommandHandlerInterface
+            public RadarScreen::ConfigurableDisplayInterface,
+            public RadarScreen::RadarRenderableInterface,
+            public Euroscope::AsrEventHandlerInterface,
+            public Command::CommandHandlerInterface
         {
             public:
                 HistoryTrailRenderer(
-                    const UKControllerPlugin::HistoryTrail::HistoryTrailRepository & trails,
-                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    const UKControllerPlugin::Dialog::DialogManager & dialogManager,
+                    const HistoryTrailRepository& trails,
+                    Euroscope::EuroscopePluginLoopbackInterface& plugin,
+                    const Dialog::DialogManager& dialogManager,
                     int toggleCallbackFunctionId
                 );
-                void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
-                void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
+                void AsrLoadedEvent(Euroscope::UserSetting& userSetting) override;
+                void AsrClosingEvent(Euroscope::UserSetting& userSetting) override;
                 void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
                 int GetAlphaPerDot(void) const;
                 bool GetAntiAliasedTrails(void) const;
-                UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
+                Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
                 bool GetDegradingTrails(void) const;
                 bool GetFadingTrails(void) const;
                 int GetHistoryTrailLength(void) const;
@@ -62,10 +62,11 @@ namespace UKControllerPlugin {
                 int GetHistoryTrailDotSize(void) const;
                 int GetMaximumAltitudeFilter(void) const;
                 int GetMinimumAltitudeFilter(void) const;
+                bool GetFilledDots() const;
                 Gdiplus::Color & GetTrailColour(void) const;
                 bool IsVisible(void) const override;
                 void LeftClick(
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+                    Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
                     int objectId,
                     std::string objectDescription,
                     POINT mousePos,
@@ -76,11 +77,11 @@ namespace UKControllerPlugin {
                 void RightClick(
                     int objectId,
                     std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
+                    Euroscope::EuroscopeRadarLoopbackInterface& radarScreen
                 ) override;
                 void Render(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
+                    Windows::GdiGraphicsInterface& graphics,
+                    Euroscope::EuroscopeRadarLoopbackInterface& radarScreen
                 ) override;
                 void ResetPosition(void) override;
 
@@ -138,6 +139,10 @@ namespace UKControllerPlugin {
                 const std::string maxAltitudeFilterUserSettingKey = "HistoryTrailMaxAltitudeFilter";
                 const std::string maxAltitudeFilterUserSettingDescription = "UKCP Maximum History Trail Altitude";
 
+                // Dot filler settings
+                const std::string dotFillUserSettingKey = "HistoryTrailDotFill";
+                const std::string dotFillUserSettingDescription = "UKCP History Trail Filled Dots";
+
                 // The module menu text
                 const std::string menuItemDescription = "Configure History Trails";
 
@@ -166,25 +171,34 @@ namespace UKControllerPlugin {
             private:
 
                 void DrawDot(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
+                    Windows::GdiGraphicsInterface& graphics,
                     Gdiplus::Pen & pen,
                     const Gdiplus::RectF & area
                 );
 
+                void FillDot(
+                    Windows::GdiGraphicsInterface& graphics,
+                    Gdiplus::Brush& brush,
+                    const Gdiplus::RectF& area
+                );
+
                 // Handles dialogs
-                const UKControllerPlugin::Dialog::DialogManager & dialogManager;
+                const Dialog::DialogManager& dialogManager;
 
                 // The plugin, so we can check altitudes
-                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+                Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
                 // The history trail repository
-                const UKControllerPlugin::HistoryTrail::HistoryTrailRepository & trails;
+                const HistoryTrailRepository& trails;
 
                 // The colour to draw the trails with (or just the first colour, if fading)
                 std::unique_ptr<Gdiplus::Color> startColour;
 
                 // The pen with which to draw the trails
                 std::unique_ptr<Gdiplus::Pen> pen;
+
+                // The brush with which to draw the trails
+                std::unique_ptr<Gdiplus::SolidBrush> brush;
 
                 // Whether or not we should render the trails.
                 bool visible;
@@ -206,6 +220,9 @@ namespace UKControllerPlugin {
 
                 // Whether or not trails should use antialiasing
                 bool antialiasedTrails;
+
+                // Should the dots be filled
+                bool filledDots;
 
                 // The length of trail to render
                 int historyTrailLength;

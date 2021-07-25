@@ -111,6 +111,12 @@ namespace UKControllerPlugin {
                 *this->data->degrade ? BST_CHECKED : BST_UNCHECKED
             );
 
+            CheckDlgButton(
+                hwnd,
+                IDC_CHECK_FILL,
+                *this->data->filledDots ? BST_CHECKED : BST_UNCHECKED
+            );
+
             // Trail length
             SendDlgItemMessage(
                 hwnd,
@@ -261,6 +267,7 @@ namespace UKControllerPlugin {
             *this->data->antiAlias = IsDlgButtonChecked(hwnd, IDC_CHECK_AA) == BST_CHECKED;
             *this->data->fade = IsDlgButtonChecked(hwnd, IDC_CHECK_FADING) == BST_CHECKED;
             *this->data->degrade = IsDlgButtonChecked(hwnd, IDC_CHECK_DEGRADING) == BST_CHECKED;
+            *this->data->filledDots = IsDlgButtonChecked(hwnd, IDC_CHECK_FILL) == BST_CHECKED;
 
             // Length
             int trailLength = SendDlgItemMessage(

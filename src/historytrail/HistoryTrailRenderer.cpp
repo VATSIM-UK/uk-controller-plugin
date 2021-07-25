@@ -33,6 +33,7 @@ namespace UKControllerPlugin {
             toggleCallbackFunctionId(toggleCallbackFunctionId), plugin(plugin)
         {
             this->pen = std::make_unique<Gdiplus::Pen>(Gdiplus::Color(255, 255, 255, 255));
+            this->brush = std::make_unique<Gdiplus::SolidBrush>(Gdiplus::Color(255, 255, 255, 255));
         }
 
         /*
@@ -61,6 +62,7 @@ namespace UKControllerPlugin {
                 this->maxAltitudeFilterUserSettingKey,
                 this->defaultMaxAltitude
             );
+            this->filledDots = userSetting.GetBooleanEntry(this->dotFillUserSettingKey, false);
         }
 
         /*
@@ -110,6 +112,11 @@ namespace UKControllerPlugin {
                 this->maxAltitudeFilterUserSettingDescription,
                 this->maximumDisplayAltitude
             );
+            userSetting.Save(
+                this->dotFillUserSettingKey,
+                this->dotFillUserSettingDescription,
+                this->filledDots
+            );
         }
 
         /*
@@ -133,6 +140,7 @@ namespace UKControllerPlugin {
             data.dotSize = &this->historyTrailDotSize;
             data.maxAltitude = &this->maximumDisplayAltitude;
             data.minAltitude = &this->minimumDisplayAltitude;
+            data.filledDots = &this->filledDots;
 
             this->dialogManager.OpenDialog(IDD_HISTORY_TRAIL, reinterpret_cast<LPARAM>(&data));
 
@@ -177,6 +185,24 @@ namespace UKControllerPlugin {
                 );
             } else {
                 graphics.DrawRect(area, pen);
+            }
+        }
+
+        /*
+            Fills a single dot to the screen.
+        */
+        void HistoryTrailRenderer::FillDot(
+            GdiGraphicsInterface& graphics,
+            Gdiplus::Brush& brush,
+            const Gdiplus::RectF& area
+        )
+        {
+            if (this->historyTrailType == this->trailTypeDiamond) {
+                graphics.FillDiamond(area, brush);
+            } else if (this->historyTrailType == this->trailTypeCircle) {
+                graphics.FillCircle(area, brush);
+            } else {
+                graphics.FillRect(area, brush);
             }
         }
 
@@ -251,6 +277,11 @@ namespace UKControllerPlugin {
             return this->minimumDisplayAltitude;
         }
 
+        bool HistoryTrailRenderer::GetFilledDots() const
+        {
+            return this->filledDots;
+        }
+
         Gdiplus::Color & HistoryTrailRenderer::GetTrailColour(void) const
         {
             return *this->startColour;
@@ -304,6 +335,7 @@ namespace UKControllerPlugin {
         ) {
             Gdiplus::Color currentColourArgb = *this->startColour;
             this->pen->SetColor(currentColourArgb);
+            this->brush->SetColor(currentColourArgb);
 
             // Anti aliasing
             graphics.SetAntialias((this->antialiasedTrails) ? true : false);
@@ -367,11 +399,19 @@ namespace UKControllerPlugin {
                     }
 
                     // Draw the dot
-                    this->DrawDot(
-                        graphics,
-                        *this->pen,
-                        dot
-                    );
+                    if (this->filledDots && this->historyTrailType != this->trailTypeLine) {
+                        this->FillDot(
+                            graphics,
+                            *this->brush,
+                            dot
+                        );
+                    } else {
+                        this->DrawDot(
+                            graphics,
+                            *this->pen,
+                            dot
+                        );
+                    }
 
                     // If the trails are set to fade, reduce the alpha value for the next run
                     if (this->fadingTrails) {
@@ -382,6 +422,7 @@ namespace UKControllerPlugin {
                             currentColourArgb.GetBlue()
                         );
                         this->pen->SetColor(currentColourArgb);
+                        this->brush->SetColor(currentColourArgb);
                     }
 
                     // If we've done enough dots, we stop.

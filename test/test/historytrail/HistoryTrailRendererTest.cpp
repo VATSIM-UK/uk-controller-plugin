@@ -308,6 +308,18 @@ namespace UKControllerPluginTest {
             renderer.AsrClosingEvent(userSetting);
         }
 
+        TEST_F(HistoryTrailRendererTest, AsrLoadedEventSetsFilledDotsFromUserSetting)
+        {
+            EXPECT_CALL(mockUserSettingProvider, GetKey(_))
+                .WillRepeatedly(Return(""));
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.dotFillUserSettingKey))
+                .WillRepeatedly(Return("1"));
+
+            renderer.AsrLoadedEvent(userSetting);
+            EXPECT_TRUE(renderer.GetFilledDots());
+        }
+
         TEST_F(HistoryTrailRendererTest, AsrClosingEventSavesTypeSetting)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
@@ -471,6 +483,28 @@ namespace UKControllerPluginTest {
                 renderer.maxAltitudeFilterUserSettingDescription,
                 "99999"
             )
+            )
+                .Times(1);
+
+            renderer.AsrLoadedEvent(userSetting);
+            renderer.AsrClosingEvent(userSetting);
+        }
+
+        TEST_F(HistoryTrailRendererTest, AsrClosingEventSavesDotFillSetting)
+        {
+            EXPECT_CALL(mockUserSettingProvider, GetKey(_))
+                .WillRepeatedly(Return(""));
+
+            EXPECT_CALL(mockUserSettingProvider, SetKey(_, _, _))
+                .WillRepeatedly(Return());
+
+            EXPECT_CALL(
+                mockUserSettingProvider,
+                SetKey(
+                    renderer.dotFillUserSettingKey,
+                    renderer.dotFillUserSettingDescription,
+                    "0"
+                )
             )
                 .Times(1);
 
