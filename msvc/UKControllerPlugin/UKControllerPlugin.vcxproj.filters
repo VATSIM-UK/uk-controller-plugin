@@ -1134,6 +1134,12 @@
     <ClInclude Include="..\..\src\integration\InitialisationFailureMessage.h">
       <Filter>src\integration</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\intention\IntentionCodeUpdatedMessage.h">
+      <Filter>src\intention</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\OutboundIntegrationEventHandler.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1959,6 +1965,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\integration\InitialisationFailureMessage.cpp">
       <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\intention\IntentionCodeUpdatedMessage.cpp">
+      <Filter>src\intention</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

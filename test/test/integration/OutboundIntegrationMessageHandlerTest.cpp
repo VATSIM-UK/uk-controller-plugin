@@ -72,33 +72,6 @@ namespace UKControllerPluginTest::Integration {
             OutboundIntegrationMessageHandler handler;
     };
 
-    TEST_F(OutboundIntegrationMessageHandlerTest, ItSendsAMessageToAClient)
-    {
-        this->clientManager->AddClient(this->client1);
-        this->clientManager->AddClient(this->client2);
-
-        EXPECT_CALL(*this->mockConnection1, Send(this->parsedTestMessage->ToJson().dump()))
-            .Times(1);
-
-        EXPECT_CALL(*this->mockConnection2, Send(testing::_))
-            .Times(0);
-
-        this->handler.SendOutboundMessage(this->parsedTestMessage, 1);
-    }
-
-    TEST_F(OutboundIntegrationMessageHandlerTest, ItDoesntSendAMessageIfAClientDoesNotExist)
-    {
-        this->clientManager->AddClient(this->client2);
-
-        EXPECT_CALL(*this->mockConnection1, Send(testing::_))
-            .Times(0);
-
-        EXPECT_CALL(*this->mockConnection2, Send(testing::_))
-            .Times(0);
-
-        this->handler.SendOutboundMessage(this->parsedTestMessage, 1);
-    }
-
     TEST_F(OutboundIntegrationMessageHandlerTest, ItSendsMessagesToInterestedClients)
     {
         this->clientManager->AddClient(this->client1);
@@ -113,6 +86,6 @@ namespace UKControllerPluginTest::Integration {
         EXPECT_CALL(*this->mockConnection2, Send(testing::_))
             .Times(0);
 
-        this->handler.SendOutboundMessage(this->parsedTestMessage);
+        this->handler.SendEvent(this->parsedTestMessage);
     }
 } // namespace UKControllerPluginTest::Integration

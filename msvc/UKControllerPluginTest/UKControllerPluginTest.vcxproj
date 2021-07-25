@@ -145,6 +145,7 @@
     <ClCompile Include="..\..\test\test\intention\IntentionCodeEventHandlerTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\IntentionCodeGeneratorTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\IntentionCodeModuleTest.cpp" />
+    <ClCompile Include="..\..\test\test\intention\IntentionCodeUpdatedMessageTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\SectorExitPointEtratTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\SectorExitPointKonanTest.cpp" />
     <ClCompile Include="..\..\test\test\intention\SectorExitPointLelnaTest.cpp" />
@@ -302,6 +303,7 @@
     <ClInclude Include="..\..\test\mock\MockConnection.h" />
     <ClInclude Include="..\..\test\mock\MockInboundIntegrationMessageProcessor.h" />
     <ClInclude Include="..\..\test\mock\MockMinStack.h" />
+    <ClInclude Include="..\..\test\mock\MockOutboundIntegrationEventHandler.h" />
     <ClInclude Include="..\..\test\mock\MockRadarRendererableInterface.h" />
     <ClInclude Include="..\..\test\mock\MockRadarTargetEventHandlerInterface.h" />
     <ClInclude Include="..\..\test\mock\MockSocket.h" />

@@ -12,11 +12,6 @@ using UKControllerPlugin::Integration::IntegrationClientManager;
 using UKControllerPlugin::Integration::IntegrationClient;
 using UKControllerPlugin::Integration::IntegrationConnection;
 
-MATCHER_P(MatchMessageInterface, message, "")
-{
-    return *arg == *message;
-}
-
 namespace UKControllerPluginTest::Integration {
     class InboundIntegrationMessageHandlerTest : public testing::Test
     {

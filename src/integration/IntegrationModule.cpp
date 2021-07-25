@@ -36,10 +36,10 @@ namespace UKControllerPlugin {
             auto initialisationManager = std::make_shared<ClientInitialisationManager>(clientManager);
             auto server = std::make_unique<IntegrationServer>(initialisationManager);
             container.timedHandler->RegisterEvent(initialisationManager, 1);
-            auto outboundHandler = std::make_unique<OutboundIntegrationMessageHandler>(clientManager);
+            const auto outboundHandler = std::make_shared<OutboundIntegrationMessageHandler>(clientManager);
 
             container.integrationModuleContainer.reset(new IntegrationPersistenceContainer{
-                std::move(outboundHandler),
+                outboundHandler,
                 std::move(inboundMessageProcessors),
                 std::move(server)
             });

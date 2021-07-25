@@ -1,4 +1,5 @@
 #pragma once
+#include "integration/OutboundIntegrationEventHandler.h"
 
 namespace UKControllerPlugin::Integration {
     class IntegrationClientManager;
@@ -8,12 +9,11 @@ namespace UKControllerPlugin::Integration {
      * A class dedicated to handling outbound messages from the plugin
      * to integrations.
      */
-    class OutboundIntegrationMessageHandler
+    class OutboundIntegrationMessageHandler : public OutboundIntegrationEventHandler
     {
         public:
             explicit OutboundIntegrationMessageHandler(std::shared_ptr<IntegrationClientManager> clientManager);
-            void SendOutboundMessage(std::shared_ptr<MessageInterface> message) const;
-            void SendOutboundMessage(std::shared_ptr<MessageInterface> message, int clientId) const;
+            void SendEvent(std::shared_ptr<MessageInterface> message) override;
 
         private:
             const std::shared_ptr<IntegrationClientManager> clientManager;
