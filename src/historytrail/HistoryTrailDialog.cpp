@@ -192,7 +192,7 @@ namespace UKControllerPlugin {
                 IDC_TRAIL_TYPE,
                 CB_INSERTSTRING,
                 this->trailTypeLine,
-                reinterpret_cast<LPARAM>(L"Line")
+                reinterpret_cast<LPARAM>(L"Line (NERC)")
             );
 
             // Set trail type position

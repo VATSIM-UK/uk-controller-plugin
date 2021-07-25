@@ -185,16 +185,10 @@ namespace UKControllerPlugin {
             } else if (this->historyTrailType == this->trailTypeCircle) {
                 graphics.DrawCircle(area, pen);
             } else if (this->historyTrailType == this->trailTypeLine) {
-                graphics.Rotated(
-                    static_cast<Gdiplus::REAL>(-45),
-                    [&graphics, &area, &pen]
-                    {
-                        graphics.DrawLine(
-                            pen,
-                            Gdiplus::PointF{area.GetLeft(), area.GetTop()},
-                            Gdiplus::PointF{area.GetRight(), area.GetBottom()}
-                        );
-                    }
+                graphics.DrawLine(
+                    pen,
+                    Gdiplus::PointF{area.GetLeft(), area.GetBottom()},
+                    Gdiplus::PointF{area.GetRight(), area.GetTop()}
                 );
             } else {
                 graphics.DrawRect(area, pen);
