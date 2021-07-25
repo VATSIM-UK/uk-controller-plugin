@@ -112,7 +112,7 @@ namespace UKControllerPluginTest::Integration {
         ON_CALL(*mockConnection1, Receive)
             .WillByDefault(testing::Return(std::queue<std::string>({this->GetTestMessage("test1", 2)})));
 
-        EXPECT_CALL(*processor1, ProcessMessage(1, MatchMessageInterface(parsedTestMessage1)))
+        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage1->ToJson().dump()))
             .Times(1);
 
         handler.TimedEventTrigger();
@@ -130,10 +130,10 @@ namespace UKControllerPluginTest::Integration {
         ON_CALL(*mockConnection1, Receive)
             .WillByDefault(testing::Return(messages));
 
-        EXPECT_CALL(*processor1, ProcessMessage(1, MatchMessageInterface(parsedTestMessage1)))
+        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage1->ToJson().dump()))
             .Times(1);
 
-        EXPECT_CALL(*processor2, ProcessMessage(1, MatchMessageInterface(parsedTestMessage2)))
+        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage2->ToJson().dump()))
             .Times(1);
 
         handler.TimedEventTrigger();
@@ -150,10 +150,10 @@ namespace UKControllerPluginTest::Integration {
         ON_CALL(*mockConnection1, Receive)
             .WillByDefault(testing::Return(messages));
 
-        EXPECT_CALL(*processor1, ProcessMessage(1, MatchMessageInterface(parsedTestMessage1)))
+        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage1->ToJson().dump()))
             .Times(1);
 
-        EXPECT_CALL(*processor1, ProcessMessage(1, MatchMessageInterface(parsedTestMessage2)))
+        EXPECT_CALL(*mockConnection2, Send(testing::_))
             .Times(0);
 
         handler.TimedEventTrigger();
@@ -178,10 +178,10 @@ namespace UKControllerPluginTest::Integration {
         ON_CALL(*mockConnection2, Receive)
             .WillByDefault(testing::Return(messages2));
 
-        EXPECT_CALL(*processor1, ProcessMessage(1, MatchMessageInterface(parsedTestMessage1)))
+        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage1->ToJson().dump()))
             .Times(1);
 
-        EXPECT_CALL(*processor2, ProcessMessage(2, MatchMessageInterface(parsedTestMessage2)))
+        EXPECT_CALL(*mockConnection2, Send(parsedTestMessage2->ToJson().dump()))
             .Times(1);
 
         handler.TimedEventTrigger();

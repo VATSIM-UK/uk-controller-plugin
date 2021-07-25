@@ -54,7 +54,13 @@ namespace UKControllerPlugin::Integration {
                 continue;
             }
 
-            this->messageProcessors[message->GetMessageType()]->ProcessMessage(client->Id(), message);
+            this->messageProcessors[message->GetMessageType()]->ProcessMessage(
+                message,
+                [client](std::shared_ptr<MessageInterface> message)
+                {
+                    client->Connection()->Send(message);
+                }
+            );
             messages.pop();
         }
     }
