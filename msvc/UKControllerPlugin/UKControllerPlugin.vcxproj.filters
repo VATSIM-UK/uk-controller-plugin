@@ -1082,6 +1082,9 @@
     <ClInclude Include="..\..\src\releases\DepartureReleaseColours.h">
       <Filter>src\releases</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\historytrail\HistoryTrailPoint.h">
+      <Filter>src\historytrail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">

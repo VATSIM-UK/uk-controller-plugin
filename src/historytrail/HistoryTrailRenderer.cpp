@@ -63,6 +63,7 @@ namespace UKControllerPlugin {
                 this->defaultMaxAltitude
             );
             this->filledDots = userSetting.GetBooleanEntry(this->dotFillUserSettingKey, false);
+            this->rotatedDots = userSetting.GetBooleanEntry(this->dotRotateUserSettingKey, false);
         }
 
         /*
@@ -117,6 +118,11 @@ namespace UKControllerPlugin {
                 this->dotFillUserSettingDescription,
                 this->filledDots
             );
+            userSetting.Save(
+                this->dotRotateUserSettingKey,
+                this->dotRotateUserSettingDescription,
+                this->rotatedDots
+            );
         }
 
         /*
@@ -141,6 +147,7 @@ namespace UKControllerPlugin {
             data.maxAltitude = &this->maximumDisplayAltitude;
             data.minAltitude = &this->minimumDisplayAltitude;
             data.filledDots = &this->filledDots;
+            data.rotate = &this->rotatedDots;
 
             this->dialogManager.OpenDialog(IDD_HISTORY_TRAIL, reinterpret_cast<LPARAM>(&data));
 
@@ -178,10 +185,16 @@ namespace UKControllerPlugin {
             } else if (this->historyTrailType == this->trailTypeCircle) {
                 graphics.DrawCircle(area, pen);
             } else if (this->historyTrailType == this->trailTypeLine) {
-                graphics.DrawLine(
-                    pen,
-                    Gdiplus::PointF{area.GetLeft(), area.GetTop()},
-                    Gdiplus::PointF{area.GetRight(), area.GetBottom()}
+                graphics.Rotated(
+                    static_cast<Gdiplus::REAL>(-45),
+                    [&graphics, &area, &pen]
+                    {
+                        graphics.DrawLine(
+                            pen,
+                            Gdiplus::PointF{area.GetLeft(), area.GetTop()},
+                            Gdiplus::PointF{area.GetRight(), area.GetBottom()}
+                        );
+                    }
                 );
             } else {
                 graphics.DrawRect(area, pen);
@@ -203,6 +216,24 @@ namespace UKControllerPlugin {
                 graphics.FillCircle(area, brush);
             } else {
                 graphics.FillRect(area, brush);
+            }
+        }
+
+        void HistoryTrailRenderer::DoDot(GdiGraphicsInterface& graphics, const Gdiplus::RectF& area)
+        {
+            // Draw the dot
+            if (this->filledDots && this->historyTrailType != this->trailTypeLine) {
+                this->FillDot(
+                    graphics,
+                    *this->brush,
+                    area
+                );
+            } else {
+                this->DrawDot(
+                    graphics,
+                    *this->pen,
+                    area
+                );
             }
         }
 
@@ -280,6 +311,11 @@ namespace UKControllerPlugin {
         bool HistoryTrailRenderer::GetFilledDots() const
         {
             return this->filledDots;
+        }
+
+        bool HistoryTrailRenderer::GetRotatedDots() const
+        {
+            return this->rotatedDots;
         }
 
         Gdiplus::Color & HistoryTrailRenderer::GetTrailColour(void) const
@@ -363,10 +399,11 @@ namespace UKControllerPlugin {
 
                 // If they're not going fast enough or are off the screen, don't display the trail.
                 if (radarScreen.GetGroundspeedForCallsign(aircraft->second->GetCallsign()) < this->minimumSpeed ||
-                    radarScreen.PositionOffScreen(*aircraft->second->GetTrail().begin()) ||
+                    aircraft->second->GetTrail().empty() ||
+                    radarScreen.PositionOffScreen(aircraft->second->GetTrail().begin()->position) ||
                     radarTarget->GetFlightLevel() < this->minimumDisplayAltitude ||
                     radarTarget->GetFlightLevel() > this->maximumDisplayAltitude
-                    ) {
+                ) {
                     continue;
                 }
 
@@ -380,38 +417,42 @@ namespace UKControllerPlugin {
 
                 // Loop through the points and display.
                 for (
-                    std::deque<EuroScopePlugIn::CPosition>::const_iterator position =
-                        aircraft->second->GetTrail().begin();
+                    auto position = aircraft->second->GetTrail().begin();
                     position != aircraft->second->GetTrail().end();
                     ++position
                 ) {
 
-                    POINT dotCoordinates = radarScreen.ConvertCoordinateToScreenPoint(*position);
-                    // Adjust the dot size and position as required
-                    if (this->degradingTrails) {
-                        dot.X = dotCoordinates.x - (this->historyTrailDotSizeFloat / 2) + (roundNumber * reducePerDot);
-                        dot.Y = dotCoordinates.y - (this->historyTrailDotSizeFloat / 2) + (roundNumber * reducePerDot);
-                        dot.Width = dot.Width - reducePerDot;
-                        dot.Height = dot.Height - reducePerDot;
-                    } else {
-                        dot.X = dotCoordinates.x - (this->historyTrailDotSizeFloat / 2);
-                        dot.Y = dotCoordinates.y - (this->historyTrailDotSizeFloat / 2);
-                    }
+                    // Translate to screen location
+                    POINT dotCoordinates = radarScreen.ConvertCoordinateToScreenPoint(position->position);
+                    graphics.Translated(
+                        static_cast<Gdiplus::REAL>(dotCoordinates.x),
+                        static_cast<Gdiplus::REAL>(dotCoordinates.y),
+                        [&graphics, this, &dot, &roundNumber, &reducePerDot, &position]
+                        {
+                            // Adjust the dot size and position as required
+                            if (this->degradingTrails) {
+                                dot.X = -(this->historyTrailDotSizeFloat / 2) + (roundNumber * reducePerDot);
+                                dot.Y = -(this->historyTrailDotSizeFloat / 2) + (roundNumber * reducePerDot);
+                                dot.Width = dot.Width - reducePerDot;
+                                dot.Height = dot.Height - reducePerDot;
+                            } else {
+                                dot.X = -(this->historyTrailDotSizeFloat / 2);
+                                dot.Y = -(this->historyTrailDotSizeFloat / 2);
+                            }
 
-                    // Draw the dot
-                    if (this->filledDots && this->historyTrailType != this->trailTypeLine) {
-                        this->FillDot(
-                            graphics,
-                            *this->brush,
-                            dot
-                        );
-                    } else {
-                        this->DrawDot(
-                            graphics,
-                            *this->pen,
-                            dot
-                        );
-                    }
+                            if (this->rotatedDots) {
+                                graphics.Rotated(
+                                    static_cast<Gdiplus::REAL>(position->heading),
+                                    [&graphics, &dot, this]()
+                                    {
+                                        this->DoDot(graphics, dot);
+                                    }
+                                );
+                            } else {
+                                this->DoDot(graphics, dot);
+                            }
+                        }
+                    );
 
                     // If the trails are set to fade, reduce the alpha value for the next run
                     if (this->fadingTrails) {

@@ -158,6 +158,8 @@
 #define IDC_DEPARTURE_RELEASE_APPROVE_RELEASED_AT 1116
 #define IDC_DEPARTURE_RELEASE_APPROVE_RELEASED_AT_STATIC 1117
 #define IDC_CHECK_FILL                  1118
+#define IDC_CHECK2                      1119
+#define IDC_TRAIL_ROTATE                1119
 
 // Next default values for new objects
 // 
@@ -165,7 +167,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1119
+#define _APS_NEXT_CONTROL_VALUE         1120
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

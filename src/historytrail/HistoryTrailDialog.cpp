@@ -117,6 +117,12 @@ namespace UKControllerPlugin {
                 *this->data->filledDots ? BST_CHECKED : BST_UNCHECKED
             );
 
+            CheckDlgButton(
+                hwnd,
+                IDC_TRAIL_ROTATE,
+                *this->data->rotate ? BST_CHECKED : BST_UNCHECKED
+            );
+
             // Trail length
             SendDlgItemMessage(
                 hwnd,
@@ -268,6 +274,7 @@ namespace UKControllerPlugin {
             *this->data->fade = IsDlgButtonChecked(hwnd, IDC_CHECK_FADING) == BST_CHECKED;
             *this->data->degrade = IsDlgButtonChecked(hwnd, IDC_CHECK_DEGRADING) == BST_CHECKED;
             *this->data->filledDots = IsDlgButtonChecked(hwnd, IDC_CHECK_FILL) == BST_CHECKED;
+            *this->data->rotate = IsDlgButtonChecked(hwnd, IDC_TRAIL_ROTATE) == BST_CHECKED;
 
             // Length
             int trailLength = SendDlgItemMessage(

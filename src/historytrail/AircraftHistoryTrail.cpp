@@ -3,6 +3,7 @@
 
 namespace UKControllerPlugin {
     namespace HistoryTrail {
+
         AircraftHistoryTrail::AircraftHistoryTrail(std::string callsign)
         {
             this->callsign = callsign;
@@ -14,9 +15,9 @@ namespace UKControllerPlugin {
 
             The new item goes to the front, whilst old items are popped off the back.
         */
-        void AircraftHistoryTrail::AddItem(EuroScopePlugIn::CPosition aircraftPosition)
+        void AircraftHistoryTrail::AddItem(HistoryTrailPoint point)
         {
-            this->trail.push_front(aircraftPosition);
+            this->trail.push_front(point);
 
             if (this->trail.size() > this->maxSize) {
                 this->trail.pop_back();
@@ -34,7 +35,7 @@ namespace UKControllerPlugin {
         /*
             Returns a copy of the current history trail.
         */
-        const std::deque<EuroScopePlugIn::CPosition> & AircraftHistoryTrail::GetTrail(void) const
+        const std::deque<HistoryTrailPoint>& AircraftHistoryTrail::GetTrail(void) const
         {
             return this->trail;
         }

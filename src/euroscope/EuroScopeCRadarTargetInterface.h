@@ -12,6 +12,7 @@ namespace UKControllerPlugin {
                 virtual const EuroScopePlugIn::CPosition GetPosition(void) const = 0;
                 virtual const int GetGroundSpeed(void) const = 0;
                 virtual int GetVerticalSpeed(void) const = 0;
+                virtual double GetHeading() const = 0;
         };
     }  // namespace Euroscope
 }  // namespace UKControllerPlugin

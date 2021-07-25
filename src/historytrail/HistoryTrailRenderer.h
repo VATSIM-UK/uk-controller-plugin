@@ -63,6 +63,7 @@ namespace UKControllerPlugin {
                 int GetMaximumAltitudeFilter(void) const;
                 int GetMinimumAltitudeFilter(void) const;
                 bool GetFilledDots() const;
+                bool GetRotatedDots() const;
                 Gdiplus::Color & GetTrailColour(void) const;
                 bool IsVisible(void) const override;
                 void LeftClick(
@@ -143,6 +144,10 @@ namespace UKControllerPlugin {
                 const std::string dotFillUserSettingKey = "HistoryTrailDotFill";
                 const std::string dotFillUserSettingDescription = "UKCP History Trail Filled Dots";
 
+                // Dot rotation settings
+                const std::string dotRotateUserSettingKey = "HistoryTrailDotTotate";
+                const std::string dotRotateUserSettingDescription = "UKCP History Trail Rotated Dots";
+
                 // The module menu text
                 const std::string menuItemDescription = "Configure History Trails";
 
@@ -181,6 +186,7 @@ namespace UKControllerPlugin {
                     Gdiplus::Brush& brush,
                     const Gdiplus::RectF& area
                 );
+                void DoDot(Windows::GdiGraphicsInterface& graphics, const Gdiplus::RectF& area);
 
                 // Handles dialogs
                 const Dialog::DialogManager& dialogManager;
@@ -223,6 +229,9 @@ namespace UKControllerPlugin {
 
                 // Should the dots be filled
                 bool filledDots;
+
+                // Should the dots be rotated
+                bool rotatedDots;
 
                 // The length of trail to render
                 int historyTrailLength;
