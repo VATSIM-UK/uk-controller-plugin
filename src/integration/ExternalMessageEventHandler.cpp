@@ -1,6 +1,6 @@
 #include "pch/stdafx.h"
 #include "integration/ExternalMessageEventHandler.h"
-#include "integration//ExternalMessageHandlerInterface.h"
+#include "integration/ExternalMessageHandlerInterface.h"
 
 namespace UKControllerPlugin {
     namespace Integration {
@@ -63,7 +63,7 @@ namespace UKControllerPlugin {
         {
             std::lock_guard<std::mutex> lock(this->messageLock);
 
-            // Process any incoming messages
+            // Process any legacy incoming messages
             while (this->messages.size() != 0) {
                 for (
                     auto handlerIt = this->eventHandlers.cbegin();
@@ -75,7 +75,7 @@ namespace UKControllerPlugin {
                     }
 
                 }
-                LogWarning("Unable to handle external message: " + this->messages.front());
+                LogWarning("Unable to handle legacy external message: " + this->messages.front());
                 this->messages.pop();
             }
         }

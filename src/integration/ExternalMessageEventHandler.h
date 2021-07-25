@@ -6,6 +6,8 @@
 
 namespace UKControllerPlugin {
     namespace Integration {
+        class MessageInterface;
+
         /*
             Receives messages from external sources and passes them on.
         */
@@ -14,9 +16,9 @@ namespace UKControllerPlugin {
         {
             public:
                 explicit ExternalMessageEventHandler(bool duplicatePlugin);
-                virtual ~ExternalMessageEventHandler(void);
+                ~ExternalMessageEventHandler() override;
                 void AddHandler(
-                    std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageHandlerInterface> handler
+                    std::shared_ptr<ExternalMessageHandlerInterface> handler
                 );
                 void AddMessageToQueue(std::string message);
                 size_t CountHandlers(void) const;
@@ -30,13 +32,13 @@ namespace UKControllerPlugin {
             private:
 
                 std::set<
-                    std::shared_ptr<UKControllerPlugin::Integration::ExternalMessageHandlerInterface>
+                    std::shared_ptr<ExternalMessageHandlerInterface>
                 > eventHandlers;
 
                 // Lock for the message queue
                 std::mutex messageLock;
 
-                // Internal message quque
+                // Internal message queue
                 std::queue<std::string> messages;
 
                 // The hidden window handle
