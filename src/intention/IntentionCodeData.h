@@ -6,16 +6,22 @@ namespace UKControllerPlugin {
         /*
             Structure containing data about an intention code.
         */
-        typedef struct IntentionCodeData {
+        using IntentionCodeData = struct IntentionCodeData {
 
             IntentionCodeData(void)
-                : intentionCode("--"), exitPointIndex(-1), exitPointValid(false)
+                : intentionCode("--"), exitPointValid(false), exitPointIndex(-1), exitPoint("")
             {
 
             }
 
-            IntentionCodeData(std::string intentionCode, bool exitPointValid, int exitPointIndex)
-                : intentionCode(intentionCode), exitPointValid(exitPointValid), exitPointIndex(exitPointIndex)
+            IntentionCodeData(
+                std::string intentionCode,
+                bool exitPointValid,
+                int exitPointIndex,
+                std::string exitPoint
+            )
+                : intentionCode(intentionCode), exitPointValid(exitPointValid), exitPointIndex(exitPointIndex),
+                  exitPoint(std::move(exitPoint))
             {
 
             };
@@ -28,6 +34,9 @@ namespace UKControllerPlugin {
 
             // The index on the extracted route at which the aircraft leaves the FIR
             int exitPointIndex;
-        } IntentionCodeData;
+
+            // The exit point itself
+            std::string exitPoint;
+        };
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin

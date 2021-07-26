@@ -26,7 +26,8 @@ namespace UKControllerPlugin {
 
             std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
                 *container.handoffs,
-                *container.activeCallsigns
+                *container.activeCallsigns,
+                *container.integrationModuleContainer->outboundMessageHandler
             );
 
             container.tagHandler->RegisterTagItem(107, handler);

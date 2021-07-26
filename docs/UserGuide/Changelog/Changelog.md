@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [3.3.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.2.0...3.3.0) (2021-07-26)
+
+
+### Features
+
+* **integration:** Introduce integration and event sharing with third-party plugins ([#303](https://github.com/VATSIM-UK/uk-controller-plugin/issues/303)) ([739930e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/739930e53b12210f541c12dbd0f55b052cfee82b)), closes [#305](https://github.com/VATSIM-UK/uk-controller-plugin/issues/305)
+
 # [3.2.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.1.4...3.2.0) (2021-07-13)
 
 

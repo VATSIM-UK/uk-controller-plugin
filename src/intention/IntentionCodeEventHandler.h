@@ -12,6 +12,9 @@ namespace UKControllerPlugin {
         class IntentionCode;
         class IntentionCodeCache;
     }  // namespace IntentionCode
+    namespace Integration {
+        class OutboundIntegrationEventHandler;
+    } // namespace Integration
 }  // namespace UKControllerPlugin
 // END
 
@@ -22,49 +25,53 @@ namespace UKControllerPlugin {
             A class for generating intention code tag items.
         */
         class IntentionCodeEventHandler
-            : public UKControllerPlugin::Tag::TagItemInterface,
-            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-            public UKControllerPlugin::Controller::ControllerStatusEventHandlerInterface
+            : public Tag::TagItemInterface,
+              public Flightplan::FlightPlanEventHandlerInterface,
+              public Controller::ControllerStatusEventHandlerInterface
         {
             public:
                 IntentionCodeEventHandler(
-                    UKControllerPlugin::IntentionCode::IntentionCodeGenerator intention,
-                    UKControllerPlugin::IntentionCode::IntentionCodeCache codeCache
+                    IntentionCodeGenerator intention,
+                    IntentionCodeCache codeCache,
+                    Integration::OutboundIntegrationEventHandler& outboundEvent
                 );
                 void ControllerFlightPlanDataEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
+                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
                     int dataType
                 );
                 void FlightPlanEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
+                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget
                 );
                 void FlightPlanDisconnectEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan
+                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan
                 );
                 std::string GetTagItemDescription(int tagItemId) const override;
-                void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
+                void SetTagItemData(Tag::TagData& tagData) override;
 
 
                 // Inherited via ControllerStatusEventHandlerInterface
                 void ControllerUpdateEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller
+                    Euroscope::EuroScopeCControllerInterface& controller
                 ) override;
                 void ControllerDisconnectEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller
+                    Euroscope::EuroScopeCControllerInterface& controller
                 ) override;
                 void SelfDisconnectEvent(void) override;
 
-                const UKControllerPlugin::IntentionCode::IntentionCodeGenerator& GetGenerator() const;
-                const UKControllerPlugin::IntentionCode::IntentionCodeCache& GetCache() const;
+                const IntentionCodeGenerator& GetGenerator() const;
+                const IntentionCodeCache& GetCache() const;
 
             private:
 
                 // A class for generating intention codes
-                UKControllerPlugin::IntentionCode::IntentionCodeGenerator intention;
+                IntentionCodeGenerator intention;
 
                 // A cache for codes that have already been generated
-                UKControllerPlugin::IntentionCode::IntentionCodeCache codeCache;
+                IntentionCodeCache codeCache;
+
+                // Allows us to send outbound events
+                Integration::OutboundIntegrationEventHandler& outboundEvent;
         };
     }  // namespace IntentionCode
 }  // namespace UKControllerPlugin
