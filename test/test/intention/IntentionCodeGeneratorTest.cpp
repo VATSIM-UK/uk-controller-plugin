@@ -4,7 +4,6 @@
 #include "mock/MockEuroscopeExtractedRouteInterface.h"
 #include "intention/IntentionCodeData.h"
 #include "intention/SectorExitRepositoryFactory.h"
-#include "intention/SectorExitPoint.h"
 
 using UKControllerPlugin::IntentionCode::AirfieldGroup;
 using UKControllerPlugin::IntentionCode::IntentionCodeData;
@@ -88,6 +87,7 @@ namespace UKControllerPluginTest {
             IntentionCodeData data = intention.GetIntentionCodeForFlightplan("BAW123", "", "", mockFlightPlan, 0);
             EXPECT_TRUE(data.intentionCode == "--");
             EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ("", data.exitPoint);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
         }
 
@@ -110,6 +110,7 @@ namespace UKControllerPluginTest {
             );
             EXPECT_TRUE(data.intentionCode == "LL");
             EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ("", data.exitPoint);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
         }
 
@@ -132,6 +133,7 @@ namespace UKControllerPluginTest {
             );
             EXPECT_TRUE(data.intentionCode == "EGNX");
             EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ("", data.exitPoint);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
         }
 
@@ -172,6 +174,7 @@ namespace UKControllerPluginTest {
             );
             EXPECT_TRUE(data.intentionCode == "S3");
             EXPECT_TRUE(data.exitPointValid);
+            EXPECT_EQ("BAKUR", data.exitPoint);
             EXPECT_EQ(1, data.exitPointIndex);
         }
 
@@ -212,6 +215,7 @@ namespace UKControllerPluginTest {
             );
             EXPECT_TRUE(data.intentionCode == "KFJK");
             EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ("", data.exitPoint);
             EXPECT_EQ(intention.invalidExitPointIndex, data.exitPointIndex);
         }
 
@@ -246,6 +250,7 @@ namespace UKControllerPluginTest {
             );
             EXPECT_TRUE(data.intentionCode == "KLAS");
             EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ("", data.exitPoint);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
         }
 
@@ -289,6 +294,7 @@ namespace UKControllerPluginTest {
             );
             EXPECT_TRUE(data.intentionCode == "EDDM");
             EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ("", data.exitPoint);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
         }
 
@@ -316,6 +322,7 @@ namespace UKControllerPluginTest {
             data = intention.GetIntentionCodeForFlightplan("BAW123", "KLAS", "EGKK", mockFlightPlan, 35000);
             EXPECT_TRUE(data.intentionCode == "KK");
             EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ("", data.exitPoint);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
         }
 
@@ -361,6 +368,7 @@ namespace UKControllerPluginTest {
             );
             EXPECT_TRUE(data.intentionCode == "KLAS");
             EXPECT_FALSE(data.exitPointValid);
+            EXPECT_EQ("", data.exitPoint);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
         }
     }  // namespace IntentionCode

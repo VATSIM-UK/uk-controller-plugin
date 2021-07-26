@@ -21,7 +21,7 @@ namespace UKControllerPluginTest {
         TEST(IntentionCodeCache, GetIntentionCodeForCallsignReturnsCodeCorrectly)
         {
             IntentionCodeCache cache;
-            cache.RegisterAircraft("BAW123", IntentionCodeData("C2", 0, true));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("C2", false, true, "REDFA"));
             EXPECT_TRUE("C2" == cache.GetIntentionCodeForAircraft("BAW123"));
         }
 
@@ -40,30 +40,30 @@ namespace UKControllerPluginTest {
         TEST(IntentionCodeCache, RegisterAircraftAddsAircraftToCache)
         {
             IntentionCodeCache cache;
-            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", 0, true));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", false, true, "KOK"));
             EXPECT_TRUE(cache.HasIntentionCodeForAircraft("BAW123"));
         }
 
         TEST(IntentionCodeCache, RegisterAircraftDoesNotDuplicateAircraft)
         {
             IntentionCodeCache cache;
-            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", 0, true));
-            cache.RegisterAircraft("BAW123", IntentionCodeData("D2", 0, true));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", false, true, "KOK"));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("D2", false, true, "KOK"));
             EXPECT_EQ(1, cache.TotalCached());
         }
 
         TEST(IntentionCodeCache, RegisterAircraftDoesNotChangeExistingCodes)
         {
             IntentionCodeCache cache;
-            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", 0, true));
-            cache.RegisterAircraft("BAW123", IntentionCodeData("D2", 0, true));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", false, true, "KOK"));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("D2", false, true, "KOK"));
             EXPECT_TRUE("D1" == cache.GetIntentionCodeForAircraft("BAW123"));
         }
 
         TEST(IntentionCodeCache, UnregisterAircraftRemovesAircraftFromCache)
         {
             IntentionCodeCache cache;
-            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", 0, true));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", false, true, "KOK"));
             cache.UnregisterAircraft("BAW123");
             EXPECT_FALSE(cache.HasIntentionCodeForAircraft("BAW123"));
         }
@@ -71,7 +71,7 @@ namespace UKControllerPluginTest {
         TEST(IntentionCodeCache, UnregisterAircraftDoesNothingIfDoesntExist)
         {
             IntentionCodeCache cache;
-            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", 0, true));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", false, true, "KOK"));
             cache.UnregisterAircraft("BAW456");
             EXPECT_TRUE(cache.HasIntentionCodeForAircraft("BAW123"));
             EXPECT_EQ(1, cache.TotalCached());
@@ -88,7 +88,7 @@ namespace UKControllerPluginTest {
         {
             IntentionCodeCache cache;
             StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-            cache.RegisterAircraft("BAW123", IntentionCodeData("--", false, -1));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("--", false, -1, ""));
             EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
         }
 
@@ -105,7 +105,7 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(4));
 
 
-            cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5, ""));
             EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
         }
 
@@ -122,7 +122,7 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(5));
 
 
-            cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5, ""));
             EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
         }
 
@@ -139,7 +139,7 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(mockFlightplan.pointPassed));
 
 
-            cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5, ""));
             EXPECT_FALSE(cache.IntentionCodeValid("BAW123", mockFlightplan));
         }
 
@@ -156,15 +156,15 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(999));
 
 
-            cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5, ""));
             EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
         }
 
         TEST(IntentionCodeCache, ClearCacheEmptiesCache)
         {
             IntentionCodeCache cache;
-            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", 0, true));
-            cache.RegisterAircraft("BAW456", IntentionCodeData("D1", 0, true));
+            cache.RegisterAircraft("BAW123", IntentionCodeData("D1", false, true, "KOK"));
+            cache.RegisterAircraft("BAW456", IntentionCodeData("D1", false, true, "KOK"));
             cache.Clear();
             EXPECT_FALSE(cache.HasIntentionCodeForAircraft("BAW123"));
             EXPECT_FALSE(cache.HasIntentionCodeForAircraft("BAW456"));

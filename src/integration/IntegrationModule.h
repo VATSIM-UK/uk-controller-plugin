@@ -4,6 +4,10 @@
 namespace UKControllerPlugin {
     namespace Integration {
 
-        void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container, bool duplicatePlugin);
+        void BootstrapPlugin(
+            Bootstrap::PersistenceContainer& container,
+            bool duplicatePlugin,
+            bool winsockInitialised
+        );
     }  // namespace Integration
 }  // namespace UKControllerPlugin

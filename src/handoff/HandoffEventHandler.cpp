@@ -3,11 +3,14 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "controller/ControllerPositionHierarchy.h"
 #include "controller/ControllerPosition.h"
+#include "handoff/HandoffFrequencyUpdatedMessage.h"
+#include "integration/OutboundIntegrationEventHandler.h"
 
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Integration::OutboundIntegrationEventHandler;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Tag::TagData;
 
@@ -16,8 +19,9 @@ namespace UKControllerPlugin {
 
         HandoffEventHandler::HandoffEventHandler(
             const HandoffCollection& handoffs,
-            const ActiveCallsignCollection& callsigns
-        ) : handoffs(std::move(handoffs)), callsigns(std::move(callsigns))
+            const ActiveCallsignCollection& callsigns,
+            OutboundIntegrationEventHandler& outboundEvent
+        ) : handoffs(std::move(handoffs)), callsigns(std::move(callsigns)), outboundEvent(outboundEvent)
         {
 
         }
@@ -88,12 +92,14 @@ namespace UKControllerPlugin {
                     this->cache[tagData.flightPlan.GetCallsign()] =
                         CachedHandoff(frequencyString, it->get().GetCallsign());
                     tagData.SetItemString(this->cache[tagData.flightPlan.GetCallsign()].frequency);
+                    this->FireHandoffUpdatedEvent(tagData.flightPlan.GetCallsign());
                     return;
                 }
             }
 
             this->cache[tagData.flightPlan.GetCallsign()] = this->UNICOM_TAG_VALUE;
             tagData.SetItemString(this->cache[tagData.flightPlan.GetCallsign()].frequency);
+            this->FireHandoffUpdatedEvent(tagData.flightPlan.GetCallsign());
         }
 
         void HandoffEventHandler::FlightPlanEvent(
@@ -145,6 +151,16 @@ namespace UKControllerPlugin {
         void HandoffEventHandler::CallsignsFlushed(void)
         {
             this->cache.clear();
+        }
+
+        void HandoffEventHandler::FireHandoffUpdatedEvent(std::string callsign)
+        {
+            this->outboundEvent.SendEvent(
+                std::make_shared<HandoffFrequencyUpdatedMessage>(
+                    callsign,
+                    this->cache[callsign].frequency
+                )
+            );
         }
     }  // namespace Handoff
 }  // namespace UKControllerPlugin

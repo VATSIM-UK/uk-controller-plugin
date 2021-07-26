@@ -9,10 +9,13 @@
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
+#include "mock/MockOutboundIntegrationEventHandler.h"
+#include "handoff/HandoffFrequencyUpdatedMessage.h"
 
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Handoff::HandoffEventHandler;
 using UKControllerPlugin::Handoff::HandoffCollection;
+using UKControllerPlugin::Handoff::HandoffFrequencyUpdatedMessage;
 using UKControllerPlugin::Handoff::CachedHandoff;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
@@ -20,6 +23,7 @@ using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPluginTest::Integration::MockOutboundIntegrationEventHandler;
 using testing::Test;
 using testing::NiceMock;
 using testing::Return;
@@ -43,7 +47,7 @@ namespace UKControllerPluginTest {
                           &tagColour,
                           &fontSize
                       ),
-                      handler(handoffs, activeCallsigns)
+                      handler(handoffs, activeCallsigns, mockIntegration)
                 {
                     ON_CALL(this->mockFlightplan, GetCallsign())
                         .WillByDefault(Return("BAW123"));
@@ -66,6 +70,7 @@ namespace UKControllerPluginTest {
                 ControllerPosition position1;
                 ControllerPosition position2;
                 std::shared_ptr<ControllerPositionHierarchy> hierarchy;
+                NiceMock<MockOutboundIntegrationEventHandler> mockIntegration;
                 NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
                 HandoffCollection handoffs;
@@ -102,6 +107,13 @@ namespace UKControllerPluginTest {
         {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
+
+            std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
+                std::make_shared<HandoffFrequencyUpdatedMessage>("BAW123", "122.800");
+
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             this->handler.SetTagItemData(this->tagData);
             EXPECT_EQ(handler.UNICOM_TAG_VALUE.frequency, this->tagData.GetItemString());
         }
@@ -119,6 +131,13 @@ namespace UKControllerPluginTest {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
             this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
+
+            std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
+                std::make_shared<HandoffFrequencyUpdatedMessage>("BAW123", "132.600");
+
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             this->handler.SetTagItemData(this->tagData);
             EXPECT_EQ("132.600", this->tagData.GetItemString());
         }

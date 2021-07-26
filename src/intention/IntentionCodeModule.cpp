@@ -25,7 +25,8 @@ namespace UKControllerPlugin {
             // Create the handler and its dependencies
             std::shared_ptr<IntentionCodeEventHandler> handler = std::make_shared<IntentionCodeEventHandler>(
                     std::move(*IntentionCodeFactory::Create(*container.sectorExitPoints)),
-                    IntentionCodeCache()
+                    IntentionCodeCache(),
+                    *container.integrationModuleContainer->outboundMessageHandler
             );
 
             // Register with required event handlers.

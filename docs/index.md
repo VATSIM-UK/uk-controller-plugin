@@ -13,3 +13,4 @@ for example, stand allocations.
 - [Getting help](UserGuide/GettingHelp/Help.md)
 - [Changelog](UserGuide/Changelog/Changelog.md)
 - [Web API Changelog](https://github.com/VATSIM-UK/uk-controller-api/blob/main/docs/CHANGELOG.md)
+- [External Integration Guide](IntegrationGuide/IntegrationGuide.md)

@@ -984,13 +984,17 @@
     <ClInclude Include="..\..\src\initialheading\InitialHeadingModule.h">
       <Filter>src\initialheading</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\initialaltitude\CompareInitialAltitudes.h" />
-    <ClInclude Include="..\..\src\initialaltitude\InitialAltitudeData.h" />
     <ClInclude Include="..\..\src\plugin\PluginChangelog.h">
       <Filter>src\plugin</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\plugin\ForceUpdate.h">
       <Filter>src\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\MessageInterface.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\MessageType.h">
+      <Filter>src\integration</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\euroscope\EuroscopeFlightplanListWrapper.h">
       <Filter>src\euroscope</Filter>
@@ -1081,6 +1085,66 @@
     </ClInclude>
     <ClInclude Include="..\..\src\releases\DepartureReleaseColours.h">
       <Filter>src\releases</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\IntegrationClient.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\IntegrationConnection.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\InboundMessage.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\IntegrationServer.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\SocketConnection.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\IntegrationClientManager.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\ClientInitialisationManager.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\Connection.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\SocketInterface.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\SocketWrapper.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\InitialisationSuccessMessage.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\OutboundIntegrationMessageHandler.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\InboundIntegrationMessageHandler.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\InboundIntegrationMessageProcessor.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\IntegrationPersistenceContainer.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\InitialisationFailureMessage.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\intention\IntentionCodeUpdatedMessage.h">
+      <Filter>src\intention</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\OutboundIntegrationEventHandler.h">
+      <Filter>src\integration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\handoff\HandoffFrequencyUpdatedMessage.h">
+      <Filter>src\handoff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\integration\DummyOutboundIntegrationMessageHandler.h">
+      <Filter>src\integration</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1871,6 +1935,51 @@
     </ClCompile>
     <ClCompile Include="..\..\src\releases\DepartureReleaseCountdownColours.cpp">
       <Filter>src\releases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\IntegrationClient.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\IntegrationServer.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\SocketConnection.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\IntegrationClientManager.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\ClientInitialisationManager.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\IntegrationConnection.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\InboundMessage.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\SocketWrapper.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\InitialisationSuccessMessage.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\OutboundIntegrationMessageHandler.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\InboundIntegrationMessageHandler.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\InitialisationFailureMessage.cpp">
+      <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\intention\IntentionCodeUpdatedMessage.cpp">
+      <Filter>src\intention</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\handoff\HandoffFrequencyUpdatedMessage.cpp">
+      <Filter>src\handoff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\integration\DummyOutboundIntegrationMessageHandler.cpp">
+      <Filter>src\integration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

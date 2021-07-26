@@ -35,13 +35,13 @@ namespace UKControllerPlugin {
 
             std::unique_ptr<UKControllerPlugin::Bootstrap::PersistenceContainer> container;
 
-            // The api root domain.
-            const std::string apiRoot = "http://ukcp.devapp";
-
             // Whether or not the plugin has already been loaded - indicating this is a second ES window
             std::unique_ptr<Duplicate::DuplicatePlugin> duplicatePlugin;
 
             // Gdiplus initialisation token.
             ULONG_PTR gdiPlusToken;
+
+            // Is winsocks initialised
+            bool winsockInitialised;
     };  // namespace UKControllerPlugin
 }  // namespace UKControllerPlugin

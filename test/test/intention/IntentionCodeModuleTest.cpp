@@ -23,6 +23,11 @@ namespace UKControllerPluginTest {
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     this->container.tagHandler.reset(new TagItemCollection);
                     this->container.controllerHandler.reset(new ControllerStatusEventHandlerCollection);
+                    this->container.integrationModuleContainer.reset(
+                        new UKControllerPlugin::Integration::IntegrationPersistenceContainer{
+
+                        }
+                    );
                 }
 
                 PersistenceContainer container;
