@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [3.3.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.3.0...3.3.1) (2021-07-29)
+
+
+### Bug Fixes
+
+* **plugin-events:** fix race condition when requesting event updates ([#307](https://github.com/VATSIM-UK/uk-controller-plugin/issues/307)) ([5da1b7c](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5da1b7c444217d8aa2bb0dae6a4185e28319ee32))
+
 # [3.3.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.2.0...3.3.0) (2021-07-26)
 
 
