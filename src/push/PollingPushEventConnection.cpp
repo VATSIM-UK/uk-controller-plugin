@@ -58,16 +58,17 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            this->syncInProgress = true;
             this->taskRunner.QueueAsynchronousTask(
                 [this]()
                 {
-                    this->syncInProgress = true;
                     try {
                         nlohmann::json syncResponse = this->api.SyncPluginEvents();
 
                         if (!this->SyncResponseValid(syncResponse)) {
                             this->lastPollTime = std::chrono::system_clock::now();
                             LogWarning("Invalid plugin event sync response from API");
+                            this->updateInProgress = false;
                             return;
                         }
 
@@ -94,16 +95,17 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            this->updateInProgress = true;
             this->taskRunner.QueueAsynchronousTask(
                 [this]()
                 {
-                    this->updateInProgress = true;
                     try {
                         nlohmann::json latestEventsResponse = this->api.GetLatestPluginEvents(this->lastEventId);
 
                         if (!LatestPluginEventsResponseValid(latestEventsResponse)) {
                             LogWarning("Invalid plugin events response from API");
                             this->lastPollTime = std::chrono::system_clock::now();
+                            this->updateInProgress = false;
                             return;
                         }
 
