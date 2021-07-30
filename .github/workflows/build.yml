@@ -59,9 +59,7 @@ jobs:
 
       - name: Restore Nuget Packages
         run: |
-          cd msvc
           nuget restore
-          cd ..
 
       # Setup all the yarn things and node modules
       - name: Setup Yarn
@@ -99,7 +97,7 @@ jobs:
       
       # Run the build and tests
       - name: Run Build
-        run: msbuild msvc/UKControllerPlugin.sln /verbosity:minimal /property:Configuration=Release -m /warnaserror
+        run: msbuild UKControllerPlugin.sln /verbosity:minimal /property:Configuration=Release -m /warnaserror
 
       - name: Run Loader Tests
         run: ".\\bin\\Release\\UKControllerPluginLoaderTest.exe"
