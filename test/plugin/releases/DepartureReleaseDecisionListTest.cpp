@@ -1,7 +1,6 @@
-#pragma once
+#include "pch/pch.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
-#include "pch/pch.h"
 #include "controller/ControllerPositionCollection.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"

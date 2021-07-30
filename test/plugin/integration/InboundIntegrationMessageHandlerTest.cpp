@@ -1,4 +1,4 @@
-#pragma once
+#include "pch/pch.h"
 #include "integration/InboundIntegrationMessageHandler.h"
 #include "integration/IntegrationClientManager.h"
 #include "integration/IntegrationClient.h"

@@ -40,6 +40,9 @@
     <ProjectReference Include="..\..\src\loader\UKControllerPluginLoader.vcxproj">
       <Project>{0136d9e8-6efc-450a-b992-0f928101af2c}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\googlemock\GoogleMock.vcxproj">
+      <Project>{2d273732-22bb-401b-8bea-1cb210b59ba2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\testingutils\UKControllerPluginTestingUtils.vcxproj">
       <Project>{098f2947-0522-4b20-8f55-66c9336efc0f}</Project>
     </ProjectReference>

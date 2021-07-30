@@ -343,6 +343,7 @@
     <ClInclude Include="timedevent\TimedEventCollection.h" />
     <ClInclude Include="timer\TimerDisplay.h" />
     <ClInclude Include="time\ParseTimeStrings.h" />
+    <ClInclude Include="time\SystemClock.h" />
     <ClInclude Include="wake\CacheItem.h" />
     <ClInclude Include="wake\CreateWakeMappings.h" />
     <ClInclude Include="wake\WakeCategoryEventHandler.h" />
@@ -623,6 +624,7 @@
     <ClCompile Include="timedevent\TimedEventCollection.cpp" />
     <ClCompile Include="timer\TimerDisplay.cpp" />
     <ClCompile Include="time\ParseTimeStrings.cpp" />
+    <ClCompile Include="time\SystemClock.cpp" />
     <ClCompile Include="wake\CreateWakeMappings.cpp" />
     <ClCompile Include="wake\WakeCategoryEventHandler.cpp" />
     <ClCompile Include="wake\WakeCategoryMapper.cpp" />

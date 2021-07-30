@@ -10,11 +10,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\plugin\UKControllerPlugin.vcxproj">
+      <Project>{6f93f8c0-6773-4353-b7dd-b14dbd3f826b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\utils\UKControllerPluginUtils.vcxproj">
+      <Project>{141124e6-d339-464a-a759-0589a331b366}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\googlemock\GoogleMock.vcxproj">
+      <Project>{2d273732-22bb-401b-8bea-1cb210b59ba2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\testingutils\UKControllerPluginTestingUtils.vcxproj">
       <Project>{098f2947-0522-4b20-8f55-66c9336efc0f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\msvc\UKControllerPluginUtils\UKControllerPluginUtils.vcxproj">
-      <Project>{141124e6-d339-464a-a759-0589a331b366}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -237,14 +243,12 @@
     <ClCompile Include="sid\SidCollectionTest.cpp" />
     <ClCompile Include="sid\SidModuleTest.cpp" />
     <ClCompile Include="sid\StandardInstrumentDepartureTest.cpp" />
-    <ClCompile Include="squawk\ApiSquawkAllocationTest.cpp" />
     <ClCompile Include="squawk\ApiSquawkAllocationHandlerTest.cpp" />
     <ClCompile Include="squawk\SquawkAssignmentTest.cpp" />
     <ClCompile Include="squawk\SquawkEventHandlerTest.cpp" />
     <ClCompile Include="squawk\SquawkGeneratorTest.cpp" />
     <ClCompile Include="squawk\SquawkModuleTest.cpp" />
     <ClCompile Include="squawk\SquawkRequestTest.cpp" />
-    <ClCompile Include="squawk\SquawkValidatorTest.cpp" />
     <ClCompile Include="srd\SrdModuleTest.cpp" />
     <ClCompile Include="srd\SrdSearchDialogTest.cpp" />
     <ClCompile Include="srd\SrdSearchHandlerTest.cpp" />
@@ -360,7 +364,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)lib\plugin\include;$(ProjectDir)..\testingutils;$(ProjectDir);$(SolutionDir)src\plugin;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(ProjectDir);$(SolutionDir)src\plugin;$(SolutionDir)src\utils;$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(ProjectDir)..\testingutils;$(SolutionDir)lib\plugin\include;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild />
@@ -392,7 +396,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)lib\plugin\include;$(ProjectDir)..\testingutils;$(ProjectDir);$(SolutionDir)src\plugin;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(ProjectDir);$(SolutionDir)src\plugin;$(SolutionDir)src\utils;$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(ProjectDir)..\testingutils;$(SolutionDir)lib\plugin\include;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ForcedIncludeFiles>

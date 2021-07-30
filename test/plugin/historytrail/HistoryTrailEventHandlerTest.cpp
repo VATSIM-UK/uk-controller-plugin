@@ -1,5 +1,5 @@
-#include "historytrail/AircraftHistoryTrail.h"
 #include "pch/pch.h"
+#include "historytrail/AircraftHistoryTrail.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "historytrail/HistoryTrailEventHandler.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"

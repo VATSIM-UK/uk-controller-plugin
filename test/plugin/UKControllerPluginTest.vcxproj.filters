@@ -396,9 +396,6 @@
     <ClCompile Include="squawk\SquawkModuleTest.cpp">
       <Filter>test\squawk</Filter>
     </ClCompile>
-    <ClCompile Include="squawk\SquawkValidatorTest.cpp">
-      <Filter>test\squawk</Filter>
-    </ClCompile>
     <ClCompile Include="tag\TagFunctionTest.cpp">
       <Filter>test\tag</Filter>
     </ClCompile>
@@ -463,9 +460,6 @@
       <Filter>test\euroscope</Filter>
     </ClCompile>
     <ClCompile Include="squawk\ApiSquawkAllocationHandlerTest.cpp">
-      <Filter>test\squawk</Filter>
-    </ClCompile>
-    <ClCompile Include="squawk\ApiSquawkAllocationTest.cpp">
       <Filter>test\squawk</Filter>
     </ClCompile>
     <ClCompile Include="hold\HoldingAircraftTest.cpp">
@@ -864,8 +858,6 @@
     <ClCompile Include="pch\pch.cpp">
       <Filter>test\pch</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch\pch.h">

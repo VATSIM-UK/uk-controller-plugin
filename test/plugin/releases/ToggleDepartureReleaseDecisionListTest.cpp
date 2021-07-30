@@ -1,6 +1,5 @@
-#pragma once
-#include "controller/ActiveCallsignCollection.h"
 #include "pch/pch.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPositionCollection.h"
 #include "dialog/DialogManager.h"
 #include "mock/MockApiInterface.h"

@@ -1,5 +1,5 @@
-#include "api/ApiException.h"
 #include "pch/pch.h"
+#include "api/ApiException.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
 #include "push/PushEventSubscription.h"

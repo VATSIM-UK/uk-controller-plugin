@@ -1149,6 +1149,9 @@
     <ClInclude Include="integration\DummyOutboundIntegrationMessageHandler.h">
       <Filter>src\integration</Filter>
     </ClInclude>
+    <ClInclude Include="time\SystemClock.h">
+      <Filter>src\time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\UKControllerPlugin.rc">
@@ -1982,6 +1985,9 @@
     </ClCompile>
     <ClCompile Include="integration\DummyOutboundIntegrationMessageHandler.cpp">
       <Filter>src\integration</Filter>
+    </ClCompile>
+    <ClCompile Include="time\SystemClock.cpp">
+      <Filter>src\time</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

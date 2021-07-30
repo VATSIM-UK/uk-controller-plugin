@@ -37,9 +37,6 @@
     <Filter Include="duplicate">
       <UniqueIdentifier>{2e91c81e-5b35-4bf3-9430-b2dc6020d6c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="time">
-      <UniqueIdentifier>{e4bbf668-1c32-4538-ac99-c46b8f2d2124}</UniqueIdentifier>
-    </Filter>
     <Filter Include="pch">
       <UniqueIdentifier>{b4cdaefd-3dbf-4d32-b706-3ca3f2511aa4}</UniqueIdentifier>
     </Filter>
@@ -110,9 +107,6 @@
     </ClCompile>
     <ClCompile Include="squawk\SquawkValidator.cpp">
       <Filter>squawk</Filter>
-    </ClCompile>
-    <ClCompile Include="time\SystemClock.cpp">
-      <Filter>time</Filter>
     </ClCompile>
     <ClCompile Include="update\LoadChangelog.cpp">
       <Filter>update</Filter>
@@ -232,9 +226,6 @@
     </ClInclude>
     <ClInclude Include="srd\SrdSearchParameters.h">
       <Filter>srd</Filter>
-    </ClInclude>
-    <ClInclude Include="time\SystemClock.h">
-      <Filter>time</Filter>
     </ClInclude>
     <ClInclude Include="update\LoadChangelog.h">
       <Filter>update</Filter>

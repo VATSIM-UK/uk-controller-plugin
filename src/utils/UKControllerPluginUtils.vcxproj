@@ -36,7 +36,6 @@
     <ClCompile Include="setting\SettingRepository.cpp" />
     <ClCompile Include="setting\SettingRepositoryFactory.cpp" />
     <ClCompile Include="squawk\SquawkValidator.cpp" />
-    <ClCompile Include="time\SystemClock.cpp" />
     <ClCompile Include="update\LoadChangelog.cpp" />
     <ClCompile Include="update\PluginVersion.cpp" />
     <ClCompile Include="update\UpdateBinaries.cpp" />
@@ -78,7 +77,6 @@
     <ClInclude Include="squawk\ApiSquawkAllocation.h" />
     <ClInclude Include="squawk\SquawkValidator.h" />
     <ClInclude Include="srd\SrdSearchParameters.h" />
-    <ClInclude Include="time\SystemClock.h" />
     <ClInclude Include="update\LoadChangelog.h" />
     <ClInclude Include="update\PluginVersion.h" />
     <ClInclude Include="update\UpdateBinaries.h" />
