@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [3.4.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.3.1...3.4.0) (2021-07-30)
+
+
+### Features
+
+* **history-trails:** Add dot filling, line-style dots, and track-rotation ([#306](https://github.com/VATSIM-UK/uk-controller-plugin/issues/306)) ([07a2e5e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/07a2e5e7d34519062e3aa9e921f5c4227e3a4481))
+
 ## [3.3.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.3.0...3.3.1) (2021-07-29)
 
 
