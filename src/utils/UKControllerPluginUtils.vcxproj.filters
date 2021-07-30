@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="api">
+      <UniqueIdentifier>{8d06d767-8689-4302-9e2c-f001928e60ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{0eaa45c3-17fc-4dd0-b3d6-f80cfa5ac14b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="windows">
+      <UniqueIdentifier>{9f91bcb5-2ffb-4742-94bb-8be74d55fc0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helper">
+      <UniqueIdentifier>{38f7a1f9-2355-4f74-82cc-d45c055141b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="squawk">
+      <UniqueIdentifier>{5d6aa859-8685-46c1-ae4d-218f700831f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="srd">
+      <UniqueIdentifier>{d97f2440-c968-4815-9d30-47d4c15444e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dialog">
+      <UniqueIdentifier>{28fc7b64-2116-4db1-aa5c-52c3754fe4bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="setting">
+      <UniqueIdentifier>{1cc172b8-4f57-4f54-8a50-173291a852ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="curl">
+      <UniqueIdentifier>{4722456a-342e-49cf-a06e-dd7e88032023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{2dfec82f-06e2-4c84-9af1-d5500400ccca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="update">
+      <UniqueIdentifier>{e02f14a9-4982-47dc-8ac3-77c039ee27e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="duplicate">
+      <UniqueIdentifier>{2e91c81e-5b35-4bf3-9430-b2dc6020d6c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="time">
+      <UniqueIdentifier>{e4bbf668-1c32-4538-ac99-c46b8f2d2124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{b4cdaefd-3dbf-4d32-b706-3ca3f2511aa4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="api\ApiAuthChecker.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiBootstrap.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiHelper.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiRequestBuilder.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiResponse.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiResponseFactory.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiResponseValidator.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\LocateApiSettings.cpp">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="curl\CurlApi.cpp">
+      <Filter>curl</Filter>
+    </ClCompile>
+    <ClCompile Include="curl\CurlRequest.cpp">
+      <Filter>curl</Filter>
+    </ClCompile>
+    <ClCompile Include="curl\CurlResponse.cpp">
+      <Filter>curl</Filter>
+    </ClCompile>
+    <ClCompile Include="data\PluginDataLocations.cpp">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\CompareDialogs.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\DialogManager.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="duplicate\DuplicatePlugin.cpp">
+      <Filter>duplicate</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\HelperFunctions.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
+    <ClCompile Include="log\LoggerBootstrap.cpp">
+      <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="log\LoggerFunctions.cpp">
+      <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="pch\pch.cpp">
+      <Filter>pch</Filter>
+    </ClCompile>
+    <ClCompile Include="setting\SettingRepository.cpp">
+      <Filter>setting</Filter>
+    </ClCompile>
+    <ClCompile Include="setting\SettingRepositoryFactory.cpp">
+      <Filter>setting</Filter>
+    </ClCompile>
+    <ClCompile Include="squawk\SquawkValidator.cpp">
+      <Filter>squawk</Filter>
+    </ClCompile>
+    <ClCompile Include="time\SystemClock.cpp">
+      <Filter>time</Filter>
+    </ClCompile>
+    <ClCompile Include="update\LoadChangelog.cpp">
+      <Filter>update</Filter>
+    </ClCompile>
+    <ClCompile Include="update\PluginVersion.cpp">
+      <Filter>update</Filter>
+    </ClCompile>
+    <ClCompile Include="update\UpdateBinaries.cpp">
+      <Filter>update</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\WinApi.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\WinApiBootstrap.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="api\ApiAuthChecker.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiBootstrap.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiException.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiHelper.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiInterface.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiNotAuthorisedException.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiNotFoundException.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiRequestBuilder.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiResponse.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiResponseFactory.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\ApiResponseValidator.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="api\LocateApiSettings.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="curl\CurlApi.h">
+      <Filter>curl</Filter>
+    </ClInclude>
+    <ClInclude Include="curl\CurlInterface.h">
+      <Filter>curl</Filter>
+    </ClInclude>
+    <ClInclude Include="curl\CurlRequest.h">
+      <Filter>curl</Filter>
+    </ClInclude>
+    <ClInclude Include="curl\CurlResponse.h">
+      <Filter>curl</Filter>
+    </ClInclude>
+    <ClInclude Include="curl\HttpException.h">
+      <Filter>curl</Filter>
+    </ClInclude>
+    <ClInclude Include="data\PluginDataLocations.h">
+      <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="dialog\CompareDialogs.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="dialog\DialogCallArgument.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="dialog\DialogData.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="dialog\DialogManager.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="dialog\DialogProviderInterface.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="duplicate\DuplicatePlugin.h">
+      <Filter>duplicate</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\HelperFunctions.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="log\LoggerBootstrap.h">
+      <Filter>log</Filter>
+    </ClInclude>
+    <ClInclude Include="log\LoggerFunctions.h">
+      <Filter>log</Filter>
+    </ClInclude>
+    <ClInclude Include="pch\pch.h">
+      <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="setting\SettingRepository.h">
+      <Filter>setting</Filter>
+    </ClInclude>
+    <ClInclude Include="setting\SettingRepositoryFactory.h">
+      <Filter>setting</Filter>
+    </ClInclude>
+    <ClInclude Include="setting\SettingValue.h">
+      <Filter>setting</Filter>
+    </ClInclude>
+    <ClInclude Include="squawk\ApiSquawkAllocation.h">
+      <Filter>squawk</Filter>
+    </ClInclude>
+    <ClInclude Include="squawk\SquawkValidator.h">
+      <Filter>squawk</Filter>
+    </ClInclude>
+    <ClInclude Include="srd\SrdSearchParameters.h">
+      <Filter>srd</Filter>
+    </ClInclude>
+    <ClInclude Include="time\SystemClock.h">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="update\LoadChangelog.h">
+      <Filter>update</Filter>
+    </ClInclude>
+    <ClInclude Include="update\PluginVersion.h">
+      <Filter>update</Filter>
+    </ClInclude>
+    <ClInclude Include="update\UpdateBinaries.h">
+      <Filter>update</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\WinApi.h">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\WinApiBootstrap.h">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\WinApiInterface.h">
+      <Filter>windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
