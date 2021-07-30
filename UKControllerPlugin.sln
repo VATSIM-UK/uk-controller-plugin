@@ -25,7 +25,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginTestingUt
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUpdaterTest", "test\updater\UKControllerPluginUpdaterTest.vcxproj", "{6180D883-D208-48BE-9CFD-45602FC5D2E0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginLoaderTest", "msvc\UKControllerPluginLoaderTest\UKControllerPluginLoaderTest.vcxproj", "{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginLoaderTest", "test\loader\UKControllerPluginLoaderTest.vcxproj", "{75F86CBF-6661-4D59-BB08-FB6C3DDB7396}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleMock", "test\googlemock\GoogleMock.vcxproj", "{2D273732-22BB-401B-8BEA-1CB210B59BA2}"
 EndProject

@@ -8,5 +8,5 @@
 #pragma warning( push )
 #pragma warning( disable : 26495 26451 28251)
 #include "gmock/gmock.h"
-#include "loader/pch.h"
+#include "../../src/loader/pch/pch.h"
 #pragma warning( pop )

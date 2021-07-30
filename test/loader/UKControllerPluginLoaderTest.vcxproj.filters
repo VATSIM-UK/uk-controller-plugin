@@ -4,16 +4,21 @@
     <Filter Include="loader">
       <UniqueIdentifier>{525ebc2a-2992-4bca-8c4f-786e8b5177ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{683f07aa-07c2-438d-8b59-6ff35d6a1363}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\test\pch\loadertestpch.cpp" />
-    <ClCompile Include="..\..\test\test\loader\LoaderTest.cpp">
+    <ClCompile Include="pch\pch.cpp">
+      <Filter>pch</Filter>
+    </ClCompile>
+    <ClCompile Include="loader\LoaderTest.cpp">
       <Filter>loader</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\test\pch\loadertestpch.h" />
+    <ClInclude Include="pch\pch.h">
+      <Filter>pch</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
