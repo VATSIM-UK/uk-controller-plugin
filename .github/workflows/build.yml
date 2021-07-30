@@ -101,7 +101,13 @@ jobs:
       - name: Run Build
         run: msbuild msvc/UKControllerPlugin.sln /verbosity:minimal /property:Configuration=Release -m /warnaserror
 
-      - name: Run Tests
+      - name: Run Loader Tests
+        run: ".\\bin\\Release\\UKControllerPluginLoaderTest.exe"
+
+      - name: Run Updater Tests
+        run: ".\\bin\\Release\\UKControllerPluginUpdaterTest.exe"
+
+      - name: Run Plugin Tests
         run: ".\\bin\\Release\\UKControllerPluginTest.exe"
 
       # Run the linter
