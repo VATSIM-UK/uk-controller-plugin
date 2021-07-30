@@ -75,14 +75,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)testing\include;$(SolutionDir)third_party\spdlog\include;$(IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(SolutionDir)lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)testing\include;$(SolutionDir)third_party\spdlog\include;$(IncludePath);</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)lib;$(CURL_DEBUG_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)testing\include;$(SolutionDir)third_party\spdlog\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(SolutionDir)lib\include;$(SolutionDir)\UKControllerPlugin;$(SolutionDir)testing\include;$(SolutionDir)third_party\spdlog\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)lib;$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
