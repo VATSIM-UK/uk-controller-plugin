@@ -1,3 +1,4 @@
+#include "historytrail/AircraftHistoryTrail.h"
 #include "pch/pch.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "historytrail/HistoryTrailEventHandler.h"
@@ -8,14 +9,14 @@ using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
 using UKControllerPlugin::HistoryTrail::HistoryTrailEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
-using ::testing::StrictMock;
+using testing::NiceMock;
 using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace EventHandler {
          TEST(HistoryTrailEventHandler, RadarTargetPositionUpdateEventAddsAnAircraftIfNotRegistered)
          {
-             StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+             NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
              EXPECT_CALL(radarTarget, GetCallsign())
                  .Times(3)
                  .WillRepeatedly(Return("Test"));
@@ -24,16 +25,20 @@ namespace UKControllerPluginTest {
                  .Times(1)
                  .WillOnce(Return(EuroScopePlugIn::CPosition::CPosition()));
 
+             ON_CALL(radarTarget, GetHeading)
+                .WillByDefault(Return(123));
+
              HistoryTrailRepository repo;
              HistoryTrailEventHandler handler(repo);
 
              handler.RadarTargetPositionUpdateEvent(radarTarget);
              EXPECT_TRUE(repo.HasAircraft("Test"));
+             EXPECT_EQ(123, repo.GetAircraft("Test")->GetTrail().front().heading);
          }
 
          TEST(HistoryTrailEventHandler, RadarTargetPositionUpdateEventDoesNotAddAnAircraftTwice)
          {
-             StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+             NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
              EXPECT_CALL(radarTarget, GetCallsign())
                  .Times(5)
                  .WillRepeatedly(Return("Test"));
@@ -41,6 +46,9 @@ namespace UKControllerPluginTest {
              EXPECT_CALL(radarTarget, GetPosition())
                  .Times(2)
                  .WillRepeatedly(Return(EuroScopePlugIn::CPosition::CPosition()));
+
+             ON_CALL(radarTarget, GetHeading)
+                .WillByDefault(Return(123));
 
              HistoryTrailRepository repo;
              HistoryTrailEventHandler handler(repo);
@@ -51,7 +59,7 @@ namespace UKControllerPluginTest {
 
          TEST(HistoryTrailEventHandler, OnFlightplanDisconnectRemovesAircraft)
          {
-             StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+             NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
              EXPECT_CALL(radarTarget, GetCallsign())
                  .Times(3)
                  .WillRepeatedly(Return("Test"));
@@ -60,7 +68,10 @@ namespace UKControllerPluginTest {
                  .Times(1)
                  .WillOnce(Return(EuroScopePlugIn::CPosition::CPosition()));
 
-             StrictMock<MockEuroScopeCFlightPlanInterface> flightPlan;
+             ON_CALL(radarTarget, GetHeading)
+                .WillByDefault(Return(123));
+
+             NiceMock<MockEuroScopeCFlightPlanInterface> flightPlan;
              EXPECT_CALL(flightPlan, GetCallsign())
                  .Times(1)
                  .WillOnce(Return("Test"));

@@ -11,6 +11,9 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\..\resource\sound\beep.wav" />
+    <Media Include="..\..\..\resource\sound\departure_release_accepted.wav" />
+    <Media Include="..\..\..\resource\sound\departure_release_rejected.wav" />
+    <Media Include="..\..\..\resource\sound\departure_release_requested.wav" />
     <Media Include="..\..\resource\sound\beep.wav" />
     <Media Include="..\..\resource\sound\departure_release_accepted.wav" />
     <Media Include="..\..\resource\sound\departure_release_rejected.wav" />
@@ -121,6 +124,7 @@
     <ClInclude Include="..\..\src\historytrail\HistoryTrailDialog.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailEventHandler.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailModule.h" />
+    <ClInclude Include="..\..\src\historytrail\HistoryTrailPoint.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailRenderer.h" />
     <ClInclude Include="..\..\src\historytrail\HistoryTrailRepository.h" />
     <ClInclude Include="..\..\src\hold\AbstractHoldLevelRestriction.h" />

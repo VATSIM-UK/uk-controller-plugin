@@ -14,6 +14,8 @@ namespace UKControllerPlugin {
             int * dotSize;
             int * maxAltitude;
             int * minAltitude;
+            bool* filledDots;
+            bool* rotate;
         } HistoryTrail;
     }  // namespace HistoryTrail
 }  // namespace UKControllerPlugin

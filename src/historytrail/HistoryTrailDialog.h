@@ -51,6 +51,9 @@ namespace UKControllerPlugin {
             // Circle trail type
             const int trailTypeCircle = 2;
 
+            // Line trail type
+            const int trailTypeLine = 3;
+
         private:
             LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 

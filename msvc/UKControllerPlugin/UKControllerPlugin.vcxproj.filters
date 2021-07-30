@@ -1086,6 +1086,9 @@
     <ClInclude Include="..\..\src\releases\DepartureReleaseColours.h">
       <Filter>src\releases</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\historytrail\HistoryTrailPoint.h">
+      <Filter>src\historytrail</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\integration\IntegrationClient.h">
       <Filter>src\integration</Filter>
     </ClInclude>
@@ -1166,6 +1169,9 @@
     <Media Include="..\..\resource\sound\departure_release_rejected.wav">
       <Filter>resource\sound</Filter>
     </Media>
+    <Media Include="..\..\..\resource\sound\departure_release_accepted.wav" />
+    <Media Include="..\..\..\resource\sound\departure_release_rejected.wav" />
+    <Media Include="..\..\..\resource\sound\departure_release_requested.wav" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\airfield\AirfieldCollection.cpp">

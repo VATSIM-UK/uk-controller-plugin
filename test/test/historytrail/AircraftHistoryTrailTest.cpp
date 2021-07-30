@@ -16,13 +16,14 @@ namespace UKControllerPluginTest {
             positionTest.m_Longitude = 2;
 
             // Add to the history trail, then get the trail to check values.
-            history.AddItem(positionTest);
-            std::deque<EuroScopePlugIn::CPosition> trail = history.GetTrail();
+            history.AddItem({123, positionTest});
+            auto trail = history.GetTrail();
 
             // Check the trail.
             EXPECT_EQ(1, trail.size());
-            EXPECT_EQ(1, trail.front().m_Latitude);
-            EXPECT_EQ(2, trail.front().m_Longitude);
+            EXPECT_EQ(1, trail.front().position.m_Latitude);
+            EXPECT_EQ(2, trail.front().position.m_Longitude);
+            EXPECT_EQ(123, trail.front().heading);
         }
 
         TEST(HistoryTrail, AddItemAddsItemIfQueueNotFull)
@@ -35,13 +36,14 @@ namespace UKControllerPluginTest {
             positionTest.m_Longitude = 2;
 
             // Add to the history trail, then get the trail to check values.
-            history.AddItem(positionTest);
-            std::deque<EuroScopePlugIn::CPosition> trail = history.GetTrail();
+            history.AddItem({123, positionTest});
+            auto trail = history.GetTrail();
 
             // Check the trail.
             EXPECT_EQ(1, trail.size());
-            EXPECT_EQ(1, trail.front().m_Latitude);
-            EXPECT_EQ(2, trail.front().m_Longitude);
+            EXPECT_EQ(1, trail.front().position.m_Latitude);
+            EXPECT_EQ(2, trail.front().position.m_Longitude);
+            EXPECT_EQ(123, trail.front().heading);
         }
 
         TEST(HistoryTrail, AddItemAddsItemIfQueueNotFullBoundary)
@@ -54,13 +56,14 @@ namespace UKControllerPluginTest {
             positionTest.m_Longitude = 2;
 
             // Add to the history trail, then get the trail to check values.
-            history.AddItem(positionTest);
-            std::deque<EuroScopePlugIn::CPosition> trail = history.GetTrail();
+            history.AddItem({123, positionTest});
+            auto trail = history.GetTrail();
 
             // Check the trail.
             EXPECT_EQ(1, trail.size());
-            EXPECT_EQ(1, trail.front().m_Latitude);
-            EXPECT_EQ(2, trail.front().m_Longitude);
+            EXPECT_EQ(1, trail.front().position.m_Latitude);
+            EXPECT_EQ(2, trail.front().position.m_Longitude);
+            EXPECT_EQ(123, trail.front().heading);
         }
 
 
@@ -78,21 +81,23 @@ namespace UKControllerPluginTest {
             positionTestSecond.m_Longitude = 4;
 
             // Add to the history trail, then get the trail to check values.
-            history.AddItem(positionTestFirst);
-            history.AddItem(positionTestSecond);
-            std::deque<EuroScopePlugIn::CPosition> trail = history.GetTrail();
+            history.AddItem({123, positionTestFirst});
+            history.AddItem({456, positionTestSecond});
+            auto trail = history.GetTrail();
 
             // Check the trail.
             EXPECT_EQ(2, trail.size());
 
             // First item
-            EXPECT_EQ(1, trail.back().m_Latitude);
-            EXPECT_EQ(2, trail.back().m_Longitude);
+            EXPECT_EQ(1, trail.back().position.m_Latitude);
+            EXPECT_EQ(2, trail.back().position.m_Longitude);
+            EXPECT_EQ(123, trail.back().heading);
 
             // Second item
             trail.pop_back();
-            EXPECT_EQ(3, trail.back().m_Latitude);
-            EXPECT_EQ(4, trail.back().m_Longitude);
+            EXPECT_EQ(3, trail.back().position.m_Latitude);
+            EXPECT_EQ(4, trail.back().position.m_Longitude);
+            EXPECT_EQ(456, trail.back().heading);
         }
 
         TEST(HistoryTrail, AddItemTrailRemovesLastItemIfFull)
@@ -110,19 +115,20 @@ namespace UKControllerPluginTest {
 
             // Fill up the trail with the first value
             for (unsigned int i = 0; i < history.maxSize; i++) {
-                history.AddItem(positionTestFirst);
+                history.AddItem({123, positionTestFirst});
             }
 
             // Add a second value to test with
-            history.AddItem(positionTestSecond);
-            std::deque<EuroScopePlugIn::CPosition> trail = history.GetTrail();
+            history.AddItem({456, positionTestSecond});
+            auto trail = history.GetTrail();
 
             // Check the trail.
             EXPECT_EQ(history.maxSize, trail.size());
 
             // First item
-            EXPECT_EQ(3, trail.front().m_Latitude);
-            EXPECT_EQ(4, trail.front().m_Longitude);
+            EXPECT_EQ(3, trail.front().position.m_Latitude);
+            EXPECT_EQ(4, trail.front().position.m_Longitude);
+            EXPECT_EQ(456, trail.front().heading);
         }
     }  // namespace HistoryTrail
 }  // namespace UKControllerPluginTest

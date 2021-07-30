@@ -111,6 +111,18 @@ namespace UKControllerPlugin {
                 *this->data->degrade ? BST_CHECKED : BST_UNCHECKED
             );
 
+            CheckDlgButton(
+                hwnd,
+                IDC_CHECK_FILL,
+                *this->data->filledDots ? BST_CHECKED : BST_UNCHECKED
+            );
+
+            CheckDlgButton(
+                hwnd,
+                IDC_TRAIL_ROTATE,
+                *this->data->rotate ? BST_CHECKED : BST_UNCHECKED
+            );
+
             // Trail length
             SendDlgItemMessage(
                 hwnd,
@@ -174,11 +186,21 @@ namespace UKControllerPlugin {
                 reinterpret_cast<LPARAM>(L"Circle")
             );
 
+            // Trail type - line
+            SendDlgItemMessage(
+                hwnd,
+                IDC_TRAIL_TYPE,
+                CB_INSERTSTRING,
+                this->trailTypeLine,
+                reinterpret_cast<LPARAM>(L"Line (NERC)")
+            );
+
             // Set trail type position
             if (
                 *this->data->type == this->trailTypeDiamond ||
                 *this->data->type == this->trailTypeCircle ||
-                *this->data->type == this->trailTypeSquare
+                *this->data->type == this->trailTypeSquare ||
+                *this->data->type == this->trailTypeLine
             ) {
                 SendDlgItemMessage(
                     hwnd,
@@ -251,6 +273,8 @@ namespace UKControllerPlugin {
             *this->data->antiAlias = IsDlgButtonChecked(hwnd, IDC_CHECK_AA) == BST_CHECKED;
             *this->data->fade = IsDlgButtonChecked(hwnd, IDC_CHECK_FADING) == BST_CHECKED;
             *this->data->degrade = IsDlgButtonChecked(hwnd, IDC_CHECK_DEGRADING) == BST_CHECKED;
+            *this->data->filledDots = IsDlgButtonChecked(hwnd, IDC_CHECK_FILL) == BST_CHECKED;
+            *this->data->rotate = IsDlgButtonChecked(hwnd, IDC_TRAIL_ROTATE) == BST_CHECKED;
 
             // Length
             int trailLength = SendDlgItemMessage(

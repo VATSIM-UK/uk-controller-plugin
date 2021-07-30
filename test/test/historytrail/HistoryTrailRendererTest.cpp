@@ -178,6 +178,32 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(renderer.defaultMaxAltitude, renderer.GetMaximumAltitudeFilter());
         }
 
+        TEST_F(HistoryTrailRendererTest, AsrLoadedEventSetsFillNoSetting)
+        {
+            EXPECT_CALL(mockUserSettingProvider, GetKey(_))
+                .WillRepeatedly(Return(""));
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.dotFillUserSettingKey))
+                .Times(1)
+                .WillRepeatedly(Return(""));
+
+            renderer.AsrLoadedEvent(userSetting);
+            EXPECT_FALSE(renderer.GetFilledDots());
+        }
+
+        TEST_F(HistoryTrailRendererTest, AsrLoadedEventSetsRotateNoSetting)
+        {
+            EXPECT_CALL(mockUserSettingProvider, GetKey(_))
+                .WillRepeatedly(Return(""));
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.dotRotateUserSettingKey))
+                .Times(1)
+                .WillRepeatedly(Return(""));
+
+            renderer.AsrLoadedEvent(userSetting);
+            EXPECT_FALSE(renderer.GetRotatedDots());
+        }
+
         TEST_F(HistoryTrailRendererTest, AsrLoadedEventSetsVisibilityFromUserSetting)
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_))
@@ -288,6 +314,30 @@ namespace UKControllerPluginTest {
 
             renderer.AsrLoadedEvent(userSetting);
             EXPECT_EQ(15000, renderer.GetMaximumAltitudeFilter());
+        }
+
+        TEST_F(HistoryTrailRendererTest, AsrLoadedEventSetsFilledDotsFromUserSetting)
+        {
+            EXPECT_CALL(mockUserSettingProvider, GetKey(_))
+                .WillRepeatedly(Return(""));
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.dotFillUserSettingKey))
+                .WillRepeatedly(Return("1"));
+
+            renderer.AsrLoadedEvent(userSetting);
+            EXPECT_TRUE(renderer.GetFilledDots());
+        }
+
+        TEST_F(HistoryTrailRendererTest, AsrLoadedEventSetsRotatedDotsFromUserSetting)
+        {
+            EXPECT_CALL(mockUserSettingProvider, GetKey(_))
+                .WillRepeatedly(Return(""));
+
+            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.dotRotateUserSettingKey))
+                .WillRepeatedly(Return("1"));
+
+            renderer.AsrLoadedEvent(userSetting);
+            EXPECT_TRUE(renderer.GetRotatedDots());
         }
 
         TEST_F(HistoryTrailRendererTest, AsrClosingEventSavesVisibleSetting)
@@ -471,6 +521,50 @@ namespace UKControllerPluginTest {
                 renderer.maxAltitudeFilterUserSettingDescription,
                 "99999"
             )
+            )
+                .Times(1);
+
+            renderer.AsrLoadedEvent(userSetting);
+            renderer.AsrClosingEvent(userSetting);
+        }
+
+        TEST_F(HistoryTrailRendererTest, AsrClosingEventSavesDotFillSetting)
+        {
+            EXPECT_CALL(mockUserSettingProvider, GetKey(_))
+                .WillRepeatedly(Return(""));
+
+            EXPECT_CALL(mockUserSettingProvider, SetKey(_, _, _))
+                .WillRepeatedly(Return());
+
+            EXPECT_CALL(
+                mockUserSettingProvider,
+                SetKey(
+                    renderer.dotFillUserSettingKey,
+                    renderer.dotFillUserSettingDescription,
+                    "0"
+                )
+            )
+                .Times(1);
+
+            renderer.AsrLoadedEvent(userSetting);
+            renderer.AsrClosingEvent(userSetting);
+        }
+
+        TEST_F(HistoryTrailRendererTest, AsrClosingEventSavesDotRotateSetting)
+        {
+            EXPECT_CALL(mockUserSettingProvider, GetKey(_))
+                .WillRepeatedly(Return(""));
+
+            EXPECT_CALL(mockUserSettingProvider, SetKey(_, _, _))
+                .WillRepeatedly(Return());
+
+            EXPECT_CALL(
+                mockUserSettingProvider,
+                SetKey(
+                    renderer.dotRotateUserSettingKey,
+                    renderer.dotRotateUserSettingDescription,
+                    "0"
+                )
             )
                 .Times(1);
 

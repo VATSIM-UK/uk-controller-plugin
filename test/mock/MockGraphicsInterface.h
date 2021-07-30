@@ -95,6 +95,14 @@ namespace UKControllerPluginTest {
                 {
                     this->FillRectRegularRect(area, brush);
                 }
+
+                MOCK_METHOD(
+                    void,
+                    DrawLine, (const Gdiplus::Pen&, const Gdiplus::PointF&, const Gdiplus::PointF&),
+                    (override)
+                );
+                MOCK_METHOD(void, FillCircle, (const Gdiplus::RectF&, const Gdiplus::Brush&), (override));
+                MOCK_METHOD(void, FillDiamond, (const Gdiplus::RectF&, const Gdiplus::Brush&), (override));
         };
     }  // namespace Windows
 }  // namespace UKControllerPluginTest

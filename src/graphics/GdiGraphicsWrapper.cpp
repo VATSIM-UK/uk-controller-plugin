@@ -104,6 +104,15 @@ namespace UKControllerPlugin {
             this->api->DrawLine(&pen, start, end);
         }
 
+        void GdiGraphicsWrapper::DrawLine(
+            const Gdiplus::Pen& pen,
+            const Gdiplus::PointF& start,
+            const Gdiplus::PointF& end
+        )
+        {
+            this->api->DrawLine(&pen, start, end);
+        }
+
         void GdiGraphicsWrapper::DrawPath(const Gdiplus::GraphicsPath& path, const Gdiplus::Pen& pen)
         {
             this->api->DrawPath(&pen, &path);
@@ -263,6 +272,22 @@ namespace UKControllerPlugin {
         void GdiGraphicsWrapper::FillPolygon(Gdiplus::Point* points, const Gdiplus::Brush& brush, int numPoints)
         {
             this->api->FillPolygon(&brush, points, numPoints);
+        }
+
+        void GdiGraphicsWrapper::FillCircle(const Gdiplus::RectF& area, const Gdiplus::Brush& brush)
+        {
+            this->api->FillEllipse(&brush, area);
+        }
+
+        void GdiGraphicsWrapper::FillDiamond(const Gdiplus::RectF& area, const Gdiplus::Brush& brush)
+        {
+            Gdiplus::PointF points[4] = {
+                Gdiplus::PointF(area.X, area.Y + (area.Height / 2)),
+                Gdiplus::PointF(area.X + (area.Width / 2), area.Y + area.Height),
+                Gdiplus::PointF(area.X + area.Width, area.Y + (area.Height / 2)),
+                Gdiplus::PointF(area.X + (area.Width / 2), area.Y)
+            };
+            api->FillPolygon(&brush, points, 4);
         }
     } // namespace Windows
 } // namespace UKControllerPlugin

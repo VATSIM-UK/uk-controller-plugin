@@ -56,7 +56,9 @@ namespace UKControllerPlugin {
             }
 
             // Add a point to the repo.
-            this->repository.GetAircraft(radarTarget.GetCallsign())->AddItem(radarTarget.GetPosition());
+            this->repository.GetAircraft(radarTarget.GetCallsign())->AddItem(
+                {radarTarget.GetHeading(), radarTarget.GetPosition()}
+            );
         }
     }  // namespace HistoryTrail
 }  // namespace UKControllerPlugin

@@ -6,7 +6,7 @@
 - Initial altitude assignment
 - Intention codes based on sector exit points
 - General and Local squawk assignment
-- History Trails
+- [History Trails](HistoryTrails.md)
 - Minimum Stack Levels
 - Countdown Timer with more granular times
 - Variable data (Initial Altitudes, Controller Positions, SIDs) updated by VATSIM UK's Sector File Team and downloaded
