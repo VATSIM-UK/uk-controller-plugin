@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "srd/SrdSearchDialog.h"
 #include "dialog/DialogCallArgument.h"
 #include "srd/SrdSearchParameters.h"

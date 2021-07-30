@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "datablock/DisplayTime.h"
 #include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"

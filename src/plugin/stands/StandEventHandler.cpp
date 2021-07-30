@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "stands/StandEventHandler.h"
 #include "push/PushEventSubscription.h"
 #include "api/ApiException.h"

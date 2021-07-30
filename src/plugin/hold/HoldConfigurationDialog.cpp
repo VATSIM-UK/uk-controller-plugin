@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "hold/HoldConfigurationDialog.h"
 #include "hold/HoldDisplayFunctions.h"
 #include "dialog/DialogCallArgument.h"

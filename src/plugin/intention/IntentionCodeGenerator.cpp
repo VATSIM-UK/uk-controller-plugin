@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "intention/IntentionCodeGenerator.h"
 #include "intention/AirfieldGroup.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"

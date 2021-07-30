@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "radarscreen/UKRadarScreen.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "integration/ClientInitialisationManager.h"
 #include "integration/InitialisationSuccessMessage.h"
 #include "integration/InitialisationFailureMessage.h"

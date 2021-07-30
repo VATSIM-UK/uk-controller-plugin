@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "bootstrap/PostInit.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/LoadDefaultUserSettings.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "integration/OutboundIntegrationMessageHandler.h"
 #include "integration/MessageInterface.h"
 #include "integration/IntegrationClient.h"

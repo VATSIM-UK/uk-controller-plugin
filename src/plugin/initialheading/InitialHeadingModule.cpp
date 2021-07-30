@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "initialheading/InitialHeadingModule.h"
 #include "initialheading/InitialHeadingEventHandler.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "euroscope/EuroScopeCFlightPlanWrapper.h"
 #include "squawk/SquawkValidator.h"
 

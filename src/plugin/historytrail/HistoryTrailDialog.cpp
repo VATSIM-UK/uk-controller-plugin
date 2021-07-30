@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "historytrail/HistoryTrailDialog.h"
 #include "historytrail/HistoryTrailData.h"
 #include "dialog/DialogCallArgument.h"

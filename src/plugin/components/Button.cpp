@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "components/Button.h"
 #include "components/ClickableArea.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"

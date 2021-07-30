@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "api/ApiConfigurationMenuItem.h"
 #include "api/LocateApiSettings.h"
 

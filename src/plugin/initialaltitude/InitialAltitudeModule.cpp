@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "initialaltitude/InitialAltitudeModule.h"
 #include "initialaltitude/InitialAltitudeEventHandler.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"

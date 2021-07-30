@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "wake/WakeCategoryMapper.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "stands/StandModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyLoaderInterface.h"

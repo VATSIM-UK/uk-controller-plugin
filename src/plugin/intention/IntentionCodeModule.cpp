@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "intention/IntentionCodeModule.h"
 #include "intention/IntentionCodeEventHandler.h"
 #include "intention/IntentionCodeFactory.h"

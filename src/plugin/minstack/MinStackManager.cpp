@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "minstack/MinStackManager.h"
 #include "helper/HelperFunctions.h"
 

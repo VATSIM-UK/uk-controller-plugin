@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "handoff/HandoffCollection.h"
 
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;

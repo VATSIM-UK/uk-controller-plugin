@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "intention/IntentionCodeUpdatedMessage.h"
 
 namespace UKControllerPlugin::IntentionCode {

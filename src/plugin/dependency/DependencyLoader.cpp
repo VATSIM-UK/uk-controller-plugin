@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "dependency/DependencyLoader.h"
 #include "helper/HelperFunctions.h"
 

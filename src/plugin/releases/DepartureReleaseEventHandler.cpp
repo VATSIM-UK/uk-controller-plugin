@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"

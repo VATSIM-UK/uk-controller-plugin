@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "navaids/NavaidModule.h"
 #include "navaids/NavaidCollection.h"
 #include "sectorfile/SectorFileCoordinates.h"

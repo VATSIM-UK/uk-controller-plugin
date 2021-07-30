@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "regional/RegionalPressureConfigurationDialog.h"
 #include "regional/RegionalPressureRenderedItem.h"
 #include "dialog/DialogCallArgument.h"

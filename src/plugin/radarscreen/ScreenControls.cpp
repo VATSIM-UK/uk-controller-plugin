@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "radarscreen/ScreenControls.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"

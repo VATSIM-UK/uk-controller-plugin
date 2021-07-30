@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "stands/CompareStands.h"
 
 namespace UKControllerPlugin {

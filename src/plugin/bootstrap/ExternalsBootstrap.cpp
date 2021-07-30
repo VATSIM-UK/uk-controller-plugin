@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "bootstrap/ExternalsBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "curl/CurlApi.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "tag/TagItemCollection.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "tag/TagItemInterface.h"

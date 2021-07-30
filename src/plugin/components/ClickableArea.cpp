@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "components/ClickableArea.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"

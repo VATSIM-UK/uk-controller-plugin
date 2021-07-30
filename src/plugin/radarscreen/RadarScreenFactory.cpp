@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "radarscreen/RadarScreenFactory.h"
 #include "radarscreen/UKRadarScreen.h"
 #include "bootstrap/PersistenceContainer.h"

@@ -1,5 +1,5 @@
 #pragma once
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "squawk/ApiSquawkAllocationHandler.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"

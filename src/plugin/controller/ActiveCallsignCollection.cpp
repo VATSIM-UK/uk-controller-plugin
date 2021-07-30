@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
 #include "controller/ActiveCallsign.h"

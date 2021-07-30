@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "notifications/NotificationsRepositoryFactory.h"
 #include "time/ParseTimeStrings.h"
 #include "api/ApiException.h"

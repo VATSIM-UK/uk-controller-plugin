@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "bootstrap/HelperBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "setting/SettingRepository.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "login/Login.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"

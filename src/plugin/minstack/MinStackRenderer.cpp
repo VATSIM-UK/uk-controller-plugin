@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "minstack/MinStackRenderer.h"
 #include "minstack/MinStackManager.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"

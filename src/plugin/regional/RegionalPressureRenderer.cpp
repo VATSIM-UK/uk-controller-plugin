@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "regional/RegionalPressureRenderer.h"
 #include "regional/RegionalPressureManager.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"

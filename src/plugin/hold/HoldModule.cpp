@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "hold/HoldModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "hold/PublishedHoldCollectionFactory.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "releases/ReleaseModule.h"
 
 #include "euroscope/AsrEventHandlerCollection.h"

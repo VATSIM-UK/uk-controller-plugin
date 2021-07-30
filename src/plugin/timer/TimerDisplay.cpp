@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "timer/TimerDisplay.h"
 #include "helper/HelperFunctions.h"
 #include "time/SystemClock.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "squawk/SquawkAssignment.h"
 #include "ownership/AirfieldOwnershipManager.h"
 #include "controller/ControllerPosition.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
 #include "flightinformationservice/FlightInformationServiceTagItem.h"
 #include "bootstrap/PersistenceContainer.h"

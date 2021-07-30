@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "plugin/PluginHelpPage.h"
 
 using UKControllerPlugin::Windows::WinApiInterface;

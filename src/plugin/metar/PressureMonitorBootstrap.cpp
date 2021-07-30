@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "metar/PressureMonitorBootstrap.h"
 #include "metar/PressureMonitor.h"
 

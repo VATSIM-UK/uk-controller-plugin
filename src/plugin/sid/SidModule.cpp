@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "sid/SidModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "sid/SidCollectionFactory.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "handoff/HandoffEventHandler.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "controller/ControllerPositionHierarchy.h"

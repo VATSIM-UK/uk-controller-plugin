@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "releases/DepartureReleaseCountdownColours.h"
 #include "releases/DepartureReleaseColours.h"
 #include "time/SystemClock.h"

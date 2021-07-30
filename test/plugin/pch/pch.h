@@ -4,7 +4,7 @@
 //
 #pragma once
 
-#include "pch/stdafx.h"
+#include "../../src/plugin/pch/pch.h"
 #include "euroscope/EuroScopePlugIn.h"
 
 // Ignore warnings about uninitialised variables in the Gmock headers

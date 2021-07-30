@@ -1,5 +1,5 @@
 #pragma once
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "integration/IntegrationServer.h"
 #include "integration/InboundIntegrationMessageHandler.h"
 #include "integration/OutboundIntegrationEventHandler.h"

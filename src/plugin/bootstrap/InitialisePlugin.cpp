@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "bootstrap/InitialisePlugin.h"
 #include "api/ApiAuthChecker.h"
 #include "bootstrap/CollectionBootstrap.h"

@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "controller/ActiveCallsignCollection.h"

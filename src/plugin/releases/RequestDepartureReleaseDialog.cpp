@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "releases/RequestDepartureReleaseDialog.h"
 #include "DepartureReleaseEventHandler.h"
 #include "dialog/DialogCallArgument.h"

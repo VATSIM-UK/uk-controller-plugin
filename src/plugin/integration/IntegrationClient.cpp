@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "integration/IntegrationClient.h"
 #include "integration/IntegrationConnection.h"
 #include "integration/MessageType.h"

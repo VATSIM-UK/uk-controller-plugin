@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "flightplan/StoredFlightplan.h"
 #include "squawk/SquawkValidator.h"
 #include "helper/HelperFunctions.h"

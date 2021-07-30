@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "hold/HoldDisplayFactory.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "hold/HoldManager.h"

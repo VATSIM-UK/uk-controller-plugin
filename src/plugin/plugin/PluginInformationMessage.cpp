@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "plugin/PluginInformationMessage.h"
 #include "update/PluginVersion.h"
 #include "helper/HelperFunctions.h"

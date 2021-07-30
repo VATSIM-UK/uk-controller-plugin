@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "handoff/HandoffModule.h"
 #include "handoff/HandoffEventHandler.h"
 #include "handoff/HandoffCollectionFactory.h"

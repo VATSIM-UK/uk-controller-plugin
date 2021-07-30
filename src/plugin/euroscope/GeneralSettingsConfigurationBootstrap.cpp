@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/GeneralSettingsConfiguration.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"

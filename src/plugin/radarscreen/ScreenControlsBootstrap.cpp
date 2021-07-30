@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "radarscreen/ScreenControlsBootstrap.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "radarscreen/ScreenControls.h"

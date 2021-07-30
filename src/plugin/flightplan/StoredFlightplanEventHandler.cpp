@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "flightplan/StoredFlightplanEventHandler.h"
 #include "flightplan/StoredFlightplan.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"

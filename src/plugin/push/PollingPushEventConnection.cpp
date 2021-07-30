@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "push/PollingPushEventConnection.h"
 
 #include "PushEventProcessorCollection.h"

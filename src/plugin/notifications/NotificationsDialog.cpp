@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "notifications/NotificationsDialog.h"
 #include "api/ApiException.h"
 #include "dialog/DialogCallArgument.h"

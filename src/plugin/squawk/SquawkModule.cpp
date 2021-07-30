@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "squawk/SquawkModule.h"
 #include "squawk/SquawkEventHandler.h"
 #include "squawk/SquawkGenerator.h"

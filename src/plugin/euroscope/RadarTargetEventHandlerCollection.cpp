@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "euroscope/RadarTargetEventHandlerCollection.h"
 #include "euroscope/RadarTargetEventHandlerInterface.h"
 

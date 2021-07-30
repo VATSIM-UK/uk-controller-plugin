@@ -324,7 +324,7 @@
     <ClInclude Include="squawk\SquawkGenerator.h" />
     <ClInclude Include="squawk\SquawkModule.h" />
     <ClInclude Include="squawk\SquawkRequest.h" />
-    <ClInclude Include="pch\stdafx.h" />
+    <ClInclude Include="pch\pch.h" />
     <ClInclude Include="srd\SrdModule.h" />
     <ClInclude Include="srd\SrdSearchDialog.h" />
     <ClInclude Include="srd\SrdSearchHandler.h" />
@@ -606,7 +606,7 @@
     <ClCompile Include="squawk\SquawkGenerator.cpp" />
     <ClCompile Include="squawk\SquawkModule.cpp" />
     <ClCompile Include="squawk\SquawkRequest.cpp" />
-    <ClCompile Include="pch\stdafx.cpp">
+    <ClCompile Include="pch\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -696,7 +696,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);DISABLE_VERSION_CHECK;CURL_STATICLIB;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(ProjectDir)..\utils;$(SolutionDir)resource;$(SolutionDir)third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(ProjectDir);$(ProjectDir)..\utils;$(SolutionDir)resource;$(SolutionDir)third_party;</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -708,7 +708,7 @@
       <ShowIncludes>false</ShowIncludes>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/Zm200 %(AdditionalOptions)</AdditionalOptions>
-      <PrecompiledHeaderFile>pch\stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -730,14 +730,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);CURL_STATICLIB;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(ProjectDir)..\utils;$(SolutionDir)resource;$(SolutionDir)third_party;$(CURL_INCLUDEDIR)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(ProjectDir);$(ProjectDir)..\utils;$(SolutionDir)resource;$(SolutionDir)third_party;$(CURL_INCLUDEDIR)</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ForcedIncludeFiles />
       <AdditionalOptions>/Zm200 %(AdditionalOptions)</AdditionalOptions>
-      <PrecompiledHeaderFile>pch\stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>

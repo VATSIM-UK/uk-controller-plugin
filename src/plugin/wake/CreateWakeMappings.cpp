@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "wake/CreateWakeMappings.h"
 #include "message/UserMessager.h"
 #include "bootstrap/BootstrapWarningMessage.h"

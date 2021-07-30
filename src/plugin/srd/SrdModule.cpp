@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "srd/SrdModule.h"
 #include "srd/SrdSearchDialog.h"
 #include "srd/SrdSearchHandler.h"

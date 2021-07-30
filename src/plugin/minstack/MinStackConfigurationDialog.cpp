@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "minstack/MinStackConfigurationDialog.h"
 #include "dialog/DialogCallArgument.h"
 #include "helper/HelperFunctions.h"

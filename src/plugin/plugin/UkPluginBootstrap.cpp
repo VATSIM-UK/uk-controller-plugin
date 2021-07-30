@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "plugin/UkPluginBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "plugin/UKPlugin.h"

@@ -552,7 +552,7 @@
     <ClInclude Include="..\..\resource\resource.h">
       <Filter>resource</Filter>
     </ClInclude>
-    <ClInclude Include="pch\stdafx.h">
+    <ClInclude Include="pch\pch.h">
       <Filter>src\pch</Filter>
     </ClInclude>
     <ClInclude Include="offblock\EstimatedDepartureTimeBootstrap.h">
@@ -1494,7 +1494,7 @@
     <ClCompile Include="euroscope\RadarTargetEventHandlerCollection.cpp">
       <Filter>src\euroscope</Filter>
     </ClCompile>
-    <ClCompile Include="pch\stdafx.cpp">
+    <ClCompile Include="pch\pch.cpp">
       <Filter>src\pch</Filter>
     </ClCompile>
     <ClCompile Include="offblock\EstimatedDepartureTimeEventHandler.cpp">

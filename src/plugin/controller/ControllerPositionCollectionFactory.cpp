@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "controller/ControllerPositionCollectionFactory.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPosition.h"

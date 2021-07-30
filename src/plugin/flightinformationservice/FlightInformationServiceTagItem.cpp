@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "flightinformationservice/FlightInformationServiceTagItem.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"

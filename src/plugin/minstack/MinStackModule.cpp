@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "minstack/MinStackModule.h"
 #include "minstack/MinStackRenderer.h"
 #include "plugin/FunctionCallEventHandler.h"

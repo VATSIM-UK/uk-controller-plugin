@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "countdown/CountdownModule.h"
 #include "countdown/CountdownRenderer.h"
 #include "plugin/FunctionCallEventHandler.h"

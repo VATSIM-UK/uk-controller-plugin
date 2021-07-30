@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "historytrail/AircraftHistoryTrail.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"

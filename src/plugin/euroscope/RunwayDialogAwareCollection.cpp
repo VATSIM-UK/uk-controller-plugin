@@ -1,5 +1,5 @@
 #pragma once
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 
 using UKControllerPlugin::Euroscope::RunwayDialogAwareInterface;

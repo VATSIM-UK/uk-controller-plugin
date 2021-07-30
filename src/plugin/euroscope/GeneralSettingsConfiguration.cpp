@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "euroscope/GeneralSettingsConfiguration.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/GeneralSettingsDialog.h"

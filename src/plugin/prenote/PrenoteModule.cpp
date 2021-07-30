@@ -1,4 +1,4 @@
-#include "pch/stdafx.h"
+#include "pch/pch.h"
 #include "prenote/PrenoteModule.h"
 #include "prenote/PrenoteEventHandler.h"
 #include "dependency/DependencyLoaderInterface.h"
