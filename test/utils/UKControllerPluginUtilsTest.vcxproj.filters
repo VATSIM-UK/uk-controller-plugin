@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="test">
+      <UniqueIdentifier>{f99e0ead-d0b8-4cb4-8fba-be678bbc6a94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\api">
+      <UniqueIdentifier>{2e7e4770-890c-42df-b898-1e1dc663cc32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\dialog">
+      <UniqueIdentifier>{71c5832f-0c06-4bd6-b459-7eb4d6eab077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\helper">
+      <UniqueIdentifier>{226cc1c9-843f-4e76-820d-e0568ecf37fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\log">
+      <UniqueIdentifier>{716bdde6-0310-4f45-9544-33cd02f4e41d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\setting">
+      <UniqueIdentifier>{ca2c82f7-78b2-4234-9ce9-b2ad4c0085a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\squawk">
+      <UniqueIdentifier>{a77d1ab1-8c59-4278-8ee6-3b39c8e0701e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\curl">
+      <UniqueIdentifier>{d1824c16-4c4d-4170-878b-5b1a508e233f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\update">
+      <UniqueIdentifier>{20d9b212-c79e-4943-98fb-84548e113762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\duplicate">
+      <UniqueIdentifier>{a2b7eb07-1364-4d45-9612-b2e62a542df4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\data">
+      <UniqueIdentifier>{b6e5cdbb-acdc-4a2c-abdc-24c720bb3a87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\pch">
+      <UniqueIdentifier>{4c5bef54-70d8-4403-a3e2-9993f65b6827}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="api\ApiAuthCheckerTest.cpp">
+      <Filter>test\api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiHelperTest.cpp">
+      <Filter>test\api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiRequestBuilderTest.cpp">
+      <Filter>test\api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiResponseFactoryTest.cpp">
+      <Filter>test\api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiResponseTest.cpp">
+      <Filter>test\api</Filter>
+    </ClCompile>
+    <ClCompile Include="api\ApiResponseValidatorTest.cpp">
+      <Filter>test\api</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\DialogManagerTest.cpp">
+      <Filter>test\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\CompareDialogsTest.cpp">
+      <Filter>test\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\DialogDataTest.cpp">
+      <Filter>test\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\HelperFunctionsTest.cpp">
+      <Filter>test\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="log\LoggerBootstrapTest.cpp">
+      <Filter>test\log</Filter>
+    </ClCompile>
+    <ClCompile Include="setting\SettingRepositoryTest.cpp">
+      <Filter>test\setting</Filter>
+    </ClCompile>
+    <ClCompile Include="setting\SettingRepositoryFactoryTest.cpp">
+      <Filter>test\setting</Filter>
+    </ClCompile>
+    <ClCompile Include="squawk\SquawkValidatorTest.cpp">
+      <Filter>test\squawk</Filter>
+    </ClCompile>
+    <ClCompile Include="curl\CurlResponseTest.cpp">
+      <Filter>test\curl</Filter>
+    </ClCompile>
+    <ClCompile Include="curl\CurlRequestTest.cpp">
+      <Filter>test\curl</Filter>
+    </ClCompile>
+    <ClCompile Include="update\UpdateBinariesTest.cpp">
+      <Filter>test\update</Filter>
+    </ClCompile>
+    <ClCompile Include="duplicate\DuplicatePluginTest.cpp">
+      <Filter>test\duplicate</Filter>
+    </ClCompile>
+    <ClCompile Include="data\PluginDataLocationsTest.cpp">
+      <Filter>test\data</Filter>
+    </ClCompile>
+    <ClCompile Include="pch\pch.cpp">
+      <Filter>test\pch</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch\pch.h">
+      <Filter>test\pch</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

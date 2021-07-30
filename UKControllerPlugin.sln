@@ -19,7 +19,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUpdater",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUtils", "src\utils\UKControllerPluginUtils.vcxproj", "{141124E6-D339-464A-A759-0589A331B366}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUtilsTest", "msvc\UKControllerPluginUtilsTest\UKControllerPluginUtilsTest.vcxproj", "{D9C30989-36D2-43D1-877C-F33DC12C8FC0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUtilsTest", "test\utils\UKControllerPluginUtilsTest.vcxproj", "{D9C30989-36D2-43D1-877C-F33DC12C8FC0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginTestingUtils", "test\testingutils\UKControllerPluginTestingUtils.vcxproj", "{098F2947-0522-4B20-8F55-66C9336EFC0F}"
 EndProject
