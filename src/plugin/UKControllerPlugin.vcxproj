@@ -696,7 +696,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);DISABLE_VERSION_CHECK;CURL_STATICLIB;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(ProjectDir);$(ProjectDir)..\utils;$(SolutionDir)resource;$(SolutionDir)third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\utils;$(SolutionDir)resource;$(SolutionDir)third_party;</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -730,7 +730,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UKCONTROLLERPLUGIN_EXPORTS;%(PreprocessorDefinitions);CURL_STATICLIB;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(ProjectDir);$(ProjectDir)..\utils;$(SolutionDir)resource;$(SolutionDir)third_party;$(CURL_INCLUDEDIR)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\utils;$(SolutionDir)resource;$(SolutionDir)third_party;$(CURL_INCLUDEDIR)</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions />
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

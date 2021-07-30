@@ -81,7 +81,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories);$(ProjectDir);$(SolutionDir)src\loader;$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir);$(SolutionDir)src\loader;$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -101,7 +101,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>None</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories);$(ProjectDir);$(SolutionDir)src\loader;$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir);$(SolutionDir)src\loader;$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -105,7 +105,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(ProjectDir);$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild />
@@ -137,7 +137,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(ProjectDir);$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ForcedIncludeFiles>pch/pch.h</ForcedIncludeFiles>

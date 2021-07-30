@@ -95,7 +95,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)resource;$(SolutionDir)src\utils;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(ProjectDir);$(SolutionDir)resource;$(SolutionDir)src\utils;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -118,7 +118,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)resource;$(SolutionDir)src\utils;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(ProjectDir);$(SolutionDir)resource;$(SolutionDir)src\utils;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
