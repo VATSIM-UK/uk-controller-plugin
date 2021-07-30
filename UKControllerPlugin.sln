@@ -1,30 +1,27 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPlugin", "msvc\UKControllerPlugin\UKControllerPlugin.vcxproj", "{6F93F8C0-6773-4353-B7DD-B14DBD3F826B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPlugin", "src\plugin\UKControllerPlugin.vcxproj", "{6F93F8C0-6773-4353-B7DD-B14DBD3F826B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{141124E6-D339-464A-A759-0589A331B366} = {141124E6-D339-464A-A759-0589A331B366}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginTest", "msvc\UKControllerPluginTest\UKControllerPluginTest.vcxproj", "{3C70CD05-DD99-406E-85AF-2A966B9CC675}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginTest", "test\plugin\UKControllerPluginTest.vcxproj", "{3C70CD05-DD99-406E-85AF-2A966B9CC675}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginLoader", "msvc\UKControllerPluginLoader\UKControllerPluginLoader.vcxproj", "{0136D9E8-6EFC-450A-B992-0F928101AF2C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginLoader", "src\loader\UKControllerPluginLoader.vcxproj", "{0136D9E8-6EFC-450A-B992-0F928101AF2C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A7D1D345-7C9D-44E4-9337-B8C265D0CE1E} = {A7D1D345-7C9D-44E4-9337-B8C265D0CE1E}
-		{6F93F8C0-6773-4353-B7DD-B14DBD3F826B} = {6F93F8C0-6773-4353-B7DD-B14DBD3F826B}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUpdater", "msvc\UKControllerPluginUpdater\UKControllerPluginUpdater.vcxproj", "{A7D1D345-7C9D-44E4-9337-B8C265D0CE1E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6F93F8C0-6773-4353-B7DD-B14DBD3F826B} = {6F93F8C0-6773-4353-B7DD-B14DBD3F826B}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUpdater", "src\updater\UKControllerPluginUpdater.vcxproj", "{A7D1D345-7C9D-44E4-9337-B8C265D0CE1E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUtils", "msvc\UKControllerPluginUtils\UKControllerPluginUtils.vcxproj", "{141124E6-D339-464A-A759-0589A331B366}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUtils", "src\utils\UKControllerPluginUtils.vcxproj", "{141124E6-D339-464A-A759-0589A331B366}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUtilsTest", "msvc\UKControllerPluginUtilsTest\UKControllerPluginUtilsTest.vcxproj", "{D9C30989-36D2-43D1-877C-F33DC12C8FC0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginTestingUtils", "msvc\UKControllerPluginTestingUtils\UKControllerPluginTestingUtils.vcxproj", "{098F2947-0522-4B20-8F55-66C9336EFC0F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginTestingUtils", "test\testingutils\UKControllerPluginTestingUtils.vcxproj", "{098F2947-0522-4B20-8F55-66C9336EFC0F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UKControllerPluginUpdaterTest", "msvc\UKControllerPluginUpdaterTest\UKControllerPluginUpdaterTest.vcxproj", "{6180D883-D208-48BE-9CFD-45602FC5D2E0}"
 EndProject
@@ -77,8 +74,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E66A8B71-97BA-4E8F-BBF1-625958342CB5}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {E66A8B71-97BA-4E8F-BBF1-625958342CB5}
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution
 		PrimaryVersionType = AssemblyInfoVersionAttribute

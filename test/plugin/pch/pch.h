@@ -4,10 +4,12 @@
 //
 #pragma once
 
-#include "pch/pch.h"
+#include "pch/stdafx.h"
+#include "euroscope/EuroScopePlugIn.h"
 
 // Ignore warnings about uninitialised variables in the Gmock headers
 #pragma warning( push )
 #pragma warning( disable : 26495 26451 28251)
 #include "gmock/gmock.h"
+#include "helper/Matchers.h"
 #pragma warning( pop )
