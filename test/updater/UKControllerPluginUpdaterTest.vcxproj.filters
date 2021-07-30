@@ -9,21 +9,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\test\pch\updatertestpch.cpp">
+    <ClCompile Include="pch\pch.cpp">
       <Filter>pch</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test\test\updater\PerformUpdatesTest.cpp">
+    <ClCompile Include="updater\PerformUpdatesTest.cpp">
       <Filter>updater</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\test\pch\updatertestpch.h">
+    <ClInclude Include="pch\pch.h">
       <Filter>pch</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

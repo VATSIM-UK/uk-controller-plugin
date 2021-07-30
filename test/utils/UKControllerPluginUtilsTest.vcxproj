@@ -38,9 +38,9 @@
     <ClInclude Include="pch\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\googlemock\GoogleMock.vcxproj">
+      <Project>{2d273732-22bb-401b-8bea-1cb210b59ba2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\testingutils\UKControllerPluginTestingUtils.vcxproj">
       <Project>{098f2947-0522-4b20-8f55-66c9336efc0f}</Project>
     </ProjectReference>
@@ -105,7 +105,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild />
@@ -137,7 +137,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);STATIC_LIBCURL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)src\utils;$(ProjectDir)..\testingutils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ForcedIncludeFiles>pch/pch.h</ForcedIncludeFiles>
@@ -158,18 +158,10 @@
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\packages\gmock.1.10.0\build\native\gmock.targets" Condition="Exists('..\..\packages\gmock.1.10.0\build\native\gmock.targets')" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
   <ProjectExtensions>
     <VisualStudio>
       <UserProperties BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\gmock.1.10.0\build\native\gmock.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\gmock.1.10.0\build\native\gmock.targets'))" />
-  </Target>
 </Project>

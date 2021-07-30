@@ -4,8 +4,6 @@
     <ClCompile Include="pch\pch.cpp">
       <Filter>pch</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
     <ClCompile Include="helper\TestingFunctions.cpp">
       <Filter>helper</Filter>
     </ClCompile>
@@ -61,8 +59,5 @@
     <Filter Include="pch">
       <UniqueIdentifier>{42ceffa4-35ec-4838-8b14-82299a38d87e}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

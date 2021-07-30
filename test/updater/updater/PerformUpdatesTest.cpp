@@ -1,4 +1,4 @@
-#include "pch/updatertestpch.h"
+#include "pch/pch.h"
 #include "api/ApiException.h"
 #include "updater/PerformUpdates.h"
 #include "mock/MockWinApi.h"

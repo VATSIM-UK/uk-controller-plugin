@@ -35,7 +35,9 @@
     <ClInclude Include="pch\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\googlemock\GoogleMock.vcxproj">
+      <Project>{2d273732-22bb-401b-8bea-1cb210b59ba2}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -93,7 +95,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)resource;$(SolutionDir)src\utils;$(SolutionDir)third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)resource;$(SolutionDir)src\utils;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -116,7 +118,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)resource;$(SolutionDir)src\utils;$(SolutionDir)third_party;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StlIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)lib\plugin\include;$(ProjectDir);$(SolutionDir)resource;$(SolutionDir)src\utils;$(SolutionDir)third_party</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -132,18 +134,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\packages\gmock.1.10.0\build\native\gmock.targets" Condition="Exists('..\..\packages\gmock.1.10.0\build\native\gmock.targets')" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
   <ProjectExtensions>
     <VisualStudio>
       <UserProperties BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\gmock.1.10.0\build\native\gmock.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\gmock.1.10.0\build\native\gmock.targets'))" />
-  </Target>
 </Project>

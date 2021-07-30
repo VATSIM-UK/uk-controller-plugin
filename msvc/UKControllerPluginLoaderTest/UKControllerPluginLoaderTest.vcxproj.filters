@@ -16,7 +16,4 @@
   <ItemGroup>
     <ClInclude Include="..\..\test\pch\loadertestpch.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
 </Project>
