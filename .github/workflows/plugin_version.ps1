@@ -19,5 +19,5 @@ Function Build-Version {
 
 $buildVersion = Build-Version;
 echo "Building version $buildVersion"
-$versionFile = ".\\src\update\\PluginVersion.cpp"
+$versionFile = ".\\src\\utils\\update\\PluginVersion.cpp"
 (Get-Content $versionFile).replace("#VERSION_STRING#", "$buildVersion") | Set-Content $versionFile
