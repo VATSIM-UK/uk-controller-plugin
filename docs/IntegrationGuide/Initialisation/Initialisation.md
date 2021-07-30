@@ -13,16 +13,16 @@ The initialisation message is structured as follows.
     "type": "initialise",
     "version": 1,
     "data": {
-        "integration_name": "string",
-        "integration_version": "string",
+        "integration_name": "My Integration",
+        "integration_version": "v1.5-beta1",
         "event_subscriptions": [
             {
-                "type": "string",
-                "version": "integer"
+                "type": "event_one",
+                "version": 1
             },
             {
-                "type": "string",
-                "version": "integer"
+                "type": "event_two",
+                "version": 2
             }
         ]
     }
