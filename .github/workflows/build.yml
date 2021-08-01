@@ -60,7 +60,7 @@ jobs:
       - name: Setup Nuget
         uses: nuget/setup-nuget@v1
         with:
-          nuget-version: '5.x'
+          nuget-version: '5.10'
 
       - name: Restore Nuget Packages
         run: |
