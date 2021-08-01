@@ -14,16 +14,9 @@ set(src__loader
 )
 source_group("src\\loader" FILES ${src__loader})
 
-set(src__pch
-    "pch/pch.cpp"
-    "pch/pch.h"
-)
-source_group("src\\pch" FILES ${src__pch})
-
 set(ALL_FILES
     ${src}
     ${src__loader}
-    ${src__pch}
 )
 
 ################################################################################
@@ -31,7 +24,7 @@ set(ALL_FILES
 ################################################################################
 add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
 
-add_precompiled_header(${PROJECT_NAME} "pch.h" ".")
+target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE UKControllerPluginLoader)
@@ -62,6 +55,18 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../utils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
+
+################################################################################
+# Link directories for cURL
+################################################################################
+target_link_directories(
+        ${PROJECT_NAME} PUBLIC
+        $ENV{CURL_DEBUG_LIBRARYDIR}
+        $ENV{CURL_LIBRARYDIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
 )
 
 ################################################################################

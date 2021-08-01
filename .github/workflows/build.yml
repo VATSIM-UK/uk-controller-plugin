@@ -101,6 +101,9 @@ jobs:
       - name: Run Build
         run: msbuild msvc/UKControllerPlugin.sln /verbosity:minimal /property:Configuration=Release -m /warnaserror
 
+      - name: Run Utils Tests
+        run: ".\\bin\\Release\\UKControllerPluginUtilsTest.exe"
+
       - name: Run Loader Tests
         run: ".\\bin\\Release\\UKControllerPluginLoaderTest.exe"
 

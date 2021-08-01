@@ -23,7 +23,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
-add_precompiled_header(${PROJECT_NAME} "pch.h" ".")
+target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -62,6 +62,17 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
+)
+
+################################################################################
+# Link directories
+################################################################################
+target_link_directories(
+        ${PROJECT_NAME} PUBLIC
+        $ENV{CURL_DEBUG_LIBRARYDIR}
+        $ENV{CURL_LIBRARYDIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+        ${CMAKE_BINARY_DIR}
 )
 
 ################################################################################
@@ -129,8 +140,8 @@ add_dependencies(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PUBLIC
     GoogleMock
     UKControllerPluginTestingUtils
-    UKControllerPluginUpdater
     UKControllerPluginUtils
+    UKControllerPluginUpdater
 )
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES

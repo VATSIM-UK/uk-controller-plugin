@@ -87,7 +87,7 @@ set(ALL_FILES
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 
-add_precompiled_header(${PROJECT_NAME} "pch.h" ".")
+target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE UKControllerPluginTest)
@@ -130,6 +130,16 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../testingutils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
+)
+
+################################################################################
+# Link directories
+################################################################################
+target_link_directories(
+        ${PROJECT_NAME} PUBLIC
+        $ENV{CURL_DEBUG_LIBRARYDIR}
+        $ENV{CURL_LIBRARYDIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
 )
 
 ################################################################################

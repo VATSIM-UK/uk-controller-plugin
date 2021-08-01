@@ -538,12 +538,6 @@ set(src__ownership
 )
 source_group("src\\ownership" FILES ${src__ownership})
 
-set(src__pch
-    "pch/pch.cpp"
-    "pch/pch.h"
-)
-source_group("src\\pch" FILES ${src__pch})
-
 set(src__plugin
     "plugin/ForceUpdate.cpp"
     "plugin/ForceUpdate.h"
@@ -830,7 +824,6 @@ set(ALL_FILES
     ${src__oceanic}
     ${src__offblock}
     ${src__ownership}
-    ${src__pch}
     ${src__plugin}
     ${src__prenote}
     ${src__push}
@@ -855,7 +848,7 @@ set(ALL_FILES
 ################################################################################
 add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
 
-add_precompiled_header(${PROJECT_NAME} "pch.h" ".")
+target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE UKControllerPlugin)
@@ -906,15 +899,24 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 ################################################################################
+# Link directories for cURL
+################################################################################
+target_link_directories(
+    ${PROJECT_NAME} PUBLIC
+    $ENV{CURL_DEBUG_LIBRARYDIR}
+    $ENV{CURL_LIBRARYDIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+)
+
+################################################################################
 # Compile definitions
 ################################################################################
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     "$<$<CONFIG:Debug>:"
         "_DEBUG;"
-        "DISABLE_VERSION_CHECK"
     ">"
     "$<$<CONFIG:Release>:"
-        "NDEBUG"
+        "NDEBUG;"
     ">"
     "WIN32;"
     "_WINDOWS;"
