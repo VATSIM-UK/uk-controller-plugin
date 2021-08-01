@@ -108,13 +108,6 @@ jobs:
 
       - name: Run Tests
         run: ctest -C Release --output-on-failure
-
-      # Run the linter
-      - name: Install Cpplint
-        run: pip install cpplint
-
-      - name: Run Lint
-        run: cpplint --quiet --recursive src/ test/
       
       # Upload artifacts
       - name: Upload Core Binary As Artifact
@@ -134,12 +127,28 @@ jobs:
         with:
           name: UKControllerPlugin.dll
           path: ".\\bin\\Release\\UKControllerPlugin.dll"
-          
+
+  lint:
+    name: Lint
+    runs-on: windows-latest
+    concurrency:
+      group: ukcp-build-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        
+      - name: Install Cpplint
+        run: pip install cpplint
+
+      - name: Run Lint
+        run: cpplint --quiet --recursive src/ test/
+
   release:
     name: Release
     runs-on: windows-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [build]
+    needs: [build, lint]
     concurrency:
       group: ukcp-release
       cancel-in-progress: false
