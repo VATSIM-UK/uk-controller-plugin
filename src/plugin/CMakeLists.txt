@@ -1,10 +1,18 @@
 set(PROJECT_NAME UKControllerPluginCore)
 
 ################################################################################
+# Resources
+################################################################################
+
+set(rc_flags "/l 0x809")
+set(CMAKE_RC_FLAGS ${rc_flags})
+
+################################################################################
 # Source groups
 ################################################################################
 set(resource
     "../../resource/resource.h"
+    "../../resource/UKControllerPlugin.rc"
 )
 source_group("resource" FILES ${resource})
 
