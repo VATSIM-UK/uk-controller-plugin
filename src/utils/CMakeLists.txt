@@ -10,14 +10,14 @@ ENDIF()
 # Check for curl libraries
 if (DEFINED ENV{CURL_LIBRARYDIR})
     message("Curl library directory set to $ENV{CURL_LIBRARYDIR}")
-ELSE()
+ELSEIF(${CMAKE_BUILD_TYPE} STREQUAL "Release")
     message(FATAL_ERROR "Curl library directory not set, please set ENV::CURL_LIBRARYDIR")
 ENDIF()
 
 # Check for curl libraries (debug)
 if (DEFINED ENV{CURL_DEBUG_LIBRARYDIR})
     message("Curl debug library directory set to $ENV{CURL_DEBUG_LIBRARYDIR}")
-ELSE()
+ELSEIF(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     message(FATAL_ERROR "Curl debug library directory not set, please set ENV::CURL_DEBUG_LIBRARYDIR")
 ENDIF()
 
