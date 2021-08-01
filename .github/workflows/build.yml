@@ -57,11 +57,13 @@ jobs:
           echo "CURL_INCLUDEDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ipv6-sspi-schannel\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "CURL_LIBRARYDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ipv6-sspi-schannel\\lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Restore Nuget Packages
-      - uses: nuget/setup-nuget@v1
+      - name: Setup Nuget
+        uses: nuget/setup-nuget@v1
         with:
           nuget-version: '5.x'
-      - run: nuget restore ../../test/googlemock/packages.config
+
+      - name: Restore Nuget Packages
+        run: nuget restore ../../test/googlemock/packages.config
 
       # Setup all the yarn things and node modules
       - name: Setup Yarn
