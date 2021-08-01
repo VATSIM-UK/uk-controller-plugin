@@ -30,6 +30,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(WakeModuleTest, ItAddsToFlightplanHandler)
         {
+            ADD_FAILURE();
             BootstrapPlugin(this->container, this->dependencies);
             EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
         }

@@ -1,4 +1,4 @@
-set(PROJECT_NAME UKControllerCoreTest)
+set(PROJECT_NAME UKControllerPluginCoreTest)
 
 ################################################################################
 # Source groups

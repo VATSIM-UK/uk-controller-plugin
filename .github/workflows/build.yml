@@ -109,6 +109,10 @@ jobs:
       - name: Run Tests
         run: ctest -C Release --output-on-failure
 
+      # Run the linter
+      - name: Install Cpplint
+        run: pip install cpplint
+
       - name: Run Lint
         run: cpplint --quiet --recursive src/ test/
       
