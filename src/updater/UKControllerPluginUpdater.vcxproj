@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -10,121 +13,203 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\utils\UKControllerPluginUtils.vcxproj">
-      <Project>{141124e6-d339-464a-a759-0589a331b366}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
-    </ClCompile>
-    <ClCompile Include="pch\pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="updater\PerformUpdates.cpp">
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch\pch.h" />
-    <ClInclude Include="updater\PerformUpdates.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{F1917A81-16F5-3E92-A377-2292A3E62A27}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{A7D1D345-7C9D-44E4-9337-B8C265D0CE1E}</ProjectGuid>
-    <RootNamespace>UKControllerPluginUpdater</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <Platform>Win32</Platform>
     <ProjectName>UKControllerPluginUpdater</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(ProjectDir);$(SolutionDir)src;$(SolutionDir)third_party;</IncludePath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(LibraryPath);$(SolutionDir)lib;$(CURL_DEBUG_LIBRARYDIR)</LibraryPath>
-    <TargetName>$(ProjectName)</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(ProjectDir);$(SolutionDir)src;$(SolutionDir)third_party)</IncludePath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(LibraryPath);$(SolutionDir)lib;$(CURL_LIBRARYDIR)</LibraryPath>
-    <TargetName>$(ProjectName)</TargetName>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\bin\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UKControllerPluginUpdater.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UKControllerPluginUpdater</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\bin\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UKControllerPluginUpdater.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UKControllerPluginUpdater</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.dll</TargetExt>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);CURL_STATICLIB</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)..\utils;$(SolutionDir)third_party;</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/UKControllerPluginUpdater.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SDLCheck>true</SDLCheck>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_DEBUG;WIN32;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;CURL_STATICLIB;UNICODE;_UNICODE;CMAKE_INTDIR="Debug";UKControllerPluginUpdater_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;CURL_STATICLIB;UNICODE;_UNICODE;CMAKE_INTDIR=\"Debug\";UKControllerPluginUpdater_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>..\..\bin\Debug\UKControllerPluginUtils.lib;libcurl_a_debug.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;EuroScopePlugInDll.lib;Winmm.lib;Shell32.lib;Ole32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-debug-static-ipv6-sspi-schannel/lib;E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-debug-static-ipv6-sspi-schannel/lib/$(Configuration);E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-release-static-ipv6-sspi-schannel/lib;E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-release-static-ipv6-sspi-schannel/lib/$(Configuration);E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/../../lib;E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/../../lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;Shell32.lib;Ole32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;libcurl_a_debug.lib</AdditionalDependencies>
-      <IgnoreAllDefaultLibraries>
-      </IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>LIBCMT;</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/Users/Andy/Documents/Projects/uk-controller-plugin/bin/Debug/UKControllerPluginUpdater.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/bin/Debug/UKControllerPluginUpdater.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);CURL_STATICLIB;</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)..\utils;$(SolutionDir)third_party;</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/UKControllerPluginUpdater.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SDLCheck>true</SDLCheck>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NDEBUG;WIN32;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;CURL_STATICLIB;UNICODE;_UNICODE;CMAKE_INTDIR="Release";UKControllerPluginUpdater_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;UKCONTROLLERPLUGINLOADER_EXPORTS;_WINDOWS;_USRDLL;CURL_STATICLIB;UNICODE;_UNICODE;CMAKE_INTDIR=\"Release\";UKControllerPluginUpdater_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>..\..\bin\Release\UKControllerPluginUtils.lib;libcurl_a.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;EuroScopePlugInDll.lib;Winmm.lib;Shell32.lib;Ole32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-debug-static-ipv6-sspi-schannel/lib;E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-debug-static-ipv6-sspi-schannel/lib/$(Configuration);E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-release-static-ipv6-sspi-schannel/lib;E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-release-static-ipv6-sspi-schannel/lib/$(Configuration);E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/../../lib;E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/../../lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);EuroScopePlugInDll.lib;Winmm.lib;Shell32.lib;Ole32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;crypt32.lib;libcurl_a.lib</AdditionalDependencies>
-      <IgnoreAllDefaultLibraries>
-      </IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>LIBCMT;</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/Users/Andy/Documents/Projects/uk-controller-plugin/bin/Release/UKControllerPluginUpdater.lib</ImportLibrary>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ProgramDataBaseFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/bin/Release/UKControllerPluginUpdater.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeLists.txt">
+      <StdOutEncoding>UTF-8</StdOutEncoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+"F:\Program Files (x86)\JetBrains\apps\CLion\ch-0\212.4746.93\bin\cmake\win\bin\cmake.exe" -SE:/Users/Andy/Documents/Projects/uk-controller-plugin -BE:/Users/Andy/Documents/Projects/uk-controller-plugin --check-stamp-file E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\CMake\Default.cmake;E:\Users\Andy\Documents\Projects\uk-controller-plugin\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+"F:\Program Files (x86)\JetBrains\apps\CLion\ch-0\212.4746.93\bin\cmake\win\bin\cmake.exe" -SE:/Users/Andy/Documents/Projects/uk-controller-plugin -BE:/Users/Andy/Documents/Projects/uk-controller-plugin --check-stamp-file E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\CMake\Default.cmake;E:\Users\Andy\Documents\Projects\uk-controller-plugin\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeFiles\UKControllerPluginUpdater.dir\cmake_pch.cxx">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/UKControllerPluginUpdater.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/UKControllerPluginUpdater.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\dllmain.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\updater\PerformUpdates.h" />
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\updater\PerformUpdates.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/CMakeFiles/UKControllerPluginUpdater.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeFiles\UKControllerPluginUpdater.dir\Debug\cmake_pch.hxx" />
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeFiles\UKControllerPluginUpdater.dir\Release\cmake_pch.hxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\ZERO_CHECK.vcxproj">
+      <Project>{14894EEA-D63F-30D3-A606-4359F75CA6BA}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\UKControllerPluginUtils.vcxproj">
+      <Project>{680E14D6-B9B3-32E2-A46C-B4A9CA5F4935}</Project>
+      <Name>UKControllerPluginUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

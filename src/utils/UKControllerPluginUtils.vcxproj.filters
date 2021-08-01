@@ -1,249 +1,267 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="api">
-      <UniqueIdentifier>{8d06d767-8689-4302-9e2c-f001928e60ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="log">
-      <UniqueIdentifier>{0eaa45c3-17fc-4dd0-b3d6-f80cfa5ac14b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="windows">
-      <UniqueIdentifier>{9f91bcb5-2ffb-4742-94bb-8be74d55fc0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="helper">
-      <UniqueIdentifier>{38f7a1f9-2355-4f74-82cc-d45c055141b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="squawk">
-      <UniqueIdentifier>{5d6aa859-8685-46c1-ae4d-218f700831f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="srd">
-      <UniqueIdentifier>{d97f2440-c968-4815-9d30-47d4c15444e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="dialog">
-      <UniqueIdentifier>{28fc7b64-2116-4db1-aa5c-52c3754fe4bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="setting">
-      <UniqueIdentifier>{1cc172b8-4f57-4f54-8a50-173291a852ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="curl">
-      <UniqueIdentifier>{4722456a-342e-49cf-a06e-dd7e88032023}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="data">
-      <UniqueIdentifier>{2dfec82f-06e2-4c84-9af1-d5500400ccca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="update">
-      <UniqueIdentifier>{e02f14a9-4982-47dc-8ac3-77c039ee27e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="duplicate">
-      <UniqueIdentifier>{2e91c81e-5b35-4bf3-9430-b2dc6020d6c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="pch">
-      <UniqueIdentifier>{b4cdaefd-3dbf-4d32-b706-3ca3f2511aa4}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="api\ApiAuthChecker.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\CMakeFiles\UKControllerPluginUtils.dir\cmake_pch.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiAuthChecker.cpp">
       <Filter>api</Filter>
     </ClCompile>
-    <ClCompile Include="api\ApiBootstrap.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiBootstrap.cpp">
       <Filter>api</Filter>
     </ClCompile>
-    <ClCompile Include="api\ApiHelper.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiHelper.cpp">
       <Filter>api</Filter>
     </ClCompile>
-    <ClCompile Include="api\ApiRequestBuilder.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiRequestBuilder.cpp">
       <Filter>api</Filter>
     </ClCompile>
-    <ClCompile Include="api\ApiResponse.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiResponse.cpp">
       <Filter>api</Filter>
     </ClCompile>
-    <ClCompile Include="api\ApiResponseFactory.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiResponseFactory.cpp">
       <Filter>api</Filter>
     </ClCompile>
-    <ClCompile Include="api\ApiResponseValidator.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiResponseValidator.cpp">
       <Filter>api</Filter>
     </ClCompile>
-    <ClCompile Include="api\LocateApiSettings.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\LocateApiSettings.cpp">
       <Filter>api</Filter>
     </ClCompile>
-    <ClCompile Include="curl\CurlApi.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\curl\CurlApi.cpp">
       <Filter>curl</Filter>
     </ClCompile>
-    <ClCompile Include="curl\CurlRequest.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\curl\CurlRequest.cpp">
       <Filter>curl</Filter>
     </ClCompile>
-    <ClCompile Include="curl\CurlResponse.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\curl\CurlResponse.cpp">
       <Filter>curl</Filter>
     </ClCompile>
-    <ClCompile Include="data\PluginDataLocations.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\data\PluginDataLocations.cpp">
       <Filter>data</Filter>
     </ClCompile>
-    <ClCompile Include="dialog\CompareDialogs.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\dialog\CompareDialogs.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
-    <ClCompile Include="dialog\DialogManager.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\dialog\DialogManager.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
-    <ClCompile Include="duplicate\DuplicatePlugin.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\duplicate\DuplicatePlugin.cpp">
       <Filter>duplicate</Filter>
     </ClCompile>
-    <ClCompile Include="helper\HelperFunctions.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\helper\HelperFunctions.cpp">
       <Filter>helper</Filter>
     </ClCompile>
-    <ClCompile Include="log\LoggerBootstrap.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\log\LoggerBootstrap.cpp">
       <Filter>log</Filter>
     </ClCompile>
-    <ClCompile Include="log\LoggerFunctions.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\log\LoggerFunctions.cpp">
       <Filter>log</Filter>
     </ClCompile>
-    <ClCompile Include="pch\pch.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\pch\pch.cpp">
       <Filter>pch</Filter>
     </ClCompile>
-    <ClCompile Include="setting\SettingRepository.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\setting\SettingRepository.cpp">
       <Filter>setting</Filter>
     </ClCompile>
-    <ClCompile Include="setting\SettingRepositoryFactory.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\setting\SettingRepositoryFactory.cpp">
       <Filter>setting</Filter>
     </ClCompile>
-    <ClCompile Include="squawk\SquawkValidator.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\squawk\SquawkValidator.cpp">
       <Filter>squawk</Filter>
     </ClCompile>
-    <ClCompile Include="update\LoadChangelog.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\update\LoadChangelog.cpp">
       <Filter>update</Filter>
     </ClCompile>
-    <ClCompile Include="update\PluginVersion.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\update\PluginVersion.cpp">
       <Filter>update</Filter>
     </ClCompile>
-    <ClCompile Include="update\UpdateBinaries.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\update\UpdateBinaries.cpp">
       <Filter>update</Filter>
     </ClCompile>
-    <ClCompile Include="windows\WinApi.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\windows\WinApi.cpp">
       <Filter>windows</Filter>
     </ClCompile>
-    <ClCompile Include="windows\WinApiBootstrap.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\windows\WinApiBootstrap.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="api\ApiAuthChecker.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiAuthChecker.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiBootstrap.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiBootstrap.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiException.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiException.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiHelper.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiHelper.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiInterface.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiInterface.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiNotAuthorisedException.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiNotAuthorisedException.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiNotFoundException.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiNotFoundException.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiRequestBuilder.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiRequestBuilder.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiResponse.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiResponse.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiResponseFactory.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiResponseFactory.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\ApiResponseValidator.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\ApiResponseValidator.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="api\LocateApiSettings.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\api\LocateApiSettings.h">
       <Filter>api</Filter>
     </ClInclude>
-    <ClInclude Include="curl\CurlApi.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\curl\CurlApi.h">
       <Filter>curl</Filter>
     </ClInclude>
-    <ClInclude Include="curl\CurlInterface.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\curl\CurlInterface.h">
       <Filter>curl</Filter>
     </ClInclude>
-    <ClInclude Include="curl\CurlRequest.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\curl\CurlRequest.h">
       <Filter>curl</Filter>
     </ClInclude>
-    <ClInclude Include="curl\CurlResponse.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\curl\CurlResponse.h">
       <Filter>curl</Filter>
     </ClInclude>
-    <ClInclude Include="curl\HttpException.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\curl\HttpException.h">
       <Filter>curl</Filter>
     </ClInclude>
-    <ClInclude Include="data\PluginDataLocations.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\data\PluginDataLocations.h">
       <Filter>data</Filter>
     </ClInclude>
-    <ClInclude Include="dialog\CompareDialogs.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\dialog\CompareDialogs.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="dialog\DialogCallArgument.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\dialog\DialogCallArgument.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="dialog\DialogData.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\dialog\DialogData.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="dialog\DialogManager.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\dialog\DialogManager.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="dialog\DialogProviderInterface.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\dialog\DialogProviderInterface.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="duplicate\DuplicatePlugin.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\duplicate\DuplicatePlugin.h">
       <Filter>duplicate</Filter>
     </ClInclude>
-    <ClInclude Include="helper\HelperFunctions.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\helper\HelperFunctions.h">
       <Filter>helper</Filter>
     </ClInclude>
-    <ClInclude Include="log\LoggerBootstrap.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\log\LoggerBootstrap.h">
       <Filter>log</Filter>
     </ClInclude>
-    <ClInclude Include="log\LoggerFunctions.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\log\LoggerFunctions.h">
       <Filter>log</Filter>
     </ClInclude>
-    <ClInclude Include="pch\pch.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\pch\pch.h">
       <Filter>pch</Filter>
     </ClInclude>
-    <ClInclude Include="setting\SettingRepository.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\setting\SettingRepository.h">
       <Filter>setting</Filter>
     </ClInclude>
-    <ClInclude Include="setting\SettingRepositoryFactory.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\setting\SettingRepositoryFactory.h">
       <Filter>setting</Filter>
     </ClInclude>
-    <ClInclude Include="setting\SettingValue.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\setting\SettingValue.h">
       <Filter>setting</Filter>
     </ClInclude>
-    <ClInclude Include="squawk\ApiSquawkAllocation.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\squawk\ApiSquawkAllocation.h">
       <Filter>squawk</Filter>
     </ClInclude>
-    <ClInclude Include="squawk\SquawkValidator.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\squawk\SquawkValidator.h">
       <Filter>squawk</Filter>
     </ClInclude>
-    <ClInclude Include="srd\SrdSearchParameters.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\srd\SrdSearchParameters.h">
       <Filter>srd</Filter>
     </ClInclude>
-    <ClInclude Include="update\LoadChangelog.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\update\LoadChangelog.h">
       <Filter>update</Filter>
     </ClInclude>
-    <ClInclude Include="update\PluginVersion.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\update\PluginVersion.h">
       <Filter>update</Filter>
     </ClInclude>
-    <ClInclude Include="update\UpdateBinaries.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\update\UpdateBinaries.h">
       <Filter>update</Filter>
     </ClInclude>
-    <ClInclude Include="windows\WinApi.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\windows\WinApi.h">
       <Filter>windows</Filter>
     </ClInclude>
-    <ClInclude Include="windows\WinApiBootstrap.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\windows\WinApiBootstrap.h">
       <Filter>windows</Filter>
     </ClInclude>
-    <ClInclude Include="windows\WinApiInterface.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\windows\WinApiInterface.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\CMakeFiles\UKControllerPluginUtils.dir\Debug\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\CMakeFiles\UKControllerPluginUtils.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Precompile Header File">
+      <UniqueIdentifier>{7E57ECD8-B663-3B08-B034-D872A723F357}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2A83C144-AB1F-36DD-B76C-F1777DA0763F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="api">
+      <UniqueIdentifier>{E1C05ED5-1733-3F2B-BEE8-CADCAA49888E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="curl">
+      <UniqueIdentifier>{B9C6BE56-63CB-3E7F-A59F-95355F8BDB80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{70D74FB6-03C0-3793-80DE-D9349051990D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dialog">
+      <UniqueIdentifier>{0758F1E9-741A-398C-8343-3F4A2E72569E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="duplicate">
+      <UniqueIdentifier>{EE109B17-A4E0-31DE-B691-7585B50380FC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helper">
+      <UniqueIdentifier>{E0665B22-C570-3BEF-9164-DB157C17FAF9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{6882DE8B-3B15-371B-BCD6-DC1AF1ABA5E0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{8BA44425-85AB-3617-942A-F909C9793A6F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="setting">
+      <UniqueIdentifier>{A3DFC46C-5E88-3365-AB64-F2226DC0D86E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="squawk">
+      <UniqueIdentifier>{225B8247-54FC-3B1D-B3F8-2B08E07B6F3F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="srd">
+      <UniqueIdentifier>{DE9C6164-223D-3A66-90E0-18668ED19176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="update">
+      <UniqueIdentifier>{7B534DB8-042E-3CBD-9FCF-7AE99CE3AC97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="windows">
+      <UniqueIdentifier>{6C08D181-CE48-34EB-88AC-4C52DDB02563}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

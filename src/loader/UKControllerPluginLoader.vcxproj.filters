@@ -1,37 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{26e7ee68-8296-4e79-bbb0-145c5686c543}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\loader">
-      <UniqueIdentifier>{9df25c84-816b-4a0d-9fbb-e898a4b28b0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\pch">
-      <UniqueIdentifier>{bebb372f-8c98-4bbd-82f8-6e5cc95006c7}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch\pch.h">
-      <Filter>src\pch</Filter>
-    </ClInclude>
-    <ClInclude Include="loader\loader.h">
-      <Filter>src\loader</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="pch\pch.cpp">
-      <Filter>src\pch</Filter>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\loader\CMakeFiles\UKControllerPluginLoader.dir\cmake_pch.cxx">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="loader\loader.cpp">
-      <Filter>src\loader</Filter>
-    </ClCompile>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\loader\dllmain.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\loader\loader\loader.cpp">
+      <Filter>src\loader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\loader\loader\loader.h">
+      <Filter>src\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\loader\CMakeFiles\UKControllerPluginLoader.dir\Debug\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\loader\CMakeFiles\UKControllerPluginLoader.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\loader\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Precompile Header File">
+      <UniqueIdentifier>{7E57ECD8-B663-3B08-B034-D872A723F357}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2A83C144-AB1F-36DD-B76C-F1777DA0763F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{D6927929-43D4-3098-94C7-48AEC3AA530D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\loader">
+      <UniqueIdentifier>{A73F041D-1500-3411-B550-3D8C8E38A82F}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

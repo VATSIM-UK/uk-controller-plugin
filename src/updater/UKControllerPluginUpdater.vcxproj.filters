@@ -1,28 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeFiles\UKControllerPluginUpdater.dir\cmake_pch.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\dllmain.cpp" />
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\updater\PerformUpdates.cpp">
+      <Filter>updater</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\updater\PerformUpdates.h">
+      <Filter>updater</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeFiles\UKControllerPluginUpdater.dir\Debug\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeFiles\UKControllerPluginUpdater.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Precompile Header File">
+      <UniqueIdentifier>{7E57ECD8-B663-3B08-B034-D872A723F357}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2A83C144-AB1F-36DD-B76C-F1777DA0763F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="updater">
-      <UniqueIdentifier>{3863582a-873a-4ca4-bcfa-ee6ef77386b8}</UniqueIdentifier>
+      <UniqueIdentifier>{3B0C6494-4C5E-3755-A308-54F0BB77DAE9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pch">
-      <UniqueIdentifier>{560570f1-1d77-4aad-bdd0-308618bbddea}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="updater\PerformUpdates.cpp">
-      <Filter>updater</Filter>
-    </ClCompile>
-    <ClCompile Include="pch\pch.cpp">
-      <Filter>pch</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="updater\PerformUpdates.h">
-      <Filter>updater</Filter>
-    </ClInclude>
-    <ClInclude Include="pch\pch.h">
-      <Filter>pch</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -9,141 +12,218 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6180d883-d208-48be-9cfd-45602fc5d2e0}</ProjectGuid>
+    <ProjectGuid>{161264C7-05A8-3D03-9A2C-6AD65FE16711}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <Platform>Win32</Platform>
+    <ProjectName>UKControllerPluginUpdaterTest</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings" />
-  <ImportGroup Label="Shared" />
-  <ImportGroup Label="PropertySheets" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(ProjectDir);$(SolutionDir)lib\include;$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)third_party\spdlog\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)lib;$(CURL_DEBUG_LIBRARYDIR);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\bin\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UKControllerPluginUpdaterTest.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UKControllerPluginUpdaterTest</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\bin\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UKControllerPluginUpdaterTest.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UKControllerPluginUpdaterTest</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VC_IncludePath);$(ProjectDir);$(SolutionDir)lib\include;$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(SolutionDir)third_party\spdlog\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)lib;$(CURL_LIBRARYDIR);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\googlemock\GoogleMock.vcxproj">
-      <Project>{2d273732-22bb-401b-8bea-1cb210b59ba2}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\testingutils\UKControllerPluginTestingUtils.vcxproj">
-      <Project>{098f2947-0522-4b20-8f55-66c9336efc0f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\updater\UKControllerPluginUpdater.vcxproj">
-      <Project>{a7d1d345-7c9d-44e4-9337-b8c265d0ce1e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\utils\UKControllerPluginUtils.vcxproj">
-      <Project>{141124e6-d339-464a-a759-0589a331b366}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="pch\pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="updater\PerformUpdatesTest.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch\pch.h" />
-  </ItemGroup>
-  <ItemDefinitionGroup />
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\testingutils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\googlemock\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(ProjectDir);$(ProjectDir)..\testingutils;$(SolutionDir)src\updater;$(SolutionDir)src\utils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>Winmm.lib;Shell32.lib;Ole32.lib;User32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;libcurl_a_debug.lib</AdditionalDependencies>
-      <AdditionalOptions>"$(SolutionDir)obj\UKControllerPluginUpdater\$(Configuration)\*.obj" %(AdditionalOptions)</AdditionalOptions>
-      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>X64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/UKControllerPluginUpdaterTest.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;_DEBUG;WIN32;_CONSOLE;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;UNICODE;_UNICODE;_CONSOLE;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\testingutils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\googlemock\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\testingutils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\googlemock\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
     <Link>
+      <AdditionalDependencies>..\..\bin\Debug\GoogleMock.lib;..\..\bin\Debug\UKControllerPluginTestingUtils.lib;..\..\bin\Debug\UKControllerPluginUtils.lib;..\..\bin\Debug\UKControllerPluginUpdater.lib;libcurl_a_debug.lib;Winmm.lib;Shell32.lib;Ole32.lib;User32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;..\..\bin\Debug\GoogleMock.lib;gdiplus.lib;..\..\bin\Debug\UKControllerPluginUtils.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;EuroScopePlugInDll.lib;Winmm.lib;Shell32.lib;Ole32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-debug-static-ipv6-sspi-schannel/lib;E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-debug-static-ipv6-sspi-schannel/lib/$(Configuration);E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-release-static-ipv6-sspi-schannel/lib;E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-release-static-ipv6-sspi-schannel/lib/$(Configuration);E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/../../lib;E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/../../lib/$(Configuration);E:/Users/Andy/Documents/Projects/uk-controller-plugin;E:/Users/Andy/Documents/Projects/uk-controller-plugin/$(Configuration);E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/../../lib;E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/../../lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <ImportLibrary>E:/Users/Andy/Documents/Projects/uk-controller-plugin/bin/Debug/UKControllerPluginUpdaterTest.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/bin/Debug/UKControllerPluginUpdaterTest.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch\pch.h</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\testingutils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\googlemock\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)packages\gmock.1.10.0\lib\native\include\;$(ProjectDir);$(ProjectDir)..\testingutils;$(SolutionDir)src\updater;$(SolutionDir)src\utils;$(SolutionDir)resource;$(SolutionDir)third_party</AdditionalIncludeDirectories>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>Winmm.lib;Shell32.lib;Ole32.lib;User32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;libcurl_a.lib</AdditionalDependencies>
-      <AdditionalOptions>"$(SolutionDir)obj\UKControllerPluginUpdater\$(Configuration)\*.obj" /LTCG %(AdditionalOptions)</AdditionalOptions>
-      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>X64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/UKControllerPluginUpdaterTest.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;NDEBUG;WIN32;_CONSOLE;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;UNICODE;_UNICODE;NDEBUG;_CONSOLE;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\testingutils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\googlemock\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\testingutils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\updater;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\googlemock\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\packages\gmock.1.10.0\lib\native\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\.;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\resource;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\..\..\third_party;E:\Users\Andy\Documents\Projects\libcurl\include;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\utils;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\..\..\third_party;E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>..\..\bin\Release\GoogleMock.lib;..\..\bin\Release\UKControllerPluginTestingUtils.lib;..\..\bin\Release\UKControllerPluginUtils.lib;..\..\bin\Release\UKControllerPluginUpdater.lib;libcurl_a.lib;Winmm.lib;Shell32.lib;Ole32.lib;User32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;..\..\bin\Release\GoogleMock.lib;gdiplus.lib;..\..\bin\Release\UKControllerPluginUtils.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;EuroScopePlugInDll.lib;Winmm.lib;Shell32.lib;Ole32.lib;crypt32.lib;Ws2_32.lib;Wldap32.lib;normaliz.lib;advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-debug-static-ipv6-sspi-schannel/lib;E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-debug-static-ipv6-sspi-schannel/lib/$(Configuration);E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-release-static-ipv6-sspi-schannel/lib;E:/Users/Andy/Documents/Projects/libcurl/builds/libcurl-vc-x86-release-static-ipv6-sspi-schannel/lib/$(Configuration);E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/../../lib;E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/../../lib/$(Configuration);E:/Users/Andy/Documents/Projects/uk-controller-plugin;E:/Users/Andy/Documents/Projects/uk-controller-plugin/$(Configuration);E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/../../lib;E:/Users/Andy/Documents/Projects/uk-controller-plugin/src/updater/../../lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/Users/Andy/Documents/Projects/uk-controller-plugin/bin/Release/UKControllerPluginUpdaterTest.lib</ImportLibrary>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ProgramDataBaseFile>E:/Users/Andy/Documents/Projects/uk-controller-plugin/bin/Release/UKControllerPluginUpdaterTest.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\CMakeLists.txt">
+      <StdOutEncoding>UTF-8</StdOutEncoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+"F:\Program Files (x86)\JetBrains\apps\CLion\ch-0\212.4746.93\bin\cmake\win\bin\cmake.exe" -SE:/Users/Andy/Documents/Projects/uk-controller-plugin -BE:/Users/Andy/Documents/Projects/uk-controller-plugin --check-stamp-file E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\CMake\Default.cmake;E:\Users\Andy\Documents\Projects\uk-controller-plugin\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+"F:\Program Files (x86)\JetBrains\apps\CLion\ch-0\212.4746.93\bin\cmake\win\bin\cmake.exe" -SE:/Users/Andy/Documents/Projects/uk-controller-plugin -BE:/Users/Andy/Documents/Projects/uk-controller-plugin --check-stamp-file E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\CMake\Default.cmake;E:\Users\Andy\Documents\Projects\uk-controller-plugin\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\CMakeFiles\UKControllerPluginUpdaterTest.dir\cmake_pch.cxx">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/UKControllerPluginUpdaterTest.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/UKControllerPluginUpdaterTest.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\pch\pch.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\pch\pch.h" />
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\updater\PerformUpdatesTest.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Users/Andy/Documents/Projects/uk-controller-plugin/test/updater/CMakeFiles/UKControllerPluginUpdaterTest.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <Object Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\UKControllerPluginUpdater.dir\$(Configuration)\cmake_pch.obj" />
+    <Object Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\UKControllerPluginUpdater.dir\$(Configuration)\dllmain.obj" />
+    <Object Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\UKControllerPluginUpdater.dir\$(Configuration)\PerformUpdates.obj" />
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\CMakeFiles\UKControllerPluginUpdaterTest.dir\Debug\cmake_pch.hxx" />
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\updater\CMakeFiles\UKControllerPluginUpdaterTest.dir\Release\cmake_pch.hxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\ZERO_CHECK.vcxproj">
+      <Project>{14894EEA-D63F-30D3-A606-4359F75CA6BA}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\googlemock\GoogleMock.vcxproj">
+      <Project>{E22D4789-5EC1-353A-98BE-4D1E87698CB9}</Project>
+      <Name>GoogleMock</Name>
+    </ProjectReference>
+    <ProjectReference Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\UKControllerPluginTestingUtils.vcxproj">
+      <Project>{2114A9DB-35B9-3F6F-92E9-7A8033E5C71E}</Project>
+      <Name>UKControllerPluginTestingUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\updater\UKControllerPluginUpdater.vcxproj">
+      <Project>{F1917A81-16F5-3E92-A377-2292A3E62A27}</Project>
+      <Name>UKControllerPluginUpdater</Name>
+    </ProjectReference>
+    <ProjectReference Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\src\utils\UKControllerPluginUtils.vcxproj">
+      <Project>{680E14D6-B9B3-32E2-A46C-B4A9CA5F4935}</Project>
+      <Name>UKControllerPluginUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
 </Project>

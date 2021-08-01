@@ -3,7 +3,6 @@
 #include "mock/MockWinApi.h"
 #include "mock/MockApiInterface.h"
 #include "api/ApiNotAuthorisedException.h"
-#include "api/ApiException.h"
 #include "setting/SettingRepository.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;

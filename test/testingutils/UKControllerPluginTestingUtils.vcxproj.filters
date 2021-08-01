@@ -1,63 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="pch\pch.cpp">
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\helper\ApiRequestHelperFunctions.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\helper\InitTests.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\helper\TestingFunctions.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\helper\TestLogger.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\pch\pch.cpp">
       <Filter>pch</Filter>
-    </ClCompile>
-    <ClCompile Include="helper\TestingFunctions.cpp">
-      <Filter>helper</Filter>
-    </ClCompile>
-    <ClCompile Include="helper\TestLogger.cpp">
-      <Filter>helper</Filter>
-    </ClCompile>
-    <ClCompile Include="helper\ApiRequestHelperFunctions.cpp">
-      <Filter>helper</Filter>
-    </ClCompile>
-    <ClCompile Include="helper\InitTests.cpp">
-      <Filter>helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch\pch.h">
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\helper\ApiRequestHelperFunctions.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\helper\Matchers.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\helper\TestEnvironment.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\helper\TestingFunctions.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\helper\TestLogger.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\mock\MockApiInterface.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\mock\MockCurlApi.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\mock\MockDialogProvider.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\mock\MockWinApi.h">
+      <Filter>mock</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\pch\pch.h">
       <Filter>pch</Filter>
-    </ClInclude>
-    <ClInclude Include="mock\MockCurlApi.h">
-      <Filter>mock</Filter>
-    </ClInclude>
-    <ClInclude Include="mock\MockDialogProvider.h">
-      <Filter>mock</Filter>
-    </ClInclude>
-    <ClInclude Include="mock\MockWinApi.h">
-      <Filter>mock</Filter>
-    </ClInclude>
-    <ClInclude Include="mock\MockApiInterface.h">
-      <Filter>mock</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\TestEnvironment.h">
-      <Filter>helper</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\TestingFunctions.h">
-      <Filter>helper</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\TestLogger.h">
-      <Filter>helper</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\ApiRequestHelperFunctions.h">
-      <Filter>helper</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\Matchers.h">
-      <Filter>helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="mock">
-      <UniqueIdentifier>{6658662c-365c-4d16-af31-00faf64a6d4e}</UniqueIdentifier>
-    </Filter>
+    <CustomBuild Include="E:\Users\Andy\Documents\Projects\uk-controller-plugin\test\testingutils\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <Filter Include="helper">
-      <UniqueIdentifier>{b599e2a8-e9f3-4213-a59f-7134817b4e61}</UniqueIdentifier>
+      <UniqueIdentifier>{E0665B22-C570-3BEF-9164-DB157C17FAF9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mock">
+      <UniqueIdentifier>{B57511F1-43CC-3852-93CD-7E914E45E262}</UniqueIdentifier>
     </Filter>
     <Filter Include="pch">
-      <UniqueIdentifier>{42ceffa4-35ec-4838-8b14-82299a38d87e}</UniqueIdentifier>
+      <UniqueIdentifier>{8BA44425-85AB-3617-942A-F909C9793A6F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
