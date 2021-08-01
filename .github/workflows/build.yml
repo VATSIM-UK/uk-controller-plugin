@@ -99,24 +99,13 @@ jobs:
       
       # Run the build and tests
       - name: Run Build
-        run: cmake
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles"
+          nmake
 
-      - name: Run Utils Tests
-        run: ".\\bin\\Release\\UKControllerPluginUtilsTest.exe"
-
-      - name: Run Loader Tests
-        run: ".\\bin\\Release\\UKControllerPluginLoaderTest.exe"
-
-      - name: Run Updater Tests
-        run: ".\\bin\\Release\\UKControllerPluginUpdaterTest.exe"
-
-      - name: Run Plugin Tests
-        run: ".\\bin\\Release\\UKControllerPluginTest.exe"
-
-      # Run the linter
-      - name: Install Cpplint
-        run: pip install cpplint
-
+      - name: Run Tests
+        run: ctest -C Release --output-on-failure
+        
       - name: Run Lint
         run: cpplint --quiet --recursive src/ test/
       

@@ -28,6 +28,7 @@ namespace UKControllerPluginTest {
                     timeInfo.tm_hour = hours;
                     timeInfo.tm_min = minutes;
                     timeInfo.tm_sec = seconds;
+                    timeInfo.tm_isdst = 0;
                     return std::chrono::system_clock::from_time_t(mktime(&timeInfo));
                 }
         };
