@@ -63,7 +63,8 @@ jobs:
           nuget-version: '5.x'
 
       - name: Restore Nuget Packages
-        run: nuget restore ../../test/googlemock/packages.config
+        run: |
+          nuget restore test/googlemock/packages.config
 
       # Setup all the yarn things and node modules
       - name: Setup Yarn
