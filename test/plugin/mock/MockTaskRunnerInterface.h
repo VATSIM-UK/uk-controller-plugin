@@ -1,7 +1,5 @@
 #pragma once
 #include "task/TaskRunnerInterface.h"
-#include "spdlog/logger.h"
-#include "spdlog/sinks/null_sink.h"
 
 namespace UKControllerPluginTest {
     namespace TaskManager {

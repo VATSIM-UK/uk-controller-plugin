@@ -86,6 +86,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 

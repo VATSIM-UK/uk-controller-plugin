@@ -17,12 +17,14 @@ source_group("pch" FILES ${pch})
 set(ALL_FILES
     ${loader}
     ${pch}
+    $<TARGET_OBJECTS:UKControllerPluginLoader>
 )
 
 ################################################################################
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -119,7 +121,6 @@ if(MSVC)
         /NODEFAULTLIB:LIBCMT;
         /DEBUG;
         /SUBSYSTEM:CONSOLE;
-        "$(SolutionDir)obj/UKControllerPluginLoader/$(Configuration)/*.obj"
     )
 endif()
 

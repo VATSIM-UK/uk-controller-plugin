@@ -1,7 +1,5 @@
-#include "pch/pch.h"
 #include "api/ApiConfigurationMenuItem.h"
 #include "mock/MockWinApi.h"
-#include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Api::ApiConfigurationMenuItem;
 using UKControllerPluginTest::Windows::MockWinApi;
@@ -45,8 +43,8 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(
                 this->mockWindows,
                 OpenMessageBox(
-                    L"Please select the key file to use, this will overwrite your previous key.",
-                    L"UKCP Message",
+                    testing::StrEq(L"Please select the key file to use, this will overwrite your previous key."),
+                    testing::StrEq(L"UKCP Message"),
                     MB_OKCANCEL | MB_ICONINFORMATION
                 )
             )

@@ -577,8 +577,7 @@ namespace UKControllerPluginUpdaterTest {
             CurlResponse updaterResponse("3.0.1.updater", true, 200);
 
             EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedUpdaterRequest))
-            .Times(0)
-                .WillOnce(testing::Return(updaterResponse));
+                .Times(0);
 
             EXPECT_CALL(
                 this->mockWindows,

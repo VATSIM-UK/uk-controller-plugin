@@ -1,4 +1,4 @@
-set(PROJECT_NAME UKControllerPluginTest)
+set(PROJECT_NAME UKControllerCoreTest)
 
 ################################################################################
 # Source groups
@@ -509,12 +509,14 @@ set(ALL_FILES
     ${test__timedevent}
     ${test__timer}
     ${test__wake}
+    $<TARGET_OBJECTS:UKControllerPluginCore>
 )
 
 ################################################################################
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -624,7 +626,6 @@ if(MSVC)
         >
         /NODEFAULTLIB:LIBCMT;
         /SUBSYSTEM:CONSOLE;
-        "$(SolutionDir)obj/UKControllerPlugin/$(Configuration)/*.obj"
     )
 endif()
 

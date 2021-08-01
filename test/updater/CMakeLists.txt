@@ -17,12 +17,15 @@ source_group("updater" FILES ${updater})
 set(ALL_FILES
     ${pch}
     ${updater}
+    $<TARGET_OBJECTS:UKControllerPluginUpdater>
 )
 
 ################################################################################
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
+
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
@@ -122,7 +125,6 @@ if(MSVC)
         /NODEFAULTLIB:LIBCMT;
         /DEBUG;
         /SUBSYSTEM:CONSOLE;
-        "$(SolutionDir)obj/UKControllerPluginUpdater/$(Configuration)/*.obj"
     )
 endif()
 

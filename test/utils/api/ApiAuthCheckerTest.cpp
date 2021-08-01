@@ -37,7 +37,7 @@ namespace UKControllerPluginUtilsTest {
 
         TEST_F(ApiAuthCheckerTest, IsAuthorisedReturnsFalseIfNotAuthorised)
         {
-            EXPECT_CALL(mockWindows, OpenMessageBox(_, L"UKCP API Authentication Warning", _))
+            EXPECT_CALL(mockWindows, OpenMessageBox(_, testing::StrEq(L"UKCP API Authentication Warning"), _))
                 .Times(1)
                 .WillOnce(Return(IDCANCEL));
 
@@ -66,7 +66,7 @@ namespace UKControllerPluginUtilsTest {
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
                 .WillByDefault(Return(true));
 
-            EXPECT_CALL(mockWindows, OpenMessageBox(_, L"UKCP API Authentication Warning", _))
+            EXPECT_CALL(mockWindows, OpenMessageBox(_, testing::StrEq(L"UKCP API Authentication Warning"), _))
                 .Times(1)
                 .WillOnce(Return(IDOK));
 
@@ -96,7 +96,7 @@ namespace UKControllerPluginUtilsTest {
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
                 .WillByDefault(Return(true));
 
-            EXPECT_CALL(mockWindows, OpenMessageBox(_, L"UKCP API Authentication Warning", _))
+            EXPECT_CALL(mockWindows, OpenMessageBox(_, testing::StrEq(L"UKCP API Authentication Warning"), _))
                 .Times(2)
                 .WillOnce(Return(IDOK))
                 .WillOnce(Return(IDCANCEL));
@@ -126,7 +126,7 @@ namespace UKControllerPluginUtilsTest {
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
                 .WillByDefault(Return(true));
 
-            EXPECT_CALL(mockWindows, OpenMessageBox(_, L"UKCP API Authentication Warning", _))
+            EXPECT_CALL(mockWindows, OpenMessageBox(_, testing::StrEq(L"UKCP API Authentication Warning"), _))
                 .Times(1)
                 .WillOnce(Return(IDOK));
 
