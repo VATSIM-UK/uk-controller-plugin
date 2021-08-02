@@ -52,8 +52,9 @@ namespace UKControllerPlugin::Integration {
             return;
         }
 
-        this->initialised = true;
         LogInfo("Successfully initialised integration server");
+        this->initialised = true;
+        this->acceptingConnections = true;
         this->acceptThread = std::make_shared<std::thread>(&IntegrationServer::AcceptLoop, this);
     }
 
@@ -70,7 +71,6 @@ namespace UKControllerPlugin::Integration {
     void IntegrationServer::AcceptLoop() const
     {
         while (this->acceptingConnections) {
-
             SOCKET integrationSocket = accept(this->serverSocket, nullptr, nullptr);
             if (integrationSocket == INVALID_SOCKET) {
                 if (!this->acceptingConnections) {
