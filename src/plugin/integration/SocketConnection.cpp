@@ -13,6 +13,7 @@ namespace UKControllerPlugin::Integration {
 
     std::queue<std::string> SocketConnection::Receive()
     {
+        this->incomingData.clear();
         *this->socket >> this->incomingData;
         return this->ProcessReceivedData();
     }
