@@ -12,12 +12,12 @@
 namespace UKControllerPlugin {
     namespace Stands {
         /*
-            A new class
+            Handles events related to stands.
         */
         class StandEventHandler: public UKControllerPlugin::Tag::TagItemInterface,
                                  public Push::PushEventProcessorInterface,
-            public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-            public UKControllerPlugin::Integration::ExternalMessageHandlerInterface
+                                 public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
+                                 public UKControllerPlugin::Integration::ExternalMessageHandlerInterface
         {
             public:
                 StandEventHandler(
@@ -36,7 +36,6 @@ namespace UKControllerPlugin {
                     std::string identifier
                 );
 
-                size_t CountStands(void) const;
                 size_t CountStandAssignments(void) const;
                 void DisplayStandSelectionMenu(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
@@ -105,6 +104,7 @@ namespace UKControllerPlugin {
                 std::string GetAirfieldForStandAssignment(
                     UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan
                 );
+                std::lock_guard<std::mutex> LockStandMap();
 
                 // The last airfield that was used to populate the stand menu, used when we receive the callback
                 std::string lastAirfieldUsed = "";
@@ -123,6 +123,9 @@ namespace UKControllerPlugin {
 
                 // The currently assigned stands and who they are assigned to
                 std::map<std::string, int> standAssignments;
+
+                // Locks the stand assignments map to prevent concurrent edits
+                std::mutex mapMutex;
             };
     }  // namespace Stands
 }  // namespace UKControllerPlugin
