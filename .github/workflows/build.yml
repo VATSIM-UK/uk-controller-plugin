@@ -57,11 +57,14 @@ jobs:
           echo "CURL_INCLUDEDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ipv6-sspi-schannel\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "CURL_LIBRARYDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ipv6-sspi-schannel\\lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
+      - name: Setup Nuget
+        uses: nuget/setup-nuget@v1
+        with:
+          nuget-version: '5.10'
+
       - name: Restore Nuget Packages
         run: |
-          cd msvc
-          nuget restore
-          cd ..
+          nuget restore test/googlemock/packages.config -OutputDirectory packages
 
       # Setup all the yarn things and node modules
       - name: Setup Yarn
@@ -99,17 +102,12 @@ jobs:
       
       # Run the build and tests
       - name: Run Build
-        run: msbuild msvc/UKControllerPlugin.sln /verbosity:minimal /property:Configuration=Release -m /warnaserror
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles"
+          nmake
 
       - name: Run Tests
-        run: ".\\bin\\Release\\UKControllerPluginTest.exe"
-
-      # Run the linter
-      - name: Install Cpplint
-        run: pip install cpplint
-
-      - name: Run Lint
-        run: cpplint --quiet --recursive src/ test/
+        run: ctest -C Release --output-on-failure
       
       # Upload artifacts
       - name: Upload Core Binary As Artifact
@@ -129,12 +127,28 @@ jobs:
         with:
           name: UKControllerPlugin.dll
           path: ".\\bin\\Release\\UKControllerPlugin.dll"
-          
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ukcp-build-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install Cpplint
+        run: pip install cpplint
+
+      - name: Run Lint
+        run: cpplint --quiet --recursive src/ test/
+
   release:
     name: Release
     runs-on: windows-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [build]
+    needs: [build, lint]
     concurrency:
       group: ukcp-release
       cancel-in-progress: false

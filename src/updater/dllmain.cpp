@@ -1,4 +1,4 @@
-#include "updater/pch.h"
+#include "pch/pch.h"
 #include "updater/PerformUpdates.h"
 #include "windows/WinApiInterface.h"
 #include "windows/WinApiBootstrap.h"

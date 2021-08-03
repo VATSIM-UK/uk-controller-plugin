@@ -21,7 +21,10 @@ There are two build configurations available:
 - Debug: Compile with all debugging symbols for development. Results in decreased performance and an inflated DLL
 - Release: Compile in release mode
 
-Compiling may be achieved using MSBuild, or by using Visual Studio 2019.
+Compiling may be achieved by:
+
+- Running CMake followed by nmake - see the workflow file for GitHub actions.
+- Using your favourite IDE (e.g. Visual Studio / CLion) to build the project.
 
 ### Running Tests
 
