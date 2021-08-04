@@ -11,6 +11,7 @@ namespace UKControllerPlugin::Integration {
     SocketWrapper::~SocketWrapper()
     {
         if (this->active) {
+            LogDebug("Shutting down socket");
             int shutdownResult = shutdown(this->socket, SD_BOTH);
             if (shutdownResult == SOCKET_ERROR) {
                 LogError("Shutdown error shutting down socket: " + std::to_string(WSAGetLastError()));
@@ -18,6 +19,7 @@ namespace UKControllerPlugin::Integration {
             this->active = false;
         }
 
+        LogDebug("Closing socket");
         closesocket(this->socket);
         this->readThread->join();
         this->writeThread->join();
