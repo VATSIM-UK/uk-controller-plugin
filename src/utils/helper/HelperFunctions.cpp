@@ -85,8 +85,9 @@ namespace UKControllerPlugin {
         tm.tm_hour = hours;
         tm.tm_min = minutes;
         tm.tm_sec = 0;
+        tm.tm_isdst = 0;
 
-        return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+        return std::chrono::system_clock::from_time_t(_mkgmtime(&tm));
     }
 
     /*
