@@ -27,9 +27,6 @@ namespace UKControllerPlugin {
 
         private:
 
-            void CreateDummy(void);
-
-
             // In the event of an invalid version, this is the "dummy" fallback plugin.
             std::unique_ptr<EuroScopePlugIn::CPlugIn> fallbackPlugin;
 

@@ -125,6 +125,7 @@ set(srd
 source_group("srd" FILES ${srd})
 
 set(update
+    "update/CheckDevelopmentVersion.cpp"
     "update/LoadChangelog.cpp"
     "update/LoadChangelog.h"
     "update/PluginVersion.cpp"
