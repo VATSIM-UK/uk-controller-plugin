@@ -234,7 +234,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(std::chrono::system_clock::now() - connection.LastPollTime() < std::chrono::seconds(2));
         }
 
-        TEST_F(PollingPushEventConnectionTest, ItHandlesInvalidApiResponseWhenUpdating)
+        TEST_F(PollingPushEventConnectionTest, ItHandlesApiResponseNotArrayWhenUpdating)
         {
             connection.SetSynced();
 
@@ -243,6 +243,30 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(nlohmann::json::object()));
 
             connection.TimedEventTrigger();
+            EXPECT_TRUE(std::chrono::system_clock::now() - connection.LastPollTime() < std::chrono::seconds(2));
+            EXPECT_EQ("", connection.GetNextMessage());
+        }
+
+        TEST_F(PollingPushEventConnectionTest, ItHandlesApiResponseWherePluginEventIsNotValid)
+        {
+            connection.SetSynced();
+
+            nlohmann::json responseData = nlohmann::json::array({{
+                {
+                    "event",
+                    nlohmann::json{
+                        {"channel", "foo"},
+                        {"data", nlohmann::json{{"bar", "baz"}}}
+                    }
+                }
+            }});
+
+            EXPECT_CALL(mockApi, GetLatestPluginEvents(0))
+                .Times(1)
+                .WillOnce(Return(responseData));
+
+            connection.TimedEventTrigger();
+            EXPECT_EQ("", connection.GetNextMessage());
             EXPECT_TRUE(std::chrono::system_clock::now() - connection.LastPollTime() < std::chrono::seconds(2));
         }
 

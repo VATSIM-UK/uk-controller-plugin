@@ -71,7 +71,6 @@ namespace UKControllerPlugin {
                             this->updateInProgress = false;
                             return;
                         }
-
                         this->lastEventId = syncResponse.at("event_id").get<int>();
                         LogInfo("Plugin events synced at id " + std::to_string(this->lastEventId));
 
@@ -116,6 +115,11 @@ namespace UKControllerPlugin {
                             eventIterator != latestEventsResponse.cend();
                             ++eventIterator
                         ) {
+                            if (!PluginEventValid(*eventIterator)) {
+                                LogError("Received invalid plugin event from API");
+                                continue;
+                            }
+
                             this->inboundMessages.push(eventIterator->at("event").dump());
 
                             if (eventIterator->at("id").get<int>() > this->lastEventId) {
