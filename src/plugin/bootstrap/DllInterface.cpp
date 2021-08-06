@@ -1,7 +1,7 @@
 #include "pch/pch.h"
 #include "bootstrap/InitialisePlugin.h"
 #include "update/PluginVersion.h"
-#include "helper/HelperFunctions.h"
+#include "update/CheckDevelopmentVersion.h"
 
 #ifndef UKCP_CORE_API
 #define UKCP_CORE_API extern "C" __declspec(dllexport)
@@ -10,6 +10,7 @@
 
 
 using UKControllerPlugin::Plugin::PluginVersion;
+using UKControllerPluginUtils::Update::IsDevelopmentVersion;
 
 // The one true app to rule them all...
 UKControllerPlugin::InitialisePlugin thePluginApp;
@@ -94,8 +95,7 @@ UKCP_CORE_API const char* GetPluginVersion()
  */
 UKCP_CORE_DIRECT_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInstance)
 {
-    std::string version(PluginVersion::version);
-    if (version != "#VERSION_STRING#" && version != "non-release-build") {
+    if (!IsDevelopmentVersion(PluginVersion::version)) {
         MessageBox(
             GetActiveWindow(),
             L"Core binary cannot be loaded directly in release versions.",
@@ -113,7 +113,7 @@ UKCP_CORE_DIRECT_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugI
  */
 UKCP_CORE_DIRECT_API void EuroScopePlugInExit(void)
 {
-    if (PluginVersion::version != "#VERSION_STRING#" && PluginVersion::version != "non-release-build") {
+    if (!IsDevelopmentVersion(PluginVersion::version)) {
         return;
     }
 

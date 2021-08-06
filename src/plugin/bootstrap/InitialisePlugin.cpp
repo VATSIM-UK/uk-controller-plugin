@@ -81,27 +81,10 @@ using UKControllerPlugin::Dependency::DependencyLoader;
 
 namespace UKControllerPlugin {
     /*
-        Creates a dummy plugin to fill the spot.
-    */
-    void InitialisePlugin::CreateDummy(void)
-    {
-        this->fallbackPlugin = std::unique_ptr<EuroScopePlugIn::CPlugIn>(
-            new EuroScopePlugIn::CPlugIn(
-                EuroScopePlugIn::COMPATIBILITY_CODE,
-                "UK Controller Plugin (Disabled)",
-                "XXX",
-                "VATSIM UK",
-                "VATSIM United Kingdom Division"
-            )
-        );
-    }
-
-    /*
         Clean up after ourself as we get closed down.
     */
     void InitialisePlugin::EuroScopeCleanup(void)
     {
-        // Shut down the container, task runner and logs.
         this->container->taskRunner.reset();
         this->container.reset();
         this->duplicatePlugin.reset();

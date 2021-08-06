@@ -65,6 +65,7 @@ source_group("test\\squawk" FILES ${test__squawk})
 
 set(test__update
     "update/UpdateBinariesTest.cpp"
+    "update/CheckDevelopmentVersionTest.cpp"
 )
 source_group("test\\update" FILES ${test__update})
 
