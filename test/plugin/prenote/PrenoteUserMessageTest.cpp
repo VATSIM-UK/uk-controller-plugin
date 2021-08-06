@@ -1,12 +1,12 @@
 #include "pch/pch.h"
-#include "prenote/PrenoteMessage.h"
+#include "prenote/PrenoteUserMessage.h"
 #include "controller/ActiveCallsign.h"
 #include "prenote/DeparturePrenote.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionHierarchy.h"
 
-using UKControllerPlugin::Prenote::PrenoteMessage;
+using UKControllerPlugin::Prenote::PrenoteUserMessage;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Prenote::DeparturePrenote;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -36,11 +36,11 @@ namespace UKControllerPluginTest {
                     );
                     departurePrenote.reset(new DeparturePrenote(NULL, "EGKK", "BIG2X"));
                     prenoteMessage.reset(
-                        new PrenoteMessage(*this->departurePrenote, *this->callsign, this->mockFlightplan)
+                        new PrenoteUserMessage(*this->departurePrenote, *this->callsign, this->mockFlightplan)
                     );
                 };
 
-                std::unique_ptr<PrenoteMessage> prenoteMessage;
+                std::unique_ptr<PrenoteUserMessage> prenoteMessage;
                 std::unique_ptr<ActiveCallsign> callsign;
                 std::unique_ptr<DeparturePrenote> departurePrenote;
                 NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;

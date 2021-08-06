@@ -8,7 +8,7 @@
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
 #include "message/UserMessager.h"
-#include "prenote/PrenoteMessage.h"
+#include "prenote/PrenoteUserMessage.h"
 #include "prenote/PrenoteService.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
@@ -19,7 +19,7 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Prenote::PrenoteMessage;
+using UKControllerPlugin::Prenote::PrenoteUserMessage;
 
 namespace UKControllerPlugin {
     namespace Prenote {
@@ -73,7 +73,7 @@ namespace UKControllerPlugin {
                         " about " + flightplan.GetCallsign()
                 );
                 this->userMessager.SendMessageToUser(
-                    PrenoteMessage(
+                    PrenoteUserMessage(
                         prenote,
                         this->activeCallsigns.GetLeadCallsignForPosition(it->get().GetCallsign()),
                         flightplan

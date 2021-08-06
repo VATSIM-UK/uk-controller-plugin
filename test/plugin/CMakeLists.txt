@@ -340,7 +340,7 @@ set(test__prenote
     "prenote/DeparturePrenoteTest.cpp"
     "prenote/PrenoteEventHandlerTest.cpp"
     "prenote/PrenoteFactoryTest.cpp"
-    "prenote/PrenoteMessageTest.cpp"
+    "prenote/PrenoteUserMessageTest.cpp"
     "prenote/PrenoteModuleTest.cpp"
     "prenote/PrenoteServiceFactoryTest.cpp"
     "prenote/PrenoteServiceTest.cpp"

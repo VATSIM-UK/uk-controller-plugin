@@ -8,7 +8,7 @@
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
 #include "message/UserMessager.h"
-#include "prenote/PrenoteMessage.h"
+#include "prenote/PrenoteUserMessage.h"
 #include "euroscope/UserSetting.h"
 #include "prenote/PrenoteService.h"
 #include "euroscope/GeneralSettingsEntries.h"
@@ -21,7 +21,7 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Prenote::PrenoteMessage;
+using UKControllerPlugin::Prenote::PrenoteUserMessage;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Prenote::PrenoteService;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;

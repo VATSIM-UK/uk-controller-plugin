@@ -20,10 +20,10 @@ namespace UKControllerPlugin {
             A prenote message - follows the MessageSerializable interface
             to display a message to the user.
         */
-        class PrenoteMessage : public UKControllerPlugin::Message::MessageSerializableInterface
+        class PrenoteUserMessage : public UKControllerPlugin::Message::MessageSerializableInterface
         {
             public:
-                PrenoteMessage(
+                PrenoteUserMessage(
                     const UKControllerPlugin::Prenote::AbstractPrenote & prenote,
                     const UKControllerPlugin::Controller::ActiveCallsign & activeCallsign,
                     const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan

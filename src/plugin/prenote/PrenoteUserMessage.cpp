@@ -1,5 +1,5 @@
 #include "pch/pch.h"
-#include "prenote/PrenoteMessage.h"
+#include "prenote/PrenoteUserMessage.h"
 #include "prenote/AbstractPrenote.h"
 #include "controller/ActiveCallsign.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -12,10 +12,10 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 namespace UKControllerPlugin {
     namespace Prenote {
 
-        const std::string PrenoteMessage::handler = "Prenote";
-        const std::string PrenoteMessage::sender = "UKCP";
+        const std::string PrenoteUserMessage::handler = "Prenote";
+        const std::string PrenoteUserMessage::sender = "UKCP";
 
-        PrenoteMessage::PrenoteMessage(
+        PrenoteUserMessage::PrenoteUserMessage(
             const AbstractPrenote & prenote,
             const ActiveCallsign & activeCallsign,
             const EuroScopeCFlightPlanInterface & flightplan
@@ -24,42 +24,42 @@ namespace UKControllerPlugin {
                 flightplan.GetCallsign() + " (" + prenote.GetSummaryString() + ")";
         }
 
-        std::string PrenoteMessage::MessageHandler(void) const
+        std::string PrenoteUserMessage::MessageHandler(void) const
         {
             return this->handler;
         }
 
-        std::string PrenoteMessage::MessageSender(void) const
+        std::string PrenoteUserMessage::MessageSender(void) const
         {
             return this->sender;
         }
 
-        std::string PrenoteMessage::MessageString(void) const
+        std::string PrenoteUserMessage::MessageString(void) const
         {
             return this->message;
         }
 
-        bool PrenoteMessage::MessageShowHandler(void) const
+        bool PrenoteUserMessage::MessageShowHandler(void) const
         {
             return true;
         }
 
-        bool PrenoteMessage::MessageMarkUnread(void) const
+        bool PrenoteUserMessage::MessageMarkUnread(void) const
         {
             return true;
         }
 
-        bool PrenoteMessage::MessageOverrideBusy(void) const
+        bool PrenoteUserMessage::MessageOverrideBusy(void) const
         {
             return true;
         }
 
-        bool PrenoteMessage::MessageFlashHandler(void) const
+        bool PrenoteUserMessage::MessageFlashHandler(void) const
         {
             return true;
         }
 
-        bool PrenoteMessage::MessageRequiresConfirm(void) const
+        bool PrenoteUserMessage::MessageRequiresConfirm(void) const
         {
             return true;
         }
