@@ -1,5 +1,15 @@
 # UK Controller Plugin Changelog
 
+## [3.4.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.4.0...3.4.1) (2021-08-06)
+
+
+### Bug Fixes
+
+* **bootstrap:** fix euroscope crash in development mode ([#318](https://github.com/VATSIM-UK/uk-controller-plugin/issues/318)) ([d66039d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d66039dc09e261256dd9159f0292c9f4276b4d5f)), closes [#317](https://github.com/VATSIM-UK/uk-controller-plugin/issues/317)
+* **edt:** fix timezone issue with estimated departure times ([#316](https://github.com/VATSIM-UK/uk-controller-plugin/issues/316)) ([09396da](https://github.com/VATSIM-UK/uk-controller-plugin/commit/09396dad1de7f0b39a9fc93a1b7b49a10eafb59f)), closes [#190](https://github.com/VATSIM-UK/uk-controller-plugin/issues/190)
+* **push-events:** fix potential crash situation in push events ([#315](https://github.com/VATSIM-UK/uk-controller-plugin/issues/315)) ([ff617be](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ff617bef3c4af9edbb10a59ab9d02353519fd5bb)), closes [#313](https://github.com/VATSIM-UK/uk-controller-plugin/issues/313)
+* **stands:** fix concurrency issues with stand assignments ([#311](https://github.com/VATSIM-UK/uk-controller-plugin/issues/311)) ([35b9e2a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/35b9e2aee816ad18eac941832bbc377d742ec949)), closes [#310](https://github.com/VATSIM-UK/uk-controller-plugin/issues/310)
+
 # [3.4.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.3.1...3.4.0) (2021-07-30)
 
 
