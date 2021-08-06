@@ -75,6 +75,7 @@ namespace UKControllerPlugin {
                 [](unsigned char c) { return std::toupper(c); }
             );
 
+            auto mapLock = this->LockStandMap();
             std::string callsign = aircraft->GetCallsign();
             // If no stand is selected, delete the current assignment if there is one
             if (
@@ -119,11 +120,6 @@ namespace UKControllerPlugin {
                     }
                 });
             }
-        }
-
-        size_t StandEventHandler::CountStands(void) const
-        {
-            return this->stands.size();
         }
 
         size_t StandEventHandler::CountStandAssignments(void) const
@@ -258,6 +254,7 @@ namespace UKControllerPlugin {
 
             // If a stand is assigned, set the starting text to be the stand identifier
             std::string startingText = "";
+            auto mapLock = this->LockStandMap();
             auto assignedStand = this->standAssignments.find(flightplan.GetCallsign());
             if (
                 assignedStand != this->standAssignments.cend() &&
@@ -294,6 +291,7 @@ namespace UKControllerPlugin {
         */
         void StandEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
         {
+            auto mapLock = this->LockStandMap();
             if (
                 this->standAssignments.count(tagData.flightPlan.GetCallsign())
             ) {
@@ -373,6 +371,7 @@ namespace UKControllerPlugin {
             EuroScopeCFlightPlanInterface& flightPlan,
             EuroScopeCRadarTargetInterface& radarTarget
         ) {
+            auto mapLock = this->LockStandMap();
             if (!this->standAssignments.count(flightPlan.GetCallsign())) {
                 return;
             }
@@ -413,6 +412,7 @@ namespace UKControllerPlugin {
                     }
 
                     // Delete all existing assignments
+                    auto mapLock = this->LockStandMap();
                     this->standAssignments.clear();
 
                     for (
@@ -444,6 +444,7 @@ namespace UKControllerPlugin {
         */
         void StandEventHandler::ProcessPushEvent(const Push::PushEvent& message)
         {
+            auto mapLock = this->LockStandMap();
             if (message.event == "App\\Events\\StandAssignedEvent") {
                 // If a stand has been assigned, assign it here
                 if (!AssignmentMessageValid(message.data)) {
@@ -455,6 +456,7 @@ namespace UKControllerPlugin {
                     message.data.at("callsign").get<std::string>(),
                     message.data.at("stand_id").get<int>()
                 );
+
                 this->standAssignments[message.data.at("callsign").get<std::string>()] =
                     message.data.at("stand_id").get<int>();
                 LogInfo(
@@ -484,6 +486,11 @@ namespace UKControllerPlugin {
                     "private-stand-assignments"
                 }
             };
+        }
+
+        std::lock_guard<std::mutex> StandEventHandler::LockStandMap()
+        {
+            return std::lock_guard(this->mapMutex);
         }
     }  // namespace Stands
 }  // namespace UKControllerPlugin
