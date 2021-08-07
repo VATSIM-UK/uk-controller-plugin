@@ -97,7 +97,9 @@ jobs:
       - name: Run Build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
+          cd build
           nmake
+          cd ..
 
       - name: Run Tests
         run: ctest -C Release --output-on-failure
