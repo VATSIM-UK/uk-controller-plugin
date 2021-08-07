@@ -14,13 +14,10 @@ jobs:
       group: ukcp-build-${{ github.ref }}
       cancel-in-progress: true
     steps:       
-      - name: Checkout Code
+      - name: Checkout Code and Submodules
         uses: actions/checkout@v2
-
-      - name: Initialise Git Submodules
-        run: |
-          git submodule init
-          git submodule update
+        with:
+          submodules: recursive
 
       # Environment things
       - name: Add Msbuild To PATH
