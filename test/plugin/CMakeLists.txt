@@ -428,6 +428,8 @@ set(test__stands
     "stands/StandEventHandlerTest.cpp"
     "stands/StandModuleTest.cpp"
     "stands/StandSerializerTest.cpp"
+    "stands/StandAssignedMessageTest.cpp"
+    "stands/StandUnassignedMessageTest.cpp"
 )
 source_group("test\\stands" FILES ${test__stands})
 

@@ -746,6 +746,8 @@ set(src__stands
     "stands/StandModule.h"
     "stands/StandSerializer.cpp"
     "stands/StandSerializer.h"
+    "stands/StandAssignedMessage.cpp"
+    "stands/StandUnassignedMessage.cpp"
 )
 source_group("src\\stands" FILES ${src__stands})
 
