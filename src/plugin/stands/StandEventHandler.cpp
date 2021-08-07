@@ -4,6 +4,8 @@
 #include "api/ApiException.h"
 #include "plugin/PopupMenuItem.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
+#include "stands/StandAssignedMessage.h"
+#include "stands/StandUnassignedMessage.h"
 
 using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Api::ApiInterface;
@@ -83,8 +85,7 @@ namespace UKControllerPlugin {
                 (identifier == this->noStandMenuItem || identifier == this->noStandEditBoxItem) &&
                 this->standAssignments.count(callsign)
             ) {
-                this->standAssignments.erase(callsign);
-                this->RemoveFlightStripAnnotation(callsign);
+                this->UnassignStandForAircraft(callsign);
                 this->taskRunner.QueueAsynchronousTask([this, callsign]() {
                     try {
                         this->api.DeleteStandAssignmentForAircraft(callsign);
@@ -109,9 +110,12 @@ namespace UKControllerPlugin {
                 }
 
                 // Assign that stand
+                this->AssignStandToAircraft(
+                    callsign,
+                    *stand
+                );
+                
                 int standId = stand->id;
-                this->standAssignments[callsign] = standId;
-                this->AnnotateFlightStrip(callsign, standId);
                 this->taskRunner.QueueAsynchronousTask([this, standId, callsign]() {
                     try {
                         this->api.AssignStandToAircraft(callsign, standId);
@@ -426,12 +430,10 @@ namespace UKControllerPlugin {
                             continue;
                         }
 
-                        this->AnnotateFlightStrip(
+                        this->AssignStandToAircraft(
                             assignment->at("callsign").get<std::string>(),
-                            assignment->at("stand_id").get<int>()
+                            *this->stands.find(assignment->at("stand_id").get<int>())
                         );
-                        this->standAssignments[assignment->at("callsign").get<std::string>()] =
-                            assignment->at("stand_id").get<int>();
                     }
                     LogInfo("Loaded " + std::to_string(this->standAssignments.size()) + " stand assignments");
                 } catch (ApiException e) {
@@ -452,17 +454,10 @@ namespace UKControllerPlugin {
                     LogWarning("Invalid stand assignment message " + message.data.dump());
                     return;
                 }
-
-                this->AnnotateFlightStrip(
+                
+                this->AssignStandToAircraft(
                     message.data.at("callsign").get<std::string>(),
-                    message.data.at("stand_id").get<int>()
-                );
-
-                this->standAssignments[message.data.at("callsign").get<std::string>()] =
-                    message.data.at("stand_id").get<int>();
-                LogInfo(
-                    "Stand id " + std::to_string(message.data.at("stand_id").get<int>()) +
-                        " assigned to " + message.data.at("callsign").get<std::string>()
+                    *this->stands.find(message.data.at("stand_id").get<int>())
                 );
             } else if (message.event == "App\\Events\\StandUnassignedEvent") {
                 // If a stand has been unassigned, unassign it here
@@ -471,11 +466,7 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                this->RemoveFlightStripAnnotation(
-                    message.data.at("callsign").get<std::string>()
-                );
-                this->standAssignments.erase(message.data.at("callsign").get<std::string>());
-                LogInfo("Stand assignment removed for " + message.data.at("callsign").get<std::string>());
+                this->UnassignStandForAircraft(message.data.at("callsign").get<std::string>());
             }
         }
 
@@ -492,6 +483,30 @@ namespace UKControllerPlugin {
         std::lock_guard<std::mutex> StandEventHandler::LockStandMap()
         {
             return std::lock_guard(this->mapMutex);
+        }
+        
+        void StandEventHandler::UnassignStandForAircraft(std::string callsign)
+        {
+            this->RemoveFlightStripAnnotation(callsign);
+            this->standAssignments.erase(callsign);
+            this->integrationEventHandler.SendEvent(std::make_shared<StandUnassignedMessage>(callsign));
+            LogInfo("Stand assignment removed for " + callsign);
+        }
+        
+        void StandEventHandler::AssignStandToAircraft(std::string callsign, const Stand& stand)
+        {
+            this->AnnotateFlightStrip(
+                callsign,
+                stand.id
+            );
+            this->standAssignments[callsign] = stand.id;
+            this->integrationEventHandler.SendEvent(
+                std::make_shared<StandAssignedMessage>(callsign, stand.airfieldCode, stand.identifier)
+            );
+            LogInfo(
+                "Stand id " + std::to_string(stand.id) + "(" + stand.airfieldCode + "/" + stand.identifier + ") "
+                 "assigned to " + callsign
+            );
         }
     }  // namespace Stands
 }  // namespace UKControllerPlugin

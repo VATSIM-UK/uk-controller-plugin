@@ -99,7 +99,8 @@ namespace UKControllerPlugin {
                 const int annotationIndex = 3;
 
             private:
-
+                void AssignStandToAircraft(std::string callsign, const Stand& stand);
+                void UnassignStandForAircraft(std::string callsign);
                 bool AssignmentMessageValid(const nlohmann::json& message) const;
                 bool CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const;
                 bool UnassignmentMessageValid(const nlohmann::json & message) const;

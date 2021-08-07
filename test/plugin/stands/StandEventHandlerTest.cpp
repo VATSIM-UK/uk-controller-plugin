@@ -14,10 +14,14 @@
 #include "api/ApiException.h"
 #include "plugin/PopupMenuItem.h"
 #include "mock/MockOutboundIntegrationEventHandler.h"
+#include "stands/StandUnassignedMessage.h"
+#include "stands/StandAssignedMessage.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Stands::StandEventHandler;
+using UKControllerPlugin::Stands::StandUnassignedMessage;
+using UKControllerPlugin::Stands::StandAssignedMessage;
 using UKControllerPlugin::Stands::CompareStands;
 using UKControllerPlugin::Stands::Stand;
 using UKControllerPlugin::Tag::TagData;
@@ -134,6 +138,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             this->handler.ProcessPushEvent(message);
@@ -269,6 +277,10 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
                 .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandUnassignedMessage>("BAW123");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
 
             this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
@@ -339,6 +351,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp1, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+                EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp2
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
@@ -348,6 +364,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp2, AnnotateFlightStrip(3, "55"))
                 .Times(1);
 
+            auto expectedMessage2 = std::make_shared<StandAssignedMessage>("VIR245", "EGKK", "55");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage2)))
+                .Times(1);
+            
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
@@ -404,6 +424,10 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
@@ -432,6 +456,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
@@ -463,6 +491,10 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
@@ -491,6 +523,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
@@ -522,6 +558,10 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
@@ -551,6 +591,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
@@ -1098,6 +1142,10 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
                 .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "55");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
                 .Times(1);
@@ -1151,6 +1199,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 1))
@@ -1207,6 +1259,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "55");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+            
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
                 .Times(1)
                 .WillOnce(Throw(ApiException("Foo")));
@@ -1314,6 +1370,10 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
                 .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandUnassignedMessage>("BAW123");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
 
             this->handler.StandSelected(1, "--", {});
             EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
@@ -1369,6 +1429,10 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
+                .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandUnassignedMessage>("BAW123");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             this->handler.StandSelected(1, "", {});
@@ -1695,6 +1759,10 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
                 .Times(1);
+            
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "55");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
                 .Times(1);
@@ -1727,8 +1795,12 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
                 .WillByDefault(Return(pluginReturnedFp));
-
+            
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 1))

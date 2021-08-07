@@ -5,7 +5,7 @@ namespace UKControllerPlugin::Stands {
     class StandUnassignedMessage: public Integration::MessageInterface
     {
         public:
-            StandUnassignedMessage(std::string callsign);
+            explicit StandUnassignedMessage(std::string callsign);
             ~StandUnassignedMessage() override = default;
             nlohmann::json GetMessageData() const override;
             Integration::MessageType GetMessageType() const override;
