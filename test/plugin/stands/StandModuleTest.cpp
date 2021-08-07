@@ -8,6 +8,7 @@
 #include "controller/HandoffEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "integration/ExternalMessageEventHandler.h"
+#include "integration/IntegrationPersistenceContainer.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -21,6 +22,7 @@ using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Integration::ExternalMessageEventHandler;
+using UKControllerPlugin::Integration::IntegrationPersistenceContainer;
 
 namespace UKControllerPluginTest {
     namespace Stands {
@@ -35,6 +37,7 @@ namespace UKControllerPluginTest {
                     container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
                     container.externalEventHandler.reset(new ExternalMessageEventHandler(true));
+                    container.integrationModuleContainer.reset(new IntegrationPersistenceContainer{});
 
                     nlohmann::json gatwick = nlohmann::json::array();
                     gatwick.push_back(

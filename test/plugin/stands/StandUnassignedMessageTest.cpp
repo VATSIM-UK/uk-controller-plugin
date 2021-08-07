@@ -1,7 +1,7 @@
 #include "pch/pch.h"
 #include "stands/StandUnassignedMessage.h"
 
-using UKControllerPlugin::Stands::StandUnassignedMessageTest;
+using UKControllerPlugin::Stands::StandUnassignedMessage;
 
 namespace UKControllerPluginTests::Stands {
     class StandUnassignedMessageTest: public testing::Test
@@ -16,7 +16,7 @@ namespace UKControllerPluginTests::Stands {
             StandUnassignedMessage message;
     };
     
-    TEST_F(StandAssignedMessageTest, ItSerializesToJson)
+    TEST_F(StandUnassignedMessageTest, ItSerializesToJson)
     {
         nlohmann::json expected {
             {"type", "stand_unassigned"},
