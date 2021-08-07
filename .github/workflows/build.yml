@@ -96,7 +96,7 @@ jobs:
       # Run the build and tests
       - name: Run Build
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild/release
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
           cd build
           nmake
           cd ..
@@ -109,19 +109,19 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: UKControllerPluginCore.dll
-          path: ".\\build\\release\\bin\\UKControllerPluginCore.dll"
+          path: ".\\build\\bin\\UKControllerPluginCore.dll"
 
       - name: Upload Updater Binary As Artifact
         uses: actions/upload-artifact@v2
         with:
           name: UKControllerPluginUpdater.dll
-          path: ".\\build\\release\\bin\\UKControllerPluginUpdater.dll"
+          path: ".\\build\\bin\\UKControllerPluginUpdater.dll"
 
       - name: Upload Loader Binary As Artifact
         uses: actions/upload-artifact@v2
         with:
           name: UKControllerPlugin.dll
-          path: ".\\build\\release\\bin\\UKControllerPlugin.dll"
+          path: ".\\build\\bin\\UKControllerPlugin.dll"
 
   lint:
     name: Lint
@@ -187,19 +187,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: UKControllerPluginCore.dll
-          path: ".\\build\\release\\bin\\UKControllerPluginCore.dll"
+          path: ".\\build\\bin\\UKControllerPluginCore.dll"
 
       - name: Download Updater Binary
         uses: actions/download-artifact@v2
         with:
           name: UKControllerPluginUpdater.dll
-          path: ".\\build\\release\\bin\\UKControllerPluginUpdater.dll"
+          path: ".\\build\\bin\\UKControllerPluginUpdater.dll"
 
       - name: Download Loader Binary
         uses: actions/download-artifact@v2
         with:
           name: UKControllerPlugin.dll
-          path: ".\\build\\release\\bin\\UKControllerPlugin.dll"   
+          path: ".\\build\\bin\\UKControllerPlugin.dll"
           
       - name: Create Release
         env:
