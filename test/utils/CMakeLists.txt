@@ -101,8 +101,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
-    OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
+    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_BINARY_DIR}/bin/"
+    OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/"
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
@@ -126,7 +126,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUN
 # Include directories
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../packages/gmock.1.10.0/lib/native/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/.;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../testingutils;"
@@ -142,6 +141,7 @@ target_link_directories(
         $ENV{CURL_DEBUG_LIBRARYDIR}
         $ENV{CURL_LIBRARYDIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+        "${CMAKE_BINARY_DIR}/lib/"
 )
 
 ################################################################################
@@ -203,14 +203,14 @@ endif()
 # Dependencies
 ################################################################################
 add_dependencies(${PROJECT_NAME}
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
     UKControllerPluginUtils
 )
 
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
     UKControllerPluginUtils
 )
@@ -218,13 +218,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "$<$<CONFIG:Debug>:"
         "EuroScopePlugInDll;"
-        "libcurl_a_debug"
+        "libcurl_a_debug;"
     ">"
     "$<$<CONFIG:Release>:"
         "EuroScopePluginDll;"
         "libcurl_a;"
-        "gdiplus"
     ">"
+    "gdiplus"
     "kernel32;"
     "user32;"
     "gdi32;"

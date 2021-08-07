@@ -36,8 +36,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
-    OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
+    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_BINARY_DIR}/bin/"
+    OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/"
 )
 ################################################################################
 # MSVC runtime library
@@ -62,7 +62,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/loader;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../testingutils;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../packages/gmock.1.10.0/lib/native/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
 )
@@ -75,6 +74,7 @@ target_link_directories(
         $ENV{CURL_DEBUG_LIBRARYDIR}
         $ENV{CURL_LIBRARYDIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+        ${CMAKE_BINARY_DIR}/lib
 )
 
 ################################################################################
@@ -129,7 +129,7 @@ endif()
 ################################################################################
 add_dependencies(${PROJECT_NAME}
     UKControllerPluginLoader
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
     UKControllerPluginUpdater
     UKControllerPluginUtils
@@ -139,7 +139,7 @@ add_dependencies(${PROJECT_NAME}
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PUBLIC
     UKControllerPluginLoader
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
     UKControllerPluginUpdater
     UKControllerPluginUtils

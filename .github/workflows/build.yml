@@ -14,8 +14,10 @@ jobs:
       group: ukcp-build-${{ github.ref }}
       cancel-in-progress: true
     steps:       
-      - name: Checkout Code
+      - name: Checkout Code and Submodules
         uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       # Environment things
       - name: Add Msbuild To PATH
@@ -57,15 +59,6 @@ jobs:
           echo "CURL_INCLUDEDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ipv6-sspi-schannel\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "CURL_LIBRARYDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ipv6-sspi-schannel\\lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Setup Nuget
-        uses: nuget/setup-nuget@v1
-        with:
-          nuget-version: '5.10'
-
-      - name: Restore Nuget Packages
-        run: |
-          nuget restore test/googlemock/packages.config -OutputDirectory packages
-
       # Setup all the yarn things and node modules
       - name: Setup Yarn
         uses: actions/setup-node@v1
@@ -103,36 +96,38 @@ jobs:
       # Run the build and tests
       - name: Run Build
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles"
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
+          cd build
           nmake
+          cd ..
 
       - name: Run Tests
         run: ctest -C Release --output-on-failure
-      
+
       # Upload artifacts
       - name: Upload Core Binary As Artifact
         uses: actions/upload-artifact@v2
         with:
           name: UKControllerPluginCore.dll
-          path: ".\\bin\\Release\\UKControllerPluginCore.dll"
+          path: ".\\build\\bin\\UKControllerPluginCore.dll"
 
       - name: Upload Updater Binary As Artifact
         uses: actions/upload-artifact@v2
         with:
           name: UKControllerPluginUpdater.dll
-          path: ".\\bin\\Release\\UKControllerPluginUpdater.dll"
+          path: ".\\build\\bin\\UKControllerPluginUpdater.dll"
 
       - name: Upload Loader Binary As Artifact
         uses: actions/upload-artifact@v2
         with:
           name: UKControllerPlugin.dll
-          path: ".\\bin\\Release\\UKControllerPlugin.dll"
+          path: ".\\build\\bin\\UKControllerPlugin.dll"
 
   lint:
     name: Lint
     runs-on: ubuntu-latest
     concurrency:
-      group: ukcp-build-${{ github.ref }}
+      group: ukcp-lint-${{ github.ref }}
       cancel-in-progress: true
     steps:
       - name: Checkout Code
@@ -192,19 +187,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: UKControllerPluginCore.dll
-          path: ".\\bin\\Release\\UKControllerPluginCore.dll"
+          path: ".\\build\\bin\\UKControllerPluginCore.dll"
 
       - name: Download Updater Binary
         uses: actions/download-artifact@v2
         with:
           name: UKControllerPluginUpdater.dll
-          path: ".\\bin\\Release\\UKControllerPluginUpdater.dll"
+          path: ".\\build\\bin\\UKControllerPluginUpdater.dll"
 
       - name: Download Loader Binary
         uses: actions/download-artifact@v2
         with:
           name: UKControllerPlugin.dll
-          path: ".\\bin\\Release\\UKControllerPlugin.dll"   
+          path: ".\\build\\bin\\UKControllerPlugin.dll"
           
       - name: Create Release
         env:
