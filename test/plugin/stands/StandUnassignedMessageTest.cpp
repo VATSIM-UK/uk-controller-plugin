@@ -9,13 +9,11 @@ namespace UKControllerPluginTests::Stands {
         public:
             StandUnassignedMessageTest()
                 : message("BAW123")
-            {
-            
-            }
-            
+            {}
+
             StandUnassignedMessage message;
     };
-    
+
     TEST_F(StandUnassignedMessageTest, ItSerializesToJson)
     {
         nlohmann::json expected {

@@ -9,14 +9,14 @@ namespace UKControllerPlugin::Stands {
             ~StandAssignedMessage() override = default;
             nlohmann::json GetMessageData() const override;
             Integration::MessageType GetMessageType() const override;
-            
+
         private:
             // The callsign for the assignment
             std::string callsign;
-            
+
             // The airfield the stand is at
             std::string airfield;
-            
+
             // The stand identifier
             std::string stand;
     };

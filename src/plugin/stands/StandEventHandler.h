@@ -129,7 +129,7 @@ namespace UKControllerPlugin {
 
                 // Locks the stand assignments map to prevent concurrent edits
                 std::mutex mapMutex;
-                
+
                 // Allows us to send events to our integrations
                 Integration::OutboundIntegrationEventHandler& integrationEventHandler;
             };

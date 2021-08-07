@@ -114,7 +114,7 @@ namespace UKControllerPlugin {
                     callsign,
                     *stand
                 );
-                
+
                 int standId = stand->id;
                 this->taskRunner.QueueAsynchronousTask([this, standId, callsign]() {
                     try {
@@ -152,7 +152,6 @@ namespace UKControllerPlugin {
                 mousePos.x + 400,
                 mousePos.y + 600
             };
-
 
             this->plugin.TriggerPopupList(
                 popupArea,
@@ -233,7 +232,6 @@ namespace UKControllerPlugin {
             if (this->lastAirfieldUsed == "") {
                 return;
             }
-
 
             this->DoStandAssignment(
                 this->plugin.GetSelectedFlightplan(),
@@ -454,7 +452,7 @@ namespace UKControllerPlugin {
                     LogWarning("Invalid stand assignment message " + message.data.dump());
                     return;
                 }
-                
+
                 this->AssignStandToAircraft(
                     message.data.at("callsign").get<std::string>(),
                     *this->stands.find(message.data.at("stand_id").get<int>())
@@ -484,7 +482,7 @@ namespace UKControllerPlugin {
         {
             return std::lock_guard(this->mapMutex);
         }
-        
+
         void StandEventHandler::UnassignStandForAircraft(std::string callsign)
         {
             this->RemoveFlightStripAnnotation(callsign);
@@ -492,7 +490,7 @@ namespace UKControllerPlugin {
             this->integrationEventHandler.SendEvent(std::make_shared<StandUnassignedMessage>(callsign));
             LogInfo("Stand assignment removed for " + callsign);
         }
-        
+
         void StandEventHandler::AssignStandToAircraft(std::string callsign, const Stand& stand)
         {
             this->AnnotateFlightStrip(

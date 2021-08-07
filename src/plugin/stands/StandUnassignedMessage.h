@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Stands {
             ~StandUnassignedMessage() override = default;
             nlohmann::json GetMessageData() const override;
             Integration::MessageType GetMessageType() const override;
-            
+
         private:
             // The callsign for the unassignment
             std::string callsign;
