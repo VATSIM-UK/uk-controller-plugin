@@ -99,9 +99,18 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles"
           nmake
 
-      - name: Run Tests
-        run: ctest -C Release --output-on-failure
-      
+      - name: Run Utils Tests
+        run: ".\\build\\release\\bin\\UKControllerPluginUtilsTest.exe"
+
+      - name: Run Updater Tests
+        run: ".\\build\\release\\bin\\UKControllerPluginUpdaterTest.exe"
+
+      - name: Run Loader Tests
+        run: ".\\build\\release\\bin\\UKControllerPluginLoaderTest.exe"
+
+      - name: Run Core Tests
+        run: ".\\build\\release\\bin\\UKControllerPluginCoreTest.exe"
+        
       # Upload artifacts
       - name: Upload Core Binary As Artifact
         uses: actions/upload-artifact@v2
