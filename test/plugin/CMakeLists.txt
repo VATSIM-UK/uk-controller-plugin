@@ -530,8 +530,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
-    OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
+    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_BINARY_DIR}/bin/"
+    OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/"
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
@@ -558,7 +558,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/.;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/plugin;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../packages/gmock.1.10.0/lib/native/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../testingutils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
@@ -572,6 +571,7 @@ target_link_directories(
         $ENV{CURL_DEBUG_LIBRARYDIR}
         $ENV{CURL_LIBRARYDIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+        ${CMAKE_BINARY_DIR}/lib
 )
 
 ################################################################################
@@ -635,7 +635,7 @@ endif()
 add_dependencies(${PROJECT_NAME}
     UKControllerPluginCore
     UKControllerPluginUtils
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
 )
 
@@ -643,7 +643,7 @@ add_dependencies(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PRIVATE
     UKControllerPluginCore
     UKControllerPluginUtils
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
 )
 
@@ -651,13 +651,13 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "$<$<CONFIG:Debug>:"
         "EuroScopePlugInDll;"
         "dbghelp;"
-        "gdiplus;"
         "libcurl_a_debug"
     ">"
     "$<$<CONFIG:Release>:"
         "EuroScopePluginDll;"
         "libcurl_a"
     ">"
+    "gdiplus;"
     "kernel32;"
     "user32;"
     "gdi32;"

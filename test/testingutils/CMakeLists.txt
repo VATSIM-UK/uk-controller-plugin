@@ -51,8 +51,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
-    OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
+    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_BINARY_DIR}/lib/"
+    OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/lib/"
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
@@ -61,7 +61,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Include directories
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../packages/gmock.1.10.0/lib/native/include;"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/googletest/googlemock/include;"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/googletest/googletest/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/.;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
@@ -114,15 +115,7 @@ endif()
 # Dependencies
 ################################################################################
 add_dependencies(${PROJECT_NAME}
-    GoogleMock
+    gmock
 )
 
-# Link with other targets.
-target_link_libraries(${PROJECT_NAME} PUBLIC
-    GoogleMock
-)
-
-set(ADDITIONAL_LIBRARY_DEPENDENCIES
-    "gdiplus"
-)
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
