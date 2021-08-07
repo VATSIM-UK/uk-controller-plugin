@@ -586,6 +586,7 @@ set(src__prenote
     "prenote/PrenoteService.h"
     "prenote/PrenoteServiceFactory.cpp"
     "prenote/PrenoteServiceFactory.h"
+    "prenote/PrenoteMessage.cpp"
 )
 source_group("src\\prenote" FILES ${src__prenote})
 
