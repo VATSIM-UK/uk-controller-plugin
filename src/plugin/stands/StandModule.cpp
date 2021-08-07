@@ -39,6 +39,7 @@ namespace UKControllerPlugin {
                 *container.api,
                 *container.taskRunner,
                 *container.plugin,
+                *container.integrationModuleContainer->outboundMessageHandler,
                 stands,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );

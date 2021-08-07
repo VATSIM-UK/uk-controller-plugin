@@ -1,4 +1,5 @@
 #pragma once
+#include "integration/OutboundIntegrationEventHandler.h"
 #include "stands/Stand.h"
 #include "stands/CompareStands.h"
 #include "tag/TagItemInterface.h"
@@ -24,6 +25,7 @@ namespace UKControllerPlugin {
                     const UKControllerPlugin::Api::ApiInterface& api,
                     UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner,
                     UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
+                    Integration::OutboundIntegrationEventHandler& integrationEventHandler,
                     std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
                     int standSelectedCallbackId
                 );
@@ -126,6 +128,9 @@ namespace UKControllerPlugin {
 
                 // Locks the stand assignments map to prevent concurrent edits
                 std::mutex mapMutex;
+                
+                // Allows us to send events to our integrations
+                Integration::OutboundIntegrationEventHandler& integrationEventHandler;
             };
     }  // namespace Stands
 }  // namespace UKControllerPlugin

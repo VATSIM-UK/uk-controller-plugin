@@ -22,11 +22,12 @@ namespace UKControllerPlugin {
             const ApiInterface& api,
             TaskRunnerInterface& taskRunner,
             EuroscopePluginLoopbackInterface& plugin,
+            Integration::OutboundIntegrationEventHandler& integrationEventHandler,
             const std::set<Stand, CompareStands> stands,
             int standSelectedCallbackId
         )
             : api(api), taskRunner(taskRunner), plugin(plugin), stands(stands),
-            standSelectedCallbackId(standSelectedCallbackId)
+            standSelectedCallbackId(standSelectedCallbackId), integrationEventHandler(integrationEventHandler)
         {
         }
 

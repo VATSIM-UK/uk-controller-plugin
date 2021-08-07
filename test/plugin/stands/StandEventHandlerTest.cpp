@@ -13,6 +13,7 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "api/ApiException.h"
 #include "plugin/PopupMenuItem.h"
+#include "mock/MockOutboundIntegrationEventHandler.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Api::ApiException;
@@ -28,6 +29,7 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
+using UKControllerPluginTest::Integration::MockOutboundIntegrationEventHandler;
 using UKControllerPlugin::Push::PushEvent;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -41,7 +43,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 StandEventHandlerTest()
-                    : handler(api, taskRunner, plugin, this->GetStands(), 1),
+                    : handler(api, taskRunner, plugin, mockIntegration, this->GetStands(), 1),
                     tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize)
                 {
                     ON_CALL(this->flightplan, GetCallsign())
@@ -66,6 +68,7 @@ namespace UKControllerPluginTest {
                 NiceMock<MockApiInterface> api;
                 NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 NiceMock<MockTaskRunnerInterface> taskRunner;
+                NiceMock<MockOutboundIntegrationEventHandler> mockIntegration;
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
                 std::shared_ptr<NiceMock<MockEuroScopeCControllerInterface>> mockController;
