@@ -17,6 +17,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Initialise Git Submodules
+        run: |
+          git submodule init
+          git submodule update
+
       # Environment things
       - name: Add Msbuild To PATH
         uses: microsoft/setup-msbuild@v1.0.2
