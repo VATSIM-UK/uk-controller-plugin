@@ -9,30 +9,37 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "integration/ExternalMessageHandlerInterface.h"
+#include "integration/IntegrationActionProcessor.h"
 
 namespace UKControllerPlugin {
     namespace Stands {
         /*
             Handles events related to stands.
         */
-        class StandEventHandler: public UKControllerPlugin::Tag::TagItemInterface,
+        class StandEventHandler: public Tag::TagItemInterface,
                                  public Push::PushEventProcessorInterface,
-                                 public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface,
-                                 public UKControllerPlugin::Integration::ExternalMessageHandlerInterface
+                                 public Flightplan::FlightPlanEventHandlerInterface,
+                                 public Integration::ExternalMessageHandlerInterface,
+                                 public Integration::IntegrationActionProcessor
         {
             public:
                 StandEventHandler(
                     const UKControllerPlugin::Api::ApiInterface& api,
-                    UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner,
-                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
+                    TaskManager::TaskRunnerInterface& taskRunner,
+                    Euroscope::EuroscopePluginLoopbackInterface& plugin,
                     Integration::OutboundIntegrationEventHandler& integrationEventHandler,
-                    std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
+                    std::set<Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
                     int standSelectedCallbackId
                 );
+                [[nodiscard]] std::vector<Integration::MessageType> ActionsToProcess() const override;
+                void ProcessAction(
+                        std::shared_ptr<Integration::MessageInterface> message, std::function<void(void)> success,
+                        std::function<void(std::vector<std::string>)> fail
+                ) override;
                 ~StandEventHandler() override = default;
 
                 void AnnotateFlightStrip(std::string callsign, int standId) const;
-                void DoStandAssignment(
+                std::string DoStandAssignment(
                     std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> aircraft,
                     std::string airfield,
                     std::string identifier
