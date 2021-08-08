@@ -46,19 +46,27 @@ namespace UKControllerPlugin::Integration {
 
         private:
             bool AttemptInitialisation(
-                std::shared_ptr<IntegrationConnection> connection,
+                const std::shared_ptr<IntegrationConnection>& connection,
                 std::queue<std::shared_ptr<MessageInterface>> incomingMessages
             );
-            static std::vector<std::string> ValidateMessage(std::shared_ptr<MessageInterface> message);
-            static std::vector<std::string> ValidateMessageType(std::shared_ptr<MessageInterface> message);
-            static std::vector<std::string> ValidateMessageData(std::shared_ptr<MessageInterface> message);
+            static std::vector<std::string> ValidateMessage(const std::shared_ptr<MessageInterface>& message);
+            static std::vector<std::string> ValidateMessageType(const std::shared_ptr<MessageInterface>& message);
+            static std::vector<std::string> ValidateMessageData(const std::shared_ptr<MessageInterface>& message);
             static std::vector<std::string> ValidateIntegrationDetails(const nlohmann::json& data);
             static std::vector<std::string> ValidateEventSubscriptions(const nlohmann::json& data);
             void UpgradeToClient(
-                std::shared_ptr<IntegrationConnection> connection,
-                std::shared_ptr<MessageInterface> initialisationMessage
+                const std::shared_ptr<IntegrationConnection>& connection,
+                const std::shared_ptr<MessageInterface>& initialisationMessage
             );
-            void SendInitialisationSuccessMessage(std::shared_ptr<IntegrationConnection> connection) const;
+            static void SendInitialisationSuccessMessage(
+                const std::shared_ptr<IntegrationConnection>& connection,
+                const std::shared_ptr<MessageInterface>& initialisationMessage
+            );
+            static void SendInitialisationFailureMessage(
+                const std::shared_ptr<IntegrationConnection>& connection,
+                const std::shared_ptr<MessageInterface>& initialisationMessage,
+                const std::vector<std::string>& errors
+            );
 
             // Manages clients once fully initialised
             std::shared_ptr<IntegrationClientManager> clientManager;

@@ -16,6 +16,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json messageData = {
             {"type", "test_message"},
             {"version", 2},
+            {"id", "foo"},
             {"data", {{"foo", "bar"}}}
         };
         auto parsedMessage = InboundMessage::FromJson(messageData);
@@ -31,6 +32,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json messageData = {
             {"type", "test_message"},
             {"version", 2},
+            {"id", "foo"},
             {"data", {{"foo", "bar"}}}
         };
         auto parsedMessage = InboundMessage::FromJson(messageData);
@@ -40,11 +42,27 @@ namespace UKControllerPluginTest::Integration {
             parsedMessage->GetMessageData()
         );
     }
+    
+    TEST_F(InboundMessageTest, ItLoadsMessageIdFromJson)
+    {
+        nlohmann::json messageData = {
+                {"type", "test_message"},
+                {"version", 2},
+                {"id", "foo"},
+                {"data", {{"foo", "bar"}}}
+        };
+        auto parsedMessage = InboundMessage::FromJson(messageData);
+        EXPECT_EQ(
+            "foo",
+            parsedMessage->GetMessageId()
+        );
+    }
 
     TEST_F(InboundMessageTest, FromJsonFailsToParseOnMissingType)
     {
         nlohmann::json messageData = {
             {"version", 2},
+            {"id", "foo"},
             {"data", {{"foo", "bar"}}}
         };
 
@@ -56,6 +74,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json messageData = {
             {"type", 123},
             {"version", 2},
+            {"id", "foo"},
             {"data", {{"foo", "bar"}}}
         };
 
@@ -66,6 +85,7 @@ namespace UKControllerPluginTest::Integration {
     {
         nlohmann::json messageData = {
             {"type", "test_message"},
+            {"id", "foo"},
             {"data", {{"foo", "bar"}}}
         };
 
@@ -77,6 +97,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json messageData = {
             {"type", "test_message"},
             {"version", "abc"},
+            {"id", "foo"},
             {"data", {{"foo", "bar"}}}
         };
 
@@ -87,6 +108,7 @@ namespace UKControllerPluginTest::Integration {
     {
         nlohmann::json messageData = {
             {"type", "test_message"},
+            {"id", "foo"},
             {"version", 2},
         };
 
@@ -98,7 +120,31 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json messageData = {
             {"type", "test_message"},
             {"version", 2},
+            {"id", "foo"},
             {"data", nlohmann::json::array()}
+        };
+
+        EXPECT_EQ(nullptr, InboundMessage::FromJson(messageData));
+    }
+    
+    TEST_F(InboundMessageTest, FromJsonFailsToParseOnNoId)
+    {
+        nlohmann::json messageData = {
+                {"type", "test_message"},
+                {"version", 2},
+                {"data", nlohmann::json::object()}
+        };
+
+        EXPECT_EQ(nullptr, InboundMessage::FromJson(messageData));
+    }
+    
+    TEST_F(InboundMessageTest, FromJsonFailsToParseOnIdNotString)
+    {
+        nlohmann::json messageData = {
+                {"type", "test_message"},
+                {"version", 2},
+                {"id", 123},
+                {"data", nlohmann::json::object()}
         };
 
         EXPECT_EQ(nullptr, InboundMessage::FromJson(messageData));

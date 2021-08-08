@@ -255,7 +255,7 @@ set(test__mock
     "mock/MockGraphicsInterface.h"
     "mock/MockHistoryTrailDialog.h"
     "mock/MockHistoryTrailRepository.h"
-    "mock/MockInboundIntegrationMessageProcessor.h"
+    "mock/MockIntegrationActionProcessor.h"
     "mock/MockMinStack.h"
     "mock/MockOutboundIntegrationEventHandler.h"
     "mock/MockPushEventConnection.h"

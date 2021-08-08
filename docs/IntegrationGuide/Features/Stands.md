@@ -8,8 +8,8 @@
 {
   "type": "assign_stand",
   "version": 1,
+  "id": "your_message_id",
   "data": {
-    "message_id": "your_message_id",
     "callsign": "RYR123",
     "airfield": "EGSS",
     "stand": "54L"
@@ -17,8 +17,22 @@
 }
 ```
 
-The response to this message will be a standard [Success message](../Responses/StandardResponses.md#success), containing your message id.
+The response to this message will be a standard [Success](../Responses/StandardResponses.md#success) or [Failure](../Responses/StandardResponses.md#failure) message, containing your message id.
 
+### Unassign an aircrafts stand
+
+```JSON
+{
+  "type": "unassign_stand",
+  "version": 1,
+  "id": "your_message_id",
+  "data": {
+    "callsign": "RYR123",
+  }
+}
+```
+
+The response to this message will be a standard [Success](../Responses/StandardResponses.md#success) or [Failure](../Responses/StandardResponses.md#failure) message, containing your message id.
 ## Events
 
 ### Stand Assigned

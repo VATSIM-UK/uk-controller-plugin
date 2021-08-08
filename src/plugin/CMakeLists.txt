@@ -350,7 +350,7 @@ set(src__integration
     "integration/HiddenWindow.h"
     "integration/InboundIntegrationMessageHandler.cpp"
     "integration/InboundIntegrationMessageHandler.h"
-    "integration/InboundIntegrationMessageProcessor.h"
+    "integration/IntegrationActionProcessor.h"
     "integration/InboundMessage.cpp"
     "integration/InboundMessage.h"
     "integration/InitialisationFailureMessage.cpp"
@@ -378,7 +378,7 @@ set(src__integration
     "integration/SocketInterface.h"
     "integration/SocketWrapper.cpp"
     "integration/SocketWrapper.h"
-)
+        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h)
 source_group("src\\integration" FILES ${src__integration})
 
 set(src__intention

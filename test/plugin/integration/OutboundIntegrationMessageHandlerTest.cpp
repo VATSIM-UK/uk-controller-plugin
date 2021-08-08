@@ -56,6 +56,7 @@ namespace UKControllerPluginTest::Integration {
                 return nlohmann::json{
                     {"type", type},
                     {"version", version},
+                    {"id", "foo"},
                     {"data", nlohmann::json::object({{"foo", "bar"}})}
                 };
             }

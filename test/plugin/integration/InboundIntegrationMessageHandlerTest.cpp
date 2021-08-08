@@ -5,12 +5,16 @@
 #include "integration/IntegrationConnection.h"
 #include "integration/InboundMessage.h"
 #include "mock/MockConnection.h"
-#include "mock/MockInboundIntegrationMessageProcessor.h"
+#include "mock/MockIntegrationActionProcessor.h"
+#include "integration/ActionFailureMessage.h"
+#include "integration/ActionSuccessMessage.h"
 
 using UKControllerPlugin::Integration::InboundIntegrationMessageHandler;
 using UKControllerPlugin::Integration::IntegrationClientManager;
 using UKControllerPlugin::Integration::IntegrationClient;
 using UKControllerPlugin::Integration::IntegrationConnection;
+using UKControllerPlugin::Integration::ActionSuccessMessage;
+using UKControllerPlugin::Integration::ActionFailureMessage;
 
 namespace UKControllerPluginTest::Integration {
     class InboundIntegrationMessageHandlerTest : public testing::Test
@@ -20,14 +24,14 @@ namespace UKControllerPluginTest::Integration {
                 : clientManager(new IntegrationClientManager),
                   handler(clientManager)
             {
-                this->processor1 = std::make_shared<testing::NiceMock<MockInboundIntegrationMessageProcessor>>();
-                this->processor2 = std::make_shared<testing::NiceMock<MockInboundIntegrationMessageProcessor>>();
+                this->processor1 = std::make_shared<testing::NiceMock<MockIntegrationActionProcessor>>();
+                this->processor2 = std::make_shared<testing::NiceMock<MockIntegrationActionProcessor>>();
 
-                ON_CALL(*this->processor1, MessageToProcess)
-                    .WillByDefault(testing::Return(MessageType{"test1", 2}));
+                ON_CALL(*this->processor1, ActionsToProcess)
+                    .WillByDefault(testing::Return(std::vector<MessageType>{MessageType{"test1", 2}}));
 
-                ON_CALL(*this->processor2, MessageToProcess)
-                    .WillByDefault(testing::Return(MessageType{"test2", 3}));
+                ON_CALL(*this->processor2, ActionsToProcess)
+                    .WillByDefault(testing::Return(std::vector<MessageType>{MessageType{"test2", 3}}));
 
                 this->mockConnection1 = std::make_shared<testing::NiceMock<MockConnection>>();
                 this->mockConnection2 = std::make_shared<testing::NiceMock<MockConnection>>();
@@ -62,7 +66,27 @@ namespace UKControllerPluginTest::Integration {
                 return nlohmann::json{
                     {"type", type},
                     {"version", version},
+                    {"id", "fooo"},
                     {"data", nlohmann::json::object({{"foo", "bar"}})}
+                };
+            }
+            
+            static nlohmann::json GetFailureJson()
+            {
+                return nlohmann::json{
+                    {"type", "action_failure"},
+                    {"version", 1},
+                    {"id", "fooo"},
+                    {"errors", nlohmann::json::array({"foo", "bar"})}
+                };
+            }
+            
+            static nlohmann::json GetSuccessJson()
+            {
+                return nlohmann::json{
+                    {"type", "action_success"},
+                    {"version", 1},
+                    {"id", "fooo"}
                 };
             }
 
@@ -72,8 +96,8 @@ namespace UKControllerPluginTest::Integration {
             std::shared_ptr<IntegrationClient> client2;
             std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection1;
             std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection2;
-            std::shared_ptr<testing::NiceMock<MockInboundIntegrationMessageProcessor>> processor1;
-            std::shared_ptr<testing::NiceMock<MockInboundIntegrationMessageProcessor>> processor2;
+            std::shared_ptr<testing::NiceMock<MockIntegrationActionProcessor>> processor1;
+            std::shared_ptr<testing::NiceMock<MockIntegrationActionProcessor>> processor2;
             std::shared_ptr<IntegrationClientManager> clientManager;
             InboundIntegrationMessageHandler handler;
     };
@@ -105,9 +129,12 @@ namespace UKControllerPluginTest::Integration {
         this->clientManager->AddClient(client1);
 
         ON_CALL(*mockConnection1, Receive)
-            .WillByDefault(testing::Return(std::queue<std::string>({this->GetTestMessage("test1", 2)})));
+            .WillByDefault(testing::Return(std::queue<std::string>({GetTestMessage("test1", 2)})));
 
-        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage1->ToJson().dump()))
+        EXPECT_CALL(*mockConnection1, Send(GetFailureJson().dump()))
+            .Times(1);
+        
+        EXPECT_CALL(*mockConnection1, Send(GetSuccessJson().dump()))
             .Times(1);
 
         handler.TimedEventTrigger();
@@ -120,16 +147,16 @@ namespace UKControllerPluginTest::Integration {
         this->clientManager->AddClient(client1);
 
         std::queue<std::string> messages;
-        messages.push(this->GetTestMessage("test1", 2));
-        messages.push(this->GetTestMessage("test2", 3));
+        messages.push(GetTestMessage("test1", 2));
+        messages.push(GetTestMessage("test2", 3));
         ON_CALL(*mockConnection1, Receive)
             .WillByDefault(testing::Return(messages));
 
-        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage1->ToJson().dump()))
-            .Times(1);
-
-        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage2->ToJson().dump()))
-            .Times(1);
+        EXPECT_CALL(*mockConnection1, Send(GetSuccessJson().dump()))
+            .Times(2);
+        
+        EXPECT_CALL(*mockConnection1, Send(GetFailureJson().dump()))
+            .Times(2);
 
         handler.TimedEventTrigger();
     }
@@ -140,12 +167,15 @@ namespace UKControllerPluginTest::Integration {
         this->clientManager->AddClient(client1);
 
         std::queue<std::string> messages;
-        messages.push(this->GetTestMessage("test1", 2));
-        messages.push(this->GetTestMessage("test2", 3));
+        messages.push(GetTestMessage("test1", 2));
+        messages.push(GetTestMessage("test2", 3));
         ON_CALL(*mockConnection1, Receive)
             .WillByDefault(testing::Return(messages));
 
-        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage1->ToJson().dump()))
+        EXPECT_CALL(*mockConnection1, Send(GetSuccessJson().dump()))
+            .Times(1);
+        
+        EXPECT_CALL(*mockConnection1, Send(GetFailureJson().dump()))
             .Times(1);
 
         EXPECT_CALL(*mockConnection2, Send(testing::_))
@@ -162,23 +192,29 @@ namespace UKControllerPluginTest::Integration {
         this->clientManager->AddClient(client2);
 
         std::queue<std::string> messages1;
-        messages1.push(this->GetTestMessage("test1", 2));
+        messages1.push(GetTestMessage("test1", 2));
 
         ON_CALL(*mockConnection1, Receive)
             .WillByDefault(testing::Return(messages1));
 
         std::queue<std::string> messages2;
-        messages2.push(this->GetTestMessage("test2", 3));
+        messages2.push(GetTestMessage("test2", 3));
 
         ON_CALL(*mockConnection2, Receive)
             .WillByDefault(testing::Return(messages2));
 
-        EXPECT_CALL(*mockConnection1, Send(parsedTestMessage1->ToJson().dump()))
+        EXPECT_CALL(*mockConnection1, Send(GetSuccessJson().dump()))
+            .Times(1);
+        
+        EXPECT_CALL(*mockConnection1, Send(GetFailureJson().dump()))
             .Times(1);
 
-        EXPECT_CALL(*mockConnection2, Send(parsedTestMessage2->ToJson().dump()))
+        EXPECT_CALL(*mockConnection2, Send(GetSuccessJson().dump()))
             .Times(1);
-
+        
+        EXPECT_CALL(*mockConnection2, Send(GetFailureJson().dump()))
+            .Times(1);
+        
         handler.TimedEventTrigger();
     }
 } // namespace UKControllerPluginTest::Integration
