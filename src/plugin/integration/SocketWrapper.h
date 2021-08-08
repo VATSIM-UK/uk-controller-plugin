@@ -33,7 +33,7 @@ namespace UKControllerPlugin::Integration {
             std::stringstream writeStream;
 
             // Is the socket still active - should we keep it alive
-            bool active;
+            bool active = true;
 
             // Thread for reading from the socket
             std::shared_ptr<std::thread> readThread;
