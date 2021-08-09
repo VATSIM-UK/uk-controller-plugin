@@ -167,12 +167,14 @@ jobs:
       - name: Get All Changed Files
         id: changed-files
         uses: jitterbit/get-changed-files@v1
-      - run: |
+
+      - name: Build Linting String
+        run: |
           lint_files=""
           for added_modified_file in "${added_modified_files[@]}"; do
             lint_files=lint_files+${added_modified_file}+" "
           done
-          echo lint_files
+          echo "${lint_files}"
           echo "FILES_TO_LINT=${lint_files}" >> $GITHUB_ENV
 
       - name: Run Lint
