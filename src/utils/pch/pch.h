@@ -13,7 +13,7 @@
 #include "spdlog/include/spdlog/logger.h"
 #include "spdlog/include/spdlog/sinks/file_sinks.h"
 #include "spdlog/include/spdlog/sinks/null_sink.h"
-#include "curl/curl.h"
+#include "curl/curl.h" // NOLINT
 #include <date/include/date/date.h>
 #include "log/LoggerFunctions.h"
 #pragma warning( pop )
@@ -21,7 +21,7 @@
 #include <CommCtrl.h>
 #pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")  // NOLINT
 #include <CommDlg.h>
-#include<sstream>
+#include <sstream>
 #include <string>
 #include <shellapi.h>
 #include <filesystem>
