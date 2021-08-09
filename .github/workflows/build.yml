@@ -136,6 +136,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install Clang Tidy
+        run: |
+          sudo apt-get install -y clang-tidy
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy 100
+
       - name: Cache cURL
         id: cache-curl
         uses: actions/cache@v2.1.3
