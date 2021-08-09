@@ -167,15 +167,10 @@ jobs:
       - name: Get All Changed Files
         id: changed-files
         uses: Ana06/get-changed-files@v2.0.0
-
-      - name: Build Linting String
-        run: |
-          lint_files=""
-          for added_modified_file in "${added_modified_files[@]}"; do
-            lint_files=lint_files+${added_modified_file}+" "
-          done
-          echo "${lint_files}"
-          echo "FILES_TO_LINT=${lint_files}" >> $GITHUB_ENV
+        with:
+          filter: |
+            'src/*/*.h'
+            'src/*/*.cpp'
 
       - name: Run Lint
         run: |
