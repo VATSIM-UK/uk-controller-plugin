@@ -3,7 +3,7 @@
 #define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #define _SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING
-#define NOMINMAX 1
+#define NOMINMAX 1 // NOLINT
 
 // add headers that you want to pre-compile here
 #pragma warning(push)
