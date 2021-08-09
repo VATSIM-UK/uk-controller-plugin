@@ -96,7 +96,7 @@ jobs:
       # Run the build and tests
       - name: Run Build
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
           cd build
           nmake
           cd ..
@@ -147,14 +147,14 @@ jobs:
           CURL_DOWNLOAD_URL: "https://github.com/curl/curl/releases/download/curl-7_76_1/curl-7.76.1.zip"
           CURL_VERSION: 7.76.1
         run: |
-          curl ${env:CURL_DOWNLOAD_URL} --output /tmp/curlzip
+          curl ${{env.CURL_DOWNLOAD_URL}} --output /tmp/curlzip
           unzip curlzip -d /tmp/curl
 
       - name: Setup cURL Environment
         env:
           CURL_VERSION: 7.76.1
         run: |
-          echo "CURL_INCLUDEDIR=/tmp/curl/curl-${env:CURL_VERSION}/include" >> $GITHUB_ENV
+          echo "CURL_INCLUDEDIR=/tmp/curl/curl-${{env.CURL_VERSION}}/include" >> $GITHUB_ENV
           echo "CURL_LIBRARYDIR=foo" >> $GITHUB_ENV
 
       # Run the build and tests
