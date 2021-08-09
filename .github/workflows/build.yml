@@ -174,6 +174,7 @@ jobs:
 
       - name: Run Lint
         run: |
+          echo "${{ steps.changed-files.outputs.added_modified }}"
           if [[ ! -z "${{ steps.changed-files.outputs.added_modified }}" ]]
           then
             clang-tidy ${{ steps.changed-files.outputs.added_modified }}
