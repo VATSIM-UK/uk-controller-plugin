@@ -11,6 +11,7 @@ namespace UKControllerPlugin::Integration {
     SocketWrapper::~SocketWrapper()
     {
         if (this->active) {
+            LogDebug("Shutting down socket");
             int shutdownResult = shutdown(this->socket, SD_BOTH);
             if (shutdownResult == SOCKET_ERROR) {
                 LogError("Shutdown error shutting down socket: " + std::to_string(WSAGetLastError()));
@@ -18,6 +19,7 @@ namespace UKControllerPlugin::Integration {
             this->active = false;
         }
 
+        LogDebug("Closing socket");
         closesocket(this->socket);
         this->readThread->join();
         this->writeThread->join();
@@ -31,6 +33,10 @@ namespace UKControllerPlugin::Integration {
     SocketInterface& SocketWrapper::operator<<(std::string& message)
     {
         auto lock = this->LockWriteSteam();
+        if (this->writeStream.eof()) {
+            this->writeStream.clear();
+        }
+
         this->writeStream << message;
         return *this;
     }
@@ -45,6 +51,7 @@ namespace UKControllerPlugin::Integration {
     SocketInterface& SocketWrapper::operator>>(std::stringstream& inboundStream)
     {
         auto lock = this->LockReadStream();
+
         std::string dataString;
         this->readStream >> dataString;
         inboundStream << dataString;
@@ -60,6 +67,10 @@ namespace UKControllerPlugin::Integration {
 
             if (bytesReceived > 0) {
                 auto lock = this->LockReadStream();
+                if (this->readStream.eof()) {
+                    this->readStream.clear();
+                }
+
                 this->readStream << std::string(&receiveBuffer[0], &receiveBuffer[bytesReceived]);
             } else if (bytesReceived == 0) {
                 LogInfo("Integration connection closing");
@@ -103,10 +114,9 @@ namespace UKControllerPlugin::Integration {
     {
         std::string message;
         auto lock = this->LockWriteSteam();
-        if (this->writeStream.str().empty()) {
+        if (this->writeStream.eof()) {
             return message;
         }
-
 
         this->writeStream >> message;
         return message;
