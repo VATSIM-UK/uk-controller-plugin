@@ -138,8 +138,8 @@ jobs:
 
       - name: Install Clang Tidy
         run: |
-          sudo apt-get install -y clang-tidy
-          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy 100
+          sudo apt-get install -y clang-tidy-10
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-10 100
 
       - name: Cache cURL
         id: cache-curl
