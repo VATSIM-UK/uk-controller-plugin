@@ -147,8 +147,8 @@ jobs:
           CURL_DOWNLOAD_URL: "https://github.com/curl/curl/releases/download/curl-7_76_1/curl-7.76.1.zip"
           CURL_VERSION: 7.76.1
         run: |
-          curl ${{env.CURL_DOWNLOAD_URL}} --output /tmp/curl.zip -L
-          7z e /tmp/curl.zip
+          curl ${{env.CURL_DOWNLOAD_URL}} --output /tmp/curlzip -L
+          unzip /tmp/curlzip
 
       - name: Setup cURL Environment
         env:
