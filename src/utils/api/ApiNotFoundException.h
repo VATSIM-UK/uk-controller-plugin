@@ -1,5 +1,4 @@
 #pragma once
-
 #include "api/ApiException.h"
 
 namespace UKControllerPlugin {
