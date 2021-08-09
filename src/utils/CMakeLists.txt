@@ -187,6 +187,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
     "$ENV{CURL_INCLUDEDIR}"
 )
