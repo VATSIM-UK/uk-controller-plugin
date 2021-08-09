@@ -167,9 +167,20 @@ jobs:
       - name: Get All Changed Files
         id: changed-files
         uses: jitterbit/get-changed-files@v1
+      - run: |
+          lint_files=""
+          for added_modified_file in "${added_modified_files[@]}"; do
+            lint_files=lint_files+${added_modified_file}+" "
+          done
+          echo lint_files
+          echo "FILES_TO_LINT=${lint_files}" >> $GITHUB_ENV
 
       - name: Run Lint
-        run: clang-tidy ${{ steps.changed-files.outputs.all }}
+        run: |
+          if [[ ! -z "${env.FILES_TO_LINT}" ]]
+          then
+            clang-tidy ${env.FILES_TO_LINT}
+          fi
 
   release:
     name: Release
