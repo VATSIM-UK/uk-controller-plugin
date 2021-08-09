@@ -148,7 +148,7 @@ jobs:
           CURL_VERSION: 7.76.1
         run: |
           curl ${{env.CURL_DOWNLOAD_URL}} --output /tmp/curl.zip
-          7z /tmp/curl.zip -o /tmp/curl
+          7z -x /tmp/curl.zip -o /tmp/curl
 
       - name: Setup cURL Environment
         env:
