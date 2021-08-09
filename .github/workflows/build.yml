@@ -166,22 +166,15 @@ jobs:
 
       - name: Get All Changed Files
         id: changed-files
-        uses: jitterbit/get-changed-files@v1
-
-      - name: Build Linting String
-        run: |
-          lint_files=""
-          for added_modified_file in "${added_modified_files[@]}"; do
-            lint_files=lint_files+${added_modified_file}+" "
-          done
-          echo "${lint_files}"
-          echo "FILES_TO_LINT=${lint_files}" >> $GITHUB_ENV
+        uses: Ana06/get-changed-files@v2.0.0
+        with:
+          filter: '*.h | *.cpp'
 
       - name: Run Lint
         run: |
-          if [[ ! -z "${env.FILES_TO_LINT}" ]]
+          if [[ ! -z "${{ steps.changed-files.outputs.added_modified }}" ]]
           then
-            clang-tidy ${env.FILES_TO_LINT}
+            clang-tidy ${{ steps.changed-files.outputs.added_modified }}
           fi
 
   release:
