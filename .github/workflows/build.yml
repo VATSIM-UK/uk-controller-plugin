@@ -183,7 +183,7 @@ jobs:
         run: |
           if [[ ! -z "${{ steps.changed-files.outputs.added_modified }}" ]]
           then
-            clang-tidy ${{ steps.changed-files.outputs.added_modified }} -p build
+            clang-tidy ${{ steps.changed-files.outputs.added_modified }} -p build -isystem "${{env.CURL_INCLUDEDIR}}"
           fi
 
   release:
