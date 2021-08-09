@@ -13,7 +13,7 @@ jobs:
     concurrency:
       group: ukcp-build-${{ github.ref }}
       cancel-in-progress: true
-    steps:       
+    steps:
       - name: Checkout Code and Submodules
         uses: actions/checkout@v2
         with:
@@ -92,11 +92,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: .\\.github\\workflows\\plugin_version.ps1
-      
+
       # Run the build and tests
       - name: Run Build
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
           cd build
           nmake
           cd ..
@@ -129,15 +129,45 @@ jobs:
     concurrency:
       group: ukcp-lint-${{ github.ref }}
       cancel-in-progress: true
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Install Cpplint
-        run: pip install cpplint
+      - name: Cache cURL
+        id: cache-curl
+        uses: actions/cache@v2.1.3
+        with:
+          path: "/tmp/curl"
+          key: "ukcp-curl-lint"
+
+      - name: Download cURL
+        if: steps.cache-curl.outputs.cache-hit != 'true'
+        env:
+          CURL_DOWNLOAD_URL: "https://github.com/curl/curl/releases/download/curl-7_76_1/curl-7.76.1.zip"
+          CURL_VERSION: 7.76.1
+        run: |
+          curl ${env:CURL_DOWNLOAD_URL} --output /tmp/curlzip
+          unzip curlzip -d /tmp/curl
+
+      - name: Setup cURL Environment
+        env:
+          CURL_VERSION: 7.76.1
+        run: |
+          echo "CURL_INCLUDEDIR=/tmp/curl/curl-${env:CURL_VERSION}/include" >> $GITHUB_ENV
+          echo "CURL_LIBRARYDIR=foo" >> $GITHUB_ENV
+
+      # Run the build and tests
+      - name: Run Cmake
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
+
+      - name: Get All Changed Files
+      - id: changed-files
+      - uses: jitterbit/get-changed-files@v1
 
       - name: Run Lint
-        run: cpplint --quiet --recursive src/ test/
+        run: clang-tidy ${{ steps.changed-files.outputs.all }}
 
   release:
     name: Release
@@ -181,7 +211,7 @@ jobs:
       # Install yarn things
       - name: Install Assets
         run: yarn
-      
+
       # Download build artifacts
       - name: Download Core Binary
         uses: actions/download-artifact@v2
@@ -200,7 +230,7 @@ jobs:
         with:
           name: UKControllerPlugin.dll
           path: ".\\build\\bin\\UKControllerPlugin.dll"
-          
+
       - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
