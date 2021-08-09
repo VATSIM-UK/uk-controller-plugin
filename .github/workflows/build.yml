@@ -183,7 +183,7 @@ jobs:
         run: |
           if [[ ! -z "${{ steps.changed-files.outputs.added_modified }}" ]]
           then
-            clang-tidy ${{ steps.changed-files.outputs.added_modified }}
+            clang-tidy ${{ steps.changed-files.outputs.added_modified }} -p build
           fi
 
   release:
