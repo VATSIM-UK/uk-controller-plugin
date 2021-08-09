@@ -168,7 +168,9 @@ jobs:
         id: changed-files
         uses: Ana06/get-changed-files@v2.0.0
         with:
-          filter: '*.h *.cpp'
+          filter: |
+            '*.h'
+            '*.cpp'
 
       - name: Run Lint
         run: |
