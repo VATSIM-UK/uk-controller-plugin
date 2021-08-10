@@ -185,6 +185,7 @@ jobs:
 
       - name: Run Lint
         run: |
+          Write-Output "${{ steps.changed-files.outputs.added_modified }}"
           if (${{ steps.changed-files.outputs.added_modified }}) { clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
 
   release:
