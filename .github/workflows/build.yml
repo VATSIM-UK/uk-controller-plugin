@@ -163,6 +163,8 @@ jobs:
         run: |
           echo "CURL_INCLUDEDIR=/tmp/curl/curl-${{env.CURL_VERSION}}/include" >> $GITHUB_ENV
           echo "CURL_LIBRARYDIR=foo" >> $GITHUB_ENV
+          touch /usr/local/include/winsock2.h
+          touch /usr/local/include/ws2tcpip.h
 
       # Run the build and tests
       - name: Run Cmake
