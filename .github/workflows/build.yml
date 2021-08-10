@@ -180,10 +180,7 @@ jobs:
 
       - name: Run Lint
         run: |
-          if [[ ! -z "${{ steps.changed-files.outputs.added_modified }}" ]]
-          then
-            clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build
-          fi
+          if (${{ steps.changed-files.outputs.added_modified }}) { clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
 
   release:
     name: Release
