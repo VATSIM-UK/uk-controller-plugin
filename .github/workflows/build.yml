@@ -185,7 +185,7 @@ jobs:
 
       - name: Run Lint
         run: |
-          if (-not ([string]::IsNullOrEmpty(${{ steps.changed-files.outputs.added_modified }}))) { Write-Output "foo"; clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { Write-Output "foo"; clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
 
   release:
     name: Release
