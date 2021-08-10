@@ -172,6 +172,9 @@ jobs:
       - name: Run Cmake
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
+          cd build
+          nmake
+          cd ..
 
       - name: Get All Changed Files
         id: changed-files
@@ -185,7 +188,7 @@ jobs:
 
       - name: Run Lint
         run: |
-          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { Write-Output "foo"; clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
 
   release:
     name: Release
