@@ -136,6 +136,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup Visual Studio Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+
       - name: Cache cURL
         id: cache-curl
         uses: actions/cache@v2.1.3
