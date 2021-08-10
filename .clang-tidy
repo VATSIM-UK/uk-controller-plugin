@@ -1,7 +1,7 @@
 ---
-Checks:          'clang-diagnostic-*,clang-analyzer-*,cert-*,cppcoreguidelines-*,bugprone-*,llvm-*,performance-*,portability-*,readability-*,modernize-*,-llvm-header-guard,-clang-diagnostic-error'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,cert-*,cppcoreguidelines-*,bugprone-*,llvm-*,performance-*,portability-*,readability-*,modernize-*,-llvm-header-guard'
 WarningsAsErrors: ''
-HeaderFilterRegex: ''
+HeaderFilterRegex: '^(?!(.*third_party|.*curl\/include)).*$'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 CheckOptions:
