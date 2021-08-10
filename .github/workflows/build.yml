@@ -181,7 +181,6 @@ jobs:
 
       - name: Run Lint
         run: |
-          cat build/compile_commands.json
           if [[ ! -z "${{ steps.changed-files.outputs.added_modified }}" ]]
           then
             clang-tidy ${{ steps.changed-files.outputs.added_modified }} -p build
