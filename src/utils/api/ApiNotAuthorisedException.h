@@ -8,7 +8,7 @@ namespace UKControllerPlugin::Api {
     class ApiNotAuthorisedException : public ApiException
     {
         public:
-            explicit ApiNotAuthorisedException(const std::string& message)
+            explicit ApiNotAuthorisedException(std::string message)
                 : ApiException("ApiNotAuthorisedException: " + message) {}
     };
 }  // namespace UKControllerPlugin::Api
