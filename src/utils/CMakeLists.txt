@@ -33,7 +33,7 @@ set(api
     "api/ApiHelper.cpp"
     "api/ApiHelper.h"
     "api/ApiInterface.h"
-    "api/ApiNotAuthorisedException.h"
+    "api/ApiNotAuthorisedException.cpp"
     "api/ApiNotFoundException.h"
     "api/ApiRequestBuilder.cpp"
     "api/ApiRequestBuilder.h"
