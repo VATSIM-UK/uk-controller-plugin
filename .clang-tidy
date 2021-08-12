@@ -1,7 +1,7 @@
 ---
 Checks:          'clang-diagnostic-*,clang-analyzer-*,cert-*,cppcoreguidelines-*,bugprone-*,llvm-*,performance-*,portability-*,readability-*,modernize-*,-llvm-header-guard'
 WarningsAsErrors: ''
-HeaderFilterRegex: ''
+HeaderFilterRegex: '.*h$'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 CheckOptions:
