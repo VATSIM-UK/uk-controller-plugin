@@ -109,6 +109,8 @@ jobs:
       # Run the build and tests
       - name: Run Build
         run: |
+          cd C:\\hostedtoolcache\\windows\\llvm\\bin
+          dir
           cmake -DCMAKE_CXX_COMPILER="C:\\hostedtoolcache\\windows\\llvm\\bin\\clang-cl.exe" -DCMAKE_C_COMPILER="C:\\hostedtoolcache\\windows\\llvm\\bin\\clang-cl.exe" -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
           cd build
           nmake
