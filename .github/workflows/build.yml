@@ -30,6 +30,19 @@ jobs:
         with:
           arch: x86
 
+      # LLVM / Clang Setup
+      - name: Cache Clang
+        id: cache-clang
+        uses: actions/cache@v2.1.3
+        with:
+          path: "C:\\hostedtoolcache\\windows\\llvm"
+          key: "ukcp-curl-build"
+
+      - name: Install Clang
+        runs: |
+          curl -Ls -o "LLVM-12.0.1-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win64.exe"
+          LLVM-12.0.1-win64.exe /S /D="C:\\hostedtoolcache\\windows\\llvm"
+
       - name: Cache cURL
         id: cache-curl
         uses: actions/cache@v2.1.3
@@ -99,7 +112,7 @@ jobs:
           CC: clang-12
           CXX: clang++-12
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
+          cmake -DCMAKE_CXX_COMPILER-clang++ -DCMAKE_C_COMPILER-clang -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
           cd build
           nmake
           cd ..
