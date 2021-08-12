@@ -40,8 +40,8 @@ jobs:
 
       - name: Install Clang
         run: |
-          curl -Ls -o "LLVM-12.0.1-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win64.exe"
-          LLVM-12.0.1-win64.exe /S /D="C:\\hostedtoolcache\\windows\\llvm"
+          curl -Ls -o ".\\LLVM-12.0.1-win64.exe" "https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win64.exe"
+          .\\LLVM-12.0.1-win64.exe /S /D="C:\\hostedtoolcache\\windows\\llvm"
 
       - name: Cache cURL
         id: cache-curl
