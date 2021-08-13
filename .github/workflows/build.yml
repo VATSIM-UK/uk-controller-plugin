@@ -117,6 +117,10 @@ jobs:
             src/**/*.cpp
             test/**/*.cpp
 
+      - name: Clang Format
+        run: |
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-format.exe --dry-run -Werror ${{ steps.changed-files.outputs.added_modified }} }
+
       - name: Clang Tidy
         run: |
           if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
