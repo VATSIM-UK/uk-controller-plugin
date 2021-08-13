@@ -59,6 +59,7 @@ using std::max;
 #include <type_traits>
 #include <unordered_set>
 #include <utility>
+#include <variant>
 #include <vector>
 #include <ws2def.h>
 #include <ws2tcpip.h>

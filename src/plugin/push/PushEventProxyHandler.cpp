@@ -2,8 +2,7 @@
 #include "push/PushEventProxyHandler.h"
 #include "push/PushEventProxyWindow.h"
 
-namespace UKControllerPlugin {
-    namespace Push {
+namespace UKControllerPlugin::Push {
 
         /*
             Handle the ping messages by responding with pong.
@@ -14,34 +13,17 @@ namespace UKControllerPlugin {
             COPYDATASTRUCT cds;
             cds.dwData = GetPushEventProxyMessageIdentifier();
             cds.cbData = message.raw.size() + 1;
-            cds.lpData = reinterpret_cast<PVOID>(reinterpret_cast<LPARAM>(message.raw.c_str()));
+            cds.lpData = std::get<PVOID>(std::variant<PVOID, const char*>(message.raw.c_str()));
             EnumWindows(
-                [](HWND hwnd, LPARAM lparam) -> BOOL
-                {
-                    WCHAR windowName[1000];
-                    GetWindowText(hwnd, reinterpret_cast<LPWSTR>(&windowName), 1000);
-                    std::wstring windowNameWide(windowName);
-
-                    if (windowNameWide == GetProxyWindowName()) {
-
-                        SendMessage(
-                            hwnd,
-                            WM_COPYDATA,
-                            reinterpret_cast<WPARAM>(hwnd),
-                            lparam
-                        );
-                    }
-
-                    return TRUE;
-                },
-                reinterpret_cast<LPARAM>(&cds)
+                EnumerateWindows,
+                std::get<LPARAM>(std::variant<LPARAM, COPYDATASTRUCT*>(&cds))
             );
         }
 
         /*
             Subscribe to pusher ping messages.
         */
-        std::set<PushEventSubscription> PushEventProxyHandler::GetPushEventSubscriptions(void) const
+        auto PushEventProxyHandler::GetPushEventSubscriptions() const -> std::set<PushEventSubscription>
         {
             return {
                 {
@@ -51,5 +33,26 @@ namespace UKControllerPlugin {
         }
 
         void PushEventProxyHandler::PluginEventsSynced() {}
-    } // namespace Push
-} // namespace UKControllerPlugin
+        
+        auto PushEventProxyHandler::EnumerateWindows(HWND hwnd, LPARAM lparam) -> BOOL
+        {
+            std::array<WCHAR, WINDOW_NAME_BUFFER_SIZE> windowName = {};
+            GetWindowText(
+                hwnd,
+                std::get<LPWSTR>(std::variant<LPWSTR, std::array<WCHAR, WINDOW_NAME_BUFFER_SIZE>*>(&windowName)),
+                WINDOW_NAME_BUFFER_SIZE
+            );
+            std::wstring windowNameWide(windowName.cbegin(), windowName.cend());
+
+            if (windowNameWide == GetProxyWindowName()) {
+                SendMessage(
+                    hwnd,
+                    WM_COPYDATA,
+                    std::get<WPARAM>(std::variant<WPARAM, HWND>(hwnd)),
+                    lparam
+                );
+            }
+
+            return TRUE;
+        }
+    } // namespace UKControllerPlugin::Push
