@@ -118,7 +118,6 @@ if(MSVC)
         $<$<CONFIG:Release>:
             /OPT:REF;
             /OPT:ICF;
-            /LTCG
         >
         /NODEFAULTLIB:LIBCMT;
         /DEBUG;
