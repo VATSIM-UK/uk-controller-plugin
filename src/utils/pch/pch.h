@@ -1,9 +1,9 @@
 #pragma once
 
 #define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING // NOLINT
-#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING // NOLINT
-#define _SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING  // NOLINT
-#define NOMINMAX 1 // NOLINT
+#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING     // NOLINT
+#define _SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING     // NOLINT
+#define NOMINMAX 1                                            // NOLINT
 
 // add headers that you want to pre-compile here
 #pragma warning(push)
@@ -18,9 +18,6 @@
 #pragma warning(pop)
 
 #include <CommCtrl.h>
-#pragma comment(                                                                                                       \
-    linker,                                                                                                            \
-    "\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"") // NOLINT
 #include <CommDlg.h>
 #include <Mmsystem.h>
 #include <filesystem>

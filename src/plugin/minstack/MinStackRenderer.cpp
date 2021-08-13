@@ -297,7 +297,7 @@ namespace UKControllerPlugin {
                 graphics.FillRect(msl, *this->brushes.greyBrush);
                 graphics.DrawRect(msl, *this->brushes.blackPen);
 
-                std::string mslString = mslData == this->minStackModule.invalidMsl
+                std::string mslString = mslData == this->minStackModule.InvalidMsl()
                     ? "-"
                     : std::to_string(mslData.msl).substr(0, 2);
 

@@ -11,8 +11,7 @@ namespace UKControllerPlugin {
     }  // namespace Controller
 }  // namespace UKControllerPlugin
 
-namespace UKControllerPlugin {
-    namespace Prenote {
+namespace UKControllerPlugin::Prenote {
 
         /*
             Class responsible for creating a prenote object from json.
@@ -20,32 +19,31 @@ namespace UKControllerPlugin {
         class PrenoteFactory
         {
             public:
-                PrenoteFactory(
+                explicit PrenoteFactory(
                     const UKControllerPlugin::Controller::ControllerPositionHierarchyFactory & controllerFactory
                 );
 
-                std::unique_ptr<UKControllerPlugin::Prenote::AbstractPrenote> CreateFromJson(
+                [[nodiscard]] auto CreateFromJson(
                     const nlohmann::json & json
-                ) const;
+                ) const -> std::unique_ptr<UKControllerPlugin::Prenote::AbstractPrenote>;
 
+            private:
+
+                [[nodiscard]] auto CreateAirfieldPairingPrenote(
+                    const nlohmann::json & json
+                ) const -> std::unique_ptr<UKControllerPlugin::Prenote::AirfieldPairingPrenote>;
+
+                [[nodiscard]] auto CreateDeparturePrenote(
+                    const nlohmann::json & json
+                ) const -> std::unique_ptr<UKControllerPlugin::Prenote::DeparturePrenote>;
+
+                // Can create a hierarchy of controller positions
+                const UKControllerPlugin::Controller::ControllerPositionHierarchyFactory & controllerFactory;
+                
                 // The type field of a SID prenote
                 const std::string typeSid = "sid";
 
                 // The type field of an airfield pairing prenote
                 const std::string typePair = "airfieldPairing";
-
-            private:
-
-                std::unique_ptr<UKControllerPlugin::Prenote::AirfieldPairingPrenote> CreateAirfieldPairingPrenote(
-                    const nlohmann::json & json
-                ) const;
-
-                std::unique_ptr<UKControllerPlugin::Prenote::DeparturePrenote> CreateDeparturePrenote(
-                    const nlohmann::json & json
-                ) const;
-
-                // Can create a hierarchy of controller positions
-                const UKControllerPlugin::Controller::ControllerPositionHierarchyFactory & controllerFactory;
         };
-    }  // namespace Prenote
-}  // namespace UKControllerPlugin
+    }  // namespace UKControllerPlugin::Prenote

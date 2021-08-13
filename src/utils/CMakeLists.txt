@@ -97,6 +97,11 @@ set(log
 )
 source_group("log" FILES ${log})
 
+set(manifest
+    "utils.manifest"
+)
+source_group("manifest" FILES ${manifest})
+
 set(pch
     "pch/pch.cpp"
     "pch/pch.h"
@@ -152,6 +157,7 @@ set(ALL_FILES
     ${duplicate}
     ${helper}
     ${log}
+    ${manifest}
     ${pch}
     ${setting}
     ${squawk}
@@ -164,6 +170,8 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
+
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
@@ -172,6 +180,8 @@ set(ROOT_NAMESPACE UKControllerPluginUtils)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 ################################################################################
 # Output directory
 ################################################################################

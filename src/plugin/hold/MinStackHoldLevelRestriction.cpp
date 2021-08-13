@@ -51,7 +51,7 @@ namespace UKControllerPlugin {
             // Check against the MSL
             const MinStackLevel & msl = this->minStackLevels.GetMinStackLevel(this->minStackKey);
 
-            if (msl == this->minStackLevels.invalidMsl) {
+            if (msl == this->minStackLevels.InvalidMsl()) {
                 return false;
             }
 

@@ -87,6 +87,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
@@ -97,6 +98,7 @@ set(ROOT_NAMESPACE UKControllerPluginTest)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 ################################################################################
 # Output directory
 ################################################################################
@@ -176,7 +178,6 @@ if(MSVC)
             /Gy;
             -Zm120
         >
-        /MP;
         /std:c++17;
         /sdl;
         /W3;

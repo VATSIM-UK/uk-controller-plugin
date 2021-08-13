@@ -434,6 +434,11 @@ set(src__login
 )
 source_group("src\\login" FILES ${src__login})
 
+set(manifest
+        "plugin.manifest"
+)
+source_group("manifest" FILES ${manifest})
+
 set(src__message
     "message/MessageSerializableInterface.h"
     "message/UserMessager.cpp"
@@ -824,6 +829,7 @@ set(ALL_FILES
     ${src__integration}
     ${src__intention}
     ${src__login}
+    ${manifest}
     ${src__message}
     ${src__metar}
     ${src__minstack}
@@ -855,6 +861,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -895,7 +902,7 @@ string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
     $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
-
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 ################################################################################
 # Include directories
 ################################################################################
@@ -949,7 +956,6 @@ if(MSVC)
             /Oi;
             /Gy
         >
-        /MP;
         /std:c++17;
         /sdl;
         /W3;
@@ -965,7 +971,6 @@ if(MSVC)
         $<$<CONFIG:Release>:
             /DEBUG;
             /OPT:REF;
-            /LTCG:incremental;
             /OPT:ICF;
             /INCREMENTAL:NO
         >

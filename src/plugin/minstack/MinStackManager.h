@@ -1,47 +1,45 @@
 #pragma once
-#include "push/PushEventProcessorInterface.h"
 #include "minstack/MinStackLevel.h"
+#include "push/PushEventProcessorInterface.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
     namespace TaskManager {
         class TaskRunnerInterface;
-    }  // namespace TaskManager
+    } // namespace TaskManager
     class HelperFunctions;
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin
 // END
 
-namespace UKControllerPlugin {
-    namespace MinStack {
+namespace UKControllerPlugin::MinStack {
 
-        /*
-            Class for handling Minimum Stack Level Calculations
-            and display.
-        */
-        class MinStackManager : public Push::PushEventProcessorInterface
-        {
-            public:
-                ~MinStackManager() override = default;
-                void AcknowledgeMsl(std::string key);
-                void AddMsl(std::string key, std::string type, std::string name, unsigned int msl);
-                std::set<std::string> GetAllMslKeys(void) const;
-                const UKControllerPlugin::MinStack::MinStackLevel & GetMinStackLevel(std::string key) const;
-                std::string GetMslKeyAirfield(std::string airfield) const;
-                std::string GetMslKeyTma(std::string tma) const;
-                std::string GetNameFromKey(std::string key) const;
-                int ProcessMetar(std::string metar);
-                void SetMinStackLevel(std::string key, unsigned int msl);
-                void UpdateAllMsls(nlohmann::json mslData);
-                void ProcessPushEvent(const Push::PushEvent& message) override;
-                std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
-                void PluginEventsSynced() override;
-                // What to return if an MSL is invalid
-                const UKControllerPlugin::MinStack::MinStackLevel invalidMsl = {};
+    /*
+        Class for handling Minimum Stack Level Calculations
+        and display.
+    */
+    class MinStackManager : public Push::PushEventProcessorInterface
+    {
+        public:
+            MinStackManager();
+            void AcknowledgeMsl(const std::string& key);
+            void AddMsl(const std::string& key, std::string type, std::string name, unsigned int msl);
+            [[nodiscard]] auto GetAllMslKeys() const -> std::set<std::string>;
+            [[nodiscard]] auto GetMinStackLevel(const std::string& key) const -> const
+                UKControllerPlugin::MinStack::MinStackLevel&;
+            [[nodiscard]] static auto GetMslKeyAirfield(const std::string& airfield) -> std::string;
+            [[nodiscard]] static auto GetMslKeyTma(const std::string& tma) -> std::string;
+            [[nodiscard]] static auto GetNameFromKey(const std::string& key) -> std::string;
+            void SetMinStackLevel(const std::string& key, unsigned int msl);
+            void UpdateAllMsls(nlohmann::json mslData);
+            void ProcessPushEvent(const Push::PushEvent& message) override;
+            [[nodiscard]] auto GetPushEventSubscriptions() const -> std::set<Push::PushEventSubscription> override;
+            void PluginEventsSynced() override;
+            [[nodiscard]] auto InvalidMsl() const -> const MinStackLevel&;
 
-            private:
-
-                // Map of identifier to MSL
-                std::map<std::string, UKControllerPlugin::MinStack::MinStackLevel> mslMap;
-        };
-    }  // namespace MinStack
-}  // namespace UKControllerPlugin
+        private:
+            const MinStackLevel invalidMsl;
+        
+            // Map of identifier to MSL
+            std::map<std::string, UKControllerPlugin::MinStack::MinStackLevel> mslMap;
+    };
+} // namespace UKControllerPlugin::MinStack

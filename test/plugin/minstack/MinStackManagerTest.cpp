@@ -51,7 +51,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(MinStackManagerTest, ItReturnsInvalidMslIfKeyNotFound)
         {
-            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel("nope"));
+            EXPECT_EQ(this->msl.InvalidMsl(), this->msl.GetMinStackLevel("nope"));
         }
 
         TEST_F(MinStackManagerTest, ItReturnsAMsl)
@@ -124,8 +124,8 @@ namespace UKControllerPluginTest {
             };
 
             this->msl.ProcessPushEvent(message);
-            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")));
-            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")));
+            EXPECT_EQ(this->msl.InvalidMsl(), this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")));
+            EXPECT_EQ(this->msl.InvalidMsl(), this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")));
         }
 
         TEST_F(MinStackManagerTest, ItDoesntDoManualMinStackUpdatesIfItDoesntExist)
