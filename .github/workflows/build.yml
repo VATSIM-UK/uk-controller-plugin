@@ -110,7 +110,7 @@ jobs:
 
       # Do Srclinting
       - name: Get Changed Src Files
-        id: changed-files
+        id: changed-files-src
         uses: Ana06/get-changed-files@v2.0.0
         with:
           filter: |
@@ -118,11 +118,11 @@ jobs:
             
       - name: Clang Tidy (Src)
         run: |
-          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-src.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files-src.outputs.added_modified }} -p build }
 
       # Do Src linting
       - name: Get Changed Test Files
-        id: changed-files
+        id: changed-files-test
         uses: Ana06/get-changed-files@v2.0.0
         with:
           filter: |
@@ -130,7 +130,7 @@ jobs:
 
       - name: Clang Tidy (Tests)
         run: |
-          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-test.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files-test.outputs.added_modified }} -p build }
 
       # Upload artifacts
       - name: Upload Core Binary As Artifact
