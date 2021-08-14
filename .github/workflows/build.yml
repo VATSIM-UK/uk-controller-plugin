@@ -100,7 +100,7 @@ jobs:
       # Run the build and tests
       - name: Run Build
         run: |
-          cmake -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G Ninja -Bbuild -DLLVM_PARALLEL_LINK_JOBS=1
+          cmake -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G Ninja -Bbuild -DLLVM_PARALLEL_LINK_JOBS=1 -Thost=x64 
           cd build
           ninja
           cd ..
