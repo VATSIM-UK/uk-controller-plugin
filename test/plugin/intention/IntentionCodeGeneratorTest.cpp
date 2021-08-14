@@ -164,7 +164,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(999));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
-            IntentionCodeGenerator intention(std::move(groups), std::move(*exitPoints));
+            IntentionCodeGenerator intention(std::move(groups), *exitPoints);
             IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
                 "BAW123",
                 "EGKK",
@@ -205,7 +205,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(999));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
-            IntentionCodeGenerator intention(std::move(groups), std::move(*exitPoints));
+            IntentionCodeGenerator intention(std::move(groups), *exitPoints);
             IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
                 "BAW123",
                 "EGKK",
@@ -240,7 +240,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return("KLAS"));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
-            IntentionCodeGenerator intention(std::move(groups), std::move(*exitPoints));
+            IntentionCodeGenerator intention(std::move(groups), *exitPoints);
             IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
                 "BAW123",
                 "EGKK",
@@ -284,7 +284,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(999));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
-            IntentionCodeGenerator intention(std::move(groups), std::move(*exitPoints));
+            IntentionCodeGenerator intention(std::move(groups), *exitPoints);
             IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
                 "BAW123",
                 "KLAS",
@@ -308,7 +308,7 @@ namespace UKControllerPluginTest {
 
             groups.push_back(std::move(mockAirfieldGroup));
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
-            IntentionCodeGenerator intention(std::move(groups), std::move(*exitPoints));
+            IntentionCodeGenerator intention(std::move(groups), *exitPoints);
             IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
                 "BAW123",
                 "KLAS",
@@ -358,7 +358,7 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(-1));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
-            IntentionCodeGenerator intention(std::move(groups), std::move(*exitPoints));
+            IntentionCodeGenerator intention(std::move(groups), *exitPoints);
             IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
                 "BAW123",
                 "EGLL",

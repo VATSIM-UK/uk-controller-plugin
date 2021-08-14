@@ -34,7 +34,8 @@ namespace UKControllerPluginTest {
         {
             public:
                 RegionalPressureRendererTest()
-                    : dialogManager(mockDialogProvider), renderer(manager, 1, 2, 3, 4, brushes, dialogManager)
+                    : dialogManager(mockDialogProvider), renderer(manager, 1, 2, 3, 4, brushes, dialogManager),
+                        userSettings(mockUserSettingProvider)
                 {
                     this->dialogManager.AddDialog(this->rpsDialogData);
                 }
@@ -45,6 +46,7 @@ namespace UKControllerPluginTest {
                 NiceMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
                 NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
                 NiceMock<MockDialogProvider> mockDialogProvider;
+                UserSetting userSettings;
                 DialogManager dialogManager;
                 RegionalPressureRenderer renderer;
         };
@@ -58,7 +60,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(""));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             EXPECT_TRUE(renderer.IsVisible());
         }
 
@@ -75,7 +77,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(""));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             RECT expectedArea = { 100, 100, 100 + renderer.leftColumnWidth, 100 + renderer.rowHeight };
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetTopBarArea()));
         }
@@ -93,7 +95,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(""));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             Gdiplus::Rect expectedArea = { 100, 100, renderer.leftColumnWidth, renderer.rowHeight };
             EXPECT_TRUE(expectedArea.Equals(renderer.GetTopBarRender()));
         }
@@ -111,7 +113,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(""));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             RECT expectedArea = {
                 100 + renderer.leftColumnWidth,
                 100,
@@ -134,7 +136,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return(""));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             Gdiplus::Rect expectedArea = {
                 100 + renderer.leftColumnWidth,
                 100, renderer.hideClickspotWidth,
@@ -152,7 +154,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return("0"));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             EXPECT_FALSE(renderer.IsVisible());
         }
 
@@ -169,7 +171,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return("175"));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             RECT expectedArea = { 150, 175, 150 + renderer.leftColumnWidth, 175 + renderer.rowHeight };
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetTopBarArea()));
         }
@@ -187,7 +189,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return("175"));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             Gdiplus::Rect expectedArea = { 150, 175, renderer.leftColumnWidth, renderer.rowHeight };
             EXPECT_TRUE(expectedArea.Equals(renderer.GetTopBarRender()));
         }
@@ -205,7 +207,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return("175"));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             RECT expectedArea = {
                 150 + renderer.leftColumnWidth,
                 175,
@@ -228,7 +230,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(Return("175"));
 
-            renderer.AsrLoadedEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrLoadedEvent(userSettings);
             Gdiplus::Rect expectedArea = {
                 150 + renderer.leftColumnWidth,
                 175,
@@ -278,7 +280,7 @@ namespace UKControllerPluginTest {
             )
                 .Times(1);
 
-            renderer.AsrClosingEvent(UserSetting(mockUserSettingProvider));
+            renderer.AsrClosingEvent(userSettings);
         }
 
         TEST_F(RegionalPressureRendererTest, GetConfigurationMenuItemReturnsCorrectValues)

@@ -1,4 +1,5 @@
 ---
+# We have to turn off extra checks in tests
 Checks: >
   clang-diagnostic-*,
   clang-analyzer-*,
@@ -10,7 +11,18 @@ Checks: >
   portability-*,
   readability-*,
   modernize-*,
-  -llvm-header-guard
+  -llvm-header-guard,
+  -modernize-use-trailing-return-type,
+  -cert-dcl37-c,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-avoid-goto,
+  -modernize-use-trailing-return-type,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -cert-err58-cpp,
+  -bugprone-reserved-identifier,
+  -readability-function-cognitive-complexity,
+  -performance-unnecessary-value-param,
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*h$'
 AnalyzeTemporaryDtors: false

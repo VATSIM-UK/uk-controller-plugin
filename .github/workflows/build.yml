@@ -100,30 +100,37 @@ jobs:
       # Run the build and tests
       - name: Run Build
         run: |
-          cmake -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles" -Bbuild
+          cmake -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G Ninja -Bbuild
           cd build
-          nmake
+          ninja
           cd ..
 
       - name: Run Tests
         run: ctest -C Release --output-on-failure
 
-      # Do linting
-      - name: Get All Changed Files
+      # Do Srclinting
+      - name: Get Changed Src Files
         id: changed-files
         uses: Ana06/get-changed-files@v2.0.0
         with:
           filter: |
             src/**/*.cpp
-            test/**/*.cpp
 
-      - name: Clang Format
-        run: |
-          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-format.exe --dry-run -Werror ${{ steps.changed-files.outputs.added_modified }} }
+    - name: Clang Tidy (Src)
+      run: |
+        if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
 
-      - name: Clang Tidy
-        run: |
-          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
+    # Do Src linting
+    - name: Get Changed Test Files
+      id: changed-files
+      uses: Ana06/get-changed-files@v2.0.0
+      with:
+        filter: |
+          test/**/*.cpp
+
+    - name: Clang Tidy (Tests)
+      run: |
+        if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files.outputs.added_modified }} -p build }
 
       # Upload artifacts
       - name: Upload Core Binary As Artifact
@@ -144,11 +151,37 @@ jobs:
           name: UKControllerPlugin.dll
           path: ".\\build\\bin\\UKControllerPlugin.dll"
 
+  format:
+    name: Format
+    runs-on: windows-latest
+    concurrency:
+      group: ukcp-format
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Get All Changed Files
+        id: changed-files
+        uses: Ana06/get-changed-files@v2.0.0
+        with:
+          filter: |
+            src/**/*.cpp
+            src/**/*.h
+            test/**/*.cpp
+            test/**/*.h
+
+      - name: Clang Format
+        run: |
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-format.exe --dry-run -Werror ${{ steps.changed-files.outputs.added_modified }} }
+
   release:
     name: Release
     runs-on: windows-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [build]
+    needs: [build, format]
     concurrency:
       group: ukcp-release
       cancel-in-progress: false

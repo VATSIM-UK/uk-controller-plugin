@@ -730,7 +730,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->dialogProvider, OpenDialog(this->dialogData, _))
                 .Times(1);
 
-            this->handler.TagFunction(this->flightplan, NiceMock<MockEuroScopeCRadarTargetInterface>(), "", {});
+            this->handler.TagFunction(this->flightplan, radarTarget, "", {});
         }
 
         TEST_F(OceanicEventHandlerTest, TestItOpensDialogWithNoValidClearance)
@@ -738,7 +738,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->dialogProvider, OpenDialog(this->dialogData, _))
                 .Times(1);
 
-            this->handler.TagFunction(this->flightplan, NiceMock<MockEuroScopeCRadarTargetInterface>(), "", {});
+            this->handler.TagFunction(this->flightplan, radarTarget, "", {});
         }
 
         TEST_F(OceanicEventHandlerTest, ItHasTheClearedLevelTagItem)
