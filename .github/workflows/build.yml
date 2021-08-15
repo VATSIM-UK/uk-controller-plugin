@@ -22,6 +22,7 @@ jobs:
       # Environment things
       - name: Setup MSVC Environment
         uses: ilammy/msvc-dev-cmd@v1
+        arch: x86
 
       # LLVM / Clang Setup
       - name: Check Clang Version
@@ -98,7 +99,7 @@ jobs:
           CXX: clang-cl
           CXXFLAGS: -m32
         run: |
-          cmake -DLLVM_PARALLEL_LINK_JOBS=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G Ninja -Bbuild
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G Ninja -Bbuild
           cd build
           ninja -j 1
           cd ..
@@ -116,7 +117,7 @@ jobs:
 
       - name: Clang Tidy (Src)
         run: |
-          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-src.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files-src.outputs.added_modified }} -p build }
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-src.outputs.added_modified }}"))) { clang-tidy ${{ steps.changed-files-src.outputs.added_modified }} -p build }
 
       # Do Src linting
       - name: Get Changed Files (Tests)
