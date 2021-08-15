@@ -24,7 +24,6 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")

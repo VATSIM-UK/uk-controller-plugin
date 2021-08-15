@@ -624,7 +624,6 @@ if(MSVC)
             /OPT:ICF;
             /INCREMENTAL:NO
         >
-        /MACHINE:X86
         /NODEFAULTLIB:LIBCMT;
         /SUBSYSTEM:CONSOLE;
     )
