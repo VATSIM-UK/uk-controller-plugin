@@ -25,10 +25,13 @@ jobs:
         with:
           version: "12.0.1"
 
-      # LLVM / Clang Setup
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
       - name: Check Clang Version
         run: clang-cl --version
 
+      # cURL
       - name: Cache cURL
         id: cache-curl
         uses: actions/cache@v2.1.3
