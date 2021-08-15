@@ -20,8 +20,10 @@ jobs:
           submodules: recursive
 
       # Environment things
-      - name: Setup MSVC Environment
-        uses: ilammy/msvc-dev-cmd@v1
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "12.1"
 
       # LLVM / Clang Setup
       - name: Check Clang Version
