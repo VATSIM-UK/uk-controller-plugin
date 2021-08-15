@@ -30,7 +30,7 @@ namespace UKControllerPlugin::MinStack {
     */
     void MinStackManager::AddMsl(const std::string& key, std::string type, std::string name, unsigned int msl)
     {
-        if (this->mslMap.count(key) == 0) {
+        if (this->mslMap.count(key) == 1) {
             return;
         }
 
@@ -55,7 +55,7 @@ namespace UKControllerPlugin::MinStack {
     */
     auto MinStackManager::GetMinStackLevel(const std::string& key) const -> const MinStackLevel&
     {
-        return this->mslMap.count(key) != 0 ? this->mslMap.at(key) : this->InvalidMsl();
+        return this->mslMap.count(key) == 1 ? this->mslMap.at(key) : this->invalidMsl;
     }
 
     auto MinStackManager::GetMslKeyAirfield(const std::string& airfield) -> std::string

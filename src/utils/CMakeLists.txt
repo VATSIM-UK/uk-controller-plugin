@@ -170,6 +170,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
