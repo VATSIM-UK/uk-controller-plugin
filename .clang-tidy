@@ -12,7 +12,7 @@ Checks: >
   modernize-*,
   -llvm-header-guard
 WarningsAsErrors: ''
-HeaderFilterRegex: '.*h$'
+HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 CheckOptions:

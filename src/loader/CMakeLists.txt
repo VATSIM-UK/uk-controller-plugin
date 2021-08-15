@@ -56,9 +56,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Include directories
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/../utils;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
     "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
 )
 
 
