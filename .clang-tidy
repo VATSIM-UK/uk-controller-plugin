@@ -11,7 +11,7 @@ Checks: >
   readability-*,
   modernize-*,
   -llvm-header-guard
-WarningsAsErrors: ''
+WarningsAsErrors: 'true'
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 FormatStyle:     none

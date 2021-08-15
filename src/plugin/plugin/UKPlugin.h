@@ -112,9 +112,12 @@ namespace UKControllerPlugin {
         void OnNewMetarReceived(const char* sStation, const char* sFullMetar) override;
         void OnAirportRunwayActivityChanged() override;
         void OnTimer(int time) override;
-        inline auto OnRadarScreenCreated(
-            const char* sDisplayName, bool NeedRadarContent, bool GeoReferenced, bool CanBeSaved, bool CanBeCreated)
-            -> EuroScopePlugIn::CRadarScreen* override;
+        auto OnRadarScreenCreated(
+            [[maybe_unused]] const char* sDisplayName,
+            [[maybe_unused]] bool NeedRadarContent,
+            [[maybe_unused]] bool GeoReferenced,
+            [[maybe_unused]] bool CanBeSaved,
+            [[maybe_unused]] bool CanBeCreated) -> EuroScopePlugIn::CRadarScreen* override;
         void OnRadarTargetPositionUpdate(EuroScopePlugIn::CRadarTarget radarTarget) override;
         void TriggerPopupList(RECT area, std::string title, int numColumns) override;
         void PostInit();

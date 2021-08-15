@@ -461,8 +461,11 @@ namespace UKControllerPlugin {
         the first time that it is loaded.
     */
     inline auto UKPlugin::OnRadarScreenCreated(
-        const char* sDisplayName, bool NeedRadarContent, bool GeoReferenced, bool CanBeSaved, bool CanBeCreated)
-        -> EuroScopePlugIn::CRadarScreen*
+        [[maybe_unused]] const char* sDisplayName,
+        [[maybe_unused]] bool NeedRadarContent,
+        [[maybe_unused]] bool GeoReferenced,
+        [[maybe_unused]] bool CanBeSaved,
+        [[maybe_unused]] bool CanBeCreated) -> EuroScopePlugIn::CRadarScreen*
     {
         return radarScreenFactory.Create();
     }

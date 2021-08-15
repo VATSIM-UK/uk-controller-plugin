@@ -3,7 +3,7 @@
 #include "api/ApiNotAuthorisedException.h"
 
 namespace UKControllerPlugin::Api {
-    ApiNotAuthorisedException::ApiNotAuthorisedException(std::string message)
+    ApiNotAuthorisedException::ApiNotAuthorisedException(const std::string& message)
         : ApiException("ApiNotAuthorisedException: " + message)
     {
     }

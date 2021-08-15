@@ -23,8 +23,8 @@ Checks: >
   -bugprone-reserved-identifier,
   -readability-function-cognitive-complexity,
   -performance-unnecessary-value-param,
-WarningsAsErrors: ''
-HeaderFilterRegex: '.*h$'
+WarningsAsErrors: 'true'
+HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 CheckOptions:
