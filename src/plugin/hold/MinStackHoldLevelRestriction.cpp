@@ -1,12 +1,12 @@
 #pragma once
-#include "pch/pch.h"
 #include "hold/MinStackHoldLevelRestriction.h"
 #include "minstack/MinStackLevel.h"
+#include "pch/pch.h"
 
-using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::MinStack::MinStackLevel;
-using UKControllerPlugin::SectorFile::RunwayCollection;
+using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::SectorFile::Runway;
+using UKControllerPlugin::SectorFile::RunwayCollection;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -15,15 +15,13 @@ namespace UKControllerPlugin {
             std::string airfield,
             unsigned int minStackOffset,
             unsigned int override,
-            const MinStackManager & minStackLevels,
-            const RunwayCollection & runways,
-            std::string runway
-        )
+            const MinStackManager& minStackLevels,
+            const RunwayCollection& runways,
+            std::string runway)
             : minStackLevels(minStackLevels), minStackOffset(minStackOffset), override(override),
-            minStackKey(this->minStackLevels.GetMslKeyAirfield(airfield)), runways(runways), airfield(airfield),
-            runway(runway)
+              minStackKey(this->minStackLevels.GetMslKeyAirfield(airfield)), runways(runways), airfield(airfield),
+              runway(runway)
         {
-
         }
 
         /*
@@ -33,10 +31,7 @@ namespace UKControllerPlugin {
         {
             // Check any runway related restrictions
             if (this->runway != noRunway) {
-                const Runway & selectedRunway = this->runways.FetchByIdentifierAndAirfield(
-                    this->runway,
-                    this->airfield
-                );
+                const Runway& selectedRunway = this->runways.FetchByIdentifierAndAirfield(this->runway, this->airfield);
 
                 if (selectedRunway == this->runways.invalidRunway || !selectedRunway.Active()) {
                     return false;
@@ -49,7 +44,7 @@ namespace UKControllerPlugin {
             }
 
             // Check against the MSL
-            const MinStackLevel & msl = this->minStackLevels.GetMinStackLevel(this->minStackKey);
+            const MinStackLevel& msl = this->minStackLevels.GetMinStackLevel(this->minStackKey);
 
             if (msl == this->minStackLevels.InvalidMsl()) {
                 return false;
@@ -57,5 +52,5 @@ namespace UKControllerPlugin {
 
             return level < msl.msl + this->minStackOffset;
         }
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

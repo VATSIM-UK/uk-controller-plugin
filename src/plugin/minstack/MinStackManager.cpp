@@ -10,12 +10,10 @@ using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 
 namespace UKControllerPlugin::MinStack {
 
-    MinStackManager::MinStackManager()
-        : invalidMsl({})
+    MinStackManager::MinStackManager() : invalidMsl({})
     {
-    
     }
-    
+
     void MinStackManager::AcknowledgeMsl(const std::string& key)
     {
         if (this->mslMap.count(key) == 0) {
@@ -43,7 +41,7 @@ namespace UKControllerPlugin::MinStack {
     auto MinStackManager::GetAllMslKeys() const -> std::set<std::string>
     {
         std::set<std::string> keys;
-        for (const auto & it : this->mslMap) {
+        for (const auto& it : this->mslMap) {
             keys.insert(it.first);
         }
 

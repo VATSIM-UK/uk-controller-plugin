@@ -22,8 +22,8 @@
 #pragma warning(pop)
 
 // Standard headers
-using std::min;
 using std::max;
+using std::min;
 #include <CommCtrl.h>
 #include <CommDlg.h>
 #include <KnownFolders.h>

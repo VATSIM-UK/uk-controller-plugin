@@ -1,4 +1,5 @@
 #include "pch/pch.h"
+
 #include "api/ApiNotAuthorisedException.h"
 
 namespace UKControllerPlugin::Api {

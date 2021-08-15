@@ -8,8 +8,8 @@ namespace UKControllerPlugin::Api {
     class ApiNotFoundException : public ApiException
     {
         public:
-            explicit ApiNotFoundException(const std::string& message) : ApiException("ApiNotFoundException: " + message)
-            {
-            }
+        explicit ApiNotFoundException(const std::string& message) : ApiException("ApiNotFoundException: " + message)
+        {
+        }
     };
 } // namespace UKControllerPlugin::Api

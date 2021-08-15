@@ -1,30 +1,31 @@
 #include "pch/pch.h"
-#include "oceanic/OceanicEventHandler.h"
-#include "mock/MockCurlApi.h"
-#include "mock/MockTaskRunnerInterface.h"
+
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
+#include "dialog/DialogData.h"
+#include "dialog/DialogManager.h"
+#include "mock/MockCurlApi.h"
+#include "mock/MockDialogProvider.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
+#include "mock/MockTaskRunnerInterface.h"
+#include "oceanic/OceanicEventHandler.h"
 #include "tag/TagData.h"
-#include "dialog/DialogManager.h"
-#include "dialog/DialogData.h"
-#include "mock/MockDialogProvider.h"
 
-using ::testing::Test;
+using testing::_;
 using testing::NiceMock;
 using testing::Return;
-using testing::_;
-using UKControllerPlugin::Oceanic::OceanicEventHandler;
-using UKControllerPlugin::Oceanic::Clearance;
+using ::testing::Test;
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;
+using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Oceanic::Clearance;
+using UKControllerPlugin::Oceanic::OceanicEventHandler;
 using UKControllerPlugin::Tag::TagData;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
-using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPlugin::Dialog::DialogData;
-using UKControllerPluginTest::Dialog::MockDialogProvider;
 
 namespace UKControllerPluginTest {
     namespace Oceanic {
@@ -32,55 +33,48 @@ namespace UKControllerPluginTest {
         class OceanicEventHandlerTest : public Test
         {
             public:
-                OceanicEventHandlerTest()
-                    : dialog(dialogProvider), handler(mockCurl, mockTaskRunner, dialog)
-                {
-                    dialog.AddDialog(this->dialogData);
+            OceanicEventHandlerTest() : dialog(dialogProvider), handler(mockCurl, mockTaskRunner, dialog)
+            {
+                dialog.AddDialog(this->dialogData);
 
-                    ON_CALL(this->flightplan, GetCallsign())
-                        .WillByDefault(Return("BAW123"));
-                }
+                ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
+            }
 
-                void SimulateNattrakCall(bool curlError, uint64_t statusCode, std::string body)
-                {
-                    CurlRequest expectedRequest(
-                        "https://nattrak.vatsim.net/pluginapi.php",
-                        CurlRequest::METHOD_GET
-                    );
-                    EXPECT_CALL(mockCurl, MakeCurlRequest(expectedRequest))
-                        .Times(1)
-                        .WillOnce(Return(CurlResponse(body, curlError, statusCode)));
+            void SimulateNattrakCall(bool curlError, uint64_t statusCode, std::string body)
+            {
+                CurlRequest expectedRequest("https://nattrak.vatsim.net/pluginapi.php", CurlRequest::METHOD_GET);
+                EXPECT_CALL(mockCurl, MakeCurlRequest(expectedRequest))
+                    .Times(1)
+                    .WillOnce(Return(CurlResponse(body, curlError, statusCode)));
 
-                    this->handler.TimedEventTrigger();
-                }
+                this->handler.TimedEventTrigger();
+            }
 
+            TagData GetTagData(int itemId = 118)
+            {
+                return TagData(
+                    flightplan,
+                    radarTarget,
+                    itemId,
+                    EuroScopePlugIn::TAG_DATA_CORRELATED,
+                    itemString,
+                    &euroscopeColourCode,
+                    &tagColour,
+                    &fontSize);
+            }
 
-                TagData GetTagData(int itemId = 118)
-                {
-                    return TagData(
-                        flightplan,
-                        radarTarget,
-                        itemId,
-                        EuroScopePlugIn::TAG_DATA_CORRELATED,
-                        itemString,
-                        &euroscopeColourCode,
-                        &tagColour,
-                        &fontSize
-                    );
-                }
-
-                DialogData dialogData = {IDD_OCEANIC_CLEARANCE, "Test"};
-                NiceMock<MockDialogProvider> dialogProvider;
-                DialogManager dialog;
-                double fontSize = 24.1;
-                COLORREF tagColour = RGB(255, 255, 255);
-                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
-                char itemString[16] = "Foooooo";
-                NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
-                NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
-                NiceMock<Curl::MockCurlApi> mockCurl;
-                TaskManager::MockTaskRunnerInterface mockTaskRunner;
-                OceanicEventHandler handler;
+            DialogData dialogData = {IDD_OCEANIC_CLEARANCE, "Test"};
+            NiceMock<MockDialogProvider> dialogProvider;
+            DialogManager dialog;
+            double fontSize = 24.1;
+            COLORREF tagColour = RGB(255, 255, 255);
+            int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+            char itemString[16] = "Foooooo";
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+            NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            NiceMock<Curl::MockCurlApi> mockCurl;
+            TaskManager::MockTaskRunnerInterface mockTaskRunner;
+            OceanicEventHandler handler;
         };
 
         TEST_F(OceanicEventHandlerTest, ItHandlesCurlErrorsFromNattrak)
@@ -165,7 +159,6 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("01:25", nattrakClearanceOne.entryTime);
             EXPECT_EQ("2021-03-28 11:12:34", nattrakClearanceOne.clearanceIssued);
             EXPECT_EQ("More info", nattrakClearanceOne.extra);
-
 
             const Clearance& nattrakClearanceTwo = this->handler.GetClearanceForCallsign("BAW456");
             EXPECT_EQ("BAW456", nattrakClearanceTwo.callsign);
@@ -295,7 +288,6 @@ namespace UKControllerPluginTest {
 
             EXPECT_FALSE(this->handler.NattrakClearanceValid(clearanceData));
         }
-
 
         TEST_F(OceanicEventHandlerTest, ClearanceValidReturnsFalseMissingNat)
         {
@@ -592,7 +584,6 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-
             TagData data = this->GetTagData();
             this->handler.SetTagItemData(data);
             EXPECT_EQ("OCA", data.GetItemString());
@@ -615,11 +606,9 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-            ON_CALL(this->flightplan, GetClearedAltitude())
-                .WillByDefault(Return(32000));
+            ON_CALL(this->flightplan, GetClearedAltitude()).WillByDefault(Return(32000));
 
-            ON_CALL(this->flightplan, GetCruiseLevel())
-                .WillByDefault(Return(35000));
+            ON_CALL(this->flightplan, GetCruiseLevel()).WillByDefault(Return(35000));
 
             TagData data = this->GetTagData();
             this->handler.SetTagItemData(data);
@@ -643,11 +632,9 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-            ON_CALL(this->flightplan, GetClearedAltitude())
-                .WillByDefault(Return(0));
+            ON_CALL(this->flightplan, GetClearedAltitude()).WillByDefault(Return(0));
 
-            ON_CALL(this->flightplan, GetCruiseLevel())
-                .WillByDefault(Return(32000));
+            ON_CALL(this->flightplan, GetCruiseLevel()).WillByDefault(Return(32000));
 
             TagData data = this->GetTagData();
             this->handler.SetTagItemData(data);
@@ -671,11 +658,9 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-            ON_CALL(this->flightplan, GetClearedAltitude())
-                .WillByDefault(Return(31000));
+            ON_CALL(this->flightplan, GetClearedAltitude()).WillByDefault(Return(31000));
 
-            ON_CALL(this->flightplan, GetCruiseLevel())
-                .WillByDefault(Return(32000));
+            ON_CALL(this->flightplan, GetCruiseLevel()).WillByDefault(Return(32000));
 
             TagData data = this->GetTagData();
             this->handler.SetTagItemData(data);
@@ -699,11 +684,9 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-            ON_CALL(this->flightplan, GetClearedAltitude())
-                .WillByDefault(Return(0));
+            ON_CALL(this->flightplan, GetClearedAltitude()).WillByDefault(Return(0));
 
-            ON_CALL(this->flightplan, GetCruiseLevel())
-                .WillByDefault(Return(31000));
+            ON_CALL(this->flightplan, GetCruiseLevel()).WillByDefault(Return(31000));
 
             TagData data = this->GetTagData();
             this->handler.SetTagItemData(data);
@@ -727,16 +710,14 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-            EXPECT_CALL(this->dialogProvider, OpenDialog(this->dialogData, _))
-                .Times(1);
+            EXPECT_CALL(this->dialogProvider, OpenDialog(this->dialogData, _)).Times(1);
 
             this->handler.TagFunction(this->flightplan, radarTarget, "", {});
         }
 
         TEST_F(OceanicEventHandlerTest, TestItOpensDialogWithNoValidClearance)
         {
-            EXPECT_CALL(this->dialogProvider, OpenDialog(this->dialogData, _))
-                .Times(1);
+            EXPECT_CALL(this->dialogProvider, OpenDialog(this->dialogData, _)).Times(1);
 
             this->handler.TagFunction(this->flightplan, radarTarget, "", {});
         }
@@ -762,11 +743,9 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-            ON_CALL(this->flightplan, GetClearedAltitude())
-                .WillByDefault(Return(30000));
+            ON_CALL(this->flightplan, GetClearedAltitude()).WillByDefault(Return(30000));
 
-            ON_CALL(this->flightplan, GetCruiseLevel())
-                .WillByDefault(Return(32000));
+            ON_CALL(this->flightplan, GetCruiseLevel()).WillByDefault(Return(32000));
 
             TagData data = this->GetTagData(119);
             this->handler.SetTagItemData(data);
@@ -790,11 +769,9 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-            ON_CALL(this->flightplan, GetClearedAltitude())
-                .WillByDefault(Return(0));
+            ON_CALL(this->flightplan, GetClearedAltitude()).WillByDefault(Return(0));
 
-            ON_CALL(this->flightplan, GetCruiseLevel())
-                .WillByDefault(Return(31000));
+            ON_CALL(this->flightplan, GetCruiseLevel()).WillByDefault(Return(31000));
 
             TagData data = this->GetTagData(119);
             this->handler.SetTagItemData(data);
@@ -818,11 +795,9 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-            ON_CALL(this->flightplan, GetClearedAltitude())
-                .WillByDefault(Return(32000));
+            ON_CALL(this->flightplan, GetClearedAltitude()).WillByDefault(Return(32000));
 
-            ON_CALL(this->flightplan, GetCruiseLevel())
-                .WillByDefault(Return(31000));
+            ON_CALL(this->flightplan, GetCruiseLevel()).WillByDefault(Return(31000));
 
             TagData data = this->GetTagData(119);
             this->handler.SetTagItemData(data);
@@ -846,11 +821,9 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
 
-            ON_CALL(this->flightplan, GetClearedAltitude())
-                .WillByDefault(Return(0));
+            ON_CALL(this->flightplan, GetClearedAltitude()).WillByDefault(Return(0));
 
-            ON_CALL(this->flightplan, GetCruiseLevel())
-                .WillByDefault(Return(32000));
+            ON_CALL(this->flightplan, GetCruiseLevel()).WillByDefault(Return(32000));
 
             TagData data = this->GetTagData(119);
             this->handler.SetTagItemData(data);
@@ -961,5 +934,5 @@ namespace UKControllerPluginTest {
             this->handler.SetTagItemData(data);
             EXPECT_EQ("01:25", data.GetItemString());
         }
-    }  // namespace Oceanic
-}  // namespace UKControllerPluginTest
+    } // namespace Oceanic
+} // namespace UKControllerPluginTest

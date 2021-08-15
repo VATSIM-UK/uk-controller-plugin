@@ -113,11 +113,8 @@ namespace UKControllerPlugin {
         void OnAirportRunwayActivityChanged() override;
         void OnTimer(int time) override;
         inline auto OnRadarScreenCreated(
-            const char* sDisplayName,
-            bool NeedRadarContent,
-            bool GeoReferenced,
-            bool CanBeSaved,
-            bool CanBeCreated) -> EuroScopePlugIn::CRadarScreen* override;
+            const char* sDisplayName, bool NeedRadarContent, bool GeoReferenced, bool CanBeSaved, bool CanBeCreated)
+            -> EuroScopePlugIn::CRadarScreen* override;
         void OnRadarTargetPositionUpdate(EuroScopePlugIn::CRadarTarget radarTarget) override;
         void TriggerPopupList(RECT area, std::string title, int numColumns) override;
         void PostInit();

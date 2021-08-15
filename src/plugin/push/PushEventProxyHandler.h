@@ -15,8 +15,8 @@ namespace UKControllerPlugin::Push {
         void PluginEventsSynced() override;
 
         private:
-            static auto CALLBACK EnumerateWindows(HWND hwnd, LPARAM lparam) -> BOOL;
-            
-            static const int WINDOW_NAME_BUFFER_SIZE = 1000;
+        static auto CALLBACK EnumerateWindows(HWND hwnd, LPARAM lparam) -> BOOL;
+
+        static const int WINDOW_NAME_BUFFER_SIZE = 1000;
     };
 } // namespace UKControllerPlugin::Push

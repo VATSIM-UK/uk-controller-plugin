@@ -1,9 +1,9 @@
 #include "pch/pch.h"
 
-#include "hold/HoldingDataSerializer.h"
 #include "hold/DeemedSeparatedHoldSerializer.h"
 #include "hold/HoldRestrictionSerializer.h"
 #include "hold/HoldingData.h"
+#include "hold/HoldingDataSerializer.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 

@@ -1,30 +1,34 @@
 #include "pch/pch.h"
+
+#include "intention/IntentionCodeData.h"
 #include "intention/IntentionCodeGenerator.h"
+#include "intention/SectorExitRepositoryFactory.h"
 #include "mock/MockAirfieldGroup.h"
 #include "mock/MockEuroscopeExtractedRouteInterface.h"
-#include "intention/IntentionCodeData.h"
-#include "intention/SectorExitRepositoryFactory.h"
+
+using EuroScopePlugIn::CPosition;
+
+using ::testing::_;
+using ::testing::NiceMock;
+using ::testing::Return;
+using ::testing::StrictMock;
+using ::testing::Test;
 
 using UKControllerPlugin::IntentionCode::AirfieldGroup;
 using UKControllerPlugin::IntentionCode::IntentionCodeData;
 using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
-using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
-using UKControllerPlugin::IntentionCode::SectorExitRepositoryFactory;
 using UKControllerPlugin::IntentionCode::SectorExitRepository;
-using ::testing::Test;
-using ::testing::NiceMock;
-using ::testing::StrictMock;
-using ::testing::Return;
-using ::testing::_;
-using EuroScopePlugIn::CPosition;
+using UKControllerPlugin::IntentionCode::SectorExitRepositoryFactory;
+using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
 
         class IntentionCodeGeneratorTest : public ::testing::Test
         {
-        public:
-            void SetUp(void) {
+            public:
+            void SetUp(void)
+            {
 
                 // Moving North - MATIK
                 exitPositionNorth.m_Latitude = 61.000000000000000;
@@ -51,8 +55,7 @@ namespace UKControllerPluginTest {
                 nextFixPositonWest.m_Longitude = -15.000000000000000;
             }
 
-        protected:
-
+            protected:
             // Position data for tests
             CPosition exitPositionNorth;
             CPosition nextFixPositonNorth;
@@ -97,17 +100,12 @@ namespace UKControllerPluginTest {
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
             std::unique_ptr<StrictMock<MockAirfieldGroup>> mockAirfieldGroup(new StrictMock<MockAirfieldGroup>);
 
-            MockAirfieldGroup * mockGroupRaw = mockAirfieldGroup.get();
+            MockAirfieldGroup* mockGroupRaw = mockAirfieldGroup.get();
 
             groups.push_back(std::move(mockAirfieldGroup));
             IntentionCodeGenerator intention(std::move(groups), *SectorExitRepositoryFactory::Create());
-            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
-                "BAW123",
-                "OMDB",
-                "EGLL",
-                mockFlightPlan,
-                27000
-            );
+            IntentionCodeData data =
+                intention.GetIntentionCodeForFlightplan("BAW123", "OMDB", "EGLL", mockFlightPlan, 27000);
             EXPECT_TRUE(data.intentionCode == "LL");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
@@ -120,17 +118,12 @@ namespace UKControllerPluginTest {
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
             std::unique_ptr<MockAirfieldGroup> mockAirfieldGroup(new MockAirfieldGroup(false));
 
-            MockAirfieldGroup * mockGroupRaw = mockAirfieldGroup.get();
+            MockAirfieldGroup* mockGroupRaw = mockAirfieldGroup.get();
 
             groups.push_back(std::move(mockAirfieldGroup));
             IntentionCodeGenerator intention(std::move(groups), *SectorExitRepositoryFactory::Create());
-            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
-                "BAW123",
-                "OMDB",
-                "EGNX",
-                mockFlightPlan,
-                27000
-            );
+            IntentionCodeData data =
+                intention.GetIntentionCodeForFlightplan("BAW123", "OMDB", "EGNX", mockFlightPlan, 27000);
             EXPECT_TRUE(data.intentionCode == "EGNX");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
@@ -142,36 +135,24 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroscopeExtractedRouteInterface> mockFlightPlan;
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
 
-            ON_CALL(mockFlightPlan, GetPointsNumber())
-                .WillByDefault(Return(3));
+            ON_CALL(mockFlightPlan, GetPointsNumber()).WillByDefault(Return(3));
 
-            ON_CALL(mockFlightPlan, GetPointName(0))
-                .WillByDefault(Return("EGKK"));
+            ON_CALL(mockFlightPlan, GetPointName(0)).WillByDefault(Return("EGKK"));
 
-            ON_CALL(mockFlightPlan, GetPointName(1))
-                .WillByDefault(Return("BAKUR"));
+            ON_CALL(mockFlightPlan, GetPointName(1)).WillByDefault(Return("BAKUR"));
 
-            ON_CALL(mockFlightPlan, GetPointName(2))
-                .WillByDefault(Return("KFJK"));
+            ON_CALL(mockFlightPlan, GetPointName(2)).WillByDefault(Return("KFJK"));
 
-            ON_CALL(mockFlightPlan, GetPointPosition(1))
-                .WillByDefault(Return(exitPositionWest));
+            ON_CALL(mockFlightPlan, GetPointPosition(1)).WillByDefault(Return(exitPositionWest));
 
-            ON_CALL(mockFlightPlan, GetPointPosition(2))
-                .WillByDefault(Return(nextFixPositonWest));
+            ON_CALL(mockFlightPlan, GetPointPosition(2)).WillByDefault(Return(nextFixPositonWest));
 
-            ON_CALL(mockFlightPlan, GetPointDistanceInMinutes(_))
-                .WillByDefault(Return(999));
+            ON_CALL(mockFlightPlan, GetPointDistanceInMinutes(_)).WillByDefault(Return(999));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
             IntentionCodeGenerator intention(std::move(groups), *exitPoints);
-            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
-                "BAW123",
-                "EGKK",
-                "KFJK",
-                mockFlightPlan,
-                24000
-            );
+            IntentionCodeData data =
+                intention.GetIntentionCodeForFlightplan("BAW123", "EGKK", "KFJK", mockFlightPlan, 24000);
             EXPECT_TRUE(data.intentionCode == "S3");
             EXPECT_TRUE(data.exitPointValid);
             EXPECT_EQ("BAKUR", data.exitPoint);
@@ -183,36 +164,24 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroscopeExtractedRouteInterface> mockFlightPlan;
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
 
-            ON_CALL(mockFlightPlan, GetPointsNumber())
-                .WillByDefault(Return(3));
+            ON_CALL(mockFlightPlan, GetPointsNumber()).WillByDefault(Return(3));
 
-            ON_CALL(mockFlightPlan, GetPointName(0))
-                .WillByDefault(Return("EGKK"));
+            ON_CALL(mockFlightPlan, GetPointName(0)).WillByDefault(Return("EGKK"));
 
-            ON_CALL(mockFlightPlan, GetPointName(1))
-                .WillByDefault(Return("LAKEY"));
+            ON_CALL(mockFlightPlan, GetPointName(1)).WillByDefault(Return("LAKEY"));
 
-            ON_CALL(mockFlightPlan, GetPointName(2))
-                .WillByDefault(Return("KFJK"));
+            ON_CALL(mockFlightPlan, GetPointName(2)).WillByDefault(Return("KFJK"));
 
-            ON_CALL(mockFlightPlan, GetPointPosition(1))
-                .WillByDefault(Return(exitPositionSouth));
+            ON_CALL(mockFlightPlan, GetPointPosition(1)).WillByDefault(Return(exitPositionSouth));
 
-            ON_CALL(mockFlightPlan, GetPointPosition(2))
-                .WillByDefault(Return(nextFixPositonSouth));
+            ON_CALL(mockFlightPlan, GetPointPosition(2)).WillByDefault(Return(nextFixPositonSouth));
 
-            ON_CALL(mockFlightPlan, GetPointDistanceInMinutes(_))
-                .WillByDefault(Return(999));
+            ON_CALL(mockFlightPlan, GetPointDistanceInMinutes(_)).WillByDefault(Return(999));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
             IntentionCodeGenerator intention(std::move(groups), *exitPoints);
-            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
-                "BAW123",
-                "EGKK",
-                "KFJK",
-                mockFlightPlan,
-                24000
-            );
+            IntentionCodeData data =
+                intention.GetIntentionCodeForFlightplan("BAW123", "EGKK", "KFJK", mockFlightPlan, 24000);
             EXPECT_TRUE(data.intentionCode == "KFJK");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
@@ -224,30 +193,20 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroscopeExtractedRouteInterface> mockFlightPlan;
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
 
-            ON_CALL(mockFlightPlan, GetPointsNumber())
-                .WillByDefault(Return(4));
+            ON_CALL(mockFlightPlan, GetPointsNumber()).WillByDefault(Return(4));
 
-            ON_CALL(mockFlightPlan, GetPointName(0))
-                .WillByDefault(Return("EGKK"));
+            ON_CALL(mockFlightPlan, GetPointName(0)).WillByDefault(Return("EGKK"));
 
-            ON_CALL(mockFlightPlan, GetPointName(1))
-                .WillByDefault(Return("BEL"));
+            ON_CALL(mockFlightPlan, GetPointName(1)).WillByDefault(Return("BEL"));
 
-            ON_CALL(mockFlightPlan, GetPointName(2))
-                .WillByDefault(Return("NOTAFIX"));
+            ON_CALL(mockFlightPlan, GetPointName(2)).WillByDefault(Return("NOTAFIX"));
 
-            ON_CALL(mockFlightPlan, GetPointName(3))
-                .WillByDefault(Return("KLAS"));
+            ON_CALL(mockFlightPlan, GetPointName(3)).WillByDefault(Return("KLAS"));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
             IntentionCodeGenerator intention(std::move(groups), *exitPoints);
-            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
-                "BAW123",
-                "EGKK",
-                "KLAS",
-                mockFlightPlan,
-                24000
-            );
+            IntentionCodeData data =
+                intention.GetIntentionCodeForFlightplan("BAW123", "EGKK", "KLAS", mockFlightPlan, 24000);
             EXPECT_TRUE(data.intentionCode == "KLAS");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
@@ -259,39 +218,26 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroscopeExtractedRouteInterface> mockFlightPlan;
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
 
-            ON_CALL(mockFlightPlan, GetPointsNumber())
-                .WillByDefault(Return(3));
+            ON_CALL(mockFlightPlan, GetPointsNumber()).WillByDefault(Return(3));
 
-            ON_CALL(mockFlightPlan, GetPointName(0))
-                .WillByDefault(Return("KLAS"));
+            ON_CALL(mockFlightPlan, GetPointName(0)).WillByDefault(Return("KLAS"));
 
-            ON_CALL(mockFlightPlan, GetPointName(1))
-                .WillByDefault(Return("BAKUR"));
+            ON_CALL(mockFlightPlan, GetPointName(1)).WillByDefault(Return("BAKUR"));
 
-            ON_CALL(mockFlightPlan, GetPointName(2))
-                .WillByDefault(Return("NOTAFIX"));
+            ON_CALL(mockFlightPlan, GetPointName(2)).WillByDefault(Return("NOTAFIX"));
 
-            ON_CALL(mockFlightPlan, GetPointName(3))
-                .WillByDefault(Return("EDDM"));
+            ON_CALL(mockFlightPlan, GetPointName(3)).WillByDefault(Return("EDDM"));
 
-            ON_CALL(mockFlightPlan, GetPointPosition(1))
-                .WillByDefault(Return(exitPositionEast));
+            ON_CALL(mockFlightPlan, GetPointPosition(1)).WillByDefault(Return(exitPositionEast));
 
-            ON_CALL(mockFlightPlan, GetPointPosition(2))
-                .WillByDefault(Return(nextFixPositonEast));
+            ON_CALL(mockFlightPlan, GetPointPosition(2)).WillByDefault(Return(nextFixPositonEast));
 
-            ON_CALL(mockFlightPlan, GetPointDistanceInMinutes(_))
-                .WillByDefault(Return(999));
+            ON_CALL(mockFlightPlan, GetPointDistanceInMinutes(_)).WillByDefault(Return(999));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
             IntentionCodeGenerator intention(std::move(groups), *exitPoints);
-            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
-                "BAW123",
-                "KLAS",
-                "EDDM",
-                mockFlightPlan,
-                24000
-            );
+            IntentionCodeData data =
+                intention.GetIntentionCodeForFlightplan("BAW123", "KLAS", "EDDM", mockFlightPlan, 24000);
             EXPECT_TRUE(data.intentionCode == "EDDM");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
@@ -304,18 +250,13 @@ namespace UKControllerPluginTest {
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
             std::unique_ptr<MockAirfieldGroup> mockAirfieldGroup(new StrictMock<MockAirfieldGroup>);
 
-            MockAirfieldGroup * groupRaw = mockAirfieldGroup.get();
+            MockAirfieldGroup* groupRaw = mockAirfieldGroup.get();
 
             groups.push_back(std::move(mockAirfieldGroup));
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
             IntentionCodeGenerator intention(std::move(groups), *exitPoints);
-            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
-                "BAW123",
-                "KLAS",
-                "EGLL",
-                mockFlightPlan,
-                33000
-            );
+            IntentionCodeData data =
+                intention.GetIntentionCodeForFlightplan("BAW123", "KLAS", "EGLL", mockFlightPlan, 33000);
             EXPECT_TRUE(data.intentionCode == "LL");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
@@ -331,45 +272,30 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroscopeExtractedRouteInterface> mockFlightPlan;
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
 
-            ON_CALL(mockFlightPlan, GetPointsNumber())
-                .WillByDefault(Return(3));
+            ON_CALL(mockFlightPlan, GetPointsNumber()).WillByDefault(Return(3));
 
-            ON_CALL(mockFlightPlan, GetPointName(0))
-                .WillByDefault(Return("EGLL"));
+            ON_CALL(mockFlightPlan, GetPointName(0)).WillByDefault(Return("EGLL"));
 
-            ON_CALL(mockFlightPlan, GetPointName(1))
-                .WillByDefault(Return("BAKUR"));
+            ON_CALL(mockFlightPlan, GetPointName(1)).WillByDefault(Return("BAKUR"));
 
-            ON_CALL(mockFlightPlan, GetPointName(2))
-                .WillByDefault(Return("KLAS"));
+            ON_CALL(mockFlightPlan, GetPointName(2)).WillByDefault(Return("KLAS"));
 
-            ON_CALL(mockFlightPlan, GetPointPosition(1))
-                .WillByDefault(Return(exitPositionWest));
+            ON_CALL(mockFlightPlan, GetPointPosition(1)).WillByDefault(Return(exitPositionWest));
 
-            ON_CALL(mockFlightPlan, GetPointPosition(2))
-                .WillByDefault(Return(nextFixPositonWest));
+            ON_CALL(mockFlightPlan, GetPointPosition(2)).WillByDefault(Return(nextFixPositonWest));
 
-            EXPECT_CALL(mockFlightPlan, GetPointDistanceInMinutes(1))
-                .Times(1)
-                .WillOnce(Return(-1));
+            EXPECT_CALL(mockFlightPlan, GetPointDistanceInMinutes(1)).Times(1).WillOnce(Return(-1));
 
-            EXPECT_CALL(mockFlightPlan, GetPointsAssignedIndex())
-                .Times(1)
-                .WillOnce(Return(-1));
+            EXPECT_CALL(mockFlightPlan, GetPointsAssignedIndex()).Times(1).WillOnce(Return(-1));
 
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
             IntentionCodeGenerator intention(std::move(groups), *exitPoints);
-            IntentionCodeData data = intention.GetIntentionCodeForFlightplan(
-                "BAW123",
-                "EGLL",
-                "KLAS",
-                mockFlightPlan,
-                33000
-            );
+            IntentionCodeData data =
+                intention.GetIntentionCodeForFlightplan("BAW123", "EGLL", "KLAS", mockFlightPlan, 33000);
             EXPECT_TRUE(data.intentionCode == "KLAS");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
             EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest
