@@ -19,6 +19,10 @@ jobs:
         with:
           submodules: recursive
 
+      # Environment things
+      - name: Setup MSVC Environment
+        uses: ilammy/msvc-dev-cmd@v1
+
       # LLVM / Clang Setup
       - name: Check Clang Version
         run: clang-cl --version
@@ -103,7 +107,7 @@ jobs:
         run: ctest -C Release --output-on-failure
 
       # Do Srclinting
-      - name: Get Changed Src Files
+      - name: Get Changed Files (Src)
         id: changed-files-src
         uses: Ana06/get-changed-files@v2.0.0
         with:
@@ -115,7 +119,7 @@ jobs:
           if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-src.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files-src.outputs.added_modified }} -p build }
 
       # Do Src linting
-      - name: Get Changed Test Files
+      - name: Get Changed Files (Tests)
         id: changed-files-test
         uses: Ana06/get-changed-files@v2.0.0
         with:
@@ -124,7 +128,7 @@ jobs:
 
       - name: Clang Tidy (Tests)
         run: |
-          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-test.outputs.added_modified }}"))) { clang-tidy.exe ${{ steps.changed-files-test.outputs.added_modified }} -p build }
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-test.outputs.added_modified }}"))) { clang-tidy ${{ steps.changed-files-test.outputs.added_modified }} -p build }
 
       # Upload artifacts
       - name: Upload Core Binary As Artifact
@@ -156,6 +160,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           persist-credentials: false
+
+      - name: Setup MSVC Environment
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Get All Changed Files
         id: changed-files
