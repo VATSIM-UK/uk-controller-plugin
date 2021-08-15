@@ -20,6 +20,11 @@ jobs:
           submodules: recursive
 
       # Environment things
+      - name: Set up Visual Studio Shell
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x86
+
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v1
         with:
