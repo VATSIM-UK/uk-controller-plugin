@@ -22,8 +22,6 @@ jobs:
       # Environment things
       - name: Setup MSVC Environment
         uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: 'x86'
 
       # LLVM / Clang Setup
       - name: Check Clang Version
@@ -96,9 +94,9 @@ jobs:
       - name: Run Build
         env:
           CC: clang-cl
-          CFLAGS: -m32
+          CFLAGS: m32
           CXX: clang-cl
-          CXXFLAGS: -m32
+          CXXFLAGS: m32
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G Ninja -Bbuild
           cd build

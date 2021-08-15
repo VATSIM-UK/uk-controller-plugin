@@ -475,3 +475,8 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
+// Manifesting
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "..\\src\\plugin\\plugin.manifest"
+
+
