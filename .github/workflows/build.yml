@@ -22,7 +22,8 @@ jobs:
       # Environment things
       - name: Setup MSVC Environment
         uses: ilammy/msvc-dev-cmd@v1
-        arch: 'x86'
+        with:
+          arch: 'x86'
 
       # LLVM / Clang Setup
       - name: Check Clang Version
