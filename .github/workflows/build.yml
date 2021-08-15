@@ -176,7 +176,7 @@ jobs:
 
       - name: Clang Format
         run: |
-          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-format --dry-run -Werror ${{ steps.changed-files.outputs.added_modified }} }
+          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files.outputs.added_modified }}"))) { clang-format -style=file --dry-run -Werror ${{ steps.changed-files.outputs.added_modified }} }
 
   release:
     name: Release

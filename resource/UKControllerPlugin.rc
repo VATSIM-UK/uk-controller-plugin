@@ -45,13 +45,13 @@ END
 // WAVE
 //
 
-IDR_WAVE1               WAVE                    "..\\..\\resource\\sound\\beep.wav"
+IDR_WAVE1               WAVE                    ".\\sound\\beep.wav"
 
-WAVE_DEP_RLS_ACCEPT     WAVE                    "..\\..\\resource\\sound\\departure_release_accepted.wav"
+WAVE_DEP_RLS_ACCEPT     WAVE                    ".\\sound\\departure_release_accepted.wav"
 
-WAVE_DEP_RLS_REJ        WAVE                    "..\\..\\resource\\sound\\departure_release_rejected.wav"
+WAVE_DEP_RLS_REJ        WAVE                    ".\\sound\\departure_release_rejected.wav"
 
-WAVE_DEP_RLS_REQ        WAVE                    "..\\..\\resource\\sound\\departure_release_requested.wav"
+WAVE_DEP_RLS_REQ        WAVE                    ".\\sound\\departure_release_requested.wav"
 
 
 /////////////////////////////////////////////////////////////////////////////
