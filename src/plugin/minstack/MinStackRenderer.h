@@ -42,7 +42,10 @@ namespace UKControllerPlugin::MinStack {
         void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         [[nodiscard]] auto GetConfigurationMenuItem() const -> UKControllerPlugin::Plugin::PopupMenuItem override;
-        void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
+        void Configure(
+            [[maybe_unused]] int functionId,
+            [[maybe_unused]] std::string subject,
+            [[maybe_unused]] RECT screenObjectArea) override;
         auto GetConfig() -> UKControllerPlugin::MinStack::MinStackRendererConfiguration&;
         [[nodiscard]] auto GetHideClickspotArea() const -> RECT;
         [[nodiscard]] auto GetHideSpotRender() const -> Gdiplus::Rect;
@@ -75,11 +78,11 @@ namespace UKControllerPlugin::MinStack {
         [[nodiscard]] auto YPositionUserSettingKey() const -> const std::string&;
         [[nodiscard]] auto YPositionUserSettingDescription() const -> const std::string&;
         [[nodiscard]] auto MenuItemDescription() const -> const std::string&;
-        [[nodiscard]] auto HideClickspotId() const -> const int;
-        [[nodiscard]] auto MslClickspotId() const -> const int;
-        [[nodiscard]] auto LeftColumnWidth() const -> const int;
-        [[nodiscard]] auto HideClickspotWidth() const -> const int;
-        [[nodiscard]] auto RowHeight() const -> const int;
+        [[nodiscard]] auto HideClickspotId() const -> int;
+        [[nodiscard]] auto MslClickspotId() const -> int;
+        [[nodiscard]] auto LeftColumnWidth() const -> int;
+        [[nodiscard]] auto HideClickspotWidth() const -> int;
+        [[nodiscard]] auto RowHeight() const -> int;
 
         private:
         auto RenderMinStacks(

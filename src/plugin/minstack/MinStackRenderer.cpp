@@ -104,10 +104,10 @@ namespace UKControllerPlugin::MinStack {
         The configuration function called if the menu item is selected. It toggles the
         visibility.
     */
-    void MinStackRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
+    void MinStackRenderer::Configure(
+        [[maybe_unused]] int functionId, [[maybe_unused]] std::string subject, [[maybe_unused]] RECT screenObjectArea)
     {
-        this->dialogManager.OpenDialog(
-            IDD_MINSTACK, std::get<LPARAM>(std::variant<LPARAM, MinStackRendererConfiguration*>(&this->config)));
+        this->dialogManager.OpenDialog(IDD_MINSTACK, reinterpret_cast<LPARAM>(&this->config)); // NOLINT
     }
 
     auto MinStackRenderer::GetConfig() -> MinStackRendererConfiguration&
@@ -353,27 +353,27 @@ namespace UKControllerPlugin::MinStack {
         return menuItemDescription;
     }
 
-    auto MinStackRenderer::HideClickspotId() const -> const int
+    auto MinStackRenderer::HideClickspotId() const -> int
     {
         return hideClickspotId;
     }
 
-    auto MinStackRenderer::MslClickspotId() const -> const int
+    auto MinStackRenderer::MslClickspotId() const -> int
     {
         return mslClickspotId;
     }
 
-    auto MinStackRenderer::LeftColumnWidth() const -> const int
+    auto MinStackRenderer::LeftColumnWidth() const -> int
     {
         return leftColumnWidth;
     }
 
-    auto MinStackRenderer::RowHeight() const -> const int
+    auto MinStackRenderer::RowHeight() const -> int
     {
         return rowHeight;
     }
 
-    auto MinStackRenderer::HideClickspotWidth() const -> const int
+    auto MinStackRenderer::HideClickspotWidth() const -> int
     {
         return hideClickspotWidth;
     }
