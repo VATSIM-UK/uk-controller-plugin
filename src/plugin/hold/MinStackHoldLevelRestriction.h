@@ -20,7 +20,7 @@ namespace UKControllerPlugin::Hold {
             const UKControllerPlugin::MinStack::MinStackManager& minStackLevels,
             const UKControllerPlugin::SectorFile::RunwayCollection& runways,
             std::string runway = "");
-        
+
         [[nodiscard]] auto LevelRestricted(unsigned int level) const -> bool override;
         [[nodiscard]] auto MinStackKey() const -> const std::string&;
         [[nodiscard]] auto MinStackOffset() const -> unsigned int;
