@@ -29,8 +29,8 @@ namespace UKControllerPlugin::MinStack {
         const GdiplusBrushes& brushes,
         const UKControllerPlugin::Dialog::DialogManager& dialogManager)
         : minStackModule(minStackModule), hideClickspotId(closeClickspotId), menuBarClickspotId(menuBarClickspotId),
-          mslClickspotId(mslClickspotId), toggleCallbackFunctionId(toggleCallbackFunctionId), brushes(brushes),
-          dialogManager(dialogManager)
+          mslClickspotId(mslClickspotId), brushes(brushes), dialogManager(dialogManager),
+          toggleCallbackFunctionId(toggleCallbackFunctionId)
     {
     }
 
