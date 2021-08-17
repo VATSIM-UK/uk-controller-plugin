@@ -47,9 +47,10 @@ namespace UKControllerPlugin::Hold {
         // The offset against minstack levels - e.g. MSL+1 would be 1000
         const unsigned int minStackOffset;
 
+        // The airfield that this restriction applies to
+        const std::string airfield;
+
         // The runways that this restriction applies to
         const std::string runway;
-
-        const std::string airfield;
     };
 } // namespace UKControllerPlugin::Hold

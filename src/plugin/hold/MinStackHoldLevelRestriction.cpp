@@ -1,4 +1,3 @@
-#pragma once
 #include "pch/pch.h"
 
 #include "hold/MinStackHoldLevelRestriction.h"
@@ -18,8 +17,8 @@ namespace UKControllerPlugin::Hold {
         const MinStackManager& minStackLevels,
         const RunwayCollection& runways,
         std::string runway)
-        : minStackLevels(minStackLevels), minStackOffset(minStackOffset), override(override),
-          minStackKey(MinStackManager::GetMslKeyAirfield(airfield)), runways(runways), airfield(airfield),
+        : minStackLevels(minStackLevels), runways(runways), minStackOffset(minStackOffset),
+          minStackKey(MinStackManager::GetMslKeyAirfield(airfield)), override(override), airfield(airfield),
           runway(std::move(runway))
     {
     }

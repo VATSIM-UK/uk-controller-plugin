@@ -28,8 +28,8 @@ namespace UKControllerPlugin::MinStack {
         int toggleCallbackFunctionId,
         const GdiplusBrushes& brushes,
         const UKControllerPlugin::Dialog::DialogManager& dialogManager)
-        : minStackModule(minStackModule), hideClickspotId(closeClickspotId), menuBarClickspotId(menuBarClickspotId),
-          mslClickspotId(mslClickspotId), brushes(brushes), dialogManager(dialogManager),
+        : brushes(brushes), minStackModule(minStackModule), dialogManager(dialogManager),
+          hideClickspotId(closeClickspotId), menuBarClickspotId(menuBarClickspotId), mslClickspotId(mslClickspotId),
           toggleCallbackFunctionId(toggleCallbackFunctionId)
     {
     }
@@ -49,8 +49,8 @@ namespace UKControllerPlugin::MinStack {
              MinStackManager::GetMslKeyTma("STMA")});
 
         unsigned int order = 0;
-        for (auto it = selectedMinStacks.cbegin(); it != selectedMinStacks.cend(); ++it) {
-            this->config.AddItem({order++, *it});
+        for (auto& selectedMinStack : selectedMinStacks) {
+            this->config.AddItem({order++, selectedMinStack});
         }
 
         this->topBarArea.right = this->topBarArea.left + this->leftColumnWidth;
@@ -200,8 +200,8 @@ namespace UKControllerPlugin::MinStack {
     /*
         Render the individual minimum stack levels and their associated clickspots.
     */
-    auto MinStackRenderer::RenderMinStacks(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
-        -> int
+    auto MinStackRenderer::RenderMinStacks(
+        GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen) const -> int
     {
         // Loop through each of the TMAs
         Gdiplus::Rect tma = {this->topBarArea.left, this->topBarArea.bottom, this->leftColumnWidth, this->rowHeight};
@@ -209,15 +209,15 @@ namespace UKControllerPlugin::MinStack {
             this->topBarArea.right, this->topBarArea.bottom, this->hideClickspotWidth, this->rowHeight};
 
         int roundNumber = 0;
-        for (auto it = this->config.cbegin(); it != this->config.cend(); ++it) {
-            const MinStackLevel& mslData = this->minStackModule.GetMinStackLevel(it->key);
+        for (auto& minStack : this->config) {
+            const MinStackLevel& mslData = this->minStackModule.GetMinStackLevel(minStack.key);
 
             // Draw the TMA title and rectangles
             graphics.FillRect(tma, *this->brushes.greyBrush);
             graphics.DrawRect(tma, *this->brushes.blackPen);
 
             graphics.DrawString(
-                HelperFunctions::ConvertToWideString(MinStackManager::GetNameFromKey(it->key)),
+                HelperFunctions::ConvertToWideString(MinStackManager::GetNameFromKey(minStack.key)),
                 tma,
                 mslData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush);
 
@@ -236,7 +236,7 @@ namespace UKControllerPlugin::MinStack {
             // Add the clickable area.
             radarScreen.RegisterScreenObject(
                 this->mslClickspotId,
-                it->key,
+                minStack.key,
                 {tma.X, tma.Y, msl.X + this->hideClickspotWidth, msl.Y + this->rowHeight},
                 false);
 

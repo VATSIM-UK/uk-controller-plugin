@@ -93,7 +93,7 @@ namespace UKControllerPlugin {
             -> std::shared_ptr<Euroscope::EuroScopeCRadarTargetInterface> override;
         auto GetSelectedFlightplan() const -> std::shared_ptr<Euroscope::EuroScopeCFlightPlanInterface> override;
         auto GetSelectedRadarTarget() const -> std::shared_ptr<Euroscope::EuroScopeCRadarTargetInterface> override;
-        auto OnCompileCommand(const char* sCommandLine) -> bool override;
+        auto OnCompileCommand(const char* command) -> bool override;
         void OnControllerDisconnect(EuroScopePlugIn::CController Controller) override;
         void OnControllerPositionUpdate(EuroScopePlugIn::CController Controller) override;
         void OnFlightPlanControllerAssignedDataUpdate(EuroScopePlugIn::CFlightPlan flightPlan, int dataType) override;
@@ -104,7 +104,7 @@ namespace UKControllerPlugin {
             EuroScopePlugIn::CFlightPlan FlightPlan,
             EuroScopePlugIn::CRadarTarget RadarTarget,
             int ItemCode,
-            int TagData,
+            int dataAvailable,
             char sItemString[16], // NOLINT
             int* pColorCode,
             COLORREF* pRGB,

@@ -87,7 +87,7 @@ namespace UKControllerPlugin::MinStack {
         private:
         auto RenderMinStacks(
             UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
-            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) -> int;
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const -> int;
         void RenderOuterFrame(
             UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
             UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,

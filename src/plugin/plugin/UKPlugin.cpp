@@ -67,11 +67,12 @@ namespace UKControllerPlugin {
               PluginVersion::version,
               PluginVersion::author,
               PluginVersion::copyright),
-          timedEvents(timedEvents), statusEventHandler(statusEventHandler),
           radarTargetEventHandler(radarTargetEventHandler), flightplanEventHandler(flightplanEventHandler),
-          tagEvents(tagEvents), radarScreenFactory(std::move(radarScreenFactory)), metarHandlers(metarHandlers),
+          statusEventHandler(statusEventHandler), timedEvents(timedEvents),
+          radarScreenFactory(std::move(radarScreenFactory)), tagEvents(tagEvents), metarHandlers(metarHandlers),
           functionCallHandler(functionCallHandler), commandHandlers(commandHandlers),
           runwayDialogHandlers(runwayDialogHandlers), controllerHandoffHandlers(controllerHandoffHandlers)
+
     {
     }
 
@@ -196,7 +197,7 @@ namespace UKControllerPlugin {
             selected = this->SectorFileElementSelectNext(selected, type);
         }
 
-        return std::move(elements);
+        return elements;
     }
 
     void UKPlugin::ApplyFunctionToAllControllers(
