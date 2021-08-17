@@ -40,8 +40,8 @@ namespace UKControllerPlugin::MinStack {
 
         // The keys currently active for MSL whilst the dialog is open
         std::set<std::string> activeMslKeys;
-        
+
         static const int AIRFIELD_SUBSTRING_LENGTH = 9;
-        static const int TMA_SUBSTRING_LENGTH = 3;
+        static const int TMA_SUBSTRING_LENGTH = 4;
     };
 } // namespace UKControllerPlugin::MinStack
