@@ -184,8 +184,8 @@ namespace UKControllerPlugin::MinStack {
 
         // Add the selected MSLs to the existing list
         this->activeMslKeys = this->manager.GetAllMslKeys();
-        for (auto it = this->config->cbegin(); it != this->config->cend(); ++it) {
-            auto mslKey = this->activeMslKeys.find(it->key);
+        for (const auto& minStackConfig : *this->config) {
+            auto mslKey = this->activeMslKeys.find(minStackConfig.key);
             if (mslKey == this->activeMslKeys.cend()) {
                 LogWarning("Unable to add Active MSL to list, not active: " + *mslKey);
                 continue;
@@ -209,8 +209,8 @@ namespace UKControllerPlugin::MinStack {
         }
 
         // Add all non-active keys to the dropdown
-        for (auto it = this->activeMslKeys.cbegin(); it != this->activeMslKeys.cend(); ++it) {
-            if (this->config->GetItem(*it) != this->config->InvalidItem()) {
+        for (const auto& activeMslKey : this->activeMslKeys) {
+            if (this->config->GetItem(activeMslKey) != this->config->InvalidItem()) {
                 continue;
             }
 
@@ -219,7 +219,7 @@ namespace UKControllerPlugin::MinStack {
                 IDC_MINSTACK_SELECT,
                 CB_ADDSTRING,
                 NULL,
-                reinterpret_cast<LPARAM>(this->GetListEntryForKey(*it).c_str()) // NOLINT
+                reinterpret_cast<LPARAM>(this->GetListEntryForKey(activeMslKey).c_str()) // NOLINT
             );
 
             SendDlgItemMessage(
@@ -227,7 +227,7 @@ namespace UKControllerPlugin::MinStack {
                 IDC_MINSTACK_SELECT,
                 CB_SETITEMDATA,
                 itemIndex,
-                reinterpret_cast<LPARAM>(it->c_str()) // NOLINT
+                reinterpret_cast<LPARAM>(activeMslKey.c_str()) // NOLINT
             );
         }
     }
@@ -386,8 +386,8 @@ namespace UKControllerPlugin::MinStack {
         }
 
         this->config->Reset();
-        for (auto it = newConfig.cbegin(); it != newConfig.cend(); ++it) {
-            this->config->AddItem(*it);
+        for (const auto& newConfigItem : newConfig) {
+            this->config->AddItem(newConfigItem);
         }
     }
 

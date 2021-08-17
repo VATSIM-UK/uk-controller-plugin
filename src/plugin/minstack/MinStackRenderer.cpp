@@ -77,8 +77,8 @@ namespace UKControllerPlugin::MinStack {
         userSetting.Save(this->yPositionUserSettingKey, this->yPositionUserSettingDescription, this->topBarArea.top);
 
         std::vector<std::string> selectedMinStacks;
-        for (auto it = this->config.cbegin(); it != this->config.cend(); ++it) {
-            selectedMinStacks.push_back(it->key);
+        for (const auto& configuredMinStack : this->config) {
+            selectedMinStacks.push_back(configuredMinStack.key);
         }
 
         userSetting.Save(
@@ -209,7 +209,7 @@ namespace UKControllerPlugin::MinStack {
             this->topBarArea.right, this->topBarArea.bottom, this->hideClickspotWidth, this->rowHeight};
 
         int roundNumber = 0;
-        for (auto& minStack : this->config) {
+        for (const auto& minStack : this->config) {
             const MinStackLevel& mslData = this->minStackModule.GetMinStackLevel(minStack.key);
 
             // Draw the TMA title and rectangles

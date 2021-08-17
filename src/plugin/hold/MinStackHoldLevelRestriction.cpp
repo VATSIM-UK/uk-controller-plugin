@@ -17,9 +17,8 @@ namespace UKControllerPlugin::Hold {
         const MinStackManager& minStackLevels,
         const RunwayCollection& runways,
         std::string runway)
-        : minStackLevels(minStackLevels), runways(runways), minStackOffset(minStackOffset),
-          minStackKey(MinStackManager::GetMslKeyAirfield(airfield)), override(override), airfield(airfield),
-          runway(std::move(runway))
+        : minStackLevels(minStackLevels), runways(runways), minStackKey(MinStackManager::GetMslKeyAirfield(airfield)),
+          minStackOffset(minStackOffset), override(override), airfield(airfield), runway(std::move(runway))
     {
     }
 

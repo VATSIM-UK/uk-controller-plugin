@@ -129,19 +129,6 @@ jobs:
         run: |
           if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-src.outputs.added_modified }}"))) { clang-tidy ${{ steps.changed-files-src.outputs.added_modified }} -p build }
 
-      # Do Src linting
-      - name: Get Changed Files (Tests)
-        id: changed-files-test
-        uses: Ana06/get-changed-files@v2.0.0
-        with:
-          filter: |
-            test/**/*.cpp
-
-      - name: Clang Tidy (Tests)
-        continue-on-error: true # Have to as clang-tidy doesnt want to run properly on Windows
-        run: |
-          if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-test.outputs.added_modified }}"))) { clang-tidy ${{ steps.changed-files-test.outputs.added_modified }} -p build }
-
       # Upload artifacts
       - name: Upload Core Binary As Artifact
         uses: actions/upload-artifact@v2
