@@ -1,4 +1,5 @@
 #include "pch/pch.h"
+
 #include "euroscope/UserSetting.h"
 #include "euroscope/UserSettingProviderInterface.h"
 #include "helper/HelperFunctions.h"
@@ -6,191 +7,191 @@
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Euroscope::UserSettingProviderInterface;
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
+namespace UKControllerPlugin::Euroscope {
 
-        UserSetting::UserSetting(UserSettingProviderInterface & userSettingProvider)
-            : userSettingProvider(userSettingProvider)
-        {
+    UserSetting::UserSetting(UserSettingProviderInterface& userSettingProvider)
+        : userSettingProvider(userSettingProvider)
+    {
+    }
+
+    /*
+        Returns a boolean value for the given ASR key. False if the key isn't a boolean.
+    */
+    auto UserSetting::GetBooleanEntry(std::string key, bool defaultValue) -> bool
+    {
+        std::string value = this->userSettingProvider.GetKey(std::move(key));
+        return UKControllerPlugin::Euroscope::UserSetting::ValidBooleanEntry(value) ? value == "1" : defaultValue;
+    }
+
+    /*
+        Return an RGB colour value for the given ASR key. Returns white if not a colour.
+    */
+    auto UserSetting::GetColourEntry(std::string key, COLORREF defaultValue) -> COLORREF
+    {
+        std::string value = this->userSettingProvider.GetKey(std::move(key));
+        return UKControllerPlugin::Euroscope::UserSetting::ValidColourEntry(value)
+                   ? HelperFunctions::GetColourFromSettingString(value)
+                   : defaultValue;
+    }
+
+    /*
+        Returns an double value for the given ASR key. 0.0 if the key isn't a double.
+    */
+    auto UserSetting::GetFloatEntry(std::string key, float defaultValue) -> double
+    {
+        std::string value = this->userSettingProvider.GetKey(std::move(key));
+        return UKControllerPlugin::Euroscope::UserSetting::ValidFloatEntry(value) ? std::stod(value) : defaultValue;
+    }
+
+    auto UserSetting::GetUnsignedIntegerEntry(std::string key, unsigned int defaultValue) -> unsigned int
+    {
+        std::string value = this->userSettingProvider.GetKey(std::move(key));
+        return UKControllerPlugin::Euroscope::UserSetting::ValidIntegerEntry(value) ? std::stoul(value) : defaultValue;
+    }
+
+    /*
+        Returns an integer value for the given ASR key. 0 if the key isn't a integer.
+    */
+    auto UserSetting::GetIntegerEntry(std::string key, int defaultValue) -> int
+    {
+        std::string value = this->userSettingProvider.GetKey(std::move(key));
+        return UKControllerPlugin::Euroscope::UserSetting::ValidIntegerEntry(value) ? std::stoi(value) : defaultValue;
+    }
+
+    /*
+        Returns the string value of a given ASR key. Empty string if the key doesn't exist.
+    */
+    auto UserSetting::GetStringEntry(std::string key, const std::string& defaultValue) -> std::string
+    {
+        std::string value = this->userSettingProvider.GetKey(std::move(key));
+        return UKControllerPlugin::Euroscope::UserSetting::ValidStringEntry(value) ? value : defaultValue;
+    }
+
+    /*
+        Returns a list of strings
+    */
+    auto UserSetting::GetStringListEntry(std::string key, std::vector<std::string> defaultValue)
+        -> std::vector<std::string>
+    {
+        std::string value = this->userSettingProvider.GetKey(std::move(key));
+
+        if (!UKControllerPlugin::Euroscope::UserSetting::ValidStringEntry(value)) {
+            return defaultValue;
         }
 
-        /*
-            Returns a boolean value for the given ASR key. False if the key isn't a boolean.
-        */
-        bool UserSetting::GetBooleanEntry(std::string key, bool defaultValue)
-        {
-            std::string value = this->userSettingProvider.GetKey(key);
-            return this->ValidBooleanEntry(value) ? value == "1" : defaultValue;
-        }
+        std::vector<std::string> list = HelperFunctions::TokeniseString(';', value);
 
-        /*
-            Return an RGB colour value for the given ASR key. Returns white if not a colour.
-        */
-        COLORREF UserSetting::GetColourEntry(std::string key, COLORREF defaultValue)
-        {
-            std::string value = this->userSettingProvider.GetKey(key);
-            return this->ValidColourEntry(value) ? HelperFunctions::GetColourFromSettingString(value) : defaultValue;
-        }
+        return list.empty() ? defaultValue : list;
+    }
 
-        /*
-            Returns an double value for the given ASR key. 0.0 if the key isn't a double.
-        */
-        double UserSetting::GetFloatEntry(std::string key, float defaultValue)
-        {
-            std::string value = this->userSettingProvider.GetKey(key);
-            return this->ValidFloatEntry(value) ? std::stod(value) : defaultValue;
-        }
+    /*
+        Returns true if there is some entry of some form for a given key.
+    */
+    auto UserSetting::HasEntry(std::string key) -> bool
+    {
+        return this->userSettingProvider.KeyExists(std::move(key));
+    }
 
-        unsigned int UserSetting::GetUnsignedIntegerEntry(std::string key, unsigned int defaultValue)
-        {
-            std::string value = this->userSettingProvider.GetKey(key);
-            return this->ValidIntegerEntry(value) ? std::stoul(value) : defaultValue;
-        }
+    /*
+        Returns true if a key exists and its value is a boolean.
+    */
+    auto UserSetting::ValidBooleanEntry(const std::string& value) -> bool
+    {
+        return value == "1" || value == "0";
+    }
 
-        /*
-            Returns an integer value for the given ASR key. 0 if the key isn't a integer.
-        */
-        int UserSetting::GetIntegerEntry(std::string key, int defaultValue)
-        {
-            std::string value = this->userSettingProvider.GetKey(key);
-            return this->ValidIntegerEntry(value) ? std::stoi(value) : defaultValue;
-        }
+    /*
+        Returns true if a key exists and its value is an RGB colour.
+    */
+    auto UserSetting::ValidColourEntry(std::string value) -> bool
+    {
+        return HelperFunctions::IsValidSettingsColour(std::move(value));
+    }
 
-        /*
-            Returns the string value of a given ASR key. Empty string if the key doesn't exist.
-        */
-        std::string UserSetting::GetStringEntry(std::string key, std::string defaultValue)
-        {
-            std::string value = this->userSettingProvider.GetKey(key);
-            return this->ValidStringEntry(value) ? value : defaultValue;
-        }
+    /*
+        Returns true if a key exists and its value is a float.
+    */
+    auto UserSetting::ValidFloatEntry(std::string value) -> bool
+    {
+        return HelperFunctions::IsFloat(std::move(value));
+    }
 
-        /*
-            Returns a list of strings
-        */
-        std::vector<std::string> UserSetting::GetStringListEntry(std::string key, std::vector<std::string> defaultValue)
-        {
-            std::string value = this->userSettingProvider.GetKey(key);
+    /*
+        Returns true if a key exists and its value is an integer.
+    */
+    auto UserSetting::ValidIntegerEntry(std::string value) -> bool
+    {
+        return HelperFunctions::IsAnInteger(std::move(value));
+    }
 
-            if (!this->ValidStringEntry(value)) {
-                return defaultValue;
-            }
+    /*
+        Returns true if a key exists in the ASR - all keys come back as strings.
+    */
+    auto UserSetting::ValidStringEntry(const std::string& value) -> bool
+    {
+        return !value.empty();
+    }
 
-            std::vector<std::string> list = HelperFunctions::TokeniseString(';', value);
+    /*
+        Save string data to the ASR.
+    */
+    void UserSetting::Save(std::string name, std::string description, std::string data)
+    {
+        this->userSettingProvider.SetKey(std::move(name), std::move(description), std::move(data));
+    }
 
-            return list.empty() ? defaultValue : list;
-        }
+    /*
+        Save int data to the ASR.
+    */
+    void UserSetting::Save(std::string name, std::string description, int data)
+    {
+        this->userSettingProvider.SetKey(std::move(name), std::move(description), std::to_string(data));
+    }
 
-        /*
-            Returns true if there is some entry of some form for a given key.
-        */
-        bool UserSetting::HasEntry(std::string key)
-        {
-            return this->userSettingProvider.KeyExists(key);
-        }
+    /*
+        Save unsigned int data to the ASR
+    */
+    void UserSetting::Save(std::string name, std::string description, unsigned int data)
+    {
+        this->userSettingProvider.SetKey(std::move(name), std::move(description), std::to_string(data));
+    }
 
-        /*
-            Returns true if a key exists and its value is a boolean.
-        */
-        bool UserSetting::ValidBooleanEntry(std::string value)
-        {
-            return value == "1" || value == "0";
-        }
+    /*
+        Save boolean data to the ASR.
+    */
+    void UserSetting::Save(std::string name, std::string description, bool data)
+    {
+        this->userSettingProvider.SetKey(std::move(name), std::move(description), std::to_string((data) ? 1 : 0));
+    }
 
-        /*
-            Returns true if a key exists and its value is an RGB colour.
-        */
-        bool UserSetting::ValidColourEntry(std::string value)
-        {
-            return HelperFunctions::IsValidSettingsColour(value);
-        }
+    /*
+        Save float data to the ASR.
+    */
+    void UserSetting::Save(std::string name, std::string description, double data)
+    {
+        this->userSettingProvider.SetKey(std::move(name), std::move(description), std::to_string(data));
+    }
 
-        /*
-            Returns true if a key exists and its value is a float.
-        */
-        bool UserSetting::ValidFloatEntry(std::string value)
-        {
-            return HelperFunctions::IsFloat(value);
-        }
+    /*
+        Save RGB colour data to the ASR.
+    */
+    void UserSetting::Save(std::string name, std::string description, COLORREF data)
+    {
+        this->userSettingProvider.SetKey(
+            std::move(name), std::move(description), HelperFunctions::GetColourString(data));
+    }
 
-        /*
-            Returns true if a key exists and its value is an integer.
-        */
-        bool UserSetting::ValidIntegerEntry(std::string value)
-        {
-            return HelperFunctions::IsAnInteger(value);
-        }
+    /*
+        Save string vector data
+    */
+    void UserSetting::Save(std::string name, std::string description, std::vector<std::string> data)
+    {
+        this->userSettingProvider.SetKey(
+            std::move(name), std::move(description), HelperFunctions::VectorToDelimetedString(std::move(data), ";"));
+    }
 
-        /*
-            Returns true if a key exists in the ASR - all keys come back as strings.
-        */
-        bool UserSetting::ValidStringEntry(std::string value)
-        {
-            return value != "";
-        }
-
-        /*
-            Returns true if a key exists and its value is an unsigned integer
-        */
-        bool UserSetting::ValidUnsignedIntegerEntry(std::string value)
-        {
-            return HelperFunctions::IsAnInteger(value);
-        }
-
-        /*
-            Save string data to the ASR.
-        */
-        void UserSetting::Save(std::string name, std::string description, std::string data)
-        {
-            this->userSettingProvider.SetKey(name, description, data);
-        }
-
-        /*
-            Save int data to the ASR.
-        */
-        void UserSetting::Save(std::string name, std::string description, int data)
-        {
-            this->userSettingProvider.SetKey(name, description, std::to_string(data));
-        }
-
-        /*
-            Save unsigned int data to the ASR
-        */
-        void UserSetting::Save(std::string name, std::string description, unsigned int data)
-        {
-            this->userSettingProvider.SetKey(name, description, std::to_string(data));
-        }
-
-        /*
-            Save boolean data to the ASR.
-        */
-        void UserSetting::Save(std::string name, std::string description, bool data)
-        {
-            this->userSettingProvider.SetKey(name, description, std::to_string((data) ? 1 : 0));
-        }
-
-        /*
-            Save float data to the ASR.
-        */
-        void UserSetting::Save(std::string name, std::string description, double data)
-        {
-            this->userSettingProvider.SetKey(name, description, std::to_string(data));
-        }
-
-        /*
-            Save RGB colour data to the ASR.
-        */
-        void UserSetting::Save(std::string name, std::string description, COLORREF data)
-        {
-            this->userSettingProvider.SetKey(name, description, HelperFunctions::GetColourString(data));
-        }
-
-        /*
-            Save string vector data
-        */
-        void UserSetting::Save(std::string name, std::string description, std::vector<std::string> data)
-        {
-            this->userSettingProvider.SetKey(name, description, HelperFunctions::VectorToDelimetedString(data, ";"));
-        }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    void UserSetting::Save(std::string name, std::string description, long data)
+    {
+        this->userSettingProvider.SetKey(std::move(name), std::move(description), std::to_string(data));
+    }
+} // namespace UKControllerPlugin::Euroscope

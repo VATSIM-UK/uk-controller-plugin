@@ -1,42 +1,56 @@
 #pragma once
 #include "minstack/MinStackRenderedItem.h"
 
-namespace UKControllerPlugin {
-    namespace MinStack {
+namespace UKControllerPlugin::MinStack {
 
-        /*
-            A class that manages the order and
-            contents of the minstack display for a given
-            rendered instance.
-        */
-        class MinStackRendererConfiguration
+    /*
+        A class that manages the order and
+        contents of the minstack display for a given
+        rendered instance.
+    */
+    class MinStackRendererConfiguration
+    {
+        public:
+        void AddItem(const UKControllerPlugin::MinStack::MinStackRenderedItem& item);
+        [[nodiscard]] auto CountItems() const -> size_t;
+        [[nodiscard]] auto GetItem(const std::string& key) const -> UKControllerPlugin::MinStack::MinStackRenderedItem;
+        void RemoveItem(const UKControllerPlugin::MinStack::MinStackRenderedItem& item);
+        void RemoveItem(unsigned int index);
+        void Reset();
+        void SetShouldRender(bool shouldRender);
+        [[nodiscard]] auto ShouldRender() const -> bool;
+        [[nodiscard]] auto InvalidItem() const -> const MinStackRenderedItem&;
+
+        // Public type definitions for a custom iterator over the class.
+        using MinStackRenderedItems = std::set<UKControllerPlugin::MinStack::MinStackRenderedItem>;
+        using const_iterator = MinStackRenderedItems::const_iterator;
+        using iterator = MinStackRenderedItems::iterator;
+        [[nodiscard]] auto cbegin() const -> const_iterator
         {
-            public:
-                void AddItem(const UKControllerPlugin::MinStack::MinStackRenderedItem item);
-                size_t CountItems(void) const;
-                UKControllerPlugin::MinStack::MinStackRenderedItem GetItem(std::string key) const;
-                void RemoveItem(const UKControllerPlugin::MinStack::MinStackRenderedItem item);
-                void RemoveItem(unsigned int index);
-                void Reset(void);
-                void SetShouldRender(bool shouldRender);
-                bool ShouldRender(void) const;
+            return this->items.cbegin();
+        }
+        [[nodiscard]] auto cend() const -> const_iterator
+        {
+            return this->items.cend();
+        }
+        [[nodiscard]] auto begin() const -> iterator
+        {
+            return this->items.begin();
+        }
+        [[nodiscard]] auto end() const -> iterator
+        {
+            return this->items.end();
+        }
 
-                // Public type definitions for a custom iterator over the class.
-                typedef std::set<UKControllerPlugin::MinStack::MinStackRenderedItem> MinStackRenderedItems;
-                typedef MinStackRenderedItems::const_iterator const_iterator;
-                const_iterator cbegin(void) const { return this->items.cbegin(); }
-                const_iterator cend(void) const { return this->items.cend(); }
+        private:
+        // The invalid item
+        const UKControllerPlugin::MinStack::MinStackRenderedItem invalidItem = {UINT_MAX, ""};
 
-                const UKControllerPlugin::MinStack::MinStackRenderedItem invalidItem = { UINT_MAX, "" };
+        // The items to render
+        std::set<UKControllerPlugin::MinStack::MinStackRenderedItem> items;
 
-            private:
+        // Should the MinStacks be rendered?
+        bool shouldRender = true;
+    };
 
-                // The items to render
-                std::set<UKControllerPlugin::MinStack::MinStackRenderedItem> items;
-
-                // Should the MinStacks be rendered?
-                bool shouldRender = true;
-        };
-
-    }  // namespace MinStack
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin::MinStack

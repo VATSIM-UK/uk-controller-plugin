@@ -1,170 +1,173 @@
 #pragma once
+#include "dialog/DialogManager.h"
+#include "euroscope/AsrEventHandlerInterface.h"
+#include "minstack/MinStackRendererConfiguration.h"
+#include "plugin/PopupMenuItem.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
-#include "euroscope/AsrEventHandlerInterface.h"
-#include "plugin/PopupMenuItem.h"
-#include "minstack/MinStackRendererConfiguration.h"
-#include "dialog/DialogManager.h"
-
-// Forward declarations
-namespace UKControllerPlugin {
-    namespace MinStack {
-        class MinStackManager;
-    }  // namespace MinStack
-}  // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Euroscope {
         class UserSetting;
         class EuroscopeRadarLoopbackInterface;
-    }  // namespace Euroscope
+    } // namespace Euroscope
 
     namespace Windows {
         class GdiGraphicsInterface;
-        struct  GdiplusBrushes;
-    }  // namespace Windows
-}  // namespace UKControllerPlugin
+        struct GdiplusBrushes;
+    } // namespace Windows
+} // namespace UKControllerPlugin
 // END
 
-namespace UKControllerPlugin {
-    namespace MinStack {
+namespace UKControllerPlugin::MinStack {
+    class MinStackManager;
 
-        /*
-            A class for rendering the Minimum Stack Levels
-            to the display.
-        */
-        class MinStackRenderer :
-            public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
-            public UKControllerPlugin::RadarScreen::RadarRenderableInterface,
-            public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
-        {
-            public:
-                MinStackRenderer(
-                    UKControllerPlugin::MinStack::MinStackManager & minStackModule,
-                    int closeClickspotId,
-                    int menuBarClickspotId,
-                    int mslClickspotId,
-                    int toggleCallbackFunctionId,
-                    const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
-                    const UKControllerPlugin::Dialog::DialogManager & dialogManager
-                );
-                void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
-                void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
-                UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const;
-                void Configure(int functionId, std::string subject, RECT screenObjectArea);
-                UKControllerPlugin::MinStack::MinStackRendererConfiguration & GetConfig(void);
-                RECT GetHideClickspotArea(void) const;
-                Gdiplus::Rect GetHideSpotRender(void) const;
-                RECT GetTopBarArea(void) const;
-                Gdiplus::Rect GetTopBarRender(void) const;
-                void LeftClick(
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
-                    int objectId,
-                    std::string objectDescription,
-                    POINT mousePos,
-                    RECT itemArea
-                );
-                bool IsVisible(void) const;
-                void Move(RECT titleBarArea, std::string objectDescription);
-                void Render(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                );
-                void RightClick(
-                    int objectId,
-                    std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                );
-                void ResetPosition(void) override;
-                void SetVisible(bool visible);
+    /*
+        A class for rendering the Minimum Stack Levels
+        to the display.
+    */
+    class MinStackRenderer : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
+                             public UKControllerPlugin::RadarScreen::RadarRenderableInterface,
+                             public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
+    {
+        public:
+        MinStackRenderer(
+            UKControllerPlugin::MinStack::MinStackManager& minStackModule,
+            int closeClickspotId,
+            int menuBarClickspotId,
+            int mslClickspotId,
+            int toggleCallbackFunctionId,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
+            const UKControllerPlugin::Dialog::DialogManager& dialogManager);
+        void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
+        void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
+        [[nodiscard]] auto GetConfigurationMenuItem() const -> UKControllerPlugin::Plugin::PopupMenuItem override;
+        void Configure(
+            [[maybe_unused]] int functionId,
+            [[maybe_unused]] std::string subject,
+            [[maybe_unused]] RECT screenObjectArea) override;
+        auto GetConfig() -> UKControllerPlugin::MinStack::MinStackRendererConfiguration&;
+        [[nodiscard]] auto GetHideClickspotArea() const -> RECT;
+        [[nodiscard]] auto GetHideSpotRender() const -> Gdiplus::Rect;
+        [[nodiscard]] auto GetTopBarArea() const -> RECT;
+        [[nodiscard]] auto GetTopBarRender() const -> Gdiplus::Rect;
+        void LeftClick(
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+            int objectId,
+            std::string objectDescription,
+            [[maybe_unused]] POINT mousePos,
+            [[maybe_unused]] RECT itemArea) override;
+        [[nodiscard]] auto IsVisible() const -> bool override;
+        void Move(RECT titleBarArea, [[maybe_unused]] std::string objectDescription) override;
+        void Render(
+            UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
+        void RightClick(
+            int objectId,
+            std::string objectDescription,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
+        void ResetPosition() override;
+        void SetVisible(bool visible);
 
-                // The EuroScope ID for the close button.
-                const int hideClickspotId;
+        [[nodiscard]] auto VisibleUserSettingKey() const -> const std::string&;
+        [[nodiscard]] auto SelectedMinStackUserSettingKey() const -> const std::string&;
+        [[nodiscard]] auto SelectedMinStackUserSettingDescription() const -> const std::string&;
+        [[nodiscard]] auto VisibleUserSettingDescription() const -> const std::string&;
+        [[nodiscard]] auto XPositionUserSettingKey() const -> const std::string&;
+        [[nodiscard]] auto XPositionUserSettingDescription() const -> const std::string&;
+        [[nodiscard]] auto YPositionUserSettingKey() const -> const std::string&;
+        [[nodiscard]] auto YPositionUserSettingDescription() const -> const std::string&;
+        [[nodiscard]] auto MenuItemDescription() const -> const std::string&;
+        [[nodiscard]] auto HideClickspotId() const -> int;
+        [[nodiscard]] auto MslClickspotId() const -> int;
+        [[nodiscard]] auto LeftColumnWidth() const -> int;
+        [[nodiscard]] auto HideClickspotWidth() const -> int;
+        [[nodiscard]] auto RowHeight() const -> int;
 
-                // The clickspot id for the menu bar
-                const int menuBarClickspotId;
+        private:
+        auto RenderMinStacks(
+            UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const -> int;
+        void RenderOuterFrame(
+            UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+            int numMinStacks);
+        void RenderTopBar(
+            UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
 
-                // The clickspot id for each MSL
-                const int mslClickspotId;
+        // The top bar rectangle
+        RECT topBarArea = {};
 
-                // Width of the left column
-                const int leftColumnWidth;
+        // The toggle spot rectangle
+        RECT hideClickspotArea = {};
 
-                // Width of the right column
-                const int rowHeight;
+        // The rectangle to render for the top bar
+        Gdiplus::Rect topBarRender;
 
-                // Width of the hide clickspot
-                const int hideClickspotWidth;
+        // The rectangle to render for the hide clickspot
+        Gdiplus::Rect hideSpotRender;
 
-                // The ASR key for whether or not to display the module
-                const std::string visibleUserSettingKey = "DisplayMinStack";
+        // Brushes
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
-                // The ASR key for saving the selected the selected minimum stack levels
-                const std::string selectedMinStackUserSettingKey = "SelectedMinStack";
+        // The configuration for the renderer
+        UKControllerPlugin::MinStack::MinStackRendererConfiguration config;
 
-                // The description when saving the selected minimum stack levels
-                const std::string selectedMinStackUserSettingDescription = "Selected Minimum Stack Levels To Display";
+        // The module to render data for
+        UKControllerPlugin::MinStack::MinStackManager& minStackModule;
 
-                // The description when saving the visibility ASR setting
-                const std::string visibleUserSettingDescription = "Minimum Stack Level Visibility";
+        // Spawns the configuration dialog
+        const UKControllerPlugin::Dialog::DialogManager& dialogManager;
 
-                // The ASR key for the windows top left X coordinate
-                const std::string xPositionUserSettingKey = "MinStackScreenPosX";
+        // The EuroScope ID for the close button.
+        const int hideClickspotId;
 
-                // The description when saving the X position ASR setting
-                const std::string xPositionUserSettingDescription = "Minimum Stack Level X Position";
+        // The clickspot id for the menu bar
+        const int menuBarClickspotId;
 
-                // The ASR key for the windows top left Y coordinate
-                const std::string yPositionUserSettingKey = "MinStackScreenPosY";
+        // The clickspot id for each MSL
+        const int mslClickspotId;
 
-                // The description when saving the Y position ASR setting
-                const std::string yPositionUserSettingDescription = "Minimum Stack Level Y Position";
+        // Width of the left column
+        const int leftColumnWidth = 75;
 
-                // The MSL module menu text
-                const std::string menuItemDescription = "Configure Minimum Stack Levels";
+        // Width of the right column
+        const int rowHeight = 20;
 
-                // The callback function ID for the toggle function
-                const int toggleCallbackFunctionId;
+        // Width of the hide clickspot
+        const int hideClickspotWidth = 25;
 
-            private:
+        // The ASR key for whether or not to display the module
+        const std::string visibleUserSettingKey = "DisplayMinStack";
 
-                int RenderMinStacks(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                );
-                void RenderOuterFrame(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
-                    int numMinStacks
-                );
-                void RenderTopBar(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                );
+        // The ASR key for saving the selected the selected minimum stack levels
+        const std::string selectedMinStackUserSettingKey = "SelectedMinStack";
 
-                // The top bar rectangle
-                RECT topBarArea;
+        // The description when saving the selected minimum stack levels
+        const std::string selectedMinStackUserSettingDescription = "Selected Minimum Stack Levels To Display";
 
-                // The toggle spot rectangle
-                RECT hideClickspotArea;
+        // The description when saving the visibility ASR setting
+        const std::string visibleUserSettingDescription = "Minimum Stack Level Visibility";
 
-                // The rectangle to render for the top bar
-                Gdiplus::Rect topBarRender;
+        // The ASR key for the windows top left X coordinate
+        const std::string xPositionUserSettingKey = "MinStackScreenPosX";
 
-                // The rectangle to render for the hide clickspot
-                Gdiplus::Rect hideSpotRender;
+        // The description when saving the X position ASR setting
+        const std::string xPositionUserSettingDescription = "Minimum Stack Level X Position";
 
-                // Brushes
-                const UKControllerPlugin::Windows::GdiplusBrushes & brushes;
+        // The ASR key for the windows top left Y coordinate
+        const std::string yPositionUserSettingKey = "MinStackScreenPosY";
 
-                // The configuration for the renderer
-                UKControllerPlugin::MinStack::MinStackRendererConfiguration config;
+        // The description when saving the Y position ASR setting
+        const std::string yPositionUserSettingDescription = "Minimum Stack Level Y Position";
 
-                // The module to render data for
-                UKControllerPlugin::MinStack::MinStackManager & minStackModule;
+        // The MSL module menu text
+        const std::string menuItemDescription = "Configure Minimum Stack Levels";
 
-                // Spawns the configuration dialog
-                const UKControllerPlugin::Dialog::DialogManager & dialogManager;
-        };
-    }  // namespace MinStack
-}  // namespace UKControllerPlugin
+        // The callback function ID for the toggle function
+        const int toggleCallbackFunctionId;
+
+        static const int DEFAULT_POSITION = 100;
+    };
+} // namespace UKControllerPlugin::MinStack

@@ -40,6 +40,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE TestingUtils)
@@ -57,13 +58,17 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
 )
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 ################################################################################
 # Include directories
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/.;"
+)
+
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/googletest/googlemock/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/googletest/googletest/include;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/.;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
@@ -95,7 +100,6 @@ if(MSVC)
             /Gy
         >
         /permissive-;
-        /MP;
         /std:c++17;
         /sdl;
         /W3;
