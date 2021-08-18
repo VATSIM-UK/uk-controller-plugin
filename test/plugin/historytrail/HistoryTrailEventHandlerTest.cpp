@@ -1,87 +1,77 @@
 #include "pch/pch.h"
-#include "historytrail/AircraftHistoryTrail.h"
-#include "historytrail/HistoryTrailRepository.h"
-#include "historytrail/HistoryTrailEventHandler.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
 
-using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
+#include "historytrail/AircraftHistoryTrail.h"
+#include "historytrail/HistoryTrailEventHandler.h"
+#include "historytrail/HistoryTrailRepository.h"
+#include "mock/MockEuroScopeCFlightplanInterface.h"
+#include "mock/MockEuroScopeCRadarTargetInterface.h"
+
 using UKControllerPlugin::HistoryTrail::HistoryTrailEventHandler;
-using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+
 using testing::NiceMock;
 using ::testing::Return;
 
-namespace UKControllerPluginTest {
-    namespace EventHandler {
-         TEST(HistoryTrailEventHandler, RadarTargetPositionUpdateEventAddsAnAircraftIfNotRegistered)
-         {
-             NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
-             EXPECT_CALL(radarTarget, GetCallsign())
-                 .Times(3)
-                 .WillRepeatedly(Return("Test"));
+namespace UKControllerPluginTest::EventHandler {
+    class HistoryTrailEventHandlerTest : public ::testing::Test
+    {
+        public:
+        HistoryTrailEventHandlerTest() : handler(repo)
+        {
+        }
 
-             EXPECT_CALL(radarTarget, GetPosition())
-                 .Times(1)
-                 .WillOnce(Return(EuroScopePlugIn::CPosition::CPosition()));
+        const int heading = 123;
 
-             ON_CALL(radarTarget, GetHeading)
-                .WillByDefault(Return(123));
+        HistoryTrailRepository repo;
+        HistoryTrailEventHandler handler;
+    };
 
-             HistoryTrailRepository repo;
-             HistoryTrailEventHandler handler(repo);
+    TEST_F(HistoryTrailEventHandlerTest, RadarTargetPositionUpdateEventAddsAnAircraftIfNotRegistered)
+    {
+        NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+        EXPECT_CALL(radarTarget, GetCallsign()).Times(3).WillRepeatedly(Return("Test"));
 
-             handler.RadarTargetPositionUpdateEvent(radarTarget);
-             EXPECT_TRUE(repo.HasAircraft("Test"));
-             EXPECT_EQ(123, repo.GetAircraft("Test")->GetTrail().front().heading);
-         }
+        EXPECT_CALL(radarTarget, GetPosition()).Times(1).WillOnce(Return(EuroScopePlugIn::CPosition()));
 
-         TEST(HistoryTrailEventHandler, RadarTargetPositionUpdateEventDoesNotAddAnAircraftTwice)
-         {
-             NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
-             EXPECT_CALL(radarTarget, GetCallsign())
-                 .Times(5)
-                 .WillRepeatedly(Return("Test"));
+        const int heading = 123;
+        ON_CALL(radarTarget, GetHeading).WillByDefault(Return(heading));
 
-             EXPECT_CALL(radarTarget, GetPosition())
-                 .Times(2)
-                 .WillRepeatedly(Return(EuroScopePlugIn::CPosition::CPosition()));
+        handler.RadarTargetPositionUpdateEvent(radarTarget);
+        EXPECT_TRUE(repo.HasAircraft("Test"));
+        EXPECT_EQ(123, repo.GetAircraft("Test")->GetTrail().front().heading);
+    }
 
-             ON_CALL(radarTarget, GetHeading)
-                .WillByDefault(Return(123));
+    TEST_F(HistoryTrailEventHandlerTest, RadarTargetPositionUpdateEventDoesNotAddAnAircraftTwice)
+    {
+        NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+        EXPECT_CALL(radarTarget, GetCallsign()).Times(5).WillRepeatedly(Return("Test"));
 
-             HistoryTrailRepository repo;
-             HistoryTrailEventHandler handler(repo);
+        EXPECT_CALL(radarTarget, GetPosition()).Times(2).WillRepeatedly(Return(EuroScopePlugIn::CPosition()));
 
-             handler.RadarTargetPositionUpdateEvent(radarTarget);
-             handler.RadarTargetPositionUpdateEvent(radarTarget);
-         }
+        const int heading = 123;
+        ON_CALL(radarTarget, GetHeading).WillByDefault(Return(heading));
 
-         TEST(HistoryTrailEventHandler, OnFlightplanDisconnectRemovesAircraft)
-         {
-             NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
-             EXPECT_CALL(radarTarget, GetCallsign())
-                 .Times(3)
-                 .WillRepeatedly(Return("Test"));
+        handler.RadarTargetPositionUpdateEvent(radarTarget);
+        handler.RadarTargetPositionUpdateEvent(radarTarget);
+    }
 
-             EXPECT_CALL(radarTarget, GetPosition())
-                 .Times(1)
-                 .WillOnce(Return(EuroScopePlugIn::CPosition::CPosition()));
+    TEST_F(HistoryTrailEventHandlerTest, OnFlightplanDisconnectRemovesAircraft)
+    {
+        NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+        EXPECT_CALL(radarTarget, GetCallsign()).Times(3).WillRepeatedly(Return("Test"));
 
-             ON_CALL(radarTarget, GetHeading)
-                .WillByDefault(Return(123));
+        EXPECT_CALL(radarTarget, GetPosition()).Times(1).WillOnce(Return(EuroScopePlugIn::CPosition()));
 
-             NiceMock<MockEuroScopeCFlightPlanInterface> flightPlan;
-             EXPECT_CALL(flightPlan, GetCallsign())
-                 .Times(1)
-                 .WillOnce(Return("Test"));
+        const int heading = 123;
+        ON_CALL(radarTarget, GetHeading).WillByDefault(Return(heading));
 
-             HistoryTrailRepository repo;
-             HistoryTrailEventHandler handler(repo);
+        NiceMock<MockEuroScopeCFlightPlanInterface> flightPlan;
+        EXPECT_CALL(flightPlan, GetCallsign()).Times(1).WillOnce(Return("Test"));
 
-             handler.RadarTargetPositionUpdateEvent(radarTarget);
-             handler.FlightPlanDisconnectEvent(flightPlan);
-             EXPECT_FALSE(repo.HasAircraft("Test"));
-         }
-    }  // namespace EventHandler
-}  // namespace UKControllerPluginTest
+        handler.RadarTargetPositionUpdateEvent(radarTarget);
+        handler.FlightPlanDisconnectEvent(flightPlan);
+        EXPECT_FALSE(repo.HasAircraft("Test"));
+    }
+} // namespace UKControllerPluginTest::EventHandler

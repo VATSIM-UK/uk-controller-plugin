@@ -1,68 +1,65 @@
-#pragma once
 #include "pch/pch.h"
+
 #include "minstack/MinStackRendererConfiguration.h"
 
-namespace UKControllerPlugin {
-    namespace MinStack {
+namespace UKControllerPlugin::MinStack {
 
-        void MinStackRendererConfiguration::AddItem(const MinStackRenderedItem item)
-        {
-            if (!this->items.insert(item).second) {
-                LogWarning("Attempted to add duplicate item: " + item.key);
-            }
+    void MinStackRendererConfiguration::AddItem(const MinStackRenderedItem& item)
+    {
+        if (!this->items.insert(item).second) {
+            LogWarning("Attempted to add duplicate item: " + item.key);
         }
+    }
 
-        size_t MinStackRendererConfiguration::CountItems(void) const
-        {
-            return this->items.size();
-        }
+    auto MinStackRendererConfiguration::CountItems() const -> size_t
+    {
+        return this->items.size();
+    }
 
-        MinStackRenderedItem MinStackRendererConfiguration::GetItem(std::string key) const
-        {
-            auto item = std::find_if(
-                this->items.begin(),
-                this->items.end(),
-                [key](const MinStackRenderedItem & item) -> bool {
-                    return item.key == key;
-                }
-            );
+    auto MinStackRendererConfiguration::GetItem(const std::string& key) const -> MinStackRenderedItem
+    {
+        auto item =
+            std::find_if(this->items.begin(), this->items.end(), [key](const MinStackRenderedItem& item) -> bool {
+                return item.key == key;
+            });
 
-            return item == this->items.cend() ? this->invalidItem : *item;
-        }
+        return item == this->items.cend() ? this->invalidItem : *item;
+    }
 
-        void MinStackRendererConfiguration::RemoveItem(const MinStackRenderedItem item)
-        {
+    void MinStackRendererConfiguration::RemoveItem(const MinStackRenderedItem& item)
+    {
+        this->items.erase(item);
+    }
+
+    void MinStackRendererConfiguration::RemoveItem(unsigned int index)
+    {
+        auto item =
+            std::find_if(this->items.begin(), this->items.end(), [index](const MinStackRenderedItem& item) -> bool {
+                return item.order == index;
+            });
+
+        if (item != this->items.end()) {
             this->items.erase(item);
         }
+    }
 
-        void MinStackRendererConfiguration::RemoveItem(unsigned int index)
-        {
-            auto item = std::find_if(
-                this->items.begin(),
-                this->items.end(),
-                [index](const MinStackRenderedItem & item) -> bool {
-                    return item.order == index;
-                }
-            );
+    void MinStackRendererConfiguration::Reset()
+    {
+        this->items.clear();
+    }
 
-            if (item != this->items.end()) {
-                this->items.erase(item);
-            }
-        }
+    void MinStackRendererConfiguration::SetShouldRender(bool shouldRender)
+    {
+        this->shouldRender = shouldRender;
+    }
 
-        void MinStackRendererConfiguration::Reset(void)
-        {
-            this->items.clear();
-        }
+    auto MinStackRendererConfiguration::ShouldRender() const -> bool
+    {
+        return this->shouldRender;
+    }
 
-        void MinStackRendererConfiguration::SetShouldRender(bool shouldRender)
-        {
-            this->shouldRender = shouldRender;
-        }
-
-        bool MinStackRendererConfiguration::ShouldRender(void) const
-        {
-            return this->shouldRender;
-        }
-    }  // namespace MinStack
-}  // namespace UKControllerPlugin
+    auto MinStackRendererConfiguration::InvalidItem() const -> const MinStackRenderedItem&
+    {
+        return this->invalidItem;
+    }
+} // namespace UKControllerPlugin::MinStack
