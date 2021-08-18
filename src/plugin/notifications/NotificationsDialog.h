@@ -24,8 +24,12 @@ namespace UKControllerPlugin {
                 void InitDialog(HWND hwnd, LPARAM lParam);
                 void SelectNotification(HWND hwnd, NMLISTVIEW * details);
                 void MarkNotificationAsRead(HWND hwnd) const;
+                void OpenNotificationLink(HWND hwnd) const;
                 LRESULT HighlightRelevantNotification(HWND hwnd, LPNMLVCUSTOMDRAW customDraw);
                 LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+                auto GetSelectedNotification(HWND hwnd) const -> Notification *;
+                auto GetSelectedItemFromNotificationsList(HWND hwnd) const -> LVITEM;
+                auto GetNotificationsList(HWND hwnd) const -> HWND;
 
                 // Repository containing notifications
                 std::shared_ptr<NotificationsRepository> repository;

@@ -1,4 +1,5 @@
 #include "pch/pch.h"
+
 #include "notifications/NotificationsDialog.h"
 #include "api/ApiException.h"
 #include "dialog/DialogCallArgument.h"
@@ -44,6 +45,10 @@ namespace UKControllerPlugin {
                         }
                         case IDC_READ_NOTIFICATION: {
                             this->MarkNotificationAsRead(hwnd);
+                            return TRUE;
+                        }
+                        case IDC_NOTIFICATION_LINK: {
+                            this->OpenNotificationLink(hwnd);
                             return TRUE;
                         }
                         default:
@@ -207,14 +212,8 @@ namespace UKControllerPlugin {
                 // Handle the link
                 if (notification->Link().empty())
                 {
-                    std::wstring link = L"";
-                    SetDlgItemText(hwnd, IDC_NOTIFICATION_LINK, link.c_str());
                     ShowWindow(GetDlgItem(hwnd, IDC_NOTIFICATION_LINK), SW_HIDE);
                 } else {
-                    std::wstring link = L"<A HREF=\"";
-                    link+= HelperFunctions::ConvertToWideString(notification->Link());
-                    link+= L"\">Read More</A>";
-                    SetDlgItemText(hwnd, IDC_NOTIFICATION_LINK, link.c_str());
                     ShowWindow(GetDlgItem(hwnd, IDC_NOTIFICATION_LINK), SW_SHOW);
                 }
             }
@@ -225,22 +224,13 @@ namespace UKControllerPlugin {
          */
         void NotificationsDialog::MarkNotificationAsRead(HWND hwnd) const
         {
-            if (this->selectedNotification == -1) {
+            // Mark the notification as read
+            Notification * notification = this->GetSelectedNotification(hwnd);
+            if (notification == nullptr) {
                 LogWarning("Tried to mark notification as read but none selected");
                 return;
             }
-
-            HWND notificationsList = GetDlgItem(hwnd, IDC_NOTIFICATIONS_LIST);
-
-            // Get the row
-            LVITEM itemToRetrieve;
-            itemToRetrieve.iItem = this->selectedNotification;
-            itemToRetrieve.iSubItem = 0;
-            itemToRetrieve.mask = LVIF_PARAM;
-            ListView_GetItem(notificationsList, (LPLVITEM) &itemToRetrieve);
-
-            // Mark the notification as read
-            Notification * notification = reinterpret_cast<Notification *>(itemToRetrieve.lParam);
+            
             notification->Read();
 
             // Try to tell the API that has been read, but handle if it doesn't
@@ -253,6 +243,9 @@ namespace UKControllerPlugin {
             }
 
             // Update the notifications display to show that it's been read
+            LVITEM itemToRetrieve = this->GetSelectedItemFromNotificationsList(hwnd);
+            HWND notificationsList = this->GetNotificationsList(hwnd);
+            
             std::wstring readText = notification->IsRead() ? this->readString : this->unreadString;
             itemToRetrieve.mask = LVIF_TEXT;
             itemToRetrieve.iSubItem = 1;
@@ -276,6 +269,45 @@ namespace UKControllerPlugin {
             }
 
             return CDRF_NEWFONT;
+        }
+        
+        void NotificationsDialog::OpenNotificationLink(HWND hwnd) const
+        {
+            // Mark the notification as read
+            Notification * notification = this->GetSelectedNotification(hwnd);
+            if (notification == nullptr) {
+                LogWarning("Tried to open link for notification but none selected");
+                return;
+            }
+            
+            std::wstring link = HelperFunctions::ConvertToWideString(notification->Link());
+            ShellExecute(NULL, L"open", link.c_str() , NULL, NULL, SW_SHOWNORMAL);
+        }
+        
+        auto NotificationsDialog::GetSelectedNotification(HWND hwnd) const -> Notification*
+        {
+            if (this->selectedNotification == -1) {
+                LogWarning("Tried to mark notification as read but none selected");
+                return nullptr;
+            }
+            
+            return reinterpret_cast<Notification *>(this->GetSelectedItemFromNotificationsList(hwnd).lParam);
+        }
+        
+        auto NotificationsDialog::GetSelectedItemFromNotificationsList(HWND hwnd) const -> LVITEM
+        {
+            // Get the row
+            LVITEM itemToRetrieve;
+            itemToRetrieve.iItem = this->selectedNotification;
+            itemToRetrieve.iSubItem = 0;
+            itemToRetrieve.mask = LVIF_PARAM;
+            ListView_GetItem(this->GetNotificationsList(hwnd), (LPLVITEM) &itemToRetrieve);
+            return itemToRetrieve;
+        }
+        
+        auto NotificationsDialog::GetNotificationsList(HWND hwnd) const -> HWND
+        {
+            return GetDlgItem(hwnd, IDC_NOTIFICATIONS_LIST);
         }
     }  // namespace Notifications
 }  // namespace UKControllerPlugin
