@@ -18,7 +18,7 @@ HINSTANCE pluginDllInstance;
 HINSTANCE loaderDllInstance;
 std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
 
-[[maybe_unused]] BOOL WINAPI DllMain(
+BOOL WINAPI DllMain(
     HINSTANCE hinstDLL,
     DWORD fdwReason,
     LPVOID lpReserved
