@@ -1,57 +1,70 @@
 #include "pch/pch.h"
+
 #include "prenote/PrenoteMessage.h"
+
 namespace UKControllerPlugin::Prenote {
     PrenoteMessage::PrenoteMessage(
-            int id,
-            std::string callsign,
-            std::string departureAirfield,
-            std::string sid,
-            std::string destinationAirfield,
-            int sendingControllerId,
-            int targetControllerId,
-            std::chrono::system_clock::time_point expiresAt
-            ) : id(id), callsign(callsign), departureAirfield(departureAirfield), sid(sid),
-            destinationAirfield(destinationAirfield), sendingControllerId(sendingControllerId),
-            targetControllerId(targetControllerId), expiresAt(expiresAt)
-    {}
-    
-    int PrenoteMessage::GetId() const
+        int id,
+        std::string callsign,
+        std::string departureAirfield,
+        std::string sid,
+        std::string destinationAirfield,
+        int sendingControllerId,
+        int targetControllerId,
+        std::chrono::system_clock::time_point expiresAt)
+        : id(id), callsign(std::move(callsign)), departureAirfield(std::move(departureAirfield)), sid(std::move(sid)),
+          destinationAirfield(std::move(destinationAirfield)), sendingControllerId(sendingControllerId),
+          targetControllerId(targetControllerId), expiresAt(expiresAt), acknowledged(false)
+    {
+    }
+
+    auto PrenoteMessage::GetId() const -> int
     {
         return id;
     }
-    
-    const std::string& PrenoteMessage::GetCallsign() const
+
+    auto PrenoteMessage::GetCallsign() const -> const std::string&
     {
         return callsign;
     }
-    
-    const std::string& PrenoteMessage::GetDepartureAirfield() const
+
+    auto PrenoteMessage::GetDepartureAirfield() const -> const std::string&
     {
         return departureAirfield;
     }
-    
-    const std::string& PrenoteMessage::GetSid() const
+
+    auto PrenoteMessage::GetSid() const -> const std::string&
     {
         return sid;
     }
-    
-    const std::string& PrenoteMessage::GetDestinationAirfield() const
+
+    auto PrenoteMessage::GetDestinationAirfield() const -> const std::string&
     {
         return destinationAirfield;
     }
-    
-    int PrenoteMessage::GetSendingControllerId() const
+
+    auto PrenoteMessage::GetSendingControllerId() const -> int
     {
         return sendingControllerId;
     }
-    
-    int PrenoteMessage::GetTargetControllerId() const
+
+    auto PrenoteMessage::GetTargetControllerId() const -> int
     {
         return targetControllerId;
     }
-    
-    const std::chrono::time_point& PrenoteMessage::GetExpiresAt() const
+
+    auto PrenoteMessage::GetExpiresAt() const -> const std::chrono::system_clock::time_point&
     {
         return expiresAt;
+    }
+
+    auto PrenoteMessage::IsAcknowledged() const -> bool
+    {
+        return acknowledged;
+    }
+
+    void PrenoteMessage::Acknowledge()
+    {
+        this->acknowledged = true;
     }
 } // namespace UKControllerPlugin::Prenote

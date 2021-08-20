@@ -1,67 +1,62 @@
 #include "pch/pch.h"
-#include "prenote/PrenoteUserMessage.h"
-#include "prenote/AbstractPrenote.h"
+
 #include "controller/ActiveCallsign.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "prenote/AbstractPrenote.h"
+#include "prenote/PrenoteUserMessage.h"
 
-using UKControllerPlugin::Prenote::AbstractPrenote;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
+using UKControllerPlugin::Prenote::AbstractPrenote;
 
+namespace UKControllerPlugin::Prenote {
 
-namespace UKControllerPlugin {
-    namespace Prenote {
+    PrenoteUserMessage::PrenoteUserMessage(
+        const AbstractPrenote& prenote,
+        const ActiveCallsign& activeCallsign,
+        const EuroScopeCFlightPlanInterface& flightplan)
+    {
+        this->message = "Prenote to " + activeCallsign.GetCallsign() + " required for " + flightplan.GetCallsign() +
+                        " (" + prenote.GetSummaryString() + ")";
+    }
 
-        const std::string PrenoteUserMessage::handler = "Prenote";
-        const std::string PrenoteUserMessage::sender = "UKCP";
+    auto PrenoteUserMessage::MessageHandler() const -> std::string
+    {
+        return this->handler;
+    }
 
-        PrenoteUserMessage::PrenoteUserMessage(
-            const AbstractPrenote & prenote,
-            const ActiveCallsign & activeCallsign,
-            const EuroScopeCFlightPlanInterface & flightplan
-        ) {
-            this->message = "Prenote to " + activeCallsign.GetCallsign() + " required for " +
-                flightplan.GetCallsign() + " (" + prenote.GetSummaryString() + ")";
-        }
+    auto PrenoteUserMessage::MessageSender() const -> std::string
+    {
+        return this->sender;
+    }
 
-        std::string PrenoteUserMessage::MessageHandler(void) const
-        {
-            return this->handler;
-        }
+    auto PrenoteUserMessage::MessageString() const -> std::string
+    {
+        return this->message;
+    }
 
-        std::string PrenoteUserMessage::MessageSender(void) const
-        {
-            return this->sender;
-        }
+    auto PrenoteUserMessage::MessageShowHandler() const -> bool
+    {
+        return true;
+    }
 
-        std::string PrenoteUserMessage::MessageString(void) const
-        {
-            return this->message;
-        }
+    auto PrenoteUserMessage::MessageMarkUnread() const -> bool
+    {
+        return true;
+    }
 
-        bool PrenoteUserMessage::MessageShowHandler(void) const
-        {
-            return true;
-        }
+    auto PrenoteUserMessage::MessageOverrideBusy() const -> bool
+    {
+        return true;
+    }
 
-        bool PrenoteUserMessage::MessageMarkUnread(void) const
-        {
-            return true;
-        }
+    auto PrenoteUserMessage::MessageFlashHandler() const -> bool
+    {
+        return true;
+    }
 
-        bool PrenoteUserMessage::MessageOverrideBusy(void) const
-        {
-            return true;
-        }
-
-        bool PrenoteUserMessage::MessageFlashHandler(void) const
-        {
-            return true;
-        }
-
-        bool PrenoteUserMessage::MessageRequiresConfirm(void) const
-        {
-            return true;
-        }
-    }  // namespace Prenote
-}  // namespace UKControllerPlugin
+    auto PrenoteUserMessage::MessageRequiresConfirm() const -> bool
+    {
+        return true;
+    }
+} // namespace UKControllerPlugin::Prenote
