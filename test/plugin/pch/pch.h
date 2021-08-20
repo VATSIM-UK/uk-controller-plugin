@@ -12,4 +12,6 @@
 #pragma warning( disable : 26495 26451 28251)
 #include "gmock/gmock.h"
 #include "helper/Matchers.h"
+
+#include <memory>
 #pragma warning( pop )

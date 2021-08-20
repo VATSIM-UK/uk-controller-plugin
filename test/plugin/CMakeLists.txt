@@ -316,12 +316,6 @@ set(test__ownership
 )
 source_group("test\\ownership" FILES ${test__ownership})
 
-set(test__pch
-    "pch/pch.cpp"
-    "pch/pch.h"
-)
-source_group("test\\pch" FILES ${test__pch})
-
 set(test__plugin
     "plugin/ForceUpdateTest.cpp"
     "plugin/FunctionCallEventHandlerTest.cpp"
@@ -344,7 +338,7 @@ set(test__prenote
     "prenote/PrenoteModuleTest.cpp"
     "prenote/PrenoteServiceFactoryTest.cpp"
     "prenote/PrenoteServiceTest.cpp"
-)
+    "prenote/PrenoteMessageTest.cpp")
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push
@@ -492,7 +486,6 @@ set(ALL_FILES
     ${test__oceanic}
     ${test__offblock}
     ${test__ownership}
-    ${test__pch}
     ${test__plugin}
     ${test__prenote}
     ${test__push}
