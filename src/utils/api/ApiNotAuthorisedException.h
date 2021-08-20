@@ -1,16 +1,13 @@
 #pragma once
 #include "api/ApiException.h"
 
-namespace UKControllerPlugin {
-    namespace Api {
-        /*
-            Custom exception for when the API returns Unauthorised or Forbidden
-        */
-        class ApiNotAuthorisedException : public ApiException
-        {
-            public:
-                explicit ApiNotAuthorisedException(std::string message)
-                    : ApiException("ApiNotAuthorisedException: " + message) {}
-        };
-    }  // namespace Api
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Api {
+    /*
+        Custom exception for when the API returns Unauthorised or Forbidden
+    */
+    class ApiNotAuthorisedException : public ApiException
+    {
+        public:
+        explicit ApiNotAuthorisedException(const std::string& message);
+    };
+} // namespace UKControllerPlugin::Api

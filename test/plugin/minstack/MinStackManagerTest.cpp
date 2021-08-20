@@ -1,16 +1,17 @@
 #include "pch/pch.h"
-#include "minstack/MinStackManager.h"
-#include "minstack/MinStackLevel.h"
-#include "push/PushEventSubscription.h"
-#include "push/PushEvent.h"
 
-using UKControllerPlugin::MinStack::MinStackManager;
-using UKControllerPlugin::MinStack::MinStackLevel;
-using UKControllerPlugin::Push::PushEventSubscription;
-using UKControllerPlugin::Push::PushEvent;
-using ::testing::StrictMock;
+#include "minstack/MinStackLevel.h"
+#include "minstack/MinStackManager.h"
+#include "push/PushEvent.h"
+#include "push/PushEventSubscription.h"
+
 using ::testing::Return;
+using ::testing::StrictMock;
 using ::testing::Test;
+using UKControllerPlugin::MinStack::MinStackLevel;
+using UKControllerPlugin::MinStack::MinStackManager;
+using UKControllerPlugin::Push::PushEvent;
+using UKControllerPlugin::Push::PushEventSubscription;
 
 namespace UKControllerPluginTest {
     namespace MinStack {
@@ -18,7 +19,7 @@ namespace UKControllerPluginTest {
         class MinStackManagerTest : public Test
         {
             public:
-                MinStackManager msl;
+            MinStackManager msl;
         };
 
         TEST_F(MinStackManagerTest, ItGeneratesTmaKeys)
@@ -44,14 +45,13 @@ namespace UKControllerPluginTest {
             this->msl.AddMsl(this->msl.GetMslKeyTma("LTMA"), "tma", "LTMA", 8000);
             this->msl.AddMsl(this->msl.GetMslKeyTma("STMA"), "tma", "STMA", 8000);
 
-
-            std::set<std::string> expectedKeys = { this->msl.GetMslKeyTma("LTMA"), this->msl.GetMslKeyTma("STMA") };
+            std::set<std::string> expectedKeys = {this->msl.GetMslKeyTma("LTMA"), this->msl.GetMslKeyTma("STMA")};
             EXPECT_EQ(expectedKeys, this->msl.GetAllMslKeys());
         }
 
         TEST_F(MinStackManagerTest, ItReturnsInvalidMslIfKeyNotFound)
         {
-            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel("nope"));
+            EXPECT_EQ(this->msl.InvalidMsl(), this->msl.GetMinStackLevel("nope"));
         }
 
         TEST_F(MinStackManagerTest, ItReturnsAMsl)
@@ -68,11 +68,7 @@ namespace UKControllerPluginTest {
         TEST_F(MinStackManagerTest, ItHasPushEventSubscriptions)
         {
             std::set<PushEventSubscription> expected = {
-                {
-                    PushEventSubscription::SUB_TYPE_CHANNEL,
-                    "private-minstack-updates"
-                }
-            };
+                {PushEventSubscription::SUB_TYPE_CHANNEL, "private-minstack-updates"}};
             EXPECT_EQ(expected, this->msl.GetPushEventSubscriptions());
         }
 
@@ -87,19 +83,10 @@ namespace UKControllerPluginTest {
         TEST_F(MinStackManagerTest, ItUpdatesMinStackLevelsFromJson)
         {
             nlohmann::json mslData;
-            mslData["airfield"] = {
-                {"EGBB", 7000}
-            };
-            mslData["tma"] = {
-                {"MTMA", 6000}
-            };
+            mslData["airfield"] = {{"EGBB", 7000}};
+            mslData["tma"] = {{"MTMA", 6000}};
 
-            PushEvent message{
-                "App\\Events\\MinStacksUpdatedEvent",
-                "private-minstack-updates",
-                mslData,
-                ""
-            };
+            PushEvent message{"App\\Events\\MinStacksUpdatedEvent", "private-minstack-updates", mslData, ""};
 
             this->msl.ProcessPushEvent(message);
             EXPECT_EQ(7000, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")).msl);
@@ -109,28 +96,19 @@ namespace UKControllerPluginTest {
         TEST_F(MinStackManagerTest, ItHandlesNullMslValues)
         {
             nlohmann::json mslData;
-            mslData["airfield"] = {
-                {"EGBB", nullptr}
-            };
-            mslData["tma"] = {
-                {"MTMA", nullptr}
-            };
+            mslData["airfield"] = {{"EGBB", nullptr}};
+            mslData["tma"] = {{"MTMA", nullptr}};
 
-            PushEvent message{
-                "App\\Events\\MinStacksUpdatedEvent",
-                "private-minstack-updates",
-                mslData,
-                ""
-            };
+            PushEvent message{"App\\Events\\MinStacksUpdatedEvent", "private-minstack-updates", mslData, ""};
 
             this->msl.ProcessPushEvent(message);
-            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")));
-            EXPECT_EQ(this->msl.invalidMsl, this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")));
+            EXPECT_EQ(this->msl.InvalidMsl(), this->msl.GetMinStackLevel(this->msl.GetMslKeyAirfield("EGBB")));
+            EXPECT_EQ(this->msl.InvalidMsl(), this->msl.GetMinStackLevel(this->msl.GetMslKeyTma("MTMA")));
         }
 
         TEST_F(MinStackManagerTest, ItDoesntDoManualMinStackUpdatesIfItDoesntExist)
         {
             EXPECT_NO_THROW(this->msl.SetMinStackLevel("nope", 8000));
         }
-    }  // namespace MinStack
-}  // namespace UKControllerPluginTest
+    } // namespace MinStack
+} // namespace UKControllerPluginTest

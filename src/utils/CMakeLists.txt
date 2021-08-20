@@ -33,7 +33,7 @@ set(api
     "api/ApiHelper.cpp"
     "api/ApiHelper.h"
     "api/ApiInterface.h"
-    "api/ApiNotAuthorisedException.h"
+    "api/ApiNotAuthorisedException.cpp"
     "api/ApiNotFoundException.h"
     "api/ApiRequestBuilder.cpp"
     "api/ApiRequestBuilder.h"
@@ -97,6 +97,11 @@ set(log
 )
 source_group("log" FILES ${log})
 
+set(manifest
+    "utils.manifest"
+)
+source_group("manifest" FILES ${manifest})
+
 set(pch
     "pch/pch.cpp"
     "pch/pch.h"
@@ -152,6 +157,7 @@ set(ALL_FILES
     ${duplicate}
     ${helper}
     ${log}
+    ${manifest}
     ${pch}
     ${setting}
     ${squawk}
@@ -164,6 +170,8 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
@@ -172,12 +180,14 @@ set(ROOT_NAMESPACE UKControllerPluginUtils)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 ################################################################################
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
-    OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
+    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_BINARY_DIR}/lib/"
+    OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/lib/"
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
@@ -187,8 +197,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
     "$ENV{CURL_INCLUDEDIR}"
+)
+
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
 )
 
 ################################################################################

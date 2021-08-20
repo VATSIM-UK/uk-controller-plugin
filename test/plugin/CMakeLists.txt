@@ -517,6 +517,7 @@ set(ALL_FILES
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -526,12 +527,13 @@ set(ROOT_NAMESPACE UKControllerPluginTest)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 ################################################################################
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
-    OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
+    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_BINARY_DIR}/bin/"
+    OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/"
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
@@ -555,11 +557,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUN
 # Include directories
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/.;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../src/plugin;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../packages/gmock.1.10.0/lib/native/include;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../testingutils;"
+    "${CMAKE_CURRENT_SOURCE_DIR}/."
+)
+
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
 )
@@ -572,6 +573,7 @@ target_link_directories(
         $ENV{CURL_DEBUG_LIBRARYDIR}
         $ENV{CURL_LIBRARYDIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+        ${CMAKE_BINARY_DIR}/lib
 )
 
 ################################################################################
@@ -606,7 +608,6 @@ if(MSVC)
             /Gy;
             -Zm120
         >
-        /MP;
         /std:c++17;
         /sdl;
         /W3;
@@ -635,7 +636,7 @@ endif()
 add_dependencies(${PROJECT_NAME}
     UKControllerPluginCore
     UKControllerPluginUtils
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
 )
 
@@ -643,7 +644,7 @@ add_dependencies(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PRIVATE
     UKControllerPluginCore
     UKControllerPluginUtils
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
 )
 
@@ -651,13 +652,13 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "$<$<CONFIG:Debug>:"
         "EuroScopePlugInDll;"
         "dbghelp;"
-        "gdiplus;"
         "libcurl_a_debug"
     ">"
     "$<$<CONFIG:Release>:"
         "EuroScopePluginDll;"
         "libcurl_a"
     ">"
+    "gdiplus;"
     "kernel32;"
     "user32;"
     "gdi32;"

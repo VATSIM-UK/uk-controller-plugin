@@ -24,6 +24,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
@@ -32,12 +33,13 @@ use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 ################################################################################
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
-    OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
+    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_BINARY_DIR}/bin/"
+    OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/"
 )
 ################################################################################
 # MSVC runtime library
@@ -59,10 +61,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUN
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/.;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../src/loader;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../testingutils;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../packages/gmock.1.10.0/lib/native/include;"
+)
+
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
 )
@@ -75,6 +76,7 @@ target_link_directories(
         $ENV{CURL_DEBUG_LIBRARYDIR}
         $ENV{CURL_LIBRARYDIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+        ${CMAKE_BINARY_DIR}/lib
 )
 
 ################################################################################
@@ -116,7 +118,6 @@ if(MSVC)
         $<$<CONFIG:Release>:
             /OPT:REF;
             /OPT:ICF;
-            /LTCG
         >
         /NODEFAULTLIB:LIBCMT;
         /DEBUG;
@@ -129,7 +130,7 @@ endif()
 ################################################################################
 add_dependencies(${PROJECT_NAME}
     UKControllerPluginLoader
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
     UKControllerPluginUpdater
     UKControllerPluginUtils
@@ -139,7 +140,7 @@ add_dependencies(${PROJECT_NAME}
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PUBLIC
     UKControllerPluginLoader
-    GoogleMock
+    gmock
     UKControllerPluginTestingUtils
     UKControllerPluginUpdater
     UKControllerPluginUtils

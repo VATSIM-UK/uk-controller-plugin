@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [3.4.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.4.1...3.4.2) (2021-08-08)
+
+
+### Bug Fixes
+
+* **integration:** Integrations not staying connected ([#312](https://github.com/VATSIM-UK/uk-controller-plugin/issues/312)) ([0900898](https://github.com/VATSIM-UK/uk-controller-plugin/commit/09008989f3c3e0ce6698131098ab173d9e95ed62))
+
 ## [3.4.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.4.0...3.4.1) (2021-08-06)
 
 

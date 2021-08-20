@@ -1,13 +1,6 @@
 set(PROJECT_NAME UKControllerPluginCore)
 
 ################################################################################
-# Resources
-################################################################################
-
-set(rc_flags "/l 0x809")
-set(CMAKE_RC_FLAGS ${rc_flags})
-
-################################################################################
 # Source groups
 ################################################################################
 set(resource
@@ -434,6 +427,11 @@ set(src__login
 )
 source_group("src\\login" FILES ${src__login})
 
+set(manifest
+        "plugin.manifest"
+)
+source_group("manifest" FILES ${manifest})
+
 set(src__message
     "message/MessageSerializableInterface.h"
     "message/UserMessager.cpp"
@@ -825,6 +823,7 @@ set(ALL_FILES
     ${src__integration}
     ${src__intention}
     ${src__login}
+    ${manifest}
     ${src__message}
     ${src__metar}
     ${src__minstack}
@@ -856,6 +855,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -876,8 +876,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
-    OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>/"
+    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_BINARY_DIR}/bin/"
+    OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin/"
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
@@ -896,13 +896,15 @@ string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
     $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
-
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 ################################################################################
 # Include directories
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/.;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../utils;"
+)
+
+target_include_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
 )
@@ -950,7 +952,6 @@ if(MSVC)
             /Oi;
             /Gy
         >
-        /MP;
         /std:c++17;
         /sdl;
         /W3;
@@ -966,7 +967,6 @@ if(MSVC)
         $<$<CONFIG:Release>:
             /DEBUG;
             /OPT:REF;
-            /LTCG:incremental;
             /OPT:ICF;
             /INCREMENTAL:NO
         >
@@ -1017,3 +1017,9 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "Comctl32"
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+
+# Post-build copy the EuroScope binary
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/EuroScopePlugInDll.dll" "${PROJECT_BINARY_DIR}/bin/EuroScopePlugInDll.dll"
+    COMMENT "Copied EuroScope shared library to ${PROJECT_BINARY_DIR}/bin/EuroScopePlugInDll.dll"
+)
