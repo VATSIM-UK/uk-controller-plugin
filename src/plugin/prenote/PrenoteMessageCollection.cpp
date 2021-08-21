@@ -1,9 +1,10 @@
-#include "PrenoteMessageCollection.h"
 #include "PrenoteMessage.h"
+#include "PrenoteMessageCollection.h"
 
 namespace UKControllerPlugin::Prenote {
     void PrenoteMessageCollection::Add(const std::shared_ptr<PrenoteMessage>& prenote)
     {
+        auto lock = this->LockPrenotes();
         if (!this->prenotes.insert(prenote).second) {
             LogWarning("Tried to add duplicate prenote");
         }
@@ -11,7 +12,8 @@ namespace UKControllerPlugin::Prenote {
 
     void PrenoteMessageCollection::Remove(int id)
     {
-        auto prenote = this->GetById(id);
+        auto lock = this->LockPrenotes();
+        auto prenote = this->GetByIdUnsafe(id);
         if (prenote == nullptr) {
             LogWarning("Tried to delete non-existent prenote");
             return;
@@ -27,17 +29,26 @@ namespace UKControllerPlugin::Prenote {
 
     auto PrenoteMessageCollection::GetById(int id) -> const std::shared_ptr<PrenoteMessage>&
     {
+        auto lock = this->LockPrenotes();
+        return this->GetByIdUnsafe(id);
+    }
+
+    auto PrenoteMessageCollection::LockPrenotes() -> std::lock_guard<std::mutex>
+    {
+        return std::lock_guard(this->prenoteLock);
+    }
+
+    auto PrenoteMessageCollection::GetByIdUnsafe(int id) -> const std::shared_ptr<PrenoteMessage>&
+    {
         auto prenote = this->prenotes.find(id);
         return prenote == this->prenotes.cend() ? this->invalidMessage : *prenote;
     }
 
-    auto PrenoteMessageCollection::cbegin() const noexcept -> PrenoteMessages::const_iterator
+    void PrenoteMessageCollection::Iterate(std::function<void(const std::shared_ptr<PrenoteMessage>&)> function)
     {
-        return this->prenotes.cbegin();
-    }
-
-    auto PrenoteMessageCollection::cend() const noexcept -> PrenoteMessages::const_iterator
-    {
-        return this->prenotes.cend();
+        std::lock_guard<std::mutex> lock = this->LockPrenotes();
+        for (const auto& message : this->prenotes) {
+            function(message);
+        }
     }
 } // namespace UKControllerPlugin::Prenote

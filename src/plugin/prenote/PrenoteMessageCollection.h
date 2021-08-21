@@ -13,16 +13,19 @@ namespace UKControllerPlugin::Prenote {
         void Add(const std::shared_ptr<PrenoteMessage>& prenote);
         [[nodiscard]] auto Count() const -> size_t;
         [[nodiscard]] auto GetById(int id) -> const std::shared_ptr<PrenoteMessage>&;
+        void Iterate(std::function<void(const std::shared_ptr<PrenoteMessage>&)> function);
         void Remove(int id);
 
-        using PrenoteMessages = std::set<std::shared_ptr<PrenoteMessage>, ComparePrenoteMessages>;
-        using const_iterator = PrenoteMessages::const_iterator;
-        [[nodiscard]] auto cbegin() const noexcept -> const_iterator;
-        [[nodiscard]] auto cend() const noexcept -> const_iterator;
-
         private:
+        [[nodiscard]] auto GetByIdUnsafe(int id) -> const std::shared_ptr<PrenoteMessage>&;
+        [[nodiscard]] auto LockPrenotes() -> std::lock_guard<std::mutex>;
+
+        // The message to return if somsone asks for one that doesn't exist
         const std::shared_ptr<PrenoteMessage> invalidMessage = nullptr;
 
+        // Stores all the prenotes sorted by id
         std::set<std::shared_ptr<PrenoteMessage>, ComparePrenoteMessages> prenotes;
+
+        std::mutex prenoteLock;
     };
 } // namespace UKControllerPlugin::Prenote

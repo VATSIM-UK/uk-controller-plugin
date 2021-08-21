@@ -1,5 +1,5 @@
-#include "prenote/PrenoteMessageCollection.h"
 #include "prenote/PrenoteMessage.h"
+#include "prenote/PrenoteMessageCollection.h"
 #include "time/SystemClock.h"
 
 using UKControllerPlugin::Prenote::PrenoteMessage;
@@ -74,9 +74,8 @@ namespace UKControllerPluginTest::Prenote {
     {
         collection.Add(message1);
         collection.Add(message2);
-        auto iter = collection.cbegin();
-        EXPECT_EQ(message1, *iter++);
-        EXPECT_EQ(message2, *iter++);
-        EXPECT_EQ(collection.cend(), iter);
+        collection.Iterate([](const std::shared_ptr<PrenoteMessage>& message) { message->Acknowledge(); });
+        EXPECT_TRUE(message1->IsAcknowledged());
+        EXPECT_TRUE(message2->IsAcknowledged());
     }
 } // namespace UKControllerPluginTest::Prenote
