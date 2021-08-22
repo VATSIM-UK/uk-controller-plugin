@@ -2,21 +2,24 @@
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
     <assemblyIdentity
             version="1.0.0.0"
-            processorArchitecture="x86"
-            name="VATSIMUK.UKCP"
+            processorArchitecture="X86"
+            name="VATSIMUK.UKCP.UKCP"
             type="win32"
     />
     <description>UK Controller Plugin</description>
     <dependency>
-        <dependentAssembly>
+        <dependentAssembly asmv2:dependencyType="preRequisite">
             <assemblyIdentity
                     type="win32"
                     name="Microsoft.Windows.Common-Controls"
                     version="6.0.0.0"
-                    processorArchitecture="x86"
+                    processorArchitecture="X86"
                     publicKeyToken="6595b64144ccf1df"
                     language="*"
             />
+            <bindingRedirect
+                oldVersion="5.0.0.0-5.9999.9999.9999"
+                newVersion="6.0.0.0"/>
         </dependentAssembly>
     </dependency>
 </assembly>

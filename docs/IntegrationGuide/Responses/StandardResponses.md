@@ -8,8 +8,9 @@ This response will be sent following a successful action performed as a result o
 
 ```JSON
 {
-    "type": "action_success",
-    "version": 1,
+  "type": "action_success",
+  "version": 1,
+  "id": "your_message_id"
 }
 ```
 
@@ -19,11 +20,12 @@ This response will be sent if the plugin fails to perform an action following a 
 
 ```JSON
 {
-    "type": "action_failure",
-    "version": 1,
-    "errors": [
-        "string",
-        "string"
-    ]
+  "type": "action_failure",
+  "version": 1,
+  "id": "your_message_id",
+  "errors": [
+    "string",
+    "string"
+  ]
 }
 ```

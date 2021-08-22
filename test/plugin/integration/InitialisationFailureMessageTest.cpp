@@ -14,7 +14,7 @@ namespace UKControllerPluginTest::Integration {
     {
         public:
             InitialisationFailureMessageTest()
-                : message(std::vector<std::string>{"message1", "message2"})
+                : message("foo", std::vector<std::string>{"message1", "message2"})
             { }
 
             InitialisationFailureMessage message;
@@ -24,6 +24,7 @@ namespace UKControllerPluginTest::Integration {
     {
         nlohmann::json expected = {
             {"type", "initialisation_failure"},
+            {"id", "foo"},
             {"version", 1},
             {"errors", {"message1", "message2"}}
         };

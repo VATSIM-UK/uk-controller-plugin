@@ -2,7 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by UKControllerPlugin.rc
 //
-#define IDR_RT_MANIFEST    1
+#define ISOLATION_AWARE_ENABLED         1
 #define IDR_WAVE1                       101
 #define IDD_DIALOG1                     102
 #define IDD_HISTORY_TRAIL               102
@@ -161,14 +161,16 @@
 #define IDC_CHECK_FILL                  1118
 #define IDC_CHECK2                      1119
 #define IDC_TRAIL_ROTATE                1119
+#define IDC_SYSLINK2                    1121
+#define IDC_SYSLINK3                    1122
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1120
+#define _APS_NEXT_CONTROL_VALUE         1123
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

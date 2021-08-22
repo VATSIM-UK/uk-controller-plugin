@@ -39,6 +39,7 @@ namespace UKControllerPlugin {
                 *container.api,
                 *container.taskRunner,
                 *container.plugin,
+                *container.integrationModuleContainer->outboundMessageHandler,
                 stands,
                 container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
             );
@@ -91,6 +92,7 @@ namespace UKControllerPlugin {
             container.tagHandler->RegisterTagItem(assignedStandTagItemId, eventHandler);
             container.pushEventProcessors->AddProcessor(eventHandler);
             container.externalEventHandler->AddHandler(eventHandler);
+            container.integrationModuleContainer->inboundMessageHandler->AddProcessor(eventHandler);
         }
     }  // namespace Stands
 }  // namespace UKControllerPlugin

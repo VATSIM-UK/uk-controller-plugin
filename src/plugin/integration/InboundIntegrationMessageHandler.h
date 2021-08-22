@@ -5,7 +5,7 @@
 namespace UKControllerPlugin::Integration {
     class IntegrationClient;
     class IntegrationClientManager;
-    class InboundIntegrationMessageProcessor;
+    class IntegrationActionProcessor;
 
     /*
      * A class dedicated to handling inbound messages from integrations
@@ -16,18 +16,21 @@ namespace UKControllerPlugin::Integration {
         public:
             explicit InboundIntegrationMessageHandler(std::shared_ptr<IntegrationClientManager> clientManager);
             ~InboundIntegrationMessageHandler() override = default;
-            void AddProcessor(std::shared_ptr<InboundIntegrationMessageProcessor> processor);
+            void AddProcessor(std::shared_ptr<IntegrationActionProcessor> processor);
             void TimedEventTrigger() override;
             size_t CountProcessors() const;
 
         private:
-            void ProcessInboundMessagesForClient(std::shared_ptr<IntegrationClient> client);
-            static void LogNoProcessorExists(std::shared_ptr<IntegrationClient> client, MessageType messageType);
+            void ProcessInboundMessagesForClient(const std::shared_ptr<IntegrationClient>& client);
+            static void LogNoProcessorExists(
+                const std::shared_ptr<IntegrationClient>& client,
+                const MessageType& messageType
+            );
 
             // Manages clients
             const std::shared_ptr<IntegrationClientManager> clientManager;
 
             // Processors for inbound messages
-            std::map<MessageType, std::shared_ptr<InboundIntegrationMessageProcessor>> messageProcessors;
+            std::map<MessageType, std::shared_ptr<IntegrationActionProcessor>> actionProcessors;
     };
 } // namespace UKControllerPlugin::Integration

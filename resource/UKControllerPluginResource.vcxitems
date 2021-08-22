@@ -19,4 +19,13 @@
   <ItemGroup>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)UKControllerPlugin.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="$(MSBuildThisFileDirectory)sound\beep.wav" />
+    <Media Include="$(MSBuildThisFileDirectory)sound\departure_release_accepted.wav" />
+    <Media Include="$(MSBuildThisFileDirectory)sound\departure_release_rejected.wav" />
+    <Media Include="$(MSBuildThisFileDirectory)sound\departure_release_requested.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="$(MSBuildThisFileDirectory)..\src\plugin\plugin.manifest" />
+  </ItemGroup>
 </Project>

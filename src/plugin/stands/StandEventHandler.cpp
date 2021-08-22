@@ -4,6 +4,8 @@
 #include "api/ApiException.h"
 #include "plugin/PopupMenuItem.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
+#include "stands/StandAssignedMessage.h"
+#include "stands/StandUnassignedMessage.h"
 
 using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Api::ApiInterface;
@@ -22,11 +24,12 @@ namespace UKControllerPlugin {
             const ApiInterface& api,
             TaskRunnerInterface& taskRunner,
             EuroscopePluginLoopbackInterface& plugin,
+            Integration::OutboundIntegrationEventHandler& integrationEventHandler,
             const std::set<Stand, CompareStands> stands,
             int standSelectedCallbackId
         )
             : api(api), taskRunner(taskRunner), plugin(plugin), stands(stands),
-            standSelectedCallbackId(standSelectedCallbackId)
+            standSelectedCallbackId(standSelectedCallbackId), integrationEventHandler(integrationEventHandler)
         {
         }
 
@@ -49,7 +52,7 @@ namespace UKControllerPlugin {
             );
         }
 
-        void StandEventHandler::DoStandAssignment(
+        std::string StandEventHandler::DoStandAssignment(
             std::shared_ptr<EuroScopeCFlightPlanInterface> aircraft,
             std::string airfield,
             std::string identifier
@@ -57,14 +60,14 @@ namespace UKControllerPlugin {
             // Only allow this action if they're tracking the flightplan or its untracked
             if (!aircraft) {
                 LogWarning("Tried assign a stand for a non-existant aircraft");
-                return;
+                return "Tried assign a stand for a non-existant aircraft";
             }
 
             if (!this->CanAssignStand(*aircraft)) {
                 LogInfo(
                     "Attempted to assign stand but flightplan is tracked by someone else " + aircraft->GetCallsign()
                 );
-                return;
+                return "Attempted to assign stand but flightplan is tracked by someone else";
             }
 
             // Uppercase any identifiers
@@ -82,8 +85,7 @@ namespace UKControllerPlugin {
                 (identifier == this->noStandMenuItem || identifier == this->noStandEditBoxItem) &&
                 this->standAssignments.count(callsign)
             ) {
-                this->standAssignments.erase(callsign);
-                this->RemoveFlightStripAnnotation(callsign);
+                this->UnassignStandForAircraft(callsign);
                 this->taskRunner.QueueAsynchronousTask([this, callsign]() {
                     try {
                         this->api.DeleteStandAssignmentForAircraft(callsign);
@@ -104,13 +106,16 @@ namespace UKControllerPlugin {
 
                 if (stand == this->stands.cend()) {
                     LogInfo("Tried to assign a non-existant stand");
-                    return;
+                    return "Tried to assign a non-existant stand";
                 }
 
                 // Assign that stand
+                this->AssignStandToAircraft(
+                    callsign,
+                    *stand
+                );
+
                 int standId = stand->id;
-                this->standAssignments[callsign] = standId;
-                this->AnnotateFlightStrip(callsign, standId);
                 this->taskRunner.QueueAsynchronousTask([this, standId, callsign]() {
                     try {
                         this->api.AssignStandToAircraft(callsign, standId);
@@ -120,6 +125,8 @@ namespace UKControllerPlugin {
                     }
                 });
             }
+            
+            return "";
         }
 
         size_t StandEventHandler::CountStandAssignments(void) const
@@ -147,7 +154,6 @@ namespace UKControllerPlugin {
                 mousePos.x + 400,
                 mousePos.y + 600
             };
-
 
             this->plugin.TriggerPopupList(
                 popupArea,
@@ -228,7 +234,6 @@ namespace UKControllerPlugin {
             if (this->lastAirfieldUsed == "") {
                 return;
             }
-
 
             this->DoStandAssignment(
                 this->plugin.GetSelectedFlightplan(),
@@ -425,12 +430,10 @@ namespace UKControllerPlugin {
                             continue;
                         }
 
-                        this->AnnotateFlightStrip(
+                        this->AssignStandToAircraft(
                             assignment->at("callsign").get<std::string>(),
-                            assignment->at("stand_id").get<int>()
+                            *this->stands.find(assignment->at("stand_id").get<int>())
                         );
-                        this->standAssignments[assignment->at("callsign").get<std::string>()] =
-                            assignment->at("stand_id").get<int>();
                     }
                     LogInfo("Loaded " + std::to_string(this->standAssignments.size()) + " stand assignments");
                 } catch (ApiException e) {
@@ -452,16 +455,9 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                this->AnnotateFlightStrip(
+                this->AssignStandToAircraft(
                     message.data.at("callsign").get<std::string>(),
-                    message.data.at("stand_id").get<int>()
-                );
-
-                this->standAssignments[message.data.at("callsign").get<std::string>()] =
-                    message.data.at("stand_id").get<int>();
-                LogInfo(
-                    "Stand id " + std::to_string(message.data.at("stand_id").get<int>()) +
-                        " assigned to " + message.data.at("callsign").get<std::string>()
+                    *this->stands.find(message.data.at("stand_id").get<int>())
                 );
             } else if (message.event == "App\\Events\\StandUnassignedEvent") {
                 // If a stand has been unassigned, unassign it here
@@ -470,11 +466,7 @@ namespace UKControllerPlugin {
                     return;
                 }
 
-                this->RemoveFlightStripAnnotation(
-                    message.data.at("callsign").get<std::string>()
-                );
-                this->standAssignments.erase(message.data.at("callsign").get<std::string>());
-                LogInfo("Stand assignment removed for " + message.data.at("callsign").get<std::string>());
+                this->UnassignStandForAircraft(message.data.at("callsign").get<std::string>());
             }
         }
 
@@ -491,6 +483,101 @@ namespace UKControllerPlugin {
         std::lock_guard<std::mutex> StandEventHandler::LockStandMap()
         {
             return std::lock_guard(this->mapMutex);
+        }
+
+        void StandEventHandler::UnassignStandForAircraft(std::string callsign)
+        {
+            this->RemoveFlightStripAnnotation(callsign);
+            this->standAssignments.erase(callsign);
+            this->integrationEventHandler.SendEvent(std::make_shared<StandUnassignedMessage>(callsign));
+            LogInfo("Stand assignment removed for " + callsign);
+        }
+
+        void StandEventHandler::AssignStandToAircraft(std::string callsign, const Stand& stand)
+        {
+            this->AnnotateFlightStrip(
+                callsign,
+                stand.id
+            );
+            this->standAssignments[callsign] = stand.id;
+            this->integrationEventHandler.SendEvent(
+                std::make_shared<StandAssignedMessage>(callsign, stand.airfieldCode, stand.identifier)
+            );
+            LogInfo(
+                "Stand id " + std::to_string(stand.id) + "(" + stand.airfieldCode + "/" + stand.identifier + ") "
+                 "assigned to " + callsign
+            );
+        }
+        std::vector<Integration::MessageType> StandEventHandler::ActionsToProcess() const
+        {
+            return {
+                {
+                    "assign_stand",
+                    1
+                },
+                {
+                    "unassign_stand",
+                    1
+                }
+            };
+        }
+        void StandEventHandler::ProcessAction(
+                std::shared_ptr<Integration::MessageInterface> message,
+                std::function<void(void)> success,
+                std::function<void(std::vector<std::string>)> fail
+        ) {
+            auto messageData = message->GetMessageData();
+            if (message->GetMessageType().type == "assign_stand") {
+                if (!messageData.contains("callsign") || !messageData.at("callsign").is_string()) {
+                    fail({"Invalid callsign in message data"});
+                    return;
+                }
+                
+                if (!messageData.contains("airfield") || !messageData.at("airfield").is_string()) {
+                    fail({"Invalid airfield field in message data"});
+                    return;
+                }
+                
+                if (!messageData.contains("stand") || !messageData.at("stand").is_string()) {
+                    fail({"Invalid stand field in message data"});
+                    return;
+                }
+                
+                auto errorMessage = this->DoStandAssignment(
+                    this->plugin.GetFlightplanForCallsign(messageData.at("callsign").get<std::string>()),
+                    messageData.at("airfield").get<std::string>(),
+                    messageData.at("stand").get<std::string>()
+                );
+                
+                if (errorMessage.empty()) {
+                    success();
+                } else {
+                    fail({errorMessage});
+                }
+            } else if (message->GetMessageType().type == "unassign_stand") {
+                if (!messageData.contains("callsign") || !messageData.at("callsign").is_string()) {
+                    fail({"Invalid callsign in message data"});
+                    return;
+                }
+                
+                auto standsGuard = this->LockStandMap();
+                auto callsign = messageData.at("callsign").get<std::string>();
+                auto assignedStand = this->GetAssignedStandForCallsign(callsign);
+                
+                if (assignedStand != this->noStandAssigned) {
+                    this->UnassignStandForAircraft(callsign);
+                    this->taskRunner.QueueAsynchronousTask([this, callsign]() {
+                        try {
+                            this->api.DeleteStandAssignmentForAircraft(callsign);
+                        }
+                        catch (ApiException) {
+                            LogError("Failed to delete stand assignment for " + callsign);
+                        }
+                    });
+                }
+                
+                success();
+            }
         }
     }  // namespace Stands
 }  // namespace UKControllerPlugin

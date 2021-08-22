@@ -25,7 +25,7 @@ namespace UKControllerPluginTest {
                     container.externalEventHandler.reset(new ExternalMessageEventHandler(true));
                     container.commandHandlers.reset(new CommandHandlerCollection);
                     container.timedHandler.reset(new TimedEventCollection);
-                    testEvent = std::make_shared<InitialisationSuccessMessage>();
+                    testEvent = std::make_shared<InitialisationSuccessMessage>("foo");
                 }
 
                 std::shared_ptr<InitialisationSuccessMessage> testEvent;
