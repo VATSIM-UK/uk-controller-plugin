@@ -13,10 +13,17 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "api/ApiException.h"
 #include "plugin/PopupMenuItem.h"
+#include "mock/MockOutboundIntegrationEventHandler.h"
+#include "stands/StandUnassignedMessage.h"
+#include "stands/StandAssignedMessage.h"
+#include "integration/InboundMessage.h"
+#include "integration/MessageType.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Stands::StandEventHandler;
+using UKControllerPlugin::Stands::StandUnassignedMessage;
+using UKControllerPlugin::Stands::StandAssignedMessage;
 using UKControllerPlugin::Stands::CompareStands;
 using UKControllerPlugin::Stands::Stand;
 using UKControllerPlugin::Tag::TagData;
@@ -28,6 +35,9 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
+using UKControllerPluginTest::Integration::MockOutboundIntegrationEventHandler;
+using UKControllerPlugin::Integration::InboundMessage;
+using UKControllerPlugin::Integration::MessageType;
 using UKControllerPlugin::Push::PushEvent;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -41,7 +51,7 @@ namespace UKControllerPluginTest {
         {
             public:
                 StandEventHandlerTest()
-                    : handler(api, taskRunner, plugin, this->GetStands(), 1),
+                    : handler(api, taskRunner, plugin, mockIntegration, GetStands(), 1),
                     tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize)
                 {
                     ON_CALL(this->flightplan, GetCallsign())
@@ -50,7 +60,7 @@ namespace UKControllerPluginTest {
                     this->mockController = std::make_shared<NiceMock<MockEuroScopeCControllerInterface>>();
                 }
 
-                std::set<Stand, CompareStands> GetStands(void) const
+                static std::set<Stand, CompareStands> GetStands()
                 {
                     std::set<Stand, CompareStands> stands;
                     stands.insert({ 1, "EGKK", "1L" });
@@ -66,6 +76,7 @@ namespace UKControllerPluginTest {
                 NiceMock<MockApiInterface> api;
                 NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
                 NiceMock<MockTaskRunnerInterface> taskRunner;
+                NiceMock<MockOutboundIntegrationEventHandler> mockIntegration;
                 NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
                 NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
                 std::shared_ptr<NiceMock<MockEuroScopeCControllerInterface>> mockController;
@@ -133,6 +144,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
@@ -150,7 +165,6 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
                 .WillByDefault(Return(nullptr));
-
 
             this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
@@ -267,6 +281,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandUnassignedMessage>("BAW123");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             this->handler.ProcessPushEvent(message);
             ASSERT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
@@ -336,6 +354,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp1, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+                EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                    .Times(1);
+
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp2
                 = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
@@ -343,6 +365,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp2));
 
             EXPECT_CALL(*pluginReturnedFp2, AnnotateFlightStrip(3, "55"))
+                .Times(1);
+
+            auto expectedMessage2 = std::make_shared<StandAssignedMessage>("VIR245", "EGKK", "55");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage2)))
                 .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
@@ -402,6 +428,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
@@ -429,6 +459,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
@@ -461,6 +495,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
@@ -488,6 +526,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
@@ -520,6 +562,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             EXPECT_CALL(this->api, GetAssignedStands())
                 .Times(1)
                 .WillOnce(Return(assignments));
@@ -548,6 +594,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, GetAssignedStands())
@@ -1096,6 +1146,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "55");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
                 .Times(1);
 
@@ -1150,6 +1204,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 1))
                 .Times(1);
 
@@ -1202,6 +1260,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
+                .Times(1);
+
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "55");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
@@ -1312,6 +1374,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandUnassignedMessage>("BAW123");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             this->handler.StandSelected(1, "--", {});
             EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
@@ -1366,6 +1432,10 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, ""))
+                .Times(1);
+
+            auto expectedMessage = std::make_shared<StandUnassignedMessage>("BAW123");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             this->handler.StandSelected(1, "", {});
@@ -1693,6 +1763,10 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
                 .Times(1);
 
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "55");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
                 .Times(1);
 
@@ -1726,6 +1800,10 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginReturnedFp));
 
             EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L"))
+                .Times(1);
+
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
                 .Times(1);
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 1))
@@ -1777,6 +1855,432 @@ namespace UKControllerPluginTest {
                 .Times(0);
 
             EXPECT_TRUE(this->handler.ProcessMessage("STANDS:BAW123:EGKK:XXX"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItSubscribesToIntegrationMessages)
+        {
+            std::vector<MessageType> messages {
+                {
+                    "assign_stand",
+                    1
+                    },
+                    {
+                    "unassign_stand",
+                    1
+                    }
+            };
+            EXPECT_EQ(messages, this->handler.ActionsToProcess());
+        }
+        
+        TEST_F(StandEventHandlerTest, ItUnassignsStandFromIntegrationMessage)
+        {
+            this->handler.SetAssignedStand("BAW123", 3);
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "unassign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {{"callsign", "BAW123"}}}
+                }
+            );
+            
+            EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft("BAW123"))
+                .Times(1);
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_TRUE(successCalled);
+            EXPECT_TRUE(failureMessages.empty());
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromAircraftFromMessageIfNothingToDo)
+        {
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "unassign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {{"callsign", "BAW123"}}}
+                }
+            );
+            
+            EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft("BAW123"))
+                .Times(0);
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                    },
+                    [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_TRUE(successCalled);
+            EXPECT_TRUE(failureMessages.empty());
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromAircraftIfBadCallsign)
+        {
+            this->handler.SetAssignedStand("BAW123", 3);
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "unassign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {{"callsign", 123}}}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_FALSE(successCalled);
+            EXPECT_FALSE(failureMessages.empty());
+            EXPECT_EQ(3, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromAircraftIfNoCallsign)
+        {
+            this->handler.SetAssignedStand("BAW123", 3);
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "unassign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", nlohmann::json::object()}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_FALSE(successCalled);
+            EXPECT_FALSE(failureMessages.empty());
+            EXPECT_EQ(3, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItMakesStandAssignmentFromIntegrationMessage)
+        {
+            ON_CALL(this->plugin, GetUserControllerObject())
+                .WillByDefault(Return(this->mockController));
+
+            ON_CALL(*this->mockController, IsVatsimRecognisedController())
+                .WillByDefault(Return(true));
+
+            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp
+                = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+            ON_CALL(*pluginReturnedFp, IsTracked())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, IsTrackedByUser())
+                .WillByDefault(Return(false));
+
+            ON_CALL(*pluginReturnedFp, GetCallsign())
+                .WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->plugin, GetSelectedFlightplan())
+                .WillByDefault(Return(pluginReturnedFp));
+
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(pluginReturnedFp));
+
+            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "55"))
+                .Times(1);
+
+            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "55");
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
+                .Times(1);
+
+            EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2))
+                .Times(1);
+
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "assign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {
+                        {"callsign", "BAW123"},
+                        {"airfield", "EGKK"},
+                        {"stand", "55"}
+                    }}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_TRUE(successCalled);
+            EXPECT_TRUE(failureMessages.empty());
+            EXPECT_EQ(2, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfAssignmentFails)
+        {
+            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123"))
+                .WillByDefault(Return(nullptr));
+
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "assign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {
+                        {"callsign", "BAW123"},
+                        {"airfield", "EGKK"},
+                        {"stand", "55"}
+                    }}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                    },
+                    [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_FALSE(successCalled);
+            EXPECT_FALSE(failureMessages.empty());
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfCallsignMissing)
+        {
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "assign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {
+                        {"airfield", "EGKK"},
+                        {"stand", "55"}
+                    }}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_FALSE(successCalled);
+            EXPECT_FALSE(failureMessages.empty());
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfCallsignNotString)
+        {
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "assign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {
+                        {"callsign", 123},
+                        {"airfield", "EGKK"},
+                        {"stand", "55"}
+                    }}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_FALSE(successCalled);
+            EXPECT_FALSE(failureMessages.empty());
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfAirfieldMissing)
+        {
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "assign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {
+                        {"callsign", "BAW123"},
+                        {"stand", "55"}
+                    }}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_FALSE(successCalled);
+            EXPECT_FALSE(failureMessages.empty());
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfAirfieldNotString)
+        {
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "assign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {
+                        {"callsign", "BAW123"},
+                        {"airfield", 123},
+                        {"stand", "55"}
+                    }}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_FALSE(successCalled);
+            EXPECT_FALSE(failureMessages.empty());
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfStandMissing)
+        {
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "assign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {
+                        {"callsign", "BAW123"},
+                        {"airfield", "EGKK"},
+                    }}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_FALSE(successCalled);
+            EXPECT_FALSE(failureMessages.empty());
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+        }
+        
+        TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfStandNotString)
+        {
+            auto message = InboundMessage::FromJson(
+                nlohmann::json {
+                    {"type", "assign_stand"},
+                    {"version", 1},
+                    {"id", "foo"},
+                    {"data", {
+                        {"callsign", "BAW123"},
+                        {"airfield", "EGKK"},
+                        {"stand", 55}
+                    }}
+                }
+            );
+            
+            bool successCalled = false;
+            std::vector<std::string> failureMessages;
+            this->handler.ProcessAction(
+                message,
+                [&successCalled]() {
+                    successCalled = true;
+                },
+                [&failureMessages](std::vector<std::string> messages) {
+                    failureMessages = std::move(messages);
+                }
+            );
+            
+            EXPECT_FALSE(successCalled);
+            EXPECT_FALSE(failureMessages.empty());
+            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
         }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

@@ -10,8 +10,15 @@ namespace UKControllerPlugin::Integration {
     class InitialisationSuccessMessage : public MessageInterface
     {
         public:
+            explicit InitialisationSuccessMessage(std::string messageId);
             ~InitialisationSuccessMessage() override = default;
-            MessageType GetMessageType() const override;
-            nlohmann::json GetMessageData() const override;
+            [[nodiscard]] MessageType GetMessageType() const override;
+            [[nodiscard]] nlohmann::json GetMessageData() const override;
+            [[nodiscard]] std::string GetMessageId() const override;
+            
+        private:
+            
+            // The id for the message to return
+            std::string messageId;
     };
 } // namespace UKControllerPlugin::Integration

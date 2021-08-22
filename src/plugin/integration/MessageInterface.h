@@ -17,7 +17,7 @@ namespace UKControllerPlugin::Integration {
              * Get the data to go in the message, which is merged
              * into the message under the "data" key.
              */
-            virtual nlohmann::json GetMessageData() const
+            [[nodiscard]] virtual nlohmann::json GetMessageData() const
             {
                 return nlohmann::json::object();
             }
@@ -26,20 +26,29 @@ namespace UKControllerPlugin::Integration {
              * Get the errors associated with the message, which is merged
              * in under the "errors" key.
              */
-            virtual nlohmann::json GetErrorData() const
+            [[nodiscard]] virtual std::vector<std::string> GetErrorData() const
             {
-                return nlohmann::json::array();
+                return {};
+            }
+            
+            /*
+             * Gets a unique id associated with the message so that
+             * things can tied together at each end.
+             */
+            [[nodiscard]] virtual std::string GetMessageId() const
+            {
+                return "";
             }
 
             /*
              * Get the type of the message.
              */
-            virtual MessageType GetMessageType() const = 0;
+            [[nodiscard]] virtual MessageType GetMessageType() const = 0;
 
             /*
              * Convert the message to JSON
              */
-            nlohmann::json ToJson() const
+            [[nodiscard]] nlohmann::json ToJson() const
             {
                 nlohmann::json baseMessage = this->GetMessageType().ToJson();
                 auto data = this->GetMessageData();
@@ -50,6 +59,10 @@ namespace UKControllerPlugin::Integration {
                 auto errors = this->GetErrorData();
                 if (!errors.empty()) {
                     baseMessage["errors"] = errors;
+                }
+                
+                if (!this->GetMessageId().empty()) {
+                    baseMessage["id"] = this->GetMessageId();
                 }
 
                 return baseMessage;

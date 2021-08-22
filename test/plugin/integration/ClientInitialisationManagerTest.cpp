@@ -39,7 +39,7 @@ namespace UKControllerPluginTest::Integration {
 
             static std::string ExpectedFailureMessage(std::string message)
             {
-                return InitialisationFailureMessage(std::vector<std::string>{message}).ToJson().dump();
+                return InitialisationFailureMessage("foo", std::vector<std::string>{message}).ToJson().dump();
             }
 
             std::shared_ptr<UKControllerPlugin::Integration::IntegrationConnection> integration1;
@@ -98,6 +98,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -136,6 +137,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -180,6 +182,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -219,6 +222,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -256,6 +260,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -277,7 +282,7 @@ namespace UKControllerPluginTest::Integration {
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(UKControllerPlugin::Integration::InitialisationSuccessMessage().ToJson().dump())
+            Send(UKControllerPlugin::Integration::InitialisationSuccessMessage("foo").ToJson().dump())
         )
             .Times(1);
 
@@ -290,6 +295,7 @@ namespace UKControllerPluginTest::Integration {
 
         nlohmann::json integrationMessage = {
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -322,6 +328,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", 1},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -354,6 +361,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "not_this"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -391,6 +399,7 @@ namespace UKControllerPluginTest::Integration {
 
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -423,6 +432,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", "1"},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -455,6 +465,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 2},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -493,6 +504,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
         };
 
         std::queue<std::string> returnedMessages;
@@ -513,6 +525,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data",
                 nlohmann::json::array({"integration_name", "UKCPTEST"})
@@ -537,6 +550,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_version", "1.5"},
@@ -574,6 +588,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", 123},
@@ -612,6 +627,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -649,6 +665,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -687,6 +704,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -719,6 +737,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -754,6 +773,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -792,6 +812,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -830,6 +851,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},
@@ -868,6 +890,7 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"version", 1},
+            {"id", "foo"},
             {
                 "data", nlohmann::json::object({
                     {"integration_name", "UKCPTEST"},

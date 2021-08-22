@@ -10,12 +10,16 @@ namespace UKControllerPlugin::Integration {
     class InitialisationFailureMessage : public MessageInterface
     {
         public:
-            explicit InitialisationFailureMessage(std::vector<std::string> errors);
+            InitialisationFailureMessage(std::string messageId, std::vector<std::string> errors);
             ~InitialisationFailureMessage() override = default;
-            MessageType GetMessageType() const override;
-            nlohmann::json GetErrorData() const override;
+            [[nodiscard]] std::string GetMessageId() const override;
+            [[nodiscard]] MessageType GetMessageType() const override;
+            [[nodiscard]] std::vector<std::string> GetErrorData() const override;
 
         private:
+            // Message id
+            std::string messageId;
+            
             // The errors
             const std::vector<std::string> errors;
     };

@@ -8,6 +8,8 @@
 #include "controller/HandoffEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "integration/ExternalMessageEventHandler.h"
+#include "integration/IntegrationPersistenceContainer.h"
+#include "integration/InboundIntegrationMessageHandler.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -21,6 +23,8 @@ using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPlugin::Integration::ExternalMessageEventHandler;
+using UKControllerPlugin::Integration::IntegrationPersistenceContainer;
+using UKControllerPlugin::Integration::InboundIntegrationMessageHandler;
 
 namespace UKControllerPluginTest {
     namespace Stands {
@@ -35,6 +39,9 @@ namespace UKControllerPluginTest {
                     container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
                     container.externalEventHandler.reset(new ExternalMessageEventHandler(true));
+                    container.integrationModuleContainer.reset(new IntegrationPersistenceContainer{});
+                    container.integrationModuleContainer->inboundMessageHandler =
+                            std::make_shared<InboundIntegrationMessageHandler>(nullptr);
 
                     nlohmann::json gatwick = nlohmann::json::array();
                     gatwick.push_back(
@@ -111,6 +118,12 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->dependencyLoader);
             EXPECT_EQ(1, this->container.externalEventHandler->CountHandlers());
+        }
+        
+        TEST_F(StandModuleTest, ItRegistersForIntegrationMessages)
+        {
+            BootstrapPlugin(this->container, this->dependencyLoader);
+            EXPECT_EQ(2, container.integrationModuleContainer->inboundMessageHandler->CountProcessors());
         }
     }  // namespace Stands
 }  // namespace UKControllerPluginTest

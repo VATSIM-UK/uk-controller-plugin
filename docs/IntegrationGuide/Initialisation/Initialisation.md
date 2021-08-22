@@ -12,6 +12,7 @@ The initialisation message is structured as follows.
 {
     "type": "initialise",
     "version": 1,
+    "id": "your_message_id",
     "data": {
         "integration_name": "My Integration",
         "integration_version": "v1.5-beta1",
@@ -44,6 +45,7 @@ After a successful initialisation, the following response will be returned.
 {
     "type": "initialisation_success",
     "version": 1,
+    "id": "your_message_id",
     "data": {
         "ukcp_version": "string"
     }
@@ -61,6 +63,7 @@ After a failed initialisation, the following response will be returned.
 {
     "type": "initialisation_failure",
     "version": 1,
+    "id": "your_message_id",
     "errors": [
         "string"
     ]
