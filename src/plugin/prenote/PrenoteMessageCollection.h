@@ -13,7 +13,7 @@ namespace UKControllerPlugin::Prenote {
         void Add(const std::shared_ptr<PrenoteMessage>& prenote);
         [[nodiscard]] auto Count() const -> size_t;
         [[nodiscard]] auto GetById(int id) -> const std::shared_ptr<PrenoteMessage>&;
-        void Iterate(std::function<void(const std::shared_ptr<PrenoteMessage>&)>& #function);
+        void Iterate(std::function<void(const std::shared_ptr<PrenoteMessage>&)>& function);
         void Remove(int id);
 
         private:
