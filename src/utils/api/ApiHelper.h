@@ -74,6 +74,16 @@ namespace UKControllerPlugin::Api {
         void ReadNotification(int id) const override;
         void SetApiKey(std::string key) override;
         void SetApiDomain(std::string domain) override;
+        [[nodiscard]] auto CreatePrenoteMessage(
+            const std::string& callsign,
+            const std::string& departureAirfield,
+            const std::string& departureSid,
+            const std::string& destinationAirfield,
+            int requestingController,
+            int targetController,
+            int requestExpiry) const -> nlohmann::json override;
+        void AcknowledgePrenoteMessage(int messageId, int controllerId) const override;
+        void DeletePrenoteMessage(int messageId) const override;
 
         // The HTTP status codes that may be returned by the API
         static const uint64_t STATUS_OK = 200L;

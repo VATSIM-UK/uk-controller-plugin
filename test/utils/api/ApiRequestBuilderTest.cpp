@@ -529,7 +529,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsAcknowledgePrenoteMessage)
     {
-        CurlRequest expectedRequest("http://testurl.com/prenotes/messages/55", CurlRequest::METHOD_PATCH);
+        CurlRequest expectedRequest("http://testurl.com/prenotes/messages/55/acknowledge", CurlRequest::METHOD_PATCH);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");

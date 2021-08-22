@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "api/ApiRequestBuilder.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
@@ -431,7 +429,8 @@ namespace UKControllerPlugin::Api {
         -> UKControllerPlugin::Curl::CurlRequest
     {
         CurlRequest request(
-            this->apiDomain + "/prenotes/messages/" + std::to_string(messageId), CurlRequest::METHOD_PATCH);
+            this->apiDomain + "/prenotes/messages/" + std::to_string(messageId) + "/acknowledge",
+            CurlRequest::METHOD_PATCH);
         nlohmann::json data{
             {"controller_position_id", controllerId},
         };

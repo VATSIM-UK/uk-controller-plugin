@@ -342,4 +342,36 @@ namespace UKControllerPlugin::Api {
     {
         this->requestBuilder.SetApiDomain(domain);
     }
+
+    auto ApiHelper::CreatePrenoteMessage(
+        const std::string& callsign,
+        const std::string& departureAirfield,
+        const std::string& departureSid,
+        const std::string& destinationAirfield,
+        int requestingController,
+        int targetController,
+        int requestExpiry) const -> nlohmann::json
+    {
+        return this
+            ->MakeApiRequest(this->requestBuilder.BuildCreatePrenoteMessageRequest(
+                callsign,
+                departureAirfield,
+                departureSid,
+                destinationAirfield,
+                requestingController,
+                targetController,
+                requestExpiry))
+            .GetRawData();
+    }
+
+    void ApiHelper::AcknowledgePrenoteMessage(int messageId, int controllerId) const
+    {
+        static_cast<void>(
+            this->MakeApiRequest(this->requestBuilder.BuildAcknowledgePrenoteMessageRequest(messageId, controllerId)));
+    }
+
+    void ApiHelper::DeletePrenoteMessage(int messageId) const
+    {
+        static_cast<void>(this->MakeApiRequest(this->requestBuilder.BuildDeletePrenoteMessageRequest(messageId)));
+    }
 } // namespace UKControllerPlugin::Api

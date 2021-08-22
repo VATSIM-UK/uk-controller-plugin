@@ -10,7 +10,10 @@ namespace UKControllerPlugin::Api {
     class ApiInterface
     {
         public:
-        ApiInterface() = default;
+        ApiInterface(const ApiInterface&) = default;
+        ApiInterface(ApiInterface&&) = default;
+        auto operator=(const ApiInterface&) -> ApiInterface& = default;
+        auto operator=(ApiInterface&&) -> ApiInterface& = default;
         virtual ~ApiInterface() = default;
         [[nodiscard]] virtual auto
         CreateGeneralSquawkAssignment(std::string callsign, std::string origin, std::string destination) const -> UKControllerPlugin::Squawk::ApiSquawkAllocation = 0;
@@ -63,7 +66,7 @@ namespace UKControllerPlugin::Api {
         virtual void ReadNotification(int id) const = 0;
         [[nodiscard]] virtual auto GetUpdateDetails() const -> nlohmann::json = 0;
 
-        [[nodiscard]] virtual auto CreatePrenoteMessageRequest(
+        [[nodiscard]] virtual auto CreatePrenoteMessage(
             const std::string& callsign,
             const std::string& departureAirfield,
             const std::string& departureSid,
@@ -71,15 +74,10 @@ namespace UKControllerPlugin::Api {
             int requestingController,
             int targetController,
             int requestExpiry) const -> nlohmann::json = 0;
-        virtual void AcknowledgePrenoteMessageRequest(int messageId, int controllerId) const = 0;
-        virtual void DeletePrenoteMessageRequest(int messageId) const = 0;
+        virtual void AcknowledgePrenoteMessage(int messageId, int controllerId) const = 0;
+        virtual void DeletePrenoteMessage(int messageId) const = 0;
 
         virtual void SetApiKey(std::string key) = 0;
         virtual void SetApiDomain(std::string domain) = 0;
-
-        // Codes returned after an update check
-        static const int UPDATE_UP_TO_DATE = 0;
-        static const int UPDATE_VERSION_DISABLED = 1;
-        static const int UPDATE_VERSION_NEEDS_UPDATE = 2;
     };
 } // namespace UKControllerPlugin::Api
