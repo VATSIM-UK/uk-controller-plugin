@@ -44,7 +44,7 @@ namespace UKControllerPlugin::Prenote {
         return prenote == this->prenotes.cend() ? this->invalidMessage : *prenote;
     }
 
-    void PrenoteMessageCollection::Iterate(std::function<void(const std::shared_ptr<PrenoteMessage>&)> function)
+    void PrenoteMessageCollection::Iterate(std::function<void(const std::shared_ptr<PrenoteMessage>&)>& function)
     {
         std::lock_guard<std::mutex> lock = this->LockPrenotes();
         for (const auto& message : this->prenotes) {
