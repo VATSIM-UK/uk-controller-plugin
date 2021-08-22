@@ -96,7 +96,7 @@ namespace UKControllerPlugin::Api {
         private:
         [[nodiscard]] auto AddCommonHeaders(UKControllerPlugin::Curl::CurlRequest request) const
             -> UKControllerPlugin::Curl::CurlRequest;
-        
+
         // The type string to send in the payload if we want a general squawk
         const std::string generalSquawkAssignmentType = "general";
 
