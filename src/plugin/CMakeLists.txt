@@ -427,11 +427,6 @@ set(src__login
 )
 source_group("src\\login" FILES ${src__login})
 
-set(manifest
-        "plugin.manifest"
-)
-source_group("manifest" FILES ${manifest})
-
 set(src__message
     "message/MessageSerializableInterface.h"
     "message/UserMessager.cpp"
@@ -822,7 +817,6 @@ set(ALL_FILES
     ${src__integration}
     ${src__intention}
     ${src__login}
-    ${manifest}
     ${src__message}
     ${src__metar}
     ${src__minstack}
@@ -971,6 +965,7 @@ if(MSVC)
         >
         /NODEFAULTLIB:LIBCMT;
         /SUBSYSTEM:WINDOWS
+        /ALLOWISOLATION
     )
 endif()
 
@@ -1013,7 +1008,7 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "Winmm;"
     "Dwmapi;"
     "gdiplus;"
-    "Comctl32"
+    "comctl32"
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 
