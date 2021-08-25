@@ -329,16 +329,19 @@ set(test__plugin
 source_group("test\\plugin" FILES ${test__plugin})
 
 set(test__prenote
-    "prenote/AbstractPrenoteTest.cpp"
-    "prenote/AirfieldPairingPrenoteTest.cpp"
-    "prenote/DeparturePrenoteTest.cpp"
-    "prenote/PrenoteEventHandlerTest.cpp"
-    "prenote/PrenoteFactoryTest.cpp"
-    "prenote/PrenoteUserMessageTest.cpp"
-    "prenote/PrenoteModuleTest.cpp"
-    "prenote/PrenoteServiceFactoryTest.cpp"
-    "prenote/PrenoteServiceTest.cpp"
-    "prenote/PrenoteMessageTest.cpp" prenote/ComparePrenoteMessagesTest.cpp prenote/PrenoteMessageCollectionTest.cpp)
+        "prenote/AbstractPrenoteTest.cpp"
+        "prenote/AirfieldPairingPrenoteTest.cpp"
+        "prenote/DeparturePrenoteTest.cpp"
+        "prenote/PrenoteEventHandlerTest.cpp"
+        "prenote/PrenoteFactoryTest.cpp"
+        "prenote/PrenoteUserMessageTest.cpp"
+        "prenote/PrenoteModuleTest.cpp"
+        "prenote/PrenoteServiceFactoryTest.cpp"
+        "prenote/PrenoteServiceTest.cpp"
+        "prenote/PrenoteMessageTest.cpp"
+        prenote/ComparePrenoteMessagesTest.cpp
+        prenote/PrenoteMessageCollectionTest.cpp
+        prenote/NewPrenotePushEventHandlerTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push
