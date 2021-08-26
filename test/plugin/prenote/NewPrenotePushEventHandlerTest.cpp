@@ -97,97 +97,97 @@ namespace UKControllerPluginTest::Prenote {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "id"));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfIdNotInteger)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"id", "abc"}})));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfCallsignMissing)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "callsign"));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfCallsignNotString)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"callsign", 123}})));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfDepartureAirfieldMissing)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "departure_airfield"));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfDepartureAirfieldNotString)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"departure_airfield", 123}})));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfDepartureSidMissing)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "departure_sid"));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfDepartureSidNotNullOrString)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"departure_sid", 123}})));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfDestinationAirfieldMissing)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "destination_airfield"));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfDestinationAirfieldNotString)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"destination_airfield", 123}})));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfSendingControllerMissing)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "sending_controller"));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfSendingControllerNotInteger)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"sending_controller", "abc"}})));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfTargetControllerMissing)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "target_controller"));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfTargetControllerNotInteger)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"target_controller", "abc"}})));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfExpiresAtMissing)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "expires_at"));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfExpiresAtNotString)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"expires_at", 123}})));
         EXPECT_EQ(0, this->messages->Count());
     }
-    
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfExpiresAtNotValidTimestamp)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"expires_at", "123-456"}})));
