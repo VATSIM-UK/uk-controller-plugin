@@ -1,67 +1,70 @@
 #include "pch/pch.h"
+
 #include "prenote/PrenoteMessage.h"
-#include "prenote/AbstractPrenote.h"
-#include "controller/ActiveCallsign.h"
-#include "euroscope/EuroScopeCFlightPlanInterface.h"
 
-using UKControllerPlugin::Prenote::AbstractPrenote;
-using UKControllerPlugin::Controller::ActiveCallsign;
-using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
+namespace UKControllerPlugin::Prenote {
+    PrenoteMessage::PrenoteMessage(
+        int id,
+        std::string callsign,
+        std::string departureAirfield,
+        std::string sid,
+        std::string destinationAirfield,
+        int sendingControllerId,
+        int targetControllerId,
+        std::chrono::system_clock::time_point expiresAt)
+        : id(id), callsign(std::move(callsign)), departureAirfield(std::move(departureAirfield)), sid(std::move(sid)),
+          destinationAirfield(std::move(destinationAirfield)), sendingControllerId(sendingControllerId),
+          targetControllerId(targetControllerId), expiresAt(expiresAt), acknowledged(false)
+    {
+    }
 
+    auto PrenoteMessage::GetId() const -> int
+    {
+        return id;
+    }
 
-namespace UKControllerPlugin {
-    namespace Prenote {
+    auto PrenoteMessage::GetCallsign() const -> const std::string&
+    {
+        return callsign;
+    }
 
-        const std::string PrenoteMessage::handler = "Prenote";
-        const std::string PrenoteMessage::sender = "UKCP";
+    auto PrenoteMessage::GetDepartureAirfield() const -> const std::string&
+    {
+        return departureAirfield;
+    }
 
-        PrenoteMessage::PrenoteMessage(
-            const AbstractPrenote & prenote,
-            const ActiveCallsign & activeCallsign,
-            const EuroScopeCFlightPlanInterface & flightplan
-        ) {
-            this->message = "Prenote to " + activeCallsign.GetCallsign() + " required for " +
-                flightplan.GetCallsign() + " (" + prenote.GetSummaryString() + ")";
-        }
+    auto PrenoteMessage::GetSid() const -> const std::string&
+    {
+        return sid;
+    }
 
-        std::string PrenoteMessage::MessageHandler(void) const
-        {
-            return this->handler;
-        }
+    auto PrenoteMessage::GetDestinationAirfield() const -> const std::string&
+    {
+        return destinationAirfield;
+    }
 
-        std::string PrenoteMessage::MessageSender(void) const
-        {
-            return this->sender;
-        }
+    auto PrenoteMessage::GetSendingControllerId() const -> int
+    {
+        return sendingControllerId;
+    }
 
-        std::string PrenoteMessage::MessageString(void) const
-        {
-            return this->message;
-        }
+    auto PrenoteMessage::GetTargetControllerId() const -> int
+    {
+        return targetControllerId;
+    }
 
-        bool PrenoteMessage::MessageShowHandler(void) const
-        {
-            return true;
-        }
+    auto PrenoteMessage::GetExpiresAt() const -> const std::chrono::system_clock::time_point&
+    {
+        return expiresAt;
+    }
 
-        bool PrenoteMessage::MessageMarkUnread(void) const
-        {
-            return true;
-        }
+    auto PrenoteMessage::IsAcknowledged() const -> bool
+    {
+        return acknowledged;
+    }
 
-        bool PrenoteMessage::MessageOverrideBusy(void) const
-        {
-            return true;
-        }
-
-        bool PrenoteMessage::MessageFlashHandler(void) const
-        {
-            return true;
-        }
-
-        bool PrenoteMessage::MessageRequiresConfirm(void) const
-        {
-            return true;
-        }
-    }  // namespace Prenote
-}  // namespace UKControllerPlugin
+    void PrenoteMessage::Acknowledge()
+    {
+        this->acknowledged = true;
+    }
+} // namespace UKControllerPlugin::Prenote
