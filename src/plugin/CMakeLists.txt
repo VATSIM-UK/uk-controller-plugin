@@ -571,15 +571,17 @@ set(src__prenote
     "prenote/PrenoteEventHandler.h"
     "prenote/PrenoteFactory.cpp"
     "prenote/PrenoteFactory.h"
-    "prenote/PrenoteMessage.cpp"
-    "prenote/PrenoteMessage.h"
+    "prenote/PrenoteUserMessage.cpp"
+    "prenote/PrenoteUserMessage.h"
     "prenote/PrenoteModule.cpp"
     "prenote/PrenoteModule.h"
     "prenote/PrenoteService.cpp"
     "prenote/PrenoteService.h"
     "prenote/PrenoteServiceFactory.cpp"
     "prenote/PrenoteServiceFactory.h"
-)
+    "prenote/PrenoteMessage.cpp"
+    prenote/PrenoteMessageCollection.cpp prenote/PrenoteMessageCollection.h
+    prenote/ComparePrenoteMessages.cpp prenote/ComparePrenoteMessages.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push
