@@ -10,6 +10,7 @@ namespace UKControllerPlugin::Api {
     class ApiInterface
     {
         public:
+        ApiInterface() = default;
         ApiInterface(const ApiInterface&) = default;
         ApiInterface(ApiInterface&&) = default;
         auto operator=(const ApiInterface&) -> ApiInterface& = default;
