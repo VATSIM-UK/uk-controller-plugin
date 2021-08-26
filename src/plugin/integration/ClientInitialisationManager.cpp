@@ -20,7 +20,7 @@ namespace UKControllerPlugin::Integration {
             return;
         }
 
-        this->connections[connection] = Time::TimeNow();
+        this->connections[std::move(connection)] = Time::TimeNow();
     }
 
     void ClientInitialisationManager::TimedEventTrigger()
@@ -57,7 +57,7 @@ namespace UKControllerPlugin::Integration {
     }
 
     bool ClientInitialisationManager::AttemptInitialisation(
-        std::shared_ptr<IntegrationConnection> connection,
+        const std::shared_ptr<IntegrationConnection>& connection,
         std::queue<std::shared_ptr<MessageInterface>> incomingMessages
     )
     {
@@ -67,20 +67,22 @@ namespace UKControllerPlugin::Integration {
                 LogError(
                     "Invalid integration initialisation message: " + incomingMessages.front()->ToJson().dump()
                 );
-                connection->Send(std::make_shared<InitialisationFailureMessage>(validationErrors));
+                SendInitialisationFailureMessage(connection, incomingMessages.front(), validationErrors);
                 incomingMessages.pop();
                 continue;
             }
 
             this->UpgradeToClient(connection, incomingMessages.front());
-            this->SendInitialisationSuccessMessage(connection);
+            SendInitialisationSuccessMessage(connection, incomingMessages.front());
             return true;
         }
 
         return false;
     }
 
-    std::vector<std::string> ClientInitialisationManager::ValidateMessage(std::shared_ptr<MessageInterface> message)
+    std::vector<std::string> ClientInitialisationManager::ValidateMessage(
+        const std::shared_ptr<MessageInterface>& message
+    )
     {
         auto errors = ValidateMessageType(message);
         auto dataErrors = ValidateMessageData(message);
@@ -93,7 +95,9 @@ namespace UKControllerPlugin::Integration {
         return errors;
     }
 
-    std::vector<std::string> ClientInitialisationManager::ValidateMessageType(std::shared_ptr<MessageInterface> message)
+    std::vector<std::string> ClientInitialisationManager::ValidateMessageType(
+        const std::shared_ptr<MessageInterface>& message
+    )
     {
         std::vector<std::string> errors;
         auto messageType = message->GetMessageType();
@@ -108,7 +112,9 @@ namespace UKControllerPlugin::Integration {
         return errors;
     }
 
-    std::vector<std::string> ClientInitialisationManager::ValidateMessageData(std::shared_ptr<MessageInterface> message)
+    std::vector<std::string> ClientInitialisationManager::ValidateMessageData(
+        const std::shared_ptr<MessageInterface>& message
+    )
     {
         auto messageData = message->GetMessageData();
         std::vector<std::string> errors = ValidateIntegrationDetails(messageData);
@@ -162,8 +168,8 @@ namespace UKControllerPlugin::Integration {
     }
 
     void ClientInitialisationManager::UpgradeToClient(
-        std::shared_ptr<IntegrationConnection> connection,
-        std::shared_ptr<MessageInterface> initialisationMessage
+        const std::shared_ptr<IntegrationConnection>& connection,
+        const std::shared_ptr<MessageInterface>& initialisationMessage
     )
     {
         auto data = initialisationMessage->GetMessageData();
@@ -185,9 +191,20 @@ namespace UKControllerPlugin::Integration {
     }
 
     void ClientInitialisationManager::SendInitialisationSuccessMessage(
-        std::shared_ptr<IntegrationConnection> connection
-    ) const
-    {
-        connection->Send(std::make_shared<InitialisationSuccessMessage>());
+        const std::shared_ptr<IntegrationConnection>& connection,
+        const std::shared_ptr<MessageInterface>& initialisationMessage
+    ) {
+        connection->Send(std::make_shared<InitialisationSuccessMessage>(initialisationMessage->GetMessageId()));
+    }
+    
+    void ClientInitialisationManager::SendInitialisationFailureMessage(
+        const std::shared_ptr<IntegrationConnection>& connection,
+        const std::shared_ptr<MessageInterface>& initialisationMessage,
+        const std::vector<std::string>& errors
+    ) {
+        connection->Send(std::make_shared<InitialisationFailureMessage>(
+            initialisationMessage->GetMessageId(),
+            errors
+        ));
     }
 } // namespace UKControllerPlugin::Integration

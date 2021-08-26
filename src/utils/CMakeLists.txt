@@ -97,11 +97,6 @@ set(log
 )
 source_group("log" FILES ${log})
 
-set(manifest
-    "utils.manifest"
-)
-source_group("manifest" FILES ${manifest})
-
 set(pch
     "pch/pch.cpp"
     "pch/pch.h"
@@ -157,7 +152,6 @@ set(ALL_FILES
     ${duplicate}
     ${helper}
     ${log}
-    ${manifest}
     ${pch}
     ${setting}
     ${squawk}

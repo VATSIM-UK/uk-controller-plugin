@@ -1,10 +1,13 @@
 #pragma once
+
+#ifndef ISOLATION_AWARE_ENABLED
+#define ISOLATION_AWARE_ENABLED 1 // NOLINT
+#endif
 #define _WIN32_WINNT 0x0603
 #define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING // NOLINT
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING     // NOLINT
 #define _SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING     // NOLINT
 #define NOMINMAX 1                                            // NOLINT
-#define ISOLATION_AWARE_ENABLED 1                             // NOLINT
 
 // Custom headers
 #pragma warning(push)

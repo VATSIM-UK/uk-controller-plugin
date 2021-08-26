@@ -343,7 +343,7 @@ set(src__integration
     "integration/HiddenWindow.h"
     "integration/InboundIntegrationMessageHandler.cpp"
     "integration/InboundIntegrationMessageHandler.h"
-    "integration/InboundIntegrationMessageProcessor.h"
+    "integration/IntegrationActionProcessor.h"
     "integration/InboundMessage.cpp"
     "integration/InboundMessage.h"
     "integration/InitialisationFailureMessage.cpp"
@@ -371,7 +371,7 @@ set(src__integration
     "integration/SocketInterface.h"
     "integration/SocketWrapper.cpp"
     "integration/SocketWrapper.h"
-)
+        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h)
 source_group("src\\integration" FILES ${src__integration})
 
 set(src__intention
@@ -426,11 +426,6 @@ set(src__login
     "login/LoginModule.h"
 )
 source_group("src\\login" FILES ${src__login})
-
-set(manifest
-        "plugin.manifest"
-)
-source_group("manifest" FILES ${manifest})
 
 set(src__message
     "message/MessageSerializableInterface.h"
@@ -746,6 +741,8 @@ set(src__stands
     "stands/StandModule.h"
     "stands/StandSerializer.cpp"
     "stands/StandSerializer.h"
+    "stands/StandAssignedMessage.cpp"
+    "stands/StandUnassignedMessage.cpp"
 )
 source_group("src\\stands" FILES ${src__stands})
 
@@ -824,7 +821,6 @@ set(ALL_FILES
     ${src__integration}
     ${src__intention}
     ${src__login}
-    ${manifest}
     ${src__message}
     ${src__metar}
     ${src__minstack}
@@ -973,6 +969,7 @@ if(MSVC)
         >
         /NODEFAULTLIB:LIBCMT;
         /SUBSYSTEM:WINDOWS
+        /ALLOWISOLATION
     )
 endif()
 
@@ -1015,7 +1012,7 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "Winmm;"
     "Dwmapi;"
     "gdiplus;"
-    "Comctl32"
+    "comctl32"
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 

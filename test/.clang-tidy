@@ -8,5 +8,6 @@ Checks: >
   -modernize-use-trailing-return-type,
   -misc-unused-parameters,
   -readability-function-cognitive-complexity,
+  -misc-unused-parameters
 InheritParentConfig: true
 ...

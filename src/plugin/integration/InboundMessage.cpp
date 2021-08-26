@@ -30,6 +30,8 @@ namespace UKControllerPlugin::Integration {
             message.at("type").is_string() &&
             message.contains("version") &&
             message.at("version").is_number_integer() &&
+            message.contains("id") &&
+            message.at("id").is_string() &&
             message.contains("data") &&
             message.at("data").is_object();
     }
@@ -46,6 +48,7 @@ namespace UKControllerPlugin::Integration {
 
         return std::shared_ptr<InboundMessage>(
             new InboundMessage(
+                json.at("id").get<std::string>(),
                 MessageType{
                     json.at("type").get<std::string>(),
                     json.at("version").get<int>()
@@ -53,5 +56,10 @@ namespace UKControllerPlugin::Integration {
                 json.at("data")
             )
         );
+    }
+    
+    std::string InboundMessage::GetMessageId() const
+    {
+        return this->id;
     }
 } // namespace UKControllerPlugin::Integration

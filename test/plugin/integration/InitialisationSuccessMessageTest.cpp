@@ -13,6 +13,12 @@ namespace UKControllerPluginTest::Integration {
     class InitialisationSuccessMessageTest : public Test
     {
         public:
+            InitialisationSuccessMessageTest()
+                : message("foo")
+            {
+            
+            }
+            
             InitialisationSuccessMessage message;
     };
 
@@ -20,6 +26,7 @@ namespace UKControllerPluginTest::Integration {
     {
         nlohmann::json expected = {
             {"type", "initialisation_success"},
+            {"id", "foo"},
             {"version", 1},
             {"data", {{"ukcp_version", PluginVersion::version}}}
         };

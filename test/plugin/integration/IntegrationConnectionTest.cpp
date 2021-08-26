@@ -44,7 +44,7 @@ namespace UKControllerPluginTest::Integration {
 
     TEST_F(IntegrationConnectionTest, ItSendsAMessage)
     {
-        const auto message = std::make_shared<InitialisationSuccessMessage>();
+        const auto message = std::make_shared<InitialisationSuccessMessage>("foo");
 
         EXPECT_CALL(*mockConnection, Send(message->ToJson().dump()))
             .Times(1);
@@ -63,7 +63,7 @@ namespace UKControllerPluginTest::Integration {
 
     TEST_F(IntegrationConnectionTest, ItReturnsParsedMessages)
     {
-        const auto message = std::make_shared<InitialisationSuccessMessage>();
+        const auto message = std::make_shared<InitialisationSuccessMessage>("foo");
         const nlohmann::json message1Data = message->ToJson();
         nlohmann::json message2Data = message->ToJson();
         message2Data["version"] = 2;
@@ -85,7 +85,7 @@ namespace UKControllerPluginTest::Integration {
 
     TEST_F(IntegrationConnectionTest, ItHandlesInvalidInboundMessages)
     {
-        const auto message = std::make_shared<InitialisationSuccessMessage>();
+        const auto message = std::make_shared<InitialisationSuccessMessage>("foo");
         nlohmann::json messageData = message->ToJson();
         messageData["version"] = "invalid";
 
