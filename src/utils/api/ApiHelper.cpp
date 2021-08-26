@@ -370,7 +370,7 @@ namespace UKControllerPlugin::Api {
             this->MakeApiRequest(this->requestBuilder.BuildAcknowledgePrenoteMessageRequest(messageId, controllerId)));
     }
 
-    void ApiHelper::DeletePrenoteMessageRequest(int messageId) const
+    void ApiHelper::DeletePrenoteMessage(int messageId) const
     {
         static_cast<void>(this->MakeApiRequest(this->requestBuilder.BuildDeletePrenoteMessageRequest(messageId)));
     }
