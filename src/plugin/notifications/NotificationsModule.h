@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
-        class PersistenceContainer;
+        struct PersistenceContainer;
     } // namespace Bootstrap
     namespace RadarScreen {
         class ConfigurableDisplayCollection;

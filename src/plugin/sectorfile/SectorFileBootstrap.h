@@ -1,17 +1,19 @@
 #pragma once
-#include "bootstrap/PersistenceContainer.h"
-#include "euroscope/AsrEventHandlerCollection.h"
 
 namespace UKControllerPlugin {
-    namespace SectorFile {
+    namespace Bootstrap {
+        struct PersistenceContainer;
+    } // namespace Bootstrap
+    namespace Euroscope {
+        struct AsrEventHandlerCollection;
+    } // namespace Euroscope
+} // namespace UKControllerPlugin
 
-        void BootstrapPlugin(
-            UKControllerPlugin::Bootstrap::PersistenceContainer & container
-        );
+namespace UKControllerPlugin::SectorFile {
 
-        void BootstrapRadarScreen(
-            const UKControllerPlugin::Bootstrap::PersistenceContainer & container,
-            UKControllerPlugin::Euroscope::AsrEventHandlerCollection & asrEvents
-        );
-    }  // namespace SectorFile
-}  // namespace UKControllerPlugin
+    void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
+
+    void BootstrapRadarScreen(
+        const UKControllerPlugin::Bootstrap::PersistenceContainer& container,
+        UKControllerPlugin::Euroscope::AsrEventHandlerCollection& asrEvents);
+} // namespace UKControllerPlugin::SectorFile
