@@ -92,6 +92,15 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_FALSE(message->IsAcknowledged());
     }
 
+    TEST_F(NewPrenotePushEventHandlerTest, ItDoesntOverwriteExistingMessages)
+    {
+        this->handler.ProcessPushEvent(MakePushEvent());
+        this->messages->GetById(1)->Acknowledge();
+        this->handler.ProcessPushEvent(MakePushEvent());
+        EXPECT_EQ(1, this->messages->Count());
+        EXPECT_TRUE(this->messages->GetById(1)->IsAcknowledged());
+    }
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfIdMissing)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "id"));

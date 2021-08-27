@@ -1,4 +1,3 @@
-#include "bootstrap/BootstrapWarningMessage.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
@@ -12,7 +11,6 @@
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
-using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
@@ -30,14 +28,16 @@ namespace UKControllerPluginTest::Prenote {
         public:
         void SetUp() override
         {
+            PushEventProcessorCollection test;
+            test.CountProcessorsForAll();
             container.controllerPositions = std::make_unique<ControllerPositionCollection>();
             container.controllerPositions->AddPosition(std::make_unique<ControllerPosition>(
                 1, "EGKK_GND", 121.800, std::vector<std::string>{"EGKK"}, true, false));
             container.controllerPositions->AddPosition(std::make_unique<ControllerPosition>(
                 2, "EGKK_TWR", 124.220, std::vector<std::string>{"EGKK"}, true, false));
-            this->container.flightplanHandler = (std::make_unique<FlightPlanEventHandlerCollection>());
-            container.userMessager = std::make_unique<UserMessager>(this->mockPlugin);
+            this->container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
             container.pushEventProcessors = std::make_shared<PushEventProcessorCollection>();
+            container.userMessager = std::make_unique<UserMessager>(mockPlugin);
         };
 
         NiceMock<MockDependencyLoader> dependency;
@@ -80,5 +80,11 @@ namespace UKControllerPluginTest::Prenote {
     {
         PrenoteModule::BootstrapPlugin(container, dependency);
         EXPECT_EQ(1, container.pushEventProcessors->CountProcessorsForEvent("prenote-message.received"));
+    }
+
+    TEST_F(PrenoteModuleTest, BootstrapPluginRegistersTheAcknowledgePrenoteMessageHandler)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(1, container.pushEventProcessors->CountProcessorsForEvent("prenote-message.acknowledged"));
     }
 } // namespace UKControllerPluginTest::Prenote
