@@ -1,18 +1,21 @@
 #pragma once
-#include "bootstrap/PersistenceContainer.h"
-#include "dependency/DependencyLoaderInterface.h"
 
 namespace UKControllerPlugin {
-    namespace Stands {
+    namespace Bootstrap {
+        struct PersistenceContainer;
+    } // namespace Bootstrap
+    namespace Dependency {
+        class DependencyLoaderInterface;
+    } // namespace Dependency
+} // namespace UKControllerPlugin
 
-        extern const std::string standDependency;
+namespace UKControllerPlugin::Stands {
+    /*
+        Bootstraps everything to do with stand assignment
+    */
+    void BootstrapPlugin(
+        UKControllerPlugin::Bootstrap::PersistenceContainer& container,
+        UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies);
 
-        /*
-            Bootstraps everything to do with stand assignment
-        */
-        void BootstrapPlugin(
-            UKControllerPlugin::Bootstrap::PersistenceContainer& container,
-            UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies
-        );
-    }  // namespace Stands
-}  // namespace UKControllerPlugin
+    [[nodiscard]] auto GetDependencyKey() -> std::string;
+} // namespace UKControllerPlugin::Stands

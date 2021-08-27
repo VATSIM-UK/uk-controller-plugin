@@ -44,7 +44,7 @@ set(src__bootstrap
     "bootstrap/PersistenceContainer.h"
     "bootstrap/PostInit.cpp"
     "bootstrap/PostInit.h"
-)
+    bootstrap/PersistenceContainer.cpp)
 source_group("src\\bootstrap" FILES ${src__bootstrap})
 
 set(src__command
@@ -359,6 +359,7 @@ set(src__integration
     "integration/IntegrationModule.cpp"
     "integration/IntegrationModule.h"
     "integration/IntegrationPersistenceContainer.h"
+    "integration/IntegrationPersistenceContainer.cpp"
     "integration/IntegrationServer.cpp"
     "integration/IntegrationServer.h"
     "integration/MessageInterface.h"

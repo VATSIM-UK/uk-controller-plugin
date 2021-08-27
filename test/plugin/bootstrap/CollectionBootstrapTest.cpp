@@ -1,43 +1,42 @@
-#include "pch/pch.h"
+#include "airfield/AirfieldCollection.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "mock/MockDependencyLoader.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "flightplan/StoredFlightplanCollection.h"
+#include "mock/MockDependencyLoader.h"
 #include "timedevent/TimedEventCollection.h"
 
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using ::testing::NiceMock;
+using ::testing::Test;
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
-using UKControllerPluginTest::Dependency::MockDependencyLoader;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
-using ::testing::Test;
-using ::testing::NiceMock;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 
-namespace UKControllerPluginTest {
-    namespace Bootstrap {
+namespace UKControllerPluginTest::Bootstrap {
 
-        class CollectionBootstrapTest : public Test
+    class CollectionBootstrapTest : public Test
+    {
+        public:
+        void SetUp() override
         {
-            public:
-                void SetUp()
-                {
-                    container.timedHandler.reset(new TimedEventCollection);
-                    container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-                }
-                PersistenceContainer container;
-                NiceMock<MockDependencyLoader> dependency;
-        };
-
-        TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesAirfields)
-        {
-            CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
-            EXPECT_NO_THROW(container.airfields->GetSize());
+            container.timedHandler = std::make_unique<TimedEventCollection>();
+            container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
         }
+        PersistenceContainer container;
+        NiceMock<MockDependencyLoader> dependency;
+    };
 
-        TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesFlightplans)
-        {
-            CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
-            EXPECT_NO_THROW(container.flightplans->cend());
-        }
-    }  // namespace Bootstrap
-}  // namespace UKControllerPluginTest
+    TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesAirfields)
+    {
+        CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
+        EXPECT_NO_THROW(container.airfields->GetSize());
+    }
+
+    TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesFlightplans)
+    {
+        CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
+        EXPECT_NO_THROW(container.flightplans->cend());
+    }
+} // namespace UKControllerPluginTest::Bootstrap

@@ -1,121 +1,88 @@
-#include "pch/pch.h"
-#include "plugin/PluginInformationBootstrap.h"
-#include "plugin/PluginInformationMessage.h"
-#include "plugin/PluginHelpPage.h"
-#include "plugin/PluginChangelog.h"
-#include "plugin/ForceUpdate.h"
+#include "ForceUpdate.h"
+#include "FunctionCallEventHandler.h"
+#include "PluginChangelog.h"
+#include "PluginHelpPage.h"
+#include "PluginInformationBootstrap.h"
+#include "PluginInformationMessage.h"
+#include "command/CommandHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
+using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 
-namespace UKControllerPlugin {
-    namespace Plugin {
+namespace UKControllerPlugin::Plugin {
 
-        void BootstrapPluginInformationMessage(
-            const PersistenceContainer& container,
-            ConfigurableDisplayCollection& displays
-        ) {
-            // Create the plugin help page toggle
-            int helpCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            std::shared_ptr<PluginHelpPage> helpPage = std::make_shared<PluginHelpPage>(
-                *container.windows,
-                helpCallbackId
-                );
+    void
+    BootstrapPluginInformationMessage(const PersistenceContainer& container, ConfigurableDisplayCollection& displays)
+    {
+        // Create the plugin help page toggle
+        int helpCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        std::shared_ptr<PluginHelpPage> helpPage = std::make_shared<PluginHelpPage>(*container.windows, helpCallbackId);
 
-            // Create callback
-            CallbackFunction helpCallback(
-                helpCallbackId,
-                "Plugin Help Page",
-                std::bind(
-                &PluginHelpPage::Configure,
-                helpPage,
-                std::placeholders::_1,
-                std::placeholders::_2,
-                std::placeholders::_3
-            )
-            );
+        // Create callback
+        CallbackFunction helpCallback(
+            helpCallbackId, "Plugin Help Page", [helpPage](int functionId, std::string subject, RECT screenObjectArea) {
+                helpPage->Configure(functionId, std::move(subject), screenObjectArea);
+            });
 
-            // Register with handlers
-            container.pluginFunctionHandlers->RegisterFunctionCall(helpCallback);
-            container.commandHandlers->RegisterHandler(helpPage);
-            displays.RegisterDisplay(helpPage);
+        // Register with handlers
+        container.pluginFunctionHandlers->RegisterFunctionCall(helpCallback);
+        container.commandHandlers->RegisterHandler(helpPage);
+        displays.RegisterDisplay(helpPage);
 
-            // Create the force update toggle
-            int forceUpdateCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            std::shared_ptr<ForceUpdate> forceUpdate = std::make_shared<ForceUpdate>(
-                *container.windows,
-                forceUpdateCallbackId
-            );
+        // Create the force update toggle
+        int forceUpdateCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        std::shared_ptr<ForceUpdate> forceUpdate =
+            std::make_shared<ForceUpdate>(*container.windows, forceUpdateCallbackId);
 
-            // Create callback
-            CallbackFunction forceUpdateCallback(
-                forceUpdateCallbackId,
-                "Plugin Force Update",
-                std::bind(
-                    &ForceUpdate::Configure,
-                    forceUpdate,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
+        // Create callback
+        CallbackFunction forceUpdateCallback(
+            forceUpdateCallbackId,
+            "Plugin Force Update",
+            [forceUpdate](int functionId, std::string subject, RECT screenObjectArea) {
+                forceUpdate->Configure(functionId, std::move(subject), screenObjectArea);
+            });
 
-            // Register with handlers
-            container.pluginFunctionHandlers->RegisterFunctionCall(forceUpdateCallback);
-            container.commandHandlers->RegisterHandler(forceUpdate);
-            displays.RegisterDisplay(forceUpdate);
+        // Register with handlers
+        container.pluginFunctionHandlers->RegisterFunctionCall(forceUpdateCallback);
+        container.commandHandlers->RegisterHandler(forceUpdate);
+        displays.RegisterDisplay(forceUpdate);
 
-            // Create the plugin help page toggle
-            int changelogCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            std::shared_ptr<PluginChangelog> changeLog = std::make_shared<PluginChangelog>(
-                *container.windows,
-                changelogCallbackId
-            );
+        // Create the plugin help page toggle
+        int changelogCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        std::shared_ptr<PluginChangelog> changeLog =
+            std::make_shared<PluginChangelog>(*container.windows, changelogCallbackId);
 
-            // Create callback
-            CallbackFunction changelogCallback(
-                changelogCallbackId,
-                "Plugin Changelog",
-                std::bind(
-                    &PluginChangelog::Configure,
-                    changeLog,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
+        // Create callback
+        CallbackFunction changelogCallback(
+            changelogCallbackId,
+            "Plugin Changelog",
+            [changeLog](int functionId, std::string subject, RECT screenObjectArea) {
+                changeLog->Configure(functionId, std::move(subject), screenObjectArea);
+            });
 
-            // Register with handlers
-            container.pluginFunctionHandlers->RegisterFunctionCall(changelogCallback);
-            container.commandHandlers->RegisterHandler(changeLog);
-            displays.RegisterDisplay(changeLog);
+        // Register with handlers
+        container.pluginFunctionHandlers->RegisterFunctionCall(changelogCallback);
+        container.commandHandlers->RegisterHandler(changeLog);
+        displays.RegisterDisplay(changeLog);
 
-            // Create the plugin information message box
-            int informationCallback = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            std::shared_ptr<PluginInformationMessage> infoMessage = std::make_shared<PluginInformationMessage>(
-                *container.windows,
-                informationCallback
-            );
+        // Create the plugin information message box
+        int informationCallback = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        std::shared_ptr<PluginInformationMessage> infoMessage =
+            std::make_shared<PluginInformationMessage>(*container.windows, informationCallback);
 
-            // Create callback
-            CallbackFunction configureCallback(
-                informationCallback,
-                "Plugin Information Message",
-                std::bind(
-                    &PluginInformationMessage::Configure,
-                    infoMessage,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
+        // Create callback
+        CallbackFunction configureCallback(
+            informationCallback,
+            "Plugin Information Message",
+            [infoMessage](int functionId, std::string subject, RECT screenObjectArea) {
+                infoMessage->Configure(functionId, std::move(subject), screenObjectArea);
+            });
 
-            // Register with handlers
-            container.pluginFunctionHandlers->RegisterFunctionCall(configureCallback);
-            container.commandHandlers->RegisterHandler(infoMessage);
-            displays.RegisterDisplay(infoMessage);
-        }
-    }  // namespace Plugin
-}  // namespace UKControllerPlugin
+        // Register with handlers
+        container.pluginFunctionHandlers->RegisterFunctionCall(configureCallback);
+        container.commandHandlers->RegisterHandler(infoMessage);
+        displays.RegisterDisplay(infoMessage);
+    }
+} // namespace UKControllerPlugin::Plugin

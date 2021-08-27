@@ -1,38 +1,42 @@
-#include "pch/pch.h"
-#include "handoff/HandoffModule.h"
-#include "handoff/HandoffEventHandler.h"
-#include "handoff/HandoffCollectionFactory.h"
+#include "HandoffCollectionFactory.h"
+#include "HandoffEventHandler.h"
+#include "HandoffModule.h"
+#include "bootstrap/PersistenceContainer.h"
+#include "dependency/DependencyLoaderInterface.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "tag/TagItemCollection.h"
 
-using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 
-namespace UKControllerPlugin {
-    namespace Handoff {
+namespace UKControllerPlugin::Handoff {
 
-        const int handoffTagItem = 107;
+    const int handoffTagItem = 107;
 
-        const std::string handoffOrdersDependencyKey = "DEPENDENCY_HANDOFF";
-        const std::string handoffSidMappingsDependency = "DEPENDENCY_SID_HANDOFF";
+    void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependency)
+    {
+        container.handoffs = Create(
+            *container.controllerPositions,
+            dependency.LoadDependency(GetHandoffDependencyKey(), "{}"_json),
+            dependency.LoadDependency(GetSidHandoffMappingDependencyKey(), "{}"_json));
 
-        void BootstrapPlugin(
-            PersistenceContainer& container,
-            DependencyLoaderInterface& dependency
-        ) {
-            container.handoffs = Create(
-                *container.controllerPositions,
-                dependency.LoadDependency(handoffOrdersDependencyKey, "{}"_json),
-                dependency.LoadDependency(handoffSidMappingsDependency, "{}"_json)
-            );
+        std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
+            *container.handoffs,
+            *container.activeCallsigns,
+            *container.integrationModuleContainer->outboundMessageHandler);
 
-            std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
-                *container.handoffs,
-                *container.activeCallsigns,
-                *container.integrationModuleContainer->outboundMessageHandler
-            );
+        container.tagHandler->RegisterTagItem(handoffTagItem, handler);
+        container.flightplanHandler->RegisterHandler(handler);
+        container.activeCallsigns->AddHandler(handler);
+    }
 
-            container.tagHandler->RegisterTagItem(107, handler);
-            container.flightplanHandler->RegisterHandler(handler);
-            container.activeCallsigns->AddHandler(handler);
-        }
-    }  // namespace Handoff
-}  // namespace UKControllerPlugin
+    auto GetHandoffDependencyKey() -> std::string
+    {
+        return "DEPENDENCY_HANDOFF";
+    }
+
+    auto GetSidHandoffMappingDependencyKey() -> std::string
+    {
+        return "DEPENDENCY_SID_HANDOFF";
+    }
+} // namespace UKControllerPlugin::Handoff
