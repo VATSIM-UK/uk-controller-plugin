@@ -5,7 +5,7 @@ namespace UKControllerPlugin {
         struct PersistenceContainer;
     } // namespace Bootstrap
     namespace Dependency {
-        struct DependencyLoaderInterface;
+        class DependencyLoaderInterface;
     } // namespace Dependency
 } // namespace UKControllerPlugin
 

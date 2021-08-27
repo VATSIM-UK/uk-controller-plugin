@@ -1,63 +1,64 @@
-#include "pch/pch.h"
-#include "handoff/HandoffModule.h"
-#include "mock/MockDependencyLoader.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "tag/TagItemCollection.h"
-#include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "controller/ActiveCallsignCollection.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "handoff/HandoffModule.h"
+#include "handoff/HandoffCollection.h"
 #include "integration/IntegrationPersistenceContainer.h"
+#include "integration/IntegrationServer.h"
+#include "mock/MockDependencyLoader.h"
+#include "tag/TagItemCollection.h"
+#include "memory"
 
-using UKControllerPlugin::Handoff::BootstrapPlugin;
-using UKControllerPluginTest::Dependency::MockDependencyLoader;
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
-using UKControllerPlugin::Tag::TagItemCollection;
-using UKControllerPlugin::Controller::ActiveCallsignCollection;
-using UKControllerPlugin::Integration::IntegrationPersistenceContainer;
-using ::testing::Test;
 using ::testing::NiceMock;
+using ::testing::Test;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
+using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
+using UKControllerPlugin::Handoff::BootstrapPlugin;
+using UKControllerPlugin::Integration::IntegrationPersistenceContainer;
+using UKControllerPlugin::Tag::TagItemCollection;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 
-namespace UKControllerPluginTest {
-    namespace Handoff {
+namespace UKControllerPluginTest::Handoff {
 
-        class HandoffModuleTest : public Test
+    class HandoffModuleTest : public Test
+    {
+        public:
+        HandoffModuleTest()
         {
-            public:
-                HandoffModuleTest()
-                {
-                    this->container.tagHandler.reset(new TagItemCollection);
-                    this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-                    this->container.activeCallsigns.reset(new ActiveCallsignCollection);
-                    this->container.integrationModuleContainer.reset(new IntegrationPersistenceContainer);
-                }
-
-                PersistenceContainer container;
-                NiceMock<MockDependencyLoader> dependencyLoader;
-        };
-
-        TEST_F(HandoffModuleTest, TestItCreatesHandoffCollection)
-        {
-            BootstrapPlugin(this->container, this->dependencyLoader);
-            ASSERT_EQ(0, this->container.handoffs->CountHandoffs());
+            this->container.tagHandler = std::make_unique<TagItemCollection>();
+            this->container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
+            this->container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+            this->container.integrationModuleContainer =
+                std::make_unique<IntegrationPersistenceContainer>(nullptr, nullptr, nullptr);
         }
 
-        TEST_F(HandoffModuleTest, TestItRegistersTagItem)
-        {
-            BootstrapPlugin(this->container, this->dependencyLoader);
-            ASSERT_EQ(1, this->container.tagHandler->CountHandlers());
-            ASSERT_TRUE(this->container.tagHandler->HasHandlerForItemId(107));
-        }
+        PersistenceContainer container;
+        NiceMock<MockDependencyLoader> dependencyLoader;
+    };
 
-        TEST_F(HandoffModuleTest, TestItRegistersFlightplanHandler)
-        {
-            BootstrapPlugin(this->container, this->dependencyLoader);
-            ASSERT_EQ(1, this->container.flightplanHandler->CountHandlers());
-        }
+    TEST_F(HandoffModuleTest, TestItCreatesHandoffCollection)
+    {
+        BootstrapPlugin(this->container, this->dependencyLoader);
+        ASSERT_EQ(0, this->container.handoffs->CountHandoffs());
+    }
 
-        TEST_F(HandoffModuleTest, TestItRegistersActiveCallsignHandler)
-        {
-            BootstrapPlugin(this->container, this->dependencyLoader);
-            ASSERT_EQ(1, this->container.activeCallsigns->CountHandlers());
-        }
-    }  // namespace Handoff
-}  // namespace UKControllerPluginTest
+    TEST_F(HandoffModuleTest, TestItRegistersTagItem)
+    {
+        BootstrapPlugin(this->container, this->dependencyLoader);
+        ASSERT_EQ(1, this->container.tagHandler->CountHandlers());
+        ASSERT_TRUE(this->container.tagHandler->HasHandlerForItemId(107));
+    }
+
+    TEST_F(HandoffModuleTest, TestItRegistersFlightplanHandler)
+    {
+        BootstrapPlugin(this->container, this->dependencyLoader);
+        ASSERT_EQ(1, this->container.flightplanHandler->CountHandlers());
+    }
+
+    TEST_F(HandoffModuleTest, TestItRegistersActiveCallsignHandler)
+    {
+        BootstrapPlugin(this->container, this->dependencyLoader);
+        ASSERT_EQ(1, this->container.activeCallsigns->CountHandlers());
+    }
+} // namespace UKControllerPluginTest::Handoff

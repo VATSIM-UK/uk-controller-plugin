@@ -1,46 +1,45 @@
-#include "pch/pch.h"
-#include "controller/ControllerBootstrap.h"
-#include "mock/MockDependencyLoader.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "controller/ActiveCallsignCollection.h"
+#include "controller/ControllerBootstrap.h"
+#include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
+#include "mock/MockDependencyLoader.h"
 
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPluginTest::Dependency::MockDependencyLoader;
-using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
-using testing::Test;
 using testing::NiceMock;
+using testing::Test;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 
-namespace UKControllerPluginTest {
-    namespace Controller {
+namespace UKControllerPluginTest::Controller {
 
-        class ControllerBootstrapTest : public Test
+    class ControllerBootstrapTest : public Test
+    {
+        public:
+        ControllerBootstrapTest()
         {
-            public:
-                ControllerBootstrapTest()
-                {
-                    container.controllerHandler.reset(new ControllerStatusEventHandlerCollection);
-                }
-
-                NiceMock<MockDependencyLoader> dependency;
-                PersistenceContainer container;
-        };
-
-        TEST_F(ControllerBootstrapTest, ItSetsUpControllerCollection)
-        {
-            UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);
-            EXPECT_EQ(0, container.controllerPositions->GetSize());
+            container.controllerHandler = std::make_unique<ControllerStatusEventHandlerCollection>();
         }
 
-        TEST_F(ControllerBootstrapTest, ItSetsUpActiveCallsigns)
-        {
-            UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);
-            EXPECT_EQ(0, container.activeCallsigns->CountHandlers());
-        }
+        NiceMock<MockDependencyLoader> dependency;
+        PersistenceContainer container;
+    };
 
-        TEST_F(ControllerBootstrapTest, ItRegistersForControllerEvents)
-        {
-            UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);
-            EXPECT_EQ(1, container.controllerHandler->CountHandlers());
-        }
-    }  // namespace Controller
-}  // namespace UKControllerPluginTest
+    TEST_F(ControllerBootstrapTest, ItSetsUpControllerCollection)
+    {
+        UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(0, container.controllerPositions->GetSize());
+    }
+
+    TEST_F(ControllerBootstrapTest, ItSetsUpActiveCallsigns)
+    {
+        UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(0, container.activeCallsigns->CountHandlers());
+    }
+
+    TEST_F(ControllerBootstrapTest, ItRegistersForControllerEvents)
+    {
+        UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(1, container.controllerHandler->CountHandlers());
+    }
+} // namespace UKControllerPluginTest::Controller

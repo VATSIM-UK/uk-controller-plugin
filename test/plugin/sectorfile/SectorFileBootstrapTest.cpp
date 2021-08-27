@@ -1,47 +1,45 @@
-#include "pch/pch.h"
-#include "sectorfile/SectorFileBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "timedevent/TimedEventCollection.h"
-#include "euroscope/RunwayDialogAwareCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "euroscope/RunwayDialogAwareCollection.h"
+#include "sectorfile/RunwayCollection.h"
+#include "sectorfile/SectorFileBootstrap.h"
+#include "timedevent/TimedEventCollection.h"
 
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::TimedEvent::TimedEventCollection;
-using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
-using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using ::testing::Test;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
+using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPlugin::TimedEvent::TimedEventCollection;
 
-namespace UKControllerPluginTest {
-    namespace SectorFile {
+namespace UKControllerPluginTest::SectorFile {
 
-        class SectorFileBootstrapTest : public Test
+    class SectorFileBootstrapTest : public Test
+    {
+        public:
+        SectorFileBootstrapTest()
         {
-            public:
-                SectorFileBootstrapTest()
-                {
-                    container.runwayDialogEventHandlers.reset(new RunwayDialogAwareCollection);
-                }
-
-                AsrEventHandlerCollection asrEvents;
-                PersistenceContainer container;
-        };
-
-        TEST_F(SectorFileBootstrapTest, BootstrapPluginSetsUpTheCollection)
-        {
-            UKControllerPlugin::SectorFile::BootstrapPlugin(this->container);
-            EXPECT_EQ(0, this->container.runways->Count());
+            container.runwayDialogEventHandlers = std::make_unique<RunwayDialogAwareCollection>();
         }
 
-        TEST_F(SectorFileBootstrapTest, BootstrapPluginRegistersForRunwayDialogEvents)
-        {
-            UKControllerPlugin::SectorFile::BootstrapPlugin(this->container);
-            EXPECT_EQ(1, this->container.runwayDialogEventHandlers->CountHandlers());
-        }
+        AsrEventHandlerCollection asrEvents;
+        PersistenceContainer container;
+    };
 
-        TEST_F(SectorFileBootstrapTest, ItRegistersForAsrEvents)
-        {
-            UKControllerPlugin::SectorFile::BootstrapRadarScreen(this->container, this->asrEvents);
-            EXPECT_EQ(1, asrEvents.CountHandlers());
-        }
-    }  // namespace SectorFile
-}  // namespace UKControllerPluginTest
+    TEST_F(SectorFileBootstrapTest, BootstrapPluginSetsUpTheCollection)
+    {
+        UKControllerPlugin::SectorFile::BootstrapPlugin(this->container);
+        EXPECT_EQ(0, this->container.runways->Count());
+    }
+
+    TEST_F(SectorFileBootstrapTest, BootstrapPluginRegistersForRunwayDialogEvents)
+    {
+        UKControllerPlugin::SectorFile::BootstrapPlugin(this->container);
+        EXPECT_EQ(1, this->container.runwayDialogEventHandlers->CountHandlers());
+    }
+
+    TEST_F(SectorFileBootstrapTest, ItRegistersForAsrEvents)
+    {
+        UKControllerPlugin::SectorFile::BootstrapRadarScreen(this->container, this->asrEvents);
+        EXPECT_EQ(1, asrEvents.CountHandlers());
+    }
+} // namespace UKControllerPluginTest::SectorFile

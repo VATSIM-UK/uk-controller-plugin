@@ -1,9 +1,10 @@
-#include "pch/pch.h"
-#include "intention/IntentionCodeModule.h"
-#include "flightplan/FlightPlanEventHandlerCollection.h"
-#include "controller/ControllerStatusEventHandlerCollection.h"
-#include "tag/TagItemCollection.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "controller/ControllerStatusEventHandlerCollection.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "integration/IntegrationPersistenceContainer.h"
+#include "integration/IntegrationServer.h"
+#include "intention/IntentionCodeModule.h"
+#include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::IntentionCode::IntentionCodeModule;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
@@ -12,21 +13,22 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 using ::testing::Test;
 
-namespace UKControllerPluginTest {
-    namespace IntentionCode {
+namespace UKControllerPluginTest::IntentionCode {
 
         class IntentionCodeModuleTest : public Test
         {
             public:
                 IntentionCodeModuleTest()
                 {
-                    this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-                    this->container.tagHandler.reset(new TagItemCollection);
-                    this->container.controllerHandler.reset(new ControllerStatusEventHandlerCollection);
-                    this->container.integrationModuleContainer.reset(
-                        new UKControllerPlugin::Integration::IntegrationPersistenceContainer{
-
-                        }
+                    this->container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
+                    this->container.tagHandler = std::make_unique<TagItemCollection>();
+                    this->container.controllerHandler = std::make_unique<ControllerStatusEventHandlerCollection>();
+                    this->container.integrationModuleContainer = std::make_unique<UKControllerPlugin::Integration::IntegrationPersistenceContainer>(
+                        
+                            nullptr,
+                            nullptr,
+                            nullptr
+                        
                     );
                 }
 
@@ -55,5 +57,4 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(1, this->container.controllerHandler->CountHandlers());
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    }  // namespace UKControllerPluginTest
