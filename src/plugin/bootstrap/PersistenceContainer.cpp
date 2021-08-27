@@ -49,8 +49,10 @@
 #include "squawk/SquawkEventHandler.h"
 #include "squawk/SquawkGenerator.h"
 #include "tag/TagItemCollection.h"
+#include "task/TaskRunnerInterface.h"
 #include "timedevent/TimedEventCollection.h"
 #include "windows/WinApiInterface.h"
+#include "releases/DepartureReleaseEventHandler.h"
 
 namespace UKControllerPlugin::Bootstrap {
     PersistenceContainer::PersistenceContainer() = default;

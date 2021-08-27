@@ -1,110 +1,101 @@
-#include "pch/pch.h"
-#include "bootstrap/ExternalsBootstrap.h"
-#include "bootstrap/PersistenceContainer.h"
+#include "ExternalsBootstrap.h"
+#include "PersistenceContainer.h"
 #include "curl/CurlApi.h"
-#include "windows/WinApi.h"
-#include "graphics/GdiplusBrushes.h"
-#include "graphics/GdiGraphicsWrapper.h"
-#include "euroscope/GeneralSettingsDialog.h"
 #include "dialog/DialogManager.h"
+#include "euroscope/GeneralSettingsDialog.h"
+#include "graphics/GdiGraphicsWrapper.h"
+#include "graphics/GdiplusBrushes.h"
+#include "windows/WinApi.h"
 
-using UKControllerPlugin::Curl::CurlApi;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Curl::CurlApi;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
+using UKControllerPlugin::Windows::GdiGraphicsWrapper;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Windows::WinApi;
 using UKControllerPlugin::Windows::WinApiInterface;
-using UKControllerPlugin::Windows::GdiplusBrushes;
-using UKControllerPlugin::Windows::GdiGraphicsWrapper;
-using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
-using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPlugin::HelperFunctions;
 
-namespace UKControllerPlugin {
-    namespace Bootstrap {
+namespace UKControllerPlugin::Bootstrap {
 
-        /*
-            Bootstraps the external services and also some Gdiplus resources.
-        */
-        void ExternalsBootstrap::Bootstrap(PersistenceContainer & persistence, HINSTANCE instance)
-        {
-            persistence.curl.reset(new CurlApi());
-            std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(
-                instance,
-                GetPluginFileRoot()
-            );
-            persistence.dialogManager.reset(new DialogManager(*winApi));
-            persistence.windows = std::move(winApi);
-            persistence.brushes.reset(new GdiplusBrushes);
-            persistence.graphics.reset(new GdiGraphicsWrapper);
+    /*
+        Bootstraps the external services and also some Gdiplus resources.
+    */
+    void ExternalsBootstrap::Bootstrap(PersistenceContainer& persistence, HINSTANCE instance)
+    {
+        persistence.curl = std::make_unique<CurlApi>();
+        std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(instance, GetPluginFileRoot());
+        persistence.dialogManager = std::make_unique<DialogManager>(*winApi);
+        persistence.windows = std::move(winApi);
+        persistence.brushes = std::make_unique<GdiplusBrushes>();
+        persistence.graphics = std::make_unique<GdiGraphicsWrapper>();
+    }
+
+    /*
+        Return the path to UKCP local files in wide format. This is located
+        in the Windows Local App Data known folder.
+    */
+    auto ExternalsBootstrap::GetPluginFileRoot() -> std::wstring
+    {
+        return GetLocalAppDataPath() + L"/UKControllerPlugin";
+    }
+
+    /*
+        Return the path to UKCP local files in wide format. This is the LEGACY
+        folder and should not be used going forward.
+    */
+    auto ExternalsBootstrap::GetLegacyPluginFileRoot() -> std::wstring
+    {
+        return GetMyDocumentsPath() + L"/EuroScope/ukcp";
+    }
+
+    /*
+        Create the required folder hierarchy for UKCP.
+    */
+    void ExternalsBootstrap::SetupUkcpFolderRoot(WinApiInterface& winApi)
+    {
+        std::wstring rootPath = GetPluginFileRoot();
+        if (!winApi.CreateFolderRecursive(rootPath)) {
+            winApi.OpenMessageBox(
+                L"Unable to create the UKCP root folder, please contact the VATUK Web Department.",
+                L"UKCP Fatal Error",
+                MB_OK | MB_ICONSTOP);
+            throw std::runtime_error("Unable to create UKCP Root");
         }
 
-        /*
-            Return the path to UKCP local files in wide format. This is located
-            in the Windows Local App Data known folder.
-        */
-        std::wstring ExternalsBootstrap::GetPluginFileRoot(void)
-        {
-            return GetLocalAppDataPath() + L"/UKControllerPlugin";
+        if (!winApi.SetPermissions(rootPath, std::filesystem::perms::all)) {
+            winApi.OpenMessageBox(
+                L"Unable to set permissions on the UKCP root folder, please contact the VATUK Web Department.",
+                L"UKCP Fatal Error",
+                MB_OK | MB_ICONSTOP);
+            throw std::runtime_error("Unable to set permissions on the UKCP root folder");
         }
+    }
 
-        /*
-            Return the path to UKCP local files in wide format. This is the LEGACY
-            folder and should not be used going forward.
-        */
-        std::wstring ExternalsBootstrap::GetLegacyPluginFileRoot(void)
-        {
-            return GetMyDocumentsPath() + L"/EuroScope/ukcp";
-        }
+    /*
+     * Get the My Documents path
+     */
+    auto ExternalsBootstrap::GetMyDocumentsPath() -> std::wstring
+    {
+        return GetKnownFolderPath(FOLDERID_Documents);
+    }
 
-        /*
-            Create the required folder hierarchy for UKCP.
-        */
-        void ExternalsBootstrap::SetupUkcpFolderRoot(WinApiInterface & winApi)
-        {
-            std::wstring rootPath = GetPluginFileRoot();
-            if (!winApi.CreateFolderRecursive(rootPath)) {
-                winApi.OpenMessageBox(
-                    L"Unable to create the UKCP root folder, please contact the VATUK Web Department.",
-                    L"UKCP Fatal Error",
-                    MB_OK | MB_ICONSTOP
-                );
-                throw std::runtime_error("Unable to create UKCP Root");
-            }
+    /*
+     * Get the local app data path.
+     */
+    auto ExternalsBootstrap::GetLocalAppDataPath() -> std::wstring
+    {
+        return GetKnownFolderPath(FOLDERID_LocalAppData);
+    }
 
-            if (!winApi.SetPermissions(rootPath, std::filesystem::perms::all)) {
-                winApi.OpenMessageBox(
-                    L"Unable to set permissions on the UKCP root folder, please contact the VATUK Web Department.",
-                    L"UKCP Fatal Error",
-                    MB_OK | MB_ICONSTOP
-                );
-                throw std::runtime_error("Unable to set permissions on the UKCP root folder");
-            }
-        }
+    auto ExternalsBootstrap::GetKnownFolderPath(GUID folderId) -> std::wstring
+    {
+        TCHAR* folderPath = nullptr;
+        SHGetKnownFolderPath(folderId, KF_FLAG_SIMPLE_IDLIST, nullptr, &folderPath);
 
-        /*
-         * Get the My Documents path
-         */
-        std::wstring ExternalsBootstrap::GetMyDocumentsPath(void)
-        {
-            return GetKnownFolderPath(FOLDERID_Documents);
-        }
-
-        /*
-         * Get the local app data path.
-         */
-        std::wstring ExternalsBootstrap::GetLocalAppDataPath()
-        {
-            return GetKnownFolderPath(FOLDERID_LocalAppData);
-        }
-
-        std::wstring ExternalsBootstrap::GetKnownFolderPath(GUID folderId)
-        {
-            TCHAR * folderPath = 0;
-            HRESULT result = SHGetKnownFolderPath(folderId, KF_FLAG_SIMPLE_IDLIST, NULL, &folderPath);
-
-            std::wstring widePath(folderPath);
-            std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
-            CoTaskMemFree(folderPath);
-            return widePath;
-        }
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+        std::wstring widePath(folderPath);
+        std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
+        CoTaskMemFree(folderPath);
+        return widePath;
+    }
+} // namespace UKControllerPlugin::Bootstrap

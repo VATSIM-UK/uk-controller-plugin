@@ -95,6 +95,9 @@ namespace UKControllerPlugin {
     namespace Regional {
         class RegionalPressureManager;
     } // namespace Regional
+    namespace Releases {
+        class DepartureReleaseEventHandler;
+    } // namespace Releases
     namespace SectorFile {
         class RunwayCollection;
     } // namespace SectorFile
@@ -119,7 +122,7 @@ namespace UKControllerPlugin {
         class TimedEventCollection;
     } // namespace TimedEvent
     namespace Windows {
-        class GdiplusBrushes;
+        struct GdiplusBrushes;
         class GdiGraphicsWrapper;
         class WinApiInterface;
     } // namespace Windows
@@ -189,6 +192,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
         std::unique_ptr<UKControllerPlugin::Handoff::HandoffCollection> handoffs;
         std::shared_ptr<UKControllerPlugin::Notifications::NotificationsMenuItem> notificationsMenuItem;
+        std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseEventHandler> departureReleaseHandler;
 
         // Collections that are spawned multiple times.
         std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;

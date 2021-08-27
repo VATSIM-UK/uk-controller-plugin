@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "prenote/PrenoteModule.h"
 #include "prenote/PrenoteEventHandler.h"
 #include "dependency/DependencyLoaderInterface.h"
@@ -11,6 +10,8 @@
 #include "prenote/PrenoteServiceFactory.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "prenote/PrenoteService.h"
+#include "message/UserMessager.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;

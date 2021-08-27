@@ -1,43 +1,36 @@
-#include "pch/pch.h"
-#include "push/PushEventBootstrap.h"
-#include "push/PushEventProtocolHandler.h"
-#include "push/PushEventProxyConnection.h"
-#include "push/PollingPushEventConnection.h"
-#include "push/PushEventProxyHandler.h"
+#include "PollingPushEventConnection.h"
+#include "PushEventBootstrap.h"
+#include "PushEventProtocolHandler.h"
+#include "PushEventProxyConnection.h"
+#include "PushEventProxyHandler.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
-namespace UKControllerPlugin {
-    namespace Push {
+namespace UKControllerPlugin::Push {
 
+    /*
+        Bootstrap up the websocket.
+    */
+    void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin)
+    {
         std::shared_ptr<PushEventConnectionInterface> pushEvents;
 
-        /*
-            Bootstrap up the websocket.
-        */
-        void BootstrapPlugin(PersistenceContainer& container, bool duplicatePlugin)
-        {
-            // Set up handler collection
-            container.pushEventProcessors.reset(new PushEventProcessorCollection);
+        // Set up handler collection
+        container.pushEventProcessors = std::make_shared<PushEventProcessorCollection>();
 
-            // Create a websocket connection depending on whether we're the main plugin
-            if (duplicatePlugin) {
-                pushEvents = std::make_shared<PushEventProxyConnection>();
-            } else {
-                const auto pollingEvents = std::make_shared<PollingPushEventConnection>(
-                    *container.api,
-                    *container.taskRunner,
-                    *container.pushEventProcessors
-                );
-                pushEvents = pollingEvents;
-                container.pushEventProcessors->AddProcessor(std::make_shared<PushEventProxyHandler>());
-                container.timedHandler->RegisterEvent(pollingEvents, 1);
-            }
-
-            container.timedHandler->RegisterEvent(
-                std::make_shared<PushEventProtocolHandler>(*pushEvents, *container.pushEventProcessors),
-                1
-            );
+        // Create a websocket connection depending on whether we're the main plugin
+        if (duplicatePlugin) {
+            pushEvents = std::make_shared<PushEventProxyConnection>();
+        } else {
+            const auto pollingEvents = std::make_shared<PollingPushEventConnection>(
+                *container.api, *container.taskRunner, *container.pushEventProcessors);
+            pushEvents = pollingEvents;
+            container.pushEventProcessors->AddProcessor(std::make_shared<PushEventProxyHandler>());
+            container.timedHandler->RegisterEvent(pollingEvents, 1);
         }
-    } // namespace Push
-} // namespace UKControllerPlugin
+
+        container.timedHandler->RegisterEvent(
+            std::make_shared<PushEventProtocolHandler>(*pushEvents, *container.pushEventProcessors), 1);
+    }
+} // namespace UKControllerPlugin::Push

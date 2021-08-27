@@ -1,17 +1,15 @@
-#include "pch/pch.h"
-#include "euroscope/PluginUserSettingBootstrap.h"
+#include "PluginUserSettingBootstrap.h"
+#include "UserSetting.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "euroscope/UserSetting.h"
+#include "plugin/UKPlugin.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Euroscope::UserSetting;
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
+namespace UKControllerPlugin::Euroscope {
 
-        void PluginUserSettingBootstrap::BootstrapPlugin(PersistenceContainer & container)
-        {
-            container.pluginUserSettingHandler.reset(new UserSetting(*container.plugin));
-        }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    void PluginUserSettingBootstrap::BootstrapPlugin(PersistenceContainer& container)
+    {
+        container.pluginUserSettingHandler = std::make_unique<UserSetting>(*container.plugin);
+    }
+} // namespace UKControllerPlugin::Euroscope

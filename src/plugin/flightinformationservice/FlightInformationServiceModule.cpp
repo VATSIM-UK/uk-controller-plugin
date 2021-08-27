@@ -1,56 +1,49 @@
-#include "pch/pch.h"
-#include "flightinformationservice/FlightInformationServiceModule.h"
-#include "flightinformationservice/FlightInformationServiceTagItem.h"
+#include "FlightInformationServiceModule.h"
+#include "FlightInformationServiceTagItem.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "tag/TagFunction.h"
 #include "euroscope/CallbackFunction.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "plugin/UKPlugin.h"
+#include "tag/TagFunction.h"
+#include "tag/TagItemCollection.h"
 
-namespace UKControllerPlugin {
-    namespace FlightInformationService {
-        const int openMenuTagFunctionId = 9009;
+namespace UKControllerPlugin::FlightInformationService {
+    const int openMenuTagFunctionId = 9009;
 
-        void BootstrapPlugin(Bootstrap::PersistenceContainer& container)
-        {
-            int ukfisSelectedCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+    void BootstrapPlugin(Bootstrap::PersistenceContainer& container)
+    {
+        int ukfisSelectedCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
 
-            std::shared_ptr<FlightInformationServiceTagItem> tagItem =
-                std::make_shared<FlightInformationServiceTagItem>(
-                    *container.plugin,
-                    ukfisSelectedCallbackId
-                );
+        std::shared_ptr<FlightInformationServiceTagItem> tagItem =
+            std::make_shared<FlightInformationServiceTagItem>(*container.plugin, ukfisSelectedCallbackId);
 
+        // TAG function to trigger the popup menu
+        Tag::TagFunction openUkfisPopupMenu(
+            openMenuTagFunctionId,
+            "Open UK Flight Information Services Popup",
+            [tagItem](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                std::string context,
+                const POINT& mousePos) {
+                tagItem->DisplayFlightInformationServicesMenu(fp, rt, std::move(context), mousePos);
+            });
 
-            // TAG function to trigger the popup menu
-            Tag::TagFunction openUkfisPopupMenu(
-                openMenuTagFunctionId,
-                "Open UK Flight Information Services Popup",
-                std::bind(
-                    &FlightInformationServiceTagItem::DisplayFlightInformationServicesMenu,
-                    tagItem,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3,
-                    std::placeholders::_4
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(openUkfisPopupMenu);
+        container.pluginFunctionHandlers->RegisterFunctionCall(openUkfisPopupMenu);
 
-            // The callback to select the UKFIS
-            Euroscope::CallbackFunction ukfisSelectionCallback(
-                ukfisSelectedCallbackId,
-                "UKFIS Selected",
-                std::bind(
-                    &FlightInformationServiceTagItem::MenuItemClicked,
-                    tagItem,
-                    std::placeholders::_1,
-                    std::placeholders::_2
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(ukfisSelectionCallback);
+        // The callback to select the UKFIS
+        Euroscope::CallbackFunction ukfisSelectionCallback(
+            ukfisSelectedCallbackId,
+            "UKFIS Selected",
+            [tagItem](int functionId, std::string subject, RECT screenObjectArea) {
+                tagItem->MenuItemClicked(functionId, std::move(subject));
+            });
 
-            container.tagHandler->RegisterTagItem(tagItem->flightInformationServiceTagItem, tagItem);
-            container.tagHandler->RegisterTagItem(tagItem->flightInformationServiceOrBlankTagItem, tagItem);
-            container.flightplanHandler->RegisterHandler(tagItem);
-        }
-    }  // namespace FlightInformationService
-}  // namespace UKControllerPlugin
+        container.pluginFunctionHandlers->RegisterFunctionCall(ukfisSelectionCallback);
+
+        container.tagHandler->RegisterTagItem(tagItem->flightInformationServiceTagItem, tagItem);
+        container.tagHandler->RegisterTagItem(tagItem->flightInformationServiceOrBlankTagItem, tagItem);
+        container.flightplanHandler->RegisterHandler(tagItem);
+    }
+} // namespace UKControllerPlugin::FlightInformationService
