@@ -77,7 +77,7 @@ namespace UKControllerPlugin::Squawk {
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
                 std::string context,
                 const POINT& mousePos) { eventHandler->SquawkRecycleLocal(fp, rt, std::move(context), mousePos); });
-        
+
         container.pluginFunctionHandlers->RegisterFunctionCall(forceSquawkCallbackLocal);
     }
 } // namespace UKControllerPlugin::Squawk

@@ -6,55 +6,53 @@
 #include "intention/IntentionCodeModule.h"
 #include "tag/TagItemCollection.h"
 
-using UKControllerPlugin::IntentionCode::IntentionCodeModule;
-using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
-using UKControllerPlugin::Tag::TagItemCollection;
+using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
-using ::testing::Test;
+using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
+using UKControllerPlugin::IntentionCode::IntentionCodeModule;
+using UKControllerPlugin::Tag::TagItemCollection;
 
 namespace UKControllerPluginTest::IntentionCode {
 
-        class IntentionCodeModuleTest : public Test
+    class IntentionCodeModuleTest : public Test
+    {
+        public:
+        IntentionCodeModuleTest()
         {
-            public:
-                IntentionCodeModuleTest()
-                {
-                    this->container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
-                    this->container.tagHandler = std::make_unique<TagItemCollection>();
-                    this->container.controllerHandler = std::make_unique<ControllerStatusEventHandlerCollection>();
-                    this->container.integrationModuleContainer = std::make_unique<UKControllerPlugin::Integration::IntegrationPersistenceContainer>(
-                        
-                            nullptr,
-                            nullptr,
-                            nullptr
-                        
-                    );
-                }
+            this->container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
+            this->container.tagHandler = std::make_unique<TagItemCollection>();
+            this->container.controllerHandler = std::make_unique<ControllerStatusEventHandlerCollection>();
+            this->container.integrationModuleContainer =
+                std::make_unique<UKControllerPlugin::Integration::IntegrationPersistenceContainer>(
 
-                PersistenceContainer container;
-        };
+                    nullptr, nullptr, nullptr
 
-
-        TEST_F(IntentionCodeModuleTest, BootstrapPluginRegistersFlightplanEvents)
-        {
-            IntentionCodeModule::BootstrapPlugin(this->container);
-
-            EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
+                );
         }
 
-        TEST_F(IntentionCodeModuleTest, BootstrapPluginRegistersCorrectTagItemEvent)
-        {
-            IntentionCodeModule::BootstrapPlugin(this->container);
+        PersistenceContainer container;
+    };
 
-            EXPECT_EQ(1, this->container.tagHandler->CountHandlers());
-            EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(IntentionCodeModule::tagItemId));
-        }
+    TEST_F(IntentionCodeModuleTest, BootstrapPluginRegistersFlightplanEvents)
+    {
+        IntentionCodeModule::BootstrapPlugin(this->container);
 
-        TEST_F(IntentionCodeModuleTest, BootstrapPluginRegistersForControllerUpdates)
-        {
-            IntentionCodeModule::BootstrapPlugin(this->container);
+        EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
+    }
 
-            EXPECT_EQ(1, this->container.controllerHandler->CountHandlers());
-        }
-    }  // namespace UKControllerPluginTest
+    TEST_F(IntentionCodeModuleTest, BootstrapPluginRegistersCorrectTagItemEvent)
+    {
+        IntentionCodeModule::BootstrapPlugin(this->container);
+
+        EXPECT_EQ(1, this->container.tagHandler->CountHandlers());
+        EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(IntentionCodeModule::tagItemId));
+    }
+
+    TEST_F(IntentionCodeModuleTest, BootstrapPluginRegistersForControllerUpdates)
+    {
+        IntentionCodeModule::BootstrapPlugin(this->container);
+
+        EXPECT_EQ(1, this->container.controllerHandler->CountHandlers());
+    }
+} // namespace UKControllerPluginTest::IntentionCode

@@ -47,9 +47,7 @@ namespace UKControllerPlugin::Notifications {
     }
 
     void BootstrapRadarScreen(
-        const Bootstrap::PersistenceContainer& container,
-        RadarScreen::ConfigurableDisplayCollection& displays
-    )
+        const Bootstrap::PersistenceContainer& container, RadarScreen::ConfigurableDisplayCollection& displays)
     {
         displays.RegisterDisplay(container.notificationsMenuItem);
     }

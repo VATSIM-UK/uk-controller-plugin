@@ -21,16 +21,14 @@ namespace UKControllerPlugin {
         void BootstrapPlugin(
             Bootstrap::PersistenceContainer& container,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
-            Dependency::DependencyLoaderInterface& dependencies
-        );
+            Dependency::DependencyLoaderInterface& dependencies);
 
         void BootstrapRadarScreen(
             const Bootstrap::PersistenceContainer& container,
             RadarScreen::RadarRenderableCollection& renderables,
             RadarScreen::ConfigurableDisplayCollection& configurables,
-            Euroscope::AsrEventHandlerCollection& asrHandlers
-        );
-        
+            Euroscope::AsrEventHandlerCollection& asrHandlers);
+
         [[nodiscard]] auto GetReleaseTypesDependencyKey() -> std::string;
-    }  // namespace Releases
-}  // namespace UKControllerPlugin
+    } // namespace Releases
+} // namespace UKControllerPlugin

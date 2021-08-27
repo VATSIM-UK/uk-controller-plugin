@@ -17,9 +17,9 @@ namespace UKControllerPlugin::Integration {
 
     IntegrationPersistenceContainer::IntegrationPersistenceContainer(IntegrationPersistenceContainer&&) noexcept =
         default;
-    
-    auto IntegrationPersistenceContainer::operator=(
-        IntegrationPersistenceContainer&&) noexcept->IntegrationPersistenceContainer& = default;
-    
+
+    auto IntegrationPersistenceContainer::operator=(IntegrationPersistenceContainer&&) noexcept
+        -> IntegrationPersistenceContainer& = default;
+
     IntegrationPersistenceContainer::~IntegrationPersistenceContainer() = default;
 } // namespace UKControllerPlugin::Integration

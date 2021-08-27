@@ -67,7 +67,7 @@ namespace UKControllerPlugin::Countdown {
         // Create the configuration dialog
         std::shared_ptr<TimerConfigurationDialog> dialog = std::make_shared<TimerConfigurationDialog>(
             *container.pluginUserSettingHandler, *container.userSettingHandlers);
-        
+
         container.dialogManager->AddDialog(
             {IDD_TIMER_CONFIGURATION,
              "Countdown Timer Configuration",
