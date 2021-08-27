@@ -1,54 +1,51 @@
-#include "pch/pch.h"
-#include "initialaltitude/InitialAltitudeModule.h"
-#include "initialaltitude/InitialAltitudeEventHandler.h"
-#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "InitialAltitudeModule.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "controller/ActiveCallsignCollection.h"
+#include "euroscope/UserSettingAwareCollection.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "InitialAltitudeEventHandler.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "plugin/UKPlugin.h"
 #include "tag/TagFunction.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
+using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPlugin::Tag::TagFunction;
-namespace UKControllerPlugin {
-    namespace InitialAltitude {
+namespace UKControllerPlugin::InitialAltitude {
 
-        /*
-            Initialises the initial altitude module. Gets the altitudes from the dependency cache
-            and registers the event handler to receive flightplan events.
-        */
-        void InitialAltitudeModule::BootstrapPlugin(
-            PersistenceContainer& persistence
-        ) {
-            std::shared_ptr<InitialAltitudeEventHandler> initialAltitudeEventHandler(
-                new InitialAltitudeEventHandler(
-                    *persistence.sids,
-                    *persistence.activeCallsigns,
-                    *persistence.airfieldOwnership,
-                    *persistence.login,
-                    *persistence.plugin
-                )
-            );
+    const int timedHandlerFrequency = 10;
 
-            persistence.initialAltitudeEvents = initialAltitudeEventHandler;
-            persistence.userSettingHandlers->RegisterHandler(initialAltitudeEventHandler);
-            persistence.flightplanHandler->RegisterHandler(initialAltitudeEventHandler);
-            persistence.activeCallsigns->AddHandler(initialAltitudeEventHandler);
-            persistence.timedHandler->RegisterEvent(initialAltitudeEventHandler, 10);
+    /*
+        Initialises the initial altitude module. Gets the altitudes from the dependency cache
+        and registers the event handler to receive flightplan events.
+    */
+    void InitialAltitudeModule::BootstrapPlugin(PersistenceContainer& persistence)
+    {
+        std::shared_ptr<InitialAltitudeEventHandler> initialAltitudeEventHandler(new InitialAltitudeEventHandler(
+            *persistence.sids,
+            *persistence.activeCallsigns,
+            *persistence.airfieldOwnership,
+            *persistence.login,
+            *persistence.plugin));
 
+        persistence.initialAltitudeEvents = initialAltitudeEventHandler;
+        persistence.userSettingHandlers->RegisterHandler(initialAltitudeEventHandler);
+        persistence.flightplanHandler->RegisterHandler(initialAltitudeEventHandler);
+        persistence.activeCallsigns->AddHandler(initialAltitudeEventHandler);
+        persistence.timedHandler->RegisterEvent(initialAltitudeEventHandler, timedHandlerFrequency);
 
-            TagFunction recycleFunction(
-                recycleFunctionId,
-                "Recycle Initial Altitude",
-                std::bind(
-                    &InitialAltitudeEventHandler::RecycleInitialAltitude,
-                    *initialAltitudeEventHandler,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3,
-                    std::placeholders::_4
-                )
-            );
-            persistence.pluginFunctionHandlers->RegisterFunctionCall(recycleFunction);
-        }
-    }  // namespace InitialAltitude
-}  // namespace UKControllerPlugin
+        TagFunction recycleFunction(
+            recycleFunctionId,
+            "Recycle Initial Altitude",
+            [initialAltitudeEventHandler](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                std::string context,
+                const POINT& mousePos) {
+                initialAltitudeEventHandler->RecycleInitialAltitude(fp, rt, std::move(context), mousePos);
+            });
+        persistence.pluginFunctionHandlers->RegisterFunctionCall(recycleFunction);
+    }
+} // namespace UKControllerPlugin::InitialAltitude
