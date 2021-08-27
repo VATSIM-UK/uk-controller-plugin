@@ -1,10 +1,6 @@
 #pragma once
 #include "push/PushEventProcessorInterface.h"
 
-namespace UKControllerPlugin::Controller {
-    class ControllerPositionCollection;
-}  // namespace UKControllerPlugin::Controller
-
 namespace UKControllerPlugin::Prenote {
     class PrenoteMessageCollection;
 
