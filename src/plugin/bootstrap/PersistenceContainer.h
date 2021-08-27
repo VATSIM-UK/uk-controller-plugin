@@ -76,6 +76,9 @@ namespace UKControllerPlugin {
     namespace Navaids {
         class NavaidCollection;
     } // namespace Navaids
+    namespace Notifications {
+        class NotificationsMenuItem;
+    } // namespace Notifications
     namespace Ownership {
         class AirfieldOwnershipManager;
     } // namespace Ownership
@@ -130,6 +133,7 @@ namespace UKControllerPlugin::Bootstrap {
     */
     using PersistenceContainer = struct PersistenceContainer
     {
+        PersistenceContainer();
         ~PersistenceContainer();
         PersistenceContainer(const PersistenceContainer&) = delete;
         PersistenceContainer(PersistenceContainer&&) noexcept;
@@ -184,6 +188,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
         std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
         std::unique_ptr<UKControllerPlugin::Handoff::HandoffCollection> handoffs;
+        std::shared_ptr<UKControllerPlugin::Notifications::NotificationsMenuItem> notificationsMenuItem;
 
         // Collections that are spawned multiple times.
         std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;

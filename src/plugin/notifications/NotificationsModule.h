@@ -1,10 +1,16 @@
 #pragma once
-#include "bootstrap/PersistenceContainer.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
 
 namespace UKControllerPlugin {
-    namespace Notifications {
-        void BootstrapPlugin(Bootstrap::PersistenceContainer& container);
-        void BootstrapRadarScreen(RadarScreen::ConfigurableDisplayCollection & displays);
-    }  // namespace Notifications
-}  // namespace UKControllerPlugin
+    namespace Bootstrap {
+        class PersistenceContainer;
+    } // namespace Bootstrap
+    namespace RadarScreen {
+        class ConfigurableDisplayCollection;
+    } // namespace RadarScreen
+} // namespace UKControllerPlugin
+
+namespace UKControllerPlugin::Notifications {
+    void BootstrapPlugin(Bootstrap::PersistenceContainer& container);
+    void BootstrapRadarScreen(
+        const Bootstrap::PersistenceContainer& container, RadarScreen::ConfigurableDisplayCollection& displays);
+} // namespace UKControllerPlugin::Notifications
