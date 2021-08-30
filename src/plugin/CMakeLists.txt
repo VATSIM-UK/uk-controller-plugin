@@ -584,6 +584,7 @@ set(src__prenote
     prenote/PrenoteMessageCollection.cpp prenote/PrenoteMessageCollection.h
     prenote/ComparePrenoteMessages.cpp prenote/ComparePrenoteMessages.h
     prenote/PrenoteAcknowledgedPushEventHandler.cpp prenote/PrenoteAcknowledgedPushEventHandler.h
+    prenote/PrenoteDeletedPushEventHandler.cpp prenote/PrenoteDeletedPushEventHandler.h
     prenote/NewPrenotePushEventHandler.cpp prenote/NewPrenotePushEventHandler.h)
 source_group("src\\prenote" FILES ${src__prenote})
 

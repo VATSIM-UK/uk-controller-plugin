@@ -1,20 +1,18 @@
-#include "prenote/PrenoteAcknowledgedPushEventHandler.h"
+#include "prenote/PrenoteDeletedPushEventHandler.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
-#include "push/PushEvent.h"
-#include "push/PushEventSubscription.h"
 
-using UKControllerPlugin::Prenote::PrenoteAcknowledgedPushEventHandler;
+using UKControllerPlugin::Prenote::PrenoteDeletedPushEventHandler;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
 using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::Push::PushEventSubscription;
 
 namespace UKControllerPluginTest::Prenote {
-    class PrenoteAcknowledgedPushEventHandlerTest : public testing::Test
+    class PrenoteDeletedPushEventHandlerHandlerTest : public testing::Test
     {
         public:
-        PrenoteAcknowledgedPushEventHandlerTest()
+        PrenoteDeletedPushEventHandlerHandlerTest()
             : messages(std::make_shared<PrenoteMessageCollection>()), handler(messages)
         {
             this->messages->Add(std::make_shared<PrenoteMessage>(
@@ -39,36 +37,35 @@ namespace UKControllerPluginTest::Prenote {
         };
 
         std::shared_ptr<PrenoteMessageCollection> messages;
-        PrenoteAcknowledgedPushEventHandler handler;
+        PrenoteDeletedPushEventHandler handler;
     };
 
-    TEST_F(PrenoteAcknowledgedPushEventHandlerTest, ItHasSubscriptions)
+    TEST_F(PrenoteDeletedPushEventHandlerHandlerTest, ItHasSubscriptions)
     {
-        auto subs =
-            std::set<PushEventSubscription>{{PushEventSubscription::SUB_TYPE_EVENT, "prenote-message.acknowledged"}};
+        auto subs = std::set<PushEventSubscription>{{PushEventSubscription::SUB_TYPE_EVENT, "prenote-message.deleted"}};
 
         EXPECT_EQ(subs, handler.GetPushEventSubscriptions());
     }
 
-    TEST_F(PrenoteAcknowledgedPushEventHandlerTest, ItAcknowledgesPrenoteFromMessage)
+    TEST_F(PrenoteDeletedPushEventHandlerHandlerTest, ItRemovesPrenoteFromMessage)
     {
         this->handler.ProcessPushEvent(MakePushEvent());
-        EXPECT_TRUE(this->messages->GetById(1)->IsAcknowledged());
+        EXPECT_EQ(nullptr, this->messages->GetById(1));
     }
 
-    TEST_F(PrenoteAcknowledgedPushEventHandlerTest, ItHandlesMissingIdFromMessage)
+    TEST_F(PrenoteDeletedPushEventHandlerHandlerTest, ItHandlesMissingIdFromMessage)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "id"));
-        EXPECT_FALSE(this->messages->GetById(1)->IsAcknowledged());
+        EXPECT_NE(nullptr, this->messages->GetById(1));
     }
 
-    TEST_F(PrenoteAcknowledgedPushEventHandlerTest, ItHandlesIdNotIntegerFromMessage)
+    TEST_F(PrenoteDeletedPushEventHandlerHandlerTest, ItHandlesIdNotIntegerFromMessage)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"id", "abc"}})));
-        EXPECT_FALSE(this->messages->GetById(1)->IsAcknowledged());
+        EXPECT_NE(nullptr, this->messages->GetById(1));
     }
 
-    TEST_F(PrenoteAcknowledgedPushEventHandlerTest, ItHandlesPrenoteNotFoundToAcknowledge)
+    TEST_F(PrenoteDeletedPushEventHandlerHandlerTest, ItHandlesPrenoteNotFoundToRemove)
     {
         this->messages->Remove(1);
         EXPECT_NO_THROW(this->handler.ProcessPushEvent(MakePushEvent()));

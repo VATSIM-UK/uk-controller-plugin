@@ -1,6 +1,7 @@
 #include "DeparturePrenote.h"
 #include "NewPrenotePushEventHandler.h"
 #include "PrenoteAcknowledgedPushEventHandler.h"
+#include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
 #include "PrenoteFactory.h"
 #include "PrenoteMessageCollection.h"
@@ -23,10 +24,6 @@ using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
-using UKControllerPlugin::Prenote::DeparturePrenote;
-using UKControllerPlugin::Prenote::PrenoteEventHandler;
-using UKControllerPlugin::Prenote::PrenoteFactory;
-using UKControllerPlugin::Prenote::PrenoteServiceFactory;
 
 namespace UKControllerPlugin::Prenote {
 
@@ -52,6 +49,7 @@ namespace UKControllerPlugin::Prenote {
         std::shared_ptr<PrenoteMessageCollection> messages = std::make_shared<PrenoteMessageCollection>();
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(messages));
         persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteAcknowledgedPushEventHandler>(messages));
+        persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteDeletedPushEventHandler>(messages));
     }
 
     auto PrenoteModule::GetDependencyKey() -> std::string

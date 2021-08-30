@@ -87,4 +87,10 @@ namespace UKControllerPluginTest::Prenote {
         PrenoteModule::BootstrapPlugin(container, dependency);
         EXPECT_EQ(1, container.pushEventProcessors->CountProcessorsForEvent("prenote-message.acknowledged"));
     }
+
+    TEST_F(PrenoteModuleTest, BootstrapPluginRegistersTheDeletePrenoteMessageHandler)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(1, container.pushEventProcessors->CountProcessorsForEvent("prenote-message.deleted"));
+    }
 } // namespace UKControllerPluginTest::Prenote
