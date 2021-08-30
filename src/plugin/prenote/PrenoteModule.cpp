@@ -5,6 +5,7 @@
 #include "PrenoteEventHandler.h"
 #include "PrenoteFactory.h"
 #include "PrenoteMessageCollection.h"
+#include "PrenoteMessageTimeout.h"
 #include "PrenoteModule.h"
 #include "PrenoteService.h"
 #include "PrenoteServiceFactory.h"
@@ -17,6 +18,7 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "message/UserMessager.h"
 #include "push/PushEventProcessorCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -26,6 +28,8 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 
 namespace UKControllerPlugin::Prenote {
+
+    const int MESSAGE_TIMEOUT_CHECK_INTERVAL = 10;
 
     void PrenoteModule::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
     {
@@ -50,6 +54,8 @@ namespace UKControllerPlugin::Prenote {
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(messages));
         persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteAcknowledgedPushEventHandler>(messages));
         persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteDeletedPushEventHandler>(messages));
+        persistence.timedHandler->RegisterEvent(
+            std::make_shared<PrenoteMessageTimeout>(messages), MESSAGE_TIMEOUT_CHECK_INTERVAL);
     }
 
     auto PrenoteModule::GetDependencyKey() -> std::string

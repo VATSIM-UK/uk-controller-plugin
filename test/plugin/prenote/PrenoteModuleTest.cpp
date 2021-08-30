@@ -7,6 +7,7 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "prenote/PrenoteModule.h"
 #include "push/PushEventProcessorCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -18,6 +19,7 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::Push::PushEventProcessorCollection;
+using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 
@@ -38,6 +40,7 @@ namespace UKControllerPluginTest::Prenote {
             this->container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
             container.pushEventProcessors = std::make_shared<PushEventProcessorCollection>();
             container.userMessager = std::make_unique<UserMessager>(mockPlugin);
+            container.timedHandler = std::make_unique<TimedEventCollection>();
         };
 
         NiceMock<MockDependencyLoader> dependency;
@@ -92,5 +95,12 @@ namespace UKControllerPluginTest::Prenote {
     {
         PrenoteModule::BootstrapPlugin(container, dependency);
         EXPECT_EQ(1, container.pushEventProcessors->CountProcessorsForEvent("prenote-message.deleted"));
+    }
+
+    TEST_F(PrenoteModuleTest, BootstrapPluginRegistersTheTimeoutHandler)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(1, container.timedHandler->CountHandlers());
+        EXPECT_EQ(1, container.timedHandler->CountHandlersForFrequency(10));
     }
 } // namespace UKControllerPluginTest::Prenote

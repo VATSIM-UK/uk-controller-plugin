@@ -1,6 +1,7 @@
-#include "pch/pch.h"
+#include "PrenoteMessage.h"
+#include "time/SystemClock.h"
 
-#include "prenote/PrenoteMessage.h"
+using UKControllerPlugin::Time::TimeNow;
 
 namespace UKControllerPlugin::Prenote {
     PrenoteMessage::PrenoteMessage(
@@ -14,7 +15,8 @@ namespace UKControllerPlugin::Prenote {
         std::chrono::system_clock::time_point expiresAt)
         : id(id), callsign(std::move(callsign)), departureAirfield(std::move(departureAirfield)), sid(std::move(sid)),
           destinationAirfield(std::move(destinationAirfield)), sendingControllerId(sendingControllerId),
-          targetControllerId(targetControllerId), expiresAt(expiresAt), acknowledged(false)
+          targetControllerId(targetControllerId), expiresAt(expiresAt),
+          acknowledgedAt((std::chrono::system_clock::time_point::max)())
     {
     }
 
@@ -60,11 +62,16 @@ namespace UKControllerPlugin::Prenote {
 
     auto PrenoteMessage::IsAcknowledged() const -> bool
     {
-        return acknowledged;
+        return this->acknowledgedAt != (std::chrono::system_clock::time_point::max)();
     }
 
     void PrenoteMessage::Acknowledge()
     {
-        this->acknowledged = true;
+        this->acknowledgedAt = TimeNow();
+    }
+
+    auto PrenoteMessage::GetAcknowledgedAt() const -> const std::chrono::system_clock::time_point&
+    {
+        return this->acknowledgedAt;
     }
 } // namespace UKControllerPlugin::Prenote

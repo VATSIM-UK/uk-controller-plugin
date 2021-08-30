@@ -343,7 +343,8 @@ set(test__prenote
         prenote/PrenoteMessageCollectionTest.cpp
         prenote/NewPrenotePushEventHandlerTest.cpp
         prenote/PrenoteAcknowledgedPushEventHandlerTest.cpp
-        prenote/PrenoteDeletedPushEventHandlerTest.cpp)
+        prenote/PrenoteDeletedPushEventHandlerTest.cpp
+        prenote/PrenoteMessageTimeoutTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push
