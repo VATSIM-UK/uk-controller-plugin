@@ -3,7 +3,7 @@
 
 namespace UKControllerPlugin::Prenote {
     class PrenoteMessageCollection;
-    
+
     class PrenoteAcknowledgedPushEventHandler : public UKControllerPlugin::Push::PushEventProcessorInterface
     {
         public:
