@@ -8,6 +8,7 @@
 #include "message/UserMessager.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
+#include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -39,6 +40,7 @@ namespace UKControllerPluginTest {
                     );
                     this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
                     container.userMessager.reset(new UserMessager(this->mockPlugin));
+                    container.tagHandler = std::make_unique<UKControllerPlugin::Tag::TagItemCollection>();
                 };
 
                 NiceMock<MockDependencyLoader> dependency;
@@ -96,6 +98,22 @@ namespace UKControllerPluginTest {
 
             PrenoteModule::BootstrapPlugin(container, dependency);
             EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
+        }
+        
+        TEST_F(PrenoteModuleTest, ItRegistersStatusIndicatorTagItem)
+        {
+            nlohmann::json json;
+            json[0] = {};
+            json[0]["type"] = "sid";
+            json[0]["airfield"] = "EGKK";
+            json[0]["departure"] = "BIG2X";
+            json[0]["recipient"] = { "EGKK_GND", "EGKK_TWR" };
+            
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_PRENOTE", nlohmann::json::array()))
+                .WillByDefault(Return(json));
+            
+            PrenoteModule::BootstrapPlugin(container, dependency);
+            EXPECT_TRUE(container.tagHandler->HasHandlerForItemId(127));
         }
     }  // namespace Prenote
 }  // namespace UKControllerPluginTest
