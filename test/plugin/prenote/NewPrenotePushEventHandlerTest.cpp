@@ -1,10 +1,12 @@
+#include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionCollection.h"
 #include "prenote/NewPrenotePushEventHandler.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
-#include "push/PushEvent.h"
-#include "push/PushEventSubscription.h"
 #include "time/ParseTimeStrings.h"
 
+using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Prenote::NewPrenotePushEventHandler;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
@@ -16,7 +18,15 @@ namespace UKControllerPluginTest::Prenote {
     class NewPrenotePushEventHandlerTest : public testing::Test
     {
         public:
-        NewPrenotePushEventHandlerTest() : messages(std::make_shared<PrenoteMessageCollection>()), handler(messages){};
+        NewPrenotePushEventHandlerTest()
+            : messages(std::make_shared<PrenoteMessageCollection>()), handler(messages, controllers)
+        {
+            controllers.AddPosition(std::make_shared<ControllerPosition>(
+                1, "EGFF_APP", 125.850, std::vector<std::string>{"EGGD", "EGFF"}, true, true));
+
+            controllers.AddPosition(std::make_shared<ControllerPosition>(
+                2, "LON_W_CTR", 126.020, std::vector<std::string>{"EGGD", "EGFF"}, true, true));
+        };
 
         /*
          * Make an event based on the merge of some base data and overriding data so we dont
@@ -43,6 +53,7 @@ namespace UKControllerPluginTest::Prenote {
             return {"prenote-message.received", "test", eventData, eventData.dump()};
         };
 
+        ControllerPositionCollection controllers;
         std::shared_ptr<PrenoteMessageCollection> messages;
         NewPrenotePushEventHandler handler;
     };
@@ -173,6 +184,12 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_EQ(0, this->messages->Count());
     }
 
+    TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfSendingControllerNotAValidController)
+    {
+        this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"sending_controller", 55}})));
+        EXPECT_EQ(0, this->messages->Count());
+    }
+
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfTargetControllerMissing)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "target_controller"));
@@ -182,6 +199,12 @@ namespace UKControllerPluginTest::Prenote {
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfTargetControllerNotInteger)
     {
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"target_controller", "abc"}})));
+        EXPECT_EQ(0, this->messages->Count());
+    }
+
+    TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfTargetControllerNotAValidController)
+    {
+        this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"target_controller", 55}})));
         EXPECT_EQ(0, this->messages->Count());
     }
 

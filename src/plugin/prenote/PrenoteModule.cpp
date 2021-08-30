@@ -51,7 +51,8 @@ namespace UKControllerPlugin::Prenote {
 
         // Electronic prenote messages bootstrap
         std::shared_ptr<PrenoteMessageCollection> messages = std::make_shared<PrenoteMessageCollection>();
-        persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(messages));
+        persistence.pushEventProcessors->AddProcessor(
+            std::make_shared<NewPrenotePushEventHandler>(messages, *persistence.controllerPositions));
         persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteAcknowledgedPushEventHandler>(messages));
         persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteDeletedPushEventHandler>(messages));
         persistence.timedHandler->RegisterEvent(

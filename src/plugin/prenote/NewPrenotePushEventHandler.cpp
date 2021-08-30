@@ -1,7 +1,7 @@
 #include "NewPrenotePushEventHandler.h"
 #include "PrenoteMessage.h"
 #include "PrenoteMessageCollection.h"
-#include "push/PushEventSubscription.h"
+#include "controller/ControllerPositionCollection.h"
 #include "time/ParseTimeStrings.h"
 #include "time/SystemClock.h"
 
@@ -10,8 +10,9 @@ using UKControllerPlugin::Time::ParseTimeString;
 using UKControllerPlugin::Time::TimeNow;
 
 namespace UKControllerPlugin::Prenote {
-    NewPrenotePushEventHandler::NewPrenotePushEventHandler(std::shared_ptr<PrenoteMessageCollection> prenotes)
-        : prenotes(std::move(prenotes))
+    NewPrenotePushEventHandler::NewPrenotePushEventHandler(
+        std::shared_ptr<PrenoteMessageCollection> prenotes, const Controller::ControllerPositionCollection& controllers)
+        : prenotes(std::move(prenotes)), controllers(controllers)
     {
     }
 
@@ -49,7 +50,7 @@ namespace UKControllerPlugin::Prenote {
         return {{PushEventSubscription::SUB_TYPE_EVENT, "prenote-message.received"}};
     }
 
-    auto NewPrenotePushEventHandler::MessageValid(const nlohmann::json& message) -> bool
+    auto NewPrenotePushEventHandler::MessageValid(const nlohmann::json& message) const -> bool
     {
         return message.contains("id") && message.at("id").is_number_integer() && message.contains("callsign") &&
                message.at("callsign").is_string() && message.contains("departure_airfield") &&
@@ -58,7 +59,9 @@ namespace UKControllerPlugin::Prenote {
                message.contains("destination_airfield") &&
                (message.at("destination_airfield").is_string() || message.at("destination_airfield").is_null()) &&
                message.contains("sending_controller") && message.at("sending_controller").is_number_integer() &&
+               this->controllers.FetchPositionById(message.at("sending_controller").get<int>()) != nullptr &&
                message.contains("target_controller") && message.at("target_controller").is_number_integer() &&
+               this->controllers.FetchPositionById(message.at("target_controller").get<int>()) != nullptr &&
                message.contains("expires_at") && message.at("expires_at").is_string() &&
                ParseTimeString(message.at("expires_at").get<std::string>()) != Time::invalidTime;
     }
