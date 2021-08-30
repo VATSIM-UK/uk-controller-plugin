@@ -1,24 +1,22 @@
-#include "pch/pch.h"
-#include "metar/PressureMonitorBootstrap.h"
-#include "metar/PressureMonitor.h"
+#include "PressureMonitor.h"
+#include "PressureMonitorBootstrap.h"
+#include "euroscope/UserSettingAwareCollection.h"
+#include "metar/MetarEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Metar::PressureMonitor;
 
-namespace UKControllerPlugin {
-    namespace Metar {
+namespace UKControllerPlugin::Metar {
 
-        /*
-            Create the PressureMonitor and register it for METAR events.
-        */
-        void PressureMonitorBootstrap(const PersistenceContainer & container)
-        {
-            std::shared_ptr<PressureMonitor> handler(
-                new PressureMonitor(*container.userMessager, *container.activeCallsigns)
-            );
+    /*
+        Create the PressureMonitor and register it for METAR events.
+    */
+    void PressureMonitorBootstrap(const PersistenceContainer& container)
+    {
+        std::shared_ptr<PressureMonitor> handler(
+            new PressureMonitor(*container.userMessager, *container.activeCallsigns));
 
-            container.metarEventHandler->RegisterHandler(handler);
-            container.userSettingHandlers->RegisterHandler(handler);
-        }
-    }  // namespace Metar
-}  // namespace UKControllerPlugin
+        container.metarEventHandler->RegisterHandler(handler);
+        container.userSettingHandlers->RegisterHandler(handler);
+    }
+} // namespace UKControllerPlugin::Metar

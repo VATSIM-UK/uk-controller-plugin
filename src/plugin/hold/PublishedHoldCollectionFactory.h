@@ -1,13 +1,10 @@
 #pragma once
-#include "hold/HoldManager.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "hold/HoldManager.h"
 
-namespace UKControllerPlugin {
-    namespace Hold {
+namespace UKControllerPlugin::Hold {
 
-        std::unique_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> CreatePublishedHoldCollection(
-            nlohmann::json data,
-            const UKControllerPlugin::Bootstrap::PersistenceContainer & container
-        );
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    auto CreatePublishedHoldCollection(
+        const nlohmann::json& data, const UKControllerPlugin::Bootstrap::PersistenceContainer& container)
+        -> std::unique_ptr<UKControllerPlugin::Hold::PublishedHoldCollection>;
+} // namespace UKControllerPlugin::Hold

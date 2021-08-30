@@ -3,20 +3,18 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
+    } // namespace Bootstrap
     namespace Dependency {
         class DependencyLoaderInterface;
-    }  // namespace Dependency
-}  // namespace UKControllerPlugin
+    } // namespace Dependency
+} // namespace UKControllerPlugin
 
+namespace UKControllerPlugin::Wake {
 
-namespace UKControllerPlugin {
-    namespace Wake {
+    void BootstrapPlugin(
+        const UKControllerPlugin::Bootstrap::PersistenceContainer& container,
+        UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies);
 
-        void BootstrapPlugin(
-            const UKControllerPlugin::Bootstrap::PersistenceContainer & container,
-            UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies
-        );
-
-    }  // namespace Wake
-}  // namespace UKControllerPlugin
+    [[nodiscard]] auto GetWakeDependencyKey() -> std::string;
+    [[nodiscard]] auto GetRecatDependencyKey() -> std::string;
+} // namespace UKControllerPlugin::Wake

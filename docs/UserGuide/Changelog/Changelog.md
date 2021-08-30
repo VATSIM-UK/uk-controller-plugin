@@ -1,5 +1,17 @@
 # UK Controller Plugin Changelog
 
+# [3.5.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.4.2...3.5.0) (2021-08-22)
+
+
+### Bug Fixes
+
+* **notifications:** Notifications window not showing ([#326](https://github.com/VATSIM-UK/uk-controller-plugin/issues/326)) ([f28a677](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f28a6772858262aa3d2a26e2524dc9591a470e61))
+
+
+### Features
+
+* **stands:** Allow external programs to view and modify stand assignments ([#320](https://github.com/VATSIM-UK/uk-controller-plugin/issues/320)) ([b0bc292](https://github.com/VATSIM-UK/uk-controller-plugin/commit/b0bc292ac8853c033f7c344c3500415ef584459b))
+
 ## [3.4.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.4.1...3.4.2) (2021-08-08)
 
 

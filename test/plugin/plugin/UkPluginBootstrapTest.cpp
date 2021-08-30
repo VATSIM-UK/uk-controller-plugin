@@ -1,19 +1,17 @@
-#include "pch/pch.h"
-#include "plugin/UkPluginBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "plugin/UKPlugin.h"
+#include "plugin/UkPluginBootstrap.h"
 
-using UKControllerPlugin::Bootstrap::UkPluginBootstrap;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Bootstrap::UkPluginBootstrap;
 
-namespace UKControllerPluginTest {
-    namespace Bootstrap {
+namespace UKControllerPluginTest::Bootstrap {
 
-        TEST(UkPluginBootstrap, BootstrapPluginCreatesPlugin)
-        {
-            PersistenceContainer container;
-            UkPluginBootstrap::BootstrapPlugin(container);
+    TEST(UkPluginBootstrap, BootstrapPluginCreatesPlugin)
+    {
+        PersistenceContainer container;
+        UkPluginBootstrap::BootstrapPlugin(container);
 
-            EXPECT_NO_THROW(container.plugin->GetPlugInName());
-        }
-    }  // namespace Bootstrap
-}  // namespace UKControllerPluginTest
+        EXPECT_NO_THROW(container.plugin->GetPlugInName());
+    }
+} // namespace UKControllerPluginTest::Bootstrap
