@@ -1,53 +1,50 @@
-#include "pch/pch.h"
-#include "ownership/AirfieldOwnershipModule.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "command/CommandHandlerCollection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "mock/MockDependencyLoader.h"
-#include "command/CommandHandlerCollection.h"
+#include "ownership/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldOwnershipModule.h"
 
-using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Controller::ActiveCallsignCollection;
-using UKControllerPluginTest::Dependency::MockDependencyLoader;
-using UKControllerPlugin::Command::CommandHandlerCollection;
-using ::testing::Test;
 using ::testing::NiceMock;
+using ::testing::Test;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Command::CommandHandlerCollection;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
+using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 
-namespace UKControllerPluginTest {
-    namespace Ownership {
+namespace UKControllerPluginTest::Ownership {
 
-        class AirfieldOwnershipModuleTest : public Test
+    class AirfieldOwnershipModuleTest : public Test
+    {
+        public:
+        void SetUp() override
         {
-            public:
-
-                void SetUp()
-                {
-                    this->container.activeCallsigns.reset(new ActiveCallsignCollection);
-                    this->container.commandHandlers.reset(new CommandHandlerCollection);
-                }
-
-                PersistenceContainer container;
-                NiceMock<MockDependencyLoader> dependency;
-        };
-
-        TEST_F(AirfieldOwnershipModuleTest, BootstrapPluginRegistersWithCommandHandlers)
-        {
-            EXPECT_EQ(0, this->container.commandHandlers->CountHandlers());
-            AirfieldOwnershipModule::BootstrapPlugin(this->container, this->dependency);
-            EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
+            this->container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+            this->container.commandHandlers = std::make_unique<CommandHandlerCollection>();
         }
 
-        TEST_F(AirfieldOwnershipModuleTest, BootstrapPluginRegistersWithActiveCallsigns)
-        {
-            EXPECT_EQ(0, this->container.activeCallsigns->CountHandlers());
-            AirfieldOwnershipModule::BootstrapPlugin(this->container, this->dependency);
-            EXPECT_EQ(1, this->container.activeCallsigns->CountHandlers());
-        }
+        PersistenceContainer container;
+        NiceMock<MockDependencyLoader> dependency;
+    };
 
-        TEST_F(AirfieldOwnershipModuleTest, ItCreatesAirfieldOwnershipManager)
-        {
-            AirfieldOwnershipModule::BootstrapPlugin(this->container, this->dependency);
-            EXPECT_NO_THROW(this->container.airfieldOwnership->Flush());
-        }
-    }  // namespace Ownership
-}  // namespace UKControllerPluginTest
+    TEST_F(AirfieldOwnershipModuleTest, BootstrapPluginRegistersWithCommandHandlers)
+    {
+        EXPECT_EQ(0, this->container.commandHandlers->CountHandlers());
+        AirfieldOwnershipModule::BootstrapPlugin(this->container, this->dependency);
+        EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
+    }
+
+    TEST_F(AirfieldOwnershipModuleTest, BootstrapPluginRegistersWithActiveCallsigns)
+    {
+        EXPECT_EQ(0, this->container.activeCallsigns->CountHandlers());
+        AirfieldOwnershipModule::BootstrapPlugin(this->container, this->dependency);
+        EXPECT_EQ(1, this->container.activeCallsigns->CountHandlers());
+    }
+
+    TEST_F(AirfieldOwnershipModuleTest, ItCreatesAirfieldOwnershipManager)
+    {
+        AirfieldOwnershipModule::BootstrapPlugin(this->container, this->dependency);
+        EXPECT_NO_THROW(this->container.airfieldOwnership->Flush());
+    }
+} // namespace UKControllerPluginTest::Ownership

@@ -28,7 +28,6 @@ namespace UKControllerPlugin::Prenote {
             UKControllerPlugin::Bootstrap::PersistenceContainer& persistence,
             UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency);
 
-        private:
-        [[nodiscard]] static auto DependencyKey() -> std::string;
+        [[nodiscard]] static auto GetDependencyKey() -> std::string;
     };
 } // namespace UKControllerPlugin::Prenote

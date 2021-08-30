@@ -9,8 +9,13 @@
 #include "PrenoteServiceFactory.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionHierarchy.h"
 #include "controller/ControllerPositionHierarchyFactory.h"
 #include "dependency/DependencyLoaderInterface.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "message/UserMessager.h"
+#include "push/PushEventProcessorCollection.h"
 
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -28,7 +33,8 @@ namespace UKControllerPlugin::Prenote {
     void PrenoteModule::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
     {
         // Prenote reminders bootstrap
-        nlohmann::json prenotes = dependency.LoadDependency(DependencyKey(), nlohmann::json::array());
+        nlohmann::json prenotes = dependency.LoadDependency(GetDependencyKey(), nlohmann::json::array());
+
         ControllerPositionHierarchyFactory hierarchyFactory(*persistence.controllerPositions);
         PrenoteFactory prenoteFactory(hierarchyFactory);
         PrenoteServiceFactory handlerFactory(prenoteFactory, *persistence.userMessager);
@@ -48,7 +54,7 @@ namespace UKControllerPlugin::Prenote {
         persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteAcknowledgedPushEventHandler>(messages));
     }
 
-    auto PrenoteModule::DependencyKey() -> std::string
+    auto PrenoteModule::GetDependencyKey() -> std::string
     {
         return "DEPENDENCY_PRENOTE";
     }
