@@ -1,58 +1,48 @@
 #pragma once
-#include "countdown/TimerConfiguration.h"
 
-// Forward declare
 namespace UKControllerPlugin {
     namespace Plugin {
         class FunctionCallEventHandler;
-    }  // namespace Plugin
+    } // namespace Plugin
     namespace RadarScreen {
         class RadarRenderableCollection;
         class ConfigurableDisplayCollection;
-    }  // namespace RadarScreen
+    } // namespace RadarScreen
     namespace Euroscope {
         class AsrEventHandlerCollection;
         class UserSetting;
-    }  // namespace Euroscope
+    } // namespace Euroscope
     namespace Windows {
         struct GdiplusBrushes;
-    }  // namespace Windows
+    } // namespace Windows
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
+    } // namespace Bootstrap
     namespace Countdown {
         class CountdownTimer;
         class TimerConfigurationManager;
-    }  // namespace Countdown
-}  // namespace UKControllerPlugin
-// END
+    } // namespace Countdown
+} // namespace UKControllerPlugin
 
+namespace UKControllerPlugin::Countdown {
 
-namespace UKControllerPlugin {
-    namespace Countdown {
+    /*
+        Factory for creating history trail renderers.
+    */
+    class CountdownModule
+    {
+        public:
+        static void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
 
-        /*
-            Factory for creating history trail renderers.
-        */
-        class CountdownModule
-        {
-            public:
-                static void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer & container);
+        static void BootstrapRadarScreen(
+            UKControllerPlugin::Plugin::FunctionCallEventHandler& eventHandler,
+            UKControllerPlugin::Countdown::CountdownTimer& countdown,
+            const std::shared_ptr<UKControllerPlugin::Countdown::TimerConfigurationManager>& configManager,
+            UKControllerPlugin::RadarScreen::RadarRenderableCollection& radarRender,
+            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& screenControls,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
+            UKControllerPlugin::Euroscope::AsrEventHandlerCollection& userSettingHandler);
 
-                static void BootstrapRadarScreen(
-                    UKControllerPlugin::Plugin::FunctionCallEventHandler & eventHandler,
-                    UKControllerPlugin::Countdown::CountdownTimer & countdown,
-                    const std::shared_ptr<UKControllerPlugin::Countdown::TimerConfigurationManager> configManager,
-                    UKControllerPlugin::RadarScreen::RadarRenderableCollection & radarRender,
-                    UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & screenControls,
-                    const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
-                    UKControllerPlugin::Euroscope::AsrEventHandlerCollection & userSettingHandler
-                );
-
-                static void LoadDefaultUserSettings(UKControllerPlugin::Euroscope::UserSetting & userSetting);
-
-            private:
-                static const std::set<UKControllerPlugin::Countdown::TimerConfiguration> defaultConfigs;
-        };
-    }  // namespace Countdown
-}  // namespace UKControllerPlugin
+        static void LoadDefaultUserSettings(UKControllerPlugin::Euroscope::UserSetting& userSetting);
+    };
+} // namespace UKControllerPlugin::Countdown

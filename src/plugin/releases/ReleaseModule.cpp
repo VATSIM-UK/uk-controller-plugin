@@ -1,335 +1,271 @@
-#include "pch/pch.h"
-#include "releases/ReleaseModule.h"
-
+#include "ApproveDepartureReleaseDialog.h"
+#include "CompareEnrouteReleaseTypes.h"
+#include "DepartureReleaseDecisionList.h"
+#include "DepartureReleaseEventHandler.h"
+#include "DepartureReleaseRequestView.h"
+#include "EnrouteReleaseEventHandler.h"
+#include "EnrouteReleaseType.h"
+#include "EnrouteReleaseTypesSerializer.h"
+#include "ReleaseModule.h"
+#include "RequestDepartureReleaseDialog.h"
+#include "ToggleDepartureReleaseDecisionList.h"
+#include "bootstrap/PersistenceContainer.h"
+#include "controller/HandoffEventHandlerCollection.h"
+#include "dependency/DependencyLoaderInterface.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerCollection.h"
-#include "releases/DepartureReleaseDecisionList.h"
-#include "releases/EnrouteReleaseEventHandler.h"
-#include "releases/EnrouteReleaseType.h"
-#include "releases/CompareEnrouteReleaseTypes.h"
-#include "releases/EnrouteReleaseTypesSerializer.h"
-#include "tag/TagFunction.h"
 #include "euroscope/CallbackFunction.h"
-#include "releases/DepartureReleaseEventHandler.h"
-#include "releases/ApproveDepartureReleaseDialog.h"
-#include "releases/RequestDepartureReleaseDialog.h"
-#include "releases/DepartureReleaseRequestView.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
-#include "releases/ToggleDepartureReleaseDecisionList.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "plugin/UKPlugin.h"
+#include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
+#include "tag/TagFunction.h"
+#include "tag/TagItemCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Tag::TagFunction;
-using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::ApproveDepartureReleaseDialog;
-using UKControllerPlugin::Releases::RequestDepartureReleaseDialog;
+using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::DepartureReleaseRequestView;
+using UKControllerPlugin::Releases::RequestDepartureReleaseDialog;
 using UKControllerPlugin::Releases::ToggleDepartureReleaseDecisionList;
+using UKControllerPlugin::Tag::TagFunction;
 
-namespace UKControllerPlugin {
-    namespace Releases {
+namespace UKControllerPlugin::Releases {
 
-        const std::string enrouteReleaseTypesDependency = "DEPENDENCY_ENROUTE_RELEASE_TYPES";
-        const unsigned int enrouteReleaseTypeTagItemId = 9005;
-        const unsigned int enrouteReleasePointTagItemId = 9006;
-        const unsigned int departureReleaseRequestDialogTriggerFunctionId = 9012;
-        const unsigned int departureReleaseDecisionMenuTriggerFunctionId = 9013;
-        const unsigned int departureReleaseStatusViewTriggerFunctionId = 9014;
-        const unsigned int departureReleaseCancelMenuFunctionId = 9015;
-        const unsigned int departureReleaseStatusIndicatorTagItemId = 124;
-        const unsigned int departureReleaseCountdownTimerTagItemId = 125;
-        const unsigned int departureReleaseRequestingControllerTagItemId = 126;
-        std::shared_ptr<DepartureReleaseEventHandler> departureHandler;
+    const unsigned int enrouteReleaseEventFrequency = 10;
+    const unsigned int departureReleaseEventFrequency = 15;
+    const unsigned int enrouteReleaseTypeTagItemId = 9005;
+    const unsigned int enrouteReleasePointTagItemId = 9006;
+    const unsigned int departureReleaseRequestDialogTriggerFunctionId = 9012;
+    const unsigned int departureReleaseDecisionMenuTriggerFunctionId = 9013;
+    const unsigned int departureReleaseStatusViewTriggerFunctionId = 9014;
+    const unsigned int departureReleaseCancelMenuFunctionId = 9015;
+    const unsigned int departureReleaseStatusIndicatorTagItemId = 124;
+    const unsigned int departureReleaseCountdownTimerTagItemId = 125;
+    const unsigned int departureReleaseRequestingControllerTagItemId = 126;
 
-        void BootstrapPlugin(
-            PersistenceContainer& container,
-            EuroscopePluginLoopbackInterface& plugin,
-            DependencyLoaderInterface& dependencies
-        )
-        {
-            // Load everything to do with ENROUTE releases
-            std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes;
-            from_json(
-                dependencies.LoadDependency(enrouteReleaseTypesDependency, nlohmann::json::array()),
-                releaseTypes
-            );
+    void BootstrapPlugin(
+        PersistenceContainer& container,
+        EuroscopePluginLoopbackInterface& plugin,
+        DependencyLoaderInterface& dependencies)
+    {
+        // Load everything to do with ENROUTE releases
+        std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes;
+        from_json(dependencies.LoadDependency(GetReleaseTypesDependencyKey(), nlohmann::json::array()), releaseTypes);
 
-            // Create the handler
-            std::shared_ptr<EnrouteReleaseEventHandler> handler = std::make_shared<EnrouteReleaseEventHandler>(
-                *container.api,
-                *container.plugin,
-                *container.taskRunner,
-                releaseTypes,
-                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
-                container.pluginFunctionHandlers->ReserveNextDynamicFunctionId()
-            );
+        // Create the handler
+        std::shared_ptr<EnrouteReleaseEventHandler> handler = std::make_shared<EnrouteReleaseEventHandler>(
+            *container.api,
+            *container.plugin,
+            *container.taskRunner,
+            releaseTypes,
+            container.pluginFunctionHandlers->ReserveNextDynamicFunctionId(),
+            container.pluginFunctionHandlers->ReserveNextDynamicFunctionId());
 
-            // TAG function to trigger the release type menu and receive the changes
-            TagFunction openReleaseTypePopupMenu(
-                enrouteReleaseTypeTagItemId,
-                "Open Enroute Release Type Menu",
-                std::bind(
-                    &EnrouteReleaseEventHandler::DisplayReleaseTypeMenu,
-                    handler,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3,
-                    std::placeholders::_4
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(openReleaseTypePopupMenu);
+        // TAG function to trigger the release type menu and receive the changes
+        TagFunction openReleaseTypePopupMenu(
+            enrouteReleaseTypeTagItemId,
+            "Open Enroute Release Type Menu",
+            [handler](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                std::string context,
+                const POINT& mousePos) { handler->DisplayReleaseTypeMenu(fp, rt, std::move(context), mousePos); });
+        container.pluginFunctionHandlers->RegisterFunctionCall(openReleaseTypePopupMenu);
 
-            CallbackFunction releaseTypeSelectedCallback(
-                handler->releaseTypeSelectedCallbackId,
-                "Release Type Selected",
-                std::bind(
-                    &EnrouteReleaseEventHandler::ReleaseTypeSelected,
-                    handler,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(releaseTypeSelectedCallback);
+        CallbackFunction releaseTypeSelectedCallback(
+            handler->releaseTypeSelectedCallbackId,
+            "Release Type Selected",
+            [handler](int functionId, std::string subject, RECT screenObjectArea) {
+                handler->ReleaseTypeSelected(functionId, std::move(subject), screenObjectArea);
+            });
+        container.pluginFunctionHandlers->RegisterFunctionCall(releaseTypeSelectedCallback);
 
-            // TAG function to trigger the release edit popup and receive the changes
-            TagFunction openReleasePointEditBox(
-                enrouteReleasePointTagItemId,
-                "Edit Enroute Release Point",
-                std::bind(
-                &EnrouteReleaseEventHandler::DisplayReleasePointEditBox,
-                    handler,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3,
-                    std::placeholders::_4
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(openReleasePointEditBox);
+        // TAG function to trigger the release edit popup and receive the changes
+        TagFunction openReleasePointEditBox(
+            enrouteReleasePointTagItemId,
+            "Edit Enroute Release Point",
+            [handler](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                std::string context,
+                const POINT& mousePos) { handler->DisplayReleasePointEditBox(fp, rt, std::move(context), mousePos); });
+        container.pluginFunctionHandlers->RegisterFunctionCall(openReleasePointEditBox);
 
-            CallbackFunction editReleaseTypeCallback(
-                handler->editReleasePointCallbackId,
-                "Release Point Edited",
-                std::bind(
-                &EnrouteReleaseEventHandler::EditReleasePoint,
-                    handler,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(editReleaseTypeCallback);
+        CallbackFunction editReleaseTypeCallback(
+            handler->editReleasePointCallbackId,
+            "Release Point Edited",
+            [handler](int functionId, std::string subject, RECT screenObjectArea) {
+                handler->EditReleasePoint(functionId, std::move(subject), screenObjectArea);
+            });
+        container.pluginFunctionHandlers->RegisterFunctionCall(editReleaseTypeCallback);
 
-            // Add to events
-            container.pushEventProcessors->AddProcessor(handler);
-            container.tagHandler->RegisterTagItem(handler->enrouteReleaseTypeTagItemId, handler);
-            container.tagHandler->RegisterTagItem(handler->enrouteReleasePointTagItemId, handler);
-            container.tagHandler->RegisterTagItem(handler->enrouteReleasePointOrBlankTagItemId, handler);
-            container.timedHandler->RegisterEvent(handler, 10);
-            container.controllerHandoffHandlers->RegisterHandler(handler);
+        // Add to events
+        container.pushEventProcessors->AddProcessor(handler);
+        container.tagHandler->RegisterTagItem(handler->enrouteReleaseTypeTagItemId, handler);
+        container.tagHandler->RegisterTagItem(handler->enrouteReleasePointTagItemId, handler);
+        container.tagHandler->RegisterTagItem(handler->enrouteReleasePointOrBlankTagItemId, handler);
+        container.timedHandler->RegisterEvent(handler, enrouteReleaseEventFrequency);
+        container.controllerHandoffHandlers->RegisterHandler(handler);
 
+        // Everything to do with DEPARTURE releases
 
-            // Everything to do with DEPARTURE releases
+        // Create the event handler
+        const int releaseDecisionCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        const int releaseCancellationCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        auto departureHandler = std::make_shared<DepartureReleaseEventHandler>(
+            *container.api,
+            *container.taskRunner,
+            *container.plugin,
+            *container.controllerPositions,
+            *container.activeCallsigns,
+            *container.dialogManager,
+            *container.windows,
+            departureReleaseRequestDialogTriggerFunctionId,
+            departureReleaseDecisionMenuTriggerFunctionId,
+            releaseDecisionCallbackId,
+            releaseCancellationCallbackId);
+        container.departureReleaseHandler = departureHandler;
+        container.pushEventProcessors->AddProcessor(departureHandler);
+        container.tagHandler->RegisterTagItem(departureReleaseStatusIndicatorTagItemId, departureHandler);
+        container.tagHandler->RegisterTagItem(departureReleaseCountdownTimerTagItemId, departureHandler);
+        container.tagHandler->RegisterTagItem(departureReleaseRequestingControllerTagItemId, departureHandler);
 
-            // Create the event handler
-            const int releaseDecisionCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            const int releaseCancellationCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            departureHandler =
-                std::make_shared<DepartureReleaseEventHandler>(
-                    *container.api,
-                    *container.taskRunner,
-                    *container.plugin,
-                    *container.controllerPositions,
-                    *container.activeCallsigns,
-                    *container.dialogManager,
-                    *container.windows,
-                    departureReleaseRequestDialogTriggerFunctionId,
-                    departureReleaseDecisionMenuTriggerFunctionId,
-                    releaseDecisionCallbackId,
-                    releaseCancellationCallbackId
-                );
-            container.pushEventProcessors->AddProcessor(departureHandler);
-            container.tagHandler->RegisterTagItem(departureReleaseStatusIndicatorTagItemId, departureHandler);
-            container.tagHandler->RegisterTagItem(departureReleaseCountdownTimerTagItemId, departureHandler);
-            container.tagHandler->RegisterTagItem(departureReleaseRequestingControllerTagItemId, departureHandler);
+        // Callback for when a release decision is made
+        CallbackFunction releaseDecisionCallback(
+            releaseDecisionCallbackId,
+            "Departure Release Decision Made",
+            [departureHandler](int functionId, std::string subject, RECT screenObjectArea) {
+                departureHandler->ReleaseDecisionMade(functionId, std::move(subject), screenObjectArea);
+            });
+        container.pluginFunctionHandlers->RegisterFunctionCall(releaseDecisionCallback);
 
-            // Callback for when a release decision is made
-            CallbackFunction releaseDecisionCallback(
-                releaseDecisionCallbackId,
-                "Departure Release Decision Made",
-                std::bind(
-                    &DepartureReleaseEventHandler::ReleaseDecisionMade,
-                    departureHandler,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(releaseDecisionCallback);
+        // TAG function to trigger the request dialog
+        TagFunction openDepartureReleaseRequestDialog(
+            departureReleaseRequestDialogTriggerFunctionId,
+            "Open Departure Release Request Dialog",
+            [departureHandler](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                std::string context,
+                const POINT& mousePos) { departureHandler->OpenRequestDialog(fp, rt, std::move(context), mousePos); });
+        container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseRequestDialog);
 
-            // TAG function to trigger the request dialog
-            TagFunction openDepartureReleaseRequestDialog(
-                departureReleaseRequestDialogTriggerFunctionId,
-                "Open Departure Release Request Dialog",
-                std::bind(
-                    &DepartureReleaseEventHandler::OpenRequestDialog,
-                    departureHandler.get(),
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3,
-                    std::placeholders::_4
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseRequestDialog);
+        // TAG function to trigger the decision menu
+        TagFunction openDepartureReleaseDecisionMenu(
+            departureReleaseDecisionMenuTriggerFunctionId,
+            "Open Departure Release Decision Menu",
+            [departureHandler](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                std::string context,
+                const POINT& mousePos) { departureHandler->OpenDecisionMenu(fp, rt, std::move(context), mousePos); });
+        container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseDecisionMenu);
 
+        // TAG function to trigger the status view
+        TagFunction openDepartureReleaseStatusView(
+            departureReleaseStatusViewTriggerFunctionId,
+            "Show Departure Release Request Status View",
+            [departureHandler](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                std::string context,
+                const POINT& mousePos) { departureHandler->ShowStatusDisplay(fp, rt, std::move(context), mousePos); });
+        container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseStatusView);
 
-            // TAG function to trigger the decision menu
-            TagFunction openDepartureReleaseDecisionMenu(
-                departureReleaseDecisionMenuTriggerFunctionId,
-                "Open Departure Release Decision Menu",
-                std::bind(
-                    &DepartureReleaseEventHandler::OpenDecisionMenu,
-                    departureHandler.get(),
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3,
-                    std::placeholders::_4
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseDecisionMenu);
+        // TAG function to trigger the cancellation menu
+        TagFunction openDepartureReleaseCancellationMenu(
+            departureReleaseCancelMenuFunctionId,
+            "Open Departure Release Request Cancellation Menu",
+            [departureHandler](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                std::string context,
+                const POINT& mousePos) {
+                departureHandler->SelectReleaseRequestToCancel(fp, rt, std::move(context), mousePos);
+            });
+        container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseCancellationMenu);
 
-            // TAG function to trigger the status view
-            TagFunction openDepartureReleaseStatusView(
-                departureReleaseStatusViewTriggerFunctionId,
-                "Show Departure Release Request Status View",
-                std::bind(
-                    &DepartureReleaseEventHandler::ShowStatusDisplay,
-                    departureHandler.get(),
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3,
-                    std::placeholders::_4
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseStatusView);
+        // Callback for when a release decision is made
+        CallbackFunction releaseCancelledCallback(
+            releaseCancellationCallbackId,
+            "Departure Release Request Cancelled",
+            [departureHandler](int functionId, std::string subject, RECT screenObjectArea) {
+                departureHandler->RequestCancelled(functionId, std::move(subject), screenObjectArea);
+            });
+        container.pluginFunctionHandlers->RegisterFunctionCall(releaseCancelledCallback);
 
-            // TAG function to trigger the cancellation menu
-            TagFunction openDepartureReleaseCancellationMenu(
-                departureReleaseCancelMenuFunctionId,
-                "Open Departure Release Request Cancellation Menu",
-                std::bind(
-                    &DepartureReleaseEventHandler::SelectReleaseRequestToCancel,
-                    departureHandler.get(),
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3,
-                    std::placeholders::_4
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseCancellationMenu);
+        // Dialog for requesting departure releases
+        std::shared_ptr<RequestDepartureReleaseDialog> requestDialog = std::make_shared<RequestDepartureReleaseDialog>(
+            departureHandler, *container.activeCallsigns, *container.plugin);
 
-            // Callback for when a release decision is made
-            CallbackFunction releaseCancelledCallback(
-                releaseCancellationCallbackId,
-                "Departure Release Request Cancelled",
-                std::bind(
-                    &DepartureReleaseEventHandler::RequestCancelled,
-                    departureHandler,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
-            container.pluginFunctionHandlers->RegisterFunctionCall(releaseCancelledCallback);
+        container.dialogManager->AddDialog(
+            {IDD_DEPARTURE_RELEASE_REQUEST,
+             "Request Departure Releases",
+             reinterpret_cast<DLGPROC>(requestDialog->WndProc), // NOLINT
+             reinterpret_cast<LPARAM>(requestDialog.get()),     // NOLINT
+             requestDialog});
 
-            // Dialog for requesting departure releases
-            std::shared_ptr<RequestDepartureReleaseDialog> requestDialog =
-                std::make_shared<RequestDepartureReleaseDialog>(
-                    departureHandler,
-                    *container.activeCallsigns,
-                    *container.plugin
-                );
+        // Dialog for approving departure releases
+        std::shared_ptr<ApproveDepartureReleaseDialog> approveDialog =
+            std::make_shared<ApproveDepartureReleaseDialog>(departureHandler);
 
-            container.dialogManager->AddDialog(
-                {
-                    IDD_DEPARTURE_RELEASE_REQUEST,
-                    "Request Departure Releases",
-                    reinterpret_cast<DLGPROC>(requestDialog->WndProc),
-                    reinterpret_cast<LPARAM>(requestDialog.get()),
-                    requestDialog
-                }
-            );
+        container.dialogManager->AddDialog(
+            {IDD_DEPARTURE_RELEASE_APPROVE,
+             "Approve Departure Releases",
+             reinterpret_cast<DLGPROC>(approveDialog->WndProc), // NOLINT
+             reinterpret_cast<LPARAM>(approveDialog.get()),     // NOLINT
+             approveDialog});
 
-            // Dialog for approving departure releases
-            std::shared_ptr<ApproveDepartureReleaseDialog> approveDialog = std::make_shared<
-                ApproveDepartureReleaseDialog
-            >(departureHandler);
+        // Add to handlers
+        container.timedHandler->RegisterEvent(departureHandler, departureReleaseEventFrequency);
+    }
 
-            container.dialogManager->AddDialog(
-                {
-                    IDD_DEPARTURE_RELEASE_APPROVE,
-                    "Approve Departure Releases",
-                    reinterpret_cast<DLGPROC>(approveDialog->WndProc),
-                    reinterpret_cast<LPARAM>(approveDialog.get()),
-                    approveDialog
-                }
-            );
+    void BootstrapRadarScreen(
+        const PersistenceContainer& container,
+        RadarScreen::RadarRenderableCollection& renderables,
+        RadarScreen::ConfigurableDisplayCollection& configurables,
+        Euroscope::AsrEventHandlerCollection& asrHandlers)
+    {
+        // Create the request view renderer
+        const int rendererId = renderables.ReserveRendererIdentifier();
+        auto releaseRequestView = std::make_shared<DepartureReleaseRequestView>(
+            *container.departureReleaseHandler, *container.controllerPositions, rendererId);
+        renderables.RegisterRenderer(rendererId, releaseRequestView, renderables.afterLists);
 
-            // Add to handlers
-            container.timedHandler->RegisterEvent(departureHandler, 15);
-        }
+        // Create the decision menu
+        const int decisionListRenderedId = renderables.ReserveRendererIdentifier();
+        const auto decisionList = std::make_shared<DepartureReleaseDecisionList>(
+            *container.departureReleaseHandler,
+            *container.plugin,
+            *container.controllerPositions,
+            renderables.ReserveScreenObjectIdentifier(decisionListRenderedId));
+        renderables.RegisterRenderer(decisionListRenderedId, decisionList, renderables.afterLists);
+        asrHandlers.RegisterHandler(decisionList);
 
-        void BootstrapRadarScreen(
-            const PersistenceContainer& container,
-            RadarScreen::RadarRenderableCollection& renderables,
-            RadarScreen::ConfigurableDisplayCollection& configurables,
-            Euroscope::AsrEventHandlerCollection& asrHandlers
-        )
-        {
-            // Create the request view renderer
-            const int rendererId = renderables.ReserveRendererIdentifier();
-            auto releaseRequestView = std::make_shared<DepartureReleaseRequestView>(
-                *departureHandler,
-                *container.controllerPositions,
-                rendererId
-            );
-            renderables.RegisterRenderer(rendererId, releaseRequestView, renderables.afterLists);
+        // Create the configuration list item
+        const int requestListShowCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        auto listItem = std::make_shared<ToggleDepartureReleaseDecisionList>(decisionList, requestListShowCallbackId);
 
-            // Create the decision menu
-            const int decisionListRenderedId = renderables.ReserveRendererIdentifier();
-            const auto decisionList = std::make_shared<DepartureReleaseDecisionList>(
-                *departureHandler,
-                *container.plugin,
-                *container.controllerPositions,
-                renderables.ReserveScreenObjectIdentifier(decisionListRenderedId)
-            );
-            renderables.RegisterRenderer(decisionListRenderedId, decisionList, renderables.afterLists);
-            asrHandlers.RegisterHandler(decisionList);
+        CallbackFunction showReleaseRequestListCallback(
+            requestListShowCallbackId,
+            "Toggle Departure Release Request List",
+            [listItem](int functionId, std::string subject, RECT screenObjectArea) {
+                listItem->Configure(functionId, std::move(subject), screenObjectArea);
+            });
 
-            // Create the configuration list item
-            const int requestListShowCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-            auto listItem = std::make_shared<ToggleDepartureReleaseDecisionList>(
-                decisionList,
-                requestListShowCallbackId
-            );
+        container.pluginFunctionHandlers->RegisterFunctionCall(showReleaseRequestListCallback);
+        configurables.RegisterDisplay(listItem);
+    }
 
-            CallbackFunction showReleaseRequestListCallback(
-                requestListShowCallbackId,
-                "Toggle Departure Release Request List",
-                std::bind(
-                    &ToggleDepartureReleaseDecisionList::Configure,
-                    listItem,
-                    std::placeholders::_1,
-                    std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
-
-            container.pluginFunctionHandlers->RegisterFunctionCall(showReleaseRequestListCallback);
-            configurables.RegisterDisplay(listItem);
-        }
-    }  // namespace Releases
-}  // namespace UKControllerPlugin
+    auto GetReleaseTypesDependencyKey() -> std::string
+    {
+        return "DEPENDENCY_ENROUTE_RELEASE_TYPES";
+    }
+} // namespace UKControllerPlugin::Releases

@@ -1,15 +1,14 @@
-#include "pch/pch.h"
-#include "message/UserMessagerBootstrap.h"
+#include "UserMessagerBootstrap.h"
+#include "UserMessager.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "plugin/UKPlugin.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
-namespace UKControllerPlugin {
-    namespace Message {
+namespace UKControllerPlugin::Message {
 
-        void UserMessagerBootstrap::BootstrapPlugin(PersistenceContainer & container)
-        {
-            container.userMessager.reset(new UserMessager(*container.plugin));
-        }
-    }  // namespace Message
-}  // namespace UKControllerPlugin
+    void UserMessagerBootstrap::BootstrapPlugin(PersistenceContainer& container)
+    {
+        container.userMessager = std::make_unique<UserMessager>(*container.plugin);
+    }
+} // namespace UKControllerPlugin::Message

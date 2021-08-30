@@ -1,17 +1,16 @@
-#include "pch/pch.h"
-#include "bootstrap/InitialisePlugin.h"
 #include "api/ApiAuthChecker.h"
 #include "bootstrap/CollectionBootstrap.h"
-#include "duplicate/DuplicatePlugin.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
 #include "bootstrap/HelperBootstrap.h"
+#include "bootstrap/InitialisePlugin.h"
 #include "bootstrap/PostInit.h"
 #include "controller/ControllerBootstrap.h"
 #include "countdown/CountdownModule.h"
 #include "datablock/DatablockBoostrap.h"
 #include "dependency/DependencyLoader.h"
 #include "dependency/UpdateDependencies.h"
+#include "duplicate/DuplicatePlugin.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
@@ -20,6 +19,7 @@
 #include "historytrail/HistoryTrailModule.h"
 #include "hold/HoldModule.h"
 #include "initialaltitude/InitialAltitudeModule.h"
+#include "initialheading/InitialHeadingModule.h"
 #include "integration/IntegrationModule.h"
 #include "intention/IntentionCodeModule.h"
 #include "log/LoggerBootstrap.h"
@@ -29,6 +29,7 @@
 #include "minstack/MinStackModule.h"
 #include "navaids/NavaidModule.h"
 #include "notifications/NotificationsModule.h"
+#include "oceanic/OceanicModule.h"
 #include "offblock/ActualOffBlockTimeBootstrap.h"
 #include "offblock/EstimatedDepartureTimeBootstrap.h"
 #include "offblock/EstimatedOffBlockTimeBootstrap.h"
@@ -36,54 +37,53 @@
 #include "plugin/UKPlugin.h"
 #include "plugin/UkPluginBootstrap.h"
 #include "prenote/PrenoteModule.h"
+#include "push/PushEventBootstrap.h"
 #include "regional/RegionalPressureModule.h"
 #include "releases/ReleaseModule.h"
 #include "sectorfile/SectorFileBootstrap.h"
+#include "sid/SidModule.h"
 #include "squawk/SquawkModule.h"
 #include "srd/SrdModule.h"
 #include "stands/StandModule.h"
+#include "task/TaskRunnerInterface.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
-#include "push/PushEventBootstrap.h"
-#include "oceanic/OceanicModule.h"
-#include "sid/SidModule.h"
-#include "initialheading/InitialHeadingModule.h"
 
 using UKControllerPlugin::Api::ApiAuthChecker;
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Bootstrap::ExternalsBootstrap;
-using UKControllerPlugin::Log::LoggerBootstrap;
-using UKControllerPlugin::Bootstrap::HelperBootstrap;
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
 using UKControllerPlugin::Bootstrap::EventHandlerCollectionBootstrap;
+using UKControllerPlugin::Bootstrap::ExternalsBootstrap;
+using UKControllerPlugin::Bootstrap::HelperBootstrap;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Bootstrap::PostInit;
 using UKControllerPlugin::Bootstrap::UkPluginBootstrap;
+using UKControllerPlugin::Controller::LoginModule;
+using UKControllerPlugin::Countdown::CountdownModule;
+using UKControllerPlugin::Datablock::ActualOffBlockTimeBootstrap;
+using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
+using UKControllerPlugin::Datablock::EstimatedOffBlockTimeBootstrap;
+using UKControllerPlugin::Dependency::DependencyLoader;
+using UKControllerPlugin::Duplicate::DuplicatePlugin;
+using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
+using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
+using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
+using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::IntentionCode::IntentionCodeModule;
-using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
-using UKControllerPlugin::Controller::LoginModule;
-using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
-using UKControllerPlugin::Countdown::CountdownModule;
-using UKControllerPlugin::MinStack::MinStackModule;
-using UKControllerPlugin::Regional::RegionalPressureModule;
-using UKControllerPlugin::Bootstrap::PostInit;
-using UKControllerPlugin::Plugin::PluginVersion;
-using UKControllerPlugin::Squawk::SquawkModule;
-using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
-using UKControllerPlugin::Datablock::ActualOffBlockTimeBootstrap;
-using UKControllerPlugin::Datablock::EstimatedOffBlockTimeBootstrap;
-using UKControllerPlugin::Prenote::PrenoteModule;
+using UKControllerPlugin::Log::LoggerBootstrap;
 using UKControllerPlugin::Message::UserMessagerBootstrap;
-using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
-using UKControllerPlugin::Duplicate::DuplicatePlugin;
-using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
-using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
-using UKControllerPlugin::Dependency::DependencyLoader;
+using UKControllerPlugin::MinStack::MinStackModule;
+using UKControllerPlugin::Ownership::AirfieldOwnershipModule;
+using UKControllerPlugin::Plugin::PluginVersion;
+using UKControllerPlugin::Prenote::PrenoteModule;
+using UKControllerPlugin::Regional::RegionalPressureModule;
+using UKControllerPlugin::Squawk::SquawkModule;
 
 namespace UKControllerPlugin {
     /*
         Clean up after ourself as we get closed down.
     */
-    void InitialisePlugin::EuroScopeCleanup(void)
+    void InitialisePlugin::EuroScopeCleanup()
     {
         this->container->taskRunner.reset();
         this->container.reset();
@@ -104,7 +104,7 @@ namespace UKControllerPlugin {
     /*
         Returns the plugin instance.
     */
-    EuroScopePlugIn::CPlugIn * InitialisePlugin::GetPlugin(void)
+    auto InitialisePlugin::GetPlugin() -> EuroScopePlugIn::CPlugIn*
     {
         return this->container->plugin.get();
     }
@@ -117,7 +117,7 @@ namespace UKControllerPlugin {
     {
         // Start GdiPlus
         Gdiplus::GdiplusStartupInput gdiStartup;
-        GdiplusStartup(&this->gdiPlusToken, &gdiStartup, NULL);
+        GdiplusStartup(&this->gdiPlusToken, &gdiStartup, nullptr);
 
         // Check if we're a duplicate plugin
         this->duplicatePlugin = std::make_unique<DuplicatePlugin>();
@@ -135,19 +135,13 @@ namespace UKControllerPlugin {
 
         // Bootstrap the logger
         if (this->duplicatePlugin->Duplicate()) {
-            LoggerBootstrap::Bootstrap(
-                *this->container->windows,
-                L"plugin-secondary"
-            );
+            LoggerBootstrap::Bootstrap(*this->container->windows, L"plugin-secondary");
             LogInfo(
-                std::string("Another instance of UKCP has been detected, automated actions such as squawk assignments ")
-                + "will be performed by the primary plugin instance."
-            );
+                std::string(
+                    "Another instance of UKCP has been detected, automated actions such as squawk assignments ") +
+                "will be performed by the primary plugin instance.");
         } else {
-            LoggerBootstrap::Bootstrap(
-                *this->container->windows,
-                L"plugin"
-            );
+            LoggerBootstrap::Bootstrap(*this->container->windows, L"plugin");
             LogInfo("Plugin loaded as primary instance");
         }
 
@@ -162,20 +156,12 @@ namespace UKControllerPlugin {
         Datablock::BootstrapPlugin(*this->container);
 
         // If we're not allowed to use the API because we've been banned or something... It's no go.
-        bool apiAuthorised = ApiAuthChecker::IsAuthorised(
-            *this->container->api,
-            *this->container->windows,
-            *this->container->settingsRepository
-        );
+        ApiAuthChecker::IsAuthorised(
+            *this->container->api, *this->container->windows, *this->container->settingsRepository);
 
         // Dependency loading can happen regardless of plugin version or API status.
-        Dependency::UpdateDependencies(
-            *this->container->api,
-            *this->container->windows
-        );
-        DependencyLoader loader(
-            *this->container->windows
-        );
+        Dependency::UpdateDependencies(*this->container->api, *this->container->windows);
+        DependencyLoader loader(*this->container->windows);
 
         // Integration module and winsock
         WSADATA winsockData;
@@ -184,8 +170,10 @@ namespace UKControllerPlugin {
             winsockInitialised = false;
             LogError("Error initialising winsock for integration server: " + std::to_string(winsockStartupResult));
         } else {
-            LogInfo("Initialised winsock for integration server, version: "
-                + std::to_string(winsockData.wVersion & 0xff) + "." + std::to_string(winsockData.wVersion >> 8 & 0xff)
+            LogInfo(
+                // NOLINTNEXTLINE
+                "Initialised winsock for integration server, version: " + std::to_string(winsockData.wVersion & 0xff) +
+                "." + std::to_string(winsockData.wVersion >> 8 & 0xff) // NOLINT
             );
             winsockInitialised = true;
         }
@@ -213,8 +201,7 @@ namespace UKControllerPlugin {
         GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
             *this->container->dialogManager,
             *this->container->pluginUserSettingHandler,
-            *this->container->userSettingHandlers
-        );
+            *this->container->userSettingHandlers);
 
         // Bootstrap the modules
         InitialAltitudeModule::BootstrapPlugin(*this->container);
@@ -228,27 +215,18 @@ namespace UKControllerPlugin {
             *this->container->taskRunner,
             *this->container->api,
             *this->container->pushEventProcessors,
-            *this->container->dialogManager
-        );
+            *this->container->dialogManager);
         RegionalPressureModule::BootstrapPlugin(
             this->container->regionalPressureManager,
             *this->container->taskRunner,
             *this->container->api,
             *this->container->pushEventProcessors,
             *this->container->dialogManager,
-            loader
-        );
-        Hold::BootstrapPlugin(
-            loader,
-            *this->container,
-            *this->container->userMessager
-        );
+            loader);
+        Hold::BootstrapPlugin(loader, *this->container, *this->container->userMessager);
 
         // Don't allow automatic squawk assignment if the plugin is deemed to be a duplicate
-        SquawkModule::BootstrapPlugin(
-            *this->container,
-            this->duplicatePlugin->Duplicate()
-        );
+        SquawkModule::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
         PrenoteModule::BootstrapPlugin(*this->container, loader);
         Handoff::BootstrapPlugin(*this->container, loader);
@@ -265,4 +243,4 @@ namespace UKControllerPlugin {
         PostInit::Process(*this->container);
         LogInfo("Plugin loaded successfully");
     }
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

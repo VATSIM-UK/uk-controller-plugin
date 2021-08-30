@@ -1,19 +1,17 @@
-#include "pch/pch.h"
-#include "datablock/DatablockBoostrap.h"
-#include "datablock/DisplayTime.h"
+#include "DatablockBoostrap.h"
+#include "DisplayTime.h"
+#include "euroscope/UserSettingAwareCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
-namespace UKControllerPlugin {
-    namespace Datablock {
+namespace UKControllerPlugin::Datablock {
 
-        /*
-            Set up the time formatter
-        */
-        void BootstrapPlugin(PersistenceContainer & container)
-        {
-            container.timeFormatting = std::make_shared<DisplayTime>();
-            container.userSettingHandlers->RegisterHandler(container.timeFormatting);
-        }
-    }  // namespace Datablock
-}  // namespace UKControllerPlugin
+    /*
+        Set up the time formatter
+    */
+    void BootstrapPlugin(PersistenceContainer& container)
+    {
+        container.timeFormatting = std::make_shared<DisplayTime>();
+        container.userSettingHandlers->RegisterHandler(container.timeFormatting);
+    }
+} // namespace UKControllerPlugin::Datablock
