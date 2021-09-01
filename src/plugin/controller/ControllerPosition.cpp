@@ -1,74 +1,81 @@
-#include "pch/pch.h"
-#include "controller/ControllerPosition.h"
+#include "ControllerPosition.h"
 
-namespace UKControllerPlugin {
-    namespace Controller {
-        ControllerPosition::ControllerPosition(
-            int id,
-            std::string callsign,
-            double frequency,
-            std::vector<std::string> topdown,
-            bool requestsDepartureReleases,
-            bool receivesDepartureReleases
-        ): id(id), requestsDepartureReleases(requestsDepartureReleases),
-           receivesDepartureReleases(receivesDepartureReleases), callsign(callsign),
-           frequency(frequency), topdown(std::move(topdown))
-        { }
+namespace UKControllerPlugin::Controller {
+    ControllerPosition::ControllerPosition(
+        int id,
+        std::string callsign,
+        double frequency,
+        std::vector<std::string> topdown,
+        bool requestsDepartureReleases,
+        bool receivesDepartureReleases,
+        bool sendsPrenoteMessages,
+        bool receivesPrenoteMessages)
+        : id(id), requestsDepartureReleases(requestsDepartureReleases),
+          receivesDepartureReleases(receivesDepartureReleases), callsign(std::move(callsign)), frequency(frequency),
+          topdown(std::move(topdown)), sendsPrenoteMessages(sendsPrenoteMessages),
+          receivesPrenoteMessages(receivesPrenoteMessages)
+    {
+    }
 
-        int ControllerPosition::GetId() const
-        {
-            return this->id;
-        }
+    auto ControllerPosition::GetId() const -> int
+    {
+        return this->id;
+    }
 
-        std::string ControllerPosition::GetUnit() const
-        {
-            return this->callsign.substr(0, this->callsign.find('_'));
-        }
+    auto ControllerPosition::GetUnit() const -> std::string
+    {
+        return this->callsign.substr(0, this->callsign.find('_'));
+    }
 
-        std::string ControllerPosition::GetCallsign() const
-        {
-            return this->callsign;
-        }
+    auto ControllerPosition::GetCallsign() const -> std::string
+    {
+        return this->callsign;
+    }
 
-        double ControllerPosition::GetFrequency() const
-        {
-            return this->frequency;
-        }
+    auto ControllerPosition::GetFrequency() const -> double
+    {
+        return this->frequency;
+    }
 
-        std::string ControllerPosition::GetType() const
-        {
-            return callsign.substr(this->callsign.size() - 3, this->callsign.size());
-        }
+    auto ControllerPosition::GetType() const -> std::string
+    {
+        return callsign.substr(this->callsign.size() - 3, this->callsign.size());
+    }
 
-        bool ControllerPosition::HasTopdownAirfield(std::string icao) const
-        {
-            return std::find(
-                this->topdown.cbegin(),
-                this->topdown.cend(),
-                icao
-            ) != this->topdown.cend();
-        }
+    auto ControllerPosition::HasTopdownAirfield(const std::string& icao) const -> bool
+    {
+        return std::find(this->topdown.cbegin(), this->topdown.cend(), icao) != this->topdown.cend();
+    }
 
-        bool ControllerPosition::RequestsDepartureReleases() const
-        {
-            return this->requestsDepartureReleases;
-        }
+    auto ControllerPosition::RequestsDepartureReleases() const -> bool
+    {
+        return this->requestsDepartureReleases;
+    }
 
-        bool ControllerPosition::ReceivesDepartureReleases() const
-        {
-            return this->receivesDepartureReleases;
-        }
+    auto ControllerPosition::ReceivesDepartureReleases() const -> bool
+    {
+        return this->receivesDepartureReleases;
+    }
 
-        std::vector<std::string> ControllerPosition::GetTopdown() const
-        {
-            return this->topdown;
-        }
+    auto ControllerPosition::GetTopdown() const -> std::vector<std::string>
+    {
+        return this->topdown;
+    }
 
-        bool ControllerPosition::operator==(const ControllerPosition& position) const
-        {
-            return this->GetId() == position.GetId() &&
-                fabs(this->frequency - position.GetFrequency()) < 0.001 &&
-                this->callsign.compare(position.GetCallsign()) == 0;
-        }
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+    auto ControllerPosition::operator==(const ControllerPosition& position) const -> bool
+    {
+        return this->GetId() == position.GetId() &&
+               fabs(this->frequency - position.GetFrequency()) < frequencyMatchDelta &&
+               this->callsign == position.GetCallsign();
+    }
+
+    auto ControllerPosition::SendsPrenoteMessages() const -> bool
+    {
+        return this->sendsPrenoteMessages;
+    }
+
+    auto ControllerPosition::ReceivesPrenoteMessages() const -> bool
+    {
+        return this->receivesPrenoteMessages;
+    }
+} // namespace UKControllerPlugin::Controller
