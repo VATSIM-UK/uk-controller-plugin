@@ -51,4 +51,18 @@ namespace UKControllerPlugin::Prenote {
             function(message);
         }
     }
+
+    auto
+    PrenoteMessageCollection::FirstWhere(const std::function<bool(const std::shared_ptr<PrenoteMessage>&)>& predicate)
+        -> const std::shared_ptr<PrenoteMessage>&
+    {
+        std::lock_guard<std::mutex> lock = this->LockPrenotes();
+        for (const auto& message : this->prenotes) {
+            if (predicate(message)) {
+                return message;
+            }
+        }
+
+        return this->invalidMessage;
+    }
 } // namespace UKControllerPlugin::Prenote

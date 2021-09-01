@@ -1,6 +1,9 @@
 #pragma once
 
 namespace UKControllerPlugin {
+    namespace Api {
+        class ApiInterface;
+    } // namespace Api
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
@@ -8,7 +11,10 @@ namespace UKControllerPlugin {
     } // namespace Euroscope
     namespace Controller {
         class ControllerPositionCollection;
-    }
+    } // namespace Controller
+    namespace TaskManager {
+        class TaskRunnerInterface;
+    } // namespace TaskManager
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Prenote {
@@ -23,9 +29,13 @@ namespace UKControllerPlugin::Prenote {
         public:
         explicit CancelPrenoteMessageMenu(
             std::shared_ptr<PrenoteMessageCollection> messages,
-            Controller::ControllerPositionCollection& controllers,
-            Euroscope::EuroscopePluginLoopbackInterface& plugin);
+            const Controller::ControllerPositionCollection& controllers,
+            Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            TaskManager::TaskRunnerInterface& taskRunner,
+            const Api::ApiInterface& api,
+            int callbackId);
         void DisplayPrenoteToDeleteMenu(Euroscope::EuroScopeCFlightPlanInterface& flightplan, const POINT& mousePos);
+        void ControllerForPrenoteDeletionSelected(std::string callsign);
 
         private:
         // All active prenote messages
@@ -37,6 +47,15 @@ namespace UKControllerPlugin::Prenote {
         // The plugin instance, lets us make menus
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
         
+        // Runs async tasks
+        TaskManager::TaskRunnerInterface& taskRunner;
+        
+        // Makes API calls
+        const Api::ApiInterface& api;
+
+        // The callback id to use for when a menu item is clicked
+        const int callbackId;
+
         static const int MENU_WIDTH = 400;
         static const int MENU_HEIGHT = 600;
     };
