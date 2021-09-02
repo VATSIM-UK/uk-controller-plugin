@@ -3,6 +3,8 @@
 #include "PrenoteMessageCollection.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
+#include "controller/ActiveCallsign.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -13,22 +15,33 @@ namespace UKControllerPlugin::Prenote {
     CancelPrenoteMessageMenu::CancelPrenoteMessageMenu(
         std::shared_ptr<PrenoteMessageCollection> messages,
         const Controller::ControllerPositionCollection& controllers,
+        const Controller::ActiveCallsignCollection& activeCallsigns,
         Euroscope::EuroscopePluginLoopbackInterface& plugin,
         TaskManager::TaskRunnerInterface& taskRunner,
         const Api::ApiInterface& api,
         int callbackId)
-        : messages(std::move(messages)), controllers(controllers), plugin(plugin), taskRunner(taskRunner), api(api),
-          callbackId(callbackId)
+        : messages(std::move(messages)), controllers(controllers), activeCallsigns(activeCallsigns), plugin(plugin),
+          taskRunner(taskRunner), api(api), callbackId(callbackId)
     {
     }
 
     void CancelPrenoteMessageMenu::DisplayPrenoteToDeleteMenu(
         Euroscope::EuroScopeCFlightPlanInterface& flightplan, const POINT& mousePos)
     {
+        if (!activeCallsigns.UserHasCallsign()) {
+            return;
+        }
+
+        auto userPosition = activeCallsigns.GetUserCallsign().GetNormalisedPosition();
+        if (!userPosition.SendsPrenoteMessages()) {
+            return;
+        }
+
         bool menuInitialised = false;
-        this->messages->Iterate([this, &flightplan, &mousePos, &menuInitialised](
+        this->messages->Iterate([this, &flightplan, &mousePos, &menuInitialised, &userPosition](
                                     const std::shared_ptr<PrenoteMessage>& message) {
-            if (message->GetCallsign() != flightplan.GetCallsign()) {
+            if (message->GetCallsign() != flightplan.GetCallsign() ||
+                message->GetSendingControllerId() != userPosition.GetId()) {
                 return;
             }
 
@@ -59,11 +72,19 @@ namespace UKControllerPlugin::Prenote {
             return;
         }
 
+        if (!activeCallsigns.UserHasCallsign()) {
+            LogWarning("Tried to cancel prenote but user does not have active callsign");
+            return;
+        }
+
+        auto userPosition = activeCallsigns.GetUserCallsign().GetNormalisedPosition();
+
         try {
             auto controllerId = this->controllers.FetchPositionByCallsign(std::move(callsign)).GetId();
-            auto message =
-                this->messages->FirstWhere([fp, controllerId](const std::shared_ptr<PrenoteMessage>& message) -> bool {
+            auto message = this->messages->FirstWhere(
+                [fp, controllerId, &userPosition](const std::shared_ptr<PrenoteMessage>& message) -> bool {
                     return message->GetCallsign() == fp->GetCallsign() &&
+                           message->GetSendingControllerId() == userPosition.GetId() &&
                            message->GetTargetControllerId() == controllerId;
                 });
 

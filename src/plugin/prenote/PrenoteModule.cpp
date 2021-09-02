@@ -27,18 +27,18 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Euroscope::CallbackFunction;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Prenote::DeparturePrenote;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
 using UKControllerPlugin::Prenote::PrenoteFactory;
 using UKControllerPlugin::Prenote::PrenoteServiceFactory;
-using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Tag::TagItemCollection;
 
 namespace UKControllerPlugin::Prenote {
 
     const int MESSAGE_STATUS_INDICATOR_TAG_ITEM_ID = 127;
-    
+
     const int CANCEL_MESSAGE_MENU_TAG_FUNCTION_ID = 9016;
 
     void PrenoteModule::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
@@ -67,18 +67,18 @@ namespace UKControllerPlugin::Prenote {
         auto messages = std::make_shared<PrenoteMessageCollection>();
         persistence.tagHandler->RegisterTagItem(
             MESSAGE_STATUS_INDICATOR_TAG_ITEM_ID, std::make_shared<PrenoteStatusIndicatorTagItem>(messages));
-        
+
         // Cancelling prenote messages menu
         auto cancelCallback = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
         auto cancelMenu = std::make_shared<CancelPrenoteMessageMenu>(
             messages,
             *persistence.controllerPositions,
+            *persistence.activeCallsigns,
             *persistence.plugin,
             *persistence.taskRunner,
             *persistence.api,
-            cancelCallback
-        );
-        
+            cancelCallback);
+
         TagFunction openCancelPrenoteMenu(
             CANCEL_MESSAGE_MENU_TAG_FUNCTION_ID,
             "Open Cancel Prenote Message Menu",
@@ -88,15 +88,12 @@ namespace UKControllerPlugin::Prenote {
                 const std::string& context,
                 const POINT& mousePos) { cancelMenu->DisplayPrenoteToDeleteMenu(fp, mousePos); });
         persistence.pluginFunctionHandlers->RegisterFunctionCall(openCancelPrenoteMenu);
-        
+
         CallbackFunction cancelPrenoteCallback(
-            cancelCallback,
-            "Prenote Cancel",
-            [cancelMenu](int functionId, std::string subject, RECT screenObjectArea) {
+            cancelCallback, "Prenote Cancel", [cancelMenu](int functionId, std::string subject, RECT screenObjectArea) {
                 cancelMenu->ControllerForPrenoteDeletionSelected(std::move(subject));
             });
         persistence.pluginFunctionHandlers->RegisterFunctionCall(cancelPrenoteCallback);
-        
     }
 
     auto PrenoteModule::GetDependencyKey() -> std::string

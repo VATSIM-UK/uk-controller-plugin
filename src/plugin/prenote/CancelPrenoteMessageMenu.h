@@ -4,14 +4,15 @@ namespace UKControllerPlugin {
     namespace Api {
         class ApiInterface;
     } // namespace Api
+    namespace Controller {
+        class ActiveCallsignCollection;
+        class ControllerPositionCollection;
+    } // namespace Controller
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
         class EuroscopePluginLoopbackInterface;
     } // namespace Euroscope
-    namespace Controller {
-        class ControllerPositionCollection;
-    } // namespace Controller
     namespace TaskManager {
         class TaskRunnerInterface;
     } // namespace TaskManager
@@ -30,6 +31,7 @@ namespace UKControllerPlugin::Prenote {
         explicit CancelPrenoteMessageMenu(
             std::shared_ptr<PrenoteMessageCollection> messages,
             const Controller::ControllerPositionCollection& controllers,
+            const Controller::ActiveCallsignCollection& activeCallsigns,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             TaskManager::TaskRunnerInterface& taskRunner,
             const Api::ApiInterface& api,
@@ -44,12 +46,15 @@ namespace UKControllerPlugin::Prenote {
         // All the controller positions
         const Controller::ControllerPositionCollection& controllers;
 
+        // Who's active as a controller
+        const Controller::ActiveCallsignCollection& activeCallsigns;
+
         // The plugin instance, lets us make menus
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
-        
+
         // Runs async tasks
         TaskManager::TaskRunnerInterface& taskRunner;
-        
+
         // Makes API calls
         const Api::ApiInterface& api;
 
