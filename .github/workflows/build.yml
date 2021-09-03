@@ -152,7 +152,7 @@ jobs:
     name: Format
     runs-on: windows-latest
     concurrency:
-      group: ukcp-format
+      group: ukcp-format-${{ github.ref }}
       cancel-in-progress: true
     steps:
       - name: Checkout
