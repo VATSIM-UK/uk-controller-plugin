@@ -7,6 +7,7 @@
 #include "PrenoteService.h"
 #include "PrenoteServiceFactory.h"
 #include "PrenoteStatusIndicatorTagItem.h"
+#include "SendPrenoteMenu.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ControllerPosition.h"
@@ -40,6 +41,7 @@ namespace UKControllerPlugin::Prenote {
     const int MESSAGE_STATUS_INDICATOR_TAG_ITEM_ID = 127;
 
     const int CANCEL_MESSAGE_MENU_TAG_FUNCTION_ID = 9016;
+    const int SEND_MESSAGE_MENU_TAG_FUNCTION_ID = 9017;
 
     void PrenoteModule::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
     {
@@ -94,6 +96,33 @@ namespace UKControllerPlugin::Prenote {
                 cancelMenu->ControllerForPrenoteDeletionSelected(std::move(subject));
             });
         persistence.pluginFunctionHandlers->RegisterFunctionCall(cancelPrenoteCallback);
+
+        // Send prenote messages menu
+        auto sendCallback = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        auto sendMenu = std::make_shared<SendPrenoteMenu>(
+            messages,
+            *persistence.controllerPositions,
+            *persistence.activeCallsigns,
+            *persistence.plugin,
+            *persistence.taskRunner,
+            *persistence.api,
+            sendCallback);
+
+        TagFunction openSendPrenoteMenu(
+            SEND_MESSAGE_MENU_TAG_FUNCTION_ID,
+            "Open Prenote Controller Selection Menu",
+            [sendMenu](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                const std::string& context,
+                const POINT& mousePos) { sendMenu->DisplayControllerSelectionMenu(fp, mousePos); });
+        persistence.pluginFunctionHandlers->RegisterFunctionCall(openSendPrenoteMenu);
+
+        CallbackFunction sendPrenoteCallback(
+            sendCallback, "Prenote Send", [sendMenu](int functionId, std::string subject, RECT screenObjectArea) {
+                sendMenu->ControllerForPrenoteSelected(std::move(subject));
+            });
+        persistence.pluginFunctionHandlers->RegisterFunctionCall(sendPrenoteCallback);
     }
 
     auto PrenoteModule::GetDependencyKey() -> std::string

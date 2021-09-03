@@ -111,7 +111,7 @@ namespace UKControllerPlugin::Plugin {
             throw std::invalid_argument("Function already registered for this id!");
         }
     }
-    
+
     auto FunctionCallEventHandler::HasCallbackByDescription(const std::string& description) const -> bool
     {
         return std::find_if(

@@ -55,7 +55,7 @@ namespace UKControllerPlugin::Controller {
 
         // Can this controller cancel a prenote
         const bool receivesPrenoteMessages;
-        
+
         const double frequencyMatchDelta = 0.001;
     };
 } // namespace UKControllerPlugin::Controller

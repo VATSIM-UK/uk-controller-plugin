@@ -583,7 +583,7 @@ set(src__prenote
     "prenote/PrenoteMessage.cpp"
     prenote/PrenoteMessageCollection.cpp prenote/PrenoteMessageCollection.h
     prenote/ComparePrenoteMessages.cpp prenote/ComparePrenoteMessages.h
-    prenote/PrenoteStatusIndicatorTagItem.cpp prenote/PrenoteStatusIndicatorTagItem.h prenote/CancelPrenoteMessageMenu.cpp prenote/CancelPrenoteMessageMenu.h)
+    prenote/PrenoteStatusIndicatorTagItem.cpp prenote/PrenoteStatusIndicatorTagItem.h prenote/CancelPrenoteMessageMenu.cpp prenote/CancelPrenoteMessageMenu.h prenote/SendPrenoteMenu.cpp prenote/SendPrenoteMenu.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push

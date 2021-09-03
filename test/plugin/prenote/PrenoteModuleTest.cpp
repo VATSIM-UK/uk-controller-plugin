@@ -145,5 +145,37 @@ namespace UKControllerPluginTest {
             PrenoteModule::BootstrapPlugin(container, dependency);
             EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Prenote Cancel"));
         }
+        
+        TEST_F(PrenoteModuleTest, ItRegistersSendMenuTagFunction)
+        {
+            nlohmann::json json;
+            json[0] = {};
+            json[0]["type"] = "sid";
+            json[0]["airfield"] = "EGKK";
+            json[0]["departure"] = "BIG2X";
+            json[0]["recipient"] = {"EGKK_GND", "EGKK_TWR"};
+            
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_PRENOTE", nlohmann::json::array()))
+                .WillByDefault(Return(json));
+
+            PrenoteModule::BootstrapPlugin(container, dependency);
+            EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9017));
+        }
+
+        TEST_F(PrenoteModuleTest, ItRegistersSendMenuCallback)
+        {
+            nlohmann::json json;
+            json[0] = {};
+            json[0]["type"] = "sid";
+            json[0]["airfield"] = "EGKK";
+            json[0]["departure"] = "BIG2X";
+            json[0]["recipient"] = {"EGKK_GND", "EGKK_TWR"};
+
+            ON_CALL(this->dependency, LoadDependency("DEPENDENCY_PRENOTE", nlohmann::json::array()))
+                .WillByDefault(Return(json));
+
+            PrenoteModule::BootstrapPlugin(container, dependency);
+            EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Prenote Send"));
+        }
     } // namespace Prenote
 } // namespace UKControllerPluginTest
