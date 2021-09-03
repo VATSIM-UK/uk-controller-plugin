@@ -145,7 +145,7 @@ namespace UKControllerPluginTest {
             PrenoteModule::BootstrapPlugin(container, dependency);
             EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Prenote Cancel"));
         }
-        
+
         TEST_F(PrenoteModuleTest, ItRegistersSendMenuTagFunction)
         {
             nlohmann::json json;
@@ -154,7 +154,7 @@ namespace UKControllerPluginTest {
             json[0]["airfield"] = "EGKK";
             json[0]["departure"] = "BIG2X";
             json[0]["recipient"] = {"EGKK_GND", "EGKK_TWR"};
-            
+
             ON_CALL(this->dependency, LoadDependency("DEPENDENCY_PRENOTE", nlohmann::json::array()))
                 .WillByDefault(Return(json));
 
