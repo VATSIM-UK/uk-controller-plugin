@@ -592,7 +592,8 @@ set(src__prenote
     prenote/SendPrenoteMenu.cpp prenote/SendPrenoteMenu.h
     prenote/PrenoteMessageStatusView.cpp prenote/PrenoteMessageStatusView.h
     prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
-    prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h)
+    prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h
+    prenote/PendingPrenoteList.cpp prenote/PendingPrenoteList.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push

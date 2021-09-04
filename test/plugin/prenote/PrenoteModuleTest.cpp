@@ -147,11 +147,17 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9018));
     }
 
+    TEST_F(PrenoteModuleTest, ItRegistersRenderables)
+    {
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables);
+        EXPECT_EQ(2, radarRenderables.CountRenderers());
+        EXPECT_EQ(2, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
+    }
+
     TEST_F(PrenoteModuleTest, ItRegistersRenderedScreenObjects)
     {
         PrenoteModule::BootstrapRadarScreen(container, radarRenderables);
-        EXPECT_EQ(1, radarRenderables.CountRenderers());
-        EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
+        EXPECT_EQ(1, radarRenderables.radarRenderables.CountScreenObjects());
     }
 
     TEST_F(PrenoteModuleTest, ItRegistersAcknowledgeTagFunction)

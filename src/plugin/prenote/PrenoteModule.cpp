@@ -2,6 +2,7 @@
 #include "CancelPrenoteMessageMenu.h"
 #include "DeparturePrenote.h"
 #include "NewPrenotePushEventHandler.h"
+#include "PendingPrenoteList.h"
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
@@ -57,7 +58,8 @@ namespace UKControllerPlugin::Prenote {
 
     const int MESSAGE_TIMEOUT_CHECK_INTERVAL = 10;
 
-    std::shared_ptr<PrenoteMessageCollection> messages; // NOLINT
+    std::shared_ptr<PrenoteMessageCollection> messages;     // NOLINT
+    std::shared_ptr<AcknowledgePrenoteMessage> acknowledge; // NOLINT
 
     void PrenoteModule::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
     {
@@ -147,17 +149,18 @@ namespace UKControllerPlugin::Prenote {
         persistence.pluginFunctionHandlers->RegisterFunctionCall(sendPrenoteCallback);
 
         // Acknowledge message
-        auto acknowledge = std::make_shared<AcknowledgePrenoteMessage>(
+        acknowledge = std::make_shared<AcknowledgePrenoteMessage>(
             messages, *persistence.activeCallsigns, *persistence.taskRunner, *persistence.api);
+        auto acknowledgeForTagFunction = acknowledge;
 
         TagFunction acknowledgePrenoteMessage(
             ACKNOWLEDGE_MESSAGE_TAG_FUNCTION_ID,
             "Acknowledge Prenote",
-            [acknowledge](
+            [acknowledgeForTagFunction](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
                 const std::string& context,
-                const POINT& mousePos) { acknowledge->Acknowledge(fp); });
+                const POINT& mousePos) { acknowledgeForTagFunction->Acknowledge(fp); });
         persistence.pluginFunctionHandlers->RegisterFunctionCall(acknowledgePrenoteMessage);
 
         // Prenote message status view
@@ -180,6 +183,18 @@ namespace UKControllerPlugin::Prenote {
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(),
             std::make_shared<PrenoteMessageStatusView>(messages, *persistence.controllerPositions),
+            radarRenderables.afterLists);
+
+        auto listRendererId = radarRenderables.ReserveRendererIdentifier();
+        radarRenderables.RegisterRenderer(
+            listRendererId,
+            std::make_shared<PendingPrenoteList>(
+                messages,
+                acknowledge,
+                *persistence.plugin,
+                *persistence.controllerPositions,
+                *persistence.activeCallsigns,
+                radarRenderables.ReserveScreenObjectIdentifier(listRendererId)),
             radarRenderables.afterLists);
     }
 
