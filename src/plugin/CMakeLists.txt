@@ -668,7 +668,7 @@ set(src__releases
     "releases/DepartureReleaseColours.h"
     "releases/DepartureReleaseCountdownColours.cpp"
     "releases/DepartureReleaseCountdownColours.h"
-    "releases/PendingPrenoteList.cpp"
+    "releases/DepartureReleaseDecisionList.cpp"
     "releases/DepartureReleaseDecisionList.h"
     "releases/DepartureReleaseEventHandler.cpp"
     "releases/DepartureReleaseEventHandler.h"
