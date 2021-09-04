@@ -157,7 +157,7 @@ namespace UKControllerPluginTest::Prenote {
     TEST_F(PrenoteModuleTest, ItRegistersRenderedScreenObjects)
     {
         PrenoteModule::BootstrapRadarScreen(container, radarRenderables);
-        EXPECT_EQ(1, radarRenderables.radarRenderables.CountScreenObjects());
+        EXPECT_EQ(1, radarRenderables.CountScreenObjects());
     }
 
     TEST_F(PrenoteModuleTest, ItRegistersAcknowledgeTagFunction)
