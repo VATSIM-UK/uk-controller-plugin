@@ -25,6 +25,7 @@ namespace UKControllerPlugin::Prenote {
         [[nodiscard]] auto GetTargetControllerId() const -> int;
         [[nodiscard]] auto GetExpiresAt() const -> const std::chrono::system_clock::time_point&;
         [[nodiscard]] auto IsAcknowledged() const -> bool;
+        [[nodiscard]] auto GetAcknowledgedAt() const -> const std::chrono::system_clock::time_point&;
         void Acknowledge();
 
         private:
@@ -52,7 +53,7 @@ namespace UKControllerPlugin::Prenote {
         // What time the prenote expires
         std::chrono::system_clock::time_point expiresAt;
 
-        // Has it been acknowledged
-        bool acknowledged;
+        // What time the prenote expires
+        std::chrono::system_clock::time_point acknowledgedAt;
     };
 } // namespace UKControllerPlugin::Prenote

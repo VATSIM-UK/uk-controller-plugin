@@ -52,6 +52,18 @@ namespace UKControllerPlugin::Prenote {
         }
     }
 
+    void
+    PrenoteMessageCollection::RemoveWhere(const std::function<bool(const std::shared_ptr<PrenoteMessage>&)>& predicate)
+    {
+        for (auto prenote = this->prenotes.cbegin(); prenote != this->prenotes.cend();) {
+            if (predicate(*prenote)) {
+                prenote = this->prenotes.erase(prenote);
+            } else {
+                ++prenote;
+            }
+        }
+    }
+
     auto
     PrenoteMessageCollection::FirstWhere(const std::function<bool(const std::shared_ptr<PrenoteMessage>&)>& predicate)
         -> const std::shared_ptr<PrenoteMessage>&

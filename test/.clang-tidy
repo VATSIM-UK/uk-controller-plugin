@@ -5,7 +5,10 @@ Checks: >
   -cert-err58-cpp,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-avoid-non-const-global-variables,
+  -cppcoreguidelines-avoid-goto,
   -modernize-use-trailing-return-type,
+  -misc-unused-parameters,
+  -readability-function-cognitive-complexity,
   -misc-unused-parameters
 InheritParentConfig: true
 ...

@@ -1,8 +1,12 @@
 #include "CancelPrenoteMessageMenu.h"
 #include "DeparturePrenote.h"
+#include "NewPrenotePushEventHandler.h"
+#include "PrenoteAcknowledgedPushEventHandler.h"
+#include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
 #include "PrenoteFactory.h"
 #include "PrenoteMessageCollection.h"
+#include "PrenoteMessageTimeout.h"
 #include "PrenoteModule.h"
 #include "PrenoteService.h"
 #include "PrenoteServiceFactory.h"
@@ -20,6 +24,8 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "tag/TagItemCollection.h"
+#include "push/PushEventProcessorCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -28,7 +34,6 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Euroscope::CallbackFunction;
-using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Prenote::DeparturePrenote;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
 using UKControllerPlugin::Prenote::PrenoteFactory;
@@ -43,15 +48,12 @@ namespace UKControllerPlugin::Prenote {
     const int CANCEL_MESSAGE_MENU_TAG_FUNCTION_ID = 9016;
     const int SEND_MESSAGE_MENU_TAG_FUNCTION_ID = 9017;
 
+    const int MESSAGE_TIMEOUT_CHECK_INTERVAL = 10;
+
     void PrenoteModule::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
     {
+        // Prenote reminders bootstrap
         nlohmann::json prenotes = dependency.LoadDependency(GetDependencyKey(), nlohmann::json::array());
-        if (prenotes.empty()) {
-            BootstrapWarningMessage message("Prenote data not found, prenotes not loaded");
-            persistence.userMessager->SendMessageToUser(message);
-            LogError("Prenote data not found, prenotes not loaded");
-            return;
-        }
 
         ControllerPositionHierarchyFactory hierarchyFactory(*persistence.controllerPositions);
         PrenoteFactory prenoteFactory(hierarchyFactory);
@@ -67,6 +69,15 @@ namespace UKControllerPlugin::Prenote {
         }
 
         auto messages = std::make_shared<PrenoteMessageCollection>();
+        // Push event processors
+        persistence.pushEventProcessors->AddProcessor(
+            std::make_shared<NewPrenotePushEventHandler>(messages, *persistence.controllerPositions));
+        persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteAcknowledgedPushEventHandler>(messages));
+        persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteDeletedPushEventHandler>(messages));
+        persistence.timedHandler->RegisterEvent(
+            std::make_shared<PrenoteMessageTimeout>(messages), MESSAGE_TIMEOUT_CHECK_INTERVAL);
+
+        // Status indicator tag item
         persistence.tagHandler->RegisterTagItem(
             MESSAGE_STATUS_INDICATOR_TAG_ITEM_ID, std::make_shared<PrenoteStatusIndicatorTagItem>(messages));
 
