@@ -48,7 +48,7 @@ namespace UKControllerPlugin::Prenote {
         [[nodiscard]] auto GetAcknowledgedColumnEntryDimensions(int rowMultiplier) const -> RECT;
 
         // The width of the menu
-        const int baseWidth = 230;
+        const int baseWidth = 170;
         const int baseHeight = 20;
         const int heighPerPrenote = 25;
         const int textInsets = 5;
