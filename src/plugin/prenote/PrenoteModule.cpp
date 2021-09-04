@@ -1,3 +1,4 @@
+#include "AcknowledgePrenoteMessage.h"
 #include "CancelPrenoteMessageMenu.h"
 #include "DeparturePrenote.h"
 #include "NewPrenotePushEventHandler.h"
@@ -7,13 +8,13 @@
 #include "PrenoteFactory.h"
 #include "PrenoteMessageCollection.h"
 #include "PrenoteMessageStatusView.h"
-#include "TriggerPrenoteMessageStatusView.h"
 #include "PrenoteMessageTimeout.h"
 #include "PrenoteModule.h"
 #include "PrenoteService.h"
 #include "PrenoteServiceFactory.h"
 #include "PrenoteStatusIndicatorTagItem.h"
 #include "SendPrenoteMenu.h"
+#include "TriggerPrenoteMessageStatusView.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ControllerPosition.h"
@@ -52,6 +53,7 @@ namespace UKControllerPlugin::Prenote {
     const int CANCEL_MESSAGE_MENU_TAG_FUNCTION_ID = 9016;
     const int SEND_MESSAGE_MENU_TAG_FUNCTION_ID = 9017;
     const int MESSAGE_STATUS_VIEW_TAG_FUNCTION_ID = 9018;
+    const int ACKNOWLEDGE_MESSAGE_TAG_FUNCTION_ID = 9019;
 
     const int MESSAGE_TIMEOUT_CHECK_INTERVAL = 10;
 
@@ -143,6 +145,20 @@ namespace UKControllerPlugin::Prenote {
                 sendMenu->ControllerForPrenoteSelected(std::move(subject));
             });
         persistence.pluginFunctionHandlers->RegisterFunctionCall(sendPrenoteCallback);
+
+        // Acknowledge message
+        auto acknowledge = std::make_shared<AcknowledgePrenoteMessage>(
+            messages, *persistence.activeCallsigns, *persistence.taskRunner, *persistence.api);
+
+        TagFunction acknowledgePrenoteMessage(
+            ACKNOWLEDGE_MESSAGE_TAG_FUNCTION_ID,
+            "Acknowledge Prenote",
+            [acknowledge](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                const std::string& context,
+                const POINT& mousePos) { acknowledge->Acknowledge(fp); });
+        persistence.pluginFunctionHandlers->RegisterFunctionCall(acknowledgePrenoteMessage);
 
         // Prenote message status view
         auto statusViewTagFunction = std::make_shared<TriggerPrenoteMessageStatusView>();

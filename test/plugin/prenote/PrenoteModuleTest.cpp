@@ -153,4 +153,10 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_EQ(1, radarRenderables.CountRenderers());
         EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
     }
+
+    TEST_F(PrenoteModuleTest, ItRegistersAcknowledgeTagFunction)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9019));
+    }
 } // namespace UKControllerPluginTest::Prenote

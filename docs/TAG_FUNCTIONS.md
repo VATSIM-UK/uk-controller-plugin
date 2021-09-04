@@ -19,3 +19,4 @@
 9016 - Open Prenote Message Cancellation Menu
 9017 - Open Prenote Message Sending Menu
 9018 - Trigger Prenote Message Status View
+9019 - Acknowledge Prenote Message

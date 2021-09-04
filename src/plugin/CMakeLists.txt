@@ -591,7 +591,8 @@ set(src__prenote
     prenote/CancelPrenoteMessageMenu.cpp prenote/CancelPrenoteMessageMenu.h
     prenote/SendPrenoteMenu.cpp prenote/SendPrenoteMenu.h
     prenote/PrenoteMessageStatusView.cpp prenote/PrenoteMessageStatusView.h
-        prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h)
+    prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
+    prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push
@@ -667,7 +668,7 @@ set(src__releases
     "releases/DepartureReleaseColours.h"
     "releases/DepartureReleaseCountdownColours.cpp"
     "releases/DepartureReleaseCountdownColours.h"
-    "releases/DepartureReleaseDecisionList.cpp"
+    "releases/PendingPrenoteList.cpp"
     "releases/DepartureReleaseDecisionList.h"
     "releases/DepartureReleaseEventHandler.cpp"
     "releases/DepartureReleaseEventHandler.h"
