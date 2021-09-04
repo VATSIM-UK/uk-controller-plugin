@@ -78,4 +78,17 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_TRUE(message1->IsAcknowledged());
         EXPECT_TRUE(message2->IsAcknowledged());
     }
+
+    TEST_F(PrenoteMessageCollectionTest, ItemsCanBeRemovedByPredicate)
+    {
+        collection.Add(message1);
+        collection.Add(message2);
+        collection.RemoveWhere([](const std::shared_ptr<PrenoteMessage>& message) { return message->GetId() == 1; });
+        EXPECT_EQ(1, collection.Count());
+        EXPECT_EQ(message2, collection.GetById(5));
+        EXPECT_EQ(nullptr, collection.GetById(1));
+        collection.RemoveWhere([](const std::shared_ptr<PrenoteMessage>& message) { return message->GetId() == 5; });
+        EXPECT_EQ(0, collection.Count());
+        EXPECT_EQ(nullptr, collection.GetById(5));
+    }
 } // namespace UKControllerPluginTest::Prenote

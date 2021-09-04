@@ -69,4 +69,10 @@ namespace UKControllerPluginTest::Prenote {
         message->Acknowledge();
         EXPECT_TRUE(message->IsAcknowledged());
     }
+
+    TEST_F(PrenoteMessageTest, AcknowledgingSetsTheAcknowledgementTime)
+    {
+        message->Acknowledge();
+        EXPECT_EQ(TimeNow(), message->GetAcknowledgedAt());
+    }
 } // namespace UKControllerPluginTest::Prenote

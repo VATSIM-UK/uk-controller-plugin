@@ -2,36 +2,36 @@
 #include "push/PushEvent.h"
 #include "push/PushEventSubscription.h"
 
-namespace UKControllerPlugin {
-    namespace Push {
+namespace UKControllerPlugin::Push {
+
+    /*
+        An interface to be implemented by classes that
+        want to process events pushed from the API.
+    */
+    class PushEventProcessorInterface
+    {
+        public:
+        PushEventProcessorInterface() = default;
+        virtual ~PushEventProcessorInterface() = default;
+        PushEventProcessorInterface(const PushEventProcessorInterface&) = default;
+        PushEventProcessorInterface(PushEventProcessorInterface&&) = default;
+        auto operator=(const PushEventProcessorInterface&) -> PushEventProcessorInterface& = default;
+        auto operator=(PushEventProcessorInterface&&) -> PushEventProcessorInterface& = default;
 
         /*
-            An interface to be implemented by classes that
-            want to process events pushed from the API.
+            Process a single push event message
         */
-        class PushEventProcessorInterface
-        {
-            public:
-                virtual ~PushEventProcessorInterface() = default;
+        virtual void ProcessPushEvent(const PushEvent& message) = 0;
 
-                /*
-                    Process a single push event message
-                */
-                virtual void ProcessPushEvent(
-                    const PushEvent& message
-                ) = 0;
+        /*
+            When the initial sync of plugin events is made, let processors know
+            so that they can pre-load initial data, etc.
+        */
+        virtual void PluginEventsSynced(){};
 
-                /*
-                    When the initial sync of plugin events is made, let processors know
-                    so that they can pre-load initial data, etc.
-                */
-                virtual void PluginEventsSynced() = 0;
-
-                /*
-                    Return the channels that we want to subscribe to with this processor
-                */
-                virtual std::set<PushEventSubscription>
-                GetPushEventSubscriptions(void) const = 0;
-        };
-    } // namespace Push
-}  // namespace UKControllerPlugin
+        /*
+            Return the channels that we want to subscribe to with this processor
+        */
+        [[nodiscard]] virtual auto GetPushEventSubscriptions() const -> std::set<PushEventSubscription> = 0;
+    };
+} // namespace UKControllerPlugin::Push
