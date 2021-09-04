@@ -79,6 +79,33 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_TRUE(message2->IsAcknowledged());
     }
 
+    TEST_F(PrenoteMessageCollectionTest, ItReturnsTheFirstMessageMatchingAPredicate)
+    {
+        collection.Add(message1);
+        collection.Add(message2);
+        EXPECT_EQ(message2, collection.FirstWhere([](const std::shared_ptr<PrenoteMessage>& message) -> bool {
+            return message->GetCallsign() == "BAW456";
+        }));
+    }
+
+    TEST_F(PrenoteMessageCollectionTest, ItReturnsAnyMessageMatchingAPredicate)
+    {
+        collection.Add(message1);
+        collection.Add(message2);
+        auto returnedMessage = collection.FirstWhere(
+            [](const std::shared_ptr<PrenoteMessage>& message) -> bool { return message->GetSid() == "BADIM1X"; });
+        EXPECT_TRUE(returnedMessage == message1 || returnedMessage == message2);
+    }
+
+    TEST_F(PrenoteMessageCollectionTest, ItReturnsNullptrIfNothingMatchesPredicate)
+    {
+        collection.Add(message1);
+        collection.Add(message2);
+        EXPECT_EQ(nullptr, collection.FirstWhere([](const std::shared_ptr<PrenoteMessage>& message) -> bool {
+            return message->GetCallsign() == "BAW99";
+        }));
+    }
+
     TEST_F(PrenoteMessageCollectionTest, ItemsCanBeRemovedByPredicate)
     {
         collection.Add(message1);

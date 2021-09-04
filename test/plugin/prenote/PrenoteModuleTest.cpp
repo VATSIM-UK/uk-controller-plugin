@@ -5,6 +5,8 @@
 #include "message/UserMessager.h"
 #include "mock/MockDependencyLoader.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "tag/TagItemCollection.h"
 #include "prenote/PrenoteModule.h"
 #include "push/PushEventProcessorCollection.h"
 #include "timedevent/TimedEventCollection.h"
@@ -41,6 +43,8 @@ namespace UKControllerPluginTest::Prenote {
             container.pushEventProcessors = std::make_shared<PushEventProcessorCollection>();
             container.userMessager = std::make_unique<UserMessager>(mockPlugin);
             container.timedHandler = std::make_unique<TimedEventCollection>();
+            container.tagHandler = std::make_unique<UKControllerPlugin::Tag::TagItemCollection>();
+            container.pluginFunctionHandlers = std::make_unique<UKControllerPlugin::Plugin::FunctionCallEventHandler>();
         };
 
         NiceMock<MockDependencyLoader> dependency;
@@ -102,5 +106,35 @@ namespace UKControllerPluginTest::Prenote {
         PrenoteModule::BootstrapPlugin(container, dependency);
         EXPECT_EQ(1, container.timedHandler->CountHandlers());
         EXPECT_EQ(1, container.timedHandler->CountHandlersForFrequency(10));
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersStatusIndicatorTagItem)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_TRUE(container.tagHandler->HasHandlerForItemId(127));
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersCancelMenuTagFunction)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9016));
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersCancelMenuCallback)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Prenote Cancel"));
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersSendMenuTagFunction)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9017));
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersSendMenuCallback)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Prenote Send"));
     }
 } // namespace UKControllerPluginTest::Prenote

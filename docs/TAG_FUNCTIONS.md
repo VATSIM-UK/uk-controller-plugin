@@ -16,3 +16,5 @@
 9013 - Open Departure Release Decision Menu
 9014 - Open Departure Release Request Status View
 9015 - Open Departure Release Cancellation Menu
+9016 - Open Prenote Message Cancellation Menu
+9017 - Open Prenote Message Sending Menu
