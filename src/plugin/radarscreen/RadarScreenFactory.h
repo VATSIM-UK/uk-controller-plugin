@@ -5,31 +5,28 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
+    } // namespace Bootstrap
     class UKRadarScreen;
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin
 // END
 
-namespace UKControllerPlugin {
-    namespace RadarScreen {
+namespace UKControllerPlugin::RadarScreen {
 
-        /*
-            A class to create a RadarScreen object.
-        */
-        class RadarScreenFactory
-        {
-            public:
-                explicit RadarScreenFactory(const UKControllerPlugin::Bootstrap::PersistenceContainer & persistence);
-                UKControllerPlugin::UKRadarScreen * Create(void) const;
+    /*
+        A class to create a RadarScreen object.
+    */
+    class RadarScreenFactory
+    {
+        public:
+        explicit RadarScreenFactory(const UKControllerPlugin::Bootstrap::PersistenceContainer& persistence);
+        UKControllerPlugin::UKRadarScreen* Create() const;
 
-            private:
+        private:
+        // Container of all the things
+        const UKControllerPlugin::Bootstrap::PersistenceContainer& persistence;
 
-                // Container of all the things
-                const UKControllerPlugin::Bootstrap::PersistenceContainer & persistence;
-
-                // Stores the renderables
-                mutable std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>>
-                    renderableCollections;
-        };
-    }  // namespace RadarScreen
-}  // namespace UKControllerPlugin
+        // Stores the renderables
+        mutable std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>>
+            renderableCollections;
+    };
+} // namespace UKControllerPlugin::RadarScreen

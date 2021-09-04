@@ -347,7 +347,8 @@ set(test__prenote
         prenote/PrenoteMessageTimeoutTest.cpp
         "prenote/PrenoteStatusIndicatorTagItemTest.cpp"
         "prenote/CancelPrenoteMessageMenuTest.cpp"
-        "prenote/SendPrenoteMenuTest.cpp")
+        "prenote/SendPrenoteMenuTest.cpp"
+        "prenote/TriggerPrenoteMessageStatusViewTest.cpp")
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push

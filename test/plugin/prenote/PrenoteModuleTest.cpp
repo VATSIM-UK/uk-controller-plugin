@@ -6,9 +6,10 @@
 #include "mock/MockDependencyLoader.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "plugin/FunctionCallEventHandler.h"
-#include "tag/TagItemCollection.h"
 #include "prenote/PrenoteModule.h"
 #include "push/PushEventProcessorCollection.h"
+#include "radarscreen/RadarRenderableCollection.h"
+#include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
 using ::testing::NiceMock;
@@ -21,6 +22,7 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::Push::PushEventProcessorCollection;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -47,6 +49,7 @@ namespace UKControllerPluginTest::Prenote {
             container.pluginFunctionHandlers = std::make_unique<UKControllerPlugin::Plugin::FunctionCallEventHandler>();
         };
 
+        RadarRenderableCollection radarRenderables;
         NiceMock<MockDependencyLoader> dependency;
         NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
         PersistenceContainer container;
@@ -136,5 +139,18 @@ namespace UKControllerPluginTest::Prenote {
     {
         PrenoteModule::BootstrapPlugin(container, dependency);
         EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Prenote Send"));
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersStatusViewTagFunction)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9018));
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersRenderedScreenObjects)
+    {
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables);
+        EXPECT_EQ(1, radarRenderables.CountRenderers());
+        EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
     }
 } // namespace UKControllerPluginTest::Prenote

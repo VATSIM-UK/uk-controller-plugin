@@ -6,6 +6,8 @@
 #include "PrenoteEventHandler.h"
 #include "PrenoteFactory.h"
 #include "PrenoteMessageCollection.h"
+#include "PrenoteMessageStatusView.h"
+#include "TriggerPrenoteMessageStatusView.h"
 #include "PrenoteMessageTimeout.h"
 #include "PrenoteModule.h"
 #include "PrenoteService.h"
@@ -23,8 +25,9 @@
 #include "message/UserMessager.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
-#include "tag/TagItemCollection.h"
 #include "push/PushEventProcessorCollection.h"
+#include "radarscreen/RadarRenderableCollection.h"
+#include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
@@ -38,6 +41,7 @@ using UKControllerPlugin::Prenote::DeparturePrenote;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
 using UKControllerPlugin::Prenote::PrenoteFactory;
 using UKControllerPlugin::Prenote::PrenoteServiceFactory;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Tag::TagItemCollection;
 
@@ -47,8 +51,11 @@ namespace UKControllerPlugin::Prenote {
 
     const int CANCEL_MESSAGE_MENU_TAG_FUNCTION_ID = 9016;
     const int SEND_MESSAGE_MENU_TAG_FUNCTION_ID = 9017;
+    const int MESSAGE_STATUS_VIEW_TAG_FUNCTION_ID = 9018;
 
     const int MESSAGE_TIMEOUT_CHECK_INTERVAL = 10;
+
+    std::shared_ptr<PrenoteMessageCollection> messages; // NOLINT
 
     void PrenoteModule::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
     {
@@ -68,7 +75,9 @@ namespace UKControllerPlugin::Prenote {
             // If something goes wrong, someone else will log what.
         }
 
-        auto messages = std::make_shared<PrenoteMessageCollection>();
+        // Electronic prenote messages
+        messages = std::make_shared<PrenoteMessageCollection>();
+
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(
             std::make_shared<NewPrenotePushEventHandler>(messages, *persistence.controllerPositions));
@@ -134,6 +143,28 @@ namespace UKControllerPlugin::Prenote {
                 sendMenu->ControllerForPrenoteSelected(std::move(subject));
             });
         persistence.pluginFunctionHandlers->RegisterFunctionCall(sendPrenoteCallback);
+
+        // Prenote message status view
+        auto statusViewTagFunction = std::make_shared<TriggerPrenoteMessageStatusView>();
+
+        TagFunction triggerStatusView(
+            MESSAGE_STATUS_VIEW_TAG_FUNCTION_ID,
+            "Open Prenote Message Status View",
+            [statusViewTagFunction](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                const std::string& context,
+                const POINT& mousePos) { statusViewTagFunction->Trigger(fp, mousePos); });
+        persistence.pluginFunctionHandlers->RegisterFunctionCall(triggerStatusView);
+    }
+
+    void PrenoteModule::BootstrapRadarScreen(
+        const PersistenceContainer& persistence, RadarRenderableCollection& radarRenderables)
+    {
+        radarRenderables.RegisterRenderer(
+            radarRenderables.ReserveRendererIdentifier(),
+            std::make_shared<PrenoteMessageStatusView>(messages, *persistence.controllerPositions),
+            radarRenderables.afterLists);
     }
 
     auto PrenoteModule::GetDependencyKey() -> std::string
