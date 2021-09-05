@@ -110,8 +110,8 @@ namespace UKControllerPlugin::Prenote {
         Gdiplus::PointF position = {0, 0};
 
         inline static const RECT DEFAULT_POSITION = {100, 100, 200, 200};
-        const Gdiplus::Rect CLOSE_BUTTON_OFFSET = {325, 5, 10, 10};
-        const Gdiplus::Rect COLLAPSE_BUTTON_OFFSET = {310, 5, 10, 10};
+        const Gdiplus::Rect CLOSE_BUTTON_OFFSET = {375, 5, 10, 10};
+        const Gdiplus::Rect COLLAPSE_BUTTON_OFFSET = {360, 5, 10, 10};
 
         const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(227, 227, 227);
         const Gdiplus::Color TITLE_BAR_BASE_COLOUR = Gdiplus::Color(197, 129, 214);

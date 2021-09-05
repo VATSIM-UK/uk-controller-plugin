@@ -63,7 +63,7 @@ namespace UKControllerPlugin::Prenote {
 
         // Add the headers / column titles
         graphics.DrawString(L"Controller", this->GetControllerColumnEntryDimensions(0), this->titleBarTextBrush);
-        graphics.DrawString(L"Acknowledged", GetAcknowledgedColumnEntryDimensions(0), this->titleBarTextBrush);
+        graphics.DrawString(L"Ack", GetAcknowledgedColumnEntryDimensions(0), this->titleBarTextBrush);
 
         // Add the prenote data
         int rowMultiplier = 1;

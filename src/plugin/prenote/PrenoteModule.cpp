@@ -23,6 +23,7 @@
 #include "controller/ControllerPositionHierarchy.h"
 #include "controller/ControllerPositionHierarchyFactory.h"
 #include "dependency/DependencyLoaderInterface.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "message/UserMessager.h"
@@ -182,7 +183,8 @@ namespace UKControllerPlugin::Prenote {
     void PrenoteModule::BootstrapRadarScreen(
         const PersistenceContainer& persistence,
         RadarRenderableCollection& radarRenderables,
-        RadarScreen::ConfigurableDisplayCollection& configurables)
+        RadarScreen::ConfigurableDisplayCollection& configurables,
+        Euroscope::AsrEventHandlerCollection& asrHandlers)
     {
         // Status view renderer
         radarRenderables.RegisterRenderer(
@@ -201,6 +203,7 @@ namespace UKControllerPlugin::Prenote {
             radarRenderables.ReserveScreenObjectIdentifier(listRendererId));
 
         radarRenderables.RegisterRenderer(listRendererId, listRenderer, radarRenderables.afterLists);
+        asrHandlers.RegisterHandler(listRenderer);
 
         // Configuration menu toggle for pending list
         auto toggleListCallbackId = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();

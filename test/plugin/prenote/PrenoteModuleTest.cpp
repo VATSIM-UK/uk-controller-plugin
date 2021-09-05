@@ -1,6 +1,7 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "message/UserMessager.h"
 #include "mock/MockDependencyLoader.h"
@@ -19,6 +20,7 @@ using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Prenote::PrenoteModule;
@@ -51,6 +53,7 @@ namespace UKControllerPluginTest::Prenote {
             container.pluginFunctionHandlers = std::make_unique<UKControllerPlugin::Plugin::FunctionCallEventHandler>();
         };
 
+        AsrEventHandlerCollection asrHandlers;
         ConfigurableDisplayCollection configurableDisplays;
         RadarRenderableCollection radarRenderables;
         NiceMock<MockDependencyLoader> dependency;
@@ -158,21 +161,28 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(PrenoteModuleTest, ItRegistersRenderables)
     {
-        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays);
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays, asrHandlers);
         EXPECT_EQ(2, radarRenderables.CountRenderers());
         EXPECT_EQ(2, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
     }
 
     TEST_F(PrenoteModuleTest, ItRegistersRenderedScreenObjects)
     {
-        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays);
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays, asrHandlers);
         EXPECT_EQ(1, radarRenderables.CountScreenObjects());
     }
 
     TEST_F(PrenoteModuleTest, ItRegistersTogglePendingList)
     {
-        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays);
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays, asrHandlers);
         EXPECT_EQ(1, configurableDisplays.CountDisplays());
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle Pending Prenote List"));
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersPendingListForAsrEvents)
+    {
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays, asrHandlers);
+        EXPECT_EQ(1, asrHandlers.CountHandlers());
         EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle Pending Prenote List"));
     }
 } // namespace UKControllerPluginTest::Prenote

@@ -35,12 +35,12 @@ namespace UKControllerPlugin::Prenote {
                                   std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_BASE_COLOUR), std::chrono::seconds(2))
                                   ->AdditionalBrush(std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_FLASH_COLOUR));
 
-        this->titleBar = Components::TitleBar::Create(
-                             L"Departure Release Requests", {0, 0, this->titleBarWidth, this->titleBarHeight})
-                             ->WithDrag(this->screenObjectId)
-                             ->WithBorder(std::make_shared<Gdiplus::Pen>(OFF_WHITE_COLOUR))
-                             ->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_BASE_COLOUR))
-                             ->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(OFF_WHITE_COLOUR));
+        this->titleBar =
+            Components::TitleBar::Create(L"Pending Prenotes", {0, 0, this->titleBarWidth, this->titleBarHeight})
+                ->WithDrag(this->screenObjectId)
+                ->WithBorder(std::make_shared<Gdiplus::Pen>(OFF_WHITE_COLOUR))
+                ->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_BASE_COLOUR))
+                ->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(OFF_WHITE_COLOUR));
 
         this->closeButton = Components::Button::Create(
             CLOSE_BUTTON_OFFSET, this->screenObjectId, "closeButton", Components::CloseButton());
@@ -103,7 +103,7 @@ namespace UKControllerPlugin::Prenote {
         std::set<std::shared_ptr<PrenoteMessage>, ComparePrenoteMessages> prenotes;
         if (userControllerId != -1) {
             this->messages->Iterate([&prenotes, &userControllerId](const std::shared_ptr<PrenoteMessage>& message) {
-                if (message->GetTargetControllerId() == userControllerId) {
+                if (message->GetTargetControllerId() == userControllerId && !message->IsAcknowledged()) {
                     prenotes.insert(message);
                 }
             });
