@@ -1,9 +1,15 @@
 #pragma once
 #include "push/PushEventProcessorInterface.h"
 
-namespace UKControllerPlugin::Controller {
-    class ControllerPositionCollection;
-} // namespace UKControllerPlugin::Controller
+namespace UKControllerPlugin {
+    namespace Controller {
+        class ActiveCallsignCollection;
+        class ControllerPositionCollection;
+    } // namespace Controller
+    namespace Windows {
+        class WinApiInterface;
+    } // namespace Windows
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Prenote {
     class PrenoteMessageCollection;
@@ -13,7 +19,9 @@ namespace UKControllerPlugin::Prenote {
         public:
         NewPrenotePushEventHandler(
             std::shared_ptr<PrenoteMessageCollection> prenotes,
-            const Controller::ControllerPositionCollection& controllers);
+            const Controller::ControllerPositionCollection& controllers,
+            const Controller::ActiveCallsignCollection& activeCallsigns,
+            Windows::WinApiInterface& winApi);
         void ProcessPushEvent(const Push::PushEvent& message) override;
         [[nodiscard]] auto GetPushEventSubscriptions() const
             -> std::set<UKControllerPlugin::Push::PushEventSubscription> override;
@@ -26,5 +34,11 @@ namespace UKControllerPlugin::Prenote {
 
         // All the controllers
         const Controller::ControllerPositionCollection& controllers;
+
+        // Active controllers
+        const Controller::ActiveCallsignCollection& activeCallsigns;
+
+        // For playing sounds
+        Windows::WinApiInterface& winApi;
     };
 } // namespace UKControllerPlugin::Prenote
