@@ -8,6 +8,7 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "prenote/PrenoteModule.h"
 #include "push/PushEventProcessorCollection.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
@@ -22,6 +23,7 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::Push::PushEventProcessorCollection;
+using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
@@ -49,6 +51,7 @@ namespace UKControllerPluginTest::Prenote {
             container.pluginFunctionHandlers = std::make_unique<UKControllerPlugin::Plugin::FunctionCallEventHandler>();
         };
 
+        ConfigurableDisplayCollection configurableDisplays;
         RadarRenderableCollection radarRenderables;
         NiceMock<MockDependencyLoader> dependency;
         NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
@@ -147,22 +150,29 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9018));
     }
 
+    TEST_F(PrenoteModuleTest, ItRegistersAcknowledgeTagFunction)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9019));
+    }
+
     TEST_F(PrenoteModuleTest, ItRegistersRenderables)
     {
-        PrenoteModule::BootstrapRadarScreen(container, radarRenderables);
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays);
         EXPECT_EQ(2, radarRenderables.CountRenderers());
         EXPECT_EQ(2, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
     }
 
     TEST_F(PrenoteModuleTest, ItRegistersRenderedScreenObjects)
     {
-        PrenoteModule::BootstrapRadarScreen(container, radarRenderables);
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays);
         EXPECT_EQ(1, radarRenderables.CountScreenObjects());
     }
 
-    TEST_F(PrenoteModuleTest, ItRegistersAcknowledgeTagFunction)
+    TEST_F(PrenoteModuleTest, ItRegistersTogglePendingList)
     {
-        PrenoteModule::BootstrapPlugin(container, dependency);
-        EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9019));
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays);
+        EXPECT_EQ(1, configurableDisplays.CountDisplays());
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle Pending Prenote List"));
     }
 } // namespace UKControllerPluginTest::Prenote

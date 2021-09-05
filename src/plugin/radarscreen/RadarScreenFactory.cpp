@@ -102,7 +102,7 @@ namespace UKControllerPlugin::RadarScreen {
         Srd::BootstrapRadarScreen(configurableDisplays);
         Notifications::BootstrapRadarScreen(this->persistence, configurableDisplays);
         Releases::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
-        PrenoteModule::BootstrapRadarScreen(this->persistence, renderers);
+        PrenoteModule::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays);
 
         // Register command for position resets
         this->persistence.commandHandlers->RegisterHandler(std::make_shared<PositionResetCommand>(renderers));
