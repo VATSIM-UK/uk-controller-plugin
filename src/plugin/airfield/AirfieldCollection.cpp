@@ -1,65 +1,68 @@
-#include "pch/pch.h"
-#include "airfield/AirfieldCollection.h"
+#include "AirfieldCollection.h"
+#include "AirfieldModel.h"
 
-using UKControllerPlugin::Airfield::AirfieldModel;
+namespace UKControllerPlugin::Airfield {
 
-namespace UKControllerPlugin {
-    namespace Airfield {
+    AirfieldCollection::~AirfieldCollection() = default;
+    AirfieldCollection::AirfieldCollection(const AirfieldCollection& copyFrom) = delete;
+    AirfieldCollection::AirfieldCollection(AirfieldCollection&&) noexcept = default;
+    auto AirfieldCollection::operator=(const AirfieldCollection&) -> AirfieldCollection& = delete;
+    auto AirfieldCollection::operator=(AirfieldCollection&&) noexcept -> AirfieldCollection& = default;
 
-        /*
-            Add an airfield to the collection. Throws an exception
-            if already added.
-        */
-        void AirfieldCollection::AddAirfield(std::unique_ptr<AirfieldModel> airfield)
-        {
-            if (this->airfieldMap.count(airfield->GetIcao()) != 0) {
-                throw std::invalid_argument("Airfield " + airfield->GetIcao() + " has already been added.");
-            }
-
-            if (!this->IsHomeAirfield(airfield->GetIcao())) {
-                throw std::invalid_argument("Airfield " + airfield->GetIcao() + " is not a home airfield.");
-            }
-
-            this->airfieldMap.insert({ airfield->GetIcao(), std::move(airfield) });
+    /*
+        Add an airfield to the collection. Throws an exception
+        if already added.
+    */
+    void AirfieldCollection::AddAirfield(std::unique_ptr<AirfieldModel> airfield)
+    {
+        if (this->airfieldMap.count(airfield->GetIcao()) != 0) {
+            throw std::invalid_argument("Airfield " + airfield->GetIcao() + " has already been added.");
         }
 
-        /*
-            Returns an airfield based on its ICAO code. Throws an exception if not found.
-        */
-        const AirfieldModel& AirfieldCollection::FetchAirfieldByIcao(std::string icao) const
-        {
-            if (!this->IsHomeAirfield(icao) || this->GetSize() == 0) {
-                throw std::out_of_range("Airfield not found");
-            }
+        if (!IsHomeAirfield(airfield->GetIcao())) {
+            throw std::invalid_argument("Airfield " + airfield->GetIcao() + " is not a home airfield.");
+        }
 
-            auto iterator = std::find_if(this->airfieldMap.begin(), this->airfieldMap.end(),
-                [icao](std::pair<std::string, const std::unique_ptr<AirfieldModel> &> airfield) -> bool {
+        this->airfieldMap.insert({airfield->GetIcao(), std::move(airfield)});
+    }
 
-                return airfield.second->GetIcao().compare(icao) == 0;
+    /*
+        Returns an airfield based on its ICAO code. Throws an exception if not found.
+    */
+    auto AirfieldCollection::FetchAirfieldByIcao(const std::string& icao) const -> const AirfieldModel&
+    {
+        if (!IsHomeAirfield(icao) || this->GetSize() == 0) {
+            throw std::out_of_range("Airfield not found");
+        }
+
+        auto iterator = std::find_if(
+            this->airfieldMap.begin(),
+            this->airfieldMap.end(),
+            [icao](const std::pair<std::string, const std::unique_ptr<AirfieldModel>&>& airfield) -> bool {
+                return airfield.second->GetIcao() == icao;
             });
 
-            if (iterator == this->airfieldMap.end()) {
-                throw std::out_of_range("Airfield not found");
-            }
-
-            return *iterator->second;
+        if (iterator == this->airfieldMap.end()) {
+            throw std::out_of_range("Airfield not found");
         }
 
-        /*
-            Returns the number of airfields in the collection.
-        */
-        size_t AirfieldCollection::GetSize(void) const
-        {
-            return this->airfieldMap.size();
-        }
+        return *iterator->second;
+    }
 
-        /*
-            Returns true if the airfield is a "home" airfield, that is, the ICAO
-            starts with EG.
-        */
-        bool AirfieldCollection::IsHomeAirfield(std::string icao) const
-        {
-            return icao.substr(0, 2).compare("EG") == 0;
-        }
-    }  // namespace Airfield
-}  // namespace UKControllerPlugin
+    /*
+        Returns the number of airfields in the collection.
+    */
+    auto AirfieldCollection::GetSize() const -> size_t
+    {
+        return this->airfieldMap.size();
+    }
+
+    /*
+        Returns true if the airfield is a "home" airfield, that is, the ICAO
+        starts with EG.
+    */
+    auto AirfieldCollection::IsHomeAirfield(const std::string& icao) -> bool
+    {
+        return icao.substr(0, 2) == "EG";
+    }
+} // namespace UKControllerPlugin::Airfield
