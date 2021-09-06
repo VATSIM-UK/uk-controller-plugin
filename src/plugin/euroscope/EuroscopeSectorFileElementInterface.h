@@ -1,25 +1,21 @@
 #pragma once
-#include "pch/pch.h"
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
-        /*
-            An interface for a class that wraps EuroScopes CSectorElement class
-        */
-        class EuroscopeSectorFileElementInterface
-        {
-            public:
-
-                virtual std::string Airport(void) const = 0;
-                virtual std::string Name(void) const = 0;
-                virtual bool Runway1ActiveForDepartures(void) = 0;
-                virtual bool Runway1ActiveForArrivals(void) = 0;
-                virtual bool Runway2ActiveForDepartures(void) = 0;
-                virtual bool Runway2ActiveForArrivals(void) = 0;
-                virtual int Runway1Heading(void) = 0;
-                virtual int Runway2Heading(void) = 0;
-                virtual std::string Runway1Identifier(void) const = 0;
-                virtual std::string Runway2Identifier(void) const = 0;
-        };
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Euroscope {
+    /*
+        An interface for a class that wraps EuroScopes CSectorElement class
+    */
+    class EuroscopeSectorFileElementInterface
+    {
+        public:
+        [[nodiscard]] virtual auto Airport() const -> std::string = 0;
+        [[nodiscard]] virtual auto Name() const -> std::string = 0;
+        [[nodiscard]] virtual auto Runway1ActiveForDepartures() -> bool = 0;
+        [[nodiscard]] virtual auto Runway1ActiveForArrivals() -> bool = 0;
+        [[nodiscard]] virtual auto Runway2ActiveForDepartures() -> bool = 0;
+        [[nodiscard]] virtual auto Runway2ActiveForArrivals() -> bool = 0;
+        [[nodiscard]] virtual auto Runway1Heading() -> int = 0;
+        [[nodiscard]] virtual auto Runway2Heading() -> int = 0;
+        [[nodiscard]] virtual auto Runway1Identifier() const -> std::string = 0;
+        [[nodiscard]] virtual auto Runway2Identifier() const -> std::string = 0;
+    };
+} // namespace UKControllerPlugin::Euroscope

@@ -1,42 +1,37 @@
 #pragma once
-#include "dialog/DialogManager.h"
-#include "radarscreen/ConfigurableDisplayInterface.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "radarscreen/ConfigurableDisplayInterface.h"
 
-namespace UKControllerPlugin {
-    namespace Srd {
+namespace UKControllerPlugin::Dialog {
+    class DialogManager;
+} // namespace UKControllerPlugin::Dialog
 
-        /*
-            A handler that triggers the SRD searching dialog
-        */
-        class SrdSearchHandler : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
-            public UKControllerPlugin::Plugin::FunctionCallEventHandler
-        {
-            public:
-                SrdSearchHandler(
-                    const int menuCallbackId,
-                    const UKControllerPlugin::Dialog::DialogManager& dialog
-                );
+namespace UKControllerPlugin::Srd {
+    /*
+        A handler that triggers the SRD searching dialog
+    */
+    class SrdSearchHandler : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
+                             public UKControllerPlugin::Plugin::FunctionCallEventHandler
+    {
+        public:
+        SrdSearchHandler(int menuCallbackId, const Dialog::DialogManager& dialog);
 
-                // Inherited via ConfigurableDisplayInterface
-                void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
-                UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
-                void TagFunction(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-                    std::string context,
-                    const POINT& mousePos
-                );
+        // Inherited via ConfigurableDisplayInterface
+        void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
+        [[nodiscard]] auto GetConfigurationMenuItem() const -> Plugin::PopupMenuItem override;
+        void TagFunction(
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            const std::string& context,
+            const POINT& mousePos);
 
-                const std::string itemDescription = "Open SRD Search Dialog";
+        private:
+        // Manages the dialogs
+        const UKControllerPlugin::Dialog::DialogManager& dialog;
 
-            private:
+        // The callback id for the menu
+        const int menuCallbackId;
 
-                // Manages the dialogs
-                const UKControllerPlugin::Dialog::DialogManager& dialog;
-
-                // The callback id for the menu
-                const int menuCallbackId;
-        };
-    }  // namespace Srd
-}  // namespace UKControllerPlugin
+        const std::string itemDescription = "Open SRD Search Dialog";
+    };
+} // namespace UKControllerPlugin::Srd
