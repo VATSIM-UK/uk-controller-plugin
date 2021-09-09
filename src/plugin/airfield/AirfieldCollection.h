@@ -11,10 +11,11 @@ namespace UKControllerPlugin::Airfield {
     class AirfieldCollection
     {
         public:
+        AirfieldCollection();
         ~AirfieldCollection();
-        AirfieldCollection(const AirfieldCollection&);
+        AirfieldCollection(const AirfieldCollection& copyFrom) = delete;
         AirfieldCollection(AirfieldCollection&&) noexcept;
-        auto operator=(const AirfieldCollection&) -> AirfieldCollection&;
+        auto operator=(const AirfieldCollection&) -> AirfieldCollection& = delete;
         auto operator=(AirfieldCollection&&) noexcept -> AirfieldCollection&;
         void AddAirfield(std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel> airfield);
         [[nodiscard]] auto FetchAirfieldByIcao(const std::string& icao) const -> const AirfieldModel&;

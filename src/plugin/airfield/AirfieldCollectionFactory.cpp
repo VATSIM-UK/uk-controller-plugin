@@ -1,6 +1,5 @@
-#include "pch/pch.h"
-#include "airfield/AirfieldCollectionFactory.h"
-#include "airfield/AirfieldCollection.h"
+#include "AirfieldCollection.h"
+#include "AirfieldCollectionFactory.h"
 #include "airfield/AirfieldModel.h"
 #include "dependency/DependencyLoaderInterface.h"
 

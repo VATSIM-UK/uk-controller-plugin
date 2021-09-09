@@ -22,10 +22,13 @@ namespace UKControllerPlugin::Ownership {
     {
     }
 
+    AirfieldOwnershipManager::~AirfieldOwnershipManager() = default;
+
     /*
         Returns true if an airfield is "owned" by the given controller, false otherwise.
     */
-    auto AirfieldOwnershipManager::AirfieldOwnedBy(const std::string& icao, const ActiveCallsign& position) const -> bool
+    auto AirfieldOwnershipManager::AirfieldOwnedBy(const std::string& icao, const ActiveCallsign& position) const
+        -> bool
     {
         return this->AirfieldHasOwner(icao) && *this->ownershipMap.find(icao)->second == position;
     }
@@ -127,5 +130,10 @@ namespace UKControllerPlugin::Ownership {
         // We can't find an owner, so set no owner.
         LogInfo("Airfield " + icao + " is no longer managed by any controller");
         this->ownershipMap.erase(icao);
+    }
+
+    auto AirfieldOwnershipManager::NotFoundCallsign() const -> Controller::ActiveCallsign&
+    {
+        return *this->notFoundCallsign;
     }
 } // namespace UKControllerPlugin::Ownership

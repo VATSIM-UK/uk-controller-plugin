@@ -3,10 +3,9 @@
 
 namespace UKControllerPlugin::Airfield {
 
+    AirfieldCollection::AirfieldCollection() = default;
     AirfieldCollection::~AirfieldCollection() = default;
-    AirfieldCollection::AirfieldCollection(const AirfieldCollection& copyFrom) = delete;
     AirfieldCollection::AirfieldCollection(AirfieldCollection&&) noexcept = default;
-    auto AirfieldCollection::operator=(const AirfieldCollection&) -> AirfieldCollection& = delete;
     auto AirfieldCollection::operator=(AirfieldCollection&&) noexcept -> AirfieldCollection& = default;
 
     /*

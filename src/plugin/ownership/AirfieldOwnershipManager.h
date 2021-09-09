@@ -26,16 +26,19 @@ namespace UKControllerPlugin::Ownership {
         AirfieldOwnershipManager(
             const UKControllerPlugin::Airfield::AirfieldCollection& airfields,
             const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns);
+        ~AirfieldOwnershipManager();
         [[nodiscard]] auto
         AirfieldOwnedBy(const std::string& icao, const UKControllerPlugin::Controller::ActiveCallsign& position) const
             -> bool;
         [[nodiscard]] auto AirfieldOwnedByUser(const std::string& icao) const -> bool;
         [[nodiscard]] auto AirfieldHasOwner(const std::string& icao) const -> bool;
         void Flush();
-        [[nodiscard]] auto GetOwner(const std::string& icao) const -> const UKControllerPlugin::Controller::ActiveCallsign&;
+        [[nodiscard]] auto GetOwner(const std::string& icao) const
+            -> const UKControllerPlugin::Controller::ActiveCallsign&;
         [[nodiscard]] auto GetOwnedAirfields(const std::string& callsign) const
             -> std::vector<std::reference_wrapper<const UKControllerPlugin::Airfield::AirfieldModel>>;
         void RefreshOwner(const std::string& icao);
+        [[nodiscard]] auto NotFoundCallsign() const -> Controller::ActiveCallsign&;
 
         private:
         constexpr static const double INVALID_FREQUENCY = 199.998;
