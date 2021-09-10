@@ -1,6 +1,6 @@
 #pragma once
-#include "hold/HoldingData.h"
-#include "hold/CompareHolds.h"
+#include "CompareHolds.h"
+#include "HoldingData.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -19,9 +19,6 @@ namespace UKControllerPlugin {
                 const HoldingData noHold = {};
 
             private:
-
-                // Array to return if no holds are found
-                const std::set<HoldingData, CompareHolds> noHolds;
 
                 // All the published holds
                 std::set<HoldingData, CompareHolds> holds;

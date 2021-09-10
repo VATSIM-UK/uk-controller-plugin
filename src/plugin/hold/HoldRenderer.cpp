@@ -179,4 +179,9 @@ namespace UKControllerPlugin::Hold {
     {
         return objectDescription.substr(objectDescription.find('/') + 1);
     }
+
+    auto HoldRenderer::GetToggleCallbackId() const -> int
+    {
+        return this->toggleCallbackFunctionId;
+    }
 } // namespace UKControllerPlugin::Hold

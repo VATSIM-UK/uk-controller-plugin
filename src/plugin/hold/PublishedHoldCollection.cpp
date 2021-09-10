@@ -1,5 +1,4 @@
-#include "pch/pch.h"
-#include "hold/PublishedHoldCollection.h"
+#include "PublishedHoldCollection.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -21,20 +20,15 @@ namespace UKControllerPlugin {
         {
             std::set<const HoldingData*> holds;
 
-            std::for_each(
-                this->holds.cbegin(),
-                this->holds.cend(),
-                [&fix, &holds](const HoldingData& hold)
-                {
-                    if (hold.fix != fix) {
-                        return;
-                    }
-
-                    holds.insert(&hold);
+            std::for_each(this->holds.cbegin(), this->holds.cend(), [&fix, &holds](const HoldingData& hold) {
+                if (hold.fix != fix) {
+                    return;
                 }
-            );
 
-            return std::move(holds);
+                holds.insert(&hold);
+            });
+
+            return holds;
         }
 
         /*
@@ -42,18 +36,13 @@ namespace UKControllerPlugin {
          */
         const HoldingData& PublishedHoldCollection::GetById(int id) const
         {
-            auto foundHold = std::find_if(
-                this->holds.cbegin(),
-                this->holds.cend(),
-                [&id](const HoldingData& hold) -> bool
-                {
+            auto foundHold =
+                std::find_if(this->holds.cbegin(), this->holds.cend(), [&id](const HoldingData& hold) -> bool {
                     return hold.identifier == id;
-                }
-            );
+                });
 
             return foundHold != this->holds.cend() ? *foundHold : this->noHold;
         }
-
 
         /*
             Count all the published holds
@@ -63,5 +52,5 @@ namespace UKControllerPlugin {
             return this->holds.size();
         }
 
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

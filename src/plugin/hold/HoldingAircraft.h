@@ -1,45 +1,43 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Hold {
+namespace UKControllerPlugin::Hold {
 
-        /*
-            Data about a holding aircraft
-        */
-        class HoldingAircraft
-        {
-            public:
-                HoldingAircraft(std::string callsign, std::string assignedHold);
-                HoldingAircraft(std::string callsign, std::set<std::string> proximityHolds);
+    /*
+        Data about a holding aircraft
+    */
+    class HoldingAircraft
+    {
+        public:
+        HoldingAircraft(std::string callsign, std::string assignedHold);
+        HoldingAircraft(std::string callsign, std::set<std::string> proximityHolds);
 
-                void AddProximityHold(std::string hold);
-                std::string GetAssignedHold(void) const;
-                const std::chrono::system_clock::time_point& GetAssignedHoldEntryTime(void) const;
-                std::string GetCallsign(void) const;
-                const std::set<std::string> GetProximityHolds(void) const;
-                bool IsInAnyHold(void) const;
-                bool IsInHold(std::string hold) const;
-                bool IsInHoldProximity(std::string hold) const;
-                void SetAssignedHold(std::string hold);
-                void RemoveAssignedHold(void);
-                void RemoveProximityHold(std::string hold);
+        void AddProximityHold(const std::string& hold);
+        [[nodiscard]] auto GetAssignedHold() const -> std::string;
+        [[nodiscard]] auto GetAssignedHoldEntryTime() const -> const std::chrono::system_clock::time_point&;
+        [[nodiscard]] auto GetCallsign() const -> std::string;
+        [[nodiscard]] auto GetProximityHolds() const -> std::set<std::string>;
+        [[nodiscard]] auto IsInAnyHold() const -> bool;
+        [[nodiscard]] auto IsInHold(const std::string& hold) const -> bool;
+        [[nodiscard]] auto IsInHoldProximity(const std::string& hold) const -> bool;
+        void SetAssignedHold(std::string hold);
+        void RemoveAssignedHold();
+        void RemoveProximityHold(const std::string& hold);
+        [[nodiscard]] auto GetNoHoldAssigned() const -> const std::string&;
 
-                const std::string noHoldAssigned = "";
+        private:
+        // If there's no hold assigned
+        const std::string noHoldAssigned;
 
-            private:
+        // The callsign of the aircraft
+        const std::string callsign;
 
-                // The callsign of the aircraft
-                const std::string callsign;
+        // The time the aircraft entered the hold
+        std::chrono::system_clock::time_point entryTime;
 
-                // The time the aircraft entered the hold
-                std::chrono::system_clock::time_point entryTime;
+        // The assigned hold of the aircraft (if any)
+        std::string assignedHold = noHoldAssigned;
 
-                // The assigned hold of the aircraft (if any)
-                std::string assignedHold = noHoldAssigned;
-
-                // The holds against which the aircraft is the the vicinity
-                std::set<std::string> proximityHolds;
-        };
-
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+        // The holds against which the aircraft is the the vicinity
+        std::set<std::string> proximityHolds;
+    };
+} // namespace UKControllerPlugin::Hold

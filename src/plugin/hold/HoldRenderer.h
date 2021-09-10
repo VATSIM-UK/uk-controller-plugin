@@ -42,6 +42,7 @@ namespace UKControllerPlugin::Hold {
         // Inherited via AsrEventHandlerInterface
         void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
+        [[nodiscard]] auto GetToggleCallbackId() const -> int;
 
         private:
         [[nodiscard]] static auto GetHoldNameFromObjectDescription(const std::string& objectDescription) -> std::string;

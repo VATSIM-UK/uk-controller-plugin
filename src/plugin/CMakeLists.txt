@@ -51,7 +51,7 @@ set(src__command
     "command/CommandHandlerCollection.cpp"
     "command/CommandHandlerCollection.h"
     "command/CommandHandlerInterface.h"
-)
+        command/CommandHandlerInterface.cpp)
 source_group("src\\command" FILES ${src__command})
 
 set(src__components
@@ -189,7 +189,7 @@ set(src__euroscope
     "euroscope/UserSettingAwareCollection.h"
     "euroscope/UserSettingAwareInterface.h"
     "euroscope/UserSettingProviderInterface.h"
-)
+        euroscope/AsrEventHandlerInterface.cpp)
 source_group("src\\euroscope" FILES ${src__euroscope})
 
 set(src__flightinformationservice
@@ -635,7 +635,7 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-        radarscreen/RadarRenderableInterface.cpp)
+        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional

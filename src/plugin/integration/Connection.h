@@ -26,6 +26,6 @@ namespace UKControllerPlugin::Integration {
         /*
          * Is the connection still active
          */
-        [[nodiscard]] virtual auto Active() -> bool const = 0;
+        [[nodiscard]] virtual auto Active() const -> bool = 0;
     };
 } // namespace UKControllerPlugin::Integration

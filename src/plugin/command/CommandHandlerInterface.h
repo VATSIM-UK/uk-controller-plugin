@@ -1,20 +1,23 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Command {
+namespace UKControllerPlugin::Command {
 
+    /*
+        An interface for classes that are to handle Euroscope dot commands.
+    */
+    class CommandHandlerInterface
+    {
+        public:
+        CommandHandlerInterface();
+        virtual ~CommandHandlerInterface();
+        CommandHandlerInterface(const CommandHandlerInterface&);
+        CommandHandlerInterface(const CommandHandlerInterface&&) = delete;
+        [[nodiscard]] auto operator=(const CommandHandlerInterface&) -> CommandHandlerInterface&;
+        [[nodiscard]] auto operator=(const CommandHandlerInterface&&) -> CommandHandlerInterface& = delete;
         /*
-            An interface for classes that are to handle Euroscope dot commands.
+            Processes a given string command from Euroscope. Should return true if the command
+            has been processed, false otherwise.
         */
-        class CommandHandlerInterface
-        {
-            public:
-
-                /*
-                    Processes a given string command from Euroscope. Should return true if the command
-                    has been processed, false otherwise.
-                */
-                virtual bool ProcessCommand(std::string command) = 0;
-        };
-    }  // namespace Command
-}  // namespace UKControllerPlugin
+        virtual auto ProcessCommand(std::string command) -> bool = 0;
+    };
+} // namespace UKControllerPlugin::Command

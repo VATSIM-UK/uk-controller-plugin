@@ -198,7 +198,7 @@ namespace UKControllerPlugin::Hold {
         asrEvents.RegisterHandler(renderer);
 
         CallbackFunction renderToggleCallback(
-            renderer->toggleCallbackFunctionId,
+            renderer->GetToggleCallbackId(),
             "Toggle Hold Rendering",
             [renderer](int functionId, std::string subject, RECT screenObjectArea) {
                 renderer->Configure(functionId, std::move(subject), screenObjectArea);

@@ -1,43 +1,39 @@
-#include "pch/pch.h"
-#include "intention/AirfieldGroup.h"
-#include "intention/ShannonAirfieldGroup.h"
+#include "ShannonAirfieldGroup.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
 
-namespace UKControllerPlugin {
-    namespace IntentionCode {
+namespace UKControllerPlugin::IntentionCode {
 
-        ShannonAirfieldGroup::ShannonAirfieldGroup(void)
-        {
-            this->Initialise();
-        }
+    ShannonAirfieldGroup::ShannonAirfieldGroup()
+    {
+        this->Initialise(); // NOLINT
+    }
 
-        /*
-            We only care about one airfield for now (Shannon).
-        */
-        bool ShannonAirfieldGroup::HasAirfield(std::string airfield, EuroscopeExtractedRouteInterface & route) const
-        {
-            return this->AirfieldInList(airfield);
-        }
+    /*
+        We only care about one airfield for now (Shannon).
+    */
+    auto ShannonAirfieldGroup::HasAirfield(const std::string& airfield, EuroscopeExtractedRouteInterface& route) const
+        -> bool
+    {
+        return this->AirfieldInList(airfield);
+    }
 
-        /*
-            We return the Shannon code.
-        */
-        std::string ShannonAirfieldGroup::GetIntentionCodeForGroup(
-            std::string airfield,
-            EuroscopeExtractedRouteInterface & route
-        ) const {
-            return "NN";
-        }
+    /*
+        We return the Shannon code.
+    */
+    auto ShannonAirfieldGroup::GetIntentionCodeForGroup(
+        const std::string& airfield, EuroscopeExtractedRouteInterface& route) const -> std::string
+    {
+        return "NN";
+    }
 
-        /*
-            Create the list of airfields that we are concerned about.
-        */
-        bool ShannonAirfieldGroup::Initialise(void)
-        {
-            AirfieldGroup::Initialise();
-            this->AddAirfieldToList("EINN");
-            return true;
-        }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    /*
+        Create the list of airfields that we are concerned about.
+    */
+    auto ShannonAirfieldGroup::Initialise() -> bool
+    {
+        AirfieldGroup::Initialise();
+        this->AddAirfieldToList("EINN");
+        return true;
+    }
+} // namespace UKControllerPlugin::IntentionCode

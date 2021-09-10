@@ -20,11 +20,11 @@ namespace UKControllerPlugin::IntentionCode {
     // Bootstrap the intention code module
     void IntentionCodeModule::BootstrapPlugin(PersistenceContainer& container)
     {
-        container.sectorExitPoints = std::move(SectorExitRepositoryFactory::Create());
+        container.sectorExitPoints = SectorExitRepositoryFactory::Create();
 
         // Create the handler and its dependencies
         std::shared_ptr<IntentionCodeEventHandler> handler = std::make_shared<IntentionCodeEventHandler>(
-            std::move(*IntentionCodeFactory::Create(*container.sectorExitPoints)),
+            *IntentionCodeFactory::Create(*container.sectorExitPoints),
             IntentionCodeCache(),
             *container.integrationModuleContainer->outboundMessageHandler);
 

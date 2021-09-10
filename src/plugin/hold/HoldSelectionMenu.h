@@ -19,15 +19,15 @@ namespace UKControllerPlugin::Hold {
         HoldSelectionMenu(
             UKControllerPlugin::Hold::HoldManager& holdManager,
             UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
-            unsigned int callbackId);
-        void AddDisplayManager(std::shared_ptr<const UKControllerPlugin::Hold::HoldDisplayManager> manager);
+            int callbackId);
+        void AddDisplayManager(const std::shared_ptr<const UKControllerPlugin::Hold::HoldDisplayManager>& manager);
         [[nodiscard]] auto CountDisplayManagers() const -> size_t;
         void DisplayMenu(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-            std::string context,
+            const std::string& context,
             const POINT& mousePos);
-        void MenuItemClicked(int functionId, std::string context);
+        void MenuItemClicked(int functionId, const std::string& context);
 
         private:
         // A set of all the open ASR's display managers.
@@ -40,7 +40,7 @@ namespace UKControllerPlugin::Hold {
         UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
         // The callback id of the first hold
-        const unsigned int callbackId;
+        const int callbackId;
 
         const std::string noHold = "--";
     };

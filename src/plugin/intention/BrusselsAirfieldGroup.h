@@ -1,60 +1,51 @@
 #pragma once
 #include "intention/AirfieldGroup.h"
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
-        class EuroscopeExtractedRouteInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Euroscope {
+    class EuroscopeExtractedRouteInterface;
+} // namespace UKControllerPlugin::Euroscope
 
-namespace UKControllerPlugin {
-    namespace IntentionCode {
+namespace UKControllerPlugin::IntentionCode {
 
-        // Predeclarations
-        class AirfieldGroup;
-        // End
+    // Predeclarations
+    class AirfieldGroup;
+    // End
 
-        /*
-            Class representing the Brussels (EBXX) airfield group.
-        */
-        class BrusselsAirfieldGroup : public AirfieldGroup
-        {
+    /*
+        Class representing the Brussels (EBXX) airfield group.
+    */
+    class BrusselsAirfieldGroup : public AirfieldGroup
+    {
         public:
-            BrusselsAirfieldGroup(void);
-            bool AppliesToController(
-                std::string callsign,
-                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route
-            ) const override;
-            bool HasAirfield(
-                std::string airfield,
-                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route
-            ) const;
-            std::string GetIntentionCodeForGroup(
-                std::string airfield,
-                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route
-            ) const;
-
-            const std::string PRIMARY_CODE = "EB";
-            const std::string SECONDARY_CODE = "EX";
+        BrusselsAirfieldGroup();
+        auto AppliesToController(
+            const std::string& callsign, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const
+            -> bool override;
+        auto HasAirfield(
+            const std::string& airfield, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const
+            -> bool override;
+        auto GetIntentionCodeForGroup(
+            const std::string& airfield, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const
+            -> std::string override;
 
         protected:
-            bool Initialise(void);
+        auto Initialise() -> bool override;
 
-            // Airfields that should get the primary intention code
-            std::set<std::string> primaryAirfields = {
-                "EBBR",
-                "EBCI",
-                "EBAW",
-                "EBMB",
-                "EBCV",
-                "EBLG",
-            };
+        private:
+        const std::string PRIMARY_CODE = "EB";
+        const std::string SECONDARY_CODE = "EX";
 
-            // Airfields that should get the secondary intention code
-            std::set<std::string> secondaryAirfields = {
-                "EBKT",
-                "EBOS"
-            };
+        // Airfields that should get the primary intention code
+        std::set<std::string> primaryAirfields = {
+            "EBBR",
+            "EBCI",
+            "EBAW",
+            "EBMB",
+            "EBCV",
+            "EBLG",
         };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+
+        // Airfields that should get the secondary intention code
+        std::set<std::string> secondaryAirfields = {"EBKT", "EBOS"};
+    };
+} // namespace UKControllerPlugin::IntentionCode

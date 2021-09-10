@@ -1,7 +1,6 @@
-#include "pch/pch.h"
-
+#include "MinStackLevel.h"
+#include "MinStackManager.h"
 #include "helper/HelperFunctions.h"
-#include "minstack/MinStackManager.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Push::PushEvent;
@@ -10,7 +9,7 @@ using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 
 namespace UKControllerPlugin::MinStack {
 
-    MinStackManager::MinStackManager() : invalidMsl({})
+    MinStackManager::MinStackManager() : invalidMsl(std::make_shared<MinStackLevel>())
     {
     }
 
@@ -53,7 +52,7 @@ namespace UKControllerPlugin::MinStack {
     */
     auto MinStackManager::GetMinStackLevel(const std::string& key) const -> const MinStackLevel&
     {
-        return this->mslMap.count(key) == 1 ? this->mslMap.at(key) : this->invalidMsl;
+        return this->mslMap.count(key) == 1 ? this->mslMap.at(key) : *this->invalidMsl;
     }
 
     auto MinStackManager::GetMslKeyAirfield(const std::string& airfield) -> std::string
@@ -140,6 +139,6 @@ namespace UKControllerPlugin::MinStack {
 
     auto MinStackManager::InvalidMsl() const -> const MinStackLevel&
     {
-        return this->invalidMsl;
+        return *this->invalidMsl;
     }
 } // namespace UKControllerPlugin::MinStack

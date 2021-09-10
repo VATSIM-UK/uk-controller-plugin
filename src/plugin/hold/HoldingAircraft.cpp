@@ -1,78 +1,81 @@
-#include "pch/pch.h"
-#include "hold/HoldingAircraft.h"
+#include "HoldingAircraft.h"
 
-namespace UKControllerPlugin {
-    namespace Hold {
+namespace UKControllerPlugin::Hold {
 
-        HoldingAircraft::HoldingAircraft(std::string callsign, std::string assignedHold)
-            : callsign(callsign), assignedHold(assignedHold), entryTime(std::chrono::system_clock::now())
-        {
+    HoldingAircraft::HoldingAircraft(std::string callsign, std::string assignedHold)
+        : callsign(std::move(callsign)), entryTime(std::chrono::system_clock::now()),
+          assignedHold(std::move(assignedHold))
+    {
+    }
+
+    HoldingAircraft::HoldingAircraft(std::string callsign, std::set<std::string> proximityHolds)
+        : callsign(std::move(callsign)), proximityHolds(std::move(proximityHolds))
+    {
+    }
+
+    void HoldingAircraft::AddProximityHold(const std::string& hold)
+    {
+        this->proximityHolds.insert(hold);
+    }
+
+    auto HoldingAircraft::GetAssignedHold() const -> std::string
+    {
+        return this->assignedHold;
+    }
+
+    auto HoldingAircraft::GetAssignedHoldEntryTime() const -> const std::chrono::system_clock::time_point&
+    {
+        return this->entryTime;
+    }
+
+    auto HoldingAircraft::GetCallsign() const -> std::string
+    {
+        return this->callsign;
+    }
+
+    auto HoldingAircraft::GetProximityHolds() const -> std::set<std::string>
+    {
+        return this->proximityHolds;
+    }
+
+    auto HoldingAircraft::IsInAnyHold() const -> bool
+    {
+        return !this->proximityHolds.empty() || this->assignedHold != this->noHoldAssigned;
+    }
+
+    auto HoldingAircraft::IsInHold(const std::string& hold) const -> bool
+    {
+        return this->IsInHoldProximity(hold) || this->assignedHold == hold;
+    }
+
+    auto HoldingAircraft::IsInHoldProximity(const std::string& hold) const -> bool
+    {
+        return this->proximityHolds.find(hold) != this->proximityHolds.cend();
+    }
+
+    void HoldingAircraft::SetAssignedHold(std::string hold)
+    {
+        this->assignedHold = std::move(hold);
+        this->entryTime = std::chrono::system_clock::now();
+    }
+
+    void HoldingAircraft::RemoveAssignedHold()
+    {
+        this->assignedHold = this->noHoldAssigned;
+    }
+
+    void HoldingAircraft::RemoveProximityHold(const std::string& hold)
+    {
+        auto proximity = this->proximityHolds.find(hold);
+        if (proximity == this->proximityHolds.cend()) {
+            return;
         }
 
-        HoldingAircraft::HoldingAircraft(std::string callsign, std::set<std::string> proximityHolds)
-            : callsign(callsign), proximityHolds(proximityHolds)
-        {
-        }
+        this->proximityHolds.erase(proximity);
+    }
 
-        void HoldingAircraft::AddProximityHold(std::string hold)
-        {
-            this->proximityHolds.insert(hold);
-        }
-
-        std::string HoldingAircraft::GetAssignedHold(void) const
-        {
-            return this->assignedHold;
-        }
-
-        const std::chrono::system_clock::time_point& HoldingAircraft::GetAssignedHoldEntryTime(void) const
-        {
-            return this->entryTime;
-        }
-
-        std::string HoldingAircraft::GetCallsign(void) const
-        {
-            return this->callsign;
-        }
-
-        const std::set<std::string> HoldingAircraft::GetProximityHolds(void) const
-        {
-            return this->proximityHolds;
-        }
-
-        bool HoldingAircraft::IsInAnyHold(void) const
-        {
-            return this->proximityHolds.size() != 0 || this->assignedHold != this->noHoldAssigned;
-        }
-
-        bool HoldingAircraft::IsInHold(std::string hold) const
-        {
-            return this->IsInHoldProximity(hold) || this->assignedHold == hold;
-        }
-
-        bool HoldingAircraft::IsInHoldProximity(std::string hold) const
-        {
-            return this->proximityHolds.find(hold) != this->proximityHolds.cend();
-        }
-
-        void HoldingAircraft::SetAssignedHold(std::string hold)
-        {
-            this->assignedHold = hold;
-            this->entryTime = std::chrono::system_clock::now();
-        }
-
-        void HoldingAircraft::RemoveAssignedHold(void)
-        {
-            this->assignedHold = this->noHoldAssigned;
-        }
-
-        void HoldingAircraft::RemoveProximityHold(std::string hold)
-        {
-            auto proximity = this->proximityHolds.find(hold);
-            if (proximity == this->proximityHolds.cend()) {
-                return;
-            }
-
-            this->proximityHolds.erase(proximity);
-        }
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    auto HoldingAircraft::GetNoHoldAssigned() const -> const std::string&
+    {
+        return this->noHoldAssigned;
+    }
+} // namespace UKControllerPlugin::Hold

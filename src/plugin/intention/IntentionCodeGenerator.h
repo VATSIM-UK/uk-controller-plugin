@@ -1,71 +1,61 @@
 #pragma once
-#include "intention/SectorExitRepository.h"
+#include "IntentionCodeData.h"
 
-// Need to make the vector of groups a pointer to resolve this.
-#include "intention/AirfieldGroup.h"
-#include "intention/IntentionCodeData.h"
+namespace UKControllerPlugin::Euroscope {
+    class EuroscopeExtractedRouteInterface;
+} // namespace UKControllerPlugin::Euroscope
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
-        class EuroscopeExtractedRouteInterface;
-    }  // namespace Euroscope
-    namespace IntentionCode {
-        class SectorExitRepository;
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::IntentionCode {
+    class AirfieldGroup;
+    class SectorExitRepository;
 
-namespace UKControllerPlugin {
-    namespace IntentionCode {
+    /*
+        Class that determines an intention code, given a flightplan.
 
-        // Pre Declarations
-        class AirfieldGroup;
-        // END
+        Only one publically facing method, which uses the private methods to determine
+        what intention code to return. Once a flightplan has been recieved once, the
+        result is cached so it doesn't have to be caclulated on every TAG load.
+    */
+    class IntentionCodeGenerator
+    {
+        public:
+        IntentionCodeGenerator(
+            std::vector<std::unique_ptr<UKControllerPlugin::IntentionCode::AirfieldGroup>> airfieldGroups,
+            UKControllerPlugin::IntentionCode::SectorExitRepository& exitPoints);
+        ~IntentionCodeGenerator();
+        IntentionCodeGenerator(const IntentionCodeGenerator&);
+        IntentionCodeGenerator(const IntentionCodeGenerator&&) = delete;
+        auto operator=(const IntentionCodeGenerator&) -> IntentionCodeGenerator& = delete;
+        auto operator=(const IntentionCodeGenerator&&) -> IntentionCodeGenerator& = delete;
 
-        /*
-            Class that determines an intention code, given a flightplan.
+        auto GetIntentionCodeForFlightplan(
+            const std::string& callsign,
+            const std::string& origin,
+            const std::string& destination,
+            UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route,
+            int cruiseLevel) -> IntentionCodeData;
 
-            Only one publically facing method, which uses the private methods to determine
-            what intention code to return. Once a flightplan has been recieved once, the
-            result is cached so it doesn't have to be caclulated on every TAG load.
-        */
-        class IntentionCodeGenerator
-        {
-            public:
-                IntentionCodeGenerator(
-                    std::vector<std::unique_ptr<UKControllerPlugin::IntentionCode::AirfieldGroup>> airfieldGroups,
-                    UKControllerPlugin::IntentionCode::SectorExitRepository & exitPoints
-                );
-                UKControllerPlugin::IntentionCode::IntentionCodeData GetIntentionCodeForFlightplan(
-                    std::string callsign,
-                    std::string origin,
-                    std::string destination,
-                    UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route,
-                    int cruiseLevel
-                );
+        void SetUserControllerPosition(std::string position);
+        [[nodiscard]] auto GetUserControllerPosition() const -> std::string;
 
-                void SetUserControllerPosition(std::string position);
-                std::string GetUserControllerPosition(void) const;
+        private:
+        auto FindFirExitPoint(UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) -> int;
 
-                // Invalid code - to be used when we have no information for intention codes
-                const std::string invalidCode = "--";
+        std::string userControllerPosition;
 
-                // Used for the exit point index when its not a valid point on the route.
-                static const int invalidExitPointIndex = -1;
+        // Special airfields
+        std::vector<std::unique_ptr<UKControllerPlugin::IntentionCode::AirfieldGroup>> airfieldGroups;
 
-                // The value given to us by Euroscope if we try to find the time to a point that has been passed.
-                const int exitPointPassed = -1;
+        // Exit Point Repository
+        SectorExitRepository& exitPoints;
 
-            private:
+        // Invalid code - to be used when we have no information for intention codes
+        const std::string invalidCode = "--";
 
-                std::string userControllerPosition = "";
+        // Used for the exit point index when its not a valid point on the route.
+        static const int invalidExitPointIndex = -1;
 
-                int FindFirExitPoint(UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route);
-
-                // Special airfields
-                std::vector<std::unique_ptr<UKControllerPlugin::IntentionCode::AirfieldGroup>> airfieldGroups;
-
-                // Exit Point Repository
-                SectorExitRepository & exitPoints;
-            };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+        // The value given to us by Euroscope if we try to find the time to a point that has been passed.
+        const int exitPointPassed = -1;
+    };
+} // namespace UKControllerPlugin::IntentionCode

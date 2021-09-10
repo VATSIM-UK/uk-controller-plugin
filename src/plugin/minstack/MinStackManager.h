@@ -1,17 +1,13 @@
 #pragma once
-#include "minstack/MinStackLevel.h"
 #include "push/PushEventProcessorInterface.h"
 
-// Forward declarations
-namespace UKControllerPlugin {
-    namespace TaskManager {
-        class TaskRunnerInterface;
-    } // namespace TaskManager
-    class HelperFunctions;
-} // namespace UKControllerPlugin
-// END
+namespace UKControllerPlugin::TaskManager {
+    class TaskRunnerInterface;
+} // namespace UKControllerPlugin::TaskManager
 
 namespace UKControllerPlugin::MinStack {
+
+    struct MinStackLevel;
 
     /*
         Class for handling Minimum Stack Level Calculations
@@ -37,7 +33,7 @@ namespace UKControllerPlugin::MinStack {
         [[nodiscard]] auto InvalidMsl() const -> const MinStackLevel&;
 
         private:
-        const MinStackLevel invalidMsl;
+        const std::shared_ptr<MinStackLevel> invalidMsl;
 
         // Map of identifier to MSL
         std::map<std::string, UKControllerPlugin::MinStack::MinStackLevel> mslMap;
