@@ -1,22 +1,19 @@
-#include "pch/pch.h"
 #include "tag/TagItemCollection.h"
 #include "tag/TagItemInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "euroscope/EuroScopeCFlightPlanInterface.h"
-#include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "tag/TagData.h"
 
+using ::testing::StrictMock;
 using testing::Test;
-using UKControllerPlugin::Tag::TagData;
-using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
-using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
-using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Tag::TagItemCollection;
-using ::testing::StrictMock;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 
 namespace UKControllerPluginTest {
     namespace Tag {
@@ -24,55 +21,50 @@ namespace UKControllerPluginTest {
         class TagItemCollectionTest : public Test
         {
             public:
-                double fontSize = 24.1;
-                COLORREF tagColour = RGB(255, 255, 255);
-                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
-                char itemString[16] = "Foooooo";
+            double fontSize = 24.1;
+            COLORREF tagColour = RGB(255, 255, 255);
+            int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+            char itemString[16] = "Foooooo";
         };
 
         class FakeTagItem : public UKControllerPlugin::Tag::TagItemInterface
         {
             public:
-                FakeTagItem(std::string desc, std::string data)
-                    : desc(desc), data(data)
-                {
+            FakeTagItem(std::string desc, std::string data) : desc(desc), data(data)
+            {
+            }
 
-                }
+            std::string GetTagItemDescription(int tagItemId) const
+            {
+                return this->desc;
+            }
 
-                std::string GetTagItemDescription(int tagItemId) const
-                {
-                    return this->desc;
-                }
+            void SetTagItemData(TagData& tagData)
+            {
+                tagData.SetItemString(this->data);
+            }
 
-                void SetTagItemData(TagData& tagData) {
-                    tagData.SetItemString(this->data);
-                }
+            // Tag item description
+            const std::string desc;
 
-                // Tag item description
-                const std::string desc;
-
-                // Tag item data
-                const std::string data;
+            // Tag item data
+            const std::string data;
         };
 
         TEST_F(TagItemCollectionTest, RegisterTagItemThrowsExceptionIfIdAlreadyExists)
         {
             TagItemCollection collection;
-            EXPECT_NO_THROW(
-                collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "testdata"))
-            );
+            EXPECT_NO_THROW(collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "testdata")));
             EXPECT_THROW(
                 collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "testdata")),
-                std::invalid_argument
-            );
+                std::invalid_argument);
         }
 
         TEST_F(TagItemCollectionTest, RegisterAllItemsWithEuroscopeCallsCorrectly)
         {
             TagItemCollection collection;
             StrictMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-            EXPECT_CALL(mockPlugin, RegisterTagItem(1, "testdesc"))
-                .Times(1);
+            EXPECT_CALL(mockPlugin, RegisterTagItem(1, "testdesc")).Times(1);
 
             collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "testdata"));
             collection.RegisterAllItemsWithEuroscope(mockPlugin);
@@ -91,11 +83,10 @@ namespace UKControllerPluginTest {
                 itemString,
                 &euroscopeColourCode,
                 &tagColour,
-                &fontSize
-            );
+                &fontSize);
 
             collection.TagItemUpdate(tagData);
-            EXPECT_EQ(collection.errorTagItemText, tagData.GetItemString());
+            EXPECT_EQ("ERROR", tagData.GetItemString());
         }
 
         TEST_F(TagItemCollectionTest, TagItemUpdateSetsTagItemData)
@@ -111,8 +102,7 @@ namespace UKControllerPluginTest {
                 itemString,
                 &euroscopeColourCode,
                 &tagColour,
-                &fontSize
-            );
+                &fontSize);
 
             collection.RegisterTagItem(1, std::make_shared<FakeTagItem>("testdesc", "testdata"));
             collection.TagItemUpdate(tagData);
@@ -149,5 +139,5 @@ namespace UKControllerPluginTest {
             collection.RegisterTagItem(5, std::make_shared<FakeTagItem>("testdesc", "testdata"));
             EXPECT_TRUE(collection.HasHandlerForItemId(5));
         }
-    }  // namespace Tag
-}  // namespace UKControllerPluginTest
+    } // namespace Tag
+} // namespace UKControllerPluginTest

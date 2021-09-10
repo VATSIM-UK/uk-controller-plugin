@@ -1,19 +1,19 @@
-#include "pch/pch.h"
-#include "releases/DepartureReleaseDecisionList.h"
-#include "releases/DepartureReleaseRequest.h"
-#include "releases/DepartureReleaseEventHandler.h"
+#include "DepartureReleaseDecisionList.h"
+#include "DepartureReleaseEventHandler.h"
+#include "DepartureReleaseRequest.h"
+#include "components/BrushSwitcher.h"
+#include "components/Button.h"
+#include "components/ClickableArea.h"
+#include "components/StandardButtons.h"
+#include "components/TitleBar.h"
+#include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionCollection.h"
+#include "euroscope/EuroScopeRadarLoopbackInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
-#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "helper/HelperFunctions.h"
-#include "components/TitleBar.h"
-#include "components/Button.h"
-#include "components/StandardButtons.h"
-#include "components/ClickableArea.h"
-#include "components/BrushSwitcher.h"
-#include "controller/ControllerPosition.h"
-#include "controller/ControllerPositionCollection.h"
+#include "tag/TagData.h"
 
 namespace UKControllerPlugin {
 
@@ -28,34 +28,34 @@ namespace UKControllerPlugin {
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             const Controller::ControllerPositionCollection& controllers,
             const int screenObjectId
-        ): controllers(controllers), handler(handler), plugin(plugin), textBrush(Gdiplus::Color(227, 227, 227)),
+        ): controllers(controllers), handler(handler), plugin(plugin), textBrush(OFF_WHITE_COLOUR),
            screenObjectId(screenObjectId),
            visible(false), contentCollapsed(false)
         {
             this->brushSwitcher = Components::BrushSwitcher::Create(
-                    std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(197, 129, 214)),
+                    std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_BASE_COLOUR),
                     std::chrono::seconds(2)
                 )
-                ->AdditionalBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(255, 97, 93)));
+                ->AdditionalBrush(std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_FLASH_COLOUR));
 
             this->titleBar = Components::TitleBar::Create(
                                  L"Departure Release Requests",
                                  {0, 0, this->titleBarWidth, this->titleBarHeight}
                              )
                              ->WithDrag(this->screenObjectId)
-                             ->WithBorder(std::make_shared<Gdiplus::Pen>(Gdiplus::Color(227, 227, 227)))
-                             ->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(197, 129, 214)))
-                             ->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(227, 227, 227)));
+                             ->WithBorder(std::make_shared<Gdiplus::Pen>(OFF_WHITE_COLOUR))
+                             ->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_BASE_COLOUR))
+                             ->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(OFF_WHITE_COLOUR));
 
             this->closeButton = Components::Button::Create(
-                {325, 5, 10, 10},
+                closeButtonOffset,
                 this->screenObjectId,
                 "closeButton",
                 Components::CloseButton()
             );
 
             this->collapseButton = Components::Button::Create(
-                {310, 5, 10, 10},
+                collapseButtonOffset,
                 this->screenObjectId,
                 "collapseButton",
                 Components::CollapseButton([this]() -> bool { return this->contentCollapsed; })
@@ -97,7 +97,7 @@ namespace UKControllerPlugin {
             // Do nothing
         }
 
-        bool DepartureReleaseDecisionList::IsVisible() const
+        auto DepartureReleaseDecisionList::IsVisible() const -> bool
         {
             return this->visible;
         }
@@ -125,7 +125,7 @@ namespace UKControllerPlugin {
             // Translate to content position
             graphics.Translated(
                 this->position.X,
-                this->position.Y + this->titleBarHeight,
+                this->position.Y + static_cast<float>(this->titleBarHeight),
                 [this, &graphics, &radarScreen, &decisions]
                 {
                     if (this->contentCollapsed) {
@@ -145,17 +145,17 @@ namespace UKControllerPlugin {
                     Gdiplus::Rect sidColumn = this->sidColumnHeader;
 
                     // Draw each decision
-                    for (const auto decision : decisions) {
+                    for (const auto& decision : decisions) {
                         auto fp = this->plugin.GetFlightplanForCallsign(decision->Callsign());
                         if (!fp) {
                             continue;
                         }
 
                         // Shift the cols
-                        callsignColumn.Y += 25;
-                        controllerColumn.Y += 25;
-                        airportColumn.Y += 25;
-                        sidColumn.Y += 25;
+                        callsignColumn.Y += lineHeight;
+                        controllerColumn.Y += lineHeight;
+                        airportColumn.Y += lineHeight;
+                        sidColumn.Y += lineHeight;
 
                         graphics.DrawString(
                             HelperFunctions::ConvertToWideString(decision->Callsign()),
@@ -210,7 +210,7 @@ namespace UKControllerPlugin {
 
         void DepartureReleaseDecisionList::ResetPosition()
         {
-            this->Move({100, 100, 200, 200}, "");
+            this->Move(defaultRect, "");
         }
 
         void DepartureReleaseDecisionList::AsrLoadedEvent(
@@ -231,11 +231,11 @@ namespace UKControllerPlugin {
                 {
                     userSetting.GetIntegerEntry(
                         GetAsrKey("XPosition"),
-                        100
+                        defaultPosition
                     ),
                     userSetting.GetIntegerEntry(
                         GetAsrKey("YPosition"),
-                        100
+                        defaultPosition
                     ),
                     0,
                     0
@@ -278,22 +278,22 @@ namespace UKControllerPlugin {
             this->visible = !this->visible;
         }
 
-        bool DepartureReleaseDecisionList::ContentCollapsed() const
+        auto DepartureReleaseDecisionList::ContentCollapsed() const -> bool
         {
             return this->contentCollapsed;
         }
 
-        Gdiplus::PointF DepartureReleaseDecisionList::Position() const
+        auto DepartureReleaseDecisionList::Position() const -> Gdiplus::PointF
         {
             return this->position;
         }
 
-        std::string DepartureReleaseDecisionList::GetAsrKey(std::string item)
+        auto DepartureReleaseDecisionList::GetAsrKey(const std::string& item) -> std::string
         {
             return "departureReleaseRequestList" + item;
         }
 
-        std::string DepartureReleaseDecisionList::GetAsrDescription(std::string description)
+        auto DepartureReleaseDecisionList::GetAsrDescription(const std::string& description) -> std::string
         {
             return "Departure Release Request List " + description;
         }

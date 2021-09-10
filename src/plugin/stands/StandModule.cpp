@@ -1,5 +1,4 @@
 #include "CompareStands.h"
-#include "Stand.h"
 #include "StandEventHandler.h"
 #include "StandModule.h"
 #include "StandSerializer.h"
@@ -9,11 +8,9 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "integration/ExternalMessageEventHandler.h"
 #include "integration/InboundIntegrationMessageHandler.h"
-#include "integration/IntegrationPersistenceContainer.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
-#include "tag/TagFunction.h"
 #include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -35,13 +32,14 @@ namespace UKControllerPlugin::Stands {
         from_json(dependencies.LoadDependency(GetDependencyKey(), nlohmann::json::object()), stands);
 
         // Create the event handler
+        auto standSelectedCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
         std::shared_ptr<StandEventHandler> eventHandler = std::make_shared<StandEventHandler>(
             *container.api,
             *container.taskRunner,
             *container.plugin,
             *container.integrationModuleContainer->outboundMessageHandler,
             stands,
-            container.pluginFunctionHandlers->ReserveNextDynamicFunctionId());
+            standSelectedCallbackId);
 
         // Create a tag function for the stand assignment popup list and add a callback
         TagFunction openStandAssignmentPopupMenu(
@@ -58,7 +56,7 @@ namespace UKControllerPlugin::Stands {
         container.pluginFunctionHandlers->RegisterFunctionCall(openStandAssignmentPopupMenu);
 
         CallbackFunction standSelectedCallback(
-            eventHandler->standSelectedCallbackId,
+            standSelectedCallbackId,
             "Stand Selected",
             [eventHandler](int functionId, std::string subject, RECT screenObjectArea) {
                 eventHandler->StandSelected(functionId, std::move(subject), screenObjectArea);

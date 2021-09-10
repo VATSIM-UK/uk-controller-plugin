@@ -753,6 +753,7 @@ set(src__tag
     "tag/TagItemCollection.cpp"
     "tag/TagItemCollection.h"
     "tag/TagItemInterface.h"
+    "tag/TagItemInterface.cpp"
 )
 source_group("src\\tag" FILES ${src__tag})
 

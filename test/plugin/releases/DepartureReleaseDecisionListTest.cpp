@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
@@ -25,112 +24,58 @@ namespace UKControllerPluginTest {
         class DepartureReleaseDecisionListTest : public Test
         {
             public:
-                DepartureReleaseDecisionListTest()
-                    : handler(
-                          mockApi,
-                          taskRunner,
-                          mockPlugin,
-                          controllers,
-                          activeCallsigns,
-                          dialogManager,
-                          windows,
-                          101,
-                          102,
-                          103,
-                          104
-                      ),
-                      list(
-                          new UKControllerPlugin::Releases::DepartureReleaseDecisionList(
-                              handler,
-                              mockPlugin,
-                              controllers,
-                              3
-                          )
-                      ),
-                      dialogManager(dialogProvider),
-                      userSettings(mockAsrProvider)
-                {
-                    this->pluginReturnedFlightplan =
-                        std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
+            DepartureReleaseDecisionListTest()
+                : handler(
+                      mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
+                  list(new UKControllerPlugin::Releases::DepartureReleaseDecisionList(
+                      handler, mockPlugin, controllers, 3)),
+                  dialogManager(dialogProvider), userSettings(mockAsrProvider)
+            {
+                this->pluginReturnedFlightplan =
+                    std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
 
-                    ON_CALL(*this->pluginReturnedFlightplan, GetCallsign)
-                        .WillByDefault(testing::Return("BAW123"));
+                ON_CALL(*this->pluginReturnedFlightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
 
-                    this->pluginReturnedRadarTarget =
-                        std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>();
+                this->pluginReturnedRadarTarget =
+                    std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>();
 
-                    // Add positions and releases
-                    auto request = std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequest>(
-                        1,
-                        "BAW123",
-                        3,
-                        2,
-                        std::chrono::system_clock::now() + std::chrono::minutes(5)
-                    );
-                    handler.AddReleaseRequest(request);
-                    auto position = std::make_shared<UKControllerPlugin::Controller::ControllerPosition>(
-                        2,
-                        "EGFF_APP",
-                        125.850,
-                        std::vector<std::string>{"EGGD", "EGFF"},
-                        true,
-                        true
-                    );
-                    controllers.AddPosition(position);
-                    auto controllerCallsign = std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
-                        "EGFF_APP",
-                        "Test 1",
-                        *position
-                    );
-                    this->activeCallsigns.AddUserCallsign(*controllerCallsign);
-                }
+                // Add positions and releases
+                auto request = std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequest>(
+                    1, "BAW123", 3, 2, std::chrono::system_clock::now() + std::chrono::minutes(5));
+                handler.AddReleaseRequest(request);
+                auto position = std::make_shared<UKControllerPlugin::Controller::ControllerPosition>(
+                    2, "EGFF_APP", 125.850, std::vector<std::string>{"EGGD", "EGFF"}, true, true);
+                controllers.AddPosition(position);
+                auto controllerCallsign =
+                    std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>("EGFF_APP", "Test 1", *position);
+                this->activeCallsigns.AddUserCallsign(*controllerCallsign);
+            }
 
-                testing::NiceMock<Euroscope::MockUserSettingProviderInterface> mockAsrProvider;
-                UKControllerPlugin::Euroscope::UserSetting userSettings;
-                std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>
-                pluginReturnedFlightplan;
-                std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>
-                pluginReturnedRadarTarget;
-                std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseDecisionList> list;
-                UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
-                UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
-                testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;
-                testing::NiceMock<Api::MockApiInterface> api;
-                testing::NiceMock<Windows::MockWinApi> windows;
-                UKControllerPlugin::Dialog::DialogManager dialogManager;
-                UKControllerPlugin::Controller::ControllerPositionCollection controllers;
-                testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
-                testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
-                testing::NiceMock<Api::MockApiInterface> mockApi;
-                TaskManager::MockTaskRunnerInterface taskRunner;
-
+            testing::NiceMock<Euroscope::MockUserSettingProviderInterface> mockAsrProvider;
+            UKControllerPlugin::Euroscope::UserSetting userSettings;
+            std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>> pluginReturnedFlightplan;
+            std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>> pluginReturnedRadarTarget;
+            std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseDecisionList> list;
+            UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
+            UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
+            testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;
+            testing::NiceMock<Api::MockApiInterface> api;
+            testing::NiceMock<Windows::MockWinApi> windows;
+            UKControllerPlugin::Dialog::DialogManager dialogManager;
+            UKControllerPlugin::Controller::ControllerPositionCollection controllers;
+            testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
+            testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
+            testing::NiceMock<Api::MockApiInterface> mockApi;
+            TaskManager::MockTaskRunnerInterface taskRunner;
         };
 
         TEST_F(DepartureReleaseDecisionListTest, LeftClickCollapseButtonTogglesCollapsedContent)
         {
-            this->list->LeftClick(
-                mockRadarScreen,
-                1,
-                "collapseButton",
-                {},
-                {}
-            );
+            this->list->LeftClick(mockRadarScreen, 1, "collapseButton", {}, {});
             EXPECT_TRUE(this->list->ContentCollapsed());
-            this->list->LeftClick(
-                mockRadarScreen,
-                1,
-                "collapseButton",
-                {},
-                {}
-            );
+            this->list->LeftClick(mockRadarScreen, 1, "collapseButton", {}, {});
             EXPECT_FALSE(this->list->ContentCollapsed());
-            this->list->LeftClick(
-                mockRadarScreen,
-                1,
-                "collapseButton",
-                {},
-                {}
-            );
+            this->list->LeftClick(mockRadarScreen, 1, "collapseButton", {}, {});
             EXPECT_TRUE(this->list->ContentCollapsed());
         }
 
@@ -139,21 +84,9 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->list->IsVisible());
             this->list->ToggleVisible();
             EXPECT_TRUE(this->list->IsVisible());
-            this->list->LeftClick(
-                mockRadarScreen,
-                1,
-                "closeButton",
-                {},
-                {}
-            );
+            this->list->LeftClick(mockRadarScreen, 1, "closeButton", {}, {});
             EXPECT_FALSE(this->list->IsVisible());
-            this->list->LeftClick(
-                mockRadarScreen,
-                1,
-                "closeButton",
-                {},
-                {}
-            );
+            this->list->LeftClick(mockRadarScreen, 1, "closeButton", {}, {});
             EXPECT_FALSE(this->list->IsVisible());
         }
 
@@ -165,36 +98,21 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
                 .WillByDefault(Return(this->pluginReturnedRadarTarget));
 
-            EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, "Departure Release Decision", 1))
-                .Times(1);
+            EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, "Departure Release Decision", 1)).Times(1);
 
-            this->list->LeftClick(
-                mockRadarScreen,
-                1,
-                "BAW123",
-                {},
-                {}
-            );
+            this->list->LeftClick(mockRadarScreen, 1, "BAW123", {}, {});
         }
 
         TEST_F(DepartureReleaseDecisionListTest, LeftClickACallsignDoesntToggleMenuIfNoFlightplan)
         {
-            ON_CALL(this->mockPlugin, GetFlightplanForCallsign("BAW123"))
-                .WillByDefault(testing::Return(nullptr));
+            ON_CALL(this->mockPlugin, GetFlightplanForCallsign("BAW123")).WillByDefault(testing::Return(nullptr));
 
             ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
                 .WillByDefault(Return(this->pluginReturnedRadarTarget));
 
-            EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, "Departure Release Decision", 1))
-            .Times(0);
+            EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, "Departure Release Decision", 1)).Times(0);
 
-            this->list->LeftClick(
-                mockRadarScreen,
-                1,
-                "BAW123",
-                {},
-                {}
-            );
+            this->list->LeftClick(mockRadarScreen, 1, "BAW123", {}, {});
         }
 
         TEST_F(DepartureReleaseDecisionListTest, LeftClickACallsignDoesntToggleMenuIfNoRadarTarget)
@@ -202,25 +120,16 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockPlugin, GetFlightplanForCallsign("BAW123"))
                 .WillByDefault(Return(this->pluginReturnedFlightplan));
 
-            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
-                .WillByDefault(testing::Return(nullptr));
+            ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(testing::Return(nullptr));
 
-            EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, "Departure Release Decision", 1))
-            .Times(0);
+            EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, "Departure Release Decision", 1)).Times(0);
 
-            this->list->LeftClick(
-                mockRadarScreen,
-                1,
-                "BAW123",
-                {},
-                {}
-            );
+            this->list->LeftClick(mockRadarScreen, 1, "BAW123", {}, {});
         }
 
         TEST_F(DepartureReleaseDecisionListTest, ItLoadsDefaultVisiblityFromAsr)
         {
-            EXPECT_CALL(mockAsrProvider, GetKey(testing::_))
-                .WillRepeatedly(testing::Return(""));
+            EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).WillRepeatedly(testing::Return(""));
 
             EXPECT_CALL(mockAsrProvider, GetKey("departureReleaseRequestListVisible"))
                 .Times(1)
@@ -233,8 +142,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseDecisionListTest, ItLoadsVisibilityFromAsr)
         {
-            EXPECT_CALL(mockAsrProvider, GetKey(testing::_))
-                .WillRepeatedly(testing::Return(""));
+            EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).WillRepeatedly(testing::Return(""));
 
             EXPECT_CALL(mockAsrProvider, GetKey("departureReleaseRequestListVisible"))
                 .Times(1)
@@ -247,8 +155,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseDecisionListTest, ItLoadsDefaultContentCollapseFromAsr)
         {
-            EXPECT_CALL(mockAsrProvider, GetKey(testing::_))
-                .WillRepeatedly(testing::Return(""));
+            EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).WillRepeatedly(testing::Return(""));
 
             EXPECT_CALL(mockAsrProvider, GetKey("departureReleaseRequestListContentCollapsed"))
                 .Times(1)
@@ -261,8 +168,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseDecisionListTest, ItLoadsContentCollapsedFromAsr)
         {
-            EXPECT_CALL(mockAsrProvider, GetKey(testing::_))
-                .WillRepeatedly(testing::Return(""));
+            EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).WillRepeatedly(testing::Return(""));
 
             EXPECT_CALL(mockAsrProvider, GetKey("departureReleaseRequestListContentCollapsed"))
                 .Times(1)
@@ -275,8 +181,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseDecisionListTest, ItLoadsDefaultPositionFromAsr)
         {
-            EXPECT_CALL(mockAsrProvider, GetKey(testing::_))
-                .WillRepeatedly(testing::Return(""));
+            EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).WillRepeatedly(testing::Return(""));
 
             EXPECT_CALL(mockAsrProvider, GetKey("departureReleaseRequestListXPosition"))
                 .Times(1)
@@ -293,12 +198,11 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseDecisionListTest, ItLoadsPositionFromAsr)
         {
-            EXPECT_CALL(mockAsrProvider, GetKey(testing::_))
-                .WillRepeatedly(testing::Return(""));
+            EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).WillRepeatedly(testing::Return(""));
 
             EXPECT_CALL(mockAsrProvider, GetKey("departureReleaseRequestListXPosition"))
                 .Times(1)
-            .WillOnce(testing::Return("250"));
+                .WillOnce(testing::Return("250"));
 
             EXPECT_CALL(mockAsrProvider, GetKey("departureReleaseRequestListYPosition"))
                 .Times(1)
@@ -314,8 +218,7 @@ namespace UKControllerPluginTest {
             this->list->Move({100, 200, 300, 400}, "");
             EXPECT_CALL(
                 mockAsrProvider,
-                SetKey("departureReleaseRequestListVisible", "Departure Release Request List Visible", "0")
-            )
+                SetKey("departureReleaseRequestListVisible", "Departure Release Request List Visible", "0"))
                 .Times(1);
 
             EXPECT_CALL(
@@ -323,29 +226,17 @@ namespace UKControllerPluginTest {
                 SetKey(
                     "departureReleaseRequestListContentCollapsed",
                     "Departure Release Request List Content Collapsed",
-                    "0"
-                )
-            )
+                    "0"))
                 .Times(1);
 
             EXPECT_CALL(
                 mockAsrProvider,
-                SetKey(
-                    "departureReleaseRequestListXPosition",
-                    "Departure Release Request List X Position",
-                    "100"
-                )
-            )
+                SetKey("departureReleaseRequestListXPosition", "Departure Release Request List X Position", "100"))
                 .Times(1);
 
             EXPECT_CALL(
                 mockAsrProvider,
-                SetKey(
-                    "departureReleaseRequestListYPosition",
-                    "Departure Release Request List Y Position",
-                    "200"
-                )
-            )
+                SetKey("departureReleaseRequestListYPosition", "Departure Release Request List Y Position", "200"))
                 .Times(1);
 
             this->list->AsrClosingEvent(userSettings);

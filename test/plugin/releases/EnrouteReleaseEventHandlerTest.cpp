@@ -1,18 +1,10 @@
-#include "pch/pch.h"
 #include "releases/EnrouteReleaseEventHandler.h"
 #include "mock/MockApiInterface.h"
-#include "push/PushEventSubscription.h"
-#include "releases/EnrouteReleaseType.h"
-#include "releases/EnrouteRelease.h"
-#include "releases/CompareEnrouteReleaseTypes.h"
-#include "push/PushEvent.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "plugin/PopupMenuItem.h"
 #include "mock/MockTaskRunnerInterface.h"
-#include "mock/MockEuroScopeCControllerInterface.h"
 #include "api/ApiException.h"
 
 using ::testing::Test;
@@ -231,7 +223,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ(
                 "Enroute Release Type",
-                this->handler.GetTagItemDescription(this->handler.enrouteReleaseTypeTagItemId)
+                this->handler.GetTagItemDescription(this->handler.GetReleaseTypeTagItemId())
             );
         }
 
@@ -239,7 +231,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ(
                 "Enroute Release Point",
-                this->handler.GetTagItemDescription(this->handler.enrouteReleasePointTagItemId)
+                this->handler.GetTagItemDescription(this->handler.GetReleasePointTagItemId())
             );
         }
 
@@ -247,7 +239,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ(
                 "Enroute Release Point or Blank",
-                this->handler.GetTagItemDescription(this->handler.enrouteReleasePointOrBlankTagItemId)
+                this->handler.GetTagItemDescription(this->handler.GetReleasePointOrBlankTagItemId())
             );
         }
 
@@ -343,7 +335,7 @@ namespace UKControllerPluginTest {
             };
 
             this->handler.ProcessPushEvent(message);
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDoesntAddIncomingReleasesIfNoUserController)
@@ -364,7 +356,7 @@ namespace UKControllerPluginTest {
             };
 
             this->handler.ProcessPushEvent(message);
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItRejectsInvalidReleaseMessages)
@@ -382,7 +374,7 @@ namespace UKControllerPluginTest {
 
             this->handler.ProcessPushEvent(message);
 
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItIgnoresIncorrectEvents)
@@ -401,7 +393,7 @@ namespace UKControllerPluginTest {
 
             this->handler.ProcessPushEvent(message);
 
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysOutgoingReleaseTypeTagItem)
@@ -693,8 +685,8 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ("ARNUN", this->handler.GetIncomingRelease("BAW123").releasePoint);
             EXPECT_EQ("ABTUM", this->handler.GetOutgoingRelease("BAW123").releasePoint);
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW456"));
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW456"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW456"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetOutgoingRelease("BAW456"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItTriggersTheReleaseTypeMenu)
@@ -785,7 +777,7 @@ namespace UKControllerPluginTest {
 
             this->handler.AddOutgoingRelease("BAW123", { 2, "" });
             this->handler.ReleaseTypeSelected(1, "N", {});
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetOutgoingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItUpdatesOutgoingReleaseIfAlreadyExists)
@@ -918,7 +910,7 @@ namespace UKControllerPluginTest {
                 .WillByDefault(Return(pluginFlightplan));
 
             this->handler.EditReleasePoint(1, "ARNUN", {});
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetOutgoingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItTruncatesOutgoingReleasePointIfTooLong)

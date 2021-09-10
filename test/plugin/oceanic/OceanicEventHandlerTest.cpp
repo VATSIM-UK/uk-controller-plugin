@@ -1,5 +1,4 @@
 #include "pch/pch.h"
-
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
 #include "dialog/DialogData.h"
@@ -101,7 +100,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(0, this->handler.CountClearances());
         }
 
-        TEST_F(OceanicEventHandlerTest, ItHandlesInvalidClearancesFromNattrak)
+        TEST_F(OceanicEventHandlerTest, ItHandlesGetInvalidClearancesFromNattrak)
         {
             nlohmann::json clearanceData = {
                 {"callsign", "BAW123"},
@@ -117,7 +116,7 @@ namespace UKControllerPluginTest {
 
             this->SimulateNattrakCall(false, 200, nlohmann::json::array({clearanceData}).dump());
             EXPECT_EQ(0, this->handler.CountClearances());
-            EXPECT_EQ(this->handler.invalidClearance, this->handler.GetClearanceForCallsign("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidClearance(), this->handler.GetClearanceForCallsign("BAW123"));
         }
 
         TEST_F(OceanicEventHandlerTest, ItUpdatesClearanceDataFromNattrak)
