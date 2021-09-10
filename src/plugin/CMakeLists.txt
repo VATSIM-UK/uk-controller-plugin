@@ -634,7 +634,7 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-)
+        radarscreen/RadarRenderableInterface.cpp)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional
@@ -872,7 +872,7 @@ set(ROOT_NAMESPACE UKControllerPlugin)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
-################################################################################
+#############################################1###################################
 # Target name
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -962,6 +962,7 @@ if(MSVC)
         /std:c++17;
         /sdl;
         /W3;
+        /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         /Zm200;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
