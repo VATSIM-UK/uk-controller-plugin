@@ -3,8 +3,8 @@
 #include "airfield/AirfieldModel.h"
 #include "dependency/DependencyLoaderInterface.h"
 
-using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Airfield::AirfieldModel;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 
 namespace UKControllerPlugin {
     namespace Airfield {
@@ -12,14 +12,11 @@ namespace UKControllerPlugin {
         // Initialise the required dependency string
         const std::string AirfieldCollectionFactory::requiredDependency = "DEPENDENCY_AIRFIELD_OWNERSHIP";
 
-        std::unique_ptr<const AirfieldCollection> AirfieldCollectionFactory::Create(
-            UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
-        ) {
+        std::unique_ptr<const AirfieldCollection>
+        AirfieldCollectionFactory::Create(UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency)
+        {
             std::unique_ptr<AirfieldCollection> collection(new AirfieldCollection);
-            nlohmann::json dependencyData = dependency.LoadDependency(
-                requiredDependency,
-                nlohmann::json::object()
-            );
+            nlohmann::json dependencyData = dependency.LoadDependency(requiredDependency, nlohmann::json::object());
 
             if (!dependencyData.is_object()) {
                 // If something goes wrong, just return the empty collection.
@@ -45,5 +42,5 @@ namespace UKControllerPlugin {
             LogInfo("Loaded " + std::to_string(collection->GetSize()) + " airfields into airfield collection");
             return std::move(collection);
         }
-    }  // namespace Airfield
-}  // namespace UKControllerPlugin
+    } // namespace Airfield
+} // namespace UKControllerPlugin

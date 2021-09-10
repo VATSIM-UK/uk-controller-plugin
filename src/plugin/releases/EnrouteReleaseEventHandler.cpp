@@ -374,9 +374,8 @@ namespace UKControllerPlugin::Releases {
     {
         return enrouteReleasePointOrBlankTagItemId;
     }
-    
-    auto EnrouteReleaseEventHandler::GetInvalidRelease() const
-        -> const UKControllerPlugin::Releases::EnrouteRelease&
+
+    auto EnrouteReleaseEventHandler::GetInvalidRelease() const -> const UKControllerPlugin::Releases::EnrouteRelease&
     {
         return this->invalidRelease;
     }

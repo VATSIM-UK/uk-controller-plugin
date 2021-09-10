@@ -47,8 +47,7 @@ namespace UKControllerPlugin::Releases {
             -> const UKControllerPlugin::Releases::EnrouteRelease&;
         [[nodiscard]] auto GetOutgoingRelease(const std::string& callsign) const
             -> const UKControllerPlugin::Releases::EnrouteRelease&;
-        [[nodiscard]] auto GetInvalidRelease() const
-            -> const UKControllerPlugin::Releases::EnrouteRelease&;
+        [[nodiscard]] auto GetInvalidRelease() const -> const UKControllerPlugin::Releases::EnrouteRelease&;
         [[nodiscard]] auto ReleaseMessageValid(const nlohmann::json& message) const -> bool;
         void DisplayReleaseTypeMenu(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,

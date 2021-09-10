@@ -48,9 +48,7 @@ namespace UKControllerPlugin::Prenote {
 
     void PrenoteService::PrenoteNotify(const AbstractPrenote& prenote, const EuroScopeCFlightPlanInterface& flightplan)
     {
-        for (auto it = prenote.GetControllers().cbegin();
-             it != prenote.GetControllers().cend();
-             ++it) {
+        for (auto it = prenote.GetControllers().cbegin(); it != prenote.GetControllers().cend(); ++it) {
             if (!activeCallsigns.PositionActive(it->get().GetCallsign())) {
                 continue;
             }
@@ -81,9 +79,7 @@ namespace UKControllerPlugin::Prenote {
             return;
         }
 
-        for (auto it = this->prenotes.cbegin();
-             it != this->prenotes.cend();
-             ++it) {
+        for (auto it = this->prenotes.cbegin(); it != this->prenotes.cend(); ++it) {
             if ((*it)->IsApplicable(flightplan)) {
                 this->PrenoteNotify(**it, flightplan);
             }

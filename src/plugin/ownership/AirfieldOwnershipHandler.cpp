@@ -79,7 +79,7 @@ namespace UKControllerPlugin::Ownership {
             for (const auto& airfield : this->airfieldOwnership.GetOwnedAirfields(ownedMatches[1])) {
                 airfields.push_back(airfield.get());
             }
-            
+
             this->userMessager.SendMessageToUser(AirfieldsOwnedQueryMessage(std::move(airfields), ownedMatches[1]));
             return true;
         }

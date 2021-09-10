@@ -27,10 +27,9 @@ namespace UKControllerPlugin::Tag {
             UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& pluginCore) const;
 
         private:
-        
         // The tag item string to use if the tag item requested is invalid
         const std::string errorTagItemText = "ERROR";
-        
+
         // All registered tag items
         std::map<int, std::shared_ptr<UKControllerPlugin::Tag::TagItemInterface>> tagItems;
     };

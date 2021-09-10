@@ -126,11 +126,14 @@ namespace UKControllerPlugin::Releases {
         -> bool
     {
         if (releaseRequest->Approved()) {
-            return releaseRequest->ReleaseExpiryTime() + std::chrono::seconds(RELEASE_DECISION_MADE_DELETE_AFTER_SECONDS) < std::chrono::system_clock::now();
+            return releaseRequest->ReleaseExpiryTime() +
+                       std::chrono::seconds(RELEASE_DECISION_MADE_DELETE_AFTER_SECONDS) <
+                   std::chrono::system_clock::now();
         }
 
         if (releaseRequest->Rejected()) {
-            return releaseRequest->RejectedAtTime() + std::chrono::seconds(RELEASE_DECISION_MADE_DELETE_AFTER_SECONDS) < std::chrono::system_clock::now();
+            return releaseRequest->RejectedAtTime() + std::chrono::seconds(RELEASE_DECISION_MADE_DELETE_AFTER_SECONDS) <
+                   std::chrono::system_clock::now();
         }
 
         return releaseRequest->RequestExpiryTime() < std::chrono::system_clock::now();

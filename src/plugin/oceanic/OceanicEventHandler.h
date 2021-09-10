@@ -45,7 +45,7 @@ namespace UKControllerPlugin::Oceanic {
             const POINT& mousePos);
         void SetTagItemData(Tag::TagData& tagData) override;
         [[nodiscard]] auto GetInvalidClearance() const -> const Clearance&;
-        
+
         // Colours
         inline static const COLORREF clearanceIndicatorOk = RGB(36, 138, 73);
         inline static const COLORREF clearanceIndicatorActionRequired = RGB(255, 128, 0);
