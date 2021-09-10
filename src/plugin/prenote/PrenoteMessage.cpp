@@ -1,67 +1,77 @@
-#include "pch/pch.h"
-#include "prenote/PrenoteMessage.h"
-#include "prenote/AbstractPrenote.h"
-#include "controller/ActiveCallsign.h"
-#include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "PrenoteMessage.h"
+#include "time/SystemClock.h"
 
-using UKControllerPlugin::Prenote::AbstractPrenote;
-using UKControllerPlugin::Controller::ActiveCallsign;
-using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
+using UKControllerPlugin::Time::TimeNow;
 
+namespace UKControllerPlugin::Prenote {
+    PrenoteMessage::PrenoteMessage(
+        int id,
+        std::string callsign,
+        std::string departureAirfield,
+        std::string sid,
+        std::string destinationAirfield,
+        int sendingControllerId,
+        int targetControllerId,
+        std::chrono::system_clock::time_point expiresAt)
+        : id(id), callsign(std::move(callsign)), departureAirfield(std::move(departureAirfield)), sid(std::move(sid)),
+          destinationAirfield(std::move(destinationAirfield)), sendingControllerId(sendingControllerId),
+          targetControllerId(targetControllerId), expiresAt(expiresAt),
+          acknowledgedAt((std::chrono::system_clock::time_point::max)())
+    {
+    }
 
-namespace UKControllerPlugin {
-    namespace Prenote {
+    auto PrenoteMessage::GetId() const -> int
+    {
+        return id;
+    }
 
-        const std::string PrenoteMessage::handler = "Prenote";
-        const std::string PrenoteMessage::sender = "UKCP";
+    auto PrenoteMessage::GetCallsign() const -> const std::string&
+    {
+        return callsign;
+    }
 
-        PrenoteMessage::PrenoteMessage(
-            const AbstractPrenote & prenote,
-            const ActiveCallsign & activeCallsign,
-            const EuroScopeCFlightPlanInterface & flightplan
-        ) {
-            this->message = "Prenote to " + activeCallsign.GetCallsign() + " required for " +
-                flightplan.GetCallsign() + " (" + prenote.GetSummaryString() + ")";
-        }
+    auto PrenoteMessage::GetDepartureAirfield() const -> const std::string&
+    {
+        return departureAirfield;
+    }
 
-        std::string PrenoteMessage::MessageHandler(void) const
-        {
-            return this->handler;
-        }
+    auto PrenoteMessage::GetSid() const -> const std::string&
+    {
+        return sid;
+    }
 
-        std::string PrenoteMessage::MessageSender(void) const
-        {
-            return this->sender;
-        }
+    auto PrenoteMessage::GetDestinationAirfield() const -> const std::string&
+    {
+        return destinationAirfield;
+    }
 
-        std::string PrenoteMessage::MessageString(void) const
-        {
-            return this->message;
-        }
+    auto PrenoteMessage::GetSendingControllerId() const -> int
+    {
+        return sendingControllerId;
+    }
 
-        bool PrenoteMessage::MessageShowHandler(void) const
-        {
-            return true;
-        }
+    auto PrenoteMessage::GetTargetControllerId() const -> int
+    {
+        return targetControllerId;
+    }
 
-        bool PrenoteMessage::MessageMarkUnread(void) const
-        {
-            return true;
-        }
+    auto PrenoteMessage::GetExpiresAt() const -> const std::chrono::system_clock::time_point&
+    {
+        return expiresAt;
+    }
 
-        bool PrenoteMessage::MessageOverrideBusy(void) const
-        {
-            return true;
-        }
+    auto PrenoteMessage::IsAcknowledged() const -> bool
+    {
+        return this->acknowledgedAt != (std::chrono::system_clock::time_point::max)();
+    }
 
-        bool PrenoteMessage::MessageFlashHandler(void) const
-        {
-            return true;
-        }
+    void PrenoteMessage::Acknowledge()
+    {
+        this->acknowledgedAt = TimeNow();
+    }
 
-        bool PrenoteMessage::MessageRequiresConfirm(void) const
-        {
-            return true;
-        }
-    }  // namespace Prenote
-}  // namespace UKControllerPlugin
+    auto PrenoteMessage::GetAcknowledgedAt() const -> const std::chrono::system_clock::time_point&
+    {
+        return this->acknowledgedAt;
+    }
+} // namespace UKControllerPlugin::Prenote

@@ -3,47 +3,41 @@
 #include "euroscope/CompareFunctions.h"
 #include "tag/TagFunction.h"
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
-        class EuroScopeCFlightPlanInterface;
-        class EuroScopeCRadarTargetInterface;
-        class EuroscopePluginLoopbackInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Euroscope {
+    class EuroScopeCFlightPlanInterface;
+    class EuroScopeCRadarTargetInterface;
+    class EuroscopePluginLoopbackInterface;
+} // namespace UKControllerPlugin::Euroscope
 
-namespace UKControllerPlugin {
-namespace Plugin {
+namespace UKControllerPlugin::Plugin {
 
-/*
-    Class to handle Euroscope OnFunctionCall
-    events. These events could be raised by CRadarScreen
-    and CPlugin derivatives.
-*/
-class FunctionCallEventHandler
-{
-    public:
-
+    /*
+        Class to handle Euroscope OnFunctionCall
+        events. These events could be raised by CRadarScreen
+        and CPlugin derivatives.
+    */
+    class FunctionCallEventHandler
+    {
+        public:
         void CallFunction(
             int functionId,
-            std::string subject,
-            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan,
-            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
-            const POINT & mousePos,
-            const RECT & area
-        ) const;
-        size_t CountCallbacks(void) const;
-        size_t CountTagFunctions(void) const;
-        bool HasCallbackFunction(int id) const;
-        bool HasTagFunction(int id) const;
-        int ReserveNextDynamicFunctionId(void);
-        void RegisterFunctionCall(const UKControllerPlugin::Euroscope::CallbackFunction function);
-        void RegisterFunctionCall(const UKControllerPlugin::Tag::TagFunction function);
+            const std::string& subject,
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            const POINT& mousePos,
+            const RECT& area) const;
+        [[nodiscard]] size_t CountCallbacks() const;
+        [[nodiscard]] size_t CountTagFunctions() const;
+        [[nodiscard]] bool HasCallbackFunction(int id) const;
+        [[nodiscard]] bool HasCallbackByDescription(const std::string& description) const;
+        [[nodiscard]] bool HasTagFunction(int id) const;
+        int ReserveNextDynamicFunctionId();
+        void RegisterFunctionCall(const UKControllerPlugin::Euroscope::CallbackFunction& function);
+        void RegisterFunctionCall(const UKControllerPlugin::Tag::TagFunction& function);
         void RegisterTagFunctionsWithEuroscope(
-            UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
-        ) const;
+            UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin) const;
 
-    private:
-
+        private:
         /*
             The next available dynamic function ID. These ids can be used by any function that doesn't
             need to have the same id every time the plugin runs. For example, these would be perfect for
@@ -58,16 +52,10 @@ class FunctionCallEventHandler
         const int firstFixedId = 9000;
 
         // The registered functions which have dynamic ids - may be different on each load.
-        std::set<
-            UKControllerPlugin::Euroscope::CallbackFunction,
-            UKControllerPlugin::Euroscope::CompareFunctions
-        > callbackFunctions;
+        std::set<UKControllerPlugin::Euroscope::CallbackFunction, UKControllerPlugin::Euroscope::CompareFunctions>
+            callbackFunctions;
 
         // The registered functions which have fixed ids - always the same on every load, as defined in the wiki.
-        std::set<
-            UKControllerPlugin::Tag::TagFunction,
-            UKControllerPlugin::Euroscope::CompareFunctions
-        > tagFunctions;
-};
-}  // namespace Plugin
-}  // namespace UKControllerPlugin
+        std::set<UKControllerPlugin::Tag::TagFunction, UKControllerPlugin::Euroscope::CompareFunctions> tagFunctions;
+    };
+} // namespace UKControllerPlugin::Plugin

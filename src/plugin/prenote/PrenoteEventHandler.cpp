@@ -7,7 +7,6 @@
 #include "message/UserMessager.h"
 #include "ownership/AirfieldOwnershipManager.h"
 #include "prenote/PrenoteEventHandler.h"
-#include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteService.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
@@ -20,7 +19,6 @@ using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
-using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::PrenoteService;
 
 namespace UKControllerPlugin::Prenote {

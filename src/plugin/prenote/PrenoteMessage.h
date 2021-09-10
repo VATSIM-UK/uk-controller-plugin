@@ -1,54 +1,59 @@
 #pragma once
-#include "message/MessageSerializableInterface.h"
 
-namespace UKControllerPlugin {
-    namespace Prenote {
-        class AbstractPrenote;
-    }  // namespace Prenote
-    namespace Controller {
-        class ActiveCallsign;
-    }  // namespace Controller
-    namespace Euroscope {
-        class EuroScopeCFlightPlanInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Prenote {
+    /**
+     * Represents a single prenote messsage.
+     */
+    class PrenoteMessage
+    {
+        public:
+        PrenoteMessage(
+            int id,
+            std::string callsign,
+            std::string departureAirfield,
+            std::string sid,
+            std::string destinationAirfield,
+            int sendingControllerId,
+            int targetControllerId,
+            std::chrono::system_clock::time_point expiresAt);
+        [[nodiscard]] auto GetId() const -> int;
+        [[nodiscard]] auto GetCallsign() const -> const std::string&;
+        [[nodiscard]] auto GetDepartureAirfield() const -> const std::string&;
+        [[nodiscard]] auto GetSid() const -> const std::string&;
+        [[nodiscard]] auto GetDestinationAirfield() const -> const std::string&;
+        [[nodiscard]] auto GetSendingControllerId() const -> int;
+        [[nodiscard]] auto GetTargetControllerId() const -> int;
+        [[nodiscard]] auto GetExpiresAt() const -> const std::chrono::system_clock::time_point&;
+        [[nodiscard]] auto IsAcknowledged() const -> bool;
+        [[nodiscard]] auto GetAcknowledgedAt() const -> const std::chrono::system_clock::time_point&;
+        void Acknowledge();
 
-namespace UKControllerPlugin {
-    namespace Prenote {
+        private:
+        // The prenote message id
+        int id;
 
-        /*
-            A prenote message - follows the MessageSerializable interface
-            to display a message to the user.
-        */
-        class PrenoteMessage : public UKControllerPlugin::Message::MessageSerializableInterface
-        {
-            public:
-                PrenoteMessage(
-                    const UKControllerPlugin::Prenote::AbstractPrenote & prenote,
-                    const UKControllerPlugin::Controller::ActiveCallsign & activeCallsign,
-                    const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan
-                );
+        // The callsign
+        std::string callsign;
 
-                // Handler to handle this message
-                static const std::string handler;
+        // The departure airfield
+        std::string departureAirfield;
 
-                // Who this message comes from
-                static const std::string sender;
+        // The departure SID
+        std::string sid;
 
-                // Inherited via MessageSerializableInterface
-                std::string MessageHandler(void) const override;
-                std::string MessageSender(void) const override;
-                std::string MessageString(void) const override;
-                bool MessageShowHandler(void) const override;
-                bool MessageMarkUnread(void) const override;
-                bool MessageOverrideBusy(void) const override;
-                bool MessageFlashHandler(void) const override;
-                bool MessageRequiresConfirm(void) const override;
+        // The destination airfield
+        std::string destinationAirfield;
 
-            private:
+        // Who sent the prenote
+        int sendingControllerId;
 
-                // The message to send
-                std::string message;
-        };
-    }  // namespace Prenote
-}  // namespace UKControllerPlugin
+        // Who the prenote was aimed at
+        int targetControllerId;
+
+        // What time the prenote expires
+        std::chrono::system_clock::time_point expiresAt;
+
+        // What time the prenote expires
+        std::chrono::system_clock::time_point acknowledgedAt;
+    };
+} // namespace UKControllerPlugin::Prenote

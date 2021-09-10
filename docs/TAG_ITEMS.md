@@ -26,3 +26,4 @@
 124 - Departure Release Status Indicator
 125 - Departure Release Countdown
 126 - Departure Release Requesting Controller
+127 - Prenote Messages Status Indicator

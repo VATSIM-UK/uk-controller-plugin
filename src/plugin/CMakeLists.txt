@@ -572,15 +572,24 @@ set(src__prenote
     "prenote/PrenoteEventHandler.h"
     "prenote/PrenoteFactory.cpp"
     "prenote/PrenoteFactory.h"
-    "prenote/PrenoteMessage.cpp"
-    "prenote/PrenoteMessage.h"
+    "prenote/PrenoteUserMessage.cpp"
+    "prenote/PrenoteUserMessage.h"
     "prenote/PrenoteModule.cpp"
     "prenote/PrenoteModule.h"
     "prenote/PrenoteService.cpp"
     "prenote/PrenoteService.h"
     "prenote/PrenoteServiceFactory.cpp"
     "prenote/PrenoteServiceFactory.h"
-)
+    "prenote/PrenoteMessage.cpp"
+    prenote/PrenoteMessageCollection.cpp prenote/PrenoteMessageCollection.h
+    prenote/ComparePrenoteMessages.cpp prenote/ComparePrenoteMessages.h
+    prenote/PrenoteAcknowledgedPushEventHandler.cpp prenote/PrenoteAcknowledgedPushEventHandler.h
+    prenote/PrenoteDeletedPushEventHandler.cpp prenote/PrenoteDeletedPushEventHandler.h
+    prenote/NewPrenotePushEventHandler.cpp prenote/NewPrenotePushEventHandler.h
+    prenote/PrenoteMessageTimeout.cpp prenote/PrenoteMessageTimeout.h
+    prenote/PrenoteStatusIndicatorTagItem.cpp prenote/PrenoteStatusIndicatorTagItem.h
+    prenote/CancelPrenoteMessageMenu.cpp prenote/CancelPrenoteMessageMenu.h
+    prenote/SendPrenoteMenu.cpp prenote/SendPrenoteMenu.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push
@@ -774,6 +783,7 @@ source_group("src\\time" FILES ${src__time})
 
 set(src__timedevent
     "timedevent/AbstractTimedEvent.h"
+    "timedevent/AbstractTimedEvent.cpp"
     "timedevent/TimedEventCollection.cpp"
     "timedevent/TimedEventCollection.h"
 )

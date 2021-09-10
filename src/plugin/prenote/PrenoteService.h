@@ -1,5 +1,4 @@
 #pragma once
-#include "prenote/AbstractPrenote.h"
 
 namespace UKControllerPlugin {
 
@@ -36,6 +35,11 @@ namespace UKControllerPlugin::Prenote {
             const UKControllerPlugin::Ownership::AirfieldOwnershipManager& airfieldOwnership,
             const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns,
             UKControllerPlugin::Message::UserMessager& userMessager);
+        ~PrenoteService();
+        PrenoteService(const PrenoteService&) = delete;
+        PrenoteService(PrenoteService&&) noexcept;
+        auto operator=(const PrenoteService&) -> PrenoteService& = delete;
+        auto operator=(PrenoteService&&) noexcept -> PrenoteService& = delete;
         void AddPrenote(std::unique_ptr<const UKControllerPlugin::Prenote::AbstractPrenote> prenote);
         void CancelPrenote(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan);
         [[nodiscard]] auto CountPrenotes() const -> size_t;

@@ -1,5 +1,7 @@
 #include "AbstractPrenote.h"
 #include "PrenoteEventHandler.h"
+#include "PrenoteService.h"
+#include "PrenoteUserMessage.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
@@ -8,8 +10,6 @@
 #include "flightplan/StoredFlightplanCollection.h"
 #include "message/UserMessager.h"
 #include "ownership/AirfieldOwnershipManager.h"
-#include "prenote/PrenoteMessage.h"
-#include "prenote/PrenoteService.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -19,7 +19,7 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
-using UKControllerPlugin::Prenote::PrenoteMessage;
+using UKControllerPlugin::Prenote::PrenoteUserMessage;
 
 namespace UKControllerPlugin::Prenote {
 
@@ -30,6 +30,9 @@ namespace UKControllerPlugin::Prenote {
         : airfieldOwnership(airfieldOwnership), activeCallsigns(activeCallsigns), userMessager(userMessager)
     {
     }
+
+    PrenoteService::~PrenoteService() = default;
+    PrenoteService::PrenoteService(PrenoteService&&) noexcept = default;
 
     void PrenoteService::AddPrenote(std::unique_ptr<const AbstractPrenote> prenote)
     {
@@ -62,7 +65,7 @@ namespace UKControllerPlugin::Prenote {
             LogInfo(
                 "Notified user of required prenote to " + it->get().GetCallsign() + " about " +
                 flightplan.GetCallsign());
-            this->userMessager.SendMessageToUser(PrenoteMessage(
+            this->userMessager.SendMessageToUser(PrenoteUserMessage(
                 prenote, this->activeCallsigns.GetLeadCallsignForPosition(it->get().GetCallsign()), flightplan));
 
             return;
