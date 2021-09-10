@@ -1,42 +1,30 @@
 #pragma once
 
-// Forward declarations
-namespace UKControllerPlugin {
-    namespace Windows
+namespace UKControllerPlugin::Windows {
+    class WinApiInterface;
+} // namespace UKControllerPlugin::Windows
+
+namespace UKControllerPlugin::Log {
+
+    /*
+        A class for bootstrapping the logger.
+    */
+    class LoggerBootstrap
     {
-        class WinApiInterface;
-    } // namespace Windows
-}  // namespace UKControllerPlugin
-// END
+        public:
+        static void Bootstrap(Windows::WinApiInterface& windows, const std::wstring& logfilePrefix);
+        static auto CreateLogsFolder(Windows::WinApiInterface& windows) -> bool;
+        static void PruneLogs(Windows::WinApiInterface& windows, const std::wstring& logFilePrefix);
+        static auto GetExistingLogs(Windows::WinApiInterface& windows, const std::wstring& logFilePrefix)
+            -> std::set<std::wstring>;
+        static auto GetLogfileName(const std::wstring& logFilePrefix) -> std::wstring;
 
-/*
-
-*/
-namespace UKControllerPlugin {
-    namespace Log {
-
-        /*
-            A class for bootstrapping the logger.
-        */
-        class LoggerBootstrap
-        {
-            public:
-                static void Bootstrap(
-                    Windows::WinApiInterface& windows,
-                    std::wstring logfilePrefix
-                );
-                static bool CreateLogsFolder(Windows::WinApiInterface& windows);
-                static void PruneLogs(Windows::WinApiInterface& windows, std::wstring logFilePrefix);
-                static std::set<std::wstring> GetExistingLogs(
-                    Windows::WinApiInterface& windows,
-                    std::wstring logFilePrefix
-                );
-                static std::wstring GetLogfileName(std::wstring logFilePrefix);
-
-            private:
-
-                static std::wstring GetLogFilePath(std::wstring logname);
-                static void CreateNullLogger();
-        };
-    }  // namespace Log
-}  // namespace UKControllerPlugin
+        private:
+        static auto GetLogFilePath(const std::wstring& logname) -> std::wstring;
+        static void CreateNullLogger();
+        [[nodiscard]] static auto GetLogsFolder() -> std::wstring;
+        [[nodiscard]] static auto GetLogFilesToKeep() -> int;
+        
+        inline static const int LOGFILES_TO_KEEP = 5;
+    };
+} // namespace UKControllerPlugin::Log

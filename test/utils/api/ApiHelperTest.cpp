@@ -2,13 +2,9 @@
 #include "api/ApiHelper.h"
 #include "api/ApiNotAuthorisedException.h"
 #include "api/ApiNotFoundException.h"
-#include "api/ApiResponse.h"
 #include "curl/CurlInterface.h"
-#include "curl/CurlRequest.h"
 #include "helper/ApiRequestHelperFunctions.h"
 #include "mock/MockCurlApi.h"
-#include "squawk/ApiSquawkAllocation.h"
-#include "srd/SrdSearchParameters.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -70,7 +66,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiNotFoundException);
+        EXPECT_THROW(static_cast<void>(this->helper.CheckApiAuthorisation()), ApiNotFoundException);
     }
 
     TEST_F(ApiHelperTest, TestItThrowsNotAuthorisedExceptionIf401)
@@ -81,7 +77,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiNotAuthorisedException);
+        EXPECT_THROW(static_cast<void>(this->helper.CheckApiAuthorisation()), ApiNotAuthorisedException);
     }
 
     TEST_F(ApiHelperTest, TestItThrowsNotAuthorisedExceptionIf403)
@@ -92,7 +88,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiNotAuthorisedException);
+        EXPECT_THROW(static_cast<void>(this->helper.CheckApiAuthorisation()), ApiNotAuthorisedException);
     }
 
     TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfServiceUnavailable)
@@ -103,7 +99,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.CheckApiAuthorisation()), ApiException);
     }
 
     TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfBadGateway)
@@ -114,7 +110,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.CheckApiAuthorisation()), ApiException);
     }
 
     TEST_F(ApiHelperTest, TestItThrowsApiExceptionIfServerError)
@@ -125,7 +121,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.CheckApiAuthorisation()), ApiException);
     }
 
     TEST_F(ApiHelperTest, ItThrowsAnExceptionIfBadRequest)
@@ -136,7 +132,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.CheckApiAuthorisation()), ApiException);
     }
 
     TEST_F(ApiHelperTest, ItThrowsAnExceptionIfUnknownResponseCode)
@@ -147,7 +143,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CheckApiAuthorisation(), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.CheckApiAuthorisation()), ApiException);
     }
 
     TEST_F(ApiHelperTest, FetchRemoteFileReturnsFileString)
@@ -173,7 +169,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.GetAssignedSquawk("BAW123"), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.GetAssignedSquawk("BAW123")), ApiException);
     }
 
     TEST_F(ApiHelperTest, GetSquawkAssignmentReturnsSquawkAllocation)
@@ -199,7 +195,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.GetAssignedSquawk("BAW123"), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.GetAssignedSquawk("BAW123")), ApiException);
     }
 
     TEST_F(ApiHelperTest, GetSquawkAssignmentThrowsExceptionSquawkNotValid)
@@ -211,7 +207,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.GetAssignedSquawk("BAW123"), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.GetAssignedSquawk("BAW123")), ApiException);
     }
 
     TEST_F(ApiHelperTest, CreateGeneralSquawkAssignmentReturnsSquawk)
@@ -247,7 +243,8 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CreateGeneralSquawkAssignment("BAW123", "EGKK", "EGCC"), ApiException);
+        EXPECT_THROW(
+            static_cast<void>(this->helper.CreateGeneralSquawkAssignment("BAW123", "EGKK", "EGCC")), ApiException);
     }
 
     TEST_F(ApiHelperTest, CreateGeneralThrowsExceptionIfNoSquawkInResponse)
@@ -264,7 +261,8 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CreateGeneralSquawkAssignment("BAW123", "EGKK", "EGCC"), ApiException);
+        EXPECT_THROW(
+            static_cast<void>(this->helper.CreateGeneralSquawkAssignment("BAW123", "EGKK", "EGCC")), ApiException);
     }
 
     TEST_F(ApiHelperTest, CreateGeneralThrowsExceptionIfSquawkInvalid)
@@ -281,7 +279,8 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CreateGeneralSquawkAssignment("BAW123", "EGKK", "EGCC"), ApiException);
+        EXPECT_THROW(
+            static_cast<void>(this->helper.CreateGeneralSquawkAssignment("BAW123", "EGKK", "EGCC")), ApiException);
     }
 
     TEST_F(ApiHelperTest, CreateLocalSquawkAssignmentReturnsSquawk)
@@ -319,7 +318,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CreateLocalSquawkAssignment("BAW123", "EGCC", "V"), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.CreateLocalSquawkAssignment("BAW123", "EGCC", "V")), ApiException);
     }
 
     TEST_F(ApiHelperTest, CreateLocalSquawkThrowsExceptionIfSquawkInvalid)
@@ -337,7 +336,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .Times(1)
             .WillOnce(Return(response));
 
-        EXPECT_THROW(this->helper.CreateLocalSquawkAssignment("BAW123", "EGCC", "V"), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.CreateLocalSquawkAssignment("BAW123", "EGCC", "V")), ApiException);
     }
 
     TEST_F(ApiHelperTest, DeleteSquawkAssignmentIsCalledCorrectly)
@@ -432,7 +431,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(_)).Times(0);
 
-        EXPECT_THROW(this->helper.GetUri("http://ukcp.test.org/someuri"), ApiException);
+        EXPECT_THROW(static_cast<void>(this->helper.GetUri("http://ukcp.test.org/someuri")), ApiException);
     }
 
     TEST_F(ApiHelperTest, SearchSrdReturnsData)

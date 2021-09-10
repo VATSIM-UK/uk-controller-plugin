@@ -1,59 +1,61 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Curl {
+namespace UKControllerPlugin::Curl {
 
-        /*
-            Class representing a curl request to the interwebs.
-        */
-        class CurlRequest
+    /*
+        Class representing a curl request to the interwebs.
+    */
+    class CurlRequest
+    {
+
+        public:
+        CurlRequest(std::string uri, std::string method);
+        void AddHeader(const std::string& key, std::string value);
+        [[nodiscard]] auto GetBody() const -> const char* const;
+        [[nodiscard]] auto GetMethod() const -> const char* const;
+        [[nodiscard]] auto GetUri() const -> const char* const;
+        auto operator==(const CurlRequest& compare) const -> bool;
+        [[nodiscard]] auto GetMaxRequestTime() const -> INT64;
+        void SetMaxRequestTime(INT64 requestTime);
+        void SetBody(const std::string& body);
+
+        // No request body
+        inline static const std::string nobody;
+
+        // HTTP Verbs
+        inline static const std::string METHOD_GET = "GET";       // NOLINT
+        inline static const std::string METHOD_POST = "POST";     // NOLINT
+        inline static const std::string METHOD_PUT = "PUT";       // NOLINT
+        inline static const std::string METHOD_DELETE = "DELETE"; // NOLINT
+        inline static const std::string METHOD_PATCH = "PATCH";   // NOLINT
+
+        using HttpHeaders = std::map<std::string, std::string>;
+        using const_iterator = HttpHeaders::const_iterator;
+        [[nodiscard]] auto cbegin() const -> const_iterator
         {
+            return this->headers.cbegin();
+        }
+        [[nodiscard]] auto cend() const -> const_iterator
+        {
+            return this->headers.cend();
+        }
 
-            public:
+        private:
+        static auto CheckMethod(std::string method) -> std::string;
 
-                CurlRequest(std::string uri, std::string method);
-                void AddHeader(std::string key, std::string value);
-                const char* const GetBody(void) const;
-                const char * const GetMethod(void) const;
-                const char * const GetUri(void) const;
-                bool operator==(const CurlRequest & compare) const;
-                INT64 GetMaxRequestTime(void) const;
-                void SetMaxRequestTime(INT64 requestTime);
-                void SetBody(std::string body);
+        // One of the HTTP verbs
+        std::string method;
 
-                // No request body
-                static const std::string nobody;
+        // The URL to hit
+        std::string uri;
 
-                // HTTP Verbs
-                static const std::string METHOD_GET;
-                static const std::string METHOD_POST;
-                static const std::string METHOD_PUT;
-                static const std::string METHOD_DELETE;
-                static const std::string METHOD_PATCH;
+        // The body of the request
+        std::string body;
 
-                typedef std::map<std::string, std::string> HttpHeaders;
-                typedef HttpHeaders::const_iterator const_iterator;
-                const_iterator cbegin() const { return this->headers.cbegin(); }
-                const_iterator cend() const { return this->headers.cend(); }
+        // Headers
+        std::map<std::string, std::string> headers;
 
-            private:
-
-                std::string CheckMethod(std::string method);
-
-                // One of the HTTP verbs
-                std::string method;
-
-                // The URL to hit
-                std::string uri;
-
-                // The body of the request
-                std::string body = "";
-
-                // Headers
-                std::map<std::string, std::string> headers;
-
-                // The maximum amount of time that requests are allowed to take
-                INT64 maxRequestTime = 10L;
-        };
-    }  // namespace Curl
-}  // namespace UKControllerPlugin
+        // The maximum amount of time that requests are allowed to take
+        INT64 maxRequestTime = 10L; // NOLINT
+    };
+} // namespace UKControllerPlugin::Curl

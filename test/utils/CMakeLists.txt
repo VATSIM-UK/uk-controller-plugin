@@ -182,6 +182,7 @@ if(MSVC)
         /std:c++17;
         /sdl;
         /W3;
+        /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )
