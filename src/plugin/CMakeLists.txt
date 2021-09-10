@@ -98,7 +98,7 @@ set(src__controller
     "controller/HandoffEventHandlerInterface.h"
     "controller/TranslateFrequencyAbbreviation.cpp"
     "controller/TranslateFrequencyAbbreviation.h"
-)
+        controller/ActiveCallsignEventHandlerInterface.cpp)
 source_group("src\\controller" FILES ${src__controller})
 
 set(src__countdown
@@ -450,7 +450,7 @@ set(src__metar
     "metar/PressureMonitor.h"
     "metar/PressureMonitorBootstrap.cpp"
     "metar/PressureMonitorBootstrap.h"
-)
+        metar/MetarEventHandlerInterface.cpp)
 source_group("src\\metar" FILES ${src__metar})
 
 set(src__minstack
@@ -559,7 +559,7 @@ set(src__plugin
     "plugin/UKPlugin.h"
     "plugin/UkPluginBootstrap.cpp"
     "plugin/UkPluginBootstrap.h"
-)
+        euroscope/UserSettingAwareInterface.cpp)
 source_group("src\\plugin" FILES ${src__plugin})
 
 set(src__prenote

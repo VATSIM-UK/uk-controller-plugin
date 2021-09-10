@@ -1,6 +1,12 @@
 #include "MinStackLevel.h"
 
 namespace UKControllerPlugin::MinStack {
+
+    MinStackLevel::MinStackLevel(std::string type, std::string name, unsigned int msl)
+        : type(type), name(name), msl(msl)
+    {
+    }
+
     auto MinStackLevel::IsAcknowledged() const -> bool
     {
         return this->acknowledgedAt > this->updatedAt;

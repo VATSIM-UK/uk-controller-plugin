@@ -1,60 +1,57 @@
-#include "pch/pch.h"
-#include "notifications/Notification.h"
+#include "Notification.h"
 
-namespace UKControllerPlugin {
-    namespace Notifications {
-        Notification::Notification(
-            int id,
-            std::string title,
-            std::string body,
-            std::chrono::system_clock::time_point validFrom,
-            std::chrono::system_clock::time_point validTo,
-            std::unique_ptr<Controller::ControllerPositionHierarchy> controllers,
-            std::string link
-        ): id(id), title(std::move(title)), body(std::move(body)), controllers(std::move(controllers)),
-            validFrom(std::move(validFrom)), validTo(std::move(validTo)), link(std::move(link))
-        {
-        }
+namespace UKControllerPlugin::Notifications {
+    Notification::Notification(
+        int id,
+        std::string title,
+        std::string body,
+        std::chrono::system_clock::time_point validFrom,
+        std::chrono::system_clock::time_point validTo,
+        std::unique_ptr<Controller::ControllerPositionHierarchy> controllers,
+        std::string link)
+        : id(id), title(std::move(title)), body(std::move(body)), link(std::move(link)),
+          validFrom(std::move(validFrom)), validTo(std::move(validTo)), controllers(std::move(controllers))
+    {
+    }
 
-        int Notification::Id() const
-        {
-            return this->id;
-        }
+    auto Notification::Id() const -> int
+    {
+        return this->id;
+    }
 
-        std::string Notification::Title() const
-        {
-            return this->title;
-        }
+    auto Notification::Title() const -> std::string
+    {
+        return this->title;
+    }
 
-        std::string Notification::Body() const
-        {
-            return this->body;
-        }
+    auto Notification::Body() const -> std::string
+    {
+        return this->body;
+    }
 
-        std::string Notification::Link() const
-        {
-            return this->link;
-        }
+    auto Notification::Link() const -> std::string
+    {
+        return this->link;
+    }
 
-        bool Notification::Active() const
-        {
-            std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-            return now >= this->validFrom && now < this->validTo;
-        }
+    auto Notification::Active() const -> bool
+    {
+        std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+        return now >= this->validFrom && now < this->validTo;
+    }
 
-        bool Notification::IsRelevant(const Controller::ControllerPosition& position) const
-        {
-            return this->controllers->PositionInHierarchy(position);
-        }
+    auto Notification::IsRelevant(const Controller::ControllerPosition& position) const -> bool
+    {
+        return this->controllers->PositionInHierarchy(position);
+    }
 
-        bool Notification::IsRead() const
-        {
-            return this->read;
-        }
+    auto Notification::IsRead() const -> bool
+    {
+        return this->read;
+    }
 
-        void Notification::Read()
-        {
-            this->read = true;
-        }
-    }  // namespace Notifications
-}  // namespace UKControllerPlugin
+    void Notification::Read()
+    {
+        this->read = true;
+    }
+} // namespace UKControllerPlugin::Notifications

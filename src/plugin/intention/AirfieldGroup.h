@@ -16,7 +16,7 @@ namespace UKControllerPlugin::IntentionCode {
         AirfieldGroup();
         virtual ~AirfieldGroup();
         AirfieldGroup(const AirfieldGroup&);
-        AirfieldGroup(const AirfieldGroup&&) = delete;
+        AirfieldGroup(AirfieldGroup&&);
         [[nodiscard]] auto operator=(const AirfieldGroup&) -> AirfieldGroup& = delete;
         [[nodiscard]] auto operator=(const AirfieldGroup&&) -> AirfieldGroup& = delete;
         virtual auto AppliesToController(

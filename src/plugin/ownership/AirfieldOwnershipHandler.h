@@ -1,68 +1,49 @@
 #pragma once
-#include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "controller/ActiveCallsignCollection.h"
+#include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "command/CommandHandlerInterface.h"
 
-// Forward declarations
 namespace UKControllerPlugin {
     namespace Ownership {
         class AirfieldOwnershipManager;
-    }  // namespace Ownership
-    namespace Flightplan {
-        class FlightplanCollection;
-    }  // namespace Flightplan
-    namespace Message {
-        class UserMessager;
-    }  // namespace Message
-}  // namespace UKControllerPlugin
-
-namespace UKControllerPlugin {
+    } // namespace Ownership
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
-// END
+    } // namespace Euroscope
+    namespace Message {
+        class UserMessager;
+    } // namespace Message
+} // namespace UKControllerPlugin
 
-namespace UKControllerPlugin {
-    namespace Ownership {
+namespace UKControllerPlugin::Ownership {
 
-        /*
-            A class to handle the process of controllers coming and going and how this
-            affects who owns which airfield.
-        */
-        class AirfieldOwnershipHandler
-            : public UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface,
-            public UKControllerPlugin::Command::CommandHandlerInterface
-        {
-            public:
-                AirfieldOwnershipHandler(
-                    UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership,
-                    UKControllerPlugin::Message::UserMessager & userMessager
-                );
-                bool ProcessCommand(std::string command);
+    /*
+        A class to handle the process of controllers coming and going and how this
+        affects who owns which airfield.
+    */
+    class AirfieldOwnershipHandler : public UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface,
+                                     public UKControllerPlugin::Command::CommandHandlerInterface
+    {
+        public:
+        AirfieldOwnershipHandler(
+            UKControllerPlugin::Ownership::AirfieldOwnershipManager& airfieldOwnership,
+            UKControllerPlugin::Message::UserMessager& userMessager);
+        auto ProcessCommand(std::string command) -> bool override;
 
-                // Inherited via ActiveCallsignEventHandlerInterface
-                void ActiveCallsignAdded(
-                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
-                    bool userCallsign
-                ) override;
-                void ActiveCallsignRemoved(
-                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
-                    bool userCallsign
-                )override;
-                void CallsignsFlushed(void) override;
+        // Inherited via ActiveCallsignEventHandlerInterface
+        void
+        ActiveCallsignAdded(const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) override;
+        void ActiveCallsignRemoved(
+            const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) override;
+        void CallsignsFlushed() override;
 
-            private:
+        private:
+        void ProcessAffectedAirfields(const UKControllerPlugin::Controller::ControllerPosition& controller);
 
-                void ProcessAffectedAirfields(
-                    const UKControllerPlugin::Controller::ControllerPosition & controller
-                );
+        // All the airfields
+        UKControllerPlugin::Ownership::AirfieldOwnershipManager& airfieldOwnership;
 
-                // All the airfields
-                UKControllerPlugin::Ownership::AirfieldOwnershipManager & airfieldOwnership;
-
-                // For sending user messages
-                UKControllerPlugin::Message::UserMessager & userMessager;
-        };
-    }  // namespace Ownership
-}  // namespace UKControllerPlugin
+        // For sending user messages
+        UKControllerPlugin::Message::UserMessager& userMessager;
+    };
+} // namespace UKControllerPlugin::Ownership

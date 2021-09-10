@@ -1,25 +1,28 @@
 #pragma once
-#include "controller/ActiveCallsign.h"
 
-namespace UKControllerPlugin {
-    namespace Controller {
+namespace UKControllerPlugin::Controller {
+    class ActiveCallsign;
 
-        /*
-            An interface to be implemented by classes that want to know
-            when Active Callsigns come and go.
-        */
-        class ActiveCallsignEventHandlerInterface
-        {
-            public:
-                virtual void ActiveCallsignAdded(
-                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
-                    bool userCallsign
-                ) = 0;
-                virtual void ActiveCallsignRemoved(
-                    const UKControllerPlugin::Controller::ActiveCallsign& callsign,
-                    bool userCallsign
-                ) = 0;
-                virtual void CallsignsFlushed(void) = 0;
-        };
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+    /*
+        An interface to be implemented by classes that want to know
+        when Active Callsigns come and go.
+    */
+    class ActiveCallsignEventHandlerInterface
+    {
+        public:
+        ActiveCallsignEventHandlerInterface();
+        virtual ~ActiveCallsignEventHandlerInterface();
+        ActiveCallsignEventHandlerInterface(const ActiveCallsignEventHandlerInterface&);
+        ActiveCallsignEventHandlerInterface(ActiveCallsignEventHandlerInterface&&) noexcept;
+        [[nodiscard]] auto operator=(const ActiveCallsignEventHandlerInterface&)
+            -> ActiveCallsignEventHandlerInterface&;
+        [[nodiscard]] auto operator=(ActiveCallsignEventHandlerInterface&&) noexcept
+            -> ActiveCallsignEventHandlerInterface&;
+
+        virtual void
+        ActiveCallsignAdded(const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) = 0;
+        virtual void
+        ActiveCallsignRemoved(const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) = 0;
+        virtual void CallsignsFlushed();
+    };
+} // namespace UKControllerPlugin::Controller

@@ -9,7 +9,7 @@ using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 
 namespace UKControllerPlugin::MinStack {
 
-    MinStackManager::MinStackManager() : invalidMsl(std::make_shared<MinStackLevel>())
+    MinStackManager::MinStackManager() : invalidMsl(std::make_shared<MinStackLevel>("", "", 0))
     {
     }
 
@@ -19,7 +19,7 @@ namespace UKControllerPlugin::MinStack {
             return;
         }
 
-        this->mslMap.at(key).Acknowledge();
+        this->mslMap.at(key)->Acknowledge();
     }
 
     /*
@@ -31,7 +31,7 @@ namespace UKControllerPlugin::MinStack {
             return;
         }
 
-        this->mslMap[key] = {std::move(type), std::move(name), msl};
+        this->mslMap[key] = std::make_shared<MinStackLevel>(std::move(type), std::move(name), msl);
     }
 
     /*
@@ -52,7 +52,7 @@ namespace UKControllerPlugin::MinStack {
     */
     auto MinStackManager::GetMinStackLevel(const std::string& key) const -> const MinStackLevel&
     {
-        return this->mslMap.count(key) == 1 ? this->mslMap.at(key) : *this->invalidMsl;
+        return this->mslMap.count(key) == 1 ? *this->mslMap.at(key) : *this->invalidMsl;
     }
 
     auto MinStackManager::GetMslKeyAirfield(const std::string& airfield) -> std::string
@@ -104,8 +104,8 @@ namespace UKControllerPlugin::MinStack {
             return;
         }
 
-        this->mslMap.at(key).msl = msl;
-        this->mslMap.at(key).updatedAt = std::chrono::system_clock::now();
+        this->mslMap.at(key)->msl = msl;
+        this->mslMap.at(key)->updatedAt = std::chrono::system_clock::now();
     }
 
     void MinStackManager::UpdateAllMsls(nlohmann::json mslData)
@@ -119,8 +119,8 @@ namespace UKControllerPlugin::MinStack {
                     continue;
                 }
 
-                this->mslMap[this->GetMslKeyAirfield(airfieldIt.key())] = {
-                    "airfield", airfieldIt.key(), airfieldIt.value().get<unsigned int>()};
+                this->mslMap[this->GetMslKeyAirfield(airfieldIt.key())] = std::make_shared<MinStackLevel>(
+                    "airfield", airfieldIt.key(), airfieldIt.value().get<unsigned int>());
             }
         }
 
@@ -132,7 +132,8 @@ namespace UKControllerPlugin::MinStack {
                     continue;
                 }
 
-                this->mslMap[this->GetMslKeyTma(tmaIt.key())] = {"tma", tmaIt.key(), tmaIt.value().get<unsigned int>()};
+                this->mslMap[this->GetMslKeyTma(tmaIt.key())] =
+                    std::make_shared<MinStackLevel>("tma", tmaIt.key(), tmaIt.value().get<unsigned int>());
             }
         }
     }

@@ -1,5 +1,6 @@
-#include "IntentionCodeData.h"
+#include "IntentionCodeCache.h"
 #include "IntentionCodeEventHandler.h"
+#include "IntentionCodeGenerator.h"
 #include "IntentionCodeUpdatedMessage.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -18,12 +19,15 @@ using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin::IntentionCode {
     IntentionCodeEventHandler::IntentionCodeEventHandler(
-        IntentionCodeGenerator intention,
-        IntentionCodeCache codeCache,
+        std::unique_ptr<IntentionCodeGenerator> intention,
+        std::unique_ptr<IntentionCodeCache> codeCache,
         Integration::OutboundIntegrationEventHandler& outboundEvent)
         : intention(std::move(intention)), codeCache(std::move(codeCache)), outboundEvent(outboundEvent)
     {
     }
+
+    IntentionCodeEventHandler::~IntentionCodeEventHandler() = default;
+    IntentionCodeEventHandler::IntentionCodeEventHandler(IntentionCodeEventHandler&&) noexcept = default;
 
     /*
         Nothing to do here.
@@ -39,7 +43,7 @@ namespace UKControllerPlugin::IntentionCode {
     void IntentionCodeEventHandler::FlightPlanEvent(
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget)
     {
-        this->codeCache.UnregisterAircraft(flightPlan.GetCallsign());
+        this->codeCache->UnregisterAircraft(flightPlan.GetCallsign());
     }
 
     /*
@@ -47,7 +51,7 @@ namespace UKControllerPlugin::IntentionCode {
     */
     void IntentionCodeEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
     {
-        this->codeCache.UnregisterAircraft(flightPlan.GetCallsign());
+        this->codeCache->UnregisterAircraft(flightPlan.GetCallsign());
     }
 
     /*
@@ -65,21 +69,21 @@ namespace UKControllerPlugin::IntentionCode {
     {
         // If we have it cached, then use the cached value
         EuroscopeExtractedRouteInterface extractedRoute = tagData.flightPlan.GetExtractedRoute();
-        if (this->codeCache.HasIntentionCodeForAircraft(tagData.flightPlan.GetCallsign()) &&
-            this->codeCache.IntentionCodeValid(tagData.flightPlan.GetCallsign(), extractedRoute)) {
-            tagData.SetItemString(this->codeCache.GetIntentionCodeForAircraft(tagData.flightPlan.GetCallsign()));
+        if (this->codeCache->HasIntentionCodeForAircraft(tagData.flightPlan.GetCallsign()) &&
+            this->codeCache->IntentionCodeValid(tagData.flightPlan.GetCallsign(), extractedRoute)) {
+            tagData.SetItemString(this->codeCache->GetIntentionCodeForAircraft(tagData.flightPlan.GetCallsign()));
             return;
         }
 
         // Generate the code and then cache it
-        IntentionCodeData data = this->intention.GetIntentionCodeForFlightplan(
+        IntentionCodeData data = this->intention->GetIntentionCodeForFlightplan(
             tagData.flightPlan.GetCallsign(),
             tagData.flightPlan.GetOrigin(),
             tagData.flightPlan.GetDestination(),
             extractedRoute,
             tagData.flightPlan.GetCruiseLevel());
 
-        this->codeCache.RegisterAircraft(tagData.flightPlan.GetCallsign(), data);
+        this->codeCache->RegisterAircraft(tagData.flightPlan.GetCallsign(), data);
         tagData.SetItemString(data.intentionCode);
         outboundEvent.SendEvent(std::make_shared<IntentionCodeUpdatedMessage>(
             tagData.flightPlan.GetCallsign(), data.exitPoint, data.intentionCode));
@@ -90,9 +94,9 @@ namespace UKControllerPlugin::IntentionCode {
     */
     void IntentionCodeEventHandler::ControllerUpdateEvent(EuroScopeCControllerInterface& controller)
     {
-        if (controller.IsCurrentUser() && controller.GetCallsign() != this->intention.GetUserControllerPosition()) {
-            this->intention.SetUserControllerPosition(controller.GetCallsign());
-            this->codeCache.Clear();
+        if (controller.IsCurrentUser() && controller.GetCallsign() != this->intention->GetUserControllerPosition()) {
+            this->intention->SetUserControllerPosition(controller.GetCallsign());
+            this->codeCache->Clear();
         }
     }
 
@@ -106,16 +110,16 @@ namespace UKControllerPlugin::IntentionCode {
     */
     void IntentionCodeEventHandler::SelfDisconnectEvent()
     {
-        this->codeCache.Clear();
+        this->codeCache->Clear();
     }
 
     auto IntentionCodeEventHandler::GetGenerator() const -> const IntentionCodeGenerator&
     {
-        return this->intention;
+        return *this->intention;
     }
 
     auto IntentionCodeEventHandler::GetCache() const -> const IntentionCodeCache&
     {
-        return this->codeCache;
+        return *this->codeCache;
     }
 } // namespace UKControllerPlugin::IntentionCode

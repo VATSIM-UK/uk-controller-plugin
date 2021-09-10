@@ -78,7 +78,7 @@ namespace UKControllerPlugin::Oceanic {
         const std::string nattrakUrl = "https://nattrak.vatsim.net/pluginapi.php";
 
         // Returned if clearance doesnt exist
-        const Clearance invalidClearance{"NOTAVALIDCLEARANCESORRY"};
+        const Clearance invalidClearance = Clearance("NOTAVALIDCLEARANCESORRY");
 
         static const int NATTRAK_EUROSCOPE_FLIGHT_LEVEL_CONVERSION_FACTOR = 100;
 

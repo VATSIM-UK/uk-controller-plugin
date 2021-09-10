@@ -1,7 +1,9 @@
 #include "IntentionCodeCache.h"
 #include "IntentionCodeEventHandler.h"
 #include "IntentionCodeFactory.h"
+#include "IntentionCodeGenerator.h"
 #include "IntentionCodeModule.h"
+#include "SectorExitRepository.h"
 #include "SectorExitRepositoryFactory.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
@@ -24,8 +26,8 @@ namespace UKControllerPlugin::IntentionCode {
 
         // Create the handler and its dependencies
         std::shared_ptr<IntentionCodeEventHandler> handler = std::make_shared<IntentionCodeEventHandler>(
-            *IntentionCodeFactory::Create(*container.sectorExitPoints),
-            IntentionCodeCache(),
+            IntentionCodeFactory::Create(*container.sectorExitPoints),
+            std::make_unique<IntentionCodeCache>(),
             *container.integrationModuleContainer->outboundMessageHandler);
 
         // Register with required event handlers.

@@ -1,14 +1,13 @@
 #pragma once
 #include "controller/ControllerStatusEventHandlerInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
-#include "intention/IntentionCodeCache.h"
-#include "intention/IntentionCodeGenerator.h"
 #include "tag/TagItemInterface.h"
 
 namespace UKControllerPlugin {
     namespace IntentionCode {
         class IntentionCode;
         class IntentionCodeCache;
+        class IntentionCodeGenerator;
     } // namespace IntentionCode
     namespace Integration {
         class OutboundIntegrationEventHandler;
@@ -26,9 +25,14 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         IntentionCodeEventHandler(
-            IntentionCodeGenerator intention,
-            IntentionCodeCache codeCache,
+            std::unique_ptr<IntentionCodeGenerator> intention,
+            std::unique_ptr<IntentionCodeCache> codeCache,
             Integration::OutboundIntegrationEventHandler& outboundEvent);
+        ~IntentionCodeEventHandler() override;
+        IntentionCodeEventHandler(const IntentionCodeEventHandler&) = delete;
+        IntentionCodeEventHandler(IntentionCodeEventHandler&&) noexcept;
+        auto operator=(const IntentionCodeEventHandler&) -> IntentionCodeEventHandler& = delete;
+        auto operator=(IntentionCodeEventHandler&&) noexcept -> IntentionCodeEventHandler& = delete;
         void ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
         void FlightPlanEvent(
             Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
@@ -47,10 +51,10 @@ namespace UKControllerPlugin::IntentionCode {
 
         private:
         // A class for generating intention codes
-        IntentionCodeGenerator intention;
+        std::unique_ptr<IntentionCodeGenerator> intention;
 
         // A cache for codes that have already been generated
-        IntentionCodeCache codeCache;
+        std::unique_ptr<IntentionCodeCache> codeCache;
 
         // Allows us to send outbound events
         Integration::OutboundIntegrationEventHandler& outboundEvent;

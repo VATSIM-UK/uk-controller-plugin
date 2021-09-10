@@ -36,6 +36,6 @@ namespace UKControllerPlugin::MinStack {
         const std::shared_ptr<MinStackLevel> invalidMsl;
 
         // Map of identifier to MSL
-        std::map<std::string, UKControllerPlugin::MinStack::MinStackLevel> mslMap;
+        std::map<std::string, std::shared_ptr<UKControllerPlugin::MinStack::MinStackLevel>> mslMap;
     };
 } // namespace UKControllerPlugin::MinStack

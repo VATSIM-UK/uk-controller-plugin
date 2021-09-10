@@ -16,9 +16,9 @@ namespace UKControllerPlugin::Euroscope {
         AsrEventHandlerInterface();
         virtual ~AsrEventHandlerInterface();
         AsrEventHandlerInterface(const AsrEventHandlerInterface&);
-        AsrEventHandlerInterface(const AsrEventHandlerInterface&&) = delete;
+        AsrEventHandlerInterface(AsrEventHandlerInterface&&) = delete;
         [[nodiscard]] auto operator=(const AsrEventHandlerInterface&) -> AsrEventHandlerInterface&;
-        [[nodiscard]] auto operator=(const AsrEventHandlerInterface&&) -> AsrEventHandlerInterface& = delete;
+        [[nodiscard]] auto operator=(AsrEventHandlerInterface&&) -> AsrEventHandlerInterface& = delete;
 
         /*
             Called when the settings file first opens and has data ready to be processed. Used to notify implementing

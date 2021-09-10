@@ -8,6 +8,7 @@ namespace UKControllerPlugin::IntentionCode {
     AirfieldGroup::AirfieldGroup() = default;
     AirfieldGroup::~AirfieldGroup() = default;
     AirfieldGroup::AirfieldGroup(const AirfieldGroup&) = default;
+    AirfieldGroup::AirfieldGroup(AirfieldGroup&&) = default;
 
     auto AirfieldGroup::AppliesToController(
         const std::string& callsign, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const

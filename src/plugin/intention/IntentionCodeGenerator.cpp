@@ -21,7 +21,7 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     IntentionCodeGenerator::~IntentionCodeGenerator() = default;
-    IntentionCodeGenerator::IntentionCodeGenerator(const IntentionCodeGenerator&) = default;
+    IntentionCodeGenerator::IntentionCodeGenerator(IntentionCodeGenerator&&) noexcept = default;
 
     /*
         Looks through the route from start to finish for a sector exit point. Returns the index in the route where

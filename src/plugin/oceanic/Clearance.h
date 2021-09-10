@@ -36,6 +36,7 @@ namespace UKControllerPlugin::Oceanic {
         // Extra information
         std::string extra;
 
+        explicit Clearance(std::string callsign);
         ~Clearance();
         Clearance(const Clearance& compare);
         Clearance(Clearance&& compare) = delete;

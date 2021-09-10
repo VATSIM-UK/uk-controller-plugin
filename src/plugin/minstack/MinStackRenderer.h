@@ -54,7 +54,7 @@ namespace UKControllerPlugin::MinStack {
         void LeftClick(
             UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
-            std::string objectDescription,
+            const std::string& objectDescription,
             [[maybe_unused]] POINT mousePos,
             [[maybe_unused]] RECT itemArea) override;
         [[nodiscard]] auto IsVisible() const -> bool override;
@@ -64,7 +64,7 @@ namespace UKControllerPlugin::MinStack {
             UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
         void RightClick(
             int objectId,
-            std::string objectDescription,
+            const std::string& objectDescription,
             UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
         void ResetPosition() override;
         void SetVisible(bool visible);

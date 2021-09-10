@@ -23,10 +23,10 @@ namespace UKControllerPlugin::IntentionCode {
             std::vector<std::unique_ptr<UKControllerPlugin::IntentionCode::AirfieldGroup>> airfieldGroups,
             UKControllerPlugin::IntentionCode::SectorExitRepository& exitPoints);
         ~IntentionCodeGenerator();
-        IntentionCodeGenerator(const IntentionCodeGenerator&);
-        IntentionCodeGenerator(const IntentionCodeGenerator&&) = delete;
+        IntentionCodeGenerator(const IntentionCodeGenerator&) = delete;
+        IntentionCodeGenerator(IntentionCodeGenerator&&) noexcept;
         auto operator=(const IntentionCodeGenerator&) -> IntentionCodeGenerator& = delete;
-        auto operator=(const IntentionCodeGenerator&&) -> IntentionCodeGenerator& = delete;
+        auto operator=(IntentionCodeGenerator&&) -> IntentionCodeGenerator& = delete;
 
         auto GetIntentionCodeForFlightplan(
             const std::string& callsign,

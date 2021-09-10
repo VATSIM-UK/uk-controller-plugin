@@ -2,6 +2,9 @@
 
 namespace UKControllerPlugin::Oceanic {
 
+    Clearance::Clearance(std::string callsign) : callsign(callsign)
+    {
+    }
     Clearance::~Clearance() = default;
     Clearance::Clearance(const Clearance& compare)
     {

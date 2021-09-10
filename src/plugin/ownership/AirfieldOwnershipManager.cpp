@@ -15,10 +15,10 @@ namespace UKControllerPlugin::Ownership {
 
     AirfieldOwnershipManager::AirfieldOwnershipManager(
         const AirfieldCollection& airfields, const ActiveCallsignCollection& activeCallsigns)
-        : airfields(airfields), activeCallsigns(activeCallsigns),
-          notFoundControllerPosition(
+        : notFoundControllerPosition(
               std::make_unique<ControllerPosition>(-1, "", INVALID_FREQUENCY, std::vector<std::string>{}, true, false)),
-          notFoundCallsign(std::make_unique<ActiveCallsign>("", "", *this->notFoundControllerPosition))
+          notFoundCallsign(std::make_unique<ActiveCallsign>("", "", *this->notFoundControllerPosition)),
+          airfields(airfields), activeCallsigns(activeCallsigns)
     {
     }
 

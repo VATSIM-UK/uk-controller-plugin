@@ -7,6 +7,8 @@ namespace UKControllerPlugin::MinStack {
     */
     using MinStackLevel = struct MinStackLevel
     {
+        MinStackLevel(std::string type, std::string name, unsigned int msl);
+
         // The type of MSL - airfield or tma
         std::string type;
 
