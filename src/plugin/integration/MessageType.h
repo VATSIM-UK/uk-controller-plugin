@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 
 namespace UKControllerPlugin::Integration {
 
@@ -18,29 +17,9 @@ namespace UKControllerPlugin::Integration {
         // What version of the message is being broadcast
         messageversion_t version;
 
-        nlohmann::json ToJson() const
-        {
-            return nlohmann::json::object({
-                {"type", this->type},
-                {"version", this->version}
-            });
-        }
-
-        bool operator==(const MessageType& compare) const
-        {
-            return this->type == compare.type &&
-                this->version == compare.version;
-        }
-
-        bool operator!=(const MessageType& compare) const
-        {
-            return !(*this == compare);
-        }
-
-        bool operator<(const MessageType& compare) const
-        {
-            return this->type < compare.type ||
-                this->version < compare.version;
-        }
+        [[nodiscard]] auto ToJson() const -> nlohmann::json;
+        [[nodiscard]] auto operator==(const MessageType& compare) const -> bool;
+        [[nodiscard]] auto operator!=(const MessageType& compare) const -> bool;
+        [[nodiscard]] auto operator<(const MessageType& compare) const -> bool;
     };
 } // namespace UKControllerPlugin::Integration

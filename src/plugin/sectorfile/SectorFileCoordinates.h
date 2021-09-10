@@ -1,10 +1,8 @@
 #pragma once
-#include "pch/pch.h"
 
-namespace UKControllerPlugin {
-    namespace SectorFile {
-        EuroScopePlugIn::CPosition GetInvalidPosition(void);
-        EuroScopePlugIn::CPosition ParseSectorFileCoordinates(std::string latitude, std::string longitude);
-        bool PositionIsInvalid(EuroScopePlugIn::CPosition pos);
-    }  // namespace SectorFile
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::SectorFile {
+    [[nodiscard]] auto GetInvalidPosition() -> EuroScopePlugIn::CPosition;
+    [[nodiscard]] auto ParseSectorFileCoordinates(std::string latitude, std::string longitude)
+        -> EuroScopePlugIn::CPosition;
+    [[nodiscard]] auto PositionIsInvalid(EuroScopePlugIn::CPosition pos) -> bool;
+} // namespace UKControllerPlugin::SectorFile

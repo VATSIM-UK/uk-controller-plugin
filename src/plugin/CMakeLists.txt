@@ -225,6 +225,7 @@ source_group("src\\graphics" FILES ${src__graphics})
 
 set(src__handoff
     "handoff/CachedHandoff.h"
+    "handoff/CachedHandoff.cpp"
     "handoff/HandoffCollection.cpp"
     "handoff/HandoffCollection.h"
     "handoff/HandoffCollectionFactory.cpp"
@@ -372,7 +373,7 @@ set(src__integration
     "integration/SocketInterface.h"
     "integration/SocketWrapper.cpp"
     "integration/SocketWrapper.h"
-        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h)
+        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h integration/MessageType.cpp)
 source_group("src\\integration" FILES ${src__integration})
 
 set(src__intention
@@ -465,7 +466,7 @@ set(src__minstack
     "minstack/MinStackRenderer.h"
     "minstack/MinStackRendererConfiguration.cpp"
     "minstack/MinStackRendererConfiguration.h"
-)
+        minstack/MinStackLevel.cpp minstack/MinStackRenderedItem.cpp)
 source_group("src\\minstack" FILES ${src__minstack})
 
 set(src__navaids
@@ -476,7 +477,7 @@ set(src__navaids
     "navaids/NavaidCollection.h"
     "navaids/NavaidModule.cpp"
     "navaids/NavaidModule.h"
-)
+        navaids/Navaid.cpp)
 source_group("src\\navaids" FILES ${src__navaids})
 
 set(src__notifications
@@ -507,7 +508,7 @@ set(src__oceanic
     "oceanic/OceanicEventHandler.h"
     "oceanic/OceanicModule.cpp"
     "oceanic/OceanicModule.h"
-)
+        oceanic/Clearance.cpp)
 source_group("src\\oceanic" FILES ${src__oceanic})
 
 set(src__offblock
@@ -614,7 +615,7 @@ set(src__push
     "push/PushEventProxyWindow.h"
     "push/PushEventSubscription.cpp"
     "push/PushEventSubscription.h"
-)
+        push/PushEvent.cpp push/PushEventConnectionInterface.cpp)
 source_group("src\\push" FILES ${src__push})
 
 set(src__radarscreen
@@ -639,6 +640,7 @@ source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional
     "regional/RegionalPressure.h"
+    "regional/RegionalPressure.cpp"
     "regional/RegionalPressureConfigurationDialog.cpp"
     "regional/RegionalPressureConfigurationDialog.h"
     "regional/RegionalPressureManager.cpp"
@@ -652,7 +654,7 @@ set(src__regional
     "regional/RegionalPressureRenderer.h"
     "regional/RegionalPressureRendererConfiguration.cpp"
     "regional/RegionalPressureRendererConfiguration.h"
-)
+        regional/RegionalPressureRenderedItem.cpp)
 source_group("src\\regional" FILES ${src__regional})
 
 set(src__releases
@@ -685,7 +687,7 @@ set(src__releases
     "releases/RequestDepartureReleaseDialog.h"
     "releases/ToggleDepartureReleaseDecisionList.cpp"
     "releases/ToggleDepartureReleaseDecisionList.h"
-)
+        releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp)
 source_group("src\\releases" FILES ${src__releases})
 
 set(src__sectorfile

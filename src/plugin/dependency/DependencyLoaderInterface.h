@@ -1,21 +1,14 @@
 #pragma once
-#include "pch/pch.h"
 
-namespace UKControllerPlugin {
-    namespace Dependency {
+namespace UKControllerPlugin::Dependency {
 
-        /*
-            Interface for classes that load dependencies
-        */
-        class DependencyLoaderInterface
-        {
-            public:
+    /*
+        Interface for classes that load dependencies
+    */
+    class DependencyLoaderInterface
+    {
+        public:
+        [[nodiscard]] virtual nlohmann::json LoadDependency(std::string key, nlohmann::json defaultValue) noexcept = 0;
+    };
 
-                virtual nlohmann::json LoadDependency(
-                    std::string key,
-                    nlohmann::json defaultValue
-                ) noexcept = 0;
-        };
-
-    }  // namespace Dependency
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin::Dependency
