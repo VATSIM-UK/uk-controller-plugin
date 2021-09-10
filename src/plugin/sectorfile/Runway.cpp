@@ -1,6 +1,4 @@
-#pragma once
-#include "pch/pch.h"
-#include "sectorfile/Runway.h"
+#include "Runway.h"
 
 namespace UKControllerPlugin {
     namespace SectorFile {

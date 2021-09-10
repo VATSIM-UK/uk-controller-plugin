@@ -1,6 +1,4 @@
-#pragma once
-#include "pch/pch.h"
-#include "regional/RegionalPressureRendererConfiguration.h"
+#include "RegionalPressureRendererConfiguration.h"
 
 namespace UKControllerPlugin {
     namespace Regional {
@@ -20,12 +18,9 @@ namespace UKControllerPlugin {
         RegionalPressureRenderedItem RegionalPressureRendererConfiguration::GetItem(std::string key) const
         {
             auto item = std::find_if(
-                this->items.begin(),
-                this->items.end(),
-                [key](const RegionalPressureRenderedItem& item) -> bool {
+                this->items.begin(), this->items.end(), [key](const RegionalPressureRenderedItem& item) -> bool {
                     return item.key == key;
-                }
-            );
+                });
 
             return item == this->items.cend() ? this->invalidItem : *item;
         }
@@ -38,12 +33,9 @@ namespace UKControllerPlugin {
         void RegionalPressureRendererConfiguration::RemoveItem(unsigned int index)
         {
             auto item = std::find_if(
-                this->items.begin(),
-                this->items.end(),
-                [index](const RegionalPressureRenderedItem& item) -> bool {
+                this->items.begin(), this->items.end(), [index](const RegionalPressureRenderedItem& item) -> bool {
                     return item.order == index;
-                }
-            );
+                });
 
             if (item != this->items.end()) {
                 this->items.erase(item);
@@ -64,5 +56,5 @@ namespace UKControllerPlugin {
         {
             return this->shouldRender;
         }
-    }  // namespace Regional
-}  // namespace UKControllerPlugin
+    } // namespace Regional
+} // namespace UKControllerPlugin

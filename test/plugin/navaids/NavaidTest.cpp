@@ -1,11 +1,9 @@
-#pragma once
-#include "pch/pch.h"
 #include "navaids/Navaid.h"
 #include "navaids/CompareNavaids.h"
 
-using UKControllerPlugin::Navaids::Navaid;
-using UKControllerPlugin::Navaids::CompareNavaids;
 using ::testing::Test;
+using UKControllerPlugin::Navaids::CompareNavaids;
+using UKControllerPlugin::Navaids::Navaid;
 
 namespace UKControllerPluginTest {
     namespace Navaids {
@@ -13,9 +11,9 @@ namespace UKControllerPluginTest {
         class NavaidTest : public Test
         {
             public:
-                Navaid navaid1 = { 1, "TIMBA" };
-                Navaid navaid1a = { 1, "WILLO" };
-                Navaid navaid2 = { 2, "TIMBA" };
+            Navaid navaid1 = {1, "TIMBA"};
+            Navaid navaid1a = {1, "WILLO"};
+            Navaid navaid2 = {2, "TIMBA"};
             CompareNavaids compare;
         };
 
@@ -28,5 +26,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_FALSE(navaid1 == navaid1a);
         }
-    }  // namespace Navaids
-}  // namespace UKControllerPluginTest
+    } // namespace Navaids
+} // namespace UKControllerPluginTest

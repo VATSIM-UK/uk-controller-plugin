@@ -1,11 +1,9 @@
-#pragma once
-#include "pch/pch.h"
 #include "navaids/Navaid.h"
 #include "navaids/NavaidCollection.h"
 
+using ::testing::Test;
 using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Navaids::NavaidCollection;
-using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace Navaids {
@@ -13,9 +11,9 @@ namespace UKControllerPluginTest {
         class NavaidCollectionTest : public Test
         {
             public:
-                Navaid navaid1 = { 1, "TIMBA" };
-                Navaid navaid2 = { 2, "WILLO" };
-                NavaidCollection collection;
+            Navaid navaid1 = {1, "TIMBA"};
+            Navaid navaid2 = {2, "WILLO"};
+            NavaidCollection collection;
         };
 
         TEST_F(NavaidCollectionTest, ItStartsEmpty)
@@ -50,5 +48,5 @@ namespace UKControllerPluginTest {
             this->collection.AddNavaid(navaid1);
             EXPECT_EQ(this->collection.invalidNavaid, this->collection.GetByIdentifier("WILLO"));
         }
-    }  // namespace Navaids
-}  // namespace UKControllerPluginTest
+    } // namespace Navaids
+} // namespace UKControllerPluginTest

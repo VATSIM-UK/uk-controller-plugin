@@ -1,6 +1,4 @@
-#pragma once
-#include "pch/pch.h"
-#include "stands/StandSerializer.h"
+#include "StandSerializer.h"
 
 namespace UKControllerPlugin {
     namespace Stands {

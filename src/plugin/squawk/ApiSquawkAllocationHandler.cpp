@@ -1,8 +1,6 @@
-#pragma once
-#include "pch/pch.h"
-#include "euroscope/EuroscopePluginLoopbackInterface.h"
-#include "squawk/ApiSquawkAllocationHandler.h"
+#include "ApiSquawkAllocationHandler.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
 
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;

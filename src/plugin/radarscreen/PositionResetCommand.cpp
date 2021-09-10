@@ -1,14 +1,11 @@
-#pragma once
-#include "pch/pch.h"
-#include "radarscreen/PositionResetCommand.h"
+#include "PositionResetCommand.h"
 
 namespace UKControllerPlugin {
     namespace RadarScreen {
 
-        PositionResetCommand::PositionResetCommand(const RadarRenderableCollection & renderables)
+        PositionResetCommand::PositionResetCommand(const RadarRenderableCollection& renderables)
             : renderables(renderables)
         {
-
         }
 
         /*
@@ -23,5 +20,5 @@ namespace UKControllerPlugin {
             this->renderables.ResetPosition();
             return true;
         }
-    }  // namespace RadarScreen
-}  // namespace UKControllerPlugin
+    } // namespace RadarScreen
+} // namespace UKControllerPlugin
