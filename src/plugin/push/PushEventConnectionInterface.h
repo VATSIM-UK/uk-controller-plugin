@@ -9,6 +9,7 @@ namespace UKControllerPlugin::Push {
     class PushEventConnectionInterface
     {
         public:
+        PushEventConnectionInterface();
         virtual ~PushEventConnectionInterface();
         PushEventConnectionInterface(const PushEventConnectionInterface&);
         PushEventConnectionInterface(PushEventConnectionInterface&&) noexcept;

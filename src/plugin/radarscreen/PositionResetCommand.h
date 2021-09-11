@@ -1,30 +1,25 @@
 #pragma once
+#include "RadarRenderableCollection.h"
 #include "command/CommandHandlerInterface.h"
-#include "RadarScreen/RadarRenderableCollection.h"
 
-namespace UKControllerPlugin {
-    namespace RadarScreen {
+namespace UKControllerPlugin::RadarScreen {
 
-        /*
-            Processes commands to reset the position of renderables
-        */
-        class PositionResetCommand : public UKControllerPlugin::Command::CommandHandlerInterface
-        {
-            public:
-                explicit PositionResetCommand(
-                    const UKControllerPlugin::RadarScreen::RadarRenderableCollection & renderables
-                );
+    /*
+        Processes commands to reset the position of renderables
+    */
+    class PositionResetCommand : public UKControllerPlugin::Command::CommandHandlerInterface
+    {
+        public:
+        explicit PositionResetCommand(const UKControllerPlugin::RadarScreen::RadarRenderableCollection& renderables);
 
-                // Inherited via CommandHandlerInterface
-                bool ProcessCommand(std::string command) override;
+        // Inherited via CommandHandlerInterface
+        [[nodiscard]] auto ProcessCommand(std::string command) -> bool override;
 
-                // Command for resetting the visuals
-                const std::string resetCommand = ".ukcp resetvisuals";
+        private:
+        // Radar renderables
+        const UKControllerPlugin::RadarScreen::RadarRenderableCollection& renderables;
 
-            private:
-
-                // Radar renderables
-                const UKControllerPlugin::RadarScreen::RadarRenderableCollection & renderables;
-        };
-    }  // namespace RadarScreen
-}  // namespace UKControllerPlugin
+        // Command for resetting the visuals
+        const std::string resetCommand = ".ukcp resetvisuals";
+    };
+} // namespace UKControllerPlugin::RadarScreen

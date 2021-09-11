@@ -1,7 +1,7 @@
 #include "MinStackLevel.h"
 #include "MinStackManager.h"
 #include "MinStackRenderer.h"
-#include "euroscope/EuroScopeRadarLoopbackInterface.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/GdiplusBrushes.h"

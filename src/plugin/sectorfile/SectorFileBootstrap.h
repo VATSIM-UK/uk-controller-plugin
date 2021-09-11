@@ -5,7 +5,7 @@ namespace UKControllerPlugin {
         struct PersistenceContainer;
     } // namespace Bootstrap
     namespace Euroscope {
-        struct AsrEventHandlerCollection;
+        class AsrEventHandlerCollection;
     } // namespace Euroscope
 } // namespace UKControllerPlugin
 

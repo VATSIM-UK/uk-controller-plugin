@@ -2,56 +2,54 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCFlightPlanWrapper.h"
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
+namespace UKControllerPlugin::Euroscope {
 
-        /*
-            Wrapper around the EuroScope CFlightPlan class.
-        */
-        class EuroScopeCFlightPlanWrapper : public UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface
-        {
-            public:
-                explicit EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan originalData);
-                void AnnotateFlightStrip(int index, std::string data) const override;
-                std::string GetAnnotation(int index) const override;
-                std::string GetAircraftType(void) const override;
-                std::string GetAssignedSquawk(void) const;
-                const std::string GetCallsign(void) const;
-                const int GetClearedAltitude(void) const;
-                virtual const int GetCruiseLevel(void) const;
-                const std::string GetDestination(void) const;
-                const double GetDistanceFromOrigin(void) const;
-                std::string GetExpectedDepartureTime(void) const override;
-                virtual UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface GetExtractedRoute(void) const;
-                std::string GetFlightRules(void) const;
-                std::string GetGroundState(void) const;
-                std::string GetIcaoWakeCategory(void) const override;
-                const std::string GetOrigin(void) const;
-                std::string GetRawRouteString(void) const override;
-                const std::string GetSidName(void) const;
-                bool HasAssignedSquawk(void) const;
-                const bool HasControllerClearedAltitude(void) const;
-                const bool HasControllerAssignedHeading(void) const override;
-                bool HasSid(void) const;
-                bool IsSimulated(void) const;
-                const bool IsTracked(void) const;
-                const bool IsTrackedByUser(void) const;
-                bool IsValid(void) const;
-                bool IsVfr(void) const override;
-                void SetClearedAltitude(int cleared);
-                void SetHeading(int heading) override;
-                void SetSquawk(std::string squawk);
-                EuroScopePlugIn::CFlightPlan GetEuroScopeObject() const override;
+    /*
+        Wrapper around the EuroScope CFlightPlan class.
+    */
+    class EuroScopeCFlightPlanWrapper : public UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface
+    {
+        public:
+        explicit EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan originalData);
+        void AnnotateFlightStrip(int index, std::string data) const override;
+        std::string GetAnnotation(int index) const override;
+        std::string GetAircraftType() const override;
+        std::string GetAssignedSquawk() const override;
+        const std::string GetCallsign() const override;
+        const int GetClearedAltitude() const override;
+        virtual const int GetCruiseLevel() const override;
+        const std::string GetDestination() const override;
+        const double GetDistanceFromOrigin() const override;
+        std::string GetExpectedDepartureTime() const override;
+        virtual UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface GetExtractedRoute() const override;
+        std::string GetFlightRules() const override;
+        std::string GetGroundState() const override;
+        std::string GetIcaoWakeCategory() const override;
+        const std::string GetOrigin() const override;
+        std::string GetRawRouteString() const override;
+        const std::string GetSidName() const override;
+        bool HasAssignedSquawk() const override;
+        const bool HasControllerClearedAltitude() const override;
+        const bool HasControllerAssignedHeading() const override;
+        bool HasSid() const override;
+        bool IsSimulated() const override;
+        const bool IsTracked() const override;
+        const bool IsTrackedByUser() const override;
+        bool IsValid() const override;
+        bool IsVfr() const override;
+        void SetClearedAltitude(int cleared) override;
+        void SetHeading(int heading) override;
+        void SetSquawk(std::string squawk) override;
+        EuroScopePlugIn::CFlightPlan GetEuroScopeObject() const override;
 
-                // The callsign that will be returned by GetTrackingControllerCallsign if untracked.
-                const std::string notTrackedControllerCallsign = "";
+        private:
+        // The original data that we're wrapping.
+        EuroScopePlugIn::CFlightPlan originalData;
 
-            private:
-                // The original data that we're wrapping.
-                EuroScopePlugIn::CFlightPlan originalData;
+        // The value ES passes as cleared altitude when none is set.
+        const int euroScopeNoControllerClearedAltitude = 0;
 
-                // The value ES passes as cleared altitude when none is set.
-                const int euroScopeNoControllerClearedAltitude = 0;
-            };
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+        // The callsign that will be returned by GetTrackingControllerCallsign if untracked.
+        const std::string notTrackedControllerCallsign = "";
+    };
+} // namespace UKControllerPlugin::Euroscope

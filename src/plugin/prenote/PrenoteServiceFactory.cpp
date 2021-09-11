@@ -48,7 +48,7 @@ namespace UKControllerPlugin::Prenote {
 
         for (nlohmann::json::const_iterator it = json.cbegin(); it != json.cend(); ++it) {
             try {
-                handler->AddPrenote(std::move(this->prenoteFactory.CreateFromJson(*it)));
+                handler->AddPrenote(this->prenoteFactory.CreateFromJson(*it));
             } catch (std::invalid_argument& invalid) {
                 // A dodgy prenote isn't a reason to stop, but we should tell the user
                 BootstrapWarningMessage message(invalid.what());

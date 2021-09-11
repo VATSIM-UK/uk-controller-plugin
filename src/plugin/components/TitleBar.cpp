@@ -1,6 +1,6 @@
 #include "pch/pch.h"
 #include "components/TitleBar.h"
-#include "euroscope/EuroScopeRadarLoopbackInterface.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "components/ClickableArea.h"
 

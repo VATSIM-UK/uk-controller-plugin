@@ -1,65 +1,57 @@
 #pragma once
+#include "HoldDisplay.h"
 #include "euroscope/AsrEventHandlerInterface.h"
-#include "hold/HoldDisplay.h"
 
-namespace UKControllerPlugin {
-    namespace Hold {
-        class HoldManager;
-        class HoldDisplayFactory;
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Hold {
 
-namespace UKControllerPlugin {
-    namespace Hold {
+    class HoldDisplayFactory;
 
-        /*
-            A class that manages hold display classes for each of the ASRs.
-        */
-        class HoldDisplayManager : public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
+    /*
+        A class that manages hold display classes for each of the ASRs.
+    */
+    class HoldDisplayManager : public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
+    {
+        public:
+        HoldDisplayManager(const UKControllerPlugin::Hold::HoldDisplayFactory& displayFactory);
+        [[nodiscard]] auto CountDisplays() const -> size_t;
+        [[nodiscard]] auto GetDisplay(const std::string& fix) const -> const UKControllerPlugin::Hold::HoldDisplay&;
+        [[nodiscard]] auto GetSelectedHolds() const -> std::vector<std::string>;
+        void LoadSelectedHolds(const std::vector<std::string>& holds);
+
+        // Inherited via AsrEventHandlerInterface
+        void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
+        void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
+
+        // Define types for iteration
+        using HoldDisplays = std::set<std::unique_ptr<UKControllerPlugin::Hold::HoldDisplay>>;
+        using const_iterator = HoldDisplays::const_iterator;
+        [[nodiscard]] auto cbegin() const -> const_iterator
         {
-            public:
-                HoldDisplayManager(
-                    const UKControllerPlugin::Hold::HoldManager & holdManager,
-                    const UKControllerPlugin::Hold::HoldDisplayFactory & displayFactory
-                );
-                size_t CountDisplays(void) const;
-                const UKControllerPlugin::Hold::HoldDisplay & GetDisplay(std::string fix) const;
-                std::vector<std::string> GetSelectedHolds(void) const;
-                void LoadSelectedHolds(std::vector<std::string> holds);
+            return displays.cbegin();
+        }
+        [[nodiscard]] auto cend() const -> const_iterator
+        {
+            return displays.cend();
+        }
 
-                // Inherited via AsrEventHandlerInterface
-                void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
-                void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) override;
+        private:
+        void SaveDisplaysToAsr() const;
 
-                // Define types for iteration
-                typedef std::set<std::unique_ptr<UKControllerPlugin::Hold::HoldDisplay>> HoldDisplays;
-                typedef HoldDisplays::const_iterator const_iterator;
-                const_iterator cbegin() const { return displays.cbegin(); }
-                const_iterator cend() const { return displays.cend(); }
+        // Creates displays
+        const UKControllerPlugin::Hold::HoldDisplayFactory& displayFactory;
 
-                // ASR Data
-                const std::string selectedHoldsAsrKey = "selectedHolds";
+        // The hold displays
+        std::set<std::unique_ptr<UKControllerPlugin::Hold::HoldDisplay>> displays;
 
-                const std::string selectedHoldsAsrDescription = "Selected Holds";
+        // Place to find settings
+        UKControllerPlugin::Euroscope::UserSetting* userSetting;
 
-            private:
+        // The currently selected holds
+        std::vector<std::string> selectedHolds;
 
-                void SaveDisplaysToAsr(void) const;
+        // ASR Data
+        const std::string selectedHoldsAsrKey = "selectedHolds";
 
-                // Manages holds
-                const UKControllerPlugin::Hold::HoldManager & holdManager;
-
-                // Creates displays
-                const UKControllerPlugin::Hold::HoldDisplayFactory & displayFactory;
-
-                // The hold displays
-                std::set<std::unique_ptr<UKControllerPlugin::Hold::HoldDisplay>> displays;
-
-                // Place to find settings
-                UKControllerPlugin::Euroscope::UserSetting * userSetting;
-
-                // The currently selected holds
-                std::vector<std::string> selectedHolds;
-        };
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+        const std::string selectedHoldsAsrDescription = "Selected Holds";
+    };
+} // namespace UKControllerPlugin::Hold

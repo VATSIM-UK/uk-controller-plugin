@@ -1,6 +1,6 @@
 #include "pch/pch.h"
 #include "historytrail/HistoryTrailRenderer.h"
-#include "euroscope/EuroScopeRadarLoopbackInterface.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "euroscope/UserSetting.h"
 #include "historytrail/AircraftHistoryTrail.h"

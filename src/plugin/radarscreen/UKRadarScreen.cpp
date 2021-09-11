@@ -25,8 +25,6 @@ namespace UKControllerPlugin {
         this->OnAsrContentToBeSaved(); // NOLINT
     }
 
-    UKRadarScreen::UKRadarScreen(UKRadarScreen&&) noexcept = default;
-
     /*
         Adds an item to the menu.
     */
@@ -72,14 +70,6 @@ namespace UKControllerPlugin {
     auto UKRadarScreen::GetRadarViewport() -> RECT
     {
         return this->GetRadarArea();
-    }
-
-    /*
-        Returns true if an ASR key exists.
-    */
-    auto UKRadarScreen::HasAsrKey(std::string key) -> bool
-    {
-        return this->GetDataFromAsr(key.c_str()) != nullptr;
     }
 
     /*

@@ -8,7 +8,7 @@
 #include "components/TitleBar.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
-#include "euroscope/EuroScopeRadarLoopbackInterface.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"

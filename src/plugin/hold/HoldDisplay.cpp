@@ -3,7 +3,7 @@
 #include "hold/HoldDisplayFunctions.h"
 #include "hold/HoldManager.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
-#include "euroscope/EuroScopeRadarLoopbackInterface.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "graphics/GdiGraphicsInterface.h"

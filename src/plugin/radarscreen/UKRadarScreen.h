@@ -2,7 +2,7 @@
 #include "RadarRenderableCollection.h"
 #include "command/CommandHandlerCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
-#include "euroscope/EuroScopeRadarLoopbackInterface.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSettingProviderInterface.h"
 
 // Forward declarations
@@ -38,9 +38,9 @@ namespace UKControllerPlugin {
             const UKControllerPlugin::RadarScreen::RadarRenderableCollection& renderers,
             UKControllerPlugin::Command::CommandHandlerCollection commandHandlers,
             UKControllerPlugin::Windows::GdiGraphicsInterface& graphics);
-        ~UKRadarScreen();
+        ~UKRadarScreen() override;
         UKRadarScreen(const UKRadarScreen&) = delete;
-        UKRadarScreen(UKRadarScreen&&) noexcept;
+        UKRadarScreen(UKRadarScreen&&) noexcept = delete;
         auto operator=(const UKRadarScreen&) -> UKRadarScreen& = delete;
         auto operator=(UKRadarScreen&&) -> UKRadarScreen& = delete;
         void AddMenuItem(UKControllerPlugin::Plugin::PopupMenuItem menuItem) override;
@@ -49,7 +49,6 @@ namespace UKControllerPlugin {
         auto GetGroundspeedForCallsign(std::string cs) -> int override;
         auto GetKey(std::string key) -> std::string override;
         auto GetRadarViewport() -> RECT override;
-        auto HasAsrKey(std::string key) -> bool override;
         auto KeyExists(std::string key) -> bool override;
         void OnAsrContentToBeClosed() override;
         void OnAsrContentToBeSaved() override;

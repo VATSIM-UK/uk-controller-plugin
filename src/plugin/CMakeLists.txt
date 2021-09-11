@@ -161,7 +161,7 @@ set(src__euroscope
     "euroscope/EuroscopeFlightplanListWrapper.cpp"
     "euroscope/EuroscopeFlightplanListWrapper.h"
     "euroscope/EuroscopePluginLoopbackInterface.h"
-    "euroscope/EuroScopeRadarLoopbackInterface.h"
+    "euroscope/EuroscopeRadarLoopbackInterface.h"
     "euroscope/EuroscopeSectorFileElementInterface.h"
     "euroscope/EuroscopeSectorFileElementWrapper.cpp"
     "euroscope/EuroscopeSectorFileElementWrapper.h"
@@ -189,7 +189,7 @@ set(src__euroscope
     "euroscope/UserSettingAwareCollection.h"
     "euroscope/UserSettingAwareInterface.h"
     "euroscope/UserSettingProviderInterface.h"
-        euroscope/AsrEventHandlerInterface.cpp)
+        euroscope/AsrEventHandlerInterface.cpp euroscope/UserSettingProviderInterface.cpp euroscope/EuroscopeRadarLoopbackInterface.cpp)
 source_group("src\\euroscope" FILES ${src__euroscope})
 
 set(src__flightinformationservice
