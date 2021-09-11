@@ -1,10 +1,7 @@
-#include "pch/pch.h"
-#include "radarscreen/UKRadarScreen.h"
-#include "euroscope/AsrEventHandlerCollection.h"
-#include "radarscreen/RadarRenderableCollection.h"
-#include "helper/HelperFunctions.h"
-#include "graphics/GdiGraphicsInterface.h"
+#include "RadarRenderableCollection.h"
+#include "UKRadarScreen.h"
 #include "euroscope/UserSetting.h"
+#include "graphics/GdiGraphicsInterface.h"
 #include "update/PluginVersion.h"
 
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
@@ -14,21 +11,21 @@ using UKControllerPlugin::Plugin::PluginVersion;
 namespace UKControllerPlugin {
 
     UKRadarScreen::UKRadarScreen(
-        const UKControllerPlugin::Euroscope::AsrEventHandlerCollection userSettingEventHandler,
-        const UKControllerPlugin::RadarScreen::RadarRenderableCollection & renderers,
-        const UKControllerPlugin::Command::CommandHandlerCollection commandHandlers,
-        UKControllerPlugin::Windows::GdiGraphicsInterface & graphics
-    )
-        : userSettingEventHandler(userSettingEventHandler), renderers(renderers),
-        commandHandlers(commandHandlers), graphics(graphics)
+        UKControllerPlugin::Euroscope::AsrEventHandlerCollection userSettingEventHandler,
+        const UKControllerPlugin::RadarScreen::RadarRenderableCollection& renderers,
+        UKControllerPlugin::Command::CommandHandlerCollection commandHandlers,
+        UKControllerPlugin::Windows::GdiGraphicsInterface& graphics)
+        : graphics(graphics), userSettingEventHandler(std::move(userSettingEventHandler)), renderers(renderers),
+          commandHandlers(std::move(commandHandlers)), asrContentLoaded(false), lastContext(nullptr)
     {
-
     }
 
-    UKRadarScreen::~UKRadarScreen(void)
+    UKRadarScreen::~UKRadarScreen()
     {
-        this->OnAsrContentToBeSaved();
+        this->OnAsrContentToBeSaved(); // NOLINT
     }
+
+    UKRadarScreen::UKRadarScreen(UKRadarScreen&&) noexcept = default;
 
     /*
         Adds an item to the menu.
@@ -42,14 +39,13 @@ namespace UKControllerPlugin {
             false,
             menuItem.checked,
             menuItem.disabled,
-            menuItem.fixedPosition
-        );
+            menuItem.fixedPosition);
     }
 
     /*
         Converts a coordinate from screen position to pixel.
     */
-    POINT UKRadarScreen::ConvertCoordinateToScreenPoint(EuroScopePlugIn::CPosition pos)
+    auto UKRadarScreen::ConvertCoordinateToScreenPoint(EuroScopePlugIn::CPosition pos) -> POINT
     {
         return this->ConvertCoordFromPositionToPixel(pos);
     }
@@ -57,15 +53,15 @@ namespace UKControllerPlugin {
     /*
         Interface method, get data from the ASR.
     */
-    std::string UKRadarScreen::GetAsrData(std::string key)
+    auto UKRadarScreen::GetAsrData(std::string key) -> std::string
     {
-        return (this->GetDataFromAsr(key.c_str()) != NULL) ? this->GetDataFromAsr(key.c_str()) : "";
+        return (this->GetDataFromAsr(key.c_str()) != nullptr) ? this->GetDataFromAsr(key.c_str()) : "";
     }
 
     /*
         Returns the groundspeed for a given callsign.
     */
-    int UKRadarScreen::GetGroundspeedForCallsign(std::string cs)
+    auto UKRadarScreen::GetGroundspeedForCallsign(std::string cs) -> int
     {
         return this->GetPlugIn()->RadarTargetSelect(cs.c_str()).GetGS();
     }
@@ -73,7 +69,7 @@ namespace UKControllerPlugin {
     /*
         Returns the viewpoint for the radar.
     */
-    RECT UKRadarScreen::GetRadarViewport(void)
+    auto UKRadarScreen::GetRadarViewport() -> RECT
     {
         return this->GetRadarArea();
     }
@@ -81,9 +77,9 @@ namespace UKControllerPlugin {
     /*
         Returns true if an ASR key exists.
     */
-    bool UKRadarScreen::HasAsrKey(std::string key)
+    auto UKRadarScreen::HasAsrKey(std::string key) -> bool
     {
-        return this->GetDataFromAsr(key.c_str()) != NULL;
+        return this->GetDataFromAsr(key.c_str()) != nullptr;
     }
 
     /*
@@ -91,23 +87,23 @@ namespace UKControllerPlugin {
     */
     void UKRadarScreen::RegisterScreenObject(int objectType, std::string objectId, RECT location, bool moveable)
     {
-        this->AddScreenObject(objectType, objectId.c_str(), location, moveable, NULL);
+        this->AddScreenObject(objectType, objectId.c_str(), location, moveable, nullptr);
     }
 
     /*
         Returns true if a key exists in the ASR, false otherwise.
     */
-    bool UKRadarScreen::KeyExists(std::string key)
+    auto UKRadarScreen::KeyExists(std::string key) -> bool
     {
-        return this->GetDataFromAsr(key.c_str()) != NULL;
+        return this->GetDataFromAsr(key.c_str()) != nullptr;
     }
 
     /*
         Returns the value of a key in the ASR, empty string if it doesn't exist.
     */
-    std::string UKRadarScreen::GetKey(std::string key)
+    auto UKRadarScreen::GetKey(std::string key) -> std::string
     {
-        return this->KeyExists(key) ? this->GetAsrData(key.c_str()) : "";
+        return this->KeyExists(key) ? this->GetAsrData(key) : "";
     }
 
     /*
@@ -122,12 +118,12 @@ namespace UKControllerPlugin {
         Has to be defined, because EuroScope. Have to call delete on current object
         in order to trigger last minute ASR content saving.
     */
-    void UKRadarScreen::OnAsrContentToBeClosed(void)
+    void UKRadarScreen::OnAsrContentToBeClosed()
     {
         delete this;
     }
 
-    void UKRadarScreen::OnAsrContentToBeSaved(void)
+    void UKRadarScreen::OnAsrContentToBeSaved()
     {
         this->userSettingEventHandler.AsrClosingEvent(*this->userSettingProvider);
     }
@@ -143,16 +139,11 @@ namespace UKControllerPlugin {
         this->asrContentLoaded = true;
     }
 
-
     /*
         Handles when an object on the screen is clicked, e.g. buttons.
     */
-    void UKRadarScreen::OnClickScreenObject(int ObjectType,
-        const char * sObjectId,
-        POINT Pt,
-        RECT Area,
-        int Button
-    ) {
+    void UKRadarScreen::OnClickScreenObject(int ObjectType, const char* sObjectId, POINT Pt, RECT Area, int Button)
+    {
         if (Button == EuroScopePlugIn::BUTTON_LEFT) {
             this->renderers.LeftClickScreenObject(*this, ObjectType, sObjectId, Pt, Area);
         } else if (Button == EuroScopePlugIn::BUTTON_RIGHT) {
@@ -166,7 +157,7 @@ namespace UKControllerPlugin {
         Should return true if we've accepted the command,
         false in all other cases.
     */
-    bool UKRadarScreen::OnCompileCommand(const char * sCommandLine)
+    auto UKRadarScreen::OnCompileCommand(const char* sCommandLine) -> bool
     {
         return this->commandHandlers.ProcessCommand(sCommandLine);
     }
@@ -174,13 +165,8 @@ namespace UKControllerPlugin {
     /*
         Handles when an object on the screen is moved, e.g. title bars.
     */
-    void UKRadarScreen::OnMoveScreenObject(
-        int ObjectType,
-        const char * sObjectId,
-        POINT Pt,
-        RECT Area,
-        bool Released
-    ) {
+    void UKRadarScreen::OnMoveScreenObject(int ObjectType, const char* sObjectId, POINT Pt, RECT Area, bool Released)
+    {
         this->renderers.MoveScreenObject(ObjectType, sObjectId, Area);
         this->RequestRefresh();
     }
@@ -199,13 +185,13 @@ namespace UKControllerPlugin {
         this->renderers.Render(phase, this->graphics, *this);
     }
 
-    bool UKRadarScreen::PositionOffScreen(EuroScopePlugIn::CPosition pos)
+    auto UKRadarScreen::PositionOffScreen(EuroScopePlugIn::CPosition pos) -> bool
     {
         RECT radarArea = this->GetRadarArea();
         POINT posOnScreen = this->ConvertCoordinateToScreenPoint(pos);
 
-        return posOnScreen.x > radarArea.right || posOnScreen.x < radarArea.left ||
-            posOnScreen.y > radarArea.bottom || posOnScreen.y < radarArea.top;
+        return posOnScreen.x > radarArea.right || posOnScreen.x < radarArea.left || posOnScreen.y > radarArea.bottom ||
+               posOnScreen.y < radarArea.top;
     }
 
     /*
@@ -221,14 +207,13 @@ namespace UKControllerPlugin {
         this->GetPlugIn()->SetASELAircraft(this->GetPlugIn()->FlightPlanSelect(callsign.c_str()));
         this->StartTagFunction(
             callsign.c_str(),
-            NULL,
+            nullptr,
             EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
             callsign.c_str(),
-            NULL,
+            nullptr,
             EuroScopePlugIn::TAG_ITEM_FUNCTION_TEMP_ALTITUDE_POPUP,
             mousePos,
-            tagItemArea
-        );
+            tagItemArea);
     }
 
     void UKRadarScreen::TogglePluginTagFunction(std::string callsign, int functionId, POINT mousePos, RECT tagItemArea)
@@ -236,13 +221,12 @@ namespace UKControllerPlugin {
         this->GetPlugIn()->SetASELAircraft(this->GetPlugIn()->FlightPlanSelect(callsign.c_str()));
         this->StartTagFunction(
             callsign.c_str(),
-            NULL,
+            nullptr,
             EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
             callsign.c_str(),
             PluginVersion::title,
             functionId,
             mousePos,
-            tagItemArea
-        );
+            tagItemArea);
     }
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

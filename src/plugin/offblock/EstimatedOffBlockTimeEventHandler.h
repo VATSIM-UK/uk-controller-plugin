@@ -1,38 +1,38 @@
 #pragma once
 #include "tag/TagItemInterface.h"
-#include "datablock/DisplayTime.h"
-#include "tag/TagData.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
-    }  // namespace Euroscope
+    } // namespace Euroscope
+    namespace Datablock {
+        class DisplayTime;
+    } // namespace Datablock
     namespace Flightplan {
         class StoredFlightplanCollection;
-    }  // namespace Flightplan
-}  // namespace UKControllerPlugin
+    } // namespace Flightplan
+    namespace Tag {
+        class TagData;
+    } // namespace Tag
+} // namespace UKControllerPlugin
 
-namespace UKControllerPlugin {
-namespace Datablock {
+namespace UKControllerPlugin::Datablock {
 
-class EstimatedOffBlockTimeEventHandler : public UKControllerPlugin::Tag::TagItemInterface
-{
-    public:
+    class EstimatedOffBlockTimeEventHandler : public UKControllerPlugin::Tag::TagItemInterface
+    {
+        public:
         EstimatedOffBlockTimeEventHandler(
-            const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans,
-            const UKControllerPlugin::Datablock::DisplayTime & displayTime
-        );
-        std::string GetTagItemDescription(int tagItemId) const override;
+            const UKControllerPlugin::Flightplan::StoredFlightplanCollection& storedFlightplans,
+            const UKControllerPlugin::Datablock::DisplayTime& displayTime);
+        [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
         void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
-    private:
-
+        private:
         // Stored flightplans
-        const UKControllerPlugin::Flightplan::StoredFlightplanCollection & storedFlightplans;
+        const UKControllerPlugin::Flightplan::StoredFlightplanCollection& storedFlightplans;
 
         // Class for converting timestamps to display times and getting the no time format
-        const UKControllerPlugin::Datablock::DisplayTime & displayTime;
-};
-}  // namespace Datablock
-}  // namespace UKControllerPlugin
+        const UKControllerPlugin::Datablock::DisplayTime& displayTime;
+    };
+} // namespace UKControllerPlugin::Datablock

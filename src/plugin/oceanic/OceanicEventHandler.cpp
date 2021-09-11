@@ -122,8 +122,9 @@ namespace UKControllerPlugin::Oceanic {
         const POINT& mousePos)
     {
         auto storedClearance = this->clearances.find(flightplan.GetCallsign());
-        this->currentlySelectedClearance =
-            storedClearance != this->clearances.cend() ? storedClearance->second : Clearance{flightplan.GetCallsign()};
+        this->currentlySelectedClearance = storedClearance != this->clearances.cend()
+                                               ? storedClearance->second
+                                               : GetDefaultClearanceForCallsign(flightplan);
 
         this->dialogManager.OpenDialog(
             IDD_OCEANIC_CLEARANCE,
@@ -133,13 +134,13 @@ namespace UKControllerPlugin::Oceanic {
 
     void OceanicEventHandler::SetTagItemData(Tag::TagData& tagData)
     {
-        auto clearance = this->clearances.find(tagData.flightPlan.GetCallsign());
+        auto clearance = this->clearances.find(tagData.GetFlightplan().GetCallsign());
 
         if (clearance == this->clearances.cend()) {
             return;
         }
 
-        switch (tagData.itemCode) {
+        switch (tagData.GetItemCode()) {
         case CLEARANCE_INDICATOR_TAG_ITEM_ID:
             this->SetClearanceIndicatorTagItem(tagData, clearance->second);
             break;
@@ -171,18 +172,19 @@ namespace UKControllerPlugin::Oceanic {
         return Datablock::NormaliseFlightLevelFromString(std::move(level)) != -1;
     }
 
-    auto OceanicEventHandler::GetClearedTagItemColour(int clearedLevel, int currentLevel) const -> COLORREF
+    auto OceanicEventHandler::GetClearedTagItemColour(int clearedLevel, int currentLevel) -> COLORREF
     {
-        return clearedLevel == currentLevel ? this->clearanceIndicatorOk : this->clearanceIndicatorActionRequired;
+        return clearedLevel == currentLevel ? clearanceIndicatorOk : clearanceIndicatorActionRequired;
     }
 
     void OceanicEventHandler::SetClearanceIndicatorTagItem(Tag::TagData& tagData, const Clearance& clearance) const
     {
         // Work out the colour of the item based on whether the controller needs to do something
+        const auto& flightplan = tagData.GetFlightplan();
         COLORREF tagItemColour = 0;
         if (clearance.status == clearance.CLEARANCE_STATUS_CLEARED) {
-            int clearedAltitude = tagData.flightPlan.GetClearedAltitude();
-            int cruisingLevel = tagData.flightPlan.GetCruiseLevel();
+            int clearedAltitude = flightplan.GetClearedAltitude();
+            int cruisingLevel = flightplan.GetCruiseLevel();
             int nattrakLevel = this->ConvertNattrakLevelToEuroscope(clearance.flightLevel);
 
             tagItemColour = clearedAltitude != 0 ? this->GetClearedTagItemColour(nattrakLevel, clearedAltitude)
@@ -198,8 +200,9 @@ namespace UKControllerPlugin::Oceanic {
 
     void OceanicEventHandler::SetClearedLevelTagItem(Tag::TagData& tagData, const Clearance& clearance) const
     {
-        int clearedAltitude = tagData.flightPlan.GetClearedAltitude();
-        int cruisingLevel = tagData.flightPlan.GetCruiseLevel();
+        const auto& flightplan = tagData.GetFlightplan();
+        int clearedAltitude = flightplan.GetClearedAltitude();
+        int cruisingLevel = flightplan.GetCruiseLevel();
         int nattrakLevel = this->ConvertNattrakLevelToEuroscope(clearance.flightLevel);
         tagData.SetTagColour(
             clearedAltitude != 0 ? this->GetClearedTagItemColour(nattrakLevel, clearedAltitude)
@@ -230,5 +233,11 @@ namespace UKControllerPlugin::Oceanic {
     auto OceanicEventHandler::GetInvalidClearance() const -> const Clearance&
     {
         return this->invalidClearance;
+    }
+
+    auto OceanicEventHandler::GetDefaultClearanceForCallsign(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+        -> Clearance
+    {
+        return Clearance{flightplan.GetCallsign()};
     }
 } // namespace UKControllerPlugin::Oceanic

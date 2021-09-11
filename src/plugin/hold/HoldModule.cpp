@@ -11,12 +11,10 @@
 #include "HoldSelectionMenu.h"
 #include "PublishedHoldCollectionFactory.h"
 #include "api/ApiException.h"
-#include "api/ApiHelper.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "command/CommandHandlerCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
-#include "dialog/DialogData.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "memory"
@@ -25,8 +23,6 @@
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
-#include "radarscreen/RadarRenderableCollection.h"
-#include "tag/TagFunction.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 #include "windows/WinApiInterface.h"
@@ -120,11 +116,8 @@ namespace UKControllerPlugin::Hold {
              displayDialog});
 
         // Create the event handler and register
-        auto eventHandler = std::make_shared<HoldEventHandler>(
-            *container.holdManager,
-            *container.navaids,
-            *container.plugin,
-            container.pluginFunctionHandlers->ReserveNextDynamicFunctionId());
+        auto eventHandler =
+            std::make_shared<HoldEventHandler>(*container.holdManager, *container.navaids, *container.plugin);
 
         container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
         container.timedHandler->RegisterEvent(eventHandler, eventHandlerTimedEventFrequency);

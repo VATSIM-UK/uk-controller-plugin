@@ -1,34 +1,27 @@
 #pragma once
 #include "euroscope/EuroScopeCControllerInterface.h"
 
-namespace EuroScopePlugIn {
-    class CController;
-}  // namespace EuroScopePlugIn
+namespace UKControllerPlugin::Euroscope {
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
+    /*
+        A class wrapping the Euroscope CController class.
+    */
+    class EuroScopeCControllerWrapper : public EuroScopeCControllerInterface
+    {
+        public:
+        EuroScopeCControllerWrapper(EuroScopePlugIn::CController originalData, bool isCurrentUser);
+        [[nodiscard]] auto IsVatsimRecognisedController() const -> bool override;
+        [[nodiscard]] auto GetCallsign() const -> const std::string override;
+        [[nodiscard]] auto GetControllerName() const -> const std::string override;
+        [[nodiscard]] auto GetFrequency() const -> const double override;
+        [[nodiscard]] auto HasActiveFrequency() const -> const bool override;
+        [[nodiscard]] auto IsCurrentUser() const -> const bool override;
 
-        /*
-            A class wrapping the Euroscope CController class.
-        */
-        class EuroScopeCControllerWrapper : public EuroScopeCControllerInterface
-        {
-            public:
-                EuroScopeCControllerWrapper(EuroScopePlugIn::CController originalData, bool isCurrentUser);
-                bool IsVatsimRecognisedController(void) const override;
-                const std::string GetCallsign(void) const;
-                const std::string GetControllerName(void) const;
-                const double GetFrequency(void) const;
-                const bool HasActiveFrequency(void) const;
-                const bool IsCurrentUser(void) const;
+        private:
+        // The original data
+        EuroScopePlugIn::CController originalData;
 
-            private:
-
-                // The original data
-                EuroScopePlugIn::CController originalData;
-
-                // Whether or not this controller is the current user
-                bool isCurrentUser;
-        };
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+        // Whether or not this controller is the current user
+        bool isCurrentUser;
+    };
+} // namespace UKControllerPlugin::Euroscope

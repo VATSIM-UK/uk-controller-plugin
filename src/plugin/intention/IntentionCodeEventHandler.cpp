@@ -68,25 +68,26 @@ namespace UKControllerPlugin::IntentionCode {
     void IntentionCodeEventHandler::SetTagItemData(TagData& tagData)
     {
         // If we have it cached, then use the cached value
-        EuroscopeExtractedRouteInterface extractedRoute = tagData.flightPlan.GetExtractedRoute();
-        if (this->codeCache->HasIntentionCodeForAircraft(tagData.flightPlan.GetCallsign()) &&
-            this->codeCache->IntentionCodeValid(tagData.flightPlan.GetCallsign(), extractedRoute)) {
-            tagData.SetItemString(this->codeCache->GetIntentionCodeForAircraft(tagData.flightPlan.GetCallsign()));
+        const auto& flightplan = tagData.GetFlightplan();
+        EuroscopeExtractedRouteInterface extractedRoute = flightplan.GetExtractedRoute();
+        if (this->codeCache->HasIntentionCodeForAircraft(flightplan.GetCallsign()) &&
+            this->codeCache->IntentionCodeValid(flightplan.GetCallsign(), extractedRoute)) {
+            tagData.SetItemString(this->codeCache->GetIntentionCodeForAircraft(flightplan.GetCallsign()));
             return;
         }
 
         // Generate the code and then cache it
         IntentionCodeData data = this->intention->GetIntentionCodeForFlightplan(
-            tagData.flightPlan.GetCallsign(),
-            tagData.flightPlan.GetOrigin(),
-            tagData.flightPlan.GetDestination(),
+            flightplan.GetCallsign(),
+            flightplan.GetOrigin(),
+            flightplan.GetDestination(),
             extractedRoute,
-            tagData.flightPlan.GetCruiseLevel());
+            flightplan.GetCruiseLevel());
 
-        this->codeCache->RegisterAircraft(tagData.flightPlan.GetCallsign(), data);
+        this->codeCache->RegisterAircraft(flightplan.GetCallsign(), data);
         tagData.SetItemString(data.intentionCode);
         outboundEvent.SendEvent(std::make_shared<IntentionCodeUpdatedMessage>(
-            tagData.flightPlan.GetCallsign(), data.exitPoint, data.intentionCode));
+            flightplan.GetCallsign(), data.exitPoint, data.intentionCode));
     }
 
     /*

@@ -1,47 +1,45 @@
 #pragma once
-
-#include "radarscreen/ConfigurableDisplayInterface.h"
 #include "command/CommandHandlerInterface.h"
-#include "windows/WinApiInterface.h"
+#include "radarscreen/ConfigurableDisplayInterface.h"
 
-namespace UKControllerPlugin {
-    namespace Plugin {
+namespace UKControllerPlugin::Windows {
+    class WinApiInterface;
+} // namespace UKControllerPlugin::Windows
 
-        /*
-            Handler to appear in the bottom of the plugin menu
-            to display an "About" message for UKCP.
-        */
-        class PluginInformationMessage : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
-            public UKControllerPlugin::Command::CommandHandlerInterface
-        {
-            public:
-                PluginInformationMessage(
-                    UKControllerPlugin::Windows::WinApiInterface& winApi,
-                    int menuCallbackId
-                );
+namespace UKControllerPlugin::Plugin {
 
-                // Inherited via ConfigurableDisplayInterface
-                void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
-                UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const override;
+    /*
+        Handler to appear in the bottom of the plugin menu
+        to display an "About" message for UKCP.
+    */
+    class PluginInformationMessage : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
+                                     public UKControllerPlugin::Command::CommandHandlerInterface
+    {
+        public:
+        PluginInformationMessage(UKControllerPlugin::Windows::WinApiInterface& winApi, int menuCallbackId);
 
-                // Inherited via CommandHandlerInterface
-                bool ProcessCommand(std::string command) override;
+        // Inherited via ConfigurableDisplayInterface
+        void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
+        [[nodiscard]] auto GetConfigurationMenuItem() const -> UKControllerPlugin::Plugin::PopupMenuItem override;
 
-                // The command to accept
-                const std::string command = ".ukcp about";
+        // Inherited via CommandHandlerInterface
+        [[nodiscard]] auto ProcessCommand(std::string command) -> bool override;
 
-                // The description of the menu item
-                const std::string menuItemDescription = "About UKCP";
+        private:
+        void ShowInformationMessage();
 
-            private:
+        // The ID of the callback
+        const int menuCallbackId;
 
-                void ShowInformationMessage();
+        // To windows so we can do the message
+        UKControllerPlugin::Windows::WinApiInterface& winApi;
 
-                // The ID of the callback
-                const int menuCallbackId;
+        const int DATE_BASE_YEAR = 1900;
 
-                // To windows so we can do the message
-                UKControllerPlugin::Windows::WinApiInterface& winApi;
-        };
-    }  // namespace Plugin
-}  // namespace UKControllerPlugin
+        // The command to accept
+        const std::string command = ".ukcp about";
+
+        // The description of the menu item
+        const std::string menuItemDescription = "About UKCP";
+    };
+} // namespace UKControllerPlugin::Plugin

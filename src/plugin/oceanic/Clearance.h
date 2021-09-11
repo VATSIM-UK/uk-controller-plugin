@@ -37,13 +37,24 @@ namespace UKControllerPlugin::Oceanic {
         std::string extra;
 
         explicit Clearance(std::string callsign);
+        Clearance(
+            std::string callsign,
+            std::string status,
+            std::string track,
+            std::string entryFix,
+            std::string flightLevel,
+            std::string mach,
+            std::string entryTime,
+            std::string clearanceIssued,
+            std::string extra);
         ~Clearance();
         Clearance(const Clearance& compare);
-        Clearance(Clearance&& compare) = delete;
-        [[nodiscard]] auto operator=(const Clearance& compare) -> Clearance&;
-        [[nodiscard]] auto operator=(Clearance&& compare) -> Clearance& = delete;
+        Clearance(Clearance&& compare) noexcept;
+        auto operator=(const Clearance& compare) -> Clearance&;
+        auto operator=(Clearance&& compare) noexcept -> Clearance&;
         auto operator==(const Clearance& compare) const -> bool;
         void AssignProperties(const Clearance& compare);
+        void MoveProperties(Clearance& compare);
 
         const std::string CLEARANCE_STATUS_CLEARED = "CLEARED";
         const std::string CLEARANCE_STATUS_PENDING = "PENDING";
