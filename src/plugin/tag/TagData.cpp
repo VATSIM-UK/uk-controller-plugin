@@ -14,8 +14,9 @@ namespace UKControllerPlugin::Tag {
         int* euroscopeColourCode,
         COLORREF* tagColour,
         double* fontSize)
-        : flightPlan(flightPlan), radarTarget(radarTarget), itemCode(itemCode), dataAvailable(dataAvailable),
-          itemString(itemString), euroscopeColourCode(euroscopeColourCode), tagColour(tagColour), fontSize(fontSize)
+        : itemString(itemString), euroscopeColourCode(euroscopeColourCode), tagColour(tagColour), fontSize(fontSize),
+          flightPlan(flightPlan), radarTarget(radarTarget), itemCode(itemCode), dataAvailable(dataAvailable)
+
     {
     }
 
@@ -65,18 +66,18 @@ namespace UKControllerPlugin::Tag {
     {
         return *this->fontSize;
     }
-    
+
     auto TagData::GetItemCode() const -> int
     {
         return this->itemCode;
     }
-    
-    auto TagData::GetFlightplan() const -> Euroscope::EuroScopeCFlightPlanInterface&
+
+    auto TagData::GetFlightplan() const -> const Euroscope::EuroScopeCFlightPlanInterface&
     {
         return this->flightPlan;
     }
-    
-    auto TagData::GetRadarTarget() const -> Euroscope::EuroScopeCRadarTargetInterface&
+
+    auto TagData::GetRadarTarget() const -> const Euroscope::EuroScopeCRadarTargetInterface&
     {
         return this->radarTarget;
     }

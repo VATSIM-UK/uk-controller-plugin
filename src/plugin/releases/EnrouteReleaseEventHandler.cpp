@@ -28,7 +28,7 @@ namespace UKControllerPlugin::Releases {
         std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releaseTypes,
         const int releaseTypeSelectedCallbackId,
         const int editReleasePointCallbackId)
-        : api(api), releaseTypes(std::move(releaseTypes)), plugin(plugin), taskRunner(taskRunner),
+        : api(api), plugin(plugin), taskRunner(taskRunner), releaseTypes(std::move(releaseTypes)),
           releaseTypeSelectedCallbackId(releaseTypeSelectedCallbackId),
           editReleasePointCallbackId(editReleasePointCallbackId)
     {
@@ -99,43 +99,43 @@ namespace UKControllerPlugin::Releases {
 
     void EnrouteReleaseEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
     {
-        if (tagData.itemCode == this->enrouteReleaseTypeTagItemId) {
+        const auto itemCode = tagData.GetItemCode();
+        const auto& flightplan = tagData.GetFlightplan();
+        if (itemCode == enrouteReleaseTypeTagItemId) {
             tagData.SetItemString(this->noReleaseItemColumn1);
 
             // We can skip for valid release type checks here as this is checked on incoming messages
             // Prioritise displaying outgoing releases
-            if (this->outgoingReleases.count(tagData.flightPlan.GetCallsign()) != 0) {
+            if (this->outgoingReleases.count(flightplan.GetCallsign()) != 0) {
                 const EnrouteReleaseType& releaseType =
-                    *this->releaseTypes.find(this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).releaseType);
+                    *this->releaseTypes.find(this->outgoingReleases.at(flightplan.GetCallsign()).releaseType);
 
                 tagData.SetItemString(releaseType.tagString);
                 tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME);
-            } else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign()) != 0) {
+            } else if (this->incomingReleases.count(flightplan.GetCallsign()) != 0) {
                 const EnrouteReleaseType& releaseType =
-                    *this->releaseTypes.find(this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releaseType);
+                    *this->releaseTypes.find(this->incomingReleases.at(flightplan.GetCallsign()).releaseType);
 
                 tagData.SetItemString(releaseType.tagString);
                 tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_TRANSFER_TO_ME_INITIATED);
             }
-        } else if (
-            tagData.itemCode == this->enrouteReleasePointTagItemId ||
-            tagData.itemCode == this->enrouteReleasePointOrBlankTagItemId) {
-            tagData.SetItemString(this->GetNoReleasePointText(tagData.itemCode));
+        } else if (itemCode == enrouteReleasePointTagItemId || itemCode == enrouteReleasePointOrBlankTagItemId) {
+            tagData.SetItemString(GetNoReleasePointText(itemCode));
 
             // Prioritise displaying outgoing releases
-            if (this->outgoingReleases.count(tagData.flightPlan.GetCallsign()) != 0) {
-                if (this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint == this->noReleasePoint) {
+            if (this->outgoingReleases.count(flightplan.GetCallsign()) != 0) {
+                if (this->outgoingReleases.at(flightplan.GetCallsign()).releasePoint == this->noReleasePoint) {
                     return;
                 }
 
-                tagData.SetItemString(this->outgoingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint);
+                tagData.SetItemString(this->outgoingReleases.at(flightplan.GetCallsign()).releasePoint);
                 tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_ONGOING_REQUEST_FROM_ME);
-            } else if (this->incomingReleases.count(tagData.flightPlan.GetCallsign()) != 0) {
-                if (this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint == this->noReleasePoint) {
+            } else if (this->incomingReleases.count(flightplan.GetCallsign()) != 0) {
+                if (this->incomingReleases.at(flightplan.GetCallsign()).releasePoint == this->noReleasePoint) {
                     return;
                 }
 
-                tagData.SetItemString(this->incomingReleases.at(tagData.flightPlan.GetCallsign()).releasePoint);
+                tagData.SetItemString(this->incomingReleases.at(flightplan.GetCallsign()).releasePoint);
                 tagData.SetEuroscopeColourCode(EuroScopePlugIn::TAG_COLOR_TRANSFER_TO_ME_INITIATED);
             }
         }
@@ -175,9 +175,9 @@ namespace UKControllerPlugin::Releases {
         this->outgoingReleases[callsign] = {type, this->noReleasePoint, (std::chrono::system_clock::time_point::max)()};
     }
 
-    auto EnrouteReleaseEventHandler::GetNoReleasePointText(int tagId) const -> std::string
+    auto EnrouteReleaseEventHandler::GetNoReleasePointText(int tagId) -> std::string
     {
-        return tagId == this->enrouteReleasePointOrBlankTagItemId ? "" : "RLSPT";
+        return tagId == enrouteReleasePointOrBlankTagItemId ? "" : "RLSPT";
     }
 
     /*

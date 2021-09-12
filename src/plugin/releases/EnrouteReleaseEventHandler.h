@@ -89,7 +89,7 @@ namespace UKControllerPlugin::Releases {
         private:
         void UpdateOutgoingReleaseType(const std::string& callsign, int type);
 
-        [[nodiscard]] auto GetNoReleasePointText(int tagId) const -> std::string;
+        [[nodiscard]] static auto GetNoReleasePointText(int tagId) -> std::string;
 
         // For sending releases
         const UKControllerPlugin::Api::ApiInterface& api;

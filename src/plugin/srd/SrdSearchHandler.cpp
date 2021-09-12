@@ -9,7 +9,7 @@ using UKControllerPlugin::Plugin::PopupMenuItem;
 namespace UKControllerPlugin::Srd {
 
     SrdSearchHandler::SrdSearchHandler(const int menuCallbackId, const DialogManager& dialog)
-        : menuCallbackId(menuCallbackId), dialog(dialog)
+        : dialog(dialog), menuCallbackId(menuCallbackId)
     {
     }
 

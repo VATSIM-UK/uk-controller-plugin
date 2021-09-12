@@ -44,14 +44,15 @@ namespace UKControllerPlugin::Tag {
     {
 
         // Make sure the item exists
-        if (this->tagItems.count(tagData.itemCode) == 0) {
-            LogWarning("Invalid TAG item requested, id: " + std::to_string(tagData.itemCode));
+        const auto itemCode = tagData.GetItemCode();
+        if (this->tagItems.count(itemCode) == 0) {
+            LogWarning("Invalid TAG item requested, id: " + std::to_string(itemCode));
             tagData.SetItemString(this->errorTagItemText);
             return;
         }
 
         // Set the data for the tag item
-        this->tagItems.at(tagData.itemCode)->SetTagItemData(tagData);
+        this->tagItems.at(itemCode)->SetTagItemData(tagData);
     }
 
     /*

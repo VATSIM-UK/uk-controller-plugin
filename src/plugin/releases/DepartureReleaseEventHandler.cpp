@@ -9,6 +9,7 @@
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "dialog/DialogManager.h"
+#include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "tag/TagData.h"
 #include "task/TaskRunnerInterface.h"
@@ -29,9 +30,10 @@ namespace UKControllerPlugin::Releases {
         Windows::WinApiInterface& windows,
         const int releaseDecisionCallbackId,
         int releaseCancellationCallbackId)
-        : releaseDecisionCallbackId(releaseDecisionCallbackId), controllers(controllers), plugin(plugin),
+        : releaseDecisionCallbackId(releaseDecisionCallbackId),
+          releaseCancellationCallbackId(releaseCancellationCallbackId), controllers(controllers), plugin(plugin),
           dialogManager(dialogManager), api(api), taskRunner(taskRunner), activeCallsigns(activeCallsigns),
-          windows(windows), releaseCancellationCallbackId(releaseCancellationCallbackId)
+          windows(windows)
     {
     }
 
@@ -172,7 +174,7 @@ namespace UKControllerPlugin::Releases {
 
     void DepartureReleaseEventHandler::SetTagItemData(Tag::TagData& tagData)
     {
-        switch (tagData.itemCode) {
+        switch (tagData.GetItemCode()) {
         case STATUS_INDICATOR_TAG_ITEM_ID:
             this->SetReleaseStatusIndicatorTagData(tagData);
             break;
@@ -260,7 +262,6 @@ namespace UKControllerPlugin::Releases {
 
         bool menuTriggered = false;
         int userControllerId = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId();
-        std::set<std::shared_ptr<const DepartureReleaseRequest>> releases;
         for (const auto& release : this->releaseRequests) {
             if (release.second->RequestingController() != userControllerId ||
                 release.second->Callsign() != flightplan.GetCallsign()) {
@@ -367,7 +368,7 @@ namespace UKControllerPlugin::Releases {
              ++releaseRequest
 
         ) {
-            if (releaseRequest->second->Callsign() != tagData.flightPlan.GetCallsign()) {
+            if (releaseRequest->second->Callsign() != tagData.GetFlightplan().GetCallsign()) {
                 continue;
             }
 
@@ -432,7 +433,7 @@ namespace UKControllerPlugin::Releases {
         int releasesPendingReleaseTime = 0;
         for (auto releaseRequest = this->releaseRequests.rbegin(); releaseRequest != this->releaseRequests.rend();
              ++releaseRequest) {
-            if (releaseRequest->second->Callsign() != tagData.flightPlan.GetCallsign()) {
+            if (releaseRequest->second->Callsign() != tagData.GetFlightplan().GetCallsign()) {
                 continue;
             }
 
@@ -497,7 +498,7 @@ namespace UKControllerPlugin::Releases {
      */
     void DepartureReleaseEventHandler::SetRequestingControllerTagData(Tag::TagData& tagData)
     {
-        auto release = this->FindReleaseRequiringDecisionForCallsign(tagData.flightPlan.GetCallsign());
+        auto release = this->FindReleaseRequiringDecisionForCallsign(tagData.GetFlightplan().GetCallsign());
         if (!release) {
             return;
         }

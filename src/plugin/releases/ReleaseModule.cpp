@@ -160,8 +160,8 @@ namespace UKControllerPlugin::Releases {
             [departureHandler](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) { departureHandler->OpenDecisionMenu(fp, rt, std::move(context), mousePos); });
+                const std::string& context,
+                const POINT& mousePos) { departureHandler->OpenDecisionMenu(fp, rt, context, mousePos); });
         container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseDecisionMenu);
 
         // TAG function to trigger the status view
@@ -228,10 +228,9 @@ namespace UKControllerPlugin::Releases {
         Euroscope::AsrEventHandlerCollection& asrHandlers)
     {
         // Create the request view renderer
-        const int rendererId = renderables.ReserveRendererIdentifier();
         auto releaseRequestView = std::make_shared<DepartureReleaseRequestView>(
-            *container.departureReleaseHandler, *container.controllerPositions, rendererId);
-        renderables.RegisterRenderer(rendererId, releaseRequestView, renderables.afterLists);
+            *container.departureReleaseHandler, *container.controllerPositions);
+        renderables.RegisterRenderer(renderables.ReserveRendererIdentifier(), releaseRequestView, renderables.afterLists);
 
         // Create the decision menu
         const int decisionListRenderedId = renderables.ReserveRendererIdentifier();

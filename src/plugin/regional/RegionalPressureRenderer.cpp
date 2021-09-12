@@ -24,9 +24,9 @@ namespace UKControllerPlugin::Regional {
         int toggleCallbackFunctionId,
         const GdiplusBrushes& brushes,
         const UKControllerPlugin::Dialog::DialogManager& dialogManager)
-        : manager(manager), hideClickspotId(closeClickspotId), menuBarClickspotId(menuBarClickspotId),
-          rpsClickspotId(rpsClickspotId), toggleCallbackFunctionId(toggleCallbackFunctionId), brushes(brushes),
-          dialogManager(dialogManager)
+        : brushes(brushes), manager(manager), dialogManager(dialogManager), hideClickspotId(closeClickspotId),
+          menuBarClickspotId(menuBarClickspotId), rpsClickspotId(rpsClickspotId),
+          toggleCallbackFunctionId(toggleCallbackFunctionId)
     {
     }
 
