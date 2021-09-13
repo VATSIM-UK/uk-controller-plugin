@@ -32,6 +32,7 @@ namespace UKControllerPlugin::Tag {
         void SetFontSize(double fontSize);
         [[nodiscard]] auto GetFontSize() const -> double;
         [[nodiscard]] auto GetItemCode() const -> int;
+        [[nodiscard]] auto GetDataAvailable() const -> int;
         [[nodiscard]] auto GetFlightplan() const -> const Euroscope::EuroScopeCFlightPlanInterface&;
         [[nodiscard]] auto GetRadarTarget() const -> const Euroscope::EuroScopeCRadarTargetInterface&;
 

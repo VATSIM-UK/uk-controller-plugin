@@ -30,7 +30,7 @@ namespace UKControllerPlugin::Stands {
         std::set<Stand, CompareStands> stands,
         int standSelectedCallbackId)
         : api(api), taskRunner(taskRunner), plugin(plugin), stands(std::move(stands)),
-          standSelectedCallbackId(standSelectedCallbackId), integrationEventHandler(integrationEventHandler)
+          integrationEventHandler(integrationEventHandler), standSelectedCallbackId(standSelectedCallbackId)
     {
     }
 
@@ -167,7 +167,7 @@ namespace UKControllerPlugin::Stands {
     auto StandEventHandler::GetAssignedStandForCallsign(const std::string& callsign) const -> int
     {
         auto assignment = this->standAssignments.find(callsign);
-        return assignment == this->standAssignments.cend() ? this->noStandAssigned : assignment->second;
+        return assignment == this->standAssignments.cend() ? noStandAssigned : assignment->second;
     }
 
     auto StandEventHandler::GetLastAirfield() const -> std::string
@@ -261,8 +261,8 @@ namespace UKControllerPlugin::Stands {
     void StandEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
     {
         auto mapLock = this->LockStandMap();
-        if (this->standAssignments.count(tagData.flightPlan.GetCallsign()) != 0) {
-            auto stand = this->stands.find(this->standAssignments.at(tagData.flightPlan.GetCallsign()));
+        if (this->standAssignments.count(tagData.GetFlightplan().GetCallsign()) != 0) {
+            auto stand = this->stands.find(this->standAssignments.at(tagData.GetFlightplan().GetCallsign()));
             if (stand == this->stands.cend()) {
                 return;
             }
@@ -488,7 +488,7 @@ namespace UKControllerPlugin::Stands {
             auto callsign = messageData.at("callsign").get<std::string>();
             auto assignedStand = this->GetAssignedStandForCallsign(callsign);
 
-            if (assignedStand != this->noStandAssigned) {
+            if (assignedStand != noStandAssigned) {
                 this->UnassignStandForAircraft(callsign);
                 this->taskRunner.QueueAsynchronousTask([this, callsign]() {
                     try {

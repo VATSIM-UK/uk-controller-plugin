@@ -181,7 +181,7 @@ namespace UKControllerPlugin::Squawk {
             [this](
                 const std::shared_ptr<EuroScopeCFlightPlanInterface>& fp,
                 const std::shared_ptr<EuroScopeCRadarTargetInterface>& rt) {
-                if (fp->HasAssignedSquawk() || fp->IsTracked() && !fp->IsTrackedByUser()) {
+                if (fp->HasAssignedSquawk() || (fp->IsTracked() && !fp->IsTrackedByUser())) {
                     return;
                 }
 

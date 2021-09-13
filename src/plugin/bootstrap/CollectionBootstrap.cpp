@@ -1,37 +1,33 @@
-#include "pch/pch.h"
-#include "bootstrap/CollectionBootstrap.h"
-#include "dependency/DependencyLoaderInterface.h"
-#include "controller/ActiveCallsignCollection.h"
-#include "bootstrap/PersistenceContainer.h"
-#include "airfield/AirfieldCollectionFactory.h"
-#include "ownership/AirfieldOwnershipManager.h"
-#include "flightplan/StoredFlightplanCollection.h"
-#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "CollectionBootstrap.h"
+#include "PersistenceContainer.h"
 #include "airfield/AirfieldCollection.h"
-#include "metar/MetarEventHandlerCollection.h"
-#include "radarscreen/RadarRenderableCollection.h"
+#include "airfield/AirfieldCollectionFactory.h"
 #include "command/CommandHandlerCollection.h"
+#include "controller/ActiveCallsignCollection.h"
+#include "dependency/DependencyLoaderInterface.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "flightplan/StoredFlightplanCollection.h"
+#include "memory"
+#include "metar/MetarEventHandlerCollection.h"
+#include "ownership/AirfieldOwnershipManager.h"
+#include "radarscreen/RadarRenderableCollection.h"
 
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dependency::DependencyLoaderInterface;
-using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Command::CommandHandlerCollection;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
+using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
+using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
-using UKControllerPlugin::Command::CommandHandlerCollection;
 
-namespace UKControllerPlugin {
-    namespace Bootstrap {
+namespace UKControllerPlugin::Bootstrap {
 
-        void CollectionBootstrap::BootstrapPlugin(
-            PersistenceContainer & persistence,
-            DependencyLoaderInterface & dependency
-        ) {
-            // Reset resources
-            persistence.airfields = std::move(AirfieldCollectionFactory::Create(dependency));
-            persistence.flightplans.reset(new StoredFlightplanCollection);
-        }
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    void CollectionBootstrap::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
+    {
+        // Reset resources
+        persistence.airfields = AirfieldCollectionFactory::Create(dependency);
+        persistence.flightplans = std::make_unique<StoredFlightplanCollection>();
+    }
+} // namespace UKControllerPlugin::Bootstrap

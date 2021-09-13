@@ -81,4 +81,9 @@ namespace UKControllerPlugin::Tag {
     {
         return this->radarTarget;
     }
+
+    auto TagData::GetDataAvailable() const -> int
+    {
+        return this->dataAvailable;
+    }
 } // namespace UKControllerPlugin::Tag

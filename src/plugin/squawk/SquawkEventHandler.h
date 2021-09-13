@@ -97,12 +97,6 @@ namespace UKControllerPlugin::Squawk {
         // Whether or not the user has enabled automatic squawk assignment
         bool userAutomaticAssignmentEnabled = true;
 
-        // The callback function ID with euroscope for forcing squawk refresh (general squawk).
-        const int squawkForceCallbackIdGeneral = 9000;
-
-        // The callback function ID with euroscope for forcing squawk refresh (local squawk).
-        const int squawkForceCallbackIdLocal = 9001;
-
         // Whether or not the automatic assignment of squawks is disabled (ie, not forced by user).
         const bool automaticAssignmentDisabled = true;
     };
