@@ -57,7 +57,7 @@ set(curl
     "curl/CurlResponse.cpp"
     "curl/CurlResponse.h"
     "curl/HttpException.h"
-)
+        curl/CurlInterface.cpp)
 source_group("curl" FILES ${curl})
 
 set(data

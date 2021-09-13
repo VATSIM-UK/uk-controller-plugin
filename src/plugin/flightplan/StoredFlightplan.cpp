@@ -28,7 +28,7 @@ namespace UKControllerPlugin::Flightplan {
     }
 
     StoredFlightplan::StoredFlightplan(std::string callsign, std::string origin, std::string destination)
-        : destination(std::move(destination)), origin(std::move(origin)), callsign(std::move(callsign)),
+        : callsign(std::move(callsign)),  origin(std::move(origin)), destination(std::move(destination)),
           timeout(defaultTime), assignedSquawk(noSquawkAllocated)
     {
     }

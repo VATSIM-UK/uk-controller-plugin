@@ -1,3 +1,4 @@
+#include "ActiveCallsignCollection.h"
 #include "ActiveCallsignMonitor.h"
 #include "ControllerBootstrap.h"
 #include "ControllerPositionCollection.h"
@@ -13,7 +14,7 @@ namespace UKControllerPlugin::Controller {
 
     void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependency)
     {
-        container.controllerPositions = std::move(ControllerPositionCollectionFactory::Create(dependency));
+        container.controllerPositions = ControllerPositionCollectionFactory::Create(dependency);
 
         container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
         container.controllerHandler->RegisterHandler(

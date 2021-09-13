@@ -18,9 +18,9 @@ namespace UKControllerPlugin::FlightInformationService {
 
     void FlightInformationServiceTagItem::SetTagItemData(Tag::TagData& tagData)
     {
-        const auto aircraftService = this->aircraftServiceMap.find(tagData.flightPlan.GetCallsign());
+        const auto aircraftService = this->aircraftServiceMap.find(tagData.GetFlightplan().GetCallsign());
         tagData.SetItemString(
-            aircraftService == this->aircraftServiceMap.cend() ? this->GetNoServiceItemString(tagData.itemCode)
+            aircraftService == this->aircraftServiceMap.cend() ? this->GetNoServiceItemString(tagData.GetItemCode())
                                                                : aircraftService->second);
     }
 

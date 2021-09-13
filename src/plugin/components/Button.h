@@ -19,12 +19,12 @@ namespace UKControllerPlugin::Components {
     class Button
     {
         public:
-            static std::shared_ptr<Button> Create(
+            static auto Create(
                 Gdiplus::Rect area,
                 int screenObjectId,
                 std::string screenObjectDescription,
                 std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw
-            );
+            ) -> std::shared_ptr<Button>;
             void WithPosition(Gdiplus::Rect area);
             void Draw(
                 Windows::GdiGraphicsInterface& graphics,
@@ -40,10 +40,8 @@ namespace UKControllerPlugin::Components {
             );
 
         private:
-            std::string screenObjectDescription;
             const std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw;
             Gdiplus::Rect area;
-            int screenObjectId;
             std::shared_ptr<ClickableArea> clickableArea;
     };
 } // namespace UKControllerPlugin::Components

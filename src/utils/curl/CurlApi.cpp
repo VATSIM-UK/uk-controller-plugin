@@ -1,5 +1,5 @@
-#include "curl/CurlApi.h"
-#include "curl/CurlRequest.h"
+#include "CurlApi.h"
+#include "CurlRequest.h"
 #include "update/PluginVersion.h"
 
 using UKControllerPlugin::Curl::CurlRequest;

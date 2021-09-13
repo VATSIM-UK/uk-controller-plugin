@@ -23,7 +23,7 @@ namespace UKControllerPlugin::Bootstrap {
     */
     void ExternalsBootstrap::Bootstrap(PersistenceContainer& persistence, HINSTANCE instance)
     {
-        persistence.curl = std::move(std::make_unique<CurlApi>());
+        persistence.curl = std::make_unique<CurlApi>();
         std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(instance, GetPluginFileRoot());
         persistence.dialogManager = std::make_unique<DialogManager>(*winApi);
         persistence.windows = std::move(winApi);

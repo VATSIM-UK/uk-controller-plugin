@@ -20,5 +20,5 @@ namespace UKControllerPlugin::Components {
     std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
     CollapseButton(std::function<bool(void)> stateFunction);
 
-    void ScalePen(std::shared_ptr<Gdiplus::Pen> pen, Gdiplus::REAL& scaleX, Gdiplus::REAL& scaleY);
+    void ScalePen(const std::shared_ptr<Gdiplus::Pen>& pen, Gdiplus::REAL& scaleX, Gdiplus::REAL& scaleY);
 } // namespace UKControllerPlugin::Components
