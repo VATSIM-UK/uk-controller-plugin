@@ -20,8 +20,7 @@ namespace UKControllerPlugin {
             this->configurationItem = reinterpret_cast<HoldDisplay *>(
                 reinterpret_cast<DialogCallArgument *>(lParam)->contextArgument
             );
-
-            HWND maxBox = GetDlgItem(hwnd, IDC_HOLD_MAXIMUM);
+            
             std::wstring maxText = std::to_wstring(this->configurationItem->GetMaximumLevel());
 
             // Increment altitude displays by 1000 each time

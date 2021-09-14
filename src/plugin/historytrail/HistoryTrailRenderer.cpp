@@ -10,27 +10,26 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 
-using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
-using UKControllerPlugin::Windows::GdiGraphicsInterface;
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
-using UKControllerPlugin::HistoryTrail::HistoryTrailData;
 using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::HistoryTrail::HistoryTrailData;
+using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
+using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Windows::GdiGraphicsInterface;
 
 namespace UKControllerPlugin {
     namespace HistoryTrail {
 
         HistoryTrailRenderer::HistoryTrailRenderer(
-            const HistoryTrailRepository & trails,
-            EuroscopePluginLoopbackInterface & plugin,
-            const DialogManager & dialogManager,
-            int toggleCallbackFunctionId
-        )
-            : trails(trails), dialogManager(dialogManager),
-            toggleCallbackFunctionId(toggleCallbackFunctionId), plugin(plugin)
+            const HistoryTrailRepository& trails,
+            EuroscopePluginLoopbackInterface& plugin,
+            const DialogManager& dialogManager,
+            int toggleCallbackFunctionId)
+            : toggleCallbackFunctionId(toggleCallbackFunctionId), dialogManager(dialogManager), plugin(plugin),
+              trails(trails)
         {
             this->pen = std::make_unique<Gdiplus::Pen>(Gdiplus::Color(255, 255, 255, 255));
             this->brush = std::make_unique<Gdiplus::SolidBrush>(Gdiplus::Color(255, 255, 255, 255));
@@ -39,7 +38,7 @@ namespace UKControllerPlugin {
         /*
             Load settings from the ASR.
         */
-        void HistoryTrailRenderer::AsrLoadedEvent(UserSetting & userSetting)
+        void HistoryTrailRenderer::AsrLoadedEvent(UserSetting& userSetting)
         {
             this->visible = userSetting.GetBooleanEntry(this->visibleUserSettingKey, true);
             this->historyTrailType = userSetting.GetIntegerEntry(this->trailTypeUserSettingKey, this->trailTypeDiamond);
@@ -51,17 +50,12 @@ namespace UKControllerPlugin {
             this->antialiasedTrails = userSetting.GetBooleanEntry(this->antialiasUserSettingKey, true);
             this->startColour = std::make_unique<Gdiplus::Color>(255, 255, 130, 20);
             this->startColour->SetFromCOLORREF(
-                userSetting.GetColourEntry(this->trailColourUserSettingKey, RGB(255, 130, 20))
-            );
+                userSetting.GetColourEntry(this->trailColourUserSettingKey, RGB(255, 130, 20)));
             this->alphaPerDot = 255 / this->historyTrailLength;
-            this->minimumDisplayAltitude = userSetting.GetIntegerEntry(
-                this->minAltitudeFilterUserSettingKey,
-                this->defaultMinAltitude
-            );
-            this->maximumDisplayAltitude = userSetting.GetIntegerEntry(
-                this->maxAltitudeFilterUserSettingKey,
-                this->defaultMaxAltitude
-            );
+            this->minimumDisplayAltitude =
+                userSetting.GetIntegerEntry(this->minAltitudeFilterUserSettingKey, this->defaultMinAltitude);
+            this->maximumDisplayAltitude =
+                userSetting.GetIntegerEntry(this->maxAltitudeFilterUserSettingKey, this->defaultMaxAltitude);
             this->filledDots = userSetting.GetBooleanEntry(this->dotFillUserSettingKey, false);
             this->rotatedDots = userSetting.GetBooleanEntry(this->dotRotateUserSettingKey, false);
         }
@@ -69,60 +63,34 @@ namespace UKControllerPlugin {
         /*
             Save settings to the ASR.
         */
-        void HistoryTrailRenderer::AsrClosingEvent(UserSetting & userSetting)
+        void HistoryTrailRenderer::AsrClosingEvent(UserSetting& userSetting)
         {
             userSetting.Save(this->visibleUserSettingKey, this->visibleUserSettingDescription, this->visible);
             userSetting.Save(
-                this->trailTypeUserSettingKey,
-                this->trailTypeUserSettingDescription,
-                this->historyTrailType
-            );
+                this->trailTypeUserSettingKey, this->trailTypeUserSettingDescription, this->historyTrailType);
             userSetting.Save(
-                this->dotSizeUserSettingKey,
-                this->dotSizeUserSettingDescription,
-                this->historyTrailDotSize
-            );
+                this->dotSizeUserSettingKey, this->dotSizeUserSettingDescription, this->historyTrailDotSize);
             userSetting.Save(
-                this->degradingUserSettingKey,
-                this->degradingUserSettingDescription,
-                this->degradingTrails
-            );
+                this->degradingUserSettingKey, this->degradingUserSettingDescription, this->degradingTrails);
             userSetting.Save(this->fadingUserSettingKey, this->fadingUserSettingDescription, this->fadingTrails);
             userSetting.Save(
-                this->trailLengthUserSettingKey,
-                this->trailLengthUserSettingDescription,
-                this->historyTrailLength
-            );
+                this->trailLengthUserSettingKey, this->trailLengthUserSettingDescription, this->historyTrailLength);
             userSetting.Save(
                 this->trailColourUserSettingKey,
                 this->trailColourUserSettingDescription,
-                this->startColour->ToCOLORREF()
-            );
+                this->startColour->ToCOLORREF());
             userSetting.Save(
-                this->antialiasUserSettingKey,
-                this->antialiasUserSettingDescription,
-                this->antialiasedTrails
-            );
+                this->antialiasUserSettingKey, this->antialiasUserSettingDescription, this->antialiasedTrails);
             userSetting.Save(
                 this->minAltitudeFilterUserSettingKey,
                 this->minAltitudeFilterUserSettingDescription,
-                this->minimumDisplayAltitude
-            );
+                this->minimumDisplayAltitude);
             userSetting.Save(
                 this->maxAltitudeFilterUserSettingKey,
                 this->maxAltitudeFilterUserSettingDescription,
-                this->maximumDisplayAltitude
-            );
-            userSetting.Save(
-                this->dotFillUserSettingKey,
-                this->dotFillUserSettingDescription,
-                this->filledDots
-            );
-            userSetting.Save(
-                this->dotRotateUserSettingKey,
-                this->dotRotateUserSettingDescription,
-                this->rotatedDots
-            );
+                this->maximumDisplayAltitude);
+            userSetting.Save(this->dotFillUserSettingKey, this->dotFillUserSettingDescription, this->filledDots);
+            userSetting.Save(this->dotRotateUserSettingKey, this->dotRotateUserSettingDescription, this->rotatedDots);
         }
 
         /*
@@ -130,11 +98,8 @@ namespace UKControllerPlugin {
         */
         void HistoryTrailRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
         {
-            COLORREF newColour = RGB(
-                this->startColour->GetRed(),
-                this->startColour->GetGreen(),
-                this->startColour->GetBlue()
-            );
+            COLORREF newColour =
+                RGB(this->startColour->GetRed(), this->startColour->GetGreen(), this->startColour->GetBlue());
 
             HistoryTrailData data;
             data.fade = &this->fadingTrails;
@@ -175,11 +140,9 @@ namespace UKControllerPlugin {
         /*
             Draws a single dot to the screen.
         */
-        void HistoryTrailRenderer::DrawDot(
-            GdiGraphicsInterface & graphics,
-            Gdiplus::Pen & pen,
-            const Gdiplus::RectF & area
-        ) {
+        void
+        HistoryTrailRenderer::DrawDot(GdiGraphicsInterface& graphics, Gdiplus::Pen& pen, const Gdiplus::RectF& area)
+        {
             if (this->historyTrailType == this->trailTypeDiamond) {
                 graphics.DrawDiamond(area, pen);
             } else if (this->historyTrailType == this->trailTypeCircle) {
@@ -188,8 +151,7 @@ namespace UKControllerPlugin {
                 graphics.DrawLine(
                     pen,
                     Gdiplus::PointF{area.GetLeft(), area.GetBottom()},
-                    Gdiplus::PointF{area.GetRight(), area.GetTop()}
-                );
+                    Gdiplus::PointF{area.GetRight(), area.GetTop()});
             } else {
                 graphics.DrawRect(area, pen);
             }
@@ -198,11 +160,8 @@ namespace UKControllerPlugin {
         /*
             Fills a single dot to the screen.
         */
-        void HistoryTrailRenderer::FillDot(
-            GdiGraphicsInterface& graphics,
-            Gdiplus::Brush& brush,
-            const Gdiplus::RectF& area
-        )
+        void
+        HistoryTrailRenderer::FillDot(GdiGraphicsInterface& graphics, Gdiplus::Brush& brush, const Gdiplus::RectF& area)
         {
             if (this->historyTrailType == this->trailTypeDiamond) {
                 graphics.FillDiamond(area, brush);
@@ -217,17 +176,9 @@ namespace UKControllerPlugin {
         {
             // Draw the dot
             if (this->filledDots && this->historyTrailType != this->trailTypeLine) {
-                this->FillDot(
-                    graphics,
-                    *this->brush,
-                    area
-                );
+                this->FillDot(graphics, *this->brush, area);
             } else {
-                this->DrawDot(
-                    graphics,
-                    *this->pen,
-                    area
-                );
+                this->DrawDot(graphics, *this->pen, area);
             }
         }
 
@@ -312,7 +263,7 @@ namespace UKControllerPlugin {
             return this->rotatedDots;
         }
 
-        Gdiplus::Color & HistoryTrailRenderer::GetTrailColour(void) const
+        Gdiplus::Color& HistoryTrailRenderer::GetTrailColour(void) const
         {
             return *this->startColour;
         }
@@ -326,24 +277,10 @@ namespace UKControllerPlugin {
         }
 
         /*
-            They aren't clickable.
-        */
-        void HistoryTrailRenderer::LeftClick(
-            EuroscopeRadarLoopbackInterface& radarScreen,
-            int objectId,
-            std::string objectDescription,
-            POINT mousePos,
-            RECT itemArea
-        ) {
-
-        }
-
-        /*
             These don't get moved.
         */
         void HistoryTrailRenderer::Move(RECT position, std::string objectDescription)
         {
-
         }
 
         /*
@@ -359,10 +296,8 @@ namespace UKControllerPlugin {
             return false;
         }
 
-        void HistoryTrailRenderer::Render(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen
-        ) {
+        void HistoryTrailRenderer::Render(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
+        {
             Gdiplus::Color currentColourArgb = *this->startColour;
             this->pen->SetColor(currentColourArgb);
             this->brush->SetColor(currentColourArgb);
@@ -380,11 +315,9 @@ namespace UKControllerPlugin {
             // Loop through the history trails.
 
             std::shared_ptr<EuroScopeCRadarTargetInterface> radarTarget;
-            for (
-                HistoryTrailRepository::const_iterator aircraft = this->trails.cbegin();
-                aircraft != this->trails.cend();
-                ++aircraft
-            ) {
+            for (HistoryTrailRepository::const_iterator aircraft = this->trails.cbegin();
+                 aircraft != this->trails.cend();
+                 ++aircraft) {
                 // Check the radar target exists
                 radarTarget = this->plugin.GetRadarTargetForCallsign(aircraft->second->GetCallsign());
                 if (!radarTarget) {
@@ -396,8 +329,7 @@ namespace UKControllerPlugin {
                     aircraft->second->GetTrail().empty() ||
                     radarScreen.PositionOffScreen(aircraft->second->GetTrail().begin()->position) ||
                     radarTarget->GetFlightLevel() < this->minimumDisplayAltitude ||
-                    radarTarget->GetFlightLevel() > this->maximumDisplayAltitude
-                ) {
+                    radarTarget->GetFlightLevel() > this->maximumDisplayAltitude) {
                     continue;
                 }
 
@@ -410,11 +342,9 @@ namespace UKControllerPlugin {
                 dot.Height = this->historyTrailDotSizeFloat;
 
                 // Loop through the points and display.
-                for (
-                    auto position = aircraft->second->GetTrail().begin();
-                    position != aircraft->second->GetTrail().end();
-                    ++position
-                ) {
+                for (auto position = aircraft->second->GetTrail().begin();
+                     position != aircraft->second->GetTrail().end();
+                     ++position) {
 
                     // Skip the first dot, that's the aircrafts current position
                     if (position == aircraft->second->GetTrail().begin()) {
@@ -426,8 +356,7 @@ namespace UKControllerPlugin {
                     graphics.Translated(
                         static_cast<Gdiplus::REAL>(dotCoordinates.x),
                         static_cast<Gdiplus::REAL>(dotCoordinates.y),
-                        [&graphics, this, &dot, &roundNumber, &reducePerDot, &position]
-                        {
+                        [&graphics, this, &dot, &roundNumber, &reducePerDot, &position] {
                             // Adjust the dot size and position as required
                             if (this->degradingTrails) {
                                 dot.X = -(this->historyTrailDotSizeFloat / 2) + (roundNumber * reducePerDot);
@@ -442,16 +371,11 @@ namespace UKControllerPlugin {
                             if (this->rotatedDots) {
                                 graphics.Rotated(
                                     static_cast<Gdiplus::REAL>(position->heading),
-                                    [&graphics, &dot, this]()
-                                    {
-                                        this->DoDot(graphics, dot);
-                                    }
-                                );
+                                    [&graphics, &dot, this]() { this->DoDot(graphics, dot); });
                             } else {
                                 this->DoDot(graphics, dot);
                             }
-                        }
-                    );
+                        });
 
                     // If the trails are set to fade, reduce the alpha value for the next run
                     if (this->fadingTrails) {
@@ -459,8 +383,7 @@ namespace UKControllerPlugin {
                             255 - (roundNumber * this->alphaPerDot),
                             currentColourArgb.GetRed(),
                             currentColourArgb.GetGreen(),
-                            currentColourArgb.GetBlue()
-                        );
+                            currentColourArgb.GetBlue());
                         this->pen->SetColor(currentColourArgb);
                         this->brush->SetColor(currentColourArgb);
                     }
@@ -481,15 +404,5 @@ namespace UKControllerPlugin {
         void HistoryTrailRenderer::ResetPosition(void)
         {
         }
-
-        /*
-            They aren't clickable.
-        */
-        void HistoryTrailRenderer::RightClick(
-            int objectId,
-            std::string objectDescription,
-            EuroscopeRadarLoopbackInterface & radarScreen
-        ) {
-        }
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin

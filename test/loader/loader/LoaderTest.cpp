@@ -1,10 +1,7 @@
-#include "pch/pch.h"
 #include "loader/loader.h"
 #include "mock/MockWinApi.h"
 #include "mock/MockApiInterface.h"
 #include "mock/MockCurlApi.h"
-#include "curl/CurlRequest.h"
-#include "curl/CurlResponse.h"
 
 using testing::Test;
 using testing::NiceMock;
@@ -58,18 +55,18 @@ namespace UKControllerPluginLoaderTest {
                 inline static bool updaterFunctionCalled;
         };
 
-        void UnloadFunction()
+        __stdcall void UnloadFunction()
         {
             LoaderTest::SetUnloadFunctionCalled();
         }
 
-        EuroScopePlugIn::CPlugIn* LoadFunction()
+        __stdcall EuroScopePlugIn::CPlugIn* LoadFunction()
         {
             LoaderTest::SetLoadFunctionCalled();
             return LoaderTest::pluginInstance;
         }
 
-        bool UpdateFunction()
+        __stdcall bool UpdateFunction()
         {
             return LoaderTest::SetUpdaterFunctionCalled();
         }

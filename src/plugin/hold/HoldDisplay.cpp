@@ -1,59 +1,44 @@
-﻿#include "pch/pch.h"
-#include "hold/HoldDisplay.h"
-#include "hold/HoldDisplayFunctions.h"
-#include "hold/HoldManager.h"
+﻿#include "HoldDisplay.h"
+#include "HoldDisplayFunctions.h"
+#include "HoldManager.h"
+#include "HoldModule.h"
+#include "euroscope/EuroScopeCRadarTargetInterface.h"
+#include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
-#include "euroscope/EuroScopeCFlightPlanInterface.h"
-#include "euroscope/EuroScopeCRadarTargetInterface.h"
-#include "graphics/GdiGraphicsInterface.h"
 #include "euroscope/UserSetting.h"
-#include "hold/HoldModule.h"
+#include "graphics/GdiGraphicsInterface.h"
 
-using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Windows::GdiGraphicsInterface;
-using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
-using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Windows::GdiGraphicsInterface;
 
-namespace UKControllerPlugin
-{
-    namespace Hold
-    {
+namespace UKControllerPlugin {
+    namespace Hold {
         HoldDisplay::HoldDisplay(
             EuroscopePluginLoopbackInterface& plugin,
             HoldManager& holdManager,
             const Navaids::Navaid& navaid,
             const PublishedHoldCollection& publishedHoldCollection,
-            const DialogManager& dialogManager
-        )
-            : navaid(navaid),
-              publishedHolds(std::move(publishedHoldCollection.GetForFix(navaid.identifier))),
-              holdManager(holdManager),
-              plugin(plugin),
-              dialogManager(dialogManager),
-              publishedHoldCollection(publishedHoldCollection),
-              titleBarTextBrush(Gdiplus::Color(227, 227, 227)),
-              titleBarBrush(Gdiplus::Color(197, 129, 214)),
-              dataBrush(Gdiplus::Color(7, 237, 7)),
-              clearedLevelBrush(Gdiplus::Color(246, 181, 4)),
-              blockedLevelBrush(Gdiplus::Color(123, 125, 123)),
-              borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
-              sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f),
+            const DialogManager& dialogManager)
+            : navaid(navaid), publishedHolds(publishedHoldCollection.GetForFix(navaid.identifier)),
+              holdManager(holdManager), plugin(plugin), dialogManager(dialogManager),
+              publishedHoldCollection(publishedHoldCollection), titleBarTextBrush(Gdiplus::Color(227, 227, 227)),
+              titleBarBrush(Gdiplus::Color(197, 129, 214)), dataBrush(Gdiplus::Color(7, 237, 7)),
+              clearedLevelBrush(Gdiplus::Color(246, 181, 4)), blockedLevelBrush(Gdiplus::Color(123, 125, 123)),
+              borderPen(Gdiplus::Color(215, 215, 215), 1.5f), sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f),
               verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f),
-              verticalSpeedDescentPen(Gdiplus::Color(7, 237, 7), 2.5f),
-              exitButtonBrush(Gdiplus::Color(0, 0, 0)),
-              backgroundBrush(Gdiplus::Color(58, 57, 58)),
-              fontFamily(L"EuroScope"),
+              verticalSpeedDescentPen(Gdiplus::Color(7, 237, 7), 2.5f), exitButtonBrush(Gdiplus::Color(0, 0, 0)),
+              backgroundBrush(Gdiplus::Color(58, 57, 58)), fontFamily(L"EuroScope"),
               font(&fontFamily, 12, Gdiplus::FontStyleBold, Gdiplus::UnitPixel),
               plusFont(&fontFamily, 18, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
-              stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip),
-              dataStartHeight(0),
-              minimiseClickRect({}),
-              informationClickRect({})
+              stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip), dataStartHeight(0),
+              minimiseClickRect({}), informationClickRect({})
         {
             verticalSpeedAscentPen.SetStartCap(Gdiplus::LineCapArrowAnchor);
             verticalSpeedDescentPen.SetEndCap(Gdiplus::LineCapArrowAnchor);
@@ -84,26 +69,17 @@ namespace UKControllerPlugin
                 std::shared_ptr<EuroScopeCFlightPlanInterface> fp = this->plugin.GetSelectedFlightplan();
 
                 if (!fp) {
-                    LogWarning(
-                        "Tried to add aircraft to hold " + this->navaid.identifier +
-                        " but none selected"
-                    );
+                    LogWarning("Tried to add aircraft to hold " + this->navaid.identifier + " but none selected");
                     return;
                 }
 
                 if (!fp->IsTrackedByUser()) {
                     LogInfo(
-                        "Tried to add aircraft " + fp->GetCallsign() +
-                        " to hold but it is not tracked by the user"
-                    );
+                        "Tried to add aircraft " + fp->GetCallsign() + " to hold but it is not tracked by the user");
                     return;
                 }
 
-                this->holdManager.AssignAircraftToHold(
-                    fp->GetCallsign(),
-                    this->navaid.identifier,
-                    true
-                );
+                this->holdManager.AssignAircraftToHold(fp->GetCallsign(), this->navaid.identifier, true);
             } else if (button == "minimise") {
                 this->minimised = !this->minimised;
             } else if (button == "information") {
@@ -114,21 +90,13 @@ namespace UKControllerPlugin
         }
 
         void HoldDisplay::CallsignClicked(
-            std::string callsign,
-            EuroscopeRadarLoopbackInterface& radarScreen,
-            POINT mousePos,
-            RECT area
-        )
+            std::string callsign, EuroscopeRadarLoopbackInterface& radarScreen, POINT mousePos, RECT area)
         {
             radarScreen.TogglePluginTagFunction(callsign, popupMenuTagItemId, mousePos, area);
         }
 
         void HoldDisplay::ClearedLevelClicked(
-            std::string callsign,
-            EuroscopeRadarLoopbackInterface& radarScreen,
-            POINT mousePos,
-            RECT area
-        )
+            std::string callsign, EuroscopeRadarLoopbackInterface& radarScreen, POINT mousePos, RECT area)
         {
             radarScreen.ToggleTemporaryAltitudePopupList(callsign, mousePos, area);
         }
@@ -137,22 +105,18 @@ namespace UKControllerPlugin
             Get the rectangle to render the background of the hold display
         */
         Gdiplus::Rect HoldDisplay::GetHoldViewBackgroundRender(
-            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& aircraft
-        ) const
+            const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& aircraft) const
         {
             Gdiplus::Rect area{
                 this->windowPos.x,
                 this->windowPos.y,
                 this->windowWidth,
-                this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel) / 1000) + 2) * this->lineHeight)
-            };
+                this->dataStartOffset + ((((this->maximumLevel - this->minimumLevel) / 1000) + 2) * this->lineHeight)};
 
-            for (
-                std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>::const_iterator it
-                    = aircraft.cbegin();
-                it != aircraft.cend();
-                ++it
-            ) {
+            for (std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>::const_iterator it =
+                     aircraft.cbegin();
+                 it != aircraft.cend();
+                 ++it) {
                 area.Height += (it->second.size() - 1) * this->lineHeight;
             }
 
@@ -332,13 +296,9 @@ namespace UKControllerPlugin
          * we don't want to keep.
          */
         void HoldDisplay::FilterVslDisplayLevels(
-            std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& levelMap
-        ) const
+            std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>& levelMap) const
         {
-            for (
-                auto level = levelMap.begin();
-                level != levelMap.end();
-            ) {
+            for (auto level = levelMap.begin(); level != levelMap.end();) {
                 // Filter out aircraft at each level that we don't need to keep
                 this->FilterAircraftAtLevel(level->first, level->second);
 
@@ -348,7 +308,6 @@ namespace UKControllerPlugin
                 } else {
                     ++level;
                 }
-
             }
         }
 
@@ -366,17 +325,14 @@ namespace UKControllerPlugin
          * holding aircraft.
          */
         bool HoldDisplay::NoAircraftAssignedToHold(
-            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
-        ) const
+            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft) const
         {
             return std::find_if(
-                holdingAircraft.cbegin(),
-                holdingAircraft.cend(),
-                [this](const std::shared_ptr<HoldingAircraft>& aircraft) -> bool
-                {
-                    return this->AircraftAssignedToHold(aircraft);
-                }
-            ) == holdingAircraft.cend();
+                       holdingAircraft.cbegin(),
+                       holdingAircraft.cend(),
+                       [this](const std::shared_ptr<HoldingAircraft>& aircraft) -> bool {
+                           return this->AircraftAssignedToHold(aircraft);
+                       }) == holdingAircraft.cend();
         }
 
         /*
@@ -384,9 +340,7 @@ namespace UKControllerPlugin
          * kept in the VSL.
          */
         void HoldDisplay::FilterAircraftAtLevel(
-            int level,
-            std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft
-        ) const
+            int level, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& holdingAircraft) const
         {
             /*
              * Filter out aircraft that are:
@@ -396,10 +350,7 @@ namespace UKControllerPlugin
              * - Are within the limits of the assigned deemed separated hold AND
              * - Are not in direct conflict with an aircraft assigned to this hold
              */
-            for (
-                auto aircraftIt = holdingAircraft.begin();
-                aircraftIt != holdingAircraft.end();
-            ) {
+            for (auto aircraftIt = holdingAircraft.begin(); aircraftIt != holdingAircraft.end();) {
                 const std::shared_ptr<HoldingAircraft> aircraft = *aircraftIt;
 
                 /*
@@ -410,16 +361,13 @@ namespace UKControllerPlugin
                  * 3. The aircraft is within a published hold that is deemed separated
                  * from all the aircraft holding within published holds at this navaid.
                  */
-                if (
-                    !this->AircraftAssignedToHold(aircraft) &&
-                    aircraft->GetAssignedHold() != aircraft->noHoldAssigned &&
-                    this->AircraftInDeemedSeparatedHold(level, aircraft, holdingAircraft)
-                ) {
+                if (!this->AircraftAssignedToHold(aircraft) &&
+                    aircraft->GetAssignedHold() != aircraft->GetNoHoldAssigned() &&
+                    this->AircraftInDeemedSeparatedHold(level, aircraft, holdingAircraft)) {
                     aircraftIt = holdingAircraft.erase(aircraftIt);
                 } else {
                     ++aircraftIt;
                 }
-
             }
         }
 
@@ -430,12 +378,11 @@ namespace UKControllerPlugin
         bool HoldDisplay::AircraftInDeemedSeparatedHold(
             int level,
             const std::shared_ptr<HoldingAircraft>& aircraft,
-            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraftAtLevel
-        ) const
+            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraftAtLevel) const
         {
             // Make sure there's a radar target for the aircraft we're checking.
-            std::shared_ptr<EuroScopeCRadarTargetInterface> aircraftRadarTarget = this->plugin.
-                GetRadarTargetForCallsign(aircraft->GetCallsign());
+            std::shared_ptr<EuroScopeCRadarTargetInterface> aircraftRadarTarget =
+                this->plugin.GetRadarTargetForCallsign(aircraft->GetCallsign());
 
             if (!aircraftRadarTarget) {
                 return false;
@@ -443,63 +390,63 @@ namespace UKControllerPlugin
 
             // Iterate each aircraft at the level
             return std::find_if(
-                aircraftAtLevel.cbegin(),
-                aircraftAtLevel.cend(),
-                [&level, &aircraftRadarTarget, &aircraft, this](
-                const std::shared_ptr<HoldingAircraft>& conflictingAircraft) -> bool
-                {
-                    std::shared_ptr<EuroScopeCRadarTargetInterface> conflictingRadarTarget =
-                        this->plugin.GetRadarTargetForCallsign(conflictingAircraft->GetCallsign());
+                       aircraftAtLevel.cbegin(),
+                       aircraftAtLevel.cend(),
+                       [&level, &aircraftRadarTarget, &aircraft, this](
+                           const std::shared_ptr<HoldingAircraft>& conflictingAircraft) -> bool {
+                           std::shared_ptr<EuroScopeCRadarTargetInterface> conflictingRadarTarget =
+                               this->plugin.GetRadarTargetForCallsign(conflictingAircraft->GetCallsign());
 
-                    /*
-                     * 1. Check that the conflicting aircraft has a radar target
-                     * 2. Check that the conflicting aircraft is actually assigned to hold here
-                     * 3. Check each of the published holds at this fix
-                     */
-                    return conflictingRadarTarget != nullptr &&
-                        this->AircraftAssignedToHold(conflictingAircraft) &&
-                        std::find_if(
-                            this->publishedHolds.cbegin(),
-                            this->publishedHolds.cend(),
-                            [this, &level, &conflictingAircraft, &conflictingRadarTarget, &aircraft,
-                                &aircraftRadarTarget](
-                            const HoldingData* const publishedHold)-> bool
-                        {
-                            /*
-                             * 3a. Make sure that the level the aircraft are at is within the published hold
-                             * 3b. Check each of the deemed separated holds for this published hold
-                             */
-                            return publishedHold->LevelWithinHold(level) &&
-                                std::find_if(
-                                    publishedHold->deemedSeparatedHolds.cbegin(),
-                                    publishedHold->deemedSeparatedHolds.cend(),
-                                    [this, &level, &conflictingAircraft, &aircraft, &aircraftRadarTarget,
-                                        &conflictingRadarTarget](
-                                    const std::unique_ptr<DeemedSeparatedHold>& deemedSeparatedHold)-> bool
-                                    {
-                                        const HoldingData& publishedSeparatedHold =
-                                            this->publishedHoldCollection.GetById(deemedSeparatedHold->identifier);
+                           /*
+                            * 1. Check that the conflicting aircraft has a radar target
+                            * 2. Check that the conflicting aircraft is actually assigned to hold here
+                            * 3. Check each of the published holds at this fix
+                            */
+                           return conflictingRadarTarget != nullptr &&
+                                  this->AircraftAssignedToHold(conflictingAircraft) &&
+                                  std::find_if(
+                                      this->publishedHolds.cbegin(),
+                                      this->publishedHolds.cend(),
+                                      [this, &level, &conflictingRadarTarget, &aircraft, &aircraftRadarTarget](
+                                          const HoldingData* const publishedHold) -> bool {
+                                          /*
+                                           * 3a. Make sure that the level the aircraft are at is within the published
+                                           * hold 3b. Check each of the deemed separated holds for this published hold
+                                           */
+                                          return publishedHold->LevelWithinHold(level) &&
+                                                 std::find_if(
+                                                     publishedHold->deemedSeparatedHolds.cbegin(),
+                                                     publishedHold->deemedSeparatedHolds.cend(),
+                                                     [this,
+                                                      &level,
+                                                      &aircraft,
+                                                      &aircraftRadarTarget,
+                                                      &conflictingRadarTarget](
+                                                         const std::unique_ptr<DeemedSeparatedHold>&
+                                                             deemedSeparatedHold) -> bool {
+                                                         const HoldingData& publishedSeparatedHold =
+                                                             this->publishedHoldCollection.GetById(
+                                                                 deemedSeparatedHold->identifier);
 
-                                        /*
-                                         * 3bi. Check the deemed separated hold is published
-                                         * 3bii. Check if the level is within the deemed separated hold
-                                         * 3biii. Check if the aircraft that we're interested in is assigned to the
-                                         * deemed separated hold
-                                         * 3biv. Check that the distance between the two aircraft is greater than the
-                                         * force VSL insert distance.
-                                         */
-                                        return publishedSeparatedHold != this->publishedHoldCollection.noHold &&
-                                            publishedSeparatedHold.LevelWithinHold(level) &&
-                                            aircraft->GetAssignedHold() == publishedSeparatedHold.fix &&
-                                            aircraftRadarTarget->GetPosition().DistanceTo(
-                                                conflictingRadarTarget->GetPosition()
-                                            ) > deemedSeparatedHold->vslInsertDistance;
-                                    }
-                                ) != publishedHold->deemedSeparatedHolds.cend();
-                        }
-                    ) != publishedHolds.cend();
-                }
-            ) != aircraftAtLevel.cend();
+                                                         /*
+                                                          * 3bi. Check the deemed separated hold is published
+                                                          * 3bii. Check if the level is within the deemed separated hold
+                                                          * 3biii. Check if the aircraft that we're interested in is
+                                                          * assigned to the deemed separated hold 3biv. Check that the
+                                                          * distance between the two aircraft is greater than the force
+                                                          * VSL insert distance.
+                                                          */
+                                                         return publishedSeparatedHold !=
+                                                                    this->publishedHoldCollection.noHold &&
+                                                                publishedSeparatedHold.LevelWithinHold(level) &&
+                                                                aircraft->GetAssignedHold() ==
+                                                                    publishedSeparatedHold.fix &&
+                                                                aircraftRadarTarget->GetPosition().DistanceTo(
+                                                                    conflictingRadarTarget->GetPosition()) >
+                                                                    deemedSeparatedHold->vslInsertDistance;
+                                                     }) != publishedHold->deemedSeparatedHolds.cend();
+                                      }) != publishedHolds.cend();
+                       }) != aircraftAtLevel.cend();
         }
 
         /*
@@ -516,17 +463,12 @@ namespace UKControllerPlugin
         */
         std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>>
         HoldDisplay::MapAircraftToLevels(
-            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft
-        ) const
+            const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft) const
         {
             std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> levelMap;
             std::shared_ptr<EuroScopeCRadarTargetInterface> rt;
 
-            for (
-                auto it = aircraft.cbegin();
-                it != aircraft.cend();
-                ++it
-            ) {
+            for (auto it = aircraft.cbegin(); it != aircraft.cend(); ++it) {
                 // Check for the radar target
                 rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
                 if (!rt) {
@@ -568,33 +510,19 @@ namespace UKControllerPlugin
         */
         void HoldDisplay::LoadDataFromAsr(UserSetting& userSetting)
         {
-            this->minimised = userSetting.GetBooleanEntry(
-                "hold" + this->navaid.identifier + "Minimised",
-                false
-            );
+            this->minimised = userSetting.GetBooleanEntry("hold" + this->navaid.identifier + "Minimised", false);
 
             this->minimumLevel = userSetting.GetIntegerEntry(
                 "hold" + this->navaid.identifier + "MinLevel",
-                this->publishedHolds.size() ? (*this->publishedHolds.cbegin())->minimum : 7000
-            );
+                this->publishedHolds.size() ? (*this->publishedHolds.cbegin())->minimum : 7000);
 
             this->maximumLevel = userSetting.GetIntegerEntry(
                 "hold" + this->navaid.identifier + "MaxLevel",
-                this->publishedHolds.size() ? (*this->publishedHolds.cbegin())->maximum : 15000
-            );
+                this->publishedHolds.size() ? (*this->publishedHolds.cbegin())->maximum : 15000);
 
             this->Move(
-                {
-                    userSetting.GetIntegerEntry(
-                        "hold" + this->navaid.identifier + "PositionX",
-                        100
-                    ),
-                    userSetting.GetIntegerEntry(
-                        "hold" + this->navaid.identifier + "PositionY",
-                        100
-                    )
-                }
-            );
+                {userSetting.GetIntegerEntry("hold" + this->navaid.identifier + "PositionX", 100),
+                 userSetting.GetIntegerEntry("hold" + this->navaid.identifier + "PositionY", 100)});
         }
 
         /*
@@ -614,8 +542,7 @@ namespace UKControllerPlugin
                 this->titleArea.X,
                 this->titleArea.Y,
                 this->titleArea.X + this->titleArea.Width,
-                this->titleArea.Y + this->titleArea.Height
-            };
+                this->titleArea.Y + this->titleArea.Height};
 
             // Minimise Button
             this->minimiseButtonArea.X = pos.x + 5;
@@ -625,8 +552,7 @@ namespace UKControllerPlugin
                 this->minimiseButtonArea.X,
                 this->minimiseButtonArea.Y,
                 this->minimiseButtonArea.X + this->minimiseButtonArea.Width,
-                this->minimiseButtonArea.Y + this->minimiseButtonArea.Height
-            };
+                this->minimiseButtonArea.Y + this->minimiseButtonArea.Height};
 
             // Information Button
             this->informationButtonArea.X = minimiseButtonArea.X + minimiseButtonArea.Width + 5;
@@ -636,8 +562,7 @@ namespace UKControllerPlugin
                 this->informationButtonArea.X,
                 this->informationButtonArea.Y,
                 this->informationButtonArea.X + this->informationButtonArea.Width,
-                this->informationButtonArea.Y + this->informationButtonArea.Height
-            };
+                this->informationButtonArea.Y + this->informationButtonArea.Height};
 
             // Options button
             this->optionsButtonArea.X = informationButtonArea.X + informationButtonArea.Width + 5;
@@ -647,8 +572,7 @@ namespace UKControllerPlugin
                 this->optionsButtonArea.X,
                 this->optionsButtonArea.Y,
                 this->optionsButtonArea.X + this->optionsButtonArea.Width,
-                this->optionsButtonArea.Y + this->optionsButtonArea.Height
-            };
+                this->optionsButtonArea.Y + this->optionsButtonArea.Height};
 
             // Minus button
             this->minusButtonRect.X = pos.x + this->buttonStartOffsetX + 5;
@@ -658,8 +582,7 @@ namespace UKControllerPlugin
                 this->minusButtonRect.X,
                 this->minusButtonRect.Y,
                 this->minusButtonRect.X + this->minusButtonRect.Width,
-                this->minusButtonRect.Y + this->minusButtonRect.Height
-            };
+                this->minusButtonRect.Y + this->minusButtonRect.Height};
 
             // Plus button
             this->plusButtonRect.X = pos.x + this->buttonStartOffsetX + 55;
@@ -669,8 +592,7 @@ namespace UKControllerPlugin
                 this->plusButtonRect.X,
                 this->plusButtonRect.Y,
                 this->plusButtonRect.X + this->plusButtonRect.Width,
-                this->plusButtonRect.Y + this->plusButtonRect.Height
-            };
+                this->plusButtonRect.Y + this->plusButtonRect.Height};
 
             // Show all levels button
             this->allButtonRect.X = pos.x + this->buttonStartOffsetX + 105;
@@ -680,8 +602,7 @@ namespace UKControllerPlugin
                 this->allButtonRect.X,
                 this->allButtonRect.Y,
                 this->allButtonRect.X + this->allButtonRect.Width,
-                this->allButtonRect.Y + this->allButtonRect.Height
-            };
+                this->allButtonRect.Y + this->allButtonRect.Height};
 
             // Add button
             this->addButtonRect.X = pos.x + this->buttonStartOffsetX + 155;
@@ -691,8 +612,7 @@ namespace UKControllerPlugin
                 this->addButtonRect.X,
                 this->addButtonRect.Y,
                 this->addButtonRect.X + this->addButtonRect.Width,
-                this->addButtonRect.Y + this->addButtonRect.Height
-            };
+                this->addButtonRect.Y + this->addButtonRect.Height};
 
             // Line under the buttons
             this->underButtonLineLeft.X = pos.x;
@@ -705,29 +625,18 @@ namespace UKControllerPlugin
         /*
             Draw the rounded rectangles that form the action buttons
         */
-        void HoldDisplay::DrawRoundRectangle(
-            GdiGraphicsInterface& graphics,
-            const Gdiplus::Rect& rect,
-            UINT8 radius
-        ) const
+        void
+        HoldDisplay::DrawRoundRectangle(GdiGraphicsInterface& graphics, const Gdiplus::Rect& rect, UINT8 radius) const
         {
             Gdiplus::GraphicsPath path;
             path.AddLine(rect.X + radius, rect.Y, rect.X + rect.Width - (radius * 2), rect.Y);
             path.AddArc(rect.X + rect.Width - (radius * 2), rect.Y, radius * 2, radius * 2, 270, 90);
             path.AddLine(
-                rect.X + rect.Width,
-                rect.Y + radius,
-                rect.X + rect.Width,
-                rect.Y + rect.Height - (radius * 2)
-            );
-            path.AddArc(rect.X + rect.Width - (radius * 2), rect.Y + rect.Height - (radius * 2), radius * 2,
-                        radius * 2, 0, 90);
+                rect.X + rect.Width, rect.Y + radius, rect.X + rect.Width, rect.Y + rect.Height - (radius * 2));
+            path.AddArc(
+                rect.X + rect.Width - (radius * 2), rect.Y + rect.Height - (radius * 2), radius * 2, radius * 2, 0, 90);
             path.AddLine(
-                rect.X + rect.Width - (radius * 2),
-                rect.Y + rect.Height,
-                rect.X + radius,
-                rect.Y + rect.Height
-            );
+                rect.X + rect.Width - (radius * 2), rect.Y + rect.Height, rect.X + radius, rect.Y + rect.Height);
             path.AddArc(rect.X, rect.Y + rect.Height - (radius * 2), radius * 2, radius * 2, 90, 90);
             path.AddLine(rect.X, rect.Y + rect.Height - (radius * 2), rect.X, rect.Y + radius);
             path.AddArc(rect.X, rect.Y, radius * 2, radius * 2, 180, 90);
@@ -741,22 +650,14 @@ namespace UKControllerPlugin
         void HoldDisplay::RenderHoldInformation(
             GdiGraphicsInterface& graphics,
             EuroscopeRadarLoopbackInterface& radarScreen,
-            const int screenObjectId
-        ) const
+            const int screenObjectId) const
         {
             // Black background and white border
             Gdiplus::Rect borderRect = {
-                this->windowPos.x,
-                this->windowPos.y,
-                this->windowWidth,
-                this->informationDisplayWindowHeight
-            };
+                this->windowPos.x, this->windowPos.y, this->windowWidth, this->informationDisplayWindowHeight};
 
             graphics.FillRect(borderRect, this->backgroundBrush);
-            graphics.DrawRect(
-                borderRect,
-                this->borderPen
-            );
+            graphics.DrawRect(borderRect, this->borderPen);
 
             // Render the title bar
             this->RenderTitleBar(graphics, radarScreen, screenObjectId);
@@ -768,46 +669,23 @@ namespace UKControllerPlugin
             const HoldingData* hold = *this->publishedHolds.cbegin();
 
             // Render the data
-            Gdiplus::Rect dataRect = {
-                this->windowPos.x,
-                this->dataStartHeight,
-                this->windowWidth,
-                this->lineHeight
-            };
+            Gdiplus::Rect dataRect = {this->windowPos.x, this->dataStartHeight, this->windowWidth, this->lineHeight};
 
             graphics.DrawString(
-                std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier),
-                dataRect,
-                this->dataBrush
-            );
+                std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier), dataRect, this->dataBrush);
+
+            dataRect.Y = dataRect.Y + this->lineHeight + 5;
+            graphics.DrawString(std::wstring(L"Inbound: ") + ConvertToTchar(hold->inbound), dataRect, this->dataBrush);
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Inbound: ") + ConvertToTchar(hold->inbound),
-                dataRect,
-                this->dataBrush
-            );
+                std::wstring(L"Turn: ") + ConvertToTchar(hold->turnDirection), dataRect, this->dataBrush);
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
-            graphics.DrawString(
-                std::wstring(L"Turn: ") + ConvertToTchar(hold->turnDirection),
-                dataRect,
-                this->dataBrush
-            );
+            graphics.DrawString(std::wstring(L"Maximum: ") + ConvertToTchar(hold->maximum), dataRect, this->dataBrush);
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
-            graphics.DrawString(
-                std::wstring(L"Maximum: ") + ConvertToTchar(hold->maximum),
-                dataRect,
-                this->dataBrush
-            );
-
-            dataRect.Y = dataRect.Y + this->lineHeight + 5;
-            graphics.DrawString(
-                std::wstring(L"Minimum: ") + ConvertToTchar(hold->minimum),
-                dataRect,
-                this->dataBrush
-            );
+            graphics.DrawString(std::wstring(L"Minimum: ") + ConvertToTchar(hold->minimum), dataRect, this->dataBrush);
         }
 
         /*
@@ -816,105 +694,65 @@ namespace UKControllerPlugin
         void HoldDisplay::RenderTitleBar(
             GdiGraphicsInterface& graphics,
             EuroscopeRadarLoopbackInterface& radarScreen,
-            const int screenObjectId
-        ) const
+            const int screenObjectId) const
         {
             // Title bar
-            radarScreen.RegisterScreenObject(
-                screenObjectId,
-                this->navaid.identifier,
-                this->titleRect,
-                true
-            );
+            radarScreen.RegisterScreenObject(screenObjectId, this->navaid.identifier, this->titleRect, true);
             graphics.FillRect(this->titleArea, this->titleBarBrush);
             graphics.DrawRect(this->titleArea, this->borderPen);
 
             std::wstring holdName = ConvertToTchar(this->navaid.identifier);
-            graphics.DrawString(
-                ConvertToTchar(this->navaid.identifier),
-                this->titleArea,
-                this->titleBarTextBrush
-            );
+            graphics.DrawString(ConvertToTchar(this->navaid.identifier), this->titleArea, this->titleBarTextBrush);
             graphics.DrawLine(
                 this->borderPen,
                 Gdiplus::Point{this->titleArea.X, this->titleArea.Y + this->titleArea.Height},
-                Gdiplus::Point{this->titleArea.X + this->titleArea.Width, this->titleArea.Y + this->titleArea.Height}
-            );
+                Gdiplus::Point{this->titleArea.X + this->titleArea.Width, this->titleArea.Y + this->titleArea.Height});
 
             // Minimise Button
             graphics.FillRect(this->minimiseButtonArea, this->backgroundBrush);
             graphics.DrawRect(this->minimiseButtonArea, this->borderPen);
             radarScreen.RegisterScreenObject(
-                screenObjectId,
-                this->navaid.identifier + "/minimise",
-                this->minimiseClickRect,
-                false
-            );
+                screenObjectId, this->navaid.identifier + "/minimise", this->minimiseClickRect, false);
 
             // Information button
             graphics.FillRect(this->informationButtonArea, this->backgroundBrush);
             graphics.DrawRect(this->informationButtonArea, this->borderPen);
             graphics.DrawString(L"i", this->informationButtonArea, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
-                screenObjectId,
-                this->navaid.identifier + "/information",
-                this->informationClickRect,
-                false
-            );
+                screenObjectId, this->navaid.identifier + "/information", this->informationClickRect, false);
 
             // Options button
             graphics.FillRect(this->optionsButtonArea, this->backgroundBrush);
             graphics.DrawRect(this->optionsButtonArea, this->borderPen);
             graphics.DrawString(L"o", this->optionsButtonArea, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
-                screenObjectId,
-                this->navaid.identifier + "/options",
-                this->optionsClickRect,
-                false
-            );
+                screenObjectId, this->navaid.identifier + "/options", this->optionsClickRect, false);
         }
 
         void HoldDisplay::RenderActionButtons(
             GdiGraphicsInterface& graphics,
             EuroscopeRadarLoopbackInterface& radarScreen,
-            const int screenObjectId
-        ) const
+            const int screenObjectId) const
         {
             this->DrawRoundRectangle(graphics, minusButtonRect, 5);
             graphics.DrawString(L"-", minusButtonRect, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
-                screenObjectId,
-                this->navaid.identifier + "/minus",
-                this->minusButtonClickRect,
-                false
-            );
+                screenObjectId, this->navaid.identifier + "/minus", this->minusButtonClickRect, false);
 
             this->DrawRoundRectangle(graphics, plusButtonRect, 5);
             graphics.DrawString(L"+", plusButtonRect, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
-                screenObjectId,
-                this->navaid.identifier + "/plus",
-                this->plusButtonClickRect,
-                false
-            );
+                screenObjectId, this->navaid.identifier + "/plus", this->plusButtonClickRect, false);
 
             this->DrawRoundRectangle(graphics, addButtonRect, 5);
             graphics.DrawString(L"ADD", addButtonRect, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
-                screenObjectId,
-                this->navaid.identifier + "/add",
-                this->addButtonClickRect,
-                false
-            );
+                screenObjectId, this->navaid.identifier + "/add", this->addButtonClickRect, false);
 
             this->DrawRoundRectangle(graphics, allButtonRect, 5);
             graphics.DrawString(L"ALL", allButtonRect, this->titleBarTextBrush);
             radarScreen.RegisterScreenObject(
-                screenObjectId,
-                this->navaid.identifier + "/allLevels",
-                this->allButtonClickRect,
-                false
-            );
+                screenObjectId, this->navaid.identifier + "/allLevels", this->allButtonClickRect, false);
 
             graphics.DrawLine(this->borderPen, this->underButtonLineLeft, this->underButtonLineRight);
         }
@@ -925,8 +763,7 @@ namespace UKControllerPlugin
         void HoldDisplay::RenderManagedHoldDisplay(
             GdiGraphicsInterface& graphics,
             EuroscopeRadarLoopbackInterface& radarScreen,
-            const int screenObjectId
-        ) const
+            const int screenObjectId) const
         {
             // Get the aircraft in each hold level
             const std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> holdingAircraft =
@@ -943,35 +780,15 @@ namespace UKControllerPlugin
             this->RenderActionButtons(graphics, radarScreen, screenObjectId);
 
             // Hold display
-            Gdiplus::Rect numbersDisplay = {
-                this->windowPos.x + 10,
-                this->dataStartHeight,
-                30,
-                this->lineHeight
-            };
+            Gdiplus::Rect numbersDisplay = {this->windowPos.x + 10, this->dataStartHeight, 30, this->lineHeight};
 
             // The row in question
-            Gdiplus::Rect holdRow = {
-                this->windowPos.x,
-                this->dataStartHeight,
-                this->windowWidth,
-                this->lineHeight
-            };
+            Gdiplus::Rect holdRow = {this->windowPos.x, this->dataStartHeight, this->windowWidth, this->lineHeight};
 
             // Rects for rendering the actual data
-            Gdiplus::Rect callsignDisplay = {
-                this->windowPos.x + 45,
-                this->dataStartHeight,
-                60,
-                this->lineHeight
-            };
+            Gdiplus::Rect callsignDisplay = {this->windowPos.x + 45, this->dataStartHeight, 60, this->lineHeight};
 
-            Gdiplus::Rect actualLevelDisplay = {
-                this->windowPos.x + 100,
-                this->dataStartHeight,
-                40,
-                this->lineHeight
-            };
+            Gdiplus::Rect actualLevelDisplay = {this->windowPos.x + 100, this->dataStartHeight, 40, this->lineHeight};
 
             Gdiplus::Point verticalSpeedArrowDisplayStart = {
                 this->windowPos.x + 135,
@@ -983,41 +800,22 @@ namespace UKControllerPlugin
                 this->dataStartHeight + this->lineHeight - (this->lineHeight / 3),
             };
 
-            Gdiplus::Rect clearedLevelDisplay = {
-                this->windowPos.x + 145,
-                this->dataStartHeight,
-                30,
-                this->lineHeight
-            };
+            Gdiplus::Rect clearedLevelDisplay = {this->windowPos.x + 145, this->dataStartHeight, 30, this->lineHeight};
 
-            Gdiplus::Rect timeInHoldDisplay = {
-                this->windowPos.x + 180,
-                this->dataStartHeight,
-                30,
-                this->lineHeight
-            };
+            Gdiplus::Rect timeInHoldDisplay = {this->windowPos.x + 180, this->dataStartHeight, 30, this->lineHeight};
 
             // Loop over all the possible levels in the hold and render
-            for (
-                int level = this->maximumLevel;
-                level >= this->minimumLevel;
-                level -= 1000
-            ) {
+            for (int level = this->maximumLevel; level >= this->minimumLevel; level -= 1000) {
                 bool levelRestricted = false;
                 bool aircraftInProximity = false;
 
                 // Loop the published holds and check if we need to render any restrictions
-                for (
-                    std::set<const HoldingData*>::const_iterator publishedIt = this->publishedHolds.cbegin();
-                    publishedIt != this->publishedHolds.cend();
-                    ++publishedIt
-                ) {
+                for (std::set<const HoldingData*>::const_iterator publishedIt = this->publishedHolds.cbegin();
+                     publishedIt != this->publishedHolds.cend();
+                     ++publishedIt) {
                     // Print the restrictions
-                    for (
-                        auto it = (*publishedIt)->restrictions.cbegin();
-                        it != (*publishedIt)->restrictions.cend();
-                        ++it
-                    ) {
+                    for (auto it = (*publishedIt)->restrictions.cbegin(); it != (*publishedIt)->restrictions.cend();
+                         ++it) {
                         if ((*it)->LevelRestricted(level)) {
                             levelRestricted = true;
                             break;
@@ -1033,10 +831,8 @@ namespace UKControllerPlugin
                         graphics.FillRect(holdRow, this->blockedLevelBrush);
                     }
 
-
                     // Render the numbers
                     graphics.DrawString(GetLevelDisplayString(level), numbersDisplay, this->titleBarTextBrush);
-
 
                     // Increase the lines
                     holdRow.Y = holdRow.Y + this->lineHeight;
@@ -1057,12 +853,10 @@ namespace UKControllerPlugin
                     std::shared_ptr<EuroScopeCFlightPlanInterface> fp;
 
                     // We have holding aircraft to deal with, render them in
-                    for (
-                        std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator
-                        it = aircraftAtLevel.cbegin();
-                        it != aircraftAtLevel.cend();
-                        ++it
-                    ) {
+                    for (std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>::const_iterator it =
+                             aircraftAtLevel.cbegin();
+                         it != aircraftAtLevel.cend();
+                         ++it) {
                         // Render the restrictions
                         if (levelRestricted) {
                             graphics.FillRect(holdRow, this->blockedLevelBrush);
@@ -1070,13 +864,8 @@ namespace UKControllerPlugin
 
                         // Render the numbers
                         if (aircraftIndex == 0) {
-                            graphics.DrawString(
-                                GetLevelDisplayString(level),
-                                numbersDisplay,
-                                this->titleBarTextBrush
-                            );
+                            graphics.DrawString(GetLevelDisplayString(level), numbersDisplay, this->titleBarTextBrush);
                         }
-
 
                         rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
                         fp = this->plugin.GetFlightplanForCallsign((*it)->GetCallsign());
@@ -1088,72 +877,50 @@ namespace UKControllerPlugin
 
                             // Callsign
                             std::wstring callsign = ConvertToTchar((*it)->GetCallsign());
-                            graphics.DrawString(
-                                callsign,
-                                callsignDisplay,
-                                this->dataBrush
-                            );
+                            graphics.DrawString(callsign, callsignDisplay, this->dataBrush);
                             radarScreen.RegisterScreenObject(
                                 screenObjectId,
                                 this->navaid.identifier + "/callsign/" + fp->GetCallsign(),
-                                {
-                                    callsignDisplay.X,
-                                    callsignDisplay.Y,
-                                    callsignDisplay.X + callsignDisplay.Width,
-                                    callsignDisplay.Y + callsignDisplay.Height
-                                },
-                                false
-                            );
+                                {callsignDisplay.X,
+                                 callsignDisplay.Y,
+                                 callsignDisplay.X + callsignDisplay.Width,
+                                 callsignDisplay.Y + callsignDisplay.Height},
+                                false);
 
                             // Reported level
                             graphics.DrawString(
-                                GetLevelDisplayString(rt->GetFlightLevel()),
-                                actualLevelDisplay,
-                                this->dataBrush
-                            );
+                                GetLevelDisplayString(rt->GetFlightLevel()), actualLevelDisplay, this->dataBrush);
                             if (GetVerticalSpeedDirection(rt->GetVerticalSpeed()) == 1) {
                                 graphics.DrawLine(
                                     this->verticalSpeedAscentPen,
                                     verticalSpeedArrowDisplayStart,
-                                    verticalSpeedArrowDisplayEnd
-                                );
+                                    verticalSpeedArrowDisplayEnd);
                             } else if (GetVerticalSpeedDirection(rt->GetVerticalSpeed()) == -1) {
                                 graphics.DrawLine(
                                     this->verticalSpeedDescentPen,
                                     verticalSpeedArrowDisplayStart,
-                                    verticalSpeedArrowDisplayEnd
-                                );
+                                    verticalSpeedArrowDisplayEnd);
                             }
-
 
                             // Cleared level - plus a clickspot for the aircraft in question
                             graphics.DrawString(
-                                fp->GetClearedAltitude() == 0
-                                    ? L"---"
-                                    : GetLevelDisplayString(fp->GetClearedAltitude()),
+                                fp->GetClearedAltitude() == 0 ? L"---"
+                                                              : GetLevelDisplayString(fp->GetClearedAltitude()),
                                 clearedLevelDisplay,
-                                this->clearedLevelBrush
-                            );
+                                this->clearedLevelBrush);
                             radarScreen.RegisterScreenObject(
                                 screenObjectId,
                                 this->navaid.identifier + "/cleared/" + fp->GetCallsign(),
-                                {
-                                    clearedLevelDisplay.X,
-                                    clearedLevelDisplay.Y,
-                                    clearedLevelDisplay.X + clearedLevelDisplay.Width,
-                                    clearedLevelDisplay.Y + clearedLevelDisplay.Height
-                                },
-                                false
-                            );
+                                {clearedLevelDisplay.X,
+                                 clearedLevelDisplay.Y,
+                                 clearedLevelDisplay.X + clearedLevelDisplay.Width,
+                                 clearedLevelDisplay.Y + clearedLevelDisplay.Height},
+                                false);
 
                             // Time in hold, if it's assigned
-                            if ((*it)->GetAssignedHold() != (*it)->noHoldAssigned) {
+                            if ((*it)->GetAssignedHold() != (*it)->GetNoHoldAssigned()) {
                                 std::wstring timeString = GetTimeInHoldDisplayString((*it)->GetAssignedHoldEntryTime());
-                                graphics.DrawString(
-                                    timeString,
-                                    timeInHoldDisplay,
-                                    this->dataBrush
-                                );
+                                graphics.DrawString(timeString, timeInHoldDisplay, this->dataBrush);
                             }
                         }
 
@@ -1176,12 +943,10 @@ namespace UKControllerPlugin
                             holdRow.X + 10,
                             holdRow.Y - (static_cast<INT>(aircraftAtLevel.size()) * this->lineHeight),
                             holdRow.Width - 20,
-                            (static_cast<INT>(aircraftAtLevel.size()) * this->lineHeight)
-                        };
+                            (static_cast<INT>(aircraftAtLevel.size()) * this->lineHeight)};
                         graphics.DrawRect(boundingBox, this->sameLevelBoxPen);
                     }
                 }
-
             }
 
             // Border around whole thing, draw this last
@@ -1190,17 +955,14 @@ namespace UKControllerPlugin
                     this->windowPos.x,
                     this->windowPos.y,
                     this->windowPos.x + this->windowWidth,
-                    holdRow.Y + this->lineHeight
-                },
-                this->borderPen
-            );
+                    holdRow.Y + this->lineHeight},
+                this->borderPen);
         }
 
         void HoldDisplay::PaintWindow(
             GdiGraphicsInterface& graphics,
             EuroscopeRadarLoopbackInterface& radarScreen,
-            const int screenObjectId
-        ) const
+            const int screenObjectId) const
         {
             // Minimised, just render the title bar.
             if (this->minimised) {
@@ -1209,52 +971,44 @@ namespace UKControllerPlugin
             }
 
             // Render the correct view.
-            this->showHoldInformation
-                ? this->RenderHoldInformation(graphics, radarScreen, screenObjectId)
-                : this->RenderManagedHoldDisplay(graphics, radarScreen, screenObjectId);
+            this->showHoldInformation ? this->RenderHoldInformation(graphics, radarScreen, screenObjectId)
+                                      : this->RenderManagedHoldDisplay(graphics, radarScreen, screenObjectId);
         }
 
         /*
             Save display data to the ASR
         */
-        void HoldDisplay::SaveDataToAsr(
-            UserSetting& userSetting
-        ) const
+        void HoldDisplay::SaveDataToAsr(UserSetting& userSetting) const
         {
             // Minimised window
             userSetting.Save(
                 "hold" + this->navaid.identifier + "Minimised",
                 "Hold " + this->navaid.identifier + " Minimised",
-                this->minimised
-            );
+                this->minimised);
 
             // X position
             userSetting.Save(
                 "hold" + this->navaid.identifier + "PositionX",
                 "Hold " + this->navaid.identifier + " X Position",
-                this->windowPos.x
-            );
+                this->windowPos.x);
 
             // Y position
             userSetting.Save(
                 "hold" + this->navaid.identifier + "PositionY",
                 "Hold " + this->navaid.identifier + " Y Position",
-                this->windowPos.y
-            );
+                this->windowPos.y);
 
             // Min level
             userSetting.Save(
                 "hold" + this->navaid.identifier + "MinLevel",
                 "Hold " + this->navaid.identifier + " Minimum Level",
-                this->minimumLevel
-            );
+                this->minimumLevel);
 
             // Max level
             userSetting.Save(
                 "hold" + this->navaid.identifier + "MaxLevel",
                 "Hold " + this->navaid.identifier + " Maximum Level",
-                this->maximumLevel
-            );
+                this->maximumLevel);
         }
     } // namespace Hold
 } // namespace UKControllerPlugin

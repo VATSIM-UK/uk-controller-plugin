@@ -1,5 +1,4 @@
-#include "pch/pch.h"
-#include "graphics/GdiGraphicsWrapper.h"
+#include "GdiGraphicsWrapper.h"
 
 namespace UKControllerPlugin {
     namespace Windows {
@@ -258,7 +257,7 @@ namespace UKControllerPlugin {
         {
             Gdiplus::RectF bounds;
             this->api->GetClipBounds(&bounds);
-            return std::move(bounds);
+            return bounds;
         }
 
         void GdiGraphicsWrapper::Rotated(Gdiplus::REAL angle, std::function<void()> drawFunction)

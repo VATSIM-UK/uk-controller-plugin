@@ -66,20 +66,8 @@ namespace UKControllerPlugin {
                 bool GetRotatedDots() const;
                 Gdiplus::Color & GetTrailColour(void) const;
                 bool IsVisible(void) const override;
-                void LeftClick(
-                    Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
-                    int objectId,
-                    std::string objectDescription,
-                    POINT mousePos,
-                    RECT itemArea
-                ) override;
                 void Move(RECT position, std::string objectDescription) override;
                 bool ProcessCommand(std::string command) override;
-                void RightClick(
-                    int objectId,
-                    std::string objectDescription,
-                    Euroscope::EuroscopeRadarLoopbackInterface& radarScreen
-                ) override;
                 void Render(
                     Windows::GdiGraphicsInterface& graphics,
                     Euroscope::EuroscopeRadarLoopbackInterface& radarScreen
