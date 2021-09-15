@@ -1,5 +1,5 @@
 #include "pch/pch.h"
-#include "handoff/HandoffEventHandler.h"
+#include "handoff/HandoffEventHandlerInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "controller/ControllerPositionHierarchy.h"
 #include "controller/ControllerPosition.h"
@@ -17,7 +17,7 @@ using UKControllerPlugin::Tag::TagData;
 namespace UKControllerPlugin {
     namespace Handoff {
 
-        HandoffEventHandler::HandoffEventHandler(
+        HandoffEventHandlerInterface::HandoffEventHandlerInterface(
             const HandoffCollection& handoffs,
             const ActiveCallsignCollection& callsigns,
             OutboundIntegrationEventHandler& outboundEvent)
@@ -28,12 +28,12 @@ namespace UKControllerPlugin {
         /*
             Add an item to the cache.
         */
-        void HandoffEventHandler::AddCachedItem(std::string callsign, CachedHandoff item)
+        void HandoffEventHandlerInterface::AddCachedItem(std::string callsign, CachedHandoff item)
         {
             this->cache[callsign] = item;
         }
 
-        size_t HandoffEventHandler::CountCachedItems(void) const
+        size_t HandoffEventHandlerInterface::CountCachedItems(void) const
         {
             return this->cache.size();
         }
@@ -41,17 +41,17 @@ namespace UKControllerPlugin {
         /*
             Get the cached item
         */
-        CachedHandoff HandoffEventHandler::GetCachedItem(std::string callsign) const
+        CachedHandoff HandoffEventHandlerInterface::GetCachedItem(std::string callsign) const
         {
             return this->cache.count(callsign) ? this->cache.at(callsign) : this->DEFAULT_TAG_VALUE;
         }
 
-        std::string HandoffEventHandler::GetTagItemDescription(int tagItemId) const
+        std::string HandoffEventHandlerInterface::GetTagItemDescription(int tagItemId) const
         {
             return "Departure Handoff Next Controller";
         }
 
-        void HandoffEventHandler::SetTagItemData(TagData& tagData)
+        void HandoffEventHandlerInterface::SetTagItemData(TagData& tagData)
         {
             const auto& flightplan = tagData.GetFlightplan();
             if (this->cache.count(flightplan.GetCallsign())) {
@@ -94,20 +94,20 @@ namespace UKControllerPlugin {
             this->FireHandoffUpdatedEvent(flightplan.GetCallsign());
         }
 
-        void HandoffEventHandler::FlightPlanEvent(
+        void HandoffEventHandlerInterface::FlightPlanEvent(
             EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget)
         {
             // FP changed, so erase the cache.
             this->cache.erase(flightPlan.GetCallsign());
         }
 
-        void HandoffEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
+        void HandoffEventHandlerInterface::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
         {
             // FP gone, so erase the cache.
             this->cache.erase(flightPlan.GetCallsign());
         }
 
-        void HandoffEventHandler::ControllerFlightPlanDataEvent(EuroScopeCFlightPlanInterface& flightPlan, int dataType)
+        void HandoffEventHandlerInterface::ControllerFlightPlanDataEvent(EuroScopeCFlightPlanInterface& flightPlan, int dataType)
         {
             // No change required here.
         }
@@ -115,7 +115,7 @@ namespace UKControllerPlugin {
         /*
             If a new callsign comes along, we have to clear the cache.
         */
-        void HandoffEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+        void HandoffEventHandlerInterface::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
         {
             this->cache.clear();
         }
@@ -123,7 +123,7 @@ namespace UKControllerPlugin {
         /*
             If a callsign is removed, clear the cache for anything they were involved in.
         */
-        void HandoffEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+        void HandoffEventHandlerInterface::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
         {
             for (std::map<std::string, CachedHandoff>::const_iterator it = this->cache.cbegin();
                  it != this->cache.cend();) {
@@ -137,12 +137,12 @@ namespace UKControllerPlugin {
         /*
             If the callsigns are flushed, no cached values are valid
         */
-        void HandoffEventHandler::CallsignsFlushed(void)
+        void HandoffEventHandlerInterface::CallsignsFlushed(void)
         {
             this->cache.clear();
         }
 
-        void HandoffEventHandler::FireHandoffUpdatedEvent(std::string callsign)
+        void HandoffEventHandlerInterface::FireHandoffUpdatedEvent(std::string callsign)
         {
             this->outboundEvent.SendEvent(
                 std::make_shared<HandoffFrequencyUpdatedMessage>(callsign, this->cache[callsign].frequency));

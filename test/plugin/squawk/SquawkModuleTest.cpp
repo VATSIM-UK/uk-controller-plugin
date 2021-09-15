@@ -76,6 +76,6 @@ namespace UKControllerPluginTest::Squawk {
     TEST_F(SquawkModuleTest, BootstrapPluginDisablesAutomaticGenerationWhereRequired)
     {
         SquawkModule::BootstrapPlugin(container, true);
-        EXPECT_TRUE(this->container.squawkEvents->automaticAssignmentDisabled);
+        EXPECT_TRUE(this->container.squawkEvents->AutomaticAssignmentsDisabled());
     }
 } // namespace UKControllerPluginTest::Squawk

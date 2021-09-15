@@ -1,5 +1,5 @@
 #include "HandoffCollectionFactory.h"
-#include "HandoffEventHandler.h"
+#include "HandoffEventHandlerInterface.h"
 #include "HandoffModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyLoaderInterface.h"
@@ -20,7 +20,7 @@ namespace UKControllerPlugin::Handoff {
             dependency.LoadDependency(GetHandoffDependencyKey(), "{}"_json),
             dependency.LoadDependency(GetSidHandoffMappingDependencyKey(), "{}"_json));
 
-        std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
+        std::shared_ptr<HandoffEventHandlerInterface> handler = std::make_shared<HandoffEventHandlerInterface>(
             *container.handoffs,
             *container.activeCallsigns,
             *container.integrationModuleContainer->outboundMessageHandler);

@@ -15,14 +15,12 @@ namespace UKControllerPlugin {
         /*
             Handles handoff events
         */
-        class HandoffEventHandler
-            : public Tag::TagItemInterface,
+        class HandoffEventHandlerInterface : public Tag::TagItemInterface,
               public Flightplan::FlightPlanEventHandlerInterface,
               public Controller::ActiveCallsignEventHandlerInterface
         {
             public:
-
-                HandoffEventHandler(
+            HandoffEventHandlerInterface(
                     const HandoffCollection& handoffs,
                     const Controller::ActiveCallsignCollection& callsigns,
                     Integration::OutboundIntegrationEventHandler& outboundEvent

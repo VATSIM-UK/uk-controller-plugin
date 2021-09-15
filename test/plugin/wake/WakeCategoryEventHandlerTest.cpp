@@ -1,15 +1,13 @@
-#include "pch/pch.h"
 #include "wake/WakeCategoryMapper.h"
-#include "wake/WakeCategoryEventhandler.h"
+#include "wake/WakeCategoryEventHandler.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "tag/TagData.h"
 
-using UKControllerPlugin::Wake::WakeCategoryMapper;
+using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Wake::WakeCategoryEventHandler;
+using UKControllerPlugin::Wake::WakeCategoryMapper;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
-using UKControllerPlugin::Tag::TagData;
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -20,97 +18,82 @@ namespace UKControllerPluginTest {
         class WakeCategoryEventHandlerTest : public Test
         {
             public:
+            WakeCategoryEventHandlerTest()
+                : tagData1(
+                      flightplan,
+                      radarTarget,
+                      105,
+                      EuroScopePlugIn::TAG_DATA_CORRELATED,
+                      itemString,
+                      &euroscopeColourCode,
+                      &tagColour,
+                      &fontSize),
+                  tagData2(
+                      flightplan2,
+                      radarTarget,
+                      105,
+                      EuroScopePlugIn::TAG_DATA_CORRELATED,
+                      itemString,
+                      &euroscopeColourCode,
+                      &tagColour,
+                      &fontSize),
+                  tagDataLong(
+                      flightplanLongType,
+                      radarTarget,
+                      105,
+                      EuroScopePlugIn::TAG_DATA_CORRELATED,
+                      itemString,
+                      &euroscopeColourCode,
+                      &tagColour,
+                      &fontSize),
+                  tagDataUnknownType(
+                      flightplan3,
+                      radarTarget,
+                      105,
+                      EuroScopePlugIn::TAG_DATA_CORRELATED,
+                      itemString,
+                      &euroscopeColourCode,
+                      &tagColour,
+                      &fontSize)
+            {
+            }
 
-                WakeCategoryEventHandlerTest()
-                    : tagData1(
-                        flightplan,
-                        radarTarget,
-                        105,
-                        EuroScopePlugIn::TAG_DATA_CORRELATED,
-                        itemString,
-                        &euroscopeColourCode,
-                        &tagColour,
-                        &fontSize
-                    ),
-                    tagData2(
-                        flightplan2,
-                        radarTarget,
-                        105,
-                        EuroScopePlugIn::TAG_DATA_CORRELATED,
-                        itemString,
-                        &euroscopeColourCode,
-                        &tagColour,
-                        &fontSize
-                    ),
-                    tagDataLong(
-                        flightplanLongType,
-                        radarTarget,
-                        105,
-                        EuroScopePlugIn::TAG_DATA_CORRELATED,
-                        itemString,
-                        &euroscopeColourCode,
-                        &tagColour,
-                        &fontSize
-                    ),
-                    tagDataUnknownType(
-                        flightplan3,
-                        radarTarget,
-                        105,
-                        EuroScopePlugIn::TAG_DATA_CORRELATED,
-                        itemString,
-                        &euroscopeColourCode,
-                        &tagColour,
-                        &fontSize
-                    )
-                {
+            void SetUp()
+            {
+                this->mapper.AddCategoryMapping("B733", "LM");
+                this->mapper.AddCategoryMapping("B744", "H");
+                this->mapper.AddCategoryMapping("123456789012345678", "UM");
+                this->recatMapper.AddCategoryMapping("B733", "D");
+                this->recatMapper.AddCategoryMapping("B744", "B");
+                ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
+                ON_CALL(this->flightplan, GetAircraftType()).WillByDefault(Return("B733"));
+                ON_CALL(this->flightplan2, GetCallsign()).WillByDefault(Return("BAW123"));
+                ON_CALL(this->flightplan2, GetAircraftType()).WillByDefault(Return("B744"));
+                ON_CALL(this->flightplan3, GetCallsign()).WillByDefault(Return("BAW123"));
+                ON_CALL(this->flightplan3, GetAircraftType()).WillByDefault(Return("AN225"));
+                ON_CALL(this->flightplan3, GetIcaoWakeCategory()).WillByDefault(Return("H"));
+                ON_CALL(this->flightplanLongType, GetCallsign()).WillByDefault(Return("BAW123"));
+                ON_CALL(this->flightplanLongType, GetAircraftType()).WillByDefault(Return("123456789012345678"));
 
-                }
+                handler = std::make_shared<WakeCategoryEventHandler>(this->mapper, this->recatMapper);
+            }
 
-                void SetUp()
-                {
-                    this->mapper.AddCategoryMapping("B733", "LM");
-                    this->mapper.AddCategoryMapping("B744", "H");
-                    this->mapper.AddCategoryMapping("123456789012345678", "UM");
-                    this->recatMapper.AddCategoryMapping("B733", "D");
-                    this->recatMapper.AddCategoryMapping("B744", "B");
-                    ON_CALL(this->flightplan, GetCallsign())
-                        .WillByDefault(Return("BAW123"));
-                    ON_CALL(this->flightplan, GetAircraftType())
-                        .WillByDefault(Return("B733"));
-                    ON_CALL(this->flightplan2, GetCallsign())
-                        .WillByDefault(Return("BAW123"));
-                    ON_CALL(this->flightplan2, GetAircraftType())
-                        .WillByDefault(Return("B744"));
-                    ON_CALL(this->flightplan3, GetCallsign())
-                        .WillByDefault(Return("BAW123"));
-                    ON_CALL(this->flightplan3, GetAircraftType())
-                        .WillByDefault(Return("AN225"));
-                    ON_CALL(this->flightplan3, GetIcaoWakeCategory())
-                        .WillByDefault(Return("H"));
-                    ON_CALL(this->flightplanLongType, GetCallsign())
-                        .WillByDefault(Return("BAW123"));
-                    ON_CALL(this->flightplanLongType, GetAircraftType())
-                        .WillByDefault(Return("123456789012345678"));
-
-                    handler = std::make_shared<WakeCategoryEventHandler>(this->mapper, this->recatMapper);
-                }
-
-                double fontSize = 24.1;
-                COLORREF tagColour = RGB(255, 255, 255);
-                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
-                char itemString[16] = "Foooooo";
-                NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
-                NiceMock<MockEuroScopeCFlightPlanInterface> flightplan2;
-                NiceMock<MockEuroScopeCFlightPlanInterface> flightplan3;
-                NiceMock<MockEuroScopeCFlightPlanInterface> flightplanLongType;
-                NiceMock< MockEuroScopeCRadarTargetInterface> radarTarget;
-                TagData tagData1;
-                TagData tagData2;
-                TagData tagDataLong;
-                TagData tagDataUnknownType;
-                WakeCategoryMapper mapper;
-                WakeCategoryMapper recatMapper;
-                std::shared_ptr<WakeCategoryEventHandler> handler;
+            double fontSize = 24.1;
+            COLORREF tagColour = RGB(255, 255, 255);
+            int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+            char itemString[16] = "Foooooo";
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan2;
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan3;
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplanLongType;
+            NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            TagData tagData1;
+            TagData tagData2;
+            TagData tagDataLong;
+            TagData tagDataUnknownType;
+            WakeCategoryMapper mapper;
+            WakeCategoryMapper recatMapper;
+            std::shared_ptr<WakeCategoryEventHandler> handler;
         };
 
         TEST_F(WakeCategoryEventHandlerTest, TestItHasATagItemNameForCombined)
@@ -194,7 +177,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheStandaloneItem)
         {
-            TagData standaloneData = TagData (
+            TagData standaloneData = TagData(
                 flightplan,
                 radarTarget,
                 112,
@@ -202,15 +185,14 @@ namespace UKControllerPluginTest {
                 itemString,
                 &euroscopeColourCode,
                 &tagColour,
-                &fontSize
-            );
+                &fontSize);
             handler->SetTagItemData(standaloneData);
             EXPECT_EQ("LM", standaloneData.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsUnknownStandaloneItem)
         {
-            TagData standaloneData = TagData (
+            TagData standaloneData = TagData(
                 flightplan3,
                 radarTarget,
                 112,
@@ -218,15 +200,14 @@ namespace UKControllerPluginTest {
                 itemString,
                 &euroscopeColourCode,
                 &tagColour,
-                &fontSize
-            );
+                &fontSize);
             handler->SetTagItemData(standaloneData);
             EXPECT_EQ("?", standaloneData.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheRecatItem)
         {
-            TagData recatData = TagData (
+            TagData recatData = TagData(
                 flightplan,
                 radarTarget,
                 113,
@@ -234,15 +215,14 @@ namespace UKControllerPluginTest {
                 itemString,
                 &euroscopeColourCode,
                 &tagColour,
-                &fontSize
-            );
+                &fontSize);
             handler->SetTagItemData(recatData);
             EXPECT_EQ("D", recatData.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsUnknownRecatItem)
         {
-            TagData recatData = TagData (
+            TagData recatData = TagData(
                 flightplan3,
                 radarTarget,
                 113,
@@ -250,15 +230,14 @@ namespace UKControllerPluginTest {
                 itemString,
                 &euroscopeColourCode,
                 &tagColour,
-                &fontSize
-            );
+                &fontSize);
             handler->SetTagItemData(recatData);
             EXPECT_EQ("?", recatData.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheUkRecatCombinedItem)
         {
-            TagData recatData = TagData (
+            TagData recatData = TagData(
                 flightplan,
                 radarTarget,
                 114,
@@ -266,15 +245,14 @@ namespace UKControllerPluginTest {
                 itemString,
                 &euroscopeColourCode,
                 &tagColour,
-                &fontSize
-            );
+                &fontSize);
             handler->SetTagItemData(recatData);
             EXPECT_EQ("LM/D", recatData.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheAircraftTypeRecatItem)
         {
-            TagData recatData = TagData (
+            TagData recatData = TagData(
                 flightplan,
                 radarTarget,
                 115,
@@ -282,15 +260,14 @@ namespace UKControllerPluginTest {
                 itemString,
                 &euroscopeColourCode,
                 &tagColour,
-                &fontSize
-            );
+                &fontSize);
             handler->SetTagItemData(recatData);
             EXPECT_EQ("B733/D", recatData.GetItemString());
         }
 
         TEST_F(WakeCategoryEventHandlerTest, TestItReturnsTheCorrectAircraftTypeRecatItemIfNoCategory)
         {
-            TagData unknownTypeData = TagData (
+            TagData unknownTypeData = TagData(
                 flightplan3,
                 radarTarget,
                 115,
@@ -298,11 +275,10 @@ namespace UKControllerPluginTest {
                 itemString,
                 &euroscopeColourCode,
                 &tagColour,
-                &fontSize
-            );
+                &fontSize);
 
             handler->SetTagItemData(unknownTypeData);
             EXPECT_EQ("AN225/?", unknownTypeData.GetItemString());
         }
-    }  // namespace Wake
-}  // namespace UKControllerPluginTest
+    } // namespace Wake
+} // namespace UKControllerPluginTest

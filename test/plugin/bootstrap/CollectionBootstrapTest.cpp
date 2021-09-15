@@ -31,7 +31,7 @@ namespace UKControllerPluginTest::Bootstrap {
     TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesAirfields)
     {
         CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
-        EXPECT_NO_THROW(container.airfields->GetSize());
+        EXPECT_EQ(0, container.airfields->GetSize());
     }
 
     TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesFlightplans)

@@ -188,4 +188,9 @@ namespace UKControllerPlugin::Squawk {
                 this->AttemptAssignment(*fp, *rt);
             });
     }
+    
+    auto SquawkEventHandler::AutomaticAssignmentsDisabled() const -> bool
+    {
+        return this->automaticAssignmentDisabled;
+    }
 } // namespace UKControllerPlugin::Squawk

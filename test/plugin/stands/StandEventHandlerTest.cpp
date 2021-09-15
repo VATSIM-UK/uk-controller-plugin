@@ -44,8 +44,8 @@ namespace UKControllerPluginTest {
         {
             public:
             StandEventHandlerTest()
-                : handler(api, taskRunner, plugin, mockIntegration, GetStands(), 1),
-                  tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize)
+                : tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize),
+                  handler(api, taskRunner, plugin, mockIntegration, GetStands(), 1)
             {
                 ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 

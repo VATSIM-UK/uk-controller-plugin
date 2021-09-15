@@ -68,6 +68,7 @@ namespace UKControllerPlugin::Squawk {
         void ActiveCallsignRemoved(
             const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) override;
         void CallsignsFlushed() override;
+        [[nodiscard]] auto AutomaticAssignmentsDisabled() const -> bool;
 
         private:
         void AttemptAssignment(

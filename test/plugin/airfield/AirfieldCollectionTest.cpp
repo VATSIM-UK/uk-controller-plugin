@@ -25,20 +25,20 @@ namespace UKControllerPluginTest {
         TEST(AirfieldCollection, FetchAirfieldByIcaoThrowsExceptionIfNotUkAirfield)
         {
             AirfieldCollection collection;
-            EXPECT_THROW(collection.FetchAirfieldByIcao("LFPG"), std::out_of_range);
+            EXPECT_THROW(static_cast<void>(collection.FetchAirfieldByIcao("LFPG")), std::out_of_range);
         }
 
         TEST(AirfieldCollection, FetchAirfieldByIcaoThrowsExceptionIfNoAirfields)
         {
             AirfieldCollection collection;
-            EXPECT_THROW(collection.FetchAirfieldByIcao("EGLL"), std::out_of_range);
+            EXPECT_THROW(static_cast<void>(collection.FetchAirfieldByIcao("EGLL")), std::out_of_range);
         }
 
         TEST(AirfieldCollection, FetchAirfieldByIcaoThrowsExceptionIfNotFound)
         {
             AirfieldCollection collection;
             collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {})));
-            EXPECT_THROW(collection.FetchAirfieldByIcao("EGLL"), std::out_of_range);
+            EXPECT_THROW(static_cast<void>(collection.FetchAirfieldByIcao("EGLL")), std::out_of_range);
         }
 
         TEST(AirfieldCollection, FetchAirfieldByIcaoReturnsAirfieldIfFound)

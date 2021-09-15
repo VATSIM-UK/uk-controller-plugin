@@ -37,6 +37,7 @@ namespace UKControllerPlugin::IntentionCode {
 
         void SetUserControllerPosition(std::string position);
         [[nodiscard]] auto GetUserControllerPosition() const -> std::string;
+        [[nodiscard]] static auto GetInvalidExitPointIndex() -> int;
 
         private:
         auto FindFirExitPoint(UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) -> int;

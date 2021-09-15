@@ -1,33 +1,32 @@
 #pragma once
 #include "task/TaskRunnerInterface.h"
 
-namespace UKControllerPluginTest {
-    namespace TaskManager {
-        class MockTaskRunnerInterface : public UKControllerPlugin::TaskManager::TaskRunnerInterface
+namespace UKControllerPluginTest::TaskManager {
+    class MockTaskRunnerInterface : public UKControllerPlugin::TaskManager::TaskRunnerInterface
+    {
+        public:
+        explicit MockTaskRunnerInterface(bool runTask = true)
+            : runTask(runTask){
+
+              };
+
+        [[nodiscard]] auto CountThreads() const -> size_t override
         {
-            public:
+            return 0;
+        }
 
-                explicit MockTaskRunnerInterface(bool runTask = true)
-                {
-                    this->runTask = runTask;
-                };
-
-                size_t CountThreads(void) const override
-                {
-                    return 0;
-                }
-
-                /*
-                    Run the task only if required.
-                */
-                void QueueAsynchronousTask(std::function<void()> callback)
-                {
-                    if (this->runTask) callback();
-                };
-
-            private:
-                // Whether we actually want to run the task.
-                bool runTask;
+        /*
+            Run the task only if required.
+        */
+        void QueueAsynchronousTask(std::function<void()> callback) override
+        {
+            if (this->runTask) {
+                callback();
+            };
         };
-    }  // namespace TaskManager
-}  // namespace UKControllerPluginTest
+
+        private:
+        // Whether we actually want to run the task.
+        bool runTask;
+    };
+} // namespace UKControllerPluginTest::TaskManager

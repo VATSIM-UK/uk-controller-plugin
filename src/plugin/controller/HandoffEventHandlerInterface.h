@@ -13,6 +13,12 @@ namespace UKControllerPlugin::Controller {
     class HandoffEventHandlerInterface
     {
         public:
+        HandoffEventHandlerInterface();
+        virtual ~HandoffEventHandlerInterface();
+        HandoffEventHandlerInterface(const HandoffEventHandlerInterface&);
+        HandoffEventHandlerInterface(HandoffEventHandlerInterface&&) = delete;
+        [[nodiscard]] auto operator=(const HandoffEventHandlerInterface&) -> HandoffEventHandlerInterface&;
+        [[nodiscard]] auto operator=(HandoffEventHandlerInterface&&) -> HandoffEventHandlerInterface& = delete;
         virtual void HandoffInitiated(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& transferringController,

@@ -123,4 +123,9 @@ namespace UKControllerPlugin::IntentionCode {
     {
         return this->userControllerPosition;
     }
+
+    auto IntentionCodeGenerator::GetInvalidExitPointIndex() -> int
+    {
+        return invalidExitPointIndex;
+    }
 } // namespace UKControllerPlugin::IntentionCode

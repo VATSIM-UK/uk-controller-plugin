@@ -1,5 +1,5 @@
 #include "pch/pch.h"
-#include "handoff/HandoffEventHandler.h"
+#include "handoff/HandoffEventHandlerInterface.h"
 #include "handoff/HandoffCollection.h"
 #include "handoff/CachedHandoff.h"
 #include "controller/ActiveCallsignCollection.h"
@@ -13,7 +13,7 @@
 #include "handoff/HandoffFrequencyUpdatedMessage.h"
 
 using UKControllerPlugin::Tag::TagData;
-using UKControllerPlugin::Handoff::HandoffEventHandler;
+using testing::Return;
 using UKControllerPlugin::Handoff::HandoffCollection;
 using UKControllerPlugin::Handoff::HandoffFrequencyUpdatedMessage;
 using UKControllerPlugin::Handoff::CachedHandoff;
@@ -76,7 +76,7 @@ namespace UKControllerPluginTest {
                 HandoffCollection handoffs;
                 ActiveCallsignCollection activeCallsigns;
                 TagData tagData;
-                HandoffEventHandler handler;
+                HandoffEventHandlerInterface handler;
         };
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsATagItemDescription)
