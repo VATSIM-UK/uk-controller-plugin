@@ -589,7 +589,12 @@ set(src__prenote
     prenote/PrenoteMessageTimeout.cpp prenote/PrenoteMessageTimeout.h
     prenote/PrenoteStatusIndicatorTagItem.cpp prenote/PrenoteStatusIndicatorTagItem.h
     prenote/CancelPrenoteMessageMenu.cpp prenote/CancelPrenoteMessageMenu.h
-    prenote/SendPrenoteMenu.cpp prenote/SendPrenoteMenu.h)
+    prenote/SendPrenoteMenu.cpp prenote/SendPrenoteMenu.h
+    prenote/PrenoteMessageStatusView.cpp prenote/PrenoteMessageStatusView.h
+    prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
+    prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h
+    prenote/PendingPrenoteList.cpp prenote/PendingPrenoteList.h
+    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push

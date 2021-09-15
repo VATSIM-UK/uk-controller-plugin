@@ -14,6 +14,13 @@ namespace UKControllerPlugin {
     namespace Controller {
         class ControllerPositionCollection;
     } // namespace Controller
+    namespace RadarScreen {
+        class ConfigurableDisplayCollection;
+        class RadarRenderableCollection;
+    } // namespace RadarScreen
+    namespace Euroscope {
+        class AsrEventHandlerCollection;
+    } // namespace Euroscope
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Prenote {
@@ -27,6 +34,12 @@ namespace UKControllerPlugin::Prenote {
         static void BootstrapPlugin(
             UKControllerPlugin::Bootstrap::PersistenceContainer& persistence,
             UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency);
+
+        static void BootstrapRadarScreen(
+            const Bootstrap::PersistenceContainer& persistence,
+            RadarScreen::RadarRenderableCollection& radarRenderables,
+            RadarScreen::ConfigurableDisplayCollection& configurables,
+            Euroscope::AsrEventHandlerCollection& asrHandlers);
 
         [[nodiscard]] static auto GetDependencyKey() -> std::string;
     };
