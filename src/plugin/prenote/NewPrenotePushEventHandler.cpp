@@ -1,9 +1,12 @@
 #include "NewPrenotePushEventHandler.h"
 #include "PrenoteMessage.h"
 #include "PrenoteMessageCollection.h"
+#include "controller/ActiveCallsignCollection.h"
+#include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "time/ParseTimeStrings.h"
 #include "time/SystemClock.h"
+#include "windows/WinApiInterface.h"
 
 using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Time::ParseTimeString;
@@ -11,8 +14,11 @@ using UKControllerPlugin::Time::TimeNow;
 
 namespace UKControllerPlugin::Prenote {
     NewPrenotePushEventHandler::NewPrenotePushEventHandler(
-        std::shared_ptr<PrenoteMessageCollection> prenotes, const Controller::ControllerPositionCollection& controllers)
-        : prenotes(std::move(prenotes)), controllers(controllers)
+        std::shared_ptr<PrenoteMessageCollection> prenotes,
+        const Controller::ControllerPositionCollection& controllers,
+        const Controller::ActiveCallsignCollection& activeCallsigns,
+        Windows::WinApiInterface& winApi)
+        : prenotes(std::move(prenotes)), controllers(controllers), activeCallsigns(activeCallsigns), winApi(winApi)
     {
     }
 
@@ -42,6 +48,10 @@ namespace UKControllerPlugin::Prenote {
             messageData.at("target_controller").get<int>(),
             ParseTimeString(messageData.at("expires_at").get<std::string>())));
 
+        if (activeCallsigns.UserHasCallsign() && activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() ==
+                                                     messageData.at("target_controller").get<int>()) {
+            winApi.PlayWave(MAKEINTRESOURCE(WAVE_NEW_PRENOTE)); // NOLINT
+        }
         LogInfo("Received prenote id " + std::to_string(prenoteId));
     }
 
