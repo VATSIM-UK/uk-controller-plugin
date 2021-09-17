@@ -316,12 +316,6 @@ set(test__ownership
 )
 source_group("test\\ownership" FILES ${test__ownership})
 
-set(test__pch
-    "pch/pch.cpp"
-    "pch/pch.h"
-)
-source_group("test\\pch" FILES ${test__pch})
-
 set(test__plugin
     "plugin/ForceUpdateTest.cpp"
     "plugin/FunctionCallEventHandlerTest.cpp"
@@ -335,16 +329,29 @@ set(test__plugin
 source_group("test\\plugin" FILES ${test__plugin})
 
 set(test__prenote
-    "prenote/AbstractPrenoteTest.cpp"
-    "prenote/AirfieldPairingPrenoteTest.cpp"
-    "prenote/DeparturePrenoteTest.cpp"
-    "prenote/PrenoteEventHandlerTest.cpp"
-    "prenote/PrenoteFactoryTest.cpp"
-    "prenote/PrenoteMessageTest.cpp"
-    "prenote/PrenoteModuleTest.cpp"
-    "prenote/PrenoteServiceFactoryTest.cpp"
-    "prenote/PrenoteServiceTest.cpp"
-)
+        "prenote/AbstractPrenoteTest.cpp"
+        "prenote/AirfieldPairingPrenoteTest.cpp"
+        "prenote/DeparturePrenoteTest.cpp"
+        "prenote/PrenoteEventHandlerTest.cpp"
+        "prenote/PrenoteFactoryTest.cpp"
+        "prenote/PrenoteUserMessageTest.cpp"
+        "prenote/PrenoteModuleTest.cpp"
+        "prenote/PrenoteServiceFactoryTest.cpp"
+        "prenote/PrenoteServiceTest.cpp"
+        "prenote/PrenoteMessageTest.cpp"
+        prenote/ComparePrenoteMessagesTest.cpp
+        prenote/PrenoteMessageCollectionTest.cpp
+        prenote/NewPrenotePushEventHandlerTest.cpp
+        prenote/PrenoteAcknowledgedPushEventHandlerTest.cpp
+        prenote/PrenoteDeletedPushEventHandlerTest.cpp
+        prenote/PrenoteMessageTimeoutTest.cpp
+        "prenote/PrenoteStatusIndicatorTagItemTest.cpp"
+        "prenote/CancelPrenoteMessageMenuTest.cpp"
+        "prenote/SendPrenoteMenuTest.cpp"
+        "prenote/TriggerPrenoteMessageStatusViewTest.cpp"
+        "prenote/AcknowledgePrenoteMessageTest.cpp"
+        "prenote/TogglePendingPrenoteListTest.cpp"
+        "prenote/PendingPrenoteListTest.cpp")
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push
@@ -494,7 +501,6 @@ set(ALL_FILES
     ${test__oceanic}
     ${test__offblock}
     ${test__ownership}
-    ${test__pch}
     ${test__plugin}
     ${test__prenote}
     ${test__push}
