@@ -114,7 +114,7 @@ jobs:
         run: ninja
 
       - name: Run Tests
-        working-directory: build/release
+        working-directory: build
         run: ctest -C Release --output-on-failure
 
       # Do Srclinting
