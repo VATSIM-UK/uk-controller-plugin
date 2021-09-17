@@ -27,7 +27,7 @@ namespace UKControllerPlugin::Prenote {
         const AirfieldOwnershipManager& airfieldOwnership,
         const ActiveCallsignCollection& activeCallsigns,
         UserMessager& userMessager)
-        : activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership), userMessager(userMessager)
+        : airfieldOwnership(airfieldOwnership), activeCallsigns(activeCallsigns), userMessager(userMessager)
     {
     }
 
@@ -82,9 +82,9 @@ namespace UKControllerPlugin::Prenote {
             return;
         }
 
-        for (auto it = this->prenotes.cbegin(); it != this->prenotes.cend(); ++it) {
-            if ((*it)->IsApplicable(flightplan)) {
-                this->PrenoteNotify(**it, flightplan);
+        for (const auto& prenote : this->prenotes) {
+            if (prenote->IsApplicable(flightplan)) {
+                this->PrenoteNotify(*prenote, flightplan);
             }
         }
 

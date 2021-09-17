@@ -1,11 +1,6 @@
 #pragma once
 
 namespace UKControllerPlugin {
-
-    namespace Prenote {
-        class AbstractPrenote;
-    } // namespace Prenote
-
     namespace Ownership {
         class AirfieldOwnershipManager;
     } // namespace Ownership
@@ -24,6 +19,7 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Prenote {
+    class AbstractPrenote;
 
     /*
         Handles the processing and sending of prenotes.

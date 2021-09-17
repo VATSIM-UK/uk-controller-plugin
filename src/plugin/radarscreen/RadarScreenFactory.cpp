@@ -1,14 +1,11 @@
 #include "ConfigurableDisplayCollection.h"
 #include "PositionResetCommand.h"
-#include "RadarRenderableCollection.h"
 #include "RadarScreenFactory.h"
 #include "ScreenControlsBootstrap.h"
 #include "UKRadarScreen.h"
 #include "bootstrap/HelperBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "command/CommandHandlerCollection.h"
 #include "countdown/CountdownModule.h"
-#include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "graphics/GdiGraphicsWrapper.h"
 #include "historytrail/HistoryTrailModule.h"
@@ -17,6 +14,7 @@
 #include "notifications/NotificationsModule.h"
 #include "plugin/PluginInformationBootstrap.h"
 #include "plugin/UKPlugin.h"
+#include "prenote/PrenoteModule.h"
 #include "regional/RegionalPressureModule.h"
 #include "releases/ReleaseModule.h"
 #include "sectorfile/SectorFileBootstrap.h"
@@ -30,6 +28,7 @@ using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::MinStack::MinStackModule;
+using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::RadarScreen::ScreenControlsBootstrap;
 using UKControllerPlugin::Regional::RegionalPressureModule;
@@ -103,6 +102,7 @@ namespace UKControllerPlugin::RadarScreen {
         Srd::BootstrapRadarScreen(configurableDisplays);
         Notifications::BootstrapRadarScreen(this->persistence, configurableDisplays);
         Releases::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
+        PrenoteModule::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
 
         // Register command for position resets
         this->persistence.commandHandlers->RegisterHandler(std::make_shared<PositionResetCommand>(renderers));

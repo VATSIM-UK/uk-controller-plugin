@@ -26,3 +26,4 @@ dynamically to the plugin.
 - RECAT-EU Wake Categories
 - [VATSIM Nattrak Integration](Nattrak.md)
 - [Electronic Departure Releases](DepartureReleases.md)
+- [Electronic Prenotes](PrenoteMessages.md)
