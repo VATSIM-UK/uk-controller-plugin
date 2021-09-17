@@ -231,12 +231,12 @@ set(src__handoff
     "handoff/HandoffCollectionFactory.cpp"
     "handoff/HandoffCollectionFactory.h"
     "handoff/HandoffEventHandler.cpp"
-    "handoff/HandoffEventHandlerInterface.h"
+    "handoff/HandoffEventHandler.h"
     "handoff/HandoffFrequencyUpdatedMessage.cpp"
     "handoff/HandoffFrequencyUpdatedMessage.h"
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
-        controller/HandoffEventHandlerInterface.cpp)
+        controller/HandoffEventHandler.cpp)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__historytrail
@@ -373,7 +373,7 @@ set(src__integration
     "integration/SocketInterface.h"
     "integration/SocketWrapper.cpp"
     "integration/SocketWrapper.h"
-        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h integration/MessageType.cpp)
+        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h integration/MessageType.cpp integration/ExternalMessageHandlerInterface.cpp)
 source_group("src\\integration" FILES ${src__integration})
 
 set(src__intention

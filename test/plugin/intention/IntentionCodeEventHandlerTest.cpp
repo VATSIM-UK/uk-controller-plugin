@@ -1,5 +1,3 @@
-#include "pch/pch.h"
-
 #include "bootstrap/PersistenceContainer.h"
 #include "intention/IntentionCodeCache.h"
 #include "intention/IntentionCodeEventHandler.h"
@@ -7,6 +5,7 @@
 #include "intention/IntentionCodeGenerator.h"
 #include "intention/IntentionCodeUpdatedMessage.h"
 #include "intention/SectorExitRepositoryFactory.h"
+#include "intention/SectorExitRepository.h"
 #include "mock/MockEuroScopeCControllerInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
@@ -40,12 +39,12 @@ namespace UKControllerPluginTest::IntentionCode {
         public:
         void SetUp() override
         {
-            IntentionCodeCache cache;
-            cache.RegisterAircraft("BAW456", {"KK", false, -1, ""});
+            auto cache = std::make_unique<IntentionCodeCache>();
+            cache->RegisterAircraft("BAW456", {"KK", false, -1, ""});
             PersistenceContainer container;
             this->repository = SectorExitRepositoryFactory::Create();
             this->handler = std::make_unique<IntentionCodeEventHandler>(
-                std::move(*IntentionCodeFactory::Create(*this->repository)), cache, mockIntegration);
+                IntentionCodeFactory::Create(*this->repository), std::move(cache), mockIntegration);
         };
 
         const double FONT_SIZE = 24.1;

@@ -12,20 +12,20 @@
 #include "dialog/DialogManager.h"
 #include "mock/MockDialogProvider.h"
 
+using ::testing::NiceMock;
+using ::testing::Return;
+using ::testing::Test;
 using UKControllerPlugin::Countdown::CountdownRenderer;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Countdown::CountdownTimer;
-using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
-using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Countdown::TimerConfigurationManager;
 using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
-using ::testing::Return;
-using ::testing::NiceMock;
-using ::testing::Test;
+using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
+using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest {
     namespace Countdown {
@@ -33,290 +33,170 @@ namespace UKControllerPluginTest {
         class CountdownRendererTest : public Test
         {
             public:
-                CountdownRendererTest()
-                    : timer(mockWindows), renderer(timer, configManager, 1, 2, 3, 4, brushes),
-                    configManager(dialogManager, 1), dialogManager(dialogProvider),
-                    userSetting(mockUserSettingProvider)
-                {
-                    this->configManager.AddTimer({ 1, true, 10 });
-                    this->configManager.AddTimer({ 2, false, 20 });
-                    this->configManager.AddTimer({ 3, false, 30 });
-                    this->configManager.AddTimer({ 4, true, 40 });
-                    this->configManager.AddTimer({ 5, false, 50 });
-                }
+            CountdownRendererTest()
+                : userSetting(mockUserSettingProvider), dialogManager(dialogProvider), timer(mockWindows),
+                  configManager(dialogManager, 1), renderer(timer, configManager, 1, 2, 3, 4, brushes)
 
-                NiceMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
-                NiceMock<MockDialogProvider> dialogProvider;
-                NiceMock<MockWinApi> mockWindows;
-                NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
-                UserSetting userSetting;
-                DialogManager dialogManager;
-                GdiplusBrushes brushes;
-                CountdownTimer timer;
-                TimerConfigurationManager configManager;
-                CountdownRenderer renderer;
+            {
+                this->configManager.AddTimer({1, true, 10});
+                this->configManager.AddTimer({2, false, 20});
+                this->configManager.AddTimer({3, false, 30});
+                this->configManager.AddTimer({4, true, 40});
+                this->configManager.AddTimer({5, false, 50});
+            }
+
+            NiceMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
+            NiceMock<MockDialogProvider> dialogProvider;
+            NiceMock<MockWinApi> mockWindows;
+            NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+            UserSetting userSetting;
+            DialogManager dialogManager;
+            GdiplusBrushes brushes;
+            CountdownTimer timer;
+            TimerConfigurationManager configManager;
+            CountdownRenderer renderer;
+
+            const std::string POS_X_ASR_ENTRY = "CountdownScreenPosX";
+            const std::string POS_X_ASR_DESC = "Countdown X Position";
+            const std::string POS_Y_ASR_ENTRY = "CountdownScreenPosY";
+            const std::string POS_Y_ASR_DESC = "Countdown Y Position";
+            const std::string VISIBLE_ASR_ENTRY = "DisplayCountdown";
+            const std::string VISIBLE_ASR_DESC = "Display UKCP Countdown Timer";
+            const int BUTTON_WIDTH = 35;
+            const int ROW_HEIGHT = 20;
         };
 
         TEST_F(CountdownRendererTest, AsrLoadedEventUsesDefaultsIfNoUserSettingDataExists)
         {
             // Set up the renderer
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.userSettingPosX))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(POS_X_ASR_ENTRY)).Times(1).WillOnce(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.userSettingPosY))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(POS_X_ASR_ENTRY)).Times(1).WillOnce(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.userSettingVisible))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(VISIBLE_ASR_ENTRY)).Times(1).WillOnce(Return(""));
 
             renderer.AsrLoadedEvent(userSetting);
 
             EXPECT_TRUE(renderer.IsVisible());
-            RECT expectedTimeDisplay = { 100, 100, 100 + (2 * renderer.buttonWidth), 100 + renderer.rowHeight };
+            RECT expectedTimeDisplay = {100, 100, 100 + (2 * BUTTON_WIDTH), 100 + ROW_HEIGHT};
             EXPECT_TRUE(RectsEqual(expectedTimeDisplay, renderer.GetTimeDisplayArea()));
-            EXPECT_TRUE(
-                    RectsEqual(
-                    {
-                        expectedTimeDisplay.right,
-                        expectedTimeDisplay.top,
-                        expectedTimeDisplay.right + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom
-                    },
-                    renderer.GetCloseClickspotDisplayArea()
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.left,
-                        expectedTimeDisplay.bottom,
-                        expectedTimeDisplay.left + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom + renderer.rowHeight
-                    },
-                    renderer.GetTimerButtonArea(1)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    RECT{},
-                    renderer.GetTimerButtonArea(2)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    RECT{},
-                    renderer.GetTimerButtonArea(3)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.left + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom,
-                        expectedTimeDisplay.left + (2 * renderer.buttonWidth),
-                        expectedTimeDisplay.bottom + renderer.rowHeight
-                    },
-                    renderer.GetTimerButtonArea(4)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    RECT{},
-                    renderer.GetTimerButtonArea(5)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.right,
-                        expectedTimeDisplay.bottom,
-                        expectedTimeDisplay.right + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom + renderer.rowHeight
-                    },
-                    renderer.GetResetDisplayArea()
-                )
-            );
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.right,
+                 expectedTimeDisplay.top,
+                 expectedTimeDisplay.right + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom},
+                renderer.GetCloseClickspotDisplayArea()));
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.left,
+                 expectedTimeDisplay.bottom,
+                 expectedTimeDisplay.left + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom + ROW_HEIGHT},
+                renderer.GetTimerButtonArea(1)));
+            EXPECT_TRUE(RectsEqual(RECT{}, renderer.GetTimerButtonArea(2)));
+            EXPECT_TRUE(RectsEqual(RECT{}, renderer.GetTimerButtonArea(3)));
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.left + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom,
+                 expectedTimeDisplay.left + (2 * BUTTON_WIDTH),
+                 expectedTimeDisplay.bottom + ROW_HEIGHT},
+                renderer.GetTimerButtonArea(4)));
+            EXPECT_TRUE(RectsEqual(RECT{}, renderer.GetTimerButtonArea(5)));
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.right,
+                 expectedTimeDisplay.bottom,
+                 expectedTimeDisplay.right + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom + ROW_HEIGHT},
+                renderer.GetResetDisplayArea()));
         }
 
         TEST_F(CountdownRendererTest, AsrLoadedEventLoadsDataFromUserSettingIfExists)
         {
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.userSettingPosX))
-                .Times(1)
-                .WillRepeatedly(Return("150"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(POS_X_ASR_ENTRY)).Times(1).WillRepeatedly(Return("150"));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.userSettingPosY))
-                .Times(1)
-                .WillRepeatedly(Return("120"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(POS_X_ASR_ENTRY)).Times(1).WillRepeatedly(Return("120"));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.userSettingVisible))
-                .Times(1)
-                .WillRepeatedly(Return("0"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(VISIBLE_ASR_ENTRY)).Times(1).WillRepeatedly(Return("0"));
 
             renderer.AsrLoadedEvent(userSetting);
 
             EXPECT_FALSE(renderer.IsVisible());
-            RECT expectedTimeDisplay = { 150, 120, 150 + (2 * renderer.buttonWidth), 120 + renderer.rowHeight };
+            RECT expectedTimeDisplay = {150, 120, 150 + (2 * BUTTON_WIDTH), 120 + ROW_HEIGHT};
             EXPECT_TRUE(RectsEqual(expectedTimeDisplay, renderer.GetTimeDisplayArea()));
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.right,
-                        expectedTimeDisplay.top,
-                        expectedTimeDisplay.right + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom
-                    },
-                    renderer.GetCloseClickspotDisplayArea()
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.left,
-                        expectedTimeDisplay.bottom,
-                        expectedTimeDisplay.left + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom + renderer.rowHeight
-                    },
-                    renderer.GetTimerButtonArea(1)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    RECT{},
-                    renderer.GetTimerButtonArea(2)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    RECT{},
-                    renderer.GetTimerButtonArea(3)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.left + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom,
-                        expectedTimeDisplay.left + (2 * renderer.buttonWidth),
-                        expectedTimeDisplay.bottom + renderer.rowHeight
-                    },
-                    renderer.GetTimerButtonArea(4)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    RECT{},
-                    renderer.GetTimerButtonArea(5)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.right,
-                        expectedTimeDisplay.bottom,
-                        expectedTimeDisplay.right + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom + renderer.rowHeight
-                    },
-                    renderer.GetResetDisplayArea()
-                )
-            );
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.right,
+                 expectedTimeDisplay.top,
+                 expectedTimeDisplay.right + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom},
+                renderer.GetCloseClickspotDisplayArea()));
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.left,
+                 expectedTimeDisplay.bottom,
+                 expectedTimeDisplay.left + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom + ROW_HEIGHT},
+                renderer.GetTimerButtonArea(1)));
+            EXPECT_TRUE(RectsEqual(RECT{}, renderer.GetTimerButtonArea(2)));
+            EXPECT_TRUE(RectsEqual(RECT{}, renderer.GetTimerButtonArea(3)));
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.left + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom,
+                 expectedTimeDisplay.left + (2 * BUTTON_WIDTH),
+                 expectedTimeDisplay.bottom + ROW_HEIGHT},
+                renderer.GetTimerButtonArea(4)));
+            EXPECT_TRUE(RectsEqual(RECT{}, renderer.GetTimerButtonArea(5)));
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.right,
+                 expectedTimeDisplay.bottom,
+                 expectedTimeDisplay.right + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom + ROW_HEIGHT},
+                renderer.GetResetDisplayArea()));
         }
 
         TEST_F(CountdownRendererTest, MoveTransitionsTheEntireTimer)
         {
-            renderer.Move({ 150, 120, 150, 120 + renderer.rowHeight }, "");
+            renderer.Move({150, 120, 150, 120 + ROW_HEIGHT}, "");
 
-            RECT expectedTimeDisplay = { 150, 120, 150 + (2 * renderer.buttonWidth), 120 + renderer.rowHeight };
+            RECT expectedTimeDisplay = {150, 120, 150 + (2 * BUTTON_WIDTH), 120 + ROW_HEIGHT};
             EXPECT_TRUE(RectsEqual(expectedTimeDisplay, renderer.GetTimeDisplayArea()));
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.right,
-                        expectedTimeDisplay.top,
-                        expectedTimeDisplay.right + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom
-                    },
-                    renderer.GetCloseClickspotDisplayArea()
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.left,
-                        expectedTimeDisplay.bottom,
-                        expectedTimeDisplay.left + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom + renderer.rowHeight
-                    },
-                    renderer.GetTimerButtonArea(1)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    RECT{},
-                    renderer.GetTimerButtonArea(2)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    RECT{},
-                    renderer.GetTimerButtonArea(3)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.left + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom,
-                        expectedTimeDisplay.left + (2 * renderer.buttonWidth),
-                        expectedTimeDisplay.bottom + renderer.rowHeight
-                    },
-                    renderer.GetTimerButtonArea(4)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    RECT{},
-                    renderer.GetTimerButtonArea(5)
-                )
-            );
-            EXPECT_TRUE(
-                RectsEqual(
-                    {
-                        expectedTimeDisplay.right,
-                        expectedTimeDisplay.bottom,
-                        expectedTimeDisplay.right + renderer.buttonWidth,
-                        expectedTimeDisplay.bottom + renderer.rowHeight
-                    },
-                    renderer.GetResetDisplayArea()
-                )
-            );
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.right,
+                 expectedTimeDisplay.top,
+                 expectedTimeDisplay.right + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom},
+                renderer.GetCloseClickspotDisplayArea()));
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.left,
+                 expectedTimeDisplay.bottom,
+                 expectedTimeDisplay.left + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom + ROW_HEIGHT},
+                renderer.GetTimerButtonArea(1)));
+            EXPECT_TRUE(RectsEqual(RECT{}, renderer.GetTimerButtonArea(2)));
+            EXPECT_TRUE(RectsEqual(RECT{}, renderer.GetTimerButtonArea(3)));
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.left + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom,
+                 expectedTimeDisplay.left + (2 * BUTTON_WIDTH),
+                 expectedTimeDisplay.bottom + ROW_HEIGHT},
+                renderer.GetTimerButtonArea(4)));
+            EXPECT_TRUE(RectsEqual(RECT{}, renderer.GetTimerButtonArea(5)));
+            EXPECT_TRUE(RectsEqual(
+                {expectedTimeDisplay.right,
+                 expectedTimeDisplay.bottom,
+                 expectedTimeDisplay.right + BUTTON_WIDTH,
+                 expectedTimeDisplay.bottom + ROW_HEIGHT},
+                renderer.GetResetDisplayArea()));
         }
 
         TEST_F(CountdownRendererTest, AsrClosingEventSavesAllData)
         {
-            EXPECT_CALL(
-                    mockUserSettingProvider,
-                    SetKey(renderer.userSettingPosX, renderer.xPositionUserSettingDescription, "150")
-                )
-                .Times(1);
+            EXPECT_CALL(mockUserSettingProvider, SetKey(POS_X_ASR_ENTRY, POS_X_ASR_DESC, "150")).Times(1);
 
-            EXPECT_CALL(
-                    mockUserSettingProvider,
-                    SetKey(renderer.userSettingPosY, renderer.yPositionUserSettingDescription, "120")
-                )
-                .Times(1);
+            EXPECT_CALL(mockUserSettingProvider, SetKey(POS_X_ASR_ENTRY, POS_Y_ASR_DESC, "120")).Times(1);
 
-            EXPECT_CALL(
-                    mockUserSettingProvider,
-                    SetKey(renderer.userSettingVisible, renderer.visibleUserSettingDescription, "0")
-                )
-                .Times(1);
+            EXPECT_CALL(mockUserSettingProvider, SetKey(VISIBLE_ASR_ENTRY, VISIBLE_ASR_DESC, "0")).Times(1);
 
             // Prepare the renderer
             renderer.SetVisible(false);
-            renderer.Move({ 150, 120, 150, 120 + renderer.rowHeight }, "");
+            renderer.Move({150, 120, 150, 120 + ROW_HEIGHT}, "");
             renderer.AsrClosingEvent(userSetting);
         }
 
@@ -335,7 +215,7 @@ namespace UKControllerPluginTest {
             renderer.SetVisible(true);
             PopupMenuItem popup = renderer.GetConfigurationMenuItem();
 
-            EXPECT_TRUE(popup.firstValue == renderer.menuItemDescription);
+            EXPECT_TRUE(popup.firstValue == "Display Countdown Timer");
             EXPECT_TRUE(popup.secondValue == "");
             EXPECT_TRUE(popup.callbackFunctionId == 4);
             EXPECT_TRUE(popup.checked);
@@ -354,56 +234,56 @@ namespace UKControllerPluginTest {
         TEST_F(CountdownRendererTest, LeftClickCloseClickspotSetsInvisible)
         {
             renderer.SetVisible(true);
-            renderer.LeftClick(mockRadarScreen, renderer.closeClickspotId, "", {}, {});
+            renderer.LeftClick(mockRadarScreen, 3, "", {}, {});
             EXPECT_FALSE(renderer.IsVisible());
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer1)
         {
-            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer1Toggle", {}, {});
+            renderer.LeftClick(mockRadarScreen, 1, "timer1Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 0 && timer.GetSecondsRemaining() <= 10);
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer2)
         {
-            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer2Toggle", {}, {});
+            renderer.LeftClick(mockRadarScreen, 1, "timer2Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 10 && timer.GetSecondsRemaining() <= 20);
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer3)
         {
-            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer3Toggle", {}, {});
+            renderer.LeftClick(mockRadarScreen, 1, "timer3Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 20 && timer.GetSecondsRemaining() <= 30);
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer4)
         {
-            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer4Toggle", {}, {});
+            renderer.LeftClick(mockRadarScreen, 1, "timer4Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 30 && timer.GetSecondsRemaining() <= 40);
         }
 
         TEST_F(CountdownRendererTest, LeftClickStartsTimer5)
         {
-            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer5Toggle", {}, {});
+            renderer.LeftClick(mockRadarScreen, 1, "timer5Toggle", {}, {});
             EXPECT_TRUE(timer.GetSecondsRemaining() > 40 && timer.GetSecondsRemaining() <= 50);
         }
 
         TEST_F(CountdownRendererTest, LeftClickHandlesUnknownTimer)
         {
-            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timerAToggle", {}, {});
+            renderer.LeftClick(mockRadarScreen, 1, "timerAToggle", {}, {});
             EXPECT_EQ(0, timer.GetSecondsRemaining());
         }
 
         TEST_F(CountdownRendererTest, LeftClickHandlesMissingTimerConfig)
         {
-            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "timer6Toggle", {}, {});
+            renderer.LeftClick(mockRadarScreen, 1, "timer6Toggle", {}, {});
             EXPECT_EQ(0, timer.GetSecondsRemaining());
         }
 
         TEST_F(CountdownRendererTest, LeftClickResetsTimer)
         {
             timer.StartTimer(1000);
-            renderer.LeftClick(mockRadarScreen, renderer.functionsClickspotId, "R", {}, {});
+            renderer.LeftClick(mockRadarScreen, 1, "R", {}, {});
             EXPECT_EQ(0, timer.GetSecondsRemaining());
         }
 
@@ -413,5 +293,5 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(100, renderer.GetTimeDisplayArea().left);
             EXPECT_EQ(100, renderer.GetTimeDisplayArea().top);
         }
-    }  // namespace Countdown
-}  // namespace UKControllerPluginTest
+    } // namespace Countdown
+} // namespace UKControllerPluginTest

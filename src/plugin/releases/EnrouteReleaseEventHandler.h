@@ -73,7 +73,7 @@ namespace UKControllerPlugin::Releases {
         // Inherited via AbstractTimedEvent
         void TimedEventTrigger() override;
 
-        // Inherited via HandoffEventHandlerInterface
+        // Inherited via HandoffEventHandler
         void HandoffInitiated(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& transferringController,

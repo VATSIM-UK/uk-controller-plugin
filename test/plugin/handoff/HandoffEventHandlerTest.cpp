@@ -1,32 +1,25 @@
-#include "pch/pch.h"
-#include "handoff/HandoffEventHandlerInterface.h"
-#include "handoff/HandoffCollection.h"
-#include "handoff/CachedHandoff.h"
-#include "controller/ActiveCallsignCollection.h"
-#include "controller/ActiveCallsign.h"
+#include "handoff/HandoffEventHandler.h"
 #include "controller/ControllerPosition.h"
-#include "controller/ControllerPositionHierarchy.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "tag/TagData.h"
 #include "mock/MockOutboundIntegrationEventHandler.h"
 #include "handoff/HandoffFrequencyUpdatedMessage.h"
 
-using UKControllerPlugin::Tag::TagData;
+using testing::NiceMock;
 using testing::Return;
-using UKControllerPlugin::Handoff::HandoffCollection;
-using UKControllerPlugin::Handoff::HandoffFrequencyUpdatedMessage;
-using UKControllerPlugin::Handoff::CachedHandoff;
-using UKControllerPlugin::Controller::ActiveCallsignCollection;
+using testing::Test;
 using UKControllerPlugin::Controller::ActiveCallsign;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
+using UKControllerPlugin::Handoff::CachedHandoff;
+using UKControllerPlugin::Handoff::HandoffCollection;
+using UKControllerPlugin::Handoff::HandoffEventHandler;
+using UKControllerPlugin::Handoff::HandoffFrequencyUpdatedMessage;
+using UKControllerPlugin::Tag::TagData;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Integration::MockOutboundIntegrationEventHandler;
-using testing::Test;
-using testing::NiceMock;
-using testing::Return;
 
 namespace UKControllerPluginTest {
     namespace Handoff {
@@ -34,49 +27,46 @@ namespace UKControllerPluginTest {
         class HandoffEventHandlerTest : public Test
         {
             public:
-                HandoffEventHandlerTest()
-                    : position1(1, "LON_S_CTR", 129.420, {}, true, false),
-                      position2(2, "LON_SC_CTR", 132.6, {}, true, false),
-                      tagData(
-                          mockFlightplan,
-                          mockRadarTarget,
-                          1,
-                          EuroScopePlugIn::TAG_DATA_CORRELATED,
-                          itemString,
-                          &euroscopeColourCode,
-                          &tagColour,
-                          &fontSize
-                      ),
-                      handler(handoffs, activeCallsigns, mockIntegration)
-                {
-                    ON_CALL(this->mockFlightplan, GetCallsign())
-                        .WillByDefault(Return("BAW123"));
+            HandoffEventHandlerTest()
+                : position1(1, "LON_S_CTR", 129.420, {}, true, false),
+                  position2(2, "LON_SC_CTR", 132.6, {}, true, false), tagData(
+                                                                          mockFlightplan,
+                                                                          mockRadarTarget,
+                                                                          1,
+                                                                          EuroScopePlugIn::TAG_DATA_CORRELATED,
+                                                                          itemString,
+                                                                          &euroscopeColourCode,
+                                                                          &tagColour,
+                                                                          &fontSize),
+                  handler(handoffs, activeCallsigns, mockIntegration)
+            {
+                ON_CALL(this->mockFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-                    ON_CALL(this->mockFlightplan, GetOrigin())
-                        .WillByDefault(Return("EGKK"));
+                ON_CALL(this->mockFlightplan, GetOrigin()).WillByDefault(Return("EGKK"));
 
-                    ON_CALL(this->mockFlightplan, GetSidName())
-                        .WillByDefault(Return("ADMAG2X"));
+                ON_CALL(this->mockFlightplan, GetSidName()).WillByDefault(Return("ADMAG2X"));
 
-                    this->hierarchy.reset(new ControllerPositionHierarchy);
-                    this->hierarchy->AddPosition(this->position1);
-                    this->hierarchy->AddPosition(this->position2);
-                }
+                this->hierarchy.reset(new ControllerPositionHierarchy);
+                this->hierarchy->AddPosition(this->position1);
+                this->hierarchy->AddPosition(this->position2);
+            }
 
-                double fontSize = 24.1;
-                COLORREF tagColour = RGB(255, 255, 255);
-                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
-                char itemString[16] = "Foooooo";
-                ControllerPosition position1;
-                ControllerPosition position2;
-                std::shared_ptr<ControllerPositionHierarchy> hierarchy;
-                NiceMock<MockOutboundIntegrationEventHandler> mockIntegration;
-                NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
-                NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
-                HandoffCollection handoffs;
-                ActiveCallsignCollection activeCallsigns;
-                TagData tagData;
-                HandoffEventHandlerInterface handler;
+            const CachedHandoff DEFAULT_TAG_VALUE = CachedHandoff("---.---", "");
+            const CachedHandoff UNICOM_TAG_VALUE = CachedHandoff("122.800", "");
+            double fontSize = 24.1;
+            COLORREF tagColour = RGB(255, 255, 255);
+            int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+            char itemString[16] = "Foooooo";
+            ControllerPosition position1;
+            ControllerPosition position2;
+            std::shared_ptr<ControllerPositionHierarchy> hierarchy;
+            NiceMock<MockOutboundIntegrationEventHandler> mockIntegration;
+            NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
+            NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+            HandoffCollection handoffs;
+            ActiveCallsignCollection activeCallsigns;
+            TagData tagData;
+            HandoffEventHandler handler;
         };
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsATagItemDescription)
@@ -94,13 +84,13 @@ namespace UKControllerPluginTest {
         TEST_F(HandoffEventHandlerTest, TestItReturnsDefaultIfNoHandoffOrder)
         {
             this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(handler.DEFAULT_TAG_VALUE.frequency, this->tagData.GetItemString());
+            EXPECT_EQ(DEFAULT_TAG_VALUE.frequency, this->tagData.GetItemString());
         }
 
         TEST_F(HandoffEventHandlerTest, TestItCachesNoHandoffOrder)
         {
             this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsUnicomIfNoControllerOnlineInHandoffOrder)
@@ -111,11 +101,10 @@ namespace UKControllerPluginTest {
             std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
                 std::make_shared<HandoffFrequencyUpdatedMessage>("BAW123", "122.800");
 
-            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
-                .Times(1);
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
 
             this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(handler.UNICOM_TAG_VALUE.frequency, this->tagData.GetItemString());
+            EXPECT_EQ(UNICOM_TAG_VALUE.frequency, this->tagData.GetItemString());
         }
 
         TEST_F(HandoffEventHandlerTest, TestItCachesNoControllerOnline)
@@ -123,7 +112,7 @@ namespace UKControllerPluginTest {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
             this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(handler.UNICOM_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(UNICOM_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsFrequencyIfControllerFoundInHandoffOrder)
@@ -135,8 +124,7 @@ namespace UKControllerPluginTest {
             std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
                 std::make_shared<HandoffFrequencyUpdatedMessage>("BAW123", "132.600");
 
-            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage)))
-                .Times(1);
+            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
 
             this->handler.SetTagItemData(this->tagData);
             EXPECT_EQ("132.600", this->tagData.GetItemString());
@@ -157,7 +145,7 @@ namespace UKControllerPluginTest {
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
             this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
             this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(handler.DEFAULT_TAG_VALUE.frequency, this->tagData.GetItemString());
+            EXPECT_EQ(DEFAULT_TAG_VALUE.frequency, this->tagData.GetItemString());
         }
 
         TEST_F(HandoffEventHandlerTest, TestItCachesIfFoundControllerIsUser)
@@ -166,7 +154,7 @@ namespace UKControllerPluginTest {
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
             this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
             this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanUpdate)
@@ -174,7 +162,7 @@ namespace UKControllerPluginTest {
             this->handler.AddCachedItem("BAW123", CachedHandoff("132.600", "LON_SC_CTR"));
             EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
             this->handler.FlightPlanEvent(this->mockFlightplan, this->mockRadarTarget);
-            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanDisconnect)
@@ -182,7 +170,7 @@ namespace UKControllerPluginTest {
             this->handler.AddCachedItem("BAW123", CachedHandoff("132.600", "LON_SC_CTR"));
             EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
             this->handler.FlightPlanDisconnectEvent(this->mockFlightplan);
-            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestItDoesntClearCacheOnFlightplanControllerDataChange)
@@ -198,8 +186,8 @@ namespace UKControllerPluginTest {
             this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
             this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_S_CTR"));
             this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1), false);
-            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
-            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
+            EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestAControllerLoggingOfClearsAssociatedCacheItems)
@@ -207,8 +195,8 @@ namespace UKControllerPluginTest {
             this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
             this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_S_CTR"));
             this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1), false);
-            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
-            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
+            EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
+            EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
         }
 
         TEST_F(HandoffEventHandlerTest, TestActiveCallsignFlushClearsTheCache)
@@ -217,7 +205,7 @@ namespace UKControllerPluginTest {
             this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_SC_CTR"));
             this->handler.ActiveCallsignRemoved(ActiveCallsign("LON_SC_CTR", "Testy", this->position1), false);
             EXPECT_EQ(CachedHandoff("123.456", "LON_S_CTR"), this->handler.GetCachedItem("BAW123"));
-            EXPECT_EQ(this->handler.DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
+            EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
         }
-    }  // namespace Handoff
-}  // namespace UKControllerPluginTest
+    } // namespace Handoff
+} // namespace UKControllerPluginTest

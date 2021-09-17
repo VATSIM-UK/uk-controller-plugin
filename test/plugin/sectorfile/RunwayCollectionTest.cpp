@@ -22,7 +22,7 @@ namespace UKControllerPluginTest {
         class RunwayCollectionTest : public Test
         {
             public:
-            RunwayCollectionTest() : collection(mockSectorFile), userSetting(mockUserSettings)
+            RunwayCollectionTest() : userSetting(mockUserSettings), collection(mockSectorFile)
             {
                 element1.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);
                 element2.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);

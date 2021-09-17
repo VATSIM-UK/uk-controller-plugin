@@ -1,11 +1,9 @@
-#include "pch/pch.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPositionCollection.h"
 #include "dialog/DialogManager.h"
 #include "mock/MockApiInterface.h"
 #include "mock/MockDialogProvider.h"
 #include "releases/ToggleDepartureReleaseDecisionList.h"
-#include "plugin/PopupMenuItem.h"
 #include "releases/DepartureReleaseDecisionList.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockTaskRunnerInterface.h"
@@ -39,8 +37,8 @@ namespace UKControllerPluginTest {
                 return ToggleDepartureReleaseDecisionList(list, 2);
             }
 
-            std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseDecisionList> list;
             UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
+            std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseDecisionList> list;
             UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
             testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;
             testing::NiceMock<Api::MockApiInterface> api;

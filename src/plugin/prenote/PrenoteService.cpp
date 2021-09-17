@@ -27,7 +27,7 @@ namespace UKControllerPlugin::Prenote {
         const AirfieldOwnershipManager& airfieldOwnership,
         const ActiveCallsignCollection& activeCallsigns,
         UserMessager& userMessager)
-        : airfieldOwnership(airfieldOwnership), activeCallsigns(activeCallsigns), userMessager(userMessager)
+        : activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership), userMessager(userMessager)
     {
     }
 
