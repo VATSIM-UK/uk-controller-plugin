@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [3.6.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.5.0...3.6.0) (2021-09-18)
+
+
+### Features
+
+* **prenotes:** Electronic prenote messages ([#330](https://github.com/VATSIM-UK/uk-controller-plugin/issues/330)) ([8ed705d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/8ed705ddfaa783feb7828c2e1781ad0ac610be83)), closes [#327](https://github.com/VATSIM-UK/uk-controller-plugin/issues/327) [#328](https://github.com/VATSIM-UK/uk-controller-plugin/issues/328) [#329](https://github.com/VATSIM-UK/uk-controller-plugin/issues/329) [#332](https://github.com/VATSIM-UK/uk-controller-plugin/issues/332) [#336](https://github.com/VATSIM-UK/uk-controller-plugin/issues/336) [#335](https://github.com/VATSIM-UK/uk-controller-plugin/issues/335) [#337](https://github.com/VATSIM-UK/uk-controller-plugin/issues/337)
+
 # [3.5.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.4.2...3.5.0) (2021-08-22)
 
 
