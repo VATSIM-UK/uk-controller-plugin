@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [3.6.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.6.0...3.6.1) (2021-09-18)
+
+
+### Bug Fixes
+
+* **docs:** Fix docs to trigger CI ([04bad57](https://github.com/VATSIM-UK/uk-controller-plugin/commit/04bad57a06ab023f42f29ec089dc1c02159ae7e4))
+
 # [3.6.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.5.0...3.6.0) (2021-09-18)
 
 
