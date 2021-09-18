@@ -6,7 +6,7 @@ As an alternative to coordinating this via TeamSpeak, the UK Controller Plugin p
 
 ## Who Can Send Prenotes?
 
-Only positions of TWR and above can send prenotes. Ground and Delivery positions will not be able to select a controller to prenote. To be able to send a prenote, you must be recognised by the plugin as an active controller.
+To be able to send a prenote, you must be recognised by the plugin as an active controller.
 
 ## Who Can Be Targeted For A Prenote?
 
