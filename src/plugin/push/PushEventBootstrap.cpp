@@ -31,6 +31,6 @@ namespace UKControllerPlugin::Push {
         }
 
         container.timedHandler->RegisterEvent(
-            std::make_shared<PushEventProtocolHandler>(*pushEvents, *container.pushEventProcessors), 1);
+            std::make_shared<PushEventProtocolHandler>(pushEvents, *container.pushEventProcessors), 1);
     }
 } // namespace UKControllerPlugin::Push
