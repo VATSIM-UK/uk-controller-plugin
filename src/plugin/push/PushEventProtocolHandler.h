@@ -13,20 +13,18 @@ namespace UKControllerPlugin {
         class PushEventProtocolHandler : public TimedEvent::AbstractTimedEvent
         {
             public:
-                PushEventProtocolHandler(
-                    PushEventConnectionInterface& pushEvents,
-                    PushEventProcessorCollection& processors
-                );
+            PushEventProtocolHandler(
+                std::shared_ptr<PushEventConnectionInterface> pushEvents, PushEventProcessorCollection& processors);
 
-                // Inherited via AbstractTimedEvent
-                void TimedEventTrigger(void) override;
+            // Inherited via AbstractTimedEvent
+            void TimedEventTrigger(void) override;
 
             private:
-                // The connection for push events
-                PushEventConnectionInterface& pushEvents;
+            // The connection for push events
+            const std::shared_ptr<PushEventConnectionInterface> pushEvents;
 
-                // Processes push events
-                PushEventProcessorCollection& processors;
+            // Processes push events
+            PushEventProcessorCollection& processors;
         };
     } // namespace Push
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin
