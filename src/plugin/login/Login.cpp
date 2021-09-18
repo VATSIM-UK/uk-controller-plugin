@@ -4,19 +4,17 @@
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
 
-using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
-using UKControllerPlugin::TimedEvent::AbstractTimedEvent;
 using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::TimedEvent::AbstractTimedEvent;
 
 namespace UKControllerPlugin {
     namespace Controller {
 
-
         Login::Login(
-            const EuroscopePluginLoopbackInterface & plugin,
-            const ControllerStatusEventHandlerCollection & controllerStatuses
-        )
+            const EuroscopePluginLoopbackInterface& plugin,
+            const ControllerStatusEventHandlerCollection& controllerStatuses)
             : plugin(plugin), controllerStatuses(controllerStatuses)
         {
             this->loginTime = this->defaultLoginTime;
@@ -29,15 +27,15 @@ namespace UKControllerPlugin {
         {
             int status;
             switch (this->euroscopeStatus) {
-                case EuroScopePlugIn::CONNECTION_TYPE_NO:
-                case EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK:
-                    status = loggedOut;
-                    break;
-                case EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY:
-                    status = this->proxied;
-                    break;
-                default:
-                    status = this->loggedIn;
+            case EuroScopePlugIn::CONNECTION_TYPE_NO:
+            case EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK:
+                status = loggedOut;
+                break;
+            case EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY:
+                status = this->proxied;
+                break;
+            default:
+                status = this->loggedIn;
             }
 
             return status;
@@ -60,10 +58,7 @@ namespace UKControllerPlugin {
                 return std::chrono::seconds(0);
             }
 
-            return std::chrono::duration_cast<std::chrono::seconds>(
-                std::chrono::system_clock::now() - this->loginTime
-            );
-
+            return std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - this->loginTime);
         }
 
         /*
@@ -88,17 +83,12 @@ namespace UKControllerPlugin {
         */
         bool Login::HasLoggedIn(const int previous, const int current)
         {
-            return (
-                        previous == EuroScopePlugIn::CONNECTION_TYPE_NO ||
-                        previous == EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK ||
-                        previous == EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY
-                   )
-                   &&
-                   (
-                       current != EuroScopePlugIn::CONNECTION_TYPE_NO &&
-                       current != EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK &&
-                       current != EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY
-                    );
+            return (previous == EuroScopePlugIn::CONNECTION_TYPE_NO ||
+                    previous == EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK ||
+                    previous == EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY) &&
+                   (current != EuroScopePlugIn::CONNECTION_TYPE_NO &&
+                    current != EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK &&
+                    current != EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY);
         }
 
         /*
@@ -106,17 +96,12 @@ namespace UKControllerPlugin {
         */
         bool Login::HasLoggedOut(const int previous, const int current)
         {
-            return (
-                        previous != EuroScopePlugIn::CONNECTION_TYPE_NO &&
-                        previous != EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK &&
-                        previous != EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY
-                   )
-                   &&
-                   (
-                       current == EuroScopePlugIn::CONNECTION_TYPE_NO ||
-                       current == EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK ||
-                       current == EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY
-                   );
+            return (previous != EuroScopePlugIn::CONNECTION_TYPE_NO &&
+                    previous != EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK &&
+                    previous != EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY) &&
+                   (current == EuroScopePlugIn::CONNECTION_TYPE_NO ||
+                    current == EuroScopePlugIn::CONNECTION_TYPE_PLAYBACK ||
+                    current == EuroScopePlugIn::CONNECTION_TYPE_VIA_PROXY);
         }
 
         /*
@@ -133,14 +118,13 @@ namespace UKControllerPlugin {
                 this->loginTime = this->defaultLoginTime;
                 this->controllerStatuses.SelfDisconnectEvent();
             }
-
         }
 
         /*
             If we get a controller update and it's from us, we may have logged into the
             network, so use this to trigger a status update if we need to.
         */
-        void Login::ControllerUpdateEvent(EuroScopeCControllerInterface & controller)
+        void Login::ControllerUpdateEvent(EuroScopeCControllerInterface& controller)
         {
             if (!controller.IsCurrentUser()) {
                 return;
@@ -152,9 +136,8 @@ namespace UKControllerPlugin {
         /*
             EuroScope never triggers this for the user, so nothing to do.
         */
-        void Login::ControllerDisconnectEvent(EuroScopeCControllerInterface & controller)
+        void Login::ControllerDisconnectEvent(EuroScopeCControllerInterface& controller)
         {
-
         }
 
         /*
@@ -162,7 +145,6 @@ namespace UKControllerPlugin {
         */
         void Login::SelfDisconnectEvent(void)
         {
-
         }
 
         /*
@@ -180,5 +162,10 @@ namespace UKControllerPlugin {
         {
             this->euroscopeStatus = status;
         }
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+
+        auto Login::GetDefaultLoginTime() const -> std::chrono::system_clock::time_point
+        {
+            return this->defaultLoginTime;
+        }
+    } // namespace Controller
+} // namespace UKControllerPlugin

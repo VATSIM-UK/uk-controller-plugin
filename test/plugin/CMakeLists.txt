@@ -265,7 +265,6 @@ set(test__mock
     "mock/MockRunwayDialogAwareInterface.h"
     "mock/MockSectorFileProviderInterface.h"
     "mock/MockSocket.h"
-    "mock/MockSquawkEventHandler.h"
     "mock/MockTaskRunnerInterface.h"
     "mock/MockUserSettingAwareInterface.h"
     "mock/MockUserSettingProviderInterface.h"

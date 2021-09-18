@@ -1,27 +1,22 @@
-#include "pch/pch.h"
 #include "metar/PressureMonitor.h"
-#include "euroscope/UserSetting.h"
 #include "mock/MockUserSettingProviderInterface.h"
-#include "message/UserMessager.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "euroscope/GeneralSettingsEntries.h"
-#include "controller/ActiveCallsign.h"
-#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 
-using UKControllerPlugin::Controller::ActiveCallsign;
-using UKControllerPlugin::Controller::ControllerPosition;
-using UKControllerPlugin::Controller::ActiveCallsignCollection;
-using UKControllerPlugin::Metar::PressureMonitor;
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
-using UKControllerPlugin::Message::UserMessager;
-using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
-using testing::Test;
+using testing::_;
 using testing::NiceMock;
 using testing::Return;
-using testing::_;
+using testing::Test;
+using UKControllerPlugin::Controller::ActiveCallsign;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
+using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Message::UserMessager;
+using UKControllerPlugin::Metar::PressureMonitor;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 
 namespace UKControllerPluginTest {
     namespace Metar {
@@ -29,25 +24,19 @@ namespace UKControllerPluginTest {
         class PressureMonitorTest : public Test
         {
             public:
-                PressureMonitorTest()
-                    : userSetting(mockUserSettingProvider), messager(mockPlugin), monitor(messager, activeCallsigns),
-                      gatwickTower(1, "EGKK_TWR", 124.22, {"EGKK"}, true, false)
-                {
-                    this->activeCallsigns.AddUserCallsign(
-                        ActiveCallsign(
-                            "EGKK_TWR",
-                            "Testy",
-                            this->gatwickTower
-                        )
-                    );
-                }
-                NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-                NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
-                ControllerPosition gatwickTower;
-                ActiveCallsignCollection activeCallsigns;
-                UserMessager messager;
-                UserSetting userSetting;
-                PressureMonitor monitor;
+            PressureMonitorTest()
+                : gatwickTower(1, "EGKK_TWR", 124.22, {"EGKK"}, true, false), messager(mockPlugin),
+                  userSetting(mockUserSettingProvider), monitor(messager, activeCallsigns)
+            {
+                this->activeCallsigns.AddUserCallsign(ActiveCallsign("EGKK_TWR", "Testy", this->gatwickTower));
+            }
+            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+            NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+            ControllerPosition gatwickTower;
+            ActiveCallsignCollection activeCallsigns;
+            UserMessager messager;
+            UserSetting userSetting;
+            PressureMonitor monitor;
         };
 
         TEST_F(PressureMonitorTest, NotificationsDefaultToOff)
@@ -79,8 +68,7 @@ namespace UKControllerPluginTest {
         {
             this->monitor.SetNotficationsEnabled(true);
 
-            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _)).Times(0);
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
         }
@@ -94,8 +82,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PressureMonitorTest, ItDoesntSendUpdateMessageOnSameQnh)
         {
-            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _)).Times(0);
 
             this->monitor.SetNotficationsEnabled(true);
 
@@ -105,10 +92,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PressureMonitorTest, ItSendsUpdateMessageOnNewQnh)
         {
-            EXPECT_CALL(
-                this->mockPlugin,
-                ChatAreaMessage(_, _, "New QNH at EGKK, Was: 1011, Now: 1012" , _, _, _, _, _)
-            )
+            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, "New QNH at EGKK, Was: 1011, Now: 1012", _, _, _, _, _))
                 .Times(1);
 
             this->monitor.SetNotficationsEnabled(true);
@@ -119,8 +103,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PressureMonitorTest, ItDoesntSendMessageIfNonConcernedStation)
         {
-            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _)).Times(0);
 
             this->monitor.SetNotficationsEnabled(true);
 
@@ -130,8 +113,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(PressureMonitorTest, ItDoesntSendUpdateMessageIfTurnedOff)
         {
-            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _)).Times(0);
 
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1011 SCT002");
             this->monitor.NewMetar("EGKK", "EGKK 02012KT Q1012 SCT002");
@@ -166,5 +148,5 @@ namespace UKControllerPluginTest {
             this->monitor.UserSettingsUpdated(this->userSetting);
             EXPECT_FALSE(this->monitor.NotificationsEnabled());
         }
-    }  // namespace Metar
-}  // namespace UKControllerPluginTest
+    } // namespace Metar
+} // namespace UKControllerPluginTest

@@ -1,13 +1,12 @@
-#include "pch/pch.h"
 #include "radarscreen/PositionResetCommand.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "mock/MockRadarRendererableInterface.h"
 
+using testing::NiceMock;
+using testing::Test;
 using UKControllerPlugin::RadarScreen::PositionResetCommand;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPluginTest::RadarScreen::MockRadarRenderableInterface;
-using testing::Test;
-using testing::NiceMock;
 
 namespace UKControllerPluginTest {
     namespace RadarScreen {
@@ -15,20 +14,16 @@ namespace UKControllerPluginTest {
         class PositionResetCommandTest : public Test
         {
             public:
-                PositionResetCommandTest()
-                    : command(collection)
-                {
-                    mockRenderable.reset(new NiceMock<MockRadarRenderableInterface>);
-                    this->collection.RegisterRenderer(
-                        1,
-                        mockRenderable,
-                        this->collection.afterLists
-                    );
-                }
+            PositionResetCommandTest() : command(collection)
+            {
+                mockRenderable.reset(new NiceMock<MockRadarRenderableInterface>);
+                this->collection.RegisterRenderer(1, mockRenderable, this->collection.afterLists);
+            }
 
-                std::shared_ptr <NiceMock<MockRadarRenderableInterface>> mockRenderable;
-                RadarRenderableCollection collection;
-                PositionResetCommand command;
+            const std::string resetCommand = ".ukcp resetvisuals";
+            std::shared_ptr<NiceMock<MockRadarRenderableInterface>> mockRenderable;
+            RadarRenderableCollection collection;
+            PositionResetCommand command;
         };
 
         TEST_F(PositionResetCommandTest, ProcessCommandReturnsFalseInvalidCommand)
@@ -38,15 +33,14 @@ namespace UKControllerPluginTest {
 
         TEST_F(PositionResetCommandTest, ProcessCommandReturnsTrueOnProcessedCommand)
         {
-            EXPECT_TRUE(this->command.ProcessCommand(this->command.resetCommand));
+            EXPECT_TRUE(this->command.ProcessCommand(resetCommand));
         }
 
         TEST_F(PositionResetCommandTest, ProcessCommandResetsPositions)
         {
-            EXPECT_CALL(*this->mockRenderable, ResetPosition())
-                .Times(1);
+            EXPECT_CALL(*this->mockRenderable, ResetPosition()).Times(1);
 
-            this->command.ProcessCommand(this->command.resetCommand);
+            EXPECT_TRUE(this->command.ProcessCommand(resetCommand));
         }
-    }  // namespace RadarScreen
-}  // namespace UKControllerPluginTest
+    } // namespace RadarScreen
+} // namespace UKControllerPluginTest

@@ -4,6 +4,7 @@
 #include "prenote/PrenoteMessageCollection.h"
 #include "prenote/PrenoteStatusIndicatorTagItem.h"
 #include "time/SystemClock.h"
+#include "tag/TagData.h"
 
 using ::testing::NiceMock;
 using UKControllerPlugin::Prenote::PrenoteMessage;

@@ -27,9 +27,9 @@ namespace UKControllerPluginTest::Prenote {
     {
         public:
         PendingPrenoteListTest()
-            : acknowledge(std::make_shared<AcknowledgePrenoteMessage>(messages, activeCallsigns, mockTaskRunner, api)),
-              messages(std::make_shared<PrenoteMessageCollection>()),
-              list(messages, acknowledge, mockPlugin, controllers, activeCallsigns, 1), userSettings(mockAsrProvider)
+            : messages(std::make_shared<PrenoteMessageCollection>()),
+              acknowledge(std::make_shared<AcknowledgePrenoteMessage>(messages, activeCallsigns, mockTaskRunner, api)),
+              userSettings(mockAsrProvider), list(messages, acknowledge, mockPlugin, controllers, activeCallsigns, 1)
         {
             this->pluginReturnedFlightplan =
                 std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();

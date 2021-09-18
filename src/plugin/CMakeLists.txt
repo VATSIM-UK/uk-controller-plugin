@@ -435,7 +435,7 @@ set(src__message
     "message/UserMessager.h"
     "message/UserMessagerBootstrap.cpp"
     "message/UserMessagerBootstrap.h"
-)
+        message/MessageSerializableInterface.cpp)
 source_group("src\\message" FILES ${src__message})
 
 set(src__metar

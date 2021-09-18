@@ -1,16 +1,13 @@
-#include "pch/pch.h"
-
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiplusBrushes.h"
 #include "helper/TestingFunctions.h"
+#include "minstack/MinStackLevel.h"
 #include "minstack/MinStackManager.h"
 #include "minstack/MinStackRenderer.h"
-#include "minstack/MinStackRendererConfiguration.h"
 #include "mock/MockDialogProvider.h"
 #include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "mock/MockUserSettingProviderInterface.h"
-#include "plugin/PopupMenuItem.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -35,8 +32,9 @@ namespace UKControllerPluginTest::MinStack {
     {
         public:
         MinStackRendererTest()
-            : dialogManager(mockDialogProvider), renderer(manager, 1, 2, 3, 4, brushes, dialogManager),
-              settings(mockUserSettingProvider)
+            : dialogManager(mockDialogProvider), settings(mockUserSettingProvider),
+              renderer(manager, 1, 2, 3, 4, brushes, dialogManager)
+
         {
             this->dialogManager.AddDialog(this->minStackDialogData);
         }

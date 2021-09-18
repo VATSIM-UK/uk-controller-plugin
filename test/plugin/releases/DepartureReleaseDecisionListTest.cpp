@@ -25,11 +25,11 @@ namespace UKControllerPluginTest {
         {
             public:
             DepartureReleaseDecisionListTest()
-                : handler(
+                : userSettings(mockAsrProvider), list(new UKControllerPlugin::Releases::DepartureReleaseDecisionList(
+                                                     handler, mockPlugin, controllers, 3)),
+                  handler(
                       mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
-                  list(new UKControllerPlugin::Releases::DepartureReleaseDecisionList(
-                      handler, mockPlugin, controllers, 3)),
-                  dialogManager(dialogProvider), userSettings(mockAsrProvider)
+                  dialogManager(dialogProvider)
             {
                 this->pluginReturnedFlightplan =
                     std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
