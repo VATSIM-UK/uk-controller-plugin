@@ -71,7 +71,7 @@ namespace UKControllerPluginTest {
             // Set up the renderer
             EXPECT_CALL(mockUserSettingProvider, GetKey(POS_X_ASR_ENTRY)).Times(1).WillOnce(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(POS_X_ASR_ENTRY)).Times(1).WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(POS_Y_ASR_ENTRY)).Times(1).WillOnce(Return(""));
 
             EXPECT_CALL(mockUserSettingProvider, GetKey(VISIBLE_ASR_ENTRY)).Times(1).WillOnce(Return(""));
 
@@ -113,7 +113,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(POS_X_ASR_ENTRY)).Times(1).WillRepeatedly(Return("150"));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(POS_X_ASR_ENTRY)).Times(1).WillRepeatedly(Return("120"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(POS_Y_ASR_ENTRY)).Times(1).WillRepeatedly(Return("120"));
 
             EXPECT_CALL(mockUserSettingProvider, GetKey(VISIBLE_ASR_ENTRY)).Times(1).WillRepeatedly(Return("0"));
 
@@ -190,7 +190,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, SetKey(POS_X_ASR_ENTRY, POS_X_ASR_DESC, "150")).Times(1);
 
-            EXPECT_CALL(mockUserSettingProvider, SetKey(POS_X_ASR_ENTRY, POS_Y_ASR_DESC, "120")).Times(1);
+            EXPECT_CALL(mockUserSettingProvider, SetKey(POS_Y_ASR_ENTRY, POS_Y_ASR_DESC, "120")).Times(1);
 
             EXPECT_CALL(mockUserSettingProvider, SetKey(VISIBLE_ASR_ENTRY, VISIBLE_ASR_DESC, "0")).Times(1);
 

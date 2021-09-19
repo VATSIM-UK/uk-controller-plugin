@@ -80,8 +80,7 @@ namespace UKControllerPlugin::Hold {
     auto HoldManager::GetAircraftForHold(const std::string& hold) const
         -> const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>&
     {
-        auto aircaft = this->holds.find(hold);
-        return aircaft == this->holds.cend() ? aircraft : this->invalidHolds;
+        return this->holds.count(hold) != 0 ? this->holds.find(hold)->second : this->invalidHolds;
     }
 
     auto HoldManager::GetHoldingAircraft(const std::string& callsign) -> const std::shared_ptr<HoldingAircraft>&

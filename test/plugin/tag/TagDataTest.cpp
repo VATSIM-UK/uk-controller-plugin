@@ -99,7 +99,7 @@ namespace UKControllerPluginTest {
         TEST_F(TagDataTest, ItSetsItemStringToInvalidIfTooLong)
         {
             tagData.SetItemString("thisdataistoolongforthetagitem");
-            EXPECT_EQ("ERROR", tagData.GetItemString());
+            EXPECT_EQ("INVALID", tagData.GetItemString());
         }
     } // namespace Tag
 } // namespace UKControllerPluginTest

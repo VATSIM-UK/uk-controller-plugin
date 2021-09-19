@@ -2,7 +2,6 @@
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "hold/HoldingAircraft.h"
 #include "mock/MockApiInterface.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "api/ApiException.h"
@@ -55,6 +54,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(
                 this->manager.GetHoldingAircraft("BAW123")->GetNoHoldAssigned(),
                 this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
+            auto test = this->manager.GetAircraftForHold("LAM");
             EXPECT_EQ(1, this->manager.GetAircraftForHold("LAM").size());
             EXPECT_EQ("BAW123", (*this->manager.GetAircraftForHold("LAM").cbegin())->GetCallsign());
         }
