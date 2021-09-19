@@ -127,7 +127,7 @@ jobs:
 
       - name: Clang Tidy (Src)
         continue-on-error: true # Have to as clang-tidy doesnt want to run properly on Windows
-        if: 1 != 0
+        if: 1 != 1
         run: |
           if (-not ([string]::IsNullOrEmpty("${{ steps.changed-files-src.outputs.added_modified }}"))) { clang-tidy ${{ steps.changed-files-src.outputs.added_modified }} -p build }
 
