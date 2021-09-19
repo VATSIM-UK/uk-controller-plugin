@@ -21,8 +21,10 @@ namespace UKControllerPlugin::Curl {
         // Set CURL params.
         CURL* curlObject = curl_easy_init();
         curl_easy_setopt(curlObject, CURLOPT_URL, request.GetUri()); // NOLINT(cppcoreguidelines-pro-type-vararg)
-        curl_easy_setopt(// NOLINT(cppcoreguidelines-pro-type-vararg)
-            curlObject, CURLOPT_CUSTOMREQUEST, request.GetMethod());
+        curl_easy_setopt(                                            // NOLINT(cppcoreguidelines-pro-type-vararg)
+            curlObject,
+            CURLOPT_CUSTOMREQUEST,
+            request.GetMethod());
 
         // Add headers
         if (request.cbegin() != request.cend()) {
@@ -32,17 +34,23 @@ namespace UKControllerPlugin::Curl {
             curl_easy_setopt(curlObject, CURLOPT_HTTPHEADER, curlHeaders); // NOLINT(cppcoreguidelines-pro-type-vararg)
         }
 
-        curl_easy_setopt(// NOLINT(cppcoreguidelines-pro-type-vararg)
-            curlObject, CURLOPT_POSTFIELDS, request.GetBody());
+        curl_easy_setopt( // NOLINT(cppcoreguidelines-pro-type-vararg)
+            curlObject,
+            CURLOPT_POSTFIELDS,
+            request.GetBody());
 
         std::string outBuffer;
         curl_easy_setopt(curlObject, CURLOPT_FOLLOWLOCATION, 1L); // NOLINT(cppcoreguidelines-pro-type-vararg)
         curl_easy_setopt(curlObject, CURLOPT_CONNECTTIMEOUT, 4);  // NOLINT(cppcoreguidelines-pro-type-vararg)
-        curl_easy_setopt( // NOLINT(cppcoreguidelines-pro-type-vararg)
-            curlObject, CURLOPT_TIMEOUT, request.GetMaxRequestTime());
-        curl_easy_setopt(curlObject, CURLOPT_WRITEDATA, &outBuffer);   // NOLINT(cppcoreguidelines-pro-type-vararg)
-        curl_easy_setopt(// NOLINT(cppcoreguidelines-pro-type-vararg)
-            curlObject, CURLOPT_WRITEFUNCTION, &CurlApi::WriteFunction);
+        curl_easy_setopt(                                         // NOLINT(cppcoreguidelines-pro-type-vararg)
+            curlObject,
+            CURLOPT_TIMEOUT,
+            request.GetMaxRequestTime());
+        curl_easy_setopt(curlObject, CURLOPT_WRITEDATA, &outBuffer); // NOLINT(cppcoreguidelines-pro-type-vararg)
+        curl_easy_setopt(                                            // NOLINT(cppcoreguidelines-pro-type-vararg)
+            curlObject,
+            CURLOPT_WRITEFUNCTION,
+            &CurlApi::WriteFunction);
         curl_easy_setopt(curlObject, CURLOPT_USERAGENT, userAgent.c_str()); // NOLINT(cppcoreguidelines-pro-type-vararg)
 
         CURLcode result = curl_easy_perform(curlObject);
@@ -55,8 +63,10 @@ namespace UKControllerPlugin::Curl {
 
         // Save a copy of the output buffer and clear the buffer, then clean up.
         uint64_t responseCode = 0;
-        curl_easy_getinfo(// NOLINT(cppcoreguidelines-pro-type-vararg)
-            curlObject, CURLINFO_RESPONSE_CODE, &responseCode);
+        curl_easy_getinfo( // NOLINT(cppcoreguidelines-pro-type-vararg)
+            curlObject,
+            CURLINFO_RESPONSE_CODE,
+            &responseCode);
         curl_easy_cleanup(curlObject);
 
         return {outBuffer, false, responseCode};

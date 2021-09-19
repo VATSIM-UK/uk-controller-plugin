@@ -24,7 +24,7 @@ namespace UKControllerPlugin::Log {
         static void CreateNullLogger();
         [[nodiscard]] static auto GetLogsFolder() -> std::wstring;
         [[nodiscard]] static auto GetLogFilesToKeep() -> int;
-        
+
         inline static const int LOGFILES_TO_KEEP = 5;
     };
 } // namespace UKControllerPlugin::Log

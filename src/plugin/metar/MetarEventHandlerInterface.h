@@ -13,7 +13,7 @@ namespace UKControllerPlugin::Metar {
         MetarEventHandlerInterface(const MetarEventHandlerInterface&);
         MetarEventHandlerInterface(MetarEventHandlerInterface&&) noexcept;
         [[nodiscard]] auto operator=(const MetarEventHandlerInterface&) -> MetarEventHandlerInterface&;
-        [[nodiscard]] auto operator=(MetarEventHandlerInterface&&)  noexcept -> MetarEventHandlerInterface&;
+        [[nodiscard]] auto operator=(MetarEventHandlerInterface&&) noexcept -> MetarEventHandlerInterface&;
         virtual void NewMetar(std::string station, std::string metar) = 0;
     };
 } // namespace UKControllerPlugin::Metar

@@ -3,35 +3,20 @@
 namespace UKControllerPlugin {
     namespace Windows {
 
-
         GdiGraphicsWrapper::GdiGraphicsWrapper(void)
         {
-            this->stringFormat = std::make_unique<Gdiplus::StringFormat>(
-                Gdiplus::StringFormatFlags::StringFormatFlagsNoClip
-            );
+            this->stringFormat =
+                std::make_unique<Gdiplus::StringFormat>(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip);
             this->stringFormat->SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat->SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
-            this->font = CreateFont(
-                13,
-                '\0',
-                '\0',
-                '\0',
-                400,
-                '\0',
-                '\0',
-                '\0',
-                '\x1',
-                '\0',
-                '\0',
-                '\0',
-                '\0',
-                L"EuroScope"
-            );
+            this->font =
+                CreateFont(13, '\0', '\0', '\0', 400, '\0', '\0', '\0', '\x1', '\0', '\0', '\0', '\0', L"EuroScope");
         }
 
-        GdiGraphicsWrapper::GdiGraphicsWrapper(std::unique_ptr<Gdiplus::Graphics> graphics): graphics(
-            std::move(graphics)) {}
-
+        GdiGraphicsWrapper::GdiGraphicsWrapper(std::unique_ptr<Gdiplus::Graphics> graphics)
+            : graphics(std::move(graphics))
+        {
+        }
 
         GdiGraphicsWrapper::~GdiGraphicsWrapper(void)
         {
@@ -86,28 +71,21 @@ namespace UKControllerPlugin {
                 Gdiplus::PointF(area.X, area.Y + (area.Height / 2)),
                 Gdiplus::PointF(area.X + (area.Width / 2), area.Y + area.Height),
                 Gdiplus::PointF(area.X + area.Width, area.Y + (area.Height / 2)),
-                Gdiplus::PointF(area.X + (area.Width / 2), area.Y)
-            };
+                Gdiplus::PointF(area.X + (area.Width / 2), area.Y)};
             api->DrawPolygon(&pen, points, 4);
         }
 
         /*
             Draw a line between two points
         */
-        void GdiGraphicsWrapper::DrawLine(
-            const Gdiplus::Pen& pen,
-            const Gdiplus::Point& start,
-            const Gdiplus::Point& end
-        )
+        void
+        GdiGraphicsWrapper::DrawLine(const Gdiplus::Pen& pen, const Gdiplus::Point& start, const Gdiplus::Point& end)
         {
             this->api->DrawLine(&pen, start, end);
         }
 
-        void GdiGraphicsWrapper::DrawLine(
-            const Gdiplus::Pen& pen,
-            const Gdiplus::PointF& start,
-            const Gdiplus::PointF& end
-        )
+        void
+        GdiGraphicsWrapper::DrawLine(const Gdiplus::Pen& pen, const Gdiplus::PointF& start, const Gdiplus::PointF& end)
         {
             this->api->DrawLine(&pen, start, end);
         }
@@ -120,20 +98,10 @@ namespace UKControllerPlugin {
         /*
             Draw a string to the screen in a bounding box.
         */
-        void GdiGraphicsWrapper::DrawString(
-            std::wstring text,
-            const Gdiplus::RectF& area,
-            const Gdiplus::Brush& brush
-        )
+        void GdiGraphicsWrapper::DrawString(std::wstring text, const Gdiplus::RectF& area, const Gdiplus::Brush& brush)
         {
             api->DrawString(
-                text.c_str(),
-                text.size(),
-                this->euroscopeFont.get(),
-                area,
-                this->stringFormat.get(),
-                &brush
-            );
+                text.c_str(), text.size(), this->euroscopeFont.get(), area, this->stringFormat.get(), &brush);
         }
 
         /*
@@ -145,17 +113,10 @@ namespace UKControllerPlugin {
                 static_cast<Gdiplus::REAL>(area.X),
                 static_cast<Gdiplus::REAL>(area.Y),
                 static_cast<Gdiplus::REAL>(area.Width),
-                static_cast<Gdiplus::REAL>(area.Height)
-            };
+                static_cast<Gdiplus::REAL>(area.Height)};
 
             api->DrawString(
-                text.c_str(),
-                text.size(),
-                this->euroscopeFont.get(),
-                areaFloat,
-                this->stringFormat.get(),
-                &brush
-            );
+                text.c_str(), text.size(), this->euroscopeFont.get(), areaFloat, this->stringFormat.get(), &brush);
         }
 
         /*
@@ -167,17 +128,10 @@ namespace UKControllerPlugin {
                 static_cast<Gdiplus::REAL>(area.left),
                 static_cast<Gdiplus::REAL>(area.top),
                 static_cast<Gdiplus::REAL>(area.right - area.left),
-                static_cast<Gdiplus::REAL>(area.bottom - area.top)
-            };
+                static_cast<Gdiplus::REAL>(area.bottom - area.top)};
 
             api->DrawString(
-                text.c_str(),
-                text.size(),
-                this->euroscopeFont.get(),
-                areaFloat,
-                this->stringFormat.get(),
-                &brush
-            );
+                text.c_str(), text.size(), this->euroscopeFont.get(), areaFloat, this->stringFormat.get(), &brush);
         }
 
         /*
@@ -284,8 +238,7 @@ namespace UKControllerPlugin {
                 Gdiplus::PointF(area.X, area.Y + (area.Height / 2)),
                 Gdiplus::PointF(area.X + (area.Width / 2), area.Y + area.Height),
                 Gdiplus::PointF(area.X + area.Width, area.Y + (area.Height / 2)),
-                Gdiplus::PointF(area.X + (area.Width / 2), area.Y)
-            };
+                Gdiplus::PointF(area.X + (area.Width / 2), area.Y)};
             api->FillPolygon(&brush, points, 4);
         }
     } // namespace Windows

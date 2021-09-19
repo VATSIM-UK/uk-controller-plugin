@@ -26,7 +26,7 @@ namespace UKControllerPlugin::Wake {
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
         [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
         void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
-        
+
         // Tag item ids
         inline static const int tagItemIdAircraftTypeCategory = 105;
         inline static const int tagItemIdStandaloneCategory = 112;

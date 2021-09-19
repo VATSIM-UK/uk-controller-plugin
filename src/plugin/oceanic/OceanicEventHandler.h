@@ -52,8 +52,7 @@ namespace UKControllerPlugin::Oceanic {
         inline static const COLORREF clearanceIndicatorPending = RGB(255, 153, 255);
 
         private:
-        static auto GetDefaultClearanceForCallsign(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
-            -> Clearance;
+        static auto GetDefaultClearanceForCallsign(Euroscope::EuroScopeCFlightPlanInterface& flightplan) -> Clearance;
         static auto ConvertNattrakLevelToEuroscope(const std::string& level) -> int;
         static auto NattrakLevelValid(std::string level) -> bool;
         [[nodiscard]] static auto GetClearedTagItemColour(int clearedLevel, int currentLevel) -> COLORREF;

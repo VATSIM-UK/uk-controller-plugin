@@ -25,7 +25,7 @@ namespace UKControllerPlugin::RadarScreen {
         public:
         ScreenControls(
             int toggleboxIdEuroscope,
-            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection  configurableDisplays,
+            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection configurableDisplays,
             const UKControllerPlugin::Windows::GdiplusBrushes& brushes);
         [[nodiscard]] auto IsVisible() const -> bool override;
         void LeftClick(

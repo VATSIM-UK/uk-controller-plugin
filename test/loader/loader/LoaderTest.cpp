@@ -3,56 +3,54 @@
 #include "mock/MockApiInterface.h"
 #include "mock/MockCurlApi.h"
 
-using testing::Test;
 using testing::NiceMock;
 using testing::Return;
-using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPluginTest::Api::MockApiInterface;
-using UKControllerPluginTest::Curl::MockCurlApi;
+using testing::Test;
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::Curl::MockCurlApi;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginLoaderTest {
     namespace Loader {
         class LoaderTest : public Test
         {
             public:
+            void SetUp() override
+            {
+                this->unloadFunctionCalled = false;
+                this->loadFunctionCalled = false;
+                this->updateFunctionReturnValue = true;
+                this->updaterFunctionCalled = false;
+            }
 
-                void SetUp() override
-                {
-                    this->unloadFunctionCalled = false;
-                    this->loadFunctionCalled = false;
-                    this->updateFunctionReturnValue = true;
-                    this->updaterFunctionCalled = false;
-                }
+            static bool SetUnloadFunctionCalled()
+            {
+                unloadFunctionCalled = true;
+                return updateFunctionReturnValue;
+            }
 
-                static bool SetUnloadFunctionCalled()
-                {
-                    unloadFunctionCalled = true;
-                    return updateFunctionReturnValue;
-                }
+            static void SetLoadFunctionCalled()
+            {
+                loadFunctionCalled = true;
+            }
 
-                static void SetLoadFunctionCalled()
-                {
-                    loadFunctionCalled = true;
-                }
+            static bool SetUpdaterFunctionCalled()
+            {
+                updaterFunctionCalled = true;
+                return updateFunctionReturnValue;
+            }
 
-                static bool SetUpdaterFunctionCalled()
-                {
-                    updaterFunctionCalled = true;
-                    return updateFunctionReturnValue;
-                }
+            NiceMock<MockWinApi> mockWindows;
+            NiceMock<MockApiInterface> mockApi;
+            NiceMock<MockCurlApi> mockCurl;
 
-                NiceMock<MockWinApi> mockWindows;
-                NiceMock<MockApiInterface> mockApi;
-                NiceMock<MockCurlApi> mockCurl;
-
-                inline static bool unloadFunctionCalled;
-                inline static bool loadFunctionCalled;
-                inline static EuroScopePlugIn::CPlugIn* pluginInstance = reinterpret_cast<EuroScopePlugIn::CPlugIn*>(456
-                );
-                inline static bool updateFunctionReturnValue;
-                inline static bool updaterFunctionCalled;
+            inline static bool unloadFunctionCalled;
+            inline static bool loadFunctionCalled;
+            inline static EuroScopePlugIn::CPlugIn* pluginInstance = reinterpret_cast<EuroScopePlugIn::CPlugIn*>(456);
+            inline static bool updateFunctionReturnValue;
+            inline static bool updaterFunctionCalled;
         };
 
         __stdcall void UnloadFunction()
@@ -71,21 +69,19 @@ namespace UKControllerPluginLoaderTest {
             return LoaderTest::SetUpdaterFunctionCalled();
         }
 
-
         TEST_F(LoaderTest, LoadPluginLibraryReturnsHandle)
         {
             HINSTANCE returnHandle = reinterpret_cast<HINSTANCE>(123);
             EXPECT_CALL(this->mockWindows, LoadLibraryRelative(std::wstring(L"bin/UKControllerPluginCore.dll")))
                 .Times(1)
-            .WillOnce(Return(returnHandle));
+                .WillOnce(Return(returnHandle));
 
             EXPECT_EQ(returnHandle, LoadPluginLibrary(this->mockWindows));
         }
 
         TEST_F(LoaderTest, LoadPluginHandlesNullLibrary)
         {
-            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(testing::_, testing::_))
-                .Times(0);
+            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(testing::_, testing::_)).Times(0);
 
             EXPECT_EQ(nullptr, LoadPlugin(nullptr, this->mockWindows));
         }
@@ -96,13 +92,9 @@ namespace UKControllerPluginLoaderTest {
 
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "LoadPlugin"))
                 .Times(1)
-            .WillOnce(Return(nullptr));
+                .WillOnce(Return(nullptr));
 
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)
-            )
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)).Times(1);
 
             EXPECT_EQ(nullptr, LoadPlugin(handle, this->mockWindows));
         }
@@ -113,8 +105,8 @@ namespace UKControllerPluginLoaderTest {
             EuroScopePlugIn::CPlugIn* pluginInstance = reinterpret_cast<EuroScopePlugIn::CPlugIn*>(456);
 
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "LoadPlugin"))
-            .Times(1)
-            .WillOnce(Return(reinterpret_cast<FARPROC>(LoadFunction)));
+                .Times(1)
+                .WillOnce(Return(reinterpret_cast<FARPROC>(LoadFunction)));
 
             EXPECT_EQ(pluginInstance, LoadPlugin(handle, this->mockWindows));
             EXPECT_TRUE(this->loadFunctionCalled);
@@ -123,28 +115,24 @@ namespace UKControllerPluginLoaderTest {
         TEST_F(LoaderTest, UnloadPluginLibraryCallsUnload)
         {
             HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
-            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle))
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
             UnloadPluginLibrary(handle, this->mockWindows);
         }
 
         TEST_F(LoaderTest, UnloadPluginLibraryDoesntCallUnloadIfNullptr)
         {
-            EXPECT_CALL(this->mockWindows, UnloadLibrary(testing::_))
-                .Times(0);
+            EXPECT_CALL(this->mockWindows, UnloadLibrary(testing::_)).Times(0);
 
             UnloadPluginLibrary(nullptr, this->mockWindows);
         }
 
         TEST_F(LoaderTest, UnloadPluginDoesntCallUnloadIfNullptr)
         {
-            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(testing::_, testing::_))
-                .Times(0);
+            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(testing::_, testing::_)).Times(0);
 
             UnloadPlugin(nullptr, this->mockWindows);
         }
-
 
         TEST_F(LoaderTest, UnloadPluginHandlesNotFindingCoreBinaryFunction)
         {
@@ -152,13 +140,9 @@ namespace UKControllerPluginLoaderTest {
 
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "UnloadPlugin"))
                 .Times(1)
-            .WillOnce(Return(nullptr));
+                .WillOnce(Return(nullptr));
 
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)
-            )
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)).Times(1);
 
             UnloadPlugin(handle, this->mockWindows);
         }
@@ -169,7 +153,7 @@ namespace UKControllerPluginLoaderTest {
 
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "UnloadPlugin"))
                 .Times(1)
-            .WillOnce(Return(reinterpret_cast<FARPROC>(UnloadFunction)));
+                .WillOnce(Return(reinterpret_cast<FARPROC>(UnloadFunction)));
 
             UnloadPlugin(handle, this->mockWindows);
             EXPECT_TRUE(this->unloadFunctionCalled);
@@ -179,16 +163,11 @@ namespace UKControllerPluginLoaderTest {
         {
             EXPECT_CALL(this->mockWindows, LoadLibraryRelative(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
-            .WillOnce(Return(nullptr));
+                .WillOnce(Return(nullptr));
 
-            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(testing::_, testing::_))
-                .Times(0);
+            EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(testing::_, testing::_)).Times(0);
 
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)
-            )
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)).Times(1);
 
             EXPECT_THROW(RunUpdater(this->mockWindows), std::exception);
             EXPECT_FALSE(this->updaterFunctionCalled);
@@ -199,14 +178,13 @@ namespace UKControllerPluginLoaderTest {
             HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
             EXPECT_CALL(this->mockWindows, LoadLibraryRelative(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
-            .WillOnce(Return(handle));
+                .WillOnce(Return(handle));
 
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "PerformUpdates"))
                 .Times(1)
-            .WillOnce(Return(reinterpret_cast<FARPROC>(UpdateFunction)));
+                .WillOnce(Return(reinterpret_cast<FARPROC>(UpdateFunction)));
 
-            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle))
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
             RunUpdater(this->mockWindows);
             EXPECT_TRUE(this->updaterFunctionCalled);
@@ -218,14 +196,13 @@ namespace UKControllerPluginLoaderTest {
             this->updateFunctionReturnValue = false;
             EXPECT_CALL(this->mockWindows, LoadLibraryRelative(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
-            .WillOnce(Return(handle));
+                .WillOnce(Return(handle));
 
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "PerformUpdates"))
                 .Times(1)
-            .WillOnce(Return(reinterpret_cast<FARPROC>(UpdateFunction)));
+                .WillOnce(Return(reinterpret_cast<FARPROC>(UpdateFunction)));
 
-            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle))
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
             EXPECT_THROW(RunUpdater(this->mockWindows), std::exception);
             EXPECT_TRUE(this->updaterFunctionCalled);
@@ -235,7 +212,7 @@ namespace UKControllerPluginLoaderTest {
         {
             EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
-            .WillOnce(Return(true));
+                .WillOnce(Return(true));
 
             EXPECT_TRUE(FirstTimeDownload(this->mockApi, this->mockWindows, this->mockCurl));
         }
@@ -246,15 +223,11 @@ namespace UKControllerPluginLoaderTest {
                 .Times(1)
                 .WillOnce(Return(false));
 
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION)
-            )
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION))
                 .Times(1)
                 .WillOnce(Return(IDCANCEL));
 
-            EXPECT_CALL(this->mockApi, GetUpdateDetails())
-                .Times(0);
+            EXPECT_CALL(this->mockApi, GetUpdateDetails()).Times(0);
 
             EXPECT_FALSE(FirstTimeDownload(this->mockApi, this->mockWindows, this->mockCurl));
         }
@@ -263,15 +236,11 @@ namespace UKControllerPluginLoaderTest {
         {
             EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
-            .WillOnce(Return(false));
+                .WillOnce(Return(false));
 
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION)
-            )
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION))
                 .Times(1)
                 .WillOnce(Return(IDOK));
-
 
             nlohmann::json apiData{
                 {"version", "3.0.1"},
@@ -280,29 +249,22 @@ namespace UKControllerPluginLoaderTest {
                 {"loader_download_url", "baz"},
             };
 
-            EXPECT_CALL(this->mockApi, GetUpdateDetails())
-                .Times(1)
-                .WillOnce(Return(apiData));
+            EXPECT_CALL(this->mockApi, GetUpdateDetails()).Times(1).WillOnce(Return(apiData));
 
             // Updater request
-            CurlRequest expectedUpdaterRequest(
-                "foo",
-                CurlRequest::METHOD_GET
-            );
+            CurlRequest expectedUpdaterRequest("foo", CurlRequest::METHOD_GET);
             expectedUpdaterRequest.SetMaxRequestTime(0);
 
             CurlResponse updaterResponse("3.0.1.updater", false, 200);
 
             EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedUpdaterRequest))
                 .Times(1)
-            .WillOnce(Return(updaterResponse));
+                .WillOnce(Return(updaterResponse));
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
-            )
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true))
                 .Times(1);
-
 
             EXPECT_TRUE(FirstTimeDownload(this->mockApi, this->mockWindows, this->mockCurl));
         }
@@ -311,15 +273,11 @@ namespace UKControllerPluginLoaderTest {
         {
             EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
-            .WillOnce(Return(false));
+                .WillOnce(Return(false));
 
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION)
-            )
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION))
                 .Times(1)
                 .WillOnce(Return(IDOK));
-
 
             nlohmann::json apiData{
                 {"version", "3.0.1"},
@@ -328,34 +286,24 @@ namespace UKControllerPluginLoaderTest {
                 {"loader_download_url", "baz"},
             };
 
-            EXPECT_CALL(this->mockApi, GetUpdateDetails())
-                .Times(1)
-                .WillOnce(Return(apiData));
+            EXPECT_CALL(this->mockApi, GetUpdateDetails()).Times(1).WillOnce(Return(apiData));
 
             // Updater request
-            CurlRequest expectedUpdaterRequest(
-                "foo",
-                CurlRequest::METHOD_GET
-            );
+            CurlRequest expectedUpdaterRequest("foo", CurlRequest::METHOD_GET);
             expectedUpdaterRequest.SetMaxRequestTime(0);
 
             CurlResponse updaterResponse("3.0.1.updater", true, 200);
 
             EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedUpdaterRequest))
                 .Times(1)
-            .WillOnce(Return(updaterResponse));
+                .WillOnce(Return(updaterResponse));
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
-            )
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true))
                 .Times(0);
 
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)
-            )
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)).Times(1);
 
             EXPECT_FALSE(FirstTimeDownload(this->mockApi, this->mockWindows, this->mockCurl));
         }
@@ -364,12 +312,9 @@ namespace UKControllerPluginLoaderTest {
         {
             EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
                 .Times(1)
-            .WillOnce(Return(false));
+                .WillOnce(Return(false));
 
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION)
-            )
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION))
                 .Times(1)
                 .WillOnce(Return(IDOK));
 
@@ -380,24 +325,16 @@ namespace UKControllerPluginLoaderTest {
                 {"loader_download_url", "baz"},
             };
 
-            EXPECT_CALL(this->mockApi, GetUpdateDetails())
-                .Times(1)
-                .WillOnce(Return(apiData));
+            EXPECT_CALL(this->mockApi, GetUpdateDetails()).Times(1).WillOnce(Return(apiData));
 
-            EXPECT_CALL(this->mockCurl, MakeCurlRequest(testing::_))
-                .Times(0);
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(testing::_)).Times(0);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
-            )
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true))
                 .Times(0);
 
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)
-            )
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)).Times(1);
 
             EXPECT_FALSE(FirstTimeDownload(this->mockApi, this->mockWindows, this->mockCurl));
         }

@@ -230,7 +230,8 @@ namespace UKControllerPlugin::Releases {
         // Create the request view renderer
         auto releaseRequestView = std::make_shared<DepartureReleaseRequestView>(
             *container.departureReleaseHandler, *container.controllerPositions);
-        renderables.RegisterRenderer(renderables.ReserveRendererIdentifier(), releaseRequestView, renderables.afterLists);
+        renderables.RegisterRenderer(
+            renderables.ReserveRendererIdentifier(), releaseRequestView, renderables.afterLists);
 
         // Create the decision menu
         const int decisionListRenderedId = renderables.ReserveRendererIdentifier();

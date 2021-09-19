@@ -2,17 +2,16 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 
-using UKControllerPlugin::Squawk::ApiSquawkAllocation;
-using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 
 namespace UKControllerPlugin {
     namespace Squawk {
 
-        ApiSquawkAllocationHandler::ApiSquawkAllocationHandler(EuroscopePluginLoopbackInterface & plugin)
+        ApiSquawkAllocationHandler::ApiSquawkAllocationHandler(EuroscopePluginLoopbackInterface& plugin)
             : plugin(plugin)
         {
-
         }
 
         /*
@@ -48,10 +47,8 @@ namespace UKControllerPlugin {
         {
             std::lock_guard<std::mutex> lock(this->queueGuard);
             std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan;
-            for (
-                std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation>::iterator it = this->allocationQueue.begin();
-                it != this->allocationQueue.end();
-            ) {
+            for (std::set<UKControllerPlugin::Squawk::ApiSquawkAllocation>::iterator it = this->allocationQueue.begin();
+                 it != this->allocationQueue.end();) {
                 flightplan = this->plugin.GetFlightplanForCallsign(it->callsign);
                 if (!flightplan) {
                     LogInfo("Could not find flightplan for " + it->callsign + " when trying to assign squawk");
@@ -63,5 +60,5 @@ namespace UKControllerPlugin {
                 this->allocationQueue.erase(it++);
             }
         }
-    }  // namespace Squawk
-}  // namespace UKControllerPlugin
+    } // namespace Squawk
+} // namespace UKControllerPlugin

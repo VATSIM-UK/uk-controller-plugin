@@ -1,14 +1,10 @@
-#include "pch/pch.h"
 #include "components/TitleBar.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "components/ClickableArea.h"
 
 namespace UKControllerPlugin::Components {
-    std::shared_ptr<TitleBar> TitleBar::Create(
-        std::wstring title,
-        Gdiplus::Rect area
-    )
+    std::shared_ptr<TitleBar> TitleBar::Create(std::wstring title, Gdiplus::Rect area)
     {
         return std::shared_ptr<TitleBar>(new TitleBar(title, area));
     }
@@ -53,20 +49,14 @@ namespace UKControllerPlugin::Components {
     }
 
     void TitleBar::Draw(
-        Windows::GdiGraphicsInterface& graphics,
-        Euroscope::EuroscopeRadarLoopbackInterface& radarScreen
-    ) const
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const
     {
         if (this->backgroundBrush) {
             graphics.FillRect(this->area, *this->backgroundBrush);
         }
 
         if (this->textBrush) {
-            graphics.DrawString(
-                this->title,
-                this->area,
-                *this->textBrush
-            );
+            graphics.DrawString(this->title, this->area, *this->textBrush);
         }
 
         if (this->borderPen) {
@@ -78,10 +68,7 @@ namespace UKControllerPlugin::Components {
         }
     }
 
-    TitleBar::TitleBar(
-        std::wstring title,
-        Gdiplus::Rect area
-    ): title(std::move(title)),
-       area(area)
-    { }
+    TitleBar::TitleBar(std::wstring title, Gdiplus::Rect area) : title(std::move(title)), area(area)
+    {
+    }
 } // namespace UKControllerPlugin::Components

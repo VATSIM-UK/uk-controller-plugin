@@ -11,7 +11,7 @@ namespace UKControllerPlugin::Controller {
         -> ActiveCallsignEventHandlerInterface& = default;
     [[nodiscard]] auto ActiveCallsignEventHandlerInterface::operator=(ActiveCallsignEventHandlerInterface&&) noexcept
         -> ActiveCallsignEventHandlerInterface& = default;
-    
+
     void ActiveCallsignEventHandlerInterface::CallsignsFlushed()
     {
     }

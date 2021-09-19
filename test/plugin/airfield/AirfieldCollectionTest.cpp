@@ -1,11 +1,10 @@
-#include "pch/pch.h"
 #include "airfield/AirfieldModel.h"
 #include "airfield/AirfieldCollection.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
 
-using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Airfield::AirfieldCollection;
+using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
 
@@ -17,9 +16,8 @@ namespace UKControllerPluginTest {
             AirfieldCollection collection;
             collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {})));
             EXPECT_THROW(
-                collection.AddAirfield(std::unique_ptr<AirfieldModel> (new AirfieldModel("EGKK", { "EGKK_DEL" }))),
-                std::invalid_argument
-            );
+                collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"EGKK_DEL"}))),
+                std::invalid_argument);
         }
 
         TEST(AirfieldCollection, FetchAirfieldByIcaoThrowsExceptionIfNotUkAirfield)
@@ -55,9 +53,9 @@ namespace UKControllerPluginTest {
         {
             AirfieldCollection collection;
             EXPECT_EQ(0, collection.GetSize());
-            collection.AddAirfield(std::unique_ptr<AirfieldModel> (new AirfieldModel("EGKK", {})));
-            collection.AddAirfield(std::unique_ptr<AirfieldModel> (new AirfieldModel("EGLL", {})));
+            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {})));
+            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGLL", {})));
             EXPECT_EQ(2, collection.GetSize());
         }
-    }  // namespace AirfieldOwnership
-}  // namespace UKControllerPluginTest
+    } // namespace AirfieldOwnership
+} // namespace UKControllerPluginTest

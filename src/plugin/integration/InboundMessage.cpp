@@ -22,16 +22,9 @@ namespace UKControllerPlugin::Integration {
      */
     auto InboundMessage::MessageFormatValid(const nlohmann::json& message) -> bool
     {
-        return
-            message.is_object() &&
-            message.contains("type") &&
-            message.at("type").is_string() &&
-            message.contains("version") &&
-            message.at("version").is_number_integer() &&
-            message.contains("id") &&
-            message.at("id").is_string() &&
-            message.contains("data") &&
-            message.at("data").is_object();
+        return message.is_object() && message.contains("type") && message.at("type").is_string() &&
+               message.contains("version") && message.at("version").is_number_integer() && message.contains("id") &&
+               message.at("id").is_string() && message.contains("data") && message.at("data").is_object();
     }
 
     /*
@@ -44,18 +37,12 @@ namespace UKControllerPlugin::Integration {
             return nullptr;
         }
 
-        return std::shared_ptr<InboundMessage>(
-            new InboundMessage(
-                json.at("id").get<std::string>(),
-                MessageType{
-                    json.at("type").get<std::string>(),
-                    json.at("version").get<int>()
-                },
-                json.at("data")
-            )
-        );
+        return std::shared_ptr<InboundMessage>(new InboundMessage(
+            json.at("id").get<std::string>(),
+            MessageType{json.at("type").get<std::string>(), json.at("version").get<int>()},
+            json.at("data")));
     }
-    
+
     auto InboundMessage::GetMessageId() const -> std::string
     {
         return this->id;
