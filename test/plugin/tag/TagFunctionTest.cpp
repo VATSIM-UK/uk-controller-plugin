@@ -1,16 +1,13 @@
-#include "pch/pch.h"
 #include "tag/TagFunction.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 
-using UKControllerPlugin::Tag::TagFunction;
+using ::testing::StrictMock;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
-using ::testing::StrictMock;
 
 namespace UKControllerPluginTest {
     namespace Function {
@@ -18,30 +15,18 @@ namespace UKControllerPluginTest {
         TEST(TagFunction, EqualityOperatorReturnsTrueIfIdsSame)
         {
             TagFunction first = {
-                1,
-                "test",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
-            };
+                1, "test", [](EuroScopeCFlightPlanInterface&, EuroScopeCRadarTargetInterface&, std::string, POINT) {}};
             TagFunction second = {
-                1,
-                "test2",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
-            };
+                1, "test2", [](EuroScopeCFlightPlanInterface&, EuroScopeCRadarTargetInterface&, std::string, POINT) {}};
             EXPECT_TRUE(first == second);
         }
 
         TEST(TagFunction, EqualityOperatorReturnsFalseIfDifferentIds)
         {
             TagFunction first = {
-                1,
-                "test",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
-            };
+                1, "test", [](EuroScopeCFlightPlanInterface&, EuroScopeCRadarTargetInterface&, std::string, POINT) {}};
             TagFunction second = {
-                2,
-                "test2",
-                [](EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {}
-            };
+                2, "test2", [](EuroScopeCFlightPlanInterface&, EuroScopeCRadarTargetInterface&, std::string, POINT) {}};
             EXPECT_FALSE(first == second);
         }
 
@@ -51,9 +36,9 @@ namespace UKControllerPluginTest {
             TagFunction first = {
                 1,
                 "test",
-                [&testCount]
-                (EuroScopeCFlightPlanInterface &, EuroScopeCRadarTargetInterface &, std::string, POINT) {testCount++; }
-            };
+                [&testCount](EuroScopeCFlightPlanInterface&, EuroScopeCRadarTargetInterface&, std::string, POINT) {
+                    testCount++;
+                }};
             TagFunction second = first;
 
             StrictMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
@@ -66,5 +51,5 @@ namespace UKControllerPluginTest {
             second.function(mockFlightplan, mockRadarTarget, "", POINT());
             EXPECT_EQ(2, testCount);
         }
-    }  // namespace Function
-}  // namespace UKControllerPluginTest
+    } // namespace Function
+} // namespace UKControllerPluginTest

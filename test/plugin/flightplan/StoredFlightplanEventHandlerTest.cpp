@@ -1,8 +1,6 @@
 #include "flightplan/StoredFlightplan.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/StoredFlightplanEventHandler.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;

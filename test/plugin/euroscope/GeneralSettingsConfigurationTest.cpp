@@ -1,5 +1,4 @@
 #include "euroscope/GeneralSettingsConfiguration.h"
-#include "mock/MockDialogProvider.h"
 #include "dialog/DialogManager.h"
 
 using ::testing::_;

@@ -1,8 +1,6 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "dialog/DialogManager.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockDialogProvider.h"
 #include "notifications/NotificationsModule.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"

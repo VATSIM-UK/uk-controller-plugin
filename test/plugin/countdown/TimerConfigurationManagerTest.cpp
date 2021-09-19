@@ -1,7 +1,5 @@
 #include "countdown/TimerConfiguration.h"
 #include "countdown/TimerConfigurationManager.h"
-#include "mock/MockDialogProvider.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "countdown/GlobalCountdownSettingFunctions.h"
 
 using testing::_;

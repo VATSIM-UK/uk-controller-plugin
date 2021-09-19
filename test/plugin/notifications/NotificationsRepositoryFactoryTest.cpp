@@ -1,29 +1,27 @@
-#include "pch/pch.h"
 #include "notifications/NotificationsRepositoryFactory.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "mock/MockApiInterface.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPositionHierarchyFactory.h"
 #include "controller/ControllerPosition.h"
 #include "api/ApiException.h"
 
-using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::Test;
 using ::testing::Throw;
-using UKControllerPlugin::Notifications::UnreadNotificationsValid;
-using UKControllerPlugin::Notifications::ControllersValid;
-using UKControllerPlugin::Notifications::NotificationValid;
-using UKControllerPlugin::Notifications::NotificationsValid;
-using UKControllerPlugin::Notifications::Make;
-using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
-using UKControllerPlugin::Controller::ControllerPosition;
-using UKControllerPlugin::Notifications::NotificationsRepository;
+using UKControllerPlugin::Notifications::ControllersValid;
+using UKControllerPlugin::Notifications::Make;
 using UKControllerPlugin::Notifications::Notification;
+using UKControllerPlugin::Notifications::NotificationsRepository;
+using UKControllerPlugin::Notifications::NotificationsValid;
+using UKControllerPlugin::Notifications::NotificationValid;
+using UKControllerPlugin::Notifications::UnreadNotificationsValid;
+using UKControllerPluginTest::Api::MockApiInterface;
 
 namespace UKControllerPluginTest {
     namespace Notifications {
@@ -31,65 +29,44 @@ namespace UKControllerPluginTest {
         class NotificationsRepositoryFactoryTest : public Test
         {
             public:
-                NotificationsRepositoryFactoryTest()
-                {
-                    std::unique_ptr<NiceMock<MockApiInterface>> apiMock =
-                        std::make_unique<NiceMock<MockApiInterface>>();
-                    mockApi = apiMock.get();
-                    container.api = std::move(apiMock);
-                    container.controllerPositions = std::make_unique<ControllerPositionCollection>();
-                    std::vector<std::string> handoffs = { "EGKK" };
+            NotificationsRepositoryFactoryTest()
+            {
+                std::unique_ptr<NiceMock<MockApiInterface>> apiMock = std::make_unique<NiceMock<MockApiInterface>>();
+                mockApi = apiMock.get();
+                container.api = std::move(apiMock);
+                container.controllerPositions = std::make_unique<ControllerPositionCollection>();
+                std::vector<std::string> handoffs = {"EGKK"};
 
-                    std::unique_ptr<ControllerPosition>position1 = std::make_unique<ControllerPosition>(
-                        1,
-                        "EGKK_DEL",
-                        121.950,
-                        handoffs,
-                        true,
-                        false
-                    );
-                    this->position1 = position1.get();
+                std::unique_ptr<ControllerPosition> position1 =
+                    std::make_unique<ControllerPosition>(1, "EGKK_DEL", 121.950, handoffs, true, false);
+                this->position1 = position1.get();
 
-                    std::unique_ptr<ControllerPosition>position2 = std::make_unique<ControllerPosition>(
-                        2,
-                        "EGKK_TWR",
-                        124.220,
-                        handoffs,
-                        true,
-                        false
-                    );
-                    this->position2 = position2.get();
+                std::unique_ptr<ControllerPosition> position2 =
+                    std::make_unique<ControllerPosition>(2, "EGKK_TWR", 124.220, handoffs, true, false);
+                this->position2 = position2.get();
 
-                    std::unique_ptr<ControllerPosition> position3 = std::make_unique<ControllerPosition>(
-                        3,
-                        "EGKK_APP",
-                        126.820,
-                        handoffs,
-                        true,
-                        false
-                    );
-                    this->position3 = position3.get();
+                std::unique_ptr<ControllerPosition> position3 =
+                    std::make_unique<ControllerPosition>(3, "EGKK_APP", 126.820, handoffs, true, false);
+                this->position3 = position3.get();
 
-                    container.controllerPositions->AddPosition(std::move(position1));
-                    container.controllerPositions->AddPosition(std::move(position2));
-                    container.controllerPositions->AddPosition(std::move(position3));
+                container.controllerPositions->AddPosition(std::move(position1));
+                container.controllerPositions->AddPosition(std::move(position2));
+                container.controllerPositions->AddPosition(std::move(position3));
 
-                    hierarchyFactory = std::make_unique<ControllerPositionHierarchyFactory>(
-                        *container.controllerPositions
-                    );
-                }
+                hierarchyFactory = std::make_unique<ControllerPositionHierarchyFactory>(*container.controllerPositions);
+            }
 
-                void TearDown() override
-                {
-                    EXPECT_TRUE(testing::Mock::VerifyAndClearExpectations(mockApi));
-                }
+            void TearDown() override
+            {
+                EXPECT_TRUE(testing::Mock::VerifyAndClearExpectations(mockApi));
+            }
 
-                ControllerPosition * position1;
-                ControllerPosition * position2;
-                ControllerPosition * position3;
-                NiceMock<MockApiInterface> * mockApi;
-                std::unique_ptr<ControllerPositionHierarchyFactory> hierarchyFactory;
-                PersistenceContainer container;
+            ControllerPosition* position1;
+            ControllerPosition* position2;
+            ControllerPosition* position3;
+            NiceMock<MockApiInterface>* mockApi;
+            std::unique_ptr<ControllerPositionHierarchyFactory> hierarchyFactory;
+            PersistenceContainer container;
         };
 
         TEST_F(NotificationsRepositoryFactoryTest, UnreadNotificationsValidReturnsFalseIfNotArray)
@@ -99,23 +76,14 @@ namespace UKControllerPluginTest {
 
         TEST_F(NotificationsRepositoryFactoryTest, UnreadNotificationsValidReturnsFalseIfNotificationDoesNotContainId)
         {
-            nlohmann::json notifications = nlohmann::json::array({
-                {
-                    {"id", 1}
-                },
-                {
-                    {"notid", 2}
-                }
-            });
+            nlohmann::json notifications = nlohmann::json::array({{{"id", 1}}, {{"notid", 2}}});
             EXPECT_FALSE(UnreadNotificationsValid(notifications));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, UnreadNotificationsValidReturnsFalseIfIdNotANumber)
         {
             nlohmann::json notifications = nlohmann::json::array({
-                {
-                    {"id", "abc"}
-                },
+                {{"id", "abc"}},
             });
             EXPECT_FALSE(UnreadNotificationsValid(notifications));
         }
@@ -123,9 +91,7 @@ namespace UKControllerPluginTest {
         TEST_F(NotificationsRepositoryFactoryTest, UnreadNotificationsValidReturnsTrueIfAllNotificationsValid)
         {
             nlohmann::json notifications = nlohmann::json::array({
-                {
-                    {"id", 1}
-                },
+                {{"id", 1}},
             });
             EXPECT_TRUE(UnreadNotificationsValid(notifications));
         }
@@ -409,26 +375,25 @@ namespace UKControllerPluginTest {
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseIfOneInvalid)
         {
-            nlohmann::json notifications = nlohmann::json::array({
-                {
-                    {"id", 1},
-                    {"title", "title"},
-                    {"body", "body"},
-                    {"link", "https://vatsim.uk"},
-                    {"valid_from", "2021-01-31 16:15:00"},
-                    {"valid_to", "2021-01-31 16:20:00"},
-                    {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
-                },
-                {
-                    {"id", "abc"},  // Invalid id
-                    {"title", "title"},
-                    {"body", "body"},
-                    {"link", "https://vatsim.uk"},
-                    {"valid_from", "2021-01-31 16:15:00"},
-                    {"valid_to", "2021-01-31 16:20:00"},
-                    {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
-                }
-            });
+            nlohmann::json notifications = nlohmann::json::array(
+                {{
+                     {"id", 1},
+                     {"title", "title"},
+                     {"body", "body"},
+                     {"link", "https://vatsim.uk"},
+                     {"valid_from", "2021-01-31 16:15:00"},
+                     {"valid_to", "2021-01-31 16:20:00"},
+                     {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
+                 },
+                 {
+                     {"id", "abc"}, // Invalid id
+                     {"title", "title"},
+                     {"body", "body"},
+                     {"link", "https://vatsim.uk"},
+                     {"valid_from", "2021-01-31 16:15:00"},
+                     {"valid_to", "2021-01-31 16:20:00"},
+                     {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
+                 }});
             EXPECT_FALSE(NotificationsValid(notifications, *hierarchyFactory));
         }
 
@@ -439,8 +404,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(NotificationsRepositoryFactoryTest, MakeHandlesExceptionFromRequestingNotifications)
         {
-            ON_CALL(*mockApi, GetAllNotifications())
-                .WillByDefault(Throw(ApiException("foo")));
+            ON_CALL(*mockApi, GetAllNotifications()).WillByDefault(Throw(ApiException("foo")));
 
             std::shared_ptr<NotificationsRepository> repo = Make(container);
             EXPECT_EQ(0, repo->Count());
@@ -448,14 +412,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(NotificationsRepositoryFactoryTest, MakeHandlesInvalidNotifications)
         {
-            nlohmann::json notifications = nlohmann::json::array({
-                {
-                    {"notid", 1}
-                }
-            });
+            nlohmann::json notifications = nlohmann::json::array({{{"notid", 1}}});
 
-            ON_CALL(*mockApi, GetAllNotifications())
-                .WillByDefault(Return(notifications));
+            ON_CALL(*mockApi, GetAllNotifications()).WillByDefault(Return(notifications));
 
             std::shared_ptr<NotificationsRepository> repo = Make(container);
             EXPECT_EQ(0, repo->Count());
@@ -463,11 +422,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(NotificationsRepositoryFactoryTest, MakeHandlesExceptionFromRequestingUnreadNotifications)
         {
-            ON_CALL(*mockApi, GetAllNotifications())
-                .WillByDefault(Return(nlohmann::json::array()));
+            ON_CALL(*mockApi, GetAllNotifications()).WillByDefault(Return(nlohmann::json::array()));
 
-            ON_CALL(*mockApi, GetUnreadNotifications())
-                .WillByDefault(Throw(ApiException("foo")));
+            ON_CALL(*mockApi, GetUnreadNotifications()).WillByDefault(Throw(ApiException("foo")));
 
             std::shared_ptr<NotificationsRepository> repo = Make(container);
             EXPECT_EQ(0, repo->Count());
@@ -475,43 +432,36 @@ namespace UKControllerPluginTest {
 
         TEST_F(NotificationsRepositoryFactoryTest, MakeLoadsNotificationsFromApi)
         {
-            nlohmann::json notifications = nlohmann::json::array({
-                {
-                    {"id", 1},
-                    {"title", "title"},
-                    {"body", "body"},
-                    {"link", "https://vatsim.uk/1"},
-                    {"valid_from", "2021-01-31 16:15:00"},
-                    {"valid_to", "2021-01-31 16:20:00"},
-                    {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
-                },
-                {
-                    {"id", 2},
-                    {"title", "title2"},
-                    {"body", "body2"},
-                    {"link", "https://vatsim.uk/2"},
-                    {"valid_from", "2021-01-31 16:20:00"},
-                    {"valid_to", "2021-01-31 16:25:00"},
-                    {"controllers", nlohmann::json::array({"EGKK_APP"})},
-                }
-            });
+            nlohmann::json notifications = nlohmann::json::array(
+                {{
+                     {"id", 1},
+                     {"title", "title"},
+                     {"body", "body"},
+                     {"link", "https://vatsim.uk/1"},
+                     {"valid_from", "2021-01-31 16:15:00"},
+                     {"valid_to", "2021-01-31 16:20:00"},
+                     {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
+                 },
+                 {
+                     {"id", 2},
+                     {"title", "title2"},
+                     {"body", "body2"},
+                     {"link", "https://vatsim.uk/2"},
+                     {"valid_from", "2021-01-31 16:20:00"},
+                     {"valid_to", "2021-01-31 16:25:00"},
+                     {"controllers", nlohmann::json::array({"EGKK_APP"})},
+                 }});
 
-            ON_CALL(*mockApi, GetAllNotifications())
-                .WillByDefault(Return(notifications));
+            ON_CALL(*mockApi, GetAllNotifications()).WillByDefault(Return(notifications));
 
-            nlohmann::json unreadNotifications = nlohmann::json::array({
-                {
-                    {"id", 1}
-                }
-            });
+            nlohmann::json unreadNotifications = nlohmann::json::array({{{"id", 1}}});
 
-            ON_CALL(*mockApi, GetUnreadNotifications())
-                .WillByDefault(Return(unreadNotifications));
+            ON_CALL(*mockApi, GetUnreadNotifications()).WillByDefault(Return(unreadNotifications));
 
             std::shared_ptr<NotificationsRepository> repo = Make(container);
             EXPECT_EQ(2, repo->Count());
 
-            Notification * const notification1 = repo->Get(1);
+            Notification* const notification1 = repo->Get(1);
             EXPECT_EQ(1, notification1->Id());
             EXPECT_EQ("title", notification1->Title());
             EXPECT_EQ("body", notification1->Body());
@@ -521,7 +471,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(notification1->IsRelevant(*position2));
             EXPECT_FALSE(notification1->IsRelevant(*position3));
 
-            Notification * const notification2 = repo->Get(2);
+            Notification* const notification2 = repo->Get(2);
             EXPECT_EQ(2, notification2->Id());
             EXPECT_EQ("title2", notification2->Title());
             EXPECT_EQ("body2", notification2->Body());
@@ -534,39 +484,36 @@ namespace UKControllerPluginTest {
 
         TEST_F(NotificationsRepositoryFactoryTest, MakeHandlesInvalidUnreadNotifications)
         {
-            nlohmann::json notifications = nlohmann::json::array({
-                {
-                    {"id", 1},
-                    {"title", "title"},
-                    {"body", "body"},
-                    {"link", "https://vatsim.uk/1"},
-                    {"valid_from", "2021-01-31 16:15:00"},
-                    {"valid_to", "2021-01-31 16:20:00"},
-                    {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
-                },
-                {
-                    {"id", 2},
-                    {"title", "title2"},
-                    {"body", "body2"},
-                    {"link", "https://vatsim.uk/2"},
-                    {"valid_from", "2021-01-31 16:20:00"},
-                    {"valid_to", "2021-01-31 16:25:00"},
-                    {"controllers", nlohmann::json::array({"EGKK_APP"})},
-                }
-            });
+            nlohmann::json notifications = nlohmann::json::array(
+                {{
+                     {"id", 1},
+                     {"title", "title"},
+                     {"body", "body"},
+                     {"link", "https://vatsim.uk/1"},
+                     {"valid_from", "2021-01-31 16:15:00"},
+                     {"valid_to", "2021-01-31 16:20:00"},
+                     {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
+                 },
+                 {
+                     {"id", 2},
+                     {"title", "title2"},
+                     {"body", "body2"},
+                     {"link", "https://vatsim.uk/2"},
+                     {"valid_from", "2021-01-31 16:20:00"},
+                     {"valid_to", "2021-01-31 16:25:00"},
+                     {"controllers", nlohmann::json::array({"EGKK_APP"})},
+                 }});
 
-            ON_CALL(*mockApi, GetAllNotifications())
-                .WillByDefault(Return(notifications));
+            ON_CALL(*mockApi, GetAllNotifications()).WillByDefault(Return(notifications));
 
             nlohmann::json unreadNotifications = nlohmann::json::object();
 
-            ON_CALL(*mockApi, GetUnreadNotifications())
-                .WillByDefault(Return(unreadNotifications));
+            ON_CALL(*mockApi, GetUnreadNotifications()).WillByDefault(Return(unreadNotifications));
 
             std::shared_ptr<NotificationsRepository> repo = Make(container);
             EXPECT_EQ(2, repo->Count());
 
-            Notification * const notification = repo->Get(2);
+            Notification* const notification = repo->Get(2);
             EXPECT_EQ(2, notification->Id());
             EXPECT_EQ("title2", notification->Title());
             EXPECT_EQ("body2", notification->Body());
@@ -576,5 +523,5 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(notification->IsRelevant(*position2));
             EXPECT_TRUE(notification->IsRelevant(*position3));
         }
-    }  // namespace Notifications
-}  // namespace UKControllerPluginTest
+    } // namespace Notifications
+} // namespace UKControllerPluginTest

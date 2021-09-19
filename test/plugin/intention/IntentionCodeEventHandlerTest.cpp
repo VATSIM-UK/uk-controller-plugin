@@ -6,11 +6,6 @@
 #include "intention/IntentionCodeUpdatedMessage.h"
 #include "intention/SectorExitRepositoryFactory.h"
 #include "intention/SectorExitRepository.h"
-#include "mock/MockEuroScopeCControllerInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
-#include "mock/MockOutboundIntegrationEventHandler.h"
 #include "tag/TagData.h"
 
 using testing::NiceMock;

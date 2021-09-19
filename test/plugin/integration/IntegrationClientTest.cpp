@@ -1,8 +1,6 @@
-#include "pch/pch.h"
 #include "integration/IntegrationClient.h"
 #include "integration/IntegrationConnection.h"
 #include "integration/MessageType.h"
-#include "mock/MockConnection.h"
 
 using testing::Test;
 using UKControllerPlugin::Integration::IntegrationClient;
@@ -10,28 +8,26 @@ using UKControllerPlugin::Integration::IntegrationConnection;
 using UKControllerPlugin::Integration::MessageType;
 using UKControllerPluginTest::Integration::MockConnection;
 
-
 namespace UKControllerPluginTest::Integration {
 
     class IntegrationClientTest : public Test
     {
         public:
-            IntegrationClientTest()
-                : mockConnection(new testing::NiceMock<MockConnection>()),
-                  connection(new IntegrationConnection(mockConnection)),
-                  client(34, "testytest", "v1.5", connection)
-            {
-                type1.reset(new MessageType{"a", 1});
-                type2.reset(new MessageType{"b", 2});
-                type3.reset(new MessageType{"c", 3});
-            }
+        IntegrationClientTest()
+            : mockConnection(new testing::NiceMock<MockConnection>()),
+              connection(new IntegrationConnection(mockConnection)), client(34, "testytest", "v1.5", connection)
+        {
+            type1.reset(new MessageType{"a", 1});
+            type2.reset(new MessageType{"b", 2});
+            type3.reset(new MessageType{"c", 3});
+        }
 
-            std::shared_ptr<MessageType> type1;
-            std::shared_ptr<MessageType> type2;
-            std::shared_ptr<MessageType> type3;
-            std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection;
-            std::shared_ptr<IntegrationConnection> connection;
-            IntegrationClient client;
+        std::shared_ptr<MessageType> type1;
+        std::shared_ptr<MessageType> type2;
+        std::shared_ptr<MessageType> type3;
+        std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection;
+        std::shared_ptr<IntegrationConnection> connection;
+        IntegrationClient client;
     };
 
     TEST_F(IntegrationClientTest, ItHasAnId)

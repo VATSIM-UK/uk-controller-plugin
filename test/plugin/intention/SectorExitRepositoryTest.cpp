@@ -1,14 +1,12 @@
-#include "pch/pch.h"
 #include "intention/SectorExitPoint.h"
 #include "intention/SectorExitRepository.h"
 #include "intention/SectorExitRepositoryFactory.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
 
-using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
-using UKControllerPlugin::IntentionCode::SectorExitRepository;
-using UKControllerPlugin::IntentionCode::SectorExitRepositoryFactory;
 using ::testing::NiceMock;
 using ::testing::Return;
+using UKControllerPlugin::IntentionCode::SectorExitRepository;
+using UKControllerPlugin::IntentionCode::SectorExitRepositoryFactory;
+using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
@@ -22,11 +20,9 @@ namespace UKControllerPluginTest {
         {
             std::unique_ptr<SectorExitRepository> repo = SectorExitRepositoryFactory::Create();
             NiceMock<MockEuroscopeExtractedRouteInterface> mockRoute;
-            ON_CALL(mockRoute, GetPointsNumber())
-                .WillByDefault(Return(-1));
+            ON_CALL(mockRoute, GetPointsNumber()).WillByDefault(Return(-1));
 
-            ON_CALL(mockRoute, GetPointName(0))
-                .WillByDefault(Return(""));
+            ON_CALL(mockRoute, GetPointName(0)).WillByDefault(Return(""));
 
             // Brussels
 
@@ -597,5 +593,5 @@ namespace UKControllerPluginTest {
             ASSERT_TRUE(repo->GetSectorExitPoint("AKOKO").GetIntentionCode(mockRoute, 0, 37000).compare("U7") == 0);
             ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("AKOKO").GetOutDirection());
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest

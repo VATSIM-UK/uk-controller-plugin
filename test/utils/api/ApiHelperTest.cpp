@@ -4,7 +4,6 @@
 #include "api/ApiNotFoundException.h"
 #include "curl/CurlInterface.h"
 #include "helper/ApiRequestHelperFunctions.h"
-#include "mock/MockCurlApi.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

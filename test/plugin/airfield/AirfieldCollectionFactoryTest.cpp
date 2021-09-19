@@ -1,17 +1,15 @@
-#include "pch/pch.h"
 #include "airfield/AirfieldCollection.h"
 #include "airfield/AirfieldCollectionFactory.h"
-#include "mock/MockDependencyLoader.h"
 #include "airfield/AirfieldModel.h"
 
-using UKControllerPlugin::Airfield::AirfieldCollection;
-using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
-using UKControllerPluginTest::Dependency::MockDependencyLoader;
-using UKControllerPlugin::Airfield::AirfieldModel;
 using ::testing::ElementsAre;
-using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::Test;
+using UKControllerPlugin::Airfield::AirfieldCollection;
+using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
+using UKControllerPlugin::Airfield::AirfieldModel;
+using UKControllerPluginTest::Dependency::MockDependencyLoader;
 
 namespace UKControllerPluginTest {
     namespace Airfield {
@@ -19,7 +17,7 @@ namespace UKControllerPluginTest {
         class AirfieldCollectionFactoryTest : public Test
         {
             public:
-                NiceMock<MockDependencyLoader> dependency;
+            NiceMock<MockDependencyLoader> dependency;
         };
 
         TEST_F(AirfieldCollectionFactoryTest, CreateReturnsEmptyColletionIfDependencyMissing)
@@ -55,5 +53,5 @@ namespace UKControllerPluginTest {
             EXPECT_THAT(collection->FetchAirfieldByIcao("EGKK").GetOwnershipPresedence(), ElementsAre("EGKK_DEL"));
             EXPECT_THAT(collection->FetchAirfieldByIcao("EGLL").GetOwnershipPresedence(), ElementsAre("EGLL_DEL"));
         }
-    }  // namespace Airfield
-}  // namespace UKControllerPluginTest
+    } // namespace Airfield
+} // namespace UKControllerPluginTest

@@ -4,7 +4,6 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "dialog/DialogManager.h"
-#include "mock/MockDialogProvider.h"
 #include "tag/TagItemCollection.h"
 
 using testing::NiceMock;

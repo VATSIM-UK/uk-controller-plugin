@@ -1,7 +1,4 @@
 #include "data/PluginDataLocations.h"
-#include "mock/MockWinApi.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockCurlApi.h"
 #include "curl/CurlResponse.h"
 
 using testing::NiceMock;

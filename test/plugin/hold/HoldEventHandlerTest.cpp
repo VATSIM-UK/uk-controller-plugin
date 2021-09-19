@@ -1,17 +1,11 @@
 #include "hold/HoldManager.h"
 #include "hold/HoldEventHandler.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "plugin/PopupMenuItem.h"
 #include "navaids/NavaidCollection.h"
 #include "hold/HoldingData.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockTaskRunnerInterface.h"
 #include "push/PushEventSubscription.h"
 #include "push/PushEvent.h"
 #include "sectorfile/SectorFileCoordinates.h"
-#include "mock/MockFlightplanRadarTargetPair.h"
 #include "tag/TagData.h"
 
 using ::testing::_;

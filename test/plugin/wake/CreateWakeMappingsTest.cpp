@@ -1,18 +1,16 @@
-#include "pch/pch.h"
 #include "wake/CreateWakeMappings.h"
 #include "wake/WakeCategoryMapper.h"
 #include "message/UserMessager.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 
+using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
+using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Wake::CreateWakeMappings;
 using UKControllerPlugin::Wake::WakeCategoryMapper;
-using UKControllerPlugin::Message::UserMessager;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
 
-using ::testing::Test;
 using ::testing::NiceMock;
+using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace Wake {
@@ -20,14 +18,12 @@ namespace UKControllerPluginTest {
         class CreateWakeMappingsTest : public Test
         {
             public:
-                CreateWakeMappingsTest()
-                    : messager(mockPlugin)
-                {
+            CreateWakeMappingsTest() : messager(mockPlugin)
+            {
+            }
 
-                }
-
-                NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-                UserMessager messager;
+            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+            UserMessager messager;
         };
 
         TEST_F(CreateWakeMappingsTest, ItCreatesAMapperFromData)
@@ -44,7 +40,7 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json data;
             data["A332"] = "H";
-            data["B738"] = { "LM" };
+            data["B738"] = {"LM"};
 
             EXPECT_CALL(
                 this->mockPlugin,
@@ -56,14 +52,12 @@ namespace UKControllerPluginTest {
                     true,
                     true,
                     true,
-                    true
-                )
-            )
+                    true))
                 .Times(1);
 
             WakeCategoryMapper mapper = CreateWakeMappings(data, this->messager);
             EXPECT_EQ(1, mapper.Count());
         }
 
-    }  // namespace Wake
-}  // namespace UKControllerPluginTest
+    } // namespace Wake
+} // namespace UKControllerPluginTest

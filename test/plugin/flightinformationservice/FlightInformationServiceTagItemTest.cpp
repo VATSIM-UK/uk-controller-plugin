@@ -1,18 +1,14 @@
-#include "pch/pch.h"
 #include "flightinformationservice/FlightInformationServiceTagItem.h"
 #include "tag/TagData.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "plugin/PopupMenuItem.h"
 
 using testing::Test;
 using UKControllerPlugin::FlightInformationService::FlightInformationServiceTagItem;
+using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Plugin::PopupMenuItem;
 
 namespace UKControllerPluginTest {
     namespace FlightInformationService {
@@ -20,43 +16,38 @@ namespace UKControllerPluginTest {
         class FlightInformationServiceTagItemTest : public Test
         {
             public:
+            FlightInformationServiceTagItemTest() : tagItem(plugin, 55)
+            {
+                this->pluginReturnedFlightplan =
+                    std::make_shared<testing::NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
-                FlightInformationServiceTagItemTest()
-                    : tagItem(plugin, 55)
-                {
-                    this->pluginReturnedFlightplan =
-                        std::make_shared<testing::NiceMock<MockEuroScopeCFlightPlanInterface>>();
+                ON_CALL(*this->pluginReturnedFlightplan, GetCallsign()).WillByDefault(testing::Return("BAW123"));
 
-                    ON_CALL(*this->pluginReturnedFlightplan, GetCallsign())
-                        .WillByDefault(testing::Return("BAW123"));
+                ON_CALL(this->flightplan, GetCallsign()).WillByDefault(testing::Return("BAW123"));
+            }
 
-                    ON_CALL(this->flightplan, GetCallsign())
-                        .WillByDefault(testing::Return("BAW123"));
-                }
+            TagData GetTagData(int tagItemId)
+            {
+                return TagData(
+                    flightplan,
+                    radarTarget,
+                    tagItemId,
+                    EuroScopePlugIn::TAG_DATA_CORRELATED,
+                    itemString,
+                    &euroscopeColourCode,
+                    &tagColour,
+                    &fontSize);
+            }
 
-                TagData GetTagData(int tagItemId)
-                {
-                    return TagData(
-                        flightplan,
-                        radarTarget,
-                        tagItemId,
-                        EuroScopePlugIn::TAG_DATA_CORRELATED,
-                        itemString,
-                        &euroscopeColourCode,
-                        &tagColour,
-                        &fontSize
-                    );
-                }
-
-                double fontSize = 24.1;
-                COLORREF tagColour = RGB(255, 255, 255);
-                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
-                char itemString[16] = "Foooooo";
-                testing::NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
-                std::shared_ptr<testing::NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFlightplan;
-                testing::NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
-                testing::NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
-                FlightInformationServiceTagItem tagItem;
+            double fontSize = 24.1;
+            COLORREF tagColour = RGB(255, 255, 255);
+            int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+            char itemString[16] = "Foooooo";
+            testing::NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
+            std::shared_ptr<testing::NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFlightplan;
+            testing::NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+            testing::NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            FlightInformationServiceTagItem tagItem;
         };
 
         TEST_F(FlightInformationServiceTagItemTest, ItDescribesTheBaseTagItem)
@@ -157,44 +148,34 @@ namespace UKControllerPluginTest {
             menuItemRemove.fixedPosition = false;
 
             RECT expectedArea = {0, 0, 300, 500};
-            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "UKFIS", 1))
-                .Times(1);
+            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "UKFIS", 1)).Times(1);
 
-            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemBasic))
-                .Times(1);
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemBasic)).Times(1);
 
-            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemTraffic))
-                .Times(1);
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemTraffic)).Times(1);
 
-            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemDecon))
-                .Times(1);
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemDecon)).Times(1);
 
-            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemProcedural))
-                .Times(1);
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemProcedural)).Times(1);
 
-            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemRemove))
-                .Times(1);
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemRemove)).Times(1);
 
             this->tagItem.DisplayFlightInformationServicesMenu(this->flightplan, this->radarTarget, "", {0, 0});
         }
 
         TEST_F(FlightInformationServiceTagItemTest, SelectingAMenuItemHandlesInvalidFlightplan)
         {
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(testing::Return(nullptr));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(testing::Return(nullptr));
 
             tagItem.MenuItemClicked(55, "BASIC");
-
 
             EXPECT_EQ("", tagItem.GetServiceForAircraft("BAW123"));
         }
 
         TEST_F(FlightInformationServiceTagItemTest, SelectingAMenuItemSetsTheServiceForTheAircraft)
         {
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(this->pluginReturnedFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(this->pluginReturnedFlightplan));
             tagItem.MenuItemClicked(55, "BASIC");
-
 
             EXPECT_EQ("BASIC", tagItem.GetServiceForAircraft("BAW123"));
         }
@@ -202,12 +183,10 @@ namespace UKControllerPluginTest {
         TEST_F(FlightInformationServiceTagItemTest, SelectingAMenuItemRemovesTheServiceForTheAircraft)
         {
             tagItem.SetServiceForAircraft("BAW123", "BASIC");
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(this->pluginReturnedFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(this->pluginReturnedFlightplan));
             tagItem.MenuItemClicked(55, "--");
-
 
             EXPECT_EQ("", tagItem.GetServiceForAircraft("BAW123"));
         }
-    }  // namespace FlightInformationService
-}  // namespace UKControllerPluginTest
+    } // namespace FlightInformationService
+} // namespace UKControllerPluginTest

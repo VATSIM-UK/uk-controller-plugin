@@ -1,12 +1,10 @@
-#include "pch/pch.h"
-#include "message/UserMessager.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "message/MessageSerializableInterface.h"
+#include "message/UserMessager.h"
 
-using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Message::MessageSerializableInterface;
 using ::testing::NiceMock;
+using UKControllerPlugin::Message::MessageSerializableInterface;
+using UKControllerPlugin::Message::UserMessager;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 
 namespace UKControllerPluginTest {
     namespace Message {
@@ -60,9 +58,8 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
 
             EXPECT_CALL(
-                    mockPlugin,
-                    ChatAreaMessage("Test Handler", "Test Sender", "Test Message", true, false, true, false, true)
-                )
+                mockPlugin,
+                ChatAreaMessage("Test Handler", "Test Sender", "Test Message", true, false, true, false, true))
                 .Times(1);
 
             UserMessager messager(mockPlugin);
@@ -70,5 +67,5 @@ namespace UKControllerPluginTest {
 
             messager.SendMessageToUser(testMessage);
         }
-    }  // namespace Message
-}  // namespace UKControllerPluginTest
+    } // namespace Message
+} // namespace UKControllerPluginTest

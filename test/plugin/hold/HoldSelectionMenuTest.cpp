@@ -2,14 +2,7 @@
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldSelectionMenu.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockTaskRunnerInterface.h"
 #include "euroscope/UserSetting.h"
-#include "mock/MockUserSettingProviderInterface.h"
-#include "mock/MockDialogProvider.h"
 
 using ::testing::_;
 using ::testing::InSequence;

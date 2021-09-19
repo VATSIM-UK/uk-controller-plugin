@@ -1,14 +1,9 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPositionCollection.h"
 #include "dialog/DialogManager.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockDialogProvider.h"
 #include "releases/ToggleDepartureReleaseDecisionList.h"
 #include "releases/DepartureReleaseDecisionList.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockTaskRunnerInterface.h"
 #include "releases/DepartureReleaseEventHandler.h"
-#include "mock/MockWinApi.h"
 
 using testing::Test;
 using UKControllerPlugin::Releases::ToggleDepartureReleaseDecisionList;

@@ -1,6 +1,5 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPositionCollection.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "prenote/PendingPrenoteList.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "prenote/TogglePendingPrenoteList.h"

@@ -1,6 +1,4 @@
 #include "minstack/MinStackModule.h"
-#include "mock/MockTaskRunnerInterface.h"
-#include "mock/MockApiInterface.h"
 #include "minstack/MinStackManager.h"
 #include "curl/CurlResponse.h"
 #include "plugin/FunctionCallEventHandler.h"
@@ -10,7 +8,6 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "curl/CurlRequest.h"
 #include "push/PushEventProcessorCollection.h"
-#include "mock/MockDialogProvider.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

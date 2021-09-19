@@ -2,7 +2,6 @@
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionHierarchy.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "prenote/DeparturePrenote.h"
 
 using ::testing::NiceMock;

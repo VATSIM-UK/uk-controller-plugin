@@ -1,14 +1,12 @@
-#include "pch/pch.h"
 #include "setting/SettingRepository.h"
 #include "setting/SettingValue.h"
-#include "mock/MockWinApi.h"
 
+using ::testing::Return;
+using ::testing::StrictMock;
+using ::testing::Throw;
 using UKControllerPlugin::Setting::SettingRepository;
 using UKControllerPlugin::Setting::SettingValue;
 using UKControllerPluginTest::Windows::MockWinApi;
-using ::testing::StrictMock;
-using ::testing::Return;
-using ::testing::Throw;
 
 namespace UKControllerPluginUtilsTest {
     namespace Setting {
@@ -204,8 +202,9 @@ namespace UKControllerPluginUtilsTest {
                 winApiMock,
                 WriteToFile(
                     std::wstring(L"settings/test/test.json"),
-                    "{\n    \"test1\": \"testValue1\",\n    \"test2\": \"testValue2\"\n}", true, false
-                ))
+                    "{\n    \"test1\": \"testValue1\",\n    \"test2\": \"testValue2\"\n}",
+                    true,
+                    false))
                 .Times(1);
 
             SettingRepository repo(winApiMock);
@@ -229,8 +228,9 @@ namespace UKControllerPluginUtilsTest {
                 winApiMock,
                 WriteToFile(
                     std::wstring(L"settings/test/test.json"),
-                    "{\n    \"test1\": \"notTestValue1\",\n    \"test2\": \"testValue2\"\n}", true, false
-                ))
+                    "{\n    \"test1\": \"notTestValue1\",\n    \"test2\": \"testValue2\"\n}",
+                    true,
+                    false))
                 .Times(1);
 
             SettingRepository repo(winApiMock);
@@ -262,17 +262,13 @@ namespace UKControllerPluginUtilsTest {
             EXPECT_CALL(
                 winApiMock,
                 WriteToFile(
-                    std::wstring(L"settings/test/test1.json"), "{\n    \"test1\": \"testValue1\"\n}", true, false
-                )
-            )
+                    std::wstring(L"settings/test/test1.json"), "{\n    \"test1\": \"testValue1\"\n}", true, false))
                 .Times(1);
 
             EXPECT_CALL(
                 winApiMock,
                 WriteToFile(
-                    std::wstring(L"settings/test/test2.json"), "{\n    \"test2\": \"testValue2\"\n}", true, false
-                )
-            )
+                    std::wstring(L"settings/test/test2.json"), "{\n    \"test2\": \"testValue2\"\n}", true, false))
                 .Times(1);
 
             SettingRepository repo(winApiMock);
@@ -280,5 +276,5 @@ namespace UKControllerPluginUtilsTest {
             repo.AddSettingsFromJsonFile("test/test2.json");
             repo.WriteSettingsToFile();
         }
-    }  // namespace Setting
-}  // namespace UKControllerPluginUtilsTest
+    } // namespace Setting
+} // namespace UKControllerPluginUtilsTest

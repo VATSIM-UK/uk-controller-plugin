@@ -1,18 +1,11 @@
-#include "pch/pch.h"
 #include "euroscope/UserSetting.h"
 #include "hold/HoldRenderer.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "plugin/PopupMenuItem.h"
 #include "navaids/NavaidCollection.h"
 #include "hold/PublishedHoldCollection.h"
-#include "mock/MockTaskRunnerInterface.h"
-#include "mock/MockDialogProvider.h"
 #include "dialog/DialogManager.h"
 
 using ::testing::NiceMock;

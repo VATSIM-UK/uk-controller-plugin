@@ -1,8 +1,6 @@
 #include "graphics/GdiplusBrushes.h"
 #include "helper/Matchers.h"
 #include "helper/TestingFunctions.h"
-#include "mock/MockConfigurableDisplay.h"
-#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "plugin/PopupMenuItem.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"

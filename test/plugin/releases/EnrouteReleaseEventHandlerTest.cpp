@@ -1,10 +1,5 @@
 #include "releases/EnrouteReleaseEventHandler.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockTaskRunnerInterface.h"
 #include "api/ApiException.h"
 
 using ::testing::_;

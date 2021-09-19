@@ -1,8 +1,5 @@
 #include "sectorfile/Runway.h"
 #include "sectorfile/RunwayCollection.h"
-#include "mock/MockSectorFileProviderInterface.h"
-#include "mock/MockEuroscopeSectorFileElementInterface.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
 
 using ::testing::NiceMock;

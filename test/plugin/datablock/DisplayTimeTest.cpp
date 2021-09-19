@@ -1,18 +1,16 @@
-#include "pch/pch.h"
 #include "datablock/DisplayTime.h"
 #include "helper/HelperFunctions.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
 
-using UKControllerPlugin::Datablock::DisplayTime;
-using UKControllerPlugin::HelperFunctions;
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
-using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using testing::NiceMock;
-using testing::Test;
 using testing::Return;
+using testing::Test;
+using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Datablock::DisplayTime;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 
 namespace UKControllerPluginTest {
     namespace Datablock {
@@ -20,14 +18,12 @@ namespace UKControllerPluginTest {
         class DisplayTimeTest : public Test
         {
             public:
-                DisplayTimeTest()
-                    : userSetting(userSettingProvider)
-                {
-
-                }
-                NiceMock<MockUserSettingProviderInterface> userSettingProvider;
-                UserSetting userSetting;
-                DisplayTime timeDisplay;
+            DisplayTimeTest() : userSetting(userSettingProvider)
+            {
+            }
+            NiceMock<MockUserSettingProviderInterface> userSettingProvider;
+            UserSetting userSetting;
+            DisplayTime timeDisplay;
         };
 
         TEST_F(DisplayTimeTest, FromTimestampReturnsTimeString)
@@ -70,5 +66,5 @@ namespace UKControllerPluginTest {
             this->timeDisplay.UserSettingsUpdated(this->userSetting);
             EXPECT_EQ(this->timeDisplay.unknownTimeFormatDefault, this->timeDisplay.GetUnknownTimeFormat());
         }
-    }  // namespace Datablock
-}  // namespace UKControllerPluginTest
+    } // namespace Datablock
+} // namespace UKControllerPluginTest

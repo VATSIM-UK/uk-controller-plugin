@@ -1,12 +1,7 @@
+#include "euroscope/UserSetting.h"
+#include "hold/HoldDisplayFactory.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
-#include "hold/HoldDisplayFactory.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockUserSettingProviderInterface.h"
-#include "euroscope/UserSetting.h"
-#include "mock/MockTaskRunnerInterface.h"
-#include "mock/MockDialogProvider.h"
 
 using testing::_;
 using testing::NiceMock;

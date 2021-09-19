@@ -1,17 +1,15 @@
-#include "pch/pch.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
-#include "mock/MockActiveCallsignEventHandler.h"
 
+using ::testing::NiceMock;
+using ::testing::Ref;
+using ::testing::Return;
+using ::testing::Test;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPluginTest::Controller::MockActiveCallsignEventHandler;
-using ::testing::NiceMock;
-using ::testing::Return;
-using ::testing::Test;
-using ::testing::Ref;
 
 namespace UKControllerPluginTest {
     namespace Controller {
@@ -19,20 +17,19 @@ namespace UKControllerPluginTest {
         class ActiveCallsignCollectionTest : public Test
         {
             public:
+            ActiveCallsignCollectionTest()
+                : testPosition(1, "LON_S_CTR", 129.420, {}, true, false),
+                  testCallsign("LON_S_CTR", "Testy Boi", testPosition)
+            {
+                handler1.reset(new NiceMock<MockActiveCallsignEventHandler>());
+                handler2.reset(new NiceMock<MockActiveCallsignEventHandler>());
+            }
 
-                ActiveCallsignCollectionTest()
-                    : testPosition(1, "LON_S_CTR", 129.420, {}, true, false),
-                      testCallsign("LON_S_CTR", "Testy Boi", testPosition)
-                {
-                    handler1.reset(new NiceMock<MockActiveCallsignEventHandler>());
-                    handler2.reset(new NiceMock<MockActiveCallsignEventHandler>());
-                }
-
-                std::shared_ptr<NiceMock<MockActiveCallsignEventHandler>> handler1;
-                std::shared_ptr<NiceMock<MockActiveCallsignEventHandler>> handler2;
-                ActiveCallsignCollection collection;
-                ControllerPosition testPosition;
-                ActiveCallsign testCallsign;
+            std::shared_ptr<NiceMock<MockActiveCallsignEventHandler>> handler1;
+            std::shared_ptr<NiceMock<MockActiveCallsignEventHandler>> handler2;
+            ActiveCallsignCollection collection;
+            ControllerPosition testPosition;
+            ActiveCallsign testCallsign;
         };
 
         TEST_F(ActiveCallsignCollectionTest, ItStartsWithNoHandlers)
@@ -59,10 +56,8 @@ namespace UKControllerPluginTest {
             this->collection.AddHandler(handler1);
             this->collection.AddHandler(handler2);
 
-            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, false))
-                .Times(1);
-            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, false))
-                .Times(1);
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, false)).Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, false)).Times(1);
 
             this->collection.AddCallsign(this->testCallsign);
         }
@@ -72,10 +67,8 @@ namespace UKControllerPluginTest {
             this->collection.AddHandler(handler1);
             this->collection.AddHandler(handler2);
 
-            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, true))
-                .Times(1);
-            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, true))
-                .Times(1);
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, true)).Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, true)).Times(1);
 
             this->collection.AddUserCallsign(this->testCallsign);
         }
@@ -85,15 +78,11 @@ namespace UKControllerPluginTest {
             this->collection.AddHandler(handler1);
             this->collection.AddHandler(handler2);
 
-            EXPECT_CALL(*this->handler1, ActiveCallsignRemoved(this->testCallsign, false))
-                .Times(1);
-            EXPECT_CALL(*this->handler2, ActiveCallsignRemoved(this->testCallsign, false))
-                .Times(1);
+            EXPECT_CALL(*this->handler1, ActiveCallsignRemoved(this->testCallsign, false)).Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignRemoved(this->testCallsign, false)).Times(1);
 
-            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, false))
-                .Times(1);
-            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, false))
-                .Times(1);
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, false)).Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, false)).Times(1);
 
             this->collection.AddCallsign(this->testCallsign);
             this->collection.RemoveCallsign(this->testCallsign);
@@ -104,15 +93,11 @@ namespace UKControllerPluginTest {
             this->collection.AddHandler(handler1);
             this->collection.AddHandler(handler2);
 
-            EXPECT_CALL(*this->handler1, ActiveCallsignRemoved(this->testCallsign, true))
-                .Times(1);
-            EXPECT_CALL(*this->handler2, ActiveCallsignRemoved(this->testCallsign, true))
-                .Times(1);
+            EXPECT_CALL(*this->handler1, ActiveCallsignRemoved(this->testCallsign, true)).Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignRemoved(this->testCallsign, true)).Times(1);
 
-            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, true))
-                .Times(1);
-            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, true))
-                .Times(1);
+            EXPECT_CALL(*this->handler1, ActiveCallsignAdded(this->testCallsign, true)).Times(1);
+            EXPECT_CALL(*this->handler2, ActiveCallsignAdded(this->testCallsign, true)).Times(1);
 
             this->collection.AddUserCallsign(this->testCallsign);
             this->collection.RemoveCallsign(this->testCallsign);
@@ -123,10 +108,8 @@ namespace UKControllerPluginTest {
             this->collection.AddHandler(handler1);
             this->collection.AddHandler(handler2);
 
-            EXPECT_CALL(*this->handler1, CallsignsFlushed())
-                .Times(1);
-            EXPECT_CALL(*this->handler2, CallsignsFlushed())
-                .Times(1);
+            EXPECT_CALL(*this->handler1, CallsignsFlushed()).Times(1);
+            EXPECT_CALL(*this->handler2, CallsignsFlushed()).Times(1);
 
             this->collection.Flush();
         }
@@ -299,7 +282,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(ActiveCallsignCollectionTest, CorrectlyHandlesMismatchingCallsigns)
         {
-            ControllerPosition pos(1, "LON_S_CTR", 129.420, { "EGKK", "EGLL", "EGLC" }, true, false);
+            ControllerPosition pos(1, "LON_S_CTR", 129.420, {"EGKK", "EGLL", "EGLC"}, true, false);
             ControllerPosition pos2(2, "LON_N_CTR", 133.700, {"EGCC", "EGGP"}, true, false);
             ActiveCallsign callsign("LON_S_CTR", "Testy McTest", pos2);
             ActiveCallsign callsign2("LON_S_CTR", "Testy McTest", pos2);
@@ -316,5 +299,5 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(collection.PositionActive("LON_N_CTR"));
             EXPECT_FALSE(collection.CallsignActive("LON_S_CTR"));
         }
-    }  // namespace Controller
-}  // namespace UKControllerPluginTest
+    } // namespace Controller
+} // namespace UKControllerPluginTest

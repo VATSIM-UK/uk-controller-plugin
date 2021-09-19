@@ -1,7 +1,5 @@
 #include "login/Login.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
-#include "mock/MockControllerStatusEventHandlerInterface.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;

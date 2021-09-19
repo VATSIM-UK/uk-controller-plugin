@@ -1,10 +1,7 @@
-#include "historytrail/HistoryTrailRenderer.h"
-#include "mock/MockUserSettingProviderInterface.h"
-#include "euroscope/UserSetting.h"
-#include "mock/MockDialogProvider.h"
 #include "dialog/DialogManager.h"
+#include "euroscope/UserSetting.h"
+#include "historytrail/HistoryTrailRenderer.h"
 #include "historytrail/HistoryTrailRepository.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Dialog::DialogManager;

@@ -1,22 +1,19 @@
-#include "pch/pch.h"
 #include "dependency/UpdateDependencies.h"
-#include "mock/MockWinApi.h"
-#include "mock/MockApiInterface.h"
 #include "api/ApiException.h"
 
-using UKControllerPluginTest::Api::MockApiInterface;
-using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPlugin::Dependency::UpdateDependencies;
-using UKControllerPlugin::Dependency::ValidDependency;
-using UKControllerPlugin::Dependency::NeedsDownload;
-using UKControllerPlugin::Dependency::LoadDependencyList;
-using UKControllerPlugin::Dependency::LoadDependencyListFromFilesystem;
-using UKControllerPlugin::Api::ApiException;
+using ::testing::_;
 using ::testing::NiceMock;
+using ::testing::Return;
 using ::testing::Test;
 using ::testing::Throw;
-using ::testing::Return;
-using ::testing::_;
+using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Dependency::LoadDependencyList;
+using UKControllerPlugin::Dependency::LoadDependencyListFromFilesystem;
+using UKControllerPlugin::Dependency::NeedsDownload;
+using UKControllerPlugin::Dependency::UpdateDependencies;
+using UKControllerPlugin::Dependency::ValidDependency;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest {
     namespace Dependency {
@@ -24,24 +21,16 @@ namespace UKControllerPluginTest {
         class UpdateDependenciesTest : public Test
         {
             public:
+            UpdateDependenciesTest()
+            {
+            }
 
-                UpdateDependenciesTest()
-                {
+            NiceMock<MockWinApi> mockWindows;
+            NiceMock<MockApiInterface> mockApi;
 
-                }
+            nlohmann::json dependency1 = {{"foo", "bar "}};
 
-                NiceMock<MockWinApi> mockWindows;
-                NiceMock<MockApiInterface> mockApi;
-
-
-                nlohmann::json dependency1 = {
-                    { "foo", "bar "}
-                };
-
-                nlohmann::json dependency2 = {
-                    { "baz", "noot "}
-                };
-
+            nlohmann::json dependency2 = {{"baz", "noot "}};
         };
 
         TEST_F(UpdateDependenciesTest, ValidDependencyReturnsTrueOnValid)
@@ -263,11 +252,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(UpdateDependenciesTest, UpdateDependenciesStopsIfListFailsDownload)
         {
-            ON_CALL(this->mockApi, GetDependencyList())
-                .WillByDefault(Throw(ApiException("nah")));
+            ON_CALL(this->mockApi, GetDependencyList()).WillByDefault(Throw(ApiException("nah")));
 
-            EXPECT_CALL(this->mockWindows, WriteToFile(_, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockWindows, WriteToFile(_, _, _, _)).Times(0);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
         }
@@ -275,43 +262,18 @@ namespace UKControllerPluginTest {
         TEST_F(UpdateDependenciesTest, UpdateDependenciesUpdatesData)
         {
             nlohmann::json existingDependencyList{
-                {
-                    {"key", "DEPENDENCY_ONE"},
-                    {"local_file", "test1.json"},
-                    {"uri", "test1"},
-                    {"updated_at", 1}
-                },
-                {
-                    {"key", "DEPENDENCY_TWO"},
-                    {"local_file", "test2.json"},
-                    {"uri", "test2"},
-                    {"updated_at", 1}
-                }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"uri", "test1"}, {"updated_at", 1}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"uri", "test2"}, {"updated_at", 1}}};
 
             nlohmann::json dependencyList{
-                    {
-                        {"key", "DEPENDENCY_ONE"},
-                        {"local_file", "test1.json"},
-                        {"uri", "test1"},
-                        {"updated_at", 2}
-                    },
-                    {
-                        {"key", "DEPENDENCY_TWO"},
-                        {"local_file", "test2.json"},
-                        {"uri", "test2"},
-                        {"updated_at", 2}
-                    }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"uri", "test1"}, {"updated_at", 2}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"uri", "test2"}, {"updated_at", 2}}};
 
-            EXPECT_CALL(this->mockApi, GetDependencyList())
-                .WillRepeatedly(Return(dependencyList));
+            EXPECT_CALL(this->mockApi, GetDependencyList()).WillRepeatedly(Return(dependencyList));
 
-            ON_CALL(this->mockApi, GetUri("test1"))
-                .WillByDefault(Return(this->dependency1));
+            ON_CALL(this->mockApi, GetUri("test1")).WillByDefault(Return(this->dependency1));
 
-            ON_CALL(this->mockApi, GetUri("test2"))
-                .WillByDefault(Return(this->dependency2));
+            ON_CALL(this->mockApi, GetUri("test2")).WillByDefault(Return(this->dependency2));
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -322,20 +284,17 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true, false)
-            )
+                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true, false))
                 .Times(1);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true, false)
-            )
+                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true, false))
                 .Times(1);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/test2.json"), this->dependency2.dump(), true, false)
-            )
+                WriteToFile(std::wstring(L"dependencies/test2.json"), this->dependency2.dump(), true, false))
                 .Times(1);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
@@ -344,43 +303,18 @@ namespace UKControllerPluginTest {
         TEST_F(UpdateDependenciesTest, UpdateDependenciesRedownloadsIfFileMissing)
         {
             nlohmann::json existingDependencyList{
-                {
-                    {"key", "DEPENDENCY_ONE"},
-                    {"local_file", "test1.json"},
-                    {"uri", "test1"},
-                    {"updated_at", 1}
-                },
-                {
-                    {"key", "DEPENDENCY_TWO"},
-                    {"local_file", "test2.json"},
-                    {"uri", "test2"},
-                    {"updated_at", 2}
-                }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"uri", "test1"}, {"updated_at", 1}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"uri", "test2"}, {"updated_at", 2}}};
 
             nlohmann::json dependencyList{
-                {
-                    {"key", "DEPENDENCY_ONE"},
-                    {"local_file", "test1.json"},
-                    {"uri", "test1"},
-                    {"updated_at", 1}
-                },
-                {
-                    {"key", "DEPENDENCY_TWO"},
-                    {"local_file", "test2.json"},
-                    {"uri", "test2"},
-                    {"updated_at", 2}
-                }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"uri", "test1"}, {"updated_at", 1}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"uri", "test2"}, {"updated_at", 2}}};
 
-            EXPECT_CALL(this->mockApi, GetDependencyList())
-                .WillRepeatedly(Return(dependencyList));
+            EXPECT_CALL(this->mockApi, GetDependencyList()).WillRepeatedly(Return(dependencyList));
 
-            ON_CALL(this->mockApi, GetUri("test1"))
-                .WillByDefault(Return(this->dependency1));
+            ON_CALL(this->mockApi, GetUri("test1")).WillByDefault(Return(this->dependency1));
 
-            ON_CALL(this->mockApi, GetUri("test2"))
-                .WillByDefault(Return(this->dependency2));
+            ON_CALL(this->mockApi, GetUri("test2")).WillByDefault(Return(this->dependency2));
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -397,60 +331,32 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true, false)
-            )
+                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true, false))
                 .Times(1);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true, false)
-            )
+                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true, false))
                 .Times(1);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
         }
 
-
         TEST_F(UpdateDependenciesTest, UpdateDependenciesDoesntUpdateIfUptoDate)
         {
             nlohmann::json existingDependencyList{
-                {
-                    {"key", "DEPENDENCY_ONE"},
-                    {"local_file", "test1.json"},
-                    {"uri", "test1"},
-                    {"updated_at", 3}
-                },
-                {
-                    {"key", "DEPENDENCY_TWO"},
-                    {"local_file", "test2.json"},
-                    {"uri", "test2"},
-                    {"updated_at", 3}
-                }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"uri", "test1"}, {"updated_at", 3}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"uri", "test2"}, {"updated_at", 3}}};
 
             nlohmann::json dependencyList{
-                    {
-                        {"key", "DEPENDENCY_ONE"},
-                        {"local_file", "test1.json"},
-                        {"uri", "test1"},
-                        {"updated_at", 2}
-                    },
-                    {
-                        {"key", "DEPENDENCY_TWO"},
-                        {"local_file", "test2.json"},
-                        {"uri", "test2"},
-                        {"updated_at", 2}
-                    }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"uri", "test1"}, {"updated_at", 2}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"uri", "test2"}, {"updated_at", 2}}};
 
-            EXPECT_CALL(this->mockApi, GetDependencyList())
-                .WillRepeatedly(Return(dependencyList));
+            EXPECT_CALL(this->mockApi, GetDependencyList()).WillRepeatedly(Return(dependencyList));
 
-            EXPECT_CALL(this->mockApi, GetUri("test1"))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, GetUri("test1")).Times(0);
 
-            EXPECT_CALL(this->mockApi, GetUri("test2"))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, GetUri("test2")).Times(0);
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -467,8 +373,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true, false)
-            )
+                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), dependencyList.dump(), true, false))
                 .Times(1);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
@@ -477,43 +382,18 @@ namespace UKControllerPluginTest {
         TEST_F(UpdateDependenciesTest, UpdateDependenciesHandlesApiExceptionsOnDependencies)
         {
             nlohmann::json existingDependencyList{
-                {
-                    {"key", "DEPENDENCY_ONE"},
-                    {"local_file", "test1.json"},
-                    {"uri", "test1"},
-                    {"updated_at", 1}
-                },
-                {
-                    {"key", "DEPENDENCY_TWO"},
-                    {"local_file", "test2.json"},
-                    {"uri", "test2"},
-                    {"updated_at", 1}
-                }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"uri", "test1"}, {"updated_at", 1}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"uri", "test2"}, {"updated_at", 1}}};
 
             nlohmann::json dependencyList{
-                {
-                    {"key", "DEPENDENCY_ONE"},
-                    {"local_file", "test1.json"},
-                    {"uri", "test1"},
-                    {"updated_at", 2}
-                },
-                {
-                    {"key", "DEPENDENCY_TWO"},
-                    {"local_file", "test2.json"},
-                    {"uri", "test2"},
-                    {"updated_at", 2}
-                }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"uri", "test1"}, {"updated_at", 2}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"uri", "test2"}, {"updated_at", 2}}};
 
-            EXPECT_CALL(this->mockApi, GetDependencyList())
-                .WillRepeatedly(Return(dependencyList));
+            EXPECT_CALL(this->mockApi, GetDependencyList()).WillRepeatedly(Return(dependencyList));
 
-            ON_CALL(this->mockApi, GetUri("test1"))
-                .WillByDefault(Throw(ApiException("nah")));
+            ON_CALL(this->mockApi, GetUri("test1")).WillByDefault(Throw(ApiException("nah")));
 
-            ON_CALL(this->mockApi, GetUri("test2"))
-                .WillByDefault(Throw(ApiException("nah")));
+            ON_CALL(this->mockApi, GetUri("test2")).WillByDefault(Throw(ApiException("nah")));
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -529,26 +409,17 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(existingDependencyList.dump()));
 
             EXPECT_CALL(
-                this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), "[]", true, false)
-            )
+                this->mockWindows, WriteToFile(std::wstring(L"dependencies/dependency-list.json"), "[]", true, false))
                 .Times(1);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true, false)
-            )
+                WriteToFile(std::wstring(L"dependencies/test1.json"), this->dependency1.dump(), true, false))
                 .Times(0);
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(
-                    std::wstring(L"dependencies/test2.json"),
-                    this->dependency2.dump(),
-                    true,
-                    false
-                )
-            )
+                WriteToFile(std::wstring(L"dependencies/test2.json"), this->dependency2.dump(), true, false))
                 .Times(0);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
@@ -557,39 +428,18 @@ namespace UKControllerPluginTest {
         TEST_F(UpdateDependenciesTest, UpdateDependenciesHandlesInvalidDependencies)
         {
             nlohmann::json existingDependencyList{
-                {
-                    {"key", "DEPENDENCY_ONE"},
-                    {"local_file", "test1.json"},
-                    {"updated_at", 1}
-                },
-                {
-                    {"key", "DEPENDENCY_TWO"},
-                    {"local_file", "test2.json"},
-                    {"updated_at", 1}
-                }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"updated_at", 1}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"updated_at", 1}}};
 
             nlohmann::json dependencyList{
-                {
-                    {"key", "DEPENDENCY_ONE"},
-                    {"local_file", "test1.json"},
-                    {"updated_at", 2}
-                },
-                {
-                    {"key", "DEPENDENCY_TWO"},
-                    {"local_file", "test2.json"},
-                    {"updated_at", 2}
-                }
-            };
+                {{"key", "DEPENDENCY_ONE"}, {"local_file", "test1.json"}, {"updated_at", 2}},
+                {{"key", "DEPENDENCY_TWO"}, {"local_file", "test2.json"}, {"updated_at", 2}}};
 
-            EXPECT_CALL(this->mockApi, GetDependencyList())
-                .WillRepeatedly(Return(dependencyList));
+            EXPECT_CALL(this->mockApi, GetDependencyList()).WillRepeatedly(Return(dependencyList));
 
-            EXPECT_CALL(this->mockApi, GetUri("test1"))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, GetUri("test1")).Times(0);
 
-            EXPECT_CALL(this->mockApi, GetUri("test2"))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, GetUri("test2")).Times(0);
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -599,12 +449,10 @@ namespace UKControllerPluginTest {
                 .WillOnce(Return(existingDependencyList.dump()));
 
             EXPECT_CALL(
-                this->mockWindows,
-                WriteToFile(std::wstring(L"dependencies/dependency-list.json"), "[]", true, false)
-            )
+                this->mockWindows, WriteToFile(std::wstring(L"dependencies/dependency-list.json"), "[]", true, false))
                 .Times(1);
 
             UpdateDependencies(this->mockApi, this->mockWindows);
         }
-    }  // namespace Dependency
-}  // namespace UKControllerPluginTest
+    } // namespace Dependency
+} // namespace UKControllerPluginTest

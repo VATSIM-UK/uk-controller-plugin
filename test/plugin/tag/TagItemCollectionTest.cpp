@@ -1,8 +1,5 @@
 #include "tag/TagItemCollection.h"
 #include "tag/TagItemInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "tag/TagData.h"
 
 using ::testing::StrictMock;

@@ -3,18 +3,9 @@
 #include "controller/ControllerPositionCollection.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockDialogProvider.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "releases/DepartureReleaseDecisionList.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-#include "mock/MockTaskRunnerInterface.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
-#include "mock/MockWinApi.h"
 
 using testing::Test;
 

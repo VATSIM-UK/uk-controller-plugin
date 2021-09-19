@@ -1,5 +1,3 @@
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "prenote/PrenoteStatusIndicatorTagItem.h"

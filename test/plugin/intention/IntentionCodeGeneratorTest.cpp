@@ -2,8 +2,6 @@
 #include "intention/IntentionCodeGenerator.h"
 #include "intention/SectorExitRepository.h"
 #include "intention/SectorExitRepositoryFactory.h"
-#include "mock/MockAirfieldGroup.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
 
 using EuroScopePlugIn::CPosition;
 

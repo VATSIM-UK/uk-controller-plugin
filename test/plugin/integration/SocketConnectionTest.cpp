@@ -1,6 +1,4 @@
-#include "pch/pch.h"
 #include "integration/SocketConnection.h"
-#include "mock/MockSocket.h"
 
 using testing::Test;
 using UKControllerPlugin::Integration::SocketConnection;
@@ -10,27 +8,24 @@ namespace UKControllerPluginTest::Integration {
     class SocketConnectionTest : public Test
     {
         public:
-            SocketConnectionTest()
-                : mockSocket(new testing::NiceMock<MockSocket>),
-                  connection(mockSocket)
-            { }
+        SocketConnectionTest() : mockSocket(new testing::NiceMock<MockSocket>), connection(mockSocket)
+        {
+        }
 
-            std::shared_ptr<testing::NiceMock<MockSocket>> mockSocket;
-            SocketConnection connection;
+        std::shared_ptr<testing::NiceMock<MockSocket>> mockSocket;
+        SocketConnection connection;
     };
 
     TEST_F(SocketConnectionTest, ItReturnsActiveIfTheSocketIsActive)
     {
-        ON_CALL(*this->mockSocket, Active)
-            .WillByDefault(testing::Return(true));
+        ON_CALL(*this->mockSocket, Active).WillByDefault(testing::Return(true));
 
         EXPECT_TRUE(this->connection.Active());
     }
 
     TEST_F(SocketConnectionTest, ItReturnsInactiveIfTheSocketIsInactive)
     {
-        ON_CALL(*this->mockSocket, Active)
-            .WillByDefault(testing::Return(false));
+        ON_CALL(*this->mockSocket, Active).WillByDefault(testing::Return(false));
 
         EXPECT_FALSE(this->connection.Active());
     }
@@ -40,18 +35,14 @@ namespace UKControllerPluginTest::Integration {
         std::string expectedMessage = "testmessage";
         expectedMessage.append({'\x1F'});
 
-        EXPECT_CALL(*this->mockSocket, InsertStringOverride(expectedMessage))
-            .Times(1);
+        EXPECT_CALL(*this->mockSocket, InsertStringOverride(expectedMessage)).Times(1);
 
         this->connection.Send("testmessage");
     }
 
     TEST_F(SocketConnectionTest, ItReceivesNoMessageFromTheSocket)
     {
-        EXPECT_CALL(*this->mockSocket, ExtractStreamOverride())
-            .Times(1)
-            .WillOnce(testing::Return(""));
-
+        EXPECT_CALL(*this->mockSocket, ExtractStreamOverride()).Times(1).WillOnce(testing::Return(""));
 
         EXPECT_EQ(0, this->connection.Receive().size());
     }
@@ -61,9 +52,7 @@ namespace UKControllerPluginTest::Integration {
         std::string messageString = "testmessage1";
         messageString.append({'\x1F'});
 
-        EXPECT_CALL(*this->mockSocket, ExtractStreamOverride())
-            .Times(1)
-            .WillOnce(testing::Return(messageString));
+        EXPECT_CALL(*this->mockSocket, ExtractStreamOverride()).Times(1).WillOnce(testing::Return(messageString));
 
         std::queue<std::string> expected;
         expected.push("testmessage1");
@@ -97,9 +86,7 @@ namespace UKControllerPluginTest::Integration {
         messageString.append("testmessage2");
         messageString.append({'\x1F'});
 
-        EXPECT_CALL(*this->mockSocket, ExtractStreamOverride())
-            .Times(1)
-            .WillOnce(testing::Return(messageString));
+        EXPECT_CALL(*this->mockSocket, ExtractStreamOverride()).Times(1).WillOnce(testing::Return(messageString));
 
         std::queue<std::string> expected;
         expected.push("testmessage1");

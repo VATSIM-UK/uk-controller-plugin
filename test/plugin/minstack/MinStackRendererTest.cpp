@@ -5,9 +5,6 @@
 #include "minstack/MinStackLevel.h"
 #include "minstack/MinStackManager.h"
 #include "minstack/MinStackRenderer.h"
-#include "mock/MockDialogProvider.h"
-#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-#include "mock/MockUserSettingProviderInterface.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

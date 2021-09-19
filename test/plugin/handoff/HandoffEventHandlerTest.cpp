@@ -1,8 +1,5 @@
 #include "handoff/HandoffEventHandler.h"
 #include "controller/ControllerPosition.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockOutboundIntegrationEventHandler.h"
 #include "handoff/HandoffFrequencyUpdatedMessage.h"
 
 using testing::NiceMock;

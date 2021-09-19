@@ -1,11 +1,9 @@
-#include "pch/pch.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
 #include "intention/HomeAirfieldGroup.h"
 
+using ::testing::Return;
+using ::testing::StrictMock;
 using UKControllerPlugin::IntentionCode::HomeAirfieldGroup;
 using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
-using ::testing::StrictMock;
-using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
@@ -49,5 +47,5 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(0, airfieldGroup.GetIntentionCodeForGroup("EGD", wrapperMock).compare("GD"));
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest

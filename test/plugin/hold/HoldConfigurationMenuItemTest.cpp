@@ -1,12 +1,8 @@
 #include "hold/HoldConfigurationMenuItem.h"
 #include "dialog/DialogManager.h"
-#include "mock/MockDialogProvider.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockTaskRunnerInterface.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

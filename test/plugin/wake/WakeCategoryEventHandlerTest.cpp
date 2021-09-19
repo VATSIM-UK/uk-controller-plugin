@@ -1,7 +1,5 @@
 #include "wake/WakeCategoryMapper.h"
 #include "wake/WakeCategoryEventHandler.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
 
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPlugin::Wake::WakeCategoryEventHandler;

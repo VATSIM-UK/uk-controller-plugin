@@ -1,21 +1,18 @@
-#include "pch/pch.h"
 #include "api/ApiAuthChecker.h"
-#include "mock/MockWinApi.h"
-#include "mock/MockApiInterface.h"
 #include "api/ApiNotAuthorisedException.h"
 #include "setting/SettingRepository.h"
 
-using UKControllerPlugin::Api::ApiAuthChecker;
-using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPluginTest::Api::MockApiInterface;
-using UKControllerPlugin::Api::ApiNotAuthorisedException;
-using UKControllerPlugin::Api::ApiException;
-using UKControllerPlugin::Setting::SettingRepository;
-using ::testing::Test;
-using ::testing::NiceMock;
-using ::testing::Throw;
-using ::testing::Return;
 using ::testing::_;
+using ::testing::NiceMock;
+using ::testing::Return;
+using ::testing::Test;
+using ::testing::Throw;
+using UKControllerPlugin::Api::ApiAuthChecker;
+using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Api::ApiNotAuthorisedException;
+using UKControllerPlugin::Setting::SettingRepository;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginUtilsTest {
     namespace Api {
@@ -23,15 +20,13 @@ namespace UKControllerPluginUtilsTest {
         class ApiAuthCheckerTest : public Test
         {
             public:
-                ApiAuthCheckerTest()
-                    : settingRepo(mockWindows)
-                {
+            ApiAuthCheckerTest() : settingRepo(mockWindows)
+            {
+            }
 
-                }
-
-                NiceMock<MockApiInterface> mockApi;
-                NiceMock<MockWinApi> mockWindows;
-                SettingRepository settingRepo;
+            NiceMock<MockApiInterface> mockApi;
+            NiceMock<MockWinApi> mockWindows;
+            SettingRepository settingRepo;
         };
 
         TEST_F(ApiAuthCheckerTest, IsAuthorisedReturnsFalseIfNotAuthorised)
@@ -49,8 +44,7 @@ namespace UKControllerPluginUtilsTest {
 
         TEST_F(ApiAuthCheckerTest, IsAuthorisedPromptsForCredentialsOnAuthFailure)
         {
-            ON_CALL(this->mockWindows, FileOpenDialog(_, _, _))
-                .WillByDefault(Return(L"testfile.json"));
+            ON_CALL(this->mockWindows, FileOpenDialog(_, _, _)).WillByDefault(Return(L"testfile.json"));
 
             nlohmann::json testJson;
             testJson["api-url"] = "testurl";
@@ -79,8 +73,7 @@ namespace UKControllerPluginUtilsTest {
 
         TEST_F(ApiAuthCheckerTest, IsAuthorisedReturnsLastActionOnAuthFailure)
         {
-            ON_CALL(this->mockWindows, FileOpenDialog(_, _, _))
-                .WillByDefault(Return(L"testfile.json"));
+            ON_CALL(this->mockWindows, FileOpenDialog(_, _, _)).WillByDefault(Return(L"testfile.json"));
 
             nlohmann::json testJson;
             testJson["api-url"] = "testurl";
@@ -109,8 +102,7 @@ namespace UKControllerPluginUtilsTest {
 
         TEST_F(ApiAuthCheckerTest, IsAuthorisedUsesPromptedCredentialsOnTheApi)
         {
-            ON_CALL(this->mockWindows, FileOpenDialog(_, _, _))
-                .WillByDefault(Return(L"testfile.json"));
+            ON_CALL(this->mockWindows, FileOpenDialog(_, _, _)).WillByDefault(Return(L"testfile.json"));
 
             nlohmann::json testJson;
             testJson["api-url"] = "testurl";
@@ -134,11 +126,9 @@ namespace UKControllerPluginUtilsTest {
                 .WillOnce(Throw(ApiNotAuthorisedException("not allowed")))
                 .WillOnce(Return(true));
 
-            EXPECT_CALL(mockApi, SetApiDomain("testurl"))
-                .Times(1);
+            EXPECT_CALL(mockApi, SetApiDomain("testurl")).Times(1);
 
-            EXPECT_CALL(mockApi, SetApiKey("testkey"))
-                .Times(1);
+            EXPECT_CALL(mockApi, SetApiKey("testkey")).Times(1);
 
             ApiAuthChecker::IsAuthorised(this->mockApi, this->mockWindows, this->settingRepo);
         }
@@ -154,11 +144,9 @@ namespace UKControllerPluginUtilsTest {
 
         TEST_F(ApiAuthCheckerTest, IsAuthorisedReturnsTrueIfCheckOk)
         {
-            EXPECT_CALL(mockApi, CheckApiAuthorisation())
-                .Times(1)
-                .WillOnce(Return(true));
+            EXPECT_CALL(mockApi, CheckApiAuthorisation()).Times(1).WillOnce(Return(true));
 
             EXPECT_TRUE(ApiAuthChecker::IsAuthorised(this->mockApi, this->mockWindows, this->settingRepo));
         }
-    }  // namespace Api
-}  // namespace UKControllerPluginUtilsTest
+    } // namespace Api
+} // namespace UKControllerPluginUtilsTest

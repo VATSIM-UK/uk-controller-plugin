@@ -1,6 +1,5 @@
 #include "radarscreen/PositionResetCommand.h"
 #include "radarscreen/RadarRenderableCollection.h"
-#include "mock/MockRadarRendererableInterface.h"
 
 using testing::NiceMock;
 using testing::Test;

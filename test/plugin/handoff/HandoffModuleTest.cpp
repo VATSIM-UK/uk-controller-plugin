@@ -5,9 +5,7 @@
 #include "handoff/HandoffCollection.h"
 #include "integration/IntegrationPersistenceContainer.h"
 #include "integration/IntegrationServer.h"
-#include "mock/MockDependencyLoader.h"
 #include "tag/TagItemCollection.h"
-#include "memory"
 
 using ::testing::NiceMock;
 using ::testing::Test;

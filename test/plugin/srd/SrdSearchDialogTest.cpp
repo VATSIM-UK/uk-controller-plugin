@@ -1,11 +1,9 @@
-#include "pch/pch.h"
 #include "srd/SrdSearchDialog.h"
-#include "mock/MockApiInterface.h"
 
+using ::testing::NiceMock;
+using ::testing::Test;
 using UKControllerPlugin::Srd::SrdSearchDialog;
 using UKControllerPluginTest::Api::MockApiInterface;
-using ::testing::Test;
-using ::testing::NiceMock;
 
 namespace UKControllerPluginTest {
     namespace Srd {
@@ -13,14 +11,12 @@ namespace UKControllerPluginTest {
         class SrdSearchDialogTest : public Test
         {
             public:
+            SrdSearchDialogTest() : dialog(mockApi)
+            {
+            }
 
-                SrdSearchDialogTest() :
-                    dialog(mockApi)
-                {
-                }
-
-                NiceMock<MockApiInterface> mockApi;
-                SrdSearchDialog dialog;
+            NiceMock<MockApiInterface> mockApi;
+            SrdSearchDialog dialog;
         };
 
         TEST_F(SrdSearchDialogTest, SearchResultsAreValidWithNoNotes)
@@ -30,8 +26,7 @@ namespace UKControllerPluginTest {
                 {"minimum_level", 10000},
                 {"maximum_level", 66000},
                 {"route_string", "BCN DCT BRI"},
-                {"notes", nlohmann::json::array()}
-            };
+                {"notes", nlohmann::json::array()}};
             results.push_back(result1);
 
             EXPECT_TRUE(this->dialog.SearchResultsValid(results));
@@ -44,8 +39,7 @@ namespace UKControllerPluginTest {
                 {"minimum_level", nlohmann::json()},
                 {"maximum_level", 66000},
                 {"route_string", "BCN DCT BRI"},
-                {"notes", nlohmann::json::array()}
-            };
+                {"notes", nlohmann::json::array()}};
             results.push_back(result1);
 
             EXPECT_TRUE(this->dialog.SearchResultsValid(results));
@@ -60,10 +54,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             notesArray.push_back(note1);
             result1["notes"] = notesArray;
 
@@ -81,10 +72,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             notesArray.push_back(note1);
             notesArray.push_back(note1);
             result1["notes"] = notesArray;
@@ -103,10 +91,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             notesArray.push_back(note1);
             notesArray.push_back(note1);
             result1["notes"] = notesArray;
@@ -131,10 +116,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
@@ -158,10 +140,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
@@ -186,10 +165,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
@@ -213,10 +189,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
@@ -241,10 +214,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
@@ -268,10 +238,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
@@ -296,10 +263,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
@@ -323,18 +287,14 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
                 {"minimum_level", 10000},
                 {"maximum_level", 66000},
                 {"route_string", 123},
-                {"notes", nlohmann::json::object()}
-            };
+                {"notes", nlohmann::json::object()}};
 
             results.push_back(result1);
             results.push_back(badResult);
@@ -351,10 +311,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
@@ -363,12 +320,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArrayBad = notesArray;
-            notesArrayBad.push_back(
-                {
-                    {"id", "invalid"},
-                    {"text", "test"}
-                }
-            );
+            notesArrayBad.push_back({{"id", "invalid"}, {"text", "test"}});
             badResult["notes"] = notesArrayBad;
 
             results.push_back(result1);
@@ -386,10 +338,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArray = nlohmann::json::array();
-            nlohmann::json note1 = {
-                {"id", 1},
-                {"text", "Test"}
-            };
+            nlohmann::json note1 = {{"id", 1}, {"text", "Test"}};
             result1["notes"] = notesArray;
 
             nlohmann::json badResult = {
@@ -398,12 +347,7 @@ namespace UKControllerPluginTest {
                 {"route_string", "BCN DCT BRI"},
             };
             nlohmann::json notesArrayBad = notesArray;
-            notesArrayBad.push_back(
-                {
-                    {"id", 1},
-                    {"text", 1}
-                }
-            );
+            notesArrayBad.push_back({{"id", 1}, {"text", 1}});
             badResult["notes"] = notesArrayBad;
 
             results.push_back(result1);
@@ -431,9 +375,7 @@ namespace UKControllerPluginTest {
         TEST_F(SrdSearchDialogTest, FormatNotesReturnsNoNotesIfContainsNoNotes)
         {
             nlohmann::json searchResults = nlohmann::json::array();
-            searchResults.push_back({
-                {"notnotes", "1"}
-            });
+            searchResults.push_back({{"notnotes", "1"}});
 
             EXPECT_EQ("No notes.", this->dialog.FormatNotes(searchResults, 0));
         }
@@ -441,9 +383,7 @@ namespace UKControllerPluginTest {
         TEST_F(SrdSearchDialogTest, FormatNotesReturnsNoNotesIfNoNotes)
         {
             nlohmann::json searchResults = nlohmann::json::array();
-            searchResults.push_back({
-                {"notes", nlohmann::json::array()}
-            });
+            searchResults.push_back({{"notes", nlohmann::json::array()}});
 
             EXPECT_EQ("No notes.", this->dialog.FormatNotes(searchResults, 0));
         }
@@ -452,14 +392,9 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json searchResults = nlohmann::json::array();
             nlohmann::json notes = nlohmann::json::array();
-            notes.push_back({
-                {"id", 1},
-                {"text", "Test"}
-            });
+            notes.push_back({{"id", 1}, {"text", "Test"}});
 
-            searchResults.push_back({
-                {"notes", notes}
-            });
+            searchResults.push_back({{"notes", notes}});
 
             EXPECT_EQ("Note 1\r\n\r\nTest\r\n\r\n", this->dialog.FormatNotes(searchResults, 0));
         }
@@ -468,43 +403,26 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json searchResults = nlohmann::json::array();
             nlohmann::json notes = nlohmann::json::array();
-            notes.push_back({
-                {"id", 1},
-                {"text", "Test"}
-            });
-            notes.push_back({
-                {"id", 2},
-                {"text", "Test 2"}
-            });
+            notes.push_back({{"id", 1}, {"text", "Test"}});
+            notes.push_back({{"id", 2}, {"text", "Test 2"}});
 
-            searchResults.push_back({
-                {"notes", notes}
-            });
+            searchResults.push_back({{"notes", notes}});
 
             EXPECT_EQ(
-                "Note 1\r\n\r\nTest\r\n\r\nNote 2\r\n\r\nTest 2\r\n\r\n",
-                this->dialog.FormatNotes(searchResults, 0)
-            );
+                "Note 1\r\n\r\nTest\r\n\r\nNote 2\r\n\r\nTest 2\r\n\r\n", this->dialog.FormatNotes(searchResults, 0));
         }
 
         TEST_F(SrdSearchDialogTest, FormatNotesReplacesLineFeedsButNotCarraigeReturns)
         {
             nlohmann::json searchResults = nlohmann::json::array();
             nlohmann::json notes = nlohmann::json::array();
-            notes.push_back({
-                {"id", 1},
-                {"text", "Test 1\nTest 2\r\nTest 3\n\nTest 4"}
-                });
+            notes.push_back({{"id", 1}, {"text", "Test 1\nTest 2\r\nTest 3\n\nTest 4"}});
 
-            searchResults.push_back({
-                {"notes", notes}
-            });
+            searchResults.push_back({{"notes", notes}});
 
             EXPECT_EQ(
                 "Note 1\r\n\r\nTest 1\r\nTest 2\r\n\r\nTest 3\r\n\r\nTest 4\r\n\r\n",
-                this->dialog.FormatNotes(searchResults, 0)
-            );
+                this->dialog.FormatNotes(searchResults, 0));
         }
-    }  // namespace Srd
-}  // namespace UKControllerPluginTest
-
+    } // namespace Srd
+} // namespace UKControllerPluginTest

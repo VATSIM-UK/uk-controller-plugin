@@ -1,7 +1,5 @@
 #include "squawk/ApiSquawkAllocation.h"
 #include "squawk/ApiSquawkAllocationHandler.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;

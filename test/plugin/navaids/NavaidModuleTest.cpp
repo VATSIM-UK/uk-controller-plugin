@@ -1,5 +1,4 @@
 #include "bootstrap/PersistenceContainer.h"
-#include "mock/MockDependencyLoader.h"
 #include "navaids/NavaidCollection.h"
 #include "navaids/NavaidModule.h"
 #include "sectorfile/SectorFileCoordinates.h"

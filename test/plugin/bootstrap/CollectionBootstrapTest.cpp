@@ -3,7 +3,6 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "flightplan/StoredFlightplanCollection.h"
-#include "mock/MockDependencyLoader.h"
 #include "timedevent/TimedEventCollection.h"
 
 using ::testing::NiceMock;

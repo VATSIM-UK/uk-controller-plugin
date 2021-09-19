@@ -1,6 +1,4 @@
 #include "controller/HandoffEventHandlerCollection.h"
-#include "mock/MockEuroScopeCControllerInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
 
 using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 using UKControllerPlugin::Controller::HandoffEventHandlerInterface;

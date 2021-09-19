@@ -1,13 +1,7 @@
-#include "pch/pch.h"
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
 #include "dialog/DialogData.h"
 #include "dialog/DialogManager.h"
-#include "mock/MockCurlApi.h"
-#include "mock/MockDialogProvider.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockTaskRunnerInterface.h"
 #include "oceanic/OceanicEventHandler.h"
 #include "tag/TagData.h"
 

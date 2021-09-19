@@ -4,8 +4,6 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "message/UserMessager.h"
-#include "mock/MockDependencyLoader.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "prenote/PrenoteModule.h"
 #include "push/PushEventProcessorCollection.h"

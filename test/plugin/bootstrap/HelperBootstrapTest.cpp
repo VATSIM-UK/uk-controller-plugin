@@ -1,7 +1,6 @@
 #include "api/ApiInterface.h"
 #include "bootstrap/HelperBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "mock/MockWinApi.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "setting/SettingRepository.h"

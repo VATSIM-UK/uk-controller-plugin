@@ -1,20 +1,18 @@
-#include "pch/pch.h"
 #include "srd/SrdModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "dialog/DialogManager.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
-#include "mock/MockDialogProvider.h"
 
-using UKControllerPlugin::Srd::BootstrapPlugin;
-using UKControllerPlugin::Srd::BootstrapRadarScreen;
+using ::testing::NiceMock;
+using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
-using ::testing::Test;
-using ::testing::NiceMock;
+using UKControllerPlugin::Srd::BootstrapPlugin;
+using UKControllerPlugin::Srd::BootstrapRadarScreen;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 
 namespace UKControllerPluginTest {
     namespace Srd {
@@ -22,17 +20,15 @@ namespace UKControllerPluginTest {
         class SrdModuleTest : public Test
         {
             public:
+            SrdModuleTest()
+            {
+                container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
+                container.dialogManager = std::make_unique<DialogManager>(NiceMock<MockDialogProvider>());
+            }
 
-                SrdModuleTest()
-                {
-                    container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
-                    container.dialogManager = std::make_unique<DialogManager>(NiceMock<MockDialogProvider>());
-                }
-
-                ConfigurableDisplayCollection displays;
-                PersistenceContainer container;
+            ConfigurableDisplayCollection displays;
+            PersistenceContainer container;
         };
-
 
         TEST_F(SrdModuleTest, BootstrapPluginRegistersDialog)
         {
@@ -61,5 +57,5 @@ namespace UKControllerPluginTest {
             BootstrapRadarScreen(this->displays);
             EXPECT_EQ(1, this->displays.CountDisplays());
         }
-    }  // namespace Srd
-}  // namespace UKControllerPluginTest
+    } // namespace Srd
+} // namespace UKControllerPluginTest

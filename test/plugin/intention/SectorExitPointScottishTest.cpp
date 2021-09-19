@@ -1,10 +1,8 @@
-#include "pch/pch.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
 #include "intention/SectorExitPointScottish.h"
 
+using ::testing::StrictMock;
 using UKControllerPlugin::IntentionCode::SectorExitPointScottish;
 using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
-using ::testing::StrictMock;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
@@ -56,5 +54,5 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 25000).compare("H7"));
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest

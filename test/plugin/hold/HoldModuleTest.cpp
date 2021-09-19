@@ -2,24 +2,17 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "timedevent/TimedEventCollection.h"
 #include "hold/HoldingData.h"
-#include "message/UserMessager.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "command/CommandHandlerCollection.h"
-#include "mock/MockWinApi.h"
-#include "mock/MockApiInterface.h"
 #include "tag/TagItemCollection.h"
 #include "dialog/DialogManager.h"
-#include "mock/MockDialogProvider.h"
-#include "mock/MockDependencyLoader.h"
 #include "dialog/DialogData.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "hold/CompareHolds.h"
 #include "push/PushEventProcessorCollection.h"
-#include "mock/MockTaskRunnerInterface.h"
 #include "api/ApiException.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "hold/HoldManager.h"
@@ -43,7 +36,6 @@ using UKControllerPlugin::Hold::BootstrapPlugin;
 using UKControllerPlugin::Hold::BootstrapRadarScreen;
 using UKControllerPlugin::Hold::CompareHolds;
 using UKControllerPlugin::Hold::HoldingData;
-using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
@@ -53,7 +45,6 @@ using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
-using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 using UKControllerPluginTest::Windows::MockWinApi;
 
@@ -62,7 +53,7 @@ namespace UKControllerPluginTest::Hold {
     class HoldModuleTest : public Test
     {
         public:
-        HoldModuleTest() : containerApi(new NiceMock<MockApiInterface>), messager(mockPlugin)
+        HoldModuleTest() : containerApi(new NiceMock<MockApiInterface>)
         {
             nlohmann::json hold;
             hold = {
@@ -124,9 +115,7 @@ namespace UKControllerPluginTest::Hold {
 
         NiceMock<MockApiInterface>* containerApi;
         NiceMock<MockDialogProvider> mockDialogProvider;
-        NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
         PersistenceContainer container;
-        UserMessager messager;
         CommandHandlerCollection radarScreenCommands;
         ConfigurableDisplayCollection configurableDisplays;
         RadarRenderableCollection radarRenderables;
@@ -138,64 +127,64 @@ namespace UKControllerPluginTest::Hold {
 
     TEST_F(HoldModuleTest, ItAddsToTagItemhandler)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_EQ(1, this->container.tagHandler->CountHandlers());
     }
 
     TEST_F(HoldModuleTest, ItAddsToTimedHandler)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
         EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(7));
     }
 
     TEST_F(HoldModuleTest, ItAddsToFunctionHandlers)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
     }
 
     TEST_F(HoldModuleTest, ItAddsHoldSelectionCallback)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9003));
     }
 
     TEST_F(HoldModuleTest, ItInitialisesHoldManager)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_EQ(0, this->container.holdManager->CountHoldingAircraft());
     }
 
     TEST_F(HoldModuleTest, ItAddsToWebsocketHandlers)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_EQ(1, this->container.pushEventProcessors->CountProcessorsForChannel("private-hold-assignments"));
     }
 
     TEST_F(HoldModuleTest, ItInitialisesHoldDisplayFactory)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_TRUE(this->container.holdDisplayFactory);
     }
 
     TEST_F(HoldModuleTest, ItRegistersHoldConfigurationDialog)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_EQ(2, this->container.dialogManager->CountDialogs());
         EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_HOLD_SELECTION));
     }
 
     TEST_F(HoldModuleTest, ItRegistersHoldParametersDialog)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_EQ(2, this->container.dialogManager->CountDialogs());
         EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_HOLD_PARAMS));
     }
 
     TEST_F(HoldModuleTest, ItLoadsHoldData)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
         HoldingData expectedHold = {1, "TIMBA", "TIMBA", 7000, 15000, 309, HoldingData::TURN_DIRECTION_RIGHT, {}, {}};
 
         std::set<const HoldingData*> expectedHoldSet;
@@ -214,7 +203,7 @@ namespace UKControllerPluginTest::Hold {
 
         ON_CALL(*this->containerApi, GetAssignedHolds()).WillByDefault(Return(responseData));
 
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         EXPECT_EQ("TIMBA", this->container.holdManager->GetHoldingAircraft("BAW123")->GetAssignedHold());
         EXPECT_EQ("WILLO", this->container.holdManager->GetHoldingAircraft("EZY234")->GetAssignedHold());
@@ -225,7 +214,7 @@ namespace UKControllerPluginTest::Hold {
     {
         ON_CALL(*this->containerApi, GetAssignedHolds()).WillByDefault(Throw(ApiException("Test")));
 
-        EXPECT_NO_THROW(BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager));
+        EXPECT_NO_THROW(BootstrapPlugin(this->mockDependencyProvider, this->container));
         EXPECT_EQ(0, this->container.holdManager->CountHoldingAircraft());
     }
 
@@ -235,7 +224,7 @@ namespace UKControllerPluginTest::Hold {
         responseData.push_back({{"navaid", "TIMBA"}});
         ON_CALL(*this->containerApi, GetAssignedHolds()).WillByDefault(Return(responseData));
 
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         EXPECT_EQ(
             this->container.holdManager->invalidAircraft, this->container.holdManager->GetHoldingAircraft("BAW123"));
@@ -247,7 +236,7 @@ namespace UKControllerPluginTest::Hold {
         responseData.push_back({{"callsign", 123}, {"navaid", "TIMBA"}});
         ON_CALL(*this->containerApi, GetAssignedHolds()).WillByDefault(Return(responseData));
 
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         EXPECT_EQ(
             this->container.holdManager->invalidAircraft, this->container.holdManager->GetHoldingAircraft("BAW123"));
@@ -261,7 +250,7 @@ namespace UKControllerPluginTest::Hold {
         });
         ON_CALL(*this->containerApi, GetAssignedHolds()).WillByDefault(Return(responseData));
 
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         EXPECT_EQ(
             this->container.holdManager->invalidAircraft, this->container.holdManager->GetHoldingAircraft("BAW123"));
@@ -273,7 +262,7 @@ namespace UKControllerPluginTest::Hold {
         responseData.push_back({{"callsign", "BAW123"}, {"navaid", 123}});
         ON_CALL(*this->containerApi, GetAssignedHolds()).WillByDefault(Return(responseData));
 
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         EXPECT_EQ(
             this->container.holdManager->invalidAircraft, this->container.holdManager->GetHoldingAircraft("BAW123"));
@@ -285,7 +274,7 @@ namespace UKControllerPluginTest::Hold {
         responseData.push_back(nlohmann::json::array({{"callsign", "BAW123", "navaid", "TIMBA"}}));
         ON_CALL(*this->containerApi, GetAssignedHolds()).WillByDefault(Return(responseData));
 
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         EXPECT_EQ(
             this->container.holdManager->invalidAircraft, this->container.holdManager->GetHoldingAircraft("BAW123"));
@@ -297,7 +286,7 @@ namespace UKControllerPluginTest::Hold {
         responseData["BAW123"] = {{"callsign", "BAW123"}, {"navaid", "TIMBA"}};
         ON_CALL(*this->containerApi, GetAssignedHolds()).WillByDefault(Return(responseData));
 
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         EXPECT_EQ(
             this->container.holdManager->invalidAircraft, this->container.holdManager->GetHoldingAircraft("BAW123"));
@@ -305,7 +294,7 @@ namespace UKControllerPluginTest::Hold {
 
     TEST_F(HoldModuleTest, RadarScreenRegistersForAsrEvents)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         BootstrapRadarScreen(
             this->configurableDisplays,
@@ -319,7 +308,7 @@ namespace UKControllerPluginTest::Hold {
 
     TEST_F(HoldModuleTest, RadarScreenRegistersDisplayManager)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         BootstrapRadarScreen(
             this->configurableDisplays,
@@ -333,7 +322,7 @@ namespace UKControllerPluginTest::Hold {
 
     TEST_F(HoldModuleTest, RadarScreenRegistersRadarRenderable)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         BootstrapRadarScreen(
             this->configurableDisplays,
@@ -348,7 +337,7 @@ namespace UKControllerPluginTest::Hold {
 
     TEST_F(HoldModuleTest, RadarScreenRegistersMenuConfigurationItems)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         BootstrapRadarScreen(
             this->configurableDisplays,
@@ -362,7 +351,7 @@ namespace UKControllerPluginTest::Hold {
 
     TEST_F(HoldModuleTest, RadarScreenRegistersCallbacksWithPluginFunctions)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         size_t countBefore = this->container.pluginFunctionHandlers->CountCallbacks();
         BootstrapRadarScreen(
@@ -377,7 +366,7 @@ namespace UKControllerPluginTest::Hold {
 
     TEST_F(HoldModuleTest, RadarScreenRegistersRadarScreenCommandHandler)
     {
-        BootstrapPlugin(this->mockDependencyProvider, this->container, this->messager);
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
 
         BootstrapRadarScreen(
             this->configurableDisplays,

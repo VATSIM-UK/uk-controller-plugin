@@ -1,11 +1,6 @@
-#include "pch/pch.h"
-
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "tag/TagFunction.h"
 

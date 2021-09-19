@@ -1,12 +1,10 @@
-#include "pch/pch.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
-#include "mock/MockConfigurableDisplay.h"
 #include "plugin/PopupMenuItem.h"
 
-using UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
+using UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface;
 
 namespace UKControllerPluginTest {
     namespace RadarScreen {
@@ -43,18 +41,14 @@ namespace UKControllerPluginTest {
             collection.RegisterDisplay(testDisplay1);
             collection.RegisterDisplay(testDisplay2);
 
-            for (
-                ConfigurableDisplayCollection::const_iterator it = collection.cbegin();
-                it != collection.cend();
-                ++it
-            ) {
+            for (ConfigurableDisplayCollection::const_iterator it = collection.cbegin(); it != collection.cend();
+                 ++it) {
                 (*it)->Configure(0, "test", {});
                 EXPECT_EQ(2, (*it)->GetConfigurationMenuItem().checked);
             }
 
-
             EXPECT_EQ(1, testDisplay1->configured);
             EXPECT_EQ(1, testDisplay1->configured);
         }
-    }  // namespace RadarScreen
-}  // namespace UKControllerPluginTest
+    } // namespace RadarScreen
+} // namespace UKControllerPluginTest

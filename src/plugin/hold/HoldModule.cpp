@@ -58,8 +58,7 @@ namespace UKControllerPlugin::Hold {
     /*
         Bootstrap the module into the plugin
     */
-    void BootstrapPlugin(
-        DependencyLoaderInterface& dependencyProvider, PersistenceContainer& container, UserMessager& userMessages)
+    void BootstrapPlugin(DependencyLoaderInterface& dependencyProvider, PersistenceContainer& container)
     {
         // Update local dependencies and build hold data
         nlohmann::json holdDependency = dependencyProvider.LoadDependency(GetDependencyKey(), nlohmann::json::array());

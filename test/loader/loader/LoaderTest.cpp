@@ -1,7 +1,4 @@
 #include "loader/loader.h"
-#include "mock/MockWinApi.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockCurlApi.h"
 
 using testing::NiceMock;
 using testing::Return;

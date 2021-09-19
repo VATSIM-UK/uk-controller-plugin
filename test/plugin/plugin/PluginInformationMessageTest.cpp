@@ -1,5 +1,4 @@
 #include "plugin/PluginInformationMessage.h"
-#include "mock/MockWinApi.h"
 
 using ::testing::_;
 using ::testing::NiceMock;

@@ -1,14 +1,12 @@
-#include "pch/pch.h"
 #include "plugin/PluginHelpPage.h"
 #include "plugin/PopupMenuItem.h"
-#include "mock/MockWinApi.h"
 
+using ::testing::_;
+using ::testing::NiceMock;
+using ::testing::Test;
 using UKControllerPlugin::Plugin::PluginHelpPage;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Windows::MockWinApi;
-using ::testing::Test;
-using ::testing::NiceMock;
-using ::testing::_;
 
 namespace UKControllerPluginTest {
     namespace Plugin {
@@ -16,15 +14,12 @@ namespace UKControllerPluginTest {
         class PluginHelpPageTest : public Test
         {
             public:
+            PluginHelpPageTest() : page(mockWindows, 123)
+            {
+            }
 
-                PluginHelpPageTest()
-                    : page(mockWindows, 123)
-                {
-
-                }
-
-                NiceMock<MockWinApi> mockWindows;
-                PluginHelpPage page;
+            NiceMock<MockWinApi> mockWindows;
+            PluginHelpPage page;
         };
 
         TEST_F(PluginHelpPageTest, ItHasAConfigurationMenuItem)
@@ -51,18 +46,16 @@ namespace UKControllerPluginTest {
 
         TEST_F(PluginHelpPageTest, ProcessCommandShowsMessage)
         {
-            EXPECT_CALL(this->mockWindows, OpenWebBrowser(page.helpUrl))
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenWebBrowser(page.helpUrl)).Times(1);
 
             this->page.ProcessCommand(".ukcp help");
         }
 
         TEST_F(PluginHelpPageTest, ConfigureShowsMessage)
         {
-            EXPECT_CALL(this->mockWindows, OpenWebBrowser(std::wstring(page.helpUrl)))
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenWebBrowser(std::wstring(page.helpUrl))).Times(1);
 
             this->page.Configure(123, "", {});
         }
-    }  // namespace Plugin
-}  // namespace UKControllerPluginTest
+    } // namespace Plugin
+} // namespace UKControllerPluginTest

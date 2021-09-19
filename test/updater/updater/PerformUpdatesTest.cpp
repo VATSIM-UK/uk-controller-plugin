@@ -1,7 +1,4 @@
 #include "api/ApiException.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockCurlApi.h"
-#include "mock/MockWinApi.h"
 #include "update/LoadChangelog.h"
 #include "updater/PerformUpdates.h"
 

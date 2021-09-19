@@ -1,7 +1,4 @@
 #include "dialog/DialogManager.h"
-#include "mock/MockDialogProvider.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "srd/SrdSearchHandler.h"
 
 using ::testing::_;

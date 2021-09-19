@@ -1,5 +1,4 @@
 #include "flightplan/StoredFlightplan.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "helper/HelperFunctions.h"
 
 using ::testing::NiceMock;

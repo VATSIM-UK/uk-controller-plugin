@@ -6,7 +6,6 @@
 #include "graphics/GdiplusBrushes.h"
 #include "graphics/GdiGraphicsWrapper.h"
 #include "helper/HelperFunctions.h"
-#include "mock/MockWinApi.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Bootstrap::ExternalsBootstrap;

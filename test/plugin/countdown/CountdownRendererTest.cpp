@@ -1,16 +1,11 @@
-#include "pch/pch.h"
 #include "countdown/CountdownRenderer.h"
 #include "graphics/GdiplusBrushes.h"
 #include "countdown/CountdownTimer.h"
-#include "mock/MockWinApi.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
 #include "helper/TestingFunctions.h"
-#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "plugin/PopupMenuItem.h"
 #include "countdown/TimerConfigurationManager.h"
 #include "dialog/DialogManager.h"
-#include "mock/MockDialogProvider.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;

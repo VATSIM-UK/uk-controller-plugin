@@ -2,15 +2,12 @@
 #include "countdown/CountdownModule.h"
 #include "countdown/CountdownTimer.h"
 #include "countdown/TimerConfigurationManager.h"
-#include "mock/MockWinApi.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "graphics/GdiplusBrushes.h"
 #include "euroscope/AsrEventHandlerCollection.h"
-#include "mock/MockDialogProvider.h"
 #include "euroscope/UserSettingAwareCollection.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "countdown/GlobalCountdownSettingFunctions.h"
 
 using ::testing::_;

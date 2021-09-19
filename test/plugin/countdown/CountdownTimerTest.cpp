@@ -1,10 +1,8 @@
-#include "pch/pch.h"
-#include "mock/MockWinApi.h"
-#include "helper/Matchers.h"
 #include "countdown/CountdownTimer.h"
+#include "helper/Matchers.h"
 
-using ::testing::StrictMock;
 using ::testing::_;
+using ::testing::StrictMock;
 using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest {
@@ -62,12 +60,11 @@ namespace UKControllerPluginTest {
         {
             StrictMock<MockWinApi> winApiMock;
 
-            EXPECT_CALL(winApiMock, PlayWave(_))
-                .Times(1);
+            EXPECT_CALL(winApiMock, PlayWave(_)).Times(1);
 
             CountdownTimer timer(winApiMock);
             timer.StartTimer(60);
             timer.ResetTimer(true);
         }
-    }  // namespace Countdown
-}  // namespace UKControllerPluginTest
+    } // namespace Countdown
+} // namespace UKControllerPluginTest

@@ -1,12 +1,7 @@
-#include "pch/pch.h"
-
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiplusBrushes.h"
 #include "helper/TestingFunctions.h"
-#include "mock/MockDialogProvider.h"
-#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "plugin/PopupMenuItem.h"
 #include "regional/RegionalPressureManager.h"
 #include "regional/RegionalPressureRenderer.h"

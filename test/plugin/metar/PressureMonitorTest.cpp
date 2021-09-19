@@ -1,6 +1,4 @@
 #include "metar/PressureMonitor.h"
-#include "mock/MockUserSettingProviderInterface.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "euroscope/GeneralSettingsEntries.h"
 #include "controller/ControllerPosition.h"
 
