@@ -1,13 +1,10 @@
-#include "pch/pch.h"
 #include "components/BrushSwitcher.h"
 #include "time/SystemClock.h"
 
 namespace UKControllerPlugin::Components {
 
-    std::shared_ptr<BrushSwitcher> BrushSwitcher::Create(
-        std::shared_ptr<Gdiplus::Brush> baseBrush,
-        const std::chrono::seconds phase
-    )
+    std::shared_ptr<BrushSwitcher>
+    BrushSwitcher::Create(std::shared_ptr<Gdiplus::Brush> baseBrush, const std::chrono::seconds phase)
     {
         return std::shared_ptr<BrushSwitcher>(new BrushSwitcher(baseBrush, phase));
     }
@@ -42,9 +39,7 @@ namespace UKControllerPlugin::Components {
         return this->brushes.at(this->brushIndex);
     }
 
-    BrushSwitcher::BrushSwitcher(
-        std::shared_ptr<Gdiplus::Brush> baseBrush,
-        const std::chrono::seconds phase)
+    BrushSwitcher::BrushSwitcher(std::shared_ptr<Gdiplus::Brush> baseBrush, const std::chrono::seconds phase)
         : baseBrush(std::move(baseBrush)), phase(phase)
     {
         this->brushes.push_back(this->baseBrush);

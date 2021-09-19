@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
             public:
             void Add(HoldingData data);
             const std::set<const HoldingData*> GetForFix(std::string fix) const;
-            const HoldingData& GetById(int id) const;
+            const HoldingData& GetById(unsigned int id) const;
             size_t Count(void) const;
 
             // Returns the hold with no data

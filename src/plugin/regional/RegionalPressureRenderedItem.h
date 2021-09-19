@@ -5,7 +5,7 @@ namespace UKControllerPlugin::Regional {
     using RegionalPressureRenderedItem = struct RegionalPressureRenderedItem
     {
         // The order in which to render the item
-        const unsigned int order;
+        const int order;
 
         // The key to find the actual rps
         const std::string key;

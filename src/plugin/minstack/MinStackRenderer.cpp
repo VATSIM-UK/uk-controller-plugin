@@ -47,7 +47,7 @@ namespace UKControllerPlugin::MinStack {
              MinStackManager::GetMslKeyTma("MTMA"),
              MinStackManager::GetMslKeyTma("STMA")});
 
-        unsigned int order = 0;
+        int order = 0;
         for (auto& selectedMinStack : selectedMinStacks) {
             this->config.AddItem({order++, selectedMinStack});
         }

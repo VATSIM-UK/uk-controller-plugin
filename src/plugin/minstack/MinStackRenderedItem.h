@@ -5,7 +5,7 @@ namespace UKControllerPlugin::MinStack {
     using MinStackRenderedItem = struct MinStackRenderedItem
     {
         // The order in which to render the item
-        const unsigned int order;
+        const int order;
 
         // The min stack key to find the actual level
         const std::string key;

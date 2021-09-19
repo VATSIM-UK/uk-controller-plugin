@@ -4,7 +4,7 @@
 namespace UKControllerPlugin {
     namespace Hold {
 
-        /* 
+        /*
             The minimum offset from a holding level that an aircraft must be
             before it is considered to be going into the next level if climbing
             or descending.
@@ -15,13 +15,7 @@ namespace UKControllerPlugin {
             The minimum vertical speed that an aircraft must have in order to be
             considered to be climbing or descending.
         */
-        const unsigned int minimumVerticalSpeed = 300;
-
-        /*
-            The value to return when a hold id cannot be found by searching.
-        */
-        const unsigned int holdIdNotFound = 0;
-
+        const int minimumVerticalSpeed = 300;
 
         /*
             Converts a C++ string to TCHAR so that we can use it in displays.
@@ -43,7 +37,7 @@ namespace UKControllerPlugin {
         /*
             Convert from TCHAR to a standard string.
         */
-        std::string ConvertFromTchar(TCHAR * string)
+        std::string ConvertFromTchar(TCHAR* string)
         {
             std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
             return converter.to_bytes(string);
@@ -61,7 +55,7 @@ namespace UKControllerPlugin {
 
             if (stringLength < 3) {
                 return L"000";
-            } else if(stringLength == 3) {
+            } else if (stringLength == 3) {
                 return L"00" + altString.substr(0, 1);
             } else if (stringLength == 4) {
                 return L"0" + altString.substr(0, 2);
@@ -102,11 +96,10 @@ namespace UKControllerPlugin {
         /*
             Returns the time in the hold as minutes
         */
-        std::wstring GetTimeInHoldDisplayString(const std::chrono::system_clock::time_point & entryTime)
+        std::wstring GetTimeInHoldDisplayString(const std::chrono::system_clock::time_point& entryTime)
         {
-            int64_t minutes = std::chrono::duration_cast<std::chrono::minutes> (
-                std::chrono::system_clock::now() - entryTime
-            ).count();
+            int64_t minutes =
+                std::chrono::duration_cast<std::chrono::minutes>(std::chrono::system_clock::now() - entryTime).count();
 
             return std::to_wstring(minutes) + L"m";
         }
@@ -119,5 +112,5 @@ namespace UKControllerPlugin {
 
             return verticalSpeed > 0 ? 1 : -1;
         }
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

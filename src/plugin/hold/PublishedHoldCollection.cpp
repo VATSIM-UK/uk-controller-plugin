@@ -34,7 +34,7 @@ namespace UKControllerPlugin {
         /*
          * Get a hold by its id
          */
-        const HoldingData& PublishedHoldCollection::GetById(int id) const
+        const HoldingData& PublishedHoldCollection::GetById(unsigned int id) const
         {
             auto foundHold =
                 std::find_if(this->holds.cbegin(), this->holds.cend(), [&id](const HoldingData& hold) -> bool {

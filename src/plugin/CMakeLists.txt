@@ -968,11 +968,13 @@ if(MSVC)
         >
         /std:c++17;
         /sdl;
-        /W3;
+        /W4;
         /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         /Zm200;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
+        -Wno-unused-parameter # Lots of interfaces don't use everything
+        -Wno-missing-field-initializers # Windows has loads of this sadly
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:

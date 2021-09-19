@@ -11,9 +11,9 @@ namespace UKControllerPlugin::Curl {
         public:
         CurlRequest(std::string uri, std::string method);
         void AddHeader(const std::string& key, std::string value);
-        [[nodiscard]] auto GetBody() const -> const char* const;
-        [[nodiscard]] auto GetMethod() const -> const char* const;
-        [[nodiscard]] auto GetUri() const -> const char* const;
+        [[nodiscard]] auto GetBody() const -> const char*;
+        [[nodiscard]] auto GetMethod() const -> const char*;
+        [[nodiscard]] auto GetUri() const -> const char*;
         auto operator==(const CurlRequest& compare) const -> bool;
         [[nodiscard]] auto GetMaxRequestTime() const -> INT64;
         void SetMaxRequestTime(INT64 requestTime);

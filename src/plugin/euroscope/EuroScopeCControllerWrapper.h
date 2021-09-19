@@ -13,9 +13,9 @@ namespace UKControllerPlugin::Euroscope {
         [[nodiscard]] auto IsVatsimRecognisedController() const -> bool override;
         [[nodiscard]] auto GetCallsign() const -> const std::string override;
         [[nodiscard]] auto GetControllerName() const -> const std::string override;
-        [[nodiscard]] auto GetFrequency() const -> const double override;
-        [[nodiscard]] auto HasActiveFrequency() const -> const bool override;
-        [[nodiscard]] auto IsCurrentUser() const -> const bool override;
+        [[nodiscard]] auto GetFrequency() const -> double override;
+        [[nodiscard]] auto HasActiveFrequency() const -> bool override;
+        [[nodiscard]] auto IsCurrentUser() const -> bool override;
 
         private:
         // The original data

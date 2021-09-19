@@ -35,12 +35,12 @@ namespace UKControllerPlugin {
             return this->originalData.GetCallsign();
         }
 
-        const int EuroScopeCFlightPlanWrapper::GetClearedAltitude(void) const
+        int EuroScopeCFlightPlanWrapper::GetClearedAltitude(void) const
         {
             return this->originalData.GetControllerAssignedData().GetClearedAltitude();
         }
 
-        const int EuroScopeCFlightPlanWrapper::GetCruiseLevel(void) const
+        int EuroScopeCFlightPlanWrapper::GetCruiseLevel(void) const
         {
             return this->originalData.GetFinalAltitude();
         }
@@ -50,7 +50,7 @@ namespace UKControllerPlugin {
             return this->originalData.GetFlightPlanData().GetDestination();
         }
 
-        const double EuroScopeCFlightPlanWrapper::GetDistanceFromOrigin(void) const
+        double EuroScopeCFlightPlanWrapper::GetDistanceFromOrigin(void) const
         {
             return this->originalData.GetDistanceFromOrigin();
         }
@@ -107,13 +107,13 @@ namespace UKControllerPlugin {
                    squawk != "2000" && squawk != "0000";
         }
 
-        const bool EuroScopeCFlightPlanWrapper::HasControllerClearedAltitude(void) const
+        bool EuroScopeCFlightPlanWrapper::HasControllerClearedAltitude(void) const
         {
             return this->originalData.GetControllerAssignedData().GetClearedAltitude() !=
                    this->euroScopeNoControllerClearedAltitude;
         }
 
-        const bool EuroScopeCFlightPlanWrapper::HasControllerAssignedHeading() const
+        bool EuroScopeCFlightPlanWrapper::HasControllerAssignedHeading() const
         {
             return this->originalData.GetControllerAssignedData().GetAssignedHeading() != 0;
         }
@@ -157,7 +157,7 @@ namespace UKControllerPlugin {
         /*
             Returns true if the aircraft is being tracked by anyone at all.
         */
-        const bool EuroScopeCFlightPlanWrapper::IsTracked(void) const
+        bool EuroScopeCFlightPlanWrapper::IsTracked(void) const
         {
             return this->notTrackedControllerCallsign.compare(this->originalData.GetTrackingControllerCallsign()) != 0;
         }
@@ -165,7 +165,7 @@ namespace UKControllerPlugin {
         /*
             Returns true if the current controller tracking the flightplan is the user.
         */
-        const bool EuroScopeCFlightPlanWrapper::IsTrackedByUser(void) const
+        bool EuroScopeCFlightPlanWrapper::IsTrackedByUser(void) const
         {
             return this->originalData.GetTrackingControllerIsMe();
         }

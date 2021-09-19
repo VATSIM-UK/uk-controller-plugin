@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
             this->items.erase(item);
         }
 
-        void RegionalPressureRendererConfiguration::RemoveItem(unsigned int index)
+        void RegionalPressureRendererConfiguration::RemoveItem(int index)
         {
             auto item = std::find_if(
                 this->items.begin(), this->items.end(), [index](const RegionalPressureRenderedItem& item) -> bool {

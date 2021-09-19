@@ -45,7 +45,7 @@ namespace UKControllerPlugin::Regional {
                 "ASR_SCOTTISH",
             });
 
-        unsigned int order = 0;
+        int order = 0;
         for (auto it = selectedMinStacks.cbegin(); it != selectedMinStacks.cend(); ++it) {
             this->config.AddItem({order++, *it});
         }

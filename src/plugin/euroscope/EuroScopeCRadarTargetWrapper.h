@@ -10,7 +10,7 @@ namespace UKControllerPlugin::Euroscope {
         [[nodiscard]] auto GetCallsign() const -> const std::string override;
         [[nodiscard]] auto GetFlightLevel() const -> int override;
         [[nodiscard]] auto GetPosition() const -> const EuroScopePlugIn::CPosition override;
-        [[nodiscard]] auto GetGroundSpeed() const -> const int override;
+        [[nodiscard]] auto GetGroundSpeed() const -> int override;
         [[nodiscard]] auto GetVerticalSpeed() const -> int override;
         [[nodiscard]] auto GetHeading() const -> double override;
 

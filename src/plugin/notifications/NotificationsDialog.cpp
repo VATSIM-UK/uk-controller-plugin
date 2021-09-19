@@ -273,7 +273,7 @@ namespace UKControllerPlugin::Notifications {
 
     auto NotificationsDialog::GetSelectedNotification(HWND hwnd) const -> Notification*
     {
-        if (this->selectedNotification == -1) {
+        if (this->selectedNotification == noNotificationSelected) {
             LogWarning("Tried to mark notification as read but none selected");
             return nullptr;
         }

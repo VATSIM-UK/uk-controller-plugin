@@ -112,7 +112,7 @@ if(MSVC)
             /Zi
         >
         /std:c++17;
-        /W3;
+        /W4;
         /WX;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )

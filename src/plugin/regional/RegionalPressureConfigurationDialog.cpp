@@ -329,7 +329,7 @@ namespace UKControllerPlugin {
             this->config->SetShouldRender(IsDlgButtonChecked(hwnd, IDC_RPS_DISPLAY_CHECK) == BST_CHECKED);
 
             // Check how many items are in the minstack list
-            unsigned int itemCount = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETCOUNT, NULL, NULL);
+            int itemCount = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETCOUNT, NULL, NULL);
 
             if (itemCount == LB_ERR) {
                 LogError("Unable to count items in RPS list");
@@ -338,7 +338,7 @@ namespace UKControllerPlugin {
 
             // Update the config from the list
             std::set<RegionalPressureRenderedItem> newConfig;
-            for (unsigned int i = 0; i < itemCount; i++) {
+            for (int i = 0; i < itemCount; i++) {
                 LPARAM rpsKey = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETITEMDATA, i, NULL);
 
                 newConfig.insert({

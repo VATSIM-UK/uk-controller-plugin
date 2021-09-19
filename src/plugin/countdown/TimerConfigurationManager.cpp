@@ -58,7 +58,7 @@ namespace UKControllerPlugin {
         /*
             Returns the given timer
         */
-        auto TimerConfigurationManager::GetTimer(int timerId) const -> TimerConfiguration
+        auto TimerConfigurationManager::GetTimer(unsigned int timerId) const -> TimerConfiguration
         {
             auto timer = std::find_if(
                 this->timers.cbegin(), this->timers.cend(), [timerId](const TimerConfiguration& storedTimer) -> bool {

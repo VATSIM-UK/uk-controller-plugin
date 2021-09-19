@@ -15,7 +15,7 @@ namespace UKControllerPlugin::MinStack {
         [[nodiscard]] auto CountItems() const -> size_t;
         [[nodiscard]] auto GetItem(const std::string& key) const -> UKControllerPlugin::MinStack::MinStackRenderedItem;
         void RemoveItem(const UKControllerPlugin::MinStack::MinStackRenderedItem& item);
-        void RemoveItem(unsigned int index);
+        void RemoveItem(int index);
         void Reset();
         void SetShouldRender(bool shouldRender);
         [[nodiscard]] auto ShouldRender() const -> bool;
@@ -44,7 +44,7 @@ namespace UKControllerPlugin::MinStack {
 
         private:
         // The invalid item
-        const UKControllerPlugin::MinStack::MinStackRenderedItem invalidItem = {UINT_MAX, ""};
+        const UKControllerPlugin::MinStack::MinStackRenderedItem invalidItem = {-9999, ""};
 
         // The items to render
         std::set<UKControllerPlugin::MinStack::MinStackRenderedItem> items;
@@ -52,5 +52,4 @@ namespace UKControllerPlugin::MinStack {
         // Should the MinStacks be rendered?
         bool shouldRender = true;
     };
-
 } // namespace UKControllerPlugin::MinStack

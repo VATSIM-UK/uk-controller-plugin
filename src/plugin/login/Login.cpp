@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "login/Login.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
@@ -23,7 +22,7 @@ namespace UKControllerPlugin {
         /*
             Returns the current login status, based on the ES connection type.
         */
-        const int Login::GetLoginStatus(void) const
+        int Login::GetLoginStatus(void) const
         {
             int status;
             switch (this->euroscopeStatus) {

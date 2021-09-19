@@ -24,7 +24,7 @@ namespace UKControllerPlugin::Releases {
         static auto ShouldDisplay() -> bool;
         static auto GetCoordinates() -> POINT;
         auto IsVisible() const -> bool override;
-        void Move(RECT position, std::string objectDescription) override{};
+        void Move([[maybe_unused]] RECT position, [[maybe_unused]] std::string objectDescription) override{};
         void Render(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
         void ResetPosition() override{};

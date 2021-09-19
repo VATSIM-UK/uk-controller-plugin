@@ -19,7 +19,7 @@ namespace UKControllerPlugin::Curl {
     /*
         Get the body of the request.
     */
-    auto CurlRequest::GetBody() const -> const char* const
+    auto CurlRequest::GetBody() const -> const char*
     {
         return this->body.c_str();
     }
@@ -27,7 +27,7 @@ namespace UKControllerPlugin::Curl {
     /*
         Get the method of the request.
     */
-    auto CurlRequest::GetMethod() const -> const char* const
+    auto CurlRequest::GetMethod() const -> const char*
     {
         return this->method.c_str();
     }
@@ -35,7 +35,7 @@ namespace UKControllerPlugin::Curl {
     /*
         Returns the request URI
     */
-    auto CurlRequest::GetUri() const -> const char* const
+    auto CurlRequest::GetUri() const -> const char*
     {
         return this->uri.c_str();
     }

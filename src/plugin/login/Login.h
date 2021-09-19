@@ -28,7 +28,7 @@ namespace UKControllerPlugin::Controller {
         void ControllerUpdateEvent(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller) override;
         void
         ControllerDisconnectEvent(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller) override;
-        [[nodiscard]] auto GetLoginStatus() const -> const int;
+        [[nodiscard]] auto GetLoginStatus() const -> int;
         [[nodiscard]] auto GetLoginTime() const -> std::chrono::system_clock::time_point;
         [[nodiscard]] auto GetDefaultLoginTime() const -> std::chrono::system_clock::time_point;
         [[nodiscard]] auto GetSecondsLoggedIn() const -> std::chrono::seconds;
