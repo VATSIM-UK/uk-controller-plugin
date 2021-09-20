@@ -1,44 +1,38 @@
-#include "pch/pch.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "countdown/CountdownModule.h"
 #include "countdown/CountdownTimer.h"
 #include "countdown/TimerConfigurationManager.h"
-#include "mock/MockWinApi.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "graphics/GdiplusBrushes.h"
 #include "euroscope/AsrEventHandlerCollection.h"
-#include "dialog/DialogManager.h"
-#include "mock/MockDialogProvider.h"
 #include "euroscope/UserSettingAwareCollection.h"
-#include "mock/MockUserSettingProviderInterface.h"
-#include "euroscope/UserSetting.h"
 #include "countdown/GlobalCountdownSettingFunctions.h"
 
+using ::testing::_;
+using ::testing::NiceMock;
+using ::testing::Return;
+using ::testing::Test;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Countdown::CountdownModule;
 using UKControllerPlugin::Countdown::CountdownTimer;
-using UKControllerPlugin::Countdown::TimerConfigurationManager;
-using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPlugin::Plugin::FunctionCallEventHandler;
-using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
-using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
-using UKControllerPlugin::Windows::GdiplusBrushes;
-using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPluginTest::Dialog::MockDialogProvider;
-using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
-using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Countdown::GetTimerDurationKey;
 using UKControllerPlugin::Countdown::GetTimerDurationDescription;
-using UKControllerPlugin::Countdown::GetTimerEnabledKey;
+using UKControllerPlugin::Countdown::GetTimerDurationKey;
 using UKControllerPlugin::Countdown::GetTimerEnabledDescription;
-using ::testing::NiceMock;
-using ::testing::Test;
-using ::testing::Return;
-using ::testing::_;
+using UKControllerPlugin::Countdown::GetTimerEnabledKey;
+using UKControllerPlugin::Countdown::TimerConfigurationManager;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
+using UKControllerPlugin::Windows::GdiplusBrushes;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
+using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest {
     namespace Countdown {
@@ -46,28 +40,29 @@ namespace UKControllerPluginTest {
         class CountdownModuleTest : public Test
         {
             public:
-                CountdownModuleTest()
-                    : countdown(windows), configManager(new TimerConfigurationManager(dialogManager, 1)),
-                    dialogManager(dialogProvider), userSetting(userSettingsProvider)
-                {
-                    container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
-                    container.dialogManager = std::make_unique<DialogManager>(dialogProvider);
-                    container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
-                }
+            CountdownModuleTest()
+                : countdown(windows), dialogManager(dialogProvider), userSetting(userSettingsProvider),
+                  configManager(new TimerConfigurationManager(dialogManager, 1))
 
-                NiceMock<MockDialogProvider> dialogProvider;
-                NiceMock<MockWinApi> windows;
-                NiceMock<MockUserSettingProviderInterface> userSettingsProvider;
-                PersistenceContainer container;
-                RadarRenderableCollection renderables;
-                ConfigurableDisplayCollection configurables;
-                GdiplusBrushes brushes;
-                AsrEventHandlerCollection asrEvents;
-                FunctionCallEventHandler functions;
-                CountdownTimer countdown;
-                DialogManager dialogManager;
-                UserSetting userSetting;
-                const std::shared_ptr<TimerConfigurationManager> configManager;
+            {
+                container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
+                container.dialogManager = std::make_unique<DialogManager>(dialogProvider);
+                container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
+            }
+
+            NiceMock<MockDialogProvider> dialogProvider;
+            NiceMock<MockWinApi> windows;
+            NiceMock<MockUserSettingProviderInterface> userSettingsProvider;
+            PersistenceContainer container;
+            RadarRenderableCollection renderables;
+            ConfigurableDisplayCollection configurables;
+            GdiplusBrushes brushes;
+            AsrEventHandlerCollection asrEvents;
+            FunctionCallEventHandler functions;
+            CountdownTimer countdown;
+            DialogManager dialogManager;
+            UserSetting userSetting;
+            const std::shared_ptr<TimerConfigurationManager> configManager;
         };
 
         TEST_F(CountdownModuleTest, BootstrapPluginCreatesTimer)
@@ -111,56 +106,28 @@ namespace UKControllerPluginTest {
         TEST_F(CountdownModuleTest, BootstrapRadarScreenAddsToRendererCollection)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions,
-                countdown,
-                configManager,
-                renderables,
-                configurables,
-                brushes,
-                asrEvents
-            );
+                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
             EXPECT_EQ(1, renderables.CountRenderers());
         }
 
         TEST_F(CountdownModuleTest, BootstrapRadarScreenSetsRenderPhaseToBeforeTags)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions,
-                countdown,
-                configManager,
-                renderables,
-                configurables,
-                brushes,
-                asrEvents
-            );
+                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
             EXPECT_EQ(1, renderables.CountRenderersInPhase(renderables.beforeTags));
         }
 
         TEST_F(CountdownModuleTest, BootstrapRadarScreenRegistersScreenObject)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions,
-                countdown,
-                configManager,
-                renderables,
-                configurables,
-                brushes,
-                asrEvents
-            );
+                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
             EXPECT_EQ(3, renderables.CountScreenObjects());
         }
 
         TEST_F(CountdownModuleTest, BootstrapRadarScreenAddsToFunctionCallCollection)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions,
-                countdown,
-                configManager,
-                renderables,
-                configurables,
-                brushes,
-                asrEvents
-            );
+                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
             EXPECT_EQ(1, functions.CountCallbacks());
             EXPECT_EQ(0, functions.CountTagFunctions());
         }
@@ -168,50 +135,28 @@ namespace UKControllerPluginTest {
         TEST_F(CountdownModuleTest, BootstrapRadarScreenAddsToConfigurableDisplays)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions,
-                countdown,
-                configManager,
-                renderables,
-                configurables,
-                brushes,
-                asrEvents
-            );
+                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
             EXPECT_EQ(2, configurables.CountDisplays());
         }
 
         TEST_F(CountdownModuleTest, BootstrapRadarScreenAddsToasrEventsEvents)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions,
-                countdown,
-                configManager,
-                renderables,
-                configurables,
-                brushes,
-                asrEvents
-            );
+                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
             EXPECT_EQ(1, asrEvents.CountHandlers());
         }
 
         TEST_F(CountdownModuleTest, LoadDefaultUserSettingsBootstrapsTimerIfNotInSettings)
         {
-            EXPECT_CALL(this->userSettingsProvider, KeyExists(_))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(this->userSettingsProvider, KeyExists(_)).WillRepeatedly(Return(true));
 
-            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(1)))
-                .WillRepeatedly(Return(false));
+            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(1))).WillRepeatedly(Return(false));
 
             EXPECT_CALL(this->userSettingsProvider, SetKey(GetTimerEnabledKey(1), GetTimerEnabledDescription(1), "1"))
                 .Times(1);
 
             EXPECT_CALL(
-                this->userSettingsProvider,
-                SetKey(
-                    GetTimerDurationKey(1),
-                    GetTimerDurationDescription(1),
-                    "30"
-                )
-            )
+                this->userSettingsProvider, SetKey(GetTimerDurationKey(1), GetTimerDurationDescription(1), "30"))
                 .Times(1);
 
             CountdownModule::LoadDefaultUserSettings(this->userSetting);
@@ -219,23 +164,15 @@ namespace UKControllerPluginTest {
 
         TEST_F(CountdownModuleTest, LoadDefaultUserSettingsBootstrapsIgnoresTimerIfExists)
         {
-            EXPECT_CALL(this->userSettingsProvider, KeyExists(_))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(this->userSettingsProvider, KeyExists(_)).WillRepeatedly(Return(true));
 
-            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(1)))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(1))).WillRepeatedly(Return(true));
 
             EXPECT_CALL(this->userSettingsProvider, SetKey(GetTimerEnabledKey(1), GetTimerEnabledDescription(1), "1"))
                 .Times(0);
 
             EXPECT_CALL(
-                this->userSettingsProvider,
-                SetKey(
-                    GetTimerDurationKey(1),
-                    GetTimerDurationDescription(1),
-                    "30"
-                )
-            )
+                this->userSettingsProvider, SetKey(GetTimerDurationKey(1), GetTimerDurationDescription(1), "30"))
                 .Times(0);
 
             CountdownModule::LoadDefaultUserSettings(this->userSetting);
@@ -243,22 +180,17 @@ namespace UKControllerPluginTest {
 
         TEST_F(CountdownModuleTest, LoadDefaultUserSettingsBootstrapsAllTimers)
         {
-            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(1)))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(1))).WillRepeatedly(Return(true));
 
-            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(2)))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(2))).WillRepeatedly(Return(true));
 
-            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(3)))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(3))).WillRepeatedly(Return(true));
 
-            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(4)))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(4))).WillRepeatedly(Return(true));
 
-            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(5)))
-                .WillRepeatedly(Return(true));
+            EXPECT_CALL(this->userSettingsProvider, KeyExists(GetTimerEnabledKey(5))).WillRepeatedly(Return(true));
 
             CountdownModule::LoadDefaultUserSettings(this->userSetting);
         }
-    }  // namespace Countdown
-}  // namespace UKControllerPluginTest
+    } // namespace Countdown
+} // namespace UKControllerPluginTest

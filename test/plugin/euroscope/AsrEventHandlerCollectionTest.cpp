@@ -1,7 +1,4 @@
-#include "pch/pch.h"
 #include "euroscope/AsrEventHandlerCollection.h"
-#include "mock/MockUserSettingProviderInterface.h"
-#include "mock/MockAsrEventHandlerInterface.h"
 
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPluginTest::RadarScreen::MockAsrEventHandlerInterface;

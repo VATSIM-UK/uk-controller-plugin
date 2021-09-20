@@ -1,13 +1,11 @@
-#include "pch/pch.h"
 #include "setting/SettingRepositoryFactory.h"
 #include "setting/SettingRepository.h"
-#include "mock/MockWinApi.h"
 
+using ::testing::Return;
+using ::testing::StrictMock;
 using UKControllerPlugin::Setting::SettingRepository;
 using UKControllerPlugin::Setting::SettingRepositoryFactory;
 using UKControllerPluginTest::Windows::MockWinApi;
-using ::testing::StrictMock;
-using ::testing::Return;
 
 namespace UKControllerPluginUtilsTest {
     namespace Setting {
@@ -27,5 +25,5 @@ namespace UKControllerPluginUtilsTest {
             std::unique_ptr<SettingRepository> repo = SettingRepositoryFactory::Create(mockWinApi);
             EXPECT_TRUE("testkey" == repo->GetSetting("api-key"));
         }
-    }  // namespace Setting
-}  // namespace UKControllerPluginUtilsTest
+    } // namespace Setting
+} // namespace UKControllerPluginUtilsTest

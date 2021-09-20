@@ -1,6 +1,8 @@
 #include "PrenoteMessage.h"
 #include "PrenoteMessageCollection.h"
 #include "PrenoteStatusIndicatorTagItem.h"
+#include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "tag/TagData.h"
 
 namespace UKControllerPlugin::Prenote {
     PrenoteStatusIndicatorTagItem::PrenoteStatusIndicatorTagItem(std::shared_ptr<PrenoteMessageCollection> messages)
@@ -25,7 +27,7 @@ namespace UKControllerPlugin::Prenote {
         int totalAcknowledged = 0;
         this->messages->Iterate(
             [&tagData, &totalForCallsign, &totalAcknowledged](const std::shared_ptr<PrenoteMessage>& message) {
-                if (message->GetCallsign() == tagData.flightPlan.GetCallsign()) {
+                if (message->GetCallsign() == tagData.GetFlightplan().GetCallsign()) {
                     totalForCallsign++;
 
                     if (message->IsAcknowledged()) {

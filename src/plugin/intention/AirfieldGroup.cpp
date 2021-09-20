@@ -1,70 +1,69 @@
-#include "pch/pch.h"
-#include "intention/AirfieldGroup.h"
+#include "AirfieldGroup.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
 
-namespace UKControllerPlugin {
-    namespace IntentionCode {
+namespace UKControllerPlugin::IntentionCode {
 
-        bool AirfieldGroup::AppliesToController(
-            std::string callsign,
-            UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route
-        ) const
-        {
-            return true;
-        }
+    AirfieldGroup::AirfieldGroup() = default;
+    AirfieldGroup::~AirfieldGroup() = default;
+    AirfieldGroup::AirfieldGroup(const AirfieldGroup&) = default;
+    AirfieldGroup::AirfieldGroup(AirfieldGroup&&) = default;
 
-        /*
-            Adds a particular airfield to the list of airfields.
-        */
-        void AirfieldGroup::AddAirfieldToList(std::string airfield)
-        {
-            this->airfields.push_back(airfield);
-        }
+    auto AirfieldGroup::AppliesToController(
+        const std::string& callsign, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const
+        -> bool
+    {
+        return true;
+    }
 
-        /*
-            Returns true if the airfield ICAO string matches one in the list.
-        */
-        bool AirfieldGroup::AirfieldInList(std::string airfield) const
-        {
-            return std::find(this->airfields.begin(), this->airfields.end(), airfield) != this->airfields.end();
-        }
+    /*
+        Adds a particular airfield to the list of airfields.
+    */
+    void AirfieldGroup::AddAirfieldToList(const std::string& airfield)
+    {
+        this->airfields.push_back(airfield);
+    }
 
-        bool AirfieldGroup::ControllerIsScottish(std::string callsign) const
-        {
-            std::string prefix = callsign.substr(0, 3);
-            return prefix == this->SCAC_CALLSIGN_PREFIX ||
-                prefix == this->SCTC_CALLSIGN_PREFIX ||
-                prefix == this->EGPX_CALLSIGN_PREFIX ||
-                prefix == this->EGPX_NI_CALLSIGN_PREFIX ||
-                prefix == this->EGPX_MIL_CALLSIGN_PREFIX;
-        }
+    /*
+        Returns true if the airfield ICAO string matches one in the list.
+    */
+    auto AirfieldGroup::AirfieldInList(const std::string& airfield) const -> bool
+    {
+        return std::find(this->airfields.begin(), this->airfields.end(), airfield) != this->airfields.end();
+    }
 
-        /*
-            By default, we empty the airfield list.
-        */
-        bool AirfieldGroup::Initialise(void)
-        {
-            return this->airfields.empty();
-        }
+    auto AirfieldGroup::ControllerIsScottish(const std::string& callsign) const -> bool
+    {
+        std::string prefix = callsign.substr(0, 3);
+        return prefix == this->SCAC_CALLSIGN_PREFIX || prefix == this->SCTC_CALLSIGN_PREFIX ||
+               prefix == this->EGPX_CALLSIGN_PREFIX || prefix == this->EGPX_NI_CALLSIGN_PREFIX ||
+               prefix == this->EGPX_MIL_CALLSIGN_PREFIX;
+    }
 
-        /*
-            Returns true if a particular point is found in the flightplan, which may be used change the intention code
-            or whether or not the airfield is "known".
-        */
-        bool AirfieldGroup::IsViaPoint(std::string point, EuroscopeExtractedRouteInterface & route) const
-        {
-            int i = 0;
-            while (i < route.GetPointsNumber()) {
-                if (point.compare(route.GetPointName(i)) == 0) {
-                    return true;
-                }
+    /*
+        By default, we empty the airfield list.
+    */
+    auto AirfieldGroup::Initialise() -> bool
+    {
+        return this->airfields.empty();
+    }
 
-                i++;
+    /*
+        Returns true if a particular point is found in the flightplan, which may be used change the intention code
+        or whether or not the airfield is "known".
+    */
+    auto AirfieldGroup::IsViaPoint(const std::string& point, EuroscopeExtractedRouteInterface& route) -> bool
+    {
+        int i = 0;
+        while (i < route.GetPointsNumber()) {
+            if (point == route.GetPointName(i)) {
+                return true;
             }
 
-            return false;
-        };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+            i++;
+        }
+
+        return false;
+    };
+} // namespace UKControllerPlugin::IntentionCode

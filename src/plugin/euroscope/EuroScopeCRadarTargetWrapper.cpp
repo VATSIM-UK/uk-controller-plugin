@@ -30,7 +30,7 @@ namespace UKControllerPlugin {
             Returns the radar targets ground speed. Initially, will use that reported from the pilot
             client. If that's 0, will use what EuroScope estimates.
         */
-        const int EuroScopeCRadarTargetWrapper::GetGroundSpeed(void) const
+        int EuroScopeCRadarTargetWrapper::GetGroundSpeed(void) const
         {
             return this->originalData.GetGS();
         }
@@ -44,5 +44,5 @@ namespace UKControllerPlugin {
         {
             return this->originalData.GetTrackHeading();
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

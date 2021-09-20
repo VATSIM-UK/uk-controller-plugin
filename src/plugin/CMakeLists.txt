@@ -51,7 +51,7 @@ set(src__command
     "command/CommandHandlerCollection.cpp"
     "command/CommandHandlerCollection.h"
     "command/CommandHandlerInterface.h"
-)
+        command/CommandHandlerInterface.cpp)
 source_group("src\\command" FILES ${src__command})
 
 set(src__components
@@ -98,7 +98,7 @@ set(src__controller
     "controller/HandoffEventHandlerInterface.h"
     "controller/TranslateFrequencyAbbreviation.cpp"
     "controller/TranslateFrequencyAbbreviation.h"
-)
+        controller/ActiveCallsignEventHandlerInterface.cpp)
 source_group("src\\controller" FILES ${src__controller})
 
 set(src__countdown
@@ -161,7 +161,7 @@ set(src__euroscope
     "euroscope/EuroscopeFlightplanListWrapper.cpp"
     "euroscope/EuroscopeFlightplanListWrapper.h"
     "euroscope/EuroscopePluginLoopbackInterface.h"
-    "euroscope/EuroScopeRadarLoopbackInterface.h"
+    "euroscope/EuroscopeRadarLoopbackInterface.h"
     "euroscope/EuroscopeSectorFileElementInterface.h"
     "euroscope/EuroscopeSectorFileElementWrapper.cpp"
     "euroscope/EuroscopeSectorFileElementWrapper.h"
@@ -189,7 +189,7 @@ set(src__euroscope
     "euroscope/UserSettingAwareCollection.h"
     "euroscope/UserSettingAwareInterface.h"
     "euroscope/UserSettingProviderInterface.h"
-)
+        euroscope/AsrEventHandlerInterface.cpp euroscope/UserSettingProviderInterface.cpp euroscope/EuroscopeRadarLoopbackInterface.cpp)
 source_group("src\\euroscope" FILES ${src__euroscope})
 
 set(src__flightinformationservice
@@ -225,6 +225,7 @@ source_group("src\\graphics" FILES ${src__graphics})
 
 set(src__handoff
     "handoff/CachedHandoff.h"
+    "handoff/CachedHandoff.cpp"
     "handoff/HandoffCollection.cpp"
     "handoff/HandoffCollection.h"
     "handoff/HandoffCollectionFactory.cpp"
@@ -235,7 +236,7 @@ set(src__handoff
     "handoff/HandoffFrequencyUpdatedMessage.h"
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
-)
+        controller/HandoffEventHandler.cpp)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__historytrail
@@ -372,7 +373,7 @@ set(src__integration
     "integration/SocketInterface.h"
     "integration/SocketWrapper.cpp"
     "integration/SocketWrapper.h"
-        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h)
+        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h integration/MessageType.cpp integration/ExternalMessageHandlerInterface.cpp)
 source_group("src\\integration" FILES ${src__integration})
 
 set(src__intention
@@ -434,7 +435,7 @@ set(src__message
     "message/UserMessager.h"
     "message/UserMessagerBootstrap.cpp"
     "message/UserMessagerBootstrap.h"
-)
+        message/MessageSerializableInterface.cpp)
 source_group("src\\message" FILES ${src__message})
 
 set(src__metar
@@ -449,7 +450,7 @@ set(src__metar
     "metar/PressureMonitor.h"
     "metar/PressureMonitorBootstrap.cpp"
     "metar/PressureMonitorBootstrap.h"
-)
+        metar/MetarEventHandlerInterface.cpp)
 source_group("src\\metar" FILES ${src__metar})
 
 set(src__minstack
@@ -465,7 +466,7 @@ set(src__minstack
     "minstack/MinStackRenderer.h"
     "minstack/MinStackRendererConfiguration.cpp"
     "minstack/MinStackRendererConfiguration.h"
-)
+        minstack/MinStackLevel.cpp minstack/MinStackRenderedItem.cpp)
 source_group("src\\minstack" FILES ${src__minstack})
 
 set(src__navaids
@@ -476,7 +477,7 @@ set(src__navaids
     "navaids/NavaidCollection.h"
     "navaids/NavaidModule.cpp"
     "navaids/NavaidModule.h"
-)
+        navaids/Navaid.cpp)
 source_group("src\\navaids" FILES ${src__navaids})
 
 set(src__notifications
@@ -507,7 +508,7 @@ set(src__oceanic
     "oceanic/OceanicEventHandler.h"
     "oceanic/OceanicModule.cpp"
     "oceanic/OceanicModule.h"
-)
+        oceanic/Clearance.cpp)
 source_group("src\\oceanic" FILES ${src__oceanic})
 
 set(src__offblock
@@ -558,7 +559,7 @@ set(src__plugin
     "plugin/UKPlugin.h"
     "plugin/UkPluginBootstrap.cpp"
     "plugin/UkPluginBootstrap.h"
-)
+        euroscope/UserSettingAwareInterface.cpp)
 source_group("src\\plugin" FILES ${src__plugin})
 
 set(src__prenote
@@ -619,7 +620,7 @@ set(src__push
     "push/PushEventProxyWindow.h"
     "push/PushEventSubscription.cpp"
     "push/PushEventSubscription.h"
-)
+        push/PushEvent.cpp push/PushEventConnectionInterface.cpp)
 source_group("src\\push" FILES ${src__push})
 
 set(src__radarscreen
@@ -639,11 +640,12 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-)
+        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional
     "regional/RegionalPressure.h"
+    "regional/RegionalPressure.cpp"
     "regional/RegionalPressureConfigurationDialog.cpp"
     "regional/RegionalPressureConfigurationDialog.h"
     "regional/RegionalPressureManager.cpp"
@@ -657,7 +659,7 @@ set(src__regional
     "regional/RegionalPressureRenderer.h"
     "regional/RegionalPressureRendererConfiguration.cpp"
     "regional/RegionalPressureRendererConfiguration.h"
-)
+        regional/RegionalPressureRenderedItem.cpp)
 source_group("src\\regional" FILES ${src__regional})
 
 set(src__releases
@@ -690,7 +692,7 @@ set(src__releases
     "releases/RequestDepartureReleaseDialog.h"
     "releases/ToggleDepartureReleaseDecisionList.cpp"
     "releases/ToggleDepartureReleaseDecisionList.h"
-)
+        releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp)
 source_group("src\\releases" FILES ${src__releases})
 
 set(src__sectorfile
@@ -767,6 +769,7 @@ set(src__tag
     "tag/TagItemCollection.cpp"
     "tag/TagItemCollection.h"
     "tag/TagItemInterface.h"
+    "tag/TagItemInterface.cpp"
 )
 source_group("src\\tag" FILES ${src__tag})
 
@@ -876,7 +879,7 @@ set(ROOT_NAMESPACE UKControllerPlugin)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
-################################################################################
+#############################################1###################################
 # Target name
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -965,10 +968,13 @@ if(MSVC)
         >
         /std:c++17;
         /sdl;
-        /W3;
+        /W4;
+        /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         /Zm200;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
+        -Wno-unused-parameter # Lots of interfaces don't use everything
+        -Wno-missing-field-initializers # Windows has loads of this sadly
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:

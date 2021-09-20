@@ -1,14 +1,11 @@
-#include "pch/pch.h"
 #include "euroscope/RadarTargetEventHandlerCollection.h"
-#include "mock/MockRadarTargetEventHandlerInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 
 using UKControllerPlugin::Euroscope::RadarTargetEventHandlerCollection;
-using UKControllerPluginTest::EventHandler::MockRadarTargetEventHandlerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
+using UKControllerPluginTest::EventHandler::MockRadarTargetEventHandlerInterface;
 
-using ::testing::StrictMock;
 using ::testing::_;
+using ::testing::StrictMock;
 
 namespace UKControllerPluginTest {
     namespace Euroscope {
@@ -17,11 +14,9 @@ namespace UKControllerPluginTest {
             RadarTargetEventHandlerCollection collection;
             StrictMock<MockEuroScopeCRadarTargetInterface> mockHandler;
             std::shared_ptr<StrictMock<MockRadarTargetEventHandlerInterface>> mockInterface(
-                new StrictMock<MockRadarTargetEventHandlerInterface>
-            );
+                new StrictMock<MockRadarTargetEventHandlerInterface>);
 
-            EXPECT_CALL(*mockInterface, RadarTargetPositionUpdateEvent(_))
-                .Times(1);
+            EXPECT_CALL(*mockInterface, RadarTargetPositionUpdateEvent(_)).Times(1);
 
             collection.RegisterHandler(mockInterface);
             collection.RadarTargetEvent(mockHandler);
@@ -32,17 +27,13 @@ namespace UKControllerPluginTest {
             RadarTargetEventHandlerCollection collection;
             StrictMock<MockEuroScopeCRadarTargetInterface> mockHandler;
             std::shared_ptr<StrictMock<MockRadarTargetEventHandlerInterface>> mockInterface1(
-                new StrictMock<MockRadarTargetEventHandlerInterface>
-            );
+                new StrictMock<MockRadarTargetEventHandlerInterface>);
             std::shared_ptr<StrictMock<MockRadarTargetEventHandlerInterface>> mockInterface2(
-                new StrictMock<MockRadarTargetEventHandlerInterface>
-            );
+                new StrictMock<MockRadarTargetEventHandlerInterface>);
 
-            EXPECT_CALL(*mockInterface1, RadarTargetPositionUpdateEvent(_))
-                .Times(1);
+            EXPECT_CALL(*mockInterface1, RadarTargetPositionUpdateEvent(_)).Times(1);
 
-            EXPECT_CALL(*mockInterface2, RadarTargetPositionUpdateEvent(_))
-                .Times(1);
+            EXPECT_CALL(*mockInterface2, RadarTargetPositionUpdateEvent(_)).Times(1);
 
             collection.RegisterHandler(mockInterface1);
             collection.RegisterHandler(mockInterface2);
@@ -59,16 +50,13 @@ namespace UKControllerPluginTest {
         {
             RadarTargetEventHandlerCollection collection;
             collection.RegisterHandler(std::shared_ptr<StrictMock<MockRadarTargetEventHandlerInterface>>(
-                new StrictMock<MockRadarTargetEventHandlerInterface>)
-            );
+                new StrictMock<MockRadarTargetEventHandlerInterface>));
             EXPECT_EQ(1, collection.CountHandlers());
             collection.RegisterHandler(std::shared_ptr<StrictMock<MockRadarTargetEventHandlerInterface>>(
-                new StrictMock<MockRadarTargetEventHandlerInterface>)
-            );
+                new StrictMock<MockRadarTargetEventHandlerInterface>));
             EXPECT_EQ(2, collection.CountHandlers());
             collection.RegisterHandler(std::shared_ptr<StrictMock<MockRadarTargetEventHandlerInterface>>(
-                new StrictMock<MockRadarTargetEventHandlerInterface>)
-            );
+                new StrictMock<MockRadarTargetEventHandlerInterface>));
             EXPECT_EQ(3, collection.CountHandlers());
         }
 
@@ -76,12 +64,11 @@ namespace UKControllerPluginTest {
         {
             RadarTargetEventHandlerCollection collection;
             std::shared_ptr<StrictMock<MockRadarTargetEventHandlerInterface>> mockInterface(
-                new StrictMock<MockRadarTargetEventHandlerInterface>
-            );
+                new StrictMock<MockRadarTargetEventHandlerInterface>);
             collection.RegisterHandler(mockInterface);
             EXPECT_EQ(1, collection.CountHandlers());
             collection.RegisterHandler(mockInterface);
             EXPECT_EQ(1, collection.CountHandlers());
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPluginTest
+    } // namespace Euroscope
+} // namespace UKControllerPluginTest

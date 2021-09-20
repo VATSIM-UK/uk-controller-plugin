@@ -1,14 +1,11 @@
-#include "pch/pch.h"
 #include "plugin/PluginInformationMessage.h"
-#include "plugin/PopupMenuItem.h"
-#include "mock/MockWinApi.h"
 
+using ::testing::_;
+using ::testing::NiceMock;
+using ::testing::Test;
 using UKControllerPlugin::Plugin::PluginInformationMessage;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Windows::MockWinApi;
-using ::testing::Test;
-using ::testing::NiceMock;
-using ::testing::_;
 
 namespace UKControllerPluginTest {
     namespace Plugin {
@@ -16,15 +13,12 @@ namespace UKControllerPluginTest {
         class PluginInformationMessageTest : public Test
         {
             public:
+            PluginInformationMessageTest() : message(mockWindows, 123)
+            {
+            }
 
-                PluginInformationMessageTest()
-                    : message(mockWindows, 123)
-                {
-
-                }
-
-                NiceMock<MockWinApi> mockWindows;
-                PluginInformationMessage message;
+            NiceMock<MockWinApi> mockWindows;
+            PluginInformationMessage message;
         };
 
         TEST_F(PluginInformationMessageTest, ItHasAConfigurationMenuItem)
@@ -51,18 +45,16 @@ namespace UKControllerPluginTest {
 
         TEST_F(PluginInformationMessageTest, ProcessCommandShowsMessage)
         {
-            EXPECT_CALL(this->mockWindows, OpenMessageBox(_, _, _))
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(_, _, _)).Times(1);
 
-            this->message.ProcessCommand(".ukcp about");
+            static_cast<void>(this->message.ProcessCommand(".ukcp about"));
         }
 
         TEST_F(PluginInformationMessageTest, ConfigureShowsMessage)
         {
-            EXPECT_CALL(this->mockWindows, OpenMessageBox(_, _, _))
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(_, _, _)).Times(1);
 
             this->message.Configure(123, "", {});
         }
-    }  // namespace Plugin
-}  // namespace UKControllerPluginTest
+    } // namespace Plugin
+} // namespace UKControllerPluginTest

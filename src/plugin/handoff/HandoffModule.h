@@ -5,14 +5,11 @@ namespace UKControllerPlugin {
         struct PersistenceContainer;
     } // namespace Bootstrap
     namespace Dependency {
-        struct DependencyLoaderInterface;
+        class DependencyLoaderInterface;
     } // namespace Dependency
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Handoff {
-
-    extern const std::string handoffOrdersDependencyKey;
-    extern const std::string handoffSidMappingsDependency;
 
     void BootstrapPlugin(
         UKControllerPlugin::Bootstrap::PersistenceContainer& container,

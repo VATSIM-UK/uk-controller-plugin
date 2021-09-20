@@ -1,10 +1,7 @@
-#include "pch/pch.h"
 #include "tag/TagData.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 
-using ::testing::Test;
 using ::testing::NiceMock;
+using ::testing::Test;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
@@ -15,48 +12,41 @@ namespace UKControllerPluginTest {
         class TagDataTest : public Test
         {
             public:
-                TagDataTest()
-                    : tagData(
-                        mockFlightplan,
-                        mockRadarTarget,
-                        1,
-                        EuroScopePlugIn::TAG_DATA_CORRELATED,
-                        itemString,
-                        &euroscopeColourCode,
-                        &tagColour,
-                        &fontSize
-                    )
-                {
+            TagDataTest()
+                : tagData(
+                      mockFlightplan,
+                      mockRadarTarget,
+                      1,
+                      EuroScopePlugIn::TAG_DATA_CORRELATED,
+                      itemString,
+                      &euroscopeColourCode,
+                      &tagColour,
+                      &fontSize)
+            {
+            }
 
-                }
-
-                double fontSize = 24.1;
-                COLORREF tagColour = RGB(255, 255, 255);
-                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
-                char itemString[16] = "Foooooo";
-                NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
-                NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
-                TagData tagData;
+            double fontSize = 24.1;
+            COLORREF tagColour = RGB(255, 255, 255);
+            int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+            char itemString[16] = "Foooooo";
+            NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
+            NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+            TagData tagData;
         };
 
         TEST_F(TagDataTest, ItSetsFlightplanInConstructor)
         {
-            EXPECT_EQ(&mockFlightplan, &tagData.flightPlan);
+            EXPECT_EQ(&mockFlightplan, &tagData.GetFlightplan());
         }
 
         TEST_F(TagDataTest, ItSetsRadarTargetInConstructor)
         {
-            EXPECT_EQ(&mockRadarTarget, &tagData.radarTarget);
+            EXPECT_EQ(&mockRadarTarget, &tagData.GetRadarTarget());
         }
 
         TEST_F(TagDataTest, ItSetsItemCodeInConstructor)
         {
-            EXPECT_EQ(1, tagData.itemCode);
-        }
-
-        TEST_F(TagDataTest, ItSetsDataAvailableInConstructor)
-        {
-            EXPECT_EQ(EuroScopePlugIn::TAG_DATA_CORRELATED, tagData.dataAvailable);
+            EXPECT_EQ(1, tagData.GetItemCode());
         }
 
         TEST_F(TagDataTest, ItSetsItemStringInConstructor)
@@ -107,7 +97,7 @@ namespace UKControllerPluginTest {
         TEST_F(TagDataTest, ItSetsItemStringToInvalidIfTooLong)
         {
             tagData.SetItemString("thisdataistoolongforthetagitem");
-            EXPECT_EQ(tagData.invalidItemText, tagData.GetItemString());
+            EXPECT_EQ("INVALID", tagData.GetItemString());
         }
-    }  // namespace Tag
-}  // namespace UKControllerPluginTest
+    } // namespace Tag
+} // namespace UKControllerPluginTest

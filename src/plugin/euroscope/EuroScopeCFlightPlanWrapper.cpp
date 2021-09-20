@@ -1,5 +1,4 @@
-#include "pch/pch.h"
-#include "euroscope/EuroScopeCFlightPlanWrapper.h"
+#include "EuroScopeCFlightPlanWrapper.h"
 #include "squawk/SquawkValidator.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
@@ -36,12 +35,12 @@ namespace UKControllerPlugin {
             return this->originalData.GetCallsign();
         }
 
-        const int EuroScopeCFlightPlanWrapper::GetClearedAltitude(void) const
+        int EuroScopeCFlightPlanWrapper::GetClearedAltitude(void) const
         {
             return this->originalData.GetControllerAssignedData().GetClearedAltitude();
         }
 
-        const int EuroScopeCFlightPlanWrapper::GetCruiseLevel(void) const
+        int EuroScopeCFlightPlanWrapper::GetCruiseLevel(void) const
         {
             return this->originalData.GetFinalAltitude();
         }
@@ -51,7 +50,7 @@ namespace UKControllerPlugin {
             return this->originalData.GetFlightPlanData().GetDestination();
         }
 
-        const double EuroScopeCFlightPlanWrapper::GetDistanceFromOrigin(void) const
+        double EuroScopeCFlightPlanWrapper::GetDistanceFromOrigin(void) const
         {
             return this->originalData.GetDistanceFromOrigin();
         }
@@ -104,28 +103,24 @@ namespace UKControllerPlugin {
         bool EuroScopeCFlightPlanWrapper::HasAssignedSquawk(void) const
         {
             std::string squawk = this->originalData.GetControllerAssignedData().GetSquawk();
-            return SquawkValidator::ValidSquawk(squawk) &&
-                squawk != "0200" &&
-                squawk != "2200" &&
-                squawk != "1200" &&
-                squawk != "2000" &&
-                squawk != "0000";
+            return SquawkValidator::ValidSquawk(squawk) && squawk != "0200" && squawk != "2200" && squawk != "1200" &&
+                   squawk != "2000" && squawk != "0000";
         }
 
-        const bool EuroScopeCFlightPlanWrapper::HasControllerClearedAltitude(void) const
+        bool EuroScopeCFlightPlanWrapper::HasControllerClearedAltitude(void) const
         {
             return this->originalData.GetControllerAssignedData().GetClearedAltitude() !=
-                this->euroScopeNoControllerClearedAltitude;
+                   this->euroScopeNoControllerClearedAltitude;
         }
 
-        const bool EuroScopeCFlightPlanWrapper::HasControllerAssignedHeading() const
+        bool EuroScopeCFlightPlanWrapper::HasControllerAssignedHeading() const
         {
             return this->originalData.GetControllerAssignedData().GetAssignedHeading() != 0;
         }
 
         bool EuroScopeCFlightPlanWrapper::HasSid(void) const
         {
-            return this->originalData.GetFlightPlanData().GetSidName() != "";
+            return !std::string(this->originalData.GetFlightPlanData().GetSidName()).empty();
         }
 
         /*
@@ -162,7 +157,7 @@ namespace UKControllerPlugin {
         /*
             Returns true if the aircraft is being tracked by anyone at all.
         */
-        const bool EuroScopeCFlightPlanWrapper::IsTracked(void) const
+        bool EuroScopeCFlightPlanWrapper::IsTracked(void) const
         {
             return this->notTrackedControllerCallsign.compare(this->originalData.GetTrackingControllerCallsign()) != 0;
         }
@@ -170,7 +165,7 @@ namespace UKControllerPlugin {
         /*
             Returns true if the current controller tracking the flightplan is the user.
         */
-        const bool EuroScopeCFlightPlanWrapper::IsTrackedByUser(void) const
+        bool EuroScopeCFlightPlanWrapper::IsTrackedByUser(void) const
         {
             return this->originalData.GetTrackingControllerIsMe();
         }
@@ -190,5 +185,5 @@ namespace UKControllerPlugin {
         {
             return strcmp(this->originalData.GetFlightPlanData().GetPlanType(), "V") == 0;
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

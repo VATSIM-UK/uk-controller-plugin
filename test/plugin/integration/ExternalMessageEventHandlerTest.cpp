@@ -1,6 +1,4 @@
-#include "pch/pch.h"
 #include "integration/ExternalMessageEventHandler.h"
-#include "mock/MockExternalMessageHandlerInterface.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Integration::ExternalMessageEventHandler;
@@ -11,14 +9,13 @@ namespace UKControllerPluginTest {
         class ExternalMessageEventHandlerTest : public Test
         {
             public:
-                std::shared_ptr<ExternalMessageEventHandler> eventHandler;
+            std::shared_ptr<ExternalMessageEventHandler> eventHandler;
 
             protected:
-
-                void SetHandler(bool duplicatePlugin)
-                {
-                    this->eventHandler = std::make_shared<ExternalMessageEventHandler>(duplicatePlugin);
-                }
+            void SetHandler(bool duplicatePlugin)
+            {
+                this->eventHandler = std::make_shared<ExternalMessageEventHandler>(duplicatePlugin);
+            }
         };
 
         TEST_F(ExternalMessageEventHandlerTest, ItStartsWithNoHandlers)
@@ -78,8 +75,7 @@ namespace UKControllerPluginTest {
             this->eventHandler->AddMessageToQueue("foo");
             this->eventHandler->TimedEventTrigger();
 
-            if (handler1 < handler2)
-            {
+            if (handler1 < handler2) {
                 EXPECT_TRUE(handler1->hasBeenCalled);
                 EXPECT_FALSE(handler2->hasBeenCalled);
             } else {
@@ -117,5 +113,5 @@ namespace UKControllerPluginTest {
             this->SetHandler(true);
             EXPECT_FALSE(this->eventHandler->ProcessCommand(".ukcp msg2 test"));
         }
-    }  // namespace Integration
-}  // namespace UKControllerPluginTest
+    } // namespace Integration
+} // namespace UKControllerPluginTest

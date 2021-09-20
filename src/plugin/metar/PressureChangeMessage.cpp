@@ -1,53 +1,49 @@
-#include "pch/pch.h"
-#include "metar/PressureChangeMessage.h"
+#include "PressureChangeMessage.h"
 
-namespace UKControllerPlugin {
-    namespace Metar {
+namespace UKControllerPlugin::Metar {
 
-        PressureChangeMessage::PressureChangeMessage(std::string station, std::string qnhBefore, std::string qnhAfter)
-            : station(station), qnhBefore(qnhBefore), qnhAfter(qnhAfter)
-        {
+    PressureChangeMessage::PressureChangeMessage(std::string station, std::string qnhBefore, std::string qnhAfter)
+        : qnhBefore(std::move(qnhBefore)), qnhAfter(std::move(qnhAfter)), station(std::move(station))
+    {
+    }
 
-        }
+    auto PressureChangeMessage::MessageHandler() const -> std::string
+    {
+        return "UKCP_QNH";
+    }
 
-        std::string PressureChangeMessage::MessageHandler(void) const
-        {
-            return "UKCP_QNH";
-        }
+    auto PressureChangeMessage::MessageSender() const -> std::string
+    {
+        return "UKCP";
+    }
 
-        std::string PressureChangeMessage::MessageSender(void) const
-        {
-            return "UKCP";
-        }
+    auto PressureChangeMessage::MessageString() const -> std::string
+    {
+        return "New QNH at " + station + ", Was: " + qnhBefore + ", Now: " + qnhAfter;
+    }
 
-        std::string PressureChangeMessage::MessageString(void) const
-        {
-            return "New QNH at " + station + ", Was: " + qnhBefore + ", Now: " + qnhAfter;
-        }
+    auto PressureChangeMessage::MessageShowHandler() const -> bool
+    {
+        return true;
+    }
 
-        bool PressureChangeMessage::MessageShowHandler(void) const
-        {
-            return true;
-        }
+    auto PressureChangeMessage::MessageMarkUnread() const -> bool
+    {
+        return true;
+    }
 
-        bool PressureChangeMessage::MessageMarkUnread(void) const
-        {
-            return true;
-        }
+    auto PressureChangeMessage::MessageOverrideBusy() const -> bool
+    {
+        return true;
+    }
 
-        bool PressureChangeMessage::MessageOverrideBusy(void) const
-        {
-            return true;
-        }
+    auto PressureChangeMessage::MessageFlashHandler() const -> bool
+    {
+        return true;
+    }
 
-        bool PressureChangeMessage::MessageFlashHandler(void) const
-        {
-            return true;
-        }
-
-        bool PressureChangeMessage::MessageRequiresConfirm(void) const
-        {
-            return true;
-        }
-    }  // namespace Metar
-}  // namespace UKControllerPlugin
+    auto PressureChangeMessage::MessageRequiresConfirm() const -> bool
+    {
+        return true;
+    }
+} // namespace UKControllerPlugin::Metar

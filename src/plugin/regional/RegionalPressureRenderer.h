@@ -1,170 +1,148 @@
 #pragma once
-#include "radarscreen/ConfigurableDisplayInterface.h"
-#include "radarscreen/RadarRenderableInterface.h"
+#include "RegionalPressureRendererConfiguration.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "plugin/PopupMenuItem.h"
-#include "regional/RegionalPressureRendererConfiguration.h"
-#include "dialog/DialogManager.h"
-
-// Forward declarations
-namespace UKControllerPlugin {
-    namespace Regional {
-        class RegionalPressureManager;
-    }  // namespace Regional
-}  // namespace UKControllerPlugin
+#include "radarscreen/ConfigurableDisplayInterface.h"
+#include "radarscreen/RadarRenderableInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
         class UserSetting;
         class EuroscopeRadarLoopbackInterface;
-    }  // namespace Euroscope
-
+    } // namespace Euroscope
     namespace Windows {
         class GdiGraphicsInterface;
-        struct  GdiplusBrushes;
-    }  // namespace Windows
-}  // namespace UKControllerPlugin
-// END
+        struct GdiplusBrushes;
+    } // namespace Windows
+} // namespace UKControllerPlugin
 
-namespace UKControllerPlugin {
-    namespace Regional {
+namespace UKControllerPlugin::Regional {
 
-        /*
-            A class for rendering the minimum stack levels to display
-        */
-        class RegionalPressureRenderer :
-            public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
-            public UKControllerPlugin::RadarScreen::RadarRenderableInterface,
-            public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
-        {
-            public:
-                RegionalPressureRenderer(
-                    UKControllerPlugin::Regional::RegionalPressureManager & manager,
-                    int closeClickspotId,
-                    int menuBarClickspotId,
-                    int rpsClickspotId,
-                    int toggleCallbackFunctionId,
-                    const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
-                    const UKControllerPlugin::Dialog::DialogManager & dialogManager
-                );
-                void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
-                void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting);
-                UKControllerPlugin::Plugin::PopupMenuItem GetConfigurationMenuItem(void) const;
-                void Configure(int functionId, std::string subject, RECT screenObjectArea);
-                UKControllerPlugin::Regional::RegionalPressureRendererConfiguration & GetConfig(void);
-                RECT GetHideClickspotArea(void) const;
-                Gdiplus::Rect GetHideSpotRender(void) const;
-                RECT GetTopBarArea(void) const;
-                Gdiplus::Rect GetTopBarRender(void) const;
-                void LeftClick(
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
-                    int objectId,
-                    std::string objectDescription,
-                    POINT mousePos,
-                    RECT itemArea
-                );
-                bool IsVisible(void) const;
-                void Move(RECT titleBarArea, std::string objectDescription);
-                void Render(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                );
-                void RightClick(
-                    int objectId,
-                    std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                );
-                void ResetPosition(void) override;
-                void SetVisible(bool visible);
+    class RegionalPressureManager;
 
-                // The EuroScope ID for the close button.
-                const int hideClickspotId;
+    /*
+        A class for rendering the minimum stack levels to display
+    */
+    class RegionalPressureRenderer : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface,
+                                     public UKControllerPlugin::RadarScreen::RadarRenderableInterface,
+                                     public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
+    {
+        public:
+        RegionalPressureRenderer(
+            UKControllerPlugin::Regional::RegionalPressureManager& manager,
+            int closeClickspotId,
+            int menuBarClickspotId,
+            int rpsClickspotId,
+            int toggleCallbackFunctionId,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
+            const UKControllerPlugin::Dialog::DialogManager& dialogManager);
+        void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
+        void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
+        [[nodiscard]] auto GetConfigurationMenuItem() const -> UKControllerPlugin::Plugin::PopupMenuItem override;
+        void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
+        auto GetConfig() -> UKControllerPlugin::Regional::RegionalPressureRendererConfiguration&;
+        [[nodiscard]] auto GetHideClickspotArea() const -> RECT;
+        [[nodiscard]] auto GetHideSpotRender() const -> Gdiplus::Rect;
+        [[nodiscard]] auto GetTopBarArea() const -> RECT;
+        [[nodiscard]] auto GetTopBarRender() const -> Gdiplus::Rect;
+        void LeftClick(
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+            int objectId,
+            const std::string& objectDescription,
+            POINT mousePos,
+            RECT itemArea) override;
+        [[nodiscard]] auto IsVisible() const -> bool override;
+        void Move(RECT titleBarArea, std::string objectDescription) override;
+        void Render(
+            UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
+        void RightClick(
+            int objectId,
+            const std::string& objectDescription,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
+        void ResetPosition() override;
+        void SetVisible(bool visible);
 
-                // The clickspot id for the menu bar
-                const int menuBarClickspotId;
+        private:
+        auto RenderPressures(
+            UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) -> int;
+        void RenderOuterFrame(
+            UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+            int numRegionalPressures);
+        void RenderTopBar(
+            UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
 
-                // The clickspot id for each MSL
-                const int rpsClickspotId;
+        // The top bar rectangle
+        RECT topBarArea = {};
 
-                // Width of the left column
-                const int leftColumnWidth;
+        // The toggle spot rectangle
+        RECT hideClickspotArea = {};
 
-                // Width of the right column
-                const int rowHeight;
+        // The rectangle to render for the top bar
+        Gdiplus::Rect topBarRender;
 
-                // Width of the hide clickspot
-                const int hideClickspotWidth;
+        // The rectangle to render for the hide clickspot
+        Gdiplus::Rect hideSpotRender;
 
-                // The ASR key for whether or not to display the module
-                const std::string visibleUserSettingKey = "DisplayRegionalPressures";
+        // Brushes
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
-                // The ASR key for saving the selected the selected minimum stack levels
-                const std::string selectedRegionalPressureUserSettingKey = "SelectedRegionalPressures";
+        // The configuration for the renderer
+        UKControllerPlugin::Regional::RegionalPressureRendererConfiguration config;
 
-                // The description when saving the selected minimum stack levels
-                const std::string selecteRegionalPressureUserSettingDescription =
-                    "Selected Regional Pressures To Display";
+        // The module to render data for
+        UKControllerPlugin::Regional::RegionalPressureManager& manager;
 
-                // The description when saving the visibility ASR setting
-                const std::string visibleUserSettingDescription = "Regional Pressure Visibility";
+        // Spawns the configuration dialog
+        const UKControllerPlugin::Dialog::DialogManager& dialogManager;
 
-                // The ASR key for the windows top left X coordinate
-                const std::string xPositionUserSettingKey = "RegionalPressureScreenPosX";
+        // The EuroScope ID for the close button.
+        const int hideClickspotId;
 
-                // The description when saving the X position ASR setting
-                const std::string xPositionUserSettingDescription = "Regional Pressure X Position";
+        // The clickspot id for the menu bar
+        const int menuBarClickspotId;
 
-                // The ASR key for the windows top left Y coordinate
-                const std::string yPositionUserSettingKey = "RegionalPressureScreenPosY";
+        // The clickspot id for each MSL
+        const int rpsClickspotId;
 
-                // The description when saving the Y position ASR setting
-                const std::string yPositionUserSettingDescription = "Regional Pressure Y Position";
+        // The ASR key for whether or not to display the module
+        const std::string visibleUserSettingKey = "DisplayRegionalPressures";
 
-                // The rps module menu text
-                const std::string menuItemDescription = "Configure Regional Pressures";
+        // The ASR key for saving the selected the selected minimum stack levels
+        const std::string selectedRegionalPressureUserSettingKey = "SelectedRegionalPressures";
 
-                // The callback function ID for the toggle function
-                const int toggleCallbackFunctionId;
+        // The description when saving the selected minimum stack levels
+        const std::string selecteRegionalPressureUserSettingDescription = "Selected Regional Pressures To Display";
 
-            private:
+        // The description when saving the visibility ASR setting
+        const std::string visibleUserSettingDescription = "Regional Pressure Visibility";
 
-                int RenderPressures(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                );
-                void RenderOuterFrame(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen,
-                    int numRegionalPressures
-                );
-                void RenderTopBar(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                );
+        // The ASR key for the windows top left X coordinate
+        const std::string xPositionUserSettingKey = "RegionalPressureScreenPosX";
 
-                // The top bar rectangle
-                RECT topBarArea;
+        // The description when saving the X position ASR setting
+        const std::string xPositionUserSettingDescription = "Regional Pressure X Position";
 
-                // The toggle spot rectangle
-                RECT hideClickspotArea;
+        // The ASR key for the windows top left Y coordinate
+        const std::string yPositionUserSettingKey = "RegionalPressureScreenPosY";
 
-                // The rectangle to render for the top bar
-                Gdiplus::Rect topBarRender;
+        // The description when saving the Y position ASR setting
+        const std::string yPositionUserSettingDescription = "Regional Pressure Y Position";
 
-                // The rectangle to render for the hide clickspot
-                Gdiplus::Rect hideSpotRender;
+        // The rps module menu text
+        const std::string menuItemDescription = "Configure Regional Pressures";
 
-                // Brushes
-                const UKControllerPlugin::Windows::GdiplusBrushes & brushes;
+        // The callback function ID for the toggle function
+        const int toggleCallbackFunctionId;
 
-                // The configuration for the renderer
-                UKControllerPlugin::Regional::RegionalPressureRendererConfiguration config;
-
-                // The module to render data for
-                UKControllerPlugin::Regional::RegionalPressureManager & manager;
-
-                // Spawns the configuration dialog
-                const UKControllerPlugin::Dialog::DialogManager & dialogManager;
-        };
-    }  // namespace Regional
-}  // namespace UKControllerPlugin
+        inline static const int DEFAULT_POSITION = 100;
+        inline static const int LEFT_COLUMN_WIDTH = 100;
+        inline static const int ROW_HEIGHT = 20;
+        inline static const int HIDE_CLICKSPOT_WIDTH = 50;
+        inline static const int APPEND_ZERO_LIMIT = 1000;
+    };
+} // namespace UKControllerPlugin::Regional

@@ -1,17 +1,19 @@
 #pragma once
-#include "bootstrap/PersistenceContainer.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
 
 namespace UKControllerPlugin {
-    namespace Srd {
+    namespace Bootstrap {
+        struct PersistenceContainer;
+    } // namespace Bootstrap
+    namespace RadarScreen {
+        class ConfigurableDisplayCollection;
+    } // namespace RadarScreen
+} // namespace UKControllerPlugin
 
-        extern const int srdDialogTagFunctionId;
+namespace UKControllerPlugin::Srd {
 
-        void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
+    extern const int srdDialogTagFunctionId;
 
-        void BootstrapRadarScreen(
-            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurables
-        );
-    }  // namespace Srd
-}  // namespace UKControllerPlugin
+    void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
 
+    void BootstrapRadarScreen(UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& configurables);
+} // namespace UKControllerPlugin::Srd

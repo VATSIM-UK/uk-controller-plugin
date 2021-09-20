@@ -1,5 +1,4 @@
 #include "HoldConfigurationDialog.h"
-#include "HoldConfigurationMenuItem.h"
 #include "HoldDisplayConfigurationDialog.h"
 #include "HoldDisplayFactory.h"
 #include "HoldDisplayManager.h"
@@ -8,25 +7,18 @@
 #include "HoldModule.h"
 #include "HoldRenderer.h"
 #include "HoldSelectionMenu.h"
-#include "HoldSelectionMenu.h"
 #include "PublishedHoldCollectionFactory.h"
 #include "api/ApiException.h"
-#include "api/ApiHelper.h"
 #include "bootstrap/BootstrapWarningMessage.h"
-#include "bootstrap/PersistenceContainer.h"
 #include "command/CommandHandlerCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
-#include "dialog/DialogData.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
-#include "memory"
 #include "message/UserMessager.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
-#include "radarscreen/RadarRenderableCollection.h"
-#include "tag/TagFunction.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 #include "windows/WinApiInterface.h"
@@ -66,8 +58,7 @@ namespace UKControllerPlugin::Hold {
     /*
         Bootstrap the module into the plugin
     */
-    void BootstrapPlugin(
-        DependencyLoaderInterface& dependencyProvider, PersistenceContainer& container, UserMessager& userMessages)
+    void BootstrapPlugin(DependencyLoaderInterface& dependencyProvider, PersistenceContainer& container)
     {
         // Update local dependencies and build hold data
         nlohmann::json holdDependency = dependencyProvider.LoadDependency(GetDependencyKey(), nlohmann::json::array());
@@ -87,16 +78,16 @@ namespace UKControllerPlugin::Hold {
             [holdSelectionMenu](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) { holdSelectionMenu->DisplayMenu(fp, rt, std::move(context), mousePos); });
+                const std::string& context,
+                const POINT& mousePos) { holdSelectionMenu->DisplayMenu(fp, rt, context, mousePos); });
         container.pluginFunctionHandlers->RegisterFunctionCall(openHoldPopupMenu);
 
         // The selection cancel function takes the base id
         CallbackFunction holdSelectionCallback(
             holdSelectionCancelId,
             "Hold Selection",
-            [holdSelectionMenu](int functionId, std::string subject, RECT screenObjectArea) {
-                holdSelectionMenu->MenuItemClicked(functionId, std::move(subject));
+            [holdSelectionMenu](int functionId, const std::string& subject, RECT screenObjectArea) {
+                holdSelectionMenu->MenuItemClicked(functionId, subject);
             });
         container.pluginFunctionHandlers->RegisterFunctionCall(holdSelectionCallback);
 
@@ -120,11 +111,8 @@ namespace UKControllerPlugin::Hold {
              displayDialog});
 
         // Create the event handler and register
-        auto eventHandler = std::make_shared<HoldEventHandler>(
-            *container.holdManager,
-            *container.navaids,
-            *container.plugin,
-            container.pluginFunctionHandlers->ReserveNextDynamicFunctionId());
+        auto eventHandler =
+            std::make_shared<HoldEventHandler>(*container.holdManager, *container.navaids, *container.plugin);
 
         container.tagHandler->RegisterTagItem(selectedHoldTagItemId, eventHandler);
         container.timedHandler->RegisterEvent(eventHandler, eventHandlerTimedEventFrequency);
@@ -182,7 +170,7 @@ namespace UKControllerPlugin::Hold {
     {
         // Display manager
         std::shared_ptr<HoldDisplayManager> displayManager =
-            std::make_shared<HoldDisplayManager>(*container.holdManager, *container.holdDisplayFactory);
+            std::make_shared<HoldDisplayManager>(*container.holdDisplayFactory);
         asrEvents.RegisterHandler(displayManager);
         container.holdSelectionMenu->AddDisplayManager(displayManager);
 
@@ -193,12 +181,12 @@ namespace UKControllerPlugin::Hold {
             radarRenderables.ReserveScreenObjectIdentifier(rendererId),
             container.pluginFunctionHandlers->ReserveNextDynamicFunctionId());
 
-        radarRenderables.RegisterRenderer(rendererId, renderer, radarRenderables.afterTags);
+        radarRenderables.RegisterRenderer(rendererId, renderer, RadarRenderableCollection::afterTags);
         configurableDisplay.RegisterDisplay(renderer);
         asrEvents.RegisterHandler(renderer);
 
         CallbackFunction renderToggleCallback(
-            renderer->toggleCallbackFunctionId,
+            renderer->GetToggleCallbackId(),
             "Toggle Hold Rendering",
             [renderer](int functionId, std::string subject, RECT screenObjectArea) {
                 renderer->Configure(functionId, std::move(subject), screenObjectArea);

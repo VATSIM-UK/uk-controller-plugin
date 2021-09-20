@@ -1,19 +1,15 @@
 #pragma once
-#include "pch/pch.h"
 
-namespace UKControllerPlugin {
-    namespace Srd {
+namespace UKControllerPlugin::Srd {
+    /*
+        Search parameters when performing an SRD search
+    */
+    using SrdSearchParameters = struct SrdSearchParameters
+    {
+        std::string origin;
 
-        /*
-            Search parameters when performing an SRD search
-        */
-        typedef struct SrdSearchParameters
-        {
-            std::string origin;
+        std::string destination;
 
-            std::string destination;
-
-            unsigned int requestedLevel = NULL;
-        } SrdSearchParameters;
-    }  // namespace Srd
-}  // namespace UKControllerPlugin
+        unsigned int requestedLevel = 0;
+    };
+} // namespace UKControllerPlugin::Srd

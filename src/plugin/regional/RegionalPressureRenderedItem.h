@@ -1,32 +1,17 @@
 #pragma once
-#include "pch/pch.h"
 
-namespace UKControllerPlugin {
-    namespace Regional {
+namespace UKControllerPlugin::Regional {
 
-        typedef struct RegionalPressureRenderedItem
-        {
-            // The order in which to render the item
-            const unsigned int order;
+    using RegionalPressureRenderedItem = struct RegionalPressureRenderedItem
+    {
+        // The order in which to render the item
+        const int order;
 
-            // The key to find the actual rps
-            const std::string key;
+        // The key to find the actual rps
+        const std::string key;
 
-            bool operator<(const RegionalPressureRenderedItem& compare) const
-            {
-                return this->order < compare.order;
-            }
-
-            bool operator==(const RegionalPressureRenderedItem& compare) const
-            {
-                return this->order == compare.order
-                    && this->key == compare.key;
-            }
-
-            bool operator!=(const RegionalPressureRenderedItem& compare) const
-            {
-                return !(*this == compare);
-            }
-        } RegionalPressureRenderedItem;
-    }  // namespace Regional
-}  // namespace UKControllerPlugin
+        [[nodiscard]] auto operator<(const RegionalPressureRenderedItem& compare) const -> bool;
+        [[nodiscard]] auto operator==(const RegionalPressureRenderedItem& compare) const -> bool;
+        [[nodiscard]] auto operator!=(const RegionalPressureRenderedItem& compare) const -> bool;
+    };
+} // namespace UKControllerPlugin::Regional

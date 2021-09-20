@@ -18,34 +18,29 @@ namespace UKControllerPlugin::Components {
     class BrushSwitcher : public std::enable_shared_from_this<BrushSwitcher>
     {
         public:
-            static std::shared_ptr<BrushSwitcher> Create(
-                std::shared_ptr<Gdiplus::Brush> baseBrush,
-                std::chrono::seconds phase
-            );
-            std::shared_ptr<BrushSwitcher> AdditionalBrush(std::shared_ptr<Gdiplus::Brush> baseBrush);
-            std::shared_ptr<Gdiplus::Brush> Base() const;
-            std::shared_ptr<Gdiplus::Brush> Next();
+        static std::shared_ptr<BrushSwitcher>
+        Create(std::shared_ptr<Gdiplus::Brush> baseBrush, std::chrono::seconds phase);
+        std::shared_ptr<BrushSwitcher> AdditionalBrush(std::shared_ptr<Gdiplus::Brush> baseBrush);
+        std::shared_ptr<Gdiplus::Brush> Base() const;
+        std::shared_ptr<Gdiplus::Brush> Next();
 
         protected:
-            explicit BrushSwitcher(
-                std::shared_ptr<Gdiplus::Brush> baseBrush,
-                std::chrono::seconds phase
-            );
+        explicit BrushSwitcher(std::shared_ptr<Gdiplus::Brush> baseBrush, std::chrono::seconds phase);
 
         private:
-            // The base colour
-            std::shared_ptr<Gdiplus::Brush> baseBrush;
+        // The base colour
+        std::shared_ptr<Gdiplus::Brush> baseBrush;
 
-            // The colours to cycle
-            std::vector<std::shared_ptr<Gdiplus::Brush>> brushes;
+        // The colours to cycle
+        std::vector<std::shared_ptr<Gdiplus::Brush>> brushes;
 
-            // The current colour index
-            int brushIndex = 0;
+        // The current colour index
+        unsigned int brushIndex = 0;
 
-            // Last time colours were switched
-            std::chrono::system_clock::time_point nextSwitch = (std::chrono::system_clock::time_point::min)();
+        // Last time colours were switched
+        std::chrono::system_clock::time_point nextSwitch = (std::chrono::system_clock::time_point::min)();
 
-            // How often to switch colours
-            const std::chrono::seconds phase;
+        // How often to switch colours
+        const std::chrono::seconds phase;
     };
 } // namespace UKControllerPlugin::Components

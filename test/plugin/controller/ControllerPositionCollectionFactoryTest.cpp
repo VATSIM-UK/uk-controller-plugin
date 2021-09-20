@@ -1,7 +1,6 @@
 #include "controller/ControllerPositionCollectionFactory.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPosition.h"
-#include "mock/MockDependencyLoader.h"
 
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;

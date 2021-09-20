@@ -40,6 +40,7 @@ namespace UKControllerPlugin::Notifications {
         const std::wstring readString;
         const std::wstring unreadString;
 
-        size_t selectedNotification = -1;
+        const size_t noNotificationSelected = 0;
+        size_t selectedNotification = noNotificationSelected;
     };
 } // namespace UKControllerPlugin::Notifications

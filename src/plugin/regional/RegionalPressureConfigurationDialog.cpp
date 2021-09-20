@@ -1,22 +1,17 @@
-#include "pch/pch.h"
-#include "regional/RegionalPressureConfigurationDialog.h"
-#include "regional/RegionalPressureRenderedItem.h"
+#include "RegionalPressureConfigurationDialog.h"
 #include "dialog/DialogCallArgument.h"
 #include "helper/HelperFunctions.h"
 
+using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Regional::RegionalPressureConfigurationDialog;
-using UKControllerPlugin::HelperFunctions;
 
 namespace UKControllerPlugin {
     namespace Regional {
 
-        RegionalPressureConfigurationDialog::RegionalPressureConfigurationDialog(
-            const RegionalPressureManager & manager
-        )
+        RegionalPressureConfigurationDialog::RegionalPressureConfigurationDialog(const RegionalPressureManager& manager)
             : manager(manager)
         {
-
         }
 
         /*
@@ -26,19 +21,14 @@ namespace UKControllerPlugin {
         {
             if (msg == WM_INITDIALOG) {
                 LogInfo("Regional pressure configuration dialog opened");
-                SetWindowLongPtr(
-                    hwnd,
-                    GWLP_USERDATA,
-                    reinterpret_cast<DialogCallArgument *>(lParam)->dialogArgument
-                );
+                SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<DialogCallArgument*>(lParam)->dialogArgument);
             } else if (msg == WM_DESTROY) {
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
                 LogInfo("Regional pressure configuration dialog closed");
             }
 
-            RegionalPressureConfigurationDialog * dialog = reinterpret_cast<RegionalPressureConfigurationDialog*>(
-                GetWindowLongPtr(hwnd, GWLP_USERDATA)
-            );
+            RegionalPressureConfigurationDialog* dialog =
+                reinterpret_cast<RegionalPressureConfigurationDialog*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
             return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
         }
 
@@ -48,46 +38,46 @@ namespace UKControllerPlugin {
         LRESULT RegionalPressureConfigurationDialog::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             switch (msg) {
-                // Initialise
-                case WM_INITDIALOG: {
-                    this->InitDialog(hwnd, lParam);
-                    return TRUE;
-                };
-                // Dialog Closed
-                case WM_CLOSE: {
+            // Initialise
+            case WM_INITDIALOG: {
+                this->InitDialog(hwnd, lParam);
+                return TRUE;
+            };
+            // Dialog Closed
+            case WM_CLOSE: {
+                EndDialog(hwnd, wParam);
+                return TRUE;
+            }
+            // Buttons pressed
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                case IDOK: {
+                    this->SaveDialog(hwnd);
                     EndDialog(hwnd, wParam);
                     return TRUE;
                 }
-                // Buttons pressed
-                case WM_COMMAND: {
-                    switch (LOWORD(wParam)) {
-                        case IDOK: {
-                            this->SaveDialog(hwnd);
-                            EndDialog(hwnd, wParam);
-                            return TRUE;
-                        }
-                        case IDCANCEL: {
-                            EndDialog(hwnd, wParam);
-                            return TRUE;
-                        }
-                        case IDC_RPS_ADD: {
-                            this->AddEntryToActiveList(hwnd, wParam);
-                            return TRUE;
-                        }
-                        case IDC_RPS_DELETE: {
-                            this->RemoveEntryFromActiveList(hwnd, wParam);
-                            return TRUE;
-                        }
-                        case IDC_RPS_DOWN: {
-                            this->SwapElements(hwnd, lParam, false);
-                            return TRUE;
-                        }
-                        case IDC_RPS_UP: {
-                            this->SwapElements(hwnd, lParam, true);
-                            return TRUE;
-                        }
-                    }
+                case IDCANCEL: {
+                    EndDialog(hwnd, wParam);
+                    return TRUE;
                 }
+                case IDC_RPS_ADD: {
+                    this->AddEntryToActiveList(hwnd, wParam);
+                    return TRUE;
+                }
+                case IDC_RPS_DELETE: {
+                    this->RemoveEntryFromActiveList(hwnd, wParam);
+                    return TRUE;
+                }
+                case IDC_RPS_DOWN: {
+                    this->SwapElements(hwnd, lParam, false);
+                    return TRUE;
+                }
+                case IDC_RPS_UP: {
+                    this->SwapElements(hwnd, lParam, true);
+                    return TRUE;
+                }
+                }
+            }
             }
 
             return FALSE;
@@ -98,13 +88,7 @@ namespace UKControllerPlugin {
         */
         void RegionalPressureConfigurationDialog::AddEntryToActiveList(HWND hwnd, LPARAM lParam)
         {
-            LPARAM selectedRegionalIndex = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_SELECT,
-                CB_GETCURSEL,
-                NULL,
-                NULL
-            );
+            LPARAM selectedRegionalIndex = SendDlgItemMessage(hwnd, IDC_RPS_SELECT, CB_GETCURSEL, NULL, NULL);
 
             // None selected, stop
             if (selectedRegionalIndex == LB_ERR) {
@@ -119,16 +103,9 @@ namespace UKControllerPlugin {
                 IDC_RPS_SELECT,
                 CB_GETLBTEXT,
                 selectedRegionalIndex,
-                reinterpret_cast<LPARAM>(bufferDisplayString)
-            );
+                reinterpret_cast<LPARAM>(bufferDisplayString));
 
-            LPARAM rpsKeyData = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_SELECT,
-                CB_GETITEMDATA,
-                selectedRegionalIndex,
-                NULL
-            );
+            LPARAM rpsKeyData = SendDlgItemMessage(hwnd, IDC_RPS_SELECT, CB_GETITEMDATA, selectedRegionalIndex, NULL);
 
             if (rpsDisplayString == LB_ERR || rpsKeyData == LB_ERR) {
                 LogError("Failed to get RPS data from select");
@@ -136,43 +113,20 @@ namespace UKControllerPlugin {
             }
 
             // Get the insert position, insert
-            LPARAM insertPosition = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETCURSEL,
-                NULL,
-                NULL
-            );
+            LPARAM insertPosition = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETCURSEL, NULL, NULL);
 
             LPARAM insertedStringPosition = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_INSERTSTRING,
-                insertPosition,
-                reinterpret_cast<LPARAM>(bufferDisplayString)
-            );
+                hwnd, IDC_RPS_LIST, LB_INSERTSTRING, insertPosition, reinterpret_cast<LPARAM>(bufferDisplayString));
 
             if (insertedStringPosition == LB_ERR) {
                 LogError("Failed to insert RPS into active list");
                 return;
             }
 
-            LPARAM insertedData = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_SETITEMDATA,
-                insertedStringPosition,
-                rpsKeyData
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_SETITEMDATA, insertedStringPosition, rpsKeyData);
 
             // Remove from previous list
-            SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_SELECT,
-                CB_DELETESTRING,
-                selectedRegionalIndex,
-                NULL
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_SELECT, CB_DELETESTRING, selectedRegionalIndex, NULL);
         }
 
         /*
@@ -186,57 +140,21 @@ namespace UKControllerPlugin {
             LPARAM firstItemData,
             unsigned int secondItemIndex,
             LPARAM secondItemString,
-            LPARAM secondItemData
-        ) {
+            LPARAM secondItemData)
+        {
             // Delete the items
-            SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_DELETESTRING,
-                secondItemIndex,
-                NULL
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_DELETESTRING, secondItemIndex, NULL);
 
-            SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_DELETESTRING,
-                firstItemIndex,
-                NULL
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_DELETESTRING, firstItemIndex, NULL);
 
             // Put them back, in the other order
-            SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_INSERTSTRING,
-                firstItemIndex,
-                secondItemString
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_INSERTSTRING, firstItemIndex, secondItemString);
 
-            SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_SETITEMDATA,
-                firstItemIndex,
-                secondItemData
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_SETITEMDATA, firstItemIndex, secondItemData);
 
-            SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_INSERTSTRING,
-                secondItemIndex,
-                firstItemString
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_INSERTSTRING, secondItemIndex, firstItemString);
 
-            SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_SETITEMDATA,
-                secondItemIndex,
-                firstItemData
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_SETITEMDATA, secondItemIndex, firstItemData);
         }
 
         /*
@@ -244,24 +162,17 @@ namespace UKControllerPlugin {
         */
         void RegionalPressureConfigurationDialog::InitDialog(HWND hwnd, LPARAM lParam)
         {
-            this->config = reinterpret_cast<RegionalPressureRendererConfiguration *>(
-                reinterpret_cast<DialogCallArgument *>(lParam)->contextArgument
-            );
+            this->config = reinterpret_cast<RegionalPressureRendererConfiguration*>(
+                reinterpret_cast<DialogCallArgument*>(lParam)->contextArgument);
 
             // Set the display checkbox
-            CheckDlgButton(
-                hwnd,
-                IDC_RPS_DISPLAY_CHECK,
-                this->config->ShouldRender() ? BST_CHECKED : BST_UNCHECKED
-            );
+            CheckDlgButton(hwnd, IDC_RPS_DISPLAY_CHECK, this->config->ShouldRender() ? BST_CHECKED : BST_UNCHECKED);
 
             // Add the selected RPSs to the existing list
             this->activePressureKeys = this->manager.GetAllRegionalPressureKeys();
-            for (
-                RegionalPressureRendererConfiguration::const_iterator it = this->config->cbegin();
-                it != this->config->cend();
-                ++it
-            ) {
+            for (RegionalPressureRendererConfiguration::const_iterator it = this->config->cbegin();
+                 it != this->config->cend();
+                 ++it) {
                 auto rpsKey = this->activePressureKeys.find(it->key);
                 if (rpsKey == this->activePressureKeys.cend()) {
                     LogWarning("Unable to add Active RPS to list, not active: " + *rpsKey);
@@ -273,24 +184,16 @@ namespace UKControllerPlugin {
                     IDC_RPS_LIST,
                     LB_ADDSTRING,
                     NULL,
-                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(*rpsKey).c_str())
-                );
+                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(*rpsKey).c_str()));
 
                 SendDlgItemMessage(
-                    hwnd,
-                    IDC_RPS_LIST,
-                    LB_SETITEMDATA,
-                    itemIndex,
-                    reinterpret_cast<LPARAM>((*rpsKey).c_str())
-                );
+                    hwnd, IDC_RPS_LIST, LB_SETITEMDATA, itemIndex, reinterpret_cast<LPARAM>((*rpsKey).c_str()));
             }
 
             // Add all non-active keys to the dropdown
-            for (
-                std::set<std::string>::const_iterator it = this->activePressureKeys.cbegin();
-                it != this->activePressureKeys.cend();
-                ++it
-            ) {
+            for (std::set<std::string>::const_iterator it = this->activePressureKeys.cbegin();
+                 it != this->activePressureKeys.cend();
+                 ++it) {
                 if (this->config->GetItem(*it) != this->config->invalidItem) {
                     continue;
                 }
@@ -300,16 +203,10 @@ namespace UKControllerPlugin {
                     IDC_RPS_SELECT,
                     CB_ADDSTRING,
                     NULL,
-                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(*it).c_str())
-                );
+                    reinterpret_cast<LPARAM>(this->GetListEntryForKey(*it).c_str()));
 
                 SendDlgItemMessage(
-                    hwnd,
-                    IDC_RPS_SELECT,
-                    CB_SETITEMDATA,
-                    itemIndex,
-                    reinterpret_cast<LPARAM>(it->c_str())
-                );
+                    hwnd, IDC_RPS_SELECT, CB_SETITEMDATA, itemIndex, reinterpret_cast<LPARAM>(it->c_str()));
             }
         }
 
@@ -318,28 +215,13 @@ namespace UKControllerPlugin {
         */
         void RegionalPressureConfigurationDialog::SwapElements(HWND hwnd, LPARAM lParam, bool swapUp)
         {
-            LPARAM selectedRegionalIndex = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETCURSEL,
-                NULL,
-                NULL
-            );
+            LPARAM selectedRegionalIndex = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETCURSEL, NULL, NULL);
 
-            LPARAM itemCount = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETCOUNT,
-                NULL,
-                NULL
-            );
+            LPARAM itemCount = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETCOUNT, NULL, NULL);
 
             // None selected, or at the extemities
-            if (
-                selectedRegionalIndex == LB_ERR ||
--               itemCount == LB_ERR ||
-                this->IsLastElement(selectedRegionalIndex, itemCount, swapUp)
-            ) {
+            if (selectedRegionalIndex == LB_ERR || -itemCount == LB_ERR ||
+                this->IsLastElement(selectedRegionalIndex, itemCount, swapUp)) {
                 return;
             }
 
@@ -352,16 +234,10 @@ namespace UKControllerPlugin {
                 IDC_RPS_LIST,
                 LB_GETTEXT,
                 selectedRegionalIndex,
-                reinterpret_cast<LPARAM>(bufferDisplayStringOriginal)
-            );
+                reinterpret_cast<LPARAM>(bufferDisplayStringOriginal));
 
-            LPARAM rpsKeyDataOriginal = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETITEMDATA,
-                selectedRegionalIndex,
-                NULL
-            );
+            LPARAM rpsKeyDataOriginal =
+                SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETITEMDATA, selectedRegionalIndex, NULL);
 
             if (rpsDisplayStringOriginal == LB_ERR || rpsKeyDataOriginal == LB_ERR) {
                 LogError("Failed to get original rps item data for swap");
@@ -371,20 +247,9 @@ namespace UKControllerPlugin {
             // Get the swap item data
             TCHAR bufferDisplayStringSwap[250];
             HRESULT rpsDisplayStringSwap = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETTEXT,
-                swapItemIndex,
-                reinterpret_cast<LPARAM>(bufferDisplayStringSwap)
-            );
+                hwnd, IDC_RPS_LIST, LB_GETTEXT, swapItemIndex, reinterpret_cast<LPARAM>(bufferDisplayStringSwap));
 
-            LPARAM rpsKeyDataSwap = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETITEMDATA,
-                swapItemIndex,
-                NULL
-            );
+            LPARAM rpsKeyDataSwap = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETITEMDATA, swapItemIndex, NULL);
 
             if (rpsDisplayStringSwap == LB_ERR || rpsKeyDataSwap == LB_ERR) {
                 LogError("Failed to get original item data for swap");
@@ -400,8 +265,7 @@ namespace UKControllerPlugin {
                     rpsKeyDataSwap,
                     selectedRegionalIndex,
                     reinterpret_cast<LPARAM>(bufferDisplayStringOriginal),
-                    rpsKeyDataOriginal
-                );
+                    rpsKeyDataOriginal);
             } else {
                 this->DoElementSwap(
                     hwnd,
@@ -410,18 +274,11 @@ namespace UKControllerPlugin {
                     rpsKeyDataOriginal,
                     swapItemIndex,
                     reinterpret_cast<LPARAM>(bufferDisplayStringSwap),
-                    rpsKeyDataSwap
-                );
+                    rpsKeyDataSwap);
             }
 
             // Select the new item index
-            SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_SETCURSEL,
-                swapItemIndex,
-                NULL
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_SETCURSEL, swapItemIndex, NULL);
         }
 
         /*
@@ -429,13 +286,7 @@ namespace UKControllerPlugin {
         */
         void RegionalPressureConfigurationDialog::RemoveEntryFromActiveList(HWND hwnd, LPARAM lParam)
         {
-            LPARAM selectedRegionalIndex = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETCURSEL,
-                NULL,
-                NULL
-            );
+            LPARAM selectedRegionalIndex = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETCURSEL, NULL, NULL);
 
             // None selected, stop
             if (selectedRegionalIndex == LB_ERR) {
@@ -445,20 +296,9 @@ namespace UKControllerPlugin {
             // Get the selected item data
             TCHAR bufferDisplayString[250];
             HRESULT rpsDisplayString = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETTEXT,
-                selectedRegionalIndex,
-                reinterpret_cast<LPARAM>(bufferDisplayString)
-            );
+                hwnd, IDC_RPS_LIST, LB_GETTEXT, selectedRegionalIndex, reinterpret_cast<LPARAM>(bufferDisplayString));
 
-            LPARAM rpsKeyData = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETITEMDATA,
-                selectedRegionalIndex,
-                NULL
-            );
+            LPARAM rpsKeyData = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETITEMDATA, selectedRegionalIndex, NULL);
 
             if (rpsDisplayString == LB_ERR || rpsKeyData == LB_ERR) {
                 LogError("Failed to get RPS data from active list");
@@ -467,34 +307,17 @@ namespace UKControllerPlugin {
 
             // Insert into the selection list
             LPARAM insertedStringPosition = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_SELECT,
-                CB_ADDSTRING,
-                NULL,
-                reinterpret_cast<LPARAM>(bufferDisplayString)
-            );
+                hwnd, IDC_RPS_SELECT, CB_ADDSTRING, NULL, reinterpret_cast<LPARAM>(bufferDisplayString));
 
             if (insertedStringPosition == LB_ERR) {
                 LogError("Failed to insert RPS into selection list");
                 return;
             }
 
-            LPARAM insertedData = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_SELECT,
-                CB_SETITEMDATA,
-                insertedStringPosition,
-                rpsKeyData
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_SELECT, CB_SETITEMDATA, insertedStringPosition, rpsKeyData);
 
             // Remove from previous list
-            SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_DELETESTRING,
-                selectedRegionalIndex,
-                NULL
-            );
+            SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_DELETESTRING, selectedRegionalIndex, NULL);
         }
 
         /*
@@ -506,13 +329,7 @@ namespace UKControllerPlugin {
             this->config->SetShouldRender(IsDlgButtonChecked(hwnd, IDC_RPS_DISPLAY_CHECK) == BST_CHECKED);
 
             // Check how many items are in the minstack list
-            unsigned int itemCount = SendDlgItemMessage(
-                hwnd,
-                IDC_RPS_LIST,
-                LB_GETCOUNT,
-                NULL,
-                NULL
-            );
+            int itemCount = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETCOUNT, NULL, NULL);
 
             if (itemCount == LB_ERR) {
                 LogError("Unable to count items in RPS list");
@@ -521,31 +338,20 @@ namespace UKControllerPlugin {
 
             // Update the config from the list
             std::set<RegionalPressureRenderedItem> newConfig;
-            for (unsigned int i = 0; i < itemCount; i++) {
-                LPARAM rpsKey = SendDlgItemMessage(
-                    hwnd,
-                    IDC_RPS_LIST,
-                    LB_GETITEMDATA,
-                    i,
-                    NULL
-                );
+            for (int i = 0; i < itemCount; i++) {
+                LPARAM rpsKey = SendDlgItemMessage(hwnd, IDC_RPS_LIST, LB_GETITEMDATA, i, NULL);
 
-                newConfig.insert(
-                    {
-                        i,
-                        reinterpret_cast<const char *>(rpsKey),
-                    }
-                );
+                newConfig.insert({
+                    i,
+                    reinterpret_cast<const char*>(rpsKey),
+                });
             }
 
-           this->config->Reset();
-           for (
-               std::set<RegionalPressureRenderedItem>::const_iterator it = newConfig.cbegin();
-               it != newConfig.cend();
-               ++it
-            ) {
-               this->config->AddItem(*it);
-           }
+            this->config->Reset();
+            for (std::set<RegionalPressureRenderedItem>::const_iterator it = newConfig.cbegin(); it != newConfig.cend();
+                 ++it) {
+                this->config->AddItem(*it);
+            }
         }
 
         /*
@@ -560,11 +366,9 @@ namespace UKControllerPlugin {
             Is the selected element the last in the list?
         */
         bool RegionalPressureConfigurationDialog::IsLastElement(
-            unsigned int selectedIndex,
-            unsigned int itemCount,
-            bool swapUp
-        ) {
+            unsigned int selectedIndex, unsigned int itemCount, bool swapUp)
+        {
             return swapUp ? selectedIndex == 0 : selectedIndex == itemCount - 1;
         }
-    }  // namespace Regional
-}  // namespace UKControllerPlugin
+    } // namespace Regional
+} // namespace UKControllerPlugin

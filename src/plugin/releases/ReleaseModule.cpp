@@ -4,7 +4,6 @@
 #include "DepartureReleaseEventHandler.h"
 #include "DepartureReleaseRequestView.h"
 #include "EnrouteReleaseEventHandler.h"
-#include "EnrouteReleaseType.h"
 #include "EnrouteReleaseTypesSerializer.h"
 #include "ReleaseModule.h"
 #include "RequestDepartureReleaseDialog.h"
@@ -20,7 +19,6 @@
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
-#include "tag/TagFunction.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
@@ -75,15 +73,15 @@ namespace UKControllerPlugin::Releases {
             [handler](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) { handler->DisplayReleaseTypeMenu(fp, rt, std::move(context), mousePos); });
+                const std::string& context,
+                const POINT& mousePos) { handler->DisplayReleaseTypeMenu(fp, rt, context, mousePos); });
         container.pluginFunctionHandlers->RegisterFunctionCall(openReleaseTypePopupMenu);
 
         CallbackFunction releaseTypeSelectedCallback(
-            handler->releaseTypeSelectedCallbackId,
+            handler->GetReleaseTypeSelectedCallbackId(),
             "Release Type Selected",
-            [handler](int functionId, std::string subject, RECT screenObjectArea) {
-                handler->ReleaseTypeSelected(functionId, std::move(subject), screenObjectArea);
+            [handler](int functionId, const std::string& subject, RECT screenObjectArea) {
+                handler->ReleaseTypeSelected(functionId, subject, screenObjectArea);
             });
         container.pluginFunctionHandlers->RegisterFunctionCall(releaseTypeSelectedCallback);
 
@@ -94,23 +92,23 @@ namespace UKControllerPlugin::Releases {
             [handler](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) { handler->DisplayReleasePointEditBox(fp, rt, std::move(context), mousePos); });
+                const std::string& context,
+                const POINT& mousePos) { handler->DisplayReleasePointEditBox(fp, rt, context, mousePos); });
         container.pluginFunctionHandlers->RegisterFunctionCall(openReleasePointEditBox);
 
         CallbackFunction editReleaseTypeCallback(
-            handler->editReleasePointCallbackId,
+            handler->GetEditReleasePointCallbackId(),
             "Release Point Edited",
-            [handler](int functionId, std::string subject, RECT screenObjectArea) {
-                handler->EditReleasePoint(functionId, std::move(subject), screenObjectArea);
+            [handler](int functionId, const std::string& subject, RECT screenObjectArea) {
+                handler->EditReleasePoint(functionId, subject, screenObjectArea);
             });
         container.pluginFunctionHandlers->RegisterFunctionCall(editReleaseTypeCallback);
 
         // Add to events
         container.pushEventProcessors->AddProcessor(handler);
-        container.tagHandler->RegisterTagItem(handler->enrouteReleaseTypeTagItemId, handler);
-        container.tagHandler->RegisterTagItem(handler->enrouteReleasePointTagItemId, handler);
-        container.tagHandler->RegisterTagItem(handler->enrouteReleasePointOrBlankTagItemId, handler);
+        container.tagHandler->RegisterTagItem(handler->GetReleaseTypeTagItemId(), handler);
+        container.tagHandler->RegisterTagItem(handler->GetReleasePointTagItemId(), handler);
+        container.tagHandler->RegisterTagItem(handler->GetReleasePointOrBlankTagItemId(), handler);
         container.timedHandler->RegisterEvent(handler, enrouteReleaseEventFrequency);
         container.controllerHandoffHandlers->RegisterHandler(handler);
 
@@ -127,8 +125,6 @@ namespace UKControllerPlugin::Releases {
             *container.activeCallsigns,
             *container.dialogManager,
             *container.windows,
-            departureReleaseRequestDialogTriggerFunctionId,
-            departureReleaseDecisionMenuTriggerFunctionId,
             releaseDecisionCallbackId,
             releaseCancellationCallbackId);
         container.departureReleaseHandler = departureHandler;
@@ -141,8 +137,8 @@ namespace UKControllerPlugin::Releases {
         CallbackFunction releaseDecisionCallback(
             releaseDecisionCallbackId,
             "Departure Release Decision Made",
-            [departureHandler](int functionId, std::string subject, RECT screenObjectArea) {
-                departureHandler->ReleaseDecisionMade(functionId, std::move(subject), screenObjectArea);
+            [departureHandler](int functionId, const std::string& subject, RECT screenObjectArea) {
+                departureHandler->ReleaseDecisionMade(functionId, subject, screenObjectArea);
             });
         container.pluginFunctionHandlers->RegisterFunctionCall(releaseDecisionCallback);
 
@@ -153,8 +149,8 @@ namespace UKControllerPlugin::Releases {
             [departureHandler](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) { departureHandler->OpenRequestDialog(fp, rt, std::move(context), mousePos); });
+                const std::string& context,
+                const POINT& mousePos) { departureHandler->OpenRequestDialog(fp, rt, context, mousePos); });
         container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseRequestDialog);
 
         // TAG function to trigger the decision menu
@@ -164,8 +160,8 @@ namespace UKControllerPlugin::Releases {
             [departureHandler](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) { departureHandler->OpenDecisionMenu(fp, rt, std::move(context), mousePos); });
+                const std::string& context,
+                const POINT& mousePos) { departureHandler->OpenDecisionMenu(fp, rt, context, mousePos); });
         container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseDecisionMenu);
 
         // TAG function to trigger the status view
@@ -175,8 +171,8 @@ namespace UKControllerPlugin::Releases {
             [departureHandler](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) { departureHandler->ShowStatusDisplay(fp, rt, std::move(context), mousePos); });
+                const std::string& context,
+                const POINT& mousePos) { departureHandler->ShowStatusDisplay(fp, rt, context, mousePos); });
         container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseStatusView);
 
         // TAG function to trigger the cancellation menu
@@ -186,18 +182,16 @@ namespace UKControllerPlugin::Releases {
             [departureHandler](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) {
-                departureHandler->SelectReleaseRequestToCancel(fp, rt, std::move(context), mousePos);
-            });
+                const std::string& context,
+                const POINT& mousePos) { departureHandler->SelectReleaseRequestToCancel(fp, rt, context, mousePos); });
         container.pluginFunctionHandlers->RegisterFunctionCall(openDepartureReleaseCancellationMenu);
 
         // Callback for when a release decision is made
         CallbackFunction releaseCancelledCallback(
             releaseCancellationCallbackId,
             "Departure Release Request Cancelled",
-            [departureHandler](int functionId, std::string subject, RECT screenObjectArea) {
-                departureHandler->RequestCancelled(functionId, std::move(subject), screenObjectArea);
+            [departureHandler](int functionId, const std::string& subject, RECT screenObjectArea) {
+                departureHandler->RequestCancelled(functionId, subject, screenObjectArea);
             });
         container.pluginFunctionHandlers->RegisterFunctionCall(releaseCancelledCallback);
 
@@ -234,10 +228,10 @@ namespace UKControllerPlugin::Releases {
         Euroscope::AsrEventHandlerCollection& asrHandlers)
     {
         // Create the request view renderer
-        const int rendererId = renderables.ReserveRendererIdentifier();
         auto releaseRequestView = std::make_shared<DepartureReleaseRequestView>(
-            *container.departureReleaseHandler, *container.controllerPositions, rendererId);
-        renderables.RegisterRenderer(rendererId, releaseRequestView, renderables.afterLists);
+            *container.departureReleaseHandler, *container.controllerPositions);
+        renderables.RegisterRenderer(
+            renderables.ReserveRendererIdentifier(), releaseRequestView, renderables.afterLists);
 
         // Create the decision menu
         const int decisionListRenderedId = renderables.ReserveRendererIdentifier();

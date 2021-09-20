@@ -1,20 +1,22 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Hold {
+namespace UKControllerPlugin::Hold {
+    /*
+        Represents a restriction on the levels in a hold that may be utilised.
+    */
+    class AbstractHoldLevelRestriction
+    {
+        public:
+        AbstractHoldLevelRestriction() = default;
+        virtual ~AbstractHoldLevelRestriction() = default;
+        AbstractHoldLevelRestriction(const AbstractHoldLevelRestriction&) = default;
+        AbstractHoldLevelRestriction(AbstractHoldLevelRestriction&&) noexcept = default;
+        auto operator=(const AbstractHoldLevelRestriction&) -> AbstractHoldLevelRestriction& = default;
+        auto operator=(AbstractHoldLevelRestriction&&) noexcept -> AbstractHoldLevelRestriction& = default;
 
         /*
-            Represents a restriction on the levels in a hold that may be utilised.
+            Given a level, return true if it is off limits, false if not.
         */
-        class AbstractHoldLevelRestriction
-        {
-            public:
-
-                /*
-                    Given a level, return true if it is off limits, false if not.
-                */
-                virtual bool LevelRestricted(unsigned int level) const = 0;
-        };
-
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+        [[nodiscard]] virtual auto LevelRestricted(unsigned int level) const -> bool = 0;
+    };
+} // namespace UKControllerPlugin::Hold

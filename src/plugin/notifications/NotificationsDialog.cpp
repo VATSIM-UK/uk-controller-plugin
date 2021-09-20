@@ -1,5 +1,3 @@
-#include "pch/pch.h"
-
 #include "api/ApiException.h"
 #include "dialog/DialogCallArgument.h"
 #include "helper/HelperFunctions.h"
@@ -63,8 +61,8 @@ namespace UKControllerPlugin::Notifications {
             }
             case NM_CLICK: {
                 if (wParam == IDC_NOTIFICATION_LINK) {
-                    NMLINK* link = reinterpret_cast<NMLINK*>(lParam); // NOLINT
-                    ShellExecute(nullptr, L"open", link->item.szUrl, nullptr, nullptr, SW_SHOWNORMAL);
+                    NMLINK* link = reinterpret_cast<NMLINK*>(lParam);                                  // NOLINT
+                    ShellExecute(nullptr, L"open", link->item.szUrl, nullptr, nullptr, SW_SHOWNORMAL); // NOLINT
                     return TRUE;
                 }
                 return FALSE;
@@ -126,20 +124,22 @@ namespace UKControllerPlugin::Notifications {
         SendMessage(notificationsList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT & ~WS_HSCROLL);
 
         // Create the title column
+        wchar_t title[6] = L"Title";
         LVCOLUMN titleColumn = {
             LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
             LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
             250, // NOLINT
-            L"Title",
+            title,
             0};
         ListView_InsertColumn(notificationsList, 0, &titleColumn); // NOLINT
 
         // Create the read column
+        wchar_t read[5] = L"Read";
         LVCOLUMN readColumn = {
             LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
             LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
             100, // NOLINT
-            L"Read",
+            read,
             1};
         ListView_InsertColumn(notificationsList, 1, &readColumn); // NOLINT
 
@@ -273,7 +273,7 @@ namespace UKControllerPlugin::Notifications {
 
     auto NotificationsDialog::GetSelectedNotification(HWND hwnd) const -> Notification*
     {
-        if (this->selectedNotification == -1) {
+        if (this->selectedNotification == noNotificationSelected) {
             LogWarning("Tried to mark notification as read but none selected");
             return nullptr;
         }

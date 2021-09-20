@@ -1,10 +1,8 @@
-#include "pch/pch.h"
 #include "timedevent/TimedEventCollection.h"
-#include "mock/MockAbstractTimedEvent.h"
 
+using ::testing::StrictMock;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPluginTest::EventHandler::MockAbstractTimedEvent;
-using ::testing::StrictMock;
 
 namespace UKControllerPluginTest {
     namespace EventHandler {
@@ -15,14 +13,11 @@ namespace UKControllerPluginTest {
             std::shared_ptr<StrictMock<MockAbstractTimedEvent>> mockEvent2(new StrictMock<MockAbstractTimedEvent>);
             std::shared_ptr<StrictMock<MockAbstractTimedEvent>> mockEvent3(new StrictMock<MockAbstractTimedEvent>);
 
-            EXPECT_CALL(*mockEvent1, TimedEventTrigger())
-                .Times(1);
+            EXPECT_CALL(*mockEvent1, TimedEventTrigger()).Times(1);
 
-            EXPECT_CALL(*mockEvent2, TimedEventTrigger())
-                .Times(1);
+            EXPECT_CALL(*mockEvent2, TimedEventTrigger()).Times(1);
 
-            EXPECT_CALL(*mockEvent3, TimedEventTrigger())
-                .Times(1);
+            EXPECT_CALL(*mockEvent3, TimedEventTrigger()).Times(1);
 
             TimedEventCollection collection;
             collection.RegisterEvent(mockEvent1, 10);
@@ -38,11 +33,9 @@ namespace UKControllerPluginTest {
             std::shared_ptr<StrictMock<MockAbstractTimedEvent>> mockEvent2(new StrictMock<MockAbstractTimedEvent>);
             std::shared_ptr<StrictMock<MockAbstractTimedEvent>> mockEvent3(new StrictMock<MockAbstractTimedEvent>);
 
-            EXPECT_CALL(*mockEvent1, TimedEventTrigger())
-                .Times(1);
+            EXPECT_CALL(*mockEvent1, TimedEventTrigger()).Times(1);
 
-            EXPECT_CALL(*mockEvent2, TimedEventTrigger())
-                .Times(1);
+            EXPECT_CALL(*mockEvent2, TimedEventTrigger()).Times(1);
 
             TimedEventCollection collection;
             collection.RegisterEvent(mockEvent1, 10);
@@ -93,5 +86,5 @@ namespace UKControllerPluginTest {
             collection.RegisterEvent(std::make_shared<MockAbstractTimedEvent>(), 30);
             EXPECT_EQ(0, collection.CountHandlersForFrequency(11));
         }
-    }  // namespace EventHandler
-}  // namespace UKControllerPluginTest
+    } // namespace EventHandler
+} // namespace UKControllerPluginTest

@@ -1,8 +1,7 @@
-#include "pch/pch.h"
-#include "integration/SocketWrapper.h"
+#include "SocketWrapper.h"
 
 namespace UKControllerPlugin::Integration {
-    SocketWrapper::SocketWrapper(SOCKET socket): socket(socket)
+    SocketWrapper::SocketWrapper(SOCKET socket) : socket(socket)
     {
         this->writeThread = std::make_shared<std::thread>(&SocketWrapper::WriteLoop, this);
         this->readThread = std::make_shared<std::thread>(&SocketWrapper::ReadLoop, this);
@@ -76,7 +75,7 @@ namespace UKControllerPlugin::Integration {
                 LogInfo("Integration connection closing");
                 this->active = false;
             } else {
-                LogError("Failed to receive data from integration: " + WSAGetLastError());
+                LogError("Failed to receive data from integration: " + std::to_string(WSAGetLastError()));
                 this->active = false;
             }
         } while (this->active);

@@ -1,10 +1,8 @@
-#include "pch/pch.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
 #include "intention/ShannonAirfieldGroup.h"
 
+using ::testing::StrictMock;
 using UKControllerPlugin::IntentionCode::ShannonAirfieldGroup;
 using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
-using ::testing::StrictMock;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
@@ -32,5 +30,5 @@ namespace UKControllerPluginTest {
 
             EXPECT_TRUE(airfieldGroup.HasAirfield("EINN", wrapperMock));
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest

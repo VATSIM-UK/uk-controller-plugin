@@ -10,10 +10,9 @@ namespace UKControllerPlugin::Controller {
         bool receivesDepartureReleases,
         bool sendsPrenoteMessages,
         bool receivesPrenoteMessages)
-        : id(id), requestsDepartureReleases(requestsDepartureReleases),
-          receivesDepartureReleases(receivesDepartureReleases), callsign(std::move(callsign)), frequency(frequency),
-          topdown(std::move(topdown)), sendsPrenoteMessages(sendsPrenoteMessages),
-          receivesPrenoteMessages(receivesPrenoteMessages)
+        : id(id), callsign(std::move(callsign)), frequency(frequency), topdown(std::move(topdown)),
+          requestsDepartureReleases(requestsDepartureReleases), receivesDepartureReleases(receivesDepartureReleases),
+          sendsPrenoteMessages(sendsPrenoteMessages), receivesPrenoteMessages(receivesPrenoteMessages)
     {
     }
 

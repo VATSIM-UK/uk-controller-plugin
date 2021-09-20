@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/RadarTargetEventHandlerCollection.h"
@@ -6,30 +5,27 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "radarscreen/RadarRenderableCollection.h"
-#include "mock/MockDialogProvider.h"
 #include "dialog/DialogManager.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "command/CommandHandlerCollection.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 
-using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Command::CommandHandlerCollection;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::RadarTargetEventHandlerCollection;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
-using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
-using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
-using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
-using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 
 using ::testing::NiceMock;
 using ::testing::Test;
-
 
 namespace UKControllerPluginTest {
     namespace HistoryTrail {
@@ -37,26 +33,23 @@ namespace UKControllerPluginTest {
         class HistoryTrailModuleTest : public Test
         {
             public:
+            HistoryTrailModuleTest() : dialogManager(mockProvider)
+            {
+                container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+                container.radarTargetHandler.reset(new RadarTargetEventHandlerCollection);
+                container.dialogManager.reset(new DialogManager(this->mockProvider));
+            }
 
-                HistoryTrailModuleTest()
-                    : dialogManager(mockProvider)
-                {
-                    container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-                    container.radarTargetHandler.reset(new RadarTargetEventHandlerCollection);
-                    container.dialogManager.reset(new DialogManager(this->mockProvider));
-                }
-
-
-                PersistenceContainer container;
-                FunctionCallEventHandler functionCalls;
-                HistoryTrailRepository trails;
-                RadarRenderableCollection renderables;
-                NiceMock<MockDialogProvider> mockProvider;
-                DialogManager dialogManager;
-                ConfigurableDisplayCollection configurables;
-                AsrEventHandlerCollection userSettingEvents;
-                CommandHandlerCollection commands;
-                NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+            PersistenceContainer container;
+            FunctionCallEventHandler functionCalls;
+            HistoryTrailRepository trails;
+            RadarRenderableCollection renderables;
+            NiceMock<MockDialogProvider> mockProvider;
+            DialogManager dialogManager;
+            ConfigurableDisplayCollection configurables;
+            AsrEventHandlerCollection userSettingEvents;
+            CommandHandlerCollection commands;
+            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
         };
 
         TEST_F(HistoryTrailModuleTest, BootstrapPluginSetsUpTrailRepository)
@@ -94,8 +87,7 @@ namespace UKControllerPluginTest {
                 this->configurables,
                 this->userSettingEvents,
                 this->commands,
-                this->mockPlugin
-            );
+                this->mockPlugin);
             EXPECT_EQ(1, this->functionCalls.CountCallbacks());
         }
 
@@ -109,8 +101,7 @@ namespace UKControllerPluginTest {
                 this->configurables,
                 this->userSettingEvents,
                 this->commands,
-                this->mockPlugin
-            );
+                this->mockPlugin);
             EXPECT_EQ(1, this->renderables.CountRenderers());
         }
 
@@ -124,8 +115,7 @@ namespace UKControllerPluginTest {
                 this->configurables,
                 this->userSettingEvents,
                 this->commands,
-                this->mockPlugin
-            );
+                this->mockPlugin);
             EXPECT_EQ(1, this->renderables.CountRenderersInPhase(renderables.beforeTags));
         }
 
@@ -139,8 +129,7 @@ namespace UKControllerPluginTest {
                 this->configurables,
                 this->userSettingEvents,
                 this->commands,
-                this->mockPlugin
-            );
+                this->mockPlugin);
             EXPECT_EQ(0, this->renderables.CountScreenObjects());
         }
 
@@ -154,8 +143,7 @@ namespace UKControllerPluginTest {
                 this->configurables,
                 this->userSettingEvents,
                 this->commands,
-                this->mockPlugin
-            );
+                this->mockPlugin);
             EXPECT_EQ(1, this->configurables.CountDisplays());
         }
 
@@ -169,8 +157,7 @@ namespace UKControllerPluginTest {
                 this->configurables,
                 this->userSettingEvents,
                 this->commands,
-                this->mockPlugin
-            );
+                this->mockPlugin);
             EXPECT_EQ(1, this->userSettingEvents.CountHandlers());
         }
 
@@ -184,9 +171,8 @@ namespace UKControllerPluginTest {
                 this->configurables,
                 this->userSettingEvents,
                 this->commands,
-                this->mockPlugin
-            );
+                this->mockPlugin);
             EXPECT_EQ(1, this->commands.CountHandlers());
         }
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPluginTest
+    } // namespace HistoryTrail
+} // namespace UKControllerPluginTest

@@ -1,34 +1,25 @@
-#include "pch/pch.h"
 #include "hold/HoldConfigurationMenuItem.h"
 #include "dialog/DialogManager.h"
-#include "mock/MockDialogProvider.h"
-#include "dialog/DialogData.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "plugin/PopupMenuItem.h"
-#include "navaids/NavaidCollection.h"
-#include "hold/PublishedHoldCollection.h"
-#include "mock/MockTaskRunnerInterface.h"
 
-using UKControllerPlugin::Hold::HoldConfigurationMenuItem;
-using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPluginTest::Dialog::MockDialogProvider;
-using UKControllerPlugin::Dialog::DialogData;
-using UKControllerPlugin::Hold::HoldDisplayManager;
-using UKControllerPlugin::Hold::HoldManager;
-using UKControllerPlugin::Hold::HoldDisplayFactory;
-using UKControllerPluginTest::Api::MockApiInterface;
-using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
-using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Hold::PublishedHoldCollection;
-using UKControllerPlugin::Navaids::NavaidCollection;
+using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Test;
-using ::testing::_;
+using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Hold::HoldConfigurationMenuItem;
+using UKControllerPlugin::Hold::HoldDisplayFactory;
+using UKControllerPlugin::Hold::HoldDisplayManager;
+using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Hold::PublishedHoldCollection;
+using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -36,28 +27,26 @@ namespace UKControllerPluginTest {
         class HoldConfigurationMenuItemTest : public Test
         {
             public:
-                HoldConfigurationMenuItemTest()
-                : dialogManager(mockProvider),
-                    displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager),
-                    menuItem(dialogManager, displayManager, 1),
-                    displayManager(new HoldDisplayManager(holdManager, displayFactory)),
-                    holdManager(mockApi, mockTaskRunner)
-                {
-                    this->dialogManager.AddDialog(this->dialogData);
-                }
+            HoldConfigurationMenuItemTest()
+                : dialogManager(mockProvider), holdManager(mockApi, mockTaskRunner),
+                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager),
+                  displayManager(new HoldDisplayManager(displayFactory)), menuItem(dialogManager, displayManager, 1)
+            {
+                this->dialogManager.AddDialog(this->dialogData);
+            }
 
-                NavaidCollection navaids;
-                PublishedHoldCollection holds;
-                DialogData dialogData = { IDD_HOLD_SELECTION, "", NULL, NULL, NULL };
-                NiceMock<MockTaskRunnerInterface> mockTaskRunner;
-                NiceMock<MockApiInterface> mockApi;
-                NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-                UKControllerPlugin::Dialog::DialogManager dialogManager;
-                NiceMock<MockDialogProvider> mockProvider;
-                HoldManager holdManager;
-                HoldDisplayFactory displayFactory;
-                std::shared_ptr<HoldDisplayManager> displayManager;
-                HoldConfigurationMenuItem menuItem;
+            NavaidCollection navaids;
+            PublishedHoldCollection holds;
+            DialogData dialogData = {IDD_HOLD_SELECTION, "", NULL, NULL, NULL};
+            NiceMock<MockTaskRunnerInterface> mockTaskRunner;
+            NiceMock<MockApiInterface> mockApi;
+            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+            NiceMock<MockDialogProvider> mockProvider;
+            UKControllerPlugin::Dialog::DialogManager dialogManager;
+            HoldManager holdManager;
+            HoldDisplayFactory displayFactory;
+            std::shared_ptr<HoldDisplayManager> displayManager;
+            HoldConfigurationMenuItem menuItem;
         };
 
         TEST_F(HoldConfigurationMenuItemTest, GetConfigurationMenuItemReturnsItem)
@@ -70,14 +59,12 @@ namespace UKControllerPluginTest {
             expected.disabled = false;
             expected.fixedPosition = false;
 
-
             EXPECT_TRUE(expected == this->menuItem.GetConfigurationMenuItem());
         }
 
         TEST_F(HoldConfigurationMenuItemTest, MenuItemConfigurationOpensDialog)
         {
-            EXPECT_CALL(this->mockProvider, OpenDialog(this->dialogData, _))
-                .Times(1);
+            EXPECT_CALL(this->mockProvider, OpenDialog(this->dialogData, _)).Times(1);
 
             this->menuItem.Configure(0, "", {});
         }
@@ -94,16 +81,15 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldConfigurationMenuItemTest, ProcessCommandOpensDialog)
         {
-            EXPECT_CALL(this->mockProvider, OpenDialog(this->dialogData, _))
-                .Times(1);
+            EXPECT_CALL(this->mockProvider, OpenDialog(this->dialogData, _)).Times(1);
 
             this->menuItem.ProcessCommand(".ukcp hold");
         }
 
         TEST_F(HoldConfigurationMenuItemTest, SelectHoldsSetsHolds)
         {
-            this->menuItem.SelectHolds(std::vector<std::string>({ "TIMBA", "LAM" }));
-            EXPECT_EQ(std::vector<std::string>({ "TIMBA", "LAM" }), this->menuItem.GetHolds());
+            this->menuItem.SelectHolds(std::vector<std::string>({"TIMBA", "LAM"}));
+            EXPECT_EQ(std::vector<std::string>({"TIMBA", "LAM"}), this->menuItem.GetHolds());
         }
-    }  // namespace Hold
-}  // namespace UKControllerPluginTest
+    } // namespace Hold
+} // namespace UKControllerPluginTest

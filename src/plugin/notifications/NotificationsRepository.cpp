@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "notifications/NotificationsRepository.h"
 
 namespace UKControllerPlugin {
@@ -8,16 +7,12 @@ namespace UKControllerPlugin {
             this->notifications.insert(std::move(notification));
         }
 
-        Notification* const NotificationsRepository::Get(int id) const
+        Notification* NotificationsRepository::Get(int id) const
         {
             auto notification = std::find_if(
                 this->notifications.cbegin(),
                 this->notifications.cend(),
-                [id](const std::unique_ptr<Notification>& notification) -> bool
-                {
-                    return notification->Id() == id;
-                }
-            );
+                [id](const std::unique_ptr<Notification>& notification) -> bool { return notification->Id() == id; });
 
             return notification == this->notifications.cend() ? nullptr : notification->get();
         }
@@ -35,11 +30,7 @@ namespace UKControllerPlugin {
             return std::count_if(
                 this->notifications.cbegin(),
                 this->notifications.cend(),
-                [](const std::unique_ptr<Notification> & notification) -> bool
-                {
-                    return !notification->IsRead();
-                }
-            );
+                [](const std::unique_ptr<Notification>& notification) -> bool { return !notification->IsRead(); });
         }
-    }  // namespace Notifications
-}  // namespace UKControllerPlugin
+    } // namespace Notifications
+} // namespace UKControllerPlugin

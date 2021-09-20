@@ -19,31 +19,26 @@ namespace UKControllerPlugin::Components {
     class Button
     {
         public:
-            static std::shared_ptr<Button> Create(
-                Gdiplus::Rect area,
-                int screenObjectId,
-                std::string screenObjectDescription,
-                std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw
-            );
-            void WithPosition(Gdiplus::Rect area);
-            void Draw(
-                Windows::GdiGraphicsInterface& graphics,
-                Euroscope::EuroscopeRadarLoopbackInterface& radarScreen
-            ) const;
+        static auto Create(
+            Gdiplus::Rect area,
+            int screenObjectId,
+            std::string screenObjectDescription,
+            std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw)
+            -> std::shared_ptr<Button>;
+        void WithPosition(Gdiplus::Rect area);
+        void
+        Draw(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const;
 
         protected:
-            Button(
-                Gdiplus::Rect area,
-                int screenObjectId,
-                std::string screenObjectDescription,
-                std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw
-            );
+        Button(
+            Gdiplus::Rect area,
+            int screenObjectId,
+            std::string screenObjectDescription,
+            std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw);
 
         private:
-            std::string screenObjectDescription;
-            const std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw;
-            Gdiplus::Rect area;
-            int screenObjectId;
-            std::shared_ptr<ClickableArea> clickableArea;
+        const std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> customDraw;
+        Gdiplus::Rect area;
+        std::shared_ptr<ClickableArea> clickableArea;
     };
 } // namespace UKControllerPlugin::Components

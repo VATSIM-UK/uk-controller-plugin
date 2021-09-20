@@ -1,109 +1,90 @@
-#include "pch/pch.h"
-#include "curl/CurlRequest.h"
+#include "CurlRequest.h"
 
-namespace UKControllerPlugin {
-    namespace Curl {
+namespace UKControllerPlugin::Curl {
 
-        // Define the HTTP verbs
-        const std::string CurlRequest::METHOD_DELETE = "DELETE";
-        const std::string CurlRequest::METHOD_GET = "GET";
-        const std::string CurlRequest::METHOD_POST = "POST";
-        const std::string CurlRequest::METHOD_PUT = "PUT";
-        const std::string CurlRequest::METHOD_PATCH = "PATCH";
-        const std::string CurlRequest::nobody = "";
+    CurlRequest::CurlRequest(std::string uri, std::string method)
+        : method(CheckMethod(std::move(method))), uri(std::move(uri))
+    {
+    }
 
-        CurlRequest::CurlRequest(std::string uri, std::string method)
-            : uri(uri), method(this->CheckMethod(method))
-        {
-
+    void CurlRequest::AddHeader(const std::string& key, std::string value)
+    {
+        if (this->headers.count(key) != 0) {
+            throw std::logic_error("Header already exists " + key);
         }
 
-        void CurlRequest::AddHeader(std::string key, std::string value)
-        {
-            if (this->headers.count(key.c_str()) != 0) {
-                throw std::logic_error("Header already exists " + key);
-            }
+        this->headers[key] = std::move(value);
+    }
 
-            this->headers[key.c_str()] = value.c_str();
+    /*
+        Get the body of the request.
+    */
+    auto CurlRequest::GetBody() const -> const char*
+    {
+        return this->body.c_str();
+    }
+
+    /*
+        Get the method of the request.
+    */
+    auto CurlRequest::GetMethod() const -> const char*
+    {
+        return this->method.c_str();
+    }
+
+    /*
+        Returns the request URI
+    */
+    auto CurlRequest::GetUri() const -> const char*
+    {
+        return this->uri.c_str();
+    }
+
+    /*
+        Returns true if two requests are the same
+    */
+    auto CurlRequest::operator==(const CurlRequest& compare) const -> bool
+    {
+        return this->uri == compare.uri && this->method == compare.method && this->body == compare.body &&
+               this->headers == compare.headers && this->maxRequestTime == compare.maxRequestTime;
+    }
+
+    auto CurlRequest::GetMaxRequestTime() const -> INT64
+    {
+        return this->maxRequestTime;
+    }
+
+    void CurlRequest::SetMaxRequestTime(INT64 requestTime)
+    {
+        this->maxRequestTime = requestTime;
+    }
+
+    /*
+        Sets the body of the request, if its valid
+    */
+    void CurlRequest::SetBody(const std::string& body)
+    {
+        if (this->body != nobody) {
+            throw std::logic_error("Body already set");
         }
 
-        /*
-            Get the body of the request.
-        */
-        const char * const CurlRequest::GetBody(void) const
-        {
-            return this->body.c_str();
+        if (this->method == METHOD_GET || this->method == METHOD_DELETE) {
+            throw std::logic_error("This type of request cannot have a body");
         }
 
-        /*
-            Get the method of the request.
-        */
-        const char * const CurlRequest::GetMethod(void) const
-        {
-            return this->method.c_str();
+        this->body = body;
+    }
+
+    /*
+        Sets the method of the request based on the HTTP verb.
+    */
+    auto CurlRequest::CheckMethod(std::string method) -> std::string
+    {
+        if (method != METHOD_PUT && method != METHOD_GET && method != METHOD_POST && method != METHOD_DELETE &&
+            method != METHOD_PATCH) {
+            throw std::invalid_argument("Invalid HTTP method");
         }
 
-        /*
-            Returns the request URI
-        */
-        const char * const CurlRequest::GetUri(void) const
-        {
-            return this->uri.c_str();
-        }
-
-        /*
-            Returns true if two requests are the same
-        */
-        bool CurlRequest::operator==(const CurlRequest & compare) const
-        {
-            return this->uri == compare.uri &&
-                this->method == compare.method &&
-                this->body == compare.body &&
-                this->headers == compare.headers &&
-                this->maxRequestTime == compare.maxRequestTime;
-        }
-
-        INT64 CurlRequest::GetMaxRequestTime(void) const
-        {
-            return this->maxRequestTime;
-        }
-
-        void CurlRequest::SetMaxRequestTime(INT64 requestTime)
-        {
-            this->maxRequestTime = requestTime;
-        }
-
-        /*
-            Sets the body of the request, if its valid
-        */
-        void CurlRequest::SetBody(std::string body)
-        {
-            if (this->body != this->nobody) {
-                throw std::logic_error("Body already set");
-            }
-
-            if (this->method == this->METHOD_GET || this->method == this->METHOD_DELETE) {
-                throw std::logic_error("This type of request cannot have a body");
-            }
-
-            this->body = body.c_str();
-        }
-
-        /*
-            Sets the method of the request based on the HTTP verb.
-        */
-        std::string CurlRequest::CheckMethod(std::string method)
-        {
-            if (method != this->METHOD_PUT &&
-                method != this->METHOD_GET &&
-                method != this->METHOD_POST &&
-                method != this->METHOD_DELETE &&
-                method != this->METHOD_PATCH
-            ) {
-                throw std::invalid_argument("Invalid HTTP method");
-            }
-
-            return method;
-        }
-    }  // namespace Curl
-}  // namespace UKControllerPlugin
+        return method;
+    }
+} // namespace UKControllerPlugin::Curl

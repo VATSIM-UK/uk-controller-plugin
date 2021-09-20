@@ -1,80 +1,66 @@
 #pragma once
-#include "radarscreen/RadarRenderableInterface.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
+#include "ConfigurableDisplayCollection.h"
+#include "RadarRenderableInterface.h"
 
 // Forward declarations
 namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroscopeRadarLoopbackInterface;
-    }  // namespace Euroscope
+    } // namespace Euroscope
 
     namespace Windows {
         class GdiGraphicsInterface;
         struct GdiplusBrushes;
-    }  // namespace Windows
-}  // namespace UKControllerPlugin
+    } // namespace Windows
+} // namespace UKControllerPlugin
 
-namespace UKControllerPlugin {
-    namespace RadarScreen {
-        class ConfigurableDisplayCollection;
-    }  // namespace RadarScreen
-}  // namespace UKControllerPlugin
-// END
+namespace UKControllerPlugin::RadarScreen {
 
-namespace UKControllerPlugin {
-    namespace RadarScreen {
+    /*
+        A class to render the controls on screen which quickly display and
+        hide things such as history trails.
+    */
+    class ScreenControls : public UKControllerPlugin::RadarScreen::RadarRenderableInterface
+    {
+        public:
+        ScreenControls(
+            int toggleboxIdEuroscope,
+            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection configurableDisplays,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes);
+        [[nodiscard]] auto IsVisible() const -> bool override;
+        void LeftClick(
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+            int objectId,
+            const std::string& objectDescription,
+            POINT mousePos,
+            RECT itemArea) override;
+        void Move(RECT position, std::string objectDescription) override;
+        void RightClick(
+            int objectId,
+            const std::string& objectDescription,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
+        void Render(
+            UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
+        void ResetPosition() override;
 
-        /*
-            A class to render the controls on screen which quickly display and
-            hide things such as history trails.
-        */
-        class ScreenControls : public UKControllerPlugin::RadarScreen::RadarRenderableInterface
-        {
-            public:
-                ScreenControls(
-                    int toggleboxIdEuroscope,
-                    const UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays,
-                    const UKControllerPlugin::Windows::GdiplusBrushes & brushes
-                );
-                bool IsVisible(void) const;
-                void LeftClick(
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
-                    int objectId,
-                    std::string objectDescription,
-                    POINT mousePos,
-                    RECT itemArea
-                ) override;
-                void Move(RECT position, std::string objectDescription);
-                void RightClick(
-                    int objectId,
-                    std::string objectDescription,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                ) override;
-                void Render(
-                    UKControllerPlugin::Windows::GdiGraphicsInterface & graphics,
-                    UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface & radarScreen
-                ) override;
-                void ResetPosition(void) override;
+        private:
+        // Brushes for drawing
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
-                // The id for the togglebox
-                const int toggleboxIdEuroscope;
+        // Configurable displays
+        const UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection configurableDisplays;
 
-                // Height for each control
-                const int controlHeight;
+        // The id for the togglebox
+        const int toggleboxIdEuroscope;
 
-                // Width for each control
-                const int controlWidth;
+        // Height for each control
+        const int controlHeight = 25;
 
-                // Title for the options
-                const std::string menuName = "UKCP Options";
+        // Width for each control
+        const int controlWidth = 25;
 
-            private:
-
-                // Brushes for drawing
-                const UKControllerPlugin::Windows::GdiplusBrushes & brushes;
-
-                // Configurable displays
-                const UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection configurableDisplays;
-        };
-    }  // namespace RadarScreen
-}  // namespace UKControllerPlugin
+        // Title for the options
+        const std::string menuName = "UKCP Options";
+    };
+} // namespace UKControllerPlugin::RadarScreen

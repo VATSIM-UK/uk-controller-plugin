@@ -3,9 +3,9 @@
 #include "PendingPrenoteList.h"
 #include "PrenoteMessage.h"
 #include "PrenoteMessageCollection.h"
-#include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
-#include "euroscope/EuroScopeRadarLoopbackInterface.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "helper/HelperFunctions.h"
@@ -55,7 +55,7 @@ namespace UKControllerPlugin::Prenote {
     void PendingPrenoteList::LeftClick(
         Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
         int objectId,
-        std::string objectDescription,
+        const std::string& objectDescription,
         POINT mousePos,
         RECT itemArea)
     {
@@ -75,12 +75,6 @@ namespace UKControllerPlugin::Prenote {
         }
 
         this->acknowledger->Acknowledge(*fp);
-    }
-
-    void PendingPrenoteList::RightClick(
-        int objectId, std::string objectDescription, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
-    {
-        // Do nothing
     }
 
     auto PendingPrenoteList::IsVisible() const -> bool

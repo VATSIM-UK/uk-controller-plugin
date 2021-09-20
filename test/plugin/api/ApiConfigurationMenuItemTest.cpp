@@ -1,13 +1,12 @@
 #include "api/ApiConfigurationMenuItem.h"
-#include "mock/MockWinApi.h"
 
-using UKControllerPlugin::Api::ApiConfigurationMenuItem;
-using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPlugin::Plugin::PopupMenuItem;
-using ::testing::Test;
+using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Return;
-using ::testing::_;
+using ::testing::Test;
+using UKControllerPlugin::Api::ApiConfigurationMenuItem;
+using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest {
     namespace Api {
@@ -15,14 +14,11 @@ namespace UKControllerPluginTest {
         class ApiConfigurationMenuItemTest : public Test
         {
             public:
-
-                ApiConfigurationMenuItemTest()
-                    : menuItem(mockWindows, 55)
-                {
-
-                }
-                NiceMock<MockWinApi> mockWindows;
-                ApiConfigurationMenuItem menuItem;
+            ApiConfigurationMenuItemTest() : menuItem(mockWindows, 55)
+            {
+            }
+            NiceMock<MockWinApi> mockWindows;
+            ApiConfigurationMenuItem menuItem;
         };
 
         TEST_F(ApiConfigurationMenuItemTest, ItReturnsTheMenuItem)
@@ -45,13 +41,11 @@ namespace UKControllerPluginTest {
                 OpenMessageBox(
                     testing::StrEq(L"Please select the key file to use, this will overwrite your previous key."),
                     testing::StrEq(L"UKCP Message"),
-                    MB_OKCANCEL | MB_ICONINFORMATION
-                )
-            )
+                    MB_OKCANCEL | MB_ICONINFORMATION))
                 .Times(1)
                 .WillOnce(Return(IDCANCEL));
 
             this->menuItem.Configure(55, "Test", {});
         }
-    }  // namespace Api
-}  // namespace UKControllerPluginTest
+    } // namespace Api
+} // namespace UKControllerPluginTest

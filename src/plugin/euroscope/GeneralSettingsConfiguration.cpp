@@ -1,21 +1,18 @@
-#include "pch/pch.h"
-#include "euroscope/GeneralSettingsConfiguration.h"
+#include "GeneralSettingsConfiguration.h"
+#include "GeneralSettingsDialog.h"
 #include "dialog/DialogManager.h"
-#include "euroscope/GeneralSettingsDialog.h"
 
 using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
+using UKControllerPlugin::Plugin::PopupMenuItem;
 
 namespace UKControllerPlugin {
     namespace Euroscope {
 
         GeneralSettingsConfiguration::GeneralSettingsConfiguration(
-            const DialogManager & dialogManager,
-            const int menuSelectedCallbackId
-        ) : dialogManager(dialogManager), menuSelectedCallbackId(menuSelectedCallbackId)
+            const DialogManager& dialogManager, const int menuSelectedCallbackId)
+            : menuSelectedCallbackId(menuSelectedCallbackId), dialogManager(dialogManager)
         {
-
         }
 
         /*
@@ -53,5 +50,5 @@ namespace UKControllerPlugin {
             this->dialogManager.OpenDialog(this->dialogId, NULL);
             return true;
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

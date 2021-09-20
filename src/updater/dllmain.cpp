@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "updater/PerformUpdates.h"
 #include "windows/WinApiInterface.h"
 #include "windows/WinApiBootstrap.h"
@@ -16,11 +15,7 @@
 HINSTANCE dllInstance;
 std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
 
-BOOL WINAPI DllMain(
-    HINSTANCE hinstDLL,
-    DWORD fdwReason,
-    LPVOID lpReserved
-)
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, [[maybe_unused]] DWORD fdwReason, [[maybe_unused]] LPVOID lpReserved)
 {
     dllInstance = hinstDLL;
     return TRUE;
@@ -40,10 +35,7 @@ UKCP_UPDATER_API bool PerformUpdates()
     UKControllerPlugin::Curl::CurlApi curl;
     std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settings =
         UKControllerPlugin::Setting::SettingRepositoryFactory::Create(*windows);
-    std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api = UKControllerPlugin::Api::Bootstrap(
-        *settings,
-        curl
-    );
+    std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api = UKControllerPlugin::Api::Bootstrap(*settings, curl);
 
     LogInfo("Updater build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
     UKControllerPlugin::Duplicate::DuplicatePlugin duplicatePlugin;

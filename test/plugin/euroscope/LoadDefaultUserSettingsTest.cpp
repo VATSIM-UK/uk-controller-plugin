@@ -1,17 +1,15 @@
-#include "pch/pch.h"
 #include "euroscope/LoadDefaultUserSettings.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
 
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
-using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
-using UKControllerPlugin::Euroscope::LoadDefaultUserSettings;
-using ::testing::Test;
+using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Return;
-using ::testing::_;
+using ::testing::Test;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
+using UKControllerPlugin::Euroscope::LoadDefaultUserSettings;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 
 namespace UKControllerPluginTest {
     namespace Euroscope {
@@ -19,36 +17,28 @@ namespace UKControllerPluginTest {
         class LoadDefaultUserSettingsTest : public Test
         {
             public:
+            LoadDefaultUserSettingsTest() : userSetting(mockUserSettingProvider)
+            {
+            }
 
-                LoadDefaultUserSettingsTest()
-                    : userSetting(mockUserSettingProvider)
-                {
+            void SetExpectation(std::string key, std::string description, std::string value)
+            {
+                ON_CALL(this->mockUserSettingProvider, KeyExists(_)).WillByDefault(Return(true));
 
-                }
+                ON_CALL(this->mockUserSettingProvider, KeyExists(key)).WillByDefault(Return(false));
 
-                void SetExpectation(std::string key, std::string description, std::string value)
-                {
-                    ON_CALL(this->mockUserSettingProvider, KeyExists(_))
-                        .WillByDefault(Return(true));
+                EXPECT_CALL(this->mockUserSettingProvider, SetKey(key, description, value)).Times(1);
+            }
 
-                    ON_CALL(this->mockUserSettingProvider, KeyExists(key))
-                        .WillByDefault(Return(false));
+            void SetExpectationNoLoad(std::string key, std::string description, std::string value)
+            {
+                ON_CALL(this->mockUserSettingProvider, KeyExists(_)).WillByDefault(Return(true));
 
-                    EXPECT_CALL(this->mockUserSettingProvider, SetKey(key, description, value))
-                        .Times(1);
-                }
+                EXPECT_CALL(this->mockUserSettingProvider, SetKey(key, description, value)).Times(0);
+            }
 
-                void SetExpectationNoLoad(std::string key, std::string description, std::string value)
-                {
-                    ON_CALL(this->mockUserSettingProvider, KeyExists(_))
-                        .WillByDefault(Return(true));
-
-                    EXPECT_CALL(this->mockUserSettingProvider, SetKey(key, description, value))
-                        .Times(0);
-                }
-
-                NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
-                UserSetting userSetting;
+            NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+            UserSetting userSetting;
         };
 
         TEST_F(LoadDefaultUserSettingsTest, ItSetsDefaultValueForPrenotes)
@@ -56,8 +46,7 @@ namespace UKControllerPluginTest {
             this->SetExpectation(
                 GeneralSettingsEntries::usePrenoteSettingsKey,
                 GeneralSettingsEntries::usePrenoteSettingsDescription,
-                "0"
-            );
+                "0");
 
             LoadDefaultUserSettings(this->userSetting);
         }
@@ -67,8 +56,7 @@ namespace UKControllerPluginTest {
             this->SetExpectationNoLoad(
                 GeneralSettingsEntries::usePrenoteSettingsKey,
                 GeneralSettingsEntries::usePrenoteSettingsDescription,
-                "0"
-            );
+                "0");
 
             LoadDefaultUserSettings(this->userSetting);
         }
@@ -78,8 +66,7 @@ namespace UKControllerPluginTest {
             this->SetExpectation(
                 GeneralSettingsEntries::squawkToggleSettingsKey,
                 GeneralSettingsEntries::squawkToggleSettingsDescription,
-                "1"
-            );
+                "1");
 
             LoadDefaultUserSettings(this->userSetting);
         }
@@ -89,8 +76,7 @@ namespace UKControllerPluginTest {
             this->SetExpectationNoLoad(
                 GeneralSettingsEntries::squawkToggleSettingsKey,
                 GeneralSettingsEntries::squawkToggleSettingsDescription,
-                "0"
-            );
+                "0");
 
             LoadDefaultUserSettings(this->userSetting);
         }
@@ -100,8 +86,7 @@ namespace UKControllerPluginTest {
             this->SetExpectation(
                 GeneralSettingsEntries::initialAltitudeToggleSettingsKey,
                 GeneralSettingsEntries::initialAltitudeToggleSettingsDescription,
-                "1"
-            );
+                "1");
 
             LoadDefaultUserSettings(this->userSetting);
         }
@@ -111,8 +96,7 @@ namespace UKControllerPluginTest {
             this->SetExpectationNoLoad(
                 GeneralSettingsEntries::initialAltitudeToggleSettingsKey,
                 GeneralSettingsEntries::initialAltitudeToggleSettingsDescription,
-                "0"
-            );
+                "0");
 
             LoadDefaultUserSettings(this->userSetting);
         }
@@ -122,8 +106,7 @@ namespace UKControllerPluginTest {
             this->SetExpectation(
                 GeneralSettingsEntries::pressureMonitorSendMessageKey,
                 GeneralSettingsEntries::pressureMonitorSendMessageDescription,
-                "1"
-            );
+                "1");
 
             LoadDefaultUserSettings(this->userSetting);
         }
@@ -133,8 +116,7 @@ namespace UKControllerPluginTest {
             this->SetExpectationNoLoad(
                 GeneralSettingsEntries::pressureMonitorSendMessageKey,
                 GeneralSettingsEntries::pressureMonitorSendMessageDescription,
-                "0"
-            );
+                "0");
 
             LoadDefaultUserSettings(this->userSetting);
         }
@@ -144,8 +126,7 @@ namespace UKControllerPluginTest {
             this->SetExpectation(
                 GeneralSettingsEntries::unknownTimeFormatBlankKey,
                 GeneralSettingsEntries::unknownTimeFormatBlankDescription,
-                "0"
-            );
+                "0");
 
             LoadDefaultUserSettings(this->userSetting);
         }
@@ -155,10 +136,9 @@ namespace UKControllerPluginTest {
             this->SetExpectationNoLoad(
                 GeneralSettingsEntries::unknownTimeFormatBlankKey,
                 GeneralSettingsEntries::unknownTimeFormatBlankDescription,
-                "0"
-            );
+                "0");
 
             LoadDefaultUserSettings(this->userSetting);
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPluginTest
+    } // namespace Euroscope
+} // namespace UKControllerPluginTest

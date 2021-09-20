@@ -4,9 +4,6 @@ namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
     } // namespace Bootstrap
-    namespace Message {
-        class UserMessager;
-    } // namespace Message
     namespace RadarScreen {
         class RadarRenderableCollection;
         class ConfigurableDisplayCollection;
@@ -38,8 +35,7 @@ namespace UKControllerPlugin::Hold {
 
     void BootstrapPlugin(
         UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencyProvider,
-        UKControllerPlugin::Bootstrap::PersistenceContainer& container,
-        UKControllerPlugin::Message::UserMessager& userMessages);
+        UKControllerPlugin::Bootstrap::PersistenceContainer& container);
 
     void BootstrapRadarScreen(
         UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& configurableDisplay,

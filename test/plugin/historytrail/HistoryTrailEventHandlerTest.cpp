@@ -1,10 +1,6 @@
-#include "pch/pch.h"
-
 #include "historytrail/AircraftHistoryTrail.h"
 #include "historytrail/HistoryTrailEventHandler.h"
 #include "historytrail/HistoryTrailRepository.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 
 using UKControllerPlugin::HistoryTrail::HistoryTrailEventHandler;
 using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;

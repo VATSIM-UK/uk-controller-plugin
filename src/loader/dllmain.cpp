@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "loader/loader.h"
 #include "log/LoggerBootstrap.h"
 #include "euroscope/EuroScopePlugIn.h"
@@ -18,11 +17,7 @@ HINSTANCE pluginDllInstance;
 HINSTANCE loaderDllInstance;
 std::unique_ptr<UKControllerPlugin::Windows::WinApiInterface> windows;
 
-BOOL WINAPI DllMain(
-    HINSTANCE hinstDLL,
-    DWORD fdwReason,
-    LPVOID lpReserved
-)
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, [[maybe_unused]] DWORD fdwReason, [[maybe_unused]] LPVOID lpReserved)
 {
     loaderDllInstance = hinstDLL;
     return TRUE;
@@ -43,10 +38,8 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
         UKControllerPlugin::Curl::CurlApi curl;
         std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settings =
             UKControllerPlugin::Setting::SettingRepositoryFactory::Create(*windows);
-        std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api = UKControllerPlugin::Api::Bootstrap(
-            *settings,
-            curl
-        );
+        std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api =
+            UKControllerPlugin::Api::Bootstrap(*settings, curl);
 
         LogInfo("Loader build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
 

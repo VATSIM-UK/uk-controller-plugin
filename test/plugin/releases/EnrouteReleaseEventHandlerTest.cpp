@@ -1,39 +1,26 @@
-#include "pch/pch.h"
 #include "releases/EnrouteReleaseEventHandler.h"
-#include "mock/MockApiInterface.h"
-#include "push/PushEventSubscription.h"
-#include "releases/EnrouteReleaseType.h"
-#include "releases/EnrouteRelease.h"
-#include "releases/CompareEnrouteReleaseTypes.h"
-#include "push/PushEvent.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "plugin/PopupMenuItem.h"
-#include "mock/MockTaskRunnerInterface.h"
-#include "mock/MockEuroScopeCControllerInterface.h"
 #include "api/ApiException.h"
 
-using ::testing::Test;
+using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::Test;
 using ::testing::Throw;
-using ::testing::_;
-using UKControllerPlugin::Releases::EnrouteReleaseEventHandler;
+using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::Push::PushEventSubscription;
+using UKControllerPlugin::Releases::CompareEnrouteReleaseTypes;
+using UKControllerPlugin::Releases::EnrouteRelease;
+using UKControllerPlugin::Releases::EnrouteReleaseEventHandler;
+using UKControllerPlugin::Releases::EnrouteReleaseType;
+using UKControllerPlugin::Tag::TagData;
 using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
-using UKControllerPlugin::Releases::CompareEnrouteReleaseTypes;
-using UKControllerPlugin::Releases::EnrouteReleaseType;
-using UKControllerPlugin::Releases::EnrouteRelease;
-using UKControllerPlugin::Push::PushEvent;
-using UKControllerPlugin::Tag::TagData;
-using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Api::ApiException;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 
 namespace UKControllerPluginTest {
@@ -42,37 +29,31 @@ namespace UKControllerPluginTest {
         class EnrouteReleaseEventHandlerTest : public Test
         {
             public:
-                EnrouteReleaseEventHandlerTest()
-                    : releases({ { 1, "test1", "testdesc1" }, { 2, "test2", "testdesc2" } }),
-                    handler(mockApi, plugin, taskRunner, releases, 101, 102)
-                {
+            EnrouteReleaseEventHandlerTest()
+                : releases({{1, "test1", "testdesc1"}, {2, "test2", "testdesc2"}}),
+                  handler(mockApi, plugin, taskRunner, releases, 101, 102)
+            {
+            }
 
-                }
-
-                double fontSize = 24.1;
-                COLORREF tagColour = RGB(255, 255, 255);
-                int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
-                char itemString[16] = "Foooooo";
-                MockTaskRunnerInterface taskRunner;
-                NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
-                NiceMock<MockEuroScopeCControllerInterface> transferringController;
-                NiceMock<MockEuroScopeCControllerInterface> targetController;
-                NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
-                NiceMock< MockEuroScopeCRadarTargetInterface> radarTarget;
-                std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
-                NiceMock<MockApiInterface> mockApi;
-                EnrouteReleaseEventHandler handler;
+            double fontSize = 24.1;
+            COLORREF tagColour = RGB(255, 255, 255);
+            int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
+            char itemString[16] = "Foooooo";
+            MockTaskRunnerInterface taskRunner;
+            NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
+            NiceMock<MockEuroScopeCControllerInterface> transferringController;
+            NiceMock<MockEuroScopeCControllerInterface> targetController;
+            NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+            NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+            std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
+            NiceMock<MockApiInterface> mockApi;
+            EnrouteReleaseEventHandler handler;
         };
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItSubscribesToChannels)
         {
             std::set<PushEventSubscription> expectedSubscriptions;
-            expectedSubscriptions.insert(
-                {
-                    PushEventSubscription::SUB_TYPE_CHANNEL,
-                    "private-enroute-releases"
-                }
-            );
+            expectedSubscriptions.insert({PushEventSubscription::SUB_TYPE_CHANNEL, "private-enroute-releases"});
             EXPECT_EQ(expectedSubscriptions, this->handler.GetPushEventSubscriptions());
         }
 
@@ -83,8 +64,7 @@ namespace UKControllerPluginTest {
                 {"type", 1},
                 {"release_point", "foo"},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_TRUE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -95,8 +75,7 @@ namespace UKControllerPluginTest {
                 {"type", 1},
                 {"release_point", nlohmann::json::value_t::null},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_TRUE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -106,8 +85,7 @@ namespace UKControllerPluginTest {
                 {"type", 1},
                 {"release_point", "foo"},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -118,8 +96,7 @@ namespace UKControllerPluginTest {
                 {"type", 1},
                 {"release_point", "foo"},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -129,8 +106,7 @@ namespace UKControllerPluginTest {
                 {"callsign", "BAW123"},
                 {"release_point", "foo"},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -141,8 +117,7 @@ namespace UKControllerPluginTest {
                 {"type", "abc"},
                 {"release_point", "foo"},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -153,8 +128,7 @@ namespace UKControllerPluginTest {
                 {"type", 3},
                 {"release_point", "foo"},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -164,8 +138,7 @@ namespace UKControllerPluginTest {
                 {"callsign", "BAW123"},
                 {"type", 1},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -176,19 +149,14 @@ namespace UKControllerPluginTest {
                 {"type", 1},
                 {"release_point", 1},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, MessageIsInvalidIfMissingInitiatingController)
         {
             nlohmann::json data{
-                {"callsign", "BAW123"},
-                {"type", 1},
-                {"release_point", "foo"},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"callsign", "BAW123"}, {"type", 1}, {"release_point", "foo"}, {"target_controller", "LON_C_CTR"}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -199,8 +167,7 @@ namespace UKControllerPluginTest {
                 {"type", 1},
                 {"release_point", "foo"},
                 {"initiating_controller", 1},
-                {"target_controller", "LON_C_CTR"}
-            };
+                {"target_controller", "LON_C_CTR"}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
@@ -222,33 +189,27 @@ namespace UKControllerPluginTest {
                 {"type", 1},
                 {"release_point", "foo"},
                 {"initiating_controller", "LON_S_CTR"},
-                {"target_controller", 1}
-            };
+                {"target_controller", 1}};
             EXPECT_FALSE(this->handler.ReleaseMessageValid(data));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItHasATagItemDescriptionForReleaseType)
         {
             EXPECT_EQ(
-                "Enroute Release Type",
-                this->handler.GetTagItemDescription(this->handler.enrouteReleaseTypeTagItemId)
-            );
+                "Enroute Release Type", this->handler.GetTagItemDescription(this->handler.GetReleaseTypeTagItemId()));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItHasATagItemDescriptionForReleasePoint)
         {
             EXPECT_EQ(
-                "Enroute Release Point",
-                this->handler.GetTagItemDescription(this->handler.enrouteReleasePointTagItemId)
-            );
+                "Enroute Release Point", this->handler.GetTagItemDescription(this->handler.GetReleasePointTagItemId()));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItHasATagItemDescriptionForReleasePointOrBlank)
         {
             EXPECT_EQ(
                 "Enroute Release Point or Blank",
-                this->handler.GetTagItemDescription(this->handler.enrouteReleasePointOrBlankTagItemId)
-            );
+                this->handler.GetTagItemDescription(this->handler.GetReleasePointOrBlankTagItemId()));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItReceivesIncomingReleases)
@@ -256,23 +217,19 @@ namespace UKControllerPluginTest {
             std::shared_ptr<MockEuroScopeCControllerInterface> myController =
                 std::make_shared<MockEuroScopeCControllerInterface>();
 
-            ON_CALL(this->plugin, GetUserControllerObject())
-                .WillByDefault(Return(myController));
+            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(myController));
 
-            ON_CALL(*myController, GetCallsign())
-                .WillByDefault(Return("LON_C_CTR"));
+            ON_CALL(*myController, GetCallsign()).WillByDefault(Return("LON_C_CTR"));
 
             PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
-                nlohmann::json {
+                nlohmann::json{
                     {"callsign", "BAW123"},
                     {"type", 1},
                     {"initiating_controller", "LON_S_CTR"},
                     {"target_controller", "LON_C_CTR"},
-                    {"release_point", nlohmann::json::value_t::null}
-                }
-            };
+                    {"release_point", nlohmann::json::value_t::null}}};
 
             this->handler.ProcessPushEvent(message);
 
@@ -280,8 +237,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, incomingRelease.releaseType);
             EXPECT_EQ("", incomingRelease.releasePoint);
             std::chrono::minutes minutesFromNow = std::chrono::duration_cast<std::chrono::minutes>(
-                incomingRelease.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10)
-            );
+                incomingRelease.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10));
             EXPECT_EQ(std::chrono::minutes(3), minutesFromNow);
         }
 
@@ -290,23 +246,19 @@ namespace UKControllerPluginTest {
             std::shared_ptr<MockEuroScopeCControllerInterface> myController =
                 std::make_shared<MockEuroScopeCControllerInterface>();
 
-            ON_CALL(this->plugin, GetUserControllerObject)
-                .WillByDefault(Return(myController));
+            ON_CALL(this->plugin, GetUserControllerObject).WillByDefault(Return(myController));
 
-            ON_CALL(*myController, GetCallsign())
-                .WillByDefault(Return("LON_C_CTR"));
+            ON_CALL(*myController, GetCallsign()).WillByDefault(Return("LON_C_CTR"));
 
             PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
-                nlohmann::json {
+                nlohmann::json{
                     {"callsign", "BAW123"},
                     {"type", 1},
                     {"initiating_controller", "LON_S_CTR"},
                     {"target_controller", "LON_C_CTR"},
-                    {"release_point", "ARNUN"}
-                }
-            };
+                    {"release_point", "ARNUN"}}};
 
             this->handler.ProcessPushEvent(message);
 
@@ -314,8 +266,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, incomingRelease.releaseType);
             EXPECT_EQ("ARNUN", incomingRelease.releasePoint);
             std::chrono::minutes minutesFromNow = std::chrono::duration_cast<std::chrono::minutes>(
-                incomingRelease.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10)
-            );
+                incomingRelease.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10));
             EXPECT_EQ(std::chrono::minutes(3), minutesFromNow);
         }
 
@@ -324,47 +275,40 @@ namespace UKControllerPluginTest {
             std::shared_ptr<MockEuroScopeCControllerInterface> myController =
                 std::make_shared<MockEuroScopeCControllerInterface>();
 
-            ON_CALL(this->plugin, GetUserControllerObject)
-                .WillByDefault(Return(myController));
+            ON_CALL(this->plugin, GetUserControllerObject).WillByDefault(Return(myController));
 
-            ON_CALL(*myController, GetCallsign())
-                .WillByDefault(Return("LON_D_CTR"));
+            ON_CALL(*myController, GetCallsign()).WillByDefault(Return("LON_D_CTR"));
 
             PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
-                nlohmann::json {
+                nlohmann::json{
                     {"callsign", "BAW123"},
                     {"type", 1},
                     {"initiating_controller", "LON_S_CTR"},
                     {"target_controller", "LON_C_CTR"},
-                    {"release_point", "ARNUN"}
-                }
-            };
+                    {"release_point", "ARNUN"}}};
 
             this->handler.ProcessPushEvent(message);
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDoesntAddIncomingReleasesIfNoUserController)
         {
-            ON_CALL(this->plugin, GetUserControllerObject)
-                .WillByDefault(Return(nullptr));
+            ON_CALL(this->plugin, GetUserControllerObject).WillByDefault(Return(nullptr));
 
             PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
-                nlohmann::json {
+                nlohmann::json{
                     {"callsign", "BAW123"},
                     {"type", 1},
                     {"initiating_controller", "LON_S_CTR"},
                     {"target_controller", "LON_C_CTR"},
-                    {"release_point", "ARNUN"}
-                }
-            };
+                    {"release_point", "ARNUN"}}};
 
             this->handler.ProcessPushEvent(message);
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItRejectsInvalidReleaseMessages)
@@ -372,17 +316,16 @@ namespace UKControllerPluginTest {
             PushEvent message{
                 "App\\Events\\EnrouteReleaseEvent",
                 "private-enroute-releases",
-                nlohmann::json {
+                nlohmann::json{
                     {"callsign", "BAW123"},
                     {"type", 1},
                     {"initiating_controller", "LON_S_CTR"},
                     {"target_controller", "LON_C_CTR"},
-                }
-            };
+                }};
 
             this->handler.ProcessPushEvent(message);
 
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItIgnoresIncorrectEvents)
@@ -390,24 +333,21 @@ namespace UKControllerPluginTest {
             PushEvent message{
                 "App\\Events\\NotEnrouteReleaseEvent",
                 "private-enroute-releases",
-                nlohmann::json {
+                nlohmann::json{
                     {"callsign", "BAW123"},
                     {"type", 1},
                     {"initiating_controller", "LON_S_CTR"},
                     {"target_controller", "LON_C_CTR"},
-                    {"release_point", nlohmann::json::value_t::null}
-                }
-            };
+                    {"release_point", nlohmann::json::value_t::null}}};
 
             this->handler.ProcessPushEvent(message);
 
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysOutgoingReleaseTypeTagItem)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -417,8 +357,7 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
             this->handler.AddOutgoingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
@@ -429,8 +368,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysIncomingReleaseTypeTagItem)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -440,8 +378,7 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
             this->handler.AddIncomingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
@@ -452,8 +389,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItPrefersOutgoingReleaseTypeTagItem)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -463,11 +399,10 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
-            this->handler.AddIncomingRelease("BAW123", { 1, "" });
-            this->handler.AddOutgoingRelease("BAW123", { 2, "" });
+            this->handler.AddIncomingRelease("BAW123", {1, ""});
+            this->handler.AddOutgoingRelease("BAW123", {2, ""});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("test2", tagData.GetItemString());
@@ -476,8 +411,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItHandlesNoReleaseForCallsign)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW345"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW345"));
 
             TagData tagData(
                 this->flightplan,
@@ -487,8 +421,7 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
             this->handler.AddOutgoingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
@@ -499,8 +432,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysOutgoingReleasePointTagItem)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -510,10 +442,9 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
-            this->handler.AddOutgoingRelease("BAW123", { 1, "ARNUN" });
+            this->handler.AddOutgoingRelease("BAW123", {1, "ARNUN"});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("ARNUN", tagData.GetItemString());
@@ -522,8 +453,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoOutgoingReleasePointTagItem)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -533,10 +463,9 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
-            this->handler.AddOutgoingRelease("BAW123", { 1, "" });
+            this->handler.AddOutgoingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("RLSPT", tagData.GetItemString());
@@ -545,8 +474,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoOutgoingReleasePointTagItemOnBlankMode)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -556,10 +484,9 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
-            this->handler.AddOutgoingRelease("BAW123", { 1, "" });
+            this->handler.AddOutgoingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("", tagData.GetItemString());
@@ -568,8 +495,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysIncomingReleasePointTagItem)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -579,10 +505,9 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
-            this->handler.AddIncomingRelease("BAW123", { 1, "ABTUM" });
+            this->handler.AddIncomingRelease("BAW123", {1, "ABTUM"});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("ABTUM", tagData.GetItemString());
@@ -591,8 +516,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoIncomingReleasePointTagItem)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -602,10 +526,9 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
-            this->handler.AddIncomingRelease("BAW123", { 1, "" });
+            this->handler.AddIncomingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("RLSPT", tagData.GetItemString());
@@ -614,8 +537,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDisplaysNoIncomingReleasePointTagItemOnBlankMode)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -625,10 +547,9 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
-            this->handler.AddIncomingRelease("BAW123", { 1, "" });
+            this->handler.AddIncomingRelease("BAW123", {1, ""});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("", tagData.GetItemString());
@@ -637,8 +558,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItPrefersOutgoingReleasePointTagItem)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             TagData tagData(
                 this->flightplan,
@@ -648,11 +568,10 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
-            this->handler.AddIncomingRelease("BAW123", { 1, "ARNUN" });
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddIncomingRelease("BAW123", {1, "ARNUN"});
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
             this->handler.SetTagItemData(tagData);
 
             EXPECT_EQ("ABTUM", tagData.GetItemString());
@@ -669,32 +588,23 @@ namespace UKControllerPluginTest {
                 this->itemString,
                 &this->euroscopeColourCode,
                 &this->tagColour,
-                &this->fontSize
-            );
+                &this->fontSize);
 
             this->handler.AddIncomingRelease(
-                "BAW123",
-                { 1, "ARNUN", std::chrono::system_clock::now() + std::chrono::seconds(3) }
-            );
+                "BAW123", {1, "ARNUN", std::chrono::system_clock::now() + std::chrono::seconds(3)});
             this->handler.AddOutgoingRelease(
-                "BAW123",
-                { 2, "ABTUM", std::chrono::system_clock::now() + std::chrono::seconds(3) }
-            );
+                "BAW123", {2, "ABTUM", std::chrono::system_clock::now() + std::chrono::seconds(3)});
 
             this->handler.AddIncomingRelease(
-                "BAW456",
-                { 1, "ARNUN", std::chrono::system_clock::now() - std::chrono::seconds(1) }
-            );
+                "BAW456", {1, "ARNUN", std::chrono::system_clock::now() - std::chrono::seconds(1)});
             this->handler.AddOutgoingRelease(
-                "BAW456",
-                { 2, "ABTUM", std::chrono::system_clock::now() - std::chrono::seconds(1) }
-            );
+                "BAW456", {2, "ABTUM", std::chrono::system_clock::now() - std::chrono::seconds(1)});
             this->handler.TimedEventTrigger();
 
             EXPECT_EQ("ARNUN", this->handler.GetIncomingRelease("BAW123").releasePoint);
             EXPECT_EQ("ABTUM", this->handler.GetOutgoingRelease("BAW123").releasePoint);
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetIncomingRelease("BAW456"));
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW456"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetIncomingRelease("BAW456"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetOutgoingRelease("BAW456"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItTriggersTheReleaseTypeMenu)
@@ -723,29 +633,23 @@ namespace UKControllerPluginTest {
             menuItemReleaseNone.disabled = false;
             menuItemReleaseNone.fixedPosition = true;
 
-            RECT expectedArea = { 0, 0, 400, 600 };
-            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Release Type", 2))
-                .Times(1);
+            RECT expectedArea = {0, 0, 400, 600};
+            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Release Type", 2)).Times(1);
 
-            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemRelease1))
-                .Times(1);
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemRelease1)).Times(1);
 
-            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemRelease2))
-                .Times(1);
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemRelease2)).Times(1);
 
-            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemReleaseNone))
-                .Times(1);
+            EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemReleaseNone)).Times(1);
 
-            this->handler.DisplayReleaseTypeMenu(this->flightplan, this->radarTarget, "", { 0, 0 });
+            this->handler.DisplayReleaseTypeMenu(this->flightplan, this->radarTarget, "", {0, 0});
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDoesNotAddOutgoingReleaseIfAircraftNotOnline)
         {
-            EXPECT_CALL(this->plugin, GetSelectedFlightplan())
-                .Times(1)
-                .WillOnce(Return(nullptr));
+            EXPECT_CALL(this->plugin, GetSelectedFlightplan()).Times(1).WillOnce(Return(nullptr));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
             this->handler.ReleaseTypeSelected(1, "test1", {});
             EXPECT_EQ(2, this->handler.GetOutgoingRelease("BAW123").releaseType);
         }
@@ -755,16 +659,13 @@ namespace UKControllerPluginTest {
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
                 std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
-            ON_CALL(*pluginFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(*pluginFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(*pluginFlightplan, IsTrackedByUser())
-                .WillByDefault(Return(false));
+            ON_CALL(*pluginFlightplan, IsTrackedByUser()).WillByDefault(Return(false));
 
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(pluginFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
             this->handler.ReleaseTypeSelected(1, "test1", {});
             EXPECT_EQ(2, this->handler.GetOutgoingRelease("BAW123").releaseType);
         }
@@ -774,18 +675,15 @@ namespace UKControllerPluginTest {
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
                 std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
-            ON_CALL(*pluginFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(*pluginFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(*pluginFlightplan, IsTrackedByUser())
-                .WillByDefault(Return(true));
+            ON_CALL(*pluginFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
 
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(pluginFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "" });
+            this->handler.AddOutgoingRelease("BAW123", {2, ""});
             this->handler.ReleaseTypeSelected(1, "N", {});
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetOutgoingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItUpdatesOutgoingReleaseIfAlreadyExists)
@@ -793,16 +691,13 @@ namespace UKControllerPluginTest {
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
                 std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
-            ON_CALL(*pluginFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(*pluginFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(*pluginFlightplan, IsTrackedByUser())
-                .WillByDefault(Return(true));
+            ON_CALL(*pluginFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
 
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(pluginFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ARNUN" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ARNUN"});
             this->handler.ReleaseTypeSelected(1, "test1", {});
             EXPECT_EQ(1, this->handler.GetOutgoingRelease("BAW123").releaseType);
         }
@@ -812,55 +707,44 @@ namespace UKControllerPluginTest {
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
                 std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
-            ON_CALL(*pluginFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(*pluginFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(*pluginFlightplan, IsTrackedByUser())
-                .WillByDefault(Return(true));
+            ON_CALL(*pluginFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
 
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(pluginFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginFlightplan));
 
             this->handler.ReleaseTypeSelected(1, "test1", {});
             EXPECT_EQ(1, this->handler.GetOutgoingRelease("BAW123").releaseType);
             EXPECT_EQ("", this->handler.GetOutgoingRelease("BAW123").releasePoint);
             EXPECT_EQ(
-                (std::chrono::system_clock::time_point::max)(),
-                this->handler.GetOutgoingRelease("BAW123").clearTime
-            );
+                (std::chrono::system_clock::time_point::max)(), this->handler.GetOutgoingRelease("BAW123").clearTime);
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItTriggersTheReleasePointEditWithCurrentValue)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(RECT{ 0, 0, 80, 25 }), 102, "ARNUN"))
-                .Times(1);
+            EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(RECT{0, 0, 80, 25}), 102, "ARNUN")).Times(1);
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ARNUN" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ARNUN"});
 
-            this->handler.DisplayReleasePointEditBox(this->flightplan, this->radarTarget, "", { 0, 0 });
+            this->handler.DisplayReleasePointEditBox(this->flightplan, this->radarTarget, "", {0, 0});
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDoesntTriggerTheReleasePointEditIfNoOutgoingRelease)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            EXPECT_CALL(this->plugin, ShowTextEditPopup(_, _, _))
-                .Times(0);
+            EXPECT_CALL(this->plugin, ShowTextEditPopup(_, _, _)).Times(0);
 
-            this->handler.DisplayReleasePointEditBox(this->flightplan, this->radarTarget, "", { 0, 0 });
+            this->handler.DisplayReleasePointEditBox(this->flightplan, this->radarTarget, "", {0, 0});
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDoesNotAddReleasePointIfAircraftNotOnline)
         {
-            EXPECT_CALL(this->plugin, GetSelectedFlightplan())
-                .Times(1)
-                .WillOnce(Return(nullptr));
+            EXPECT_CALL(this->plugin, GetSelectedFlightplan()).Times(1).WillOnce(Return(nullptr));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
             this->handler.EditReleasePoint(1, "ARNUN", {});
             EXPECT_EQ("ABTUM", this->handler.GetOutgoingRelease("BAW123").releasePoint);
         }
@@ -870,16 +754,13 @@ namespace UKControllerPluginTest {
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
                 std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
-            ON_CALL(*pluginFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(*pluginFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(*pluginFlightplan, IsTrackedByUser())
-                .WillByDefault(Return(false));
+            ON_CALL(*pluginFlightplan, IsTrackedByUser()).WillByDefault(Return(false));
 
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(pluginFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
             this->handler.EditReleasePoint(1, "ARNUN", {});
             EXPECT_EQ("ABTUM", this->handler.GetOutgoingRelease("BAW123").releasePoint);
         }
@@ -889,16 +770,13 @@ namespace UKControllerPluginTest {
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
                 std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
-            ON_CALL(*pluginFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(*pluginFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(*pluginFlightplan, IsTrackedByUser())
-                .WillByDefault(Return(true));
+            ON_CALL(*pluginFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
 
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(pluginFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
             this->handler.EditReleasePoint(1, "ARNUN", {});
             EXPECT_EQ("ARNUN", this->handler.GetOutgoingRelease("BAW123").releasePoint);
         }
@@ -908,17 +786,14 @@ namespace UKControllerPluginTest {
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
                 std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
-            ON_CALL(*pluginFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(*pluginFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(*pluginFlightplan, IsTrackedByUser())
-                .WillByDefault(Return(true));
+            ON_CALL(*pluginFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
 
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(pluginFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginFlightplan));
 
             this->handler.EditReleasePoint(1, "ARNUN", {});
-            EXPECT_EQ(this->handler.invalidRelease, this->handler.GetOutgoingRelease("BAW123"));
+            EXPECT_EQ(this->handler.GetInvalidRelease(), this->handler.GetOutgoingRelease("BAW123"));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItTruncatesOutgoingReleasePointIfTooLong)
@@ -926,146 +801,113 @@ namespace UKControllerPluginTest {
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginFlightplan =
                 std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
 
-            ON_CALL(*pluginFlightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(*pluginFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(*pluginFlightplan, IsTrackedByUser())
-                .WillByDefault(Return(true));
+            ON_CALL(*pluginFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
 
-            ON_CALL(this->plugin, GetSelectedFlightplan())
-                .WillByDefault(Return(pluginFlightplan));
+            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginFlightplan));
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
             this->handler.EditReleasePoint(1, "1234567890123456", {});
             EXPECT_EQ("123456789012345", this->handler.GetOutgoingRelease("BAW123").releasePoint);
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDoesntDoTheReleaseIfTheTransferringControllerIsNotUser)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(this->transferringController, IsCurrentUser())
-                .WillByDefault(Return(false));
+            ON_CALL(this->transferringController, IsCurrentUser()).WillByDefault(Return(false));
 
-            EXPECT_CALL(this->mockApi, SendEnrouteReleaseWithReleasePoint(_, _, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, SendEnrouteReleaseWithReleasePoint(_, _, _, _, _)).Times(0);
 
-            EXPECT_CALL(this->mockApi, SendEnrouteRelease(_, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, SendEnrouteRelease(_, _, _, _)).Times(0);
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
             this->handler.HandoffInitiated(this->flightplan, this->transferringController, this->targetController);
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItDoesntDoTheReleaseIfThereIsNoOutgoingRelease)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(this->transferringController, IsCurrentUser())
-                .WillByDefault(Return(true));
+            ON_CALL(this->transferringController, IsCurrentUser()).WillByDefault(Return(true));
 
-            EXPECT_CALL(this->mockApi, SendEnrouteReleaseWithReleasePoint(_, _, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, SendEnrouteReleaseWithReleasePoint(_, _, _, _, _)).Times(0);
 
-            EXPECT_CALL(this->mockApi, SendEnrouteRelease(_, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, SendEnrouteRelease(_, _, _, _)).Times(0);
 
             this->handler.HandoffInitiated(this->flightplan, this->transferringController, this->targetController);
         }
 
-
         TEST_F(EnrouteReleaseEventHandlerTest, ItHandlesExceptionsWhenSendingReleases)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(this->transferringController, GetCallsign())
-                .WillByDefault(Return("LON_S_CTR"));
+            ON_CALL(this->transferringController, GetCallsign()).WillByDefault(Return("LON_S_CTR"));
 
-            ON_CALL(this->transferringController, IsCurrentUser())
-                .WillByDefault(Return(true));
+            ON_CALL(this->transferringController, IsCurrentUser()).WillByDefault(Return(true));
 
-            ON_CALL(this->targetController, GetCallsign())
-                .WillByDefault(Return("LON_C_CTR"));
+            ON_CALL(this->targetController, GetCallsign()).WillByDefault(Return("LON_C_CTR"));
 
             EXPECT_CALL(this->mockApi, SendEnrouteReleaseWithReleasePoint(_, _, _, _, _))
                 .Times(1)
                 .WillOnce(Throw(ApiException("test")));
 
-            EXPECT_CALL(this->mockApi, SendEnrouteRelease(_, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, SendEnrouteRelease(_, _, _, _)).Times(0);
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
 
             EXPECT_NO_THROW(
-                this->handler.HandoffInitiated(this->flightplan, this->transferringController, this->targetController)
-            );
+                this->handler.HandoffInitiated(this->flightplan, this->transferringController, this->targetController));
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItSendsReleaseWithReleasePoint)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(this->transferringController, GetCallsign())
-                .WillByDefault(Return("LON_S_CTR"));
+            ON_CALL(this->transferringController, GetCallsign()).WillByDefault(Return("LON_S_CTR"));
 
-            ON_CALL(this->transferringController, IsCurrentUser())
-                .WillByDefault(Return(true));
+            ON_CALL(this->transferringController, IsCurrentUser()).WillByDefault(Return(true));
 
-            ON_CALL(this->targetController, GetCallsign())
-                .WillByDefault(Return("LON_C_CTR"));
+            ON_CALL(this->targetController, GetCallsign()).WillByDefault(Return("LON_C_CTR"));
 
             EXPECT_CALL(
-                this->mockApi,
-                SendEnrouteReleaseWithReleasePoint("BAW123", "LON_S_CTR", "LON_C_CTR", 2, "ABTUM")
-            )
+                this->mockApi, SendEnrouteReleaseWithReleasePoint("BAW123", "LON_S_CTR", "LON_C_CTR", 2, "ABTUM"))
                 .Times(1);
 
-            EXPECT_CALL(this->mockApi, SendEnrouteRelease(_, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, SendEnrouteRelease(_, _, _, _)).Times(0);
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "ABTUM" });
+            this->handler.AddOutgoingRelease("BAW123", {2, "ABTUM"});
 
             this->handler.HandoffInitiated(this->flightplan, this->transferringController, this->targetController);
 
             const EnrouteRelease& release = this->handler.GetOutgoingRelease("BAW123");
             std::chrono::minutes expectedClearDelta = std::chrono::duration_cast<std::chrono::minutes>(
-                release.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10)
-            );
+                release.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10));
             EXPECT_EQ(std::chrono::minutes(3), expectedClearDelta);
         }
 
         TEST_F(EnrouteReleaseEventHandlerTest, ItSendsReleaseWithoutReleasePoint)
         {
-            ON_CALL(this->flightplan, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(this->transferringController, GetCallsign())
-                .WillByDefault(Return("LON_S_CTR"));
+            ON_CALL(this->transferringController, GetCallsign()).WillByDefault(Return("LON_S_CTR"));
 
-            ON_CALL(this->transferringController, IsCurrentUser())
-                .WillByDefault(Return(true));
+            ON_CALL(this->transferringController, IsCurrentUser()).WillByDefault(Return(true));
 
-            ON_CALL(this->targetController, GetCallsign())
-                .WillByDefault(Return("LON_C_CTR"));
+            ON_CALL(this->targetController, GetCallsign()).WillByDefault(Return("LON_C_CTR"));
 
-            EXPECT_CALL(this->mockApi, SendEnrouteReleaseWithReleasePoint(_, _, _, _, _))
-                .Times(0);
+            EXPECT_CALL(this->mockApi, SendEnrouteReleaseWithReleasePoint(_, _, _, _, _)).Times(0);
 
-            EXPECT_CALL(this->mockApi, SendEnrouteRelease("BAW123", "LON_S_CTR", "LON_C_CTR", 2))
-                .Times(1);
+            EXPECT_CALL(this->mockApi, SendEnrouteRelease("BAW123", "LON_S_CTR", "LON_C_CTR", 2)).Times(1);
 
-            this->handler.AddOutgoingRelease("BAW123", { 2, "" });
+            this->handler.AddOutgoingRelease("BAW123", {2, ""});
             this->handler.HandoffInitiated(this->flightplan, this->transferringController, this->targetController);
 
             const EnrouteRelease& release = this->handler.GetOutgoingRelease("BAW123");
             std::chrono::minutes expectedClearDelta = std::chrono::duration_cast<std::chrono::minutes>(
-                release.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10)
-                );
+                release.clearTime - std::chrono::system_clock::now() + std::chrono::seconds(10));
             EXPECT_EQ(std::chrono::minutes(3), expectedClearDelta);
         }
-    }  // namespace Releases
-}  // namespace UKControllerPluginTest
+    } // namespace Releases
+} // namespace UKControllerPluginTest

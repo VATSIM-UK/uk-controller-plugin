@@ -2,7 +2,6 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
-#include "mock/MockWinApi.h"
 #include "prenote/NewPrenotePushEventHandler.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"

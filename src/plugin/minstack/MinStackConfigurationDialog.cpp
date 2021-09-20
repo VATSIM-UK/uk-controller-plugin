@@ -367,7 +367,7 @@ namespace UKControllerPlugin::MinStack {
         this->config->SetShouldRender(IsDlgButtonChecked(hwnd, IDC_MINSTACK_DISPLAY_CHECK) == BST_CHECKED);
 
         // Check how many items are in the minstack list
-        unsigned int itemCount = SendDlgItemMessage(hwnd, IDC_MINSTACK_LIST, LB_GETCOUNT, NULL, NULL);
+        int itemCount = SendDlgItemMessage(hwnd, IDC_MINSTACK_LIST, LB_GETCOUNT, NULL, NULL);
 
         if (itemCount == LB_ERR) {
             LogError("Unable to count items in MinStack list");
@@ -376,7 +376,7 @@ namespace UKControllerPlugin::MinStack {
 
         // Update the config from the list
         std::set<MinStackRenderedItem> newConfig;
-        for (unsigned int i = 0; i < itemCount; i++) {
+        for (int i = 0; i < itemCount; i++) {
             LPARAM mslKey = SendDlgItemMessage(hwnd, IDC_MINSTACK_LIST, LB_GETITEMDATA, i, NULL);
 
             newConfig.insert({

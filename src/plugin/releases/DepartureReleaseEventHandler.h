@@ -1,8 +1,8 @@
 #pragma once
 #include "push/PushEventProcessorInterface.h"
-#include "timedevent/AbstractTimedEvent.h"
-#include "tag/TagItemInterface.h"
 #include "releases/CompareDepartureReleases.h"
+#include "tag/TagItemInterface.h"
+#include "timedevent/AbstractTimedEvent.h"
 
 namespace UKControllerPlugin {
     namespace Controller {
@@ -40,129 +40,119 @@ namespace UKControllerPlugin {
                                              public Tag::TagItemInterface
         {
             public:
-                explicit DepartureReleaseEventHandler(
-                    const Api::ApiInterface& api,
-                    TaskManager::TaskRunnerInterface& taskRunner,
-                    Euroscope::EuroscopePluginLoopbackInterface& plugin,
-                    const Controller::ControllerPositionCollection& controllers,
-                    const Controller::ActiveCallsignCollection& activeCallsigns,
-                    const Dialog::DialogManager& dialogManager,
-                    Windows::WinApiInterface& windows,
-                    int triggerRequestDialogFunctionId,
-                    int triggerDecisionMenuFunctionId,
-                    int releaseDecisionCallbackId,
-                    int releaseCancellationCallbackId
-                );
-                ~DepartureReleaseEventHandler() override = default;
-                void ProcessPushEvent(const Push::PushEvent& message) override;
-                std::set<Push::PushEventSubscription> GetPushEventSubscriptions() const override;
-                void PluginEventsSynced() override {};
-                void AddReleaseRequest(std::shared_ptr<DepartureReleaseRequest> request);
-                std::shared_ptr<DepartureReleaseRequest> GetReleaseRequest(int id);
-                void TimedEventTrigger() override;
-                void OpenRequestDialog(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-                    std::string context,
-                    const POINT& mousePos
-                );
-                void OpenDecisionMenu(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-                    std::string context,
-                    const POINT& mousePos
-                );
-                void ReleaseDecisionMade(int functionId, std::string context, RECT);
-                void RequestRelease(std::string callsign, int targetControllerId);
-                void ApproveRelease(
-                    int releaseId,
-                    std::chrono::system_clock::time_point releasedAt,
-                    int expiresInSeconds
-                );
-                std::string GetTagItemDescription(int tagItemId) const override;
-                void SetTagItemData(Tag::TagData& tagData) override;
-                void ShowStatusDisplay(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-                    std::string context,
-                    const POINT& mousePos
-                );
-                const std::set<std::shared_ptr<DepartureReleaseRequest>>& GetReleasesToDisplay() const;
-                std::set<std::shared_ptr<DepartureReleaseRequest>, CompareDepartureReleases>
-                GetReleasesRequiringUsersDecision();
-                void SelectReleaseRequestToCancel(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-                    std::string context,
-                    const POINT& mousePos
-                );
-                void RequestCancelled(int functionId, std::string context, RECT);
+            DepartureReleaseEventHandler(
+                const Api::ApiInterface& api,
+                TaskManager::TaskRunnerInterface& taskRunner,
+                Euroscope::EuroscopePluginLoopbackInterface& plugin,
+                const Controller::ControllerPositionCollection& controllers,
+                const Controller::ActiveCallsignCollection& activeCallsigns,
+                const Dialog::DialogManager& dialogManager,
+                Windows::WinApiInterface& windows,
+                int releaseDecisionCallbackId,
+                int releaseCancellationCallbackId);
+            void ProcessPushEvent(const Push::PushEvent& message) override;
+            [[nodiscard]] auto GetPushEventSubscriptions() const -> std::set<Push::PushEventSubscription> override;
+            void PluginEventsSynced() override{};
+            void AddReleaseRequest(const std::shared_ptr<DepartureReleaseRequest>& request);
+            auto GetReleaseRequest(int id) -> std::shared_ptr<DepartureReleaseRequest>;
+            void TimedEventTrigger() override;
+            void OpenRequestDialog(
+                Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                const std::string& context,
+                const POINT& mousePos);
+            void OpenDecisionMenu(
+                Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                const std::string& context,
+                const POINT& mousePos);
+            void ReleaseDecisionMade(int functionId, const std::string& context, RECT);
+            void RequestRelease(const std::string& callsign, int targetControllerId);
+            void ApproveRelease(int releaseId, std::chrono::system_clock::time_point releasedAt, int expiresInSeconds);
+            [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
+            void SetTagItemData(Tag::TagData& tagData) override;
+            void ShowStatusDisplay(
+                Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                const std::string& context,
+                const POINT& mousePos);
+            [[nodiscard]] auto GetReleasesToDisplay() const
+                -> const std::set<std::shared_ptr<DepartureReleaseRequest>>&;
+            auto GetReleasesRequiringUsersDecision()
+                -> std::set<std::shared_ptr<DepartureReleaseRequest>, CompareDepartureReleases>;
+            void SelectReleaseRequestToCancel(
+                Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+                const std::string& context,
+                const POINT& mousePos);
+            void RequestCancelled(int functionId, const std::string& context, RECT);
 
             private:
-                void ProcessDepartureReleaseRequestedMessage(const nlohmann::json& data);
-                void ProcessRequestAcknowledgedMessage(const nlohmann::json& data);
-                void ProcessRequestRejectedMessage(const nlohmann::json& data);
-                void ProcessRequestApprovedMessage(const nlohmann::json& data);
-                void ProcessRequestCancelledMessage(const nlohmann::json& data);
+            void ProcessDepartureReleaseRequestedMessage(const nlohmann::json& data);
+            void ProcessRequestAcknowledgedMessage(const nlohmann::json& data);
+            void ProcessRequestRejectedMessage(const nlohmann::json& data);
+            void ProcessRequestApprovedMessage(const nlohmann::json& data);
+            void ProcessRequestCancelledMessage(const nlohmann::json& data);
 
-                bool DepartureReleaseRequestedMessageValid(const nlohmann::json& data) const;
-                bool DepartureReleaseAcknowledgedMessageValid(const nlohmann::json& data) const;
-                bool DepartureReleaseRejectedMessageValid(const nlohmann::json& data) const;
-                bool DepartureReleaseApprovedMessageValid(const nlohmann::json& data) const;
-                bool DepartureReleaseCancelMessageValid(const nlohmann::json& data) const;
-                bool ReleaseShouldBeRemoved(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest);
-                bool ControllerCanMakeReleaseDecision(
-                    const std::shared_ptr<DepartureReleaseRequest>& releaseRequest
-                ) const;
-                const std::shared_ptr<DepartureReleaseRequest> FindReleaseRequiringDecisionForCallsign(
-                    std::string callsign
-                );
-                void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData);
-                void SetReleaseCountdownTagData(Tag::TagData& tagData);
-                void SetRequestingControllerTagData(Tag::TagData& tagData);
-                bool UserRequestedRelease(const std::shared_ptr<DepartureReleaseRequest>& request) const;
+            [[nodiscard]] auto DepartureReleaseRequestedMessageValid(const nlohmann::json& data) const -> bool;
+            [[nodiscard]] auto DepartureReleaseAcknowledgedMessageValid(const nlohmann::json& data) const -> bool;
+            [[nodiscard]] auto DepartureReleaseRejectedMessageValid(const nlohmann::json& data) const -> bool;
+            [[nodiscard]] auto DepartureReleaseApprovedMessageValid(const nlohmann::json& data) const -> bool;
+            [[nodiscard]] auto DepartureReleaseCancelMessageValid(const nlohmann::json& data) const -> bool;
+            static auto ReleaseShouldBeRemoved(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest) -> bool;
+            [[nodiscard]] auto
+            ControllerCanMakeReleaseDecision(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest) const
+                -> bool;
+            auto FindReleaseRequiringDecisionForCallsign(std::string callsign)
+                -> std::shared_ptr<DepartureReleaseRequest>;
+            void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData);
+            void SetReleaseCountdownTagData(Tag::TagData& tagData);
+            void SetRequestingControllerTagData(Tag::TagData& tagData);
+            [[nodiscard]] auto UserRequestedRelease(const std::shared_ptr<DepartureReleaseRequest>& request) const
+                -> bool;
 
-                // A guard on the map to allow async operations
-                std::mutex releaseMapGuard;
+            // A guard on the map to allow async operations
+            std::mutex releaseMapGuard;
 
-                // TAG function that triggers the request dialog
-                const int triggerRequestDialogFunctionId;
+            // Callback for when a release decision is made
+            const int releaseDecisionCallbackId;
 
-                // TAG function that triggers the approve menu
-                const int triggerDecisionMenuFunctionId;
+            // Callback for when a release request is cancelled
+            const int releaseCancellationCallbackId;
 
-                // Callback for when a release decision is made
-                const int releaseDecisionCallbackId;
+            static const int STATUS_INDICATOR_TAG_ITEM_ID = 124;
+            static const int COUNTDOWN_TAG_ITEM_ID = 125;
+            static const int REQUESTING_CONTROLLER_TAG_ITEM_ID = 126;
 
-                // Callback for when a release request is cancelled
-                const int releaseCancellationCallbackId;
+            static const int RELEASE_EXPIRY_SECONDS = 300;
+            static const int RELEASE_DECISION_MADE_DELETE_AFTER_SECONDS = 90;
 
-                // Release requests in progress
-                std::map<int, std::shared_ptr<DepartureReleaseRequest>> releaseRequests;
+            // Release requests in progress
+            std::map<int, std::shared_ptr<DepartureReleaseRequest>> releaseRequests;
 
-                // Controller positions
-                const Controller::ControllerPositionCollection& controllers;
+            // Controller positions
+            const Controller::ControllerPositionCollection& controllers;
 
-                // Plugin
-                Euroscope::EuroscopePluginLoopbackInterface& plugin;
+            // Plugin
+            Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
-                // For loading dialogs
-                const Dialog::DialogManager& dialogManager;
+            // For loading dialogs
+            const Dialog::DialogManager& dialogManager;
 
-                // For making API calls
-                const Api::ApiInterface& api;
+            // For making API calls
+            const Api::ApiInterface& api;
 
-                // For running tasks asynchronously
-                TaskManager::TaskRunnerInterface& taskRunner;
+            // For running tasks asynchronously
+            TaskManager::TaskRunnerInterface& taskRunner;
 
-                // All the active controllers
-                const Controller::ActiveCallsignCollection& activeCallsigns;
+            // All the active controllers
+            const Controller::ActiveCallsignCollection& activeCallsigns;
 
-                // A set of releases to display in the view
-                std::set<std::shared_ptr<DepartureReleaseRequest>> releasesToDisplay;
+            // A set of releases to display in the view
+            std::set<std::shared_ptr<DepartureReleaseRequest>> releasesToDisplay;
 
-                // Windows api interface for playing sounds
-                Windows::WinApiInterface& windows;
+            // Windows api interface for playing sounds
+            Windows::WinApiInterface& windows;
         };
     } // namespace Releases
 } // namespace UKControllerPlugin

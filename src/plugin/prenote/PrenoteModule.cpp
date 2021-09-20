@@ -31,7 +31,6 @@
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
-#include "radarscreen/RadarRenderableCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
@@ -190,7 +189,7 @@ namespace UKControllerPlugin::Prenote {
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(),
             std::make_shared<PrenoteMessageStatusView>(messages, *persistence.controllerPositions),
-            radarRenderables.afterLists);
+            RadarRenderableCollection::afterLists);
 
         // Pending list renderer
         auto listRendererId = radarRenderables.ReserveRendererIdentifier();
@@ -202,7 +201,7 @@ namespace UKControllerPlugin::Prenote {
             *persistence.activeCallsigns,
             radarRenderables.ReserveScreenObjectIdentifier(listRendererId));
 
-        radarRenderables.RegisterRenderer(listRendererId, listRenderer, radarRenderables.afterLists);
+        radarRenderables.RegisterRenderer(listRendererId, listRenderer, RadarRenderableCollection::afterLists);
         asrHandlers.RegisterHandler(listRenderer);
 
         // Configuration menu toggle for pending list

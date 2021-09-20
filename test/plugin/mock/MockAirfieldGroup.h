@@ -7,52 +7,51 @@ namespace UKControllerPluginTest {
         class MockAirfieldGroup : public UKControllerPlugin::IntentionCode::AirfieldGroup
         {
             public:
-                explicit MockAirfieldGroup(bool applicableToController = true)
-                {
-                    this->applicableToController = applicableToController;
+            explicit MockAirfieldGroup(bool applicableToController = true)
+            {
+                this->applicableToController = applicableToController;
+            }
+
+            bool AppliesToController(
+                const std::string& callsign,
+                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const override
+            {
+                return this->applicableToController;
+            }
+
+            bool HasAirfield(
+                const std::string& airfield,
+                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const override
+            {
+                return airfield == "EGLL" || airfield == "EGKK" || airfield == "EGNX";
+            }
+
+            std::string GetIntentionCodeForGroup(
+                const std::string& airfield,
+                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const override
+            {
+                if (airfield == "EGLL") {
+                    return "LL";
                 }
 
-                bool AppliesToController(
-                    std::string callsign,
-                    UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route
-                ) const
-                {
-                    return this->applicableToController;
+                if (airfield == "EGKK") {
+                    return "KK";
                 }
 
-                bool HasAirfield(
-                    std::string airfield,
-                    UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route
-                ) const {
-                    return airfield == "EGLL" || airfield == "EGKK" || airfield == "EGNX";
+                if (airfield == "EGNX") {
+                    return "NX";
                 }
 
-                std::string GetIntentionCodeForGroup(
-                    std::string airfield,
-                    UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route
-                ) const {
-                    if (airfield == "EGLL") {
-                        return "LL";
-                    }
-
-                    if (airfield == "EGKK") {
-                        return "KK";
-                    }
-
-                    if (airfield == "EGNX") {
-                        return "NX";
-                    }
-
-                    return "NOPE";
-                }
+                return "NOPE";
+            }
 
             protected:
-                bool Initialise(void)
-                {
-                    return true;
-                }
+            bool Initialise() override
+            {
+                return true;
+            }
 
-                bool applicableToController;
+            bool applicableToController;
         };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest

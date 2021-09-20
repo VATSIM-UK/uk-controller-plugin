@@ -1,26 +1,17 @@
 #pragma once
-#include "pch/pch.h"
 
-namespace UKControllerPlugin {
-    namespace Releases {
+namespace UKControllerPlugin::Releases {
 
-        typedef struct EnrouteReleaseType
-        {
-            int id;
+    using EnrouteReleaseType = struct EnrouteReleaseType
+    {
+        int id;
 
-            // What to show in the tag
-            std::string tagString;
+        // What to show in the tag
+        std::string tagString;
 
-            // The description for menus
-            std::string description;
+        // The description for menus
+        std::string description;
 
-            bool operator==(const EnrouteReleaseType& compare) const
-            {
-                return this->id == compare.id &&
-                    this->tagString == compare.tagString &&
-                    this->description == compare.description;
-            }
-        } EnrouteReleaseType;
-
-    }  // namespace Releases
-}  // namespace UKControllerPlugin
+        [[nodiscard]] auto operator==(const EnrouteReleaseType& compare) const -> bool;
+    };
+} // namespace UKControllerPlugin::Releases

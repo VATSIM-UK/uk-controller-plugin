@@ -1,6 +1,4 @@
-#pragma once
-#include "pch/pch.h"
-#include "stands/StandSerializer.h"
+#include "StandSerializer.h"
 
 namespace UKControllerPlugin {
     namespace Stands {
@@ -8,10 +6,8 @@ namespace UKControllerPlugin {
         /*
             Create Stand data from JSON
         */
-        void from_json(
-            const nlohmann::json& json,
-            std::set<Stand, CompareStands>& stands
-        ) {
+        void from_json(const nlohmann::json& json, std::set<Stand, CompareStands>& stands)
+        {
             if (!DependencyValid(json)) {
                 LogInfo("Stand data is not valid");
                 return;
@@ -23,18 +19,14 @@ namespace UKControllerPlugin {
                 numberOfAirfields++;
                 for (auto standIt = airfieldIt->cbegin(); standIt != airfieldIt->cend(); ++standIt) {
                     numberOfStands++;
-                    stands.insert({
-                        standIt->at("id").get<int>(),
-                        airfieldIt.key(),
-                        standIt->at("identifier").get<std::string>()
-                    });
+                    stands.insert(
+                        {standIt->at("id").get<int>(), airfieldIt.key(), standIt->at("identifier").get<std::string>()});
                 }
             }
 
             LogInfo(
-                "Loaded " + std::to_string(numberOfStands) + " stands across " +
-                std::to_string(numberOfAirfields) + " airfields"
-            );
+                "Loaded " + std::to_string(numberOfStands) + " stands across " + std::to_string(numberOfAirfields) +
+                " airfields");
         }
 
         /*
@@ -78,11 +70,8 @@ namespace UKControllerPlugin {
         */
         bool StandDataValid(const nlohmann::json& data)
         {
-            return data.is_object() &&
-                data.contains("id") &&
-                data.at("id").is_number_integer() &&
-                data.contains("identifier") &&
-                data.at("identifier").is_string();
+            return data.is_object() && data.contains("id") && data.at("id").is_number_integer() &&
+                   data.contains("identifier") && data.at("identifier").is_string();
         }
-    }  // namespace Stands
-}  // namespace UKControllerPlugin
+    } // namespace Stands
+} // namespace UKControllerPlugin

@@ -1,31 +1,27 @@
-#include "pch/pch.h"
-#include "update/UpdateBinaries.h"
-#include "api/ApiInterface.h"
-#include "windows/WinApi.h"
-#include "curl/CurlInterface.h"
+#include "UpdateBinaries.h"
 #include "api/ApiException.h"
-#include "curl/CurlResponse.h"
+#include "api/ApiInterface.h"
+#include "curl/CurlInterface.h"
 #include "curl/CurlRequest.h"
 #include "data/PluginDataLocations.h"
 #include "helper/HelperFunctions.h"
+#include "windows/WinApi.h"
 
-using UKControllerPlugin::Api::ApiException;
-using UKControllerPlugin::Curl::CurlResponse;
-using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPlugin::Curl::CurlResponse;
 
 namespace UKControllerPlugin {
 
     /*
      * Download and update the Updater binary. Do this without a cURL time limit.
      */
-    bool DownloadUpdater(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
+    auto DownloadUpdater(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
+        -> bool
     {
         LogInfo("Downloading updater library");
-        CurlRequest updaterRequest(
-            updateData.at("updater_download_url").get<std::string>(),
-            CurlRequest::METHOD_GET
-        );
+        CurlRequest updaterRequest(updateData.at("updater_download_url").get<std::string>(), CurlRequest::METHOD_GET);
         updaterRequest.SetMaxRequestTime(0);
         return UpdateBinary(curl, updaterRequest, windows, GetUpdaterBinaryRelativePath());
     }
@@ -33,18 +29,16 @@ namespace UKControllerPlugin {
     /*
      * Download and update the Core binary. Do this without a cURL time limit.
      */
-    bool DownloadCoreLibrary(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
+    auto DownloadCoreLibrary(nlohmann::json updateData, Windows::WinApiInterface& windows, Curl::CurlInterface& curl)
+        -> bool
     {
         LogInfo("Downloading core library");
-        CurlRequest coreRequest(
-            updateData.at("core_download_url").get<std::string>(),
-            CurlRequest::METHOD_GET
-        );
+        CurlRequest coreRequest(updateData.at("core_download_url").get<std::string>(), CurlRequest::METHOD_GET);
         coreRequest.SetMaxRequestTime(0);
         return UpdateBinary(curl, coreRequest, windows, GetCoreBinaryRelativePath());
     }
 
-    nlohmann::json GetUpdateData(const Api::ApiInterface& api)
+    auto GetUpdateData(const Api::ApiInterface& api) -> nlohmann::json
     {
         try {
             nlohmann::json updateData = api.GetUpdateDetails();
@@ -53,41 +47,33 @@ namespace UKControllerPlugin {
                 throw std::exception("Update data response invalid");
             }
             return updateData;
-        } catch (ApiException apiException) {
+        } catch (ApiException& apiException) {
             LogError("Unable to download update for binaries: " + std::string(apiException.what()));
-            throw (apiException);
+            throw(apiException);
         }
     }
 
-    bool UpdateBinary(
-        Curl::CurlInterface& curl,
-        CurlRequest& request,
-        Windows::WinApiInterface& windows,
-        std::wstring targetFile
-    )
+    auto UpdateBinary(
+        Curl::CurlInterface& curl, CurlRequest& request, Windows::WinApiInterface& windows, std::wstring targetFile)
+        -> bool
     {
         CurlResponse response = curl.MakeCurlRequest(request);
 
-        if (response.IsCurlError() || response.GetStatusCode() != 200L) {
+        if (response.IsCurlError() || !response.StatusOk()) {
             LogError("Error when downloading binary");
             return false;
         }
 
-        windows.WriteToFile(targetFile, response.GetResponse(), true, true);
+        windows.WriteToFile(std::move(targetFile), response.GetResponse(), true, true);
         LogInfo("Binary updated successfully");
         return true;
     }
 
-    bool UpdateDataValid(const nlohmann::json& updateData)
+    auto UpdateDataValid(const nlohmann::json& updateData) -> bool
     {
-        return updateData.is_object() &&
-            updateData.contains("version") &&
-            updateData.at("version").is_string() &&
-            updateData.contains("updater_download_url") &&
-            updateData.at("updater_download_url").is_string() &&
-            updateData.contains("core_download_url") &&
-            updateData.at("core_download_url").is_string() &&
-            updateData.contains("loader_download_url") &&
-            updateData.at("loader_download_url").is_string();
+        return updateData.is_object() && updateData.contains("version") && updateData.at("version").is_string() &&
+               updateData.contains("updater_download_url") && updateData.at("updater_download_url").is_string() &&
+               updateData.contains("core_download_url") && updateData.at("core_download_url").is_string() &&
+               updateData.contains("loader_download_url") && updateData.at("loader_download_url").is_string();
     }
 } // namespace UKControllerPlugin

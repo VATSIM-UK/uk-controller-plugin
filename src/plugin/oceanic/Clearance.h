@@ -1,63 +1,62 @@
 #pragma once
-#include "pch/pch.h"
 
-namespace UKControllerPlugin {
-    namespace Oceanic {
+namespace UKControllerPlugin::Oceanic {
 
-        /**
-         * Represents an oceanic clearance.
-         *
-         * We have clearance, Clarance.
-         */
-        typedef struct Clearance
-        {
-            // Callsign on the clearance
-            std::string callsign;
+    /**
+     * Represents an oceanic clearance.
+     *
+     * We have clearance, Clarance.
+     */
+    using Clearance = struct Clearance
+    {
+        // Callsign on the clearance
+        std::string callsign;
 
-            // The current status
-            std::string status;
+        // The current status
+        std::string status;
 
-            // The track (or RR) that they're cleared on.
-            std::string track;
+        // The track (or RR) that they're cleared on.
+        std::string track;
 
-            // Entry fix
-            std::string entryFix;
+        // Entry fix
+        std::string entryFix;
 
-            // Flight level
-            std::string flightLevel;
+        // Flight level
+        std::string flightLevel;
 
-            // Mach number
-            std::string mach;
+        // Mach number
+        std::string mach;
 
-            // Entry estimate time (Z)
-            std::string entryTime;
+        // Entry estimate time (Z)
+        std::string entryTime;
 
-            // Time (Z) the clearance was issued
-            std::string clearanceIssued;
+        // Time (Z) the clearance was issued
+        std::string clearanceIssued;
 
-            // Extra information
-            std::string extra;
+        // Extra information
+        std::string extra;
 
-            bool operator==(const Clearance& compare) const
-            {
-                return this->callsign == compare.callsign;
-            }
+        explicit Clearance(std::string callsign);
+        Clearance(
+            std::string callsign,
+            std::string status,
+            std::string track,
+            std::string entryFix,
+            std::string flightLevel,
+            std::string mach,
+            std::string entryTime,
+            std::string clearanceIssued,
+            std::string extra);
+        ~Clearance();
+        Clearance(const Clearance& compare);
+        Clearance(Clearance&& compare) noexcept;
+        auto operator=(const Clearance& compare) -> Clearance&;
+        auto operator=(Clearance&& compare) noexcept -> Clearance&;
+        auto operator==(const Clearance& compare) const -> bool;
+        void AssignProperties(const Clearance& compare);
+        void MoveProperties(Clearance& compare);
 
-            void operator=(const Clearance& compare)
-            {
-                this->callsign = compare.callsign;
-                this->status = compare.status;
-                this->track = compare.track;
-                this->entryFix = compare.entryFix;
-                this->flightLevel = compare.flightLevel;
-                this->mach = compare.mach;
-                this->entryTime = compare.entryTime;
-                this->clearanceIssued = compare.clearanceIssued;
-                this->extra = compare.extra;
-            }
-
-            const std::string CLEARANCE_STATUS_CLEARED = "CLEARED";
-            const std::string CLEARANCE_STATUS_PENDING = "PENDING";
-        } Clearance;
-    } // namespace Oceanic
-} // namespace UKControllerPlugin
+        const std::string CLEARANCE_STATUS_CLEARED = "CLEARED";
+        const std::string CLEARANCE_STATUS_PENDING = "PENDING";
+    };
+} // namespace UKControllerPlugin::Oceanic

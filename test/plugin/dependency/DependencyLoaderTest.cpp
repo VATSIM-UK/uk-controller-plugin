@@ -1,16 +1,14 @@
-#include "pch/pch.h"
-#include "dependency/DependencyLoader.h"
-#include "mock/MockWinApi.h"
 #include "api/ApiException.h"
+#include "dependency/DependencyLoader.h"
 
-using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPlugin::Dependency::DependencyLoader;
-using UKControllerPlugin::Api::ApiException;
+using ::testing::_;
 using ::testing::NiceMock;
+using ::testing::Return;
 using ::testing::Test;
 using ::testing::Throw;
-using ::testing::Return;
-using ::testing::_;
+using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Dependency::DependencyLoader;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest {
     namespace Dependency {
@@ -18,22 +16,15 @@ namespace UKControllerPluginTest {
         class DependencyLoaderTest : public Test
         {
             public:
-
             DependencyLoaderTest()
             {
-
             }
 
             NiceMock<MockWinApi> mockWindows;
 
-            nlohmann::json dependency1 = {
-                { "foo", "bar "}
-            };
+            nlohmann::json dependency1 = {{"foo", "bar "}};
 
-            nlohmann::json dependency2 = {
-                { "baz", "noot "}
-            };
-
+            nlohmann::json dependency2 = {{"baz", "noot "}};
         };
 
         TEST_F(DependencyLoaderTest, ItLoadsDependencies)
@@ -48,8 +39,7 @@ namespace UKControllerPluginTest {
                     {"key", "DEPENDENCY_TWO"},
                     {"local_file", "test2.json"},
                     {"uri", "test2"},
-                }
-            };
+                }};
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -68,7 +58,6 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(this->dependency2.dump()));
-
 
             DependencyLoader loader(this->mockWindows);
             EXPECT_EQ(this->dependency1, loader.LoadDependency("DEPENDENCY_ONE", "{}"));
@@ -87,8 +76,7 @@ namespace UKControllerPluginTest {
                     {"key", "DEPENDENCY_TWO"},
                     {"local_file", "test2.json"},
                     {"uri", "test2"},
-                }
-            };
+                }};
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(false));
@@ -107,7 +95,6 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(this->dependency2.dump()));
-
 
             DependencyLoader loader(this->mockWindows);
             EXPECT_EQ("{}", loader.LoadDependency("DEPENDENCY_ONE", "{}"));
@@ -134,7 +121,6 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(this->dependency2.dump()));
 
-
             DependencyLoader loader(this->mockWindows);
             EXPECT_EQ("{}", loader.LoadDependency("DEPENDENCY_ONE", "{}"));
             EXPECT_EQ("{}", loader.LoadDependency("DEPENDENCY_TWO", "{}"));
@@ -152,8 +138,7 @@ namespace UKControllerPluginTest {
                     {"key", "DEPENDENCY_TWO"},
                     {"local_file", 2},
                     {"uri", "test2"},
-                }
-            };
+                }};
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -172,7 +157,6 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(this->dependency2.dump()));
-
 
             DependencyLoader loader(this->mockWindows);
             EXPECT_EQ("{}", loader.LoadDependency("DEPENDENCY_ONE", "{}"));
@@ -191,8 +175,7 @@ namespace UKControllerPluginTest {
                     {"key", "DEPENDENCY_TWO"},
                     {"local_file", "test2.json"},
                     {"uri", "test2"},
-                }
-            };
+                }};
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -212,7 +195,6 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(this->dependency2.dump()));
 
-
             DependencyLoader loader(this->mockWindows);
             EXPECT_EQ("{}", loader.LoadDependency("DEPENDENCY_THREE", "{}"));
         }
@@ -229,8 +211,7 @@ namespace UKControllerPluginTest {
                     {"key", "DEPENDENCY_TWO"},
                     {"local_file", "test2.json"},
                     {"uri", "test2"},
-                }
-            };
+                }};
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -250,7 +231,6 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(this->dependency2.dump()));
 
-
             DependencyLoader loader(this->mockWindows);
             EXPECT_EQ("{}", loader.LoadDependency("DEPENDENCY_ONE", "{}"));
         }
@@ -267,8 +247,7 @@ namespace UKControllerPluginTest {
                     {"key", "DEPENDENCY_TWO"},
                     {"local_file", "test2.json"},
                     {"uri", "test2"},
-                }
-            };
+                }};
 
             ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
                 .WillByDefault(Return(true));
@@ -288,9 +267,8 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(this->dependency2.dump()));
 
-
             DependencyLoader loader(this->mockWindows);
             EXPECT_EQ("{}", loader.LoadDependency("DEPENDENCY_ONE", "{}"));
         }
-    }  // namespace Dependency
-}  // namespace UKControllerPluginTest
+    } // namespace Dependency
+} // namespace UKControllerPluginTest

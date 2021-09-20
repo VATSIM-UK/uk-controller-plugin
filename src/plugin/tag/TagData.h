@@ -1,67 +1,70 @@
 #pragma once
-#include "euroscope/EuroScopeCFlightPlanInterface.h"
-#include "euroscope/EuroScopeCRadarTargetInterface.h"
 
-namespace UKControllerPlugin {
-    namespace Tag {
-        /*
-            A new class
-        */
-        class TagData
-        {
-            public:
-                TagData(
-                    const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightPlan,
-                    const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget,
-                    const int itemCode,
-                    const int dataAvailable,
-                    char * itemString,
-                    int * euroscopeColourCode,
-                    COLORREF * tagColour,
-                    double * fontSize
-                );
+namespace UKControllerPlugin::Euroscope {
+    class EuroScopeCFlightPlanInterface;
+    class EuroScopeCRadarTargetInterface;
+} // namespace UKControllerPlugin::Euroscope
 
-                std::string GetItemString(void) const;
-                void SetItemString(std::string itemString);
-                void SetEuroscopeColourCode(int code);
-                int GetEuroscopeColourCode(void) const;
-                void SetTagColour(COLORREF colour);
-                COLORREF GetTagColour(void) const;
-                void SetFontSize(double fontSize);
-                double GetFontSize(void) const;
+namespace UKControllerPlugin::Tag {
+    /*
+        Amalgamates all of the data EuroScope uses when requesting a tag function to make it
+        nicer to pass around.
+    */
+    class TagData
+    {
+        public:
+        TagData(
+            const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+            const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            int itemCode,
+            int dataAvailable,
+            char* itemString,
+            int* euroscopeColourCode,
+            COLORREF* tagColour,
+            double* fontSize);
 
+        [[nodiscard]] auto GetItemString() const -> std::string;
+        void SetItemString(std::string itemString);
+        void SetEuroscopeColourCode(int code);
+        [[nodiscard]] auto GetEuroscopeColourCode() const -> int;
+        void SetTagColour(COLORREF colour);
+        [[nodiscard]] auto GetTagColour() const -> COLORREF;
+        void SetFontSize(double fontSize);
+        [[nodiscard]] auto GetFontSize() const -> double;
+        [[nodiscard]] auto GetItemCode() const -> int;
+        [[nodiscard]] auto GetDataAvailable() const -> int;
+        [[nodiscard]] auto GetFlightplan() const -> const Euroscope::EuroScopeCFlightPlanInterface&;
+        [[nodiscard]] auto GetRadarTarget() const -> const Euroscope::EuroScopeCRadarTargetInterface&;
 
-                // The tag item text is too long
-                const std::string invalidItemText = "INVALID";
+        private:
+        // The string to put into the tag
+        char* itemString;
 
-                // Max length we can have on TAG items, 15 characters + 1 null terminator
-                const size_t maxItemSize = 16;
+        // The colour code for Euroscope;
+        int* euroscopeColourCode;
 
-                // The flightplan
-                const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan;
+        // The custom colour to use for the tag
+        COLORREF* tagColour;
 
-                // The radar target
-                const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget;
+        // The font size to use
+        double* fontSize;
 
-                // The code for the tag item
-                const int itemCode;
+        // The tag item text is too long
+        const std::string invalidItemText = "INVALID";
 
-                // What data is available - e.g. correlated track, uncorrelated etc
-                const int dataAvailable;
+        // Max length we can have on TAG items, 15 characters + 1 null terminator
+        static const size_t maxItemSize = 16;
 
-            private:
+        // The flightplan
+        const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan;
 
-                // The string to put into the tag
-                char * itemString;
+        // The radar target
+        const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget;
 
-                // The colour code for Euroscope;
-                int* euroscopeColourCode;
+        // The code for the tag item
+        const int itemCode;
 
-                // The custom colour to use for the tag
-                COLORREF* tagColour;
-
-                // The font size to use
-                double* fontSize;
-        };
-    }  // namespace Tag
-}  // namespace UKControllerPlugin
+        // What data is available - e.g. correlated track, uncorrelated etc
+        const int dataAvailable;
+    };
+} // namespace UKControllerPlugin::Tag

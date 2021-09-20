@@ -1,10 +1,8 @@
-#pragma once
-#include "pch/pch.h"
 #include "releases/DepartureReleaseRequest.h"
 #include "time/SystemClock.h"
 
-using UKControllerPlugin::Releases::DepartureReleaseRequest;
 using testing::Test;
+using UKControllerPlugin::Releases::DepartureReleaseRequest;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -12,15 +10,15 @@ namespace UKControllerPluginTest {
         class DepartureReleaseRequestTest : public Test
         {
             public:
-                DepartureReleaseRequestTest()
-                    : requestExpiresAt(std::chrono::system_clock::now() + std::chrono::minutes(3)),
-                      request(1, "BAW123", 2, 3, requestExpiresAt)
-                {
-                    UKControllerPlugin::Time::SetTestNow(std::chrono::system_clock::now());
-                }
+            DepartureReleaseRequestTest()
+                : requestExpiresAt(std::chrono::system_clock::now() + std::chrono::minutes(3)),
+                  request(1, "BAW123", 2, 3, requestExpiresAt)
+            {
+                UKControllerPlugin::Time::SetTestNow(std::chrono::system_clock::now());
+            }
 
-                std::chrono::system_clock::time_point requestExpiresAt;
-                DepartureReleaseRequest request;
+            std::chrono::system_clock::time_point requestExpiresAt;
+            DepartureReleaseRequest request;
         };
 
         TEST_F(DepartureReleaseRequestTest, ItHasAnId)
@@ -103,20 +101,20 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseRequestTest, ApprovingTheRequestSetsReleasedAtTime)
         {
-            std::chrono::system_clock::time_point releasedAt = std::chrono::system_clock::now() +
-                std::chrono::minutes(1);
-            std::chrono::system_clock::time_point releaseExpiresAt = std::chrono::system_clock::now() +
-                std::chrono::minutes(2);
+            std::chrono::system_clock::time_point releasedAt =
+                std::chrono::system_clock::now() + std::chrono::minutes(1);
+            std::chrono::system_clock::time_point releaseExpiresAt =
+                std::chrono::system_clock::now() + std::chrono::minutes(2);
             request.Approve(releasedAt, releaseExpiresAt);
             EXPECT_EQ(releasedAt, request.ReleasedAtTime());
         }
 
         TEST_F(DepartureReleaseRequestTest, ApprovingTheRequestSetsReleaseExpiryTime)
         {
-            std::chrono::system_clock::time_point releasedAt = std::chrono::system_clock::now() +
-                std::chrono::minutes(1);
-            std::chrono::system_clock::time_point releaseExpiresAt = std::chrono::system_clock::now() +
-                std::chrono::minutes(2);
+            std::chrono::system_clock::time_point releasedAt =
+                std::chrono::system_clock::now() + std::chrono::minutes(1);
+            std::chrono::system_clock::time_point releaseExpiresAt =
+                std::chrono::system_clock::now() + std::chrono::minutes(2);
             request.Approve(releasedAt, releaseExpiresAt);
             EXPECT_EQ(releaseExpiresAt, request.ReleaseExpiryTime());
         }
@@ -157,20 +155,20 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseRequestTest, RequestsCanBePendingReleasedAtTime)
         {
-            std::chrono::system_clock::time_point releasedAt = std::chrono::system_clock::now() +
-                std::chrono::minutes(1);
-            std::chrono::system_clock::time_point releaseExpiresAt = std::chrono::system_clock::now() +
-                std::chrono::minutes(2);
+            std::chrono::system_clock::time_point releasedAt =
+                std::chrono::system_clock::now() + std::chrono::minutes(1);
+            std::chrono::system_clock::time_point releaseExpiresAt =
+                std::chrono::system_clock::now() + std::chrono::minutes(2);
             request.Approve(releasedAt, releaseExpiresAt);
             EXPECT_TRUE(this->request.AwaitingReleasedTime());
         }
 
         TEST_F(DepartureReleaseRequestTest, RequestsCanBeReadyToGo)
         {
-            std::chrono::system_clock::time_point releasedAt = std::chrono::system_clock::now() -
-                std::chrono::minutes(1);
-            std::chrono::system_clock::time_point releaseExpiresAt = std::chrono::system_clock::now() +
-                std::chrono::minutes(2);
+            std::chrono::system_clock::time_point releasedAt =
+                std::chrono::system_clock::now() - std::chrono::minutes(1);
+            std::chrono::system_clock::time_point releaseExpiresAt =
+                std::chrono::system_clock::now() + std::chrono::minutes(2);
             request.Approve(releasedAt, releaseExpiresAt);
             EXPECT_FALSE(this->request.AwaitingReleasedTime());
         }

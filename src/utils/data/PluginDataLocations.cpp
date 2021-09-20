@@ -1,31 +1,30 @@
-#include "pch/pch.h"
-#include "data/PluginDataLocations.h"
+#include "PluginDataLocations.h"
 #include "windows/WinApiInterface.h"
 
-std::wstring GetUpdaterBinaryRelativePath()
+auto GetUpdaterBinaryRelativePath() -> std::wstring
 {
     return GetBinariesFolderRelativePath() + L"/UKControllerPluginUpdater.dll";
 }
 
-std::wstring GetCoreBinaryRelativePath()
+auto GetCoreBinaryRelativePath() -> std::wstring
 {
     return GetBinariesFolderRelativePath() + L"/UKControllerPluginCore.dll";
 }
 
-std::wstring GetOldCoreBinaryRelativePath()
+auto GetOldCoreBinaryRelativePath() -> std::wstring
 {
     return GetCoreBinaryRelativePath() + L".old";
 }
 
-std::wstring GetOldUpdaterBinaryRelativePath()
+auto GetOldUpdaterBinaryRelativePath() -> std::wstring
 {
     return GetUpdaterBinaryRelativePath() + L".old";
 }
 
-std::wstring GetFullPluginDataRoot(void)
+auto GetFullPluginDataRoot() -> std::wstring
 {
     TCHAR* folderPath = nullptr;
-    HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_SIMPLE_IDLIST, nullptr, &folderPath);
+    SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_SIMPLE_IDLIST, nullptr, &folderPath);
 
     std::wstring widePath(folderPath);
     std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
@@ -33,7 +32,7 @@ std::wstring GetFullPluginDataRoot(void)
     return widePath + L"/UKControllerPlugin";
 }
 
-std::wstring GetBinariesFolderRelativePath()
+auto GetBinariesFolderRelativePath() -> std::wstring
 {
     return L"bin";
 }
@@ -45,8 +44,7 @@ void CreatePluginDataRoot(UKControllerPlugin::Windows::WinApiInterface& windows)
         windows.OpenMessageBox(
             L"Unable to create the UKCP root folder, please contact the VATUK Web Department.",
             L"UKCP Fatal Error",
-            MB_OK | MB_ICONSTOP
-        );
+            MB_OK | MB_ICONSTOP);
         throw std::runtime_error("Unable to create UKCP Root");
     }
 
@@ -54,13 +52,7 @@ void CreatePluginDataRoot(UKControllerPlugin::Windows::WinApiInterface& windows)
         windows.OpenMessageBox(
             L"Unable to set permissions on the UKCP root folder, please contact the VATUK Web Department.",
             L"UKCP Fatal Error",
-            MB_OK | MB_ICONSTOP
-        );
+            MB_OK | MB_ICONSTOP);
         throw std::runtime_error("Unable to set permissions on the UKCP root folder");
     }
-}
-
-std::wstring GetForceUpdateFileLocation()
-{
-    return L"force.update.txt";
 }

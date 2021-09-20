@@ -1,38 +1,27 @@
 #pragma once
-#include "intention/AirfieldGroup.h"
+#include "AirfieldGroup.h"
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
-        class EuroscopeExtractedRouteInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Euroscope {
+    class EuroscopeExtractedRouteInterface;
+} // namespace UKControllerPlugin::Euroscope
 
-namespace UKControllerPlugin {
-    namespace IntentionCode {
+namespace UKControllerPlugin::IntentionCode {
 
-        // Predeclarations
-        class AirfieldGroup;
-        // End
-
-        /*
-            Class representing all airfields within the United Kingdom (EGXX).
-        */
-        class HomeAirfieldGroup : public AirfieldGroup
-        {
+    /*
+        Class representing all airfields within the United Kingdom (EGXX).
+    */
+    class HomeAirfieldGroup : public AirfieldGroup
+    {
         public:
-            HomeAirfieldGroup(void);
-            bool HasAirfield(
-                std::string airfield,
-                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface
-                & route
-            ) const;
-            std::string GetIntentionCodeForGroup(
-                std::string airfield,
-                UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface
-                & route
-            ) const;
+        HomeAirfieldGroup();
+        auto HasAirfield(
+            const std::string& airfield, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const
+            -> bool override;
+        auto GetIntentionCodeForGroup(
+            const std::string& airfield, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) const
+            -> std::string override;
+
         protected:
-            bool Initialise(void);
-        };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+        bool Initialise() override;
+    };
+} // namespace UKControllerPlugin::IntentionCode

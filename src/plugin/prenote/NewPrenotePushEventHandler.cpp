@@ -52,6 +52,7 @@ namespace UKControllerPlugin::Prenote {
                                                      messageData.at("target_controller").get<int>()) {
             winApi.PlayWave(MAKEINTRESOURCE(WAVE_NEW_PRENOTE)); // NOLINT
         }
+
         LogInfo("Received prenote id " + std::to_string(prenoteId));
     }
 

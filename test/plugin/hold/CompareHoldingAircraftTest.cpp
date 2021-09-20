@@ -1,11 +1,9 @@
-#pragma once
-#include "pch/pch.h"
 #include "hold/HoldingAircraft.h"
 #include "hold/CompareHoldingAircraft.h"
 
-using UKControllerPlugin::Hold::HoldingAircraft;
-using UKControllerPlugin::Hold::CompareHoldingAircraft;
 using ::testing::Test;
+using UKControllerPlugin::Hold::CompareHoldingAircraft;
+using UKControllerPlugin::Hold::HoldingAircraft;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -13,7 +11,7 @@ namespace UKControllerPluginTest {
         class CompareHoldingAircraftTest : public Test
         {
             public:
-                CompareHoldingAircraft compare;
+            CompareHoldingAircraft compare;
         };
 
         TEST_F(CompareHoldingAircraftTest, LessThanStringReturnsTrueIfLessThan)
@@ -34,5 +32,5 @@ namespace UKControllerPluginTest {
             std::shared_ptr<HoldingAircraft> aircraft2 = std::make_shared<HoldingAircraft>("BAW124", "BNN");
             EXPECT_TRUE(compare(aircraft1, aircraft2));
         }
-    }  // namespace Hold
-}  // namespace UKControllerPluginTest
+    } // namespace Hold
+} // namespace UKControllerPluginTest

@@ -112,7 +112,8 @@ if(MSVC)
             /Zi
         >
         /std:c++17;
-        /W3;
+        /W4;
+        /WX;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )
     target_link_options(${PROJECT_NAME} PRIVATE

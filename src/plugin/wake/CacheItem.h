@@ -1,25 +1,22 @@
 #pragma once
-#include "pch/pch.h"
 
-namespace UKControllerPlugin {
-    namespace Wake {
+namespace UKControllerPlugin::Wake {
 
-        typedef struct CacheItem
-        {
-            // What's there if no data
-            std::string noData = "NODATA";
+    using CacheItem = struct CacheItem
+    {
+        // What's there if no data
+        std::string noData = "NODATA";
 
-            // UK Wake Category
-            std::string standaloneItem = noData;
+        // UK Wake Category
+        std::string standaloneItem = noData;
 
-            // RECAT-EU category
-            std::string recatItem = noData;
+        // RECAT-EU category
+        std::string recatItem = noData;
 
-            // UK Wake Category + Aircraft Type
-            std::string aircraftTypeUKCategoryItem = noData;
+        // UK Wake Category + Aircraft Type
+        std::string aircraftTypeUKCategoryItem = noData;
 
-            // RECAT-EU Category + Aircraft Type
-            std::string aircraftTypeRecatCategoryItem = noData;
-        } CacheItem;
-    }  // namespace Wake
-}  // namespace UKControllerPlugin
+        // RECAT-EU Category + Aircraft Type
+        std::string aircraftTypeRecatCategoryItem = noData;
+    };
+} // namespace UKControllerPlugin::Wake

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/ClientInitialisationManager.h"
 #include "integration/InitialisationSuccessMessage.h"
 #include "integration/InitialisationFailureMessage.h"
@@ -6,48 +5,42 @@
 #include "integration/IntegrationClientManager.h"
 #include "integration/IntegrationConnection.h"
 #include "integration/MessageType.h"
-#include "mock/MockConnection.h"
 #include "time/SystemClock.h"
 
-using UKControllerPlugin::Integration::IntegrationClientManager;
 using UKControllerPlugin::Integration::ClientInitialisationManager;
 using UKControllerPlugin::Integration::InitialisationFailureMessage;
+using UKControllerPlugin::Integration::IntegrationClientManager;
 using UKControllerPlugin::Time::SetTestNow;
 
 namespace UKControllerPluginTest::Integration {
     class ClientInitialisationManagerTest : public testing::Test
     {
         public:
-            ClientInitialisationManagerTest()
-                : clientManager(new IntegrationClientManager),
-                  initialisationManager(clientManager)
-            {
-                mockConnection1 = std::make_shared<testing::NiceMock<MockConnection>>();
-                mockConnection2 = std::make_shared<testing::NiceMock<MockConnection>>();
-                integration1 = std::make_shared<UKControllerPlugin::Integration::IntegrationConnection>(
-                    mockConnection1
-                );
-                integration2 = std::make_shared<UKControllerPlugin::Integration::IntegrationConnection>(
-                    mockConnection2
-                );
-            }
+        ClientInitialisationManagerTest()
+            : clientManager(new IntegrationClientManager), initialisationManager(clientManager)
+        {
+            mockConnection1 = std::make_shared<testing::NiceMock<MockConnection>>();
+            mockConnection2 = std::make_shared<testing::NiceMock<MockConnection>>();
+            integration1 = std::make_shared<UKControllerPlugin::Integration::IntegrationConnection>(mockConnection1);
+            integration2 = std::make_shared<UKControllerPlugin::Integration::IntegrationConnection>(mockConnection2);
+        }
 
-            void SetUp() override
-            {
-                SetTestNow(std::chrono::system_clock::now());
-            }
+        void SetUp() override
+        {
+            SetTestNow(std::chrono::system_clock::now());
+        }
 
-            static std::string ExpectedFailureMessage(std::string message)
-            {
-                return InitialisationFailureMessage("foo", std::vector<std::string>{message}).ToJson().dump();
-            }
+        static std::string ExpectedFailureMessage(std::string message)
+        {
+            return InitialisationFailureMessage("foo", std::vector<std::string>{message}).ToJson().dump();
+        }
 
-            std::shared_ptr<UKControllerPlugin::Integration::IntegrationConnection> integration1;
-            std::shared_ptr<UKControllerPlugin::Integration::IntegrationConnection> integration2;
-            std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection1;
-            std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection2;
-            std::shared_ptr<IntegrationClientManager> clientManager;
-            ClientInitialisationManager initialisationManager;
+        std::shared_ptr<UKControllerPlugin::Integration::IntegrationConnection> integration1;
+        std::shared_ptr<UKControllerPlugin::Integration::IntegrationConnection> integration2;
+        std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection1;
+        std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection2;
+        std::shared_ptr<IntegrationClientManager> clientManager;
+        ClientInitialisationManager initialisationManager;
     };
 
     TEST_F(ClientInitialisationManagerTest, ItOnlyAddsEachIntegrationOnce)
@@ -80,11 +73,9 @@ namespace UKControllerPluginTest::Integration {
     {
         initialisationManager.AddConnection(integration1);
         initialisationManager.AddConnection(integration2);
-        ON_CALL(*this->mockConnection1, Receive)
-            .WillByDefault(testing::Return(std::queue<std::string>{}));
+        ON_CALL(*this->mockConnection1, Receive).WillByDefault(testing::Return(std::queue<std::string>{}));
 
-        ON_CALL(*this->mockConnection2, Receive)
-            .WillByDefault(testing::Return(std::queue<std::string>{}));
+        ON_CALL(*this->mockConnection2, Receive).WillByDefault(testing::Return(std::queue<std::string>{}));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(2, initialisationManager.CountConnections());
@@ -99,27 +90,20 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        ON_CALL(*this->mockConnection1, Receive)
-            .WillByDefault(testing::Return(returnedMessages));
+        ON_CALL(*this->mockConnection1, Receive).WillByDefault(testing::Return(returnedMessages));
 
-        ON_CALL(*this->mockConnection2, Receive)
-            .WillByDefault(testing::Return(std::queue<std::string>{}));
+        ON_CALL(*this->mockConnection2, Receive).WillByDefault(testing::Return(std::queue<std::string>{}));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(1, initialisationManager.CountConnections());
@@ -138,34 +122,24 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        ON_CALL(*this->mockConnection1, Receive)
-            .WillByDefault(testing::Return(returnedMessages));
+        ON_CALL(*this->mockConnection1, Receive).WillByDefault(testing::Return(returnedMessages));
 
-        ON_CALL(*this->mockConnection2, Receive)
-            .WillByDefault(testing::Return(std::queue<std::string>{}));
+        ON_CALL(*this->mockConnection2, Receive).WillByDefault(testing::Return(std::queue<std::string>{}));
 
-        EXPECT_CALL(*this->mockConnection1, Active)
-            .Times(1)
-            .WillOnce(testing::Return(true));
+        EXPECT_CALL(*this->mockConnection1, Active).Times(1).WillOnce(testing::Return(true));
 
-        EXPECT_CALL(*this->mockConnection2, Active)
-            .Times(0);
+        EXPECT_CALL(*this->mockConnection2, Active).Times(0);
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(1, initialisationManager.CountConnections());
@@ -183,27 +157,20 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        ON_CALL(*this->mockConnection1, Receive)
-            .WillByDefault(testing::Return(returnedMessages));
+        ON_CALL(*this->mockConnection1, Receive).WillByDefault(testing::Return(returnedMessages));
 
-        ON_CALL(*this->mockConnection2, Receive)
-            .WillByDefault(testing::Return(std::queue<std::string>{}));
+        ON_CALL(*this->mockConnection2, Receive).WillByDefault(testing::Return(std::queue<std::string>{}));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(1, initialisationManager.CountConnections());
@@ -223,27 +190,20 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        ON_CALL(*this->mockConnection1, Receive)
-            .WillByDefault(testing::Return(returnedMessages));
+        ON_CALL(*this->mockConnection1, Receive).WillByDefault(testing::Return(returnedMessages));
 
-        ON_CALL(*this->mockConnection2, Receive)
-            .WillByDefault(testing::Return(returnedMessages));
+        ON_CALL(*this->mockConnection2, Receive).WillByDefault(testing::Return(returnedMessages));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, initialisationManager.CountConnections());
@@ -261,29 +221,22 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        ON_CALL(*this->mockConnection1, Receive)
-            .WillByDefault(testing::Return(returnedMessages));
+        ON_CALL(*this->mockConnection1, Receive).WillByDefault(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(UKControllerPlugin::Integration::InitialisationSuccessMessage("foo").ToJson().dump())
-        )
+            Send(UKControllerPlugin::Integration::InitialisationSuccessMessage("foo").ToJson().dump()))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -296,25 +249,18 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -329,25 +275,18 @@ namespace UKControllerPluginTest::Integration {
             {"type", 1},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -362,30 +301,21 @@ namespace UKControllerPluginTest::Integration {
             {"type", "not_this"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
-            *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_TYPE))
-        )
+            *this->mockConnection1, Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_TYPE)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -400,25 +330,18 @@ namespace UKControllerPluginTest::Integration {
         nlohmann::json integrationMessage = {
             {"type", "initialise"},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -433,25 +356,18 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", "1"},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -466,30 +382,22 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 2},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_VERSION))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_VERSION)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -509,9 +417,7 @@ namespace UKControllerPluginTest::Integration {
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -526,17 +432,11 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data",
-                nlohmann::json::array({"integration_name", "UKCPTEST"})
-            }
-        };
+            {"data", nlohmann::json::array({"integration_name", "UKCPTEST"})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         initialisationManager.TimedEventTrigger();
         EXPECT_EQ(0, this->clientManager->CountClients());
@@ -551,29 +451,21 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_NAME))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_NAME)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -589,30 +481,22 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", 123},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", 123},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_NAME))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_NAME)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -628,29 +512,21 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_VERSION))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_VERSION)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -666,30 +542,22 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", 1},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", 1},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_VERSION))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_INTEGRATION_VERSION)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -705,24 +573,19 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object({
+                 {"integration_name", "UKCPTEST"},
+                 {"integration_version", "1.5"},
+             })}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTIONS))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTIONS)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -738,27 +601,19 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::object({{"foo", "bar"}})
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions", nlohmann::json::object({{"foo", "bar"}})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTIONS))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTIONS)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -774,30 +629,22 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -813,30 +660,22 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", 1}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", 2}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", 1}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -852,30 +691,22 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();
@@ -891,30 +722,22 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialise"},
             {"version", 1},
             {"id", "foo"},
-            {
-                "data", nlohmann::json::object({
-                    {"integration_name", "UKCPTEST"},
-                    {"integration_version", "1.5"},
-                    {
-                        "event_subscriptions", nlohmann::json::array({
-                            nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
-                            nlohmann::json::object({{"type", "bar"}, {"version", "123"}})
-                        })
-                    }
-                })
-            }
-        };
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", "123"}})})}})}};
 
         std::queue<std::string> returnedMessages;
         returnedMessages.push(integrationMessage.dump());
-        EXPECT_CALL(*this->mockConnection1, Receive)
-            .Times(1)
-            .WillOnce(testing::Return(returnedMessages));
+        EXPECT_CALL(*this->mockConnection1, Receive).Times(1).WillOnce(testing::Return(returnedMessages));
 
         EXPECT_CALL(
             *this->mockConnection1,
-            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION))
-        )
+            Send(ExpectedFailureMessage(initialisationManager.VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION)))
             .Times(1);
 
         initialisationManager.TimedEventTrigger();

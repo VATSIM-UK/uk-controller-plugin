@@ -2,12 +2,6 @@
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "euroscope/UserSetting.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-#include "mock/MockTaskRunnerInterface.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "prenote/AcknowledgePrenoteMessage.h"
 #include "prenote/PendingPrenoteList.h"
 #include "prenote/PrenoteMessage.h"
@@ -27,9 +21,9 @@ namespace UKControllerPluginTest::Prenote {
     {
         public:
         PendingPrenoteListTest()
-            : acknowledge(std::make_shared<AcknowledgePrenoteMessage>(messages, activeCallsigns, mockTaskRunner, api)),
-              messages(std::make_shared<PrenoteMessageCollection>()),
-              list(messages, acknowledge, mockPlugin, controllers, activeCallsigns, 1), userSettings(mockAsrProvider)
+            : messages(std::make_shared<PrenoteMessageCollection>()),
+              acknowledge(std::make_shared<AcknowledgePrenoteMessage>(messages, activeCallsigns, mockTaskRunner, api)),
+              userSettings(mockAsrProvider), list(messages, acknowledge, mockPlugin, controllers, activeCallsigns, 1)
         {
             this->pluginReturnedFlightplan =
                 std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();

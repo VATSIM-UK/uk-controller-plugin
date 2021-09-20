@@ -1,17 +1,13 @@
-#include "pch/pch.h"
 #include "radarscreen/RadarRenderableCollection.h"
-#include "mock/MockRadarRendererableInterface.h"
-#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "helper/Matchers.h"
-#include "mock/MockGraphicsInterface.h"
 
-using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
-using UKControllerPluginTest::RadarScreen::MockRadarRenderableInterface;
-using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
-using UKControllerPluginTest::Windows::MockGraphicsInterface;
 using ::testing::Ref;
 using ::testing::Return;
 using ::testing::StrictMock;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
+using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
+using UKControllerPluginTest::RadarScreen::MockRadarRenderableInterface;
+using UKControllerPluginTest::Windows::MockGraphicsInterface;
 
 namespace UKControllerPluginTest {
     namespace RadarScreen {
@@ -39,17 +35,14 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(2, collection.ReserveRendererIdentifier());
         }
 
-
         TEST(RadarRenderableCollection, RegisterRendererThrowsExceptionIfRendererAlreadyExists)
         {
             RadarRenderableCollection collection;
-            EXPECT_NO_THROW(
-                collection.RegisterRenderer(1, std::make_shared<MockRadarRenderableInterface>(), collection.afterLists)
-            );
+            EXPECT_NO_THROW(collection.RegisterRenderer(
+                1, std::make_shared<MockRadarRenderableInterface>(), collection.afterLists));
             EXPECT_THROW(
                 collection.RegisterRenderer(1, std::make_shared<MockRadarRenderableInterface>(), collection.afterLists),
-                std::invalid_argument
-            );
+                std::invalid_argument);
         }
 
         TEST(RadarRenderableCollection, RegisterRendererAddsRenderersToInitialPhase)
@@ -101,8 +94,7 @@ namespace UKControllerPluginTest {
             RadarRenderableCollection collection;
             EXPECT_THROW(
                 collection.RegisterRenderer(1, std::make_shared<MockRadarRenderableInterface>(), -999),
-                std::invalid_argument
-            );
+                std::invalid_argument);
         }
 
         TEST(RadarRenderableCollection, CountRenderersCountsTotalRenderers)
@@ -126,8 +118,8 @@ namespace UKControllerPluginTest {
             RadarRenderableCollection collection;
             collection.RegisterRenderer(
                 collection.ReserveRendererIdentifier(),
-                std::make_shared<MockRadarRenderableInterface>(), collection.initialPhase
-            );
+                std::make_shared<MockRadarRenderableInterface>(),
+                collection.initialPhase);
             EXPECT_EQ(1, collection.ReserveScreenObjectIdentifier(1));
         }
 
@@ -137,8 +129,7 @@ namespace UKControllerPluginTest {
             collection.RegisterRenderer(
                 collection.ReserveRendererIdentifier(),
                 std::make_shared<MockRadarRenderableInterface>(),
-                collection.initialPhase
-            );
+                collection.initialPhase);
             EXPECT_EQ(1, collection.ReserveScreenObjectIdentifier(1));
             EXPECT_EQ(2, collection.ReserveScreenObjectIdentifier(1));
             EXPECT_EQ(3, collection.ReserveScreenObjectIdentifier(1));
@@ -158,15 +149,12 @@ namespace UKControllerPluginTest {
             collection.RegisterRenderer(keyRendererId, renderer1, collection.beforeTags);
             collection.RegisterRenderer(collection.ReserveRendererIdentifier(), renderer2, collection.beforeTags);
 
-
             int screenObjectId = collection.ReserveScreenObjectIdentifier(1);
             std::string desc = "testdesc";
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
 
             EXPECT_CALL(
-                *renderer1,
-                LeftClick(Ref(mockRadarScreen), screenObjectId, desc, PointEq(POINT {}), RectEq(RECT {}))
-            )
+                *renderer1, LeftClick(Ref(mockRadarScreen), screenObjectId, desc, PointEq(POINT{}), RectEq(RECT{})))
                 .Times(1);
 
             collection.LeftClickScreenObject(mockRadarScreen, screenObjectId, desc, POINT{}, RECT{});
@@ -192,8 +180,7 @@ namespace UKControllerPluginTest {
             // One fake screen object, to prove we don't call the wrong one
             collection.ReserveScreenObjectIdentifier(2);
 
-            EXPECT_CALL(*renderer1, RightClick(screenObjectId, desc, Ref(mockRadarScreen)))
-                .Times(1);
+            EXPECT_CALL(*renderer1, RightClick(screenObjectId, desc, Ref(mockRadarScreen))).Times(1);
 
             collection.RightClickScreenObject(screenObjectId, desc, mockRadarScreen);
         }
@@ -212,14 +199,13 @@ namespace UKControllerPluginTest {
 
             // Setup test vars
             int screenObjectId = collection.ReserveScreenObjectIdentifier(1);
-            RECT pos = { 1, 2, 3, 4 };
+            RECT pos = {1, 2, 3, 4};
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
 
             // One fake screen object, to prove we don't call the wrong one
             collection.ReserveScreenObjectIdentifier(2);
 
-            EXPECT_CALL(*renderer1, Move(RectEq(pos), ""))
-                .Times(1);
+            EXPECT_CALL(*renderer1, Move(RectEq(pos), "")).Times(1);
 
             collection.MoveScreenObject(screenObjectId, {}, pos);
         }
@@ -244,12 +230,9 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
             StrictMock<MockGraphicsInterface> mockGraphics;
 
-            EXPECT_CALL(*renderer1, Render(Ref(mockGraphics), Ref(mockRadarScreen)))
-                .Times(1);
+            EXPECT_CALL(*renderer1, Render(Ref(mockGraphics), Ref(mockRadarScreen))).Times(1);
 
-            EXPECT_CALL(*renderer1, IsVisible())
-                .Times(1)
-                .WillOnce(Return(true));
+            EXPECT_CALL(*renderer1, IsVisible()).Times(1).WillOnce(Return(true));
 
             collection.Render(collection.initialPhase, mockGraphics, mockRadarScreen);
         }
@@ -274,12 +257,9 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
             StrictMock<MockGraphicsInterface> mockGraphics;
 
-            EXPECT_CALL(*renderer2, Render(Ref(mockGraphics), Ref(mockRadarScreen)))
-                .Times(1);
+            EXPECT_CALL(*renderer2, Render(Ref(mockGraphics), Ref(mockRadarScreen))).Times(1);
 
-            EXPECT_CALL(*renderer2, IsVisible())
-                .Times(1)
-                .WillOnce(Return(true));
+            EXPECT_CALL(*renderer2, IsVisible()).Times(1).WillOnce(Return(true));
 
             collection.Render(collection.beforeTags, mockGraphics, mockRadarScreen);
         }
@@ -304,12 +284,9 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
             StrictMock<MockGraphicsInterface> mockGraphics;
 
-            EXPECT_CALL(*renderer3, Render(Ref(mockGraphics), Ref(mockRadarScreen)))
-                .Times(1);
+            EXPECT_CALL(*renderer3, Render(Ref(mockGraphics), Ref(mockRadarScreen))).Times(1);
 
-            EXPECT_CALL(*renderer3, IsVisible())
-                .Times(1)
-                .WillOnce(Return(true));
+            EXPECT_CALL(*renderer3, IsVisible()).Times(1).WillOnce(Return(true));
 
             collection.Render(collection.afterTags, mockGraphics, mockRadarScreen);
         }
@@ -334,12 +311,9 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
             StrictMock<MockGraphicsInterface> mockGraphics;
 
-            EXPECT_CALL(*renderer4, Render(Ref(mockGraphics), Ref(mockRadarScreen)))
-                .Times(1);
+            EXPECT_CALL(*renderer4, Render(Ref(mockGraphics), Ref(mockRadarScreen))).Times(1);
 
-            EXPECT_CALL(*renderer4, IsVisible())
-                .Times(1)
-                .WillOnce(Return(true));
+            EXPECT_CALL(*renderer4, IsVisible()).Times(1).WillOnce(Return(true));
 
             collection.Render(collection.afterLists, mockGraphics, mockRadarScreen);
         }
@@ -364,9 +338,7 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
             StrictMock<MockGraphicsInterface> mockGraphics;
 
-            EXPECT_CALL(*renderer1, IsVisible())
-                .Times(1)
-                .WillOnce(Return(false));
+            EXPECT_CALL(*renderer1, IsVisible()).Times(1).WillOnce(Return(false));
 
             collection.Render(collection.initialPhase, mockGraphics, mockRadarScreen);
         }
@@ -385,16 +357,13 @@ namespace UKControllerPluginTest {
             collection.RegisterRenderer(collection.ReserveRendererIdentifier(), renderer2, collection.beforeTags);
             collection.RegisterRenderer(collection.ReserveRendererIdentifier(), renderer3, collection.afterTags);
 
-            EXPECT_CALL(*renderer1, ResetPosition())
-                .Times(1);
+            EXPECT_CALL(*renderer1, ResetPosition()).Times(1);
 
-            EXPECT_CALL(*renderer2, ResetPosition())
-                .Times(1);
+            EXPECT_CALL(*renderer2, ResetPosition()).Times(1);
 
-            EXPECT_CALL(*renderer3, ResetPosition())
-                .Times(1);
+            EXPECT_CALL(*renderer3, ResetPosition()).Times(1);
 
             collection.ResetPosition();
         }
-    }  // namespace RadarScreen
-}  // namespace UKControllerPluginTest
+    } // namespace RadarScreen
+} // namespace UKControllerPluginTest

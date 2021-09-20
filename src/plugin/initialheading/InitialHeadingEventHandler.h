@@ -1,8 +1,8 @@
 #pragma once
-#include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "airfield/NormaliseSid.h"
-#include "euroscope/UserSettingAwareInterface.h"
 #include "controller/ActiveCallsignEventHandlerInterface.h"
+#include "euroscope/UserSettingAwareInterface.h"
+#include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "timedevent/AbstractTimedEvent.h"
 
 // Forward declarations
@@ -10,128 +10,107 @@
 namespace UKControllerPlugin {
     namespace Flightplan {
         class FlightPlanEventHandlerInterface;
-    }  // namespace Flightplan
+    } // namespace Flightplan
     namespace Ownership {
         class AirfieldOwnershipManager;
-    }  // namespace Ownership
+    } // namespace Ownership
 
     namespace Controller {
         class ActiveCallsignCollection;
         class Login;
-    }  // namespace Controller
+    } // namespace Controller
     namespace Sid {
         class SidCollection;
         class StandardInstrumentDeparture;
     } // namespace Sid
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin
 
-namespace UKControllerPlugin {
-    namespace InitialHeading {
+namespace UKControllerPlugin::InitialHeading {
 
-        /*
-            Class that responds to events related to initial headings.
-        */
-        class InitialHeadingEventHandler : public Flightplan::FlightPlanEventHandlerInterface,
-                                           public Euroscope::UserSettingAwareInterface,
-                                           public Controller::ActiveCallsignEventHandlerInterface,
-                                           public TimedEvent::AbstractTimedEvent
-        {
-            public:
-                InitialHeadingEventHandler(
-                    const Sid::SidCollection& sids,
-                    const Controller::ActiveCallsignCollection& activeCallsigns,
-                    const Ownership::AirfieldOwnershipManager& airfieldOwnership,
-                    const Controller::Login& login,
-                    Euroscope::EuroscopePluginLoopbackInterface& plugin
-                );
-                ~InitialHeadingEventHandler() override = default;
-                void FlightPlanEvent(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
-                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget
-                ) override;
-                void FlightPlanDisconnectEvent(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan
-                ) override;
-                void ControllerFlightPlanDataEvent(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
-                    int dataType
-                ) override;
-                void RecycleInitialHeading(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
-                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-                    std::string context,
-                    const POINT & mousePos
-                );
-                bool UserAutomaticAssignmentsAllowed(void) const;
-                void UserSettingsUpdated(Euroscope::UserSetting& userSettings) override;
+    /*
+        Class that responds to events related to initial headings.
+    */
+    class InitialHeadingEventHandler : public Flightplan::FlightPlanEventHandlerInterface,
+                                       public Euroscope::UserSettingAwareInterface,
+                                       public Controller::ActiveCallsignEventHandlerInterface,
+                                       public TimedEvent::AbstractTimedEvent
+    {
+        public:
+        InitialHeadingEventHandler(
+            const Sid::SidCollection& sids,
+            const Controller::ActiveCallsignCollection& activeCallsigns,
+            const Ownership::AirfieldOwnershipManager& airfieldOwnership,
+            const Controller::Login& login,
+            Euroscope::EuroscopePluginLoopbackInterface& plugin);
+        void FlightPlanEvent(
+            Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) override;
+        void FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan) override;
+        void ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
+        void RecycleInitialHeading(
+            Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            const std::string& context,
+            const POINT& mousePos);
+        [[nodiscard]] auto UserAutomaticAssignmentsAllowed() const -> bool;
+        void UserSettingsUpdated(Euroscope::UserSetting& userSettings) override;
 
-                // Inherited via ActiveCallsignEventHandlerInterface
-                void ActiveCallsignAdded(
-                    const Controller::ActiveCallsign& callsign,
-                    bool userCallsign
-                ) override;
-                void ActiveCallsignRemoved(
-                    const Controller::ActiveCallsign& callsign,
-                    bool userCallsign
-                ) override;
-                void CallsignsFlushed(void) override;
-                void TimedEventTrigger() override;
+        // Inherited via ActiveCallsignEventHandlerInterface
+        void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign, bool userCallsign) override;
+        void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign, bool userCallsign) override;
+        void TimedEventTrigger() override;
 
-                // The maximum distance from the airfield that an aircraft can be untracked
-                // to be considered for an heading update.
-                const double assignmentMaxDistanceFromOrigin = 3.0;
+        private:
+        void CheckAllFlightplansForAssignment();
+        auto MeetsAssignmentConditions(
+            Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const -> bool;
 
-                // Then maximum speed that for assigning initial headings.
-                const int assignmentMaxSpeed = 40;
+        static auto MeetsForceAssignmentConditions(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool;
 
-                // Then current altitude assigning initial headings.
-                const int assignmentMaxAltitude = 1000;
+        auto GetSidForFlight(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+            -> std::shared_ptr<Sid::StandardInstrumentDeparture>;
 
-                // How long we should wait after logging in before assigning
-                const std::chrono::seconds minimumLoginTimeBeforeAssignment;
+        // Used to generate initial headings.
+        const Sid::SidCollection& sids;
 
-            private:
-                void CheckAllFlightplansForAssignment();
-                bool MeetsAssignmentConditions(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
-                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget
-                ) const;
+        // Used to find out the users callsign.
+        const Controller::ActiveCallsignCollection& activeCallsigns;
 
-                static bool MeetsForceAssignmentConditions(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    Euroscope::EuroScopeCRadarTargetInterface& radarTarget
-                );
+        // Used to find out if the user owns a particular airfield.
+        const Ownership::AirfieldOwnershipManager& airfieldOwnership;
 
-                std::shared_ptr<Sid::StandardInstrumentDeparture> GetSidForFlight(
-                    Euroscope::EuroScopeCFlightPlanInterface& flightplan
-                );
+        // For checking how long we've been logged in
+        const Controller::Login& login;
 
-                // Used to generate initial headings.
-                const Sid::SidCollection& sids;
+        // Class for parsing SIDs and removing deprecation warnings.
+        const Airfield::NormaliseSid normalise;
 
-                // Used to find out the users callsign.
-                const Controller::ActiveCallsignCollection& activeCallsigns;
+        // So we can get flightplans after deferred events
+        Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
-                // Used to find out if the user owns a particular airfield.
-                const Ownership::AirfieldOwnershipManager& airfieldOwnership;
+        // Has the user enabled automatic assignments
+        bool userAutomaticAssignmentsAllowed = true;
 
-                // For checking how long we've been logged in
-                const Controller::Login& login;
+        // Map of callsigns vs which SID their heading has been set for
+        std::map<std::string, std::string> alreadySetMap;
 
-                // Class for parsing SIDs and removing deprecation warnings.
-                const Airfield::NormaliseSid normalise;
+        // The maximum distance from the airfield that an aircraft can be untracked
+        // to be considered for an heading update.
+        const double assignmentMaxDistanceFromOrigin = 3.0;
 
-                // So we can get flightplans after deferred events
-                Euroscope::EuroscopePluginLoopbackInterface& plugin;
+        // Then maximum speed that for assigning initial headings.
+        const int assignmentMaxSpeed = 40;
 
-                // Has the user enabled automatic assignments
-                bool userAutomaticAssignmentsAllowed = true;
+        // Then current altitude assigning initial headings.
+        const int assignmentMaxAltitude = 1000;
 
-                // Map of callsigns vs which SID their heading has been set for
-                std::map<std::string, std::string> alreadySetMap;
-        };
-    } // namespace InitialHeading
-}  // namespace UKControllerPlugin
+        // How long we should wait after logging in before assigning
+        const std::chrono::seconds minimumLoginTimeBeforeAssignment = std::chrono::seconds(5);
+    };
+} // namespace UKControllerPlugin::InitialHeading

@@ -1,40 +1,21 @@
 #pragma once
-#include "pch/pch.h"
 
-namespace UKControllerPlugin {
-    namespace Handoff {
+namespace UKControllerPlugin::Handoff {
 
-        /*
-            Represents a handoff that has been cached.
-        */
-        struct CachedHandoff
-        {
-            public:
+    /*
+        Represents a handoff that has been cached.
+    */
+    struct CachedHandoff
+    {
+        public:
+        CachedHandoff();
+        CachedHandoff(std::string frequency, std::string callsign);
+        [[nodiscard]] auto operator==(const CachedHandoff& compare) const -> bool;
 
-                CachedHandoff()
-                    : frequency(""), callsign("")
-                {
+        // The frequency that the handoff is to
+        std::string frequency;
 
-                };
-
-
-                CachedHandoff(std::string frequency, std::string callsign)
-                    : frequency(frequency), callsign(callsign)
-                {
-
-                };
-
-                // The frequency that the handoff is to
-                std::string frequency;
-
-                // The normalised callsign of the position that the handoff is to
-                std::string callsign;
-
-                bool operator==(const CachedHandoff& compare) const
-                {
-                    return this->callsign == compare.callsign &&
-                        this->frequency == compare.frequency;
-                }
-        };
-    }  // namespace Handoff
-}  // namespace UKControllerPlugin
+        // The normalised callsign of the position that the handoff is to
+        std::string callsign;
+    };
+} // namespace UKControllerPlugin::Handoff

@@ -57,7 +57,7 @@ set(curl
     "curl/CurlResponse.cpp"
     "curl/CurlResponse.h"
     "curl/HttpException.h"
-)
+        curl/CurlInterface.cpp)
 source_group("curl" FILES ${curl})
 
 set(data
@@ -74,7 +74,7 @@ set(dialog
     "dialog/DialogManager.cpp"
     "dialog/DialogManager.h"
     "dialog/DialogProviderInterface.h"
-)
+        dialog/DialogData.cpp)
 source_group("dialog" FILES ${dialog})
 
 set(duplicate
@@ -116,7 +116,7 @@ set(squawk
     "squawk/ApiSquawkAllocation.h"
     "squawk/SquawkValidator.cpp"
     "squawk/SquawkValidator.h"
-)
+        squawk/ApiSquawkAllocation.cpp)
 source_group("squawk" FILES ${squawk})
 
 set(srd
@@ -141,7 +141,7 @@ set(windows
     "windows/WinApiBootstrap.cpp"
     "windows/WinApiBootstrap.h"
     "windows/WinApiInterface.h"
-)
+        windows/WinApiInterface.cpp)
 source_group("windows" FILES ${windows})
 
 set(ALL_FILES
@@ -227,7 +227,8 @@ if(MSVC)
         /permissive-;
         /std:c++17;
         /sdl;
-        /W3;
+        /W4;
+        /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )

@@ -1,5 +1,3 @@
-#pragma once
-#include "pch/pch.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 
 using UKControllerPlugin::Euroscope::RunwayDialogAwareInterface;
@@ -21,13 +19,11 @@ namespace UKControllerPlugin {
 
         void RunwayDialogAwareCollection::RunwayDialogSaved(void) const
         {
-            for (
-                std::set<std::shared_ptr<RunwayDialogAwareInterface>>::const_iterator it = this->handlers.cbegin();
-                it != this->handlers.cend();
-                ++it
-            ) {
+            for (std::set<std::shared_ptr<RunwayDialogAwareInterface>>::const_iterator it = this->handlers.cbegin();
+                 it != this->handlers.cend();
+                 ++it) {
                 (*it)->RunwayDialogSaved();
             }
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

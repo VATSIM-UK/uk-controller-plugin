@@ -10,3 +10,7 @@
 #include "gmock/gmock.h"
 #include "../../src/updater/pch/pch.h"
 #pragma warning( pop )
+
+#include "../../testingutils/mock/MockApiInterface.h"
+#include "../../testingutils/mock/MockCurlApi.h"
+#include "../../testingutils/mock/MockWinApi.h"

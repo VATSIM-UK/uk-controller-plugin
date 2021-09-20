@@ -1,7 +1,6 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "command/CommandHandlerCollection.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "mock/MockDependencyLoader.h"
 #include "ownership/AirfieldOwnershipManager.h"
 #include "ownership/AirfieldOwnershipModule.h"
 

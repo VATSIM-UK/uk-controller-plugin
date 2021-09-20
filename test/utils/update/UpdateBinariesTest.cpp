@@ -1,28 +1,24 @@
-#include "pch/pch.h"
 #include "api/ApiException.h"
 #include "update/UpdateBinaries.h"
-#include "mock/MockWinApi.h"
-#include "mock/MockApiInterface.h"
-#include "mock/MockCurlApi.h"
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
 
-using testing::Test;
 using testing::NiceMock;
-using UKControllerPluginTest::Windows::MockWinApi;
-using UKControllerPluginTest::Api::MockApiInterface;
-using UKControllerPluginTest::Curl::MockCurlApi;
+using testing::Test;
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;
+using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::Curl::MockCurlApi;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginUtilsTest {
     namespace Update {
         class UpdateBinariesTest : public Test
         {
             public:
-                NiceMock<MockWinApi> mockWindows;
-                NiceMock<MockApiInterface> mockApi;
-                NiceMock<MockCurlApi> mockCurl;
+            NiceMock<MockWinApi> mockWindows;
+            NiceMock<MockApiInterface> mockApi;
+            NiceMock<MockCurlApi> mockCurl;
         };
 
         TEST_F(UpdateBinariesTest, UpdateDataIsValidIfAllPresent)
@@ -138,8 +134,7 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails())
-                .WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
             EXPECT_EQ(updateData, UKControllerPlugin::GetUpdateData(this->mockApi));
         }
@@ -153,8 +148,7 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails())
-                .WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
             EXPECT_THROW(UKControllerPlugin::GetUpdateData(this->mockApi), std::exception);
         }
@@ -183,26 +177,18 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails())
-                .WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
-            CurlRequest expectedRequest(
-                "bar",
-                CurlRequest::METHOD_GET
-            );
+            CurlRequest expectedRequest("bar", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
 
             CurlResponse response("3.0.1.core", false, 200);
 
-            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest))
-                .Times(1)
-                .WillOnce(testing::Return(response));
-
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
-            )
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true))
                 .Times(1);
 
             EXPECT_TRUE(UKControllerPlugin::DownloadCoreLibrary(updateData, this->mockWindows, this->mockCurl));
@@ -217,26 +203,18 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails())
-                .WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
-            CurlRequest expectedRequest(
-                "bar",
-                CurlRequest::METHOD_GET
-            );
+            CurlRequest expectedRequest("bar", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
 
             CurlResponse response("3.0.1.core", true, 200);
 
-            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest))
-                .Times(1)
-                .WillOnce(testing::Return(response));
-
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
-            )
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true))
                 .Times(0);
 
             EXPECT_FALSE(UKControllerPlugin::DownloadCoreLibrary(updateData, this->mockWindows, this->mockCurl));
@@ -251,26 +229,18 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails())
-                .WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
-            CurlRequest expectedRequest(
-                "bar",
-                CurlRequest::METHOD_GET
-            );
+            CurlRequest expectedRequest("bar", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
 
             CurlResponse response("3.0.1.core", false, 500);
 
-            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest))
-                .Times(1)
-                .WillOnce(testing::Return(response));
-
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true)
-            )
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true))
                 .Times(0);
 
             EXPECT_FALSE(UKControllerPlugin::DownloadCoreLibrary(updateData, this->mockWindows, this->mockCurl));
@@ -285,26 +255,18 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails())
-                .WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
-            CurlRequest expectedRequest(
-                "foo",
-                CurlRequest::METHOD_GET
-            );
+            CurlRequest expectedRequest("foo", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
 
             CurlResponse response("3.0.1.updater", false, 200);
 
-            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest))
-                .Times(1)
-                .WillOnce(testing::Return(response));
-
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true)
-            )
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true))
                 .Times(1);
 
             EXPECT_TRUE(UKControllerPlugin::DownloadUpdater(updateData, this->mockWindows, this->mockCurl));
@@ -319,26 +281,18 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails())
-                .WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
-            CurlRequest expectedRequest(
-                "foo",
-                CurlRequest::METHOD_GET
-            );
+            CurlRequest expectedRequest("foo", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
 
             CurlResponse response("3.0.1.updater", true, 200);
 
-            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest))
-                .Times(1)
-                .WillOnce(testing::Return(response));
-
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true, true)
-            )
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true, true))
                 .Times(0);
 
             EXPECT_FALSE(UKControllerPlugin::DownloadUpdater(updateData, this->mockWindows, this->mockCurl));
@@ -353,26 +307,18 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails())
-                .WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
-            CurlRequest expectedRequest(
-                "foo",
-                CurlRequest::METHOD_GET
-            );
+            CurlRequest expectedRequest("foo", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
 
             CurlResponse response("3.0.1.updater", false, 500);
 
-            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest))
-                .Times(1)
-                .WillOnce(testing::Return(response));
-
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
 
             EXPECT_CALL(
                 this->mockWindows,
-                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true, true)
-            )
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true, true))
                 .Times(0);
 
             EXPECT_FALSE(UKControllerPlugin::DownloadUpdater(updateData, this->mockWindows, this->mockCurl));

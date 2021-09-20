@@ -1,24 +1,30 @@
 #pragma once
-#include "airfield/AirfieldModel.h"
 
-namespace UKControllerPlugin {
-    namespace Airfield {
+namespace UKControllerPlugin::Airfield {
 
-        /*
-            A class representing a collection of airfields. Allows airfields to be
-            retrieved by their ICAO code.
-        */
-        class AirfieldCollection
-        {
-            public:
-                void AddAirfield(std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel> airfield);
-                const AirfieldModel & FetchAirfieldByIcao(std::string icao) const;
-                size_t GetSize(void) const;
-            private:
-                bool IsHomeAirfield(std::string icao) const;
+    class AirfieldModel;
 
-                // A map of ICAO code to airfield.
-                std::map<std::string, std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel>> airfieldMap;
-        };
-    }  // namespace Airfield
-}  // namespace UKControllerPlugin
+    /*
+        A class representing a collection of airfields. Allows airfields to be
+        retrieved by their ICAO code.
+    */
+    class AirfieldCollection
+    {
+        public:
+        AirfieldCollection();
+        ~AirfieldCollection();
+        AirfieldCollection(const AirfieldCollection& copyFrom) = delete;
+        AirfieldCollection(AirfieldCollection&&) noexcept;
+        auto operator=(const AirfieldCollection&) -> AirfieldCollection& = delete;
+        auto operator=(AirfieldCollection&&) noexcept -> AirfieldCollection&;
+        void AddAirfield(std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel> airfield);
+        [[nodiscard]] auto FetchAirfieldByIcao(const std::string& icao) const -> const AirfieldModel&;
+        [[nodiscard]] auto GetSize() const -> size_t;
+
+        private:
+        static auto IsHomeAirfield(const std::string& icao) -> bool;
+
+        // A map of ICAO code to airfield.
+        std::map<std::string, std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel>> airfieldMap;
+    };
+} // namespace UKControllerPlugin::Airfield

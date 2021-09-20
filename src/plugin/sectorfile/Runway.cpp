@@ -1,6 +1,4 @@
-#pragma once
-#include "pch/pch.h"
-#include "sectorfile/Runway.h"
+#include "Runway.h"
 
 namespace UKControllerPlugin {
     namespace SectorFile {
@@ -10,12 +8,10 @@ namespace UKControllerPlugin {
             std::string identifier,
             unsigned int heading,
             bool activeForDepartures,
-            bool activeForArrivals
-        )
-            : airfield(airfield), identifier(identifier), heading(heading),
-            activeForDepartures(activeForDepartures), activeForArrivals(activeForArrivals)
+            bool activeForArrivals)
+            : airfield(airfield), identifier(identifier), heading(heading), activeForDepartures(activeForDepartures),
+              activeForArrivals(activeForArrivals)
         {
-
         }
 
         /*
@@ -46,10 +42,10 @@ namespace UKControllerPlugin {
             this->activeForArrivals = active;
         }
 
-        bool Runway::operator==(const UKControllerPlugin::SectorFile::Runway & compare) const
+        bool Runway::operator==(const UKControllerPlugin::SectorFile::Runway& compare) const
         {
             return this->airfield + "." + this->identifier == compare.airfield + "." + compare.identifier;
             return false;
         }
-    }  // namespace SectorFile
-}  // namespace UKControllerPlugin
+    } // namespace SectorFile
+} // namespace UKControllerPlugin

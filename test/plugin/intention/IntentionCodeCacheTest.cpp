@@ -1,13 +1,11 @@
-#include "pch/pch.h"
 #include "intention/IntentionCodeCache.h"
 #include "intention/IntentionCodeData.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
 
+using ::testing::Return;
+using ::testing::StrictMock;
 using UKControllerPlugin::IntentionCode::IntentionCodeCache;
 using UKControllerPlugin::IntentionCode::IntentionCodeData;
 using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
-using ::testing::StrictMock;
-using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
@@ -96,14 +94,9 @@ namespace UKControllerPluginTest {
         {
             IntentionCodeCache cache;
             StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-            EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex())
-                .Times(1)
-                .WillOnce(Return(7));
+            EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex()).Times(1).WillOnce(Return(7));
 
-            EXPECT_CALL(mockFlightplan, GetPointsCalculatedIndex())
-                .Times(1)
-                .WillOnce(Return(4));
-
+            EXPECT_CALL(mockFlightplan, GetPointsCalculatedIndex()).Times(1).WillOnce(Return(4));
 
             cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5, ""));
             EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
@@ -113,14 +106,9 @@ namespace UKControllerPluginTest {
         {
             IntentionCodeCache cache;
             StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-            EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex())
-                .Times(1)
-                .WillOnce(Return(7));
+            EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex()).Times(1).WillOnce(Return(7));
 
-            EXPECT_CALL(mockFlightplan, GetPointsCalculatedIndex())
-                .Times(1)
-                .WillOnce(Return(5));
-
+            EXPECT_CALL(mockFlightplan, GetPointsCalculatedIndex()).Times(1).WillOnce(Return(5));
 
             cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5, ""));
             EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
@@ -130,14 +118,11 @@ namespace UKControllerPluginTest {
         {
             IntentionCodeCache cache;
             StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-            EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex())
-                .Times(1)
-                .WillOnce(Return(mockFlightplan.noDirect));
+            EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex()).Times(1).WillOnce(Return(mockFlightplan.noDirect));
 
             EXPECT_CALL(mockFlightplan, GetPointDistanceInMinutes(5))
                 .Times(1)
                 .WillOnce(Return(mockFlightplan.pointPassed));
-
 
             cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5, ""));
             EXPECT_FALSE(cache.IntentionCodeValid("BAW123", mockFlightplan));
@@ -147,14 +132,9 @@ namespace UKControllerPluginTest {
         {
             IntentionCodeCache cache;
             StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-            EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex())
-                .Times(1)
-                .WillOnce(Return(mockFlightplan.noDirect));
+            EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex()).Times(1).WillOnce(Return(mockFlightplan.noDirect));
 
-            EXPECT_CALL(mockFlightplan, GetPointDistanceInMinutes(5))
-                .Times(1)
-                .WillOnce(Return(999));
-
+            EXPECT_CALL(mockFlightplan, GetPointDistanceInMinutes(5)).Times(1).WillOnce(Return(999));
 
             cache.RegisterAircraft("BAW123", IntentionCodeData("--", true, 5, ""));
             EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
@@ -170,5 +150,5 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(cache.HasIntentionCodeForAircraft("BAW456"));
             EXPECT_EQ(0, cache.TotalCached());
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest

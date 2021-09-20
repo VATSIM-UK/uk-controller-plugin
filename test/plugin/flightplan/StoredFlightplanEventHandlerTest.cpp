@@ -1,18 +1,15 @@
-#include "pch/pch.h"
-#include "flightplan/StoredFlightplanEventHandler.h"
-#include "mock/MockEuroScopeCFlightplanInterface.h"
-#include "mock/MockEuroScopeCRadarTargetInterface.h"
-#include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/StoredFlightplan.h"
+#include "flightplan/StoredFlightplanCollection.h"
+#include "flightplan/StoredFlightplanEventHandler.h"
 
+using ::testing::NiceMock;
+using ::testing::Return;
+using ::testing::Test;
+using UKControllerPlugin::Flightplan::StoredFlightplan;
+using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Flightplan::StoredFlightplanEventHandler;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
-using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
-using UKControllerPlugin::Flightplan::StoredFlightplan;
-using ::testing::Test;
-using ::testing::NiceMock;
-using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace Flightplan {
@@ -20,21 +17,18 @@ namespace UKControllerPluginTest {
         class StoredFlightplanEventHandlerTest : public Test
         {
             public:
-                StoredFlightplanCollection collection;
+            StoredFlightplanCollection collection;
         };
 
         TEST_F(StoredFlightplanEventHandlerTest, FlightPlanEventAddsFlightplanIfNotRegistered)
         {
             NiceMock<MockEuroScopeCFlightPlanInterface> flightplanMock;
 
-            ON_CALL(flightplanMock, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(flightplanMock, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(flightplanMock, GetOrigin())
-                .WillByDefault(Return("EGKK"));
+            ON_CALL(flightplanMock, GetOrigin()).WillByDefault(Return("EGKK"));
 
-            ON_CALL(flightplanMock, GetOrigin())
-                .WillByDefault(Return("EGCC"));
+            ON_CALL(flightplanMock, GetOrigin()).WillByDefault(Return("EGCC"));
 
             NiceMock<MockEuroScopeCRadarTargetInterface> radarTargetMock;
 
@@ -48,14 +42,11 @@ namespace UKControllerPluginTest {
         {
             NiceMock<MockEuroScopeCFlightPlanInterface> flightplanMock;
 
-            ON_CALL(flightplanMock, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(flightplanMock, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(flightplanMock, GetOrigin())
-                .WillByDefault(Return("EGKK"));
+            ON_CALL(flightplanMock, GetOrigin()).WillByDefault(Return("EGKK"));
 
-            ON_CALL(flightplanMock, GetOrigin())
-                .WillByDefault(Return("EGCC"));
+            ON_CALL(flightplanMock, GetOrigin()).WillByDefault(Return("EGCC"));
 
             NiceMock<MockEuroScopeCRadarTargetInterface> radarTargetMock;
 
@@ -71,25 +62,19 @@ namespace UKControllerPluginTest {
         {
             NiceMock<MockEuroScopeCFlightPlanInterface> flightplanMock1;
 
-            ON_CALL(flightplanMock1, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(flightplanMock1, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(flightplanMock1, GetOrigin())
-                .WillByDefault(Return("EGKK"));
+            ON_CALL(flightplanMock1, GetOrigin()).WillByDefault(Return("EGKK"));
 
-            ON_CALL(flightplanMock1, GetDestination())
-                .WillByDefault(Return("EGCC"));
+            ON_CALL(flightplanMock1, GetDestination()).WillByDefault(Return("EGCC"));
 
             NiceMock<MockEuroScopeCFlightPlanInterface> flightplanMock2;
 
-            ON_CALL(flightplanMock2, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(flightplanMock2, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(flightplanMock2, GetOrigin())
-                .WillByDefault(Return("EGKK"));
+            ON_CALL(flightplanMock2, GetOrigin()).WillByDefault(Return("EGKK"));
 
-            ON_CALL(flightplanMock2, GetDestination())
-                .WillByDefault(Return("EGGP"));
+            ON_CALL(flightplanMock2, GetDestination()).WillByDefault(Return("EGGP"));
 
             NiceMock<MockEuroScopeCRadarTargetInterface> radarTargetMock;
 
@@ -106,9 +91,7 @@ namespace UKControllerPluginTest {
             StoredFlightplanEventHandler handler(collection);
             NiceMock<MockEuroScopeCFlightPlanInterface> flightplanMock1;
 
-            EXPECT_CALL(flightplanMock1, GetCallsign())
-                .Times(1)
-                .WillOnce(Return("BAW123"));
+            EXPECT_CALL(flightplanMock1, GetCallsign()).Times(1).WillOnce(Return("BAW123"));
 
             handler.FlightPlanDisconnectEvent(flightplanMock1);
         }
@@ -117,14 +100,11 @@ namespace UKControllerPluginTest {
         {
             NiceMock<MockEuroScopeCFlightPlanInterface> flightplanMock;
 
-            ON_CALL(flightplanMock, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(flightplanMock, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(flightplanMock, GetOrigin())
-                .WillByDefault(Return("EGKK"));
+            ON_CALL(flightplanMock, GetOrigin()).WillByDefault(Return("EGKK"));
 
-            ON_CALL(flightplanMock, GetOrigin())
-                .WillByDefault(Return("EGCC"));
+            ON_CALL(flightplanMock, GetOrigin()).WillByDefault(Return("EGCC"));
 
             NiceMock<MockEuroScopeCRadarTargetInterface> radarTargetMock;
 
@@ -133,21 +113,18 @@ namespace UKControllerPluginTest {
             handler.FlightPlanDisconnectEvent(flightplanMock);
 
             UKControllerPlugin::Flightplan::StoredFlightplan plan = collection.GetFlightplanForCallsign("BAW123");
-            EXPECT_TRUE(plan.GetTimeout() != plan.defaultTime);
+            EXPECT_TRUE(plan.GetTimeout() != 0);
         }
 
         TEST_F(StoredFlightplanEventHandlerTest, FlightPlanEventResetsTimeout)
         {
             NiceMock<MockEuroScopeCFlightPlanInterface> flightplanMock;
 
-            ON_CALL(flightplanMock, GetCallsign())
-                .WillByDefault(Return("BAW123"));
+            ON_CALL(flightplanMock, GetCallsign()).WillByDefault(Return("BAW123"));
 
-            ON_CALL(flightplanMock, GetOrigin())
-                .WillByDefault(Return("EGKK"));
+            ON_CALL(flightplanMock, GetOrigin()).WillByDefault(Return("EGKK"));
 
-            ON_CALL(flightplanMock, GetOrigin())
-                .WillByDefault(Return("EGCC"));
+            ON_CALL(flightplanMock, GetOrigin()).WillByDefault(Return("EGCC"));
 
             NiceMock<MockEuroScopeCRadarTargetInterface> radarTargetMock;
 
@@ -157,7 +134,7 @@ namespace UKControllerPluginTest {
             handler.FlightPlanEvent(flightplanMock, radarTargetMock);
 
             UKControllerPlugin::Flightplan::StoredFlightplan plan = collection.GetFlightplanForCallsign("BAW123");
-            EXPECT_TRUE(plan.GetTimeout() == plan.defaultTime);
+            EXPECT_TRUE(plan.GetTimeout() == 0);
         }
 
         TEST_F(StoredFlightplanEventHandlerTest, TimedEventTriggerRemovesTimedOutFlightplans)
@@ -173,5 +150,5 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(collection.HasFlightplanForCallsign("BAW456"));
             EXPECT_FALSE(collection.HasFlightplanForCallsign("BAW123"));
         }
-    }  // namespace Flightplan
-}  // namespace UKControllerPluginTest
+    } // namespace Flightplan
+} // namespace UKControllerPluginTest

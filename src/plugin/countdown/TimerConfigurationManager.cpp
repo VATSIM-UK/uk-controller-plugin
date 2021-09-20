@@ -1,21 +1,17 @@
-#include "pch/pch.h"
-#include "countdown/TimerConfigurationManager.h"
-#include "countdown/GlobalCountdownSettingFunctions.h"
+#include "GlobalCountdownSettingFunctions.h"
+#include "TimerConfigurationManager.h"
 
-using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 
 namespace UKControllerPlugin {
     namespace Countdown {
 
         TimerConfigurationManager::TimerConfigurationManager(
-            const DialogManager & dialogManager,
-            const unsigned int menuCallbackFunctionId
-        )
-            : dialogManager(dialogManager), menuCallbackFunctionId(menuCallbackFunctionId)
+            const DialogManager& dialogManager, const unsigned int menuCallbackFunctionId)
+            : menuCallbackFunctionId(menuCallbackFunctionId), dialogManager(dialogManager)
         {
-
         }
 
         /*
@@ -31,14 +27,10 @@ namespace UKControllerPlugin {
         /*
             Returns the number of enabled timers
         */
-        size_t TimerConfigurationManager::CountEnabledTimers(void) const
+        auto TimerConfigurationManager::CountEnabledTimers() const -> size_t
         {
             size_t numberEnabled = 0;
-            for (
-                std::set<TimerConfiguration>::const_iterator it = this->timers.cbegin();
-                it != this->timers.cend();
-                ++it
-            ) {
+            for (auto it = this->timers.cbegin(); it != this->timers.cend(); ++it) {
                 if (it->timerEnabled) {
                     numberEnabled++;
                 }
@@ -50,7 +42,7 @@ namespace UKControllerPlugin {
         /*
             Returns number of timers
         */
-        size_t TimerConfigurationManager::CountTimers(void) const
+        auto TimerConfigurationManager::CountTimers() const -> size_t
         {
             return this->timers.size();
         }
@@ -58,7 +50,7 @@ namespace UKControllerPlugin {
         /*
             Returns whether the config has been updated since the given time
         */
-        unsigned int TimerConfigurationManager::GetConfigVersion(void) const
+        auto TimerConfigurationManager::GetConfigVersion() const -> unsigned int
         {
             return this->configVersion;
         }
@@ -66,15 +58,12 @@ namespace UKControllerPlugin {
         /*
             Returns the given timer
         */
-        TimerConfiguration TimerConfigurationManager::GetTimer(int timerId) const
+        auto TimerConfigurationManager::GetTimer(unsigned int timerId) const -> TimerConfiguration
         {
             auto timer = std::find_if(
-                this->timers.cbegin(),
-                this->timers.cend(),
-                [timerId](const TimerConfiguration & storedTimer) -> bool {
+                this->timers.cbegin(), this->timers.cend(), [timerId](const TimerConfiguration& storedTimer) -> bool {
                     return timerId == storedTimer.timerId;
-                }
-            );
+                });
 
             return timer != this->timers.cend() ? *timer : this->invalidTimer;
         }
@@ -90,7 +79,7 @@ namespace UKControllerPlugin {
         /*
             Return the menu item we want to display
         */
-        PopupMenuItem TimerConfigurationManager::GetConfigurationMenuItem(void) const
+        auto TimerConfigurationManager::GetConfigurationMenuItem() const -> PopupMenuItem
         {
             PopupMenuItem returnVal;
             returnVal.firstValue = this->menuItemDescription;
@@ -105,17 +94,13 @@ namespace UKControllerPlugin {
         /*
             Update each of the timers based on the user settings
         */
-        void TimerConfigurationManager::UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings)
+        void TimerConfigurationManager::UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting& userSettings)
         {
-            for (
-                std::set<TimerConfiguration>::iterator it = this->timers.begin();
-                it != this->timers.end();
-            ) {
+            for (auto it = this->timers.begin(); it != this->timers.end();) {
                 TimerConfiguration config = {
                     it->timerId,
                     userSettings.GetBooleanEntry(GetTimerEnabledKey(*it), false),
-                    userSettings.GetUnsignedIntegerEntry(GetTimerDurationKey(*it), 60)
-                };
+                    userSettings.GetUnsignedIntegerEntry(GetTimerDurationKey(*it), 60)};
 
                 it = this->timers.erase(it);
                 this->timers.insert(config);
@@ -123,5 +108,5 @@ namespace UKControllerPlugin {
 
             this->configVersion++;
         }
-    }  // namespace Countdown
-}  // namespace UKControllerPlugin
+    } // namespace Countdown
+} // namespace UKControllerPlugin

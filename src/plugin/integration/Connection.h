@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 
 namespace UKControllerPlugin::Integration {
 
@@ -12,21 +11,21 @@ namespace UKControllerPlugin::Integration {
     class Connection
     {
         public:
-            virtual ~Connection() = default;
+        virtual ~Connection() = default;
 
-            /*
-             * Send a single message over the connection.
-             */
-            virtual void Send(std::string message) = 0;
+        /*
+         * Send a single message over the connection.
+         */
+        virtual void Send(std::string message) = 0;
 
-            /*
-             * Receive a sequence of queued messages.
-             */
-            virtual std::queue<std::string> Receive() = 0;
+        /*
+         * Receive a sequence of queued messages.
+         */
+        [[nodiscard]] virtual auto Receive() -> std::queue<std::string> = 0;
 
-            /*
-             * Is the connection still active
-             */
-            virtual bool Active() const = 0;
+        /*
+         * Is the connection still active
+         */
+        [[nodiscard]] virtual auto Active() const -> bool = 0;
     };
 } // namespace UKControllerPlugin::Integration

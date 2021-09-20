@@ -7,12 +7,12 @@ namespace UKControllerPluginTest {
         class MockEuroScopeCRadarTargetInterface : public UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface
         {
             public:
-                MOCK_CONST_METHOD0(GetCallsign, const std::string(void));
-                MOCK_CONST_METHOD0(GetFlightLevel, int(void));
-                MOCK_CONST_METHOD0(GetGroundSpeed, const int(void));
-                MOCK_CONST_METHOD0(GetPosition, const EuroScopePlugIn::CPosition(void));
-                MOCK_CONST_METHOD0(GetVerticalSpeed, int(void));
-                MOCK_METHOD(double, GetHeading, (), (const, override));
+            MOCK_CONST_METHOD0(GetCallsign, const std::string(void));
+            MOCK_CONST_METHOD0(GetFlightLevel, int(void));
+            MOCK_CONST_METHOD0(GetGroundSpeed, int(void));
+            MOCK_CONST_METHOD0(GetPosition, const EuroScopePlugIn::CPosition(void));
+            MOCK_CONST_METHOD0(GetVerticalSpeed, int(void));
+            MOCK_METHOD(double, GetHeading, (), (const, override));
         };
-    }  // namespace Euroscope
-}  // namespace UKControllerPluginTest
+    } // namespace Euroscope
+} // namespace UKControllerPluginTest

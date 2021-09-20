@@ -1,6 +1,4 @@
-#include "pch/pch.h"
-
-#include "minstack/MinStackRendererConfiguration.h"
+#include "MinStackRendererConfiguration.h"
 
 namespace UKControllerPlugin::MinStack {
 
@@ -31,7 +29,7 @@ namespace UKControllerPlugin::MinStack {
         this->items.erase(item);
     }
 
-    void MinStackRendererConfiguration::RemoveItem(unsigned int index)
+    void MinStackRendererConfiguration::RemoveItem(int index)
     {
         auto item =
             std::find_if(this->items.begin(), this->items.end(), [index](const MinStackRenderedItem& item) -> bool {

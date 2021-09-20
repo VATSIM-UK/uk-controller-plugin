@@ -1,19 +1,16 @@
-#include "pch/pch.h"
 #include "hold/MinStackHoldLevelRestriction.h"
 #include "minstack/MinStackManager.h"
 #include "sectorfile/RunwayCollection.h"
-#include "mock/MockSectorFileProviderInterface.h"
-#include "mock/MockEuroscopeSectorFileElementInterface.h"
 
+using ::testing::NiceMock;
+using ::testing::Return;
+using ::testing::Test;
+using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
 using UKControllerPlugin::Hold::MinStackHoldLevelRestriction;
 using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::SectorFile::RunwayCollection;
-using UKControllerPluginTest::SectorFile::MockSectorFileProviderInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopeSectorFileElementInterface;
-using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
-using ::testing::Test;
-using ::testing::NiceMock;
-using ::testing::Return;
+using UKControllerPluginTest::SectorFile::MockSectorFileProviderInterface;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -21,55 +18,44 @@ namespace UKControllerPluginTest {
         class MinStackHoldLevelRestrictionTest : public Test
         {
             public:
-                MinStackHoldLevelRestrictionTest()
-                    : runways(sectorFileProvider), restriction("EGLL", 2000, 8000, manager, runways, "")
-                {
-                    manager.AddMsl("airfield.EGLL", "airfield", "Heathrow", 7000);
+            MinStackHoldLevelRestrictionTest()
+                : runways(sectorFileProvider), restriction("EGLL", 2000, 8000, manager, runways, "")
+            {
+                manager.AddMsl("airfield.EGLL", "airfield", "Heathrow", 7000);
 
+                // Setup the first element
+                element1.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);
+                ON_CALL(*element1, Airport()).WillByDefault(Return("EGLL - London Heathrow"));
 
-                    // Setup the first element
-                    element1.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);
-                    ON_CALL(*element1, Airport())
-                        .WillByDefault(Return("EGLL - London Heathrow"));
+                ON_CALL(*element1, Name()).WillByDefault(Return("EGLL - London Heathrow 09R - 27L"));
 
-                    ON_CALL(*element1, Name())
-                        .WillByDefault(Return("EGLL - London Heathrow 09R - 27L"));
+                ON_CALL(*element1, Runway1ActiveForDepartures()).WillByDefault(Return(false));
 
-                    ON_CALL(*element1, Runway1ActiveForDepartures())
-                        .WillByDefault(Return(false));
+                ON_CALL(*element1, Runway1ActiveForArrivals()).WillByDefault(Return(false));
 
-                    ON_CALL(*element1, Runway1ActiveForArrivals())
-                        .WillByDefault(Return(false));
+                ON_CALL(*element1, Runway2ActiveForDepartures()).WillByDefault(Return(true));
 
-                    ON_CALL(*element1, Runway2ActiveForDepartures())
-                        .WillByDefault(Return(true));
+                ON_CALL(*element1, Runway2ActiveForArrivals()).WillByDefault(Return(true));
 
-                    ON_CALL(*element1, Runway2ActiveForArrivals())
-                        .WillByDefault(Return(true));
+                ON_CALL(*element1, Runway1Heading()).WillByDefault(Return(89));
 
-                    ON_CALL(*element1, Runway1Heading())
-                        .WillByDefault(Return(89));
+                ON_CALL(*element1, Runway2Heading()).WillByDefault(Return(271));
 
-                    ON_CALL(*element1, Runway2Heading())
-                        .WillByDefault(Return(271));
+                ON_CALL(*element1, Runway1Identifier()).WillByDefault(Return("09R"));
 
-                    ON_CALL(*element1, Runway1Identifier())
-                        .WillByDefault(Return("09R"));
+                ON_CALL(*element1, Runway2Identifier()).WillByDefault(Return("27L"));
 
-                    ON_CALL(*element1, Runway2Identifier())
-                        .WillByDefault(Return("27L"));
+                std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> elements = {element1};
 
-                    std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> elements = {element1};
+                ON_CALL(sectorFileProvider, GetAllElementsByType(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY))
+                    .WillByDefault(Return(elements));
+            }
 
-                    ON_CALL(sectorFileProvider, GetAllElementsByType(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY))
-                        .WillByDefault(Return(elements));
-                }
-
-                std::shared_ptr<NiceMock<MockEuroscopeSectorFileElementInterface>> element1;
-                NiceMock<MockSectorFileProviderInterface> sectorFileProvider;
-                RunwayCollection runways;
-                MinStackManager manager;
-                MinStackHoldLevelRestriction restriction;
+            std::shared_ptr<NiceMock<MockEuroscopeSectorFileElementInterface>> element1;
+            NiceMock<MockSectorFileProviderInterface> sectorFileProvider;
+            RunwayCollection runways;
+            MinStackManager manager;
+            MinStackHoldLevelRestriction restriction;
         };
 
         TEST_F(MinStackHoldLevelRestrictionTest, IsLevelRestrictedReturnsTrueIfLevelBelowMinimum)
@@ -110,5 +96,5 @@ namespace UKControllerPluginTest {
             MinStackHoldLevelRestriction restriction2("EGLL", 1000, 7000, manager, runways, "27L");
             EXPECT_FALSE(restriction2.LevelRestricted(7000));
         }
-    }  // namespace Hold
-}  // namespace UKControllerPluginTest
+    } // namespace Hold
+} // namespace UKControllerPluginTest

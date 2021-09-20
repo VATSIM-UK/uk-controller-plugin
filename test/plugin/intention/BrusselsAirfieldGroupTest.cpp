@@ -1,11 +1,9 @@
-#include "pch/pch.h"
 #include "intention/BrusselsAirfieldGroup.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
 
+using ::testing::Return;
+using ::testing::StrictMock;
 using UKControllerPlugin::IntentionCode::BrusselsAirfieldGroup;
 using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
-using ::testing::StrictMock;
-using ::testing::Return;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
@@ -79,21 +77,13 @@ namespace UKControllerPluginTest {
             BrusselsAirfieldGroup airfieldGroup;
             StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
 
-            EXPECT_CALL(wrapperMock, GetPointsNumber())
-                .Times(4)
-                .WillRepeatedly(Return(3));
+            EXPECT_CALL(wrapperMock, GetPointsNumber()).Times(4).WillRepeatedly(Return(3));
 
-            EXPECT_CALL(wrapperMock, GetPointName(0))
-                .Times(1)
-                .WillOnce(Return("EGKK"));
+            EXPECT_CALL(wrapperMock, GetPointName(0)).Times(1).WillOnce(Return("EGKK"));
 
-            EXPECT_CALL(wrapperMock, GetPointName(1))
-                .Times(1)
-                .WillOnce(Return("REDFA"));
+            EXPECT_CALL(wrapperMock, GetPointName(1)).Times(1).WillOnce(Return("REDFA"));
 
-            EXPECT_CALL(wrapperMock, GetPointName(2))
-                .Times(1)
-                .WillOnce(Return("EBBR"));
+            EXPECT_CALL(wrapperMock, GetPointName(2)).Times(1).WillOnce(Return("EBBR"));
 
             EXPECT_FALSE(airfieldGroup.HasAirfield("EBBR", wrapperMock));
         }
@@ -103,17 +93,11 @@ namespace UKControllerPluginTest {
             BrusselsAirfieldGroup airfieldGroup;
             StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
 
-            EXPECT_CALL(wrapperMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(3));
+            EXPECT_CALL(wrapperMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(3));
 
-            EXPECT_CALL(wrapperMock, GetPointName(0))
-                .Times(1)
-                .WillOnce(Return("EGKK"));
+            EXPECT_CALL(wrapperMock, GetPointName(0)).Times(1).WillOnce(Return("EGKK"));
 
-            EXPECT_CALL(wrapperMock, GetPointName(1))
-                .Times(1)
-                .WillOnce(Return("KOK"));
+            EXPECT_CALL(wrapperMock, GetPointName(1)).Times(1).WillOnce(Return("KOK"));
 
             EXPECT_TRUE(airfieldGroup.HasAirfield("EBBR", wrapperMock));
         }
@@ -123,17 +107,11 @@ namespace UKControllerPluginTest {
             BrusselsAirfieldGroup airfieldGroup;
             StrictMock<MockEuroscopeExtractedRouteInterface> wrapperMock;
 
-            EXPECT_CALL(wrapperMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(3));
+            EXPECT_CALL(wrapperMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(3));
 
-            EXPECT_CALL(wrapperMock, GetPointName(0))
-                .Times(1)
-                .WillOnce(Return("EGKK"));
+            EXPECT_CALL(wrapperMock, GetPointName(0)).Times(1).WillOnce(Return("EGKK"));
 
-            EXPECT_CALL(wrapperMock, GetPointName(1))
-                .Times(1)
-                .WillOnce(Return("KOK"));
+            EXPECT_CALL(wrapperMock, GetPointName(1)).Times(1).WillOnce(Return("KOK"));
 
             EXPECT_TRUE(airfieldGroup.HasAirfield("EBOS", wrapperMock));
         }
@@ -201,5 +179,5 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ("EX", airfieldGroup.GetIntentionCodeForGroup("EBOS", wrapperMock));
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest

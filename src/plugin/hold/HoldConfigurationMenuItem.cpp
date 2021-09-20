@@ -1,30 +1,26 @@
-#include "pch/pch.h"
-#include "hold/HoldConfigurationMenuItem.h"
-#include "hold/HoldSelectionMenu.h"
-#include "hold/HoldRenderer.h"
+#include "HoldConfigurationMenuItem.h"
+#include "HoldRenderer.h"
+#include "HoldSelectionMenu.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
-#include "dialog/DialogManager.h"
-#include "hold/HoldDisplayManager.h"
 
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Hold::HoldRenderer;
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Dialog::DialogManager;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
         HoldConfigurationMenuItem::HoldConfigurationMenuItem(
-            const UKControllerPlugin::Dialog::DialogManager & dialogManager,
+            const UKControllerPlugin::Dialog::DialogManager& dialogManager,
             const std::shared_ptr<HoldDisplayManager> displayManager,
-            const unsigned int selectorMenuOpenCallbackId
-        ) : displayManager(displayManager), selectorMenuOpenCallbackId(selectorMenuOpenCallbackId),
-            dialogManager(dialogManager)
+            const unsigned int selectorMenuOpenCallbackId)
+            : selectorMenuOpenCallbackId(selectorMenuOpenCallbackId), displayManager(displayManager),
+              dialogManager(dialogManager)
         {
-
         }
 
         /*
@@ -76,5 +72,5 @@ namespace UKControllerPlugin {
 
             return false;
         }
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

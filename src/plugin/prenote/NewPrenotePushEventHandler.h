@@ -35,10 +35,10 @@ namespace UKControllerPlugin::Prenote {
         // All the controllers
         const Controller::ControllerPositionCollection& controllers;
 
-        // Active controllers
+        // All the active callsigns
         const Controller::ActiveCallsignCollection& activeCallsigns;
 
-        // For playing sounds
+        // Windows API
         Windows::WinApiInterface& winApi;
     };
 } // namespace UKControllerPlugin::Prenote

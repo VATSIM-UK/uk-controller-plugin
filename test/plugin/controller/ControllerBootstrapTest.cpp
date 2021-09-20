@@ -3,7 +3,6 @@
 #include "controller/ControllerBootstrap.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
-#include "mock/MockDependencyLoader.h"
 
 using testing::NiceMock;
 using testing::Test;

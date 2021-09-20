@@ -1,10 +1,7 @@
-#include "pch/pch.h"
-
 #include "intention/IntentionCodeData.h"
 #include "intention/IntentionCodeGenerator.h"
+#include "intention/SectorExitRepository.h"
 #include "intention/SectorExitRepositoryFactory.h"
-#include "mock/MockAirfieldGroup.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
 
 using EuroScopePlugIn::CPosition;
 
@@ -91,7 +88,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(data.intentionCode == "--");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
-            EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
+            EXPECT_EQ(IntentionCodeGenerator::GetInvalidExitPointIndex(), data.exitPointIndex);
         }
 
         TEST_F(IntentionCodeGeneratorTest, ReturnsCorrectCodeFromAirfieldGroup)
@@ -100,8 +97,6 @@ namespace UKControllerPluginTest {
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
             std::unique_ptr<StrictMock<MockAirfieldGroup>> mockAirfieldGroup(new StrictMock<MockAirfieldGroup>);
 
-            MockAirfieldGroup* mockGroupRaw = mockAirfieldGroup.get();
-
             groups.push_back(std::move(mockAirfieldGroup));
             IntentionCodeGenerator intention(std::move(groups), *SectorExitRepositoryFactory::Create());
             IntentionCodeData data =
@@ -109,7 +104,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(data.intentionCode == "LL");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
-            EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
+            EXPECT_EQ(IntentionCodeGenerator::GetInvalidExitPointIndex(), data.exitPointIndex);
         }
 
         TEST_F(IntentionCodeGeneratorTest, IgnoresAirfieldGroupsThatArentApplicable)
@@ -118,8 +113,6 @@ namespace UKControllerPluginTest {
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
             std::unique_ptr<MockAirfieldGroup> mockAirfieldGroup(new MockAirfieldGroup(false));
 
-            MockAirfieldGroup* mockGroupRaw = mockAirfieldGroup.get();
-
             groups.push_back(std::move(mockAirfieldGroup));
             IntentionCodeGenerator intention(std::move(groups), *SectorExitRepositoryFactory::Create());
             IntentionCodeData data =
@@ -127,7 +120,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(data.intentionCode == "EGNX");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
-            EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
+            EXPECT_EQ(IntentionCodeGenerator::GetInvalidExitPointIndex(), data.exitPointIndex);
         }
 
         TEST_F(IntentionCodeGeneratorTest, ReturnsCorrectCodeNormalCase)
@@ -185,7 +178,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(data.intentionCode == "KFJK");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
-            EXPECT_EQ(intention.invalidExitPointIndex, data.exitPointIndex);
+            EXPECT_EQ(intention.GetInvalidExitPointIndex(), data.exitPointIndex);
         }
 
         TEST_F(IntentionCodeGeneratorTest, ReturnsDestinationIcaoNoMatch)
@@ -210,7 +203,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(data.intentionCode == "KLAS");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
-            EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
+            EXPECT_EQ(IntentionCodeGenerator::GetInvalidExitPointIndex(), data.exitPointIndex);
         }
 
         TEST_F(IntentionCodeGeneratorTest, GetIntentionCodeForFlightPlanIgnoresFixIfTravellingInWrongDirection)
@@ -241,7 +234,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(data.intentionCode == "EDDM");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
-            EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
+            EXPECT_EQ(IntentionCodeGenerator::GetInvalidExitPointIndex(), data.exitPointIndex);
         }
 
         TEST_F(IntentionCodeGeneratorTest, GetIntentionCodeReturnsDifferentCodeIfFlightplanChanges)
@@ -250,8 +243,6 @@ namespace UKControllerPluginTest {
             std::vector<std::unique_ptr<AirfieldGroup>> groups;
             std::unique_ptr<MockAirfieldGroup> mockAirfieldGroup(new StrictMock<MockAirfieldGroup>);
 
-            MockAirfieldGroup* groupRaw = mockAirfieldGroup.get();
-
             groups.push_back(std::move(mockAirfieldGroup));
             std::unique_ptr<SectorExitRepository> exitPoints = SectorExitRepositoryFactory::Create();
             IntentionCodeGenerator intention(std::move(groups), *exitPoints);
@@ -259,12 +250,12 @@ namespace UKControllerPluginTest {
                 intention.GetIntentionCodeForFlightplan("BAW123", "KLAS", "EGLL", mockFlightPlan, 33000);
             EXPECT_TRUE(data.intentionCode == "LL");
             EXPECT_FALSE(data.exitPointValid);
-            EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
+            EXPECT_EQ(IntentionCodeGenerator::GetInvalidExitPointIndex(), data.exitPointIndex);
             data = intention.GetIntentionCodeForFlightplan("BAW123", "KLAS", "EGKK", mockFlightPlan, 35000);
             EXPECT_TRUE(data.intentionCode == "KK");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
-            EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
+            EXPECT_EQ(IntentionCodeGenerator::GetInvalidExitPointIndex(), data.exitPointIndex);
         }
 
         TEST_F(IntentionCodeGeneratorTest, GetIntentionCodeReturnsIcaoIfPointPassed)
@@ -295,7 +286,7 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(data.intentionCode == "KLAS");
             EXPECT_FALSE(data.exitPointValid);
             EXPECT_EQ("", data.exitPoint);
-            EXPECT_EQ(IntentionCodeGenerator::invalidExitPointIndex, data.exitPointIndex);
+            EXPECT_EQ(IntentionCodeGenerator::GetInvalidExitPointIndex(), data.exitPointIndex);
         }
     } // namespace IntentionCode
 } // namespace UKControllerPluginTest

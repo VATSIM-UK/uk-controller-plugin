@@ -1,12 +1,7 @@
-#include "pch/pch.h"
-
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiplusBrushes.h"
 #include "helper/TestingFunctions.h"
-#include "mock/MockDialogProvider.h"
-#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-#include "mock/MockUserSettingProviderInterface.h"
 #include "plugin/PopupMenuItem.h"
 #include "regional/RegionalPressureManager.h"
 #include "regional/RegionalPressureRenderer.h"
@@ -35,12 +30,23 @@ namespace UKControllerPluginTest {
         {
             public:
             RegionalPressureRendererTest()
-                : dialogManager(mockDialogProvider), renderer(manager, 1, 2, 3, 4, brushes, dialogManager),
-                  userSettings(mockUserSettingProvider)
+                : userSettings(mockUserSettingProvider), dialogManager(mockDialogProvider),
+                  renderer(manager, 1, 2, 3, 4, brushes, dialogManager)
             {
                 this->dialogManager.AddDialog(this->rpsDialogData);
             }
 
+            inline static const int HIDE_CLICKSPOT_WIDTH = 50;
+            inline static const int LEFT_COLUMN_WIDTH = 100;
+            inline static const int ROW_HEIGHT = 20;
+            const std::string SELECTED_ASR_KEY = "SelectedRegionalPressures";
+            const std::string SELECTED_ASR_DESC = "Selected Regional Pressures To Display";
+            const std::string VISIBLE_ASR_KEY = "DisplayRegionalPressures";
+            const std::string VISIBLE_ASR_DESC = "Regional Pressure Visibility";
+            const std::string XPOS_ASR_KEY = "RegionalPressureScreenPosX";
+            const std::string XPOS_ASR_DESC = "Regional Pressure X Position";
+            const std::string YPOS_ASR_KEY = "RegionalPressureScreenPosY";
+            const std::string YPOS_ASR_DESC = "Regional Pressure Y Position";
             DialogData rpsDialogData = {IDD_REGIONAL_PRESSURE, "Test"};
             RegionalPressureManager manager;
             GdiplusBrushes brushes;
@@ -56,7 +62,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.visibleUserSettingKey)).Times(1).WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(VISIBLE_ASR_KEY)).Times(1).WillOnce(Return(""));
 
             renderer.AsrLoadedEvent(userSettings);
             EXPECT_TRUE(renderer.IsVisible());
@@ -66,16 +72,12 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.xPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(XPOS_ASR_KEY)).Times(1).WillOnce(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.yPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(YPOS_ASR_KEY)).Times(1).WillOnce(Return(""));
 
             renderer.AsrLoadedEvent(userSettings);
-            RECT expectedArea = {100, 100, 100 + renderer.leftColumnWidth, 100 + renderer.rowHeight};
+            RECT expectedArea = {100, 100, 100 + LEFT_COLUMN_WIDTH, 100 + ROW_HEIGHT};
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetTopBarArea()));
         }
 
@@ -83,16 +85,12 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.xPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(XPOS_ASR_KEY)).Times(1).WillOnce(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.yPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(YPOS_ASR_KEY)).Times(1).WillOnce(Return(""));
 
             renderer.AsrLoadedEvent(userSettings);
-            Gdiplus::Rect expectedArea = {100, 100, renderer.leftColumnWidth, renderer.rowHeight};
+            Gdiplus::Rect expectedArea = {100, 100, LEFT_COLUMN_WIDTH, ROW_HEIGHT};
             EXPECT_TRUE(expectedArea.Equals(renderer.GetTopBarRender()));
         }
 
@@ -100,20 +98,13 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.xPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(XPOS_ASR_KEY)).Times(1).WillOnce(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.yPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(YPOS_ASR_KEY)).Times(1).WillOnce(Return(""));
 
             renderer.AsrLoadedEvent(userSettings);
             RECT expectedArea = {
-                100 + renderer.leftColumnWidth,
-                100,
-                100 + renderer.leftColumnWidth + renderer.hideClickspotWidth,
-                100 + renderer.rowHeight};
+                100 + LEFT_COLUMN_WIDTH, 100, 100 + LEFT_COLUMN_WIDTH + HIDE_CLICKSPOT_WIDTH, 100 + ROW_HEIGHT};
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetHideClickspotArea()));
         }
 
@@ -121,17 +112,12 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.xPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(XPOS_ASR_KEY)).Times(1).WillOnce(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.yPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return(""));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(YPOS_ASR_KEY)).Times(1).WillOnce(Return(""));
 
             renderer.AsrLoadedEvent(userSettings);
-            Gdiplus::Rect expectedArea = {
-                100 + renderer.leftColumnWidth, 100, renderer.hideClickspotWidth, renderer.rowHeight};
+            Gdiplus::Rect expectedArea = {100 + LEFT_COLUMN_WIDTH, 100, HIDE_CLICKSPOT_WIDTH, ROW_HEIGHT};
             EXPECT_TRUE(expectedArea.Equals(renderer.GetHideSpotRender()));
         }
 
@@ -139,7 +125,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.visibleUserSettingKey)).Times(1).WillOnce(Return("0"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(VISIBLE_ASR_KEY)).Times(1).WillOnce(Return("0"));
 
             renderer.AsrLoadedEvent(userSettings);
             EXPECT_FALSE(renderer.IsVisible());
@@ -149,16 +135,12 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.xPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return("150"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(XPOS_ASR_KEY)).Times(1).WillOnce(Return("150"));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.yPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return("175"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(YPOS_ASR_KEY)).Times(1).WillOnce(Return("175"));
 
             renderer.AsrLoadedEvent(userSettings);
-            RECT expectedArea = {150, 175, 150 + renderer.leftColumnWidth, 175 + renderer.rowHeight};
+            RECT expectedArea = {150, 175, 150 + LEFT_COLUMN_WIDTH, 175 + ROW_HEIGHT};
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetTopBarArea()));
         }
 
@@ -166,16 +148,12 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.xPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return("150"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(XPOS_ASR_KEY)).Times(1).WillOnce(Return("150"));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.yPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return("175"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(YPOS_ASR_KEY)).Times(1).WillOnce(Return("175"));
 
             renderer.AsrLoadedEvent(userSettings);
-            Gdiplus::Rect expectedArea = {150, 175, renderer.leftColumnWidth, renderer.rowHeight};
+            Gdiplus::Rect expectedArea = {150, 175, LEFT_COLUMN_WIDTH, ROW_HEIGHT};
             EXPECT_TRUE(expectedArea.Equals(renderer.GetTopBarRender()));
         }
 
@@ -183,20 +161,13 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.xPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return("150"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(XPOS_ASR_KEY)).Times(1).WillOnce(Return("150"));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.yPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return("175"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(YPOS_ASR_KEY)).Times(1).WillOnce(Return("175"));
 
             renderer.AsrLoadedEvent(userSettings);
             RECT expectedArea = {
-                150 + renderer.leftColumnWidth,
-                175,
-                150 + renderer.leftColumnWidth + renderer.hideClickspotWidth,
-                175 + renderer.rowHeight};
+                150 + LEFT_COLUMN_WIDTH, 175, 150 + LEFT_COLUMN_WIDTH + HIDE_CLICKSPOT_WIDTH, 175 + ROW_HEIGHT};
             EXPECT_TRUE(RectsEqual(expectedArea, renderer.GetHideClickspotArea()));
         }
 
@@ -204,17 +175,12 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.xPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return("150"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(XPOS_ASR_KEY)).Times(1).WillOnce(Return("150"));
 
-            EXPECT_CALL(mockUserSettingProvider, GetKey(renderer.yPositionUserSettingKey))
-                .Times(1)
-                .WillOnce(Return("175"));
+            EXPECT_CALL(mockUserSettingProvider, GetKey(YPOS_ASR_KEY)).Times(1).WillOnce(Return("175"));
 
             renderer.AsrLoadedEvent(userSettings);
-            Gdiplus::Rect expectedArea = {
-                150 + renderer.leftColumnWidth, 175, renderer.hideClickspotWidth, renderer.rowHeight};
+            Gdiplus::Rect expectedArea = {150 + LEFT_COLUMN_WIDTH, 175, HIDE_CLICKSPOT_WIDTH, ROW_HEIGHT};
             EXPECT_TRUE(expectedArea.Equals(renderer.GetHideSpotRender()));
         }
 
@@ -230,28 +196,13 @@ namespace UKControllerPluginTest {
             config.AddItem({3, "foo"});
 
             // Expect the ASR to provider to be called appropriately.
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey(renderer.visibleUserSettingKey, renderer.visibleUserSettingDescription, "1"))
-                .Times(1);
+            EXPECT_CALL(mockUserSettingProvider, SetKey(VISIBLE_ASR_KEY, VISIBLE_ASR_DESC, "1")).Times(1);
 
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey(renderer.xPositionUserSettingKey, renderer.xPositionUserSettingDescription, "100"))
-                .Times(1);
+            EXPECT_CALL(mockUserSettingProvider, SetKey(XPOS_ASR_KEY, XPOS_ASR_DESC, "100")).Times(1);
 
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey(renderer.yPositionUserSettingKey, renderer.yPositionUserSettingDescription, "50"))
-                .Times(1);
+            EXPECT_CALL(mockUserSettingProvider, SetKey(YPOS_ASR_KEY, YPOS_ASR_DESC, "50")).Times(1);
 
-            EXPECT_CALL(
-                mockUserSettingProvider,
-                SetKey(
-                    renderer.selectedRegionalPressureUserSettingKey,
-                    renderer.selecteRegionalPressureUserSettingDescription,
-                    "bar;baz;foo"))
-                .Times(1);
+            EXPECT_CALL(mockUserSettingProvider, SetKey(SELECTED_ASR_KEY, SELECTED_ASR_DESC, "bar;baz;foo")).Times(1);
 
             renderer.AsrClosingEvent(userSettings);
         }
@@ -265,7 +216,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(4, item.callbackFunctionId);
             EXPECT_TRUE(item.checked);
             EXPECT_FALSE(item.disabled);
-            EXPECT_TRUE(renderer.menuItemDescription == item.firstValue);
+            EXPECT_TRUE("Configure Regional Pressures" == item.firstValue);
             EXPECT_TRUE("" == item.secondValue);
             EXPECT_FALSE(item.fixedPosition);
         }
@@ -284,7 +235,7 @@ namespace UKControllerPluginTest {
             renderer.SetVisible(true);
 
             EXPECT_TRUE(renderer.IsVisible());
-            renderer.LeftClick(mockRadarScreen, renderer.hideClickspotId, "", {}, {});
+            renderer.LeftClick(mockRadarScreen, 1, "", {}, {});
             EXPECT_FALSE(renderer.IsVisible());
         }
 
@@ -293,13 +244,13 @@ namespace UKControllerPluginTest {
             this->manager.AddRegionalPressure("ASR_LONDON", "London", 1013);
 
             EXPECT_FALSE(manager.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
-            renderer.LeftClick(mockRadarScreen, renderer.rpsClickspotId, "ASR_LONDON", {}, {});
+            renderer.LeftClick(mockRadarScreen, 3, "ASR_LONDON", {}, {});
             EXPECT_TRUE(manager.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
         }
 
         TEST_F(RegionalPressureRendererTest, MoveShiftsTheTopBar)
         {
-            Gdiplus::Rect expectedRender = {150, 50, renderer.leftColumnWidth, renderer.rowHeight};
+            Gdiplus::Rect expectedRender = {150, 50, LEFT_COLUMN_WIDTH, ROW_HEIGHT};
             RECT expectedArea = {150, 50, 200, 25};
 
             renderer.Move(expectedArea, "");
@@ -312,7 +263,7 @@ namespace UKControllerPluginTest {
             renderer.SetVisible(true);
 
             EXPECT_TRUE(renderer.IsVisible());
-            renderer.RightClick(renderer.hideClickspotId, "", mockRadarScreen);
+            renderer.RightClick(1, "", mockRadarScreen);
             EXPECT_FALSE(renderer.IsVisible());
         }
 

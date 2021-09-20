@@ -1,5 +1,4 @@
 #include "bootstrap/PersistenceContainer.h"
-#include "mock/MockDependencyLoader.h"
 #include "sid/SidCollection.h"
 #include "sid/SidModule.h"
 

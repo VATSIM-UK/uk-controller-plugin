@@ -1,12 +1,11 @@
-#include "pch/pch.h"
-
-#include "euroscope/EuroScopeRadarLoopbackInterface.h"
+#include "MinStackLevel.h"
+#include "MinStackManager.h"
+#include "MinStackRenderer.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/GdiplusBrushes.h"
 #include "helper/HelperFunctions.h"
-#include "minstack/MinStackManager.h"
-#include "minstack/MinStackRenderer.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Dialog::DialogManager;
@@ -48,7 +47,7 @@ namespace UKControllerPlugin::MinStack {
              MinStackManager::GetMslKeyTma("MTMA"),
              MinStackManager::GetMslKeyTma("STMA")});
 
-        unsigned int order = 0;
+        int order = 0;
         for (auto& selectedMinStack : selectedMinStacks) {
             this->config.AddItem({order++, selectedMinStack});
         }
@@ -153,7 +152,7 @@ namespace UKControllerPlugin::MinStack {
     void MinStackRenderer::LeftClick(
         EuroscopeRadarLoopbackInterface& radarScreen,
         int objectId,
-        std::string objectDescription,
+        const std::string& objectDescription,
         [[maybe_unused]] POINT mousePos,
         [[maybe_unused]] RECT itemArea)
     {
@@ -285,7 +284,7 @@ namespace UKControllerPlugin::MinStack {
         When one the clickspots is clicked on. Just do whatever the leftclick does.
     */
     void MinStackRenderer::RightClick(
-        int objectId, std::string objectDescription, EuroscopeRadarLoopbackInterface& radarScreen)
+        int objectId, const std::string& objectDescription, EuroscopeRadarLoopbackInterface& radarScreen)
     {
         this->LeftClick(radarScreen, objectId, objectDescription, POINT{}, RECT{});
     }

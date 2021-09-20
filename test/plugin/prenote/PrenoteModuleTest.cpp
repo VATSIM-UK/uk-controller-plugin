@@ -4,8 +4,6 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "message/UserMessager.h"
-#include "mock/MockDependencyLoader.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "prenote/PrenoteModule.h"
 #include "push/PushEventProcessorCollection.h"
@@ -183,6 +181,5 @@ namespace UKControllerPluginTest::Prenote {
     {
         PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays, asrHandlers);
         EXPECT_EQ(1, asrHandlers.CountHandlers());
-        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle Pending Prenote List"));
     }
 } // namespace UKControllerPluginTest::Prenote

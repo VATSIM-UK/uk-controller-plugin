@@ -1,18 +1,14 @@
-#include "pch/pch.h"
 #include "euroscope/GeneralSettingsConfiguration.h"
-#include "mock/MockDialogProvider.h"
-#include "plugin/PopupMenuItem.h"
 #include "dialog/DialogManager.h"
-#include "dialog/DialogData.h"
 
-using UKControllerPlugin::Euroscope::GeneralSettingsConfiguration;
-using UKControllerPluginTest::Dialog::MockDialogProvider;
-using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPlugin::Dialog::DialogData;
+using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Test;
-using ::testing::_;
+using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Euroscope::GeneralSettingsConfiguration;
+using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 
 namespace UKControllerPluginTest {
     namespace Euroscope {
@@ -20,17 +16,15 @@ namespace UKControllerPluginTest {
         class GeneralSettingsConfigurationTest : public Test
         {
             public:
+            GeneralSettingsConfigurationTest() : dialogManager(dialogProvider), configuration(this->dialogManager, 1)
+            {
+                this->dialogManager.AddDialog(generalSettingsData);
+            }
 
-                GeneralSettingsConfigurationTest()
-                    : configuration(this->dialogManager, 1), dialogManager(dialogProvider)
-                {
-                    this->dialogManager.AddDialog(generalSettingsData);
-                }
-
-                DialogData generalSettingsData = { IDD_GENERAL_SETTINGS, "Test" };
-                NiceMock<MockDialogProvider> dialogProvider;
-                DialogManager dialogManager;
-                GeneralSettingsConfiguration configuration;
+            DialogData generalSettingsData = {IDD_GENERAL_SETTINGS, "Test"};
+            NiceMock<MockDialogProvider> dialogProvider;
+            DialogManager dialogManager;
+            GeneralSettingsConfiguration configuration;
         };
 
         TEST_F(GeneralSettingsConfigurationTest, ProcessCommandReturnsFalseOnIncorrectCommand)
@@ -40,8 +34,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(GeneralSettingsConfigurationTest, ProcessCommandOpensDialogOnSuccess)
         {
-            EXPECT_CALL(this->dialogProvider, OpenDialog(this->generalSettingsData, _))
-                .Times(1);
+            EXPECT_CALL(this->dialogProvider, OpenDialog(this->generalSettingsData, _)).Times(1);
 
             this->configuration.ProcessCommand(".ukcp g");
         }
@@ -54,25 +47,20 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemHasADescription)
         {
             EXPECT_EQ(
-                this->configuration.configMenuDescription,
-                this->configuration.GetConfigurationMenuItem().firstValue
-            );
+                this->configuration.configMenuDescription, this->configuration.GetConfigurationMenuItem().firstValue);
         }
 
         TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemHasTheCorrectCallbackId)
         {
             EXPECT_EQ(
                 this->configuration.menuSelectedCallbackId,
-                this->configuration.GetConfigurationMenuItem().callbackFunctionId
-            );
+                this->configuration.GetConfigurationMenuItem().callbackFunctionId);
         }
 
         TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemHasNoCheckbox)
         {
             EXPECT_EQ(
-                EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX,
-                this->configuration.GetConfigurationMenuItem().checked
-            );
+                EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX, this->configuration.GetConfigurationMenuItem().checked);
         }
 
         TEST_F(GeneralSettingsConfigurationTest, GetPopupMenuItemIsEnabled)
@@ -87,10 +75,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(GeneralSettingsConfigurationTest, SelectingTheMenuItemOpensConfigurationDialog)
         {
-            EXPECT_CALL(this->dialogProvider, OpenDialog(this->generalSettingsData, _))
-                .Times(1);
+            EXPECT_CALL(this->dialogProvider, OpenDialog(this->generalSettingsData, _)).Times(1);
 
             this->configuration.Configure(0, "test", {});
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPluginTest
+    } // namespace Euroscope
+} // namespace UKControllerPluginTest

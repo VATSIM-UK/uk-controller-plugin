@@ -1,7 +1,5 @@
-#include "pch/pch.h"
 #include "releases/ReleaseModule.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "mock/MockDependencyLoader.h"
 #include "push/PushEventProcessorCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
@@ -9,28 +7,26 @@
 #include "controller/HandoffEventHandlerCollection.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerCollection.h"
-#include "mock/MockDialogProvider.h"
 #include "radarscreen/RadarRenderableCollection.h"
-#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 
 using ::testing::NiceMock;
-using ::testing::Test;
 using ::testing::Return;
+using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::Push::PushEventProcessorCollection;
+using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Releases::BootstrapPlugin;
 using UKControllerPlugin::Releases::BootstrapRadarScreen;
-using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
-using UKControllerPlugin::Push::PushEventProcessorCollection;
+using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
-using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -38,46 +34,31 @@ namespace UKControllerPluginTest {
         class ReleaseModuleTest : public Test
         {
             public:
+            ReleaseModuleTest()
+            {
+                container.pushEventProcessors.reset(new PushEventProcessorCollection);
+                container.tagHandler.reset(new TagItemCollection);
+                container.timedHandler.reset(new TimedEventCollection);
+                container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
+                container.controllerHandoffHandlers.reset(new HandoffEventHandlerCollection);
+                container.dialogManager.reset(new DialogManager(this->dialogProvider));
 
-                ReleaseModuleTest()
-                {
-                    container.pushEventProcessors.reset(new PushEventProcessorCollection);
-                    container.tagHandler.reset(new TagItemCollection);
-                    container.timedHandler.reset(new TimedEventCollection);
-                    container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
-                    container.controllerHandoffHandlers.reset(new HandoffEventHandlerCollection);
-                    container.dialogManager.reset(new DialogManager(this->dialogProvider));
+                nlohmann::json dependency = nlohmann::json::array();
+                dependency.push_back({{"id", 1}, {"tag_string", "RFC"}, {"description", "Released For Climb"}});
+                dependency.push_back({{"id", 2}, {"tag_string", "RFD"}, {"description", "Released For Descent"}});
 
-                    nlohmann::json dependency = nlohmann::json::array();
-                    dependency.push_back(
-                        {
-                            {"id", 1},
-                            {"tag_string", "RFC"},
-                            {"description", "Released For Climb"}
-                        }
-                    );
-                    dependency.push_back(
-                        {
-                            {"id", 2},
-                            {"tag_string", "RFD"},
-                            {"description", "Released For Descent"}
-                        }
-                    );
+                ON_CALL(
+                    this->dependencyLoader, LoadDependency("DEPENDENCY_ENROUTE_RELEASE_TYPES", nlohmann::json::array()))
+                    .WillByDefault(Return(dependency));
+            }
 
-                    ON_CALL(
-                        this->dependencyLoader,
-                        LoadDependency("DEPENDENCY_ENROUTE_RELEASE_TYPES", nlohmann::json::array())
-                    )
-                        .WillByDefault(Return(dependency));
-                }
-
-                NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
-                NiceMock<MockDialogProvider> dialogProvider;
-                NiceMock<MockDependencyLoader> dependencyLoader;
-                PersistenceContainer container;
-                RadarRenderableCollection renderables;
-                ConfigurableDisplayCollection configurables;
-                UKControllerPlugin::Euroscope::AsrEventHandlerCollection asr;
+            NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
+            NiceMock<MockDialogProvider> dialogProvider;
+            NiceMock<MockDependencyLoader> dependencyLoader;
+            PersistenceContainer container;
+            RadarRenderableCollection renderables;
+            ConfigurableDisplayCollection configurables;
+            UKControllerPlugin::Euroscope::AsrEventHandlerCollection asr;
         };
 
         TEST_F(ReleaseModuleTest, ItRegistersForEnroutePushEvents)
@@ -215,4 +196,4 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->container.tagHandler->HasHandlerForItemId(126));
         }
     } // namespace Releases
-}  // namespace UKControllerPluginTest
+} // namespace UKControllerPluginTest

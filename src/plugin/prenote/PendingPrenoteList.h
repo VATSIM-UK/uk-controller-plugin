@@ -41,13 +41,9 @@ namespace UKControllerPlugin::Prenote {
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
-            std::string objectDescription,
+            const std::string& objectDescription,
             POINT mousePos,
             RECT itemArea) override;
-        void RightClick(
-            int objectId,
-            std::string objectDescription,
-            Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
         auto IsVisible() const -> bool override;
         void Move(RECT position, std::string objectDescription) override;
         void Render(

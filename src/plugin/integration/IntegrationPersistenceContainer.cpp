@@ -1,4 +1,3 @@
-#pragma once
 #include "IntegrationPersistenceContainer.h"
 #include "InboundIntegrationMessageHandler.h"
 #include "IntegrationServer.h"

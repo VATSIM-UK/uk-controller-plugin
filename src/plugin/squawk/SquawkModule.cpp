@@ -1,3 +1,4 @@
+#include "ApiSquawkAllocationHandler.h"
 #include "SquawkAssignment.h"
 #include "SquawkEventHandler.h"
 #include "SquawkGenerator.h"
@@ -9,8 +10,6 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
-#include "squawk/ApiSquawkAllocationHandler.h"
-#include "tag/TagFunction.h"
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Squawk::ApiSquawkAllocationHandler;
@@ -19,6 +18,12 @@ using UKControllerPlugin::Squawk::SquawkGenerator;
 using UKControllerPlugin::Tag::TagFunction;
 
 namespace UKControllerPlugin::Squawk {
+
+    // The callback function ID with euroscope for forcing squawk refresh (general squawk).
+    const int squawkForceCallbackIdGeneral = 9000;
+
+    // The callback function ID with euroscope for forcing squawk refresh (local squawk).
+    const int squawkForceCallbackIdLocal = 9001;
 
     /*
         Bootstrap the squawk module when the plugin loads.
@@ -59,24 +64,24 @@ namespace UKControllerPlugin::Squawk {
         container.activeCallsigns->AddHandler(eventHandler);
 
         TagFunction forceSquawkCallbackGeneral(
-            eventHandler->squawkForceCallbackIdGeneral,
+            squawkForceCallbackIdGeneral,
             "Force Squawk Recycle (General)",
             [eventHandler](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) { eventHandler->SquawkReycleGeneral(fp, rt, std::move(context), mousePos); });
+                const std::string& context,
+                const POINT& mousePos) { eventHandler->SquawkReycleGeneral(fp, rt, context, mousePos); });
 
         container.pluginFunctionHandlers->RegisterFunctionCall(forceSquawkCallbackGeneral);
 
         TagFunction forceSquawkCallbackLocal(
-            eventHandler->squawkForceCallbackIdLocal,
+            squawkForceCallbackIdLocal,
             "Force Squawk Recycle (Local)",
             [eventHandler](
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
-                std::string context,
-                const POINT& mousePos) { eventHandler->SquawkRecycleLocal(fp, rt, std::move(context), mousePos); });
+                const std::string& context,
+                const POINT& mousePos) { eventHandler->SquawkRecycleLocal(fp, rt, context, mousePos); });
 
         container.pluginFunctionHandlers->RegisterFunctionCall(forceSquawkCallbackLocal);
     }

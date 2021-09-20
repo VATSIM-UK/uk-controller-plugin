@@ -1,150 +1,140 @@
 #pragma once
-#include "push/PushEventProcessorInterface.h"
-#include "api/ApiInterface.h"
-#include "releases/EnrouteReleaseType.h"
-#include "releases/CompareEnrouteReleaseTypes.h"
-#include "tag/TagItemInterface.h"
-#include "releases/EnrouteRelease.h"
-#include "timedevent/AbstractTimedEvent.h"
-#include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "CompareEnrouteReleaseTypes.h"
+#include "EnrouteRelease.h"
+#include "EnrouteReleaseType.h"
 #include "controller/HandoffEventHandlerInterface.h"
-#include "task/TaskRunnerInterface.h"
+#include "push/PushEventProcessorInterface.h"
+#include "tag/TagItemInterface.h"
+#include "timedevent/AbstractTimedEvent.h"
 
 namespace UKControllerPlugin {
-    namespace Releases {
+    namespace Api {
+        class ApiInterface;
+    } // namespace Api
+    namespace Euroscope {
+        class EuroScopeCFlightPlanInterface;
+        class EuroScopeCRadarTargetInterface;
+        class EuroscopePluginLoopbackInterface;
+    } // namespace Euroscope
+    namespace TaskManager {
+        class TaskRunnerInterface;
+    } // namespace TaskManager
+} // namespace UKControllerPlugin
 
-        /*
-            Handles events around enroute releases
-        */
-        class EnrouteReleaseEventHandler : public Push::PushEventProcessorInterface,
-                                           public UKControllerPlugin::Tag::TagItemInterface,
-                                           public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
-                                           public UKControllerPlugin::Controller::HandoffEventHandlerInterface
-        {
-            public:
-                EnrouteReleaseEventHandler(
-                    const UKControllerPlugin::Api::ApiInterface& api,
-                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
-                    UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner,
-                    const std::set<
-                        UKControllerPlugin::Releases::EnrouteReleaseType,
-                        UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
-                    > releaseTypes,
-                    const int releaseTypeSelectedCallbackId,
-                    const int editReleasePointCallbackId
-                );
-                ~EnrouteReleaseEventHandler() override = default;
-                void AddIncomingRelease(
-                    const std::string callsign,
-                    UKControllerPlugin::Releases::EnrouteRelease release
-                );
-                void AddOutgoingRelease(
-                    const std::string callsign,
-                    UKControllerPlugin::Releases::EnrouteRelease release
-                );
-                const UKControllerPlugin::Releases::EnrouteRelease & GetIncomingRelease(
-                    const std::string callsign
-                ) const;
-                const UKControllerPlugin::Releases::EnrouteRelease& GetOutgoingRelease(
-                    const std::string callsign
-                ) const;
-                const std::set<
-                    UKControllerPlugin::Releases::EnrouteReleaseType,
-                    UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
-                > GetReleaseTypes(void) const;
-                bool ReleaseMessageValid(const nlohmann::json& message) const;
-                void DisplayReleaseTypeMenu(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-                    std::string context,
-                    const POINT& mousePos
-                );
-                void ReleaseTypeSelected(int functionId, std::string context, RECT);
-                void DisplayReleasePointEditBox(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-                    std::string context,
-                    const POINT& mousePos
-                );
-                void EditReleasePoint(int functionId, std::string context, RECT);
+namespace UKControllerPlugin::Releases {
 
-                // Inherited via WebsocketEventProcessorInterface
-                void ProcessPushEvent(const Push::PushEvent& message) override;
-                std::set<Push::PushEventSubscription> GetPushEventSubscriptions(void) const override;
+    /*
+        Handles events around enroute releases
+    */
+    class EnrouteReleaseEventHandler : public Push::PushEventProcessorInterface,
+                                       public UKControllerPlugin::Tag::TagItemInterface,
+                                       public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
+                                       public UKControllerPlugin::Controller::HandoffEventHandlerInterface
+    {
+        public:
+        EnrouteReleaseEventHandler(
+            const UKControllerPlugin::Api::ApiInterface& api,
+            UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner,
+            std::set<
+                UKControllerPlugin::Releases::EnrouteReleaseType,
+                UKControllerPlugin::Releases::CompareEnrouteReleaseTypes> releaseTypes,
+            int releaseTypeSelectedCallbackId,
+            int editReleasePointCallbackId);
+        void AddIncomingRelease(const std::string& callsign, UKControllerPlugin::Releases::EnrouteRelease release);
+        void AddOutgoingRelease(const std::string& callsign, UKControllerPlugin::Releases::EnrouteRelease release);
+        [[nodiscard]] auto GetIncomingRelease(const std::string& callsign) const
+            -> const UKControllerPlugin::Releases::EnrouteRelease&;
+        [[nodiscard]] auto GetOutgoingRelease(const std::string& callsign) const
+            -> const UKControllerPlugin::Releases::EnrouteRelease&;
+        [[nodiscard]] auto GetInvalidRelease() const -> const UKControllerPlugin::Releases::EnrouteRelease&;
+        [[nodiscard]] auto ReleaseMessageValid(const nlohmann::json& message) const -> bool;
+        void DisplayReleaseTypeMenu(
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            const std::string& context,
+            const POINT& mousePos);
+        void ReleaseTypeSelected(int functionId, const std::string& context, RECT);
+        void DisplayReleasePointEditBox(
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            const std::string& context,
+            const POINT& mousePos);
+        void EditReleasePoint(int functionId, const std::string& context, RECT);
 
-                // Inherited via TagItemInterface
-                std::string GetTagItemDescription(int tagItemId) const override;
-                void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
+        // Inherited via WebsocketEventProcessorInterface
+        void ProcessPushEvent(const Push::PushEvent& message) override;
+        [[nodiscard]] auto GetPushEventSubscriptions() const -> std::set<Push::PushEventSubscription> override;
 
-                // Inherited via AbstractTimedEvent
-                void TimedEventTrigger(void) override;
+        // Inherited via TagItemInterface
+        [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
+        void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
 
-                // Inherited via HandoffEventHandlerInterface
-                void HandoffInitiated(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& transferringController,
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& targetController
-                ) override;
-                void PluginEventsSynced() override;
+        // Inherited via AbstractTimedEvent
+        void TimedEventTrigger() override;
 
-                // Colours
-                const COLORREF outgoingItemColour = RGB(255, 255, 0);
-                const COLORREF incomingItemColour = RGB(255, 0, 0);
+        // Inherited via HandoffEventHandler
+        void HandoffInitiated(
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& transferringController,
+            UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& targetController) override;
+        void PluginEventsSynced() override;
 
-                // Tag items
-                const int enrouteReleaseTypeTagItemId = 108;
-                const int enrouteReleasePointTagItemId = 109;
-                const int enrouteReleasePointOrBlankTagItemId = 111;
+        [[nodiscard]] auto GetReleaseTypeSelectedCallbackId() const -> int;
+        [[nodiscard]] auto GetEditReleasePointCallbackId() const -> int;
+        [[nodiscard]] static auto GetReleaseTypeTagItemId() -> int;
+        [[nodiscard]] static auto GetReleasePointTagItemId() -> int;
+        [[nodiscard]] static auto GetReleasePointOrBlankTagItemId() -> int;
 
-                // Function ids
-                const int releaseTypeSelectedCallbackId;
-                const int editReleasePointCallbackId;
+        private:
+        void UpdateOutgoingReleaseType(const std::string& callsign, int type);
 
-                const std::string noReleaseItemColumn1 = "N";
-                const std::string noReleaseItemColumn2 = "No Release";
+        [[nodiscard]] static auto GetNoReleasePointText(int tagId) -> std::string;
 
-                // Invalid release
-                const UKControllerPlugin::Releases::EnrouteRelease invalidRelease = {-1};
+        // For sending releases
+        const UKControllerPlugin::Api::ApiInterface& api;
 
-            private:
+        // The plugin instance
+        UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
-                void UpdateOutgoingReleaseType(
-                    std::string callsign,
-                    int type
-                );
+        // For running tasks asynchronously
+        UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner;
 
-                std::string GetNoReleasePointText(int tagId) const;
+        // The different type of enroute releases
+        const std::set<
+            UKControllerPlugin::Releases::EnrouteReleaseType,
+            UKControllerPlugin::Releases::CompareEnrouteReleaseTypes>
+            releaseTypes;
 
-                // For sending releases
-                const UKControllerPlugin::Api::ApiInterface& api;
+        // Release point string to use when there is no release point
+        const std::string noReleasePoint;
 
-                // The plugin instance
-                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin;
+        // All incoming enroute releases
+        std::map<std::string, UKControllerPlugin::Releases::EnrouteRelease> incomingReleases;
 
-                // For running tasks asynchronously
-                UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner;
+        // All outgoing enroute releases
+        std::map<std::string, UKControllerPlugin::Releases::EnrouteRelease> outgoingReleases;
 
-                // The different type of enroute releases
-                const std::set<
-                    UKControllerPlugin::Releases::EnrouteReleaseType,
-                    UKControllerPlugin::Releases::CompareEnrouteReleaseTypes
-                > releaseTypes;
+        // Tag items
+        static const int enrouteReleaseTypeTagItemId = 108;
+        static const int enrouteReleasePointTagItemId = 109;
+        static const int enrouteReleasePointOrBlankTagItemId = 111;
 
-                // Release point string to use when there is no release point
-                const std::string noReleasePoint = "";
+        // Function ids
+        const int releaseTypeSelectedCallbackId;
+        const int editReleasePointCallbackId;
 
-                // All incoming enroute releases
-                std::map<std::string, UKControllerPlugin::Releases::EnrouteRelease> incomingReleases;
+        const std::string noReleaseItemColumn1 = "N";
+        const std::string noReleaseItemColumn2 = "No Release";
 
-                // All outgoing enroute releases
-                std::map<std::string, UKControllerPlugin::Releases::EnrouteRelease> outgoingReleases;
+        // Invalid release
+        const UKControllerPlugin::Releases::EnrouteRelease invalidRelease = {-1};
 
-                // TAG item descriptions
-                std::map<int, std::string> tagItemDescriptions {
-                    {enrouteReleaseTypeTagItemId, "Enroute Release Type"},
-                    {enrouteReleasePointTagItemId, "Enroute Release Point"},
-                    {enrouteReleasePointOrBlankTagItemId, "Enroute Release Point or Blank"},
-                };
-            };
-    }  // namespace Releases
-}  // namespace UKControllerPlugin
+        // TAG item descriptions
+        std::map<int, std::string> tagItemDescriptions{
+            {enrouteReleaseTypeTagItemId, "Enroute Release Type"},
+            {enrouteReleasePointTagItemId, "Enroute Release Point"},
+            {enrouteReleasePointOrBlankTagItemId, "Enroute Release Point or Blank"},
+        };
+    };
+} // namespace UKControllerPlugin::Releases

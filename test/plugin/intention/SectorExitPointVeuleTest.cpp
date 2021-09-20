@@ -1,13 +1,11 @@
-#include "pch/pch.h"
-#include "mock/MockEuroscopeExtractedRouteInterface.h"
 #include "intention/SectorExitPointVeule.h"
 #include "intention/IntentionCodeGenerator.h"
 
-using UKControllerPlugin::IntentionCode::SectorExitPointVeule;
-using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
-using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
-using ::testing::StrictMock;
 using ::testing::Return;
+using ::testing::StrictMock;
+using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
+using UKControllerPlugin::IntentionCode::SectorExitPointVeule;
+using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
 
 namespace UKControllerPluginTest {
     namespace IntentionCode {
@@ -25,17 +23,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(3)
-                .WillRepeatedly(Return(2));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(3).WillRepeatedly(Return(2));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(5)
-                .WillRepeatedly(Return("LFMN"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(5).WillRepeatedly(Return("LFMN"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 31000).compare("V"));
         }
@@ -45,17 +37,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(1)
-                .WillRepeatedly(Return("TEPRI"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(1).WillRepeatedly(Return("TEPRI"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 31000).compare("V1"));
         }
@@ -65,17 +51,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(1)
-                .WillRepeatedly(Return("TEPRI"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(1).WillRepeatedly(Return("TEPRI"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 27000).compare("X1"));
         }
@@ -85,17 +65,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(1)
-                .WillRepeatedly(Return("TEPRI"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(1).WillRepeatedly(Return("TEPRI"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 29000).compare("X1"));
         }
@@ -105,17 +79,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(2)
-                .WillRepeatedly(Return("PEKIM"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(2).WillRepeatedly(Return("PEKIM"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 31000).compare("V2"));
         }
@@ -125,17 +93,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(2)
-                .WillRepeatedly(Return("PEKIM"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(2).WillRepeatedly(Return("PEKIM"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 27000).compare("X2"));
         }
@@ -145,17 +107,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(2)
-                .WillRepeatedly(Return("PEKIM"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(2).WillRepeatedly(Return("PEKIM"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 29000).compare("X2"));
         }
@@ -165,17 +121,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(3)
-                .WillRepeatedly(Return("ODEBU"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(3).WillRepeatedly(Return("ODEBU"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 31000).compare("V3"));
         }
@@ -185,17 +135,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(3)
-                .WillRepeatedly(Return("ODEBU"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(3).WillRepeatedly(Return("ODEBU"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 27000).compare("X3"));
         }
@@ -205,17 +149,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(3)
-                .WillRepeatedly(Return("ODEBU"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(3).WillRepeatedly(Return("ODEBU"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 29000).compare("X3"));
         }
@@ -225,17 +163,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(4)
-                .WillRepeatedly(Return("KOTAP"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(4).WillRepeatedly(Return("KOTAP"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 31000).compare("V5"));
         }
@@ -245,17 +177,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(4)
-                .WillRepeatedly(Return("KOTAP"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(4).WillRepeatedly(Return("KOTAP"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 27000).compare("X5"));
         }
@@ -265,17 +191,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(4)
-                .WillRepeatedly(Return("KOTAP"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(4).WillRepeatedly(Return("KOTAP"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 29000).compare("X5"));
         }
@@ -285,17 +205,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(5)
-                .WillRepeatedly(Return("DEKOD"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(5).WillRepeatedly(Return("DEKOD"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 31000).compare("V6"));
         }
@@ -305,17 +219,11 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(5)
-                .WillRepeatedly(Return("DEKOD"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(5).WillRepeatedly(Return("DEKOD"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 27000).compare("X6"));
         }
@@ -325,19 +233,13 @@ namespace UKControllerPluginTest {
             StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
             SectorExitPointVeule exitPoint("VEULE", "V", SectorExitPointVeule::outSouth);
 
-            EXPECT_CALL(routeMock, GetPointsNumber())
-                .Times(2)
-                .WillRepeatedly(Return(5));
+            EXPECT_CALL(routeMock, GetPointsNumber()).Times(2).WillRepeatedly(Return(5));
 
-            EXPECT_CALL(routeMock, GetPointName(0))
-                .Times(5)
-                .WillRepeatedly(Return("VEULE"));
+            EXPECT_CALL(routeMock, GetPointName(0)).Times(5).WillRepeatedly(Return("VEULE"));
 
-            EXPECT_CALL(routeMock, GetPointName(1))
-                .Times(5)
-                .WillRepeatedly(Return("DEKOD"));
+            EXPECT_CALL(routeMock, GetPointName(1)).Times(5).WillRepeatedly(Return("DEKOD"));
 
             EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 29000).compare("X6"));
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest

@@ -102,7 +102,8 @@ if(MSVC)
         /permissive-;
         /std:c++17;
         /sdl;
-        /W3;
+        /W4;
+        /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING};
         /Y-

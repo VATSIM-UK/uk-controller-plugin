@@ -5,7 +5,6 @@
 #include "integration/InboundIntegrationMessageHandler.h"
 #include "integration/IntegrationPersistenceContainer.h"
 #include "integration/IntegrationServer.h"
-#include "mock/MockDependencyLoader.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "push/PushEventProcessorCollection.h"
 #include "stands/StandModule.h"

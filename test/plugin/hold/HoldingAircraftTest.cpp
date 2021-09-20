@@ -1,8 +1,7 @@
-#include "pch/pch.h"
 #include "hold/HoldingAircraft.h"
 
-using UKControllerPlugin::Hold::HoldingAircraft;
 using ::testing::Test;
+using UKControllerPlugin::Hold::HoldingAircraft;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -10,15 +9,13 @@ namespace UKControllerPluginTest {
         class HoldingAircraftTest : public Test
         {
             public:
-                HoldingAircraftTest()
-                    : baseAircraft("BAW123", "BNN"),
-                    proximityAircraft("BAW123", std::set<std::string>({ "BNN", "LAM" }))
-                {
+            HoldingAircraftTest()
+                : baseAircraft("BAW123", "BNN"), proximityAircraft("BAW123", std::set<std::string>({"BNN", "LAM"}))
+            {
+            }
 
-                }
-
-                HoldingAircraft baseAircraft;
-                HoldingAircraft proximityAircraft;
+            HoldingAircraft baseAircraft;
+            HoldingAircraft proximityAircraft;
         };
 
         TEST_F(HoldingAircraftTest, AssignedConstructionSetsCallsignAssignedHoldAndEntryTime)
@@ -26,9 +23,8 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("BAW123", this->baseAircraft.GetCallsign());
             EXPECT_EQ("BNN", this->baseAircraft.GetAssignedHold());
 
-            std::chrono::seconds seconds = std::chrono::duration_cast<std::chrono::seconds> (
-                this->baseAircraft.GetAssignedHoldEntryTime() - std::chrono::system_clock::now()
-            );
+            std::chrono::seconds seconds = std::chrono::duration_cast<std::chrono::seconds>(
+                this->baseAircraft.GetAssignedHoldEntryTime() - std::chrono::system_clock::now());
 
             EXPECT_LT(seconds, std::chrono::seconds(3));
         }
@@ -36,13 +32,13 @@ namespace UKControllerPluginTest {
         TEST_F(HoldingAircraftTest, ProximityConstructionSetsCallsignAndProximityHolds)
         {
             EXPECT_EQ("BAW123", this->proximityAircraft.GetCallsign());
-            EXPECT_EQ(std::set<std::string>({ "BNN", "LAM" }), this->proximityAircraft.GetProximityHolds());
+            EXPECT_EQ(std::set<std::string>({"BNN", "LAM"}), this->proximityAircraft.GetProximityHolds());
         }
 
         TEST_F(HoldingAircraftTest, TestItAddsAProximityHold)
         {
             this->baseAircraft.AddProximityHold("TIMBA");
-            EXPECT_EQ(std::set<std::string>({ "TIMBA" }), this->baseAircraft.GetProximityHolds());
+            EXPECT_EQ(std::set<std::string>({"TIMBA"}), this->baseAircraft.GetProximityHolds());
         }
 
         TEST_F(HoldingAircraftTest, IsInAnyHoldReturnsTrueIfAssigned)
@@ -84,18 +80,18 @@ namespace UKControllerPluginTest {
         TEST_F(HoldingAircraftTest, RemoveAssignedHoldRemovesFromHold)
         {
             this->baseAircraft.RemoveAssignedHold();
-            EXPECT_EQ(this->baseAircraft.noHoldAssigned, this->baseAircraft.GetAssignedHold());
+            EXPECT_EQ(this->baseAircraft.GetNoHoldAssigned(), this->baseAircraft.GetAssignedHold());
         }
 
         TEST_F(HoldingAircraftTest, RemoveProximityHoldRemovesProximity)
         {
             this->proximityAircraft.RemoveProximityHold("BNN");
-            EXPECT_EQ(std::set<std::string>({ "LAM" }), this->proximityAircraft.GetProximityHolds());
+            EXPECT_EQ(std::set<std::string>({"LAM"}), this->proximityAircraft.GetProximityHolds());
         }
 
         TEST_F(HoldingAircraftTest, RemoveProximityHoldHandlesNotInProximity)
         {
             EXPECT_NO_THROW(this->proximityAircraft.RemoveProximityHold("ABCDEF"));
         }
-    }  // namespace Hold
-}  // namespace UKControllerPluginTest
+    } // namespace Hold
+} // namespace UKControllerPluginTest

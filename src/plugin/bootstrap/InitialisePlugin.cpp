@@ -223,7 +223,7 @@ namespace UKControllerPlugin {
             *this->container->pushEventProcessors,
             *this->container->dialogManager,
             loader);
-        Hold::BootstrapPlugin(loader, *this->container, *this->container->userMessager);
+        Hold::BootstrapPlugin(loader, *this->container);
 
         // Don't allow automatic squawk assignment if the plugin is deemed to be a duplicate
         SquawkModule::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());

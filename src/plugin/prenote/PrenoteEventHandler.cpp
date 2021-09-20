@@ -1,16 +1,13 @@
-#include "prenote/PrenoteEventHandler.h"
-#include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionHierarchy.h"
+#include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/GeneralSettingsEntries.h"
 #include "euroscope/UserSetting.h"
-#include "flightplan/StoredFlightplanCollection.h"
 #include "message/UserMessager.h"
 #include "ownership/AirfieldOwnershipManager.h"
-#include "prenote/AbstractPrenote.h"
+#include "prenote/PrenoteEventHandler.h"
 #include "prenote/PrenoteService.h"
-#include "prenote/PrenoteUserMessage.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -23,7 +20,6 @@ using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Prenote::PrenoteService;
-using UKControllerPlugin::Prenote::PrenoteUserMessage;
 
 namespace UKControllerPlugin::Prenote {
 

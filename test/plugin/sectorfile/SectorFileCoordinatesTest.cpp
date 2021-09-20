@@ -1,11 +1,9 @@
-#pragma once
-#include "pch/pch.h"
 #include "sectorfile/SectorFileCoordinates.h"
 
-using UKControllerPlugin::SectorFile::GetInvalidPosition;
-using UKControllerPlugin::SectorFile::PositionIsInvalid;
-using UKControllerPlugin::SectorFile::ParseSectorFileCoordinates;
 using testing::Test;
+using UKControllerPlugin::SectorFile::GetInvalidPosition;
+using UKControllerPlugin::SectorFile::ParseSectorFileCoordinates;
+using UKControllerPlugin::SectorFile::PositionIsInvalid;
 
 namespace UKControllerPluginTest {
     namespace SectorFile {
@@ -132,5 +130,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_FALSE(PositionIsInvalid(ParseSectorFileCoordinates("N050.42.32.000", "W001.15.59.888")));
         }
-    }  // namespace SectorFile
-}  // namespace UKControllerPluginTest
+    } // namespace SectorFile
+} // namespace UKControllerPluginTest

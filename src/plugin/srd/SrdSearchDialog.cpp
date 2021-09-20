@@ -7,16 +7,14 @@
 #include "api/ApiException.h"
 #include "datablock/DatablockFunctions.h"
 
-using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Datablock::ConvertAltitudeToFlightLevel;
+using UKControllerPlugin::Dialog::DialogCallArgument;
 
 namespace UKControllerPlugin {
     namespace Srd {
-        SrdSearchDialog::SrdSearchDialog(const UKControllerPlugin::Api::ApiInterface& api)
-            : api(api)
+        SrdSearchDialog::SrdSearchDialog(const UKControllerPlugin::Api::ApiInterface& api) : api(api)
         {
-
         }
         /*
             Public facing window procedure
@@ -25,19 +23,13 @@ namespace UKControllerPlugin {
         {
             if (msg == WM_INITDIALOG) {
                 LogInfo("SRD search dialog opened");
-                SetWindowLongPtr(
-                    hwnd,
-                    GWLP_USERDATA,
-                    reinterpret_cast<DialogCallArgument*>(lParam)->dialogArgument
-                );
+                SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<DialogCallArgument*>(lParam)->dialogArgument);
             } else if (msg == WM_DESTROY) {
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
                 LogInfo("SRD search dialog closed");
             }
 
-            SrdSearchDialog* dialog = reinterpret_cast<SrdSearchDialog*>(
-                GetWindowLongPtr(hwnd, GWLP_USERDATA)
-            );
+            SrdSearchDialog* dialog = reinterpret_cast<SrdSearchDialog*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
             return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
         }
 
@@ -50,10 +42,8 @@ namespace UKControllerPlugin {
 
             for (nlohmann::json::const_iterator it = results.cbegin(); it != results.cend(); ++it) {
 
-                if (
-                    !it->contains("minimum_level") ||
-                    (!it->at("minimum_level").is_number_integer() && !it->at("minimum_level").is_null())
-                ) {
+                if (!it->contains("minimum_level") ||
+                    (!it->at("minimum_level").is_number_integer() && !it->at("minimum_level").is_null())) {
                     LogError("SRD search result has invalid minimum level " + results.dump());
                     return false;
                 }
@@ -73,19 +63,11 @@ namespace UKControllerPlugin {
                     return false;
                 }
 
-                for (
-                    nlohmann::json::const_iterator noteIt = it->at("notes").cbegin();
-                    noteIt != it->at("notes").cend();
-                    ++noteIt
-                ) {
+                for (nlohmann::json::const_iterator noteIt = it->at("notes").cbegin(); noteIt != it->at("notes").cend();
+                     ++noteIt) {
 
-                    if (
-                        !noteIt->is_object() ||
-                        !noteIt->contains("id") ||
-                        !noteIt->at("id").is_number_integer() ||
-                        !noteIt->contains("text") ||
-                        !noteIt->at("text").is_string()
-                    ) {
+                    if (!noteIt->is_object() || !noteIt->contains("id") || !noteIt->at("id").is_number_integer() ||
+                        !noteIt->contains("text") || !noteIt->at("text").is_string()) {
                         LogError("SRD search result has an invalid note " + results.dump());
                         return false;
                     }
@@ -111,16 +93,15 @@ namespace UKControllerPlugin {
             }
 
             std::string noteString;
-            for (
-                nlohmann::json::const_iterator noteIt = selectedRoute.at("notes").cbegin();
-                noteIt != selectedRoute.at("notes").cend();
-                ++noteIt
-            ) {
-                noteString += "Note " + std::to_string(noteIt->at("id").get<int>()) + "\n\n"
-                    + noteIt->at("text").get<std::string>() + "\n\n";
+            for (nlohmann::json::const_iterator noteIt = selectedRoute.at("notes").cbegin();
+                 noteIt != selectedRoute.at("notes").cend();
+                 ++noteIt) {
+                noteString += "Note " + std::to_string(noteIt->at("id").get<int>()) + "\n\n" +
+                              noteIt->at("text").get<std::string>() + "\n\n";
             }
 
-             return std::regex_replace(noteString, std::regex("[\r\n]"), "\r\n");;
+            return std::regex_replace(noteString, std::regex("[\r\n]"), "\r\n");
+            ;
         }
 
         /*
@@ -129,52 +110,52 @@ namespace UKControllerPlugin {
         LRESULT SrdSearchDialog::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             switch (msg) {
-                // Initialise
-                case WM_INITDIALOG: {
-                    this->InitDialog(hwnd, lParam);
-                    return TRUE;
+            // Initialise
+            case WM_INITDIALOG: {
+                this->InitDialog(hwnd, lParam);
+                return TRUE;
+            }
+            // Dialog Closed
+            case WM_CLOSE: {
+                EndDialog(hwnd, wParam);
+                return TRUE;
+            }
+            // Catching the events when search results are clicked.
+            case WM_NOTIFY: {
+                switch (((LPNMHDR)lParam)->code) {
+                case LVN_ITEMCHANGED: {
+                    if (((LPNMHDR)lParam)->idFrom == IDC_SRD_RESULTS) {
+                        this->SelectSearchResult(hwnd, reinterpret_cast<NMLISTVIEW*>((LPNMHDR)lParam));
+                        return TRUE;
+                    }
                 }
-                // Dialog Closed
-                case WM_CLOSE: {
+                default:
+                    return FALSE;
+                }
+            }
+            // Buttons pressed
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                case IDOK: {
                     EndDialog(hwnd, wParam);
                     return TRUE;
                 }
-                // Catching the events when search results are clicked.
-                case WM_NOTIFY: {
-                    switch (((LPNMHDR)lParam)->code) {
-                        case LVN_ITEMCHANGED: {
-                            if (((LPNMHDR)lParam)->idFrom == IDC_SRD_RESULTS){
-                                this->SelectSearchResult(hwnd, reinterpret_cast<NMLISTVIEW*>((LPNMHDR)lParam));
-                                return TRUE;
-                            }
-                        }
-                        default:
-                            return FALSE;
-                    }
+                case IDCANCEL: {
+                    EndDialog(hwnd, wParam);
+                    return TRUE;
                 }
-                // Buttons pressed
-                case WM_COMMAND: {
-                    switch (LOWORD(wParam)) {
-                        case IDOK: {
-                            EndDialog(hwnd, wParam);
-                            return TRUE;
-                        }
-                        case IDCANCEL: {
-                            EndDialog(hwnd, wParam);
-                            return TRUE;
-                        }
-                        case IDC_SRD_SEARCH: {
-                            this->StartSearch(hwnd);
-                            return TRUE;
-                        }
-                        case IDC_SRD_ROUTE_COPY: {
-                            this->CopyRouteStringToClipboard(hwnd);
-                            return TRUE;
-                        }
-                        default:
-                            return FALSE;
-                    }
+                case IDC_SRD_SEARCH: {
+                    this->StartSearch(hwnd);
+                    return TRUE;
                 }
+                case IDC_SRD_ROUTE_COPY: {
+                    this->CopyRouteStringToClipboard(hwnd);
+                    return TRUE;
+                }
+                default:
+                    return FALSE;
+                }
+            }
             }
 
             return FALSE;
@@ -188,33 +169,25 @@ namespace UKControllerPlugin {
             SendMessage(resultsList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT);
 
             // Create the min level column
+            wchar_t min[4] = L"Min";
             LVCOLUMN minLevelColumn = {
-                LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
-                LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
-                50,
-                L"Min",
-                0
-            };
+                LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM, LVCFMT_LEFT | LVCFMT_FIXED_WIDTH, 50, min, 0};
             ListView_InsertColumn(resultsList, 0, &minLevelColumn);
 
             // Create the max level column
+            wchar_t max[4] = L"Max";
             LVCOLUMN maxLevelColumn = {
-                LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
-                LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
-                50,
-                L"Max",
-                1
-            };
+                LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM, LVCFMT_LEFT | LVCFMT_FIXED_WIDTH, 50, max, 1};
             ListView_InsertColumn(resultsList, 1, &maxLevelColumn);
 
             // Create the route string column
+            wchar_t routeString[13] = L"Route String";
             LVCOLUMN routeStringColumn = {
                 LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
                 LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
                 335,
-                L"Route String",
-                2
-            };
+                routeString,
+                2};
             ListView_InsertColumn(resultsList, 2, &routeStringColumn);
         }
 
@@ -224,35 +197,18 @@ namespace UKControllerPlugin {
 
             // Get the origin
             TCHAR originBuffer[255];
-            SendDlgItemMessage(
-                hwnd,
-                IDC_SRD_ORIGIN,
-                WM_GETTEXT,
-                255,
-                reinterpret_cast<LPARAM>(&originBuffer)
-            );
+            SendDlgItemMessage(hwnd, IDC_SRD_ORIGIN, WM_GETTEXT, 255, reinterpret_cast<LPARAM>(&originBuffer));
             searchParams.origin = UKControllerPlugin::Hold::ConvertFromTchar(originBuffer);
 
             // Get the destination
             TCHAR destinationBuffer[255];
             SendDlgItemMessage(
-                hwnd,
-                IDC_SRD_DESTINATION,
-                WM_GETTEXT,
-                255,
-                reinterpret_cast<LPARAM>(&destinationBuffer)
-            );
+                hwnd, IDC_SRD_DESTINATION, WM_GETTEXT, 255, reinterpret_cast<LPARAM>(&destinationBuffer));
             searchParams.destination = UKControllerPlugin::Hold::ConvertFromTchar(destinationBuffer);
 
             // Get the requested cruise level
             TCHAR cruiseBuffer[255];
-            SendDlgItemMessage(
-                hwnd,
-                IDC_SRD_CRUISE,
-                WM_GETTEXT,
-                255,
-                reinterpret_cast<LPARAM>(&cruiseBuffer)
-            );
+            SendDlgItemMessage(hwnd, IDC_SRD_CRUISE, WM_GETTEXT, 255, reinterpret_cast<LPARAM>(&cruiseBuffer));
             std::string requestedLevel = UKControllerPlugin::Hold::ConvertFromTchar(cruiseBuffer);
 
             if (requestedLevel != "") {
@@ -261,20 +217,12 @@ namespace UKControllerPlugin {
 
             // Clear the results list and notes box
             HWND resultsList = GetDlgItem(hwnd, IDC_SRD_RESULTS);
-            HWND notesBox = GetDlgItem(hwnd, IDC_SRD_NOTES);
             ListView_DeleteAllItems(resultsList);
             this->previousSearchResults = this->noResultsFound;
-            SendDlgItemMessage(
-                hwnd,
-                IDC_SRD_NOTES,
-                WM_SETTEXT,
-                NULL,
-                (LPARAM)L""
-            );
+            SendDlgItemMessage(hwnd, IDC_SRD_NOTES, WM_SETTEXT, NULL, (LPARAM)L"");
 
             // Disable the route copy button
             EnableWindow(GetDlgItem(hwnd, IDC_SRD_ROUTE_COPY), false);
-
 
             if (resultsList == NULL) {
                 return;
@@ -294,51 +242,49 @@ namespace UKControllerPlugin {
                 item.iSubItem = 0;
 
                 // Nothing found, display the fact
-                item.pszText = L"0";
+                wchar_t zero[2] = L"0";
+                item.pszText = zero;
                 ListView_InsertItem(resultsList, &item);
                 item.iSubItem++;
-                item.pszText = L"0";
+                item.pszText = zero;
                 ListView_SetItem(resultsList, &item);
                 item.iSubItem++;
-                item.pszText = L"No routes found";
+                wchar_t noneFound[16] = L"No routes found";
+                item.pszText = noneFound;
                 ListView_SetItem(resultsList, &item);
 
                 return;
             }
 
-
             // Populate the results list with results
             int itemNumber = 0;
-            for (
-                nlohmann::json::const_iterator it = this->previousSearchResults.cbegin();
-                it != this->previousSearchResults.cend();
-                ++it
-            ) {
+            for (nlohmann::json::const_iterator it = this->previousSearchResults.cbegin();
+                 it != this->previousSearchResults.cend();
+                 ++it) {
                 LVITEM item;
                 item.mask = LVIF_TEXT;
                 item.iItem = itemNumber;
                 item.iSubItem = 0;
 
                 // Min Level
-                std::wstring minLevel = it->at("minimum_level").is_null()
-                    ? L"MC"
-                    : std::to_wstring(ConvertAltitudeToFlightLevel(it->at("minimum_level").get<int>()));
+                std::wstring minLevel =
+                    it->at("minimum_level").is_null()
+                        ? L"MC"
+                        : std::to_wstring(ConvertAltitudeToFlightLevel(it->at("minimum_level").get<int>()));
                 item.pszText = (LPWSTR)minLevel.c_str();
                 ListView_InsertItem(resultsList, &item);
 
                 // Max Level
                 item.iSubItem++;
-                std::wstring maxLevel = std::to_wstring(
-                    ConvertAltitudeToFlightLevel(it->at("maximum_level").get<int>())
-                );
+                std::wstring maxLevel =
+                    std::to_wstring(ConvertAltitudeToFlightLevel(it->at("maximum_level").get<int>()));
                 item.pszText = (LPWSTR)maxLevel.c_str();
                 ListView_SetItem(resultsList, &item);
 
                 // Route String
                 item.iSubItem++;
-                std::wstring routeString = HelperFunctions::ConvertToWideString(
-                    it->at("route_string").get<std::string>()
-                );
+                std::wstring routeString =
+                    HelperFunctions::ConvertToWideString(it->at("route_string").get<std::string>());
                 item.pszText = (LPWSTR)(routeString.c_str());
                 ListView_SetItem(resultsList, &item);
 
@@ -354,9 +300,8 @@ namespace UKControllerPlugin {
 
             EmptyClipboard();
 
-            std::string routeString = this->previousSearchResults.at(this->selectedResult)
-                .at("route_string")
-                .get<std::string>();
+            std::string routeString =
+                this->previousSearchResults.at(this->selectedResult).at("route_string").get<std::string>();
 
             HGLOBAL handle = GlobalAlloc(GMEM_MOVEABLE, (routeString.size() + 1) * sizeof(char));
             if (handle == NULL) {
@@ -372,32 +317,22 @@ namespace UKControllerPlugin {
             CloseClipboard();
         }
 
-        void SrdSearchDialog::SelectSearchResult(HWND hwnd, NMLISTVIEW * details)
+        void SrdSearchDialog::SelectSearchResult(HWND hwnd, NMLISTVIEW* details)
         {
             // If a new item has been selected, change the notes
-            if (
-                ((details->uNewState ^ details->uOldState) & LVIS_SELECTED) &&
-                !this->previousSearchResults.empty()
-            ) {
+            if (((details->uNewState ^ details->uOldState) & LVIS_SELECTED) && !this->previousSearchResults.empty()) {
 
                 this->selectedResult = details->iItem;
 
                 std::wstring noteStringWide = HelperFunctions::ConvertToWideString(
-                    this->FormatNotes(this->previousSearchResults, details->iItem)
-                );
+                    this->FormatNotes(this->previousSearchResults, details->iItem));
 
-                SendDlgItemMessage(
-                    hwnd,
-                    IDC_SRD_NOTES,
-                    WM_SETTEXT,
-                    NULL,
-                    (LPARAM) noteStringWide.c_str()
-                );
+                SendDlgItemMessage(hwnd, IDC_SRD_NOTES, WM_SETTEXT, NULL, (LPARAM)noteStringWide.c_str());
 
                 // Enable the route copy button
                 EnableWindow(GetDlgItem(hwnd, IDC_SRD_ROUTE_COPY), true);
             }
         }
 
-    }  // namespace Srd
-}  // namespace UKControllerPlugin
+    } // namespace Srd
+} // namespace UKControllerPlugin

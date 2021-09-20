@@ -1,15 +1,13 @@
-#include "pch/pch.h"
 #include "plugin/PluginChangelog.h"
 #include "plugin/PopupMenuItem.h"
-#include "mock/MockWinApi.h"
 #include "update/LoadChangelog.h"
 
+using ::testing::_;
+using ::testing::NiceMock;
+using ::testing::Test;
 using UKControllerPlugin::Plugin::PluginChangelog;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Windows::MockWinApi;
-using ::testing::Test;
-using ::testing::NiceMock;
-using ::testing::_;
 
 namespace UKControllerPluginTest {
     namespace Plugin {
@@ -17,15 +15,12 @@ namespace UKControllerPluginTest {
         class PluginChangelogTest : public Test
         {
             public:
+            PluginChangelogTest() : page(mockWindows, 123)
+            {
+            }
 
-                PluginChangelogTest()
-                    : page(mockWindows, 123)
-                {
-
-                }
-
-                NiceMock<MockWinApi> mockWindows;
-                PluginChangelog page;
+            NiceMock<MockWinApi> mockWindows;
+            PluginChangelog page;
         };
 
         TEST_F(PluginChangelogTest, ItHasAConfigurationMenuItem)
@@ -52,18 +47,16 @@ namespace UKControllerPluginTest {
 
         TEST_F(PluginChangelogTest, ProcessCommandShowsChangelog)
         {
-            EXPECT_CALL(this->mockWindows, OpenWebBrowser(UKControllerPlugin::Update::changelogUrl))
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenWebBrowser(UKControllerPlugin::Update::changelogUrl)).Times(1);
 
             this->page.ProcessCommand(".ukcp changelog");
         }
 
         TEST_F(PluginChangelogTest, ConfigureShowsChangelog)
         {
-            EXPECT_CALL(this->mockWindows, OpenWebBrowser(UKControllerPlugin::Update::changelogUrl))
-                .Times(1);
+            EXPECT_CALL(this->mockWindows, OpenWebBrowser(UKControllerPlugin::Update::changelogUrl)).Times(1);
 
             this->page.Configure(123, "", {});
         }
-    }  // namespace Plugin
-}  // namespace UKControllerPluginTest
+    } // namespace Plugin
+} // namespace UKControllerPluginTest

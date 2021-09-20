@@ -1,12 +1,10 @@
-#include "pch/pch.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
-#include "mock/MockRunwayDialogAwareInterface.h"
 
-using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
-using UKControllerPluginTest::Euroscope::MockRunwayDialogAwareInterface;
-using ::testing::Test;
 using ::testing::NiceMock;
 using ::testing::Ref;
+using ::testing::Test;
+using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPluginTest::Euroscope::MockRunwayDialogAwareInterface;
 
 namespace UKControllerPluginTest {
     namespace Euroscope {
@@ -14,16 +12,15 @@ namespace UKControllerPluginTest {
         class RunwayDialogAwareCollectionTest : public Test
         {
             public:
+            void SetUp()
+            {
+                mockHandler1.reset(new NiceMock<MockRunwayDialogAwareInterface>);
+                mockHandler2.reset(new NiceMock<MockRunwayDialogAwareInterface>);
+            }
 
-                void SetUp()
-                {
-                    mockHandler1.reset(new NiceMock<MockRunwayDialogAwareInterface>);
-                    mockHandler2.reset(new NiceMock<MockRunwayDialogAwareInterface>);
-                }
-
-                std::shared_ptr<NiceMock<MockRunwayDialogAwareInterface>> mockHandler1;
-                std::shared_ptr<NiceMock<MockRunwayDialogAwareInterface>> mockHandler2;
-                RunwayDialogAwareCollection collection;
+            std::shared_ptr<NiceMock<MockRunwayDialogAwareInterface>> mockHandler1;
+            std::shared_ptr<NiceMock<MockRunwayDialogAwareInterface>> mockHandler2;
+            RunwayDialogAwareCollection collection;
         };
 
         TEST_F(RunwayDialogAwareCollectionTest, ItStartsEmpty)
@@ -50,14 +47,11 @@ namespace UKControllerPluginTest {
             this->collection.AddHandler(mockHandler1);
             this->collection.AddHandler(mockHandler2);
 
-            EXPECT_CALL(*this->mockHandler1, RunwayDialogSaved())
-                .Times(1);
+            EXPECT_CALL(*this->mockHandler1, RunwayDialogSaved()).Times(1);
 
-            EXPECT_CALL(*this->mockHandler2, RunwayDialogSaved())
-                .Times(1);
-
+            EXPECT_CALL(*this->mockHandler2, RunwayDialogSaved()).Times(1);
 
             this->collection.RunwayDialogSaved();
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPluginTest
+    } // namespace Euroscope
+} // namespace UKControllerPluginTest

@@ -1,418 +1,309 @@
-#include "pch/pch.h"
-#include "regional/RegionalPressureRenderer.h"
-#include "regional/RegionalPressureManager.h"
+#include "RegionalPressureManager.h"
+#include "RegionalPressureRenderer.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
-#include "helper/HelperFunctions.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/GdiplusBrushes.h"
+#include "helper/HelperFunctions.h"
 
-using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
 using UKControllerPlugin::Windows::GdiplusBrushes;
-using UKControllerPlugin::Dialog::DialogManager;
 
-namespace UKControllerPlugin {
-    namespace Regional {
+namespace UKControllerPlugin::Regional {
 
-        RegionalPressureRenderer::RegionalPressureRenderer(
-            RegionalPressureManager & manager,
-            int closeClickspotId,
-            int menuBarClickspotId,
-            int rpsClickspotId,
-            int toggleCallbackFunctionId,
-            const GdiplusBrushes & brushes,
-            const UKControllerPlugin::Dialog::DialogManager & dialogManager
-        )
-            : manager(manager), hideClickspotId(closeClickspotId), menuBarClickspotId(menuBarClickspotId),
-            rpsClickspotId(rpsClickspotId), leftColumnWidth(100), rowHeight(20), hideClickspotWidth(50),
-            toggleCallbackFunctionId(toggleCallbackFunctionId), brushes(brushes), dialogManager(dialogManager)
-        {
+    RegionalPressureRenderer::RegionalPressureRenderer(
+        RegionalPressureManager& manager,
+        int closeClickspotId,
+        int menuBarClickspotId,
+        int rpsClickspotId,
+        int toggleCallbackFunctionId,
+        const GdiplusBrushes& brushes,
+        const UKControllerPlugin::Dialog::DialogManager& dialogManager)
+        : brushes(brushes), manager(manager), dialogManager(dialogManager), hideClickspotId(closeClickspotId),
+          menuBarClickspotId(menuBarClickspotId), rpsClickspotId(rpsClickspotId),
+          toggleCallbackFunctionId(toggleCallbackFunctionId)
+    {
+    }
 
+    /*
+        Called when the ASR is first loaded to initialise important data.
+    */
+    void RegionalPressureRenderer::AsrLoadedEvent(UserSetting& userSetting)
+    {
+        this->config.SetShouldRender(userSetting.GetBooleanEntry(this->visibleUserSettingKey, true));
+        this->topBarArea.left = userSetting.GetIntegerEntry(this->xPositionUserSettingKey, DEFAULT_POSITION);
+        this->topBarArea.top = userSetting.GetIntegerEntry(this->yPositionUserSettingKey, DEFAULT_POSITION);
+        std::vector<std::string> selectedMinStacks = userSetting.GetStringListEntry(
+            this->selectedRegionalPressureUserSettingKey,
+            {
+                "ASR_LONDON",
+                "ASR_SCOTTISH",
+            });
+
+        int order = 0;
+        for (auto it = selectedMinStacks.cbegin(); it != selectedMinStacks.cend(); ++it) {
+            this->config.AddItem({order++, *it});
         }
 
-        /*
-            Called when the ASR is first loaded to initialise important data.
-        */
-        void RegionalPressureRenderer::AsrLoadedEvent(UserSetting & userSetting)
-        {
-            this->config.SetShouldRender(userSetting.GetBooleanEntry(this->visibleUserSettingKey, true));
-            this->topBarArea.left = userSetting.GetIntegerEntry(this->xPositionUserSettingKey, 100);
-            this->topBarArea.top = userSetting.GetIntegerEntry(this->yPositionUserSettingKey, 100);
-            std::vector<std::string> selectedMinStacks = userSetting.GetStringListEntry(
-                this->selectedRegionalPressureUserSettingKey,
-                {
-                    "ASR_LONDON",
-                    "ASR_SCOTTISH",
-                }
-            );
+        this->topBarArea.right = this->topBarArea.left + LEFT_COLUMN_WIDTH;
+        this->topBarArea.bottom = this->topBarArea.top + ROW_HEIGHT;
 
-            unsigned int order = 0;
-            for (
-                std::vector<std::string>::const_iterator it = selectedMinStacks.cbegin();
-                it != selectedMinStacks.cend();
-                ++it
-            ) {
-                this->config.AddItem(
-                    {
-                        order++,
-                        *it
-                    }
-                );
-            }
+        this->hideClickspotArea = {
+            this->topBarArea.right,
+            this->topBarArea.top,
+            this->topBarArea.right + HIDE_CLICKSPOT_WIDTH,
+            this->topBarArea.bottom};
 
-            this->topBarArea.right = this->topBarArea.left + this->leftColumnWidth;
-            this->topBarArea.bottom = this->topBarArea.top + this->rowHeight;
+        this->topBarRender = {this->topBarArea.left, this->topBarArea.top, LEFT_COLUMN_WIDTH, ROW_HEIGHT};
+        this->hideSpotRender = {this->topBarArea.right, this->topBarArea.top, HIDE_CLICKSPOT_WIDTH, ROW_HEIGHT};
+    }
 
-            this->hideClickspotArea = {
-                this->topBarArea.right,
-                this->topBarArea.top,
-                this->topBarArea.right + this->hideClickspotWidth,
-                this->topBarArea.bottom
-            };
+    /*
+        Called when the ASR is closing. Saves important data to the ASR for next time.
+    */
+    void RegionalPressureRenderer::AsrClosingEvent(UserSetting& userSetting)
+    {
+        userSetting.Save(this->visibleUserSettingKey, this->visibleUserSettingDescription, this->config.ShouldRender());
+        userSetting.Save(this->xPositionUserSettingKey, this->xPositionUserSettingDescription, this->topBarArea.left);
+        userSetting.Save(this->yPositionUserSettingKey, this->yPositionUserSettingDescription, this->topBarArea.top);
 
-            this->topBarRender = {
-                this->topBarArea.left,
-                this->topBarArea.top,
-                this->leftColumnWidth,
-                this->rowHeight
-            };
-            this->hideSpotRender = {
-                this->topBarArea.right,
-                this->topBarArea.top,
-                this->hideClickspotWidth,
-                this->rowHeight
-            };
+        std::vector<std::string> selectedPressures;
+        for (auto it = this->config.cbegin(); it != this->config.cend(); ++it) {
+            selectedPressures.push_back(it->key);
         }
 
-        /*
-            Called when the ASR is closing. Saves important data to the ASR for next time.
-        */
-        void RegionalPressureRenderer::AsrClosingEvent(UserSetting & userSetting)
-        {
-            userSetting.Save(
-                this->visibleUserSettingKey,
-                this->visibleUserSettingDescription,
-                this->config.ShouldRender()
-            );
-            userSetting.Save(
-                this->xPositionUserSettingKey,
-                this->xPositionUserSettingDescription,
-                this->topBarArea.left
-            );
-            userSetting.Save(
-                this->yPositionUserSettingKey,
-                this->yPositionUserSettingDescription,
-                this->topBarArea.top
-            );
+        userSetting.Save(
+            this->selectedRegionalPressureUserSettingKey,
+            this->selecteRegionalPressureUserSettingDescription,
+            selectedPressures);
+    }
 
-            std::vector<std::string> selectedPressures;
-            for (
-                RegionalPressureRendererConfiguration::const_iterator it = this->config.cbegin();
-                it != this->config.cend();
-                ++it
-            ) {
-                selectedPressures.push_back(it->key);
-            }
+    /*
+        Returns the menu configuration item.
+    */
+    auto RegionalPressureRenderer::GetConfigurationMenuItem() const -> PopupMenuItem
+    {
+        PopupMenuItem returnVal;
+        returnVal.firstValue = this->menuItemDescription;
+        returnVal.secondValue = "";
+        returnVal.callbackFunctionId = this->toggleCallbackFunctionId;
+        returnVal.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
+        returnVal.disabled = false;
+        returnVal.fixedPosition = false;
+        return returnVal;
+    }
 
-            userSetting.Save(
-                this->selectedRegionalPressureUserSettingKey,
-                this->selecteRegionalPressureUserSettingDescription,
-                selectedPressures
-            );
+    /*
+        The configuration function called if the menu item is selected. It toggles the
+        visibility.
+    */
+    void RegionalPressureRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
+    {
+        this->dialogManager.OpenDialog(
+            IDD_REGIONAL_PRESSURE,
+            reinterpret_cast<LPARAM>(&this->config) // NOLINT
+        );
+    }
+
+    auto RegionalPressureRenderer::GetConfig() -> RegionalPressureRendererConfiguration&
+    {
+        return this->config;
+    }
+
+    /*
+        Returns the screen area for the hide clickspot.
+    */
+    auto RegionalPressureRenderer::GetHideClickspotArea() const -> RECT
+    {
+        return this->hideClickspotArea;
+    }
+
+    /*
+        Returns the renderable area for the hide clickspot.
+    */
+    auto RegionalPressureRenderer::GetHideSpotRender() const -> Gdiplus::Rect
+    {
+        return this->hideSpotRender;
+    }
+
+    /*
+        Return the screen area for the top bar.
+    */
+    auto RegionalPressureRenderer::GetTopBarArea() const -> RECT
+    {
+        return this->topBarArea;
+    }
+
+    /*
+        Return the renderable area for the top bar.
+    */
+    auto RegionalPressureRenderer::GetTopBarRender() const -> Gdiplus::Rect
+    {
+        return this->topBarRender;
+    }
+
+    /*
+        Called when one of the clickable areas is clicked on.
+    */
+    void RegionalPressureRenderer::LeftClick(
+        EuroscopeRadarLoopbackInterface& radarScreen,
+        int objectId,
+        const std::string& objectDescription,
+        POINT mousePos,
+        RECT itemArea)
+    {
+        // Hiding the module
+        if (objectId == this->hideClickspotId) {
+            this->config.SetShouldRender(false);
+            return;
         }
 
-        /*
-            Returns the menu configuration item.
-        */
-        PopupMenuItem RegionalPressureRenderer::GetConfigurationMenuItem(void) const
-        {
-            PopupMenuItem returnVal;
-            returnVal.firstValue = this->menuItemDescription;
-            returnVal.secondValue = "";
-            returnVal.callbackFunctionId = this->toggleCallbackFunctionId;
-            returnVal.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-            returnVal.disabled = false;
-            returnVal.fixedPosition = false;
-            return returnVal;
-        }
+        // It was the RPS that was clicked
+        this->manager.AcknowledgePressure(objectDescription);
+    }
 
-        /*
-            The configuration function called if the menu item is selected. It toggles the
-            visibility.
-        */
-        void RegionalPressureRenderer::Configure(int functionId, std::string subject, RECT screenObjectArea)
-        {
-            this->dialogManager.OpenDialog(
-                IDD_REGIONAL_PRESSURE,
-                reinterpret_cast<LPARAM>(&this->config)
-            );
-        }
+    /*
+        Returns whether or not the module is visible on the screen.
+    */
+    auto RegionalPressureRenderer::IsVisible() const -> bool
+    {
+        return this->config.ShouldRender();
+    }
 
-        RegionalPressureRendererConfiguration & RegionalPressureRenderer::GetConfig(void)
-        {
-            return this->config;
-        }
+    /*
+        Moves the topleft point of the RPS window.
+    */
+    void RegionalPressureRenderer::Move(RECT titleBarArea, std::string objectDescription)
+    {
+        this->topBarArea = titleBarArea;
+        this->hideClickspotArea = {
+            titleBarArea.right, titleBarArea.top, titleBarArea.right + HIDE_CLICKSPOT_WIDTH, titleBarArea.bottom};
+        this->topBarRender = {this->topBarArea.left, this->topBarArea.top, LEFT_COLUMN_WIDTH, ROW_HEIGHT};
+        this->hideSpotRender = {this->topBarArea.right, this->topBarArea.top, HIDE_CLICKSPOT_WIDTH, ROW_HEIGHT};
+    }
 
-        /*
-            Returns the screen area for the hide clickspot.
-        */
-        RECT RegionalPressureRenderer::GetHideClickspotArea(void) const
-        {
-            return this->hideClickspotArea;
-        }
+    /*
+        Function called to render the module to the screen.
+    */
+    void RegionalPressureRenderer::Render(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        this->RenderTopBar(graphics, radarScreen);
+        this->RenderOuterFrame(graphics, radarScreen, this->RenderPressures(graphics, radarScreen));
+    }
 
-        /*
-            Returns the renderable area for the hide clickspot.
-        */
-        Gdiplus::Rect RegionalPressureRenderer::GetHideSpotRender(void) const
-        {
-            return this->hideSpotRender;
-        }
+    /*
+        Render the individual pressures and their associated clickspots.
+    */
+    auto RegionalPressureRenderer::RenderPressures(
+        GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen) -> int
+    {
+        // Loop through each of the TMAs
+        Gdiplus::Rect asr = {this->topBarArea.left, this->topBarArea.bottom, LEFT_COLUMN_WIDTH, ROW_HEIGHT};
+        Gdiplus::Rect rps = {this->topBarArea.right, this->topBarArea.bottom, HIDE_CLICKSPOT_WIDTH, ROW_HEIGHT};
 
-        /*
-            Return the screen area for the top bar.
-        */
-        RECT RegionalPressureRenderer::GetTopBarArea(void) const
-        {
-            return this->topBarArea;
-        }
+        int roundNumber = 0;
+        for (auto it = this->config.cbegin(); it != this->config.cend(); ++it) {
+            const RegionalPressure& pressureData = this->manager.GetRegionalPressure(it->key);
 
-        /*
-            Return the renderable area for the top bar.
-        */
-        Gdiplus::Rect RegionalPressureRenderer::GetTopBarRender(void) const
-        {
-            return this->topBarRender;
-        }
+            // Draw the TMA title and rectangles
+            graphics.FillRect(asr, *this->brushes.greyBrush);
+            graphics.DrawRect(asr, *this->brushes.blackPen);
 
-        /*
-            Called when one of the clickable areas is clicked on.
-        */
-        void RegionalPressureRenderer::LeftClick(
-            EuroscopeRadarLoopbackInterface& radarScreen,
-            int objectId,
-            std::string objectDescription,
-            POINT mousePos,
-            RECT itemArea
-        ) {
-            // Hiding the module
-            if (objectId == this->hideClickspotId) {
-                this->config.SetShouldRender(false);
-                return;
-            }
-
-            // It was the RPS that was clicked
-            this->manager.AcknowledgePressure(objectDescription);
-        }
-
-        /*
-            Returns whether or not the module is visible on the screen.
-        */
-        bool RegionalPressureRenderer::IsVisible(void) const
-        {
-            return this->config.ShouldRender();
-        }
-
-        /*
-            Moves the topleft point of the RPS window.
-        */
-        void RegionalPressureRenderer::Move(RECT titleBarArea, std::string objectDescription)
-        {
-            this->topBarArea = titleBarArea;
-            this->hideClickspotArea = {
-                titleBarArea.right,
-                titleBarArea.top,
-                titleBarArea.right + this->hideClickspotWidth,
-                titleBarArea.bottom
-            };
-            this->topBarRender = {
-                this->topBarArea.left,
-                this->topBarArea.top,
-                this->leftColumnWidth,
-                this->rowHeight
-            };
-            this->hideSpotRender = {
-                this->topBarArea.right,
-                this->topBarArea.top,
-                this->hideClickspotWidth,
-                this->rowHeight
-            };
-        }
-
-        /*
-            Function called to render the module to the screen.
-        */
-        void RegionalPressureRenderer::Render(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen
-        ) {
-            this->RenderTopBar(graphics, radarScreen);
-            this->RenderOuterFrame(graphics, radarScreen, this->RenderPressures(graphics, radarScreen));
-        }
-
-        /*
-            Render the individual pressures and their associated clickspots.
-        */
-        int RegionalPressureRenderer::RenderPressures(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen
-        ) {
-            // Loop through each of the TMAs
-            Gdiplus::Rect asr = {
-                this->topBarArea.left,
-                this->topBarArea.bottom,
-                this->leftColumnWidth,
-                this->rowHeight
-            };
-            Gdiplus::Rect rps = {
-                this->topBarArea.right,
-                this->topBarArea.bottom,
-                this->hideClickspotWidth,
-                this->rowHeight
-            };
-
-            int roundNumber = 0;
-            for (
-                RegionalPressureRendererConfiguration::const_iterator it = this->config.cbegin();
-                it != this->config.cend();
-                ++it
-            ) {
-                const RegionalPressure & pressureData = this->manager.GetRegionalPressure(it->key);
-
-                // Draw the TMA title and rectangles
-                graphics.FillRect(asr, *this->brushes.greyBrush);
-                graphics.DrawRect(asr, *this->brushes.blackPen);
-
-                graphics.DrawString(
-                    HelperFunctions::ConvertToWideString(this->manager.GetNameFromKey(it->key)),
-                    asr,
-                    pressureData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
-                );
-
-                // Draw the RPS itself and associated rectangles
-                graphics.FillRect(rps, *this->brushes.greyBrush);
-                graphics.DrawRect(rps, *this->brushes.blackPen);
-
-                std::string rpsString;
-                if (pressureData == this->manager.invalidPressure) {
-                    rpsString = "-";
-                } else if (pressureData.pressure < 1000) {
-                    rpsString = "0" + std::to_string(pressureData.pressure);
-                } else {
-                    rpsString = std::to_string(pressureData.pressure);
-                }
-
-                graphics.DrawString(
-                    HelperFunctions::ConvertToWideString(rpsString),
-                    rps,
-                    pressureData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush
-                );
-
-                // Add the clickable area.
-                radarScreen.RegisterScreenObject(
-                    this->rpsClickspotId,
-                    it->key,
-                    {
-                        asr.X,
-                        asr.Y,
-                        rps.X + this->hideClickspotWidth,
-                        rps.Y + this->rowHeight
-                    },
-                    false
-                );
-
-                // Increment values for the next TMA
-                asr.Y = asr.Y + this->rowHeight;
-                rps.Y = rps.Y + this->rowHeight;
-                roundNumber++;
-            }
-
-            return roundNumber;
-        }
-
-        /*
-            Renders a frame around the box.
-        */
-        void RegionalPressureRenderer::RenderOuterFrame(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen,
-            int numRegionalPressures
-        ) {
-            Gdiplus::Rect area = {
-                this->topBarArea.left,
-                this->topBarArea.top,
-                this->leftColumnWidth + this->hideClickspotWidth,
-                1 + ((numRegionalPressures) * this->rowHeight)
-            };
-            graphics.DrawRect(
-                area,
-                *this->brushes.blackPen
-            );
-        }
-
-        /*
-            Renders the title bar of the RPS display.
-        */
-        void RegionalPressureRenderer::RenderTopBar(
-            GdiGraphicsInterface & graphics,
-            EuroscopeRadarLoopbackInterface & radarScreen
-        ) {
-            // The title bar - the draggable bit
-            graphics.DrawRect(this->topBarRender, *this->brushes.blackPen);
-            graphics.FillRect(this->topBarRender, *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawString(L"ASR", this->topBarRender, *this->brushes.whiteBrush);
-            radarScreen.RegisterScreenObject(
-                this->menuBarClickspotId,
-                "",
-                this->topBarArea,
-                true
-            );
-
-            // The toggle button - no draggable
-            graphics.DrawRect(this->hideSpotRender, *this->brushes.blackPen);
-            graphics.FillRect(this->hideSpotRender, *this->brushes.euroscopeBackgroundBrush);
             graphics.DrawString(
-                L"X",
-                this->hideSpotRender,
-                *this->brushes.whiteBrush
-            );
+                HelperFunctions::ConvertToWideString(this->manager.GetNameFromKey(it->key)),
+                asr,
+                pressureData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush);
+
+            // Draw the RPS itself and associated rectangles
+            graphics.FillRect(rps, *this->brushes.greyBrush);
+            graphics.DrawRect(rps, *this->brushes.blackPen);
+
+            std::string rpsString;
+            if (pressureData == this->manager.invalidPressure) {
+                rpsString = "-";
+            } else if (pressureData.pressure < APPEND_ZERO_LIMIT) {
+                rpsString = "0" + std::to_string(pressureData.pressure);
+            } else {
+                rpsString = std::to_string(pressureData.pressure);
+            }
+
+            graphics.DrawString(
+                HelperFunctions::ConvertToWideString(rpsString),
+                rps,
+                pressureData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush);
+
+            // Add the clickable area.
             radarScreen.RegisterScreenObject(
-                this->hideClickspotId,
-                "",
-                this->hideClickspotArea,
-                false
-            );
+                this->rpsClickspotId, it->key, {asr.X, asr.Y, rps.X + HIDE_CLICKSPOT_WIDTH, rps.Y + ROW_HEIGHT}, false);
+
+            // Increment values for the next TMA
+            asr.Y = asr.Y + ROW_HEIGHT;
+            rps.Y = rps.Y + ROW_HEIGHT;
+            roundNumber++;
         }
 
-        /*
-            When one the clickspots is clicked on. Just do whatever the leftclick does.
-        */
-        void RegionalPressureRenderer::RightClick(
-            int objectId,
-            std::string objectDescription,
-            EuroscopeRadarLoopbackInterface & radarScreen
-        ) {
-            this->LeftClick(radarScreen, objectId, objectDescription, POINT{}, RECT{});
-        }
+        return roundNumber;
+    }
 
-        /*
-            Reset the position of the renderer
-        */
-        void RegionalPressureRenderer::ResetPosition(void)
-        {
-            this->Move(
-                { 100, 100, 100 + this->leftColumnWidth, 100 + this->rowHeight },
-                ""
-            );
-        }
+    /*
+        Renders a frame around the box.
+    */
+    void RegionalPressureRenderer::RenderOuterFrame(
+        GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen, int numRegionalPressures)
+    {
+        Gdiplus::Rect area = {
+            this->topBarArea.left,
+            this->topBarArea.top,
+            LEFT_COLUMN_WIDTH + HIDE_CLICKSPOT_WIDTH,
+            1 + ((numRegionalPressures)*ROW_HEIGHT)};
+        graphics.DrawRect(area, *this->brushes.blackPen);
+    }
 
-        void RegionalPressureRenderer::SetVisible(bool visible)
-        {
-            this->config.SetShouldRender(visible);
-        }
-    }  // namespace Regional
-}  // namespace UKControllerPlugin
+    /*
+        Renders the title bar of the RPS display.
+    */
+    void
+    RegionalPressureRenderer::RenderTopBar(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        // The title bar - the draggable bit
+        graphics.DrawRect(this->topBarRender, *this->brushes.blackPen);
+        graphics.FillRect(this->topBarRender, *this->brushes.euroscopeBackgroundBrush);
+        graphics.DrawString(L"ASR", this->topBarRender, *this->brushes.whiteBrush);
+        radarScreen.RegisterScreenObject(this->menuBarClickspotId, "", this->topBarArea, true);
+
+        // The toggle button - no draggable
+        graphics.DrawRect(this->hideSpotRender, *this->brushes.blackPen);
+        graphics.FillRect(this->hideSpotRender, *this->brushes.euroscopeBackgroundBrush);
+        graphics.DrawString(L"X", this->hideSpotRender, *this->brushes.whiteBrush);
+        radarScreen.RegisterScreenObject(this->hideClickspotId, "", this->hideClickspotArea, false);
+    }
+
+    /*
+        When one the clickspots is clicked on. Just do whatever the leftclick does.
+    */
+    void RegionalPressureRenderer::RightClick(
+        int objectId, const std::string& objectDescription, EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        this->LeftClick(radarScreen, objectId, objectDescription, POINT{}, RECT{});
+    }
+
+    /*
+        Reset the position of the renderer
+    */
+    void RegionalPressureRenderer::ResetPosition()
+    {
+        this->Move(
+            {DEFAULT_POSITION, DEFAULT_POSITION, DEFAULT_POSITION + LEFT_COLUMN_WIDTH, DEFAULT_POSITION + ROW_HEIGHT},
+            "");
+    }
+
+    void RegionalPressureRenderer::SetVisible(bool visible)
+    {
+        this->config.SetShouldRender(visible);
+    }
+} // namespace UKControllerPlugin::Regional
