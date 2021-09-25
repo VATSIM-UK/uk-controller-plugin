@@ -470,7 +470,9 @@ set(src__minstack
 source_group("src\\minstack" FILES ${src__minstack})
 
 set(src__missedapproach
-        missedapproach/MissedApproach.cpp missedapproach/MissedApproach.h)
+        missedapproach/MissedApproach.cpp missedapproach/MissedApproach.h
+        missedapproach/MissedApproachCollection.cpp missedapproach/MissedApproachCollection.h
+        missedapproach/CompareMissedApproaches.cpp missedapproach/CompareMissedApproaches.h)
 source_group("src\\missedapproach" FILES ${src__missedapproach})
 
 set(src__navaids

@@ -6,14 +6,10 @@ namespace UKControllerPlugin::MissedApproach {
     class MissedApproach
     {
         public:
-        MissedApproach(int id, std::string callsign, std::chrono::system_clock::time_point expiresAt);
-        [[nodiscard]] auto Id() const -> int;
+        MissedApproach(std::string callsign, std::chrono::system_clock::time_point expiresAt);
         [[nodiscard]] auto Callsign() const -> const std::string&;
         [[nodiscard]] auto ExpiresAt() const -> const std::chrono::system_clock::time_point&;
         [[nodiscard]] auto IsExpired() const -> bool;
-
-        // The id of the missed approach
-        int id;
 
         // The callsign associated with the missed approach
         std::string callsign;
