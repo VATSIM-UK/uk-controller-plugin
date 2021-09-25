@@ -29,9 +29,8 @@ namespace UKControllerPlugin::Integration {
             return {};
         }
 
-        std::string streamData;
+        std::string streamData = this->incomingData.str();
         std::queue<std::string> messages;
-        this->incomingData >> streamData;
 
         size_t indexOfMessageSeparator = 0;
         while ((indexOfMessageSeparator = streamData.find(MESSAGE_DELIMITER)) != std::string::npos) {
@@ -40,9 +39,9 @@ namespace UKControllerPlugin::Integration {
         }
 
         // Put any incomplete messages back on the stream for later
-        this->incomingData.str(streamData);
+        this->incomingData.str("");
         this->incomingData.clear();
-        this->incomingData = std::stringstream();
+        this->incomingData << streamData;
 
         return messages;
     }
