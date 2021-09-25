@@ -11,17 +11,18 @@ namespace UKControllerPlugin::Integration {
         public:
         explicit SocketWrapper(SOCKET socket);
         ~SocketWrapper() override;
-        bool Active() const override;
-        SocketInterface& operator<<(std::string& message) override;
-        SocketInterface& operator>>(std::string& message) override;
-        SocketInterface& operator>>(std::stringstream& inboundStream) override;
+        [[nodiscard]] auto Active() const -> bool override;
+        auto operator<<(std::string& message) -> SocketInterface& override;
+        auto operator>>(std::string& message) -> SocketInterface& override;
+        auto operator>>(std::stringstream& inboundStream) -> SocketInterface& override;
 
         private:
         void ReadLoop();
         void WriteLoop();
-        std::lock_guard<std::mutex> LockWriteSteam();
-        std::lock_guard<std::mutex> LockReadStream();
-        std::string GetMessageToWrite();
+        auto LockWriteSteam() -> std::lock_guard<std::mutex>;
+        auto LockReadStream() -> std::lock_guard<std::mutex>;
+        auto GetMessageToWrite() -> std::string;
+        static void ResetStream(std::stringstream& stream);
 
         // The socket
         SOCKET socket;
@@ -46,5 +47,8 @@ namespace UKControllerPlugin::Integration {
 
         // Mutex for the write stream
         std::mutex writeStreamLock;
+
+        // How big a message we can read in one go
+        static inline const int READ_BUFFER_SIZE = 4096;
     };
 } // namespace UKControllerPlugin::Integration

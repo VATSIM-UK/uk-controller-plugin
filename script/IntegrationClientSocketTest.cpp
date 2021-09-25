@@ -54,7 +54,7 @@ thread = std::make_shared<std::thread>([clientSocket]() {
     do {
         bytesReceived = recv(clientSocket, &receiveBuffer[0], 4096, 0);
         if (bytesReceived > 0) {
-            std::string message = std::string(&receiveBuffer[0], &receiveBuffer[bytesReceived - 1]);
+            std::string message = std::string(receiveBuffer.cbegin(), receiveBuffer.cbegin() + bytesReceived);
             LogInfo("Message received: " + message + "\n\n");
             if (!sentStandRequest) {
                 nlohmann::json stand{

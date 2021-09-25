@@ -24,45 +24,40 @@ namespace UKControllerPlugin::Integration {
         this->writeThread->join();
     }
 
-    bool SocketWrapper::Active() const
+    auto SocketWrapper::Active() const -> bool
     {
         return this->active;
     }
 
-    SocketInterface& SocketWrapper::operator<<(std::string& message)
+    auto SocketWrapper::operator<<(std::string& message) -> SocketInterface&
     {
         auto lock = this->LockWriteSteam();
-        if (this->writeStream.eof()) {
-            this->writeStream.clear();
-        }
-
         this->writeStream << message;
         return *this;
     }
 
-    SocketInterface& SocketWrapper::operator>>(std::string& message)
+    auto SocketWrapper::operator>>(std::string& message) -> SocketInterface&
     {
         auto lock = this->LockReadStream();
-        this->readStream >> message;
+        message = readStream.str();
+        ResetStream(this->readStream);
         return *this;
     }
 
-    SocketInterface& SocketWrapper::operator>>(std::stringstream& inboundStream)
+    auto SocketWrapper::operator>>(std::stringstream& inboundStream) -> SocketInterface&
     {
         auto lock = this->LockReadStream();
-
-        std::string dataString;
-        this->readStream >> dataString;
-        inboundStream << dataString;
+        inboundStream << this->readStream.str();
+        ResetStream(this->readStream);
         return *this;
     }
 
     void SocketWrapper::ReadLoop()
     {
-        int bytesReceived;
-        std::array<char, 4096> receiveBuffer;
+        int bytesReceived = 0;
+        std::array<char, READ_BUFFER_SIZE> receiveBuffer{};
         do {
-            bytesReceived = recv(this->socket, &receiveBuffer[0], 4096, 0);
+            bytesReceived = recv(this->socket, &receiveBuffer[0], READ_BUFFER_SIZE, 0);
 
             if (bytesReceived > 0) {
                 auto lock = this->LockReadStream();
@@ -70,7 +65,7 @@ namespace UKControllerPlugin::Integration {
                     this->readStream.clear();
                 }
 
-                this->readStream << std::string(&receiveBuffer[0], &receiveBuffer[bytesReceived]);
+                this->readStream << std::string(receiveBuffer.cbegin(), receiveBuffer.cbegin() + bytesReceived);
             } else if (bytesReceived == 0) {
                 LogInfo("Integration connection closing");
                 this->active = false;
@@ -91,7 +86,7 @@ namespace UKControllerPlugin::Integration {
                 continue;
             }
 
-            int sendResult = send(this->socket, message.c_str(), message.size(), 0);
+            int sendResult = send(this->socket, message.c_str(), static_cast<int>(message.size()), 0);
             if (sendResult == SOCKET_ERROR) {
                 LogError("Failed to send on socket, socket will be shut down: " + std::to_string(WSAGetLastError()));
                 this->active = false;
@@ -99,25 +94,32 @@ namespace UKControllerPlugin::Integration {
         } while (this->active);
     }
 
-    std::lock_guard<std::mutex> SocketWrapper::LockWriteSteam()
+    auto SocketWrapper::LockWriteSteam() -> std::lock_guard<std::mutex>
     {
         return std::lock_guard(this->writeStreamLock);
     }
 
-    std::lock_guard<std::mutex> SocketWrapper::LockReadStream()
+    auto SocketWrapper::LockReadStream() -> std::lock_guard<std::mutex>
     {
         return std::lock_guard(this->readStreamLock);
     }
 
-    std::string SocketWrapper::GetMessageToWrite()
+    auto SocketWrapper::GetMessageToWrite() -> std::string
     {
         std::string message;
         auto lock = this->LockWriteSteam();
-        if (this->writeStream.eof()) {
+        if (this->writeStream.tellp() == 0) {
             return message;
         }
 
-        this->writeStream >> message;
+        message = this->writeStream.str();
+        ResetStream(this->writeStream);
         return message;
+    }
+
+    void SocketWrapper::ResetStream(std::stringstream& stream)
+    {
+        stream.str("");
+        stream.clear();
     }
 } // namespace UKControllerPlugin::Integration
