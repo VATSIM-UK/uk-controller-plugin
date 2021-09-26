@@ -32,8 +32,6 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] auto BuildDeleteAssignedHoldRequest(const std::string& callsign) const
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] static auto BuildRemoteFileRequest(std::string uri) -> UKControllerPlugin::Curl::CurlRequest;
-        [[nodiscard]] auto BuildVersionCheckRequest(const std::string& versionString) const
-            -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildMinStackLevelRequest() const -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildRegionalPressureRequest() const -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildSrdQueryRequest(const UKControllerPlugin::Srd::SrdSearchParameters& parameters) const
@@ -86,6 +84,8 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] auto BuildAcknowledgePrenoteMessageRequest(int messageId, int controllerId) const
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildDeletePrenoteMessageRequest(int messageId) const
+            -> UKControllerPlugin::Curl::CurlRequest;
+        [[nodiscard]] auto BuildMissedApproachMessage(const std::string& callsign) const
             -> UKControllerPlugin::Curl::CurlRequest;
 
         [[nodiscard]] auto GetApiDomain() const -> std::string;

@@ -374,4 +374,9 @@ namespace UKControllerPlugin::Api {
     {
         static_cast<void>(this->MakeApiRequest(this->requestBuilder.BuildDeletePrenoteMessageRequest(messageId)));
     }
+
+    void ApiHelper::CreateMissedApproach(const std::string& callsign) const
+    {
+        static_cast<void>(this->MakeApiRequest(this->requestBuilder.BuildMissedApproachMessage(callsign)));
+    }
 } // namespace UKControllerPlugin::Api

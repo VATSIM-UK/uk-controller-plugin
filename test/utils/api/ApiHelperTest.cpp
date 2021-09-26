@@ -802,4 +802,20 @@ namespace UKControllerPluginUtilsTest::Api {
 
         this->helper.DeletePrenoteMessage(55);
     }
+
+    TEST_F(ApiHelperTest, CreateMissedApproachMakesRequest)
+    {
+        nlohmann::json responseData;
+        responseData["bla"] = "bla";
+        CurlResponse response(responseData.dump(), false, 200);
+
+        nlohmann::json expectedData;
+        expectedData["callsign"] = "BAW123";
+
+        CurlRequest expectedRequest(GetApiCurlRequest("/missed-approaches", CurlRequest::METHOD_POST, expectedData));
+
+        EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
+
+        this->helper.CreateMissedApproach("BAW123");
+    }
 } // namespace UKControllerPluginUtilsTest::Api
