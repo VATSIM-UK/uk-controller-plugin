@@ -816,6 +816,6 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
-        this->helper.CreateMissedApproach("BAW123");
+        EXPECT_EQ(responseData, this->helper.CreateMissedApproach("BAW123"));
     }
 } // namespace UKControllerPluginUtilsTest::Api

@@ -8,10 +8,10 @@ namespace UKControllerPlugin::MissedApproach {
      */
     using CompareMissedApproaches = struct CompareMissedApproaches
     {
-        using is_transparent = std::string;
+        using is_transparent = int;
 
-        auto operator()(const std::shared_ptr<MissedApproach>& missed, const std::string& callsign) const -> bool;
-        auto operator()(const std::string& callsign, const std::shared_ptr<MissedApproach>& missed) const -> bool;
+        auto operator()(const std::shared_ptr<MissedApproach>& missed, int id) const -> bool;
+        auto operator()(int id, const std::shared_ptr<MissedApproach>& missed) const -> bool;
         auto operator()(const std::shared_ptr<MissedApproach>& a, const std::shared_ptr<MissedApproach>& b) const
             -> bool;
     };

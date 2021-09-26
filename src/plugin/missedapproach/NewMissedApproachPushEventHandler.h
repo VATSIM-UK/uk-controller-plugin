@@ -17,7 +17,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         private:
         [[nodiscard]] static auto MessageValid(const nlohmann::json& data) -> bool;
-        [[nodiscard]] auto CheckForExisting(std::string callsign) const -> bool;
+        [[nodiscard]] auto CheckForExisting(int id) const -> bool;
 
         const std::shared_ptr<MissedApproachCollection> missedApproaches;
     };

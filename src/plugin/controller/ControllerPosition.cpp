@@ -77,4 +77,9 @@ namespace UKControllerPlugin::Controller {
     {
         return this->receivesPrenoteMessages;
     }
+
+    auto ControllerPosition::IsTower() const -> bool
+    {
+        return this->GetType() == "TWR";
+    }
 } // namespace UKControllerPlugin::Controller

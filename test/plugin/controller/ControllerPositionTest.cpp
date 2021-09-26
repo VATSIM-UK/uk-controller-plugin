@@ -100,4 +100,15 @@ namespace UKControllerPluginTest::Controller {
     {
         EXPECT_TRUE(controller.ReceivesPrenoteMessages());
     }
+
+    TEST_F(ControllerPositionTest, IsTowerReturnsFalseNotTower)
+    {
+        EXPECT_FALSE(controller.IsTower());
+    }
+
+    TEST_F(ControllerPositionTest, IsTowerReturnsTrueIfTower)
+    {
+        ControllerPosition controller2(1, "EGFF_TWR", 125.8501, std::vector<std::string>{"EGFF"}, true, false);
+        EXPECT_TRUE(controller2.IsTower());
+    }
 } // namespace UKControllerPluginTest::Controller

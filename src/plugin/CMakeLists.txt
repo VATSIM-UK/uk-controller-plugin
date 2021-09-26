@@ -472,7 +472,7 @@ source_group("src\\minstack" FILES ${src__minstack})
 set(src__missedapproach
         missedapproach/MissedApproach.cpp missedapproach/MissedApproach.h
         missedapproach/MissedApproachCollection.cpp missedapproach/MissedApproachCollection.h
-        missedapproach/CompareMissedApproaches.cpp missedapproach/CompareMissedApproaches.h missedapproach/RemoveExpiredMissedApproaches.cpp missedapproach/RemoveExpiredMissedApproaches.h missedapproach/MissedApproachModule.cpp missedapproach/MissedApproachModule.h missedapproach/NewMissedApproachPushEventHandler.cpp missedapproach/NewMissedApproachPushEventHandler.h)
+        missedapproach/CompareMissedApproaches.cpp missedapproach/CompareMissedApproaches.h missedapproach/RemoveExpiredMissedApproaches.cpp missedapproach/RemoveExpiredMissedApproaches.h missedapproach/MissedApproachModule.cpp missedapproach/MissedApproachModule.h missedapproach/NewMissedApproachPushEventHandler.cpp missedapproach/NewMissedApproachPushEventHandler.h missedapproach/TriggerMissedApproach.cpp missedapproach/TriggerMissedApproach.h)
 source_group("src\\missedapproach" FILES ${src__missedapproach})
 
 set(src__navaids
@@ -779,13 +779,6 @@ set(src__tag
 )
 source_group("src\\tag" FILES ${src__tag})
 
-set(src__task
-    "task/TaskRunner.cpp"
-    "task/TaskRunner.h"
-    "task/TaskRunnerInterface.h"
-)
-source_group("src\\task" FILES ${src__task})
-
 set(src__time
     "time/ParseTimeStrings.cpp"
     "time/ParseTimeStrings.h"
@@ -865,7 +858,6 @@ set(ALL_FILES
     ${src__srd}
     ${src__stands}
     ${src__tag}
-    ${src__task}
     ${src__time}
     ${src__timedevent}
     ${src__timer}

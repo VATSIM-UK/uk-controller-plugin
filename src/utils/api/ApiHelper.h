@@ -84,7 +84,7 @@ namespace UKControllerPlugin::Api {
             int requestExpiry) const -> nlohmann::json override;
         void AcknowledgePrenoteMessage(int messageId, int controllerId) const override;
         void DeletePrenoteMessage(int messageId) const override;
-        void CreateMissedApproach(const std::string& callsign) const override;
+        [[nodiscard]] auto CreateMissedApproach(const std::string& callsign) const -> nlohmann::json override;
 
         // The HTTP status codes that may be returned by the API
         static const uint64_t STATUS_OK = 200L;

@@ -49,6 +49,6 @@
 #include "../mock/MockRunwayDialogAwareInterface.h"
 #include "../mock/MockSectorFileProviderInterface.h"
 #include "../mock/MockSocket.h"
-#include "../mock/MockTaskRunnerInterface.h"
+#include "mock/MockTaskRunnerInterface.h"
 #include "../mock/MockUserSettingAwareInterface.h"
 #include "../mock/MockUserSettingProviderInterface.h"
