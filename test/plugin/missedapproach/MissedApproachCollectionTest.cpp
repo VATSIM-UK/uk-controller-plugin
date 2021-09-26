@@ -74,4 +74,38 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(nullptr, collection.Get("BAW123"));
         EXPECT_EQ(missed2, collection.Get("BAW456"));
     }
+
+    TEST_F(MissedApproachCollectionTest, FirstWhereReturnsItem)
+    {
+        collection.Add(missed1);
+        collection.Add(missed2);
+        auto result = collection.FirstWhere(
+            [](const std::shared_ptr<class MissedApproach>& app) -> bool { return app->Callsign() == "BAW123"; });
+        EXPECT_EQ(missed1, result);
+    }
+
+    TEST_F(MissedApproachCollectionTest, FirstWhereReturnsNullptrIfNotFound)
+    {
+        collection.Add(missed1);
+        collection.Add(missed2);
+        auto result = collection.FirstWhere(
+            [](const std::shared_ptr<class MissedApproach>& app) -> bool { return app->Callsign() == "BAW999"; });
+        EXPECT_EQ(nullptr, result);
+    }
+
+    TEST_F(MissedApproachCollectionTest, ItRemovesBasedOnValue)
+    {
+        collection.Add(missed1);
+        collection.Add(missed2);
+        collection.Remove(missed1);
+        EXPECT_EQ(1, collection.Count());
+        EXPECT_EQ(nullptr, collection.Get("BAW123"));
+        EXPECT_EQ(missed2, collection.Get("BAW456"));
+    }
+
+    TEST_F(MissedApproachCollectionTest, ItHandlesRemoveWhenNoValue)
+    {
+        collection.Remove(missed1);
+        EXPECT_NO_THROW(collection.Remove(missed1));
+    }
 } // namespace UKControllerPluginTest::MissedApproach

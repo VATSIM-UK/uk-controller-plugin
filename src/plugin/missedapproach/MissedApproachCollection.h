@@ -12,8 +12,12 @@ namespace UKControllerPlugin::MissedApproach {
     {
         public:
         void Add(const std::shared_ptr<MissedApproach>& missed);
-        auto Get(const std::string& callsign) const -> std::shared_ptr<MissedApproach>;
+        [[nodiscard]] auto
+        FirstWhere(const std::function<bool(const std::shared_ptr<MissedApproach>&)>& predicate) const
+            -> std::shared_ptr<MissedApproach>;
+        [[nodiscard]] auto Get(const std::string& callsign) const -> std::shared_ptr<MissedApproach>;
         [[nodiscard]] auto Count() const -> size_t;
+        void Remove(const std::shared_ptr<MissedApproach>& missed);
         void RemoveWhere(const std::function<bool(const std::shared_ptr<MissedApproach>&)>& predicate);
 
         private:
