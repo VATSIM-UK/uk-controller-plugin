@@ -49,4 +49,29 @@ namespace UKControllerPluginTest::MissedApproach {
         collection.Add(missed2);
         EXPECT_EQ(nullptr, collection.Get("BAW999"));
     }
+
+    TEST_F(MissedApproachCollectionTest, ItHandlesNoRemovalsNothingToRemove)
+    {
+        EXPECT_NO_THROW(
+            collection.RemoveWhere([](const std::shared_ptr<class MissedApproach>&) -> bool { return false; }));
+    }
+
+    TEST_F(MissedApproachCollectionTest, ItHandlesNoRemovals)
+    {
+        collection.Add(missed1);
+        collection.Add(missed2);
+        EXPECT_NO_THROW(
+            collection.RemoveWhere([](const std::shared_ptr<class MissedApproach>&) -> bool { return false; }));
+    }
+
+    TEST_F(MissedApproachCollectionTest, ItRemovesBasedOnPredicate)
+    {
+        collection.Add(missed1);
+        collection.Add(missed2);
+        collection.RemoveWhere(
+            [](const std::shared_ptr<class MissedApproach>& app) -> bool { return app->Callsign() == "BAW123"; });
+        EXPECT_EQ(1, collection.Count());
+        EXPECT_EQ(nullptr, collection.Get("BAW123"));
+        EXPECT_EQ(missed2, collection.Get("BAW456"));
+    }
 } // namespace UKControllerPluginTest::MissedApproach

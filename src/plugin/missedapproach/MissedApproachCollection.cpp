@@ -26,4 +26,17 @@ namespace UKControllerPlugin::MissedApproach {
     {
         return std::lock_guard(this->collectionLock);
     }
+
+    void
+    MissedApproachCollection::RemoveWhere(const std::function<bool(const std::shared_ptr<MissedApproach>&)>& predicate)
+    {
+        auto lock = this->Lock();
+        for (auto missedApproach = this->missedApproaches.cbegin(); missedApproach != this->missedApproaches.cend();) {
+            if (predicate(*missedApproach)) {
+                missedApproach = this->missedApproaches.erase(missedApproach);
+            } else {
+                ++missedApproach;
+            }
+        }
+    }
 } // namespace UKControllerPlugin::MissedApproach

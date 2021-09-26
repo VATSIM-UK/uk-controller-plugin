@@ -11,6 +11,7 @@ namespace UKControllerPlugin::MissedApproach {
         [[nodiscard]] auto ExpiresAt() const -> const std::chrono::system_clock::time_point&;
         [[nodiscard]] auto IsExpired() const -> bool;
 
+        private:
         // The callsign associated with the missed approach
         std::string callsign;
 
