@@ -469,6 +469,12 @@ set(src__minstack
         minstack/MinStackLevel.cpp minstack/MinStackRenderedItem.cpp)
 source_group("src\\minstack" FILES ${src__minstack})
 
+set(src__missedapproach
+        missedapproach/MissedApproach.cpp missedapproach/MissedApproach.h
+        missedapproach/MissedApproachCollection.cpp missedapproach/MissedApproachCollection.h
+        missedapproach/CompareMissedApproaches.cpp missedapproach/CompareMissedApproaches.h missedapproach/RemoveExpiredMissedApproaches.cpp missedapproach/RemoveExpiredMissedApproaches.h missedapproach/MissedApproachModule.cpp missedapproach/MissedApproachModule.h)
+source_group("src\\missedapproach" FILES ${src__missedapproach})
+
 set(src__navaids
     "navaids/CompareNavaids.cpp"
     "navaids/CompareNavaids.h"
@@ -841,6 +847,7 @@ set(ALL_FILES
     ${src__message}
     ${src__metar}
     ${src__minstack}
+    ${src__missedapproach}
     ${src__navaids}
     ${src__notifications}
     ${src__oceanic}

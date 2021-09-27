@@ -232,6 +232,11 @@ set(test__minstack
 )
 source_group("test\\minstack" FILES ${test__minstack})
 
+set(test__missedapproach
+        missedapproach/MissedApproachTest.cpp
+        missedapproach/CompareMissedApproachesTest.cpp missedapproach/MissedApproachCollectionTest.cpp missedapproach/RemoveExpiredMissedApproachesTest.cpp missedapproach/MissedApproachModuleTest.cpp)
+source_group("test\\missedapproach" FILES ${test__missedapproach})
+
 set(test__mock
     "mock/MockAbstractTimedEvent.h"
     "mock/MockActiveCallsignEventHandler.h"
@@ -494,6 +499,7 @@ set(ALL_FILES
     ${test__message}
     ${test__metar}
     ${test__minstack}
+    ${test__missedapproach}
     ${test__mock}
     ${test__navaids}
     ${test__notifications}
@@ -516,8 +522,7 @@ set(ALL_FILES
     ${test__timedevent}
     ${test__timer}
     ${test__wake}
-    $<TARGET_OBJECTS:UKControllerPluginCore>
-)
+    $<TARGET_OBJECTS:UKControllerPluginCore>)
 
 ################################################################################
 # Target

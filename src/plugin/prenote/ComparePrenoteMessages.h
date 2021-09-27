@@ -6,7 +6,7 @@ namespace UKControllerPlugin::Prenote {
     /**
      * Compares prenotes in a set by id.
      */
-    using ComparePrenoteMessages = struct ComparePrenoteMessages
+    using ComparePrenoteMessages = struct CompareMissedApproaches
     {
         using is_transparent = int;
 
