@@ -5,6 +5,7 @@ namespace UKControllerPlugin::MissedApproach {
 
     void MissedApproachCollection::Add(const std::shared_ptr<MissedApproach>& missed)
     {
+        auto lock = this->Lock();
         if (!this->missedApproaches.insert(missed).second) {
             LogWarning("Duplicate missed approach added");
         }
@@ -17,9 +18,9 @@ namespace UKControllerPlugin::MissedApproach {
 
     auto MissedApproachCollection::Get(const std::string& callsign) const -> std::shared_ptr<MissedApproach>
     {
-        auto lock = this->Lock();
-        auto missed = this->missedApproaches.find(callsign);
-        return missed == this->missedApproaches.cend() ? nullptr : *missed;
+        return this->FirstWhere([&callsign](const std::shared_ptr<MissedApproach>& missed) -> bool {
+            return missed->Callsign() == callsign;
+        });
     }
 
     auto MissedApproachCollection::Lock() const -> std::lock_guard<std::mutex>
@@ -38,5 +39,25 @@ namespace UKControllerPlugin::MissedApproach {
                 ++missedApproach;
             }
         }
+    }
+
+    auto MissedApproachCollection::FirstWhere(
+        const std::function<bool(const std::shared_ptr<MissedApproach>&)>& predicate) const
+        -> std::shared_ptr<MissedApproach>
+    {
+        auto lock = this->Lock();
+        for (const auto& approach : this->missedApproaches) {
+            if (predicate(approach)) {
+                return approach;
+            }
+        }
+
+        return nullptr;
+    }
+
+    void MissedApproachCollection::Remove(const std::shared_ptr<MissedApproach>& missed)
+    {
+        auto lock = this->Lock();
+        this->missedApproaches.erase(missed);
     }
 } // namespace UKControllerPlugin::MissedApproach
