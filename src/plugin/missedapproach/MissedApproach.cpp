@@ -21,7 +21,7 @@ namespace UKControllerPlugin::MissedApproach {
     {
         return expiresAt < Time::TimeNow();
     }
-    
+
     auto MissedApproach::Id() const -> int
     {
         return this->id;
