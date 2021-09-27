@@ -59,7 +59,7 @@ namespace UKControllerPlugin::MissedApproach {
      */
     auto TriggerMissedApproach::UserCanTrigger(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool
     {
-        if (this->activeCallsigns.UserHasCallsign()) {
+        if (!this->activeCallsigns.UserHasCallsign()) {
             return false;
         }
 
@@ -86,7 +86,7 @@ namespace UKControllerPlugin::MissedApproach {
 
                 this->missedApproaches->Add(std::make_shared<class MissedApproach>(
                     response.at("id").get<int>(),
-                    response.at("callsign").get<std::string>(),
+                    callsign,
                     Time::ParseTimeString(response.at("expires_at").get<std::string>())));
             } catch (Api::ApiException&) {
                 LogError("ApiException when creating missed approach");
