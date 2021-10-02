@@ -14,67 +14,61 @@ namespace UKControllerPlugin::Integration {
     class ClientInitialisationManager : public TimedEvent::AbstractTimedEvent
     {
         public:
-            explicit ClientInitialisationManager(std::shared_ptr<IntegrationClientManager> clientManager);
-            ~ClientInitialisationManager() override = default;
-            void AddConnection(std::shared_ptr<IntegrationConnection> connection);
-            void TimedEventTrigger() override;
-            size_t CountConnections() const;
+        explicit ClientInitialisationManager(std::shared_ptr<IntegrationClientManager> clientManager);
+        void AddConnection(std::shared_ptr<IntegrationConnection> connection);
+        void TimedEventTrigger() override;
+        [[nodiscard]] auto CountConnections() const -> size_t;
 
-            const inline static std::string VALIDATION_ERROR_INVALID_TYPE =
-                "Initialisation messages must have type \"initialise\"";
+        const inline static std::string VALIDATION_ERROR_INVALID_TYPE =
+            "Initialisation messages must have type \"initialise\"";
 
-            const inline static std::string VALIDATION_ERROR_INVALID_VERSION =
-                "Initialisation messages must have version 1";
+        const inline static std::string VALIDATION_ERROR_INVALID_VERSION =
+            "Initialisation messages must have version 1";
 
-            const inline static std::string VALIDATION_ERROR_INVALID_INTEGRATION_NAME =
-                "Invalid integration name";
+        const inline static std::string VALIDATION_ERROR_INVALID_INTEGRATION_NAME = "Invalid integration name";
 
-            const inline static std::string VALIDATION_ERROR_INVALID_INTEGRATION_VERSION =
-                "Invalid integration version";
+        const inline static std::string VALIDATION_ERROR_INVALID_INTEGRATION_VERSION = "Invalid integration version";
 
-            const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTIONS =
-                "Expected array of integration subscription";
+        const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTIONS =
+            "Expected array of integration subscription";
 
-            const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTION =
-                "Invalid subscription - must be an object";
+        const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTION =
+            "Invalid subscription - must be an object";
 
-            const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE =
-                "Invalid subscription type";
+        const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTION_TYPE = "Invalid subscription type";
 
-            const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION =
-                "Invalid subscription version";
+        const inline static std::string VALIDATION_ERROR_INVALID_SUBSCRIPTION_VERSION = "Invalid subscription version";
 
         private:
-            bool AttemptInitialisation(
-                const std::shared_ptr<IntegrationConnection>& connection,
-                std::queue<std::shared_ptr<MessageInterface>> incomingMessages
-            );
-            static std::vector<std::string> ValidateMessage(const std::shared_ptr<MessageInterface>& message);
-            static std::vector<std::string> ValidateMessageType(const std::shared_ptr<MessageInterface>& message);
-            static std::vector<std::string> ValidateMessageData(const std::shared_ptr<MessageInterface>& message);
-            static std::vector<std::string> ValidateIntegrationDetails(const nlohmann::json& data);
-            static std::vector<std::string> ValidateEventSubscriptions(const nlohmann::json& data);
-            void UpgradeToClient(
-                const std::shared_ptr<IntegrationConnection>& connection,
-                const std::shared_ptr<MessageInterface>& initialisationMessage
-            );
-            static void SendInitialisationSuccessMessage(
-                const std::shared_ptr<IntegrationConnection>& connection,
-                const std::shared_ptr<MessageInterface>& initialisationMessage
-            );
-            static void SendInitialisationFailureMessage(
-                const std::shared_ptr<IntegrationConnection>& connection,
-                const std::shared_ptr<MessageInterface>& initialisationMessage,
-                const std::vector<std::string>& errors
-            );
+        auto AttemptInitialisation(
+            const std::shared_ptr<IntegrationConnection>& connection,
+            std::queue<std::shared_ptr<MessageInterface>> incomingMessages) -> bool;
+        static auto ValidateMessage(const std::shared_ptr<MessageInterface>& message) -> std::vector<std::string>;
+        static auto ValidateMessageType(const std::shared_ptr<MessageInterface>& message) -> std::vector<std::string>;
+        static auto ValidateMessageData(const std::shared_ptr<MessageInterface>& message) -> std::vector<std::string>;
+        static auto ValidateIntegrationDetails(const nlohmann::json& data) -> std::vector<std::string>;
+        static auto ValidateEventSubscriptions(const nlohmann::json& data) -> std::vector<std::string>;
+        void UpgradeToClient(
+            const std::shared_ptr<IntegrationConnection>& connection,
+            const std::shared_ptr<MessageInterface>& initialisationMessage);
+        static void SendInitialisationSuccessMessage(
+            const std::shared_ptr<IntegrationConnection>& connection,
+            const std::shared_ptr<MessageInterface>& initialisationMessage);
+        static void SendInitialisationFailureMessage(
+            const std::shared_ptr<IntegrationConnection>& connection,
+            const std::shared_ptr<MessageInterface>& initialisationMessage,
+            const std::vector<std::string>& errors);
 
-            // Manages clients once fully initialised
-            std::shared_ptr<IntegrationClientManager> clientManager;
+        // Manages clients once fully initialised
+        std::shared_ptr<IntegrationClientManager> clientManager;
 
-            // Clients that are fully initialised
-            std::map<std::shared_ptr<IntegrationConnection>, std::chrono::system_clock::time_point> connections;
+        // Clients that are fully initialised
+        std::map<std::shared_ptr<IntegrationConnection>, std::chrono::system_clock::time_point> connections;
 
-            // The next unique id for the integration
-            int nextIntegrationId = 1;
+        // The next unique id for the integration
+        int nextIntegrationId = 1;
+
+        // How long an integration has to initialise before we drop the connection
+        const std::chrono::seconds INITIALISATION_TIMEOUT = std::chrono::seconds(10);
     };
 } // namespace UKControllerPlugin::Integration

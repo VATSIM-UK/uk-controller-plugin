@@ -50,11 +50,32 @@ thread = std::make_shared<std::thread>([clientSocket]() {
     
     int bytesReceived;
     std::array<char, 4096> receiveBuffer;
+    bool sentStandRequest = false;
     do {
         bytesReceived = recv(clientSocket, &receiveBuffer[0], 4096, 0);
         if (bytesReceived > 0) {
-            LogInfo("Message received: " + std::string(&receiveBuffer[0], &receiveBuffer[bytesReceived]) +
-                    "\n\n");
+            std::string message = std::string(receiveBuffer.cbegin(), receiveBuffer.cbegin() + bytesReceived);
+            LogInfo("Message received: " + message + "\n\n");
+            if (!sentStandRequest) {
+                nlohmann::json stand{
+                    {"type", "assign_stand"},
+                    {"version", 1},
+                    {"id", "test_message_id"},
+                    {"data",
+                     {{"callsign", "BAW999"},
+                         {"airfield", "EGLL"},
+                         {"stand", "502"},
+                     }},
+                };
+                std::string standMessage = stand.dump().c_str();
+                standMessage.append({'\x1F'});
+                int sendResult = send(clientSocket, standMessage.c_str(), standMessage.size(), 0);
+                if (sendResult == SOCKET_ERROR) {
+                    LogError("Failed to send: " + std::to_string(WSAGetLastError()));
+                }
+                sentStandRequest = true;
+            }
         }
     } while (bytesReceived > 0);
 });
+thread->detach();
