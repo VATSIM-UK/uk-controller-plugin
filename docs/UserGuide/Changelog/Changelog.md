@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+## [3.6.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.6.1...3.6.2) (2021-10-02)
+
+
+### Bug Fixes
+
+* **a11y:** Make release and prenote list header colours accessible ([e89dd19](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e89dd1929d4d277662af71549e3a52879a69318d))
+* **integration:** Fix messages not being received from clients ([#343](https://github.com/VATSIM-UK/uk-controller-plugin/issues/343)) ([7d85c9b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/7d85c9b5401dcd28e29b999cb4de904cf4d28b99))
+
 ## [3.6.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.6.0...3.6.1) (2021-09-18)
 
 
