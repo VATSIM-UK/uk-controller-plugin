@@ -157,10 +157,8 @@ jobs:
           persist-credentials: false
 
       # Environment things
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "12.0.1"
+      - name: Check Clang Version
+        run: clang-cl --version
 
       - name: Get All Changed Files
         id: changed-files
