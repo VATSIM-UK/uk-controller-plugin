@@ -25,13 +25,13 @@ jobs:
         with:
           arch: x86
 
+      - name: Check Clang Version
+        run: clang-cl --version
+
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: "12.0.1"
-
-      - name: Check Clang Version
-        run: clang-cl --version
 
       - name: Setup Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
