@@ -3,15 +3,20 @@
 
 using UKControllerPlugin::MissedApproach::MissedApproach;
 using UKControllerPlugin::Time::SetTestNow;
+using UKControllerPlugin::Time::TimeNow;
 
 namespace UKControllerPluginTest::MissedApproach {
     class MissedApproachTest : public testing::Test
     {
         public:
-        MissedApproachTest()
-            : expiresAt(std::chrono::system_clock::now() + std::chrono::minutes(5)), missed(1, "BAW123", expiresAt)
+        MissedApproachTest() : expiresAt(GetExpiresAt()), missed(1, "BAW123", expiresAt)
+        {
+        }
+
+        [[nodiscard]] static auto GetExpiresAt() -> std::chrono::system_clock::time_point
         {
             SetTestNow(std::chrono::system_clock::now());
+            return TimeNow() + std::chrono::minutes(5);
         }
 
         std::chrono::system_clock::time_point expiresAt;
@@ -42,5 +47,10 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         class MissedApproach missed2(2, "BAW123", std::chrono::system_clock::now() - std::chrono::seconds(5));
         EXPECT_TRUE(missed2.IsExpired());
+    }
+
+    TEST_F(MissedApproachTest, ItHasACreatedAtTimeWhichIsSetToCurrentTime)
+    {
+        EXPECT_EQ(TimeNow(), missed.CreatedAt());
     }
 } // namespace UKControllerPluginTest::MissedApproach

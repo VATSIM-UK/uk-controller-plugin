@@ -13,6 +13,7 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Ownership {
+    struct ServiceProvision;
 
     /*
         A class for managing who "owns" a particular airfield. This can then be used
@@ -32,6 +33,8 @@ namespace UKControllerPlugin::Ownership {
             -> bool;
         [[nodiscard]] auto AirfieldOwnedByUser(const std::string& icao) const -> bool;
         [[nodiscard]] auto AirfieldHasOwner(const std::string& icao) const -> bool;
+        [[nodiscard]] auto ApproachControlProvidedByUser(const std::string& icao) const -> bool;
+        [[nodiscard]] auto TowerControlProvidedByUser(const std::string& icao) const -> bool;
         void Flush();
         [[nodiscard]] auto GetOwner(const std::string& icao) const
             -> const UKControllerPlugin::Controller::ActiveCallsign&;
@@ -41,6 +44,17 @@ namespace UKControllerPlugin::Ownership {
         [[nodiscard]] auto NotFoundCallsign() const -> Controller::ActiveCallsign&;
 
         private:
+        [[nodiscard]] auto GetDeliveryServiceProviderForAirfield(const std::string& icao) const ->
+            std::shared_ptr<ServiceProvision>;
+        [[nodiscard]] static auto ServiceProviderMatchingConditionExists(
+            const std::vector<std::shared_ptr<ServiceProvision>>& providers,
+            const std::function<bool(const std::shared_ptr<ServiceProvision>& provider)>& predicate
+        ) -> bool;
+        [[nodiscard]] static auto MapServiceProvisionToString(const std::shared_ptr<ServiceProvision>& provision) ->
+            std::string;
+        static void LogNewServiceProvision(const std::string& icao, const std::shared_ptr<ServiceProvision>& provision);
+        static void LogRemovedServiceProvision(const std::string& icao, const std::shared_ptr<ServiceProvision>&
+            provision);
         constexpr static const double INVALID_FREQUENCY = 199.998;
 
         // A controller position to return when a lookup is done but the callsign cant be found
@@ -55,7 +69,7 @@ namespace UKControllerPlugin::Ownership {
         // Collection of all airfields
         const UKControllerPlugin::Airfield::AirfieldCollection& airfields;
 
-        // Map of callsign to ownership
-        std::map<std::string, std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsign>> ownershipMap;
+        // Map of airfield ICAO to who's providing services there
+        std::map<std::string, std::vector<std::shared_ptr<ServiceProvision>>> serviceProviders;
     };
 } // namespace UKControllerPlugin::Ownership

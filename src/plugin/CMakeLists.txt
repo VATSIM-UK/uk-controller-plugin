@@ -472,7 +472,13 @@ source_group("src\\minstack" FILES ${src__minstack})
 set(src__missedapproach
         missedapproach/MissedApproach.cpp missedapproach/MissedApproach.h
         missedapproach/MissedApproachCollection.cpp missedapproach/MissedApproachCollection.h
-        missedapproach/CompareMissedApproaches.cpp missedapproach/CompareMissedApproaches.h missedapproach/RemoveExpiredMissedApproaches.cpp missedapproach/RemoveExpiredMissedApproaches.h missedapproach/MissedApproachModule.cpp missedapproach/MissedApproachModule.h missedapproach/NewMissedApproachPushEventHandler.cpp missedapproach/NewMissedApproachPushEventHandler.h missedapproach/TriggerMissedApproach.cpp missedapproach/TriggerMissedApproach.h)
+        missedapproach/CompareMissedApproaches.cpp missedapproach/CompareMissedApproaches.h
+        missedapproach/RemoveExpiredMissedApproaches.cpp missedapproach/RemoveExpiredMissedApproaches.h
+        missedapproach/MissedApproachModule.cpp missedapproach/MissedApproachModule.h
+        missedapproach/NewMissedApproachPushEventHandler.cpp missedapproach/NewMissedApproachPushEventHandler.h
+        missedapproach/TriggerMissedApproach.cpp missedapproach/TriggerMissedApproach.h
+        missedapproach/MissedApproachRenderer.cpp missedapproach/MissedApproachRenderer.h
+        missedapproach/MissedApproachRenderMode.h)
 source_group("src\\missedapproach" FILES ${src__missedapproach})
 
 set(src__navaids
@@ -544,7 +550,8 @@ set(src__ownership
     "ownership/AirfieldOwnershipModule.h"
     "ownership/AirfieldsOwnedQueryMessage.cpp"
     "ownership/AirfieldsOwnedQueryMessage.h"
-)
+    ownership/ServiceProvision.h ownership/ServiceProvision.cpp
+    ownership/ServiceType.h )
 source_group("src\\ownership" FILES ${src__ownership})
 
 set(src__plugin
