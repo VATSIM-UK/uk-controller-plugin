@@ -65,7 +65,7 @@ namespace UKControllerPluginTest {
                 this->controller = std::unique_ptr<ControllerPosition>(
                     new ControllerPosition(1, "EGKK_APP", 126.820, {"EGKK"}, true, false));
                 this->activeCallsigns.AddUserCallsign(
-                    ActiveCallsign("EGKK_APP", "Testy McTestface", *this->controller));
+                    ActiveCallsign("EGKK_APP", "Testy McTestface", *this->controller, true));
                 this->airfieldOwnership->RefreshOwner("EGKK");
 
                 ON_CALL(*this->mockSelfController, IsVatsimRecognisedController()).WillByDefault(Return(true));
@@ -489,7 +489,8 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
 
-            this->activeCallsigns.RemoveCallsign(ActiveCallsign("EGKK_APP", "Testy McTestface", *this->controller));
+            this->activeCallsigns.RemoveCallsign(
+                ActiveCallsign("EGKK_APP", "Testy McTestface", *this->controller, true));
 
             EXPECT_FALSE(this->generator->ForceLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
         }

@@ -63,10 +63,8 @@ namespace UKControllerPlugin::Squawk {
         [[nodiscard]] auto UserAllowedSquawkAssignment() const -> bool;
 
         // Inherited via ActiveCallsignEventHandlerInterface
-        void
-        ActiveCallsignAdded(const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) override;
-        void ActiveCallsignRemoved(
-            const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) override;
+        void ActiveCallsignAdded(const UKControllerPlugin::Controller::ActiveCallsign& callsign) override;
+        void ActiveCallsignRemoved(const UKControllerPlugin::Controller::ActiveCallsign& callsign) override;
         void CallsignsFlushed() override;
         [[nodiscard]] auto AutomaticAssignmentsDisabled() const -> bool;
 

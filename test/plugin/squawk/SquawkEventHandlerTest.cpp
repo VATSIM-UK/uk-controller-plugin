@@ -73,7 +73,8 @@ namespace UKControllerPluginTest {
                       this->apiSquawkAllocations),
                   assignmentRules(this->plans, this->pluginLoopback, this->airfieldOwnership, this->activeCallsigns),
                   controller(1, "EGKK_APP", 126.820, {"EGKK"}, true, false),
-                  userCallsign("EGKK_APP", "Testy McTestface", this->controller),
+                  userCallsign("EGKK_APP", "Testy McTestface", this->controller, true),
+                  notUserCallsign("EGKK_APP", "Testy McTestface", this->controller, false),
                   airfieldOwnership(this->airfields, this->activeCallsigns),
                   handler(this->generator, this->activeCallsigns, this->plans, this->pluginLoopback, this->login, false)
 
@@ -187,6 +188,7 @@ namespace UKControllerPluginTest {
             ActiveCallsignCollection activeCallsigns;
             ControllerPosition controller;
             ActiveCallsign userCallsign;
+            ActiveCallsign notUserCallsign;
             AirfieldOwnershipManager airfieldOwnership;
             AirfieldCollection airfields;
             SquawkEventHandler handler;
@@ -469,7 +471,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(testing::_)).Times(0);
 
             this->expectGeneralAssignment();
-            handler.ActiveCallsignAdded(this->userCallsign, true);
+            handler.ActiveCallsignAdded(this->userCallsign);
             this->AssertGeneralAssignment();
         }
 
@@ -485,7 +487,7 @@ namespace UKControllerPluginTest {
 
             this->ExpectNoAssignment();
 
-            handler.ActiveCallsignAdded(this->userCallsign, false);
+            handler.ActiveCallsignAdded(this->userCallsign);
         }
     } // namespace Squawk
 } // namespace UKControllerPluginTest

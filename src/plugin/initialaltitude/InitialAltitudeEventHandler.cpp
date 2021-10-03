@@ -187,9 +187,9 @@ namespace UKControllerPlugin::InitialAltitude {
     /*
         If its the user, do some updates
     */
-    void InitialAltitudeEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+    void InitialAltitudeEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign)
     {
-        if (!userCallsign) {
+        if (!callsign.GetIsUser()) {
             return;
         }
 
@@ -200,7 +200,7 @@ namespace UKControllerPlugin::InitialAltitude {
     /*
         Nothing to see here
     */
-    void InitialAltitudeEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+    void InitialAltitudeEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign)
     {
     }
 

@@ -52,8 +52,9 @@ namespace UKControllerPluginTest {
                     std::shared_ptr<MockEuroScopeCControllerInterface>(new NiceMock<MockEuroScopeCControllerInterface>);
 
                 this->airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"EGKK_APP"})));
-                this->activeCallsigns.AddUserCallsign(ActiveCallsign("EGKK_APP", "Testy McTestface", this->kkApp));
-                this->activeCallsigns.AddCallsign(ActiveCallsign("LON_S_CTR", "Boaty McBoatface", this->lonS));
+                this->activeCallsigns.AddUserCallsign(
+                    ActiveCallsign("EGKK_APP", "Testy McTestface", this->kkApp, true));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("LON_S_CTR", "Boaty McBoatface", this->lonS, false));
                 this->airfieldOwnership.RefreshOwner("EGKK");
 
                 ON_CALL(*this->mockSelfController, IsVatsimRecognisedController()).WillByDefault(Return(true));
@@ -271,7 +272,7 @@ namespace UKControllerPluginTest {
 
             this->activeCallsigns.Flush();
             ControllerPosition controller(55, "LON_S_CTR", 129.420, {"EGLL"}, true, false);
-            this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_S_CTR", "Boaty McBoatface", controller));
+            this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_S_CTR", "Boaty McBoatface", controller, true));
             EXPECT_FALSE(this->assignment.LocalAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 

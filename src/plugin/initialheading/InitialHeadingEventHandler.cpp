@@ -189,9 +189,9 @@ namespace UKControllerPlugin::InitialHeading {
     /*
         If its the user, do some updates
     */
-    void InitialHeadingEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+    void InitialHeadingEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign)
     {
-        if (!userCallsign) {
+        if (!callsign.GetIsUser()) {
             return;
         }
 
@@ -202,7 +202,7 @@ namespace UKControllerPlugin::InitialHeading {
     /*
         Nothing to see here
     */
-    void InitialHeadingEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+    void InitialHeadingEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign)
     {
     }
 

@@ -95,10 +95,10 @@ namespace UKControllerPluginTest {
                 this->llApp = std::unique_ptr<ControllerPosition>(
                     new ControllerPosition(5, "EGLL_N_APP", 199.998, {"EGLL"}, true, false));
 
-                this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *kkTwr));
-                this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_APP", "Testy McTest", *kkApp));
-                this->activeCallsigns.AddCallsign(ActiveCallsign("EGLL_S_TWR", "Testy McTest", *llTwr));
-                this->activeCallsigns.AddCallsign(ActiveCallsign("EGLL_N_APP", "Testy McTest", *llApp));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *kkTwr, false));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_APP", "Testy McTest", *kkApp, false));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("EGLL_S_TWR", "Testy McTest", *llTwr, false));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("EGLL_N_APP", "Testy McTest", *llApp, false));
                 this->ownership.RefreshOwner("EGKK");
 
                 // Create a dummy initial altitude
@@ -188,7 +188,7 @@ namespace UKControllerPluginTest {
         {
             ActiveCallsign gatwick = this->activeCallsigns.GetCallsign("EGKK_TWR");
             this->activeCallsigns.RemoveCallsign(this->activeCallsigns.GetCallsign("EGKK_TWR"));
-            this->handler.ActiveCallsignRemoved(gatwick, false);
+            this->handler.ActiveCallsignRemoved(gatwick);
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_APP")));
         }
 
@@ -198,27 +198,27 @@ namespace UKControllerPluginTest {
         {
             // Add the spare controller
             ControllerPosition pos(1, "EGKK_TWR", 199.998, {"EGKK"}, true, false);
-            this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_1_TWR", "Another Guy", pos));
+            this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_1_TWR", "Another Guy", pos, false));
 
             ActiveCallsign gatwick = this->activeCallsigns.GetCallsign("EGKK_TWR");
             this->activeCallsigns.RemoveCallsign(this->activeCallsigns.GetCallsign("EGKK_TWR"));
-            this->handler.ActiveCallsignRemoved(gatwick, false);
+            this->handler.ActiveCallsignRemoved(gatwick);
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_1_TWR")));
         }
 
         TEST_F(ControllerAirfieldOwnershipHandlerTest, NewActiveCallsignEventRefreshesTopDown)
         {
-            this->activeCallsigns.AddCallsign(
-                ActiveCallsign("EGKK_DEL", "Test", this->controllerCollection.FetchPositionByCallsign("EGKK_DEL")));
-            this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("EGKK_DEL"), true);
+            this->activeCallsigns.AddCallsign(ActiveCallsign(
+                "EGKK_DEL", "Test", this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), false));
+            this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("EGKK_DEL"));
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_DEL")));
         }
 
         TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventUpdatesTopDownMultiple)
         {
-            this->activeCallsigns.AddCallsign(
-                ActiveCallsign("LTC_S_CTR", "Test", this->controllerCollection.FetchPositionByCallsign("LTC_S_CTR")));
-            this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("LTC_S_CTR"), true);
+            this->activeCallsigns.AddCallsign(ActiveCallsign(
+                "LTC_S_CTR", "Test", this->controllerCollection.FetchPositionByCallsign("LTC_S_CTR"), false));
+            this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("LTC_S_CTR"));
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_TWR")));
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGLL", this->activeCallsigns.GetCallsign("EGLL_S_TWR")));
             EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGLC", this->activeCallsigns.GetCallsign("LTC_S_CTR")));

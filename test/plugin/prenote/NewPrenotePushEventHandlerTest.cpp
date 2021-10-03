@@ -34,7 +34,7 @@ namespace UKControllerPluginTest::Prenote {
             controllers.AddPosition(std::make_shared<ControllerPosition>(
                 2, "LON_W_CTR", 126.020, std::vector<std::string>{"EGGD", "EGFF"}, true, true));
 
-            callsigns.AddUserCallsign(ActiveCallsign("LON_W_CTR", "Foo", *controllers.FetchPositionById(2)));
+            callsigns.AddUserCallsign(ActiveCallsign("LON_W_CTR", "Foo", *controllers.FetchPositionById(2), true));
         };
 
         /*
@@ -138,7 +138,7 @@ namespace UKControllerPluginTest::Prenote {
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntPlaySoundIfUserIsADifferentController)
     {
         callsigns.Flush();
-        callsigns.AddUserCallsign(ActiveCallsign("LON_W_CTR", "Foo", *controllers.FetchPositionById(1)));
+        callsigns.AddUserCallsign(ActiveCallsign("LON_W_CTR", "Foo", *controllers.FetchPositionById(1), true));
         EXPECT_CALL(mockWindows, PlayWave(testing::_)).Times(0);
 
         this->handler.ProcessPushEvent(MakePushEvent());

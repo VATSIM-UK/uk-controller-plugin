@@ -59,8 +59,8 @@ namespace UKControllerPlugin::InitialAltitude {
         void UserSettingsUpdated(Euroscope::UserSetting& userSettings) override;
 
         // Inherited via ActiveCallsignEventHandlerInterface
-        void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign, bool userCallsign) override;
-        void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign, bool userCallsign) override;
+        void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign) override;
+        void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign) override;
         void TimedEventTrigger() override;
 
         private:

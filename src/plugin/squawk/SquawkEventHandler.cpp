@@ -136,9 +136,9 @@ namespace UKControllerPlugin::Squawk {
     /*
         If the ActiveCallsign is the user callsign, then force a squawk regenerate.
     */
-    void SquawkEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+    void SquawkEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign)
     {
-        if (!userCallsign) {
+        if (!callsign.GetIsUser()) {
             return;
         }
 
@@ -149,7 +149,7 @@ namespace UKControllerPlugin::Squawk {
     /*
         Nothing to see here
     */
-    void SquawkEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+    void SquawkEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign)
     {
     }
 

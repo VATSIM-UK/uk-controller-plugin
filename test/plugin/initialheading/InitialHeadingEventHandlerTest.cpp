@@ -45,7 +45,8 @@ namespace UKControllerPluginTest {
             public:
             InitialHeadingEventHandlerTest()
                 : controller(1, "LON_S_CTR", 129.420, {"EGKK"}, true, false),
-                  userCallsign("LON_S_CTR", "Test", controller),
+                  userCallsign("LON_S_CTR", "Test", controller, true),
+                  notUserCallsign("LON_S_CTR", "Test", controller, false),
                   login(plugin, ControllerStatusEventHandlerCollection()), owners(airfields, callsigns),
                   handler(sids, callsigns, owners, login, plugin)
             {
@@ -72,6 +73,7 @@ namespace UKControllerPluginTest {
             inline static const int MAX_ASSIGNMENT_SPEED = 40;
             ControllerPosition controller;
             ActiveCallsign userCallsign;
+            ActiveCallsign notUserCallsign;
             AirfieldCollection airfields;
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplanPointer;
             std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTargetPointer;
@@ -635,7 +637,7 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(MAX_ASSIGNMENT_SPEED));
 
-            handler.ActiveCallsignAdded(userCallsign, true);
+            handler.ActiveCallsignAdded(userCallsign);
         }
 
         TEST_F(InitialHeadingEventHandlerTest, NewActiveCallsignDoesNotAssignIfNotUserCallsign)
@@ -646,7 +648,7 @@ namespace UKControllerPluginTest {
             this->plugin.AddAllFlightplansItem({this->mockFlightplanPointer, this->mockRadarTargetPointer});
             this->plugin.ExpectNoFlightplanLoop();
 
-            handler.ActiveCallsignAdded(userCallsign, false);
+            handler.ActiveCallsignAdded(notUserCallsign);
         }
 
         TEST_F(InitialHeadingEventHandlerTest, TimedEventAssignsIfUserCallsign)

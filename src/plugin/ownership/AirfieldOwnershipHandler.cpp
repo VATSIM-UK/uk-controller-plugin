@@ -41,13 +41,13 @@ namespace UKControllerPlugin::Ownership {
         }
     }
 
-    void AirfieldOwnershipHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+    void AirfieldOwnershipHandler::ActiveCallsignAdded(const ActiveCallsign& callsign)
     {
         // Refresh the top-down responsibilities for affected airfields
         this->ProcessAffectedAirfields(callsign.GetNormalisedPosition());
     }
 
-    void AirfieldOwnershipHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+    void AirfieldOwnershipHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign)
     {
         // Refresh the top-down responsibilities for affected airfields
         this->ProcessAffectedAirfields(callsign.GetNormalisedPosition());

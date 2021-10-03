@@ -72,12 +72,12 @@ namespace UKControllerPluginTest {
                 this->controllerNoLondon = std::unique_ptr<ControllerPosition>(
                     new ControllerPosition(3, "LON_S_CTR", 129.420, {"EGKK"}, true, false));
                 this->activeCallsigns.AddUserCallsign(
-                    ActiveCallsign("EGKK_GND", "Testy McTestface", *this->controllerUser));
+                    ActiveCallsign("EGKK_GND", "Testy McTestface", *this->controllerUser, true));
                 this->activeCallsigns.AddCallsign(
-                    ActiveCallsign("EGKK_APP", "Testy McTestface II", *this->controllerOther));
+                    ActiveCallsign("EGKK_APP", "Testy McTestface II", *this->controllerOther, false));
 
                 this->activeCallsigns.AddCallsign(
-                    ActiveCallsign("LON_S_CTR", "Testy McTestface III", *this->controllerNoLondon));
+                    ActiveCallsign("LON_S_CTR", "Testy McTestface III", *this->controllerNoLondon, false));
 
                 this->hierarchy = std::make_unique<ControllerPositionHierarchy>();
                 this->airfieldOwnership->RefreshOwner("EGKK");
@@ -147,7 +147,7 @@ namespace UKControllerPluginTest {
             // The target controller is offline.
             this->hierarchy->AddPosition(*this->controllerOther);
             this->activeCallsigns.RemoveCallsign(
-                ActiveCallsign("EGKK_APP", "Testy McTestface II", *this->controllerOther));
+                ActiveCallsign("EGKK_APP", "Testy McTestface II", *this->controllerOther, false));
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), true));
 
             EXPECT_NO_THROW(this->service->SendPrenotes(this->mockFlightplan));

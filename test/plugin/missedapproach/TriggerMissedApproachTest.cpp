@@ -28,7 +28,8 @@ namespace UKControllerPluginTest::MissedApproach {
         TriggerMissedApproachTest()
             : kkTwr(2, "EGKK_TWR", 199.999, {"EGKK"}, true, false),
               kkApp(3, "EGKK_APP", 199.999, {"EGKK"}, true, false),
-              userTowerCallsign("EGKK_TWR", "Testy McTest", kkTwr), userAppCallsign("EGKK_TWR", "Testy McTest", kkApp),
+              userTowerCallsign("EGKK_TWR", "Testy McTest", kkTwr, true),
+              userAppCallsign("EGKK_TWR", "Testy McTest", kkApp, true),
               missed1(std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 13:56:00"))),
               missed2(std::make_shared<class MissedApproach>(2, "BAW456", ParseTimeString("2021-08-23 13:56:00"))),
               missed3(std::make_shared<class MissedApproach>(3, "BAW123", ParseTimeString("2021-08-23 13:54:00"))),

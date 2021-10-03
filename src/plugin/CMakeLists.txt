@@ -551,7 +551,8 @@ set(src__ownership
     "ownership/AirfieldsOwnedQueryMessage.cpp"
     "ownership/AirfieldsOwnedQueryMessage.h"
     ownership/ServiceProvision.h ownership/ServiceProvision.cpp
-    ownership/ServiceType.h )
+    ownership/ServiceType.h
+    ownership/AirfieldServiceProviderCollection.cpp ownership/AirfieldServiceProviderCollection.h)
 source_group("src\\ownership" FILES ${src__ownership})
 
 set(src__plugin

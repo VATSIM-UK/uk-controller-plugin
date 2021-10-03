@@ -44,7 +44,7 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, RefreshOwnerSetsOwner)
     {
-        this->activeCallsigns.AddCallsign(ActiveCallsign("EGGD_TWR", "Testy McTestface", controller1));
+        this->activeCallsigns.AddCallsign(ActiveCallsign("EGGD_TWR", "Testy McTestface", controller1, false));
 
         this->manager.RefreshOwner("EGGD");
 
@@ -53,7 +53,7 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, RefreshOwnerSetsOwnerToCorrectcontroller1)
     {
-        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1);
+        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1, false);
         this->activeCallsigns.AddCallsign(active);
 
         this->manager.RefreshOwner("EGGD");
@@ -63,8 +63,8 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, RefreshOwnerSetsOwnerWithCorrectPriority)
     {
-        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1);
-        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2);
+        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1, false);
+        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2, false);
 
         this->activeCallsigns.AddCallsign(active1);
         this->manager.RefreshOwner("EGGD");
@@ -78,8 +78,8 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, RefreshAfterLogOffChangesOwner)
     {
-        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1);
-        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2);
+        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1, false);
+        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2, false);
 
         this->activeCallsigns.AddCallsign(active1);
         this->activeCallsigns.AddCallsign(active2);
@@ -95,8 +95,8 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, FlushRemovesAllOwners)
     {
-        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1);
-        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2);
+        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1, false);
+        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2, false);
 
         this->activeCallsigns.AddCallsign(active1);
         this->activeCallsigns.AddCallsign(active2);
@@ -109,7 +109,7 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, AirfieldOwnedByUserReturnsTrueIfActiveCallsignIsUser)
     {
-        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1);
+        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1, false);
 
         this->activeCallsigns.AddUserCallsign(active);
 
@@ -120,7 +120,7 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, AirfieldOwnedByUserReturnsFalseIfActiveCallsignNotUser)
     {
-        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1);
+        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1, false);
 
         this->activeCallsigns.AddCallsign(active);
 
@@ -131,7 +131,7 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, GetOwnerReturnsOwnerIfFound)
     {
-        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1);
+        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1, false);
         this->activeCallsigns.AddCallsign(active);
 
         this->manager.RefreshOwner("EGGD");
@@ -141,7 +141,7 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, GetOwnerReturnsNoneIfNotFound)
     {
-        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1);
+        ActiveCallsign active("EGGD_TWR", "Testy McTestface", controller1, false);
         this->activeCallsigns.AddCallsign(active);
 
         EXPECT_EQ(this->manager.NotFoundCallsign(), this->manager.GetOwner("EGPF"));
@@ -149,8 +149,8 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, GetOwnedReturnsNothingIfNotFound)
     {
-        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1);
-        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2);
+        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1, false);
+        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2, false);
         this->activeCallsigns.AddCallsign(active1);
         this->activeCallsigns.AddCallsign(active2);
         this->manager.RefreshOwner("EGGD");
@@ -160,8 +160,8 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, GetOwnedReturnsOwnedAirfields)
     {
-        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1);
-        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2);
+        ActiveCallsign active1("EGGD_TWR", "Testy McTestface", controller1, false);
+        ActiveCallsign active2("EGGD_GND", "Testy McTestface 2", controller2, false);
         this->activeCallsigns.AddCallsign(active1);
         this->activeCallsigns.AddCallsign(active2);
         this->manager.RefreshOwner("EGGD");

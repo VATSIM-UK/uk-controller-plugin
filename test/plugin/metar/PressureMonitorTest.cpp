@@ -26,7 +26,7 @@ namespace UKControllerPluginTest {
                 : gatwickTower(1, "EGKK_TWR", 124.22, {"EGKK"}, true, false), messager(mockPlugin),
                   userSetting(mockUserSettingProvider), monitor(messager, activeCallsigns)
             {
-                this->activeCallsigns.AddUserCallsign(ActiveCallsign("EGKK_TWR", "Testy", this->gatwickTower));
+                this->activeCallsigns.AddUserCallsign(ActiveCallsign("EGKK_TWR", "Testy", this->gatwickTower, true));
             }
             NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
             NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;

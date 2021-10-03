@@ -106,7 +106,7 @@ namespace UKControllerPlugin::Handoff {
     /*
         If a new callsign comes along, we have to clear the cache.
     */
-    void HandoffEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+    void HandoffEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign)
     {
         this->cache.clear();
     }
@@ -114,7 +114,7 @@ namespace UKControllerPlugin::Handoff {
     /*
         If a callsign is removed, clear the cache for anything they were involved in.
     */
-    void HandoffEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+    void HandoffEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign)
     {
         for (auto it = this->cache.cbegin(); it != this->cache.cend();) {
             auto keyToRemove = it++;

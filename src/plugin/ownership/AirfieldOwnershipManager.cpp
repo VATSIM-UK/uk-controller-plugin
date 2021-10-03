@@ -18,7 +18,7 @@ namespace UKControllerPlugin::Ownership {
         const AirfieldCollection& airfields, const ActiveCallsignCollection& activeCallsigns)
         : notFoundControllerPosition(
               std::make_unique<ControllerPosition>(-1, "", INVALID_FREQUENCY, std::vector<std::string>{}, true, false)),
-          notFoundCallsign(std::make_unique<ActiveCallsign>("", "", *this->notFoundControllerPosition)),
+          notFoundCallsign(std::make_unique<ActiveCallsign>("", "", *this->notFoundControllerPosition, false)),
           activeCallsigns(activeCallsigns), airfields(airfields)
     {
     }
