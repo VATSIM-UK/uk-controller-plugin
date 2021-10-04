@@ -1,7 +1,7 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "command/CommandHandlerCollection.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "ownership/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/AirfieldOwnershipModule.h"
 
 using ::testing::NiceMock;

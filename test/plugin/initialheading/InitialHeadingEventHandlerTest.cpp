@@ -1,19 +1,14 @@
 #include "initialheading/InitialHeadingEventHandler.h"
-#include "ownership/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
+#include "ownership/ServiceProvision.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "airfield/AirfieldCollection.h"
-#include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
-#include "airfield/AirfieldModel.h"
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
-#include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
 #include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 
-using UKControllerPlugin::Airfield::AirfieldCollection;
-using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
@@ -22,7 +17,9 @@ using UKControllerPlugin::Controller::Login;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::InitialHeading::InitialHeadingEventHandler;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
+using UKControllerPlugin::Ownership::ServiceProvision;
+using UKControllerPlugin::Ownership::ServiceType;
 using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -47,7 +44,7 @@ namespace UKControllerPluginTest {
                 : controller(1, "LON_S_CTR", 129.420, {"EGKK"}, true, false),
                   userCallsign("LON_S_CTR", "Test", controller, true),
                   notUserCallsign("LON_S_CTR", "Test", controller, false),
-                  login(plugin, ControllerStatusEventHandlerCollection()), owners(airfields, callsigns),
+                  login(plugin, ControllerStatusEventHandlerCollection()),
                   handler(sids, callsigns, owners, login, plugin)
             {
             }
@@ -68,13 +65,22 @@ namespace UKControllerPluginTest {
                 ON_CALL(*mockFlightplanPointer, GetCallsign()).WillByDefault(Return("BAW123"));
             }
 
+            void SetServiceProvision(bool isUser)
+            {
+                auto callsign = isUser ? this->userCallsign : this->notUserCallsign;
+                this->owners.SetProvidersForAirfield(
+                    "EGKK",
+                    std::vector<std::shared_ptr<ServiceProvision>>{std::make_shared<ServiceProvision>(
+                        ServiceType::Delivery,
+                        std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(callsign))});
+            }
+
             inline static const double MAX_DISTANCE_FROM_ORIGIN = 3.0;
             inline static const int MAX_ASSIGNMENT_ALTITUDE = 1000;
             inline static const int MAX_ASSIGNMENT_SPEED = 40;
             ControllerPosition controller;
             ActiveCallsign userCallsign;
             ActiveCallsign notUserCallsign;
-            AirfieldCollection airfields;
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplanPointer;
             std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTargetPointer;
             NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightPlan;
@@ -82,7 +88,7 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
             Login login;
             ActiveCallsignCollection callsigns;
-            AirfieldOwnershipManager owners;
+            AirfieldServiceProviderCollection owners;
             SidCollection sids;
             InitialHeadingEventHandler handler;
         };
@@ -321,8 +327,7 @@ namespace UKControllerPluginTest {
         {
             callsigns.AddUserCallsign(userCallsign);
 
-            airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"LON_S_CTR"})));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(true);
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -349,8 +354,7 @@ namespace UKControllerPluginTest {
         {
             callsigns.AddUserCallsign(userCallsign);
 
-            airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"LON_S_CTR"})));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(true);
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -382,8 +386,7 @@ namespace UKControllerPluginTest {
         {
             callsigns.AddUserCallsign(userCallsign);
 
-            airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"LON_S_CTR"})));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(true);
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -414,8 +417,7 @@ namespace UKControllerPluginTest {
         {
             callsigns.AddUserCallsign(userCallsign);
 
-            airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"LON_S_CTR"})));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(true);
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -446,8 +448,7 @@ namespace UKControllerPluginTest {
         {
             callsigns.AddUserCallsign(userCallsign);
 
-            airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"LON_S_CTR"})));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(true);
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(4)
@@ -487,8 +488,7 @@ namespace UKControllerPluginTest {
         {
             callsigns.AddUserCallsign(userCallsign);
 
-            airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"LON_S_CTR"})));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(true);
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(4)
@@ -609,8 +609,8 @@ namespace UKControllerPluginTest {
         {
             callsigns.AddUserCallsign(userCallsign);
 
-            airfields.AddAirfield(std::make_unique<AirfieldModel>("EGKK", std::vector<std::string>{"LON_S_CTR"}));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(true);
+
             this->plugin.AddAllFlightplansItem({this->mockFlightplanPointer, this->mockRadarTargetPointer});
 
             EXPECT_CALL(*mockFlightplanPointer, GetDistanceFromOrigin())
@@ -642,9 +642,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialHeadingEventHandlerTest, NewActiveCallsignDoesNotAssignIfNotUserCallsign)
         {
-            callsigns.AddCallsign(userCallsign);
-            airfields.AddAirfield(std::make_unique<AirfieldModel>("EGKK", std::vector<std::string>{"LON_S_CTR"}));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(false);
+
             this->plugin.AddAllFlightplansItem({this->mockFlightplanPointer, this->mockRadarTargetPointer});
             this->plugin.ExpectNoFlightplanLoop();
 
@@ -655,8 +654,8 @@ namespace UKControllerPluginTest {
         {
             callsigns.AddUserCallsign(userCallsign);
 
-            airfields.AddAirfield(std::make_unique<AirfieldModel>("EGKK", std::vector<std::string>{"LON_S_CTR"}));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(true);
+
             this->plugin.AddAllFlightplansItem({this->mockFlightplanPointer, this->mockRadarTargetPointer});
 
             EXPECT_CALL(*mockFlightplanPointer, GetDistanceFromOrigin())
@@ -689,8 +688,8 @@ namespace UKControllerPluginTest {
         TEST_F(InitialHeadingEventHandlerTest, TimedEventDoesNotAssignIfNoUserCallsign)
         {
             callsigns.AddCallsign(userCallsign);
-            airfields.AddAirfield(std::make_unique<AirfieldModel>("EGKK", std::vector<std::string>{"LON_S_CTR"}));
-            owners.RefreshOwner("EGKK");
+            this->SetServiceProvision(false);
+
             this->plugin.AddAllFlightplansItem({this->mockFlightplanPointer, this->mockRadarTargetPointer});
             this->plugin.ExpectNoFlightplanLoop();
 

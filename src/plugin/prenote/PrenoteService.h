@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin {
     namespace Ownership {
-        class AirfieldOwnershipManager;
+        class AirfieldServiceProviderCollection;
     } // namespace Ownership
 
     namespace Controller {
@@ -28,7 +28,7 @@ namespace UKControllerPlugin::Prenote {
     {
         public:
         PrenoteService(
-            const UKControllerPlugin::Ownership::AirfieldOwnershipManager& airfieldOwnership,
+            const UKControllerPlugin::Ownership::AirfieldServiceProviderCollection& airfieldOwnership,
             const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns,
             UKControllerPlugin::Message::UserMessager& userMessager);
         ~PrenoteService();
@@ -53,7 +53,7 @@ namespace UKControllerPlugin::Prenote {
         const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns;
 
         // Who owns what airfield
-        const UKControllerPlugin::Ownership::AirfieldOwnershipManager& airfieldOwnership;
+        const UKControllerPlugin::Ownership::AirfieldServiceProviderCollection& airfieldOwnership;
 
         // List of callsigns already prenoted
         std::set<std::string> alreadyPrenoted;

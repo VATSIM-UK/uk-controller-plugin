@@ -11,6 +11,8 @@
 #include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 #include "login/Login.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
+#include "ownership/ServiceProvision.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldModel;
@@ -26,6 +28,7 @@ using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Ownership::AirfieldOwnershipHandler;
 using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
@@ -45,9 +48,10 @@ namespace UKControllerPluginTest {
         {
             public:
             ControllerAirfieldOwnershipHandlerTest()
-                : ownership(this->airfieldCollection, this->activeCallsigns),
+                : serviceProviders(std::make_shared<AirfieldServiceProviderCollection>()),
+                  ownership(serviceProviders, this->airfieldCollection, this->activeCallsigns),
                   initialAltitudes(new InitialAltitudeEventHandler(
-                      this->sids, this->activeCallsigns, this->ownership, this->login, this->plugin)),
+                      this->sids, this->activeCallsigns, *serviceProviders, this->login, this->plugin)),
                   login(plugin, ControllerStatusEventHandlerCollection()), userMessager(this->plugin),
                   handler(this->ownership, this->userMessager)
             {
@@ -108,6 +112,7 @@ namespace UKControllerPluginTest {
 
             AirfieldCollection airfieldCollection;
             ControllerPositionCollection controllerCollection;
+            std::shared_ptr<AirfieldServiceProviderCollection> serviceProviders;
             AirfieldOwnershipManager ownership;
             StoredFlightplanCollection flightplans;
             SidCollection sids;
@@ -180,8 +185,8 @@ namespace UKControllerPluginTest {
             this->ownership.RefreshOwner("EGLL");
 
             this->handler.CallsignsFlushed();
-            EXPECT_FALSE(this->ownership.AirfieldHasOwner("EGKK"));
-            EXPECT_FALSE(this->ownership.AirfieldHasOwner("EGLL"));
+            EXPECT_FALSE(this->serviceProviders->AirfieldHasDeliveryProvider("EGKK"));
+            EXPECT_FALSE(this->serviceProviders->AirfieldHasDeliveryProvider("EGLL"));
         }
 
         TEST_F(ControllerAirfieldOwnershipHandlerTest, ActiveCallsignDisconnectRefreshesOwnership)
@@ -189,7 +194,9 @@ namespace UKControllerPluginTest {
             ActiveCallsign gatwick = this->activeCallsigns.GetCallsign("EGKK_TWR");
             this->activeCallsigns.RemoveCallsign(this->activeCallsigns.GetCallsign("EGKK_TWR"));
             this->handler.ActiveCallsignRemoved(gatwick);
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_APP")));
+            EXPECT_EQ(
+                this->activeCallsigns.GetCallsign("EGKK_APP"),
+                *this->serviceProviders->DeliveryProviderForAirfield("EGKK")->controller);
         }
 
         TEST_F(
@@ -203,7 +210,9 @@ namespace UKControllerPluginTest {
             ActiveCallsign gatwick = this->activeCallsigns.GetCallsign("EGKK_TWR");
             this->activeCallsigns.RemoveCallsign(this->activeCallsigns.GetCallsign("EGKK_TWR"));
             this->handler.ActiveCallsignRemoved(gatwick);
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_1_TWR")));
+            EXPECT_EQ(
+                this->activeCallsigns.GetCallsign("EGKK_1_TWR"),
+                *this->serviceProviders->DeliveryProviderForAirfield("EGKK")->controller);
         }
 
         TEST_F(ControllerAirfieldOwnershipHandlerTest, NewActiveCallsignEventRefreshesTopDown)
@@ -211,7 +220,9 @@ namespace UKControllerPluginTest {
             this->activeCallsigns.AddCallsign(ActiveCallsign(
                 "EGKK_DEL", "Test", this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), false));
             this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("EGKK_DEL"));
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_DEL")));
+            EXPECT_EQ(
+                this->activeCallsigns.GetCallsign("EGKK_DEL"),
+                *this->serviceProviders->DeliveryProviderForAirfield("EGKK")->controller);
         }
 
         TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventUpdatesTopDownMultiple)
@@ -219,12 +230,24 @@ namespace UKControllerPluginTest {
             this->activeCallsigns.AddCallsign(ActiveCallsign(
                 "LTC_S_CTR", "Test", this->controllerCollection.FetchPositionByCallsign("LTC_S_CTR"), false));
             this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("LTC_S_CTR"));
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKK", this->activeCallsigns.GetCallsign("EGKK_TWR")));
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGLL", this->activeCallsigns.GetCallsign("EGLL_S_TWR")));
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGLC", this->activeCallsigns.GetCallsign("LTC_S_CTR")));
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGKB", this->activeCallsigns.GetCallsign("LTC_S_CTR")));
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGMC", this->activeCallsigns.GetCallsign("LTC_S_CTR")));
-            EXPECT_TRUE(this->ownership.AirfieldOwnedBy("EGMD", this->activeCallsigns.GetCallsign("LTC_S_CTR")));
+            EXPECT_EQ(
+                this->activeCallsigns.GetCallsign("EGKK_TWR"),
+                *this->serviceProviders->DeliveryProviderForAirfield("EGKK")->controller);
+            EXPECT_EQ(
+                this->activeCallsigns.GetCallsign("EGLL_S_TWR"),
+                *this->serviceProviders->DeliveryProviderForAirfield("EGLL")->controller);
+            EXPECT_EQ(
+                this->activeCallsigns.GetCallsign("LTC_S_CTR"),
+                *this->serviceProviders->DeliveryProviderForAirfield("EGLC")->controller);
+            EXPECT_EQ(
+                this->activeCallsigns.GetCallsign("LTC_S_CTR"),
+                *this->serviceProviders->DeliveryProviderForAirfield("EGKB")->controller);
+            EXPECT_EQ(
+                this->activeCallsigns.GetCallsign("LTC_S_CTR"),
+                *this->serviceProviders->DeliveryProviderForAirfield("EGMC")->controller);
+            EXPECT_EQ(
+                this->activeCallsigns.GetCallsign("LTC_S_CTR"),
+                *this->serviceProviders->DeliveryProviderForAirfield("EGMD")->controller);
         }
     } // namespace Ownership
 } // namespace UKControllerPluginTest

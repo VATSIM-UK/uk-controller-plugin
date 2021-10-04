@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
         class FlightPlanEventHandlerInterface;
     } // namespace Flightplan
     namespace Ownership {
-        class AirfieldOwnershipManager;
+        class AirfieldServiceProviderCollection;
     } // namespace Ownership
 
     namespace Controller {
@@ -42,7 +42,7 @@ namespace UKControllerPlugin::InitialAltitude {
         InitialAltitudeEventHandler(
             const Sid::SidCollection& sids,
             const Controller::ActiveCallsignCollection& activeCallsigns,
-            const Ownership::AirfieldOwnershipManager& airfieldOwnership,
+            const Ownership::AirfieldServiceProviderCollection& airfieldOwnership,
             const Controller::Login& login,
             Euroscope::EuroscopePluginLoopbackInterface& plugin);
         void FlightPlanEvent(
@@ -83,7 +83,7 @@ namespace UKControllerPlugin::InitialAltitude {
         const Controller::ActiveCallsignCollection& activeCallsigns;
 
         // Used to find out if the user owns a particular airfield.
-        const Ownership::AirfieldOwnershipManager& airfieldOwnership;
+        const Ownership::AirfieldServiceProviderCollection& airfieldOwnership;
 
         // For checking how long we've been logged in
         const Controller::Login& login;

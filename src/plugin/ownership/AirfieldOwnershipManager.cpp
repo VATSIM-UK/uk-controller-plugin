@@ -1,4 +1,5 @@
 #include "AirfieldOwnershipManager.h"
+#include "AirfieldServiceProviderCollection.h"
 #include "ServiceProvision.h"
 #include "airfield/AirfieldCollection.h"
 #include "airfield/AirfieldModel.h"
@@ -15,41 +16,11 @@ using UKControllerPlugin::Controller::ControllerPosition;
 namespace UKControllerPlugin::Ownership {
 
     AirfieldOwnershipManager::AirfieldOwnershipManager(
-        const AirfieldCollection& airfields, const ActiveCallsignCollection& activeCallsigns)
-        : notFoundControllerPosition(
-              std::make_unique<ControllerPosition>(-1, "", INVALID_FREQUENCY, std::vector<std::string>{}, true, false)),
-          notFoundCallsign(std::make_unique<ActiveCallsign>("", "", *this->notFoundControllerPosition, false)),
-          activeCallsigns(activeCallsigns), airfields(airfields)
+        std::shared_ptr<AirfieldServiceProviderCollection> serviceProviders,
+        const AirfieldCollection& airfields,
+        const ActiveCallsignCollection& activeCallsigns)
+        : activeCallsigns(activeCallsigns), airfields(airfields), serviceProviders(std::move(serviceProviders))
     {
-    }
-
-    AirfieldOwnershipManager::~AirfieldOwnershipManager() = default;
-
-    /*
-        Returns true if an airfield is "owned" by the given controller, false otherwise.
-    */
-    auto AirfieldOwnershipManager::AirfieldOwnedBy(const std::string& icao, const ActiveCallsign& position) const
-        -> bool
-    {
-        auto owner = this->GetDeliveryServiceProviderForAirfield(icao);
-        return owner != nullptr && *owner->controller == position;
-    }
-
-    /*
-        Returns true if an airfield is owned by the user.
-    */
-    auto AirfieldOwnershipManager::AirfieldOwnedByUser(const std::string& icao) const -> bool
-    {
-        return this->activeCallsigns.UserHasCallsign() &&
-               this->AirfieldOwnedBy(icao, this->activeCallsigns.GetUserCallsign());
-    }
-
-    /*
-        Returns true if the airfield has an owner.
-    */
-    auto AirfieldOwnershipManager::AirfieldHasOwner(const std::string& icao) const -> bool
-    {
-        return this->GetDeliveryServiceProviderForAirfield(icao) != nullptr;
     }
 
     /*
@@ -57,16 +28,7 @@ namespace UKControllerPlugin::Ownership {
     */
     void AirfieldOwnershipManager::Flush()
     {
-        this->serviceProviders.clear();
-    }
-
-    /*
-        Returns the controller that owns a given airfield.
-    */
-    auto AirfieldOwnershipManager::GetOwner(const std::string& icao) const -> const ActiveCallsign&
-    {
-        auto provider = this->GetDeliveryServiceProviderForAirfield(icao);
-        return provider == nullptr ? *this->notFoundCallsign : *provider->controller;
+        this->serviceProviders->Flush();
     }
 
     /*
@@ -81,14 +43,8 @@ namespace UKControllerPlugin::Ownership {
             return ownedAirfields;
         }
 
-        for (auto it = this->serviceProviders.cbegin(); it != this->serviceProviders.cend(); ++it) {
-            if (ServiceProviderMatchingConditionExists(
-                    it->second, [callsign](const std::shared_ptr<ServiceProvision>& provider) -> bool {
-                        return provider->controller->GetCallsign() == callsign &&
-                               provider->serviceProvided == ServiceType::Delivery;
-                    })) {
-                ownedAirfields.emplace_back(this->airfields.FetchAirfieldByIcao(it->first));
-            }
+        for (const auto& airfield : this->serviceProviders->GetAirfieldsWhereUserIsProvidingDelivery()) {
+            ownedAirfields.emplace_back(this->airfields.FetchAirfieldByIcao(airfield));
         }
 
         return ownedAirfields;
@@ -107,117 +63,16 @@ namespace UKControllerPlugin::Ownership {
             return;
         }
 
-        std::vector<std::string> activeControllers;
-
-        // First lets work out who we've got online here
-        for (const auto& controller : topdownOrder) {
-            if (this->activeCallsigns.PositionActive(controller)) {
-                activeControllers.push_back(controller);
-            }
-        }
-
-        // Nobody's active, so we're done here
+        const auto activeControllers = this->GetActiveControllersInAirfieldTopdownOrder(icao, topdownOrder);
         if (activeControllers.empty()) {
             LogInfo("Airfield " + icao + " is now uncontrolled");
-            this->serviceProviders.erase(icao);
+            this->serviceProviders->FlushForAirfield(icao);
             return;
         }
 
-        // Generate the new service providers
-        std::vector<std::shared_ptr<ServiceProvision>> newServiceProviders;
-        for (const auto& controller : activeControllers) {
-            const auto& leadCallsign = this->activeCallsigns.GetLeadCallsignForPosition(controller);
-            const auto& normalisedPosition = leadCallsign.GetNormalisedPosition();
-
-            // If nobody's providing any services yet, this controller is.
-            if (newServiceProviders.empty()) {
-                newServiceProviders.push_back(std::make_shared<ServiceProvision>(
-                    ServiceType::Delivery, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
-            }
-
-            // If controller can't provide GND, skip this.
-            if (!normalisedPosition.ProvidesGroundServices()) {
-                continue;
-            }
-
-            // If nobody's providing ground services yet, this controller is.
-            if (!ServiceProviderMatchingConditionExists(
-                    newServiceProviders, [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
-                        return provider->serviceProvided == ServiceType::Ground;
-                    })) {
-                newServiceProviders.push_back(std::make_shared<ServiceProvision>(
-                    ServiceType::Ground, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
-            }
-
-            // If controller can't provide TWR, skip this.
-            if (!normalisedPosition.ProvidesTowerServices()) {
-                continue;
-            }
-
-            // Only TWR controllers (or APP+ if there aren't any TWR's) can provide TWR services.
-            if (normalisedPosition.IsTower() ||
-                !ServiceProviderMatchingConditionExists(
-                    newServiceProviders, [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
-                        return provider->serviceProvided == ServiceType::Tower;
-                    })) {
-                newServiceProviders.push_back(std::make_shared<ServiceProvision>(
-                    ServiceType::Tower, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
-            }
-
-            // If controller can't provide APP, skip this.
-            if (!normalisedPosition.ProvidesApproachServices()) {
-                continue;
-            }
-
-            // The first controller we find that can provide APP is the final phase controller
-            if (!ServiceProviderMatchingConditionExists(
-                    newServiceProviders, [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
-                        return provider->serviceProvided == ServiceType::FinalApproach;
-                    })) {
-                newServiceProviders.push_back(std::make_shared<ServiceProvision>(
-                    ServiceType::FinalApproach, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
-            }
-
-            // Enroute and APP can provide generic app control
-            if (normalisedPosition.IsApproach() ||
-                !ServiceProviderMatchingConditionExists(
-                    newServiceProviders, [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
-                        return provider->serviceProvided == ServiceType::Approach;
-                    })) {
-                newServiceProviders.push_back(std::make_shared<ServiceProvision>(
-                    ServiceType::Approach, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
-            }
-        }
-
-        // Phew, we've worked out who's doing what role. Now for the log messages.
-        for (const auto& serviceProvider : newServiceProviders) {
-            if (!ServiceProviderMatchingConditionExists(
-                    this->serviceProviders[icao],
-                    [&serviceProvider](const std::shared_ptr<ServiceProvision>& provider) -> bool {
-                        return provider->serviceProvided == serviceProvider->serviceProvided &&
-                               *provider->controller == *serviceProvider->controller;
-                    })) {
-                LogNewServiceProvision(icao, serviceProvider);
-            }
-        }
-
-        for (const auto& serviceProvider : this->serviceProviders[icao]) {
-            if (!ServiceProviderMatchingConditionExists(
-                    newServiceProviders, [&serviceProvider](const std::shared_ptr<ServiceProvision>& provider) -> bool {
-                        return provider->serviceProvided == serviceProvider->serviceProvided &&
-                               *provider->controller == *serviceProvider->controller;
-                    })) {
-                LogNewServiceProvision(icao, serviceProvider);
-            }
-        }
-
-        // Now replace the controllers
-        this->serviceProviders[icao] = std::move(newServiceProviders);
-    }
-
-    auto AirfieldOwnershipManager::NotFoundCallsign() const -> Controller::ActiveCallsign&
-    {
-        return *this->notFoundCallsign;
+        const auto newServiceProviders = this->GetServiceProvidersAtAirfield(activeControllers);
+        this->LogProviderChanges(icao, newServiceProviders);
+        this->serviceProviders->SetProvidersForAirfield(icao, newServiceProviders);
     }
 
     auto AirfieldOwnershipManager::ServiceProviderMatchingConditionExists(
@@ -262,20 +117,118 @@ namespace UKControllerPlugin::Ownership {
             " services at " + icao);
     }
 
-    auto AirfieldOwnershipManager::GetDeliveryServiceProviderForAirfield(const std::string& icao) const
-        -> std::shared_ptr<ServiceProvision>
+    auto AirfieldOwnershipManager::GetActiveControllersInAirfieldTopdownOrder(
+        const std::string& icao, const std::vector<std::string>& topDownOrder) -> std::vector<std::string>
     {
-        if (this->serviceProviders.count(icao) == 0) {
-            return nullptr;
+        std::vector<std::string> activeControllers;
+        for (const auto& controller : topDownOrder) {
+            if (this->activeCallsigns.PositionActive(controller)) {
+                activeControllers.push_back(controller);
+            }
         }
 
-        const auto& providerForAirfield = this->serviceProviders.at(icao);
-        auto provider = std::find_if(
-            providerForAirfield.begin(),
-            providerForAirfield.end(),
-            [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
-                return provider->serviceProvided == ServiceType::Delivery;
-            });
-        return provider == providerForAirfield.cend() ? nullptr : *provider;
+        return activeControllers;
+    }
+
+    auto AirfieldOwnershipManager::GetServiceProvidersAtAirfield(const std::vector<std::string>& controllers)
+        -> std::vector<std::shared_ptr<ServiceProvision>>
+    {
+        // Generate the new service providers
+        std::vector<std::shared_ptr<ServiceProvision>> serviceProviders;
+        for (const auto& controller : controllers) {
+            const auto& leadCallsign = this->activeCallsigns.GetLeadCallsignForPosition(controller);
+            const auto& normalisedPosition = leadCallsign.GetNormalisedPosition();
+
+            // If nobody's providing any services yet, this controller is.
+            if (serviceProviders.empty()) {
+                serviceProviders.push_back(std::make_shared<ServiceProvision>(
+                    ServiceType::Delivery, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
+            }
+
+            // If controller can't provide GND, skip this.
+            if (!normalisedPosition.ProvidesGroundServices()) {
+                continue;
+            }
+
+            // If nobody's providing ground services yet, this controller is.
+            if (!ServiceProviderMatchingConditionExists(
+                    serviceProviders, [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
+                        return provider->serviceProvided == ServiceType::Ground;
+                    })) {
+                serviceProviders.push_back(std::make_shared<ServiceProvision>(
+                    ServiceType::Ground, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
+            }
+
+            // If controller can't provide TWR, skip this.
+            if (!normalisedPosition.ProvidesTowerServices()) {
+                continue;
+            }
+
+            // Only TWR controllers (or APP+ if there aren't any TWR's) can provide TWR services.
+            if (normalisedPosition.IsTower() ||
+                !ServiceProviderMatchingConditionExists(
+                    serviceProviders, [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
+                        return provider->serviceProvided == ServiceType::Tower;
+                    })) {
+                serviceProviders.push_back(std::make_shared<ServiceProvision>(
+                    ServiceType::Tower, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
+            }
+
+            // If controller can't provide APP, skip this.
+            if (!normalisedPosition.ProvidesApproachServices()) {
+                continue;
+            }
+
+            // The first controller we find that can provide APP is the final phase controller
+            if (!ServiceProviderMatchingConditionExists(
+                    serviceProviders, [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
+                        return provider->serviceProvided == ServiceType::FinalApproach;
+                    })) {
+                serviceProviders.push_back(std::make_shared<ServiceProvision>(
+                    ServiceType::FinalApproach, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
+            }
+
+            // Enroute and APP can provide generic app control
+            if (normalisedPosition.IsApproach() ||
+                !ServiceProviderMatchingConditionExists(
+                    serviceProviders, [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
+                        return provider->serviceProvided == ServiceType::Approach;
+                    })) {
+                serviceProviders.push_back(std::make_shared<ServiceProvision>(
+                    ServiceType::Approach, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
+            }
+        }
+
+        return serviceProviders;
+    }
+
+    void AirfieldOwnershipManager::LogProviderChanges(
+        const std::string& icao, const std::vector<std::shared_ptr<ServiceProvision>>& newProviders)
+    {
+        const auto& currentProviders = this->serviceProviders->GetServiceProviders(icao);
+        for (const auto& serviceProvider : newProviders) {
+            if (!ServiceProviderMatchingConditionExists(
+                    currentProviders, [&serviceProvider](const std::shared_ptr<ServiceProvision>& provider) -> bool {
+                        return provider->serviceProvided == serviceProvider->serviceProvided &&
+                               *provider->controller == *serviceProvider->controller;
+                    })) {
+                LogNewServiceProvision(icao, serviceProvider);
+            }
+        }
+
+        for (const auto& serviceProvider : currentProviders) {
+            if (!ServiceProviderMatchingConditionExists(
+                    newProviders, [&serviceProvider](const std::shared_ptr<ServiceProvision>& provider) -> bool {
+                        return provider->serviceProvided == serviceProvider->serviceProvided &&
+                               *provider->controller == *serviceProvider->controller;
+                    })) {
+                LogRemovedServiceProvision(icao, serviceProvider);
+            }
+        }
+    }
+
+    auto AirfieldOwnershipManager::GetProviders() const -> const AirfieldServiceProviderCollection&
+    {
+        return *this->serviceProviders;
     }
 } // namespace UKControllerPlugin::Ownership

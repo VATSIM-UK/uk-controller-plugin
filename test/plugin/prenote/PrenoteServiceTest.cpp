@@ -1,9 +1,9 @@
 #include "prenote/PrenoteService.h"
-#include "ownership/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
+#include "ownership/ServiceProvision.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "airfield/AirfieldCollection.h"
 #include "controller/ControllerPosition.h"
-#include "controller/ActiveCallsign.h"
 #include "message/UserMessager.h"
 #include "prenote/AbstractPrenote.h"
 #include "controller/ControllerPositionHierarchy.h"
@@ -19,7 +19,9 @@ using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
+using UKControllerPlugin::Ownership::ServiceProvision;
+using UKControllerPlugin::Ownership::ServiceType;
 using UKControllerPlugin::Prenote::AbstractPrenote;
 using UKControllerPlugin::Prenote::PrenoteService;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -59,10 +61,7 @@ namespace UKControllerPluginTest {
             public:
             void SetUp(void)
             {
-                this->airfields = std::make_unique<AirfieldCollection>();
-                this->airfields->AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"EGKK_GND"})));
-                this->airfieldOwnership =
-                    std::make_unique<AirfieldOwnershipManager>(*this->airfields, this->activeCallsigns);
+                this->airfieldOwnership = std::make_unique<AirfieldServiceProviderCollection>();
 
                 // Add controllers
                 this->controllerUser = std::unique_ptr<ControllerPosition>(
@@ -80,15 +79,21 @@ namespace UKControllerPluginTest {
                     ActiveCallsign("LON_S_CTR", "Testy McTestface III", *this->controllerNoLondon, false));
 
                 this->hierarchy = std::make_unique<ControllerPositionHierarchy>();
-                this->airfieldOwnership->RefreshOwner("EGKK");
+
+                this->airfieldOwnership->SetProvidersForAirfield(
+                    "EGKK",
+                    std::vector<std::shared_ptr<ServiceProvision>>{std::make_shared<ServiceProvision>(
+                        ServiceType::Delivery,
+                        std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
+                            this->activeCallsigns.GetUserCallsign()))});
+
                 this->messager = std::make_unique<UserMessager>(this->mockPlugin);
                 this->service =
                     std::make_unique<PrenoteService>(*this->airfieldOwnership, this->activeCallsigns, *this->messager);
             };
 
             std::unique_ptr<PrenoteService> service;
-            std::unique_ptr<AirfieldCollection> airfields;
-            std::unique_ptr<AirfieldOwnershipManager> airfieldOwnership;
+            std::unique_ptr<AirfieldServiceProviderCollection> airfieldOwnership;
             ActiveCallsignCollection activeCallsigns;
             std::unique_ptr<ControllerPosition> controllerUser;
             std::unique_ptr<ControllerPosition> controllerOther;

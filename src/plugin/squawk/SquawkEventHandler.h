@@ -18,9 +18,6 @@ namespace UKControllerPlugin {
         class StoredFlightplan;
         class StoredFlightplanCollection;
     } // namespace Flightplan
-    namespace Airfield {
-        class AirfieldOwnershipManager;
-    } // namespace Airfield
     namespace Squawk {
         class SquawkGenerator;
     } // namespace Squawk

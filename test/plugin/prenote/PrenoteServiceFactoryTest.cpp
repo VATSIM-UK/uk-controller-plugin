@@ -4,8 +4,7 @@
 #include "controller/ControllerPositionHierarchyFactory.h"
 #include "prenote/PrenoteFactory.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "ownership/AirfieldOwnershipManager.h"
-#include "airfield/AirfieldCollection.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "message/UserMessager.h"
 #include "prenote/PrenoteService.h"
 #include "bootstrap/BootstrapWarningMessage.h"
@@ -13,14 +12,13 @@
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
-using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Prenote::PrenoteFactory;
 using UKControllerPlugin::Prenote::PrenoteServiceFactory;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -40,8 +38,7 @@ namespace UKControllerPluginTest {
                     new ControllerPosition(2, "EGKK_TWR", 124.220, {"EGKK"}, true, false)));
                 this->hierarchyFactory = std::make_unique<ControllerPositionHierarchyFactory>(*this->collection);
                 this->prenoteFactory = std::make_unique<PrenoteFactory>(*this->hierarchyFactory);
-                this->airfieldOwnership = std::unique_ptr<AirfieldOwnershipManager>(
-                    new AirfieldOwnershipManager(AirfieldCollection(), this->activeCallsigns));
+                this->airfieldOwnership = std::make_unique<AirfieldServiceProviderCollection>();
                 this->userMessager = std::make_unique<UserMessager>(this->mockPlugin);
                 this->serviceFactory =
                     std::make_unique<PrenoteServiceFactory>(*this->prenoteFactory, *this->userMessager);
@@ -51,7 +48,7 @@ namespace UKControllerPluginTest {
             std::unique_ptr<ControllerPositionHierarchyFactory> hierarchyFactory;
             std::unique_ptr<PrenoteFactory> prenoteFactory;
             std::unique_ptr<PrenoteServiceFactory> serviceFactory;
-            std::unique_ptr<AirfieldOwnershipManager> airfieldOwnership;
+            std::unique_ptr<AirfieldServiceProviderCollection> airfieldOwnership;
             std::unique_ptr<UserMessager> userMessager;
             NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
             ActiveCallsignCollection activeCallsigns;

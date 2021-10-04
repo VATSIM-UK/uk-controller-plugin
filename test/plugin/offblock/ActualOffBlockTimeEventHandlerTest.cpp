@@ -18,7 +18,6 @@ using UKControllerPlugin::Datablock::ActualOffBlockTimeEventHandler;
 using UKControllerPlugin::Datablock::DisplayTime;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
