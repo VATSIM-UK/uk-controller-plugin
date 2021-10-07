@@ -139,7 +139,7 @@ namespace UKControllerPlugin::Ownership {
             const auto& leadCallsign = this->activeCallsigns.GetLeadCallsignForPosition(controller);
             const auto& normalisedPosition = leadCallsign.GetNormalisedPosition();
 
-            // If nobody's providing any services yet, this controller is.
+            // If nobody's providing any services yet, this controller is providing delivery.
             if (serviceProviders.empty()) {
                 serviceProviders.push_back(std::make_shared<ServiceProvision>(
                     ServiceType::Delivery, std::make_shared<Controller::ActiveCallsign>(leadCallsign)));
@@ -151,7 +151,8 @@ namespace UKControllerPlugin::Ownership {
             }
 
             // If nobody's providing ground services yet, this controller is.
-            if (!ServiceProviderMatchingConditionExists(
+            if (normalisedPosition.IsGround() ||
+                !ServiceProviderMatchingConditionExists(
                     serviceProviders, [](const std::shared_ptr<ServiceProvision>& provider) -> bool {
                         return provider->serviceProvided == ServiceType::Ground;
                     })) {

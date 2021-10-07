@@ -28,9 +28,11 @@ namespace UKControllerPlugin::Ownership {
         [[nodiscard]] auto TowerControlProvidedByUser(const std::string& icao) const -> bool;
         void Flush();
         void FlushForAirfield(const std::string& icao);
+        [[nodiscard]] auto ServiceProvidedAtAirfield(const std::string& icao, ServiceType type) const -> bool;
+        [[nodiscard]] auto GetProvidersForServiceAtAirfield(const std::string& icao, ServiceType type) const
+            -> std::vector<std::shared_ptr<ServiceProvision>>;
 
         private:
-        [[nodiscard]] auto ServiceProvidedAtAirfield(const std::string& icao, ServiceType type) const -> bool;
         [[nodiscard]] auto ServiceProvidedAtAirfieldByUser(const std::string& icao, ServiceType type) const -> bool;
         [[nodiscard]] auto GetFirstServiceProviderMatchingCondition(
             const std::vector<std::shared_ptr<ServiceProvision>>& providers,

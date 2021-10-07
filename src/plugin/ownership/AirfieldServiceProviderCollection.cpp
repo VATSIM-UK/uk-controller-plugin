@@ -114,4 +114,24 @@ namespace UKControllerPlugin::Ownership {
                 return provision->serviceProvided == ServiceType::Delivery;
             });
     }
+
+    auto
+    AirfieldServiceProviderCollection::GetProvidersForServiceAtAirfield(const std::string& icao, ServiceType type) const
+        -> std::vector<std::shared_ptr<ServiceProvision>>
+    {
+        if (this->serviceProviders.count(icao) == 0) {
+            return this->noProviders;
+        }
+
+        std::vector<std::shared_ptr<ServiceProvision>> providers;
+        std::copy_if(
+            this->serviceProviders.at(icao).cbegin(),
+            this->serviceProviders.at(icao).cend(),
+            std::back_inserter(providers),
+            [&type](const std::shared_ptr<ServiceProvision>& provider) -> bool {
+                return provider->serviceProvided == type;
+            });
+
+        return providers;
+    }
 } // namespace UKControllerPlugin::Ownership
