@@ -130,6 +130,22 @@ namespace UKControllerPlugin::Ownership {
         return activeControllers;
     }
 
+    /**
+     * This method has the following rationalle:
+     *
+     * - The first controller in the top-down order will be providing delivery services.
+     * - There may be multiple Ground controllers. All of them provide ground services, but only one of them,
+     * the first one, will be covering Delivery.
+     * - There may be multiple Tower controllers, but only the first one in the top-down order (ie the primary
+     * position) will be providing DEL/GND in the absence of those controllers.
+     * - There may be multiple Approach controllers. Only the first approach controller in the top-down order
+     * will be providing final approach services and below.
+     * - If one Approach controller is online, they assume both Final approach and Approach services, regardless
+     * of whether other controllers (e.g. Enroute) is online.
+     * - Enroute controllers may provide all services down to the first position to be covered.
+     * - At all levels apart from Delivery and Final Approach, multiple controllers of the same type can provide
+     * the same service.
+     */
     auto AirfieldOwnershipManager::GetServiceProvidersAtAirfield(const std::vector<std::string>& controllers)
         -> std::vector<std::shared_ptr<ServiceProvision>>
     {
