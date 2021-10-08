@@ -6,7 +6,12 @@ namespace UKControllerPlugin::MissedApproach {
         None = 0,
         Line = 1,
         Circle = 2,
-        CirleLine = 3,
         Invalid = 4
     };
+
+    inline MissedApproachRenderMode operator|(MissedApproachRenderMode first, MissedApproachRenderMode second)
+    {
+        return static_cast<MissedApproachRenderMode>(
+            static_cast<unsigned int>(first) | static_cast<unsigned int>(second));
+    }
 } // namespace UKControllerPlugin::MissedApproach

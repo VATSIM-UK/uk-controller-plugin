@@ -7,7 +7,7 @@ namespace UKControllerPlugin::MissedApproach {
 
     MissedApproachRenderer::MissedApproachRenderer(
         std::shared_ptr<MissedApproachCollection> missedApproaches, Euroscope::EuroscopePluginLoopbackInterface& plugin)
-        : missedApproaches(std::move(missedApproaches)), plugin(plugin)
+        : renderMode(MissedApproachRenderMode::None), missedApproaches(std::move(missedApproaches)), plugin(plugin)
     {
         this->plugin.GetSelectedFlightplan();
     }
