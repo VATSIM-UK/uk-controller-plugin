@@ -34,10 +34,10 @@ namespace UKControllerPlugin::MissedApproach {
 
         // Lets us access flightplans and radar targets
         const Euroscope::EuroscopePluginLoopbackInterface& plugin;
-        
+
         // The render mode for missed approaches
         MissedApproachRenderMode renderMode;
-        
+
         const std::string RENDER_MODE_ASR_KEY = "missedApproachRenderMode";
         const std::string RENDER_MODE_ASR_DESC = "Missed Approach Render Mode";
     };

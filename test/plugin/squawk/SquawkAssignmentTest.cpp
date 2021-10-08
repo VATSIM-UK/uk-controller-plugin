@@ -49,7 +49,7 @@ namespace UKControllerPluginTest {
                     new NiceMock<MockEuroScopeCRadarTargetInterface>);
                 this->mockSelfController =
                     std::shared_ptr<MockEuroScopeCControllerInterface>(new NiceMock<MockEuroScopeCControllerInterface>);
-                
+
                 this->activeCallsigns.AddUserCallsign(
                     ActiveCallsign("EGKK_APP", "Testy McTestface", this->kkApp, true));
                 this->activeCallsigns.AddCallsign(ActiveCallsign("LON_S_CTR", "Boaty McBoatface", this->lonS, false));
@@ -57,8 +57,8 @@ namespace UKControllerPluginTest {
                     "EGKK",
                     std::vector<std::shared_ptr<ServiceProvision>>{std::make_shared<ServiceProvision>(
                         ServiceType::Delivery,
-                        std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(this->activeCallsigns.GetUserCallsign())
-                            )});
+                        std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
+                            this->activeCallsigns.GetUserCallsign()))});
 
                 ON_CALL(*this->mockSelfController, IsVatsimRecognisedController()).WillByDefault(Return(true));
             }
