@@ -316,7 +316,7 @@ set(test__ownership
     "ownership/AirfieldOwnershipManagerTest.cpp"
     "ownership/AirfieldOwnershipModuleTest.cpp"
     "ownership/AirfieldsOwnedQueryMessageTest.cpp"
-)
+     ownership/AirfieldServiceProviderCollectionTest.cpp)
 source_group("test\\ownership" FILES ${test__ownership})
 
 set(test__plugin

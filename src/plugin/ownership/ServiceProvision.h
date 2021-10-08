@@ -11,8 +11,7 @@ namespace UKControllerPlugin::Ownership {
      */
     using ServiceProvision = struct ServiceProvision
     {
-        ServiceProvision(
-            const ServiceType serviceProvided, const std::shared_ptr<Controller::ActiveCallsign> controller);
+        ServiceProvision(ServiceType serviceProvided, std::shared_ptr<Controller::ActiveCallsign> controller);
 
         // The service being provided
         const ServiceType serviceProvided{};
