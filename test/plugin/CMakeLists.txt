@@ -239,7 +239,13 @@ source_group("test\\minstack" FILES ${test__minstack})
 
 set(test__missedapproach
         missedapproach/MissedApproachTest.cpp
-        missedapproach/CompareMissedApproachesTest.cpp missedapproach/MissedApproachCollectionTest.cpp missedapproach/RemoveExpiredMissedApproachesTest.cpp missedapproach/MissedApproachModuleTest.cpp missedapproach/NewMissedApproachPushEventHandlerTest.cpp missedapproach/TriggerMissedApproachTest.cpp)
+        missedapproach/CompareMissedApproachesTest.cpp
+        missedapproach/MissedApproachCollectionTest.cpp
+        missedapproach/RemoveExpiredMissedApproachesTest.cpp
+        missedapproach/MissedApproachModuleTest.cpp
+        missedapproach/NewMissedApproachPushEventHandlerTest.cpp
+        missedapproach/TriggerMissedApproachTest.cpp
+        missedapproach/MissedApproachRendererTest.cpp missedapproach/MissedApproachRenderOptionsTest.cpp)
 source_group("test\\missedapproach" FILES ${test__missedapproach})
 
 set(test__mock

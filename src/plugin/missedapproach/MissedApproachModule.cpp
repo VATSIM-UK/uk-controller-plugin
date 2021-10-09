@@ -1,6 +1,7 @@
 #include "MissedApproachCollection.h"
 #include "MissedApproachModule.h"
 #include "MissedApproachRenderer.h"
+#include "MissedApproachRenderOptions.h"
 #include "NewMissedApproachPushEventHandler.h"
 #include "RemoveExpiredMissedApproaches.h"
 #include "TriggerMissedApproach.h"
@@ -46,10 +47,11 @@ namespace UKControllerPlugin::MissedApproach {
         RadarScreen::ConfigurableDisplayCollection& configurables,
         Euroscope::AsrEventHandlerCollection& asrHandlers)
     {
-        auto renderer =
-            std::make_shared<MissedApproachRenderer>(collection, *persistence.airfieldOwnership, *persistence.plugin);
+        auto renderOptions = std::make_shared<MissedApproachRenderOptions>();
+        auto renderer = std::make_shared<MissedApproachRenderer>(
+            collection, *persistence.airfieldOwnership, *persistence.plugin, renderOptions);
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(), renderer, RadarScreen::RadarRenderableCollection::afterTags);
-        asrHandlers.RegisterHandler(renderer);
+        asrHandlers.RegisterHandler(renderOptions);
     }
 } // namespace UKControllerPlugin::MissedApproach
