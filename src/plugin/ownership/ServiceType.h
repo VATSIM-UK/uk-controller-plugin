@@ -10,16 +10,14 @@ namespace UKControllerPlugin::Ownership {
         Approach = 16,
         Invalid = 32
     };
-    
+
     inline ServiceType operator|(ServiceType first, ServiceType second)
     {
-        return static_cast<ServiceType>(
-            static_cast<unsigned int>(first) | static_cast<unsigned int>(second));
+        return static_cast<ServiceType>(static_cast<unsigned int>(first) | static_cast<unsigned int>(second));
     }
-    
+
     inline ServiceType operator&(ServiceType first, ServiceType second)
     {
-        return static_cast<ServiceType>(
-            static_cast<unsigned int>(first) & static_cast<unsigned int>(second));
+        return static_cast<ServiceType>(static_cast<unsigned int>(first) & static_cast<unsigned int>(second));
     }
 } // namespace UKControllerPlugin::Ownership

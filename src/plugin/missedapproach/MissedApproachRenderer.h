@@ -40,15 +40,14 @@ namespace UKControllerPlugin::MissedApproach {
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
             const Gdiplus::Point& screenCentre,
             const EuroScopePlugIn::CPosition aircraftPosition,
-            const Gdiplus::Rect& aircraftBoundingRect
-        ) -> Gdiplus::Point;
-        
+            const Gdiplus::Rect& aircraftBoundingRect) -> Gdiplus::Point;
+
         [[nodiscard]] auto CreatePen() const -> std::shared_ptr<Gdiplus::Pen>;
         inline static const unsigned int DEFAULT_RENDER_DURATION = 55;
 
         // Contains all the missed approaches currently active
         const std::shared_ptr<MissedApproachCollection> missedApproaches;
-        
+
         // Who's controlling what and where
         const Ownership::AirfieldServiceProviderCollection& serviceProviders;
 
@@ -63,7 +62,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         // How long to render missed approaches for
         std::chrono::seconds renderDuration;
-        
+
         // Which airfields we care about
         std::vector<std::string> renderFor;
 
@@ -75,10 +74,10 @@ namespace UKControllerPlugin::MissedApproach {
         const std::string RENDER_DURATION_ASR_DESC = "Missed Approach Render Duration";
         const std::string SERVICE_PROVISION_ASR_KEY = "missedApproachRenderForServiceProvision";
         const std::string SERVICE_PROVISION_ASR_DESC = "Missed Approach Render For Service Provision";
-        
+
         // Render things
         static const INT CIRCLE_RENDER_SIZE_PX = 40;
-    
+
         // The pen to draw with
         const Gdiplus::REAL PEN_WIDTH = 3;
         const Gdiplus::Color DRAW_COLOUR = Gdiplus::Color(255, 0, 0);
