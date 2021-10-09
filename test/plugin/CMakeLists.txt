@@ -116,6 +116,11 @@ set(test__handoff
 )
 source_group("test\\handoff" FILES ${test__handoff})
 
+set(test__headings
+    "headings/HeadingTest.cpp"
+        headings/HeadingTest.cpp)
+source_group("test\\headings" FILES ${test__headings})
+
 set(test__historytrail
     "historytrail/AircraftHistoryTrailTest.cpp"
     "historytrail/HistoryTrailEventHandlerTest.cpp"
@@ -488,6 +493,7 @@ set(ALL_FILES
     ${test__flightinformationservice}
     ${test__flightplan}
     ${test__handoff}
+    ${test__headings}
     ${test__historytrail}
     ${test__hold}
     ${test__initialaltitude}

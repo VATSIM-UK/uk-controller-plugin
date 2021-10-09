@@ -92,14 +92,7 @@ namespace UKControllerPlugin::Ownership {
 
     auto AirfieldServiceProviderCollection::GetAirfieldsWhereUserIsProvidingDelivery() const -> std::vector<std::string>
     {
-        std::vector<std::string> airfields;
-        for (const auto& providersAtAirfield : this->serviceProviders) {
-            if (this->DeliveryControlProvidedByUser(providersAtAirfield.first)) {
-                airfields.push_back(providersAtAirfield.first);
-            }
-        }
-
-        return airfields;
+        return this->GetAirfieldsWhereUserProvidingServices(ServiceType::Delivery);
     }
 
     auto AirfieldServiceProviderCollection::DeliveryProviderForAirfield(const std::string& icao) const
@@ -133,5 +126,25 @@ namespace UKControllerPlugin::Ownership {
             });
 
         return providers;
+    }
+
+    /**
+     * A bitwise check of airfields where the user is providing a specific service.
+     */
+    auto AirfieldServiceProviderCollection::GetAirfieldsWhereUserProvidingServices(ServiceType service) const
+        -> std::vector<std::string>
+    {
+        std::vector<std::string> airfields;
+        for (const auto& providersAtAirfield : this->serviceProviders) {
+            for (const auto& serviceProvider : providersAtAirfield.second) {
+                if ((serviceProvider->serviceProvided & service) == serviceProvider->serviceProvided &&
+                    serviceProvider->controller->GetIsUser()) {
+                    airfields.push_back(providersAtAirfield.first);
+                    break;
+                }
+            }
+        }
+
+        return airfields;
     }
 } // namespace UKControllerPlugin::Ownership

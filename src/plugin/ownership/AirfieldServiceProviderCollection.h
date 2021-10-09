@@ -17,6 +17,8 @@ namespace UKControllerPlugin::Ownership {
         public:
         void SetProvidersForAirfield(const std::string& icao, std::vector<std::shared_ptr<ServiceProvision>> providers);
         [[nodiscard]] auto GetAirfieldsWhereUserIsProvidingDelivery() const -> std::vector<std::string>;
+        [[nodiscard]] auto GetAirfieldsWhereUserProvidingServices(ServiceType service) const ->
+            std::vector<std::string>;
         [[nodiscard]] auto DeliveryProviderForAirfield(const std::string& icao) const
             -> const std::shared_ptr<ServiceProvision>&;
         [[nodiscard]] auto AirfieldHasDeliveryProvider(const std::string& icao) const -> bool;

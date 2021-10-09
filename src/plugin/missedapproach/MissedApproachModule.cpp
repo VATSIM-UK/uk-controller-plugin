@@ -46,7 +46,8 @@ namespace UKControllerPlugin::MissedApproach {
         RadarScreen::ConfigurableDisplayCollection& configurables,
         Euroscope::AsrEventHandlerCollection& asrHandlers)
     {
-        auto renderer = std::make_shared<MissedApproachRenderer>(collection, *persistence.plugin);
+        auto renderer =
+            std::make_shared<MissedApproachRenderer>(collection, *persistence.airfieldOwnership, *persistence.plugin);
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(), renderer, RadarScreen::RadarRenderableCollection::afterTags);
         asrHandlers.RegisterHandler(renderer);

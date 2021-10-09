@@ -239,6 +239,9 @@ set(src__handoff
         controller/HandoffEventHandler.cpp)
 source_group("src\\handoff" FILES ${src__handoff})
 
+set(src__headings headings/Heading.h headings/Heading.cpp)
+source_group("src\\headings" FILES ${src__headings})
+
 set(src__historytrail
     "historytrail/AircraftHistoryTrail.cpp"
     "historytrail/AircraftHistoryTrail.h"
@@ -838,6 +841,7 @@ set(ALL_FILES
     ${src__flightplan}
     ${src__graphics}
     ${src__handoff}
+    ${src__headings}
     ${src__historytrail}
     ${src__hold}
     ${src__initialaltitude}

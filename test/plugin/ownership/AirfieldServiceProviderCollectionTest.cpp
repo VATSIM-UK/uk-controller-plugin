@@ -261,4 +261,33 @@ namespace UKControllerPluginTest::Ownership {
         EXPECT_EQ(groundProvision, groundProviders[0]);
         EXPECT_EQ(groundProvision2, groundProviders[1]);
     }
+
+    TEST_F(AirfieldServiceProviderCollectionTest, ItReturnsAirfieldsWhereUserProvidingServicesInBitwise)
+    {
+        // Will show - right service, is user
+        collection.SetProvidersForAirfield("EGGD", {CreateProvision(groundController, ServiceType::Ground, true)});
+
+        // Won't show - right service, not user
+        collection.SetProvidersForAirfield("EGFF", {CreateProvision(groundController, ServiceType::Ground, false)});
+
+        // Won't show - wrong service, is user
+        collection.SetProvidersForAirfield("EGKK", {CreateProvision(groundController, ServiceType::Delivery, true)});
+
+        // Will show - right service, is user, to test bitwise
+        collection.SetProvidersForAirfield("EGLL", {CreateProvision(groundController, ServiceType::Approach, true)});
+
+        // Will show, at least one service matches
+        collection.SetProvidersForAirfield(
+            "EGLC",
+            {CreateProvision(groundController, ServiceType::Ground, true),
+             CreateProvision(groundController, ServiceType::Delivery, true)});
+
+        // Will show, two matches
+        collection.SetProvidersForAirfield("EGMC", {CreateProvision(groundController, ServiceType::Ground, true)});
+        collection.SetProvidersForAirfield("EGMC", {CreateProvision(groundController, ServiceType::Approach, true)});
+
+        EXPECT_EQ(
+            std::vector<std::string>({"EGGD", "EGLC", "EGLL", "EGMC"}),
+            collection.GetAirfieldsWhereUserProvidingServices(ServiceType::Ground | ServiceType::Approach));
+    }
 } // namespace UKControllerPluginTest::Ownership

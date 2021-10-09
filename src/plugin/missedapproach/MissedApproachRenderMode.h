@@ -14,4 +14,10 @@ namespace UKControllerPlugin::MissedApproach {
         return static_cast<MissedApproachRenderMode>(
             static_cast<unsigned int>(first) | static_cast<unsigned int>(second));
     }
+    
+    inline MissedApproachRenderMode operator&(MissedApproachRenderMode first, MissedApproachRenderMode second)
+    {
+        return static_cast<MissedApproachRenderMode>(
+            static_cast<unsigned int>(first) & static_cast<unsigned int>(second));
+    }
 } // namespace UKControllerPlugin::MissedApproach

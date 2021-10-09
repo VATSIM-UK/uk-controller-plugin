@@ -96,6 +96,8 @@ namespace UKControllerPlugin::Ownership {
             return "Final Approach";
         case ServiceType::Approach:
             return "Approach";
+        default:
+            return "Invalid";
         }
 
         return "Unknown";

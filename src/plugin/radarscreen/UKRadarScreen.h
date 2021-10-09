@@ -45,6 +45,7 @@ namespace UKControllerPlugin {
         auto operator=(UKRadarScreen&&) -> UKRadarScreen& = delete;
         void AddMenuItem(UKControllerPlugin::Plugin::PopupMenuItem menuItem) override;
         auto ConvertCoordinateToScreenPoint(EuroScopePlugIn::CPosition pos) -> POINT override;
+        [[nodiscard]] auto ConvertScreenPointToCoordinate(const POINT& point) -> EuroScopePlugIn::CPosition override;
         auto GetAsrData(std::string key) -> std::string override;
         auto GetGroundspeedForCallsign(std::string cs) -> int override;
         auto GetKey(std::string key) -> std::string override;
