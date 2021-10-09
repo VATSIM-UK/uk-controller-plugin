@@ -23,7 +23,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         private:
         // The default render duration
-        inline static const unsigned int DEFAULT_RENDER_DURATION = 55;
+        inline static const unsigned int DEFAULT_RENDER_DURATION = 5;
 
         // The render mode for missed approaches
         MissedApproachRenderMode mode;

@@ -30,7 +30,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         // How long to render
         duration = std::chrono::seconds(
-            userSetting.GetUnsignedIntegerEntry(this->SERVICE_PROVISION_ASR_KEY, DEFAULT_RENDER_DURATION));
+            userSetting.GetUnsignedIntegerEntry(this->RENDER_DURATION_ASR_KEY, DEFAULT_RENDER_DURATION));
 
         // Which airfields to render for
         airfields = userSetting.GetStringListEntry(this->RENDER_FOR_ASR_KEY);

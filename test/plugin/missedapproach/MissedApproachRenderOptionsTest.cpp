@@ -152,25 +152,13 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(std::vector<std::string>{}, options.Airfields());
     }
 
-    TEST_F(MissedApproachRenderOptionsTest, LoadingAsrSetsDefaultAirfieldsIfInvalid)
-    {
-        EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
-
-        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachRenderAirfields")).Times(1).WillOnce(Return("abc"));
-
-        options.AsrLoadedEvent(settings);
-        EXPECT_EQ(std::vector<std::string>{}, options.Airfields());
-    }
-
     TEST_F(MissedApproachRenderOptionsTest, LoadingAsrSetsAirfields)
     {
         EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
         EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachRenderAirfields"))
             .Times(1)
-            .WillOnce(Return("EGGD,"
-                             "EGLL"
-                             ""));
+            .WillOnce(Return("EGGD;EGLL"));
 
         options.AsrLoadedEvent(settings);
         EXPECT_EQ(std::vector<std::string>({"EGGD", "EGLL"}), options.Airfields());

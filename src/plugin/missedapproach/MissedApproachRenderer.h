@@ -28,8 +28,7 @@ namespace UKControllerPlugin::MissedApproach {
             std::shared_ptr<MissedApproachCollection> missedApproaches,
             const Ownership::AirfieldServiceProviderCollection& serviceProviders,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
-            std::shared_ptr<const MissedApproachRenderOptions> renderOptions
-        );
+            std::shared_ptr<const MissedApproachRenderOptions> renderOptions);
         [[nodiscard]] auto IsVisible() const -> bool override;
         void Render(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
@@ -51,7 +50,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         // Lets us access flightplans and radar targets
         const Euroscope::EuroscopePluginLoopbackInterface& plugin;
-        
+
         // The options for this renderer
         const std::shared_ptr<const MissedApproachRenderOptions> renderOptions;
 
