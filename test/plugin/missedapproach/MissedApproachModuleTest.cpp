@@ -62,16 +62,23 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(1, container.userSettingHandlers->Count());
     }
 
-    TEST_F(MissedApproachModuleTest, ItRegistersTheRenderer)
+    TEST_F(MissedApproachModuleTest, ItRegistersTheRenderers)
     {
         BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);
-        EXPECT_EQ(1, renderers.CountRenderers());
+        EXPECT_EQ(2, renderers.CountRenderers());
         EXPECT_EQ(1, renderers.CountRenderersInPhase(RadarRenderableCollection::afterTags));
+        EXPECT_EQ(1, renderers.CountRenderersInPhase(RadarRenderableCollection::afterLists));
     }
 
-    TEST_F(MissedApproachModuleTest, ItRegistersTheRenderOptionsForAsrEvents)
+    TEST_F(MissedApproachModuleTest, ItRegistersTheScreenObjects)
     {
         BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);
-        EXPECT_EQ(1, asrHandlers.CountHandlers());
+        EXPECT_EQ(1, renderers.CountScreenObjects());
+    }
+
+    TEST_F(MissedApproachModuleTest, ItRegistersTheRenderersForAsrEvents)
+    {
+        BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);
+        EXPECT_EQ(2, asrHandlers.CountHandlers());
     }
 } // namespace UKControllerPluginTest::MissedApproach

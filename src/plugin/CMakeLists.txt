@@ -481,7 +481,13 @@ set(src__missedapproach
         missedapproach/NewMissedApproachPushEventHandler.cpp missedapproach/NewMissedApproachPushEventHandler.h
         missedapproach/TriggerMissedApproach.cpp missedapproach/TriggerMissedApproach.h
         missedapproach/MissedApproachRenderer.cpp missedapproach/MissedApproachRenderer.h
-        missedapproach/MissedApproachRenderMode.h missedapproach/MissedApproachRenderOptions.cpp missedapproach/MissedApproachRenderOptions.h missedapproach/MissedApproachConfigurationDialog.cpp missedapproach/MissedApproachConfigurationDialog.h missedapproach/MissedApproachOptions.cpp missedapproach/MissedApproachOptions.h missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h missedapproach/MissedApproachUserSettingHandler.cpp missedapproach/MissedApproachUserSettingHandler.h)
+        missedapproach/MissedApproachRenderMode.h
+        missedapproach/MissedApproachRenderOptions.cpp missedapproach/MissedApproachRenderOptions.h
+        missedapproach/MissedApproachConfigurationDialog.cpp missedapproach/MissedApproachConfigurationDialog.h
+        missedapproach/MissedApproachOptions.cpp missedapproach/MissedApproachOptions.h
+        missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h
+        missedapproach/MissedApproachUserSettingHandler.cpp missedapproach/MissedApproachUserSettingHandler.h
+        missedapproach/MissedApproachButton.cpp missedapproach/MissedApproachButton.h)
 source_group("src\\missedapproach" FILES ${src__missedapproach})
 
 set(src__navaids

@@ -120,6 +120,7 @@ namespace UKControllerPlugin::MissedApproach {
         -> bool
     {
         return flightplan.GetDistanceToDestination() < MAX_DISTANCE_FROM_DESTINATION &&
+               radarTarget.GetGroundSpeed() > MIN_GROUNDSPEED &&
                radarTarget.GetFlightLevel() < MAX_ALTITUDE;
     }
 } // namespace UKControllerPlugin::MissedApproach

@@ -65,6 +65,7 @@ namespace UKControllerPluginTest::MissedApproach {
 
             ON_CALL(mockFlightplan, GetDistanceToDestination()).WillByDefault(testing::Return(5.0));
             ON_CALL(mockRadarTarget, GetFlightLevel()).WillByDefault(testing::Return(3000));
+            ON_CALL(mockRadarTarget, GetGroundspeed()).WillByDefault(testing::Return(75));
         }
 
         AirfieldServiceProviderCollection serviceProviders;
@@ -331,6 +332,18 @@ namespace UKControllerPluginTest::MissedApproach {
     TEST_F(TriggerMissedApproachTest, ItDoesntTriggerAircraftTooHigh)
     {
         ON_CALL(mockRadarTarget, GetFlightLevel()).WillByDefault(testing::Return(9000));
+        EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
+
+        EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
+
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
+        EXPECT_EQ(2, collection->Count());
+        EXPECT_EQ(nullptr, collection->Get(55));
+    }
+
+    TEST_F(TriggerMissedApproachTest, ItDoesntTriggerAircraftTooSlow)
+    {
+        ON_CALL(mockRadarTarget, GetGroundspeed()).WillByDefault(testing::Return(30));
         EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);

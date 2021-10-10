@@ -1,4 +1,5 @@
 #include "MissedApproachAudioAlert.h"
+#include "MissedApproachButton.h"
 #include "MissedApproachCollection.h"
 #include "MissedApproachModule.h"
 #include "MissedApproachOptions.h"
@@ -26,6 +27,7 @@ namespace UKControllerPlugin::MissedApproach {
     std::shared_ptr<MissedApproachAudioAlert> audioAlert;             // NOLINT
     std::shared_ptr<MissedApproachOptions> options;                   // NOLINT
     std::shared_ptr<MissedApproachUserSettingHandler> optionsHandler; // NOLINT
+    std::shared_ptr<TriggerMissedApproach> triggerHandler;            // NOLINT
 
     void BootstrapPlugin(const Bootstrap::PersistenceContainer& container)
     {
@@ -47,8 +49,9 @@ namespace UKControllerPlugin::MissedApproach {
             std::make_shared<NewMissedApproachPushEventHandler>(collection, audioAlert));
 
         // Trigger missed approach
-        auto trigger = std::make_shared<TriggerMissedApproach>(
+        const auto trigger = std::make_shared<TriggerMissedApproach>(
             collection, *container.windows, *container.api, *container.airfieldOwnership, audioAlert);
+        triggerHandler = trigger;
         TagFunction triggerMissedApproachTagFunction(
             TRIGGER_MISSED_APPROACH_TAG_FUNCTION_ID,
             "Trigger Missed Approach",
@@ -67,10 +70,19 @@ namespace UKControllerPlugin::MissedApproach {
         Euroscope::AsrEventHandlerCollection& asrHandlers)
     {
         auto renderOptions = std::make_shared<MissedApproachRenderOptions>();
+        asrHandlers.RegisterHandler(renderOptions);
+
         auto renderer = std::make_shared<MissedApproachRenderer>(
             collection, *persistence.airfieldOwnership, *persistence.plugin, renderOptions);
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(), renderer, RadarScreen::RadarRenderableCollection::afterTags);
-        asrHandlers.RegisterHandler(renderOptions);
+
+        const auto buttonRendererId = radarRenderables.ReserveRendererIdentifier();
+        const auto buttonScreenObject = radarRenderables.ReserveScreenObjectIdentifier(buttonRendererId);
+        auto button = std::make_shared<MissedApproachButton>(
+            collection, triggerHandler, *persistence.plugin, *persistence.airfieldOwnership, buttonScreenObject);
+
+        radarRenderables.RegisterRenderer(buttonRendererId, button, RadarScreen::RadarRenderableCollection::afterLists);
+        asrHandlers.RegisterHandler(button);
     }
 } // namespace UKControllerPlugin::MissedApproach
