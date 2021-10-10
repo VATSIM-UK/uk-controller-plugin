@@ -10,6 +10,9 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
     } // namespace Euroscope
+    namespace Ownership {
+        class AirfieldServiceProviderCollection;
+    } // namespace Ownership
     namespace Windows {
         class WinApiInterface;
     } // namespace Windows
@@ -28,7 +31,7 @@ namespace UKControllerPlugin::MissedApproach {
             std::shared_ptr<MissedApproachCollection> missedApproaches,
             Windows::WinApiInterface& windowsApi,
             const Api::ApiInterface& api,
-            const Controller::ActiveCallsignCollection& activeCallsigns);
+            const Ownership::AirfieldServiceProviderCollection& serviceProviders);
         void Trigger(Euroscope::EuroScopeCFlightPlanInterface& flightplan);
 
         private:
@@ -48,6 +51,6 @@ namespace UKControllerPlugin::MissedApproach {
         const Api::ApiInterface& api;
 
         // Which controllers are online
-        const Controller::ActiveCallsignCollection& activeCallsigns;
+        const Ownership::AirfieldServiceProviderCollection& serviceProviders;
     };
 } // namespace UKControllerPlugin::MissedApproach

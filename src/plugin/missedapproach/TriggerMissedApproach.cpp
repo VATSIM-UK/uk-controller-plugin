@@ -4,10 +4,11 @@
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "controller/ActiveCallsign.h"
-#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "helper/HelperFunctions.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
+#include "ownership/ServiceProvision.h"
 #include "time/ParseTimeStrings.h"
 #include "windows/WinApiInterface.h"
 
@@ -17,9 +18,9 @@ namespace UKControllerPlugin::MissedApproach {
         std::shared_ptr<MissedApproachCollection> missedApproaches,
         Windows::WinApiInterface& windowsApi,
         const Api::ApiInterface& api,
-        const Controller::ActiveCallsignCollection& activeCallsigns)
+        const Ownership::AirfieldServiceProviderCollection& serviceProviders)
         : missedApproaches(std::move(missedApproaches)), windowsApi(windowsApi), api(api),
-          activeCallsigns(activeCallsigns)
+          serviceProviders(serviceProviders)
     {
     }
 
@@ -54,17 +55,20 @@ namespace UKControllerPlugin::MissedApproach {
     }
 
     /**
-     * Only users that are controlling Tower positions may trigger
-     * missed approaches.
+     * Only users providing tower services and actually logged on to a Tower position can call for a missed
+     * approach.
      */
     auto TriggerMissedApproach::UserCanTrigger(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool
     {
-        if (!this->activeCallsigns.UserHasCallsign()) {
-            return false;
-        }
-
-        const auto& userPosition = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition();
-        return userPosition.IsTower() && userPosition.HasTopdownAirfield(flightplan.GetDestination());
+        const auto serviceProviders = this->serviceProviders.GetServiceProviders(flightplan.GetDestination());
+        return std::find_if(
+                   serviceProviders.begin(),
+                   serviceProviders.end(),
+                   [](const std::shared_ptr<Ownership::ServiceProvision>& provision) {
+                       return provision->serviceProvided == Ownership::ServiceType::Tower &&
+                              provision->controller->GetIsUser() &&
+                              provision->controller->GetNormalisedPosition().IsTower();
+                   }) != serviceProviders.cend();
     }
 
     auto TriggerMissedApproach::ResponseValid(const nlohmann::json& responseData) -> bool

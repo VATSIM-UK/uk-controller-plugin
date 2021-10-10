@@ -29,7 +29,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         // Trigger missed approach
         auto trigger = std::make_shared<TriggerMissedApproach>(
-            collection, *container.windows, *container.api, *container.activeCallsigns);
+            collection, *container.windows, *container.api, *container.airfieldOwnership);
         TagFunction triggerMissedApproachTagFunction(
             TRIGGER_MISSED_APPROACH_TAG_FUNCTION_ID,
             "Trigger Missed Approach",
