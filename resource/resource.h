@@ -24,6 +24,8 @@
 #define WAVE_DEP_RLS_REQ                133
 #define IDR_NEW_PRENOTE                 135
 #define WAVE_NEW_PRENOTE                135
+#define IDR_WAVE2                       136
+#define WAVE_MISSED_APPROACH            136
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -170,7 +172,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        136
+#define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1123
 #define _APS_NEXT_SYMED_VALUE           101

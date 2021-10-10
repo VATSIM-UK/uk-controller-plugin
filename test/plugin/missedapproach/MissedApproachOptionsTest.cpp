@@ -1,6 +1,5 @@
 #include "euroscope/UserSetting.h"
 #include "missedapproach/MissedApproachOptions.h"
-#include "ownership/ServiceType.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;

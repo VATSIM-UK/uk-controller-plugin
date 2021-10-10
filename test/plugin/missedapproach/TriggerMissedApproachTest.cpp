@@ -34,9 +34,12 @@ namespace UKControllerPluginTest::MissedApproach {
               userTowerCallsign(std::make_shared<ActiveCallsign>("EGKK_TWR", "Testy McTest", kkTwr, true)),
               notUserTowerCallsign(std::make_shared<ActiveCallsign>("EGKK_TWR", "Testy McTest", kkTwr, false)),
               userAppCallsign(std::make_shared<ActiveCallsign>("EGKK_TWR", "Testy McTest", kkApp, true)),
-              missed1(std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 13:56:00"))),
-              missed2(std::make_shared<class MissedApproach>(2, "BAW456", ParseTimeString("2021-08-23 13:56:00"))),
-              missed3(std::make_shared<class MissedApproach>(3, "BAW123", ParseTimeString("2021-08-23 13:54:00"))),
+              missed1(
+                  std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 13:56:00"), false)),
+              missed2(
+                  std::make_shared<class MissedApproach>(2, "BAW456", ParseTimeString("2021-08-23 13:56:00"), false)),
+              missed3(
+                  std::make_shared<class MissedApproach>(3, "BAW123", ParseTimeString("2021-08-23 13:54:00"), false)),
               collection(std::make_shared<MissedApproachCollection>()),
               trigger(collection, windows, api, serviceProviders)
         {
@@ -110,6 +113,7 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(55, missed->Id());
         EXPECT_EQ("BAW123", missed->Callsign());
         EXPECT_EQ(ParseTimeString("2021-08-23 14:00:00"), missed->ExpiresAt());
+        EXPECT_TRUE(missed->CreatedByUser());
     }
 
     TEST_F(TriggerMissedApproachTest, ItHandlesExpiresAtNotValidTimestampInResponse)

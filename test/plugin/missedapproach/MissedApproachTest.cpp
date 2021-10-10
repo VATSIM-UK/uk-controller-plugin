@@ -9,7 +9,7 @@ namespace UKControllerPluginTest::MissedApproach {
     class MissedApproachTest : public testing::Test
     {
         public:
-        MissedApproachTest() : expiresAt(GetExpiresAt()), missed(1, "BAW123", expiresAt)
+        MissedApproachTest() : expiresAt(GetExpiresAt()), missed(1, "BAW123", expiresAt, true)
         {
         }
 
@@ -45,12 +45,17 @@ namespace UKControllerPluginTest::MissedApproach {
 
     TEST_F(MissedApproachTest, ItsExpiredIfExpiryTimeHasPassed)
     {
-        class MissedApproach missed2(2, "BAW123", std::chrono::system_clock::now() - std::chrono::seconds(5));
+        class MissedApproach missed2(2, "BAW123", std::chrono::system_clock::now() - std::chrono::seconds(5), false);
         EXPECT_TRUE(missed2.IsExpired());
     }
 
     TEST_F(MissedApproachTest, ItHasACreatedAtTimeWhichIsSetToCurrentTime)
     {
         EXPECT_EQ(TimeNow(), missed.CreatedAt());
+    }
+
+    TEST_F(MissedApproachTest, ItHasACreatedByUser)
+    {
+        EXPECT_TRUE(missed.CreatedByUser());
     }
 } // namespace UKControllerPluginTest::MissedApproach

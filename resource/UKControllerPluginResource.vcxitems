@@ -24,6 +24,7 @@
     <Media Include="$(MSBuildThisFileDirectory)sound\departure_release_accepted.wav" />
     <Media Include="$(MSBuildThisFileDirectory)sound\departure_release_rejected.wav" />
     <Media Include="$(MSBuildThisFileDirectory)sound\departure_release_requested.wav" />
+    <Media Include="$(MSBuildThisFileDirectory)sound\missedapproach.wav" />
     <Media Include="$(MSBuildThisFileDirectory)sound\new_prenote.wav" />
   </ItemGroup>
   <ItemGroup>

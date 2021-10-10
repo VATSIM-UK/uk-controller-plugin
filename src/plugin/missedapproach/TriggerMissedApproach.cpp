@@ -31,7 +31,7 @@ namespace UKControllerPlugin::MissedApproach {
         if (!AircraftElegibleForMissedApproach(flightplan, radarTarget)) {
             return;
         }
-        
+
         if (!this->UserCanTrigger(flightplan)) {
             LogWarning("User tried to trigger missed approach, but is not authorised to do so");
             return;
@@ -97,7 +97,8 @@ namespace UKControllerPlugin::MissedApproach {
                 this->missedApproaches->Add(std::make_shared<class MissedApproach>(
                     response.at("id").get<int>(),
                     callsign,
-                    Time::ParseTimeString(response.at("expires_at").get<std::string>())));
+                    Time::ParseTimeString(response.at("expires_at").get<std::string>()),
+                    true));
             } catch (Api::ApiException&) {
                 LogError("ApiException when creating missed approach");
             }
@@ -111,8 +112,8 @@ namespace UKControllerPlugin::MissedApproach {
     }
 
     auto TriggerMissedApproach::AircraftElegibleForMissedApproach(
-        Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-        Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool
+        Euroscope::EuroScopeCFlightPlanInterface& flightplan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+        -> bool
     {
         return flightplan.GetDistanceToDestination() < MAX_DISTANCE_FROM_DESTINATION &&
                radarTarget.GetFlightLevel() < MAX_ALTITUDE;

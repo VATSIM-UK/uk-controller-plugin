@@ -9,8 +9,8 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         public:
         MissedApproachCollectionTest()
-            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now())),
-              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now()))
+            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now(), true)),
+              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now(), true))
         {
         }
         std::shared_ptr<class MissedApproach> missed1;

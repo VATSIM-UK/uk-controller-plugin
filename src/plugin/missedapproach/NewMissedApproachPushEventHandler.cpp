@@ -25,10 +25,12 @@ namespace UKControllerPlugin::MissedApproach {
             return;
         }
 
+        // If we get to this point, the missed approach wasn't user-triggered
         this->missedApproaches->Add(std::make_shared<class MissedApproach>(
             data.at("id").get<int>(),
             data.at("callsign").get<std::string>(),
-            Time::ParseTimeString(data.at("expires_at").get<std::string>())));
+            Time::ParseTimeString(data.at("expires_at").get<std::string>()),
+            false));
     }
 
     auto NewMissedApproachPushEventHandler::GetPushEventSubscriptions() const -> std::set<PushEventSubscription>

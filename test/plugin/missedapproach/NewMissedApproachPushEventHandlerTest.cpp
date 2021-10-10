@@ -18,8 +18,8 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         public:
         NewMissedApproachPushEventHandlerTest()
-            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now())),
-              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now())),
+            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now(), true)),
+              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now(), true)),
               collection(std::make_shared<MissedApproachCollection>()), handler(collection)
         {
             SetTestNow(ParseTimeString("2021-08-23 13:55:00"));
@@ -68,11 +68,13 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(1, message->Id());
         EXPECT_EQ("BAW123", message->Callsign());
         EXPECT_EQ(ParseTimeString("2021-08-23 14:00:00"), message->ExpiresAt());
+        EXPECT_FALSE(message->CreatedByUser());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItDoesntOverwriteExistingMissedApproach)
     {
-        collection->Add(std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 14:05:00")));
+        collection->Add(
+            std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 14:05:00"), true));
 
         handler.ProcessPushEvent(MakePushEvent());
         EXPECT_EQ(1, collection->Count());
@@ -81,6 +83,7 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_NE(nullptr, message);
         EXPECT_EQ("BAW123", message->Callsign());
         EXPECT_EQ(ParseTimeString("2021-08-23 14:05:00"), message->ExpiresAt());
+        EXPECT_TRUE(message->CreatedByUser());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesMessageNotObject)

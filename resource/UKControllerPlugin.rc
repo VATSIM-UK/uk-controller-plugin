@@ -58,6 +58,8 @@ WAVE_DEP_RLS_REQ        WAVE                    ".\\sound\\departure_release_req
 
 WAVE_NEW_PRENOTE        WAVE                    "sound\\new_prenote.wav"
 
+WAVE_MISSED_APPROACH    WAVE                    "sound\\missedapproach.wav"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
