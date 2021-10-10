@@ -163,4 +163,35 @@ namespace UKControllerPluginTest::MissedApproach {
         options.AsrLoadedEvent(settings);
         EXPECT_EQ(std::vector<std::string>({"EGGD", "EGLL"}), options.Airfields());
     }
+
+    TEST_F(MissedApproachRenderOptionsTest, SavingAsrSavesEverything)
+    {
+        options.SetMode(MissedApproachRenderMode::Line);
+        options.SetServiceProvisions(ServiceType::FinalApproach);
+        options.SetAirfields(std::vector<std::string>{"EGLL", "EGCC"});
+        options.SetDuration(std::chrono::seconds(15));
+
+        EXPECT_CALL(mockUserSettingProvider, SetKey("missedApproachRenderMode", "Missed Approach Render Mode", "1"))
+            .Times(1);
+
+        EXPECT_CALL(
+            mockUserSettingProvider,
+            SetKey("missedApproachRenderAirfields", "Missed Approach Render Airfields", "EGLL;EGCC"))
+            .Times(1);
+
+        EXPECT_CALL(
+            mockUserSettingProvider, SetKey("missedApproachRenderDuration", "Missed Approach Render Duration", "15"))
+            .Times(1);
+
+        EXPECT_CALL(
+            mockUserSettingProvider,
+            SetKey(
+                "missedApproachRenderServiceProvisions",
+                "Missed Approach Render For "
+                "Service Provision",
+                "8"))
+            .Times(1);
+
+        options.AsrClosingEvent(settings);
+    }
 } // namespace UKControllerPluginTest::MissedApproach

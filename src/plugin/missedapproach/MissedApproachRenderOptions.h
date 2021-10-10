@@ -19,7 +19,9 @@ namespace UKControllerPlugin::MissedApproach {
         [[nodiscard]] auto ServiceProvisions() const -> Ownership::ServiceType;
         void SetServiceProvisions(Ownership::ServiceType serviceProvisions);
         [[nodiscard]] auto Duration() const -> const std::chrono::seconds&;
+        void SetDuration(std::chrono::seconds duration);
         [[nodiscard]] auto Airfields() const -> const std::vector<std::string>&;
+        void SetAirfields(std::vector<std::string> airfields);
 
         private:
         // The default render duration

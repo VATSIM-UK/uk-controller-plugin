@@ -76,9 +76,18 @@ namespace UKControllerPlugin::MissedApproach {
         return duration;
     }
 
+    void MissedApproachRenderOptions::SetDuration(std::chrono::seconds duration)
+    {
+        this->duration = duration;
+    }
+
     auto MissedApproachRenderOptions::Airfields() const -> const std::vector<std::string>&
     {
         return airfields;
     }
 
+    void MissedApproachRenderOptions::SetAirfields(std::vector<std::string> airfields)
+    {
+        this->airfields = std::move(airfields);
+    }
 } // namespace UKControllerPlugin::MissedApproach
