@@ -52,9 +52,13 @@ namespace UKControllerPluginTest::MissedApproach {
             ON_CALL(mockFlightplan, GetDestination).WillByDefault(testing::Return("EGKK"));
             ON_CALL(mockFlightplanBristol, GetCallsign).WillByDefault(testing::Return("BAW123"));
             ON_CALL(mockFlightplanBristol, GetDestination).WillByDefault(testing::Return("EGGD"));
+
+            ON_CALL(mockFlightplan, GetDistanceToDestination()).WillByDefault(testing::Return(5.0));
+            ON_CALL(mockRadarTarget, GetFlightLevel()).WillByDefault(testing::Return(3000));
         }
 
         AirfieldServiceProviderCollection serviceProviders;
+        NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface> mockRadarTarget;
         NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;
         NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplanBristol;
         ControllerPosition kkTwr;
@@ -80,7 +84,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(3, collection->Count());
         auto missed = collection->Get(55);
         EXPECT_NE(nullptr, missed);
@@ -99,7 +103,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         auto missed = collection->Get(55);
         EXPECT_NE(nullptr, missed);
@@ -117,7 +121,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -131,7 +135,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -145,7 +149,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -159,7 +163,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -173,7 +177,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -187,7 +191,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -200,7 +204,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -213,7 +217,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDNO));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -225,7 +229,7 @@ namespace UKControllerPluginTest::MissedApproach {
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(3, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -236,7 +240,7 @@ namespace UKControllerPluginTest::MissedApproach {
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplanBristol);
+        trigger.Trigger(mockFlightplanBristol, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -251,7 +255,7 @@ namespace UKControllerPluginTest::MissedApproach {
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplanBristol);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -266,7 +270,7 @@ namespace UKControllerPluginTest::MissedApproach {
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplanBristol);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -281,7 +285,7 @@ namespace UKControllerPluginTest::MissedApproach {
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplanBristol);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -293,7 +297,31 @@ namespace UKControllerPluginTest::MissedApproach {
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplanBristol);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
+        EXPECT_EQ(2, collection->Count());
+        EXPECT_EQ(nullptr, collection->Get(55));
+    }
+
+    TEST_F(TriggerMissedApproachTest, ItDoesntTriggerAircraftTooFarFromDestination)
+    {
+        ON_CALL(mockFlightplan, GetDistanceToDestination()).WillByDefault(testing::Return(9.0));
+        EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
+
+        EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
+
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
+        EXPECT_EQ(2, collection->Count());
+        EXPECT_EQ(nullptr, collection->Get(55));
+    }
+
+    TEST_F(TriggerMissedApproachTest, ItDoesntTriggerAircraftTooHigh)
+    {
+        ON_CALL(mockRadarTarget, GetFlightLevel()).WillByDefault(testing::Return(9000));
+        EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
+
+        EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
+
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }

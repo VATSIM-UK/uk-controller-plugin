@@ -37,7 +37,7 @@ namespace UKControllerPlugin::MissedApproach {
                 UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
                 UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
                 const std::string& context,
-                const POINT& mousePos) { trigger->Trigger(fp); });
+                const POINT& mousePos) { trigger->Trigger(fp, rt); });
         container.pluginFunctionHandlers->RegisterFunctionCall(triggerMissedApproachTagFunction);
     }
 

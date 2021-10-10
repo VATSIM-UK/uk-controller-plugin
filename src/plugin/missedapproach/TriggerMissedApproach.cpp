@@ -6,6 +6,7 @@
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "helper/HelperFunctions.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceProvision.h"
@@ -24,8 +25,13 @@ namespace UKControllerPlugin::MissedApproach {
     {
     }
 
-    void TriggerMissedApproach::Trigger(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+    void TriggerMissedApproach::Trigger(
+        Euroscope::EuroScopeCFlightPlanInterface& flightplan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
     {
+        if (!AircraftElegibleForMissedApproach(flightplan, radarTarget)) {
+            return;
+        }
+        
         if (!this->UserCanTrigger(flightplan)) {
             LogWarning("User tried to trigger missed approach, but is not authorised to do so");
             return;
@@ -102,5 +108,13 @@ namespace UKControllerPlugin::MissedApproach {
     {
         auto existing = this->missedApproaches->Get(callsign);
         return existing != nullptr && !existing->IsExpired();
+    }
+
+    auto TriggerMissedApproach::AircraftElegibleForMissedApproach(
+        Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool
+    {
+        return flightplan.GetDistanceToDestination() < MAX_DISTANCE_FROM_DESTINATION &&
+               radarTarget.GetFlightLevel() < MAX_ALTITUDE;
     }
 } // namespace UKControllerPlugin::MissedApproach

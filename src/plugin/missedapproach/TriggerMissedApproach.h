@@ -9,6 +9,7 @@ namespace UKControllerPlugin {
     } // namespace Controller
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
+        class EuroScopeCRadarTargetInterface;
     } // namespace Euroscope
     namespace Ownership {
         class AirfieldServiceProviderCollection;
@@ -32,9 +33,14 @@ namespace UKControllerPlugin::MissedApproach {
             Windows::WinApiInterface& windowsApi,
             const Api::ApiInterface& api,
             const Ownership::AirfieldServiceProviderCollection& serviceProviders);
-        void Trigger(Euroscope::EuroScopeCFlightPlanInterface& flightplan);
+        void Trigger(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget);
 
         private:
+        [[nodiscard]] static auto AircraftElegibleForMissedApproach(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool;
         [[nodiscard]] auto UserCanTrigger(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool;
         [[nodiscard]] auto Confirm(const std::string& callsign) const -> bool;
         [[nodiscard]] static auto ResponseValid(const nlohmann::json& responseData) -> bool;
@@ -52,5 +58,11 @@ namespace UKControllerPlugin::MissedApproach {
 
         // Which controllers are online
         const Ownership::AirfieldServiceProviderCollection& serviceProviders;
+
+        // The maximum distance from the destination for which we can trigger a missed approach
+        inline static const double MAX_DISTANCE_FROM_DESTINATION = 7.0;
+
+        // The maximum altitude at which we can trigger a missed approach
+        inline static const int MAX_ALTITUDE = 5000;
     };
 } // namespace UKControllerPlugin::MissedApproach
