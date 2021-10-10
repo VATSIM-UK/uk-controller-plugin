@@ -60,4 +60,10 @@ namespace UKControllerPlugin::MissedApproach {
         auto lock = this->Lock();
         this->missedApproaches.erase(missed);
     }
+
+    auto MissedApproachCollection::Get(int id) const -> std::shared_ptr<MissedApproach>
+    {
+        return this->FirstWhere(
+            [&id](const std::shared_ptr<MissedApproach>& missed) -> bool { return missed->Id() == id; });
+    }
 } // namespace UKControllerPlugin::MissedApproach

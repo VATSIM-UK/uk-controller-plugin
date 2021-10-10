@@ -124,6 +124,13 @@ set(srd
 )
 source_group("srd" FILES ${srd})
 
+set(task
+        "../utils/task/TaskRunner.cpp"
+        "../utils/task/TaskRunner.h"
+        "../utils/task/TaskRunnerInterface.h"
+        ../utils/task/RunAsyncTask.cpp ../utils/task/RunAsyncTask.h)
+source_group("task" FILES ${task})
+
 set(update
     "update/CheckDevelopmentVersion.cpp"
     "update/LoadChangelog.cpp"
@@ -156,6 +163,7 @@ set(ALL_FILES
     ${setting}
     ${squawk}
     ${srd}
+    ${task}
     ${update}
     ${windows}
 )

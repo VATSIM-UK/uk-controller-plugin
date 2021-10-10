@@ -24,6 +24,7 @@ namespace UKControllerPlugin::Controller {
         [[nodiscard]] auto GetFrequency() const -> double;
         [[nodiscard]] auto GetTopdown() const -> std::vector<std::string>;
         [[nodiscard]] auto GetType() const -> std::string;
+        [[nodiscard]] auto IsTower() const -> bool;
         [[nodiscard]] auto HasTopdownAirfield(const std::string& icao) const -> bool;
         [[nodiscard]] auto RequestsDepartureReleases() const -> bool;
         [[nodiscard]] auto ReceivesDepartureReleases() const -> bool;

@@ -9,8 +9,8 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         public:
         MissedApproachCollectionTest()
-            : missed1(std::make_shared<class MissedApproach>("BAW123", std::chrono::system_clock::now())),
-              missed2(std::make_shared<class MissedApproach>("BAW456", std::chrono::system_clock::now()))
+            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now())),
+              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now()))
         {
         }
         std::shared_ptr<class MissedApproach> missed1;
@@ -43,11 +43,30 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(2, collection.Count());
     }
 
-    TEST_F(MissedApproachCollectionTest, ItReturnsNullptrOnNonExistentApproach)
+    TEST_F(MissedApproachCollectionTest, ItReturnsApproachByCallsign)
+    {
+        collection.Add(missed1);
+        EXPECT_EQ(missed1, collection.Get("BAW123"));
+    }
+
+    TEST_F(MissedApproachCollectionTest, ItReturnsNullptrOnNonExistentApproachByCallsign)
     {
         collection.Add(missed1);
         collection.Add(missed2);
         EXPECT_EQ(nullptr, collection.Get("BAW999"));
+    }
+
+    TEST_F(MissedApproachCollectionTest, ItReturnsApproachById)
+    {
+        collection.Add(missed1);
+        EXPECT_EQ(missed1, collection.Get(1));
+    }
+
+    TEST_F(MissedApproachCollectionTest, ItReturnsNullptrOnNonExistentApproachById)
+    {
+        collection.Add(missed1);
+        collection.Add(missed2);
+        EXPECT_EQ(nullptr, collection.Get(999));
     }
 
     TEST_F(MissedApproachCollectionTest, ItHandlesNoRemovalsNothingToRemove)

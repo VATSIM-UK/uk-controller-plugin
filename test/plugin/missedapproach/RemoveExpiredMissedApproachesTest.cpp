@@ -30,9 +30,9 @@ namespace UKControllerPluginTest::MissedApproach {
 
     TEST_F(RemoveExpiredMissedApproachesTest, ItRemovesExpiredApproaches)
     {
-        collection->Add(std::make_shared<class MissedApproach>("BAW123", TimeNow() + std::chrono::seconds(5)));
-        collection->Add(std::make_shared<class MissedApproach>("BAW456", TimeNow() - std::chrono::seconds(1)));
-        collection->Add(std::make_shared<class MissedApproach>("BAW789", TimeNow()));
+        collection->Add(std::make_shared<class MissedApproach>(1, "BAW123", TimeNow() + std::chrono::seconds(5)));
+        collection->Add(std::make_shared<class MissedApproach>(2, "BAW456", TimeNow() - std::chrono::seconds(1)));
+        collection->Add(std::make_shared<class MissedApproach>(3, "BAW789", TimeNow()));
 
         remove.TimedEventTrigger();
         EXPECT_EQ(nullptr, collection->Get("BAW456"));

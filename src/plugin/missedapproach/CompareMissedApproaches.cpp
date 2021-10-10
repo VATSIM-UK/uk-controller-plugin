@@ -2,21 +2,19 @@
 #include "MissedApproach.h"
 
 namespace UKControllerPlugin::MissedApproach {
-    auto CompareMissedApproaches::operator()(
-        const std::shared_ptr<MissedApproach>& missed, const std::string& callsign) const -> bool
+    auto CompareMissedApproaches::operator()(const std::shared_ptr<MissedApproach>& missed, int id) const -> bool
     {
-        return missed->Callsign() < callsign;
+        return missed->Id() < id;
     }
 
-    auto CompareMissedApproaches::operator()(
-        const std::string& callsign, const std::shared_ptr<MissedApproach>& missed) const -> bool
+    auto CompareMissedApproaches::operator()(int id, const std::shared_ptr<MissedApproach>& missed) const -> bool
     {
-        return callsign < missed->Callsign();
+        return id < missed->Id();
     }
 
     auto CompareMissedApproaches::operator()(
         const std::shared_ptr<MissedApproach>& a, const std::shared_ptr<MissedApproach>& b) const -> bool
     {
-        return a->Callsign() < b->Callsign();
+        return a->Id() < b->Id();
     }
 } // namespace UKControllerPlugin::MissedApproach

@@ -2,8 +2,8 @@
 #include "time/SystemClock.h"
 
 namespace UKControllerPlugin::MissedApproach {
-    MissedApproach::MissedApproach(std::string callsign, std::chrono::system_clock::time_point expiresAt)
-        : callsign(std::move(callsign)), expiresAt(expiresAt)
+    MissedApproach::MissedApproach(int id, std::string callsign, std::chrono::system_clock::time_point expiresAt)
+        : id(id), callsign(std::move(callsign)), expiresAt(expiresAt)
     {
     }
 
@@ -20,5 +20,10 @@ namespace UKControllerPlugin::MissedApproach {
     auto MissedApproach::IsExpired() const -> bool
     {
         return expiresAt < Time::TimeNow();
+    }
+
+    auto MissedApproach::Id() const -> int
+    {
+        return this->id;
     }
 } // namespace UKControllerPlugin::MissedApproach

@@ -18,8 +18,8 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         public:
         NewMissedApproachPushEventHandlerTest()
-            : missed1(std::make_shared<class MissedApproach>("BAW123", std::chrono::system_clock::now())),
-              missed2(std::make_shared<class MissedApproach>("BAW456", std::chrono::system_clock::now())),
+            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now())),
+              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now())),
               collection(std::make_shared<MissedApproachCollection>()), handler(collection)
         {
             SetTestNow(ParseTimeString("2021-08-23 13:55:00"));
@@ -32,8 +32,12 @@ namespace UKControllerPluginTest::MissedApproach {
         static PushEvent MakePushEvent(
             const nlohmann::json& overridingData = nlohmann::json::object(), const std::string& keyToRemove = "")
         {
-            nlohmann::json eventData{{"callsign", "BAW123"}, {"expires_at", "2021-08-23 14:00:00"}};
-            eventData.update(overridingData);
+            nlohmann::json eventData{{"id", 1}, {"callsign", "BAW123"}, {"expires_at", "2021-08-23 14:00:00"}};
+            if (overridingData.is_object()) {
+                eventData.update(overridingData);
+            } else {
+                eventData = overridingData;
+            }
 
             if (!keyToRemove.empty()) {
                 eventData.erase(eventData.find(keyToRemove));
@@ -61,26 +65,14 @@ namespace UKControllerPluginTest::MissedApproach {
 
         auto message = collection->Get("BAW123");
         EXPECT_NE(nullptr, message);
+        EXPECT_EQ(1, message->Id());
         EXPECT_EQ("BAW123", message->Callsign());
         EXPECT_EQ(ParseTimeString("2021-08-23 14:00:00"), message->ExpiresAt());
     }
 
-    TEST_F(NewMissedApproachPushEventHandlerTest, ItAddsAMissedApproachAndRemovesAnOldOne)
+    TEST_F(NewMissedApproachPushEventHandlerTest, ItDoesntOverwriteExistingMissedApproach)
     {
-        collection->Add(std::make_shared<class MissedApproach>("BAW123", ParseTimeString("2021-08-23 13:50:00")));
-
-        handler.ProcessPushEvent(MakePushEvent());
-        EXPECT_EQ(1, collection->Count());
-
-        auto message = collection->Get("BAW123");
-        EXPECT_NE(nullptr, message);
-        EXPECT_EQ("BAW123", message->Callsign());
-        EXPECT_EQ(ParseTimeString("2021-08-23 14:00:00"), message->ExpiresAt());
-    }
-
-    TEST_F(NewMissedApproachPushEventHandlerTest, ItDoesntOverwriteValidMissedApproach)
-    {
-        collection->Add(std::make_shared<class MissedApproach>("BAW123", ParseTimeString("2021-08-23 14:05:00")));
+        collection->Add(std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 14:05:00")));
 
         handler.ProcessPushEvent(MakePushEvent());
         EXPECT_EQ(1, collection->Count());
@@ -89,6 +81,24 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_NE(nullptr, message);
         EXPECT_EQ("BAW123", message->Callsign());
         EXPECT_EQ(ParseTimeString("2021-08-23 14:05:00"), message->ExpiresAt());
+    }
+
+    TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesMessageNotObject)
+    {
+        handler.ProcessPushEvent(MakePushEvent(nlohmann::json::array()));
+        EXPECT_EQ(0, collection->Count());
+    }
+
+    TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesMissingIdInMessage)
+    {
+        handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "id"));
+        EXPECT_EQ(0, collection->Count());
+    }
+
+    TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesIdNotIntegerInMessage)
+    {
+        handler.ProcessPushEvent(MakePushEvent(nlohmann::json{{"id", "123"}}));
+        EXPECT_EQ(0, collection->Count());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesMissingCallsignInMessage)
