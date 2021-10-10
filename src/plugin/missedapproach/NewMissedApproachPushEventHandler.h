@@ -14,8 +14,7 @@ namespace UKControllerPlugin::MissedApproach {
         public:
         NewMissedApproachPushEventHandler(
             std::shared_ptr<MissedApproachCollection> missedApproaches,
-            std::shared_ptr<const MissedApproachAudioAlert> audioAlert
-        );
+            std::shared_ptr<const MissedApproachAudioAlert> audioAlert);
         void ProcessPushEvent(const Push::PushEvent& message) override;
         [[nodiscard]] auto GetPushEventSubscriptions() const -> std::set<Push::PushEventSubscription> override;
 
@@ -25,7 +24,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         // All the approaches
         const std::shared_ptr<MissedApproachCollection> missedApproaches;
-        
+
         // For alerting the user
         const std::shared_ptr<const MissedApproachAudioAlert> audioAlert;
     };

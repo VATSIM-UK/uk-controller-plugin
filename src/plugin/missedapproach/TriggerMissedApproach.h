@@ -34,8 +34,7 @@ namespace UKControllerPlugin::MissedApproach {
             Windows::WinApiInterface& windowsApi,
             const Api::ApiInterface& api,
             const Ownership::AirfieldServiceProviderCollection& serviceProviders,
-            std::shared_ptr<const MissedApproachAudioAlert> audioAlert
-            );
+            std::shared_ptr<const MissedApproachAudioAlert> audioAlert);
         void Trigger(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget);

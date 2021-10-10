@@ -32,7 +32,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         private:
         [[nodiscard]] auto ShouldPlay(const std::shared_ptr<class MissedApproach>& missedApproach) const -> bool;
-        
+
         // Options for missed approaches
         std::shared_ptr<const MissedApproachOptions> options;
 

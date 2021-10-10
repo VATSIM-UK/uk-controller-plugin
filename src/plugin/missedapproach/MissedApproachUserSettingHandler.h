@@ -26,10 +26,9 @@ namespace UKControllerPlugin::MissedApproach {
         void SetAudioAlertServiceProvisions(Ownership::ServiceType audioAlertServiceProvisions);
 
         private:
-        
         // The options
         std::shared_ptr<MissedApproachOptions> options;
-        
+
         // Who to let know when something changes
         const Euroscope::UserSettingAwareCollection& userSettingsHandlers;
 
