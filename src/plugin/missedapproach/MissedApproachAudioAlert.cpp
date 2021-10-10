@@ -18,7 +18,7 @@ namespace UKControllerPlugin::MissedApproach {
     {
     }
 
-    void MissedApproachAudioAlert::Play(const std::shared_ptr<class MissedApproach>& missedApproach)
+    void MissedApproachAudioAlert::Play(const std::shared_ptr<class MissedApproach>& missedApproach) const
     {
         if (!this->ShouldPlay(missedApproach)) {
             LogDebug("Skipping missed approach audio alert for " + missedApproach->Callsign());

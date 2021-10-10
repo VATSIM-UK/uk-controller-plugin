@@ -1,7 +1,9 @@
 #include "api/ApiException.h"
 #include "controller/ControllerPosition.h"
 #include "missedapproach/MissedApproach.h"
+#include "missedapproach/MissedApproachAudioAlert.h"
 #include "missedapproach/MissedApproachCollection.h"
+#include "missedapproach/MissedApproachOptions.h"
 #include "missedapproach/TriggerMissedApproach.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceProvision.h"
@@ -13,7 +15,9 @@ using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::MissedApproach::MissedApproach;
+using UKControllerPlugin::MissedApproach::MissedApproachAudioAlert;
 using UKControllerPlugin::MissedApproach::MissedApproachCollection;
+using UKControllerPlugin::MissedApproach::MissedApproachOptions;
 using UKControllerPlugin::MissedApproach::TriggerMissedApproach;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Ownership::ServiceProvision;
@@ -22,6 +26,7 @@ using UKControllerPlugin::Time::ParseTimeString;
 using UKControllerPlugin::Time::SetTestNow;
 using UKControllerPlugin::Time::TimeNow;
 using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest::MissedApproach {
@@ -41,7 +46,9 @@ namespace UKControllerPluginTest::MissedApproach {
               missed3(
                   std::make_shared<class MissedApproach>(3, "BAW123", ParseTimeString("2021-08-23 13:54:00"), false)),
               collection(std::make_shared<MissedApproachCollection>()),
-              trigger(collection, windows, api, serviceProviders)
+              options(std::make_shared<MissedApproachOptions>()),
+              audioAlert(std::make_shared<MissedApproachAudioAlert>(options, plugin, serviceProviders, windows)),
+              trigger(collection, windows, api, serviceProviders, audioAlert)
         {
             SetTestNow(ParseTimeString("2021-08-23 13:55:00"));
             collection->Add(missed2);
@@ -71,10 +78,13 @@ namespace UKControllerPluginTest::MissedApproach {
         std::shared_ptr<ActiveCallsign> userAppCallsign;
         NiceMock<MockWinApi> windows;
         NiceMock<MockApiInterface> api;
+        NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
         std::shared_ptr<class MissedApproach> missed1;
         std::shared_ptr<class MissedApproach> missed2;
         std::shared_ptr<class MissedApproach> missed3;
         std::shared_ptr<MissedApproachCollection> collection;
+        std::shared_ptr<MissedApproachOptions> options;
+        std::shared_ptr<MissedApproachAudioAlert> audioAlert;
         TriggerMissedApproach trigger;
     };
 

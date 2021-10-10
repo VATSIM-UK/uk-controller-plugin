@@ -1,4 +1,5 @@
 #include "MissedApproach.h"
+#include "MissedApproachAudioAlert.h"
 #include "MissedApproachCollection.h"
 #include "TriggerMissedApproach.h"
 #include "api/ApiException.h"
@@ -19,9 +20,10 @@ namespace UKControllerPlugin::MissedApproach {
         std::shared_ptr<MissedApproachCollection> missedApproaches,
         Windows::WinApiInterface& windowsApi,
         const Api::ApiInterface& api,
-        const Ownership::AirfieldServiceProviderCollection& serviceProviders)
+        const Ownership::AirfieldServiceProviderCollection& serviceProviders,
+        std::shared_ptr<const MissedApproachAudioAlert> audioAlert)
         : missedApproaches(std::move(missedApproaches)), windowsApi(windowsApi), api(api),
-          serviceProviders(serviceProviders)
+          serviceProviders(serviceProviders), audioAlert(std::move(audioAlert))
     {
     }
 
@@ -94,11 +96,13 @@ namespace UKControllerPlugin::MissedApproach {
                     return;
                 }
 
-                this->missedApproaches->Add(std::make_shared<class MissedApproach>(
+                const auto missedApproach = std::make_shared<class MissedApproach>(
                     response.at("id").get<int>(),
                     callsign,
                     Time::ParseTimeString(response.at("expires_at").get<std::string>()),
-                    true));
+                    true);
+                this->missedApproaches->Add(missedApproach);
+                this->audioAlert->Play(missedApproach);
             } catch (Api::ApiException&) {
                 LogError("ApiException when creating missed approach");
             }

@@ -1,17 +1,26 @@
 #include "missedapproach/MissedApproach.h"
+#include "missedapproach/MissedApproachAudioAlert.h"
 #include "missedapproach/MissedApproachCollection.h"
+#include "missedapproach/MissedApproachOptions.h"
 #include "missedapproach/NewMissedApproachPushEventHandler.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "time/ParseTimeStrings.h"
 #include "time/SystemClock.h"
 
+using testing::NiceMock;
 using UKControllerPlugin::MissedApproach::MissedApproach;
+using UKControllerPlugin::MissedApproach::MissedApproachAudioAlert;
 using UKControllerPlugin::MissedApproach::MissedApproachCollection;
+using UKControllerPlugin::MissedApproach::MissedApproachOptions;
 using UKControllerPlugin::MissedApproach::NewMissedApproachPushEventHandler;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Time::ParseTimeString;
 using UKControllerPlugin::Time::SetTestNow;
 using UKControllerPlugin::Time::TimeNow;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest::MissedApproach {
     class NewMissedApproachPushEventHandlerTest : public testing::Test
@@ -20,7 +29,10 @@ namespace UKControllerPluginTest::MissedApproach {
         NewMissedApproachPushEventHandlerTest()
             : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now(), true)),
               missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now(), true)),
-              collection(std::make_shared<MissedApproachCollection>()), handler(collection)
+              collection(std::make_shared<MissedApproachCollection>()),
+              options(std::make_shared<MissedApproachOptions>()),
+              audioAlert(std::make_shared<MissedApproachAudioAlert>(options, plugin, ownership, windows)),
+              handler(collection, audioAlert)
         {
             SetTestNow(ParseTimeString("2021-08-23 13:55:00"));
         }
@@ -46,9 +58,14 @@ namespace UKControllerPluginTest::MissedApproach {
             return {"missed-approach.created", "test", eventData, eventData.dump()};
         };
 
+        AirfieldServiceProviderCollection ownership;
+        NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
+        NiceMock<MockWinApi> windows;
         std::shared_ptr<class MissedApproach> missed1;
         std::shared_ptr<class MissedApproach> missed2;
         std::shared_ptr<MissedApproachCollection> collection;
+        std::shared_ptr<MissedApproachOptions> options;
+        std::shared_ptr<MissedApproachAudioAlert> audioAlert;
         NewMissedApproachPushEventHandler handler;
     };
 

@@ -28,7 +28,7 @@ namespace UKControllerPlugin::MissedApproach {
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             const Ownership::AirfieldServiceProviderCollection& airfieldServiceProvisions,
             Windows::WinApiInterface& winApi);
-        void Play(const std::shared_ptr<class MissedApproach>& missedApproach);
+        void Play(const std::shared_ptr<class MissedApproach>& missedApproach) const;
 
         private:
         [[nodiscard]] auto ShouldPlay(const std::shared_ptr<class MissedApproach>& missedApproach) const -> bool;

@@ -1,4 +1,5 @@
 #include "MissedApproach.h"
+#include "MissedApproachAudioAlert.h"
 #include "MissedApproachCollection.h"
 #include "NewMissedApproachPushEventHandler.h"
 #include "time/ParseTimeStrings.h"
@@ -8,8 +9,9 @@ using UKControllerPlugin::Push::PushEventSubscription;
 
 namespace UKControllerPlugin::MissedApproach {
     NewMissedApproachPushEventHandler::NewMissedApproachPushEventHandler(
-        std::shared_ptr<MissedApproachCollection> missedApproaches)
-        : missedApproaches(std::move(missedApproaches))
+        std::shared_ptr<MissedApproachCollection> missedApproaches,
+        std::shared_ptr<const MissedApproachAudioAlert> audioAlert)
+        : missedApproaches(std::move(missedApproaches)), audioAlert(std::move(audioAlert))
     {
     }
 
@@ -26,11 +28,13 @@ namespace UKControllerPlugin::MissedApproach {
         }
 
         // If we get to this point, the missed approach wasn't user-triggered
-        this->missedApproaches->Add(std::make_shared<class MissedApproach>(
+        const auto missedApproach = std::make_shared<class MissedApproach>(
             data.at("id").get<int>(),
             data.at("callsign").get<std::string>(),
             Time::ParseTimeString(data.at("expires_at").get<std::string>()),
-            false));
+            false);
+        this->missedApproaches->Add(missedApproach);
+        this->audioAlert->Play(missedApproach);
     }
 
     auto NewMissedApproachPushEventHandler::GetPushEventSubscriptions() const -> std::set<PushEventSubscription>

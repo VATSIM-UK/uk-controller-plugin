@@ -1,6 +1,5 @@
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
-#include "euroscope/UserSetting.h"
 #include "missedapproach/MissedApproach.h"
 #include "missedapproach/MissedApproachAudioAlert.h"
 #include "missedapproach/MissedApproachOptions.h"
@@ -10,7 +9,6 @@
 using testing::NiceMock;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
-using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::MissedApproach::MissedApproach;
 using UKControllerPlugin::MissedApproach::MissedApproachAudioAlert;
 using UKControllerPlugin::MissedApproach::MissedApproachOptions;
@@ -27,8 +25,8 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         public:
         MissedApproachAudioAlertTest()
-            : mockFlightplan(std::make_shared<MockEuroScopeCFlightPlanInterface>()), settings(mockUserSettingProvider),
-              options(std::make_shared<MissedApproachOptions>(settings)),
+            : mockFlightplan(std::make_shared<MockEuroScopeCFlightPlanInterface>()),
+              options(std::make_shared<MissedApproachOptions>()),
               alert(options, mockPlugin, serviceProviders, mockWindows),
               kkTwr(2, "EGKK_TWR", 199.999, {"EGKK"}, true, false),
               userTowerCallsign(std::make_shared<ActiveCallsign>("EGKK_TWR", "Testy McTest", kkTwr, true))
@@ -54,8 +52,6 @@ namespace UKControllerPluginTest::MissedApproach {
         std::shared_ptr<MockEuroScopeCFlightPlanInterface> mockFlightplan;
         NiceMock<MockWinApi> mockWindows;
         NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-        NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
-        UserSetting settings;
         std::shared_ptr<MissedApproachOptions> options;
         MissedApproachAudioAlert alert;
         ControllerPosition kkTwr;
