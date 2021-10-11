@@ -28,7 +28,8 @@ namespace UKControllerPlugin::MissedApproach {
     }
 
     void TriggerMissedApproach::Trigger(
-        Euroscope::EuroScopeCFlightPlanInterface& flightplan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+        Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const
     {
         if (!AircraftElegibleForMissedApproach(flightplan, radarTarget)) {
             return;
@@ -120,7 +121,6 @@ namespace UKControllerPlugin::MissedApproach {
         -> bool
     {
         return flightplan.GetDistanceToDestination() < MAX_DISTANCE_FROM_DESTINATION &&
-               radarTarget.GetGroundSpeed() > MIN_GROUNDSPEED &&
-               radarTarget.GetFlightLevel() < MAX_ALTITUDE;
+               radarTarget.GetGroundSpeed() > MIN_GROUNDSPEED && radarTarget.GetFlightLevel() < MAX_ALTITUDE;
     }
 } // namespace UKControllerPlugin::MissedApproach

@@ -37,7 +37,7 @@ namespace UKControllerPlugin::MissedApproach {
             std::shared_ptr<const MissedApproachAudioAlert> audioAlert);
         void Trigger(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            Euroscope::EuroScopeCRadarTargetInterface& radarTarget);
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const;
 
         private:
         [[nodiscard]] static auto AircraftElegibleForMissedApproach(
@@ -60,7 +60,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         // Which controllers are online
         const Ownership::AirfieldServiceProviderCollection& serviceProviders;
-        
+
         // Used for alerting the controller to the missed approach
         const std::shared_ptr<const MissedApproachAudioAlert> audioAlert;
 
@@ -69,6 +69,8 @@ namespace UKControllerPlugin::MissedApproach {
 
         // The maximum altitude at which we can trigger a missed approach
         inline static const int MAX_ALTITUDE = 5000;
-        inline static const int MIN_GROUNDSPEED = 75;
+        
+        // Minimum groundspeed at which we can trigger missed approach
+        inline static const int MIN_GROUNDSPEED = 60;
     };
 } // namespace UKControllerPlugin::MissedApproach

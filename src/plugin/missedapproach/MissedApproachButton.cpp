@@ -5,6 +5,7 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
+#include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 
@@ -25,10 +26,17 @@ namespace UKControllerPlugin::MissedApproach {
 
     void MissedApproachButton::AsrLoadedEvent(Euroscope::UserSetting& userSetting)
     {
+        this->isVisible = userSetting.GetBooleanEntry(this->ASR_VISIBILITY_KEY, false);
+        auto xpos = userSetting.GetIntegerEntry(this->ASR_X_POSITION_KEY, DEFAULT_COORDINATE);
+        auto ypos = userSetting.GetIntegerEntry(this->ASR_Y_POSITION_KEY, DEFAULT_COORDINATE);
+        this->Move({xpos, ypos, xpos + DEFAULT_WIDTH, ypos + DEFAULT_HEIGHT}, "");
     }
 
     void MissedApproachButton::AsrClosingEvent(Euroscope::UserSetting& userSetting)
     {
+        userSetting.Save(this->ASR_VISIBILITY_KEY, this->ASR_VISIBILITY_DESC, this->isVisible);
+        userSetting.Save(this->ASR_X_POSITION_KEY, this->ASR_X_POSITION_DESC, this->position.left);
+        userSetting.Save(this->ASR_Y_POSITION_KEY, this->ASR_Y_POSITION_DESC, this->position.top);
     }
 
     auto MissedApproachButton::IsVisible() const -> bool
@@ -43,14 +51,19 @@ namespace UKControllerPlugin::MissedApproach {
         POINT mousePos,
         RECT itemArea)
     {
-        RadarRenderableInterface::LeftClick(radarScreen, objectId, objectDescription, mousePos, itemArea);
+        const auto flightplan = this->plugin.GetSelectedFlightplan();
+        const auto radarTarget = this->plugin.GetSelectedRadarTarget();
+        if (!flightplan || !radarTarget) {
+            return;
+        }
+
+        this->trigger->Trigger(*flightplan, *radarTarget);
     }
 
     void MissedApproachButton::Move(RECT position, std::string objectDescription)
     {
-        this->position = position;
-        this->renderRect =
-            Gdiplus::Rect{position.left, position.top, position.right - position.left, position.bottom - position.top};
+        this->position = {position.left, position.top, position.left + DEFAULT_WIDTH, position.top + DEFAULT_HEIGHT};
+        this->renderRect = Gdiplus::Rect{this->position.left, this->position.top, DEFAULT_WIDTH, DEFAULT_HEIGHT};
     }
 
     void MissedApproachButton::Render(
@@ -122,5 +135,10 @@ namespace UKControllerPlugin::MissedApproach {
     void MissedApproachButton::ApplyClickspot(Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
         radarScreen.RegisterScreenObject(this->screenObjectId, "goAroundButton", this->position, true);
+    }
+
+    auto MissedApproachButton::Position() const -> RECT
+    {
+        return this->position;
     }
 } // namespace UKControllerPlugin::MissedApproach

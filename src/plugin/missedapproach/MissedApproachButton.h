@@ -40,6 +40,7 @@ namespace UKControllerPlugin::MissedApproach {
             POINT mousePos,
             RECT itemArea) override;
         void Move(RECT position, std::string objectDescription) override;
+        [[nodiscard]] auto Position() const -> RECT;
         void Render(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
         void ResetPosition() override;
@@ -72,8 +73,23 @@ namespace UKControllerPlugin::MissedApproach {
         // Are we displaying the button
         bool isVisible;
 
+        // ASR Keys
+        const std::string ASR_VISIBILITY_KEY = "missedApproachButtonVisibility";
+        const std::string ASR_VISIBILITY_DESC = "Missed Approach Button Visibility";
+        const std::string ASR_X_POSITION_KEY = "missedApproachButtonXPosition";
+        const std::string ASR_X_POSITION_DESC = "Missed Approach Button X Position";
+        const std::string ASR_Y_POSITION_KEY = "missedApproachButtonYPosition";
+        const std::string ASR_Y_POSITION_DESC = "Missed Approach Button Y Position";
+
         // Positional things
-        static inline const RECT DEFAULT_POSITION = {200, 200, 325, 275};
+        static inline const int DEFAULT_COORDINATE = 200;
+        static inline const int DEFAULT_WIDTH = 125;
+        static inline const int DEFAULT_HEIGHT = 75;
+        static inline const RECT DEFAULT_POSITION = {
+            DEFAULT_COORDINATE,
+            DEFAULT_COORDINATE,
+            DEFAULT_COORDINATE + DEFAULT_WIDTH,
+            DEFAULT_COORDINATE + DEFAULT_HEIGHT};
         RECT position;
         Gdiplus::Rect renderRect;
 
