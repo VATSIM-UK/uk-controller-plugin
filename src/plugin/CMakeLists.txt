@@ -708,6 +708,11 @@ set(src__sectorfile
 )
 source_group("src\\sectorfile" FILES ${src__sectorfile})
 
+set(src__selcal
+        selcal/SelcalParser.cpp selcal/SelcalParser.h
+        selcal/ParsedSelcal.cpp selcal/ParsedSelcal.h)
+source_group("src\\selcal" FILES ${src__selcal})
+
 set(src__sid
     "sid/SidCollection.cpp"
     "sid/SidCollection.h"
@@ -853,6 +858,7 @@ set(ALL_FILES
     ${src__regional}
     ${src__releases}
     ${src__sectorfile}
+    ${src__selcal}
     ${src__sid}
     ${src__squawk}
     ${src__srd}
