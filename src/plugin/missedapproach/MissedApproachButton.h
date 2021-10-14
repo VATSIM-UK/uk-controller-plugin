@@ -44,6 +44,7 @@ namespace UKControllerPlugin::MissedApproach {
         void Render(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
         void ResetPosition() override;
+        void ToggleVisible();
 
         private:
         void RenderActiveButton(Windows::GdiGraphicsInterface& graphics);

@@ -487,7 +487,7 @@ set(src__missedapproach
         missedapproach/MissedApproachOptions.cpp missedapproach/MissedApproachOptions.h
         missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h
         missedapproach/MissedApproachUserSettingHandler.cpp missedapproach/MissedApproachUserSettingHandler.h
-        missedapproach/MissedApproachButton.cpp missedapproach/MissedApproachButton.h)
+        missedapproach/MissedApproachButton.cpp missedapproach/MissedApproachButton.h missedapproach/ToggleMissedApproachButton.cpp missedapproach/ToggleMissedApproachButton.h)
 source_group("src\\missedapproach" FILES ${src__missedapproach})
 
 set(src__navaids
