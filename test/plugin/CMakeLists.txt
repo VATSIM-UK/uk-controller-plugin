@@ -406,7 +406,7 @@ source_group("test\\sectorfile" FILES ${test__sectorfile})
 
 set(test__selcal
         selcal/ParsedSelcalTest.cpp
-        selcal/SelcalParserTest.cpp)
+        selcal/SelcalParserTest.cpp selcal/SelcalTagItemTest.cpp)
 source_group("test\\selcal" FILES ${test__selcal})
 
 set(test__sid

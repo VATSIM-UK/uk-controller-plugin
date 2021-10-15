@@ -27,3 +27,5 @@
 125 - Departure Release Countdown
 126 - Departure Release Requesting Controller
 127 - Prenote Messages Status Indicator
+128 - SELCAL Code
+129 - SELCAL Code With Separator

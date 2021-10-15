@@ -185,5 +185,10 @@ namespace UKControllerPlugin {
         {
             return strcmp(this->originalData.GetFlightPlanData().GetPlanType(), "V") == 0;
         }
+        
+        auto EuroScopeCFlightPlanWrapper::GetRemarks() const -> std::string
+        {
+            return this->originalData.GetFlightPlanData().GetRemarks();
+        }
     } // namespace Euroscope
 } // namespace UKControllerPlugin

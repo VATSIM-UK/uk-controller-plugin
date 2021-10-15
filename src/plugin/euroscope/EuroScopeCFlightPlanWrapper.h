@@ -41,6 +41,7 @@ namespace UKControllerPlugin::Euroscope {
         void SetHeading(int heading) override;
         void SetSquawk(std::string squawk) override;
         EuroScopePlugIn::CFlightPlan GetEuroScopeObject() const override;
+        [[nodiscard]] auto GetRemarks() const -> std::string override;
 
         private:
         // The original data that we're wrapping.
