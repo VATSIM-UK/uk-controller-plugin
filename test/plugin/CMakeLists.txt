@@ -250,7 +250,7 @@ set(test__missedapproach
         missedapproach/MissedApproachOptionsTest.cpp
         missedapproach/MissedApproachAudioAlertTest.cpp
         missedapproach/MissedApproachUserSettingHandlerTest.cpp
-        missedapproach/MissedApproachButtonTest.cpp)
+        missedapproach/MissedApproachButtonTest.cpp missedapproach/ToggleMissedApproachButtonTest.cpp)
 source_group("test\\missedapproach" FILES ${test__missedapproach})
 
 set(test__mock

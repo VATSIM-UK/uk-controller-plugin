@@ -19,7 +19,7 @@ namespace UKControllerPlugin::MissedApproach {
     auto ToggleMissedApproachButton::GetConfigurationMenuItem() const -> Plugin::PopupMenuItem
     {
         PopupMenuItem returnVal;
-        returnVal.firstValue = "Toggle Missed Approach Button";
+        returnVal.firstValue = "Display Missed Approach Button";
         returnVal.secondValue = "";
         returnVal.callbackFunctionId = this->configureCallbackId;
         returnVal.checked = this->button->IsVisible() ? EuroScopePlugIn::POPUP_ELEMENT_CHECKED

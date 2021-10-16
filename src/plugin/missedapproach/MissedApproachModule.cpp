@@ -8,15 +8,19 @@
 #include "MissedApproachUserSettingHandler.h"
 #include "NewMissedApproachPushEventHandler.h"
 #include "RemoveExpiredMissedApproaches.h"
+#include "ToggleMissedApproachButton.h"
 #include "TriggerMissedApproach.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "euroscope/CallbackFunction.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
+using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Tag::TagFunction;
 
 namespace UKControllerPlugin::MissedApproach {
@@ -69,6 +73,7 @@ namespace UKControllerPlugin::MissedApproach {
         RadarScreen::ConfigurableDisplayCollection& configurables,
         Euroscope::AsrEventHandlerCollection& asrHandlers)
     {
+        // Alerts
         auto renderOptions = std::make_shared<MissedApproachRenderOptions>();
         asrHandlers.RegisterHandler(renderOptions);
 
@@ -77,6 +82,7 @@ namespace UKControllerPlugin::MissedApproach {
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(), renderer, RadarScreen::RadarRenderableCollection::afterTags);
 
+        // The button
         const auto buttonRendererId = radarRenderables.ReserveRendererIdentifier();
         const auto buttonScreenObject = radarRenderables.ReserveScreenObjectIdentifier(buttonRendererId);
         auto button = std::make_shared<MissedApproachButton>(
@@ -84,5 +90,15 @@ namespace UKControllerPlugin::MissedApproach {
 
         radarRenderables.RegisterRenderer(buttonRendererId, button, RadarScreen::RadarRenderableCollection::afterLists);
         asrHandlers.RegisterHandler(button);
+
+        // Button toggle
+        const auto callbackId = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        const auto buttonToggle = std::make_shared<ToggleMissedApproachButton>(button, callbackId);
+        configurables.RegisterDisplay(buttonToggle);
+        CallbackFunction toggleButtonCallback(
+            callbackId, "Trigger Missed Approach", [buttonToggle](int id, const std::string& context, const RECT& pos) {
+                buttonToggle->Configure(id, context, pos);
+            });
+        persistence.pluginFunctionHandlers->RegisterFunctionCall(toggleButtonCallback);
     }
 } // namespace UKControllerPlugin::MissedApproach

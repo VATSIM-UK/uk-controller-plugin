@@ -9,7 +9,7 @@ namespace UKControllerPlugin {
             // Create the threads for asynchronous tasks.
             std::unique_lock<std::mutex> uniqueLock(this->asynchronousQueueLock);
             for (int i = 0; i < numThreads; i++) {
-                this->threads.push_back(std::thread(&TaskRunner::ProcessAsynchronousTasks, this, i));
+                this->threads.push_back(std::thread(&TaskRunner::ProcessAsynchronousTasks, this));
             }
 
             LogInfo("TaskRunner created with " + std::to_string(numThreads) + " threads");
@@ -54,7 +54,7 @@ namespace UKControllerPlugin {
             loop of EuroScope execution. For example, tasks that require HTTP requests, which
             make take a significant amount of time.
         */
-        void TaskRunner::ProcessAsynchronousTasks(int threadNumber)
+        void TaskRunner::ProcessAsynchronousTasks()
         {
             std::unique_lock<std::mutex> uniqueLock(this->asynchronousQueueLock, std::defer_lock_t());
             std::function<void(void)> currentTask;

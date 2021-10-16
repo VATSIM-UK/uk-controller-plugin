@@ -81,4 +81,10 @@ namespace UKControllerPluginTest::MissedApproach {
         BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);
         EXPECT_EQ(2, asrHandlers.CountHandlers());
     }
+
+    TEST_F(MissedApproachModuleTest, ItRegistersTheConfigurableDisplays)
+    {
+        BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);
+        EXPECT_EQ(1, configurableDisplays.CountDisplays());
+    }
 } // namespace UKControllerPluginTest::MissedApproach
