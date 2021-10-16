@@ -710,7 +710,7 @@ source_group("src\\sectorfile" FILES ${src__sectorfile})
 
 set(src__selcal
         selcal/SelcalParser.cpp selcal/SelcalParser.h
-        selcal/ParsedSelcal.cpp selcal/ParsedSelcal.h selcal/SelcalTagItem.cpp selcal/SelcalTagItem.h)
+        selcal/ParsedSelcal.cpp selcal/ParsedSelcal.h selcal/SelcalTagItem.cpp selcal/SelcalTagItem.h selcal/SelcalModule.cpp selcal/SelcalModule.h)
 source_group("src\\selcal" FILES ${src__selcal})
 
 set(src__sid

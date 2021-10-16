@@ -83,6 +83,20 @@ namespace UKControllerPluginTest::Selcal {
         EXPECT_EQ("ABCD", tagData.GetItemString());
     }
 
+    TEST_F(SelcalTagItemTest, ItCachesInvalidItemFromRemarks)
+    {
+        ON_CALL(mockFlightplan, GetRemarks).WillByDefault(testing::Return("RMK/HI SEL/XXXX"));
+
+        auto tagData = GetTagData(128);
+        tagItem.SetTagItemData(tagData);
+
+        ON_CALL(mockFlightplan, GetRemarks).WillByDefault(testing::Return("RMK/HI SEL/DEFG"));
+
+        tagItem.SetTagItemData(tagData);
+
+        EXPECT_EQ("", tagData.GetItemString());
+    }
+
     TEST_F(SelcalTagItemTest, ItProvidesTheSeparatedItemFromRemarks)
     {
         ON_CALL(mockFlightplan, GetRemarks).WillByDefault(testing::Return("RMK/HI SEL/ABCD"));
@@ -101,6 +115,8 @@ namespace UKControllerPluginTest::Selcal {
         tagItem.SetTagItemData(tagData);
 
         ON_CALL(mockFlightplan, GetRemarks).WillByDefault(testing::Return("RMK/HI SEL/DEFG"));
+
+        tagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("AB-CD", tagData.GetItemString());
     }
