@@ -1,6 +1,8 @@
+#include "ConfigureMissedApproaches.h"
 #include "MissedApproachAudioAlert.h"
 #include "MissedApproachButton.h"
 #include "MissedApproachCollection.h"
+#include "MissedApproachConfigurationDialog.h"
 #include "MissedApproachModule.h"
 #include "MissedApproachOptions.h"
 #include "MissedApproachRenderOptions.h"
@@ -11,6 +13,7 @@
 #include "ToggleMissedApproachButton.h"
 #include "TriggerMissedApproach.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/UserSettingAwareCollection.h"
@@ -32,6 +35,7 @@ namespace UKControllerPlugin::MissedApproach {
     std::shared_ptr<MissedApproachOptions> options;                   // NOLINT
     std::shared_ptr<MissedApproachUserSettingHandler> optionsHandler; // NOLINT
     std::shared_ptr<TriggerMissedApproach> triggerHandler;            // NOLINT
+    std::shared_ptr<MissedApproachConfigurationDialog> dialog;        // NOLINT
 
     void BootstrapPlugin(const Bootstrap::PersistenceContainer& container)
     {
@@ -65,6 +69,16 @@ namespace UKControllerPlugin::MissedApproach {
                 const std::string& context,
                 const POINT& mousePos) { trigger->Trigger(fp, rt); });
         container.pluginFunctionHandlers->RegisterFunctionCall(triggerMissedApproachTagFunction);
+
+        // Dialog
+        dialog = std::make_shared<MissedApproachConfigurationDialog>(optionsHandler, *container.airfields);
+
+        container.dialogManager->AddDialog(Dialog::DialogData{
+            IDD_MISSED_APPROACH,
+            "Missed Approach",
+            reinterpret_cast<DLGPROC>(dialog->WndProc), // NOLINT
+            reinterpret_cast<LPARAM>(dialog.get()),     // NOLINT
+            dialog});
     }
 
     void BootstrapRadarScreen(
@@ -92,13 +106,28 @@ namespace UKControllerPlugin::MissedApproach {
         asrHandlers.RegisterHandler(button);
 
         // Button toggle
-        const auto callbackId = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-        const auto buttonToggle = std::make_shared<ToggleMissedApproachButton>(button, callbackId);
+        const auto buttonToggleCallbackId = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        const auto buttonToggle = std::make_shared<ToggleMissedApproachButton>(button, buttonToggleCallbackId);
         configurables.RegisterDisplay(buttonToggle);
         CallbackFunction toggleButtonCallback(
-            callbackId, "Trigger Missed Approach", [buttonToggle](int id, const std::string& context, const RECT& pos) {
+            buttonToggleCallbackId,
+            "Toggle Missed Approach Button",
+            [buttonToggle](int id, const std::string& context, const RECT& pos) {
                 buttonToggle->Configure(id, context, pos);
             });
         persistence.pluginFunctionHandlers->RegisterFunctionCall(toggleButtonCallback);
+
+        // Configuration menu item
+        const auto configurationCallbackId = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        const auto configuration = std::make_shared<ConfigureMissedApproaches>(
+            renderOptions, *persistence.dialogManager, configurationCallbackId);
+        CallbackFunction configurationCallback(
+            configurationCallbackId,
+            "Configure Missed Approaches",
+            [configuration](int id, const std::string& context, const RECT& pos) {
+                configuration->Configure(id, context, pos);
+            });
+        configurables.RegisterDisplay(configuration);
+        persistence.pluginFunctionHandlers->RegisterFunctionCall(configurationCallback);
     }
 } // namespace UKControllerPlugin::MissedApproach

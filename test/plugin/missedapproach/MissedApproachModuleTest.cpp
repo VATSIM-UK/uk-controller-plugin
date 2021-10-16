@@ -1,4 +1,6 @@
+#include "airfield/AirfieldCollection.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "missedapproach/MissedApproachModule.h"
@@ -8,7 +10,9 @@
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
 
+using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::MissedApproach::BootstrapPlugin;
@@ -18,6 +22,7 @@ using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
+using UKControllerPluginTest::Dialog::MockDialogProvider;
 
 namespace UKControllerPluginTest::MissedApproach {
     class MissedApproachModuleTest : public testing::Test
@@ -29,8 +34,11 @@ namespace UKControllerPluginTest::MissedApproach {
             container.pushEventProcessors = std::make_shared<PushEventProcessorCollection>();
             container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
             container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
+            container.dialogManager = std::make_unique<DialogManager>(mockProvider);
+            container.airfields = std::make_unique<AirfieldCollection>();
         }
 
+        testing::NiceMock<MockDialogProvider> mockProvider;
         AsrEventHandlerCollection asrHandlers;
         ConfigurableDisplayCollection configurableDisplays;
         RadarRenderableCollection renderers;
@@ -62,6 +70,12 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(1, container.userSettingHandlers->Count());
     }
 
+    TEST_F(MissedApproachModuleTest, ItRegistersTheConfigurationDialog)
+    {
+        BootstrapPlugin(container);
+        EXPECT_EQ(1, container.dialogManager->CountDialogs());
+    }
+
     TEST_F(MissedApproachModuleTest, ItRegistersTheRenderers)
     {
         BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);
@@ -82,9 +96,17 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(2, asrHandlers.CountHandlers());
     }
 
-    TEST_F(MissedApproachModuleTest, ItRegistersTheConfigurableDisplays)
+    TEST_F(MissedApproachModuleTest, ItRegistersTheToggleButtonConfigurable)
     {
         BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);
-        EXPECT_EQ(1, configurableDisplays.CountDisplays());
+        EXPECT_EQ(2, configurableDisplays.CountDisplays());
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle Missed Approach Button"));
+    }
+
+    TEST_F(MissedApproachModuleTest, ItRegistersTheConfigurationConfigurable)
+    {
+        BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);
+        EXPECT_EQ(2, configurableDisplays.CountDisplays());
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Configure Missed Approaches"));
     }
 } // namespace UKControllerPluginTest::MissedApproach
