@@ -25,13 +25,11 @@ namespace UKControllerPlugin {
             this->asynchronousQueueCondVar.notify_all();
             uniqueLock.unlock();
 
-
-            for (auto &thread : this->threads) {
+            for (auto& thread : this->threads) {
                 if (thread.joinable()) {
                     thread.join();
                 }
             }
-            LogInfo("All TaskRunner threads shut down");
         }
 
         size_t TaskRunner::CountThreads(void) const
@@ -88,13 +86,10 @@ namespace UKControllerPlugin {
                 // Do the task
                 try {
                     currentTask();
-                }
-                catch (std::exception exception) {
+                } catch (std::exception exception) {
                     LogError("Unhandled exception in task runner " + std::string(exception.what()));
                 }
             }
-
-            LogInfo("Task runner thread " + std::to_string(threadNumber) + " stopped");
         }
-    }  // namespace TaskManager
-}  // namespace UKControllerPlugin
+    } // namespace TaskManager
+} // namespace UKControllerPlugin
