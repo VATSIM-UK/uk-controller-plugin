@@ -35,7 +35,8 @@ namespace UKControllerPlugin::Selcal {
     void SelcalTagItem::SetTagItemData(Tag::TagData& tagData)
     {
         if (this->cache.count(tagData.GetFlightplan().GetCallsign()) == 0) {
-            this->cache[tagData.GetFlightplan().GetCallsign()] = this->parser->ParseFromString(tagData.GetFlightplan().GetRemarks());
+            this->cache[tagData.GetFlightplan().GetCallsign()] =
+                this->parser->ParseFromString(tagData.GetFlightplan().GetRemarks());
         }
 
         tagData.SetItemString(this->GetFromCache(tagData.GetFlightplan().GetCallsign(), tagData.GetItemCode()));
@@ -47,7 +48,7 @@ namespace UKControllerPlugin::Selcal {
         if (cacheItem == nullptr) {
             return "";
         }
-        
+
         return type == SELCAL_TAG_ITEM_ID ? cacheItem->GetRaw() : cacheItem->GetWithSeparator();
     }
 } // namespace UKControllerPlugin::Selcal
