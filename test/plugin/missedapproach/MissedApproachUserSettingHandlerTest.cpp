@@ -1,4 +1,3 @@
-#include "euroscope/UserSetting.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "missedapproach/MissedApproachOptions.h"
 #include "missedapproach/MissedApproachUserSettingHandler.h"
@@ -36,40 +35,34 @@ namespace UKControllerPluginTest::MissedApproach {
 
     TEST_F(MissedApproachUserSettingHandlerTest, LoadingSettingsSetsDefaultServiceProvisionsIfNoSetting)
     {
-        options->SetAudioAlertServiceProvisions(ServiceType::FinalApproach);
+        options->SetServiceProvisions(ServiceType::FinalApproach);
         EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachAudioServiceProvision"))
-            .Times(1)
-            .WillOnce(Return(""));
+        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachServiceProvision")).Times(1).WillOnce(Return(""));
 
         handler.UserSettingsUpdated(settings);
-        EXPECT_EQ(ServiceType::Invalid, options->AudioAlertServiceProvisions());
+        EXPECT_EQ(ServiceType::Invalid, options->ServiceProvisions());
     }
 
     TEST_F(MissedApproachUserSettingHandlerTest, LoadingSettingSetsDefaultServiceProvisionsIfInvalid)
     {
-        options->SetAudioAlertServiceProvisions(ServiceType::FinalApproach);
+        options->SetServiceProvisions(ServiceType::FinalApproach);
         EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachAudioServiceProvision"))
-            .Times(1)
-            .WillOnce(Return("66"));
+        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachServiceProvision")).Times(1).WillOnce(Return("66"));
 
         handler.UserSettingsUpdated(settings);
-        EXPECT_EQ(ServiceType::Invalid, options->AudioAlertServiceProvisions());
+        EXPECT_EQ(ServiceType::Invalid, options->ServiceProvisions());
     }
 
     TEST_F(MissedApproachUserSettingHandlerTest, LoadingSettingSetsServiceProvisions)
     {
         EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
 
-        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachAudioServiceProvision"))
-            .Times(1)
-            .WillOnce(Return("8"));
+        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachServiceProvision")).Times(1).WillOnce(Return("8"));
 
         handler.UserSettingsUpdated(settings);
-        EXPECT_EQ(ServiceType::FinalApproach, options->AudioAlertServiceProvisions());
+        EXPECT_EQ(ServiceType::FinalApproach, options->ServiceProvisions());
     }
 
     TEST_F(MissedApproachUserSettingHandlerTest, LoadingSettingsSetsDefaultCurrentUserIfNoSetting)
@@ -104,6 +97,69 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_TRUE(options->AudioAlertForCurrentUser());
     }
 
+    TEST_F(MissedApproachUserSettingHandlerTest, LoadingSettingsSetsDefaultAudioAlertIfNoSetting)
+    {
+        options->SetAudioAlertForCurrentUser(true);
+        EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
+
+        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachAudio")).Times(1).WillOnce(Return(""));
+
+        handler.UserSettingsUpdated(settings);
+        EXPECT_FALSE(options->AudioAlertForCurrentUser());
+    }
+
+    TEST_F(MissedApproachUserSettingHandlerTest, LoadingSettingSetsDefaultAudioAlertIfInvalid)
+    {
+        options->SetAudioAlertForCurrentUser(true);
+        EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
+
+        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachAudio")).Times(1).WillOnce(Return("66"));
+
+        handler.UserSettingsUpdated(settings);
+        EXPECT_FALSE(options->AudioAlertForCurrentUser());
+    }
+
+    TEST_F(MissedApproachUserSettingHandlerTest, LoadingSettingSetsAudioAlert)
+    {
+        EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
+
+        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachAudio")).Times(1).WillOnce(Return("1"));
+
+        handler.UserSettingsUpdated(settings);
+        EXPECT_TRUE(options->AudioAlert());
+    }
+
+    TEST_F(MissedApproachUserSettingHandlerTest, LoadingAsrSetsDefaulAirfieldsIfNoSetting)
+    {
+        EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
+
+        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachAirfields")).Times(1).WillOnce(Return(""));
+
+        handler.UserSettingsUpdated(settings);
+        EXPECT_EQ(std::vector<std::string>{}, options->Airfields());
+    }
+
+    TEST_F(MissedApproachUserSettingHandlerTest, LoadingAsrSetsAirfields)
+    {
+        EXPECT_CALL(mockUserSettingProvider, GetKey(_)).WillRepeatedly(Return(""));
+
+        EXPECT_CALL(mockUserSettingProvider, GetKey("missedApproachAirfields")).Times(1).WillOnce(Return("EGGD;EGLL"));
+
+        handler.UserSettingsUpdated(settings);
+        EXPECT_EQ(std::vector<std::string>({"EGGD", "EGLL"}), options->Airfields());
+    }
+
+    TEST_F(MissedApproachUserSettingHandlerTest, ItSetsAudioAlert)
+    {
+        EXPECT_CALL(mockUserSettingProvider, SetKey("missedApproachAudio", "Play Missed Approach Alarm", "1")).Times(1);
+
+        EXPECT_CALL(*mockUserSettingAware, UserSettingsUpdated(testing::_)).Times(1);
+
+        handler.SetAudioAlert(true);
+
+        EXPECT_TRUE(options->AudioAlert());
+    }
+
     TEST_F(MissedApproachUserSettingHandlerTest, ItSetsAudioAlertCurrentUser)
     {
         EXPECT_CALL(
@@ -122,13 +178,26 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         EXPECT_CALL(
             mockUserSettingProvider,
-            SetKey("missedApproachAudioServiceProvision", "Missed Approach Audio For Service Provision", "8"))
+            SetKey("missedApproachServiceProvision", "Missed Approach Alerts Service Provision", "8"))
             .Times(1);
 
         EXPECT_CALL(*mockUserSettingAware, UserSettingsUpdated(testing::_)).Times(1);
 
-        handler.SetAudioAlertServiceProvisions(ServiceType::FinalApproach);
+        handler.SetServiceProvisions(ServiceType::FinalApproach);
 
-        EXPECT_EQ(ServiceType::FinalApproach, options->AudioAlertServiceProvisions());
+        EXPECT_EQ(ServiceType::FinalApproach, options->ServiceProvisions());
+    }
+
+    TEST_F(MissedApproachUserSettingHandlerTest, ItSetsAirfields)
+    {
+        EXPECT_CALL(
+            mockUserSettingProvider, SetKey("missedApproachAirfields", "Missed Approach Alert Airfields", "EGGD;EGLL"))
+            .Times(1);
+
+        EXPECT_CALL(*mockUserSettingAware, UserSettingsUpdated(testing::_)).Times(1);
+
+        handler.SetAirfields(std::vector<std::string>({"EGGD", "EGLL"}));
+
+        EXPECT_EQ(std::vector<std::string>({"EGGD", "EGLL"}), options->Airfields());
     }
 } // namespace UKControllerPluginTest::MissedApproach

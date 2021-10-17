@@ -39,8 +39,9 @@ namespace UKControllerPluginTest::MissedApproach {
             provisions.push_back(std::make_shared<ServiceProvision>(ServiceType::Tower, userTowerCallsign));
             serviceProviders.SetProvidersForAirfield("EGKK", provisions);
 
-            this->options->SetAudioAlertServiceProvisions(ServiceType::Tower);
+            this->options->SetServiceProvisions(ServiceType::Tower);
             this->options->SetAudioAlertForCurrentUser(false);
+            this->options->SetAudioAlert(true);
         }
 
         [[nodiscard]] static auto Create(bool isUserCreated) -> std::shared_ptr<class MissedApproach>
@@ -71,6 +72,14 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_CALL(mockWindows, PlayWave(MAKEINTRESOURCE(WAVE_MISSED_APPROACH))).Times(1);
 
         alert.Play(Create(true));
+    }
+
+    TEST_F(MissedApproachAudioAlertTest, ItDoesntPlayAudioAlertIfTurnedOff)
+    {
+        this->options->SetAudioAlert(false);
+        EXPECT_CALL(mockWindows, PlayWave(MAKEINTRESOURCE(WAVE_MISSED_APPROACH))).Times(0);
+
+        alert.Play(Create(false));
     }
 
     TEST_F(MissedApproachAudioAlertTest, ItDoesntPlayAudioAlertIfUserNotProvidingServices)

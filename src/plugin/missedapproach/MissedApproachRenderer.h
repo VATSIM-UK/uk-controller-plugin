@@ -15,6 +15,7 @@ namespace UKControllerPlugin {
 namespace UKControllerPlugin::MissedApproach {
     class MissedApproachCollection;
     class MissedApproachRenderOptions;
+    class MissedApproachOptions;
 
     /**
      * Renders recent missed approaches to the screen
@@ -28,7 +29,9 @@ namespace UKControllerPlugin::MissedApproach {
             std::shared_ptr<MissedApproachCollection> missedApproaches,
             const Ownership::AirfieldServiceProviderCollection& serviceProviders,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
-            std::shared_ptr<const MissedApproachRenderOptions> renderOptions);
+            std::shared_ptr<const MissedApproachRenderOptions> renderOptions,
+            std::shared_ptr<const MissedApproachOptions> options
+        );
         [[nodiscard]] auto IsVisible() const -> bool override;
         void Render(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
@@ -53,6 +56,9 @@ namespace UKControllerPlugin::MissedApproach {
 
         // The options for this renderer
         const std::shared_ptr<const MissedApproachRenderOptions> renderOptions;
+        
+        // Global settings
+        const std::shared_ptr<const MissedApproachOptions> options;
 
         // Render things
         static const INT CIRCLE_RENDER_SIZE_PX = 40;

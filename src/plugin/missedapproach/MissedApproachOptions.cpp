@@ -7,27 +7,47 @@ using UKControllerPlugin::Ownership::ServiceType;
 namespace UKControllerPlugin::MissedApproach {
 
     MissedApproachOptions::MissedApproachOptions()
-        : audioAlertForCurrentUser(false), audioAlertServiceProvisions(ServiceType::Invalid)
+        : audioAlert(false), alertForCurrentUser(false), seviceProvisions(ServiceType::Invalid)
     {
     }
 
     auto MissedApproachOptions::AudioAlertForCurrentUser() const -> bool
     {
-        return audioAlertForCurrentUser;
+        return alertForCurrentUser;
     }
 
-    auto MissedApproachOptions::AudioAlertServiceProvisions() const -> Ownership::ServiceType
+    auto MissedApproachOptions::ServiceProvisions() const -> Ownership::ServiceType
     {
-        return audioAlertServiceProvisions;
+        return seviceProvisions;
     }
 
     void MissedApproachOptions::SetAudioAlertForCurrentUser(bool audioAlertForCurrentUser)
     {
-        this->audioAlertForCurrentUser = audioAlertForCurrentUser;
+        this->alertForCurrentUser = audioAlertForCurrentUser;
     }
 
-    void MissedApproachOptions::SetAudioAlertServiceProvisions(Ownership::ServiceType audioAlertServiceProvisions)
+    void MissedApproachOptions::SetServiceProvisions(Ownership::ServiceType audioAlertServiceProvisions)
     {
-        this->audioAlertServiceProvisions = audioAlertServiceProvisions;
+        this->seviceProvisions = audioAlertServiceProvisions;
+    }
+
+    void MissedApproachOptions::SetAirfields(std::vector<std::string> airfields)
+    {
+        this->airfields = std::move(airfields);
+    }
+
+    auto MissedApproachOptions::Airfields() const -> const std::vector<std::string>&
+    {
+        return this->airfields;
+    }
+
+    void MissedApproachOptions::SetAudioAlert(bool audioAlert)
+    {
+        this->audioAlert = audioAlert;
+    }
+
+    auto MissedApproachOptions::AudioAlert() const -> bool
+    {
+        return this->audioAlert;
     }
 } // namespace UKControllerPlugin::MissedApproach

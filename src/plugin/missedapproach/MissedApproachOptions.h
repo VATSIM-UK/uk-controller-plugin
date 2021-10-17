@@ -10,16 +10,26 @@ namespace UKControllerPlugin::MissedApproach {
     {
         public:
         MissedApproachOptions();
+        [[nodiscard]] auto AudioAlert() const -> bool;
+        void SetAudioAlert(bool audioAlert);
         [[nodiscard]] auto AudioAlertForCurrentUser() const -> bool;
         void SetAudioAlertForCurrentUser(bool audioAlertForCurrentUser);
-        [[nodiscard]] auto AudioAlertServiceProvisions() const -> Ownership::ServiceType;
-        void SetAudioAlertServiceProvisions(Ownership::ServiceType audioAlertServiceProvisions);
+        [[nodiscard]] auto ServiceProvisions() const -> Ownership::ServiceType;
+        void SetServiceProvisions(Ownership::ServiceType audioAlertServiceProvisions);
+        [[nodiscard]] auto Airfields() const -> const std::vector<std::string>&;
+        void SetAirfields(std::vector<std::string> airfields);
 
         private:
         // Should audio alerts be played if the current user triggered the missed approach
-        bool audioAlertForCurrentUser;
+        bool audioAlert;
+        
+        // Should audio alerts be played if the current user triggered the missed approach
+        bool alertForCurrentUser;
 
         // Should we limit audio alerts to certain service provisions
-        Ownership::ServiceType audioAlertServiceProvisions;
+        Ownership::ServiceType seviceProvisions;
+        
+        // Which airfields we care about
+        std::vector<std::string> airfields;
     };
 } // namespace UKControllerPlugin::MissedApproach

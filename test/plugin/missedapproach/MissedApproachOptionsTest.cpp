@@ -7,12 +7,13 @@ namespace UKControllerPluginTest::MissedApproach {
     class MissedApproachOptionsTest : public testing::Test
     {
         public:
-        MissedApproachOptionsTest()
-        {
-        }
-
         MissedApproachOptions options;
     };
+
+    TEST_F(MissedApproachOptionsTest, ItHasDefaultAudioAlert)
+    {
+        EXPECT_FALSE(options.AudioAlert());
+    }
 
     TEST_F(MissedApproachOptionsTest, ItHasDefaultAudioAlertCurrentUser)
     {
@@ -21,7 +22,18 @@ namespace UKControllerPluginTest::MissedApproach {
 
     TEST_F(MissedApproachOptionsTest, ItHasDefaultAudioAlertServiceProvisions)
     {
-        EXPECT_EQ(ServiceType::Invalid, options.AudioAlertServiceProvisions());
+        EXPECT_EQ(ServiceType::Invalid, options.ServiceProvisions());
+    }
+
+    TEST_F(MissedApproachOptionsTest, ItHasDefaultAirfields)
+    {
+        EXPECT_TRUE(options.Airfields().empty());
+    }
+
+    TEST_F(MissedApproachOptionsTest, ItSetsAudioAlert)
+    {
+        options.SetAudioAlert(true);
+        EXPECT_TRUE(options.AudioAlert());
     }
 
     TEST_F(MissedApproachOptionsTest, ItSetsAudioAlertCurrentUser)
@@ -32,7 +44,14 @@ namespace UKControllerPluginTest::MissedApproach {
 
     TEST_F(MissedApproachOptionsTest, ItSetsAudioAlertServiceProvisions)
     {
-        options.SetAudioAlertServiceProvisions(ServiceType::FinalApproach);
-        EXPECT_EQ(ServiceType::FinalApproach, options.AudioAlertServiceProvisions());
+        options.SetServiceProvisions(ServiceType::FinalApproach);
+        EXPECT_EQ(ServiceType::FinalApproach, options.ServiceProvisions());
+    }
+
+    TEST_F(MissedApproachOptionsTest, ItSetsAirfields)
+    {
+        std::vector<std::string> expected({"EGGD", "EGFF"});
+        options.SetAirfields(expected);
+        EXPECT_EQ(expected, options.Airfields());
     }
 } // namespace UKControllerPluginTest::MissedApproach

@@ -16,12 +16,8 @@ namespace UKControllerPlugin::MissedApproach {
         void AsrClosingEvent(Euroscope::UserSetting& userSetting) override;
         [[nodiscard]] auto Mode() const -> MissedApproachRenderMode;
         void SetMode(MissedApproachRenderMode mode);
-        [[nodiscard]] auto ServiceProvisions() const -> Ownership::ServiceType;
-        void SetServiceProvisions(Ownership::ServiceType serviceProvisions);
         [[nodiscard]] auto Duration() const -> const std::chrono::seconds&;
         void SetDuration(std::chrono::seconds duration);
-        [[nodiscard]] auto Airfields() const -> const std::vector<std::string>&;
-        void SetAirfields(std::vector<std::string> airfields);
 
         private:
         // The default render duration
@@ -30,22 +26,12 @@ namespace UKControllerPlugin::MissedApproach {
         // The render mode for missed approaches
         MissedApproachRenderMode mode;
 
-        // We should render when providing which services
-        Ownership::ServiceType serviceProvisions;
-
         // How long to render missed approaches for
         std::chrono::seconds duration;
 
-        // Which airfields we care about
-        std::vector<std::string> airfields;
-
         const std::string RENDER_MODE_ASR_KEY = "missedApproachRenderMode";
         const std::string RENDER_MODE_ASR_DESC = "Missed Approach Render Mode";
-        const std::string RENDER_FOR_ASR_KEY = "missedApproachRenderAirfields";
-        const std::string RENDER_FOR_ASR_DESC = "Missed Approach Render Airfields";
         const std::string RENDER_DURATION_ASR_KEY = "missedApproachRenderDuration";
         const std::string RENDER_DURATION_ASR_DESC = "Missed Approach Render Duration";
-        const std::string SERVICE_PROVISION_ASR_KEY = "missedApproachRenderServiceProvisions";
-        const std::string SERVICE_PROVISION_ASR_DESC = "Missed Approach Render For Service Provision";
     };
 } // namespace UKControllerPlugin::MissedApproach

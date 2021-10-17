@@ -22,8 +22,11 @@ namespace UKControllerPlugin::MissedApproach {
             const Euroscope::UserSettingAwareCollection& userSettingsHandlers,
             Euroscope::UserSetting& userSettings);
         void UserSettingsUpdated(Euroscope::UserSetting& userSettings) override;
+        void SetAudioAlert(bool audioAlert);
         void SetAudioAlertForCurrentUser(bool audioAlertForCurrentUser);
-        void SetAudioAlertServiceProvisions(Ownership::ServiceType audioAlertServiceProvisions);
+        void SetServiceProvisions(Ownership::ServiceType audioAlertServiceProvisions);
+        void SetAirfields(std::vector<std::string> airfields);
+        [[nodiscard]] auto GetOptions() const -> const std::shared_ptr<const MissedApproachOptions>;
 
         private:
         // The options
@@ -35,9 +38,13 @@ namespace UKControllerPlugin::MissedApproach {
         // Where we persist user settings
         Euroscope::UserSetting& userSettings;
 
-        const std::string CURRENT_USER_AUDIO_ASR_KEY = "missedApproachAudioCurrentUser";
-        const std::string CURRENT_USER_AUDIO_ASR_DESC = "Play Missed Approach Alarm If User Initiated";
-        const std::string SERVICE_PROVISION_ASR_KEY = "missedApproachAudioServiceProvision";
-        const std::string SERVICE_PROVISION_ASR_DESC = "Missed Approach Audio For Service Provision";
+        const std::string AUDIO_KEY = "missedApproachAudio";
+        const std::string AUDIO_DESC = "Play Missed Approach Alarm";
+        const std::string CURRENT_USER_AUDIO_KEY = "missedApproachAudioCurrentUser";
+        const std::string CURRENT_USER_AUDIO_DESC = "Play Missed Approach Alarm If User Initiated";
+        const std::string SERVICE_PROVISION_KEY = "missedApproachServiceProvision";
+        const std::string SERVICE_PROVISION_DESC = "Missed Approach Alerts Service Provision";
+        const std::string AIRFIELDS_KEY = "missedApproachAirfields";
+        const std::string AIRFIELDS_DESC = "Missed Approach Alert Airfields";
     };
 } // namespace UKControllerPlugin::MissedApproach

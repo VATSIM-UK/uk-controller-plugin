@@ -41,6 +41,10 @@ namespace UKControllerPlugin::MissedApproach {
      */
     auto MissedApproachAudioAlert::ShouldPlay(const std::shared_ptr<class MissedApproach>& missedApproach) const -> bool
     {
+        if (!this->options->AudioAlert()) {
+            return false;
+        }
+        
         if (!this->options->AudioAlertForCurrentUser() && missedApproach->CreatedByUser()) {
             return false;
         }
@@ -51,7 +55,7 @@ namespace UKControllerPlugin::MissedApproach {
         }
 
         const auto airfields = this->airfieldServiceProvisions.GetAirfieldsWhereUserProvidingServices(
-            this->options->AudioAlertServiceProvisions());
+            this->options->ServiceProvisions());
 
         return std::find(airfields.cbegin(), airfields.cend(), flightplan->GetDestination()) != airfields.cend();
     }

@@ -92,7 +92,7 @@ namespace UKControllerPlugin::MissedApproach {
         asrHandlers.RegisterHandler(renderOptions);
 
         auto renderer = std::make_shared<MissedApproachRenderer>(
-            collection, *persistence.airfieldOwnership, *persistence.plugin, renderOptions);
+            collection, *persistence.airfieldOwnership, *persistence.plugin, renderOptions, options);
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(), renderer, RadarScreen::RadarRenderableCollection::afterTags);
 

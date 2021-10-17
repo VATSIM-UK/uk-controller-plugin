@@ -1,5 +1,6 @@
 #include "MissedApproach.h"
 #include "MissedApproachCollection.h"
+#include "MissedApproachOptions.h"
 #include "MissedApproachRenderer.h"
 #include "MissedApproachRenderOptions.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -22,9 +23,10 @@ namespace UKControllerPlugin::MissedApproach {
         std::shared_ptr<MissedApproachCollection> missedApproaches,
         const Ownership::AirfieldServiceProviderCollection& serviceProviders,
         Euroscope::EuroscopePluginLoopbackInterface& plugin,
-        std::shared_ptr<const MissedApproachRenderOptions> renderOptions)
+        std::shared_ptr<const MissedApproachRenderOptions> renderOptions,
+        std::shared_ptr<const MissedApproachOptions> options)
         : missedApproaches(std::move(missedApproaches)), serviceProviders(serviceProviders), plugin(plugin),
-          renderOptions(std::move(renderOptions)), DRAW_PEN(CreatePen())
+          renderOptions(std::move(renderOptions)), options(std::move(options)), DRAW_PEN(CreatePen())
     {
     }
 
@@ -37,8 +39,8 @@ namespace UKControllerPlugin::MissedApproach {
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
         const auto airfieldsProvidingServices =
-            this->serviceProviders.GetAirfieldsWhereUserProvidingServices(this->renderOptions->ServiceProvisions());
-        const auto& renderFor = this->renderOptions->Airfields();
+            this->serviceProviders.GetAirfieldsWhereUserProvidingServices(this->options->ServiceProvisions());
+        const auto& renderFor = this->options->Airfields();
 
         std::vector<std::string> relevantAirfields;
         std::copy_if(

@@ -16,7 +16,7 @@ namespace UKControllerPluginTest::MissedApproach {
         MissedApproachRendererTest()
             : missedApproaches(std::make_shared<MissedApproachCollection>()),
               options(std::make_shared<MissedApproachRenderOptions>()),
-              renderer(missedApproaches, serviceProviders, mockPlugin, options)
+              renderer(missedApproaches, serviceProviders, mockPlugin, options, nullptr)
         {
         }
 
