@@ -141,7 +141,7 @@ namespace UKControllerPlugin::MissedApproach {
     {
         return this->position;
     }
-    
+
     void MissedApproachButton::ToggleVisible()
     {
         this->isVisible = !this->isVisible;

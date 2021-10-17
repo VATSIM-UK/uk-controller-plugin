@@ -69,7 +69,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         // The maximum altitude at which we can trigger a missed approach
         inline static const int MAX_ALTITUDE = 5000;
-        
+
         // Minimum groundspeed at which we can trigger missed approach
         inline static const int MIN_GROUNDSPEED = 60;
     };
