@@ -115,11 +115,6 @@ namespace UKControllerPlugin::Releases {
 
                 // Draw each decision
                 for (const auto& decision : decisions) {
-                    auto fp = this->plugin.GetFlightplanForCallsign(decision->Callsign());
-                    if (!fp) {
-                        continue;
-                    }
-
                     // Shift the cols
                     callsignColumn.Y += lineHeight;
                     controllerColumn.Y += lineHeight;
@@ -135,6 +130,11 @@ namespace UKControllerPlugin::Releases {
                     const std::wstring controller = HelperFunctions::ConvertToWideString(
                         this->controllers.FetchPositionById(decision->RequestingController())->GetCallsign());
                     graphics.DrawString(controller, controllerColumn, this->textBrush);
+
+                    auto fp = this->plugin.GetFlightplanForCallsign(decision->Callsign());
+                    if (!fp) {
+                        continue;
+                    }
 
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(fp->GetOrigin()), airportColumn, this->textBrush);
