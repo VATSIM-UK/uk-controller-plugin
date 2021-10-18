@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [3.6.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.6.2...3.6.3) (2021-10-18)
+
+
+### Bug Fixes
+
+* **release+prenotes:** Broken colours in lists ([#354](https://github.com/VATSIM-UK/uk-controller-plugin/issues/354)) ([292a613](https://github.com/VATSIM-UK/uk-controller-plugin/commit/292a6134191006e602ae2d5f5e7c0960b66bae7e))
+
 ## [3.6.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.6.1...3.6.2) (2021-10-02)
 
 
