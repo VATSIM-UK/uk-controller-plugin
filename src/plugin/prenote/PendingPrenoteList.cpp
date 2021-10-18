@@ -134,11 +134,6 @@ namespace UKControllerPlugin::Prenote {
 
                 // Draw each decision
                 for (const auto& prenote : prenotes) {
-                    auto fp = this->plugin.GetFlightplanForCallsign(prenote->GetCallsign());
-                    if (!fp) {
-                        continue;
-                    }
-
                     // Shift the cols
                     callsignColumn.Y += LINE_HEIGHT;
                     controllerColumn.Y += LINE_HEIGHT;
@@ -156,6 +151,11 @@ namespace UKControllerPlugin::Prenote {
                     const std::wstring controller = HelperFunctions::ConvertToWideString(
                         this->controllers.FetchPositionById(prenote->GetSendingControllerId())->GetCallsign());
                     graphics.DrawString(controller, controllerColumn, this->textBrush);
+
+                    auto fp = this->plugin.GetFlightplanForCallsign(prenote->GetCallsign());
+                    if (!fp) {
+                        continue;
+                    }
 
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(fp->GetOrigin()), airportColumn, this->textBrush);
