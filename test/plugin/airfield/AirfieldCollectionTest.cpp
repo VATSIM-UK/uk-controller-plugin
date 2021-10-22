@@ -57,5 +57,19 @@ namespace UKControllerPluginTest {
             collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGLL", {})));
             EXPECT_EQ(2, collection.GetSize());
         }
+
+        TEST(AirfieldCollection, ItIteratesTheCollection)
+        {
+            AirfieldCollection collection;
+            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {})));
+            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGLL", {})));
+
+            std::vector<std::string> airfields;
+            collection.ForEach(
+                [&airfields](const AirfieldModel& airfield) { airfields.push_back(airfield.GetIcao()); });
+
+            std::vector<std::string> expected({"EGKK", "EGLL"});
+            EXPECT_EQ(expected, airfields);
+        }
     } // namespace AirfieldOwnership
 } // namespace UKControllerPluginTest
