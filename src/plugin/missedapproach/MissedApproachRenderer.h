@@ -30,8 +30,7 @@ namespace UKControllerPlugin::MissedApproach {
             const Ownership::AirfieldServiceProviderCollection& serviceProviders,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             std::shared_ptr<const MissedApproachRenderOptions> renderOptions,
-            std::shared_ptr<const MissedApproachOptions> options
-        );
+            std::shared_ptr<const MissedApproachOptions> options);
         [[nodiscard]] auto IsVisible() const -> bool override;
         void Render(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
@@ -56,7 +55,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         // The options for this renderer
         const std::shared_ptr<const MissedApproachRenderOptions> renderOptions;
-        
+
         // Global settings
         const std::shared_ptr<const MissedApproachOptions> options;
 
