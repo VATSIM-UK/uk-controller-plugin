@@ -44,7 +44,7 @@ namespace UKControllerPlugin::MissedApproach {
         if (!this->options->AudioAlert()) {
             return false;
         }
-        
+
         if (!this->options->AudioAlertForCurrentUser() && missedApproach->CreatedByUser()) {
             return false;
         }
@@ -54,8 +54,8 @@ namespace UKControllerPlugin::MissedApproach {
             return false;
         }
 
-        const auto airfields = this->airfieldServiceProvisions.GetAirfieldsWhereUserProvidingServices(
-            this->options->ServiceProvisions());
+        const auto airfields =
+            this->airfieldServiceProvisions.GetAirfieldsWhereUserProvidingServices(this->options->ServiceProvisions());
 
         return std::find(airfields.cbegin(), airfields.cend(), flightplan->GetDestination()) != airfields.cend();
     }

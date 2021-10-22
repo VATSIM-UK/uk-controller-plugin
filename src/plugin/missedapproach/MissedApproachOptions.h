@@ -22,13 +22,13 @@ namespace UKControllerPlugin::MissedApproach {
         private:
         // Should audio alerts be played if the current user triggered the missed approach
         bool audioAlert;
-        
+
         // Should audio alerts be played if the current user triggered the missed approach
         bool alertForCurrentUser;
 
         // Should we limit audio alerts to certain service provisions
         Ownership::ServiceType seviceProvisions;
-        
+
         // Which airfields we care about
         std::vector<std::string> airfields;
     };
