@@ -52,7 +52,7 @@ namespace UKControllerPlugin::RadarScreen {
         /*
             Called when an object is moved.
         */
-        virtual void Move(RECT position, std::string objectDescription) = 0;
+        virtual void Move(RECT position, std::string objectDescription);
 
         /*
             Render to the screen and possibly add clickable spots.

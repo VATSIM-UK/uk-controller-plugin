@@ -24,7 +24,7 @@ namespace UKControllerPluginTest::Prenote {
             ON_CALL(mockFlightplan, GetCallsign).WillByDefault(Return("BAW123"));
 
             this->callsign = std::make_unique<ActiveCallsign>(
-                "LTC_SE_CTR", "Testy McTestface", ControllerPosition(1, "LTC_SE_CTR", 121.225, {}, true, false));
+                "LTC_SE_CTR", "Testy McTestface", ControllerPosition(1, "LTC_SE_CTR", 121.225, {}, true, false), false);
             this->departurePrenote = std::make_unique<DeparturePrenote>(nullptr, "EGKK", "BIG2X");
             this->prenoteMessage =
                 std::make_unique<PrenoteUserMessage>(*this->departurePrenote, *this->callsign, this->mockFlightplan);

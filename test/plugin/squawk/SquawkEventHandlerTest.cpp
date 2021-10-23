@@ -1,26 +1,17 @@
 #include "squawk/SquawkEventHandler.h"
 #include "squawk/SquawkGenerator.h"
-#include "curl/CurlResponse.h"
 #include "flightplan/StoredFlightplanCollection.h"
-#include "flightplan/StoredFlightplan.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "ownership/AirfieldOwnershipManager.h"
-#include "airfield/AirfieldCollection.h"
-#include "controller/ActiveCallsign.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
+#include "ownership/ServiceProvision.h"
 #include "controller/ControllerPosition.h"
-#include "airfield/AirfieldModel.h"
 #include "api/ApiRequestBuilder.h"
-#include "curl/CurlRequest.h"
 #include "squawk/SquawkAssignment.h"
 #include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
-#include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
-#include "squawk/ApiSquawkAllocation.h"
 #include "squawk/ApiSquawkAllocationHandler.h"
 
-using UKControllerPlugin::Airfield::AirfieldCollection;
-using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -33,7 +24,9 @@ using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
+using UKControllerPlugin::Ownership::ServiceProvision;
+using UKControllerPlugin::Ownership::ServiceType;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using UKControllerPlugin::Squawk::ApiSquawkAllocationHandler;
 using UKControllerPlugin::Squawk::SquawkAssignment;
@@ -73,8 +66,8 @@ namespace UKControllerPluginTest {
                       this->apiSquawkAllocations),
                   assignmentRules(this->plans, this->pluginLoopback, this->airfieldOwnership, this->activeCallsigns),
                   controller(1, "EGKK_APP", 126.820, {"EGKK"}, true, false),
-                  userCallsign("EGKK_APP", "Testy McTestface", this->controller),
-                  airfieldOwnership(this->airfields, this->activeCallsigns),
+                  userCallsign("EGKK_APP", "Testy McTestface", this->controller, true),
+                  notUserCallsign("EGKK_APP", "Testy McTestface", this->controller, false),
                   handler(this->generator, this->activeCallsigns, this->plans, this->pluginLoopback, this->login, false)
 
             {
@@ -88,9 +81,12 @@ namespace UKControllerPluginTest {
 
                 ON_CALL(*this->mockSelfController, IsVatsimRecognisedController()).WillByDefault(Return(true));
 
-                this->airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"EGKK_APP"})));
                 this->activeCallsigns.AddUserCallsign(this->userCallsign);
-                this->airfieldOwnership.RefreshOwner("EGKK");
+                this->airfieldOwnership.SetProvidersForAirfield(
+                    "EGKK",
+                    std::vector<std::shared_ptr<ServiceProvision>>{std::make_shared<ServiceProvision>(
+                        ServiceType::Delivery,
+                        std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(this->userCallsign))});
 
                 // By default, lets assume we've been logged in for a while.
                 this->login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::minutes(5));
@@ -187,8 +183,8 @@ namespace UKControllerPluginTest {
             ActiveCallsignCollection activeCallsigns;
             ControllerPosition controller;
             ActiveCallsign userCallsign;
-            AirfieldOwnershipManager airfieldOwnership;
-            AirfieldCollection airfields;
+            ActiveCallsign notUserCallsign;
+            AirfieldServiceProviderCollection airfieldOwnership;
             SquawkEventHandler handler;
         };
 
@@ -469,7 +465,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(*this->mockFlightplan, SetSquawk(testing::_)).Times(0);
 
             this->expectGeneralAssignment();
-            handler.ActiveCallsignAdded(this->userCallsign, true);
+            handler.ActiveCallsignAdded(this->userCallsign);
             this->AssertGeneralAssignment();
         }
 
@@ -485,7 +481,7 @@ namespace UKControllerPluginTest {
 
             this->ExpectNoAssignment();
 
-            handler.ActiveCallsignAdded(this->userCallsign, false);
+            handler.ActiveCallsignAdded(this->userCallsign);
         }
     } // namespace Squawk
 } // namespace UKControllerPluginTest

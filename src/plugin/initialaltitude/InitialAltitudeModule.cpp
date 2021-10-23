@@ -30,7 +30,6 @@ namespace UKControllerPlugin::InitialAltitude {
             *persistence.login,
             *persistence.plugin));
 
-        persistence.initialAltitudeEvents = initialAltitudeEventHandler;
         persistence.userSettingHandlers->RegisterHandler(initialAltitudeEventHandler);
         persistence.flightplanHandler->RegisterHandler(initialAltitudeEventHandler);
         persistence.activeCallsigns->AddHandler(initialAltitudeEventHandler);

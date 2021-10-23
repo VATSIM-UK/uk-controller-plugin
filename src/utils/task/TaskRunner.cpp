@@ -9,7 +9,7 @@ namespace UKControllerPlugin {
             // Create the threads for asynchronous tasks.
             std::unique_lock<std::mutex> uniqueLock(this->asynchronousQueueLock);
             for (int i = 0; i < numThreads; i++) {
-                this->threads.push_back(std::thread(&TaskRunner::ProcessAsynchronousTasks, this, i));
+                this->threads.push_back(std::thread(&TaskRunner::ProcessAsynchronousTasks, this));
             }
 
             LogInfo("TaskRunner created with " + std::to_string(numThreads) + " threads");
@@ -25,13 +25,11 @@ namespace UKControllerPlugin {
             this->asynchronousQueueCondVar.notify_all();
             uniqueLock.unlock();
 
-
-            for (auto &thread : this->threads) {
+            for (auto& thread : this->threads) {
                 if (thread.joinable()) {
                     thread.join();
                 }
             }
-            LogInfo("All TaskRunner threads shut down");
         }
 
         size_t TaskRunner::CountThreads(void) const
@@ -56,7 +54,7 @@ namespace UKControllerPlugin {
             loop of EuroScope execution. For example, tasks that require HTTP requests, which
             make take a significant amount of time.
         */
-        void TaskRunner::ProcessAsynchronousTasks(int threadNumber)
+        void TaskRunner::ProcessAsynchronousTasks()
         {
             std::unique_lock<std::mutex> uniqueLock(this->asynchronousQueueLock, std::defer_lock_t());
             std::function<void(void)> currentTask;
@@ -88,13 +86,10 @@ namespace UKControllerPlugin {
                 // Do the task
                 try {
                     currentTask();
-                }
-                catch (std::exception exception) {
+                } catch (std::exception exception) {
                     LogError("Unhandled exception in task runner " + std::string(exception.what()));
                 }
             }
-
-            LogInfo("Task runner thread " + std::to_string(threadNumber) + " stopped");
         }
-    }  // namespace TaskManager
-}  // namespace UKControllerPlugin
+    } // namespace TaskManager
+} // namespace UKControllerPlugin

@@ -37,7 +37,8 @@ namespace UKControllerPlugin::Bootstrap {
             persistence.settingsRepository->GetSetting("api-key"));
         persistence.api = std::make_unique<ApiHelper>(*persistence.curl, requestBuilder);
 
-        persistence.taskRunner = std::make_unique<TaskRunner>(3);
+        persistence.taskRunner = std::make_shared<TaskRunner>(3);
+        SetTaskRunner(persistence.taskRunner);
     }
 
     /*

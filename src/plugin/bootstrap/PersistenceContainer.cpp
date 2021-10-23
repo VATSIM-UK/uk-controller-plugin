@@ -34,7 +34,7 @@
 #include "minstack/MinStackManager.h"
 #include "navaids/NavaidCollection.h"
 #include "notifications/NotificationsMenuItem.h"
-#include "ownership/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"

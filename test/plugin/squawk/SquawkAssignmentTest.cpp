@@ -3,23 +3,23 @@
 #include "airfield/AirfieldCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ActiveCallsign.h"
-#include "ownership/AirfieldOwnershipManager.h"
-#include "airfield/AirfieldModel.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "flightplan/StoredFlightplan.h"
+#include "ownership/ServiceProvision.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
-using UKControllerPlugin::Airfield::AirfieldCollection;
-using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
+using UKControllerPlugin::Ownership::ServiceProvision;
+using UKControllerPlugin::Ownership::ServiceType;
 using UKControllerPlugin::Squawk::SquawkAssignment;
 using UKControllerPluginTest::Curl::MockCurlApi;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
@@ -35,8 +35,7 @@ namespace UKControllerPluginTest {
         {
             public:
             SquawkAssignmentTest(void)
-                : airfieldOwnership(this->airfields, this->activeCallsigns),
-                  kkApp(1, "EGKK_APP", 126.820, {"EGKK"}, true, false),
+                : kkApp(1, "EGKK_APP", 126.820, {"EGKK"}, true, false),
                   lonS(2, "LON_S_CTR", 129.420, {"EGLL"}, true, false),
                   assignment(this->plans, this->pluginLoopback, this->airfieldOwnership, this->activeCallsigns){
 
@@ -51,10 +50,15 @@ namespace UKControllerPluginTest {
                 this->mockSelfController =
                     std::shared_ptr<MockEuroScopeCControllerInterface>(new NiceMock<MockEuroScopeCControllerInterface>);
 
-                this->airfields.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"EGKK_APP"})));
-                this->activeCallsigns.AddUserCallsign(ActiveCallsign("EGKK_APP", "Testy McTestface", this->kkApp));
-                this->activeCallsigns.AddCallsign(ActiveCallsign("LON_S_CTR", "Boaty McBoatface", this->lonS));
-                this->airfieldOwnership.RefreshOwner("EGKK");
+                this->activeCallsigns.AddUserCallsign(
+                    ActiveCallsign("EGKK_APP", "Testy McTestface", this->kkApp, true));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("LON_S_CTR", "Boaty McBoatface", this->lonS, false));
+                this->airfieldOwnership.SetProvidersForAirfield(
+                    "EGKK",
+                    std::vector<std::shared_ptr<ServiceProvision>>{std::make_shared<ServiceProvision>(
+                        ServiceType::Delivery,
+                        std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
+                            this->activeCallsigns.GetUserCallsign()))});
 
                 ON_CALL(*this->mockSelfController, IsVatsimRecognisedController()).WillByDefault(Return(true));
             }
@@ -66,8 +70,7 @@ namespace UKControllerPluginTest {
             std::shared_ptr<MockEuroScopeCControllerInterface> mockSelfController;
             StoredFlightplanCollection plans;
             ActiveCallsignCollection activeCallsigns;
-            AirfieldOwnershipManager airfieldOwnership;
-            AirfieldCollection airfields;
+            AirfieldServiceProviderCollection airfieldOwnership;
             ControllerPosition kkApp;
             ControllerPosition lonS;
             SquawkAssignment assignment;
@@ -271,7 +274,7 @@ namespace UKControllerPluginTest {
 
             this->activeCallsigns.Flush();
             ControllerPosition controller(55, "LON_S_CTR", 129.420, {"EGLL"}, true, false);
-            this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_S_CTR", "Boaty McBoatface", controller));
+            this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_S_CTR", "Boaty McBoatface", controller, true));
             EXPECT_FALSE(this->assignment.LocalAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 

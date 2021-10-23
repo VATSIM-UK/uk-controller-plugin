@@ -1,24 +1,18 @@
 #include "prenote/PrenoteEventHandler.h"
 #include "prenote/PrenoteService.h"
-#include "ownership/AirfieldOwnershipManager.h"
-#include "airfield/AirfieldCollection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "message/UserMessager.h"
-#include "prenote/AbstractPrenote.h"
-#include "airfield/AirfieldModel.h"
-#include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
-using UKControllerPlugin::Airfield::AirfieldCollection;
-using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Prenote::AbstractPrenote;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
 using UKControllerPlugin::Prenote::PrenoteService;
@@ -34,10 +28,7 @@ namespace UKControllerPluginTest {
             public:
             void SetUp(void)
             {
-                this->airfields = std::make_unique<AirfieldCollection>();
-                this->airfields->AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"EGKK_GND"})));
-                this->airfieldOwnership =
-                    std::make_unique<AirfieldOwnershipManager>(*this->airfields, this->activeCallsigns);
+                this->airfieldOwnership = std::make_unique<AirfieldServiceProviderCollection>();
 
                 this->messager = std::make_unique<UserMessager>(this->mockPlugin);
                 std::unique_ptr<PrenoteService> service =
@@ -50,8 +41,7 @@ namespace UKControllerPluginTest {
             NiceMock<UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface> mockSettingProvider;
             std::unique_ptr<PrenoteEventHandler> eventHandler;
             std::unique_ptr<PrenoteService> service;
-            std::unique_ptr<AirfieldCollection> airfields;
-            std::unique_ptr<AirfieldOwnershipManager> airfieldOwnership;
+            std::unique_ptr<AirfieldServiceProviderCollection> airfieldOwnership;
             ActiveCallsignCollection activeCallsigns;
             std::unique_ptr<UserMessager> messager;
             NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;

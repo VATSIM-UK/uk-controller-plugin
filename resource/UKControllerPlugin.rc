@@ -58,6 +58,8 @@ WAVE_DEP_RLS_REQ        WAVE                    ".\\sound\\departure_release_req
 
 WAVE_NEW_PRENOTE        WAVE                    "sound\\new_prenote.wav"
 
+WAVE_MISSED_APPROACH    WAVE                    "sound\\missedapproach.wav"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -291,6 +293,31 @@ BEGIN
     LTEXT           "Released At (Z)",IDC_DEPARTURE_RELEASE_APPROVE_RELEASED_AT_STATIC,7,64,51,8
 END
 
+IDD_MISSED_APPROACH DIALOGEX 0, 0, 257, 311
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Missed Approach Configuration"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,147,289,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,201,289,50,14
+    LTEXT           "Global Settings",MISSED_APPROACH_GLOSAL_STATIc,7,7,132,8
+    CONTROL         "Play missed approach alert sound",MISSED_APPROACH_PLAY_SOUND,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,23,123,10
+    CONTROL         "Trigger missed approach alert when I initiate",MISSED_APPROACH_SOUND_USER,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,38,158,10
+    CONTROL         "",MISSED_APPROACH_SERVICE_LIST,"SysListView32",LVS_LIST | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,67,84,60
+    LTEXT           "Alert me to missed approaches when I am providing the following services:",MISSED_APPROACH_ALERT_STATIC,7,52,243,15
+    LTEXT           "ASR Specific Settings",MISSED_APPROACH_ASR_STATIC,7,212,68,8
+    CONTROL         "Draw circle around missed approach aircraft",MISSED_APPROACH_CIRCLE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,229,156,10
+    CONTROL         "Draw line to missed approach aircraft",MISSED_APPROACH_LINE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,243,135,10
+    LTEXT           "Alert me to missed approaches at these airfields:",MISSED_APPROACH_AIRFIELDS,7,133,157,8
+    CONTROL         "",MISSED_APPROACH_AIRFIELD_LIST,"SysListView32",LVS_LIST | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,146,226,62
+    EDITTEXT        MISSED_APPROACH_DRAW_DURATION,7,259,55,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Draw duration in seconds (1-9)",MISSED_APPROACH_DRAW_DURATION_TEXT,69,262,100,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -397,6 +424,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 130
     END
+
+    IDD_MISSED_APPROACH, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 250
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 303
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -462,6 +497,11 @@ BEGIN
 END
 
 IDD_DEPARTURE_RELEASE_APPROVE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_MISSED_APPROACH AFX_DIALOG_LAYOUT
 BEGIN
     0
 END

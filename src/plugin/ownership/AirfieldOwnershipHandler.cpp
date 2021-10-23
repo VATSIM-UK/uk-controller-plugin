@@ -1,6 +1,7 @@
 #include "AirfieldOwnerQueryMessage.h"
 #include "AirfieldOwnershipHandler.h"
 #include "AirfieldOwnershipManager.h"
+#include "AirfieldServiceProviderCollection.h"
 #include "AirfieldsOwnedQueryMessage.h"
 #include "airfield/AirfieldCollection.h"
 #include "controller/ControllerPosition.h"
@@ -8,6 +9,7 @@
 #include "controller/ControllerPositionParser.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
 #include "message/UserMessager.h"
+#include "ownership/ServiceProvision.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldModel;
@@ -41,13 +43,13 @@ namespace UKControllerPlugin::Ownership {
         }
     }
 
-    void AirfieldOwnershipHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+    void AirfieldOwnershipHandler::ActiveCallsignAdded(const ActiveCallsign& callsign)
     {
         // Refresh the top-down responsibilities for affected airfields
         this->ProcessAffectedAirfields(callsign.GetNormalisedPosition());
     }
 
-    void AirfieldOwnershipHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+    void AirfieldOwnershipHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign)
     {
         // Refresh the top-down responsibilities for affected airfields
         this->ProcessAffectedAirfields(callsign.GetNormalisedPosition());
@@ -66,9 +68,14 @@ namespace UKControllerPlugin::Ownership {
         std::regex ownerRegex(".ukcp owner ([A-Za-z]{4})");
         std::smatch ownerMatches;
         if (std::regex_search(command, ownerMatches, ownerRegex)) {
-            ActiveCallsign active = this->airfieldOwnership.GetOwner(ownerMatches[1]);
+            auto owner = this->airfieldOwnership.GetProviders().DeliveryProviderForAirfield(ownerMatches[1]);
+            if (!owner) {
+                return true;
+            }
+
+            const auto active = owner->controller;
             this->userMessager.SendMessageToUser(
-                AirfieldOwnerQueryMessage(ownerMatches[1], active.GetCallsign(), active.GetControllerName()));
+                AirfieldOwnerQueryMessage(ownerMatches[1], active->GetCallsign(), active->GetControllerName()));
             return true;
         }
 

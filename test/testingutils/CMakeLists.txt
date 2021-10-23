@@ -20,6 +20,7 @@ set(mock
     "mock/MockApiInterface.h"
     "mock/MockCurlApi.h"
     "mock/MockDialogProvider.h"
+    "mock/MockTaskRunnerInterface.h"
     "mock/MockWinApi.h"
 )
 source_group("mock" FILES ${mock})

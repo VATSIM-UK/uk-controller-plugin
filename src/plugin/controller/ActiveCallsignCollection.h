@@ -1,43 +1,36 @@
 #pragma once
-#include "controller/ActiveCallsign.h"
-#include "controller/ActiveCallsignEventHandlerInterface.h"
+#include "ActiveCallsign.h"
+#include "ActiveCallsignEventHandlerInterface.h"
 
-namespace UKControllerPlugin {
-    namespace Controller {
+namespace UKControllerPlugin::Controller {
+    class ActiveCallsign;
 
-// Forward declaration
-class ActiveCallsign;
-// END
-
-/*
-    Class that maps connected callsigns to UK controller positions and determines
-    priority order.
-*/
-class ActiveCallsignCollection
-{
-    public:
-        ActiveCallsignCollection(void);
-        void AddCallsign(UKControllerPlugin::Controller::ActiveCallsign controller);
-        void AddUserCallsign(UKControllerPlugin::Controller::ActiveCallsign controller);
-        bool CallsignActive(std::string callsign) const;
-        void Flush(void);
+    /*
+        Class that maps connected callsigns to UK controller positions and determines
+        priority order.
+    */
+    class ActiveCallsignCollection
+    {
+        public:
+        ActiveCallsignCollection();
+        void AddCallsign(const UKControllerPlugin::Controller::ActiveCallsign& controller);
+        void AddUserCallsign(const UKControllerPlugin::Controller::ActiveCallsign& controller);
+        bool CallsignActive(const std::string& callsign) const;
+        void Flush();
         int GetNumberActiveCallsigns() const;
         int GetNumberActivePositions() const;
-        UKControllerPlugin::Controller::ActiveCallsign GetCallsign(std::string callsign) const;
-        UKControllerPlugin::Controller::ActiveCallsign GetLeadCallsignForPosition(
-            std::string normalisedCallsign
-        ) const;
-        UKControllerPlugin::Controller::ActiveCallsign GetUserCallsign(void) const;
-        bool PositionActive(std::string normalisedCallsign) const;
-        void RemoveCallsign(UKControllerPlugin::Controller::ActiveCallsign controller);
-        bool UserHasCallsign(void) const;
-        void AddHandler(
-            std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface> handler
-        );
-        size_t CountHandlers(void) const;
+        UKControllerPlugin::Controller::ActiveCallsign GetCallsign(const std::string& callsign) const;
+        auto GetLeadCallsignForPosition(const std::string& normalisedCallsign) const
+            -> UKControllerPlugin::Controller::ActiveCallsign;
+        auto GetUserCallsign() const -> UKControllerPlugin::Controller::ActiveCallsign;
+        bool PositionActive(const std::string& normalisedCallsign) const;
+        void RemoveCallsign(const UKControllerPlugin::Controller::ActiveCallsign& controller);
+        auto UserHasCallsign() const -> bool;
+        void
+        AddHandler(const std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface>& handler);
+        auto CountHandlers() const -> size_t;
 
-    private:
-
+        private:
         // Whether or not the user is active.
         bool userActive = false;
 
@@ -51,10 +44,6 @@ class ActiveCallsignCollection
         std::set<UKControllerPlugin::Controller::ActiveCallsign>::iterator userCallsign;
 
         // All the handlers for these events
-        std::list<
-            std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface>
-        > handlers;
-};
-
-}  // namespace Controller
-}  // namespace UKControllerPlugin
+        std::list<std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsignEventHandlerInterface>> handlers;
+    };
+} // namespace UKControllerPlugin::Controller

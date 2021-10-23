@@ -116,6 +116,11 @@ set(test__handoff
 )
 source_group("test\\handoff" FILES ${test__handoff})
 
+set(test__headings
+    "headings/HeadingTest.cpp"
+        headings/HeadingTest.cpp)
+source_group("test\\headings" FILES ${test__headings})
+
 set(test__historytrail
     "historytrail/AircraftHistoryTrailTest.cpp"
     "historytrail/HistoryTrailEventHandlerTest.cpp"
@@ -232,6 +237,22 @@ set(test__minstack
 )
 source_group("test\\minstack" FILES ${test__minstack})
 
+set(test__missedapproach
+        missedapproach/MissedApproachTest.cpp
+        missedapproach/CompareMissedApproachesTest.cpp
+        missedapproach/MissedApproachCollectionTest.cpp
+        missedapproach/RemoveExpiredMissedApproachesTest.cpp
+        missedapproach/MissedApproachModuleTest.cpp
+        missedapproach/NewMissedApproachPushEventHandlerTest.cpp
+        missedapproach/TriggerMissedApproachTest.cpp
+        missedapproach/MissedApproachRendererTest.cpp
+        missedapproach/MissedApproachRenderOptionsTest.cpp
+        missedapproach/MissedApproachOptionsTest.cpp
+        missedapproach/MissedApproachAudioAlertTest.cpp
+        missedapproach/MissedApproachUserSettingHandlerTest.cpp
+        missedapproach/MissedApproachButtonTest.cpp missedapproach/ToggleMissedApproachButtonTest.cpp missedapproach/ConfigureMissedApproachesTest.cpp)
+source_group("test\\missedapproach" FILES ${test__missedapproach})
+
 set(test__mock
     "mock/MockAbstractTimedEvent.h"
     "mock/MockActiveCallsignEventHandler.h"
@@ -265,7 +286,6 @@ set(test__mock
     "mock/MockRunwayDialogAwareInterface.h"
     "mock/MockSectorFileProviderInterface.h"
     "mock/MockSocket.h"
-    "mock/MockTaskRunnerInterface.h"
     "mock/MockUserSettingAwareInterface.h"
     "mock/MockUserSettingProviderInterface.h"
 )
@@ -312,7 +332,7 @@ set(test__ownership
     "ownership/AirfieldOwnershipManagerTest.cpp"
     "ownership/AirfieldOwnershipModuleTest.cpp"
     "ownership/AirfieldsOwnedQueryMessageTest.cpp"
-)
+     ownership/AirfieldServiceProviderCollectionTest.cpp)
 source_group("test\\ownership" FILES ${test__ownership})
 
 set(test__plugin
@@ -484,6 +504,7 @@ set(ALL_FILES
     ${test__flightinformationservice}
     ${test__flightplan}
     ${test__handoff}
+    ${test__headings}
     ${test__historytrail}
     ${test__hold}
     ${test__initialaltitude}
@@ -494,6 +515,7 @@ set(ALL_FILES
     ${test__message}
     ${test__metar}
     ${test__minstack}
+    ${test__missedapproach}
     ${test__mock}
     ${test__navaids}
     ${test__notifications}
@@ -516,8 +538,7 @@ set(ALL_FILES
     ${test__timedevent}
     ${test__timer}
     ${test__wake}
-    $<TARGET_OBJECTS:UKControllerPluginCore>
-)
+    $<TARGET_OBJECTS:UKControllerPluginCore>)
 
 ################################################################################
 # Target
