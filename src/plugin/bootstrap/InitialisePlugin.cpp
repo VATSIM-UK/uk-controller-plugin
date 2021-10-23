@@ -230,6 +230,7 @@ namespace UKControllerPlugin {
 
         PrenoteModule::BootstrapPlugin(*this->container, loader);
         Handoff::BootstrapPlugin(*this->container, loader);
+        MissedApproach::BootstrapPlugin(*this->container);
 
         // Bootstrap other things
         ActualOffBlockTimeBootstrap::BootstrapPlugin(*this->container);

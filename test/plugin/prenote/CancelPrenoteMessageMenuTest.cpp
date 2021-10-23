@@ -53,7 +53,7 @@ namespace UKControllerPluginTest::Prenote {
                 3, "LON_SC_CTR", 132.600, std::vector<std::string>{"EGKK"}, true, false));
 
             // Default the user to active
-            callsigns.AddUserCallsign(ActiveCallsign("EGKK_TWR", "Test", *controllers.FetchPositionById(1)));
+            callsigns.AddUserCallsign(ActiveCallsign("EGKK_TWR", "Test", *controllers.FetchPositionById(1), true));
         }
 
         ActiveCallsignCollection callsigns;
@@ -182,7 +182,7 @@ namespace UKControllerPluginTest::Prenote {
     TEST_F(CancelPrenoteMessageMenuTest, ItDoesntDisplayTheCancelMenuIfUserCannotMakePrenotes)
     {
         this->callsigns.Flush();
-        callsigns.AddUserCallsign(ActiveCallsign("LON_S_CTR", "Test", *controllers.FetchPositionById(2)));
+        callsigns.AddUserCallsign(ActiveCallsign("LON_S_CTR", "Test", *controllers.FetchPositionById(2), true));
 
         EXPECT_CALL(mockPlugin, TriggerPopupList(testing::_, testing::_, testing::_)).Times(0);
 

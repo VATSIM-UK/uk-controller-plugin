@@ -11,20 +11,21 @@ namespace UKControllerPluginTest {
             MOCK_CONST_METHOD2(AnnotateFlightStrip, void(int, std::string));
             MOCK_CONST_METHOD1(GetAnnotation, std::string(int));
             MOCK_CONST_METHOD0(GetAircraftType, std::string(void));
-            MOCK_CONST_METHOD0(GetCallsign, const std::string(void));
+            MOCK_CONST_METHOD0(GetCallsign, std::string(void));
             MOCK_CONST_METHOD0(GetClearedAltitude, int(void));
             MOCK_CONST_METHOD0(GetCruiseLevel, int(void));
-            MOCK_CONST_METHOD0(GetDestination, const std::string(void));
+            MOCK_CONST_METHOD0(GetDestination, std::string(void));
             MOCK_CONST_METHOD0(GetDistanceFromOrigin, double(void));
+            MOCK_CONST_METHOD0(GetDistanceToDestination, double(void));
             MOCK_CONST_METHOD0(GetExpectedDepartureTime, std::string(void));
             MOCK_CONST_METHOD0(
                 GetExtractedRoute, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface(void));
             MOCK_CONST_METHOD0(GetFlightRules, std::string(void));
             MOCK_CONST_METHOD0(GetGroundState, std::string(void));
             MOCK_CONST_METHOD0(GetIcaoWakeCategory, std::string(void));
-            MOCK_CONST_METHOD0(GetOrigin, const std::string(void));
+            MOCK_CONST_METHOD0(GetOrigin, std::string(void));
             MOCK_CONST_METHOD0(GetRawRouteString, std::string(void));
-            MOCK_CONST_METHOD0(GetSidName, const std::string(void));
+            MOCK_CONST_METHOD0(GetSidName, std::string(void));
             MOCK_CONST_METHOD0(GetAssignedSquawk, std::string(void));
             MOCK_CONST_METHOD0(HasControllerClearedAltitude, bool(void));
             MOCK_CONST_METHOD0(HasControllerAssignedHeading, bool(void));

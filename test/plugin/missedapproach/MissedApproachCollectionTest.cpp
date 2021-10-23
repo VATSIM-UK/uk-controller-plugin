@@ -9,8 +9,8 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         public:
         MissedApproachCollectionTest()
-            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now())),
-              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now()))
+            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now(), true)),
+              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now(), true))
         {
         }
         std::shared_ptr<class MissedApproach> missed1;
@@ -126,5 +126,18 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         collection.Remove(missed1);
         EXPECT_NO_THROW(collection.Remove(missed1));
+    }
+
+    TEST_F(MissedApproachCollectionTest, ItIteratesTheCollection)
+    {
+        collection.Add(missed1);
+        collection.Add(missed2);
+
+        std::vector<std::string> expected({"BAW123", "BAW456"});
+        std::vector<std::string> actual;
+        collection.ForEach(
+            [&actual](const std::shared_ptr<class MissedApproach>& missed) { actual.push_back(missed->Callsign()); });
+
+        EXPECT_EQ(expected, actual);
     }
 } // namespace UKControllerPluginTest::MissedApproach

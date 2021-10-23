@@ -4,8 +4,8 @@
 namespace UKControllerPlugin {
     namespace Curl {
         class HttpHelper;
-    }  // namespace Curl
-}  // namespace UKControllerPlugin
+    } // namespace Curl
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace TaskManager {
@@ -19,29 +19,29 @@ namespace UKControllerPlugin {
         class TaskRunner : public UKControllerPlugin::TaskManager::TaskRunnerInterface
         {
             public:
-                explicit TaskRunner(int numThreads);
-                TaskRunner(const TaskRunner&) = delete;
-                ~TaskRunner(void);
-                size_t CountThreads(void) const override;
-                void QueueAsynchronousTask(std::function<void(void)> task) override;
+            explicit TaskRunner(int numThreads);
+            TaskRunner(const TaskRunner&) = delete;
+            ~TaskRunner(void);
+            size_t CountThreads(void) const override;
+            void QueueAsynchronousTask(std::function<void(void)> task) override;
 
             private:
-                void ProcessAsynchronousTasks(int threadNumber);
+            void ProcessAsynchronousTasks();
 
-                // Are the threads running
-                bool threadsRunning = true;
+            // Are the threads running
+            bool threadsRunning = true;
 
-                // A vector for all the threads.
-                std::vector<std::thread> threads;
+            // A vector for all the threads.
+            std::vector<std::thread> threads;
 
-                // A lock for the asynchronous queue when picking off tasks.
-                std::mutex asynchronousQueueLock;
+            // A lock for the asynchronous queue when picking off tasks.
+            std::mutex asynchronousQueueLock;
 
-                // The master queue for asynchronous tasks - will be taken off in order.
-                std::deque <std::function<void(void)>> asynchronousTaskQueue;
+            // The master queue for asynchronous tasks - will be taken off in order.
+            std::deque<std::function<void(void)>> asynchronousTaskQueue;
 
-                // A condition variable for the asynchronous queue.
-                std::condition_variable asynchronousQueueCondVar;
+            // A condition variable for the asynchronous queue.
+            std::condition_variable asynchronousQueueCondVar;
         };
-    }  // namespace TaskManager
-}  // namespace UKControllerPlugin
+    } // namespace TaskManager
+} // namespace UKControllerPlugin

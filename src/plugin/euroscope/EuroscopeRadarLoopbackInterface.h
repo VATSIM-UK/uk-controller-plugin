@@ -27,5 +27,6 @@ namespace UKControllerPlugin::Euroscope {
         TogglePluginTagFunction(std::string callsign, int functionId, POINT mousePos, RECT tagItemArea) = 0;
         virtual void ToogleMenu(RECT area, std::string title, int numColumns) = 0;
         [[nodiscard]] virtual auto ConvertCoordinateToScreenPoint(EuroScopePlugIn::CPosition pos) -> POINT = 0;
+        [[nodiscard]] virtual auto ConvertScreenPointToCoordinate(const POINT& point) -> EuroScopePlugIn::CPosition = 0;
     };
 } // namespace UKControllerPlugin::Euroscope

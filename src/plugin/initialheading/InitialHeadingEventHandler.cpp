@@ -6,7 +6,7 @@
 #include "euroscope/GeneralSettingsEntries.h"
 #include "euroscope/UserSetting.h"
 #include "login/Login.h"
-#include "ownership/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 
@@ -18,7 +18,7 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 
@@ -27,7 +27,7 @@ namespace UKControllerPlugin::InitialHeading {
     InitialHeadingEventHandler::InitialHeadingEventHandler(
         const SidCollection& sids,
         const ActiveCallsignCollection& activeCallsigns,
-        const AirfieldOwnershipManager& airfieldOwnership,
+        const AirfieldServiceProviderCollection& airfieldOwnership,
         const Login& login,
         EuroscopePluginLoopbackInterface& plugin)
         : sids(sids), activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership), login(login),
@@ -164,7 +164,7 @@ namespace UKControllerPlugin::InitialHeading {
                flightPlan.GetDistanceFromOrigin() <= this->assignmentMaxDistanceFromOrigin &&
                radarTarget.GetGroundSpeed() <= this->assignmentMaxSpeed && !flightPlan.HasControllerAssignedHeading() &&
                !flightPlan.IsTracked() && !flightPlan.IsSimulated() &&
-               this->airfieldOwnership.AirfieldOwnedByUser(flightPlan.GetOrigin());
+               this->airfieldOwnership.DeliveryControlProvidedByUser(flightPlan.GetOrigin());
     }
 
     /*
@@ -189,9 +189,9 @@ namespace UKControllerPlugin::InitialHeading {
     /*
         If its the user, do some updates
     */
-    void InitialHeadingEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign, bool userCallsign)
+    void InitialHeadingEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign)
     {
-        if (!userCallsign) {
+        if (!callsign.GetIsUser()) {
             return;
         }
 
@@ -202,7 +202,7 @@ namespace UKControllerPlugin::InitialHeading {
     /*
         Nothing to see here
     */
-    void InitialHeadingEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign, bool userCallsign)
+    void InitialHeadingEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign)
     {
     }
 

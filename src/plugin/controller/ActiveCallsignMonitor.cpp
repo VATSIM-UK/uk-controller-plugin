@@ -102,11 +102,11 @@ namespace UKControllerPlugin::Controller {
                 "The current user, with callsign " + callsign.GetCallsign() + ", has been marked as active, covering " +
                 matchedPos.GetCallsign());
             this->activeCallsigns.AddUserCallsign(
-                ActiveCallsign(callsign.GetCallsign(), callsign.GetControllerName(), matchedPos));
+                ActiveCallsign(callsign.GetCallsign(), callsign.GetControllerName(), matchedPos, true));
         } else {
             LogInfo(callsign.GetCallsign() + " has been marked as active, covering " + matchedPos.GetCallsign());
             this->activeCallsigns.AddCallsign(
-                ActiveCallsign(callsign.GetCallsign(), callsign.GetControllerName(), matchedPos));
+                ActiveCallsign(callsign.GetCallsign(), callsign.GetControllerName(), matchedPos, false));
         }
     }
 } // namespace UKControllerPlugin::Controller

@@ -11,6 +11,7 @@
 #include "historytrail/HistoryTrailModule.h"
 #include "hold/HoldModule.h"
 #include "minstack/MinStackModule.h"
+#include "missedapproach/MissedApproachModule.h"
 #include "notifications/NotificationsModule.h"
 #include "plugin/PluginInformationBootstrap.h"
 #include "plugin/UKPlugin.h"
@@ -103,6 +104,7 @@ namespace UKControllerPlugin::RadarScreen {
         Notifications::BootstrapRadarScreen(this->persistence, configurableDisplays);
         Releases::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         PrenoteModule::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
+        MissedApproach::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
 
         // Register command for position resets
         this->persistence.commandHandlers->RegisterHandler(std::make_shared<PositionResetCommand>(renderers));

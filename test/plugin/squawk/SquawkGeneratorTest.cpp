@@ -1,23 +1,19 @@
 #include "squawk/SquawkGenerator.h"
-#include "api/ApiInterface.h"
 #include "flightplan/StoredFlightplanCollection.h"
-#include "flightplan/StoredFlightplan.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "squawk/SquawkAssignment.h"
-#include "ownership/AirfieldOwnershipManager.h"
-#include "airfield/AirfieldCollection.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "controller/ControllerPosition.h"
-#include "controller/ActiveCallsign.h"
 #include "api/ApiNotFoundException.h"
-#include "squawk/ApiSquawkAllocation.h"
 #include "squawk/ApiSquawkAllocationHandler.h"
+#include "ownership/ServiceProvision.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
 using ::testing::Throw;
-using UKControllerPlugin::Airfield::AirfieldCollection;
+
 using UKControllerPlugin::Api::ApiInterface;
 using UKControllerPlugin::Api::ApiNotFoundException;
 using UKControllerPlugin::Controller::ActiveCallsign;
@@ -25,7 +21,9 @@ using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
+using UKControllerPlugin::Ownership::ServiceProvision;
+using UKControllerPlugin::Ownership::ServiceType;
 using UKControllerPlugin::Squawk::ApiSquawkAllocation;
 using UKControllerPlugin::Squawk::ApiSquawkAllocationHandler;
 using UKControllerPlugin::Squawk::SquawkAssignment;
@@ -50,8 +48,7 @@ namespace UKControllerPluginTest {
                 this->mockFlightplan = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
                 this->mockRadarTarget = std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
                 this->mockSelfController = std::make_shared<NiceMock<MockEuroScopeCControllerInterface>>();
-                this->airfieldOwnership =
-                    std::make_unique<AirfieldOwnershipManager>(this->airfields, this->activeCallsigns);
+                this->airfieldOwnership = std::make_unique<AirfieldServiceProviderCollection>();
                 this->assignmentRules = std::make_unique<SquawkAssignment>(
                     this->flightplans, this->pluginLoopback, *this->airfieldOwnership, this->activeCallsigns);
                 this->generator = std::make_unique<SquawkGenerator>(
@@ -65,8 +62,13 @@ namespace UKControllerPluginTest {
                 this->controller = std::unique_ptr<ControllerPosition>(
                     new ControllerPosition(1, "EGKK_APP", 126.820, {"EGKK"}, true, false));
                 this->activeCallsigns.AddUserCallsign(
-                    ActiveCallsign("EGKK_APP", "Testy McTestface", *this->controller));
-                this->airfieldOwnership->RefreshOwner("EGKK");
+                    ActiveCallsign("EGKK_APP", "Testy McTestface", *this->controller, true));
+                this->airfieldOwnership->SetProvidersForAirfield(
+                    "EGKK",
+                    std::vector<std::shared_ptr<ServiceProvision>>{std::make_shared<ServiceProvision>(
+                        ServiceType::Delivery,
+                        std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
+                            this->activeCallsigns.GetUserCallsign()))});
 
                 ON_CALL(*this->mockSelfController, IsVatsimRecognisedController()).WillByDefault(Return(true));
             }
@@ -82,10 +84,9 @@ namespace UKControllerPluginTest {
             StoredFlightplanCollection flightplans;
             ActiveCallsignCollection activeCallsigns;
             std::unique_ptr<SquawkAssignment> assignmentRules;
-            std::unique_ptr<AirfieldOwnershipManager> airfieldOwnership;
+            std::unique_ptr<AirfieldServiceProviderCollection> airfieldOwnership;
             std::unique_ptr<ControllerPosition> controller;
             std::shared_ptr<ApiSquawkAllocationHandler> squawkAllocationHandler;
-            AirfieldCollection airfields;
         };
 
         TEST_F(SquawkGeneratorTest, GeneralSquawkReturnsFalseOnNoAction)
@@ -489,7 +490,8 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
 
-            this->activeCallsigns.RemoveCallsign(ActiveCallsign("EGKK_APP", "Testy McTestface", *this->controller));
+            this->activeCallsigns.RemoveCallsign(
+                ActiveCallsign("EGKK_APP", "Testy McTestface", *this->controller, true));
 
             EXPECT_FALSE(this->generator->ForceLocalSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
         }

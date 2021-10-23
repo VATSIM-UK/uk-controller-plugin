@@ -12,8 +12,8 @@ namespace UKControllerPluginTest::MissedApproach {
         public:
         CompareMissedApproachesTest()
         {
-            missed1 = std::make_shared<class MissedApproach>(3, "BAW123", TimeNow());
-            missed2 = std::make_shared<class MissedApproach>(4, "BAW456", TimeNow());
+            missed1 = std::make_shared<class MissedApproach>(3, "BAW123", TimeNow(), true);
+            missed2 = std::make_shared<class MissedApproach>(4, "BAW456", TimeNow(), true);
         }
 
         CompareMissedApproaches compare;

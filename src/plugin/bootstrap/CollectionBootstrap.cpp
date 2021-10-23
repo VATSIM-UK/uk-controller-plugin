@@ -7,7 +7,6 @@
 #include "dependency/DependencyLoaderInterface.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "flightplan/StoredFlightplanCollection.h"
-#include "memory"
 #include "metar/MetarEventHandlerCollection.h"
 #include "ownership/AirfieldOwnershipManager.h"
 #include "radarscreen/RadarRenderableCollection.h"
@@ -19,7 +18,6 @@ using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
 using UKControllerPlugin::Metar::MetarEventHandlerCollection;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 
 namespace UKControllerPlugin::Bootstrap {

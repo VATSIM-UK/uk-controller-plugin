@@ -64,4 +64,11 @@ namespace UKControllerPlugin::Airfield {
     {
         return icao.substr(0, 2) == "EG";
     }
+
+    void AirfieldCollection::ForEach(const std::function<void(const AirfieldModel&)>& callback) const
+    {
+        for (const auto& airfieldMapping : this->airfieldMap) {
+            callback(*airfieldMapping.second);
+        }
+    }
 } // namespace UKControllerPlugin::Airfield

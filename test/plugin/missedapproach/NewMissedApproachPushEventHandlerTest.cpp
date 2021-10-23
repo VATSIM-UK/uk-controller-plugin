@@ -1,26 +1,38 @@
 #include "missedapproach/MissedApproach.h"
+#include "missedapproach/MissedApproachAudioAlert.h"
 #include "missedapproach/MissedApproachCollection.h"
+#include "missedapproach/MissedApproachOptions.h"
 #include "missedapproach/NewMissedApproachPushEventHandler.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "time/ParseTimeStrings.h"
 #include "time/SystemClock.h"
 
+using testing::NiceMock;
 using UKControllerPlugin::MissedApproach::MissedApproach;
+using UKControllerPlugin::MissedApproach::MissedApproachAudioAlert;
 using UKControllerPlugin::MissedApproach::MissedApproachCollection;
+using UKControllerPlugin::MissedApproach::MissedApproachOptions;
 using UKControllerPlugin::MissedApproach::NewMissedApproachPushEventHandler;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Time::ParseTimeString;
 using UKControllerPlugin::Time::SetTestNow;
 using UKControllerPlugin::Time::TimeNow;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest::MissedApproach {
     class NewMissedApproachPushEventHandlerTest : public testing::Test
     {
         public:
         NewMissedApproachPushEventHandlerTest()
-            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now())),
-              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now())),
-              collection(std::make_shared<MissedApproachCollection>()), handler(collection)
+            : missed1(std::make_shared<class MissedApproach>(1, "BAW123", std::chrono::system_clock::now(), true)),
+              missed2(std::make_shared<class MissedApproach>(2, "BAW456", std::chrono::system_clock::now(), true)),
+              collection(std::make_shared<MissedApproachCollection>()),
+              options(std::make_shared<MissedApproachOptions>()),
+              audioAlert(std::make_shared<MissedApproachAudioAlert>(options, plugin, ownership, windows)),
+              handler(collection, audioAlert)
         {
             SetTestNow(ParseTimeString("2021-08-23 13:55:00"));
         }
@@ -46,9 +58,14 @@ namespace UKControllerPluginTest::MissedApproach {
             return {"missed-approach.created", "test", eventData, eventData.dump()};
         };
 
+        AirfieldServiceProviderCollection ownership;
+        NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
+        NiceMock<MockWinApi> windows;
         std::shared_ptr<class MissedApproach> missed1;
         std::shared_ptr<class MissedApproach> missed2;
         std::shared_ptr<MissedApproachCollection> collection;
+        std::shared_ptr<MissedApproachOptions> options;
+        std::shared_ptr<MissedApproachAudioAlert> audioAlert;
         NewMissedApproachPushEventHandler handler;
     };
 
@@ -68,11 +85,13 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(1, message->Id());
         EXPECT_EQ("BAW123", message->Callsign());
         EXPECT_EQ(ParseTimeString("2021-08-23 14:00:00"), message->ExpiresAt());
+        EXPECT_FALSE(message->CreatedByUser());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItDoesntOverwriteExistingMissedApproach)
     {
-        collection->Add(std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 14:05:00")));
+        collection->Add(
+            std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 14:05:00"), true));
 
         handler.ProcessPushEvent(MakePushEvent());
         EXPECT_EQ(1, collection->Count());
@@ -81,6 +100,7 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_NE(nullptr, message);
         EXPECT_EQ("BAW123", message->Callsign());
         EXPECT_EQ(ParseTimeString("2021-08-23 14:05:00"), message->ExpiresAt());
+        EXPECT_TRUE(message->CreatedByUser());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesMessageNotObject)

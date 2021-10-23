@@ -24,6 +24,9 @@
 #define WAVE_DEP_RLS_REQ                133
 #define IDR_NEW_PRENOTE                 135
 #define WAVE_NEW_PRENOTE                135
+#define IDR_WAVE2                       136
+#define WAVE_MISSED_APPROACH            136
+#define IDD_MISSED_APPROACH             137
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -38,6 +41,7 @@
 #define GS_DIALOG_PRENOTE_CHECK         1013
 #define TIMER1_ENABLED_CHECK            1013
 #define IDC_MINSTACK_DISPLAY_CHECK      1013
+#define MISSED_APPROACH_PLAY_SOUND      1013
 #define TIMER2_ENABLED_CHECK            1014
 #define IDC_MFCBUTTON1                  1015
 #define TIMER3_ENABLED_CHECK            1015
@@ -70,6 +74,8 @@
 #define IDC_LIST1                       1034
 #define IDC_MINSTACK_LIST               1034
 #define IDC_NOTIFICATIONS_LIST          1034
+#define MISSED_APPROACH_SOUND_SERVICE_LIST 1034
+#define MISSED_APPROACH_SERVICE_LIST    1034
 #define IDC_HOLD_LIST                   1036
 #define IDC_BUTTON2                     1046
 #define IDC_ROUTE_COPY                  1046
@@ -120,6 +126,7 @@
 #define IDC_READ_NOTIFICATION           1087
 #define IDC_DEPARTURE_RELEASE_REQUEST_CALLSIGN 1087
 #define IDC_DEPARTURE_RELEASE_APPROVE_CALLSIGN 1087
+#define MISSED_APPROACH_DRAW_DURATION   1087
 #define IDC_NOTES_STATIC                1088
 #define IDC_HOLD_PARAMS_MIN_STATIC      1089
 #define IDC_NOTIFICATION_BODY           1089
@@ -163,16 +170,31 @@
 #define IDC_CHECK_FILL                  1118
 #define IDC_CHECK2                      1119
 #define IDC_TRAIL_ROTATE                1119
+#define MISSED_APPROACH_SOUND_USER      1119
 #define IDC_SYSLINK2                    1121
 #define IDC_SYSLINK3                    1122
+#define MISSED_APPROACH_GLOSAL_STATIc   1123
+#define MISSED_APPROACH_SOUND_STATIC    1126
+#define MISSED_APPROACH_ALERT_STATIC    1126
+#define MISSED_APPROACH_ASR_STATIC      1127
+#define MISSED_APPROACH_CIRCLE          1128
+#define MISSED_APPROACH_LINE            1129
+#define MISSED_APPROACH_DRAW_AIRFIELDS  1130
+#define MISSED_APPROACH_AIRFIELDS       1130
+#define MISSED_APPROACH_DRAW_AIRFIELD_LIST 1132
+#define MISSED_APPROACH_AIRFIELD_LIST   1132
+#define MISSED_APPROACH_DRAW_PROVISIONS 1133
+#define IDC_LIST4                       1134
+#define MISSED_APPROACH_DRAW_SERVICE_LIST 1134
+#define MISSED_APPROACH_DRAW_DURATION_TEXT 1135
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        136
+#define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1123
+#define _APS_NEXT_CONTROL_VALUE         1136
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

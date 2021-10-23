@@ -38,4 +38,12 @@ namespace UKControllerPlugin::RadarScreen {
     void RadarRenderableInterface::ResetPosition()
     {
     }
+
+    /**
+     * Some renderers, such as the MissedApproachRenderer and HistoryTrailRenderer aren't draggable
+     * and therefore not movable.
+     */
+    void RadarRenderableInterface::Move(RECT position, std::string objectDescription)
+    {
+    }
 } // namespace UKControllerPlugin::RadarScreen

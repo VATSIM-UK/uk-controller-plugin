@@ -1,13 +1,16 @@
 #include "MissedApproach.h"
+#include "MissedApproachAudioAlert.h"
 #include "MissedApproachCollection.h"
 #include "TriggerMissedApproach.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "controller/ActiveCallsign.h"
-#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "helper/HelperFunctions.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
+#include "ownership/ServiceProvision.h"
 #include "time/ParseTimeStrings.h"
 #include "windows/WinApiInterface.h"
 
@@ -17,14 +20,21 @@ namespace UKControllerPlugin::MissedApproach {
         std::shared_ptr<MissedApproachCollection> missedApproaches,
         Windows::WinApiInterface& windowsApi,
         const Api::ApiInterface& api,
-        const Controller::ActiveCallsignCollection& activeCallsigns)
+        const Ownership::AirfieldServiceProviderCollection& serviceProviders,
+        std::shared_ptr<const MissedApproachAudioAlert> audioAlert)
         : missedApproaches(std::move(missedApproaches)), windowsApi(windowsApi), api(api),
-          activeCallsigns(activeCallsigns)
+          serviceProviders(serviceProviders), audioAlert(std::move(audioAlert))
     {
     }
 
-    void TriggerMissedApproach::Trigger(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+    void TriggerMissedApproach::Trigger(
+        Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const
     {
+        if (!AircraftElegibleForMissedApproach(flightplan, radarTarget)) {
+            return;
+        }
+
         if (!this->UserCanTrigger(flightplan)) {
             LogWarning("User tried to trigger missed approach, but is not authorised to do so");
             return;
@@ -54,17 +64,20 @@ namespace UKControllerPlugin::MissedApproach {
     }
 
     /**
-     * Only users that are controlling Tower positions may trigger
-     * missed approaches.
+     * Only users providing tower services and actually logged on to a Tower position can call for a missed
+     * approach.
      */
     auto TriggerMissedApproach::UserCanTrigger(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool
     {
-        if (!this->activeCallsigns.UserHasCallsign()) {
-            return false;
-        }
-
-        const auto& userPosition = this->activeCallsigns.GetUserCallsign().GetNormalisedPosition();
-        return userPosition.IsTower() && userPosition.HasTopdownAirfield(flightplan.GetDestination());
+        const auto serviceProviders = this->serviceProviders.GetServiceProviders(flightplan.GetDestination());
+        return std::find_if(
+                   serviceProviders.begin(),
+                   serviceProviders.end(),
+                   [](const std::shared_ptr<Ownership::ServiceProvision>& provision) {
+                       return provision->serviceProvided == Ownership::ServiceType::Tower &&
+                              provision->controller->GetIsUser() &&
+                              provision->controller->GetNormalisedPosition().IsTower();
+                   }) != serviceProviders.cend();
     }
 
     auto TriggerMissedApproach::ResponseValid(const nlohmann::json& responseData) -> bool
@@ -84,10 +97,13 @@ namespace UKControllerPlugin::MissedApproach {
                     return;
                 }
 
-                this->missedApproaches->Add(std::make_shared<class MissedApproach>(
+                const auto missedApproach = std::make_shared<class MissedApproach>(
                     response.at("id").get<int>(),
                     callsign,
-                    Time::ParseTimeString(response.at("expires_at").get<std::string>())));
+                    Time::ParseTimeString(response.at("expires_at").get<std::string>()),
+                    true);
+                this->missedApproaches->Add(missedApproach);
+                this->audioAlert->Play(missedApproach);
             } catch (Api::ApiException&) {
                 LogError("ApiException when creating missed approach");
             }
@@ -98,5 +114,13 @@ namespace UKControllerPlugin::MissedApproach {
     {
         auto existing = this->missedApproaches->Get(callsign);
         return existing != nullptr && !existing->IsExpired();
+    }
+
+    auto TriggerMissedApproach::AircraftElegibleForMissedApproach(
+        Euroscope::EuroScopeCFlightPlanInterface& flightplan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+        -> bool
+    {
+        return flightplan.GetDistanceToDestination() < MAX_DISTANCE_FROM_DESTINATION &&
+               radarTarget.GetGroundSpeed() > MIN_GROUNDSPEED && radarTarget.GetFlightLevel() < MAX_ALTITUDE;
     }
 } // namespace UKControllerPlugin::MissedApproach

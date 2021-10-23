@@ -19,6 +19,7 @@ namespace UKControllerPlugin::Airfield {
         auto operator=(AirfieldCollection&&) noexcept -> AirfieldCollection&;
         void AddAirfield(std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel> airfield);
         [[nodiscard]] auto FetchAirfieldByIcao(const std::string& icao) const -> const AirfieldModel&;
+        void ForEach(const std::function<void(const AirfieldModel& airfield)>& callback) const;
         [[nodiscard]] auto GetSize() const -> size_t;
 
         private:

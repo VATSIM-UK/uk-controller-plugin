@@ -66,4 +66,13 @@ namespace UKControllerPlugin::MissedApproach {
         return this->FirstWhere(
             [&id](const std::shared_ptr<MissedApproach>& missed) -> bool { return missed->Id() == id; });
     }
+
+    void
+    MissedApproachCollection::ForEach(const std::function<void(const std::shared_ptr<MissedApproach>&)>& callback) const
+    {
+        auto lock = this->Lock();
+        for (const auto& approach : this->missedApproaches) {
+            callback(approach);
+        }
+    }
 } // namespace UKControllerPlugin::MissedApproach

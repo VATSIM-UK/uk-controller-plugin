@@ -1,24 +1,32 @@
 #include "api/ApiException.h"
-#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "missedapproach/MissedApproach.h"
+#include "missedapproach/MissedApproachAudioAlert.h"
 #include "missedapproach/MissedApproachCollection.h"
+#include "missedapproach/MissedApproachOptions.h"
 #include "missedapproach/TriggerMissedApproach.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
+#include "ownership/ServiceProvision.h"
 #include "time/ParseTimeStrings.h"
 #include "time/SystemClock.h"
 
 using ::testing::NiceMock;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Controller::ActiveCallsign;
-using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::MissedApproach::MissedApproach;
+using UKControllerPlugin::MissedApproach::MissedApproachAudioAlert;
 using UKControllerPlugin::MissedApproach::MissedApproachCollection;
+using UKControllerPlugin::MissedApproach::MissedApproachOptions;
 using UKControllerPlugin::MissedApproach::TriggerMissedApproach;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
+using UKControllerPlugin::Ownership::ServiceProvision;
+using UKControllerPlugin::Ownership::ServiceType;
 using UKControllerPlugin::Time::ParseTimeString;
 using UKControllerPlugin::Time::SetTestNow;
 using UKControllerPlugin::Time::TimeNow;
 using UKControllerPluginTest::Api::MockApiInterface;
+using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest::MissedApproach {
@@ -28,36 +36,56 @@ namespace UKControllerPluginTest::MissedApproach {
         TriggerMissedApproachTest()
             : kkTwr(2, "EGKK_TWR", 199.999, {"EGKK"}, true, false),
               kkApp(3, "EGKK_APP", 199.999, {"EGKK"}, true, false),
-              userTowerCallsign("EGKK_TWR", "Testy McTest", kkTwr), userAppCallsign("EGKK_TWR", "Testy McTest", kkApp),
-              missed1(std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 13:56:00"))),
-              missed2(std::make_shared<class MissedApproach>(2, "BAW456", ParseTimeString("2021-08-23 13:56:00"))),
-              missed3(std::make_shared<class MissedApproach>(3, "BAW123", ParseTimeString("2021-08-23 13:54:00"))),
+              userTowerCallsign(std::make_shared<ActiveCallsign>("EGKK_TWR", "Testy McTest", kkTwr, true)),
+              notUserTowerCallsign(std::make_shared<ActiveCallsign>("EGKK_TWR", "Testy McTest", kkTwr, false)),
+              userAppCallsign(std::make_shared<ActiveCallsign>("EGKK_TWR", "Testy McTest", kkApp, true)),
+              missed1(
+                  std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 13:56:00"), false)),
+              missed2(
+                  std::make_shared<class MissedApproach>(2, "BAW456", ParseTimeString("2021-08-23 13:56:00"), false)),
+              missed3(
+                  std::make_shared<class MissedApproach>(3, "BAW123", ParseTimeString("2021-08-23 13:54:00"), false)),
               collection(std::make_shared<MissedApproachCollection>()),
-              trigger(collection, windows, api, activeCallsigns)
+              options(std::make_shared<MissedApproachOptions>()),
+              audioAlert(std::make_shared<MissedApproachAudioAlert>(options, plugin, serviceProviders, windows)),
+              trigger(collection, windows, api, serviceProviders, audioAlert)
         {
             SetTestNow(ParseTimeString("2021-08-23 13:55:00"));
             collection->Add(missed2);
             collection->Add(missed3);
-            activeCallsigns.AddUserCallsign(userTowerCallsign);
+
+            std::vector<std::shared_ptr<ServiceProvision>> provisions;
+            provisions.push_back(std::make_shared<ServiceProvision>(ServiceType::Tower, userTowerCallsign));
+            serviceProviders.SetProvidersForAirfield("EGKK", provisions);
+
             ON_CALL(mockFlightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
             ON_CALL(mockFlightplan, GetDestination).WillByDefault(testing::Return("EGKK"));
             ON_CALL(mockFlightplanBristol, GetCallsign).WillByDefault(testing::Return("BAW123"));
             ON_CALL(mockFlightplanBristol, GetDestination).WillByDefault(testing::Return("EGGD"));
+
+            ON_CALL(mockFlightplan, GetDistanceToDestination()).WillByDefault(testing::Return(5.0));
+            ON_CALL(mockRadarTarget, GetFlightLevel()).WillByDefault(testing::Return(3000));
+            ON_CALL(mockRadarTarget, GetGroundSpeed()).WillByDefault(testing::Return(100));
         }
 
+        AirfieldServiceProviderCollection serviceProviders;
+        NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface> mockRadarTarget;
         NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;
         NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplanBristol;
         ControllerPosition kkTwr;
         ControllerPosition kkApp;
-        ActiveCallsign userTowerCallsign;
-        ActiveCallsign userAppCallsign;
-        ActiveCallsignCollection activeCallsigns;
+        std::shared_ptr<ActiveCallsign> userTowerCallsign;
+        std::shared_ptr<ActiveCallsign> notUserTowerCallsign;
+        std::shared_ptr<ActiveCallsign> userAppCallsign;
         NiceMock<MockWinApi> windows;
         NiceMock<MockApiInterface> api;
+        NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
         std::shared_ptr<class MissedApproach> missed1;
         std::shared_ptr<class MissedApproach> missed2;
         std::shared_ptr<class MissedApproach> missed3;
         std::shared_ptr<MissedApproachCollection> collection;
+        std::shared_ptr<MissedApproachOptions> options;
+        std::shared_ptr<MissedApproachAudioAlert> audioAlert;
         TriggerMissedApproach trigger;
     };
 
@@ -70,7 +98,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(3, collection->Count());
         auto missed = collection->Get(55);
         EXPECT_NE(nullptr, missed);
@@ -89,13 +117,14 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         auto missed = collection->Get(55);
         EXPECT_NE(nullptr, missed);
         EXPECT_EQ(55, missed->Id());
         EXPECT_EQ("BAW123", missed->Callsign());
         EXPECT_EQ(ParseTimeString("2021-08-23 14:00:00"), missed->ExpiresAt());
+        EXPECT_TRUE(missed->CreatedByUser());
     }
 
     TEST_F(TriggerMissedApproachTest, ItHandlesExpiresAtNotValidTimestampInResponse)
@@ -107,7 +136,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -121,7 +150,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -135,7 +164,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -149,7 +178,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -163,7 +192,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -177,7 +206,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -190,7 +219,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -203,7 +232,7 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDNO));
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -215,7 +244,7 @@ namespace UKControllerPluginTest::MissedApproach {
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplan);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(3, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
@@ -226,32 +255,100 @@ namespace UKControllerPluginTest::MissedApproach {
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplanBristol);
+        trigger.Trigger(mockFlightplanBristol, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
 
     TEST_F(TriggerMissedApproachTest, ItDoesntTriggerUserIsNotTower)
     {
-        activeCallsigns.Flush();
-        activeCallsigns.AddUserCallsign(userAppCallsign);
+        std::vector<std::shared_ptr<ServiceProvision>> provisions;
+        provisions.push_back(std::make_shared<ServiceProvision>(ServiceType::Tower, userAppCallsign));
+        serviceProviders.SetProvidersForAirfield("EGKK", provisions);
+
         EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplanBristol);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
+        EXPECT_EQ(2, collection->Count());
+        EXPECT_EQ(nullptr, collection->Get(55));
+    }
+
+    TEST_F(TriggerMissedApproachTest, ItDoesntTriggerNonUserProvidingTower)
+    {
+        std::vector<std::shared_ptr<ServiceProvision>> provisions;
+        provisions.push_back(std::make_shared<ServiceProvision>(ServiceType::Tower, notUserTowerCallsign));
+        serviceProviders.SetProvidersForAirfield("EGKK", provisions);
+
+        EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
+
+        EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
+
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
+        EXPECT_EQ(2, collection->Count());
+        EXPECT_EQ(nullptr, collection->Get(55));
+    }
+
+    TEST_F(TriggerMissedApproachTest, ItDoesntTriggerUserNotProvidingTower)
+    {
+        std::vector<std::shared_ptr<ServiceProvision>> provisions;
+        provisions.push_back(std::make_shared<ServiceProvision>(ServiceType::Approach, userTowerCallsign));
+        serviceProviders.SetProvidersForAirfield("EGKK", provisions);
+
+        EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
+
+        EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
+
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }
 
     TEST_F(TriggerMissedApproachTest, ItDoesntTriggerUserNotActive)
     {
-        activeCallsigns.Flush();
+        serviceProviders.Flush();
         EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
 
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
 
-        trigger.Trigger(mockFlightplanBristol);
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
+        EXPECT_EQ(2, collection->Count());
+        EXPECT_EQ(nullptr, collection->Get(55));
+    }
+
+    TEST_F(TriggerMissedApproachTest, ItDoesntTriggerAircraftTooFarFromDestination)
+    {
+        ON_CALL(mockFlightplan, GetDistanceToDestination()).WillByDefault(testing::Return(9.0));
+        EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
+
+        EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
+
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
+        EXPECT_EQ(2, collection->Count());
+        EXPECT_EQ(nullptr, collection->Get(55));
+    }
+
+    TEST_F(TriggerMissedApproachTest, ItDoesntTriggerAircraftTooHigh)
+    {
+        ON_CALL(mockRadarTarget, GetFlightLevel()).WillByDefault(testing::Return(9000));
+        EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
+
+        EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
+
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
+        EXPECT_EQ(2, collection->Count());
+        EXPECT_EQ(nullptr, collection->Get(55));
+    }
+
+    TEST_F(TriggerMissedApproachTest, ItDoesntTriggerAircraftTooSlow)
+    {
+        ON_CALL(mockRadarTarget, GetGroundSpeed()).WillByDefault(testing::Return(30));
+        EXPECT_CALL(api, CreateMissedApproach(testing::_)).Times(0);
+
+        EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_)).Times(0);
+
+        trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
     }

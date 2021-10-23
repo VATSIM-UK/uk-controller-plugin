@@ -219,4 +219,9 @@ namespace UKControllerPlugin {
             mousePos,
             tagItemArea);
     }
+
+    auto UKRadarScreen::ConvertScreenPointToCoordinate(const POINT& point) -> EuroScopePlugIn::CPosition
+    {
+        return this->ConvertCoordFromPixelToPosition(point);
+    }
 } // namespace UKControllerPlugin

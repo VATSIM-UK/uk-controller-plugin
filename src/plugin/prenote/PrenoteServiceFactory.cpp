@@ -5,12 +5,12 @@
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "message/UserMessager.h"
-#include "ownership/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Prenote::PrenoteFactory;
 using UKControllerPlugin::Prenote::PrenoteService;
 
@@ -25,7 +25,7 @@ namespace UKControllerPlugin::Prenote {
         Creates a prenote event handler from the specification
     */
     auto PrenoteServiceFactory::Create(
-        const UKControllerPlugin::Ownership::AirfieldOwnershipManager& airfieldOwnership,
+        const UKControllerPlugin::Ownership::AirfieldServiceProviderCollection& airfieldOwnership,
         const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns,
         const nlohmann::json& json) -> std::unique_ptr<PrenoteService>
     {
