@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [3.7.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.6.3...3.7.0) (2021-10-26)
+
+
+### Features
+
+* **selcal:** add tag item to show selcal from flightplan remarks ([#353](https://github.com/VATSIM-UK/uk-controller-plugin/issues/353)) ([c26dc46](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c26dc46eca5c9f8ab71322cd5a202481b7480e76))
+
 ## [3.6.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.6.2...3.6.3) (2021-10-18)
 
 
