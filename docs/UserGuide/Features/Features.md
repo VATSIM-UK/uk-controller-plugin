@@ -27,3 +27,4 @@ dynamically to the plugin.
 - [VATSIM Nattrak Integration](Nattrak.md)
 - [Electronic Departure Releases](DepartureReleases.md)
 - [Electronic Prenotes](PrenoteMessages.md)
+- [SELCAL Parsing](Selcal.md)
