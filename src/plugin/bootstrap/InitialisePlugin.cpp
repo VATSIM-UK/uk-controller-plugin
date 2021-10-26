@@ -41,6 +41,7 @@
 #include "regional/RegionalPressureModule.h"
 #include "releases/ReleaseModule.h"
 #include "sectorfile/SectorFileBootstrap.h"
+#include "selcal/SelcalModule.h"
 #include "sid/SidModule.h"
 #include "squawk/SquawkModule.h"
 #include "srd/SrdModule.h"
@@ -231,6 +232,7 @@ namespace UKControllerPlugin {
         PrenoteModule::BootstrapPlugin(*this->container, loader);
         Handoff::BootstrapPlugin(*this->container, loader);
         MissedApproach::BootstrapPlugin(*this->container);
+        Selcal::BootstrapPlugin(*this->container);
 
         // Bootstrap other things
         ActualOffBlockTimeBootstrap::BootstrapPlugin(*this->container);

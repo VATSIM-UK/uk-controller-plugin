@@ -189,4 +189,9 @@ namespace UKControllerPlugin::Euroscope {
     {
         return this->originalData.GetDistanceToDestination();
     }
+
+    auto EuroScopeCFlightPlanWrapper::GetRemarks() const -> std::string
+    {
+        return this->originalData.GetFlightPlanData().GetRemarks();
+    }
 } // namespace UKControllerPlugin::Euroscope

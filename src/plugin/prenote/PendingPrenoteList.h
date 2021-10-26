@@ -81,6 +81,10 @@ namespace UKControllerPlugin::Prenote {
         const Gdiplus::Rect sidColumnHeader{275, 5, 65, 25};
         const Gdiplus::Rect destColumnHeader{350, 5, 40, 25};
 
+        const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(255, 255, 255);
+        const Gdiplus::Color TITLE_BAR_BASE_COLOUR = Gdiplus::Color(130, 50, 154);
+        const Gdiplus::Color TITLE_BAR_FLASH_COLOUR = Gdiplus::Color(179, 3, 0);
+
         // Brushes
         const Gdiplus::SolidBrush textBrush;
 
@@ -108,10 +112,6 @@ namespace UKControllerPlugin::Prenote {
         inline static const RECT DEFAULT_POSITION = {100, 100, 200, 200};
         const Gdiplus::Rect CLOSE_BUTTON_OFFSET = {375, 5, 10, 10};
         const Gdiplus::Rect COLLAPSE_BUTTON_OFFSET = {360, 5, 10, 10};
-
-        const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(227, 227, 227);
-        const Gdiplus::Color TITLE_BAR_BASE_COLOUR = Gdiplus::Color(197, 129, 214);
-        const Gdiplus::Color TITLE_BAR_FLASH_COLOUR = Gdiplus::Color(255, 97, 93);
 
         // Standard window components
         std::shared_ptr<Components::TitleBar> titleBar;

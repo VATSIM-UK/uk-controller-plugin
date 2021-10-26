@@ -1,21 +1,21 @@
-#include "pch/pch.h"
-#include "integration/ClientInitialisationManager.h"
-#include "integration/InitialisationSuccessMessage.h"
-#include "integration/InitialisationFailureMessage.h"
-#include "integration/IntegrationClient.h"
-#include "integration/MessageInterface.h"
-#include "integration/IntegrationConnection.h"
-#include "integration/IntegrationClientManager.h"
+#include "ClientInitialisationManager.h"
+#include "InitialisationFailureMessage.h"
+#include "InitialisationSuccessMessage.h"
+#include "IntegrationClient.h"
+#include "IntegrationClientManager.h"
+#include "IntegrationConnection.h"
 #include "time/SystemClock.h"
 
 namespace UKControllerPlugin::Integration {
 
-    ClientInitialisationManager::ClientInitialisationManager(std::shared_ptr<IntegrationClientManager> clientManager):
-        clientManager(std::move(clientManager)) {}
+    ClientInitialisationManager::ClientInitialisationManager(std::shared_ptr<IntegrationClientManager> clientManager)
+        : clientManager(std::move(clientManager))
+    {
+    }
 
     void ClientInitialisationManager::AddConnection(std::shared_ptr<IntegrationConnection> connection)
     {
-        if (this->connections.count(connection)) {
+        if (this->connections.count(connection) > 0) {
             LogWarning("A duplicate integration client was added");
             return;
         }
@@ -25,12 +25,9 @@ namespace UKControllerPlugin::Integration {
 
     void ClientInitialisationManager::TimedEventTrigger()
     {
-        for (
-            auto connection = this->connections.begin();
-            connection != this->connections.end();
-        ) {
+        for (auto connection = this->connections.begin(); connection != this->connections.end();) {
             // If it's taken too long to initialise, then kill the connection
-            if (Time::TimeNow() > connection->second + std::chrono::seconds(10)) {
+            if (Time::TimeNow() > connection->second + INITIALISATION_TIMEOUT) {
                 LogInfo("Integration has not initialised in time");
                 this->connections.erase(connection++);
                 continue;
@@ -44,6 +41,9 @@ namespace UKControllerPlugin::Integration {
             }
 
             if (this->AttemptInitialisation(connection->first, incomingMessages)) {
+                if (incomingMessages.size() > 1) {
+                    LogWarning("Dropped some messages received before initialisation completed");
+                }
                 this->connections.erase(connection++);
             } else {
                 ++connection;
@@ -51,22 +51,19 @@ namespace UKControllerPlugin::Integration {
         }
     }
 
-    size_t ClientInitialisationManager::CountConnections() const
+    auto ClientInitialisationManager::CountConnections() const -> size_t
     {
         return this->connections.size();
     }
 
-    bool ClientInitialisationManager::AttemptInitialisation(
+    auto ClientInitialisationManager::AttemptInitialisation(
         const std::shared_ptr<IntegrationConnection>& connection,
-        std::queue<std::shared_ptr<MessageInterface>> incomingMessages
-    )
+        std::queue<std::shared_ptr<MessageInterface>> incomingMessages) -> bool
     {
         while (!incomingMessages.empty()) {
             auto validationErrors = ValidateMessage(incomingMessages.front());
             if (!validationErrors.empty()) {
-                LogError(
-                    "Invalid integration initialisation message: " + incomingMessages.front()->ToJson().dump()
-                );
+                LogError("Invalid integration initialisation message: " + incomingMessages.front()->ToJson().dump());
                 SendInitialisationFailureMessage(connection, incomingMessages.front(), validationErrors);
                 incomingMessages.pop();
                 continue;
@@ -80,24 +77,19 @@ namespace UKControllerPlugin::Integration {
         return false;
     }
 
-    std::vector<std::string> ClientInitialisationManager::ValidateMessage(
-        const std::shared_ptr<MessageInterface>& message
-    )
+    auto ClientInitialisationManager::ValidateMessage(const std::shared_ptr<MessageInterface>& message)
+        -> std::vector<std::string>
     {
         auto errors = ValidateMessageType(message);
         auto dataErrors = ValidateMessageData(message);
         errors.insert(
-            errors.end(),
-            std::make_move_iterator(dataErrors.cbegin()),
-            std::make_move_iterator(dataErrors.cend())
-        );
+            errors.end(), std::make_move_iterator(dataErrors.cbegin()), std::make_move_iterator(dataErrors.cend()));
 
         return errors;
     }
 
-    std::vector<std::string> ClientInitialisationManager::ValidateMessageType(
-        const std::shared_ptr<MessageInterface>& message
-    )
+    auto ClientInitialisationManager::ValidateMessageType(const std::shared_ptr<MessageInterface>& message)
+        -> std::vector<std::string>
     {
         std::vector<std::string> errors;
         auto messageType = message->GetMessageType();
@@ -112,9 +104,8 @@ namespace UKControllerPlugin::Integration {
         return errors;
     }
 
-    std::vector<std::string> ClientInitialisationManager::ValidateMessageData(
-        const std::shared_ptr<MessageInterface>& message
-    )
+    auto ClientInitialisationManager::ValidateMessageData(const std::shared_ptr<MessageInterface>& message)
+        -> std::vector<std::string>
     {
         auto messageData = message->GetMessageData();
         std::vector<std::string> errors = ValidateIntegrationDetails(messageData);
@@ -122,12 +113,11 @@ namespace UKControllerPlugin::Integration {
         errors.insert(
             errors.end(),
             std::make_move_iterator(eventSubscriptionErrors.cbegin()),
-            std::make_move_iterator(eventSubscriptionErrors.cend())
-        );
+            std::make_move_iterator(eventSubscriptionErrors.cend()));
         return errors;
     }
 
-    std::vector<std::string> ClientInitialisationManager::ValidateIntegrationDetails(const nlohmann::json& data)
+    auto ClientInitialisationManager::ValidateIntegrationDetails(const nlohmann::json& data) -> std::vector<std::string>
     {
         std::vector<std::string> errors;
         if (!data.contains("integration_name") || !data.at("integration_name").is_string()) {
@@ -141,7 +131,7 @@ namespace UKControllerPlugin::Integration {
         return errors;
     }
 
-    std::vector<std::string> ClientInitialisationManager::ValidateEventSubscriptions(const nlohmann::json& data)
+    auto ClientInitialisationManager::ValidateEventSubscriptions(const nlohmann::json& data) -> std::vector<std::string>
     {
         std::vector<std::string> errors;
         if (!data.contains("event_subscriptions") || !data.at("event_subscriptions").is_array()) {
@@ -169,42 +159,33 @@ namespace UKControllerPlugin::Integration {
 
     void ClientInitialisationManager::UpgradeToClient(
         const std::shared_ptr<IntegrationConnection>& connection,
-        const std::shared_ptr<MessageInterface>& initialisationMessage
-    )
+        const std::shared_ptr<MessageInterface>& initialisationMessage)
     {
         auto data = initialisationMessage->GetMessageData();
         auto client = std::make_shared<IntegrationClient>(
             this->nextIntegrationId++,
             data.at("integration_name").get<std::string>(),
             data.at("integration_version").get<std::string>(),
-            connection
-        );
+            connection);
         for (const auto& interestedEvent : data.at("event_subscriptions")) {
-            client->AddInterestedMessage(
-                std::make_shared<MessageType>(MessageType{
-                    interestedEvent.at("type").get<std::string>(),
-                    interestedEvent.at("version").get<int>()
-                })
-            );
+            client->AddInterestedMessage(std::make_shared<MessageType>(
+                MessageType{interestedEvent.at("type").get<std::string>(), interestedEvent.at("version").get<int>()}));
         }
         this->clientManager->AddClient(client);
     }
 
     void ClientInitialisationManager::SendInitialisationSuccessMessage(
         const std::shared_ptr<IntegrationConnection>& connection,
-        const std::shared_ptr<MessageInterface>& initialisationMessage
-    ) {
+        const std::shared_ptr<MessageInterface>& initialisationMessage)
+    {
         connection->Send(std::make_shared<InitialisationSuccessMessage>(initialisationMessage->GetMessageId()));
     }
-    
+
     void ClientInitialisationManager::SendInitialisationFailureMessage(
         const std::shared_ptr<IntegrationConnection>& connection,
         const std::shared_ptr<MessageInterface>& initialisationMessage,
-        const std::vector<std::string>& errors
-    ) {
-        connection->Send(std::make_shared<InitialisationFailureMessage>(
-            initialisationMessage->GetMessageId(),
-            errors
-        ));
+        const std::vector<std::string>& errors)
+    {
+        connection->Send(std::make_shared<InitialisationFailureMessage>(initialisationMessage->GetMessageId(), errors));
     }
 } // namespace UKControllerPlugin::Integration

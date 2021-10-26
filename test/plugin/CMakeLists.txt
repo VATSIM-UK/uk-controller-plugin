@@ -424,6 +424,11 @@ set(test__sectorfile
 )
 source_group("test\\sectorfile" FILES ${test__sectorfile})
 
+set(test__selcal
+        selcal/ParsedSelcalTest.cpp
+        selcal/SelcalParserTest.cpp selcal/SelcalTagItemTest.cpp selcal/SelcalModuleTest.cpp)
+source_group("test\\selcal" FILES ${test__selcal})
+
 set(test__sid
     "sid/SidCollectionFactoryTest.cpp"
     "sid/SidCollectionTest.cpp"
@@ -529,6 +534,7 @@ set(ALL_FILES
     ${test__regional}
     ${test__releases}
     ${test__sectorfile}
+    ${test__selcal}
     ${test__sid}
     ${test__squawk}
     ${test__srd}
