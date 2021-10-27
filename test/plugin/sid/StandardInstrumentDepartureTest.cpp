@@ -37,6 +37,6 @@ namespace UKControllerPluginTest::Sid {
 
     TEST_F(StandardInstrumentDepartureTest, ItHasAHandoffId)
     {
-        EXPECT_EQ(3, sid.InitialHeading());
+        EXPECT_EQ(3, sid.HandoffId());
     }
 } // namespace UKControllerPluginTest::Sid
