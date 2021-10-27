@@ -14,9 +14,9 @@ namespace UKControllerPluginTest {
             public:
                 SidCollectionTest()
                 {
-                    this->sid1.reset(new StandardInstrumentDeparture("EGLL", "TEST1A", 1, 2));
-                    this->sid2.reset(new StandardInstrumentDeparture("EGLL", "TEST1B", 3, 4));
-                    this->sid3.reset(new StandardInstrumentDeparture("EGBB", "TEST1A", 5, 6));
+                    this->sid1.reset(new StandardInstrumentDeparture("EGLL", "TEST1A", 1, 2, 3));
+                    this->sid2.reset(new StandardInstrumentDeparture("EGLL", "TEST1B", 3, 4, 5));
+                    this->sid3.reset(new StandardInstrumentDeparture("EGBB", "TEST1A", 5, 6, 7));
                 }
 
 

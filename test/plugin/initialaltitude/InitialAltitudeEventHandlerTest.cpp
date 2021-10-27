@@ -56,8 +56,8 @@ namespace UKControllerPluginTest {
                 // Pretend we've been logged in a while
                 login.SetLoginStatus(EuroScopePlugIn::CONNECTION_TYPE_DIRECT);
                 login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::minutes(15));
-                sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 0));
-                sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "CLN3X", 5000, 0));
+                sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 0, 1));
+                sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "CLN3X", 5000, 0, 1));
 
                 this->mockFlightplanPointer.reset(new NiceMock<MockEuroScopeCFlightPlanInterface>);
                 this->mockRadarTargetPointer.reset(new NiceMock<MockEuroScopeCRadarTargetInterface>);

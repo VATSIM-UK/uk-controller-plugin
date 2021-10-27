@@ -102,7 +102,7 @@ namespace UKControllerPluginTest {
                 this->ownership.RefreshOwner("EGKK");
 
                 // Create a dummy initial altitude
-                sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 0));
+                sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 0, 1));
                 this->login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::minutes(15));
             }
 

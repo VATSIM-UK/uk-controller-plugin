@@ -1,35 +1,36 @@
-#include "pch/pch.h"
-#include "sid/StandardInstrumentDeparture.h"
+#include "StandardInstrumentDeparture.h"
 
-namespace UKControllerPlugin {
-    namespace Sid {
+namespace UKControllerPlugin::Sid {
 
-        StandardInstrumentDeparture::StandardInstrumentDeparture(
-            std::string airfield,
-            std::string identifier,
-            int initialAltitude,
-            int initialHeading
-        ) : airfield(std::move(airfield)), identifier(std::move(identifier)),
-            initialAltitude(initialAltitude), initialHeading(initialHeading) {}
+    StandardInstrumentDeparture::StandardInstrumentDeparture(
+        std::string airfield, std::string identifier, int initialAltitude, int initialHeading, int handoffId)
+        : airfield(std::move(airfield)), identifier(std::move(identifier)), initialAltitude(initialAltitude),
+          initialHeading(initialHeading), handoffId(handoffId)
+    {
+    }
 
-        std::string StandardInstrumentDeparture::Airfield() const
-        {
-            return this->airfield;
-        }
+    auto StandardInstrumentDeparture::Airfield() const -> std::string
+    {
+        return this->airfield;
+    }
 
-        std::string StandardInstrumentDeparture::Identifier() const
-        {
-            return this->identifier;
-        }
+    auto StandardInstrumentDeparture::Identifier() const -> std::string
+    {
+        return this->identifier;
+    }
 
-        int StandardInstrumentDeparture::InitialAltitude() const
-        {
-            return this->initialAltitude;
-        }
+    auto StandardInstrumentDeparture::InitialAltitude() const -> int
+    {
+        return this->initialAltitude;
+    }
 
-        int StandardInstrumentDeparture::InitialHeading() const
-        {
-            return this->initialHeading;
-        }
-    }  // namespace Sid
-}  // namespace UKControllerPlugin
+    auto StandardInstrumentDeparture::InitialHeading() const -> int
+    {
+        return this->initialHeading;
+    }
+
+    auto StandardInstrumentDeparture::HandoffId() const -> int
+    {
+        return this->handoffId;
+    }
+} // namespace UKControllerPlugin::Sid

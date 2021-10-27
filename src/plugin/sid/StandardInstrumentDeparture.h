@@ -1,31 +1,26 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Sid {
-        /*
-            Represents a standard instrument departure.
-        */
-        class StandardInstrumentDeparture
-        {
-            public:
+namespace UKControllerPlugin::Sid {
+    /*
+        Represents a standard instrument departure.
+    */
+    class StandardInstrumentDeparture
+    {
+        public:
+        StandardInstrumentDeparture(
+            std::string airfield, std::string identifier, int initialAltitude, int initialHeading, int handoffId);
 
-                StandardInstrumentDeparture(
-                    std::string airfield,
-                    std::string identifier,
-                    int initialAltitude,
-                    int initialHeading
-                );
+        [[nodiscard]] auto Airfield() const -> std::string;
+        [[nodiscard]] auto Identifier() const -> std::string;
+        [[nodiscard]] auto InitialAltitude() const -> int;
+        [[nodiscard]] auto InitialHeading() const -> int;
+        [[nodiscard]] auto HandoffId() const -> int;
 
-                std::string Airfield() const;
-                std::string Identifier() const;
-                int InitialAltitude() const;
-                int InitialHeading() const;
-            private:
-
-                const std::string airfield;
-                const std::string identifier;
-                const int initialAltitude;
-                const int initialHeading;
-        };
-    }  // namespace Sid
-}  // namespace UKControllerPlugin
+        private:
+        const std::string airfield;
+        const std::string identifier;
+        const int initialAltitude;
+        const int initialHeading;
+        const int handoffId;
+    };
+} // namespace UKControllerPlugin::Sid
