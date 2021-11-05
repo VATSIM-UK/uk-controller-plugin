@@ -236,7 +236,8 @@ set(src__handoff
     "handoff/HandoffFrequencyUpdatedMessage.h"
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
-        controller/HandoffEventHandler.cpp)
+    controller/HandoffEventHandler.cpp
+    handoff/HandoffOrder.h handoff/HandoffOrder.cpp)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__historytrail

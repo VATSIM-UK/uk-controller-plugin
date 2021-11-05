@@ -17,8 +17,7 @@ namespace UKControllerPlugin::Handoff {
     {
         container.handoffs = Create(
             *container.controllerPositions,
-            dependency.LoadDependency(GetHandoffDependencyKey(), "{}"_json),
-            dependency.LoadDependency(GetSidHandoffMappingDependencyKey(), "{}"_json));
+            dependency.LoadDependency(GetHandoffDependencyKey(), nlohmann::json::array()));
 
         std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
             *container.handoffs,
@@ -32,11 +31,6 @@ namespace UKControllerPlugin::Handoff {
 
     auto GetHandoffDependencyKey() -> std::string
     {
-        return "DEPENDENCY_HANDOFF";
-    }
-
-    auto GetSidHandoffMappingDependencyKey() -> std::string
-    {
-        return "DEPENDENCY_SID_HANDOFF";
+        return "DEPENDENCY_HANDOFF_V2";
     }
 } // namespace UKControllerPlugin::Handoff
