@@ -37,7 +37,7 @@ namespace UKControllerPluginTest::Prenote {
             // Default the user to active
             userPosition = std::make_shared<ControllerPosition>(
                 2, "LON_S_CTR", 129.420, std::vector<std::string>{"EGKK"}, true, false, true);
-            callsigns.AddUserCallsign(ActiveCallsign("LON_S_CTR", "Test", *userPosition));
+            callsigns.AddUserCallsign(ActiveCallsign("LON_S_CTR", "Test", *userPosition, true));
         }
 
         ActiveCallsignCollection callsigns;

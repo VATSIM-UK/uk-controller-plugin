@@ -80,7 +80,7 @@ namespace UKControllerPlugin {
         class NotificationsMenuItem;
     } // namespace Notifications
     namespace Ownership {
-        class AirfieldOwnershipManager;
+        class AirfieldServiceProviderCollection;
     } // namespace Ownership
     namespace Plugin {
         class FunctionCallEventHandler;
@@ -149,7 +149,7 @@ namespace UKControllerPlugin::Bootstrap {
 
         // The helpers and collections
         std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
-        std::unique_ptr<UKControllerPlugin::TaskManager::TaskRunnerInterface> taskRunner;
+        std::shared_ptr<UKControllerPlugin::TaskManager::TaskRunnerInterface> taskRunner;
         std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
         std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> flightplans;
         std::unique_ptr<UKControllerPlugin::Message::UserMessager> userMessager;
@@ -205,7 +205,7 @@ namespace UKControllerPlugin::Bootstrap {
         // Large collections that we don't want to go onto the stack
         std::unique_ptr<Sid::SidCollection> sids;
         std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
-        std::unique_ptr<UKControllerPlugin::Ownership::AirfieldOwnershipManager> airfieldOwnership;
+        std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
         std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;

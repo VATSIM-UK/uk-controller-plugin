@@ -40,13 +40,13 @@ namespace UKControllerPluginTest::Releases {
             position1 = std::make_shared<ControllerPosition>(
                 2, "EGFF_APP", 125.850, std::vector<std::string>{"EGGD", "EGFF"}, true, true);
             controllers.AddPosition(position1);
-            controller1Callsign = std::make_shared<ActiveCallsign>("EGFF_APP", "Test 1", *position1);
+            controller1Callsign = std::make_shared<ActiveCallsign>("EGFF_APP", "Test 1", *position1, false);
 
             // Add position 2
             position2 = std::make_shared<ControllerPosition>(
                 3, "EGFF_TWR", 123.450, std::vector<std::string>{"EGGD", "EGFF"}, false, false);
             controllers.AddPosition(position2);
-            controller2Callsign = std::make_shared<ActiveCallsign>("EGFF_1_TWR", "Test 2", *position2);
+            controller2Callsign = std::make_shared<ActiveCallsign>("EGFF_1_TWR", "Test 2", *position2, false);
 
             // Add position 3
             position3 = std::make_shared<ControllerPosition>(

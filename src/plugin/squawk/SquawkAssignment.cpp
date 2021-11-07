@@ -8,7 +8,8 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "flightplan/StoredFlightplan.h"
 #include "flightplan/StoredFlightplanCollection.h"
-#include "ownership/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
+#include "ownership/ServiceProvision.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -18,14 +19,14 @@ using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 
 namespace UKControllerPlugin::Squawk {
 
     SquawkAssignment::SquawkAssignment(
         const StoredFlightplanCollection& storedFlightplans,
         EuroscopePluginLoopbackInterface& plugin,
-        const AirfieldOwnershipManager& airfieldOwnership,
+        const AirfieldServiceProviderCollection& airfieldOwnership,
         const ActiveCallsignCollection& activeCallsigns)
         : activeCallsigns(activeCallsigns), storedFlightplans(storedFlightplans), airfieldOwnership(airfieldOwnership),
           plugin(plugin)
@@ -87,8 +88,7 @@ namespace UKControllerPlugin::Squawk {
             return radarTarget.GetGroundSpeed() <= this->untrackedMaxAssignmentSpeed &&
                    flightPlan.GetDistanceFromOrigin() <= this->untrackedMaxAssignmentDistanceFromOrigin &&
                    !flightPlan.HasAssignedSquawk() &&
-                   this->airfieldOwnership.AirfieldOwnedBy(
-                       flightPlan.GetOrigin(), this->activeCallsigns.GetUserCallsign());
+                   this->airfieldOwnership.DeliveryControlProvidedByUser(flightPlan.GetOrigin());
         }
 
         return !flightPlan.HasAssignedSquawk();
@@ -136,8 +136,7 @@ namespace UKControllerPlugin::Squawk {
                 (!flightPlan.HasSid() && flightPlan.GetCruiseLevel() <= this->maxAssignmentAltitude)) &&
                radarTarget.GetGroundSpeed() <= this->untrackedMaxAssignmentSpeed &&
                flightPlan.GetDistanceFromOrigin() <= this->untrackedMaxAssignmentDistanceFromOrigin &&
-               this->airfieldOwnership.AirfieldOwnedBy(
-                   flightPlan.GetOrigin(), this->activeCallsigns.GetUserCallsign()) &&
+               this->airfieldOwnership.DeliveryControlProvidedByUser(flightPlan.GetOrigin()) &&
                !flightPlan.HasAssignedSquawk();
     }
 

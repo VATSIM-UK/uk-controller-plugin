@@ -22,6 +22,7 @@
 
 #include "euroscope/EuroScopePlugIn.h"
 #include "log/LoggerFunctions.h"
+#include "task/RunAsyncTask.h"
 #pragma warning(pop)
 
 // Standard headers
@@ -58,7 +59,6 @@ using std::min;
 #include <sstream>
 #include <string>
 #include <tchar.h>
-#include <thread>
 #include <type_traits>
 #include <unordered_set>
 #include <utility>

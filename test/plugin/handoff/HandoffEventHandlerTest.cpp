@@ -116,7 +116,7 @@ namespace UKControllerPluginTest {
         {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
-            this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
+            this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2, false));
 
             std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
                 std::make_shared<HandoffFrequencyUpdatedMessage>("BAW123", "132.600");
@@ -131,7 +131,7 @@ namespace UKControllerPluginTest {
         {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
-            this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
+            this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2, false));
             this->handler.SetTagItemData(this->tagData);
             EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
         }
@@ -140,7 +140,8 @@ namespace UKControllerPluginTest {
         {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
-            this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
+            this->activeCallsigns.AddUserCallsign(
+                ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2, true));
             this->handler.SetTagItemData(this->tagData);
             EXPECT_EQ(DEFAULT_TAG_VALUE.frequency, this->tagData.GetItemString());
         }
@@ -149,7 +150,8 @@ namespace UKControllerPluginTest {
         {
             this->handoffs.AddHandoffOrder("EGKK_ADMAG2X", this->hierarchy);
             this->handoffs.AddSidMapping("EGKK", "ADMAG2X", "EGKK_ADMAG2X");
-            this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2));
+            this->activeCallsigns.AddUserCallsign(
+                ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2, true));
             this->handler.SetTagItemData(this->tagData);
             EXPECT_EQ(DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
         }

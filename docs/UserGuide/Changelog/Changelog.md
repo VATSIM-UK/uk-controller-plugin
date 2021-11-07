@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [3.8.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.7.0...3.8.0) (2021-11-07)
+
+
+### Features
+
+* **missed:** Electronic missed approach coordination ([#346](https://github.com/VATSIM-UK/uk-controller-plugin/issues/346)) ([844bdf4](https://github.com/VATSIM-UK/uk-controller-plugin/commit/844bdf4dc074c75b9555ccc64d72ae48b2a629c3)), closes [#344](https://github.com/VATSIM-UK/uk-controller-plugin/issues/344) [#345](https://github.com/VATSIM-UK/uk-controller-plugin/issues/345) [#347](https://github.com/VATSIM-UK/uk-controller-plugin/issues/347) [#350](https://github.com/VATSIM-UK/uk-controller-plugin/issues/350) [#352](https://github.com/VATSIM-UK/uk-controller-plugin/issues/352) [#350](https://github.com/VATSIM-UK/uk-controller-plugin/issues/350)
+
 # [3.7.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.6.3...3.7.0) (2021-10-26)
 
 

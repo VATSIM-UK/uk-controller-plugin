@@ -1,211 +1,182 @@
-#include "pch/pch.h"
-#include "controller/ActiveCallsignCollection.h"
+#include "ActiveCallsign.h"
+#include "ActiveCallsignCollection.h"
+#include "ControllerPosition.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
-#include "controller/ActiveCallsign.h"
-#include "controller/ControllerPosition.h"
 
-using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 
-namespace UKControllerPlugin {
-    namespace Controller {
+namespace UKControllerPlugin::Controller {
 
+    ActiveCallsignCollection::ActiveCallsignCollection()
+    {
+    }
 
-        ActiveCallsignCollection::ActiveCallsignCollection(void)
-        {
-
+    /*
+        Inserts the callsign into the position set and also stores the iterator
+        pointing to it in the callsign list for easy access.
+    */
+    void ActiveCallsignCollection::AddCallsign(const ActiveCallsign& controller)
+    {
+        if (this->CallsignActive(controller.GetCallsign())) {
+            throw std::invalid_argument("Controller " + controller.GetCallsign() + " already active.");
         }
 
-        /*
-            Inserts the callsign into the position set and also stores the iterator
-            pointing to it in the callsign list for easy access.
-        */
-        void ActiveCallsignCollection::AddCallsign(ActiveCallsign controller)
-        {
-            if (this->CallsignActive(controller.GetCallsign())) {
-                throw std::invalid_argument("Controller " + controller.GetCallsign() + " already active.");
-            }
+        this->activeCallsigns[controller.GetCallsign()] =
+            this->activePositions[controller.GetNormalisedPosition().GetCallsign()].insert(controller).first;
 
-            this->activeCallsigns[controller.GetCallsign()] =
-                this->activePositions[controller.GetNormalisedPosition().GetCallsign()]
-                .insert(controller).first;
+        for (auto it = this->handlers.cbegin(); it != this->handlers.cend(); ++it) {
+            (*it)->ActiveCallsignAdded(controller);
+        }
+    }
 
-            for (
-                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it
-                    = this->handlers.cbegin();
-                it != this->handlers.cend();
-                ++it
-            ) {
-                (*it)->ActiveCallsignAdded(controller, false);
-            }
+    /*
+        Add a callsign for the "current user".
+    */
+    void ActiveCallsignCollection::AddUserCallsign(const ActiveCallsign& controller)
+    {
+        if (this->CallsignActive(controller.GetCallsign())) {
+            throw std::invalid_argument("Callsign is already active.");
         }
 
-        /*
-            Add a callsign for the "current user".
-        */
-        void ActiveCallsignCollection::AddUserCallsign(ActiveCallsign controller)
-        {
-            if (this->CallsignActive(controller.GetCallsign())) {
-                throw std::invalid_argument("Callsign is already active.");
-            }
-
-            if (this->userActive) {
-                this->RemoveCallsign(*this->userCallsign);
-            }
-
-            this->userCallsign = this->activePositions[controller.GetNormalisedPosition().GetCallsign()]
-                .insert(controller).first;
-            this->activeCallsigns[controller.GetCallsign()] = this->userCallsign;
-            this->userActive = true;
-
-            for (
-                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it
-                    = this->handlers.cbegin();
-                it != this->handlers.cend();
-                ++it
-            ) {
-                (*it)->ActiveCallsignAdded(controller, true);
-            }
+        if (this->userActive) {
+            this->RemoveCallsign(*this->userCallsign);
         }
 
-        /*
-            Returns true if a callsign is known to be active, false otherwise.
-        */
-        bool ActiveCallsignCollection::CallsignActive(std::string callsign) const
-        {
-            return this->activeCallsigns.count(callsign) != 0;
-        }
+        this->userCallsign =
+            this->activePositions[controller.GetNormalisedPosition().GetCallsign()].insert(controller).first;
+        this->activeCallsigns[controller.GetCallsign()] = this->userCallsign;
+        this->userActive = true;
 
-        /*
-            Flushes the entire collection. Sad times.
-        */
-        void ActiveCallsignCollection::Flush(void)
-        {
-            this->activeCallsigns.clear();
-            this->activePositions.clear();
-            this->userActive = false;
-            for (
-                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it
-                    = this->handlers.cbegin();
-                it != this->handlers.cend();
-                ++it
-            ) {
-                (*it)->CallsignsFlushed();
-            }
+        for (auto it = this->handlers.cbegin(); it != this->handlers.cend(); ++it) {
+            (*it)->ActiveCallsignAdded(controller);
         }
+    }
 
-        int ActiveCallsignCollection::GetNumberActiveCallsigns() const
-        {
-            return this->activeCallsigns.size();
+    /*
+        Returns true if a callsign is known to be active, false otherwise.
+    */
+    auto ActiveCallsignCollection::CallsignActive(const std::string& callsign) const -> bool
+    {
+        return this->activeCallsigns.count(callsign) != 0;
+    }
+
+    /*
+        Flushes the entire collection. Sad times.
+    */
+    void ActiveCallsignCollection::Flush()
+    {
+        this->activeCallsigns.clear();
+        this->activePositions.clear();
+        this->userActive = false;
+        for (auto it = this->handlers.cbegin(); it != this->handlers.cend(); ++it) {
+            (*it)->CallsignsFlushed();
         }
+    }
 
-        int ActiveCallsignCollection::GetNumberActivePositions() const
-        {
-            return this->activePositions.size();
+    auto ActiveCallsignCollection::GetNumberActiveCallsigns() const -> int
+    {
+        return this->activeCallsigns.size();
+    }
+
+    auto ActiveCallsignCollection::GetNumberActivePositions() const -> int
+    {
+        return this->activePositions.size();
+    }
+
+    /*
+        Returns a particular active callsign.
+    */
+    auto ActiveCallsignCollection::GetCallsign(const std::string& callsign) const -> ActiveCallsign
+    {
+        if (!this->CallsignActive(callsign)) {
+            throw std::out_of_range("Callsign not found");
         }
-
-        /*
-            Returns a particular active callsign.
-        */
-        ActiveCallsign ActiveCallsignCollection::GetCallsign(std::string callsign) const
-        {
-            if (!this->CallsignActive(callsign)) {
-                throw std::out_of_range("Callsign not found");
-            }
 #
-            return *this->activeCallsigns.find(callsign)->second;
+        return *this->activeCallsigns.find(callsign)->second;
+    }
+
+    /*
+        Returns the "lead" callsign for a given position.
+    */
+    auto ActiveCallsignCollection::GetLeadCallsignForPosition(const std::string& normalisedCallsign) const
+        -> ActiveCallsign
+    {
+        if (!this->PositionActive(normalisedCallsign)) {
+            throw std::out_of_range("Position not found");
         }
 
-        /*
-            Returns the "lead" callsign for a given position.
-        */
-        ActiveCallsign ActiveCallsignCollection::GetLeadCallsignForPosition(std::string normalisedCallsign) const
-        {
-            if (!this->PositionActive(normalisedCallsign)) {
-                throw std::out_of_range("Position not found");
-            }
+        return *this->activePositions.find(normalisedCallsign)->second.begin();
+    }
 
-            return *this->activePositions.find(normalisedCallsign)->second.begin();
+    /*
+        Returns the users active callsign. Throws exception if not found.
+    */
+    auto ActiveCallsignCollection::GetUserCallsign() const -> ActiveCallsign
+    {
+        if (!this->userActive) {
+            throw std::out_of_range("User has no callsign.");
         }
 
-        /*
-            Returns the users active callsign. Throws exception if not found.
-        */
-        ActiveCallsign ActiveCallsignCollection::GetUserCallsign(void) const
-        {
-            if (!this->userActive) {
-                throw std::out_of_range("User has no callsign.");
-            }
+        return *this->userCallsign;
+    }
 
-            return *this->userCallsign;
+    /*
+        Returns whether or not there is an active callsign for a given controller position.
+    */
+    auto ActiveCallsignCollection::PositionActive(const std::string& normalisedCallsign) const -> bool
+    {
+        return this->activePositions.find(normalisedCallsign) != this->activePositions.end() &&
+               !this->activePositions.find(normalisedCallsign)->second.empty();
+    }
+
+    /*
+        Removes a callsign from the active lists.
+    */
+    void ActiveCallsignCollection::RemoveCallsign(const ActiveCallsign& controller)
+    {
+        auto callsign = this->activeCallsigns.find(controller.GetCallsign());
+
+        if (callsign == this->activeCallsigns.end()) {
+            LogError("Tried to remove inactive callsign " + controller.GetCallsign());
+            return;
         }
 
-        /*
-            Returns whether or not there is an active callsign for a given controller position.
-        */
-        bool ActiveCallsignCollection::PositionActive(std::string normalisedCallsign) const
-        {
-            return this->activePositions.find(normalisedCallsign) != this->activePositions.end() &&
-                this->activePositions.find(normalisedCallsign)->second.size() != 0;
+        // If they're the current user, mark inactive.
+        bool isUser = this->userActive && *callsign->second == *this->userCallsign;
+        if (isUser) {
+            this->userActive = false;
         }
 
-        /*
-            Removes a callsign from the active lists.
-        */
-        void ActiveCallsignCollection::RemoveCallsign(ActiveCallsign controller)
-        {
-            std::map<std::string, std::set<ActiveCallsign>::iterator>::iterator callsign = this->activeCallsigns.find(
-                controller.GetCallsign()
-            );
+        this->activePositions.find(controller.GetNormalisedPosition().GetCallsign())->second.erase(callsign->second);
+        this->activeCallsigns.erase(callsign);
 
-            if (callsign == this->activeCallsigns.end()) {
-                LogError("Tried to remove inactive callsign " + controller.GetCallsign());
-                return;
-            }
+        for (auto it = this->handlers.cbegin(); it != this->handlers.cend(); ++it) {
+            (*it)->ActiveCallsignRemoved(controller);
+        }
+    }
 
-            // If they're the current user, mark inactive.
-            bool isUser = this->userActive && *callsign->second == *this->userCallsign;
-            if (isUser) {
-                this->userActive = false;
-            }
+    /*
+        Returns true if the user has an active callsign.
+    */
+    auto ActiveCallsignCollection::UserHasCallsign() const -> bool
+    {
+        return this->userActive;
+    }
 
-            this->activePositions.find(
-                controller.GetNormalisedPosition().GetCallsign()
-            )->second.erase(callsign->second);
-            this->activeCallsigns.erase(callsign);
-
-            for (
-                std::list<std::shared_ptr<ActiveCallsignEventHandlerInterface>>::const_iterator it
-                    = this->handlers.cbegin();
-                it != this->handlers.cend();
-                ++it
-            ) {
-                (*it)->ActiveCallsignRemoved(controller, isUser);
-            }
+    void ActiveCallsignCollection::AddHandler(const std::shared_ptr<ActiveCallsignEventHandlerInterface>& handler)
+    {
+        if (std::find(this->handlers.cbegin(), this->handlers.cend(), handler) != this->handlers.cend()) {
+            LogWarning("Duplicate ActiveCallsignEventHandler detected");
+            return;
         }
 
-        /*
-            Returns true if the user has an active callsign.
-        */
-        bool ActiveCallsignCollection::UserHasCallsign(void) const
-        {
-            return this->userActive;
-        }
+        this->handlers.push_back(handler);
+    }
 
-        void ActiveCallsignCollection::AddHandler(std::shared_ptr<ActiveCallsignEventHandlerInterface> handler)
-        {
-            if (std::find(this->handlers.cbegin(), this->handlers.cend(), handler) != this->handlers.cend()) {
-                LogWarning("Duplicate ActiveCallsignEventHandler detected");
-                return;
-            }
-
-            this->handlers.push_back(handler);
-        }
-
-        size_t ActiveCallsignCollection::CountHandlers(void) const
-        {
-            return this->handlers.size();
-        }
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+    auto ActiveCallsignCollection::CountHandlers() const -> size_t
+    {
+        return this->handlers.size();
+    }
+} // namespace UKControllerPlugin::Controller

@@ -240,6 +240,9 @@ set(src__handoff
     handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h)
 source_group("src\\handoff" FILES ${src__handoff})
 
+set(src__headings headings/Heading.h headings/Heading.cpp)
+source_group("src\\headings" FILES ${src__headings})
+
 set(src__historytrail
     "historytrail/AircraftHistoryTrail.cpp"
     "historytrail/AircraftHistoryTrail.h"
@@ -470,6 +473,24 @@ set(src__minstack
         minstack/MinStackLevel.cpp minstack/MinStackRenderedItem.cpp)
 source_group("src\\minstack" FILES ${src__minstack})
 
+set(src__missedapproach
+        missedapproach/MissedApproach.cpp missedapproach/MissedApproach.h
+        missedapproach/MissedApproachCollection.cpp missedapproach/MissedApproachCollection.h
+        missedapproach/CompareMissedApproaches.cpp missedapproach/CompareMissedApproaches.h
+        missedapproach/RemoveExpiredMissedApproaches.cpp missedapproach/RemoveExpiredMissedApproaches.h
+        missedapproach/MissedApproachModule.cpp missedapproach/MissedApproachModule.h
+        missedapproach/NewMissedApproachPushEventHandler.cpp missedapproach/NewMissedApproachPushEventHandler.h
+        missedapproach/TriggerMissedApproach.cpp missedapproach/TriggerMissedApproach.h
+        missedapproach/MissedApproachRenderer.cpp missedapproach/MissedApproachRenderer.h
+        missedapproach/MissedApproachRenderMode.h
+        missedapproach/MissedApproachRenderOptions.cpp missedapproach/MissedApproachRenderOptions.h
+        missedapproach/MissedApproachConfigurationDialog.cpp missedapproach/MissedApproachConfigurationDialog.h
+        missedapproach/MissedApproachOptions.cpp missedapproach/MissedApproachOptions.h
+        missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h
+        missedapproach/MissedApproachUserSettingHandler.cpp missedapproach/MissedApproachUserSettingHandler.h
+        missedapproach/MissedApproachButton.cpp missedapproach/MissedApproachButton.h missedapproach/ToggleMissedApproachButton.cpp missedapproach/ToggleMissedApproachButton.h missedapproach/ConfigureMissedApproaches.cpp missedapproach/ConfigureMissedApproaches.h)
+source_group("src\\missedapproach" FILES ${src__missedapproach})
+
 set(src__navaids
     "navaids/CompareNavaids.cpp"
     "navaids/CompareNavaids.h"
@@ -539,7 +560,9 @@ set(src__ownership
     "ownership/AirfieldOwnershipModule.h"
     "ownership/AirfieldsOwnedQueryMessage.cpp"
     "ownership/AirfieldsOwnedQueryMessage.h"
-)
+    ownership/ServiceProvision.h ownership/ServiceProvision.cpp
+    ownership/ServiceType.h
+    ownership/AirfieldServiceProviderCollection.cpp ownership/AirfieldServiceProviderCollection.h)
 source_group("src\\ownership" FILES ${src__ownership})
 
 set(src__plugin
@@ -779,13 +802,6 @@ set(src__tag
 )
 source_group("src\\tag" FILES ${src__tag})
 
-set(src__task
-    "task/TaskRunner.cpp"
-    "task/TaskRunner.h"
-    "task/TaskRunnerInterface.h"
-)
-source_group("src\\task" FILES ${src__task})
-
 set(src__time
     "time/ParseTimeStrings.cpp"
     "time/ParseTimeStrings.h"
@@ -837,6 +853,7 @@ set(ALL_FILES
     ${src__flightplan}
     ${src__graphics}
     ${src__handoff}
+    ${src__headings}
     ${src__historytrail}
     ${src__hold}
     ${src__initialaltitude}
@@ -847,6 +864,7 @@ set(ALL_FILES
     ${src__message}
     ${src__metar}
     ${src__minstack}
+    ${src__missedapproach}
     ${src__navaids}
     ${src__notifications}
     ${src__oceanic}
@@ -865,12 +883,11 @@ set(ALL_FILES
     ${src__srd}
     ${src__stands}
     ${src__tag}
-    ${src__task}
     ${src__time}
     ${src__timedevent}
     ${src__timer}
     ${src__wake}
-)
+        missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h)
 
 ################################################################################
 # Target

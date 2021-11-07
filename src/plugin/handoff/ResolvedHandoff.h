@@ -8,13 +8,12 @@ namespace UKControllerPlugin::Handoff {
     using ResolvedHandoff = struct ResolvedHandoff
     {
         public:
-        ResolvedHandoff(std::string frequency, std::string callsign);
-        [[nodiscard]] auto operator==(const ResolvedHandoff& compare) const -> bool;
-
-        // The frequency that the handoff is to
-        const std::string frequency;
+        ResolvedHandoff(std::string callsign, double frequency);
 
         // The normalised callsign of the position that the handoff is to
         const std::string callsign;
+
+        // The frequency that the handoff is to
+        const double frequency;
     };
 } // namespace UKControllerPlugin::Handoff

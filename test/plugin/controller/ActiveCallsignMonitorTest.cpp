@@ -1,12 +1,10 @@
 #include "controller/ActiveCallsignMonitor.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
-#include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
-#include "flightplan/StoredFlightplanCollection.h"
-#include "flightplan/StoredFlightplan.h"
-#include "login/Login.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
+#include "flightplan/StoredFlightplanCollection.h"
+#include "login/Login.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -69,10 +67,10 @@ namespace UKControllerPluginTest {
                 this->llApp = std::unique_ptr<ControllerPosition>(
                     new ControllerPosition(6, "EGLL_N_APP", 199.998, {"EGLL"}, true, false));
 
-                this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *kkTwr));
-                this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_APP", "Testy McTest", *kkApp));
-                this->activeCallsigns.AddCallsign(ActiveCallsign("EGLL_S_TWR", "Testy McTest", *llTwr));
-                this->activeCallsigns.AddCallsign(ActiveCallsign("EGLL_N_APP", "Testy McTest", *llApp));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *kkTwr, false));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_APP", "Testy McTest", *kkApp, false));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("EGLL_S_TWR", "Testy McTest", *llTwr, false));
+                this->activeCallsigns.AddCallsign(ActiveCallsign("EGLL_N_APP", "Testy McTest", *llApp, false));
 
                 this->login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::minutes(15));
             }
@@ -162,7 +160,7 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(*this->kkTwr, this->activeCallsigns.GetCallsign("EGKK_TWR").GetNormalisedPosition());
         }
 
-        TEST_F(ActiveCallsignMonitorTest, ControllerUpdateEventAddsActiveCallsign)
+        TEST_F(ActiveCallsignMonitorTest, ControllerUpdateEventAddsUserActiveCallsign)
         {
             NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
 
@@ -179,6 +177,37 @@ namespace UKControllerPluginTest {
             this->handler.ControllerUpdateEvent(euroscopeMock);
             EXPECT_TRUE(this->activeCallsigns.CallsignActive("EGKK_DEL"));
             EXPECT_TRUE(this->activeCallsigns.PositionActive("EGKK_DEL"));
+            EXPECT_TRUE(this->activeCallsigns.UserHasCallsign());
+            auto callsign = this->activeCallsigns.GetCallsign("EGKK_DEL");
+            EXPECT_EQ("EGKK_DEL", callsign.GetCallsign());
+            EXPECT_EQ("Testy McTestington", callsign.GetControllerName());
+            EXPECT_EQ(this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), callsign.GetNormalisedPosition());
+            EXPECT_TRUE(callsign.GetIsUser());
+        }
+
+        TEST_F(ActiveCallsignMonitorTest, ControllerUpdateEventAddsNonUserActiveCallsign)
+        {
+            NiceMock<MockEuroScopeCControllerInterface> euroscopeMock;
+
+            EXPECT_CALL(euroscopeMock, GetCallsign()).WillRepeatedly(Return("EGKK_DEL"));
+
+            EXPECT_CALL(euroscopeMock, HasActiveFrequency()).Times(1).WillOnce(Return(true));
+
+            EXPECT_CALL(euroscopeMock, GetControllerName()).Times(1).WillOnce(Return("Testy McTestington"));
+
+            EXPECT_CALL(euroscopeMock, GetFrequency()).Times(1).WillOnce(Return(199.998));
+
+            EXPECT_CALL(euroscopeMock, IsCurrentUser()).Times(1).WillRepeatedly(Return(false));
+
+            this->handler.ControllerUpdateEvent(euroscopeMock);
+            EXPECT_TRUE(this->activeCallsigns.CallsignActive("EGKK_DEL"));
+            EXPECT_TRUE(this->activeCallsigns.PositionActive("EGKK_DEL"));
+            EXPECT_FALSE(this->activeCallsigns.UserHasCallsign());
+            auto callsign = this->activeCallsigns.GetCallsign("EGKK_DEL");
+            EXPECT_EQ("EGKK_DEL", callsign.GetCallsign());
+            EXPECT_EQ("Testy McTestington", callsign.GetControllerName());
+            EXPECT_EQ(this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), callsign.GetNormalisedPosition());
+            EXPECT_FALSE(callsign.GetIsUser());
         }
 
         TEST_F(ActiveCallsignMonitorTest, ControllerUpdateEventHandlesHyphenatedCallsigns)

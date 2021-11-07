@@ -24,6 +24,7 @@ dynamically to the plugin.
 - Enroute releases
 - Stand assignment
 - RECAT-EU Wake Categories
+- [Electronic Missed Approach Coordination](MissedApproaches.md)
 - [VATSIM Nattrak Integration](Nattrak.md)
 - [Electronic Departure Releases](DepartureReleases.md)
 - [Electronic Prenotes](PrenoteMessages.md)

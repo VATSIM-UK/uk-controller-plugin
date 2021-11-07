@@ -75,13 +75,15 @@ namespace UKControllerPluginTest::Prenote {
                     callsigns.AddCallsign(ActiveCallsign(
                         this->controllers.FetchPositionById(positionId)->GetCallsign(),
                         "Test",
-                        *controllers.FetchPositionById(positionId)));
+                        *controllers.FetchPositionById(positionId),
+                        false));
                     this->mockPlugin.AddAllControllersItem(mockController);
                 } else {
                     callsigns.AddUserCallsign(ActiveCallsign(
                         this->controllers.FetchPositionById(positionId)->GetCallsign(),
                         "Test",
-                        *controllers.FetchPositionById(positionId)));
+                        *controllers.FetchPositionById(positionId),
+                        true));
                     this->mockPlugin.AddAllControllersItem(mockController);
                 }
             }
@@ -134,7 +136,7 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(SendPrenoteMenuTest, ItDoesntDisplayControllerMenuIfUserIsNotActive)
     {
-        callsigns.RemoveCallsign(ActiveCallsign("EGKK_APP", "Test", *controllers.FetchPositionById(1)));
+        callsigns.RemoveCallsign(ActiveCallsign("EGKK_APP", "Test", *controllers.FetchPositionById(1), true));
         EXPECT_CALL(mockPlugin, TriggerPopupList(testing::_, testing::_, testing::_)).Times(0);
 
         menu.DisplayControllerSelectionMenu(mockFlightplan, {0, 0});
@@ -142,9 +144,9 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(SendPrenoteMenuTest, ItDoesntDisplayControllerMenuIfUserCantSendPrenotes)
     {
-        callsigns.RemoveCallsign(ActiveCallsign("EGKK_APP", "Test", *controllers.FetchPositionById(1)));
-        callsigns.RemoveCallsign(ActiveCallsign("LON_SC_CTR", "Test", *controllers.FetchPositionById(3)));
-        callsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Test", *controllers.FetchPositionById(3)));
+        callsigns.RemoveCallsign(ActiveCallsign("EGKK_APP", "Test", *controllers.FetchPositionById(1), true));
+        callsigns.RemoveCallsign(ActiveCallsign("LON_SC_CTR", "Test", *controllers.FetchPositionById(3), false));
+        callsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Test", *controllers.FetchPositionById(3), false));
         EXPECT_CALL(mockPlugin, TriggerPopupList(testing::_, testing::_, testing::_)).Times(0);
 
         menu.DisplayControllerSelectionMenu(mockFlightplan, {0, 0});

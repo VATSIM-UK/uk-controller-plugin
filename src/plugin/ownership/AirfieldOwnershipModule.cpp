@@ -1,6 +1,7 @@
 #include "AirfieldOwnershipHandler.h"
 #include "AirfieldOwnershipManager.h"
 #include "AirfieldOwnershipModule.h"
+#include "AirfieldServiceProviderCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "command/CommandHandlerCollection.h"
 #include "controller/ControllerPositionCollection.h"
@@ -15,14 +16,18 @@ using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 
 namespace UKControllerPlugin::Ownership {
 
+    std::shared_ptr<AirfieldOwnershipManager> manager; // NOLINT
+
     void
     AirfieldOwnershipModule::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
     {
-        persistence.airfieldOwnership =
-            std::make_unique<AirfieldOwnershipManager>(*persistence.airfields, *persistence.activeCallsigns);
+
+        persistence.airfieldOwnership = std::make_shared<AirfieldServiceProviderCollection>();
+        manager = std::make_shared<AirfieldOwnershipManager>(
+            persistence.airfieldOwnership, *persistence.airfields, *persistence.activeCallsigns);
 
         std::shared_ptr<AirfieldOwnershipHandler> airfieldOwnership(
-            new AirfieldOwnershipHandler(*persistence.airfieldOwnership, *persistence.userMessager));
+            new AirfieldOwnershipHandler(*manager, *persistence.userMessager));
 
         // Add the handlers to the collections.
         persistence.activeCallsigns->AddHandler(airfieldOwnership);
