@@ -1,15 +1,23 @@
 #pragma once
-#include "CachedHandoff.h"
-#include "HandoffCollection.h"
-#include "controller/ActiveCallsign.h"
-#include "controller/ActiveCallsignCollection.h"
+#include "ResolvedHandoff.h"
 #include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "integration/OutboundIntegrationEventHandler.h"
-#include "tag/TagData.h"
 #include "tag/TagItemInterface.h"
 
+namespace UKControllerPlugin {
+    namespace Controller {
+        class ActiveCallsign;
+        class ActiveCallsignCollection;
+    } // namespace Controller
+    namespace Sid {
+        class SidCollection;
+    } // namespace Sid
+} // namespace UKControllerPlugin
+
 namespace UKControllerPlugin::Handoff {
+    class HandoffCollection;
+    class HandoffOrder;
 
     /*
         Handles handoff events
@@ -21,10 +29,11 @@ namespace UKControllerPlugin::Handoff {
         public:
         HandoffEventHandler(
             const HandoffCollection& handoffs,
+            const Sid::SidCollection& sids,
             const Controller::ActiveCallsignCollection& callsigns,
             Integration::OutboundIntegrationEventHandler& outboundEvent);
-        void AddCachedItem(const std::string& callsign, CachedHandoff handoff);
-        [[nodiscard]] auto GetCachedItem(const std::string& callsign) const -> CachedHandoff;
+        void AddCachedItem(const std::string& callsign, ResolvedHandoff handoff);
+        [[nodiscard]] auto GetCachedItem(const std::string& callsign) const -> ResolvedHandoff;
 
         // Inherited via TagItemInterface
         [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
@@ -44,19 +53,24 @@ namespace UKControllerPlugin::Handoff {
 
         private:
         // The default values to return
-        const CachedHandoff DEFAULT_TAG_VALUE = CachedHandoff("---.---", "");
-        const CachedHandoff UNICOM_TAG_VALUE = CachedHandoff("122.800", "");
+        const ResolvedHandoff DEFAULT_TAG_VALUE = ResolvedHandoff("---.---", "");
+        const ResolvedHandoff UNICOM_TAG_VALUE = ResolvedHandoff("122.800", "");
 
         void FireHandoffUpdatedEvent(const std::string& callsign);
+        auto MapSidToHandoffOrder(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+            -> std::shared_ptr<HandoffOrder>;
 
         // The handoffs
         const HandoffCollection& handoffs;
+
+        // All the SIDS that we have
+        const Sid::SidCollection& sids;
 
         // The active callsigns
         const Controller::ActiveCallsignCollection& callsigns;
 
         // Maps callsign -> result so we can cache it.
-        std::map<std::string, CachedHandoff> cache;
+        std::map<std::string, ResolvedHandoff> cache;
 
         // Allows us to push events to integrations
         Integration::OutboundIntegrationEventHandler& outboundEvent;

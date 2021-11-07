@@ -21,6 +21,7 @@ namespace UKControllerPlugin::Handoff {
 
         std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
             *container.handoffs,
+            *container.sids,
             *container.activeCallsigns,
             *container.integrationModuleContainer->outboundMessageHandler);
 

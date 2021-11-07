@@ -5,17 +5,16 @@ namespace UKControllerPlugin::Handoff {
     /*
         Represents a handoff that has been cached.
     */
-    struct CachedHandoff
+    using ResolvedHandoff = struct ResolvedHandoff
     {
         public:
-        CachedHandoff();
-        CachedHandoff(std::string frequency, std::string callsign);
-        [[nodiscard]] auto operator==(const CachedHandoff& compare) const -> bool;
+        ResolvedHandoff(std::string frequency, std::string callsign);
+        [[nodiscard]] auto operator==(const ResolvedHandoff& compare) const -> bool;
 
         // The frequency that the handoff is to
-        std::string frequency;
+        const std::string frequency;
 
         // The normalised callsign of the position that the handoff is to
-        std::string callsign;
+        const std::string callsign;
     };
 } // namespace UKControllerPlugin::Handoff

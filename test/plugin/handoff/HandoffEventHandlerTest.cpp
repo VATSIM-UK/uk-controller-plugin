@@ -9,7 +9,7 @@ using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
-using UKControllerPlugin::Handoff::CachedHandoff;
+using UKControllerPlugin::Handoff::HandoffCollection;
 using UKControllerPlugin::Handoff::HandoffCollection;
 using UKControllerPlugin::Handoff::HandoffEventHandler;
 using UKControllerPlugin::Handoff::HandoffFrequencyUpdatedMessage;
@@ -48,8 +48,8 @@ namespace UKControllerPluginTest {
                 this->hierarchy->AddPosition(this->position2);
             }
 
-            const CachedHandoff DEFAULT_TAG_VALUE = CachedHandoff("---.---", "");
-            const CachedHandoff UNICOM_TAG_VALUE = CachedHandoff("122.800", "");
+            const ResolvedHandoff DEFAULT_TAG_VALUE = ResolvedHandoff("---.---", "");
+            const ResolvedHandoff UNICOM_TAG_VALUE = ResolvedHandoff("122.800", "");
             double fontSize = 24.1;
             COLORREF tagColour = RGB(255, 255, 255);
             int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
@@ -73,7 +73,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestItReturnsCachedTagItem)
         {
-            this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
+            this->handler.AddCachedItem("BAW123", ResolvedHandoff("123.456", "LON_S_CTR"));
             this->handler.SetTagItemData(this->tagData);
             EXPECT_EQ("123.456", this->tagData.GetItemString());
         }
@@ -156,7 +156,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanUpdate)
         {
-            this->handler.AddCachedItem("BAW123", CachedHandoff("132.600", "LON_SC_CTR"));
+            this->handler.AddCachedItem("BAW123", ResolvedHandoff("132.600", "LON_SC_CTR"));
             EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
             this->handler.FlightPlanEvent(this->mockFlightplan, this->mockRadarTarget);
             EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
@@ -164,7 +164,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanDisconnect)
         {
-            this->handler.AddCachedItem("BAW123", CachedHandoff("132.600", "LON_SC_CTR"));
+            this->handler.AddCachedItem("BAW123", ResolvedHandoff("132.600", "LON_SC_CTR"));
             EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
             this->handler.FlightPlanDisconnectEvent(this->mockFlightplan);
             EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
@@ -172,7 +172,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestItDoesntClearCacheOnFlightplanControllerDataChange)
         {
-            this->handler.AddCachedItem("BAW123", CachedHandoff("132.600", "LON_SC_CTR"));
+            this->handler.AddCachedItem("BAW123", ResolvedHandoff("132.600", "LON_SC_CTR"));
             EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
             this->handler.ControllerFlightPlanDataEvent(this->mockFlightplan, 1);
             EXPECT_EQ(CachedHandoff("132.600", "LON_SC_CTR"), this->handler.GetCachedItem("BAW123"));
@@ -180,8 +180,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestANewControllerPositionClearsTheCache)
         {
-            this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
-            this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_S_CTR"));
+            this->handler.AddCachedItem("BAW123", ResolvedHandoff("123.456", "LON_S_CTR"));
+            this->handler.AddCachedItem("BAW456", ResolvedHandoff("123.456", "LON_S_CTR"));
             this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1), false);
             EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
             EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
@@ -189,8 +189,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestAControllerLoggingOfClearsAssociatedCacheItems)
         {
-            this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
-            this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_S_CTR"));
+            this->handler.AddCachedItem("BAW123", ResolvedHandoff("123.456", "LON_S_CTR"));
+            this->handler.AddCachedItem("BAW456", ResolvedHandoff("123.456", "LON_S_CTR"));
             this->handler.ActiveCallsignAdded(ActiveCallsign("LON_S_CTR", "Testy", this->position1), false);
             EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW123"));
             EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));
@@ -198,8 +198,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(HandoffEventHandlerTest, TestActiveCallsignFlushClearsTheCache)
         {
-            this->handler.AddCachedItem("BAW123", CachedHandoff("123.456", "LON_S_CTR"));
-            this->handler.AddCachedItem("BAW456", CachedHandoff("123.456", "LON_SC_CTR"));
+            this->handler.AddCachedItem("BAW123", ResolvedHandoff("123.456", "LON_S_CTR"));
+            this->handler.AddCachedItem("BAW456", ResolvedHandoff("123.456", "LON_SC_CTR"));
             this->handler.ActiveCallsignRemoved(ActiveCallsign("LON_SC_CTR", "Testy", this->position1), false);
             EXPECT_EQ(CachedHandoff("123.456", "LON_S_CTR"), this->handler.GetCachedItem("BAW123"));
             EXPECT_EQ(this->DEFAULT_TAG_VALUE, this->handler.GetCachedItem("BAW456"));

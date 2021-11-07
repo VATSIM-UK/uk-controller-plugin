@@ -39,4 +39,15 @@ namespace UKControllerPluginTest::Sid {
     {
         EXPECT_EQ(3, sid.HandoffId());
     }
+
+    TEST_F(StandardInstrumentDepartureTest, ItHasAHandoff)
+    {
+        EXPECT_TRUE(sid.HandoffId());
+    }
+
+    TEST_F(StandardInstrumentDepartureTest, ItDoesntHaveAHandoff)
+    {
+        StandardInstrumentDeparture sid2("EGGD", "WOTAN1Z", 6000, 55, 3, 0);
+        EXPECT_FALSE(sid.HandoffId());
+    }
 } // namespace UKControllerPluginTest::Sid

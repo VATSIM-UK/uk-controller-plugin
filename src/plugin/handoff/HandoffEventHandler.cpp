@@ -1,7 +1,15 @@
+#include "HandoffCollection.h"
 #include "HandoffEventHandler.h"
 #include "HandoffFrequencyUpdatedMessage.h"
+#include "HandoffOrder.h"
+#include "controller/ActiveCallsign.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionHierarchy.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "sid/SidCollection.h"
+#include "sid/StandardInstrumentDeparture.h"
+#include "tag/TagData.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -15,16 +23,17 @@ namespace UKControllerPlugin::Handoff {
 
     HandoffEventHandler::HandoffEventHandler(
         const HandoffCollection& handoffs,
+        const Sid::SidCollection& sids,
         const ActiveCallsignCollection& callsigns,
         OutboundIntegrationEventHandler& outboundEvent)
-        : handoffs(handoffs), callsigns(callsigns), outboundEvent(outboundEvent)
+        : handoffs(handoffs), sids(sids), callsigns(callsigns), outboundEvent(outboundEvent)
     {
     }
 
     /*
         Add an item to the cache.
     */
-    void HandoffEventHandler::AddCachedItem(const std::string& callsign, CachedHandoff item)
+    void HandoffEventHandler::AddCachedItem(const std::string& callsign, ResolvedHandoff item)
     {
         this->cache[callsign] = std::move(item);
     }
@@ -32,7 +41,7 @@ namespace UKControllerPlugin::Handoff {
     /*
         Get the cached item
     */
-    auto HandoffEventHandler::GetCachedItem(const std::string& callsign) const -> CachedHandoff
+    auto HandoffEventHandler::GetCachedItem(const std::string& callsign) const -> ResolvedHandoff
     {
         return this->cache.count(callsign) != 0 ? this->cache.at(callsign) : this->DEFAULT_TAG_VALUE;
     }
@@ -49,6 +58,15 @@ namespace UKControllerPlugin::Handoff {
             tagData.SetItemString(this->cache[flightplan.GetCallsign()].frequency);
             return;
         }
+        
+        const auto handoff = this->MapSidToHandoffOrder(flightplan);
+        if (!handoff) {
+            this->cache[flightplan.GetCallsign()] = this->DEFAULT_TAG_VALUE;
+            tagData.SetItemString(this->DEFAULT_TAG_VALUE.frequency);
+            return;
+        }
+        
+        auto controllers = handoff->order;
 
         ControllerPositionHierarchy controllers =
             this->handoffs.GetSidHandoffOrder(flightplan.GetOrigin(), flightplan.GetSidName());
@@ -73,7 +91,7 @@ namespace UKControllerPlugin::Handoff {
                 char frequencyString[24];                                     // NOLINT
                 sprintf_s(frequencyString, "%.3f", it->get().GetFrequency()); // NOLINT
                 this->cache[flightplan.GetCallsign()] =
-                    CachedHandoff(frequencyString, it->get().GetCallsign()); // NOLINT
+                    ResolvedHandoff(frequencyString, it->get().GetCallsign()); // NOLINT
                 tagData.SetItemString(this->cache[flightplan.GetCallsign()].frequency);
                 this->FireHandoffUpdatedEvent(flightplan.GetCallsign());
                 return;
@@ -136,5 +154,20 @@ namespace UKControllerPlugin::Handoff {
     {
         this->outboundEvent.SendEvent(
             std::make_shared<HandoffFrequencyUpdatedMessage>(callsign, this->cache[callsign].frequency));
+    }
+    
+    auto HandoffEventHandler::MapSidToHandoffOrder(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const ->
+        std::shared_ptr<HandoffOrder>
+    {
+        const auto sid = this->sids.GetByAirfieldAndIdentifier(
+            flightplan.GetOrigin(),
+            flightplan.GetSidName()
+        );
+        
+        if (!sid || !sid->HasHandoff()) {
+            return nullptr;
+        }
+        
+        return this->handoffs.Get(sid->HandoffId());
     }
 } // namespace UKControllerPlugin::Handoff

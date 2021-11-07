@@ -33,4 +33,9 @@ namespace UKControllerPlugin::Sid {
     {
         return this->handoffId;
     }
+    
+    auto StandardInstrumentDeparture::HasHandoff() const -> bool
+    {
+        return this->handoffId != 0;
+    }
 } // namespace UKControllerPlugin::Sid

@@ -15,6 +15,7 @@ namespace UKControllerPlugin::Sid {
         [[nodiscard]] auto InitialAltitude() const -> int;
         [[nodiscard]] auto InitialHeading() const -> int;
         [[nodiscard]] auto HandoffId() const -> int;
+        [[nodiscard]] auto HasHandoff() const -> bool;
 
         private:
         const std::string airfield;

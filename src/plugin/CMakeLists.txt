@@ -224,8 +224,8 @@ set(src__graphics
 source_group("src\\graphics" FILES ${src__graphics})
 
 set(src__handoff
-    "handoff/CachedHandoff.h"
-    "handoff/CachedHandoff.cpp"
+    "handoff/ResolvedHandoff.h"
+    "handoff/ResolvedHandoff.cpp"
     "handoff/HandoffCollection.cpp"
     "handoff/HandoffCollection.h"
     "handoff/HandoffCollectionFactory.cpp"
@@ -237,7 +237,7 @@ set(src__handoff
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
     controller/HandoffEventHandler.cpp
-    handoff/HandoffOrder.h handoff/HandoffOrder.cpp)
+    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__historytrail
