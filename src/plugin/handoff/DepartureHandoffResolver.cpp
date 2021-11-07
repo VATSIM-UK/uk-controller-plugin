@@ -7,6 +7,8 @@
 #include "controller/ControllerPositionHierarchy.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 
+using UKControllerPlugin::Controller::ControllerPositionHierarchy;
+
 namespace UKControllerPlugin::Handoff {
 
     DepartureHandoffResolver::DepartureHandoffResolver(
@@ -15,12 +17,12 @@ namespace UKControllerPlugin::Handoff {
     {
     }
 
-    auto DepartureHandoffResolver::Resolve(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+    auto DepartureHandoffResolver::Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
         -> std::shared_ptr<ResolvedHandoff>
     {
         const auto handoff = this->mapper->MapForFlightplan(flightplan);
         if (!handoff) {
-            return nullptr;
+            return ResolveToUnicom(flightplan);
         }
 
         for (const auto& controller : *handoff->order) {
@@ -33,9 +35,17 @@ namespace UKControllerPlugin::Handoff {
                 break;
             }
 
-            return std::make_shared<ResolvedHandoff>(flightplan.GetCallsign(), controller.get().GetFrequency());
+            return std::make_shared<ResolvedHandoff>(
+                flightplan.GetCallsign(), controller.get().GetFrequency(), handoff->order);
         }
 
-        return nullptr;
+        return ResolveToUnicom(flightplan);
+    }
+
+    auto DepartureHandoffResolver::ResolveToUnicom(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+        -> std::shared_ptr<ResolvedHandoff>
+    {
+        return std::make_shared<ResolvedHandoff>(
+            flightplan.GetCallsign(), UNICOM_FREQUENCY, std::make_shared<ControllerPositionHierarchy>());
     }
 } // namespace UKControllerPlugin::Handoff

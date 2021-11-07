@@ -9,8 +9,8 @@ namespace UKControllerPluginTest::Handoff {
     {
         public:
         HandoffCacheTest()
-            : handoff1(std::make_shared<ResolvedHandoff>("BAW123", 122.800)),
-              handoff2(std::make_shared<ResolvedHandoff>("BAW456", 122.800))
+            : handoff1(std::make_shared<ResolvedHandoff>("BAW123", 122.800, nullptr)),
+              handoff2(std::make_shared<ResolvedHandoff>("BAW456", 122.800, nullptr))
         {
         }
 
@@ -68,5 +68,26 @@ namespace UKControllerPluginTest::Handoff {
     TEST_F(HandoffCacheTest, ItHandlesNonExistantHandoffRemoval)
     {
         EXPECT_NO_THROW(cache.Delete("BAW123"));
+    }
+
+    TEST_F(HandoffCacheTest, ItClearsTheCache)
+    {
+        cache.Add(handoff1);
+        cache.Add(handoff2);
+        cache.Clear();
+
+        EXPECT_EQ(0, cache.Count());
+    }
+
+    TEST_F(HandoffCacheTest, ItRemovesHandoffsBasedOnPredicate)
+    {
+        cache.Add(handoff1);
+        cache.Add(handoff2);
+        cache.DeleteWhere(
+            [](const std::shared_ptr<ResolvedHandoff>& handoff) -> bool { return handoff->callsign == "BAW123"; });
+
+        EXPECT_EQ(1, cache.Count());
+        EXPECT_EQ(nullptr, cache.Get("BAW123"));
+        EXPECT_EQ(handoff2, cache.Get("BAW456"));
     }
 } // namespace UKControllerPluginTest::Handoff

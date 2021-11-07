@@ -11,7 +11,7 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin::Handoff {
     class FlightplanSidHandoffMapper;
-    class ResolvedHandoff;
+    struct ResolvedHandoff;
 
     /**
      * Given a flightplan, resolves the handoff frequency
@@ -24,14 +24,20 @@ namespace UKControllerPlugin::Handoff {
             std::shared_ptr<FlightplanSidHandoffMapper> mapper,
             const Controller::ActiveCallsignCollection& activeCallsigns);
 
-        [[nodiscard]] auto Resolve(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+        [[nodiscard]] auto Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
             -> std::shared_ptr<ResolvedHandoff>;
 
         private:
+        [[nodiscard]] static auto ResolveToUnicom(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+            -> std::shared_ptr<ResolvedHandoff>;
+
         // Maps flightplans to sids to handoffs
         const std::shared_ptr<FlightplanSidHandoffMapper> mapper;
 
         // All the active controllers
         const Controller::ActiveCallsignCollection& activeCallsigns;
+
+        // The unicom frequency
+        inline static const double UNICOM_FREQUENCY = 122.800;
     };
 } // namespace UKControllerPlugin::Handoff

@@ -3,15 +3,15 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
-    } //
+    } // namespace Euroscope
     namespace Sid {
         class SidCollection;
-    } //
-} // namespace UKControllerPlugin::Sid
+    } // namespace Sid
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Handoff {
     class HandoffCollection;
-    class HandoffOrder;
+    struct HandoffOrder;
 
     /**
      * Given a flightplan, map it to its SID
@@ -20,20 +20,16 @@ namespace UKControllerPlugin::Handoff {
     class FlightplanSidHandoffMapper
     {
         public:
-        FlightplanSidHandoffMapper(std::shared_ptr<const HandoffCollection> handoffs,
-                                   std::shared_ptr<const Sid::SidCollection>
-            sids);
-        
-        [[nodiscard]] auto MapForFlightplan(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const ->
-            std::shared_ptr<HandoffOrder>;
-        
+        FlightplanSidHandoffMapper(std::shared_ptr<const HandoffCollection> handoffs, const Sid::SidCollection& sids);
+
+        [[nodiscard]] auto MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+            -> std::shared_ptr<HandoffOrder>;
+
         private:
-        
         // All the handoffs
         const std::shared_ptr<const HandoffCollection> handoffs;
-        
+
         // All the sids
-        std::shared_ptr<const Sid::SidCollection>
-            sids;
+        const Sid::SidCollection& sids;
     };
 } // namespace UKControllerPlugin::Handoff

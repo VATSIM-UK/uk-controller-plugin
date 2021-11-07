@@ -43,9 +43,6 @@ namespace UKControllerPlugin {
         class FlightPlanEventHandlerCollection;
         class StoredFlightplanCollection;
     } // namespace Flightplan
-    namespace Handoff {
-        class HandoffCollection;
-    } // namespace Handoff
     namespace HistoryTrail {
         class HistoryTrailRepository;
     } // namespace HistoryTrail
@@ -190,7 +187,6 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Hold::HoldManager> holdManager;
         std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
         std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
-        std::unique_ptr<UKControllerPlugin::Handoff::HandoffCollection> handoffs;
         std::shared_ptr<UKControllerPlugin::Notifications::NotificationsMenuItem> notificationsMenuItem;
         std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseEventHandler> departureReleaseHandler;
 

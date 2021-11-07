@@ -19,7 +19,6 @@
 #include "flightplan/StoredFlightplanCollection.h"
 #include "graphics/GdiGraphicsWrapper.h"
 #include "graphics/GdiplusBrushes.h"
-#include "handoff/HandoffCollection.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldManager.h"

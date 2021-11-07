@@ -10,7 +10,7 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 
 namespace UKControllerPlugin::Handoff {
     auto Create(const ControllerPositionCollection& controllerPositions, const nlohmann::json& handoffs)
-        -> std::unique_ptr<HandoffCollection>
+        -> std::shared_ptr<HandoffCollection>
     {
         std::unique_ptr<HandoffCollection> collection = std::make_unique<HandoffCollection>();
 

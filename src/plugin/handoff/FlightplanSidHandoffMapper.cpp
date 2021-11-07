@@ -6,15 +6,15 @@
 namespace UKControllerPlugin::Handoff {
 
     FlightplanSidHandoffMapper::FlightplanSidHandoffMapper(
-        std::shared_ptr<const HandoffCollection> handoffs, std::shared_ptr<const Sid::SidCollection> sids)
-        : handoffs(std::move(handoffs)), sids(std::move(sids))
+        std::shared_ptr<const HandoffCollection> handoffs, const Sid::SidCollection& sids)
+        : handoffs(std::move(handoffs)), sids(sids)
     {
     }
 
-    auto FlightplanSidHandoffMapper::MapForFlightplan(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+    auto FlightplanSidHandoffMapper::MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
         -> std::shared_ptr<HandoffOrder>
     {
-        const auto sid = this->sids->GetForFlightplan(flightplan);
+        const auto sid = this->sids.GetForFlightplan(flightplan);
 
         if (!sid || !sid->HasHandoff()) {
             return nullptr;

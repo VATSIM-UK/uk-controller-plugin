@@ -26,4 +26,20 @@ namespace UKControllerPlugin::Handoff {
     {
         this->handoffs.erase(callsign);
     }
+    
+    void HandoffCache::Clear()
+    {
+        this->handoffs.clear();
+    }
+    
+    void HandoffCache::DeleteWhere(const std::function<bool(const std::shared_ptr<ResolvedHandoff>)>& predicate)
+    {
+        for (auto handoff = this->handoffs.cbegin(); handoff != this->handoffs.cend();) {
+            if (predicate(handoff->second)) {
+                handoff = this->handoffs.erase(handoff);
+            } else {
+                ++handoff;
+            }
+        }
+    }
 } // namespace UKControllerPlugin::Handoff

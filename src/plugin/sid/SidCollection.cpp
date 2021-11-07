@@ -26,7 +26,7 @@ namespace UKControllerPlugin::Sid {
         return sid == this->sids.cend() ? nullptr : *sid;
     }
 
-    auto SidCollection::GetForFlightplan(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+    auto SidCollection::GetForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
         -> std::shared_ptr<StandardInstrumentDeparture>
     {
         return this->GetByAirfieldAndIdentifier(flightplan.GetOrigin(), flightplan.GetSidName());

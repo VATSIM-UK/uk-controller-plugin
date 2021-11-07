@@ -18,7 +18,7 @@ namespace UKControllerPlugin::Sid {
         [[nodiscard]] auto CountSids() const -> size_t;
         [[nodiscard]] auto GetByAirfieldAndIdentifier(std::string airfield, std::string identifier) const
             -> std::shared_ptr<StandardInstrumentDeparture>;
-        [[nodiscard]] auto GetForFlightplan(Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+        [[nodiscard]] auto GetForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
             -> std::shared_ptr<StandardInstrumentDeparture>;
 
         private:
