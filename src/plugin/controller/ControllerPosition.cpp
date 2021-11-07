@@ -77,4 +77,49 @@ namespace UKControllerPlugin::Controller {
     {
         return this->receivesPrenoteMessages;
     }
+
+    auto ControllerPosition::IsGround() const -> bool
+    {
+        return this->GetType() == "GND";
+    }
+
+    auto ControllerPosition::IsTower() const -> bool
+    {
+        return this->GetType() == "TWR";
+    }
+
+    auto ControllerPosition::IsApproach() const -> bool
+    {
+        return this->GetType() == "APP";
+    }
+
+    auto ControllerPosition::IsEnroute() const -> bool
+    {
+        return this->GetType() == "CTR";
+    }
+
+    auto ControllerPosition::ProvidesApproachServices() const -> bool
+    {
+        return this->IsApproach() || this->IsEnroute();
+    }
+
+    auto ControllerPosition::ProvidesGroundServices() const -> bool
+    {
+        return this->IsGround() || this->IsTower() || this->IsApproach() || this->IsEnroute();
+    }
+
+    auto ControllerPosition::ProvidesTowerServices() const -> bool
+    {
+        return this->IsTower() || this->IsApproach() || this->IsEnroute();
+    }
+
+    auto ControllerPosition::IsFlightServiceStation() const -> bool
+    {
+        return this->GetType() == "FSS";
+    }
+
+    auto ControllerPosition::IsDelivery() const -> bool
+    {
+        return this->GetType() == "DEL";
+    }
 } // namespace UKControllerPlugin::Controller

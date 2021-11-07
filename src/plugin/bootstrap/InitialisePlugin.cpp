@@ -10,7 +10,6 @@
 #include "datablock/DatablockBoostrap.h"
 #include "dependency/DependencyLoader.h"
 #include "dependency/UpdateDependencies.h"
-#include "duplicate/DuplicatePlugin.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
@@ -27,6 +26,7 @@
 #include "message/UserMessagerBootstrap.h"
 #include "metar/PressureMonitorBootstrap.h"
 #include "minstack/MinStackModule.h"
+#include "missedapproach/MissedApproachModule.h"
 #include "navaids/NavaidModule.h"
 #include "notifications/NotificationsModule.h"
 #include "oceanic/OceanicModule.h"
@@ -231,6 +231,7 @@ namespace UKControllerPlugin {
 
         PrenoteModule::BootstrapPlugin(*this->container, loader);
         Handoff::BootstrapPlugin(*this->container, loader);
+        MissedApproach::BootstrapPlugin(*this->container);
         Selcal::BootstrapPlugin(*this->container);
 
         // Bootstrap other things

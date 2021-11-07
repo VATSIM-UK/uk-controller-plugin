@@ -17,8 +17,8 @@ namespace UKControllerPlugin::Notifications {
         public:
         NotificationsEventHandler(
             std::shared_ptr<NotificationsRepository> notifications, Message::UserMessager& messager);
-        void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign, bool userCallsign) override;
-        void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign, bool userCallsign) override{};
+        void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign) override;
+        void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign) override{};
 
         private:
         // The repository of all the notifications

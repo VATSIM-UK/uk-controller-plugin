@@ -19,10 +19,8 @@ namespace UKControllerPlugin::Controller {
         [[nodiscard]] auto operator=(ActiveCallsignEventHandlerInterface&&) noexcept
             -> ActiveCallsignEventHandlerInterface&;
 
-        virtual void
-        ActiveCallsignAdded(const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) = 0;
-        virtual void
-        ActiveCallsignRemoved(const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) = 0;
+        virtual void ActiveCallsignAdded(const UKControllerPlugin::Controller::ActiveCallsign& callsign) = 0;
+        virtual void ActiveCallsignRemoved(const UKControllerPlugin::Controller::ActiveCallsign& callsign) = 0;
         virtual void CallsignsFlushed();
     };
 } // namespace UKControllerPlugin::Controller

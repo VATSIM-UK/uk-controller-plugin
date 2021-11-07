@@ -31,10 +31,8 @@ namespace UKControllerPlugin::Ownership {
         auto ProcessCommand(std::string command) -> bool override;
 
         // Inherited via ActiveCallsignEventHandlerInterface
-        void
-        ActiveCallsignAdded(const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) override;
-        void ActiveCallsignRemoved(
-            const UKControllerPlugin::Controller::ActiveCallsign& callsign, bool userCallsign) override;
+        void ActiveCallsignAdded(const UKControllerPlugin::Controller::ActiveCallsign& callsign) override;
+        void ActiveCallsignRemoved(const UKControllerPlugin::Controller::ActiveCallsign& callsign) override;
         void CallsignsFlushed() override;
 
         private:

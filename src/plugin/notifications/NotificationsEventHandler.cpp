@@ -15,9 +15,9 @@ namespace UKControllerPlugin::Notifications {
     /*
      * If the user has connected with a callsign
      */
-    void NotificationsEventHandler::ActiveCallsignAdded(const Controller::ActiveCallsign& callsign, bool userCallsign)
+    void NotificationsEventHandler::ActiveCallsignAdded(const Controller::ActiveCallsign& callsign)
     {
-        if (!userCallsign) {
+        if (!callsign.GetIsUser()) {
             return;
         }
 

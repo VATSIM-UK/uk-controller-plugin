@@ -37,8 +37,8 @@ namespace UKControllerPluginTest {
                 auto position = std::make_shared<UKControllerPlugin::Controller::ControllerPosition>(
                     2, "EGFF_APP", 125.850, std::vector<std::string>{"EGGD", "EGFF"}, true, true);
                 controllers.AddPosition(position);
-                auto controllerCallsign =
-                    std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>("EGFF_APP", "Test 1", *position);
+                auto controllerCallsign = std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
+                    "EGFF_APP", "Test 1", *position, true);
                 this->activeCallsigns.AddUserCallsign(*controllerCallsign);
             }
 

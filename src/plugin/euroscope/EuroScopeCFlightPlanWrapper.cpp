@@ -4,191 +4,194 @@
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
 using UKControllerPlugin::Squawk::SquawkValidator;
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
+namespace UKControllerPlugin::Euroscope {
 
-        EuroScopeCFlightPlanWrapper::EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan originalData)
-        {
-            this->originalData = originalData;
-        }
+    EuroScopeCFlightPlanWrapper::EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan originalData)
+        : originalData(originalData)
+    {
+    }
 
-        /*
-            Note indexes begin from 0
-        */
-        void EuroScopeCFlightPlanWrapper::AnnotateFlightStrip(int index, std::string data) const
-        {
-            this->originalData.GetControllerAssignedData().SetFlightStripAnnotation(index, data.c_str());
-        }
+    /*
+        Note indexes begin from 0
+    */
+    void EuroScopeCFlightPlanWrapper::AnnotateFlightStrip(int index, std::string data) const
+    {
+        this->originalData.GetControllerAssignedData().SetFlightStripAnnotation(index, data.c_str());
+    }
 
-        std::string EuroScopeCFlightPlanWrapper::GetAnnotation(int index) const
-        {
-            return this->originalData.GetControllerAssignedData().GetFlightStripAnnotation(index);
-        }
+    auto EuroScopeCFlightPlanWrapper::GetAnnotation(int index) const -> std::string
+    {
+        return this->originalData.GetControllerAssignedData().GetFlightStripAnnotation(index);
+    }
 
-        std::string EuroScopeCFlightPlanWrapper::GetAircraftType(void) const
-        {
-            return this->originalData.GetFlightPlanData().GetAircraftFPType();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetAircraftType() const -> std::string
+    {
+        return this->originalData.GetFlightPlanData().GetAircraftFPType();
+    }
 
-        const std::string EuroScopeCFlightPlanWrapper::GetCallsign(void) const
-        {
-            return this->originalData.GetCallsign();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetCallsign() const -> std::string
+    {
+        return this->originalData.GetCallsign();
+    }
 
-        int EuroScopeCFlightPlanWrapper::GetClearedAltitude(void) const
-        {
-            return this->originalData.GetControllerAssignedData().GetClearedAltitude();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetClearedAltitude() const -> int
+    {
+        return this->originalData.GetControllerAssignedData().GetClearedAltitude();
+    }
 
-        int EuroScopeCFlightPlanWrapper::GetCruiseLevel(void) const
-        {
-            return this->originalData.GetFinalAltitude();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetCruiseLevel() const -> int
+    {
+        return this->originalData.GetFinalAltitude();
+    }
 
-        const std::string EuroScopeCFlightPlanWrapper::GetDestination(void) const
-        {
-            return this->originalData.GetFlightPlanData().GetDestination();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetDestination() const -> std::string
+    {
+        return this->originalData.GetFlightPlanData().GetDestination();
+    }
 
-        double EuroScopeCFlightPlanWrapper::GetDistanceFromOrigin(void) const
-        {
-            return this->originalData.GetDistanceFromOrigin();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetDistanceFromOrigin() const -> double
+    {
+        return this->originalData.GetDistanceFromOrigin();
+    }
 
-        std::string EuroScopeCFlightPlanWrapper::GetExpectedDepartureTime(void) const
-        {
-            return this->originalData.GetFlightPlanData().GetEstimatedDepartureTime();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetExpectedDepartureTime() const -> std::string
+    {
+        return this->originalData.GetFlightPlanData().GetEstimatedDepartureTime();
+    }
 
-        EuroscopeExtractedRouteInterface EuroScopeCFlightPlanWrapper::GetExtractedRoute(void) const
-        {
-            return EuroscopeExtractedRouteInterface(this->originalData.GetExtractedRoute());
-        }
+    auto EuroScopeCFlightPlanWrapper::GetExtractedRoute() const -> EuroscopeExtractedRouteInterface
+    {
+        return EuroscopeExtractedRouteInterface(this->originalData.GetExtractedRoute());
+    }
 
-        std::string EuroScopeCFlightPlanWrapper::GetFlightRules(void) const
-        {
-            return this->originalData.GetFlightPlanData().GetPlanType();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetFlightRules() const -> std::string
+    {
+        return this->originalData.GetFlightPlanData().GetPlanType();
+    }
 
-        std::string EuroScopeCFlightPlanWrapper::GetGroundState(void) const
-        {
-            return this->originalData.GetGroundState();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetGroundState() const -> std::string
+    {
+        return this->originalData.GetGroundState();
+    }
 
-        std::string EuroScopeCFlightPlanWrapper::GetIcaoWakeCategory(void) const
-        {
-            return std::string(1, this->originalData.GetFlightPlanData().GetAircraftWtc());
-        }
+    auto EuroScopeCFlightPlanWrapper::GetIcaoWakeCategory() const -> std::string
+    {
+        return {this->originalData.GetFlightPlanData().GetAircraftWtc()};
+    }
 
-        std::string EuroScopeCFlightPlanWrapper::GetAssignedSquawk(void) const
-        {
-            return this->originalData.GetControllerAssignedData().GetSquawk();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetAssignedSquawk() const -> std::string
+    {
+        return this->originalData.GetControllerAssignedData().GetSquawk();
+    }
 
-        const std::string EuroScopeCFlightPlanWrapper::GetOrigin(void) const
-        {
-            return this->originalData.GetFlightPlanData().GetOrigin();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetOrigin() const -> std::string
+    {
+        return this->originalData.GetFlightPlanData().GetOrigin();
+    }
 
-        std::string EuroScopeCFlightPlanWrapper::GetRawRouteString(void) const
-        {
-            return this->originalData.GetFlightPlanData().GetRoute();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetRawRouteString() const -> std::string
+    {
+        return this->originalData.GetFlightPlanData().GetRoute();
+    }
 
-        const std::string EuroScopeCFlightPlanWrapper::GetSidName(void) const
-        {
-            return this->originalData.GetFlightPlanData().GetSidName();
-        }
+    auto EuroScopeCFlightPlanWrapper::GetSidName() const -> std::string
+    {
+        return this->originalData.GetFlightPlanData().GetSidName();
+    }
 
-        bool EuroScopeCFlightPlanWrapper::HasAssignedSquawk(void) const
-        {
-            std::string squawk = this->originalData.GetControllerAssignedData().GetSquawk();
-            return SquawkValidator::ValidSquawk(squawk) && squawk != "0200" && squawk != "2200" && squawk != "1200" &&
-                   squawk != "2000" && squawk != "0000";
-        }
+    auto EuroScopeCFlightPlanWrapper::HasAssignedSquawk() const -> bool
+    {
+        std::string squawk = this->originalData.GetControllerAssignedData().GetSquawk();
+        return SquawkValidator::ValidSquawk(squawk) && squawk != "0200" && squawk != "2200" && squawk != "1200" &&
+               squawk != "2000" && squawk != "0000";
+    }
 
-        bool EuroScopeCFlightPlanWrapper::HasControllerClearedAltitude(void) const
-        {
-            return this->originalData.GetControllerAssignedData().GetClearedAltitude() !=
-                   this->euroScopeNoControllerClearedAltitude;
-        }
+    auto EuroScopeCFlightPlanWrapper::HasControllerClearedAltitude() const -> bool
+    {
+        return this->originalData.GetControllerAssignedData().GetClearedAltitude() !=
+               this->euroScopeNoControllerClearedAltitude;
+    }
 
-        bool EuroScopeCFlightPlanWrapper::HasControllerAssignedHeading() const
-        {
-            return this->originalData.GetControllerAssignedData().GetAssignedHeading() != 0;
-        }
+    auto EuroScopeCFlightPlanWrapper::HasControllerAssignedHeading() const -> bool
+    {
+        return this->originalData.GetControllerAssignedData().GetAssignedHeading() != 0;
+    }
 
-        bool EuroScopeCFlightPlanWrapper::HasSid(void) const
-        {
-            return !std::string(this->originalData.GetFlightPlanData().GetSidName()).empty();
-        }
+    auto EuroScopeCFlightPlanWrapper::HasSid() const -> bool
+    {
+        return !std::string(this->originalData.GetFlightPlanData().GetSidName()).empty();
+    }
 
-        /*
-            Sets the cleared altitude.
-        */
-        void EuroScopeCFlightPlanWrapper::SetClearedAltitude(int cleared)
-        {
-            this->originalData.GetControllerAssignedData().SetClearedAltitude(cleared);
-        }
+    /*
+        Sets the cleared altitude.
+    */
+    void EuroScopeCFlightPlanWrapper::SetClearedAltitude(int cleared)
+    {
+        this->originalData.GetControllerAssignedData().SetClearedAltitude(cleared);
+    }
 
-        void EuroScopeCFlightPlanWrapper::SetHeading(int heading)
-        {
-            this->originalData.GetControllerAssignedData().SetAssignedHeading(heading);
-        }
+    void EuroScopeCFlightPlanWrapper::SetHeading(int heading)
+    {
+        this->originalData.GetControllerAssignedData().SetAssignedHeading(heading);
+    }
 
-        void EuroScopeCFlightPlanWrapper::SetSquawk(std::string squawk)
-        {
-            this->originalData.GetControllerAssignedData().SetSquawk(squawk.c_str());
-        }
+    void EuroScopeCFlightPlanWrapper::SetSquawk(std::string squawk)
+    {
+        this->originalData.GetControllerAssignedData().SetSquawk(squawk.c_str());
+    }
 
-        EuroScopePlugIn::CFlightPlan EuroScopeCFlightPlanWrapper::GetEuroScopeObject() const
-        {
-            return this->originalData;
-        }
+    auto EuroScopeCFlightPlanWrapper::GetEuroScopeObject() const -> EuroScopePlugIn::CFlightPlan
+    {
+        return this->originalData;
+    }
 
-        /*
-            Returns true if its actually real and not Euroscope pretending.
-        */
-        bool EuroScopeCFlightPlanWrapper::IsSimulated(void) const
-        {
-            return this->originalData.GetSimulated();
-        }
+    /*
+        Returns true if its actually real and not Euroscope pretending.
+    */
+    auto EuroScopeCFlightPlanWrapper::IsSimulated() const -> bool
+    {
+        return this->originalData.GetSimulated();
+    }
 
-        /*
-            Returns true if the aircraft is being tracked by anyone at all.
-        */
-        bool EuroScopeCFlightPlanWrapper::IsTracked(void) const
-        {
-            return this->notTrackedControllerCallsign.compare(this->originalData.GetTrackingControllerCallsign()) != 0;
-        }
+    /*
+        Returns true if the aircraft is being tracked by anyone at all.
+    */
+    auto EuroScopeCFlightPlanWrapper::IsTracked() const -> bool
+    {
+        return this->notTrackedControllerCallsign != this->originalData.GetTrackingControllerCallsign();
+    }
 
-        /*
-            Returns true if the current controller tracking the flightplan is the user.
-        */
-        bool EuroScopeCFlightPlanWrapper::IsTrackedByUser(void) const
-        {
-            return this->originalData.GetTrackingControllerIsMe();
-        }
+    /*
+        Returns true if the current controller tracking the flightplan is the user.
+    */
+    auto EuroScopeCFlightPlanWrapper::IsTrackedByUser() const -> bool
+    {
+        return this->originalData.GetTrackingControllerIsMe();
+    }
 
-        /*
-            Returns true if Euroscope deems that the flightplan is valid.
-        */
-        bool EuroScopeCFlightPlanWrapper::IsValid(void) const
-        {
-            return this->originalData.IsValid();
-        }
+    /*
+        Returns true if Euroscope deems that the flightplan is valid.
+    */
+    auto EuroScopeCFlightPlanWrapper::IsValid() const -> bool
+    {
+        return this->originalData.IsValid();
+    }
 
-        /*
-            Returns true if the flightplan is VFR
-        */
-        bool EuroScopeCFlightPlanWrapper::IsVfr(void) const
-        {
-            return strcmp(this->originalData.GetFlightPlanData().GetPlanType(), "V") == 0;
-        }
+    /*
+        Returns true if the flightplan is VFR
+    */
+    auto EuroScopeCFlightPlanWrapper::IsVfr() const -> bool
+    {
+        return strcmp(this->originalData.GetFlightPlanData().GetPlanType(), "V") == 0;
+    }
 
-        auto EuroScopeCFlightPlanWrapper::GetRemarks() const -> std::string
-        {
-            return this->originalData.GetFlightPlanData().GetRemarks();
-        }
-    } // namespace Euroscope
-} // namespace UKControllerPlugin
+    auto EuroScopeCFlightPlanWrapper::GetDistanceToDestination() const -> double
+    {
+        return this->originalData.GetDistanceToDestination();
+    }
+
+    auto EuroScopeCFlightPlanWrapper::GetRemarks() const -> std::string
+    {
+        return this->originalData.GetFlightPlanData().GetRemarks();
+    }
+} // namespace UKControllerPlugin::Euroscope

@@ -4,8 +4,6 @@
 #include "api/ApiNotFoundException.h"
 #include "api/ApiResponseFactory.h"
 #include "curl/CurlInterface.h"
-#include "curl/CurlRequest.h"
-#include "curl/CurlResponse.h"
 #include "squawk/SquawkValidator.h"
 
 using UKControllerPlugin::Api::ApiException;
@@ -373,5 +371,10 @@ namespace UKControllerPlugin::Api {
     void ApiHelper::DeletePrenoteMessage(int messageId) const
     {
         static_cast<void>(this->MakeApiRequest(this->requestBuilder.BuildDeletePrenoteMessageRequest(messageId)));
+    }
+
+    auto ApiHelper::CreateMissedApproach(const std::string& callsign) const -> nlohmann::json
+    {
+        return this->MakeApiRequest(this->requestBuilder.BuildMissedApproachMessage(callsign)).GetRawData();
     }
 } // namespace UKControllerPlugin::Api

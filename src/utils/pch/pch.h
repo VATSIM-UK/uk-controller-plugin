@@ -33,6 +33,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <thread>
 
 // Custom headers
 #include "log/LoggerFunctions.h"

@@ -9,7 +9,7 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "message/UserMessager.h"
-#include "ownership/AirfieldOwnershipManager.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -18,13 +18,13 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
+using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Prenote::PrenoteUserMessage;
 
 namespace UKControllerPlugin::Prenote {
 
     PrenoteService::PrenoteService(
-        const AirfieldOwnershipManager& airfieldOwnership,
+        const AirfieldServiceProviderCollection& airfieldOwnership,
         const ActiveCallsignCollection& activeCallsigns,
         UserMessager& userMessager)
         : activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership), userMessager(userMessager)
@@ -74,7 +74,7 @@ namespace UKControllerPlugin::Prenote {
 
     void PrenoteService::SendPrenotes(EuroScopeCFlightPlanInterface& flightplan)
     {
-        if (!this->airfieldOwnership.AirfieldOwnedByUser(flightplan.GetOrigin())) {
+        if (!this->airfieldOwnership.DeliveryControlProvidedByUser(flightplan.GetOrigin())) {
             return;
         }
 

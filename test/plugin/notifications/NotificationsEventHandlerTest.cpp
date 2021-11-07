@@ -31,7 +31,8 @@ namespace UKControllerPluginTest {
             std::shared_ptr<ControllerPosition> controller2 =
                 std::make_shared<ControllerPosition>(2, "EGLL_S_TWR", 199.998, topDown, true, false);
             std::vector<std::string> topDown = {"EGLL"};
-            ActiveCallsign callsign = ActiveCallsign("EGLL_S_TWR", "Bobby", *controller1);
+            ActiveCallsign callsign = ActiveCallsign("EGLL_S_TWR", "Bobby", *controller1, true);
+            ActiveCallsign notUserCallsign = ActiveCallsign("EGLL_S_TWR", "Bobby", *controller1, false);
             UserMessager messager;
             NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
             std::shared_ptr<NotificationsRepository> repository;
@@ -42,7 +43,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _)).Times(0);
 
-            this->handler->ActiveCallsignAdded(this->callsign, false);
+            this->handler->ActiveCallsignAdded(this->notUserCallsign);
         }
 
         TEST_F(NotificationsEventHandlerTest, ItDoesNothingIfNoRelevantNotifications)
@@ -59,7 +60,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, _, _, _, _, _, _)).Times(0);
 
-            this->handler->ActiveCallsignAdded(this->callsign, true);
+            this->handler->ActiveCallsignAdded(this->callsign);
         }
 
         TEST_F(NotificationsEventHandlerTest, ItNotifiesForRelevantNotifications)
@@ -117,7 +118,7 @@ namespace UKControllerPluginTest {
                     _))
                 .Times(1);
 
-            this->handler->ActiveCallsignAdded(this->callsign, true);
+            this->handler->ActiveCallsignAdded(this->callsign);
         }
     } // namespace Notifications
 } // namespace UKControllerPluginTest

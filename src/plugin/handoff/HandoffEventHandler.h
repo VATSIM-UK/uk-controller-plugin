@@ -38,8 +38,8 @@ namespace UKControllerPlugin::Handoff {
         void ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
 
         // Inherited via ActiveCallsignEventHandlerInterface
-        void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign, bool userCallsign) override;
-        void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign, bool userCallsign) override;
+        void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign) override;
+        void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign) override;
         void CallsignsFlushed() override;
 
         private:

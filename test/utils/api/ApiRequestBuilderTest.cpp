@@ -64,15 +64,6 @@ namespace UKControllerPluginUtilsTest::Api {
         EXPECT_TRUE(expectedRequest == this->builder.BuildRemoteFileRequest("http://testurl.com/files/test1.json"));
     }
 
-    TEST_F(ApiRequestBuilderTest, ItBuildsVersionCheckRequests)
-    {
-        CurlRequest expectedRequest("http://testurl.com/version/1.0.0/status", CurlRequest::METHOD_GET);
-        expectedRequest.AddHeader("Authorization", "Bearer apikey");
-        expectedRequest.AddHeader("Accept", "application/json");
-        expectedRequest.AddHeader("Content-Type", "application/json");
-        EXPECT_TRUE(expectedRequest == this->builder.BuildVersionCheckRequest("1.0.0"));
-    }
-
     TEST_F(ApiRequestBuilderTest, ItBuildsSquawkAssignmentDeletionRequests)
     {
         CurlRequest expectedRequest("http://testurl.com/squawk-assignment/BAW123", CurlRequest::METHOD_DELETE);
@@ -552,5 +543,19 @@ namespace UKControllerPluginUtilsTest::Api {
         expectedRequest.AddHeader("Content-Type", "application/json");
 
         EXPECT_TRUE(expectedRequest == this->builder.BuildDeletePrenoteMessageRequest(55));
+    }
+
+    TEST_F(ApiRequestBuilderTest, ItBuildsMissedApproachMessage)
+    {
+        CurlRequest expectedRequest("http://testurl.com/missed-approaches", CurlRequest::METHOD_POST);
+
+        expectedRequest.AddHeader("Authorization", "Bearer apikey");
+        expectedRequest.AddHeader("Accept", "application/json");
+        expectedRequest.AddHeader("Content-Type", "application/json");
+
+        nlohmann::json expectedData = {{"callsign", "BAW123"}};
+        expectedRequest.SetBody(expectedData.dump());
+
+        EXPECT_TRUE(expectedRequest == this->builder.BuildMissedApproachMessage("BAW123"));
     }
 } // namespace UKControllerPluginUtilsTest::Api

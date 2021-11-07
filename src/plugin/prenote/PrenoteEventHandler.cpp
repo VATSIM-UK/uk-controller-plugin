@@ -5,7 +5,6 @@
 #include "euroscope/GeneralSettingsEntries.h"
 #include "euroscope/UserSetting.h"
 #include "message/UserMessager.h"
-#include "ownership/AirfieldOwnershipManager.h"
 #include "prenote/PrenoteEventHandler.h"
 #include "prenote/PrenoteService.h"
 
@@ -18,7 +17,6 @@ using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Message::UserMessager;
-using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Prenote::PrenoteService;
 
 namespace UKControllerPlugin::Prenote {

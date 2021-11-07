@@ -58,15 +58,6 @@ namespace UKControllerPlugin::Api {
     }
 
     /*
-        Builds a request to check the version of the plugin
-    */
-    auto ApiRequestBuilder::BuildVersionCheckRequest(const std::string& versionString) const -> CurlRequest
-    {
-        return this->AddCommonHeaders(
-            CurlRequest(apiDomain + "/version/" + versionString + "/status", CurlRequest::METHOD_GET));
-    }
-
-    /*
         Builds a request for getting minimum stack levels.
     */
     auto ApiRequestBuilder::BuildMinStackLevelRequest() const -> CurlRequest
@@ -443,5 +434,17 @@ namespace UKControllerPlugin::Api {
     {
         return this->AddCommonHeaders(
             {this->apiDomain + "/prenotes/messages/" + std::to_string(messageId), CurlRequest::METHOD_DELETE});
+    }
+
+    auto ApiRequestBuilder::BuildMissedApproachMessage(const std::string& callsign) const
+        -> UKControllerPlugin::Curl::CurlRequest
+    {
+        CurlRequest request(this->apiDomain + "/missed-approaches", CurlRequest::METHOD_POST);
+        nlohmann::json data{
+            {"callsign", callsign},
+        };
+        request.SetBody(data.dump());
+
+        return this->AddCommonHeaders(request);
     }
 } // namespace UKControllerPlugin::Api
