@@ -1,4 +1,4 @@
-# Intention Codes
+# Stands
 
 ## Messages
 
