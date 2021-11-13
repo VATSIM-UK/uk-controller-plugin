@@ -52,6 +52,6 @@ namespace UKControllerPluginTest::Handoff {
     TEST_F(FlightplanSidHandoffMapperTest, ItReturnsMappedHandoff)
     {
         ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
-        EXPECT_EQ(sids.GetByAirfieldAndIdentifier("EGKK", "CLN3X"), mapper.MapForFlightplan(mockFlightplan));
+        EXPECT_EQ(handoffs->Get(1), mapper.MapForFlightplan(mockFlightplan));
     }
 } // namespace UKControllerPluginTest::Handoff

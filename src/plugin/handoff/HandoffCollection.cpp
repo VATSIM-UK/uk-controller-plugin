@@ -17,7 +17,7 @@ namespace UKControllerPlugin::Handoff {
     auto HandoffCollection::Get(int id) const -> const std::shared_ptr<HandoffOrder>
     {
         auto handoff = this->orders.find(id);
-        return handoff == this->orders.cend() ? handoff->second : this->noOrder;
+        return handoff == this->orders.cend() ? this->noOrder : handoff->second;
     }
 
     auto HandoffCollection::Count() const -> size_t

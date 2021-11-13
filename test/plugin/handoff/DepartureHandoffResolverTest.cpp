@@ -81,7 +81,7 @@ namespace UKControllerPluginTest::Handoff {
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_NE(nullptr, resolved);
         EXPECT_EQ("BAW123", resolved->callsign);
-        EXPECT_EQ(121.800, resolved->frequency);
+        EXPECT_EQ(121.950, resolved->frequency);
         EXPECT_EQ(handoffs->Get(1)->order, resolved->hierarchy);
     }
 } // namespace UKControllerPluginTest::Handoff

@@ -44,6 +44,7 @@ namespace UKControllerPlugin::Handoff {
     auto HandoffOrderValid(const nlohmann::json& order, const ControllerPositionCollection& controllers) -> bool
     {
         return order.is_object() && order.contains("id") && order.at("id").is_number_integer() &&
+               order.contains("key") && order.at("key").is_string() &&
                order.contains("controller_positions") && order.at("controller_positions").is_array() &&
                !order.at("controller_positions").empty() &&
                std::find_if_not(

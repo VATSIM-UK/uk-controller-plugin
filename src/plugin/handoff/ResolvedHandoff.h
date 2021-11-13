@@ -13,7 +13,9 @@ namespace UKControllerPlugin::Handoff {
     {
         public:
         ResolvedHandoff(
-            std::string callsign, double frequency, const std::shared_ptr<Controller::ControllerPositionHierarchy>& hierarchy);
+            std::string callsign,
+            double frequency,
+            const std::shared_ptr<Controller::ControllerPositionHierarchy>& hierarchy);
 
         // The normalised callsign of the position that the handoff is to
         const std::string callsign;

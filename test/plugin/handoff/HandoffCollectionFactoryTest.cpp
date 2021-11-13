@@ -84,18 +84,18 @@ namespace UKControllerPluginTest::Handoff {
         EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
     }
 
-    TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfControllerPositionNotInteger)
-    {
-        const nlohmann::json data = {
-            {"id", 1}, {"key", "handoff_key"}, {"controller_positions", nlohmann::json::array({"abc"})}};
-
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
-    }
-
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfControllerPositionsEmpty)
     {
         const nlohmann::json data = {
             {"id", 1}, {"key", "handoff_key"}, {"controller_positions", nlohmann::json::array()}};
+
+        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+    }
+
+    TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfControllerPositionNotInteger)
+    {
+        const nlohmann::json data = {
+            {"id", 1}, {"key", "handoff_key"}, {"controller_positions", nlohmann::json::array({"abc"})}};
 
         EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
     }
@@ -121,7 +121,7 @@ namespace UKControllerPluginTest::Handoff {
         handoffs.push_back(
             nlohmann::json{{"id", 2}, {"key", "handoff_key_2"}, {"controller_positions", nlohmann::json::array({1})}});
 
-        std::unique_ptr<HandoffCollection> collection = Create(this->controllers, handoffs);
+        auto collection = Create(this->controllers, handoffs);
         EXPECT_EQ(2, collection->Count());
         auto handoff1 = collection->Get(1);
         EXPECT_EQ(1, handoff1->id);
@@ -138,7 +138,7 @@ namespace UKControllerPluginTest::Handoff {
 
     TEST_F(HandoffCollectionFactoryTest, ItReturnsAnEmptyCollectionIfHandoffsNotValid)
     {
-        std::unique_ptr<HandoffCollection> collection = Create(this->controllers, nlohmann::json::object());
+        auto collection = Create(this->controllers, nlohmann::json::object());
         EXPECT_EQ(0, collection->Count());
     }
 
@@ -150,8 +150,9 @@ namespace UKControllerPluginTest::Handoff {
         handoffs.push_back(
             nlohmann::json{{"id", 2}, {"key", "handoff_key_2"}, {"controller_positions", nlohmann::json::array({55})}});
 
-        std::unique_ptr<HandoffCollection> collection = Create(this->controllers, handoffs);
+        auto collection = Create(this->controllers, handoffs);
         EXPECT_EQ(1, collection->Count());
+        auto handoff = collection->Get(1);
         EXPECT_NE(nullptr, collection->Get(1));
     }
 } // namespace UKControllerPluginTest::Handoff

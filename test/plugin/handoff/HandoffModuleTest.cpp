@@ -34,12 +34,6 @@ namespace UKControllerPluginTest::Handoff {
         NiceMock<MockDependencyLoader> dependencyLoader;
     };
 
-    TEST_F(HandoffModuleTest, TestItCreatesHandoffCollection)
-    {
-        BootstrapPlugin(this->container, this->dependencyLoader);
-        ASSERT_EQ(0, this->container.handoffs->Count());
-    }
-
     TEST_F(HandoffModuleTest, TestItRegistersTagItem)
     {
         BootstrapPlugin(this->container, this->dependencyLoader);
