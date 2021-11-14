@@ -619,7 +619,7 @@ set(src__prenote
     prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
     prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h
     prenote/PendingPrenoteList.cpp prenote/PendingPrenoteList.h
-    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h)
+    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h prenote/PublishedPrenote.h prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h prenote/PublishedPrenote.cpp)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push

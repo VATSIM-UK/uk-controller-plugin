@@ -218,7 +218,7 @@ namespace UKControllerPluginTest {
         TEST_F(ControllerAirfieldOwnershipHandlerTest, NewActiveCallsignEventRefreshesTopDown)
         {
             this->activeCallsigns.AddCallsign(ActiveCallsign(
-                "EGKK_DEL", "Test", this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), false));
+                "EGKK_DEL", "Test", *this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), false));
             this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("EGKK_DEL"));
             EXPECT_EQ(
                 this->activeCallsigns.GetCallsign("EGKK_DEL"),
@@ -228,7 +228,7 @@ namespace UKControllerPluginTest {
         TEST_F(ControllerAirfieldOwnershipHandlerTest, ControllerUpdateEventUpdatesTopDownMultiple)
         {
             this->activeCallsigns.AddCallsign(ActiveCallsign(
-                "LTC_S_CTR", "Test", this->controllerCollection.FetchPositionByCallsign("LTC_S_CTR"), false));
+                "LTC_S_CTR", "Test", *this->controllerCollection.FetchPositionByCallsign("LTC_S_CTR"), false));
             this->handler.ActiveCallsignAdded(this->activeCallsigns.GetCallsign("LTC_S_CTR"));
             EXPECT_EQ(
                 this->activeCallsigns.GetCallsign("EGKK_TWR"),

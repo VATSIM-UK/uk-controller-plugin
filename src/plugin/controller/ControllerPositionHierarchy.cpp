@@ -1,70 +1,58 @@
-#include "pch/pch.h"
-#include "controller/ControllerPositionHierarchy.h"
-#include "controller/ControllerPosition.h"
+#include "ControllerPosition.h"
+#include "ControllerPositionHierarchy.h"
 
 using UKControllerPlugin::Controller::ControllerPosition;
 
-namespace UKControllerPlugin {
-    namespace Controller {
+namespace UKControllerPlugin::Controller {
+    /*
+        Adds a position to the hierarchy.
+    */
+    void ControllerPositionHierarchy::AddPosition(const std::shared_ptr<const ControllerPosition>& position)
+    {
+        this->positions.push_back(position);
+    }
 
-        ControllerPositionHierarchy::ControllerPositionHierarchy(void)
-        {
+    /*
+        Returns the size of the hierarchy.
+    */
+    auto ControllerPositionHierarchy::CountPositions() const -> size_t
+    {
+        return this->positions.size();
+    }
 
+    /*
+        Returns true iff a given position is found in the hierarchy.
+    */
+    auto ControllerPositionHierarchy::PositionInHierarchy(const ControllerPosition& position) const -> bool
+    {
+        return std::find_if(
+                   this->positions.cbegin(),
+                   this->positions.cend(),
+                   [&position](const std::shared_ptr<const ControllerPosition>& storedPosition) -> bool {
+                       return position == *storedPosition;
+                   }) != this->positions.cend();
+    }
+
+    auto ControllerPositionHierarchy::operator==(const ControllerPositionHierarchy& compare) const -> bool
+    {
+        if (compare.CountPositions() != this->CountPositions()) {
+            return false;
         }
 
-        /*
-            Adds a position to the hierarchy.
-        */
-        void ControllerPositionHierarchy::AddPosition(const ControllerPosition & position)
-        {
-            this->positions.push_back(std::reference_wrapper<const ControllerPosition>(position));
-        }
+        auto it1 = this->positions.cbegin();
+        auto it2 = compare.cbegin();
 
-        /*
-            Returns the size of the hierarchy.
-        */
-        size_t ControllerPositionHierarchy::CountPositions(void) const
-        {
-            return this->positions.size();
-        }
-
-        /*
-            Returns true iff a given position is found in the hierarchy.
-        */
-        bool ControllerPositionHierarchy::PositionInHierarchy(const ControllerPosition & position) const
-        {
-            return std::find_if(
-                this->positions.cbegin(),
-                this->positions.cend(),
-                [position](std::reference_wrapper<const ControllerPosition>(storedPosition)) -> bool {
-                    return position == storedPosition.get();
-            }) != this->positions.cend();
-        }
-
-        bool ControllerPositionHierarchy::operator==(const ControllerPositionHierarchy& compare) const
-        {
-            if (compare.CountPositions() != this->CountPositions()) {
-                return false;
+        // Loop through the positions, stop if they don't match
+        while (it1 != this->positions.cend()) {
+            if ((*it1) == (*it2)) {
+                it1++;
+                it2++;
+                continue;
             }
 
-            std::vector<std::reference_wrapper<const ControllerPosition>>::const_iterator it1
-                = this->positions.cbegin();
-            std::vector<std::reference_wrapper<const ControllerPosition>>::const_iterator it2
-                = compare.positions.cbegin();
-
-            // Loop through the positions, stop if they don't match
-            while (it1 != this->positions.cend())
-            {
-                if (it1->get() == it2->get()) {
-                    it1++;
-                    it2++;
-                    continue;
-                }
-
-                return false;
-            }
-
-            return true;
+            return false;
         }
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+
+        return true;
+    }
+} // namespace UKControllerPlugin::Controller

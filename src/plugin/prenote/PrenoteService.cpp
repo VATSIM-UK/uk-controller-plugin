@@ -51,22 +51,22 @@ namespace UKControllerPlugin::Prenote {
 
     void PrenoteService::PrenoteNotify(const AbstractPrenote& prenote, const EuroScopeCFlightPlanInterface& flightplan)
     {
-        for (auto it = prenote.GetControllers().cbegin(); it != prenote.GetControllers().cend(); ++it) {
-            if (!activeCallsigns.PositionActive(it->get().GetCallsign())) {
+        for (const auto& position : prenote.GetControllers()) {
+            if (!activeCallsigns.PositionActive(position->GetCallsign())) {
                 continue;
             }
 
             // If we're just prenoting ourselves, stop.
-            if (it->get() == this->activeCallsigns.GetUserCallsign().GetNormalisedPosition()) {
+            if (*position == this->activeCallsigns.GetUserCallsign().GetNormalisedPosition()) {
                 return;
             }
 
             // Notify the user
             LogInfo(
-                "Notified user of required prenote to " + it->get().GetCallsign() + " about " +
+                "Notified user of required prenote to " + position->GetCallsign() + " about " +
                 flightplan.GetCallsign());
             this->userMessager.SendMessageToUser(PrenoteUserMessage(
-                prenote, this->activeCallsigns.GetLeadCallsignForPosition(it->get().GetCallsign()), flightplan));
+                prenote, this->activeCallsigns.GetLeadCallsignForPosition(position->GetCallsign()), flightplan));
 
             return;
         }

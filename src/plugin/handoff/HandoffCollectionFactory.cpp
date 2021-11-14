@@ -28,7 +28,7 @@ namespace UKControllerPlugin::Handoff {
             // Build the hierarchy
             std::shared_ptr<ControllerPositionHierarchy> hierarchy = std::make_shared<ControllerPositionHierarchy>();
             for (const auto& controller : handoff.at("controller_positions")) {
-                hierarchy->AddPosition(*controllerPositions.FetchPositionById(controller.get<int>()));
+                hierarchy->AddPosition(controllerPositions.FetchPositionById(controller.get<int>()));
             }
 
             collection->Add(std::make_shared<HandoffOrder>(handoff.at("id").get<int>(), hierarchy));

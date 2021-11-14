@@ -3,9 +3,9 @@
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionHierarchy.h"
 
-using UKControllerPlugin::Prenote::AbstractPrenote;
-using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Controller::ControllerPositionHierarchy;
+using UKControllerPlugin::Prenote::AbstractPrenote;
 
 namespace UKControllerPluginTest {
     namespace Prenote {
@@ -13,30 +13,31 @@ namespace UKControllerPluginTest {
         class ConcretePrenote : public AbstractPrenote
         {
             public:
-                ConcretePrenote(
-                    std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy> controllers
-                ) : AbstractPrenote(std::move(controllers))
-                {
+            ConcretePrenote(std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy> controllers)
+                : AbstractPrenote(std::move(controllers)){
 
-                };
+                  };
 
-                bool IsApplicable(
-                    const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface & flightplan
-                ) const override {
-                    return false;
-                }
+            bool
+            IsApplicable(const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const override
+            {
+                return false;
+            }
 
-                std::string GetSummaryString(void) const override
-                {
-                    return std::string();
-                }
+            std::string GetSummaryString(void) const override
+            {
+                return std::string();
+            }
         };
 
         TEST(AbstractPrenote, GetControllersReturnsControllerHierarchy)
         {
-            ControllerPosition position1(1, "EGKK_DEL", 121.950, {"EGKK"}, true, false);
-            ControllerPosition position2(2, "EGKK_GND", 121.800, {"EGKK"}, true, false);
-            ControllerPosition position3(3, "EGKK_TWR", 124.220, {"EGKK"}, true, false);
+            auto position1 = std::make_shared<ControllerPosition>(
+                1, "EGKK_DEL", 121.950, std::vector<std::string>{"EGKK"}, true, false);
+            auto position2 = std::make_shared<ControllerPosition>(
+                2, "EGKK_GND", 121.800, std::vector<std::string>{"EGKK"}, true, false);
+            auto position3 = std::make_shared<ControllerPosition>(
+                3, "EGKK_TWR", 124.220, std::vector<std::string>{"EGKK"}, true, false);
             std::unique_ptr<ControllerPositionHierarchy> hierarchy = std::make_unique<ControllerPositionHierarchy>();
 
             hierarchy->AddPosition(position1);
@@ -44,9 +45,8 @@ namespace UKControllerPluginTest {
             hierarchy->AddPosition(position3);
 
             // Take a copy of the hierarchy
-            std::unique_ptr<ControllerPositionHierarchy> hierarchyCopy = std::make_unique<ControllerPositionHierarchy>(
-                *hierarchy
-            );
+            std::unique_ptr<ControllerPositionHierarchy> hierarchyCopy =
+                std::make_unique<ControllerPositionHierarchy>(*hierarchy);
             ConcretePrenote prenote(std::move(hierarchy));
 
             // Check the hierarchies match
@@ -58,5 +58,5 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(it1++->get(), it2++->get());
             EXPECT_EQ(it1++->get(), it2++->get());
         }
-    }  // namespace Prenote
-}  // namespace UKControllerPluginTest
+    } // namespace Prenote
+} // namespace UKControllerPluginTest

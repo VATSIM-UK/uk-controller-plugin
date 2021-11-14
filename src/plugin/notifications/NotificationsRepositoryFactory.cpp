@@ -60,7 +60,7 @@ namespace UKControllerPlugin::Notifications {
                 notification->at("body").get<std::string>(),
                 ParseTimeString(notification->at("valid_from")),
                 ParseTimeString(notification->at("valid_to")),
-                hierarchyFactory.CreateFromJson(notification->at("controllers")),
+                hierarchyFactory.CreateFromJsonByCallsign(notification->at("controllers")),
                 notification->at("link").is_null() ? "" : notification->at("link").get<std::string>()));
         }
     }
@@ -114,7 +114,7 @@ namespace UKControllerPlugin::Notifications {
         -> bool
     {
         try {
-            hierarchyFactory.CreateFromJson(controllers);
+            static_cast<void>(hierarchyFactory.CreateFromJsonByCallsign(controllers));
             return true;
         } catch (...) {
             return false;

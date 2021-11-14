@@ -15,16 +15,18 @@ namespace UKControllerPluginTest::Handoff {
     class HandoffCollectionTest : public Test
     {
         public:
-        HandoffCollectionTest() : position(new ControllerPosition(1, "EGKK_GND", 122.8, {"EGKK"}, true, false))
+        HandoffCollectionTest()
+            : position(std::make_shared<ControllerPosition>(
+                  1, "EGKK_GND", 122.8, std::vector<std::string>{"EGKK"}, true, false))
         {
 
             this->hierarchy = std::make_shared<ControllerPositionHierarchy>();
-            this->hierarchy->AddPosition(*this->position);
+            this->hierarchy->AddPosition(this->position);
             this->handoff1 = std::make_shared<HandoffOrder>(1, this->hierarchy);
             this->handoff2 = std::make_shared<HandoffOrder>(2, this->hierarchy);
         }
 
-        std::unique_ptr<ControllerPosition> position;
+        std::shared_ptr<ControllerPosition> position;
         HandoffCollection collection;
         std::shared_ptr<ControllerPositionHierarchy> hierarchy;
         std::shared_ptr<HandoffOrder> handoff1;

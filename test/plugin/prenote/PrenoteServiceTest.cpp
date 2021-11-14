@@ -64,11 +64,11 @@ namespace UKControllerPluginTest {
                 this->airfieldOwnership = std::make_unique<AirfieldServiceProviderCollection>();
 
                 // Add controllers
-                this->controllerUser = std::unique_ptr<ControllerPosition>(
+                this->controllerUser = std::shared_ptr<ControllerPosition>(
                     new ControllerPosition(1, "EGKK_GND", 121.800, {"EGKK"}, true, false));
-                this->controllerOther = std::unique_ptr<ControllerPosition>(
+                this->controllerOther = std::shared_ptr<ControllerPosition>(
                     new ControllerPosition(2, "EGKK_APP", 126.820, {"EGKK"}, true, false));
-                this->controllerNoLondon = std::unique_ptr<ControllerPosition>(
+                this->controllerNoLondon = std::shared_ptr<ControllerPosition>(
                     new ControllerPosition(3, "LON_S_CTR", 129.420, {"EGKK"}, true, false));
                 this->activeCallsigns.AddUserCallsign(
                     ActiveCallsign("EGKK_GND", "Testy McTestface", *this->controllerUser, true));
@@ -95,9 +95,9 @@ namespace UKControllerPluginTest {
             std::unique_ptr<PrenoteService> service;
             std::unique_ptr<AirfieldServiceProviderCollection> airfieldOwnership;
             ActiveCallsignCollection activeCallsigns;
-            std::unique_ptr<ControllerPosition> controllerUser;
-            std::unique_ptr<ControllerPosition> controllerOther;
-            std::unique_ptr<ControllerPosition> controllerNoLondon;
+            std::shared_ptr<ControllerPosition> controllerUser;
+            std::shared_ptr<ControllerPosition> controllerOther;
+            std::shared_ptr<ControllerPosition> controllerNoLondon;
             std::unique_ptr<UserMessager> messager;
             std::unique_ptr<ControllerPositionHierarchy> hierarchy;
             NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
@@ -124,7 +124,7 @@ namespace UKControllerPluginTest {
         TEST_F(PrenoteServiceTest, CountPrenotesReturnsNumberOfPrenotesStored)
         {
             // Add self to the prenote hierarchy
-            this->hierarchy->AddPosition(*this->controllerOther);
+            this->hierarchy->AddPosition(this->controllerOther);
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), false));
 
             EXPECT_EQ(1, this->service->CountPrenotes());
@@ -137,7 +137,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             // Add self to the prenote hierarchy
-            this->hierarchy->AddPosition(*this->controllerOther);
+            this->hierarchy->AddPosition(this->controllerOther);
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), false));
 
             EXPECT_NO_THROW(this->service->SendPrenotes(this->mockFlightplan));
@@ -150,7 +150,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             // The target controller is offline.
-            this->hierarchy->AddPosition(*this->controllerOther);
+            this->hierarchy->AddPosition(this->controllerOther);
             this->activeCallsigns.RemoveCallsign(
                 ActiveCallsign("EGKK_APP", "Testy McTestface II", *this->controllerOther, false));
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), true));
@@ -165,7 +165,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             // Add self to the prenote hierarchy
-            this->hierarchy->AddPosition(*this->controllerUser);
+            this->hierarchy->AddPosition(this->controllerUser);
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), true));
 
             EXPECT_NO_THROW(this->service->SendPrenotes(this->mockFlightplan));
@@ -191,7 +191,7 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             // Add self to the prenote hierarchy
-            this->hierarchy->AddPosition(*this->controllerOther);
+            this->hierarchy->AddPosition(this->controllerOther);
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), true));
 
             this->service->SendPrenotes(this->mockFlightplan);
@@ -217,8 +217,8 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             // Add self to the prenote hierarchy
-            this->hierarchy->AddPosition(*this->controllerOther);
-            this->hierarchy->AddPosition(*this->controllerNoLondon);
+            this->hierarchy->AddPosition(this->controllerOther);
+            this->hierarchy->AddPosition(this->controllerNoLondon);
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), true));
 
             this->service->SendPrenotes(this->mockFlightplan);
@@ -244,8 +244,8 @@ namespace UKControllerPluginTest {
                 .Times(1);
 
             // Add self to the prenote hierarchy
-            this->hierarchy->AddPosition(*this->controllerOther);
-            this->hierarchy->AddPosition(*this->controllerNoLondon);
+            this->hierarchy->AddPosition(this->controllerOther);
+            this->hierarchy->AddPosition(this->controllerNoLondon);
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), true));
 
             this->service->SendPrenotes(this->mockFlightplan);
@@ -287,8 +287,8 @@ namespace UKControllerPluginTest {
             // Add self to the prenote hierarchy
             std::unique_ptr<ControllerPositionHierarchy> hierarchy2 =
                 std::make_unique<ControllerPositionHierarchy>(*this->hierarchy);
-            this->hierarchy->AddPosition(*this->controllerOther);
-            hierarchy2->AddPosition(*this->controllerNoLondon);
+            this->hierarchy->AddPosition(this->controllerOther);
+            hierarchy2->AddPosition(this->controllerNoLondon);
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), true));
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(hierarchy2), true));
 
@@ -315,8 +315,8 @@ namespace UKControllerPluginTest {
                 .Times(2);
 
             // Add self to the prenote hierarchy
-            this->hierarchy->AddPosition(*this->controllerOther);
-            this->hierarchy->AddPosition(*this->controllerNoLondon);
+            this->hierarchy->AddPosition(this->controllerOther);
+            this->hierarchy->AddPosition(this->controllerNoLondon);
             this->service->AddPrenote(std::make_unique<EventHandlerPrenote>(std::move(this->hierarchy), true));
 
             this->service->SendPrenotes(this->mockFlightplan);

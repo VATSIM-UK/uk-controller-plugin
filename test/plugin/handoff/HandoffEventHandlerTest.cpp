@@ -12,7 +12,6 @@
 #include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 #include "tag/TagData.h"
-#include "memory"
 
 using testing::NiceMock;
 using testing::Return;
@@ -42,7 +41,10 @@ namespace UKControllerPluginTest::Handoff {
     {
         public:
         HandoffEventHandlerTest()
-            : position1(1, "LON_S_CTR", 129.420, {}, true, false), position2(2, "LON_SC_CTR", 132.6, {}, true, false),
+            : position1(std::make_shared<ControllerPosition>(
+                  1, "LON_S_CTR", 129.420, std::vector<std::string>{}, true, false)),
+              position2(std::make_shared<ControllerPosition>(
+                  2, "LON_SC_CTR", 132.6, std::vector<std::string>{}, true, false)),
               tagData(
                   mockFlightplan,
                   mockRadarTarget,
@@ -81,8 +83,8 @@ namespace UKControllerPluginTest::Handoff {
         COLORREF tagColour = RGB(255, 255, 255);
         int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
         char itemString[16] = "Foooooo";
-        ControllerPosition position1;
-        ControllerPosition position2;
+        std::shared_ptr<ControllerPosition> position1;
+        std::shared_ptr<ControllerPosition> position2;
         std::shared_ptr<ControllerPositionHierarchy> hierarchy;
         std::shared_ptr<ControllerPositionHierarchy> hierarchy2;
         NiceMock<MockOutboundIntegrationEventHandler> mockIntegration;
@@ -144,7 +146,7 @@ namespace UKControllerPluginTest::Handoff {
     TEST_F(HandoffEventHandlerTest, TestItReturnsFrequencyIfControllerFoundInHandoffOrder)
     {
         this->AddHandoffOrders();
-        this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2, false));
+        this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", *this->position2, false));
 
         std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
             std::make_shared<HandoffFrequencyUpdatedMessage>("BAW123", "132.600");
@@ -158,7 +160,7 @@ namespace UKControllerPluginTest::Handoff {
     TEST_F(HandoffEventHandlerTest, TestItCachesFoundController)
     {
         this->AddHandoffOrders();
-        this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2, false));
+        this->activeCallsigns.AddCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", *this->position2, false));
         this->handler.SetTagItemData(this->tagData);
         EXPECT_EQ(132.600, this->cache->Get("BAW123")->frequency);
     }
@@ -166,7 +168,7 @@ namespace UKControllerPluginTest::Handoff {
     TEST_F(HandoffEventHandlerTest, TestItReturnsDefaultIfFoundControllerIsUser)
     {
         this->AddHandoffOrders();
-        this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2, true));
+        this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", *this->position2, true));
         this->handler.SetTagItemData(this->tagData);
         EXPECT_EQ("122.800", this->tagData.GetItemString());
     }
@@ -174,7 +176,7 @@ namespace UKControllerPluginTest::Handoff {
     TEST_F(HandoffEventHandlerTest, TestItCachesIfFoundControllerIsUser)
     {
         this->AddHandoffOrders();
-        this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", this->position2, true));
+        this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", *this->position2, true));
         this->handler.SetTagItemData(this->tagData);
         EXPECT_EQ(122.800, this->cache->Get("BAW123")->frequency);
     }
@@ -205,7 +207,7 @@ namespace UKControllerPluginTest::Handoff {
         this->cache->Add(std::make_shared<ResolvedHandoff>("BAW123", 123.456, this->hierarchy));
         this->cache->Add(std::make_shared<ResolvedHandoff>("BAW456", 123.456, this->hierarchy2));
 
-        this->handler.ActiveCallsignAdded(ActiveCallsign("LON_SC_CTR", "Testy", this->position2, true));
+        this->handler.ActiveCallsignAdded(ActiveCallsign("LON_SC_CTR", "Testy", *this->position2, true));
 
         EXPECT_EQ(nullptr, this->cache->Get("BAW123"));
         EXPECT_NE(nullptr, this->cache->Get("BAW456"));
@@ -216,7 +218,7 @@ namespace UKControllerPluginTest::Handoff {
         this->cache->Add(std::make_shared<ResolvedHandoff>("BAW123", 123.456, this->hierarchy));
         this->cache->Add(std::make_shared<ResolvedHandoff>("BAW456", 123.456, this->hierarchy2));
 
-        this->handler.ActiveCallsignRemoved(ActiveCallsign("LON_SC_CTR", "Testy", this->position2, true));
+        this->handler.ActiveCallsignRemoved(ActiveCallsign("LON_SC_CTR", "Testy", *this->position2, true));
 
         EXPECT_EQ(nullptr, this->cache->Get("BAW123"));
         EXPECT_NE(nullptr, this->cache->Get("BAW456"));

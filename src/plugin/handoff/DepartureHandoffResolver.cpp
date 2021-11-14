@@ -26,17 +26,17 @@ namespace UKControllerPlugin::Handoff {
         }
 
         for (const auto& controller : *handoff->order) {
-            if (!this->activeCallsigns.PositionActive(controller.get().GetCallsign())) {
+            if (!this->activeCallsigns.PositionActive(controller->GetCallsign())) {
                 continue;
             }
 
             // If the controller is the user, no handoff frequency here!
-            if (this->activeCallsigns.GetLeadCallsignForPosition(controller.get().GetCallsign()).GetIsUser()) {
+            if (this->activeCallsigns.GetLeadCallsignForPosition(controller->GetCallsign()).GetIsUser()) {
                 break;
             }
 
             return std::make_shared<ResolvedHandoff>(
-                flightplan.GetCallsign(), controller.get().GetFrequency(), handoff->order);
+                flightplan.GetCallsign(), controller->GetFrequency(), handoff->order);
         }
 
         return ResolveToUnicom(flightplan);

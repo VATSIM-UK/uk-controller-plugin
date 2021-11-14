@@ -1,12 +1,11 @@
-#include "pch/pch.h"
 #include "notifications/Notification.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionHierarchy.h"
 
 using ::testing::Test;
-using UKControllerPlugin::Notifications::Notification;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
+using UKControllerPlugin::Notifications::Notification;
 
 namespace UKControllerPluginTest {
     namespace Notifications {
@@ -14,33 +13,29 @@ namespace UKControllerPluginTest {
         class NotificationTest : public Test
         {
             public:
-                Notification GetNotification(
-                    std::chrono::system_clock::time_point validFrom,
-                    std::chrono::system_clock::time_point validTo
-                )
-                {
-                    std::unique_ptr<ControllerPositionHierarchy> hierarchy =
-                        std::make_unique<ControllerPositionHierarchy>();
-                    hierarchy->AddPosition(position);
+            NotificationTest()
+                : position(std::make_shared<ControllerPosition>(
+                      1, "EGKK_TWR", 124.220, std::vector<std::string>{"EGKK"}, true, false)),
+                  position2(std::make_shared<ControllerPosition>(
+                      2, "EGKK_APP", 126.820, std::vector<std::string>{"EGKK"}, true, false))
+            {
+            }
+            Notification GetNotification(
+                std::chrono::system_clock::time_point validFrom, std::chrono::system_clock::time_point validTo)
+            {
+                std::unique_ptr<ControllerPositionHierarchy> hierarchy =
+                    std::make_unique<ControllerPositionHierarchy>();
+                hierarchy->AddPosition(position);
 
-                    return Notification(
-                        3,
-                        "Title",
-                        "Body",
-                        validFrom,
-                        validTo,
-                        std::move(hierarchy),
-                        "Link"
-                    );
-                }
+                return Notification(3, "Title", "Body", validFrom, validTo, std::move(hierarchy), "Link");
+            }
 
-                std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-                std::chrono::system_clock::time_point oneHourAgo =
-                    std::chrono::system_clock::now() - std::chrono::hours(1);
-                std::chrono::system_clock::time_point oneHoursTime =
-                    std::chrono::system_clock::now() + std::chrono::hours(1);
-                ControllerPosition position = ControllerPosition(1, "EGKK_TWR", 124.220, {"EGKK"}, true, false);
-                ControllerPosition position2 = ControllerPosition(2, "EGKK_APP", 126.820, {"EGKK"}, true, false);
+            std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+            std::chrono::system_clock::time_point oneHourAgo = std::chrono::system_clock::now() - std::chrono::hours(1);
+            std::chrono::system_clock::time_point oneHoursTime =
+                std::chrono::system_clock::now() + std::chrono::hours(1);
+            std::shared_ptr<ControllerPosition> position;
+            std::shared_ptr<ControllerPosition> position2;
         };
 
         TEST_F(NotificationTest, ItHasAnId)
@@ -80,12 +75,12 @@ namespace UKControllerPluginTest {
 
         TEST_F(NotificationTest, ItIsRelevant)
         {
-            EXPECT_TRUE(this->GetNotification(now, now).IsRelevant(this->position));
+            EXPECT_TRUE(this->GetNotification(now, now).IsRelevant(*this->position));
         }
 
         TEST_F(NotificationTest, ItIsNotRelevant)
         {
-            EXPECT_FALSE(this->GetNotification(now, now).IsRelevant(this->position2));
+            EXPECT_FALSE(this->GetNotification(now, now).IsRelevant(*this->position2));
         }
 
         TEST_F(NotificationTest, ItDefaultsToNotRead)
@@ -99,5 +94,5 @@ namespace UKControllerPluginTest {
             notification.Read();
             EXPECT_TRUE(notification.IsRead());
         }
-    }  // namespace Notifications
-}  // namespace UKControllerPluginTest
+    } // namespace Notifications
+} // namespace UKControllerPluginTest

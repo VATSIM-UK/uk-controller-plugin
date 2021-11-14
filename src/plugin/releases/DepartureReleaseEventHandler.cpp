@@ -311,7 +311,7 @@ namespace UKControllerPlugin::Releases {
             this->releaseRequests.cend(),
             [fp, this, context](auto releaseRequest) -> bool {
                 return fp->GetCallsign() == releaseRequest.second->Callsign() &&
-                       this->controllers.FetchPositionByCallsign(context).GetId() ==
+                       this->controllers.FetchPositionByCallsign(context)->GetId() ==
                            releaseRequest.second->TargetController();
             });
 

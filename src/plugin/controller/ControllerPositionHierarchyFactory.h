@@ -1,31 +1,25 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Controller {
-        class ControllerPositionCollection;
-        class ControllerPositionHierarchy;
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Controller {
+    class ControllerPositionCollection;
+    class ControllerPositionHierarchy;
+} // namespace UKControllerPlugin::Controller
 
-namespace UKControllerPlugin {
-    namespace Controller {
+namespace UKControllerPlugin::Controller {
 
-        /*
-            Responsible for creating Hierarchies of controllers.
-        */
-        class ControllerPositionHierarchyFactory
-        {
-            public:
-                ControllerPositionHierarchyFactory(
-                    const ControllerPositionCollection& controllers
-                );
-                std::unique_ptr<ControllerPositionHierarchy> CreateFromJson(
-                    const nlohmann::json & json
-                ) const;
+    /*
+        Responsible for creating Hierarchies of controllers.
+    */
+    class ControllerPositionHierarchyFactory
+    {
+        public:
+        ControllerPositionHierarchyFactory(const ControllerPositionCollection& controllers);
+        [[nodiscard]] std::unique_ptr<ControllerPositionHierarchy>
+        CreateFromJsonByCallsign(const nlohmann::json& json) const;
+        [[nodiscard]] std::unique_ptr<ControllerPositionHierarchy> CreateFromJsonById(const nlohmann::json& json) const;
 
-            private:
-                // All the controller positions known to the plugin
-                const ControllerPositionCollection& controllers;
-        };
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+        private:
+        // All the controller positions known to the plugin
+        const ControllerPositionCollection& controllers;
+    };
+} // namespace UKControllerPlugin::Controller

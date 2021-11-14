@@ -1,11 +1,9 @@
-#include "pch/pch.h"
-
+#include "AbstractPrenote.h"
+#include "AirfieldPairingPrenote.h"
+#include "DeparturePrenote.h"
+#include "PrenoteFactory.h"
 #include "controller/ControllerPositionHierarchy.h"
 #include "controller/ControllerPositionHierarchyFactory.h"
-#include "prenote/AbstractPrenote.h"
-#include "prenote/AirfieldPairingPrenote.h"
-#include "prenote/DeparturePrenote.h"
-#include "prenote/PrenoteFactory.h"
 
 using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 using UKControllerPlugin::Prenote::AbstractPrenote;
@@ -40,7 +38,7 @@ namespace UKControllerPlugin::Prenote {
         }
 
         return std::make_unique<AirfieldPairingPrenote>(
-            this->controllerFactory.CreateFromJson(json.at("recipient")),
+            this->controllerFactory.CreateFromJsonByCallsign(json.at("recipient")),
             json["origin"],
             json["destination"],
             json.at("flight_rules").is_string() ? json.at("flight_rules").get<std::string>() : "");
@@ -61,7 +59,9 @@ namespace UKControllerPlugin::Prenote {
         }
 
         return std::make_unique<DeparturePrenote>(
-            this->controllerFactory.CreateFromJson(json.at("recipient")), json["airfield"], json["departure"]);
+            this->controllerFactory.CreateFromJsonByCallsign(json.at("recipient")),
+            json["airfield"],
+            json["departure"]);
     }
 
     /*
