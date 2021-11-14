@@ -370,7 +370,7 @@ set(test__prenote
         "prenote/TriggerPrenoteMessageStatusViewTest.cpp"
         "prenote/AcknowledgePrenoteMessageTest.cpp"
         "prenote/TogglePendingPrenoteListTest.cpp"
-        "prenote/PendingPrenoteListTest.cpp" prenote/PublishedPrenoteCollectionTest.cpp)
+        "prenote/PendingPrenoteListTest.cpp" prenote/PublishedPrenoteCollectionTest.cpp prenote/PublishedPrenoteCollectionFactoryTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push

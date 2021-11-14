@@ -27,6 +27,7 @@ namespace UKControllerPlugin::Prenote {
                 hierarchyFactory.CreateFromJsonById(prenote.at("controller_positions"))));
         }
 
+        LogInfo("Loaded " + std::to_string(collection->Count()) + " published prenotes");
         return collection;
     }
 
