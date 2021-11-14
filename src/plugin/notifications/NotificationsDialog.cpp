@@ -243,6 +243,7 @@ namespace UKControllerPlugin::Notifications {
 
         // Force a repaint to make sure the notifications are painted the right colour
         RedrawWindow(notificationsList, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
+        LogInfo("Marked notification read: " + std::to_string(notification->Id()));
     }
 
     auto NotificationsDialog::HighlightRelevantNotification(LPNMLVCUSTOMDRAW customDraw) -> HRESULT
@@ -274,7 +275,6 @@ namespace UKControllerPlugin::Notifications {
     auto NotificationsDialog::GetSelectedNotification(HWND hwnd) const -> Notification*
     {
         if (this->selectedNotification == noNotificationSelected) {
-            LogWarning("Tried to mark notification as read but none selected");
             return nullptr;
         }
 
