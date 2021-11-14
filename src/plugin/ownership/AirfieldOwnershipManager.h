@@ -30,7 +30,7 @@ namespace UKControllerPlugin::Ownership {
             const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns);
         void Flush();
         [[nodiscard]] auto GetOwnedAirfields(const std::string& callsign) const
-            -> std::vector<std::reference_wrapper<const UKControllerPlugin::Airfield::AirfieldModel>>;
+            -> std::vector<std::shared_ptr<UKControllerPlugin::Airfield::AirfieldModel>>;
         void RefreshOwner(const std::string& icao);
         [[nodiscard]] auto GetProviders() const -> const AirfieldServiceProviderCollection&;
 
@@ -44,7 +44,8 @@ namespace UKControllerPlugin::Ownership {
         static void
         LogRemovedServiceProvision(const std::string& icao, const std::shared_ptr<ServiceProvision>& provision);
         [[nodiscard]] auto GetActiveControllersInAirfieldTopdownOrder(
-            const std::string& icao, const std::vector<std::string>& topDownOrder) -> std::vector<std::string>;
+            const std::string& icao, const std::shared_ptr<Airfield::AirfieldModel>& airfield) ->
+            std::vector<std::string>;
         [[nodiscard]] auto GetServiceProvidersAtAirfield(const std::vector<std::string>& controllers)
             -> std::vector<std::shared_ptr<ServiceProvision>>;
         void

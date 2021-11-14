@@ -1,38 +1,35 @@
-#include "pch/pch.h"
-#include "airfield/AirfieldModel.h"
+#include "AirfieldModel.h"
+#include "controller/ControllerPositionHierarchy.h"
 
-namespace UKControllerPlugin {
-    namespace Airfield {
+namespace UKControllerPlugin::Airfield {
 
-        AirfieldModel::AirfieldModel(std::string icao, std::vector<std::string> ownership)
-        {
-            if (icao.size() > 4 || icao.substr(0, 2).compare("EG") != 0) {
-                throw std::invalid_argument("Invalid UK code.");
-            }
+    AirfieldModel::AirfieldModel(
+        int id, std::string icao, std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder)
+        : id(id), icao(std::move(icao)), topDownOrder(std::move(topDownOrder))
+    {
+    }
 
-            this->icao = icao;
-            this->ownershipPresedence = ownership;
-        }
+    AirfieldModel::~AirfieldModel() = default;
+    AirfieldModel::AirfieldModel(AirfieldModel&&) noexcept = default;
+    auto AirfieldModel::operator=(AirfieldModel&&) noexcept -> AirfieldModel& = default;
 
-        std::string AirfieldModel::GetIcao(void) const
-        {
-            return this->icao;
-        }
+    auto AirfieldModel::Id() const -> int
+    {
+        return this->id;
+    }
 
-        /*
-            Returns the ownership presedence for the airfield.
-        */
-        std::vector<std::string> AirfieldModel::GetOwnershipPresedence(void) const
-        {
-            return this->ownershipPresedence;
-        }
+    auto AirfieldModel::Icao() const -> std::string
+    {
+        return this->icao;
+    }
 
-        /*
-            Returns true if the two airfields are the same.
-        */
-        bool AirfieldModel::operator==(const AirfieldModel& compare)
-        {
-            return this->icao == compare.icao;
-        }
-    }  // namespace Airfield
-}  // namespace UKControllerPlugin
+    auto AirfieldModel::TopDownOrder() const -> const Controller::ControllerPositionHierarchy&
+    {
+        return *this->topDownOrder;
+    }
+    
+    auto AirfieldModel::operator==(const AirfieldModel& compare) const -> bool
+    {
+        return this->id == compare.id;
+    }
+} // namespace UKControllerPlugin::Airfield

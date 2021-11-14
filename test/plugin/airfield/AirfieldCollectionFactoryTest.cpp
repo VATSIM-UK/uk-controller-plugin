@@ -7,7 +7,7 @@ using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
 using UKControllerPlugin::Airfield::AirfieldCollection;
-using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
+using UKControllerPlugin::Airfield::CreateAirfieldColletion;
 using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 

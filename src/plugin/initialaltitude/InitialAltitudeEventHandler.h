@@ -1,5 +1,5 @@
 #pragma once
-#include "airfield/NormaliseSid.h"
+#include "sid/NormaliseSid.h"
 #include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "euroscope/UserSettingAwareInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"

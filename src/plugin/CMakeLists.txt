@@ -16,9 +16,7 @@ set(src__airfield
     "airfield/AirfieldCollectionFactory.h"
     "airfield/AirfieldModel.cpp"
     "airfield/AirfieldModel.h"
-    "airfield/NormaliseSid.cpp"
-    "airfield/NormaliseSid.h"
-)
+        airfield/AirfieldModule.cpp airfield/AirfieldModule.h)
 source_group("src\\airfield" FILES ${src__airfield})
 
 set(src__api
@@ -746,6 +744,8 @@ set(src__sid
     "sid/SidModule.h"
     "sid/StandardInstrumentDeparture.cpp"
     "sid/StandardInstrumentDeparture.h"
+    "sid/NormaliseSid.cpp"
+    "sid/NormaliseSid.h"
 )
 source_group("src\\sid" FILES ${src__sid})
 
