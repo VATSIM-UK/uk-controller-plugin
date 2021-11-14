@@ -23,7 +23,7 @@ namespace UKControllerPlugin::Handoff {
             std::make_shared<DepartureHandoffResolver>(
                 std::make_shared<FlightplanSidHandoffMapper>(
                     Create(
-                        *container.controllerPositions,
+                        *container.controllerHierarchyFactory,
                         dependency.LoadDependency(GetHandoffDependencyKey(), nlohmann::json::array())),
                     *container.sids),
                 *container.activeCallsigns),

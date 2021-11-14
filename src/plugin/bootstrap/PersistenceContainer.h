@@ -16,6 +16,7 @@ namespace UKControllerPlugin {
     namespace Controller {
         class ActiveCallsignCollection;
         class ControllerPositionCollection;
+        class ControllerPositionHierarchyFactory;
         class ControllerStatusEventHandlerCollection;
         class HandoffEventHandlerCollection;
         class Login;
@@ -203,6 +204,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
         std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
+        std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchyFactory> controllerHierarchyFactory;
         std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;

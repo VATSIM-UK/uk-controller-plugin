@@ -4,10 +4,12 @@
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPositionHierarchy.h"
+#include "controller/ControllerPositionHierarchyFactory.h"
 
 using testing::Test;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
+using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 using UKControllerPlugin::Handoff::Create;
 using UKControllerPlugin::Handoff::HandoffCollection;
 using UKControllerPlugin::Handoff::HandoffOrderValid;
@@ -18,6 +20,7 @@ namespace UKControllerPluginTest::Handoff {
     {
         public:
         HandoffCollectionFactoryTest()
+            : factory(controllers)
         {
             std::vector<std::string> handoffs = {"EGKK"};
             controllers.AddPosition(
@@ -27,6 +30,7 @@ namespace UKControllerPluginTest::Handoff {
         }
 
         ControllerPositionCollection controllers;
+        ControllerPositionHierarchyFactory factory;
     };
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsValid)
@@ -34,14 +38,14 @@ namespace UKControllerPluginTest::Handoff {
         const nlohmann::json data = {
             {"id", 1}, {"key", "handoff_key"}, {"controller_positions", nlohmann::json::array({1, 2})}};
 
-        EXPECT_TRUE(HandoffOrderValid(data, this->controllers));
+        EXPECT_TRUE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfNoId)
     {
         const nlohmann::json data = {{"key", "handoff_key"}, {"controller_positions", nlohmann::json::array({1, 2})}};
 
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfIdNotInteger)
@@ -49,21 +53,21 @@ namespace UKControllerPluginTest::Handoff {
         const nlohmann::json data = {
             {"id", "abc"}, {"key", "handoff_key"}, {"controller_positions", nlohmann::json::array({1, 2})}};
 
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfNoKey)
     {
         const nlohmann::json data = {{"id", 1}, {"controller_positions", nlohmann::json::array({1, 2})}};
 
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfKeyNotString)
     {
         const nlohmann::json data = {{"id", 1}, {"key", 123}, {"controller_positions", nlohmann::json::array({1, 2})}};
 
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfNoControllerPositions)
@@ -73,7 +77,7 @@ namespace UKControllerPluginTest::Handoff {
             {"key", "handoff_key"},
         };
 
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfControllerPositionsNotArray)
@@ -81,7 +85,7 @@ namespace UKControllerPluginTest::Handoff {
         const nlohmann::json data = {
             {"id", 1}, {"key", "handoff_key"}, {"controller_positions", nlohmann::json::object()}};
 
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfControllerPositionsEmpty)
@@ -89,7 +93,7 @@ namespace UKControllerPluginTest::Handoff {
         const nlohmann::json data = {
             {"id", 1}, {"key", "handoff_key"}, {"controller_positions", nlohmann::json::array()}};
 
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfControllerPositionNotInteger)
@@ -97,7 +101,7 @@ namespace UKControllerPluginTest::Handoff {
         const nlohmann::json data = {
             {"id", 1}, {"key", "handoff_key"}, {"controller_positions", nlohmann::json::array({"abc"})}};
 
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfControllerPositionIsNotValid)
@@ -105,12 +109,12 @@ namespace UKControllerPluginTest::Handoff {
         const nlohmann::json data = {
             {"id", 1}, {"key", "handoff_key"}, {"controller_positions", nlohmann::json::array({1, 2, 55})}};
 
-        EXPECT_FALSE(HandoffOrderValid(data, this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsNotValidIfNotObject)
     {
-        EXPECT_FALSE(HandoffOrderValid(nlohmann::json::array(), this->controllers));
+        EXPECT_FALSE(HandoffOrderValid(nlohmann::json::array(), this->factory));
     }
 
     TEST_F(HandoffCollectionFactoryTest, ItReturnsACollectionOfHandoffs)
@@ -121,7 +125,7 @@ namespace UKControllerPluginTest::Handoff {
         handoffs.push_back(
             nlohmann::json{{"id", 2}, {"key", "handoff_key_2"}, {"controller_positions", nlohmann::json::array({1})}});
 
-        auto collection = Create(this->controllers, handoffs);
+        auto collection = Create(this->factory, handoffs);
         EXPECT_EQ(2, collection->Count());
         auto handoff1 = collection->Get(1);
         EXPECT_EQ(1, handoff1->id);
@@ -138,7 +142,7 @@ namespace UKControllerPluginTest::Handoff {
 
     TEST_F(HandoffCollectionFactoryTest, ItReturnsAnEmptyCollectionIfHandoffsNotValid)
     {
-        auto collection = Create(this->controllers, nlohmann::json::object());
+        auto collection = Create(this->factory, nlohmann::json::object());
         EXPECT_EQ(0, collection->Count());
     }
 
@@ -150,9 +154,8 @@ namespace UKControllerPluginTest::Handoff {
         handoffs.push_back(
             nlohmann::json{{"id", 2}, {"key", "handoff_key_2"}, {"controller_positions", nlohmann::json::array({55})}});
 
-        auto collection = Create(this->controllers, handoffs);
+        auto collection = Create(this->factory, handoffs);
         EXPECT_EQ(1, collection->Count());
-        auto handoff = collection->Get(1);
         EXPECT_NE(nullptr, collection->Get(1));
     }
 } // namespace UKControllerPluginTest::Handoff

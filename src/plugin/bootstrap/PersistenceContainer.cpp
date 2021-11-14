@@ -4,6 +4,7 @@
 #include "command/CommandHandlerCollection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPositionCollection.h"
+#include "controller/ControllerPositionHierarchyFactory.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "countdown/CountdownTimer.h"

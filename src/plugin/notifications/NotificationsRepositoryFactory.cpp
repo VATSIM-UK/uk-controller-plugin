@@ -20,14 +20,13 @@ namespace UKControllerPlugin::Notifications {
             LogError("Failed to get notifications " + std::string(apiException.what()));
             return repository;
         }
-
-        const Controller::ControllerPositionHierarchyFactory hierarchyFactory(*container.controllerPositions);
-        if (!NotificationsValid(allNotifications, hierarchyFactory)) {
+        
+        if (!NotificationsValid(allNotifications, *container.controllerHierarchyFactory)) {
             LogError("API returned invalid notifications");
             return repository;
         }
 
-        ProcessNotifications(*repository, allNotifications, hierarchyFactory);
+        ProcessNotifications(*repository, allNotifications, *container.controllerHierarchyFactory);
         LogInfo("Loaded " + std::to_string(repository->Count()) + " notifications");
 
         nlohmann::json unreadNotifications;

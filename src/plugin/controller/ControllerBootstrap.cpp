@@ -3,6 +3,7 @@
 #include "ControllerBootstrap.h"
 #include "ControllerPositionCollection.h"
 #include "ControllerPositionCollectionFactory.h"
+#include "ControllerPositionHierarchyFactory.h"
 #include "ControllerStatusEventHandlerCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyLoaderInterface.h"
@@ -15,6 +16,8 @@ namespace UKControllerPlugin::Controller {
     void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependency)
     {
         container.controllerPositions = ControllerPositionCollectionFactory::Create(dependency);
+        container.controllerHierarchyFactory =
+            std::make_unique<ControllerPositionHierarchyFactory>(*container.controllerPositions);
 
         container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
         container.controllerHandler->RegisterHandler(

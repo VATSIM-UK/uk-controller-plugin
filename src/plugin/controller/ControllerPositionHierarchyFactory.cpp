@@ -44,30 +44,48 @@ namespace UKControllerPlugin::Controller {
         return std::move(hierarchy);
     }
 
-    std::unique_ptr<ControllerPositionHierarchy>
-    ControllerPositionHierarchyFactory::CreateFromJsonById(const nlohmann::json& json) const
+    auto ControllerPositionHierarchyFactory::CreateFromJsonById(const nlohmann::json& json) const
+        -> std::unique_ptr<ControllerPositionHierarchy>
     {
-        if (!json.is_array()) {
-            LogError("Controller hierarchy is not an array: " + json.dump());
-            return nullptr;
+        auto hierarchy = std::make_unique<ControllerPositionHierarchy>();
+        return this->AddPositionsById(json, hierarchy.get()) ? std::move(hierarchy) : nullptr;
+    }
+
+    auto ControllerPositionHierarchyFactory::CreateSharedFromJsonById(const nlohmann::json& json) const
+        -> std::shared_ptr<ControllerPositionHierarchy>
+    {
+        auto hierarchy = std::make_shared<ControllerPositionHierarchy>();
+        return this->AddPositionsById(json, hierarchy.get()) ? hierarchy : nullptr;
+    }
+
+    auto ControllerPositionHierarchyFactory::AddPositionsById(
+        const nlohmann::json& positions, ControllerPositionHierarchy* const hierarchy) const -> bool
+    {
+        if (!positions.is_array()) {
+            LogError("Controller hierarchy is not an array: " + positions.dump());
+            return false;
         }
 
-        std::unique_ptr<ControllerPositionHierarchy> hierarchy = std::make_unique<ControllerPositionHierarchy>();
-        for (const auto& position : json) {
+        for (const auto& position : positions) {
             if (!position.is_number_integer()) {
                 LogError("Controller position in hierarchy is not an integer");
-                return nullptr;
+                return false;
             }
 
             auto resolvedPosition = this->controllers.FetchPositionById(position.get<int>());
             if (!resolvedPosition) {
-                LogError("Controller position in hierarchy does not exist " + json.dump());
-                return nullptr;
+                LogError("Controller position in hierarchy does not exist " + positions.dump());
+                return false;
             }
 
             hierarchy->AddPosition(resolvedPosition);
         }
 
-        return std::move(hierarchy);
+        return true;
+    }
+    
+    auto ControllerPositionHierarchyFactory::GetPositionsCollection() const -> const ControllerPositionCollection&
+    {
+        return this->controllers;
     }
 } // namespace UKControllerPlugin::Controller

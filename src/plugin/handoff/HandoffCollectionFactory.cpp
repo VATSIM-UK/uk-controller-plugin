@@ -2,14 +2,15 @@
 #include "HandoffOrder.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPositionHierarchy.h"
+#include "controller/ControllerPositionHierarchyFactory.h"
 #include "controller/ControllerPosition.h"
 
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
-using UKControllerPlugin::Controller::ControllerPositionHierarchy;
+using UKControllerPlugin::Controller::ControllerPositionHierarchyFactory;
 
 namespace UKControllerPlugin::Handoff {
-    auto Create(const ControllerPositionCollection& controllerPositions, const nlohmann::json& handoffs)
+    auto Create(const ControllerPositionHierarchyFactory& controllerFactory, const nlohmann::json& handoffs)
         -> std::shared_ptr<HandoffCollection>
     {
         std::unique_ptr<HandoffCollection> collection = std::make_unique<HandoffCollection>();
@@ -20,18 +21,14 @@ namespace UKControllerPlugin::Handoff {
         }
 
         for (const auto& handoff : handoffs) {
-            if (!HandoffOrderValid(handoff, controllerPositions)) {
+            if (!HandoffOrderValid(handoff, controllerFactory)) {
                 LogWarning("Invalid handoff order detected");
                 continue;
             }
 
-            // Build the hierarchy
-            std::shared_ptr<ControllerPositionHierarchy> hierarchy = std::make_shared<ControllerPositionHierarchy>();
-            for (const auto& controller : handoff.at("controller_positions")) {
-                hierarchy->AddPosition(controllerPositions.FetchPositionById(controller.get<int>()));
-            }
-
-            collection->Add(std::make_shared<HandoffOrder>(handoff.at("id").get<int>(), hierarchy));
+            collection->Add(std::make_shared<HandoffOrder>(
+                handoff.at("id").get<int>(),
+                controllerFactory.CreateSharedFromJsonById(handoff.at("controller_positions"))));
         }
 
         LogInfo("Added " + std::to_string(collection->Count()) + " handoff orders");
@@ -41,18 +38,12 @@ namespace UKControllerPlugin::Handoff {
     /*
         Validate a handoff order
     */
-    auto HandoffOrderValid(const nlohmann::json& order, const ControllerPositionCollection& controllers) -> bool
+    auto HandoffOrderValid(const nlohmann::json& order, const ControllerPositionHierarchyFactory& controllerFactory)
+        -> bool
     {
         return order.is_object() && order.contains("id") && order.at("id").is_number_integer() &&
-               order.contains("key") && order.at("key").is_string() &&
-               order.contains("controller_positions") && order.at("controller_positions").is_array() &&
-               !order.at("controller_positions").empty() &&
-               std::find_if_not(
-                   order.at("controller_positions").cbegin(),
-                   order.at("controller_positions").cend(),
-                   [&controllers](const nlohmann::json& position) -> bool {
-                       return position.is_number_integer() &&
-                              controllers.FetchPositionById(position.get<int>()) != nullptr;
-                   }) == order.at("controller_positions").cend();
+               order.contains("key") && order.at("key").is_string() && order.contains("controller_positions") &&
+               order.at("controller_positions").is_array() && !order.at("controller_positions").empty() &&
+               controllerFactory.CreateSharedFromJsonById(order.at("controller_positions")) != nullptr;
     }
 } // namespace UKControllerPlugin::Handoff

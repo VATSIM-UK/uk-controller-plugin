@@ -52,8 +52,8 @@ namespace UKControllerPluginTest {
                 container.controllerPositions->AddPosition(std::move(position1));
                 container.controllerPositions->AddPosition(std::move(position2));
                 container.controllerPositions->AddPosition(std::move(position3));
-
-                hierarchyFactory = std::make_unique<ControllerPositionHierarchyFactory>(*container.controllerPositions);
+                container.controllerHierarchyFactory = std::make_unique<ControllerPositionHierarchyFactory>
+                    (*container.controllerPositions);
             }
 
             void TearDown() override
@@ -99,13 +99,13 @@ namespace UKControllerPluginTest {
         TEST_F(NotificationsRepositoryFactoryTest, ControllersValidReturnsFalseIfHierarchyInvalid)
         {
             nlohmann::json controllers = nlohmann::json::object();
-            EXPECT_FALSE(ControllersValid(controllers, *hierarchyFactory));
+            EXPECT_FALSE(ControllersValid(controllers, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, ControllersValidReturnsTrueIfHierarchyValid)
         {
             nlohmann::json controllers = nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"});
-            EXPECT_TRUE(ControllersValid(controllers, *hierarchyFactory));
+            EXPECT_TRUE(ControllersValid(controllers, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsTrueIfValid)
@@ -119,7 +119,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_TRUE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_TRUE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsTrueIfLinkNull)
@@ -133,12 +133,12 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_TRUE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_TRUE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseNotObject)
         {
-            EXPECT_FALSE(NotificationValid(nlohmann::json::array(), *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(nlohmann::json::array(), *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseMissingId)
@@ -151,7 +151,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseIdNotInteger)
@@ -165,7 +165,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseMissingTitle)
@@ -178,7 +178,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseTitleNotString)
@@ -192,7 +192,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseMissingBody)
@@ -205,7 +205,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseBodyNotString)
@@ -219,7 +219,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseIfLinkMissing)
@@ -232,7 +232,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseIfLinkNotString)
@@ -247,7 +247,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseMissingValidFrom)
@@ -260,7 +260,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseValidFromNotString)
@@ -274,7 +274,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseValidFromInvalidTimestamp)
@@ -288,7 +288,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseMissingValidTo)
@@ -301,7 +301,7 @@ namespace UKControllerPluginTest {
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseValidToNotString)
@@ -315,7 +315,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", 123},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseValidToNotValidTimestamp)
@@ -329,7 +329,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021:01:31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseMissingControllers)
@@ -342,7 +342,7 @@ namespace UKControllerPluginTest {
                 {"valid_from", "2021-01-31 16:15:00"},
                 {"valid_to", "2021-01-31 16:20:00"},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseControllersInvalid)
@@ -356,7 +356,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", 123},
             };
-            EXPECT_FALSE(NotificationValid(notification, *hierarchyFactory));
+            EXPECT_FALSE(NotificationValid(notification, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsTrueIfAllValid)
@@ -370,7 +370,7 @@ namespace UKControllerPluginTest {
                 {"valid_to", "2021-01-31 16:20:00"},
                 {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
             };
-            EXPECT_TRUE(NotificationValid(notifications, *hierarchyFactory));
+            EXPECT_TRUE(NotificationValid(notifications, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseIfOneInvalid)
@@ -394,12 +394,12 @@ namespace UKControllerPluginTest {
                      {"valid_to", "2021-01-31 16:20:00"},
                      {"controllers", nlohmann::json::array({"EGKK_DEL", "EGKK_TWR"})},
                  }});
-            EXPECT_FALSE(NotificationsValid(notifications, *hierarchyFactory));
+            EXPECT_FALSE(NotificationsValid(notifications, *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, NotificationValidReturnsFalseIfNotArray)
         {
-            EXPECT_FALSE(NotificationsValid(nlohmann::json::object(), *hierarchyFactory));
+            EXPECT_FALSE(NotificationsValid(nlohmann::json::object(), *container.controllerHierarchyFactory));
         }
 
         TEST_F(NotificationsRepositoryFactoryTest, MakeHandlesExceptionFromRequestingNotifications)

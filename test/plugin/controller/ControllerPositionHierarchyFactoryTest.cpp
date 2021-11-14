@@ -28,6 +28,11 @@ namespace UKControllerPluginTest::Controller {
         std::unique_ptr<ControllerPositionHierarchyFactory> factory;
     };
 
+    TEST_F(ControllerPositionHierarchyFactoryTest, ReturnsItsControllers)
+    {
+        EXPECT_EQ(collection.get(), &this->factory->GetPositionsCollection());
+    }
+
     TEST_F(ControllerPositionHierarchyFactoryTest, CreateFromJsonByCallsignThrowsAnExceptionIfNotArray)
     {
         nlohmann::json json = "{}";
