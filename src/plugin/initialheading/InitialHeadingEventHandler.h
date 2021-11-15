@@ -89,7 +89,7 @@ namespace UKControllerPlugin::InitialHeading {
         const Controller::Login& login;
 
         // Class for parsing SIDs and removing deprecation warnings.
-        const Airfield::NormaliseSid normalise;
+        const Sid::NormaliseSid normalise;
 
         // So we can get flightplans after deferred events
         Euroscope::EuroscopePluginLoopbackInterface& plugin;

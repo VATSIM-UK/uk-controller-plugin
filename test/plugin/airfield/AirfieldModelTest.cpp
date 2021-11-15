@@ -48,6 +48,6 @@ namespace UKControllerPluginTest::Airfield {
 
     TEST_F(AirfieldModelTest, EqualityOperatorReturnsTrueSameId)
     {
-        EXPECT_TRUE(airfield == airfield2);
+        EXPECT_TRUE(airfield == airfield3);
     }
 } // namespace UKControllerPluginTest::Airfield

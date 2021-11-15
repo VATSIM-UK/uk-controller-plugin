@@ -24,9 +24,9 @@ namespace UKControllerPlugin::Airfield {
     auto AirfieldCollection::FetchAirfieldByIcao(const std::string& icao) const -> std::shared_ptr<AirfieldModel>
     {
         auto airfield = std::find_if(
-            this->airfieldMap.begin(),
-            this->airfieldMap.end(),
-            [&icao](const std::pair<std::string, const std::unique_ptr<AirfieldModel>&>& airfield) -> bool {
+            this->airfieldMap.cbegin(),
+            this->airfieldMap.cend(),
+            [&icao](const std::pair<int, std::shared_ptr<AirfieldModel>>& airfield) -> bool {
                 return airfield.second->Icao() == icao;
             });
 
