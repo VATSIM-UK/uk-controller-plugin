@@ -211,8 +211,12 @@ namespace UKControllerPlugin {
             SendDlgItemMessage(hwnd, IDC_SRD_CRUISE, WM_GETTEXT, 255, reinterpret_cast<LPARAM>(&cruiseBuffer));
             std::string requestedLevel = UKControllerPlugin::Hold::ConvertFromTchar(cruiseBuffer);
 
-            if (requestedLevel != "") {
+            // If the requested level is < 100, assume it's a flight-level
+            if (requestedLevel.empty()) {
                 searchParams.requestedLevel = std::stoi(requestedLevel);
+                if (searchParams.requestedLevel < 1000) {
+                    searchParams.requestedLevel *= 100;
+                }
             }
 
             // Clear the results list and notes box
