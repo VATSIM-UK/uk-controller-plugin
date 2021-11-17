@@ -212,7 +212,7 @@ namespace UKControllerPlugin {
             std::string requestedLevel = UKControllerPlugin::Hold::ConvertFromTchar(cruiseBuffer);
 
             // If the requested level is < 100, assume it's a flight-level
-            if (requestedLevel.empty()) {
+            if (!requestedLevel.empty()) {
                 searchParams.requestedLevel = std::stoi(requestedLevel);
                 if (searchParams.requestedLevel < 1000) {
                     searchParams.requestedLevel *= 100;
