@@ -44,6 +44,9 @@ namespace UKControllerPlugin {
         class FlightPlanEventHandlerCollection;
         class StoredFlightplanCollection;
     } // namespace Flightplan
+    namespace FlightRules {
+        class FlightRuleCollection;
+    } // namespace FlightRules
     namespace HistoryTrail {
         class HistoryTrailRepository;
     } // namespace HistoryTrail
@@ -209,6 +212,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
+        std::unique_ptr<UKControllerPlugin::FlightRules::FlightRuleCollection> flightRules;
 
         // Push events
         std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;

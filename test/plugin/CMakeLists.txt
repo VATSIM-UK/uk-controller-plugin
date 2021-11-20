@@ -107,6 +107,10 @@ set(test__flightplan
 )
 source_group("test\\flightplan" FILES ${test__flightplan})
 
+set(test__flightrule
+        flightrule/FlightRuleCollectionTest.cpp flightrule/FlightRuleCollectionFactoryTest.cpp flightrule/FlightRuleModuleTest.cpp)
+source_group("test\\flightrule" FILES ${test__flightrule})
+
 set(test__handoff
     "handoff/HandoffCollectionFactoryTest.cpp"
     "handoff/HandoffCollectionTest.cpp"
@@ -508,6 +512,7 @@ set(ALL_FILES
     ${test__euroscope}
     ${test__flightinformationservice}
     ${test__flightplan}
+    ${test__flightrule}
     ${test__handoff}
     ${test__headings}
     ${test__historytrail}

@@ -18,6 +18,7 @@
 #include "euroscope/UserSettingAwareCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "flightplan/StoredFlightplanCollection.h"
+#include "flightrule/FlightRuleCollection.h"
 #include "graphics/GdiGraphicsWrapper.h"
 #include "graphics/GdiplusBrushes.h"
 #include "historytrail/HistoryTrailRepository.h"

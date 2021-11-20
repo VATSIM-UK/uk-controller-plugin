@@ -15,6 +15,7 @@
 #include "euroscope/PluginUserSettingBootstrap.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
 #include "flightplan/FlightplanStorageBootstrap.h"
+#include "flightrule/FlightRuleModule.h"
 #include "handoff/HandoffModule.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "hold/HoldModule.h"
@@ -187,6 +188,7 @@ namespace UKControllerPlugin {
         Airfield::BootstrapPlugin(*this->container, loader);
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
+        FlightRules::BootstrapPlugin(*this->container, loader);
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         Sid::BootstrapPlugin(*this->container, loader);
         Navaids::BootstrapPlugin(*this->container, loader);

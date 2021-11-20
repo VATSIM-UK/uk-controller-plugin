@@ -213,6 +213,10 @@ set(src__flightplan
 )
 source_group("src\\flightplan" FILES ${src__flightplan})
 
+set(src__flightrule
+        flightrule/FlightRule.h flightrule/FlightRuleCollection.cpp flightrule/FlightRuleCollection.h flightrule/FlightRuleModule.cpp flightrule/FlightRuleModule.h flightrule/FlightRuleCollectionFactory.cpp flightrule/FlightRuleCollectionFactoryTest.h)
+source_group("src\\flightrule" FILES ${src__flightrule})
+
 set(src__graphics
     "graphics/GdiGraphicsInterface.h"
     "graphics/GdiGraphicsWrapper.cpp"
@@ -617,7 +621,7 @@ set(src__prenote
     prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
     prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h
     prenote/PendingPrenoteList.cpp prenote/PendingPrenoteList.h
-    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h prenote/PublishedPrenote.h prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h prenote/PublishedPrenote.cpp)
+    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h prenote/PublishedPrenote.h prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h prenote/PublishedPrenote.cpp prenote/PairedAirfieldPrenote.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push
@@ -851,6 +855,7 @@ set(ALL_FILES
     ${src__euroscope}
     ${src__flightinformationservice}
     ${src__flightplan}
+    ${src__flightrule}
     ${src__graphics}
     ${src__handoff}
     ${src__headings}
