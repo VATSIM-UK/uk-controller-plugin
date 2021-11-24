@@ -214,7 +214,10 @@ set(src__flightplan
 source_group("src\\flightplan" FILES ${src__flightplan})
 
 set(src__flightrule
-        flightrule/FlightRule.h flightrule/FlightRuleCollection.cpp flightrule/FlightRuleCollection.h flightrule/FlightRuleModule.cpp flightrule/FlightRuleModule.h flightrule/FlightRuleCollectionFactory.cpp flightrule/FlightRuleCollectionFactoryTest.h)
+        flightrule/FlightRule.h
+        flightrule/FlightRuleCollection.cpp flightrule/FlightRuleCollection.h
+        flightrule/FlightRuleModule.cpp flightrule/FlightRuleModule.h
+        flightrule/FlightRuleCollectionFactory.cpp flightrule/FlightRuleCollectionFactory.h)
 source_group("src\\flightrule" FILES ${src__flightrule})
 
 set(src__graphics
@@ -621,7 +624,12 @@ set(src__prenote
     prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
     prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h
     prenote/PendingPrenoteList.cpp prenote/PendingPrenoteList.h
-    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h prenote/PublishedPrenote.h prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h prenote/PublishedPrenote.cpp prenote/PairedAirfieldPrenote.h)
+    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h
+    prenote/PublishedPrenote.h prenote/PublishedPrenote.cpp
+    prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h
+    prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h
+    prenote/PairedAirfieldPrenote.h
+    prenote/PublishedPrenoteMapper.cpp prenote/PublishedPrenoteMapper.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push

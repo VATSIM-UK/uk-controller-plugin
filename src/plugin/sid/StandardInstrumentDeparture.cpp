@@ -3,9 +3,14 @@
 namespace UKControllerPlugin::Sid {
 
     StandardInstrumentDeparture::StandardInstrumentDeparture(
-        std::string airfield, std::string identifier, int initialAltitude, int initialHeading, int handoffId)
+        std::string airfield,
+        std::string identifier,
+        int initialAltitude,
+        int initialHeading,
+        int handoffId,
+        std::set<int> prenotes)
         : airfield(std::move(airfield)), identifier(std::move(identifier)), initialAltitude(initialAltitude),
-          initialHeading(initialHeading), handoffId(handoffId)
+          initialHeading(initialHeading), handoffId(handoffId), prenotes(std::move(prenotes))
     {
     }
 
@@ -33,9 +38,14 @@ namespace UKControllerPlugin::Sid {
     {
         return this->handoffId;
     }
-    
+
     auto StandardInstrumentDeparture::HasHandoff() const -> bool
     {
         return this->handoffId != 0;
+    }
+
+    auto StandardInstrumentDeparture::Prenotes() const -> const std::set<int>&
+    {
+        return this->prenotes;
     }
 } // namespace UKControllerPlugin::Sid

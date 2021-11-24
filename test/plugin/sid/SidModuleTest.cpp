@@ -21,18 +21,21 @@ namespace UKControllerPluginTest::Sid {
     TEST_F(SidModuleTest, ItCreatesSidCollection)
     {
         nlohmann::json sidData = nlohmann::json::array(
-            {nlohmann::json::object(
-                 {{"airfield", "EGGD"},
-                  {"identifier", "TEST1Y"},
-                  {"initial_altitude", 6000},
-                  {"initial_heading", 350},
-                  {"handoff_id", 5}}),
+            {nlohmann::json::object({
+                 {"airfield", "EGGD"},
+                 {"identifier", "TEST1Y"},
+                 {"initial_altitude", 6000},
+                 {"initial_heading", 350},
+                 {"handoff_id", 5},
+                 {"prenotes", nlohmann::json::array({1, 2})},
+             }),
              nlohmann::json::object(
                  {{"airfield", "EGGD"},
                   {"identifier", "TEST1Y"},
                   {"initial_altitude", 6000},
                   {"initial_heading", nlohmann::json::value_t::null},
-                  {"handoff_id", 5}})});
+                  {"handoff_id", 5},
+                  {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_CALL(dependencyLoader, LoadDependency("DEPENDENCY_SIDS", nlohmann::json::array()))
             .Times(1)

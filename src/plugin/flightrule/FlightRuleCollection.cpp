@@ -22,4 +22,15 @@ namespace UKControllerPlugin::FlightRules {
         auto rule = this->flightRules.find(id);
         return rule == this->flightRules.cend() ? nullptr : rule->second;
     }
+
+    auto FlightRuleCollection::GetByEuroscopeKey(const std::string& key) const -> std::shared_ptr<FlightRule>
+    {
+        auto rule = std::find_if(
+            this->flightRules.begin(),
+            this->flightRules.end(),
+            [&key](const std::pair<int, std::shared_ptr<FlightRule>>& rule) -> bool {
+                return rule.second->euroscopeKey == key;
+            });
+        return rule == this->flightRules.cend() ? nullptr : rule->second;
+    }
 } // namespace UKControllerPlugin::FlightRules

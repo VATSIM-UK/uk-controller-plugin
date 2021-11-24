@@ -12,6 +12,7 @@ namespace UKControllerPlugin::FlightRules {
         void Add(const std::shared_ptr<FlightRule>& rule);
         [[nodiscard]] auto Count() const -> size_t;
         [[nodiscard]] auto Get(int id) const -> std::shared_ptr<FlightRule>;
+        [[nodiscard]] auto GetByEuroscopeKey(const std::string& key) const -> std::shared_ptr<FlightRule>;
 
         private:
         std::map<int, std::shared_ptr<FlightRule>> flightRules;

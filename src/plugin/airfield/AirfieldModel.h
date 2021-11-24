@@ -1,8 +1,13 @@
 #pragma once
 
-namespace UKControllerPlugin::Controller {
-    class ControllerPositionHierarchy;
-} // namespace UKControllerPlugin::Controller
+namespace UKControllerPlugin {
+    namespace Controller {
+        class ControllerPositionHierarchy;
+    } // namespace Controller
+    namespace Prenote {
+        struct PairedAirfieldPrenote;
+    } // namespace Prenote
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Airfield {
 
@@ -13,7 +18,11 @@ namespace UKControllerPlugin::Airfield {
     class AirfieldModel
     {
         public:
-        AirfieldModel(int id, std::string icao, std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder);
+        AirfieldModel(
+            int id,
+            std::string icao,
+            std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder,
+            std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>> airfieldPairingPrenotes = {});
         ~AirfieldModel();
         AirfieldModel(const AirfieldModel&) = delete;
         AirfieldModel(AirfieldModel&&) noexcept;
@@ -22,6 +31,8 @@ namespace UKControllerPlugin::Airfield {
         [[nodiscard]] auto Id() const -> int;
         [[nodiscard]] auto Icao() const -> std::string;
         [[nodiscard]] auto TopDownOrder() const -> const Controller::ControllerPositionHierarchy&;
+        [[nodiscard]] auto AirfieldPairingPrenotes() const
+            -> const std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>>&;
         auto operator==(const AirfieldModel& compare) const -> bool;
 
         private:
@@ -33,5 +44,8 @@ namespace UKControllerPlugin::Airfield {
 
         // The order of who owns this airfield.
         std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder;
+
+        // Prenotes for an airfield pairing
+        std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>> airfieldPairingPrenotes;
     };
 } // namespace UKControllerPlugin::Airfield

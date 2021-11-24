@@ -50,4 +50,18 @@ namespace UKControllerPluginTest::FlightRules {
         EXPECT_EQ(2, collection.Count());
         EXPECT_EQ(nullptr, collection.Get(3));
     }
+
+    TEST_F(FlightRuleCollectionTest, ItReturnsRuleByKey)
+    {
+        collection.Add(rule1);
+        collection.Add(rule2);
+        EXPECT_EQ(rule2, collection.GetByEuroscopeKey("V"));
+    }
+
+    TEST_F(FlightRuleCollectionTest, ItReturnsNullptrIfRuleNotFoundByKey)
+    {
+        collection.Add(rule1);
+        collection.Add(rule2);
+        EXPECT_EQ(nullptr, collection.GetByEuroscopeKey("X"));
+    }
 } // namespace UKControllerPluginTest::FlightRules

@@ -4,8 +4,12 @@
 namespace UKControllerPlugin::Airfield {
 
     AirfieldModel::AirfieldModel(
-        int id, std::string icao, std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder)
-        : id(id), icao(std::move(icao)), topDownOrder(std::move(topDownOrder))
+        int id,
+        std::string icao,
+        std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder,
+        std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>> airfieldPairingPrenotes)
+        : id(id), icao(std::move(icao)), topDownOrder(std::move(topDownOrder)),
+          airfieldPairingPrenotes(std::move(airfieldPairingPrenotes))
     {
     }
 
@@ -27,7 +31,12 @@ namespace UKControllerPlugin::Airfield {
     {
         return *this->topDownOrder;
     }
-    
+
+    auto AirfieldModel::AirfieldPairingPrenotes() const -> const std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>>&
+    {
+        return this->airfieldPairingPrenotes;
+    }
+
     auto AirfieldModel::operator==(const AirfieldModel& compare) const -> bool
     {
         return this->id == compare.id;

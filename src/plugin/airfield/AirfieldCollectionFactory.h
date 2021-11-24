@@ -21,4 +21,7 @@ namespace UKControllerPlugin::Airfield {
     [[nodiscard]] auto
     AirfieldValid(const nlohmann::json& airfield, const Controller::ControllerPositionHierarchyFactory& hierarchyFactory) ->
         bool;
+    [[nodiscard]] auto
+    AirfieldValid(const nlohmann::json& airfield, const Controller::ControllerPositionHierarchyFactory& hierarchyFactory) ->
+        bool;
 } // namespace UKControllerPlugin::Airfield

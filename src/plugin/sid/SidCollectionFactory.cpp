@@ -19,7 +19,8 @@ namespace UKControllerPlugin::Sid {
                 sid.at("identifier").get<std::string>(),
                 sid.at("initial_altitude").get<int>(),
                 sid.at("initial_heading").is_number_integer() ? sid.at("initial_heading").get<int>() : 0,
-                sid.at("handoff_id").is_number_integer() ? sid.at("handoff_id").get<int>() : 0));
+                sid.at("handoff_id").is_number_integer() ? sid.at("handoff_id").get<int>() : 0,
+                sid.at("prenotes").get<std::set<int>>()));
         }
 
         LogInfo("Loaded " + std::to_string(sids->CountSids()) + " standard instrument departures");
@@ -34,7 +35,13 @@ namespace UKControllerPlugin::Sid {
                           sid.contains("identifier") && sid.at("identifier").is_string() &&
                           sid.contains("initial_altitude") && sid.at("initial_altitude").is_number_integer() &&
                           sid.contains("initial_heading") && InitialHeadingValid(sid) && sid.contains("handoff_id") &&
-                          (sid.at("handoff_id").is_number_integer() || sid.at("handoff_id").is_null());
+                          (sid.at("handoff_id").is_number_integer() || sid.at("handoff_id").is_null()) &&
+                          sid.contains("prenotes") && sid.at("prenotes").is_array() &&
+                          std::find_if_not(
+                              sid.at("prenotes").begin(),
+                              sid.at("prenotes").end(),
+                              [](const nlohmann::json& prenote) -> bool { return prenote.is_number_integer(); }) ==
+                              sid.at("prenotes").cend();
                }) == sidData.cend();
     }
 
