@@ -35,8 +35,7 @@ namespace UKControllerPlugin::Prenote {
 
         private:
         [[nodiscard]] static auto
-        GetSummaryString(const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan)
-            -> std::string;
+        GetSummaryString(const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) -> std::string;
 
         // The message to send
         std::string message;

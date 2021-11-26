@@ -11,7 +11,5 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin::Airfield {
     void BootstrapPlugin(
-        Bootstrap::PersistenceContainer& container,
-        Dependency::DependencyLoaderInterface& dependencyLoader
-    );
+        Bootstrap::PersistenceContainer& container, Dependency::DependencyLoaderInterface& dependencyLoader);
 } // namespace UKControllerPlugin::Airfield

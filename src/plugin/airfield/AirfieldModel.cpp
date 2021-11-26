@@ -32,7 +32,8 @@ namespace UKControllerPlugin::Airfield {
         return *this->topDownOrder;
     }
 
-    auto AirfieldModel::AirfieldPairingPrenotes() const -> const std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>>&
+    auto AirfieldModel::AirfieldPairingPrenotes() const
+        -> const std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>>&
     {
         return this->airfieldPairingPrenotes;
     }
