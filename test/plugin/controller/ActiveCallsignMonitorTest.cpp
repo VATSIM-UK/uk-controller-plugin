@@ -181,8 +181,8 @@ namespace UKControllerPluginTest {
             auto callsign = this->activeCallsigns.GetCallsign("EGKK_DEL");
             EXPECT_EQ("EGKK_DEL", callsign.GetCallsign());
             EXPECT_EQ("Testy McTestington", callsign.GetControllerName());
-            EXPECT_EQ(*this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), callsign.GetNormalisedPosition
-                                                                                       ());
+            EXPECT_EQ(
+                *this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), callsign.GetNormalisedPosition());
             EXPECT_TRUE(callsign.GetIsUser());
         }
 
@@ -207,8 +207,8 @@ namespace UKControllerPluginTest {
             auto callsign = this->activeCallsigns.GetCallsign("EGKK_DEL");
             EXPECT_EQ("EGKK_DEL", callsign.GetCallsign());
             EXPECT_EQ("Testy McTestington", callsign.GetControllerName());
-            EXPECT_EQ(*this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), callsign.GetNormalisedPosition
-                                                                                       ());
+            EXPECT_EQ(
+                *this->controllerCollection.FetchPositionByCallsign("EGKK_DEL"), callsign.GetNormalisedPosition());
             EXPECT_FALSE(callsign.GetIsUser());
         }
 

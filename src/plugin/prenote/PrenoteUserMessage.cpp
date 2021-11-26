@@ -57,6 +57,6 @@ namespace UKControllerPlugin::Prenote {
     auto PrenoteUserMessage::GetSummaryString(const EuroScopeCFlightPlanInterface& flightplan) -> std::string
     {
         return flightplan.GetSidName().empty() ? flightplan.GetOrigin()
-                                              : flightplan.GetOrigin() + "/" + flightplan.GetSidName();
+                                               : flightplan.GetOrigin() + "/" + flightplan.GetSidName();
     }
 } // namespace UKControllerPlugin::Prenote

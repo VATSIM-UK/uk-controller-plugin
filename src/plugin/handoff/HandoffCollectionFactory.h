@@ -7,11 +7,10 @@ namespace UKControllerPlugin::Controller {
 
 namespace UKControllerPlugin::Handoff {
 
-    [[nodiscard]] auto Create(
-        const Controller::ControllerPositionHierarchyFactory& controllerFactory,
-        const nlohmann::json& handoffs) -> std::shared_ptr<HandoffCollection>;
+    [[nodiscard]] auto
+    Create(const Controller::ControllerPositionHierarchyFactory& controllerFactory, const nlohmann::json& handoffs)
+        -> std::shared_ptr<HandoffCollection>;
 
     [[nodiscard]] auto HandoffOrderValid(
-        const nlohmann::json& order, const Controller::ControllerPositionHierarchyFactory& controllerFactory)
-        -> bool;
+        const nlohmann::json& order, const Controller::ControllerPositionHierarchyFactory& controllerFactory) -> bool;
 } // namespace UKControllerPlugin::Handoff

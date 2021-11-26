@@ -12,8 +12,8 @@ namespace UKControllerPlugin::Prenote {
         void Add(const std::shared_ptr<PublishedPrenote>& prenote);
         [[nodiscard]] auto Get(int id) const -> std::shared_ptr<PublishedPrenote>;
         [[nodiscard]] auto Count() const -> size_t;
-        
+
         private:
-            std::map<int, std::shared_ptr<PublishedPrenote>> prenotes;
+        std::map<int, std::shared_ptr<PublishedPrenote>> prenotes;
     };
 } // namespace UKControllerPlugin::Prenote

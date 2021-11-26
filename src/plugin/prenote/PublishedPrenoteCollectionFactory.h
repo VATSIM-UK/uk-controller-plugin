@@ -12,5 +12,6 @@ namespace UKControllerPlugin::Prenote {
         -> std::unique_ptr<PublishedPrenoteCollection>;
 
     [[nodiscard]] auto
-    PrenoteValid(const nlohmann::json& prenote, const Controller::ControllerPositionHierarchyFactory& hierarchyFactory) -> bool;
+    PrenoteValid(const nlohmann::json& prenote, const Controller::ControllerPositionHierarchyFactory& hierarchyFactory)
+        -> bool;
 } // namespace UKControllerPlugin::Prenote

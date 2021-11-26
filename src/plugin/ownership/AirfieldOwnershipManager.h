@@ -44,8 +44,8 @@ namespace UKControllerPlugin::Ownership {
         static void
         LogRemovedServiceProvision(const std::string& icao, const std::shared_ptr<ServiceProvision>& provision);
         [[nodiscard]] auto GetActiveControllersInAirfieldTopdownOrder(
-            const std::string& icao, const std::shared_ptr<Airfield::AirfieldModel>& airfield) ->
-            std::vector<std::string>;
+            const std::string& icao, const std::shared_ptr<Airfield::AirfieldModel>& airfield)
+            -> std::vector<std::string>;
         [[nodiscard]] auto GetServiceProvidersAtAirfield(const std::vector<std::string>& controllers)
             -> std::vector<std::shared_ptr<ServiceProvision>>;
         void

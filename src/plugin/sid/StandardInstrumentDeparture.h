@@ -13,8 +13,7 @@ namespace UKControllerPlugin::Sid {
             int initialAltitude,
             int initialHeading,
             int handoffId,
-            std::set<int> prenotes = {}
-        );
+            std::set<int> prenotes = {});
 
         [[nodiscard]] auto Airfield() const -> std::string;
         [[nodiscard]] auto Identifier() const -> std::string;

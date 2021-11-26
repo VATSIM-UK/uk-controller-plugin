@@ -83,7 +83,7 @@ namespace UKControllerPlugin::Controller {
 
         return true;
     }
-    
+
     auto ControllerPositionHierarchyFactory::GetPositionsCollection() const -> const ControllerPositionCollection&
     {
         return this->controllers;

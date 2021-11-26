@@ -30,7 +30,7 @@ namespace UKControllerPluginTest::Controller {
         UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);
         EXPECT_EQ(0, container.controllerPositions->GetSize());
     }
-    
+
     TEST_F(ControllerBootstrapTest, ItSetsUpControllerHierarchyFactory)
     {
         UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);

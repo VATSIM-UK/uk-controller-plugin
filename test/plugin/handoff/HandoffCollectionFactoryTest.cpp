@@ -19,8 +19,7 @@ namespace UKControllerPluginTest::Handoff {
     class HandoffCollectionFactoryTest : public Test
     {
         public:
-        HandoffCollectionFactoryTest()
-            : factory(controllers)
+        HandoffCollectionFactoryTest() : factory(controllers)
         {
             std::vector<std::string> handoffs = {"EGKK"};
             controllers.AddPosition(

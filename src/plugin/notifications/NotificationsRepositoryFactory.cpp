@@ -20,7 +20,7 @@ namespace UKControllerPlugin::Notifications {
             LogError("Failed to get notifications " + std::string(apiException.what()));
             return repository;
         }
-        
+
         if (!NotificationsValid(allNotifications, *container.controllerHierarchyFactory)) {
             LogError("API returned invalid notifications");
             return repository;
