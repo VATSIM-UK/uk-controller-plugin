@@ -20,7 +20,6 @@ using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::FlightRules::FlightRuleCollection;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
-using UKControllerPlugin::Prenote::AbstractPrenote;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
 using UKControllerPlugin::Prenote::PrenoteService;
 using UKControllerPlugin::Prenote::PublishedPrenoteCollection;
@@ -31,106 +30,104 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 
-namespace UKControllerPluginTest {
-    namespace Prenote {
-        class PrenoteEventHandlerTest : public Test
+namespace UKControllerPluginTest::Prenote {
+    class PrenoteEventHandlerTest : public Test
+    {
+        public:
+        PrenoteEventHandlerTest() : mapper(prenotes, airfields, sids, flightRules)
         {
-            public:
-            PrenoteEventHandlerTest() : mapper(prenotes, airfields, sids, flightRules)
-            {
-                this->airfieldOwnership = std::make_unique<AirfieldServiceProviderCollection>();
+            this->airfieldOwnership = std::make_unique<AirfieldServiceProviderCollection>();
 
-                this->messager = std::make_unique<UserMessager>(this->mockPlugin);
-                std::unique_ptr<PrenoteService> service = std::make_unique<PrenoteService>(
-                    this->mapper, *this->airfieldOwnership, this->activeCallsigns, *this->messager);
-                this->userSetting = std::make_unique<UserSetting>(this->mockSettingProvider);
-                this->eventHandler = std::make_unique<PrenoteEventHandler>(std::move(service), *this->userSetting);
-            }
-
-            std::unique_ptr<UserSetting> userSetting;
-            NiceMock<UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface> mockSettingProvider;
-            std::unique_ptr<PrenoteEventHandler> eventHandler;
-            std::unique_ptr<AirfieldServiceProviderCollection> airfieldOwnership;
-            ActiveCallsignCollection activeCallsigns;
-            std::unique_ptr<UserMessager> messager;
-            NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
-            NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
-            NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
-            AirfieldCollection airfields;
-            SidCollection sids;
-            FlightRuleCollection flightRules;
-            PublishedPrenoteCollection prenotes;
-            PublishedPrenoteMapper mapper;
-            std::unique_ptr<PrenoteService> service;
-        };
-
-        TEST_F(PrenoteEventHandlerTest, FlightplanEventCancelsSentPrenotes)
-        {
-            EXPECT_CALL(this->mockFlightplan, GetCallsign()).Times(1).WillOnce(Return("BAW123"));
-
-            this->eventHandler->FlightPlanEvent(this->mockFlightplan, this->mockRadarTarget);
+            this->messager = std::make_unique<UserMessager>(this->mockPlugin);
+            std::unique_ptr<PrenoteService> service = std::make_unique<PrenoteService>(
+                this->mapper, *this->airfieldOwnership, this->activeCallsigns, *this->messager);
+            this->userSetting = std::make_unique<UserSetting>(this->mockSettingProvider);
+            this->eventHandler = std::make_unique<PrenoteEventHandler>(std::move(service), *this->userSetting);
         }
 
-        TEST_F(PrenoteEventHandlerTest, FlightPlanDisconnectEventCancelsSentPrenotes)
-        {
-            EXPECT_CALL(this->mockFlightplan, GetCallsign()).Times(1).WillOnce(Return("BAW123"));
+        std::unique_ptr<UserSetting> userSetting;
+        NiceMock<UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface> mockSettingProvider;
+        std::unique_ptr<PrenoteEventHandler> eventHandler;
+        std::unique_ptr<AirfieldServiceProviderCollection> airfieldOwnership;
+        ActiveCallsignCollection activeCallsigns;
+        std::unique_ptr<UserMessager> messager;
+        NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
+        NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+        NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+        AirfieldCollection airfields;
+        SidCollection sids;
+        FlightRuleCollection flightRules;
+        PublishedPrenoteCollection prenotes;
+        PublishedPrenoteMapper mapper;
+        std::unique_ptr<PrenoteService> service;
+    };
 
-            this->eventHandler->FlightPlanDisconnectEvent(this->mockFlightplan);
-        }
+    TEST_F(PrenoteEventHandlerTest, FlightplanEventCancelsSentPrenotes)
+    {
+        EXPECT_CALL(this->mockFlightplan, GetCallsign()).Times(1).WillOnce(Return("BAW123"));
 
-        TEST_F(PrenoteEventHandlerTest, ControllerFlightPlanDataEventDoesNothingIfPrenotesDisabled)
-        {
-            ON_CALL(this->mockSettingProvider, KeyExists(GeneralSettingsEntries::usePrenoteSettingsKey))
-                .WillByDefault(Return(true));
+        this->eventHandler->FlightPlanEvent(this->mockFlightplan, this->mockRadarTarget);
+    }
 
-            ON_CALL(this->mockSettingProvider, GetKey(GeneralSettingsEntries::usePrenoteSettingsKey))
-                .WillByDefault(Return("0"));
+    TEST_F(PrenoteEventHandlerTest, FlightPlanDisconnectEventCancelsSentPrenotes)
+    {
+        EXPECT_CALL(this->mockFlightplan, GetCallsign()).Times(1).WillOnce(Return("BAW123"));
 
-            this->eventHandler->ControllerFlightPlanDataEvent(
-                this->mockFlightplan, EuroScopePlugIn::CTR_DATA_TYPE_GROUND_STATE);
-        }
+        this->eventHandler->FlightPlanDisconnectEvent(this->mockFlightplan);
+    }
 
-        TEST_F(PrenoteEventHandlerTest, ControllerFlightPlanDataEventDoesNothingIfNotGroundStatusDataType)
-        {
-            ON_CALL(this->mockSettingProvider, KeyExists(GeneralSettingsEntries::usePrenoteSettingsKey))
-                .WillByDefault(Return(true));
+    TEST_F(PrenoteEventHandlerTest, ControllerFlightPlanDataEventDoesNothingIfPrenotesDisabled)
+    {
+        ON_CALL(this->mockSettingProvider, KeyExists(GeneralSettingsEntries::usePrenoteSettingsKey))
+            .WillByDefault(Return(true));
 
-            ON_CALL(this->mockSettingProvider, GetKey(GeneralSettingsEntries::usePrenoteSettingsKey))
-                .WillByDefault(Return("1"));
+        ON_CALL(this->mockSettingProvider, GetKey(GeneralSettingsEntries::usePrenoteSettingsKey))
+            .WillByDefault(Return("0"));
 
-            this->eventHandler->ControllerFlightPlanDataEvent(
-                this->mockFlightplan, EuroScopePlugIn::CTR_DATA_TYPE_FINAL_ALTITUDE);
-        }
+        this->eventHandler->ControllerFlightPlanDataEvent(
+            this->mockFlightplan, EuroScopePlugIn::CTR_DATA_TYPE_GROUND_STATE);
+    }
 
-        TEST_F(PrenoteEventHandlerTest, ControllerFlightPlanDataEventDoesNothingIfNotPush)
-        {
-            ON_CALL(this->mockFlightplan, GetGroundState()).WillByDefault(Return("TAXI"));
+    TEST_F(PrenoteEventHandlerTest, ControllerFlightPlanDataEventDoesNothingIfNotGroundStatusDataType)
+    {
+        ON_CALL(this->mockSettingProvider, KeyExists(GeneralSettingsEntries::usePrenoteSettingsKey))
+            .WillByDefault(Return(true));
 
-            ON_CALL(this->mockSettingProvider, KeyExists(GeneralSettingsEntries::usePrenoteSettingsKey))
-                .WillByDefault(Return(true));
+        ON_CALL(this->mockSettingProvider, GetKey(GeneralSettingsEntries::usePrenoteSettingsKey))
+            .WillByDefault(Return("1"));
 
-            ON_CALL(this->mockSettingProvider, GetKey(GeneralSettingsEntries::usePrenoteSettingsKey))
-                .WillByDefault(Return("1"));
+        this->eventHandler->ControllerFlightPlanDataEvent(
+            this->mockFlightplan, EuroScopePlugIn::CTR_DATA_TYPE_FINAL_ALTITUDE);
+    }
 
-            this->eventHandler->ControllerFlightPlanDataEvent(
-                this->mockFlightplan, EuroScopePlugIn::CTR_DATA_TYPE_GROUND_STATE);
-        }
+    TEST_F(PrenoteEventHandlerTest, ControllerFlightPlanDataEventDoesNothingIfNotPush)
+    {
+        ON_CALL(this->mockFlightplan, GetGroundState()).WillByDefault(Return("TAXI"));
 
-        TEST_F(PrenoteEventHandlerTest, ControllerFlightPlanDataEventAttempsPrenoteSendingOnPush)
-        {
-            // The call to GetOrigin means that it's trying to send prenotes
-            EXPECT_CALL(this->mockFlightplan, GetOrigin()).Times(1).WillOnce(Return("EGKK"));
+        ON_CALL(this->mockSettingProvider, KeyExists(GeneralSettingsEntries::usePrenoteSettingsKey))
+            .WillByDefault(Return(true));
 
-            ON_CALL(this->mockFlightplan, GetGroundState()).WillByDefault(Return("PUSH"));
+        ON_CALL(this->mockSettingProvider, GetKey(GeneralSettingsEntries::usePrenoteSettingsKey))
+            .WillByDefault(Return("1"));
 
-            ON_CALL(this->mockSettingProvider, KeyExists(GeneralSettingsEntries::usePrenoteSettingsKey))
-                .WillByDefault(Return(true));
+        this->eventHandler->ControllerFlightPlanDataEvent(
+            this->mockFlightplan, EuroScopePlugIn::CTR_DATA_TYPE_GROUND_STATE);
+    }
 
-            ON_CALL(this->mockSettingProvider, GetKey(GeneralSettingsEntries::usePrenoteSettingsKey))
-                .WillByDefault(Return("1"));
+    TEST_F(PrenoteEventHandlerTest, ControllerFlightPlanDataEventAttempsPrenoteSendingOnPush)
+    {
+        // The call to GetOrigin means that it's trying to send prenotes
+        EXPECT_CALL(this->mockFlightplan, GetOrigin()).Times(1).WillOnce(Return("EGKK"));
 
-            this->eventHandler->ControllerFlightPlanDataEvent(
-                this->mockFlightplan, EuroScopePlugIn::CTR_DATA_TYPE_GROUND_STATE);
-        }
-    } // namespace Prenote
-} // namespace UKControllerPluginTest
+        ON_CALL(this->mockFlightplan, GetGroundState()).WillByDefault(Return("PUSH"));
+
+        ON_CALL(this->mockSettingProvider, KeyExists(GeneralSettingsEntries::usePrenoteSettingsKey))
+            .WillByDefault(Return(true));
+
+        ON_CALL(this->mockSettingProvider, GetKey(GeneralSettingsEntries::usePrenoteSettingsKey))
+            .WillByDefault(Return("1"));
+
+        this->eventHandler->ControllerFlightPlanDataEvent(
+            this->mockFlightplan, EuroScopePlugIn::CTR_DATA_TYPE_GROUND_STATE);
+    }
+} // namespace UKControllerPluginTest::Prenote

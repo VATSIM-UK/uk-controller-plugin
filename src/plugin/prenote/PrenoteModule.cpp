@@ -1,12 +1,10 @@
 #include "AcknowledgePrenoteMessage.h"
 #include "CancelPrenoteMessageMenu.h"
-#include "DeparturePrenote.h"
 #include "NewPrenotePushEventHandler.h"
 #include "PendingPrenoteList.h"
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
-#include "PrenoteFactory.h"
 #include "PrenoteMessageCollection.h"
 #include "PrenoteMessageStatusView.h"
 #include "PrenoteMessageTimeout.h"
@@ -45,7 +43,6 @@ using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Prenote::DeparturePrenote;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
-using UKControllerPlugin::Prenote::PrenoteFactory;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Tag::TagItemCollection;
@@ -77,7 +74,6 @@ namespace UKControllerPlugin::Prenote {
             *prenotes, *persistence.airfields, *persistence.sids, *persistence.flightRules);
 
         ControllerPositionHierarchyFactory hierarchyFactory(*persistence.controllerPositions);
-        PrenoteFactory prenoteFactory(hierarchyFactory);
 
         persistence.flightplanHandler->RegisterHandler(std::make_shared<PrenoteEventHandler>(
             std::make_unique<PrenoteService>(

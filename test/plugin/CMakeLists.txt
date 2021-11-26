@@ -352,11 +352,7 @@ set(test__plugin
 source_group("test\\plugin" FILES ${test__plugin})
 
 set(test__prenote
-        "prenote/AbstractPrenoteTest.cpp"
-        "prenote/AirfieldPairingPrenoteTest.cpp"
-        "prenote/DeparturePrenoteTest.cpp"
         "prenote/PrenoteEventHandlerTest.cpp"
-        "prenote/PrenoteFactoryTest.cpp"
         "prenote/PrenoteUserMessageTest.cpp"
         "prenote/PrenoteModuleTest.cpp"
         "prenote/PrenoteServiceTest.cpp"

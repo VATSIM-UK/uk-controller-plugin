@@ -5,7 +5,6 @@
 #include "airfield/AirfieldCollection.h"
 #include "controller/ControllerPosition.h"
 #include "message/UserMessager.h"
-#include "prenote/AbstractPrenote.h"
 #include "prenote/PublishedPrenote.h"
 #include "controller/ControllerPositionHierarchy.h"
 #include "airfield/AirfieldModel.h"
@@ -29,7 +28,6 @@ using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Ownership::ServiceProvision;
 using UKControllerPlugin::Ownership::ServiceType;
-using UKControllerPlugin::Prenote::AbstractPrenote;
 using UKControllerPlugin::Prenote::PrenoteService;
 using UKControllerPlugin::Prenote::PublishedPrenote;
 using UKControllerPlugin::Prenote::PublishedPrenoteCollection;

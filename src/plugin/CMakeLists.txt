@@ -592,16 +592,8 @@ set(src__plugin
 source_group("src\\plugin" FILES ${src__plugin})
 
 set(src__prenote
-    "prenote/AbstractPrenote.cpp"
-    "prenote/AbstractPrenote.h"
-    "prenote/AirfieldPairingPrenote.cpp"
-    "prenote/AirfieldPairingPrenote.h"
-    "prenote/DeparturePrenote.cpp"
-    "prenote/DeparturePrenote.h"
     "prenote/PrenoteEventHandler.cpp"
     "prenote/PrenoteEventHandler.h"
-    "prenote/PrenoteFactory.cpp"
-    "prenote/PrenoteFactory.h"
     "prenote/PrenoteUserMessage.cpp"
     "prenote/PrenoteUserMessage.h"
     "prenote/PrenoteModule.cpp"
