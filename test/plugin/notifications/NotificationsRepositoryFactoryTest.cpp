@@ -52,8 +52,8 @@ namespace UKControllerPluginTest {
                 container.controllerPositions->AddPosition(std::move(position1));
                 container.controllerPositions->AddPosition(std::move(position2));
                 container.controllerPositions->AddPosition(std::move(position3));
-                container.controllerHierarchyFactory = std::make_unique<ControllerPositionHierarchyFactory>
-                    (*container.controllerPositions);
+                container.controllerHierarchyFactory =
+                    std::make_unique<ControllerPositionHierarchyFactory>(*container.controllerPositions);
             }
 
             void TearDown() override
