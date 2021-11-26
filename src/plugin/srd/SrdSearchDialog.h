@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
             public:
                 explicit SrdSearchDialog(const UKControllerPlugin::Api::ApiInterface& api);
                 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-                bool SearchResultsValid(const nlohmann::json results) const;
+                bool SearchResultsValid(const nlohmann::json& results) const;
                 std::string FormatNotes(const nlohmann::json& json, size_t selectedIndex) const;
 
             private:

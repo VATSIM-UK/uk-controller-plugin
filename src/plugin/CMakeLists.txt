@@ -771,7 +771,7 @@ set(src__srd
     "srd/SrdSearchDialog.h"
     "srd/SrdSearchHandler.cpp"
     "srd/SrdSearchHandler.h"
-)
+        srd/ContainsFreeRouteAirspace.cpp srd/ContainsFreeRouteAirspace.h)
 source_group("src\\srd" FILES ${src__srd})
 
 set(src__stands
