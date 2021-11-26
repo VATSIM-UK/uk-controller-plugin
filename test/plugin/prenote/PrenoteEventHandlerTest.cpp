@@ -1,21 +1,31 @@
+#include "airfield/AirfieldCollection.h"
+#include "flightrule/FlightRuleCollection.h"
 #include "prenote/PrenoteEventHandler.h"
 #include "prenote/PrenoteService.h"
+#include "prenote/PublishedPrenoteCollection.h"
+#include "prenote/PublishedPrenoteMapper.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "message/UserMessager.h"
 #include "euroscope/GeneralSettingsEntries.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
+#include "sid/SidCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
+using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::FlightRules::FlightRuleCollection;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Prenote::AbstractPrenote;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
 using UKControllerPlugin::Prenote::PrenoteService;
+using UKControllerPlugin::Prenote::PublishedPrenoteCollection;
+using UKControllerPlugin::Prenote::PublishedPrenoteMapper;
+using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -26,27 +36,32 @@ namespace UKControllerPluginTest {
         class PrenoteEventHandlerTest : public Test
         {
             public:
-            void SetUp(void)
+            PrenoteEventHandlerTest() : mapper(prenotes, airfields, sids, flightRules)
             {
                 this->airfieldOwnership = std::make_unique<AirfieldServiceProviderCollection>();
 
                 this->messager = std::make_unique<UserMessager>(this->mockPlugin);
-                std::unique_ptr<PrenoteService> service =
-                    std::make_unique<PrenoteService>(*this->airfieldOwnership, this->activeCallsigns, *this->messager);
+                std::unique_ptr<PrenoteService> service = std::make_unique<PrenoteService>(
+                    this->mapper, *this->airfieldOwnership, this->activeCallsigns, *this->messager);
                 this->userSetting = std::make_unique<UserSetting>(this->mockSettingProvider);
                 this->eventHandler = std::make_unique<PrenoteEventHandler>(std::move(service), *this->userSetting);
-            };
+            }
 
             std::unique_ptr<UserSetting> userSetting;
             NiceMock<UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface> mockSettingProvider;
             std::unique_ptr<PrenoteEventHandler> eventHandler;
-            std::unique_ptr<PrenoteService> service;
             std::unique_ptr<AirfieldServiceProviderCollection> airfieldOwnership;
             ActiveCallsignCollection activeCallsigns;
             std::unique_ptr<UserMessager> messager;
             NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
             NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
             NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+            AirfieldCollection airfields;
+            SidCollection sids;
+            FlightRuleCollection flightRules;
+            PublishedPrenoteCollection prenotes;
+            PublishedPrenoteMapper mapper;
+            std::unique_ptr<PrenoteService> service;
         };
 
         TEST_F(PrenoteEventHandlerTest, FlightplanEventCancelsSentPrenotes)

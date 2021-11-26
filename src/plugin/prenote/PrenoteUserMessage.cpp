@@ -1,23 +1,17 @@
-#include "pch/pch.h"
-
+#include "PrenoteUserMessage.h"
 #include "controller/ActiveCallsign.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
-#include "prenote/AbstractPrenote.h"
-#include "prenote/PrenoteUserMessage.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
-using UKControllerPlugin::Prenote::AbstractPrenote;
 
 namespace UKControllerPlugin::Prenote {
 
     PrenoteUserMessage::PrenoteUserMessage(
-        const AbstractPrenote& prenote,
-        const ActiveCallsign& activeCallsign,
-        const EuroScopeCFlightPlanInterface& flightplan)
+        const ActiveCallsign& activeCallsign, const EuroScopeCFlightPlanInterface& flightplan)
     {
         this->message = "Prenote to " + activeCallsign.GetCallsign() + " required for " + flightplan.GetCallsign() +
-                        " (" + prenote.GetSummaryString() + ")";
+                        " (" + GetSummaryString(flightplan) + ")";
     }
 
     auto PrenoteUserMessage::MessageHandler() const -> std::string
@@ -58,5 +52,11 @@ namespace UKControllerPlugin::Prenote {
     auto PrenoteUserMessage::MessageRequiresConfirm() const -> bool
     {
         return true;
+    }
+
+    auto PrenoteUserMessage::GetSummaryString(const EuroScopeCFlightPlanInterface& flightplan) -> std::string
+    {
+        return flightplan.GetSidName().empty() ? flightplan.GetOrigin()
+                                              : flightplan.GetOrigin() + "/" + flightplan.GetSidName();
     }
 } // namespace UKControllerPlugin::Prenote

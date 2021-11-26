@@ -608,8 +608,6 @@ set(src__prenote
     "prenote/PrenoteModule.h"
     "prenote/PrenoteService.cpp"
     "prenote/PrenoteService.h"
-    "prenote/PrenoteServiceFactory.cpp"
-    "prenote/PrenoteServiceFactory.h"
     "prenote/PrenoteMessage.cpp"
     prenote/PrenoteMessageCollection.cpp prenote/PrenoteMessageCollection.h
     prenote/ComparePrenoteMessages.cpp prenote/ComparePrenoteMessages.h

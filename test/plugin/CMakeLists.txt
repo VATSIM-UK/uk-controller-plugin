@@ -359,7 +359,6 @@ set(test__prenote
         "prenote/PrenoteFactoryTest.cpp"
         "prenote/PrenoteUserMessageTest.cpp"
         "prenote/PrenoteModuleTest.cpp"
-        "prenote/PrenoteServiceFactoryTest.cpp"
         "prenote/PrenoteServiceTest.cpp"
         "prenote/PrenoteMessageTest.cpp"
         prenote/ComparePrenoteMessagesTest.cpp

@@ -19,7 +19,7 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Prenote {
-    class AbstractPrenote;
+    class PublishedPrenoteMapper;
 
     /*
         Handles the processing and sending of prenotes.
@@ -28,6 +28,7 @@ namespace UKControllerPlugin::Prenote {
     {
         public:
         PrenoteService(
+            const PublishedPrenoteMapper& prenoteMapper,
             const UKControllerPlugin::Ownership::AirfieldServiceProviderCollection& airfieldOwnership,
             const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns,
             UKControllerPlugin::Message::UserMessager& userMessager);
@@ -36,18 +37,12 @@ namespace UKControllerPlugin::Prenote {
         PrenoteService(PrenoteService&&) noexcept;
         auto operator=(const PrenoteService&) -> PrenoteService& = delete;
         auto operator=(PrenoteService&&) noexcept -> PrenoteService& = delete;
-        void AddPrenote(std::unique_ptr<const UKControllerPlugin::Prenote::AbstractPrenote> prenote);
         void CancelPrenote(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan);
-        [[nodiscard]] auto CountPrenotes() const -> size_t;
         void SendPrenotes(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan);
 
         private:
-        void PrenoteNotify(
-            const UKControllerPlugin::Prenote::AbstractPrenote& prenote,
-            const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan);
-
-        // All the prenotes
-        std::set<std::unique_ptr<const UKControllerPlugin::Prenote::AbstractPrenote>> prenotes;
+        // Maps flightplan to prenote
+        const PublishedPrenoteMapper& prenoteMapper;
 
         // Who's actively controlling
         const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns;
@@ -58,7 +53,7 @@ namespace UKControllerPlugin::Prenote {
         // List of callsigns already prenoted
         std::set<std::string> alreadyPrenoted;
 
-        // Allows us to send messagesto the user.
+        // Allows us to send messages to the user.
         UKControllerPlugin::Message::UserMessager& userMessager;
     };
 } // namespace UKControllerPlugin::Prenote

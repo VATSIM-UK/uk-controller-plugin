@@ -13,7 +13,7 @@ namespace UKControllerPlugin::Sid {
         return this->sids.size();
     }
 
-    auto SidCollection::GetByAirfieldAndIdentifier(std::string airfield, std::string identifier) const
+    auto SidCollection::GetByAirfieldAndIdentifier(const std::string& airfield, const std::string& identifier) const
         -> std::shared_ptr<StandardInstrumentDeparture>
     {
         auto sid = std::find_if(

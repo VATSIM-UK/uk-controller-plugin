@@ -11,7 +11,6 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Prenote {
-    class AbstractPrenote;
 
     /*
         A prenote message - follows the MessageSerializable interface
@@ -21,7 +20,6 @@ namespace UKControllerPlugin::Prenote {
     {
         public:
         PrenoteUserMessage(
-            const UKControllerPlugin::Prenote::AbstractPrenote& prenote,
             const UKControllerPlugin::Controller::ActiveCallsign& activeCallsign,
             const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan);
 
@@ -36,11 +34,15 @@ namespace UKControllerPlugin::Prenote {
         [[nodiscard]] auto MessageRequiresConfirm() const -> bool override;
 
         private:
+        [[nodiscard]] static auto
+        GetSummaryString(const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+            -> std::string;
+
         // The message to send
         std::string message;
 
         // Handler to handle this message
-        const std::string handler = "Prenote";
+        const std::string handler = "PRENOTE";
 
         // Who this message comes from
         const std::string sender = "UKCP";
