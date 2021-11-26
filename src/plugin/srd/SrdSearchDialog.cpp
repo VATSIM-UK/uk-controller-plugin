@@ -92,7 +92,7 @@ namespace UKControllerPlugin {
                                        ? "This route contains segments of Free Route Airspace."
                                        : "";
             if (!selectedRoute.contains("notes") || selectedRoute.at("notes").empty()) {
-                return "No notes.\r\n\r\n" + fraNotes;
+                return "No notes." + (fraNotes.empty() ? "" : "\r\n\r\n" + fraNotes);
             }
 
             std::string noteString;
