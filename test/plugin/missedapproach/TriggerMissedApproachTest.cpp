@@ -4,6 +4,7 @@
 #include "missedapproach/MissedApproachAudioAlert.h"
 #include "missedapproach/MissedApproachCollection.h"
 #include "missedapproach/MissedApproachOptions.h"
+#include "missedapproach/MissedApproachTriggeredMessage.h"
 #include "missedapproach/TriggerMissedApproach.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceProvision.h"
@@ -18,6 +19,7 @@ using UKControllerPlugin::MissedApproach::MissedApproach;
 using UKControllerPlugin::MissedApproach::MissedApproachAudioAlert;
 using UKControllerPlugin::MissedApproach::MissedApproachCollection;
 using UKControllerPlugin::MissedApproach::MissedApproachOptions;
+using UKControllerPlugin::MissedApproach::MissedApproachTriggeredMessage;
 using UKControllerPlugin::MissedApproach::TriggerMissedApproach;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Ownership::ServiceProvision;
@@ -48,7 +50,7 @@ namespace UKControllerPluginTest::MissedApproach {
               collection(std::make_shared<MissedApproachCollection>()),
               options(std::make_shared<MissedApproachOptions>()),
               audioAlert(std::make_shared<MissedApproachAudioAlert>(options, plugin, serviceProviders, windows)),
-              trigger(collection, windows, api, serviceProviders, audioAlert)
+              trigger(collection, windows, api, serviceProviders, audioAlert, mockIntegration)
         {
             SetTestNow(ParseTimeString("2021-08-23 13:55:00"));
             collection->Add(missed2);
@@ -69,6 +71,7 @@ namespace UKControllerPluginTest::MissedApproach {
         }
 
         AirfieldServiceProviderCollection serviceProviders;
+        NiceMock<Integration::MockOutboundIntegrationEventHandler> mockIntegration;
         NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface> mockRadarTarget;
         NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;
         NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplanBristol;
@@ -98,6 +101,10 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
+        auto expectedMessage =
+            std::make_shared<MissedApproachTriggeredMessage>("BAW123", true, ParseTimeString("2021-08-23 14:00:00"));
+        EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+
         trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(3, collection->Count());
         auto missed = collection->Get(55);
@@ -117,6 +124,10 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
+        auto expectedMessage =
+            std::make_shared<MissedApproachTriggeredMessage>("BAW123", true, ParseTimeString("2021-08-23 14:00:00"));
+        EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+
         trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         auto missed = collection->Get(55);
@@ -135,6 +146,8 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_))
             .Times(1)
             .WillOnce(testing::Return(IDYES));
+
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
 
         trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
@@ -219,6 +232,8 @@ namespace UKControllerPluginTest::MissedApproach {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
+
         trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());
         EXPECT_EQ(nullptr, collection->Get(55));
@@ -231,6 +246,8 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_CALL(windows, OpenMessageBox(testing::_, testing::_, testing::_))
             .Times(1)
             .WillOnce(testing::Return(IDNO));
+
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
 
         trigger.Trigger(mockFlightplan, mockRadarTarget);
         EXPECT_EQ(2, collection->Count());

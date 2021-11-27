@@ -1,6 +1,7 @@
 #include "MissedApproach.h"
 #include "MissedApproachAudioAlert.h"
 #include "MissedApproachCollection.h"
+#include "MissedApproachTriggeredMessage.h"
 #include "TriggerMissedApproach.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
@@ -9,6 +10,7 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "helper/HelperFunctions.h"
+#include "integration/OutboundIntegrationEventHandler.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceProvision.h"
 #include "time/ParseTimeStrings.h"
@@ -21,9 +23,10 @@ namespace UKControllerPlugin::MissedApproach {
         Windows::WinApiInterface& windowsApi,
         const Api::ApiInterface& api,
         const Ownership::AirfieldServiceProviderCollection& serviceProviders,
-        std::shared_ptr<const MissedApproachAudioAlert> audioAlert)
+        std::shared_ptr<const MissedApproachAudioAlert> audioAlert,
+        const Integration::OutboundIntegrationEventHandler& integrationEvents)
         : missedApproaches(std::move(missedApproaches)), windowsApi(windowsApi), api(api),
-          serviceProviders(serviceProviders), audioAlert(std::move(audioAlert))
+          serviceProviders(serviceProviders), audioAlert(std::move(audioAlert)), integrationEvents(integrationEvents)
     {
     }
 
@@ -97,6 +100,7 @@ namespace UKControllerPlugin::MissedApproach {
                     return;
                 }
 
+                // Create the missed approach and play the alert
                 const auto missedApproach = std::make_shared<class MissedApproach>(
                     response.at("id").get<int>(),
                     callsign,
@@ -104,6 +108,10 @@ namespace UKControllerPlugin::MissedApproach {
                     true);
                 this->missedApproaches->Add(missedApproach);
                 this->audioAlert->Play(missedApproach);
+
+                // Send the integration message
+                this->integrationEvents.SendEvent(std::make_shared<MissedApproachTriggeredMessage>(
+                    missedApproach->Callsign(), true, missedApproach->ExpiresAt()));
             } catch (Api::ApiException&) {
                 LogError("ApiException when creating missed approach");
             }

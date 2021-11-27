@@ -11,6 +11,9 @@ namespace UKControllerPlugin {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
     } // namespace Euroscope
+    namespace Integration {
+        class OutboundIntegrationEventHandler;
+    } // namespace Integration
     namespace Ownership {
         class AirfieldServiceProviderCollection;
     } // namespace Ownership
@@ -34,7 +37,9 @@ namespace UKControllerPlugin::MissedApproach {
             Windows::WinApiInterface& windowsApi,
             const Api::ApiInterface& api,
             const Ownership::AirfieldServiceProviderCollection& serviceProviders,
-            std::shared_ptr<const MissedApproachAudioAlert> audioAlert);
+            std::shared_ptr<const MissedApproachAudioAlert> audioAlert,
+            const Integration::OutboundIntegrationEventHandler& integrationEvents
+        );
         void Trigger(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const;
@@ -63,6 +68,9 @@ namespace UKControllerPlugin::MissedApproach {
 
         // Used for alerting the controller to the missed approach
         const std::shared_ptr<const MissedApproachAudioAlert> audioAlert;
+        
+        // Used to send integration events
+        const Integration::OutboundIntegrationEventHandler& integrationEvents;
 
         // The maximum distance from the destination for which we can trigger a missed approach
         inline static const double MAX_DISTANCE_FROM_DESTINATION = 7.0;

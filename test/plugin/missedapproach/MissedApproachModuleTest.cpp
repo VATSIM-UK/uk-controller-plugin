@@ -1,8 +1,10 @@
 #include "airfield/AirfieldCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dialog/DialogManager.h"
-#include "euroscope/UserSettingAwareCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "euroscope/UserSettingAwareCollection.h"
+#include "integration/IntegrationPersistenceContainer.h"
+#include "integration/IntegrationServer.h"
 #include "missedapproach/MissedApproachModule.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "push/PushEventProcessorCollection.h"
@@ -15,6 +17,7 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Integration::IntegrationPersistenceContainer;
 using UKControllerPlugin::MissedApproach::BootstrapPlugin;
 using UKControllerPlugin::MissedApproach::BootstrapRadarScreen;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -36,6 +39,8 @@ namespace UKControllerPluginTest::MissedApproach {
             container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
             container.dialogManager = std::make_unique<DialogManager>(mockProvider);
             container.airfields = std::make_unique<AirfieldCollection>();
+            container.integrationModuleContainer =
+                std::make_unique<IntegrationPersistenceContainer>(nullptr, nullptr, nullptr);
         }
 
         testing::NiceMock<MockDialogProvider> mockProvider;

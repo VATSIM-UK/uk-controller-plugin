@@ -5,7 +5,6 @@
 #include "MissedApproachConfigurationDialog.h"
 #include "MissedApproachModule.h"
 #include "MissedApproachOptions.h"
-#include "MissedApproachRenderOptions.h"
 #include "MissedApproachRenderer.h"
 #include "MissedApproachUserSettingHandler.h"
 #include "NewMissedApproachPushEventHandler.h"
@@ -53,12 +52,17 @@ namespace UKControllerPlugin::MissedApproach {
         collection = std::make_shared<MissedApproachCollection>();
         container.timedHandler->RegisterEvent(
             std::make_shared<RemoveExpiredMissedApproaches>(collection), REMOVE_APPROACHES_FREQUENCY);
-        container.pushEventProcessors->AddProcessor(
-            std::make_shared<NewMissedApproachPushEventHandler>(collection, audioAlert));
+        container.pushEventProcessors->AddProcessor(std::make_shared<NewMissedApproachPushEventHandler>(
+            collection, audioAlert, *container.integrationModuleContainer->outboundMessageHandler));
 
         // Trigger missed approach
         const auto trigger = std::make_shared<TriggerMissedApproach>(
-            collection, *container.windows, *container.api, *container.airfieldOwnership, audioAlert);
+            collection,
+            *container.windows,
+            *container.api,
+            *container.airfieldOwnership,
+            audioAlert,
+            *container.integrationModuleContainer->outboundMessageHandler);
         triggerHandler = trigger;
         TagFunction triggerMissedApproachTagFunction(
             TRIGGER_MISSED_APPROACH_TAG_FUNCTION_ID,

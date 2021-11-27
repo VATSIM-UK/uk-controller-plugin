@@ -2,6 +2,7 @@
 #include "missedapproach/MissedApproachAudioAlert.h"
 #include "missedapproach/MissedApproachCollection.h"
 #include "missedapproach/MissedApproachOptions.h"
+#include "missedapproach/MissedApproachTriggeredMessage.h"
 #include "missedapproach/NewMissedApproachPushEventHandler.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "time/ParseTimeStrings.h"
@@ -12,6 +13,7 @@ using UKControllerPlugin::MissedApproach::MissedApproach;
 using UKControllerPlugin::MissedApproach::MissedApproachAudioAlert;
 using UKControllerPlugin::MissedApproach::MissedApproachCollection;
 using UKControllerPlugin::MissedApproach::MissedApproachOptions;
+using UKControllerPlugin::MissedApproach::MissedApproachTriggeredMessage;
 using UKControllerPlugin::MissedApproach::NewMissedApproachPushEventHandler;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Push::PushEvent;
@@ -32,7 +34,7 @@ namespace UKControllerPluginTest::MissedApproach {
               collection(std::make_shared<MissedApproachCollection>()),
               options(std::make_shared<MissedApproachOptions>()),
               audioAlert(std::make_shared<MissedApproachAudioAlert>(options, plugin, ownership, windows)),
-              handler(collection, audioAlert)
+              handler(collection, audioAlert, mockIntegration)
         {
             SetTestNow(ParseTimeString("2021-08-23 13:55:00"));
         }
@@ -59,6 +61,7 @@ namespace UKControllerPluginTest::MissedApproach {
         };
 
         AirfieldServiceProviderCollection ownership;
+        NiceMock<Integration::MockOutboundIntegrationEventHandler> mockIntegration;
         NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
         NiceMock<MockWinApi> windows;
         std::shared_ptr<class MissedApproach> missed1;
@@ -77,6 +80,10 @@ namespace UKControllerPluginTest::MissedApproach {
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItAddsAMissedApproach)
     {
+        auto expectedMessage =
+            std::make_shared<MissedApproachTriggeredMessage>("BAW123", false, ParseTimeString("2021-08-23 14:00:00"));
+        EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+
         handler.ProcessPushEvent(MakePushEvent());
         EXPECT_EQ(1, collection->Count());
 
@@ -93,6 +100,8 @@ namespace UKControllerPluginTest::MissedApproach {
         collection->Add(
             std::make_shared<class MissedApproach>(1, "BAW123", ParseTimeString("2021-08-23 14:05:00"), true));
 
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
+
         handler.ProcessPushEvent(MakePushEvent());
         EXPECT_EQ(1, collection->Count());
 
@@ -105,48 +114,56 @@ namespace UKControllerPluginTest::MissedApproach {
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesMessageNotObject)
     {
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
         handler.ProcessPushEvent(MakePushEvent(nlohmann::json::array()));
         EXPECT_EQ(0, collection->Count());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesMissingIdInMessage)
     {
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
         handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "id"));
         EXPECT_EQ(0, collection->Count());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesIdNotIntegerInMessage)
     {
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
         handler.ProcessPushEvent(MakePushEvent(nlohmann::json{{"id", "123"}}));
         EXPECT_EQ(0, collection->Count());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesMissingCallsignInMessage)
     {
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
         handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "callsign"));
         EXPECT_EQ(0, collection->Count());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesCallsignNotStringInMessage)
     {
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
         handler.ProcessPushEvent(MakePushEvent(nlohmann::json{{"callsign", 123}}));
         EXPECT_EQ(0, collection->Count());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesExpiresAtMissingInMessage)
     {
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
         handler.ProcessPushEvent(MakePushEvent(nlohmann::json::object(), "expires_at"));
         EXPECT_EQ(0, collection->Count());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesExpiresAtNotStringInMessage)
     {
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
         handler.ProcessPushEvent(MakePushEvent(nlohmann::json{{"expires_at", 123}}));
         EXPECT_EQ(0, collection->Count());
     }
 
     TEST_F(NewMissedApproachPushEventHandlerTest, ItHandlesExpiresAtNotValidTimestampInMessage)
     {
+        EXPECT_CALL(this->mockIntegration, SendEvent(testing::_)).Times(0);
         handler.ProcessPushEvent(MakePushEvent(nlohmann::json{{"expires_at", "abc"}}));
         EXPECT_EQ(0, collection->Count());
     }

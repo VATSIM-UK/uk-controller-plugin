@@ -1,5 +1,5 @@
 #pragma once
-#include "integration/OutboundIntegrationEventHandler.h"
+#include "OutboundIntegrationEventHandler.h"
 
 namespace UKControllerPlugin::Integration {
     class IntegrationClientManager;
@@ -12,10 +12,10 @@ namespace UKControllerPlugin::Integration {
     class OutboundIntegrationMessageHandler : public OutboundIntegrationEventHandler
     {
         public:
-            explicit OutboundIntegrationMessageHandler(std::shared_ptr<IntegrationClientManager> clientManager);
-            void SendEvent(std::shared_ptr<MessageInterface> message) override;
+        explicit OutboundIntegrationMessageHandler(std::shared_ptr<IntegrationClientManager> clientManager);
+        void SendEvent(std::shared_ptr<MessageInterface> message) const override;
 
         private:
-            const std::shared_ptr<IntegrationClientManager> clientManager;
+        const std::shared_ptr<IntegrationClientManager> clientManager;
     };
 } // namespace UKControllerPlugin::Integration
