@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [3.8.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.8.0...3.8.1) (2021-11-14)
+
+
+### Bug Fixes
+
+* **notifications:** notifications not being read when only one available ([#355](https://github.com/VATSIM-UK/uk-controller-plugin/issues/355)) ([4193501](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4193501e1a5be0d3b29e365fa3cc7919494eb72d))
+
 # [3.8.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.7.0...3.8.0) (2021-11-07)
 
 
