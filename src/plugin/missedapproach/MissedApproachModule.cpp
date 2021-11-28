@@ -11,11 +11,13 @@
 #include "RemoveExpiredMissedApproaches.h"
 #include "ToggleMissedApproachButton.h"
 #include "TriggerMissedApproach.h"
+#include "TriggerMissedApproachMessageHandler.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "integration/InboundIntegrationMessageHandler.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
@@ -83,6 +85,10 @@ namespace UKControllerPlugin::MissedApproach {
             reinterpret_cast<DLGPROC>(dialog->WndProc), // NOLINT
             reinterpret_cast<LPARAM>(dialog.get()),     // NOLINT
             dialog});
+
+        // Message handler
+        auto messageHandler = std::make_shared<TriggerMissedApproachMessageHandler>(*triggerHandler, *container.plugin);
+        container.integrationModuleContainer->inboundMessageHandler->AddProcessor(messageHandler);
     }
 
     void BootstrapRadarScreen(

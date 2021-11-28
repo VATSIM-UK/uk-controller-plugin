@@ -30,31 +30,41 @@ namespace UKControllerPlugin::MissedApproach {
     {
     }
 
+    /**
+     * This could be triggered async by external integrations
+     */
     void TriggerMissedApproach::Trigger(
         Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-        Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const
+        Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+        bool userConfirm,
+        const std::function<void(void)>& success,
+        const std::function<void(std::vector<std::string>)>& fail) const
     {
         if (!AircraftElegibleForMissedApproach(flightplan, radarTarget)) {
+            fail({"Aircraft not eligible for missed approach"});
             return;
         }
 
         if (!this->UserCanTrigger(flightplan)) {
+            fail({"User not authorised to trigger missed approach"});
             LogWarning("User tried to trigger missed approach, but is not authorised to do so");
             return;
         }
 
         auto callsign = flightplan.GetCallsign();
         if (AlreadyActive(callsign)) {
+            fail({"Missed approach already active"});
             LogWarning("Tried to create missed approach but one is alread active");
             return;
         }
 
-        if (!Confirm(callsign)) {
+        if (userConfirm && !Confirm(callsign)) {
+            fail({"User did not confirm missed approach"});
             LogInfo("User did not confirm missed approach");
             return;
         }
 
-        this->TriggerMissedApproachInApi(callsign);
+        this->TriggerMissedApproachInApi(callsign, success, fail);
     }
 
     auto TriggerMissedApproach::Confirm(const std::string& callsign) const -> bool
@@ -90,12 +100,16 @@ namespace UKControllerPlugin::MissedApproach {
                Time::ParseTimeString(responseData.at("expires_at").get<std::string>()) != Time::invalidTime;
     }
 
-    void TriggerMissedApproach::TriggerMissedApproachInApi(const std::string& callsign) const
+    void TriggerMissedApproach::TriggerMissedApproachInApi(
+        const std::string& callsign,
+        const std::function<void(void)> success,
+        const std::function<void(std::vector<std::string>)> fail) const
     {
-        Async([this, callsign]() {
+        Async([this, callsign, success, fail]() {
             try {
                 auto response = this->api.CreateMissedApproach(callsign);
                 if (!ResponseValid(response)) {
+                    fail({"Bad API response when creating missed approach"});
                     LogError("Invalid response from API when creating missed approach");
                     return;
                 }
@@ -112,7 +126,10 @@ namespace UKControllerPlugin::MissedApproach {
                 // Send the integration message
                 this->integrationEvents.SendEvent(std::make_shared<MissedApproachTriggeredMessage>(
                     missedApproach->Callsign(), true, missedApproach->ExpiresAt()));
+
+                success();
             } catch (Api::ApiException&) {
+                fail({"API error when creating missed approach"});
                 LogError("ApiException when creating missed approach");
             }
         });

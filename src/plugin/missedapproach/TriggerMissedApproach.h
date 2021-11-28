@@ -38,11 +38,13 @@ namespace UKControllerPlugin::MissedApproach {
             const Api::ApiInterface& api,
             const Ownership::AirfieldServiceProviderCollection& serviceProviders,
             std::shared_ptr<const MissedApproachAudioAlert> audioAlert,
-            const Integration::OutboundIntegrationEventHandler& integrationEvents
-        );
+            const Integration::OutboundIntegrationEventHandler& integrationEvents);
         void Trigger(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const;
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            bool userConfirm = true,
+            const std::function<void(void)>& success = []() {},
+            const std::function<void(std::vector<std::string>)>& fail = [](const std::vector<std::string>&) {}) const;
 
         private:
         [[nodiscard]] static auto AircraftElegibleForMissedApproach(
@@ -52,7 +54,10 @@ namespace UKControllerPlugin::MissedApproach {
         [[nodiscard]] auto Confirm(const std::string& callsign) const -> bool;
         [[nodiscard]] static auto ResponseValid(const nlohmann::json& responseData) -> bool;
         [[nodiscard]] auto AlreadyActive(const std::string& callsign) const -> bool;
-        void TriggerMissedApproachInApi(const std::string& callsign) const;
+        void TriggerMissedApproachInApi(
+            const std::string& callsign,
+            const std::function<void(void)> success,
+            const std::function<void(std::vector<std::string>)> fail) const;
 
         // All the missed approaches
         const std::shared_ptr<MissedApproachCollection> missedApproaches;
@@ -68,7 +73,7 @@ namespace UKControllerPlugin::MissedApproach {
 
         // Used for alerting the controller to the missed approach
         const std::shared_ptr<const MissedApproachAudioAlert> audioAlert;
-        
+
         // Used to send integration events
         const Integration::OutboundIntegrationEventHandler& integrationEvents;
 
