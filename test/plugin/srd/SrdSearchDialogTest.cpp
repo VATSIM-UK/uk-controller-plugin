@@ -375,7 +375,7 @@ namespace UKControllerPluginTest {
         TEST_F(SrdSearchDialogTest, FormatNotesReturnsNoNotesIfContainsNoNotes)
         {
             nlohmann::json searchResults = nlohmann::json::array();
-            searchResults.push_back({{"notnotes", "1"}});
+            searchResults.push_back({{"notnotes", "1"}, {"route_string", "foo"}});
 
             EXPECT_EQ("No notes.", this->dialog.FormatNotes(searchResults, 0));
         }
@@ -383,9 +383,19 @@ namespace UKControllerPluginTest {
         TEST_F(SrdSearchDialogTest, FormatNotesReturnsNoNotesIfNoNotes)
         {
             nlohmann::json searchResults = nlohmann::json::array();
-            searchResults.push_back({{"notes", nlohmann::json::array()}});
+            searchResults.push_back({{"notes", nlohmann::json::array()}, {"route_string", "foo"}});
 
             EXPECT_EQ("No notes.", this->dialog.FormatNotes(searchResults, 0));
+        }
+
+        TEST_F(SrdSearchDialogTest, FormatNotesReturnsNoNotesWithFreeRouteAirspace)
+        {
+            nlohmann::json searchResults = nlohmann::json::array();
+            searchResults.push_back({{"notes", nlohmann::json::array()}, {"route_string", "<FRA>"}});
+
+            EXPECT_EQ(
+                "No notes.\r\n\r\nThis route contains segments of Free Route Airspace.",
+                this->dialog.FormatNotes(searchResults, 0));
         }
 
         TEST_F(SrdSearchDialogTest, FormatNotesFormatsSingleNote)
@@ -394,7 +404,7 @@ namespace UKControllerPluginTest {
             nlohmann::json notes = nlohmann::json::array();
             notes.push_back({{"id", 1}, {"text", "Test"}});
 
-            searchResults.push_back({{"notes", notes}});
+            searchResults.push_back({{"notes", notes}, {"route_string", "foo"}});
 
             EXPECT_EQ("Note 1\r\n\r\nTest\r\n\r\n", this->dialog.FormatNotes(searchResults, 0));
         }
@@ -406,10 +416,23 @@ namespace UKControllerPluginTest {
             notes.push_back({{"id", 1}, {"text", "Test"}});
             notes.push_back({{"id", 2}, {"text", "Test 2"}});
 
-            searchResults.push_back({{"notes", notes}});
+            searchResults.push_back({{"notes", notes}, {"route_string", "foo"}});
 
             EXPECT_EQ(
                 "Note 1\r\n\r\nTest\r\n\r\nNote 2\r\n\r\nTest 2\r\n\r\n", this->dialog.FormatNotes(searchResults, 0));
+        }
+
+        TEST_F(SrdSearchDialogTest, FormatNotesFormatsNotesWithFreeRouteAirspace)
+        {
+            nlohmann::json searchResults = nlohmann::json::array();
+            nlohmann::json notes = nlohmann::json::array();
+            notes.push_back({{"id", 1}, {"text", "Test"}});
+
+            searchResults.push_back({{"notes", notes}, {"route_string", "<FRA>"}});
+
+            EXPECT_EQ(
+                "Note 1\r\n\r\nTest\r\n\r\nThis route contains segments of Free Route Airspace.",
+                this->dialog.FormatNotes(searchResults, 0));
         }
 
         TEST_F(SrdSearchDialogTest, FormatNotesReplacesLineFeedsButNotCarraigeReturns)
@@ -418,7 +441,7 @@ namespace UKControllerPluginTest {
             nlohmann::json notes = nlohmann::json::array();
             notes.push_back({{"id", 1}, {"text", "Test 1\nTest 2\r\nTest 3\n\nTest 4"}});
 
-            searchResults.push_back({{"notes", notes}});
+            searchResults.push_back({{"notes", notes}, {"route_string", "foo"}});
 
             EXPECT_EQ(
                 "Note 1\r\n\r\nTest 1\r\nTest 2\r\n\r\nTest 3\r\n\r\nTest 4\r\n\r\n",
