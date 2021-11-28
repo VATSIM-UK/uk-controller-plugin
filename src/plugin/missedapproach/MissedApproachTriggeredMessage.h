@@ -9,9 +9,8 @@ namespace UKControllerPlugin::MissedApproach {
             std::string callsign, bool triggeredByUser, std::chrono::system_clock::time_point expiresAt);
         auto GetMessageData() const -> nlohmann::json override;
         auto GetMessageType() const -> Integration::MessageType override;
-        
+
         private:
-        
         std::string callsign;
         bool triggeredByUser;
         std::chrono::system_clock::time_point expiresAt;

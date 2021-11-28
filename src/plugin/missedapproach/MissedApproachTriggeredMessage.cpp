@@ -17,7 +17,7 @@ namespace UKControllerPlugin::MissedApproach {
             {"expires_at", Time::ToDateTimeString(this->expiresAt)},
         };
     }
-    
+
     auto MissedApproachTriggeredMessage::GetMessageType() const -> Integration::MessageType
     {
         return {"missed_approach_triggered", 1};
