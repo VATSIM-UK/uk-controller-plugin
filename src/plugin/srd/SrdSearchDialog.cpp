@@ -105,7 +105,6 @@ namespace UKControllerPlugin {
 
             noteString += fraNotes;
             return std::regex_replace(noteString, std::regex("[\r\n]"), "\r\n");
-            ;
         }
 
         /*
@@ -195,7 +194,7 @@ namespace UKControllerPlugin {
             LVCOLUMN routeStringColumn = {
                 LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
                 LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
-                335,
+                600,
                 routeString,
                 2};
             ListView_InsertColumn(resultsList, 3, &routeStringColumn);
