@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "srd/SrdSearchDialog.h"
 #include "dialog/DialogCallArgument.h"
 #include "srd/SrdSearchParameters.h"
@@ -6,6 +5,7 @@
 #include "helper/HelperFunctions.h"
 #include "api/ApiException.h"
 #include "datablock/DatablockFunctions.h"
+#include "srd/ContainsFreeRouteAirspace.h"
 
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Datablock::ConvertAltitudeToFlightLevel;
@@ -33,7 +33,7 @@ namespace UKControllerPlugin {
             return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
         }
 
-        bool SrdSearchDialog::SearchResultsValid(const nlohmann::json results) const
+        bool SrdSearchDialog::SearchResultsValid(const nlohmann::json& results) const
         {
             if (!results.is_array()) {
                 LogError("SRD search result is not an array" + results.dump());
@@ -88,8 +88,11 @@ namespace UKControllerPlugin {
             }
 
             nlohmann::json selectedRoute = json.at(selectedIndex);
+            std::string fraNotes = RouteContainsFreeRouteAirspace(selectedRoute.at("route_string").get<std::string>())
+                                       ? "This route contains segments of Free Route Airspace."
+                                       : "";
             if (!selectedRoute.contains("notes") || selectedRoute.at("notes").empty()) {
-                return "No notes.";
+                return "No notes." + (fraNotes.empty() ? "" : "\r\n\r\n" + fraNotes);
             }
 
             std::string noteString;
@@ -100,8 +103,8 @@ namespace UKControllerPlugin {
                               noteIt->at("text").get<std::string>() + "\n\n";
             }
 
+            noteString += fraNotes;
             return std::regex_replace(noteString, std::regex("[\r\n]"), "\r\n");
-            ;
         }
 
         /*
@@ -180,15 +183,21 @@ namespace UKControllerPlugin {
                 LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM, LVCFMT_LEFT | LVCFMT_FIXED_WIDTH, 50, max, 1};
             ListView_InsertColumn(resultsList, 1, &maxLevelColumn);
 
+            // Create the Free Route Airspace column
+            wchar_t fra[4] = L"FRA";
+            LVCOLUMN freeRouteAirspaceColumn = {
+                LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM, LVCFMT_LEFT | LVCFMT_FIXED_WIDTH, 50, fra, 1};
+            ListView_InsertColumn(resultsList, 2, &freeRouteAirspaceColumn);
+
             // Create the route string column
             wchar_t routeString[13] = L"Route String";
             LVCOLUMN routeStringColumn = {
                 LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM,
                 LVCFMT_LEFT | LVCFMT_FIXED_WIDTH,
-                335,
+                600,
                 routeString,
                 2};
-            ListView_InsertColumn(resultsList, 2, &routeStringColumn);
+            ListView_InsertColumn(resultsList, 3, &routeStringColumn);
         }
 
         void SrdSearchDialog::StartSearch(HWND hwnd)
@@ -211,8 +220,12 @@ namespace UKControllerPlugin {
             SendDlgItemMessage(hwnd, IDC_SRD_CRUISE, WM_GETTEXT, 255, reinterpret_cast<LPARAM>(&cruiseBuffer));
             std::string requestedLevel = UKControllerPlugin::Hold::ConvertFromTchar(cruiseBuffer);
 
-            if (requestedLevel != "") {
+            // If the requested level is < 100, assume it's a flight-level
+            if (!requestedLevel.empty()) {
                 searchParams.requestedLevel = std::stoi(requestedLevel);
+                if (searchParams.requestedLevel < 1000) {
+                    searchParams.requestedLevel *= 100;
+                }
             }
 
             // Clear the results list and notes box
@@ -249,6 +262,9 @@ namespace UKControllerPlugin {
                 item.pszText = zero;
                 ListView_SetItem(resultsList, &item);
                 item.iSubItem++;
+                item.pszText = zero;
+                ListView_SetItem(resultsList, &item);
+                item.iSubItem++;
                 wchar_t noneFound[16] = L"No routes found";
                 item.pszText = noneFound;
                 ListView_SetItem(resultsList, &item);
@@ -279,6 +295,13 @@ namespace UKControllerPlugin {
                 std::wstring maxLevel =
                     std::to_wstring(ConvertAltitudeToFlightLevel(it->at("maximum_level").get<int>()));
                 item.pszText = (LPWSTR)maxLevel.c_str();
+                ListView_SetItem(resultsList, &item);
+
+                // Free route airspace
+                item.iSubItem++;
+                std::wstring freeRoute =
+                    RouteContainsFreeRouteAirspace(it->at("route_string").get<std::string>()) ? L"Yes" : L"No";
+                item.pszText = (LPWSTR)freeRoute.c_str();
                 ListView_SetItem(resultsList, &item);
 
                 // Route String

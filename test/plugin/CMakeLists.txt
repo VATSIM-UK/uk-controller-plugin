@@ -450,7 +450,7 @@ set(test__srd
     "srd/SrdModuleTest.cpp"
     "srd/SrdSearchDialogTest.cpp"
     "srd/SrdSearchHandlerTest.cpp"
-)
+        srd/ContainsFreeRouteAirspaceTest.cpp)
 source_group("test\\srd" FILES ${test__srd})
 
 set(test__stands
