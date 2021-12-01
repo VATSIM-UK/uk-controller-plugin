@@ -119,18 +119,6 @@ namespace UKControllerPluginTest::Airfield {
         EXPECT_FALSE(AirfieldValid(airfield, factory));
     }
 
-    TEST_F(AirfieldCollectionFactoryTest, AirfieldIsNotValidIfTopDownEmpty)
-    {
-        nlohmann::json airfield{
-            {"id", 1},
-            {"identifier", "EGLL"},
-            {"top_down_controller_positions", nlohmann::json::array()},
-            {"pairing_prenotes",
-             nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
-
-        EXPECT_FALSE(AirfieldValid(airfield, factory));
-    }
-
     TEST_F(AirfieldCollectionFactoryTest, AirfieldIsNotValidIfTopDownControllersInvalid)
     {
         nlohmann::json airfield{
@@ -212,6 +200,17 @@ namespace UKControllerPluginTest::Airfield {
         EXPECT_FALSE(AirfieldValid(airfield, factory));
     }
 
+    TEST_F(AirfieldCollectionFactoryTest, AirfieldIsNotValidIfPrenotePrenoteNotObject)
+    {
+        nlohmann::json airfield{
+            {"id", 1},
+            {"identifier", "EGLL"},
+            {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"pairing_prenotes", nlohmann::json::array({nlohmann::json::array()})}};
+
+        EXPECT_FALSE(AirfieldValid(airfield, factory));
+    }
+
     TEST_F(AirfieldCollectionFactoryTest, AirfieldIsNotValidIfPrenotesNotArray)
     {
         nlohmann::json airfield{
@@ -241,7 +240,7 @@ namespace UKControllerPluginTest::Airfield {
         airfields.push_back(nlohmann::json{
             {"id", 2},
             {"identifier", "EGKK"},
-            {"top_down_controller_positions", nlohmann::json::array({1})},
+            {"top_down_controller_positions", nlohmann::json::array({})},
             {"pairing_prenotes", nlohmann::json::array()}});
 
         const auto collection = CreateAirfieldCollection(airfields, factory);
@@ -261,7 +260,7 @@ namespace UKControllerPluginTest::Airfield {
         EXPECT_NE(nullptr, airfieldTwo);
         EXPECT_EQ(2, airfieldTwo->Id());
         EXPECT_EQ("EGKK", airfieldTwo->Icao());
-        EXPECT_EQ(1, airfieldTwo->TopDownOrder().CountPositions());
+        EXPECT_EQ(0, airfieldTwo->TopDownOrder().CountPositions());
         EXPECT_EQ(0, airfieldTwo->AirfieldPairingPrenotes().size());
     }
 

@@ -22,14 +22,14 @@ namespace UKControllerPluginTest::Sid {
                   {"identifier", "TEST1Y"},
                   {"initial_altitude", 6000},
                   {"initial_heading", 350},
-                  {"handoff_id", 5},
+                  {"handoff", 5},
                   {"prenotes", nlohmann::json::array({1, 2})}}),
              nlohmann::json::object(
                  {{"airfield", "EGGD"},
                   {"identifier", "TEST1Y"},
                   {"initial_altitude", 6000},
                   {"initial_heading", nlohmann::json::value_t::null},
-                  {"handoff_id", nlohmann::json::value_t::null},
+                  {"handoff", nlohmann::json::value_t::null},
                   {"prenotes", nlohmann::json::array()}})});
 
         EXPECT_TRUE(SidDataValid(sidData));
@@ -41,7 +41,7 @@ namespace UKControllerPluginTest::Sid {
             {{"identifier", "TEST1Y"},
              {"initial_altitude", 6000},
              {"initial_heading", nlohmann::json::value_t::null},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -54,7 +54,7 @@ namespace UKControllerPluginTest::Sid {
              {"identifier", "TEST1Y"},
              {"initial_altitude", 6000},
              {"initial_heading", nlohmann::json::value_t::null},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -66,7 +66,7 @@ namespace UKControllerPluginTest::Sid {
             {{"airfield", "EGGD"},
              {"initial_altitude", 6000},
              {"initial_heading", nlohmann::json::value_t::null},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -79,7 +79,7 @@ namespace UKControllerPluginTest::Sid {
              {"identifier", 123},
              {"initial_altitude", 6000},
              {"initial_heading", nlohmann::json::value_t::null},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -91,7 +91,7 @@ namespace UKControllerPluginTest::Sid {
             {{"airfield", "EGGD"},
              {"identifier", "TEST1Y"},
              {"initial_heading", nlohmann::json::value_t::null},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -104,7 +104,7 @@ namespace UKControllerPluginTest::Sid {
              {"identifier", "TEST1Y"},
              {"initial_altitude", "6000"},
              {"initial_heading", nlohmann::json::value_t::null},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -116,7 +116,7 @@ namespace UKControllerPluginTest::Sid {
             {{"airfield", "EGGD"},
              {"identifier", "TEST1Y"},
              {"initial_altitude", 6000},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -129,7 +129,7 @@ namespace UKControllerPluginTest::Sid {
              {"identifier", "TEST1Y"},
              {"initial_altitude", 6000},
              {"initial_heading", "abc"},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -142,7 +142,7 @@ namespace UKControllerPluginTest::Sid {
              {"identifier", "TEST1Y"},
              {"initial_altitude", 6000},
              {"initial_heading", 0},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -155,7 +155,7 @@ namespace UKControllerPluginTest::Sid {
              {"identifier", "TEST1Y"},
              {"initial_altitude", 6000},
              {"initial_heading", 361},
-             {"handoff_id", 5},
+             {"handoff", 5},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -180,7 +180,7 @@ namespace UKControllerPluginTest::Sid {
              {"identifier", "TEST1Y"},
              {"initial_altitude", 6000},
              {"initial_heading", 15},
-             {"handoff_id", "abc"},
+             {"handoff", "abc"},
              {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -193,7 +193,7 @@ namespace UKControllerPluginTest::Sid {
             {"identifier", "TEST1Y"},
             {"initial_altitude", 6000},
             {"initial_heading", 15},
-            {"handoff_id", 1},
+            {"handoff", 1},
         })});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -206,7 +206,7 @@ namespace UKControllerPluginTest::Sid {
              {"identifier", "TEST1Y"},
              {"initial_altitude", 6000},
              {"initial_heading", 15},
-             {"handoff_id", 1},
+             {"handoff", 1},
              {"prenotes", "abc"}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -219,7 +219,7 @@ namespace UKControllerPluginTest::Sid {
              {"identifier", "TEST1Y"},
              {"initial_altitude", 6000},
              {"initial_heading", 15},
-             {"handoff_id", 1},
+             {"handoff", 1},
              {"prenotes", nlohmann::json::array({"", 2})}})});
 
         EXPECT_FALSE(SidDataValid(sidData));
@@ -257,14 +257,14 @@ namespace UKControllerPluginTest::Sid {
                   {"identifier", "TEST1Y"},
                   {"initial_altitude", 6000},
                   {"initial_heading", 350},
-                  {"handoff_id", 55},
+                  {"handoff", 55},
                   {"prenotes", nlohmann::json::array({1, 2})}}),
              nlohmann::json::object(
                  {{"airfield", "EGLL"},
                   {"identifier", "TEST1Z"},
                   {"initial_altitude", 5000},
                   {"initial_heading", nlohmann::json::value_t::null},
-                  {"handoff_id", nlohmann::json::value_t::null},
+                  {"handoff", nlohmann::json::value_t::null},
                   {"prenotes", nlohmann::json::array()}})});
 
         std::unique_ptr<SidCollection> collection = MakeSidCollection(sidData);

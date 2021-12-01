@@ -37,6 +37,6 @@ namespace UKControllerPlugin::Handoff {
 
     auto GetHandoffDependencyKey() -> std::string
     {
-        return "DEPENDENCY_HANDOFF_V2";
+        return "DEPENDENCY_HANDOFFS_V2";
     }
 } // namespace UKControllerPlugin::Handoff

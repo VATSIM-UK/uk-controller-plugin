@@ -54,16 +54,16 @@ namespace UKControllerPlugin::Airfield {
                airfield.contains("identifier") && airfield.at("identifier").is_string() &&
                airfield.contains("top_down_controller_positions") &&
                airfield.at("top_down_controller_positions").is_array() &&
-               !airfield.at("top_down_controller_positions").empty() &&
                hierarchyFactory.CreateFromJsonById(airfield.at("top_down_controller_positions")) != nullptr &&
                airfield.contains("pairing_prenotes") && airfield.at("pairing_prenotes").is_array() &&
                std::find_if_not(
                    airfield.at("pairing_prenotes").begin(),
                    airfield.at("pairing_prenotes").end(),
                    [](const nlohmann::json& prenote) -> bool {
-                       return prenote.contains("airfield_id") && prenote.at("airfield_id").is_number_integer() &&
-                              prenote.contains("flight_rule_id") && prenote.at("flight_rule_id").is_number_integer() &&
-                              prenote.contains("prenote_id") && prenote.at("prenote_id").is_number_integer();
+                       return prenote.is_object() && prenote.contains("airfield_id") &&
+                              prenote.at("airfield_id").is_number_integer() && prenote.contains("flight_rule_id") &&
+                              prenote.at("flight_rule_id").is_number_integer() && prenote.contains("prenote_id") &&
+                              prenote.at("prenote_id").is_number_integer();
                    }) == airfield.at("pairing_prenotes").cend();
     }
 } // namespace UKControllerPlugin::Airfield
