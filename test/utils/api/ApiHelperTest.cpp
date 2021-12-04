@@ -818,4 +818,20 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_EQ(responseData, this->helper.CreateMissedApproach("BAW123"));
     }
+
+    TEST_F(ApiHelperTest, AcknowledgeMissedApproachMakesRequest)
+    {
+        nlohmann::json responseData;
+        responseData["bla"] = "bla";
+        CurlResponse response(responseData.dump(), false, 200);
+
+        nlohmann::json expectedData;
+        expectedData["remarks"] = "Some remarks";
+
+        CurlRequest expectedRequest(GetApiCurlRequest("/missed-approaches/1", CurlRequest::METHOD_PATCH, expectedData));
+
+        EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
+
+        this->helper.AcknowledgeMissedApproach(1, "Some remarks");
+    }
 } // namespace UKControllerPluginUtilsTest::Api

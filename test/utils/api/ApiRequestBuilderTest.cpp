@@ -558,4 +558,18 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_TRUE(expectedRequest == this->builder.BuildMissedApproachMessage("BAW123"));
     }
+
+    TEST_F(ApiRequestBuilderTest, ItBuildsMissedApproachAcknowledge)
+    {
+        CurlRequest expectedRequest("http://testurl.com/missed-approaches/1", CurlRequest::METHOD_PATCH);
+
+        expectedRequest.AddHeader("Authorization", "Bearer apikey");
+        expectedRequest.AddHeader("Accept", "application/json");
+        expectedRequest.AddHeader("Content-Type", "application/json");
+
+        nlohmann::json expectedData = {{"remarks", "Some remarks"}};
+        expectedRequest.SetBody(expectedData.dump());
+
+        EXPECT_TRUE(expectedRequest == this->builder.BuildMissedApproachAcknowledgeMessage(1, "Some remarks"));
+    }
 } // namespace UKControllerPluginUtilsTest::Api
