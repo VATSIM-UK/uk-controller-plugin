@@ -11,6 +11,7 @@
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
+#include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
@@ -26,6 +27,7 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
+using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 
@@ -43,6 +45,7 @@ namespace UKControllerPluginTest::MissedApproach {
             container.airfields = std::make_unique<AirfieldCollection>();
             container.integrationModuleContainer = std::make_unique<IntegrationPersistenceContainer>(
                 nullptr, std::make_shared<InboundIntegrationMessageHandler>(nullptr), nullptr);
+            container.tagHandler = std::make_unique<TagItemCollection>();
         }
 
         testing::NiceMock<MockDialogProvider> mockProvider;
@@ -93,6 +96,12 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         BootstrapPlugin(container);
         EXPECT_EQ(1, container.integrationModuleContainer->inboundMessageHandler->CountProcessors());
+    }
+
+    TEST_F(MissedApproachModuleTest, ItRegistersTheIndicatorTagItem)
+    {
+        BootstrapPlugin(container);
+        EXPECT_EQ(1, container.tagHandler->HasHandlerForItemId(130));
     }
 
     TEST_F(MissedApproachModuleTest, ItRegistersTheRenderers)

@@ -29,3 +29,4 @@
 127 - Prenote Messages Status Indicator
 128 - SELCAL Code
 129 - SELCAL Code With Separator
+130 - Missed Approach Indicator

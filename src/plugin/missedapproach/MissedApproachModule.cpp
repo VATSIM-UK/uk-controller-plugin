@@ -4,6 +4,7 @@
 #include "MissedApproachButton.h"
 #include "MissedApproachCollection.h"
 #include "MissedApproachConfigurationDialog.h"
+#include "MissedApproachIndicator.h"
 #include "MissedApproachModule.h"
 #include "MissedApproachOptions.h"
 #include "MissedApproachRenderer.h"
@@ -23,6 +24,7 @@
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
+#include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Euroscope::CallbackFunction;
@@ -32,6 +34,7 @@ namespace UKControllerPlugin::MissedApproach {
 
     const int REMOVE_APPROACHES_FREQUENCY = 30;
     const int TRIGGER_MISSED_APPROACH_TAG_FUNCTION_ID = 9020;
+    const int INDICATOR_TAG_ITEM_ID = 130;
     std::shared_ptr<MissedApproachCollection> collection;             // NOLINT
     std::shared_ptr<MissedApproachAudioAlert> audioAlert;             // NOLINT
     std::shared_ptr<MissedApproachOptions> options;                   // NOLINT
@@ -94,6 +97,10 @@ namespace UKControllerPlugin::MissedApproach {
         // Acknowledge message handler
         container.pushEventProcessors->AddProcessor(
             std::make_shared<MissedApproachAcknowledgedPushEventProcessor>(*collection, *container.userMessager));
+
+        // Indicator tag item
+        container.tagHandler.get()->RegisterTagItem(
+            INDICATOR_TAG_ITEM_ID, std::make_shared<MissedApproachIndicator>(*collection));
     }
 
     void BootstrapRadarScreen(
