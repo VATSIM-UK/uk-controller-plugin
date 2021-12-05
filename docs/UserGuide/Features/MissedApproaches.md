@@ -22,6 +22,8 @@ There are two methods by which to trigger a missed approach.
 When either of these methods are used, the plugin will ask for confirmation and, if confirmed, will trigger
 the missed approach.
 
+The first two settings are explained in
+
 ## The missed approach button
 
 ### How do I trigger the button?
@@ -40,6 +42,19 @@ If the button is `green`, a missed approach may be triggered.
 If the button is `red`, then a missed approach is active for the selected aircraft.
 
 ## How do I know if a missed approach has happened?
+
+There are multiple ways to know if a missed approach has happened:
+
+- An audio alert
+- A visual cue on the radar display
+- A TAG item
+
+## TAG Item
+
+There is a TAG item named "Missed Approach Indicator". This will display "GO AROUND" if the aircraft in question
+has an active missed approach.
+
+## Audio Alert and Visual Cues
 
 There are a number of configurable options for missed approaches in the plugin. These are all configurable
 via the "Configure Missed Approaches" option of the `OP` menu.
@@ -82,3 +97,17 @@ When this option is selected, a red line will be drawn from the centre of the sc
 ### Draw duration
 
 This option controls how long any drawings will remain on screen following a missed approach.
+
+## Acknowledging a missed approach
+
+To acknowledge a missed approach, you must be providing Final Approach services at the given aircraft's destination airfield.
+
+### TAG Function
+
+Acknowledging a missed approach is achieved via the "Acknowledge Missed Approach" TAG function. Activate this TAG function and in the following dialog, enter any instructions or remarks that you have for the controller who triggered the approach.
+
+### Receiving instructions
+
+When a controller acknowledges a missed approach, they may append remarks or instructions for the responsible controller to carry out.
+
+These remarks will be displayed to the controller in the `MISSED_APPROACH` message handler of the Euroscope chat box.
