@@ -27,6 +27,7 @@
 #define IDR_WAVE2                       136
 #define WAVE_MISSED_APPROACH            136
 #define IDD_MISSED_APPROACH             137
+#define IDD_MISSED_APPROACH_ACKNOWLEDGE 139
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -187,14 +188,17 @@
 #define IDC_LIST4                       1134
 #define MISSED_APPROACH_DRAW_SERVICE_LIST 1134
 #define MISSED_APPROACH_DRAW_DURATION_TEXT 1135
+#define IDC_MISSED_APPROACH_REMARKS     1137
+#define IDC_MISSED_APPROACH_STATICS     1138
+#define IDC_MISSED_APPROACH_STATIC      1138
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        139
+#define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1136
+#define _APS_NEXT_CONTROL_VALUE         1139
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
