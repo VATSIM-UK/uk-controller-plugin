@@ -1,4 +1,5 @@
 #include "ConfigureMissedApproaches.h"
+#include "MissedApproachAcknowledgedPushEventProcessor.h"
 #include "MissedApproachAudioAlert.h"
 #include "MissedApproachButton.h"
 #include "MissedApproachCollection.h"
@@ -89,6 +90,10 @@ namespace UKControllerPlugin::MissedApproach {
         // Message handler
         auto messageHandler = std::make_shared<TriggerMissedApproachMessageHandler>(*triggerHandler, *container.plugin);
         container.integrationModuleContainer->inboundMessageHandler->AddProcessor(messageHandler);
+
+        // Acknowledge message handler
+        container.pushEventProcessors->AddProcessor(
+            std::make_shared<MissedApproachAcknowledgedPushEventProcessor>(*collection, *container.userMessager));
     }
 
     void BootstrapRadarScreen(

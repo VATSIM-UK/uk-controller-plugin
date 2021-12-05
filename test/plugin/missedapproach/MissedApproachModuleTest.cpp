@@ -65,6 +65,12 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(1, container.pushEventProcessors->CountProcessorsForEvent("missed-approach.created"));
     }
 
+    TEST_F(MissedApproachModuleTest, ItRegistersTheMissedApproachAcknowledgedPushEvent)
+    {
+        BootstrapPlugin(container);
+        EXPECT_EQ(1, container.pushEventProcessors->CountProcessorsForEvent("missed-approach.acknowledged"));
+    }
+
     TEST_F(MissedApproachModuleTest, ItRegistersTheTriggerMissedApproachTagFunction)
     {
         BootstrapPlugin(container);
