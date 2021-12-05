@@ -8,37 +8,37 @@ namespace UKControllerPlugin::MissedApproach {
     {
     }
 
-    std::string MissedApproachAcknowledgedUserMessage::MessageHandler(void) const
+    auto MissedApproachAcknowledgedUserMessage::MessageHandler() const -> std::string
     {
         return "MISSED_APPROACH";
     }
-    std::string MissedApproachAcknowledgedUserMessage::MessageSender(void) const
+    auto MissedApproachAcknowledgedUserMessage::MessageSender() const -> std::string
     {
         return "UKCP";
     }
-    std::string MissedApproachAcknowledgedUserMessage::MessageString(void) const
+    auto MissedApproachAcknowledgedUserMessage::MessageString() const -> std::string
     {
         std::string remarksString = this->approach.Remarks().empty() ? "" : " Remarks: " + this->approach.Remarks();
         return "Missed approach for " + this->approach.Callsign() + " acknowledged by " +
                this->approach.AcknowledgedBy() + "." + remarksString;
     }
-    bool MissedApproachAcknowledgedUserMessage::MessageShowHandler(void) const
+    auto MissedApproachAcknowledgedUserMessage::MessageShowHandler() const -> bool
     {
         return true;
     }
-    bool MissedApproachAcknowledgedUserMessage::MessageMarkUnread(void) const
+    auto MissedApproachAcknowledgedUserMessage::MessageMarkUnread() const -> bool
     {
         return true;
     }
-    bool MissedApproachAcknowledgedUserMessage::MessageOverrideBusy(void) const
+    auto MissedApproachAcknowledgedUserMessage::MessageOverrideBusy() const -> bool
     {
         return true;
     }
-    bool MissedApproachAcknowledgedUserMessage::MessageFlashHandler(void) const
+    auto MissedApproachAcknowledgedUserMessage::MessageFlashHandler() const -> bool
     {
         return true;
     }
-    bool MissedApproachAcknowledgedUserMessage::MessageRequiresConfirm(void) const
+    auto MissedApproachAcknowledgedUserMessage::MessageRequiresConfirm() const -> bool
     {
         return true;
     }

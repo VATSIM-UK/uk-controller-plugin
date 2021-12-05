@@ -1,25 +1,23 @@
 #pragma once
-#include <string>
 #include "message/MessageSerializableInterface.h"
 
 namespace UKControllerPlugin::MissedApproach {
     class MissedApproach;
-    
+
     class MissedApproachAcknowledgedUserMessage : public Message::MessageSerializableInterface
     {
         public:
         MissedApproachAcknowledgedUserMessage(const MissedApproach& approach);
-        std::string MessageHandler(void) const override;
-        std::string MessageSender(void) const override;
-        std::string MessageString(void) const override;
-        bool MessageShowHandler(void) const override;
-        bool MessageMarkUnread(void) const override;
-        bool MessageOverrideBusy(void) const override;
-        bool MessageFlashHandler(void) const override;
-        bool MessageRequiresConfirm(void) const override;
-        
+        auto MessageHandler() const -> std::string override;
+        auto MessageSender() const -> std::string override;
+        auto MessageString() const -> std::string override;
+        auto MessageShowHandler() const -> bool override;
+        auto MessageMarkUnread() const -> bool override;
+        auto MessageOverrideBusy() const -> bool override;
+        auto MessageFlashHandler() const -> bool override;
+        auto MessageRequiresConfirm() const -> bool override;
+
         private:
-        
         const MissedApproach& approach;
     };
-} // namespace UKControllerPlugin::Message
+} // namespace UKControllerPlugin::MissedApproach
