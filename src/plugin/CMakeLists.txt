@@ -495,7 +495,7 @@ set(src__missedapproach
         missedapproach/MissedApproachAcknowledgedUserMessage.cpp missedapproach/MissedApproachAcknowledgedUserMessage.h
         missedapproach/MissedApproachAcknowledgedPushEventProcessor.cpp missedapproach/MissedApproachAcknowledgedPushEventProcessor.h
         missedapproach/MissedApproachIndicator.cpp missedapproach/MissedApproachIndicator.h
-        missedapproach/AcknowledgeMissedApproachTagFunction.cpp missedapproach/AcknowledgeMissedApproachTagFunction.h)
+        missedapproach/AcknowledgeMissedApproachTagFunction.cpp missedapproach/AcknowledgeMissedApproachTagFunction.h missedapproach/AcknowledgeMissedApproachDialog.cpp missedapproach/AcknowledgeMissedApproachDialog.h)
 source_group("src\\missedapproach" FILES ${src__missedapproach})
 
 set(src__navaids

@@ -1,3 +1,4 @@
+#include "AcknowledgeMissedApproachDialog.h"
 #include "AcknowledgeMissedApproachTagFunction.h"
 #include "ConfigureMissedApproaches.h"
 #include "MissedApproachAcknowledgedPushEventProcessor.h"
@@ -37,12 +38,13 @@ namespace UKControllerPlugin::MissedApproach {
     const int TRIGGER_MISSED_APPROACH_TAG_FUNCTION_ID = 9020;
     const int ACKNOWLEDGE_MISSED_APPROACH_TAG_FUNCTION_ID = 9021;
     const int INDICATOR_TAG_ITEM_ID = 130;
-    std::shared_ptr<MissedApproachCollection> collection;             // NOLINT
-    std::shared_ptr<MissedApproachAudioAlert> audioAlert;             // NOLINT
-    std::shared_ptr<MissedApproachOptions> options;                   // NOLINT
-    std::shared_ptr<MissedApproachUserSettingHandler> optionsHandler; // NOLINT
-    std::shared_ptr<TriggerMissedApproach> triggerHandler;            // NOLINT
-    std::shared_ptr<MissedApproachConfigurationDialog> dialog;        // NOLINT
+    std::shared_ptr<MissedApproachCollection> collection;               // NOLINT
+    std::shared_ptr<MissedApproachAudioAlert> audioAlert;               // NOLINT
+    std::shared_ptr<MissedApproachOptions> options;                     // NOLINT
+    std::shared_ptr<MissedApproachUserSettingHandler> optionsHandler;   // NOLINT
+    std::shared_ptr<TriggerMissedApproach> triggerHandler;              // NOLINT
+    std::shared_ptr<MissedApproachConfigurationDialog> dialog;          // NOLINT
+    std::shared_ptr<AcknowledgeMissedApproachDialog> acknowledgeDialog; // NOLINT
 
     void BootstrapPlugin(const Bootstrap::PersistenceContainer& container)
     {
@@ -116,6 +118,16 @@ namespace UKControllerPlugin::MissedApproach {
                 const std::string& context,
                 const POINT& mousePos) { acknowledge->TriggerDialog(fp); });
         container.pluginFunctionHandlers->RegisterFunctionCall(acknowledgeMissedApproachTagFunction);
+
+        // Acknowledge dialog
+        acknowledgeDialog = std::make_shared<AcknowledgeMissedApproachDialog>(acknowledge);
+
+        container.dialogManager->AddDialog(Dialog::DialogData{
+            IDD_MISSED_APPROACH_ACKNOWLEDGE,
+            "Missed Approach Acknowledge",
+            reinterpret_cast<DLGPROC>(acknowledgeDialog->WndProc), // NOLINT
+            reinterpret_cast<LPARAM>(acknowledgeDialog.get()),     // NOLINT
+            acknowledgeDialog});
     }
 
     void BootstrapRadarScreen(

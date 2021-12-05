@@ -86,10 +86,10 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(1, container.userSettingHandlers->Count());
     }
 
-    TEST_F(MissedApproachModuleTest, ItRegistersTheConfigurationDialog)
+    TEST_F(MissedApproachModuleTest, ItRegistersTheDialogs)
     {
         BootstrapPlugin(container);
-        EXPECT_EQ(1, container.dialogManager->CountDialogs());
+        EXPECT_EQ(2, container.dialogManager->CountDialogs());
     }
 
     TEST_F(MissedApproachModuleTest, ItRegistersTheInboundMessageHandler)

@@ -34,7 +34,7 @@ namespace UKControllerPlugin::MissedApproach {
         }
 
         this->lastCallsign = flightplan.GetCallsign();
-        this->dialogManager.OpenDialog(IDD_MISSED_APPROACH_ACKNOWLEDGE, reinterpret_cast<LPARAM>(this));
+        this->dialogManager.OpenDialog(IDD_MISSED_APPROACH_ACKNOWLEDGE, reinterpret_cast<LPARAM>(nullptr));
     }
 
     auto AcknowledgeMissedApproachTagFunction::MissedApproachForCallsign() const
