@@ -104,6 +104,12 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_EQ(1, container.tagHandler->HasHandlerForItemId(130));
     }
 
+    TEST_F(MissedApproachModuleTest, ItRegistersTheAcknowledgeTagFunction)
+    {
+        BootstrapPlugin(container);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9021));
+    }
+
     TEST_F(MissedApproachModuleTest, ItRegistersTheRenderers)
     {
         BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);

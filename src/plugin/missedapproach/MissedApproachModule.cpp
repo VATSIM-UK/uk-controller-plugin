@@ -1,3 +1,4 @@
+#include "AcknowledgeMissedApproachTagFunction.h"
 #include "ConfigureMissedApproaches.h"
 #include "MissedApproachAcknowledgedPushEventProcessor.h"
 #include "MissedApproachAudioAlert.h"
@@ -34,6 +35,7 @@ namespace UKControllerPlugin::MissedApproach {
 
     const int REMOVE_APPROACHES_FREQUENCY = 30;
     const int TRIGGER_MISSED_APPROACH_TAG_FUNCTION_ID = 9020;
+    const int ACKNOWLEDGE_MISSED_APPROACH_TAG_FUNCTION_ID = 9021;
     const int INDICATOR_TAG_ITEM_ID = 130;
     std::shared_ptr<MissedApproachCollection> collection;             // NOLINT
     std::shared_ptr<MissedApproachAudioAlert> audioAlert;             // NOLINT
@@ -101,6 +103,19 @@ namespace UKControllerPlugin::MissedApproach {
         // Indicator tag item
         container.tagHandler.get()->RegisterTagItem(
             INDICATOR_TAG_ITEM_ID, std::make_shared<MissedApproachIndicator>(*collection));
+
+        // Acknowledge tag function
+        auto acknowledge = std::make_shared<AcknowledgeMissedApproachTagFunction>(
+            *collection, *container.dialogManager, *container.api, *container.airfieldOwnership);
+        TagFunction acknowledgeMissedApproachTagFunction(
+            ACKNOWLEDGE_MISSED_APPROACH_TAG_FUNCTION_ID,
+            "Acknowledge Missed Approach",
+            [acknowledge](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                const std::string& context,
+                const POINT& mousePos) { acknowledge->TriggerDialog(fp); });
+        container.pluginFunctionHandlers->RegisterFunctionCall(acknowledgeMissedApproachTagFunction);
     }
 
     void BootstrapRadarScreen(
