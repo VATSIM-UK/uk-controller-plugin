@@ -51,7 +51,8 @@ namespace UKControllerPluginTest::MissedApproach {
               collection(std::make_shared<MissedApproachCollection>()),
               options(std::make_shared<MissedApproachOptions>()),
               audioAlert(std::make_shared<MissedApproachAudioAlert>(options, plugin, serviceProviders, windows)),
-              trigger(std::make_shared<TriggerMissedApproach>(collection, windows, api, serviceProviders, audioAlert)),
+              trigger(std::make_shared<TriggerMissedApproach>(
+                  collection, windows, api, serviceProviders, audioAlert, mockIntegration)),
               button(std::make_shared<MissedApproachButton>(collection, trigger, plugin, serviceProviders, 55)),
               toggle(button, 5)
         {
@@ -71,6 +72,7 @@ namespace UKControllerPluginTest::MissedApproach {
             ON_CALL(plugin, GetSelectedRadarTarget).WillByDefault(Return(mockRadarTarget));
         }
 
+        NiceMock<Integration::MockOutboundIntegrationEventHandler> mockIntegration;
         NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
         NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
         UserSetting settings;

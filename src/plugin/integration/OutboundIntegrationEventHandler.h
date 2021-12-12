@@ -10,7 +10,7 @@ namespace UKControllerPlugin::Integration {
     class OutboundIntegrationEventHandler
     {
         public:
-            virtual ~OutboundIntegrationEventHandler() = default;
-            virtual void SendEvent(std::shared_ptr<MessageInterface> message) = 0;
+        virtual ~OutboundIntegrationEventHandler() = default;
+        virtual void SendEvent(std::shared_ptr<MessageInterface> message) const = 0;
     };
 } // namespace UKControllerPlugin::Integration

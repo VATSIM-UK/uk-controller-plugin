@@ -493,7 +493,7 @@ set(src__missedapproach
         missedapproach/MissedApproachOptions.cpp missedapproach/MissedApproachOptions.h
         missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h
         missedapproach/MissedApproachUserSettingHandler.cpp missedapproach/MissedApproachUserSettingHandler.h
-        missedapproach/MissedApproachButton.cpp missedapproach/MissedApproachButton.h missedapproach/ToggleMissedApproachButton.cpp missedapproach/ToggleMissedApproachButton.h missedapproach/ConfigureMissedApproaches.cpp missedapproach/ConfigureMissedApproaches.h)
+        missedapproach/MissedApproachButton.cpp missedapproach/MissedApproachButton.h missedapproach/ToggleMissedApproachButton.cpp missedapproach/ToggleMissedApproachButton.h missedapproach/ConfigureMissedApproaches.cpp missedapproach/ConfigureMissedApproaches.h missedapproach/MissedApproachTriggeredMessage.cpp missedapproach/MissedApproachTriggeredMessage.h missedapproach/TriggerMissedApproachMessageHandler.cpp missedapproach/TriggerMissedApproachMessageHandler.h)
 source_group("src\\missedapproach" FILES ${src__missedapproach})
 
 set(src__navaids

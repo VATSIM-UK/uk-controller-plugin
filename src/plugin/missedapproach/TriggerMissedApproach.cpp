@@ -1,6 +1,7 @@
 #include "MissedApproach.h"
 #include "MissedApproachAudioAlert.h"
 #include "MissedApproachCollection.h"
+#include "MissedApproachTriggeredMessage.h"
 #include "TriggerMissedApproach.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
@@ -9,6 +10,7 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "helper/HelperFunctions.h"
+#include "integration/OutboundIntegrationEventHandler.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceProvision.h"
 #include "time/ParseTimeStrings.h"
@@ -21,37 +23,48 @@ namespace UKControllerPlugin::MissedApproach {
         Windows::WinApiInterface& windowsApi,
         const Api::ApiInterface& api,
         const Ownership::AirfieldServiceProviderCollection& serviceProviders,
-        std::shared_ptr<const MissedApproachAudioAlert> audioAlert)
+        std::shared_ptr<const MissedApproachAudioAlert> audioAlert,
+        const Integration::OutboundIntegrationEventHandler& integrationEvents)
         : missedApproaches(std::move(missedApproaches)), windowsApi(windowsApi), api(api),
-          serviceProviders(serviceProviders), audioAlert(std::move(audioAlert))
+          serviceProviders(serviceProviders), audioAlert(std::move(audioAlert)), integrationEvents(integrationEvents)
     {
     }
 
+    /**
+     * This could be triggered async by external integrations
+     */
     void TriggerMissedApproach::Trigger(
         Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-        Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const
+        Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+        bool userConfirm,
+        const std::function<void(void)>& success,
+        const std::function<void(std::vector<std::string>)>& fail) const
     {
         if (!AircraftElegibleForMissedApproach(flightplan, radarTarget)) {
+            fail({"Aircraft not eligible for missed approach"});
             return;
         }
 
         if (!this->UserCanTrigger(flightplan)) {
+            fail({"User not authorised to trigger missed approach"});
             LogWarning("User tried to trigger missed approach, but is not authorised to do so");
             return;
         }
 
         auto callsign = flightplan.GetCallsign();
         if (AlreadyActive(callsign)) {
+            fail({"Missed approach already active"});
             LogWarning("Tried to create missed approach but one is alread active");
             return;
         }
 
-        if (!Confirm(callsign)) {
+        if (userConfirm && !Confirm(callsign)) {
+            fail({"User did not confirm missed approach"});
             LogInfo("User did not confirm missed approach");
             return;
         }
 
-        this->TriggerMissedApproachInApi(callsign);
+        this->TriggerMissedApproachInApi(callsign, success, fail);
     }
 
     auto TriggerMissedApproach::Confirm(const std::string& callsign) const -> bool
@@ -87,16 +100,21 @@ namespace UKControllerPlugin::MissedApproach {
                Time::ParseTimeString(responseData.at("expires_at").get<std::string>()) != Time::invalidTime;
     }
 
-    void TriggerMissedApproach::TriggerMissedApproachInApi(const std::string& callsign) const
+    void TriggerMissedApproach::TriggerMissedApproachInApi(
+        const std::string& callsign,
+        const std::function<void(void)> success,
+        const std::function<void(std::vector<std::string>)> fail) const
     {
-        Async([this, callsign]() {
+        Async([this, callsign, success, fail]() {
             try {
                 auto response = this->api.CreateMissedApproach(callsign);
                 if (!ResponseValid(response)) {
+                    fail({"Bad API response when creating missed approach"});
                     LogError("Invalid response from API when creating missed approach");
                     return;
                 }
 
+                // Create the missed approach and play the alert
                 const auto missedApproach = std::make_shared<class MissedApproach>(
                     response.at("id").get<int>(),
                     callsign,
@@ -104,7 +122,14 @@ namespace UKControllerPlugin::MissedApproach {
                     true);
                 this->missedApproaches->Add(missedApproach);
                 this->audioAlert->Play(missedApproach);
+
+                // Send the integration message
+                this->integrationEvents.SendEvent(std::make_shared<MissedApproachTriggeredMessage>(
+                    missedApproach->Callsign(), true, missedApproach->ExpiresAt()));
+
+                success();
             } catch (Api::ApiException&) {
+                fail({"API error when creating missed approach"});
                 LogError("ApiException when creating missed approach");
             }
         });

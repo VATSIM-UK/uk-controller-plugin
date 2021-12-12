@@ -1,7 +1,9 @@
 #include "MissedApproach.h"
 #include "MissedApproachAudioAlert.h"
 #include "MissedApproachCollection.h"
+#include "MissedApproachTriggeredMessage.h"
 #include "NewMissedApproachPushEventHandler.h"
+#include "integration/OutboundIntegrationEventHandler.h"
 #include "time/ParseTimeStrings.h"
 
 using UKControllerPlugin::MissedApproach::MissedApproach;
@@ -10,8 +12,10 @@ using UKControllerPlugin::Push::PushEventSubscription;
 namespace UKControllerPlugin::MissedApproach {
     NewMissedApproachPushEventHandler::NewMissedApproachPushEventHandler(
         std::shared_ptr<MissedApproachCollection> missedApproaches,
-        std::shared_ptr<const MissedApproachAudioAlert> audioAlert)
-        : missedApproaches(std::move(missedApproaches)), audioAlert(std::move(audioAlert))
+        std::shared_ptr<const MissedApproachAudioAlert> audioAlert,
+        const Integration::OutboundIntegrationEventHandler& integrationEvents)
+        : missedApproaches(std::move(missedApproaches)), audioAlert(std::move(audioAlert)),
+          integrationEvents(integrationEvents)
     {
     }
 
@@ -35,6 +39,10 @@ namespace UKControllerPlugin::MissedApproach {
             false);
         this->missedApproaches->Add(missedApproach);
         this->audioAlert->Play(missedApproach);
+
+        // Trigger the integration message
+        this->integrationEvents.SendEvent(std::make_shared<MissedApproachTriggeredMessage>(
+            missedApproach->Callsign(), false, missedApproach->ExpiresAt()));
     }
 
     auto NewMissedApproachPushEventHandler::GetPushEventSubscriptions() const -> std::set<PushEventSubscription>

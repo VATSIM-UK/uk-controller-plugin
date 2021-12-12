@@ -1,8 +1,7 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Time {
-        std::chrono::system_clock::time_point ParseTimeString(std::string time);
-        extern const std::chrono::system_clock::time_point invalidTime;
-    }  // namespace Time
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Time {
+    [[nodiscard]] auto ParseTimeString(const std::string& time) -> std::chrono::system_clock::time_point;
+    extern const std::chrono::system_clock::time_point invalidTime;
+    [[nodiscard]] auto ToDateTimeString(const std::chrono::system_clock::time_point& timePoint) -> std::string;
+} // namespace UKControllerPlugin::Time
