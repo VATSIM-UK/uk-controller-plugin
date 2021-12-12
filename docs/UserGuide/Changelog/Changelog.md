@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [3.10.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.9.0...3.10.0) (2021-12-12)
+
+
+### Features
+
+* **missedapproach:** Allow integrations to trigger missed approaches ([#373](https://github.com/VATSIM-UK/uk-controller-plugin/issues/373)) ([8614508](https://github.com/VATSIM-UK/uk-controller-plugin/commit/861450803b17a355b1d357d2b4b5597cc02796dd))
+
 # [3.9.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.8.1...3.9.0) (2021-11-28)
 
 
