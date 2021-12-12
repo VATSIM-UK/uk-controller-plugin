@@ -22,7 +22,7 @@ namespace UKControllerPlugin::Handoff {
     {
         const auto handoff = this->mapper->MapForFlightplan(flightplan);
         if (!handoff) {
-            return ResolveToUnicom(flightplan);
+            return ResolveToUnicom(flightplan, std::make_shared<ControllerPositionHierarchy>());
         }
 
         for (const auto& controller : *handoff->order) {
@@ -39,13 +39,13 @@ namespace UKControllerPlugin::Handoff {
                 flightplan.GetCallsign(), controller->GetFrequency(), handoff->order);
         }
 
-        return ResolveToUnicom(flightplan);
+        return ResolveToUnicom(flightplan, handoff->order);
     }
 
-    auto DepartureHandoffResolver::ResolveToUnicom(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
-        -> std::shared_ptr<ResolvedHandoff>
+    auto DepartureHandoffResolver::ResolveToUnicom(
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        std::shared_ptr<Controller::ControllerPositionHierarchy> handoffOrder) -> std::shared_ptr<ResolvedHandoff>
     {
-        return std::make_shared<ResolvedHandoff>(
-            flightplan.GetCallsign(), UNICOM_FREQUENCY, std::make_shared<ControllerPositionHierarchy>());
+        return std::make_shared<ResolvedHandoff>(flightplan.GetCallsign(), UNICOM_FREQUENCY, handoffOrder);
     }
 } // namespace UKControllerPlugin::Handoff

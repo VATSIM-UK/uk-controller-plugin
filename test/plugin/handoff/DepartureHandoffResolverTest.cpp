@@ -37,7 +37,7 @@ namespace UKControllerPluginTest::Handoff {
             ON_CALL(mockFlightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
 
             sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "CLN3X", 5000, 200, 1));
-            auto hierarchy = std::make_shared<ControllerPositionHierarchy>();
+            hierarchy = std::make_shared<ControllerPositionHierarchy>();
             hierarchy->AddPosition(position1);
             hierarchy->AddPosition(position2);
             handoffs->Add(std::make_shared<HandoffOrder>(1, hierarchy));
@@ -46,6 +46,7 @@ namespace UKControllerPluginTest::Handoff {
         testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;
         ActiveCallsignCollection callsigns;
         SidCollection sids;
+        std::shared_ptr<ControllerPositionHierarchy> hierarchy;
         std::shared_ptr<ControllerPosition> position1;
         std::shared_ptr<ControllerPosition> position2;
         std::shared_ptr<HandoffCollection> handoffs;
@@ -57,13 +58,18 @@ namespace UKControllerPluginTest::Handoff {
     {
         ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("LAM5M"));
 
-        EXPECT_EQ(122.800, resolver.Resolve(mockFlightplan)->frequency);
+        const auto resolved = resolver.Resolve(mockFlightplan);
+        EXPECT_EQ(122.800, resolved->frequency);
+        EXPECT_EQ(0, resolved->hierarchy->CountPositions());
     }
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsUnicomIfNoPositionsActive)
     {
         ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
-        EXPECT_EQ(122.800, resolver.Resolve(mockFlightplan)->frequency);
+
+        const auto resolved = resolver.Resolve(mockFlightplan);
+        EXPECT_EQ(122.800, resolved->frequency);
+        EXPECT_EQ(this->hierarchy, resolved->hierarchy);
     }
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsUnicomIfFirstPositionOnlineIsUser)
@@ -72,7 +78,10 @@ namespace UKControllerPluginTest::Handoff {
         this->callsigns.AddCallsign(ActiveCallsign("EGKK_GND", "Testy McTest", *position2, false));
 
         ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
-        EXPECT_EQ(122.800, resolver.Resolve(mockFlightplan)->frequency);
+
+        const auto resolved = resolver.Resolve(mockFlightplan);
+        EXPECT_EQ(122.800, resolved->frequency);
+        EXPECT_EQ(this->hierarchy, resolved->hierarchy);
     }
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsResolvedHandoff)
@@ -85,6 +94,6 @@ namespace UKControllerPluginTest::Handoff {
         EXPECT_NE(nullptr, resolved);
         EXPECT_EQ("BAW123", resolved->callsign);
         EXPECT_EQ(121.950, resolved->frequency);
-        EXPECT_EQ(handoffs->Get(1)->order, resolved->hierarchy);
+        EXPECT_EQ(this->hierarchy, resolved->hierarchy);
     }
 } // namespace UKControllerPluginTest::Handoff
