@@ -26,7 +26,7 @@ namespace UKControllerPluginTest::Sid {
                  {"identifier", "TEST1Y"},
                  {"initial_altitude", 6000},
                  {"initial_heading", 350},
-                 {"handoff_id", 5},
+                 {"handoff", 5},
                  {"prenotes", nlohmann::json::array({1, 2})},
              }),
              nlohmann::json::object(
@@ -34,7 +34,7 @@ namespace UKControllerPluginTest::Sid {
                   {"identifier", "TEST1Y"},
                   {"initial_altitude", 6000},
                   {"initial_heading", nlohmann::json::value_t::null},
-                  {"handoff_id", 5},
+                  {"handoff", 5},
                   {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_CALL(dependencyLoader, LoadDependency("DEPENDENCY_SIDS", nlohmann::json::array()))
