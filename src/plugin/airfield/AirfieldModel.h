@@ -1,26 +1,51 @@
 #pragma once
 
 namespace UKControllerPlugin {
-    namespace Airfield {
+    namespace Controller {
+        class ControllerPositionHierarchy;
+    } // namespace Controller
+    namespace Prenote {
+        struct PairedAirfieldPrenote;
+    } // namespace Prenote
+} // namespace UKControllerPlugin
 
-        /*
-            A class representing a UK airfield. Contains details such as the top-down
-            order, as well as who currently owns it.
-        */
-        class AirfieldModel
-        {
-            public:
-                AirfieldModel(std::string icao, std::vector<std::string> ownership);
-                std::string GetIcao(void) const;
-                std::vector<std::string> GetOwnershipPresedence(void) const;
-                bool operator==(const AirfieldModel& compare);
+namespace UKControllerPlugin::Airfield {
 
-            private:
-                // The airfield ICAO
-                std::string icao;
+    /*
+        A class representing a UK airfield. Contains details such as the top-down
+        order, as well as who currently owns it.
+    */
+    class AirfieldModel
+    {
+        public:
+        AirfieldModel(
+            int id,
+            std::string icao,
+            std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder,
+            std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>> airfieldPairingPrenotes = {});
+        ~AirfieldModel();
+        AirfieldModel(const AirfieldModel&) = delete;
+        AirfieldModel(AirfieldModel&&) noexcept;
+        auto operator=(const AirfieldModel&) -> AirfieldModel& = delete;
+        auto operator=(AirfieldModel&&) noexcept -> AirfieldModel&;
+        [[nodiscard]] auto Id() const -> int;
+        [[nodiscard]] auto Icao() const -> std::string;
+        [[nodiscard]] auto TopDownOrder() const -> const Controller::ControllerPositionHierarchy&;
+        [[nodiscard]] auto AirfieldPairingPrenotes() const
+            -> const std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>>&;
+        auto operator==(const AirfieldModel& compare) const -> bool;
 
-                // The order of who owns this airfield.
-                std::vector<std::string> ownershipPresedence;
-        };
-    }  // namespace Airfield
-}  // namespace UKControllerPlugin
+        private:
+        // The id of the airfield
+        int id;
+
+        // The airfield ICAO
+        std::string icao;
+
+        // The order of who owns this airfield.
+        std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder;
+
+        // Prenotes for an airfield pairing
+        std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>> airfieldPairingPrenotes;
+    };
+} // namespace UKControllerPlugin::Airfield

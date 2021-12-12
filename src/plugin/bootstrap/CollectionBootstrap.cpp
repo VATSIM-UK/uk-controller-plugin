@@ -1,7 +1,5 @@
 #include "CollectionBootstrap.h"
 #include "PersistenceContainer.h"
-#include "airfield/AirfieldCollection.h"
-#include "airfield/AirfieldCollectionFactory.h"
 #include "command/CommandHandlerCollection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
@@ -11,7 +9,6 @@
 #include "ownership/AirfieldOwnershipManager.h"
 #include "radarscreen/RadarRenderableCollection.h"
 
-using UKControllerPlugin::Airfield::AirfieldCollectionFactory;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
@@ -25,7 +22,6 @@ namespace UKControllerPlugin::Bootstrap {
     void CollectionBootstrap::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
     {
         // Reset resources
-        persistence.airfields = AirfieldCollectionFactory::Create(dependency);
         persistence.flightplans = std::make_unique<StoredFlightplanCollection>();
     }
 } // namespace UKControllerPlugin::Bootstrap

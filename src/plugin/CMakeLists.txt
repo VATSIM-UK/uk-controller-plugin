@@ -16,9 +16,7 @@ set(src__airfield
     "airfield/AirfieldCollectionFactory.h"
     "airfield/AirfieldModel.cpp"
     "airfield/AirfieldModel.h"
-    "airfield/NormaliseSid.cpp"
-    "airfield/NormaliseSid.h"
-)
+        airfield/AirfieldModule.cpp airfield/AirfieldModule.h)
 source_group("src\\airfield" FILES ${src__airfield})
 
 set(src__api
@@ -215,6 +213,13 @@ set(src__flightplan
 )
 source_group("src\\flightplan" FILES ${src__flightplan})
 
+set(src__flightrule
+        flightrule/FlightRule.h
+        flightrule/FlightRuleCollection.cpp flightrule/FlightRuleCollection.h
+        flightrule/FlightRuleModule.cpp flightrule/FlightRuleModule.h
+        flightrule/FlightRuleCollectionFactory.cpp flightrule/FlightRuleCollectionFactory.h)
+source_group("src\\flightrule" FILES ${src__flightrule})
+
 set(src__graphics
     "graphics/GdiGraphicsInterface.h"
     "graphics/GdiGraphicsWrapper.cpp"
@@ -224,8 +229,8 @@ set(src__graphics
 source_group("src\\graphics" FILES ${src__graphics})
 
 set(src__handoff
-    "handoff/CachedHandoff.h"
-    "handoff/CachedHandoff.cpp"
+    "handoff/ResolvedHandoff.h"
+    "handoff/ResolvedHandoff.cpp"
     "handoff/HandoffCollection.cpp"
     "handoff/HandoffCollection.h"
     "handoff/HandoffCollectionFactory.cpp"
@@ -236,7 +241,8 @@ set(src__handoff
     "handoff/HandoffFrequencyUpdatedMessage.h"
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
-        controller/HandoffEventHandler.cpp)
+    controller/HandoffEventHandler.cpp
+    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__headings headings/Heading.h headings/Heading.cpp)
@@ -586,24 +592,14 @@ set(src__plugin
 source_group("src\\plugin" FILES ${src__plugin})
 
 set(src__prenote
-    "prenote/AbstractPrenote.cpp"
-    "prenote/AbstractPrenote.h"
-    "prenote/AirfieldPairingPrenote.cpp"
-    "prenote/AirfieldPairingPrenote.h"
-    "prenote/DeparturePrenote.cpp"
-    "prenote/DeparturePrenote.h"
     "prenote/PrenoteEventHandler.cpp"
     "prenote/PrenoteEventHandler.h"
-    "prenote/PrenoteFactory.cpp"
-    "prenote/PrenoteFactory.h"
     "prenote/PrenoteUserMessage.cpp"
     "prenote/PrenoteUserMessage.h"
     "prenote/PrenoteModule.cpp"
     "prenote/PrenoteModule.h"
     "prenote/PrenoteService.cpp"
     "prenote/PrenoteService.h"
-    "prenote/PrenoteServiceFactory.cpp"
-    "prenote/PrenoteServiceFactory.h"
     "prenote/PrenoteMessage.cpp"
     prenote/PrenoteMessageCollection.cpp prenote/PrenoteMessageCollection.h
     prenote/ComparePrenoteMessages.cpp prenote/ComparePrenoteMessages.h
@@ -618,7 +614,12 @@ set(src__prenote
     prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
     prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h
     prenote/PendingPrenoteList.cpp prenote/PendingPrenoteList.h
-    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h)
+    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h
+    prenote/PublishedPrenote.h prenote/PublishedPrenote.cpp
+    prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h
+    prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h
+    prenote/PairedAirfieldPrenote.h
+    prenote/PublishedPrenoteMapper.cpp prenote/PublishedPrenoteMapper.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push
@@ -745,6 +746,8 @@ set(src__sid
     "sid/SidModule.h"
     "sid/StandardInstrumentDeparture.cpp"
     "sid/StandardInstrumentDeparture.h"
+    "sid/NormaliseSid.cpp"
+    "sid/NormaliseSid.h"
 )
 source_group("src\\sid" FILES ${src__sid})
 
@@ -850,6 +853,7 @@ set(ALL_FILES
     ${src__euroscope}
     ${src__flightinformationservice}
     ${src__flightplan}
+    ${src__flightrule}
     ${src__graphics}
     ${src__handoff}
     ${src__headings}

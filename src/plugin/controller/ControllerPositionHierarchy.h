@@ -1,35 +1,43 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Controller {
-        class ControllerPosition;
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Controller {
+    class ControllerPosition;
 
-namespace UKControllerPlugin {
-    namespace Controller {
-
-/*
-    Represents a hierarchy of controllers.
-*/
-class ControllerPositionHierarchy
-{
-    public:
-        ControllerPositionHierarchy(void);
-        void AddPosition(const UKControllerPlugin::Controller::ControllerPosition & position);
-        size_t CountPositions(void) const;
-        bool PositionInHierarchy(const UKControllerPlugin::Controller::ControllerPosition & position) const;
-        bool operator==(const UKControllerPlugin::Controller::ControllerPositionHierarchy& compare) const;
+    /*
+        Represents a hierarchy of controllers.
+    */
+    class ControllerPositionHierarchy
+    {
+        public:
+        ControllerPositionHierarchy() = default;
+        void AddPosition(const std::shared_ptr<const ControllerPosition>& position);
+        [[nodiscard]] auto CountPositions() const -> size_t;
+        [[nodiscard]] auto PositionInHierarchy(const UKControllerPlugin::Controller::ControllerPosition& position) const
+            -> bool;
+        [[nodiscard]] auto operator==(const UKControllerPlugin::Controller::ControllerPositionHierarchy& compare) const
+            -> bool;
 
         // Public type definitions for a custom iterator over the class.
-        typedef std::vector<std::reference_wrapper<const ControllerPosition>> PositionHierarchy;
-        typedef PositionHierarchy::const_iterator const_iterator;
-        const_iterator cbegin(void) const { return positions.cbegin(); }
-        const_iterator cend(void) const { return positions.cend(); }  // namespace Controller
+        using PositionHierarchy = std::list<std::shared_ptr<const ControllerPosition>>;
+        using const_iterator = PositionHierarchy::const_iterator;
+        [[nodiscard]] const_iterator begin() const
+        {
+            return positions.begin();
+        }
+        [[nodiscard]] const_iterator cbegin() const
+        {
+            return positions.cbegin();
+        }
+        [[nodiscard]] const_iterator end() const
+        {
+            return positions.end();
+        }
+        [[nodiscard]] const_iterator cend() const
+        {
+            return positions.cend();
+        }
 
-    private:
+        private:
         PositionHierarchy positions;
-};
-
-}  // namespace Controller
-}  // namespace UKControllerPlugin
+    };
+} // namespace UKControllerPlugin::Controller

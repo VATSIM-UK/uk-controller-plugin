@@ -82,12 +82,8 @@ namespace UKControllerPlugin::Ownership {
         std::regex ownedRegex(".ukcp owned ([A-Za-z0-9_-]+)");
         std::smatch ownedMatches;
         if (std::regex_search(command, ownedMatches, ownedRegex)) {
-            std::vector<AirfieldModel> airfields;
-            for (const auto& airfield : this->airfieldOwnership.GetOwnedAirfields(ownedMatches[1])) {
-                airfields.push_back(airfield.get());
-            }
-
-            this->userMessager.SendMessageToUser(AirfieldsOwnedQueryMessage(std::move(airfields), ownedMatches[1]));
+            this->userMessager.SendMessageToUser(AirfieldsOwnedQueryMessage(
+                this->airfieldOwnership.GetOwnedAirfields(ownedMatches[1]), ownedMatches[1]));
             return true;
         }
 

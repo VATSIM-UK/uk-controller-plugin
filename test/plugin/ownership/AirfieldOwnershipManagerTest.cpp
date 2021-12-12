@@ -2,6 +2,7 @@
 #include "airfield/AirfieldModel.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionHierarchy.h"
 #include "ownership/AirfieldOwnershipManager.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceProvision.h"
@@ -12,6 +13,7 @@ using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
 using UKControllerPlugin::Ownership::ServiceProvision;
@@ -23,54 +25,62 @@ namespace UKControllerPluginTest::Ownership {
     {
         public:
         AirfieldOwnershipManagerTest()
-            : providers(std::make_shared<AirfieldServiceProviderCollection>()),
-              towerController(1, "EGGD_TWR", 133.850, {"EGGD"}, true, true),
-              towerController2(8, "EGGD_2_TWR", 133.850, {"EGGD"}, true, true),
-              groundController(2, "EGGD_GND", 121.920, {"EGGD"}, true, true),
-              groundController2(9, "EGGD_2_GND", 121.920, {"EGGD"}, true, true),
-              finalApproachController(3, "EGGD_F_APP", 121.920, {"EGGD"}, true, true),
-              approachController(4, "EGGD_APP", 121.920, {"EGGD"}, true, true),
-              enrouteController(5, "LON_W_CTR", 121.920, {"EGGD"}, true, true),
-              enrouteController2(10, "LON_CTR", 121.920, {"EGGD"}, true, true),
-              deliveryController(7, "EGGD_DEL", 121.920, {"EGGD"}, true, true),
-              towerCallsign("EGGD_TWR", "Testy McTestface", towerController, false),
-              towerCallsign2("EGGD_2_TWR", "Testy McTestface", towerController2, false),
-              groundCallsign("EGGD_GND", "Testy McTestface", groundController, false),
-              groundCallsign2("EGGD_2_GND", "Testy McTestface", groundController2, false),
-              finalApproachCallsign("EGGD_F_APP", "Testy McTestface", finalApproachController, false),
-              approachCallsign("EGGD_APP", "Testy McTestface", approachController, false),
-              enrouteCallsign("LON_W_CTR", "Testy McTestface", enrouteController, false),
-              enrouteCallsign2("LON_CTR", "Testy McTestface", enrouteController2, false),
-              deliveryCallsign("EGGD_DEL", "Testy McTestface", deliveryController, false),
+            : airfieldList({"EGGD"}), providers(std::make_shared<AirfieldServiceProviderCollection>()),
+              towerController(std::make_shared<ControllerPosition>(1, "EGGD_TWR", 133.850, airfieldList, true, true)),
+              towerController2(
+                  std::make_shared<ControllerPosition>(8, "EGGD_2_TWR", 133.850, airfieldList, true, true)),
+              groundController(std::make_shared<ControllerPosition>(2, "EGGD_GND", 121.920, airfieldList, true, true)),
+              groundController2(
+                  std::make_shared<ControllerPosition>(9, "EGGD_2_GND", 121.920, airfieldList, true, true)),
+              finalApproachController(
+                  std::make_shared<ControllerPosition>(3, "EGGD_F_APP", 121.920, airfieldList, true, true)),
+              approachController(
+                  std::make_shared<ControllerPosition>(4, "EGGD_APP", 121.920, airfieldList, true, true)),
+              enrouteController(
+                  std::make_shared<ControllerPosition>(5, "LON_W_CTR", 121.920, airfieldList, true, true)),
+              enrouteController2(
+                  std::make_shared<ControllerPosition>(10, "LON_CTR", 121.920, airfieldList, true, true)),
+              deliveryController(
+                  std::make_shared<ControllerPosition>(7, "EGGD_DEL", 121.920, airfieldList, true, true)),
+              towerCallsign("EGGD_TWR", "Testy McTestface", *towerController, false),
+              towerCallsign2("EGGD_2_TWR", "Testy McTestface", *towerController2, false),
+              groundCallsign("EGGD_GND", "Testy McTestface", *groundController, false),
+              groundCallsign2("EGGD_2_GND", "Testy McTestface", *groundController2, false),
+              finalApproachCallsign("EGGD_F_APP", "Testy McTestface", *finalApproachController, false),
+              approachCallsign("EGGD_APP", "Testy McTestface", *approachController, false),
+              enrouteCallsign("LON_W_CTR", "Testy McTestface", *enrouteController, false),
+              enrouteCallsign2("LON_CTR", "Testy McTestface", *enrouteController2, false),
+              deliveryCallsign("EGGD_DEL", "Testy McTestface", *deliveryController, false),
               manager(providers, this->airfields, this->activeCallsigns)
         {
         }
 
         void SetUp() override
         {
-            std::vector<std::string> topDown = {
-                "EGGD_DEL",
-                "EGGD_GND",
-                "EGGD_2_GND",
-                "EGGD_TWR",
-                "EGGD_2_TWR",
-                "EGGD_F_APP",
-                "EGGD_APP",
-                "LON_W_CTR",
-                "LON_CTR"};
-            this->airfields.AddAirfield(std::make_unique<AirfieldModel>("EGGD", topDown));
+            auto hierarchy = std::make_unique<ControllerPositionHierarchy>();
+            hierarchy->AddPosition(this->deliveryController);
+            hierarchy->AddPosition(this->groundController);
+            hierarchy->AddPosition(this->groundController2);
+            hierarchy->AddPosition(this->towerController);
+            hierarchy->AddPosition(this->towerController2);
+            hierarchy->AddPosition(this->finalApproachController);
+            hierarchy->AddPosition(this->approachController);
+            hierarchy->AddPosition(this->enrouteController);
+            hierarchy->AddPosition(this->enrouteController2);
+            this->airfields.AddAirfield(std::make_shared<AirfieldModel>(1, "EGGD", std::move(hierarchy)));
         };
 
+        std::vector<std::string> airfieldList;
         std::shared_ptr<AirfieldServiceProviderCollection> providers;
-        ControllerPosition towerController;
-        ControllerPosition towerController2;
-        ControllerPosition groundController;
-        ControllerPosition groundController2;
-        ControllerPosition finalApproachController;
-        ControllerPosition approachController;
-        ControllerPosition enrouteController;
-        ControllerPosition enrouteController2;
-        ControllerPosition deliveryController;
+        std::shared_ptr<ControllerPosition> towerController;
+        std::shared_ptr<ControllerPosition> towerController2;
+        std::shared_ptr<ControllerPosition> groundController;
+        std::shared_ptr<ControllerPosition> groundController2;
+        std::shared_ptr<ControllerPosition> finalApproachController;
+        std::shared_ptr<ControllerPosition> approachController;
+        std::shared_ptr<ControllerPosition> enrouteController;
+        std::shared_ptr<ControllerPosition> enrouteController2;
+        std::shared_ptr<ControllerPosition> deliveryController;
         ActiveCallsign towerCallsign;
         ActiveCallsign towerCallsign2;
         ActiveCallsign groundCallsign;
@@ -98,7 +108,7 @@ namespace UKControllerPluginTest::Ownership {
 
     TEST_F(AirfieldOwnershipManagerTest, RefreshOwnerSetsDeliveryProvider)
     {
-        this->activeCallsigns.AddCallsign(ActiveCallsign("EGGD_TWR", "Testy McTestface", towerController, false));
+        this->activeCallsigns.AddCallsign(ActiveCallsign("EGGD_TWR", "Testy McTestface", *towerController, false));
         this->manager.RefreshOwner("EGGD");
 
         EXPECT_TRUE(this->providers->AirfieldHasDeliveryProvider("EGGD"));

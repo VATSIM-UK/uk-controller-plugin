@@ -1,35 +1,34 @@
-#include "pch/pch.h"
-#include "sid/SidCollection.h"
-#include "sid/StandardInstrumentDeparture.h"
+#include "SidCollection.h"
+#include "StandardInstrumentDeparture.h"
+#include "euroscope/EuroScopeCFlightPlanInterface.h"
 
-namespace UKControllerPlugin {
-    namespace Sid {
+namespace UKControllerPlugin::Sid {
+    void SidCollection::AddSid(const std::shared_ptr<StandardInstrumentDeparture>& sid)
+    {
+        this->sids.insert(sid);
+    }
 
-        void SidCollection::AddSid(std::shared_ptr<StandardInstrumentDeparture> sid)
-        {
-            this->sids.insert(sid);
-        }
+    auto SidCollection::CountSids() const -> size_t
+    {
+        return this->sids.size();
+    }
 
-        size_t SidCollection::CountSids() const
-        {
-            return this->sids.size();
-        }
+    auto SidCollection::GetByAirfieldAndIdentifier(const std::string& airfield, const std::string& identifier) const
+        -> std::shared_ptr<StandardInstrumentDeparture>
+    {
+        auto sid = std::find_if(
+            this->sids.cbegin(),
+            this->sids.cend(),
+            [&airfield, &identifier](const std::shared_ptr<StandardInstrumentDeparture>& sid) -> bool {
+                return sid->Airfield() == airfield && sid->Identifier() == identifier;
+            });
 
-        const std::shared_ptr<StandardInstrumentDeparture> SidCollection::GetByAirfieldAndIdentifier(
-            std::string airfield,
-            std::string identifier
-        ) const
-        {
-            auto sid = std::find_if(
-                this->sids.cbegin(),
-                this->sids.cend(),
-                [&airfield, &identifier](const std::shared_ptr<StandardInstrumentDeparture>& sid) -> bool
-                {
-                    return sid->Airfield() == airfield && sid->Identifier() == identifier;
-                }
-            );
+        return sid == this->sids.cend() ? nullptr : *sid;
+    }
 
-            return sid == this->sids.cend() ? nullptr : *sid;
-        }
-    }  // namespace Sid
-}  // namespace UKControllerPlugin
+    auto SidCollection::GetForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+        -> std::shared_ptr<StandardInstrumentDeparture>
+    {
+        return this->GetByAirfieldAndIdentifier(flightplan.GetOrigin(), flightplan.GetSidName());
+    }
+} // namespace UKControllerPlugin::Sid

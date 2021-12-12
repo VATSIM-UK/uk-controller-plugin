@@ -2,6 +2,7 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerBootstrap.h"
 #include "controller/ControllerPositionCollection.h"
+#include "controller/ControllerPositionHierarchyFactory.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 
 using testing::NiceMock;
@@ -28,6 +29,12 @@ namespace UKControllerPluginTest::Controller {
     {
         UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);
         EXPECT_EQ(0, container.controllerPositions->GetSize());
+    }
+
+    TEST_F(ControllerBootstrapTest, ItSetsUpControllerHierarchyFactory)
+    {
+        UKControllerPlugin::Controller::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(0, container.controllerHierarchyFactory->GetPositionsCollection().GetSize());
     }
 
     TEST_F(ControllerBootstrapTest, ItSetsUpActiveCallsigns)

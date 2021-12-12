@@ -64,7 +64,7 @@ namespace UKControllerPlugin::Prenote {
         });
     }
 
-    void CancelPrenoteMessageMenu::ControllerForPrenoteDeletionSelected(std::string callsign)
+    void CancelPrenoteMessageMenu::ControllerForPrenoteDeletionSelected(const std::string& callsign)
     {
         auto fp = this->plugin.GetSelectedFlightplan();
         if (!fp) {
@@ -79,32 +79,34 @@ namespace UKControllerPlugin::Prenote {
 
         auto userPosition = activeCallsigns.GetUserCallsign().GetNormalisedPosition();
 
-        try {
-            auto controllerId = this->controllers.FetchPositionByCallsign(std::move(callsign)).GetId();
-            auto message = this->messages->FirstWhere(
-                [fp, controllerId, &userPosition](const std::shared_ptr<PrenoteMessage>& message) -> bool {
-                    return message->GetCallsign() == fp->GetCallsign() &&
-                           message->GetSendingControllerId() == userPosition.GetId() &&
-                           message->GetTargetControllerId() == controllerId;
-                });
-
-            if (!message) {
-                LogWarning("Unable to find prenote to cancel");
-                return;
-            }
-            auto messageId = message->GetId();
-
-            this->taskRunner.QueueAsynchronousTask([this, messageId]() {
-                try {
-                    this->api.DeletePrenoteMessage(messageId);
-                    this->messages->Remove(messageId);
-                    LogInfo("Deleted prenote message " + std::to_string(messageId));
-                } catch (Api::ApiException&) {
-                    LogError("ApiException when deleting prenote messsage");
-                }
-            });
-        } catch (std::out_of_range&) {
+        auto controller = this->controllers.FetchPositionByCallsign(callsign);
+        if (!controller) {
             LogError("Tried to cancel a prenote but selected controller was invalid");
+            return;
         }
+
+        auto controllerId = controller->GetId();
+        auto message = this->messages->FirstWhere(
+            [fp, controllerId, &userPosition](const std::shared_ptr<PrenoteMessage>& message) -> bool {
+                return message->GetCallsign() == fp->GetCallsign() &&
+                       message->GetSendingControllerId() == userPosition.GetId() &&
+                       message->GetTargetControllerId() == controllerId;
+            });
+
+        if (!message) {
+            LogWarning("Unable to find prenote to cancel");
+            return;
+        }
+        auto messageId = message->GetId();
+
+        this->taskRunner.QueueAsynchronousTask([this, messageId]() {
+            try {
+                this->api.DeletePrenoteMessage(messageId);
+                this->messages->Remove(messageId);
+                LogInfo("Deleted prenote message " + std::to_string(messageId));
+            } catch (Api::ApiException&) {
+                LogError("ApiException when deleting prenote messsage");
+            }
+        });
     }
 } // namespace UKControllerPlugin::Prenote

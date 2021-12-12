@@ -1,75 +1,75 @@
 #include "airfield/AirfieldModel.h"
 #include "airfield/AirfieldCollection.h"
-#include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionHierarchy.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 
-namespace UKControllerPluginTest {
-    namespace AirfieldOwnership {
+namespace UKControllerPluginTest::Airfield {
 
-        TEST(AirfieldCollection, AddAirfieldThrowsExceptionIfAlreadyAdded)
+    class AirfieldCollectionTest : public testing::Test
+    {
+        public:
+        AirfieldCollectionTest()
+            : airfield1(std::make_shared<AirfieldModel>(1, "EGKK", std::make_unique<ControllerPositionHierarchy>())),
+              airfield2(std::make_shared<AirfieldModel>(2, "EGLL", std::make_unique<ControllerPositionHierarchy>()))
         {
-            AirfieldCollection collection;
-            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {})));
-            EXPECT_THROW(
-                collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {"EGKK_DEL"}))),
-                std::invalid_argument);
         }
 
-        TEST(AirfieldCollection, FetchAirfieldByIcaoThrowsExceptionIfNotUkAirfield)
-        {
-            AirfieldCollection collection;
-            EXPECT_THROW(static_cast<void>(collection.FetchAirfieldByIcao("LFPG")), std::out_of_range);
-        }
+        std::shared_ptr<AirfieldModel> airfield1;
+        std::shared_ptr<AirfieldModel> airfield2;
+        AirfieldCollection collection;
+    };
 
-        TEST(AirfieldCollection, FetchAirfieldByIcaoThrowsExceptionIfNoAirfields)
-        {
-            AirfieldCollection collection;
-            EXPECT_THROW(static_cast<void>(collection.FetchAirfieldByIcao("EGLL")), std::out_of_range);
-        }
+    TEST_F(AirfieldCollectionTest, ItStartsEmpty)
+    {
+        EXPECT_EQ(0, collection.GetSize());
+    }
 
-        TEST(AirfieldCollection, FetchAirfieldByIcaoThrowsExceptionIfNotFound)
-        {
-            AirfieldCollection collection;
-            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {})));
-            EXPECT_THROW(static_cast<void>(collection.FetchAirfieldByIcao("EGLL")), std::out_of_range);
-        }
+    TEST_F(AirfieldCollectionTest, ItAddsAirfields)
+    {
 
-        TEST(AirfieldCollection, FetchAirfieldByIcaoReturnsAirfieldIfFound)
-        {
-            AirfieldCollection collection;
-            std::unique_ptr<AirfieldModel> airfield(new AirfieldModel("EGKK", {}));
-            AirfieldModel* airfieldRaw = airfield.get();
+        collection.AddAirfield(airfield1);
+        collection.AddAirfield(airfield2);
 
-            collection.AddAirfield(std::move(airfield));
-            EXPECT_TRUE(*airfieldRaw == collection.FetchAirfieldByIcao("EGKK"));
-        }
+        EXPECT_EQ(2, collection.GetSize());
+        EXPECT_EQ(airfield1, collection.FetchAirfieldByIcao("EGKK"));
+        EXPECT_EQ(airfield2, collection.FetchAirfieldByIcao("EGLL"));
+    }
 
-        TEST(AirfieldCollection, GetSizeReturnsNumberOfItemsInCollection)
-        {
-            AirfieldCollection collection;
-            EXPECT_EQ(0, collection.GetSize());
-            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {})));
-            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGLL", {})));
-            EXPECT_EQ(2, collection.GetSize());
-        }
+    TEST_F(AirfieldCollectionTest, ItDoesntAddDuplicateAirfields)
+    {
 
-        TEST(AirfieldCollection, ItIteratesTheCollection)
-        {
-            AirfieldCollection collection;
-            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGKK", {})));
-            collection.AddAirfield(std::unique_ptr<AirfieldModel>(new AirfieldModel("EGLL", {})));
+        collection.AddAirfield(airfield1);
+        collection.AddAirfield(airfield1);
+        collection.AddAirfield(airfield1);
+        collection.AddAirfield(airfield2);
+        collection.AddAirfield(airfield2);
+        collection.AddAirfield(airfield2);
 
-            std::vector<std::string> airfields;
-            collection.ForEach(
-                [&airfields](const AirfieldModel& airfield) { airfields.push_back(airfield.GetIcao()); });
+        EXPECT_EQ(2, collection.GetSize());
+    }
 
-            std::vector<std::string> expected({"EGKK", "EGLL"});
-            EXPECT_EQ(expected, airfields);
-        }
-    } // namespace AirfieldOwnership
-} // namespace UKControllerPluginTest
+    TEST_F(AirfieldCollectionTest, FetchAirfieldByIcaoReturnsNullPtrIfNotFound)
+    {
+        collection.AddAirfield(airfield1);
+        collection.AddAirfield(airfield2);
+        EXPECT_EQ(nullptr, collection.FetchAirfieldByIcao("EGBB"));
+    }
+
+    TEST_F(AirfieldCollectionTest, ItIteratesTheCollection)
+    {
+        collection.AddAirfield(airfield1);
+        collection.AddAirfield(airfield2);
+
+        std::vector<std::string> airfields;
+        collection.ForEach([&airfields](const AirfieldModel& airfield) { airfields.push_back(airfield.Icao()); });
+
+        std::vector<std::string> expected({"EGKK", "EGLL"});
+        EXPECT_EQ(expected, airfields);
+    }
+} // namespace UKControllerPluginTest::Airfield

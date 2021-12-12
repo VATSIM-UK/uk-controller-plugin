@@ -1,7 +1,11 @@
+#include "DepartureHandoffResolver.h"
+#include "FlightplanSidHandoffMapper.h"
+#include "HandoffCache.h"
 #include "HandoffCollectionFactory.h"
 #include "HandoffEventHandler.h"
 #include "HandoffModule.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "tag/TagItemCollection.h"
@@ -15,14 +19,15 @@ namespace UKControllerPlugin::Handoff {
 
     void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependency)
     {
-        container.handoffs = Create(
-            *container.controllerPositions,
-            dependency.LoadDependency(GetHandoffDependencyKey(), "{}"_json),
-            dependency.LoadDependency(GetSidHandoffMappingDependencyKey(), "{}"_json));
-
         std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
-            *container.handoffs,
-            *container.activeCallsigns,
+            std::make_shared<DepartureHandoffResolver>(
+                std::make_shared<FlightplanSidHandoffMapper>(
+                    Create(
+                        *container.controllerHierarchyFactory,
+                        dependency.LoadDependency(GetHandoffDependencyKey(), nlohmann::json::array())),
+                    *container.sids),
+                *container.activeCallsigns),
+            std::make_shared<HandoffCache>(),
             *container.integrationModuleContainer->outboundMessageHandler);
 
         container.tagHandler->RegisterTagItem(handoffTagItem, handler);
@@ -32,11 +37,6 @@ namespace UKControllerPlugin::Handoff {
 
     auto GetHandoffDependencyKey() -> std::string
     {
-        return "DEPENDENCY_HANDOFF";
-    }
-
-    auto GetSidHandoffMappingDependencyKey() -> std::string
-    {
-        return "DEPENDENCY_SID_HANDOFF";
+        return "DEPENDENCY_HANDOFFS_V2";
     }
 } // namespace UKControllerPlugin::Handoff

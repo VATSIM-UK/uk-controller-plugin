@@ -1,30 +1,24 @@
 #pragma once
 
 namespace UKControllerPlugin {
+    namespace Controller {
+        class ControllerPositionHierarchyFactory;
+    } // namespace Controller
     namespace Dependency {
         class DependencyLoaderInterface;
-    }  // namespace Dependency
-}  // namespace UKControllerPlugin
+    } // namespace Dependency
+} // namespace UKControllerPlugin
 
-namespace UKControllerPlugin {
-    namespace Airfield {
+namespace UKControllerPlugin::Airfield {
 
-        // Forward Declarations
-        class AirfieldModel;
-        class AirfieldCollection;
-        // END
+    class AirfieldCollection;
 
-        /*
-            A class for creating a collection of airfields based on the dependency
-            data downloaded from the webserver.
-        */
-        class AirfieldCollectionFactory
-        {
-            public:
-                static std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> Create(
-                    UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
-                );
-                static const std::string requiredDependency;
-        };
-    }  // namespace Airfield
-}  // namespace UKControllerPlugin
+    [[nodiscard]] auto CreateAirfieldCollection(
+        const nlohmann::json& airfields, const Controller::ControllerPositionHierarchyFactory& hierarchyFactory)
+        -> std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection>;
+
+    [[nodiscard]] auto AirfieldValid(
+        const nlohmann::json& airfield, const Controller::ControllerPositionHierarchyFactory& hierarchyFactory) -> bool;
+    [[nodiscard]] auto AirfieldValid(
+        const nlohmann::json& airfield, const Controller::ControllerPositionHierarchyFactory& hierarchyFactory) -> bool;
+} // namespace UKControllerPlugin::Airfield

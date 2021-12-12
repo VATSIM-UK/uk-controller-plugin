@@ -68,17 +68,16 @@ namespace UKControllerPlugin::Controller {
 
         // Perform a match based on frequency and facility to find the canonical position
         ControllerPositionParser parser;
-        try {
-            this->SetupPosition(
-                controller,
-                this->controllers.FetchPositionByFacilityTypeAndFrequency(
-                    parser.ParseFacilityFromCallsign(controller.GetCallsign()),
-                    parser.ParseTypeFromCallsign(controller.GetCallsign()),
-                    controller.GetFrequency()));
-        } catch (std::out_of_range&) {
-            // No position at all, so nothing we can do.
+        auto position = this->controllers.FetchPositionByFacilityTypeAndFrequency(
+            parser.ParseFacilityFromCallsign(controller.GetCallsign()),
+            parser.ParseTypeFromCallsign(controller.GetCallsign()),
+            controller.GetFrequency());
+
+        if (!position) {
             return;
         }
+
+        this->SetupPosition(controller, *position);
     }
 
     /*

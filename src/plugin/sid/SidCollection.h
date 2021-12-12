@@ -1,27 +1,28 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Sid {
+namespace UKControllerPlugin::Euroscope {
+    class EuroScopeCFlightPlanInterface;
+} // namespace UKControllerPlugin::Euroscope
 
-        class StandardInstrumentDeparture;
+namespace UKControllerPlugin::Sid {
 
-        /*
-            Stores SIDs and allows them to be searched
-        */
-        class SidCollection
-        {
-            public:
+    class StandardInstrumentDeparture;
 
-                void AddSid(std::shared_ptr<StandardInstrumentDeparture> sid);
-                size_t CountSids() const;
-                const std::shared_ptr<StandardInstrumentDeparture> GetByAirfieldAndIdentifier(
-                    std::string airfield,
-                    std::string identifier
-                ) const;
+    /*
+        Stores SIDs and allows them to be searched
+    */
+    class SidCollection
+    {
+        public:
+        void AddSid(const std::shared_ptr<StandardInstrumentDeparture>& sid);
+        [[nodiscard]] auto CountSids() const -> size_t;
+        [[nodiscard]] auto GetByAirfieldAndIdentifier(const std::string& airfield, const std::string& identifier) const
+            -> std::shared_ptr<StandardInstrumentDeparture>;
+        [[nodiscard]] auto GetForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+            -> std::shared_ptr<StandardInstrumentDeparture>;
 
-            private:
-                // All the SIDs
-                std::set<std::shared_ptr<StandardInstrumentDeparture>> sids;
-        };
-    }  // namespace Sid
-}  // namespace UKControllerPlugin
+        private:
+        // All the SIDs
+        std::set<std::shared_ptr<StandardInstrumentDeparture>> sids;
+    };
+} // namespace UKControllerPlugin::Sid

@@ -10,7 +10,6 @@
 #include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 
-using UKControllerPlugin::Airfield::NormaliseSid;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::Login;
@@ -19,6 +18,7 @@ using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
+using UKControllerPlugin::Sid::NormaliseSid;
 using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 
