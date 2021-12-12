@@ -40,7 +40,9 @@ namespace UKControllerPlugin::Airfield {
                 airfield.at("id").get<int>(),
                 airfield.at("identifier").get<std::string>(),
                 hierarchyFactory.CreateFromJsonById(airfield.at("top_down_controller_positions")),
-                pairedAirfieldPrenotes));
+                pairedAirfieldPrenotes,
+                airfield.at("handoff_id").is_null() ? AirfieldModel::NO_HANDOFF_ID
+                                                    : airfield.at("handoff_id").get<int>()));
         }
 
         LogInfo("Loaded " + std::to_string(collection->GetSize()) + " airfields");
@@ -64,6 +66,8 @@ namespace UKControllerPlugin::Airfield {
                               prenote.at("airfield_id").is_number_integer() && prenote.contains("flight_rule_id") &&
                               prenote.at("flight_rule_id").is_number_integer() && prenote.contains("prenote_id") &&
                               prenote.at("prenote_id").is_number_integer();
-                   }) == airfield.at("pairing_prenotes").cend();
+                   }) == airfield.at("pairing_prenotes").cend() &&
+               airfield.contains("handoff_id") &&
+               (airfield.at("handoff_id").is_number_integer() || airfield.at("handoff_id").is_null());
     }
 } // namespace UKControllerPlugin::Airfield

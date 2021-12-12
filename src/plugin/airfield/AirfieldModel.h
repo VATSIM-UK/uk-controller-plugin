@@ -38,10 +38,10 @@ namespace UKControllerPlugin::Airfield {
         [[nodiscard]] auto DefaultHandoff() const -> int;
         auto operator==(const AirfieldModel& compare) const -> bool;
 
-        private:
         // The default handoff id if there is none
         inline static const int NO_HANDOFF_ID = 0;
 
+        private:
         // The id of the airfield
         int id;
 
