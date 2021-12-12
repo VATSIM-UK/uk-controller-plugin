@@ -1,51 +1,61 @@
-#include "pch/pch.h"
 #include "airfield/AirfieldModel.h"
-#include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionHierarchy.h"
+#include "prenote/PairedAirfieldPrenote.h"
 
+using ::testing::ElementsAre;
 using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
-using ::testing::ElementsAre;
+using UKControllerPlugin::Controller::ControllerPositionHierarchy;
+using UKControllerPlugin::Prenote::PairedAirfieldPrenote;
 
-namespace UKControllerPluginTest {
-    namespace AirfieldOwnership {
+namespace UKControllerPluginTest::Airfield {
 
-        TEST(AirfieldModel, ConstructorThrowsExceptionIfIcaoTooLong)
+    class AirfieldModelTest : public testing::Test
+    {
+        public:
+        AirfieldModelTest()
+            : prenotes({std::make_shared<PairedAirfieldPrenote>(1, 2, 3)}),
+              airfield(1, "EGKK", std::make_unique<ControllerPositionHierarchy>(), prenotes),
+              airfield2(2, "EGLL", std::make_unique<ControllerPositionHierarchy>()),
+              airfield3(1, "EGBB", std::make_unique<ControllerPositionHierarchy>())
         {
-            EXPECT_THROW(AirfieldModel("EGXYZ", {}), std::invalid_argument);
         }
 
-        TEST(AirfieldModel, ConstructorThrowsExceptionIfIcaoNotUk)
-        {
-            EXPECT_THROW(AirfieldModel("LIML", {}), std::invalid_argument);
-        }
+        std::vector<std::shared_ptr<PairedAirfieldPrenote>> prenotes;
+        AirfieldModel airfield;
+        AirfieldModel airfield2;
+        AirfieldModel airfield3;
+    };
 
-        TEST(AirfieldModel, GetIcaoReturnsIcao)
-        {
-            std::string icao = "EGKK";
-            AirfieldModel airfield(icao, {});
-            EXPECT_EQ(0, icao.compare(airfield.GetIcao()));
-        }
+    TEST_F(AirfieldModelTest, ItHasAnId)
+    {
+        EXPECT_EQ(1, airfield.Id());
+    }
 
-        TEST(AirfieldModel, GetOwnershipPresedenceReturnsOwnership)
-        {
-            AirfieldModel airfield("EGKK", { "EGKK_DEL", "EGKK_GND" });
-            EXPECT_THAT(airfield.GetOwnershipPresedence(), ElementsAre("EGKK_DEL", "EGKK_GND"));
-        }
+    TEST_F(AirfieldModelTest, ItHasAnIcao)
+    {
+        EXPECT_EQ("EGKK", airfield.Icao());
+    }
 
-        TEST(AirfieldModel, EqualityOperatorReturnsFalseDifferentIcao)
-        {
-            AirfieldModel airfield("EGKK", { "EGKK_DEL", "EGKK_GND" });
-            AirfieldModel airfield2("EGLL", { "EGKK_DEL", "EGKK_GND" });
-            EXPECT_FALSE(airfield == airfield2);
-        }
+    TEST_F(AirfieldModelTest, GetOwnershipPresedenceReturnsOwnership)
+    {
+        EXPECT_EQ(0, airfield.TopDownOrder().CountPositions());
+    }
 
-        TEST(AirfieldModel, EqualityOperatorReturnsTrueSameIcao)
-        {
-            AirfieldModel airfield("EGKK", { "EGKK_DEL", "EGKK_GND" });
-            AirfieldModel airfield2("EGKK", { "EGKK_DEL", "EGKK_GND" });
-            EXPECT_TRUE(airfield == airfield2);
-        }
-    }  // namespace AirfieldOwnership
-}  // namespace UKControllerPluginTest
+    TEST_F(AirfieldModelTest, AirfieldPairingPrenotesReturnsPrenotes)
+    {
+        EXPECT_EQ(prenotes, airfield.AirfieldPairingPrenotes());
+    }
+
+    TEST_F(AirfieldModelTest, EqualityOperatorReturnsFalseDifferentId)
+    {
+        EXPECT_FALSE(airfield2 == airfield3);
+    }
+
+    TEST_F(AirfieldModelTest, EqualityOperatorReturnsTrueSameId)
+    {
+        EXPECT_TRUE(airfield == airfield3);
+    }
+} // namespace UKControllerPluginTest::Airfield

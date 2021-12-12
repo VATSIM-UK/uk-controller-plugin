@@ -1,15 +1,23 @@
 #pragma once
-#include "CachedHandoff.h"
-#include "HandoffCollection.h"
-#include "controller/ActiveCallsign.h"
-#include "controller/ActiveCallsignCollection.h"
 #include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "integration/OutboundIntegrationEventHandler.h"
-#include "tag/TagData.h"
 #include "tag/TagItemInterface.h"
 
+namespace UKControllerPlugin {
+    namespace Controller {
+        class ActiveCallsign;
+        class ActiveCallsignCollection;
+    } // namespace Controller
+    namespace Sid {
+        class SidCollection;
+    } // namespace Sid
+} // namespace UKControllerPlugin
+
 namespace UKControllerPlugin::Handoff {
+    class DepartureHandoffResolver;
+    class HandoffCache;
+    struct ResolvedHandoff;
 
     /*
         Handles handoff events
@@ -20,11 +28,10 @@ namespace UKControllerPlugin::Handoff {
     {
         public:
         HandoffEventHandler(
-            const HandoffCollection& handoffs,
-            const Controller::ActiveCallsignCollection& callsigns,
+            std::shared_ptr<DepartureHandoffResolver> resolver,
+            std::shared_ptr<HandoffCache> cache,
             Integration::OutboundIntegrationEventHandler& outboundEvent);
-        void AddCachedItem(const std::string& callsign, CachedHandoff handoff);
-        [[nodiscard]] auto GetCachedItem(const std::string& callsign) const -> CachedHandoff;
+        [[nodiscard]] auto GetCache() const -> std::shared_ptr<HandoffCache>;
 
         // Inherited via TagItemInterface
         [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
@@ -43,22 +50,19 @@ namespace UKControllerPlugin::Handoff {
         void CallsignsFlushed() override;
 
         private:
-        // The default values to return
-        const CachedHandoff DEFAULT_TAG_VALUE = CachedHandoff("---.---", "");
-        const CachedHandoff UNICOM_TAG_VALUE = CachedHandoff("122.800", "");
-
         void FireHandoffUpdatedEvent(const std::string& callsign);
+        [[nodiscard]] static auto FormatFrequency(const std::shared_ptr<ResolvedHandoff>& handoff) -> std::string;
 
-        // The handoffs
-        const HandoffCollection& handoffs;
+        // Resolves handoffs
+        const std::shared_ptr<DepartureHandoffResolver> resolver;
 
-        // The active callsigns
-        const Controller::ActiveCallsignCollection& callsigns;
-
-        // Maps callsign -> result so we can cache it.
-        std::map<std::string, CachedHandoff> cache;
+        // Caches resolved handoffs
+        const std::shared_ptr<HandoffCache> cache;
 
         // Allows us to push events to integrations
         Integration::OutboundIntegrationEventHandler& outboundEvent;
+
+        // How big to make the buffer
+        inline static const int FREQUENCY_BUFFER_LENGTH = 8;
     };
 } // namespace UKControllerPlugin::Handoff

@@ -38,7 +38,7 @@ namespace UKControllerPlugin::Prenote {
             int callbackId);
         void
         DisplayControllerSelectionMenu(Euroscope::EuroScopeCFlightPlanInterface& flightplan, const POINT& mousePos);
-        void ControllerForPrenoteSelected(std::string callsign);
+        void ControllerForPrenoteSelected(const std::string& callsign);
 
         private:
         [[nodiscard]] auto PrenoteMessageExists(

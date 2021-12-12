@@ -1,107 +1,66 @@
-#include "pch/pch.h"
-#include "handoff/HandoffCollection.h"
-#include "controller/ControllerPositionHierarchy.h"
 #include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionHierarchy.h"
+#include "handoff/HandoffCollection.h"
+#include "handoff/HandoffOrder.h"
 
-using UKControllerPlugin::Handoff::HandoffCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
+using UKControllerPlugin::Handoff::HandoffCollection;
+using UKControllerPlugin::Handoff::HandoffOrder;
 
 using ::testing::Test;
 
-namespace UKControllerPluginTest {
-    namespace Handoff {
+namespace UKControllerPluginTest::Handoff {
 
-        class HandoffCollectionTest : public Test
+    class HandoffCollectionTest : public Test
+    {
+        public:
+        HandoffCollectionTest()
+            : position(std::make_shared<ControllerPosition>(
+                  1, "EGKK_GND", 122.8, std::vector<std::string>{"EGKK"}, true, false))
         {
-            public:
 
-                HandoffCollectionTest()
-                    : position(new ControllerPosition(1, "EGKK_GND", 122.8, {"EGKK"}, true, false))
-                {
-                    this->hierarchy1.reset(new ControllerPositionHierarchy);
-                    this->hierarchy1->AddPosition(*this->position);
-                    this->hierarchy2.reset(new ControllerPositionHierarchy);
-                    this->hierarchy2->AddPosition(*this->position);
-                }
-
-                std::unique_ptr<ControllerPosition> position;
-                HandoffCollection collection;
-                std::shared_ptr<ControllerPositionHierarchy> hierarchy1;
-                std::shared_ptr<ControllerPositionHierarchy> hierarchy2;
-        };
-
-        TEST_F(HandoffCollectionTest, ItStartsWithNoSids)
-        {
-            EXPECT_EQ(0, this->collection.CountSidMappings());
+            this->hierarchy = std::make_shared<ControllerPositionHierarchy>();
+            this->hierarchy->AddPosition(this->position);
+            this->handoff1 = std::make_shared<HandoffOrder>(1, this->hierarchy);
+            this->handoff2 = std::make_shared<HandoffOrder>(2, this->hierarchy);
         }
 
-        TEST_F(HandoffCollectionTest, ItStartsWithNoHandoffs)
-        {
-            EXPECT_EQ(0, this->collection.CountHandoffs());
-        }
+        std::shared_ptr<ControllerPosition> position;
+        HandoffCollection collection;
+        std::shared_ptr<ControllerPositionHierarchy> hierarchy;
+        std::shared_ptr<HandoffOrder> handoff1;
+        std::shared_ptr<HandoffOrder> handoff2;
+    };
 
-        TEST_F(HandoffCollectionTest, ItAddsHandoffOrders)
-        {
-            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
-            this->collection.AddHandoffOrder("TEST_2", this->hierarchy2);
+    TEST_F(HandoffCollectionTest, ItStartsEmpty)
+    {
+        EXPECT_EQ(0, this->collection.Count());
+    }
 
-            EXPECT_EQ(2, this->collection.CountHandoffs());
-        }
+    TEST_F(HandoffCollectionTest, ItAddsOrders)
+    {
+        this->collection.Add(this->handoff1);
+        this->collection.Add(this->handoff2);
+        EXPECT_EQ(2, this->collection.Count());
+        EXPECT_EQ(this->handoff1, this->collection.Get(1));
+        EXPECT_EQ(this->handoff2, this->collection.Get(2));
+    }
 
-        TEST_F(HandoffCollectionTest, ItDoesntAddDuplicateHandoffs)
-        {
-            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
-            this->collection.AddHandoffOrder("TEST_1", this->hierarchy2);
+    TEST_F(HandoffCollectionTest, ItDoesntAddDuplidateOrders)
+    {
+        this->collection.Add(this->handoff1);
+        this->collection.Add(this->handoff1);
+        this->collection.Add(this->handoff1);
+        this->collection.Add(this->handoff2);
+        this->collection.Add(this->handoff2);
+        this->collection.Add(this->handoff2);
+        EXPECT_EQ(2, this->collection.Count());
+    }
 
-            EXPECT_EQ(1, this->collection.CountHandoffs());
-        }
-
-        TEST_F(HandoffCollectionTest, ItAddsSidMappings)
-        {
-            this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_1");
-            this->collection.AddSidMapping("EGKK", "SFD4Z", "TEST_2");
-
-            EXPECT_EQ(2, this->collection.CountSidMappings());
-        }
-
-        TEST_F(HandoffCollectionTest, ItDoesntAddDuplicateSidMappings)
-        {
-            this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_1");
-            this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_2");
-
-            EXPECT_EQ(1, this->collection.CountSidMappings());
-        }
-
-        TEST_F(HandoffCollectionTest, ItReturnsControllerHierarchiesIfSidMappingsValid)
-        {
-            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
-            this->collection.AddHandoffOrder("TEST_2", this->hierarchy2);
-            this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_1");
-            this->collection.AddSidMapping("EGKK", "SFD4Z", "TEST_2");
-
-            EXPECT_EQ(*this->hierarchy1, this->collection.GetSidHandoffOrder("EGKK", "ADMAG2X"));
-            EXPECT_EQ(*this->hierarchy2, this->collection.GetSidHandoffOrder("EGKK", "SFD4Z"));
-        }
-
-        TEST_F(HandoffCollectionTest, ItReturnsInvalidMappingIfSidNotFound)
-        {
-            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
-            this->collection.AddHandoffOrder("TEST_2", this->hierarchy2);
-            this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_1");
-            this->collection.AddSidMapping("EGKK", "SFD4Z", "TEST_2");
-
-            EXPECT_EQ(this->collection.invalidHierarchy, this->collection.GetSidHandoffOrder("EGKK", "BIG1X"));
-        }
-
-        TEST_F(HandoffCollectionTest, ItReturnsInvalidMappingIfSidFoundButNoHierarchy)
-        {
-            this->collection.AddHandoffOrder("TEST_1", this->hierarchy1);
-            this->collection.AddHandoffOrder("TEST_2", this->hierarchy2);
-            this->collection.AddSidMapping("EGKK", "ADMAG2X", "TEST_1");
-            this->collection.AddSidMapping("EGKK", "SFD4Z", "TEST_3");
-
-            EXPECT_EQ(this->collection.invalidHierarchy, this->collection.GetSidHandoffOrder("EGKK", "SFD4Z"));
-        }
-    }  // namespace Handoff
-}  // namespace UKControllerPluginTest
+    TEST_F(HandoffCollectionTest, ItReturnsNullPointerIfNoHandoffOrderFound)
+    {
+        this->collection.Add(this->handoff1);
+        EXPECT_EQ(nullptr, this->collection.Get(2));
+    }
+} // namespace UKControllerPluginTest::Handoff

@@ -1,20 +1,16 @@
 #pragma once
 #include "handoff/HandoffCollection.h"
-#include "controller/ControllerPositionCollection.h"
 
-namespace UKControllerPlugin {
-    namespace Handoff {
+namespace UKControllerPlugin::Controller {
+    class ControllerPositionHierarchyFactory;
+} // namespace UKControllerPlugin::Controller
 
-        std::unique_ptr<HandoffCollection> Create(
-            const UKControllerPlugin::Controller::ControllerPositionCollection & controllerPositions,
-            nlohmann::json handoffs,
-            nlohmann::json sidMappings
-        );
+namespace UKControllerPlugin::Handoff {
 
-        bool HandoffOrderValid(
-            nlohmann::json order,
-            const UKControllerPlugin::Controller::ControllerPositionCollection& controllerPositions
-        );
-        bool SidMappingValid(nlohmann::json mapping);
-    }  // namespace Handoff
-}  // namespace UKControllerPlugin
+    [[nodiscard]] auto
+    Create(const Controller::ControllerPositionHierarchyFactory& controllerFactory, const nlohmann::json& handoffs)
+        -> std::shared_ptr<HandoffCollection>;
+
+    [[nodiscard]] auto HandoffOrderValid(
+        const nlohmann::json& order, const Controller::ControllerPositionHierarchyFactory& controllerFactory) -> bool;
+} // namespace UKControllerPlugin::Handoff

@@ -1,10 +1,11 @@
-#include "pch/pch.h"
-#include "ownership/AirfieldsOwnedQueryMessage.h"
 #include "airfield/AirfieldModel.h"
+#include "controller/ControllerPositionHierarchy.h"
+#include "ownership/AirfieldsOwnedQueryMessage.h"
 
-using UKControllerPlugin::Ownership::AirfieldsOwnedQueryMessage;
-using UKControllerPlugin::Airfield::AirfieldModel;
 using ::testing::Test;
+using UKControllerPlugin::Airfield::AirfieldModel;
+using UKControllerPlugin::Controller::ControllerPositionHierarchy;
+using UKControllerPlugin::Ownership::AirfieldsOwnedQueryMessage;
 
 namespace UKControllerPluginTest {
     namespace Ownership {
@@ -12,20 +13,16 @@ namespace UKControllerPluginTest {
         class AirfieldsOwnedQueryMessageTest : public Test
         {
             public:
-                AirfieldsOwnedQueryMessageTest(void)
-                    : message(
-                        {
-                            AirfieldModel("EGKK", {}),
-                            AirfieldModel("EGLL", {}),
-                            AirfieldModel("EGLC", {})
-                        },
-                        "LON_S_CTR"
-                    )
-                {
+            AirfieldsOwnedQueryMessageTest(void)
+                : message(
+                      {std::make_shared<AirfieldModel>(1, "EGKK", std::make_unique<ControllerPositionHierarchy>()),
+                       std::make_shared<AirfieldModel>(2, "EGLL", std::make_unique<ControllerPositionHierarchy>()),
+                       std::make_shared<AirfieldModel>(3, "EGLC", std::make_unique<ControllerPositionHierarchy>())},
+                      "LON_S_CTR"){
 
-                };
+                  };
 
-                AirfieldsOwnedQueryMessage message;
+            AirfieldsOwnedQueryMessage message;
         };
 
         TEST_F(AirfieldsOwnedQueryMessageTest, ItUsesAHandler)
@@ -73,5 +70,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_FALSE(this->message.MessageRequiresConfirm());
         }
-    }  // namespace Ownership
-}  // namespace UKControllerPluginTest
+    } // namespace Ownership
+} // namespace UKControllerPluginTest

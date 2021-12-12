@@ -1,43 +1,22 @@
 #pragma once
-#include "controller/ControllerPositionHierarchy.h"
 
-namespace UKControllerPlugin {
-    namespace Handoff {
+namespace UKControllerPlugin::Handoff {
+    struct HandoffOrder;
 
-        /*
-            A class that stores all the handoff orders available from the plugin
-            and how each SID maps to a handoff order.
-        */
-        class HandoffCollection
-        {
-            public:
+    /*
+        A class that stores all the handoff orders available from the plugin
+        and how each SID maps to a handoff order.
+    */
+    class HandoffCollection
+    {
+        public:
+        void Add(std::shared_ptr<HandoffOrder> order);
+        [[nodiscard]] auto Get(int id) const -> const std::shared_ptr<HandoffOrder>;
+        [[nodiscard]] auto Count() const -> size_t;
 
-                void AddHandoffOrder(
-                    std::string key,
-                    std::shared_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy> controllers
-                );
-                void AddSidMapping(std::string airfield, std::string identifier, std::string handoffKey);
-                const UKControllerPlugin::Controller::ControllerPositionHierarchy& GetSidHandoffOrder(
-                    std::string airfield,
-                    std::string identifier
-                ) const;
-                size_t CountSidMappings(void) const;
-                size_t CountHandoffs(void) const;
+        private:
+        const std::shared_ptr<HandoffOrder> noOrder = nullptr;
 
-                const UKControllerPlugin::Controller::ControllerPositionHierarchy invalidHierarchy;
-
-            private:
-
-                std::string GetStorageKeyForSid(std::string airfield, std::string identifier) const;
-
-                // All the handoff orders
-                std::map<
-                    std::string,
-                    std::shared_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchy>
-                > orders;
-
-                // The SID -> handoff mappings
-                std::map<std::string, std::string> sidMappings;
-        };
-    }  // namespace Handoff
-}  // namespace UKControllerPlugin
+        std::map<int, std::shared_ptr<HandoffOrder>> orders;
+    };
+} // namespace UKControllerPlugin::Handoff

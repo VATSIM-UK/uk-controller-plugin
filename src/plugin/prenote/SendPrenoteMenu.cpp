@@ -73,7 +73,7 @@ namespace UKControllerPlugin::Prenote {
             });
     }
 
-    void SendPrenoteMenu::ControllerForPrenoteSelected(std::string callsign)
+    void SendPrenoteMenu::ControllerForPrenoteSelected(const std::string& callsign)
     {
         auto fp = this->plugin.GetSelectedFlightplan();
         if (!fp) {
@@ -88,50 +88,52 @@ namespace UKControllerPlugin::Prenote {
 
         auto userPosition = activeCallsigns.GetUserCallsign().GetNormalisedPosition();
 
-        try {
-            auto requestingControllerId = userPosition.GetId();
-            auto targetControllerId = this->controllers.FetchPositionByCallsign(std::move(callsign)).GetId();
-
-            std::string callsign = fp->GetCallsign();
-            std::string origin = fp->GetOrigin();
-            std::string destination = fp->GetDestination();
-            std::string sid = fp->GetSidName();
-
-            this->taskRunner.QueueAsynchronousTask(
-                [this, callsign, origin, destination, sid, requestingControllerId, targetControllerId]() {
-                    try {
-                        auto prenoteResponse = this->api.CreatePrenoteMessage(
-                            callsign,
-                            origin,
-                            sid,
-                            destination,
-                            requestingControllerId,
-                            targetControllerId,
-                            MESSAGE_EXPIRY_SECONDS);
-
-                        if (!ResponseValid(prenoteResponse)) {
-                            LogError("Invalid prenote creation response");
-                            return;
-                        }
-
-                        auto prenoteId = prenoteResponse.at("id").get<int>();
-                        this->messages->Add(std::make_shared<PrenoteMessage>(
-                            prenoteId,
-                            callsign,
-                            origin,
-                            sid,
-                            destination,
-                            requestingControllerId,
-                            targetControllerId,
-                            Time::TimeNow() + std::chrono::seconds(MESSAGE_EXPIRY_SECONDS)));
-                        LogInfo("Created prenote message " + std::to_string(prenoteId));
-                    } catch (Api::ApiException&) {
-                        LogError("ApiException when creating prenote messsage");
-                    }
-                });
-        } catch (std::out_of_range&) {
+        auto targetController = this->controllers.FetchPositionByCallsign(callsign);
+        if (!targetController) {
             LogError("Tried to create a prenote but selected controller was invalid");
+            return;
         }
+
+        auto requestingControllerId = userPosition.GetId();
+        auto targetControllerId = targetController->GetId();
+
+        std::string flightplanCallsign = fp->GetCallsign();
+        std::string origin = fp->GetOrigin();
+        std::string destination = fp->GetDestination();
+        std::string sid = fp->GetSidName();
+
+        this->taskRunner.QueueAsynchronousTask(
+            [this, flightplanCallsign, origin, destination, sid, requestingControllerId, targetControllerId]() {
+                try {
+                    auto prenoteResponse = this->api.CreatePrenoteMessage(
+                        flightplanCallsign,
+                        origin,
+                        sid,
+                        destination,
+                        requestingControllerId,
+                        targetControllerId,
+                        MESSAGE_EXPIRY_SECONDS);
+
+                    if (!ResponseValid(prenoteResponse)) {
+                        LogError("Invalid prenote creation response");
+                        return;
+                    }
+
+                    auto prenoteId = prenoteResponse.at("id").get<int>();
+                    this->messages->Add(std::make_shared<PrenoteMessage>(
+                        prenoteId,
+                        flightplanCallsign,
+                        origin,
+                        sid,
+                        destination,
+                        requestingControllerId,
+                        targetControllerId,
+                        Time::TimeNow() + std::chrono::seconds(MESSAGE_EXPIRY_SECONDS)));
+                    LogInfo("Created prenote message " + std::to_string(prenoteId));
+                } catch (Api::ApiException&) {
+                    LogError("ApiException when creating prenote messsage");
+                }
+            });
     }
 
     auto SendPrenoteMenu::ResponseValid(nlohmann::json& response) -> bool

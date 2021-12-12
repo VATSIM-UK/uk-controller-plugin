@@ -5,18 +5,19 @@
 #include "MissedApproachConfigurationDialog.h"
 #include "MissedApproachModule.h"
 #include "MissedApproachOptions.h"
-#include "MissedApproachRenderOptions.h"
 #include "MissedApproachRenderer.h"
 #include "MissedApproachUserSettingHandler.h"
 #include "NewMissedApproachPushEventHandler.h"
 #include "RemoveExpiredMissedApproaches.h"
 #include "ToggleMissedApproachButton.h"
 #include "TriggerMissedApproach.h"
+#include "TriggerMissedApproachMessageHandler.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "integration/InboundIntegrationMessageHandler.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
@@ -53,12 +54,17 @@ namespace UKControllerPlugin::MissedApproach {
         collection = std::make_shared<MissedApproachCollection>();
         container.timedHandler->RegisterEvent(
             std::make_shared<RemoveExpiredMissedApproaches>(collection), REMOVE_APPROACHES_FREQUENCY);
-        container.pushEventProcessors->AddProcessor(
-            std::make_shared<NewMissedApproachPushEventHandler>(collection, audioAlert));
+        container.pushEventProcessors->AddProcessor(std::make_shared<NewMissedApproachPushEventHandler>(
+            collection, audioAlert, *container.integrationModuleContainer->outboundMessageHandler));
 
         // Trigger missed approach
         const auto trigger = std::make_shared<TriggerMissedApproach>(
-            collection, *container.windows, *container.api, *container.airfieldOwnership, audioAlert);
+            collection,
+            *container.windows,
+            *container.api,
+            *container.airfieldOwnership,
+            audioAlert,
+            *container.integrationModuleContainer->outboundMessageHandler);
         triggerHandler = trigger;
         TagFunction triggerMissedApproachTagFunction(
             TRIGGER_MISSED_APPROACH_TAG_FUNCTION_ID,
@@ -79,6 +85,10 @@ namespace UKControllerPlugin::MissedApproach {
             reinterpret_cast<DLGPROC>(dialog->WndProc), // NOLINT
             reinterpret_cast<LPARAM>(dialog.get()),     // NOLINT
             dialog});
+
+        // Message handler
+        auto messageHandler = std::make_shared<TriggerMissedApproachMessageHandler>(*triggerHandler, *container.plugin);
+        container.integrationModuleContainer->inboundMessageHandler->AddProcessor(messageHandler);
     }
 
     void BootstrapRadarScreen(

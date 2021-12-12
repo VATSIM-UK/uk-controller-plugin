@@ -1,4 +1,3 @@
-#include "airfield/AirfieldCollection.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
@@ -26,12 +25,6 @@ namespace UKControllerPluginTest::Bootstrap {
         PersistenceContainer container;
         NiceMock<MockDependencyLoader> dependency;
     };
-
-    TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesAirfields)
-    {
-        CollectionBootstrap::BootstrapPlugin(this->container, this->dependency);
-        EXPECT_EQ(0, container.airfields->GetSize());
-    }
 
     TEST_F(CollectionBootstrapTest, BootstrapPluginCreatesFlightplans)
     {

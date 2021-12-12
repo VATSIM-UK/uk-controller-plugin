@@ -67,7 +67,7 @@ namespace UKControllerPluginTest {
         {
             // Not relevant
             auto hierarchy = std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>();
-            hierarchy->AddPosition(*controller2);
+            hierarchy->AddPosition(controller2);
             auto notification1 = std::make_unique<UKControllerPlugin::Notifications::Notification>(
                 1,
                 "abc",
@@ -80,7 +80,7 @@ namespace UKControllerPluginTest {
 
             // Relevant but read
             auto hierarchy2 = std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>();
-            hierarchy2->AddPosition(*controller1);
+            hierarchy2->AddPosition(controller1);
             auto notification2 = std::make_unique<UKControllerPlugin::Notifications::Notification>(
                 1,
                 "abc",
@@ -94,7 +94,7 @@ namespace UKControllerPluginTest {
 
             // Relevant and unread
             auto hierarchy3 = std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>();
-            hierarchy3->AddPosition(*controller1);
+            hierarchy3->AddPosition(controller1);
             auto notification3 = std::make_unique<UKControllerPlugin::Notifications::Notification>(
                 1,
                 "abc",

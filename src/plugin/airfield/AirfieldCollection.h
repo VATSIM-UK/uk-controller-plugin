@@ -17,15 +17,13 @@ namespace UKControllerPlugin::Airfield {
         AirfieldCollection(AirfieldCollection&&) noexcept;
         auto operator=(const AirfieldCollection&) -> AirfieldCollection& = delete;
         auto operator=(AirfieldCollection&&) noexcept -> AirfieldCollection&;
-        void AddAirfield(std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel> airfield);
-        [[nodiscard]] auto FetchAirfieldByIcao(const std::string& icao) const -> const AirfieldModel&;
+        void AddAirfield(std::shared_ptr<UKControllerPlugin::Airfield::AirfieldModel> airfield);
+        [[nodiscard]] auto FetchAirfieldByIcao(const std::string& icao) const -> std::shared_ptr<AirfieldModel>;
         void ForEach(const std::function<void(const AirfieldModel& airfield)>& callback) const;
         [[nodiscard]] auto GetSize() const -> size_t;
 
         private:
-        static auto IsHomeAirfield(const std::string& icao) -> bool;
-
         // A map of ICAO code to airfield.
-        std::map<std::string, std::unique_ptr<UKControllerPlugin::Airfield::AirfieldModel>> airfieldMap;
+        std::map<int, std::shared_ptr<AirfieldModel>> airfieldMap;
     };
 } // namespace UKControllerPlugin::Airfield

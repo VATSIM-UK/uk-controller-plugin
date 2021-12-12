@@ -21,13 +21,12 @@ namespace UKControllerPlugin::Notifications {
             return repository;
         }
 
-        const Controller::ControllerPositionHierarchyFactory hierarchyFactory(*container.controllerPositions);
-        if (!NotificationsValid(allNotifications, hierarchyFactory)) {
+        if (!NotificationsValid(allNotifications, *container.controllerHierarchyFactory)) {
             LogError("API returned invalid notifications");
             return repository;
         }
 
-        ProcessNotifications(*repository, allNotifications, hierarchyFactory);
+        ProcessNotifications(*repository, allNotifications, *container.controllerHierarchyFactory);
         LogInfo("Loaded " + std::to_string(repository->Count()) + " notifications");
 
         nlohmann::json unreadNotifications;
@@ -60,7 +59,7 @@ namespace UKControllerPlugin::Notifications {
                 notification->at("body").get<std::string>(),
                 ParseTimeString(notification->at("valid_from")),
                 ParseTimeString(notification->at("valid_to")),
-                hierarchyFactory.CreateFromJson(notification->at("controllers")),
+                hierarchyFactory.CreateFromJsonByCallsign(notification->at("controllers")),
                 notification->at("link").is_null() ? "" : notification->at("link").get<std::string>()));
         }
     }
@@ -114,7 +113,7 @@ namespace UKControllerPlugin::Notifications {
         -> bool
     {
         try {
-            hierarchyFactory.CreateFromJson(controllers);
+            static_cast<void>(hierarchyFactory.CreateFromJsonByCallsign(controllers));
             return true;
         } catch (...) {
             return false;

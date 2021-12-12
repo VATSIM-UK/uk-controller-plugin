@@ -1,6 +1,10 @@
 #pragma once
 #include "push/PushEventProcessorInterface.h"
 
+namespace UKControllerPlugin::Integration {
+    class OutboundIntegrationEventHandler;
+} // namespace UKControllerPlugin::Integration
+
 namespace UKControllerPlugin::MissedApproach {
     class MissedApproachCollection;
     class MissedApproachAudioAlert;
@@ -14,7 +18,8 @@ namespace UKControllerPlugin::MissedApproach {
         public:
         NewMissedApproachPushEventHandler(
             std::shared_ptr<MissedApproachCollection> missedApproaches,
-            std::shared_ptr<const MissedApproachAudioAlert> audioAlert);
+            std::shared_ptr<const MissedApproachAudioAlert> audioAlert,
+            const Integration::OutboundIntegrationEventHandler& integrationEvents);
         void ProcessPushEvent(const Push::PushEvent& message) override;
         [[nodiscard]] auto GetPushEventSubscriptions() const -> std::set<Push::PushEventSubscription> override;
 
@@ -27,5 +32,8 @@ namespace UKControllerPlugin::MissedApproach {
 
         // For alerting the user
         const std::shared_ptr<const MissedApproachAudioAlert> audioAlert;
+
+        // For triggering integration events
+        const Integration::OutboundIntegrationEventHandler& integrationEvents;
     };
 } // namespace UKControllerPlugin::MissedApproach

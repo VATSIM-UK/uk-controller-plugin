@@ -1,20 +1,25 @@
 #include "airfield/AirfieldCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dialog/DialogManager.h"
-#include "euroscope/UserSettingAwareCollection.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "euroscope/UserSettingAwareCollection.h"
+#include "integration/IntegrationPersistenceContainer.h"
+#include "integration/InboundIntegrationMessageHandler.h"
+#include "integration/IntegrationServer.h"
 #include "missedapproach/MissedApproachModule.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "push/PushEventProcessorCollection.h"
-#include "timedevent/TimedEventCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Integration::InboundIntegrationMessageHandler;
+using UKControllerPlugin::Integration::IntegrationPersistenceContainer;
 using UKControllerPlugin::MissedApproach::BootstrapPlugin;
 using UKControllerPlugin::MissedApproach::BootstrapRadarScreen;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -36,6 +41,8 @@ namespace UKControllerPluginTest::MissedApproach {
             container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
             container.dialogManager = std::make_unique<DialogManager>(mockProvider);
             container.airfields = std::make_unique<AirfieldCollection>();
+            container.integrationModuleContainer = std::make_unique<IntegrationPersistenceContainer>(
+                nullptr, std::make_shared<InboundIntegrationMessageHandler>(nullptr), nullptr);
         }
 
         testing::NiceMock<MockDialogProvider> mockProvider;
@@ -74,6 +81,12 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         BootstrapPlugin(container);
         EXPECT_EQ(1, container.dialogManager->CountDialogs());
+    }
+
+    TEST_F(MissedApproachModuleTest, ItRegistersTheInboundMessageHandler)
+    {
+        BootstrapPlugin(container);
+        EXPECT_EQ(1, container.integrationModuleContainer->inboundMessageHandler->CountProcessors());
     }
 
     TEST_F(MissedApproachModuleTest, ItRegistersTheRenderers)
