@@ -7,8 +7,7 @@ set(test__airfield
     "airfield/AirfieldCollectionFactoryTest.cpp"
     "airfield/AirfieldCollectionTest.cpp"
     "airfield/AirfieldModelTest.cpp"
-    "sid/NormaliseSidTest.cpp"
-        airfield/AirfieldModuleTest.cpp)
+    airfield/AirfieldModuleTest.cpp)
 source_group("test\\airfield" FILES ${test__airfield})
 
 set(test__api

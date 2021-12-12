@@ -746,8 +746,6 @@ set(src__sid
     "sid/SidModule.h"
     "sid/StandardInstrumentDeparture.cpp"
     "sid/StandardInstrumentDeparture.h"
-    "sid/NormaliseSid.cpp"
-    "sid/NormaliseSid.h"
 )
 source_group("src\\sid" FILES ${src__sid})
 

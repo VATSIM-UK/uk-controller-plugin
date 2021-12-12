@@ -61,6 +61,22 @@ namespace UKControllerPluginTest::Sid {
         EXPECT_EQ(this->sid2, this->sids.GetByAirfieldAndIdentifier("EGLL", "TEST1B"));
     }
 
+    TEST_F(SidCollectionTest, ItReturnsASidHandlingDeprecationsInTheSectorfile)
+    {
+        this->sids.AddSid(this->sid1);
+        this->sids.AddSid(this->sid2);
+        this->sids.AddSid(this->sid3);
+        EXPECT_EQ(this->sid2, this->sids.GetByAirfieldAndIdentifier("EGLL", "#TEST1B"));
+    }
+
+    TEST_F(SidCollectionTest, ItReturnsNullPtrIfNoEuroscopeSid)
+    {
+        this->sids.AddSid(this->sid1);
+        this->sids.AddSid(this->sid2);
+        this->sids.AddSid(this->sid3);
+        EXPECT_EQ(nullptr, this->sids.GetByAirfieldAndIdentifier("EGLL", ""));
+    }
+
     TEST_F(SidCollectionTest, ItReturnsASidByFlightplan)
     {
         testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;

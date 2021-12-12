@@ -1,5 +1,4 @@
 #pragma once
-#include "sid/NormaliseSid.h"
 #include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "euroscope/UserSettingAwareInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
@@ -87,9 +86,6 @@ namespace UKControllerPlugin::InitialAltitude {
 
         // For checking how long we've been logged in
         const Controller::Login& login;
-
-        // Class for parsing SIDs and removing deprecation warnings.
-        const Sid::NormaliseSid normalise;
 
         // So we can get flightplans after deferred events
         Euroscope::EuroscopePluginLoopbackInterface& plugin;

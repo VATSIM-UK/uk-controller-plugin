@@ -22,6 +22,8 @@ namespace UKControllerPlugin::Sid {
             -> std::shared_ptr<StandardInstrumentDeparture>;
 
         private:
+        [[nodiscard]] auto NormaliseIdentifier(const std::string& identifier) const -> std::string;
+
         // All the SIDs
         std::set<std::shared_ptr<StandardInstrumentDeparture>> sids;
     };
