@@ -17,7 +17,7 @@ namespace UKControllerPluginTest::Airfield {
         public:
         AirfieldModelTest()
             : prenotes({std::make_shared<PairedAirfieldPrenote>(1, 2, 3)}),
-              airfield(1, "EGKK", std::make_unique<ControllerPositionHierarchy>(), prenotes),
+              airfield(1, "EGKK", std::make_unique<ControllerPositionHierarchy>(), prenotes, 4),
               airfield2(2, "EGLL", std::make_unique<ControllerPositionHierarchy>()),
               airfield3(1, "EGBB", std::make_unique<ControllerPositionHierarchy>())
         {
@@ -37,6 +37,26 @@ namespace UKControllerPluginTest::Airfield {
     TEST_F(AirfieldModelTest, ItHasAnIcao)
     {
         EXPECT_EQ("EGKK", airfield.Icao());
+    }
+
+    TEST_F(AirfieldModelTest, ItHasAHandoffIdIfPresent)
+    {
+        EXPECT_TRUE(airfield.HasDefaultHandoff());
+    }
+
+    TEST_F(AirfieldModelTest, ItReturnsAHandoffIdIfPresent)
+    {
+        EXPECT_EQ(4, airfield.DefaultHandoff());
+    }
+
+    TEST_F(AirfieldModelTest, ItDoesntHaveHandoffIdIfNotPresent)
+    {
+        EXPECT_FALSE(airfield2.HasDefaultHandoff());
+    }
+
+    TEST_F(AirfieldModelTest, ItDoesntHaveAHandoffIdIfNotPresent)
+    {
+        EXPECT_EQ(0, airfield2.DefaultHandoff());
     }
 
     TEST_F(AirfieldModelTest, GetOwnershipPresedenceReturnsOwnership)
