@@ -112,7 +112,7 @@ namespace UKControllerPluginTest::Handoff {
     TEST_F(DepartureHandoffResolverTest, ItReturnsResolvedAirfieldHandoffIfNoMatchingSid)
     {
         this->callsigns.AddCallsign(ActiveCallsign("EGKK_DEL", "Testy McTest", *position1, false));
-        this->callsigns.AddCallsign(ActiveCallsign("EGKK_GND", "Testy McTest", *position2, true));
+        this->callsigns.AddCallsign(ActiveCallsign("EGKK_GND", "Testy McTest", *position2, false));
 
         auto hierarchy2 = std::make_shared<ControllerPositionHierarchy>();
         hierarchy2->AddPosition(position2);
