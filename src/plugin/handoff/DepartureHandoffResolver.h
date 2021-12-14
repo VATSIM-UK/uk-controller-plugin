@@ -12,6 +12,8 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin::Handoff {
     class FlightplanSidHandoffMapper;
+    class FlightplanAirfieldHandoffMapper;
+    struct HandoffOrder;
     struct ResolvedHandoff;
 
     /**
@@ -22,19 +24,25 @@ namespace UKControllerPlugin::Handoff {
     {
         public:
         DepartureHandoffResolver(
-            std::shared_ptr<FlightplanSidHandoffMapper> mapper,
+            const FlightplanSidHandoffMapper& sidMapper,
+            const FlightplanAirfieldHandoffMapper& airfieldMapper,
             const Controller::ActiveCallsignCollection& activeCallsigns);
 
         [[nodiscard]] auto Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
             -> std::shared_ptr<ResolvedHandoff>;
 
         private:
+        [[nodiscard]] auto ResolveHandoff(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+            -> std::shared_ptr<HandoffOrder>;
         [[nodiscard]] static auto ResolveToUnicom(
             const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             std::shared_ptr<Controller::ControllerPositionHierarchy> handoffOrder) -> std::shared_ptr<ResolvedHandoff>;
 
         // Maps flightplans to sids to handoffs
-        const std::shared_ptr<FlightplanSidHandoffMapper> mapper;
+        const FlightplanSidHandoffMapper& sidMapper;
+
+        // Maps flightplans to airfields to handoffs
+        const FlightplanAirfieldHandoffMapper& airfieldMapper;
 
         // All the active controllers
         const Controller::ActiveCallsignCollection& activeCallsigns;

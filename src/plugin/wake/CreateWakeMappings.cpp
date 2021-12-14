@@ -9,7 +9,7 @@ using UKControllerPlugin::Wake::WakeCategoryMapper;
 namespace UKControllerPlugin::Wake {
 
     /*
-        Create the mapper from JSON data
+        Create the sidMapper from JSON data
     */
     auto CreateWakeMappings(const nlohmann::json& jsonData, UserMessager& messager, const std::string type)
         -> WakeCategoryMapper

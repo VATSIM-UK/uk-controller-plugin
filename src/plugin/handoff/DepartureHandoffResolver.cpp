@@ -1,4 +1,5 @@
 #include "DepartureHandoffResolver.h"
+#include "FlightplanAirfieldHandoffMapper.h"
 #include "FlightplanSidHandoffMapper.h"
 #include "HandoffOrder.h"
 #include "ResolvedHandoff.h"
@@ -12,15 +13,17 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 namespace UKControllerPlugin::Handoff {
 
     DepartureHandoffResolver::DepartureHandoffResolver(
-        std::shared_ptr<FlightplanSidHandoffMapper> mapper, const Controller::ActiveCallsignCollection& activeCallsigns)
-        : mapper(std::move(mapper)), activeCallsigns(activeCallsigns)
+        const FlightplanSidHandoffMapper& sidMapper,
+        const FlightplanAirfieldHandoffMapper& airfieldMapper,
+        const Controller::ActiveCallsignCollection& activeCallsigns)
+        : sidMapper(sidMapper), airfieldMapper(airfieldMapper), activeCallsigns(activeCallsigns)
     {
     }
 
     auto DepartureHandoffResolver::Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
         -> std::shared_ptr<ResolvedHandoff>
     {
-        const auto handoff = this->mapper->MapForFlightplan(flightplan);
+        const auto handoff = this->ResolveHandoff(flightplan);
         if (!handoff) {
             return ResolveToUnicom(flightplan, std::make_shared<ControllerPositionHierarchy>());
         }
@@ -47,5 +50,12 @@ namespace UKControllerPlugin::Handoff {
         std::shared_ptr<Controller::ControllerPositionHierarchy> handoffOrder) -> std::shared_ptr<ResolvedHandoff>
     {
         return std::make_shared<ResolvedHandoff>(flightplan.GetCallsign(), UNICOM_FREQUENCY, handoffOrder);
+    }
+
+    auto DepartureHandoffResolver::ResolveHandoff(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+        -> std::shared_ptr<HandoffOrder>
+    {
+        const auto sidHandoff = this->sidMapper.MapForFlightplan(flightplan);
+        return sidHandoff != nullptr ? sidHandoff : this->airfieldMapper.MapForFlightplan(flightplan);
     }
 } // namespace UKControllerPlugin::Handoff
