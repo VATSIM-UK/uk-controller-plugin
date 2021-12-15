@@ -1,5 +1,25 @@
 # UK Controller Plugin Changelog
 
+# [3.10.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.9.0...3.10.0) (2021-12-12)
+
+
+### Features
+
+* **missedapproach:** Allow integrations to trigger missed approaches ([#373](https://github.com/VATSIM-UK/uk-controller-plugin/issues/373)) ([8614508](https://github.com/VATSIM-UK/uk-controller-plugin/commit/861450803b17a355b1d357d2b4b5597cc02796dd))
+
+# [3.9.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.8.1...3.9.0) (2021-11-28)
+
+
+### Bug Fixes
+
+* **srd:** Cater for longer routes in SRD dialog ([#364](https://github.com/VATSIM-UK/uk-controller-plugin/issues/364)) ([32136de](https://github.com/VATSIM-UK/uk-controller-plugin/commit/32136de150d31f76bc5a2d492d1b89e51bb3d151)), closes [#358](https://github.com/VATSIM-UK/uk-controller-plugin/issues/358)
+
+
+### Features
+
+* **srd:** allow srd searches by flight level ([#360](https://github.com/VATSIM-UK/uk-controller-plugin/issues/360)) ([e7b1899](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e7b1899d57d1f4dcb48e82270ad79a21d728e44b)), closes [#358](https://github.com/VATSIM-UK/uk-controller-plugin/issues/358)
+* **srd:** Indicate whether a route contains free route airspace ([#363](https://github.com/VATSIM-UK/uk-controller-plugin/issues/363)) ([ab0b62a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ab0b62a63b0e877ff712c690e1d741bc80b0ce34)), closes [#358](https://github.com/VATSIM-UK/uk-controller-plugin/issues/358)
+
 ## [3.8.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.8.0...3.8.1) (2021-11-14)
 
 

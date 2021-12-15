@@ -1,6 +1,5 @@
 #pragma once
 #include "flightplan/FlightPlanEventHandlerInterface.h"
-#include "prenote/AbstractPrenote.h"
 
 namespace UKControllerPlugin::Euroscope {
     class UserSetting;

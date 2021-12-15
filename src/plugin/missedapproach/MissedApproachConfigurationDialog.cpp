@@ -70,14 +70,14 @@ namespace UKControllerPlugin::MissedApproach {
         airfieldItem.iSubItem = 0;
         this->airfields.ForEach(
             [&airfieldItem, &airfieldList, &selectedAirfields](const Airfield::AirfieldModel& airfield) {
-                std::wstring text = HelperFunctions::ConvertToWideString(airfield.GetIcao());
+                std::wstring text = HelperFunctions::ConvertToWideString(airfield.Icao());
                 airfieldItem.pszText = (LPWSTR)text.c_str();
                 ListView_InsertItem(airfieldList, &airfieldItem);
 
                 ListView_SetCheckState(
                     airfieldList,
                     airfieldItem.iItem,
-                    std::find(selectedAirfields.cbegin(), selectedAirfields.cend(), airfield.GetIcao()) !=
+                    std::find(selectedAirfields.cbegin(), selectedAirfields.cend(), airfield.Icao()) !=
                         selectedAirfields.end());
 
                 airfieldItem.iItem++;

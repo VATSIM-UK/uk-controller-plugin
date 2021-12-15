@@ -1,3 +1,4 @@
+#include "airfield/AirfieldModule.h"
 #include "api/ApiAuthChecker.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
@@ -14,6 +15,7 @@
 #include "euroscope/PluginUserSettingBootstrap.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
 #include "flightplan/FlightplanStorageBootstrap.h"
+#include "flightrule/FlightRuleModule.h"
 #include "handoff/HandoffModule.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "hold/HoldModule.h"
@@ -183,8 +185,10 @@ namespace UKControllerPlugin {
 
         // Boostrap all the modules at a plugin level
         Controller::BootstrapPlugin(*this->container, loader);
+        Airfield::BootstrapPlugin(*this->container, loader);
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
+        FlightRules::BootstrapPlugin(*this->container, loader);
         AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
         Sid::BootstrapPlugin(*this->container, loader);
         Navaids::BootstrapPlugin(*this->container, loader);

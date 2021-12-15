@@ -78,7 +78,7 @@ namespace UKControllerPluginTest::Controller {
         auto collection = ControllerPositionCollectionFactory::Create(dependency);
         EXPECT_EQ(3, collection->GetSize());
 
-        ControllerPosition positionNormal = collection->FetchPositionByCallsign("EGAA_R_APP");
+        ControllerPosition positionNormal = *collection->FetchPositionByCallsign("EGAA_R_APP");
         EXPECT_EQ(1, positionNormal.GetId());
         EXPECT_EQ("EGAA_R_APP", positionNormal.GetCallsign());
         EXPECT_EQ(121.750, positionNormal.GetFrequency());
@@ -88,7 +88,7 @@ namespace UKControllerPluginTest::Controller {
         EXPECT_TRUE(positionNormal.SendsPrenoteMessages());
         EXPECT_TRUE(positionNormal.ReceivesPrenoteMessages());
 
-        ControllerPosition positionAllZeroFrequency = collection->FetchPositionByCallsign("EGAA_TWR");
+        ControllerPosition positionAllZeroFrequency = *collection->FetchPositionByCallsign("EGAA_TWR");
         EXPECT_EQ(2, positionAllZeroFrequency.GetId());
         EXPECT_EQ("EGAA_TWR", positionAllZeroFrequency.GetCallsign());
         EXPECT_EQ(123.000, positionAllZeroFrequency.GetFrequency());
@@ -98,7 +98,7 @@ namespace UKControllerPluginTest::Controller {
         EXPECT_TRUE(positionAllZeroFrequency.SendsPrenoteMessages());
         EXPECT_FALSE(positionAllZeroFrequency.ReceivesPrenoteMessages());
 
-        ControllerPosition positionNoTopDown = collection->FetchPositionByCallsign("EGAA_GND");
+        ControllerPosition positionNoTopDown = *collection->FetchPositionByCallsign("EGAA_GND");
         EXPECT_EQ(3, positionNoTopDown.GetId());
         EXPECT_EQ("EGAA_GND", positionNoTopDown.GetCallsign());
         EXPECT_EQ(123.450, positionNoTopDown.GetFrequency());

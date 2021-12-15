@@ -26,13 +26,16 @@ namespace UKControllerPluginTest::Sid {
                  {"identifier", "TEST1Y"},
                  {"initial_altitude", 6000},
                  {"initial_heading", 350},
+                 {"handoff", 5},
+                 {"prenotes", nlohmann::json::array({1, 2})},
              }),
-             nlohmann::json::object({
-                 {"airfield", "EGGD"},
-                 {"identifier", "TEST1Y"},
-                 {"initial_altitude", 6000},
-                 {"initial_heading", nlohmann::json::value_t::null},
-             })});
+             nlohmann::json::object(
+                 {{"airfield", "EGGD"},
+                  {"identifier", "TEST1Y"},
+                  {"initial_altitude", 6000},
+                  {"initial_heading", nlohmann::json::value_t::null},
+                  {"handoff", 5},
+                  {"prenotes", nlohmann::json::array({1, 2})}})});
 
         EXPECT_CALL(dependencyLoader, LoadDependency("DEPENDENCY_SIDS", nlohmann::json::array()))
             .Times(1)

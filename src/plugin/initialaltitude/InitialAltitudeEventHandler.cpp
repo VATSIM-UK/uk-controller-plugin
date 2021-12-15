@@ -10,7 +10,6 @@
 #include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 
-using UKControllerPlugin::Airfield::NormaliseSid;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::Login;
@@ -180,8 +179,7 @@ namespace UKControllerPlugin::InitialAltitude {
     auto InitialAltitudeEventHandler::GetSidForFlight(EuroScopeCFlightPlanInterface& flightplan)
         -> std::shared_ptr<StandardInstrumentDeparture>
     {
-        return this->sids.GetByAirfieldAndIdentifier(
-            flightplan.GetOrigin(), normalise.StripSidDeprecation(flightplan.GetSidName()));
+        return this->sids.GetByAirfieldAndIdentifier(flightplan.GetOrigin(), flightplan.GetSidName());
     }
 
     /*

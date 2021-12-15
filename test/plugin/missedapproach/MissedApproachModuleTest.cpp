@@ -110,6 +110,12 @@ namespace UKControllerPluginTest::MissedApproach {
         EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9021));
     }
 
+    TEST_F(MissedApproachModuleTest, ItRegistersTheInboundMessageHandler)
+    {
+        BootstrapPlugin(container);
+        EXPECT_EQ(1, container.integrationModuleContainer->inboundMessageHandler->CountProcessors());
+    }
+
     TEST_F(MissedApproachModuleTest, ItRegistersTheRenderers)
     {
         BootstrapRadarScreen(container, renderers, configurableDisplays, asrHandlers);

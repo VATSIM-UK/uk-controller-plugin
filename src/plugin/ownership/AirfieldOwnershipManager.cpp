@@ -6,6 +6,7 @@
 #include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
+#include "controller/ControllerPositionHierarchy.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldModel;
@@ -35,9 +36,9 @@ namespace UKControllerPlugin::Ownership {
         Returns a set of the airfields owned by a given contrroller.
     */
     auto AirfieldOwnershipManager::GetOwnedAirfields(const std::string& callsign) const
-        -> std::vector<std::reference_wrapper<const AirfieldModel>>
+        -> std::vector<std::shared_ptr<Airfield::AirfieldModel>>
     {
-        std::vector<std::reference_wrapper<const AirfieldModel>> ownedAirfields;
+        std::vector<std::shared_ptr<AirfieldModel>> ownedAirfields;
 
         if (!this->activeCallsigns.CallsignActive(callsign)) {
             return ownedAirfields;
@@ -55,15 +56,12 @@ namespace UKControllerPlugin::Ownership {
     */
     void AirfieldOwnershipManager::RefreshOwner(const std::string& icao)
     {
-        std::vector<std::string> topdownOrder;
-        try {
-            topdownOrder = this->airfields.FetchAirfieldByIcao(icao).GetOwnershipPresedence();
-        } catch (std::out_of_range&) {
-            // Nothing we can do if we can't find the airfield.
+        auto airfield = this->airfields.FetchAirfieldByIcao(icao);
+        if (!airfield) {
             return;
         }
 
-        const auto activeControllers = this->GetActiveControllersInAirfieldTopdownOrder(icao, topdownOrder);
+        const auto activeControllers = this->GetActiveControllersInAirfieldTopdownOrder(icao, airfield);
         if (activeControllers.empty()) {
             LogInfo("Airfield " + icao + " is now uncontrolled");
             this->serviceProviders->FlushForAirfield(icao);
@@ -120,12 +118,12 @@ namespace UKControllerPlugin::Ownership {
     }
 
     auto AirfieldOwnershipManager::GetActiveControllersInAirfieldTopdownOrder(
-        const std::string& icao, const std::vector<std::string>& topDownOrder) -> std::vector<std::string>
+        const std::string& icao, const std::shared_ptr<Airfield::AirfieldModel>& airfield) -> std::vector<std::string>
     {
         std::vector<std::string> activeControllers;
-        for (const auto& controller : topDownOrder) {
-            if (this->activeCallsigns.PositionActive(controller)) {
-                activeControllers.push_back(controller);
+        for (const auto& controller : airfield->TopDownOrder()) {
+            if (this->activeCallsigns.PositionActive(controller->GetCallsign())) {
+                activeControllers.push_back(controller->GetCallsign());
             }
         }
 

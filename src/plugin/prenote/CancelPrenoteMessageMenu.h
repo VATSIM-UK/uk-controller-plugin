@@ -37,7 +37,7 @@ namespace UKControllerPlugin::Prenote {
             const Api::ApiInterface& api,
             int callbackId);
         void DisplayPrenoteToDeleteMenu(Euroscope::EuroScopeCFlightPlanInterface& flightplan, const POINT& mousePos);
-        void ControllerForPrenoteDeletionSelected(std::string callsign);
+        void ControllerForPrenoteDeletionSelected(const std::string& callsign);
 
         private:
         // All active prenote messages

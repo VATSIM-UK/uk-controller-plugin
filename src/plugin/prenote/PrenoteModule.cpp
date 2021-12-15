@@ -1,19 +1,19 @@
 #include "AcknowledgePrenoteMessage.h"
 #include "CancelPrenoteMessageMenu.h"
-#include "DeparturePrenote.h"
 #include "NewPrenotePushEventHandler.h"
 #include "PendingPrenoteList.h"
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
-#include "PrenoteFactory.h"
 #include "PrenoteMessageCollection.h"
 #include "PrenoteMessageStatusView.h"
 #include "PrenoteMessageTimeout.h"
 #include "PrenoteModule.h"
 #include "PrenoteService.h"
-#include "PrenoteServiceFactory.h"
 #include "PrenoteStatusIndicatorTagItem.h"
+#include "PublishedPrenoteCollection.h"
+#include "PublishedPrenoteCollectionFactory.h"
+#include "PublishedPrenoteMapper.h"
 #include "SendPrenoteMenu.h"
 #include "TogglePendingPrenoteList.h"
 #include "TriggerPrenoteMessageStatusView.h"
@@ -43,8 +43,6 @@ using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Prenote::DeparturePrenote;
 using UKControllerPlugin::Prenote::PrenoteEventHandler;
-using UKControllerPlugin::Prenote::PrenoteFactory;
-using UKControllerPlugin::Prenote::PrenoteServiceFactory;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Tag::TagItemCollection;
@@ -62,24 +60,25 @@ namespace UKControllerPlugin::Prenote {
 
     std::shared_ptr<PrenoteMessageCollection> messages;     // NOLINT
     std::shared_ptr<AcknowledgePrenoteMessage> acknowledge; // NOLINT
+    std::unique_ptr<PublishedPrenoteCollection> prenotes;   // NOLINT
+    std::unique_ptr<PublishedPrenoteMapper> mapper;         // NOLINT
 
     void PrenoteModule::BootstrapPlugin(PersistenceContainer& persistence, DependencyLoaderInterface& dependency)
     {
         // Prenote reminders bootstrap
-        nlohmann::json prenotes = dependency.LoadDependency(GetDependencyKey(), nlohmann::json::array());
+        prenotes = CreatePublishedPrenoteCollection(
+            dependency.LoadDependency(GetDependencyKey(), nlohmann::json::array()),
+            *persistence.controllerHierarchyFactory);
+
+        mapper = std::make_unique<PublishedPrenoteMapper>(
+            *prenotes, *persistence.airfields, *persistence.sids, *persistence.flightRules);
 
         ControllerPositionHierarchyFactory hierarchyFactory(*persistence.controllerPositions);
-        PrenoteFactory prenoteFactory(hierarchyFactory);
-        PrenoteServiceFactory handlerFactory(prenoteFactory, *persistence.userMessager);
 
-        try {
-            // Register handler
-            persistence.flightplanHandler->RegisterHandler(std::make_shared<PrenoteEventHandler>(
-                handlerFactory.Create(*persistence.airfieldOwnership, *persistence.activeCallsigns, prenotes),
-                *persistence.pluginUserSettingHandler));
-        } catch (...) {
-            // If something goes wrong, someone else will log what.
-        }
+        persistence.flightplanHandler->RegisterHandler(std::make_shared<PrenoteEventHandler>(
+            std::make_unique<PrenoteService>(
+                *mapper, *persistence.airfieldOwnership, *persistence.activeCallsigns, *persistence.userMessager),
+            *persistence.pluginUserSettingHandler));
 
         // Electronic prenote messages
         messages = std::make_shared<PrenoteMessageCollection>();
@@ -220,6 +219,6 @@ namespace UKControllerPlugin::Prenote {
 
     auto PrenoteModule::GetDependencyKey() -> std::string
     {
-        return "DEPENDENCY_PRENOTE";
+        return "DEPENDENCY_PRENOTES_V2";
     }
 } // namespace UKControllerPlugin::Prenote

@@ -59,32 +59,10 @@ namespace UKControllerPluginTest::Prenote {
         PersistenceContainer container;
     };
 
-    TEST_F(PrenoteModuleTest, BootstrapPluginDoesNothingIfNoDependency)
-    {
-        PrenoteModule::BootstrapPlugin(container, dependency);
-        EXPECT_EQ(0, container.flightplanHandler->CountHandlers());
-    }
-
-    TEST_F(PrenoteModuleTest, DoesNothingIfErrorParsingPrenotes)
-    {
-        ON_CALL(this->dependency, LoadDependency("DEPENDENCY_PRENOTE", nlohmann::json::array()))
-            .WillByDefault(Return("{}"_json));
-
-        PrenoteModule::BootstrapPlugin(container, dependency);
-        EXPECT_EQ(0, container.flightplanHandler->CountHandlers());
-    }
-
     TEST_F(PrenoteModuleTest, BootstrapPluginAddsHandlerToFlightplanEvents)
     {
-        nlohmann::json json;
-        json[0] = {};
-        json[0]["type"] = "sid";
-        json[0]["airfield"] = "EGKK";
-        json[0]["departure"] = "BIG2X";
-        json[0]["recipient"] = {"EGKK_GND", "EGKK_TWR"};
-
-        ON_CALL(this->dependency, LoadDependency("DEPENDENCY_PRENOTE", nlohmann::json::array()))
-            .WillByDefault(Return(json));
+        ON_CALL(this->dependency, LoadDependency("DEPENDENCY_PRENOTES_V2", nlohmann::json::array()))
+            .WillByDefault(Return(nlohmann::json::array()));
 
         PrenoteModule::BootstrapPlugin(container, dependency);
         EXPECT_EQ(1, container.flightplanHandler->CountHandlers());

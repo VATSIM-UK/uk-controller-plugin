@@ -3,7 +3,6 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "handoff/HandoffModule.h"
 #include "handoff/HandoffCollection.h"
-#include "integration/IntegrationPersistenceContainer.h"
 #include "integration/IntegrationServer.h"
 #include "tag/TagItemCollection.h"
 
@@ -34,12 +33,6 @@ namespace UKControllerPluginTest::Handoff {
         PersistenceContainer container;
         NiceMock<MockDependencyLoader> dependencyLoader;
     };
-
-    TEST_F(HandoffModuleTest, TestItCreatesHandoffCollection)
-    {
-        BootstrapPlugin(this->container, this->dependencyLoader);
-        ASSERT_EQ(0, this->container.handoffs->CountHandoffs());
-    }
 
     TEST_F(HandoffModuleTest, TestItRegistersTagItem)
     {

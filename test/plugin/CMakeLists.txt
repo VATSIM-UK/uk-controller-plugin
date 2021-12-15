@@ -7,8 +7,7 @@ set(test__airfield
     "airfield/AirfieldCollectionFactoryTest.cpp"
     "airfield/AirfieldCollectionTest.cpp"
     "airfield/AirfieldModelTest.cpp"
-    "airfield/NormaliseSidTest.cpp"
-)
+    airfield/AirfieldModuleTest.cpp)
 source_group("test\\airfield" FILES ${test__airfield})
 
 set(test__api
@@ -107,13 +106,17 @@ set(test__flightplan
 )
 source_group("test\\flightplan" FILES ${test__flightplan})
 
+set(test__flightrule
+        flightrule/FlightRuleCollectionTest.cpp flightrule/FlightRuleCollectionFactoryTest.cpp flightrule/FlightRuleModuleTest.cpp)
+source_group("test\\flightrule" FILES ${test__flightrule})
+
 set(test__handoff
     "handoff/HandoffCollectionFactoryTest.cpp"
     "handoff/HandoffCollectionTest.cpp"
     "handoff/HandoffEventHandlerTest.cpp"
     "handoff/HandoffFrequencyUpdatedEventTest.cpp"
     "handoff/HandoffModuleTest.cpp"
-)
+        handoff/FlightplanSidHandoffMapperTest.cpp handoff/HandoffCacheTest.cpp handoff/DepartureHandoffResolverTest.cpp)
 source_group("test\\handoff" FILES ${test__handoff})
 
 set(test__headings
@@ -258,7 +261,10 @@ set(test__missedapproach
         missedapproach/MissedApproachAcknowledgedUserMessageTest.cpp
         missedapproach/MissedApproachAcknowledgedPushEventProcessorTest.cpp
         missedapproach/MissedApproachIndicatorTest.cpp
-        missedapproach/AcknowledgeMissedApproachTagFunctionTest.cpp)
+        missedapproach/AcknowledgeMissedApproachTagFunctionTest.cpp
+        missedapproach/MissedApproachTriggeredMessageTest.cpp 
+        missedapproach/TriggerMissedApproachMessageHandlerTest.cpp)
+
 source_group("test\\missedapproach" FILES ${test__missedapproach})
 
 set(test__mock
@@ -356,14 +362,9 @@ set(test__plugin
 source_group("test\\plugin" FILES ${test__plugin})
 
 set(test__prenote
-        "prenote/AbstractPrenoteTest.cpp"
-        "prenote/AirfieldPairingPrenoteTest.cpp"
-        "prenote/DeparturePrenoteTest.cpp"
         "prenote/PrenoteEventHandlerTest.cpp"
-        "prenote/PrenoteFactoryTest.cpp"
         "prenote/PrenoteUserMessageTest.cpp"
         "prenote/PrenoteModuleTest.cpp"
-        "prenote/PrenoteServiceFactoryTest.cpp"
         "prenote/PrenoteServiceTest.cpp"
         "prenote/PrenoteMessageTest.cpp"
         prenote/ComparePrenoteMessagesTest.cpp
@@ -378,7 +379,7 @@ set(test__prenote
         "prenote/TriggerPrenoteMessageStatusViewTest.cpp"
         "prenote/AcknowledgePrenoteMessageTest.cpp"
         "prenote/TogglePendingPrenoteListTest.cpp"
-        "prenote/PendingPrenoteListTest.cpp")
+        "prenote/PendingPrenoteListTest.cpp" prenote/PublishedPrenoteCollectionTest.cpp prenote/PublishedPrenoteCollectionFactoryTest.cpp prenote/PublishedPrenoteMapperTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push
@@ -459,7 +460,7 @@ set(test__srd
     "srd/SrdModuleTest.cpp"
     "srd/SrdSearchDialogTest.cpp"
     "srd/SrdSearchHandlerTest.cpp"
-)
+        srd/ContainsFreeRouteAirspaceTest.cpp)
 source_group("test\\srd" FILES ${test__srd})
 
 set(test__stands
@@ -516,6 +517,7 @@ set(ALL_FILES
     ${test__euroscope}
     ${test__flightinformationservice}
     ${test__flightplan}
+    ${test__flightrule}
     ${test__handoff}
     ${test__headings}
     ${test__historytrail}

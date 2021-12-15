@@ -16,6 +16,7 @@ namespace UKControllerPlugin {
     namespace Controller {
         class ActiveCallsignCollection;
         class ControllerPositionCollection;
+        class ControllerPositionHierarchyFactory;
         class ControllerStatusEventHandlerCollection;
         class HandoffEventHandlerCollection;
         class Login;
@@ -43,9 +44,9 @@ namespace UKControllerPlugin {
         class FlightPlanEventHandlerCollection;
         class StoredFlightplanCollection;
     } // namespace Flightplan
-    namespace Handoff {
-        class HandoffCollection;
-    } // namespace Handoff
+    namespace FlightRules {
+        class FlightRuleCollection;
+    } // namespace FlightRules
     namespace HistoryTrail {
         class HistoryTrailRepository;
     } // namespace HistoryTrail
@@ -190,7 +191,6 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Hold::HoldManager> holdManager;
         std::shared_ptr<UKControllerPlugin::Hold::HoldSelectionMenu> holdSelectionMenu;
         std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
-        std::unique_ptr<UKControllerPlugin::Handoff::HandoffCollection> handoffs;
         std::shared_ptr<UKControllerPlugin::Notifications::NotificationsMenuItem> notificationsMenuItem;
         std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseEventHandler> departureReleaseHandler;
 
@@ -207,10 +207,12 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
         std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
+        std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchyFactory> controllerHierarchyFactory;
         std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
+        std::unique_ptr<UKControllerPlugin::FlightRules::FlightRuleCollection> flightRules;
 
         // Push events
         std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;
