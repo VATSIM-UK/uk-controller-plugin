@@ -229,7 +229,7 @@ set(test__metar
     "metar/PressureChangeMessageTest.cpp"
     "metar/PressureMonitorBootstrapTest.cpp"
     "metar/PressureMonitorTest.cpp"
-        metar/PressureComponentTest.cpp metar/ParsedMetarTest.cpp)
+        metar/PressureComponentTest.cpp metar/ParsedMetarTest.cpp metar/ParsedMetarCollectionTest.cpp)
 source_group("test\\metar" FILES ${test__metar})
 
 set(test__minstack

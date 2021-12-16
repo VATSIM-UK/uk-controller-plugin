@@ -1,5 +1,4 @@
 #pragma once
-#include "MetarComponents.h"
 
 namespace UKControllerPlugin::Metar {
     struct MetarComponents;
