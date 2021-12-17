@@ -459,7 +459,7 @@ set(src__metar
     "metar/PressureMonitor.h"
     "metar/PressureMonitorBootstrap.cpp"
     "metar/PressureMonitorBootstrap.h"
-        metar/MetarEventHandlerInterface.cpp metar/ParsedMetar.cpp metar/ParsedMetar.h metar/PressureComponent.h metar/PressureUnit.h metar/PressureComponent.cpp metar/MetarComponents.h metar/ParsedMetarCollection.cpp metar/ParsedMetarCollection.h)
+        metar/MetarEventHandlerInterface.cpp metar/ParsedMetar.cpp metar/ParsedMetar.h metar/PressureComponent.h metar/PressureUnit.h metar/PressureComponent.cpp metar/MetarComponents.h metar/ParsedMetarCollection.cpp metar/ParsedMetarCollection.h metar/MetarComponentsFactory.cpp metar/MetarComponentsFactory.h metar/MetarComponentFactoryInterface.h metar/PressureComponentFactory.cpp metar/PressureComponentFactory.h metar/MetarComponentsFactoryFactory.cpp metar/MetarComponentsFactoryFactory.h)
 source_group("src\\metar" FILES ${src__metar})
 
 set(src__minstack
