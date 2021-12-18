@@ -11,7 +11,7 @@ namespace UKControllerPlugin::Metar {
     {
         public:
             MetarComponentsFactory(std::set<std::shared_ptr<MetarComponentFactoryInterface>> factories);
-            [[nodiscard]] auto FromJson(const nlohmann::json& json) -> std::unique_ptr<MetarComponents>;
+            [[nodiscard]] auto FromJson(const nlohmann::json& json) const -> std::unique_ptr<MetarComponents>;
             
             private:
             

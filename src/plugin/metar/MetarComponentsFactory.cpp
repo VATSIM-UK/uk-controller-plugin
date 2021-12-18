@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Metar {
     {
     }
 
-    auto MetarComponentsFactory::FromJson(const nlohmann::json& json) -> std::unique_ptr<MetarComponents>
+    auto MetarComponentsFactory::FromJson(const nlohmann::json& json) const -> std::unique_ptr<MetarComponents>
     {
         auto components = std::make_unique<MetarComponents>();
         if (!json.is_object()) {
