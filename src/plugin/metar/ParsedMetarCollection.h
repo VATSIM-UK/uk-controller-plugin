@@ -15,7 +15,7 @@ namespace UKControllerPlugin::Metar {
 
         private:
         std::map<std::string, std::shared_ptr<ParsedMetar>> metars;
-        
+
         // Locks the container
         mutable std::mutex containerLock;
     };

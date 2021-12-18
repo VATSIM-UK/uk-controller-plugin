@@ -23,13 +23,13 @@ namespace UKControllerPlugin::Metar {
 
         private:
         void ProcessMetarsUpdatedJson(const nlohmann::json& data);
-        
+
         // All the parsed metars
         ParsedMetarCollection& metars;
 
         // Builds the parsed metars from json
         const ParsedMetarFactory& factory;
-        
+
         // The API for pulling all METAR updates
         const Api::ApiInterface& api;
     };

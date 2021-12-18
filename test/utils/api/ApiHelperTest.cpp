@@ -818,13 +818,13 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_EQ(responseData, this->helper.CreateMissedApproach("BAW123"));
     }
-    
+
     TEST_F(ApiHelperTest, GetAllMetarsMakesRequest)
     {
         nlohmann::json responseData;
         responseData["bla"] = "bla";
         CurlResponse response(responseData.dump(), false, 200);
-        
+
         CurlRequest expectedRequest(GetApiCurlRequest("/metar", CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
