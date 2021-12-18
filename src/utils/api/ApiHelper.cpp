@@ -377,4 +377,9 @@ namespace UKControllerPlugin::Api {
     {
         return this->MakeApiRequest(this->requestBuilder.BuildMissedApproachMessage(callsign)).GetRawData();
     }
+
+    auto ApiHelper::GetAllMetars() const -> nlohmann::json
+    {
+        return this->MakeApiRequest(this->requestBuilder.BuildGetAllMetarsRequest()).GetRawData();
+    }
 } // namespace UKControllerPlugin::Api

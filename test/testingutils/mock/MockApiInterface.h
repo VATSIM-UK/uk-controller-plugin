@@ -27,6 +27,7 @@ namespace UKControllerPluginTest::Api {
         MOCK_METHOD(void, AcknowledgePrenoteMessage, (int, int), (const, override));
         MOCK_METHOD(void, DeletePrenoteMessage, (int), (const, override));
         MOCK_METHOD(nlohmann::json, CreateMissedApproach, (const std::string&), (const, override));
+        MOCK_METHOD(nlohmann::json, GetAllMetars, (), (const, override));
         MOCK_CONST_METHOD0(GetHoldDependency, nlohmann::json(void));
         MOCK_CONST_METHOD0(GetAssignedHolds, nlohmann::json(void));
         MOCK_CONST_METHOD2(AssignAircraftToHold, void(std::string, std::string));

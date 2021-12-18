@@ -558,4 +558,15 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_TRUE(expectedRequest == this->builder.BuildMissedApproachMessage("BAW123"));
     }
+
+    TEST_F(ApiRequestBuilderTest, ItBuildsGetAllMetarsMessage)
+    {
+        CurlRequest expectedRequest("http://testurl.com/metar", CurlRequest::METHOD_GET);
+
+        expectedRequest.AddHeader("Authorization", "Bearer apikey");
+        expectedRequest.AddHeader("Accept", "application/json");
+        expectedRequest.AddHeader("Content-Type", "application/json");
+
+        EXPECT_TRUE(expectedRequest == this->builder.BuildGetAllMetarsRequest());
+    }
 } // namespace UKControllerPluginUtilsTest::Api

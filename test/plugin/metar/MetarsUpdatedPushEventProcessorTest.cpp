@@ -1,5 +1,6 @@
 #include "airfield/AirfieldCollection.h"
 #include "airfield/AirfieldModel.h"
+#include "api/ApiException.h"
 #include "controller/ControllerPositionHierarchy.h"
 #include "metar/MetarsUpdatedPushEventProcessor.h"
 #include "metar/MetarComponents.h"
@@ -14,6 +15,7 @@
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldModel;
+using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Metar::BuildComponentsFactory;
 using UKControllerPlugin::Metar::MetarComponentsFactory;
 using UKControllerPlugin::Metar::MetarsUpdatedPushEventProcessor;
@@ -28,7 +30,7 @@ namespace UKControllerPluginTest::Metar {
         public:
         MetarsUpdatedPushEventProcessorTest()
             : componentsFactory(BuildComponentsFactory()), factory(*componentsFactory, airfields),
-              processor(collection, factory)
+              processor(collection, factory, mockApi)
         {
             this->airfields.AddAirfield(std::make_shared<AirfieldModel>(1, "EGKK", nullptr));
             this->airfields.AddAirfield(std::make_shared<AirfieldModel>(2, "EGLL", nullptr));
@@ -43,6 +45,7 @@ namespace UKControllerPluginTest::Metar {
             return {"metars,updated.created", "test", data, data.dump()};
         };
 
+        testing::NiceMock<Api::MockApiInterface> mockApi;
         std::shared_ptr<MetarComponentsFactory> componentsFactory;
         AirfieldCollection airfields;
         ParsedMetarFactory factory;
@@ -89,5 +92,38 @@ namespace UKControllerPluginTest::Metar {
         EXPECT_EQ("foo", collection.GetForAirfield("EGKK")->Raw());
         EXPECT_NE(nullptr, collection.GetForAirfield("EGLL"));
         EXPECT_EQ("bar", collection.GetForAirfield("EGLL")->Raw());
+    }
+
+    TEST_F(MetarsUpdatedPushEventProcessorTest, ItLoadsMetarsOnPluginEventSync)
+    {
+        nlohmann::json data = nlohmann::json::array();
+        data.push_back(
+            {{"airfield_id", 1},
+             {"raw", "foo"},
+             {"parsed",
+              {{"qnh", 1013}, {"qfe", 1007}, {"qnh_inhg", 29.92}, {"qfe_inhg", 28.21}, {"pressure_format", "hpa"}}}});
+        data.push_back(
+            {{"airfield_id", 2},
+             {"raw", "bar"},
+             {"parsed",
+              {{"qnh", 1013}, {"qfe", 1007}, {"qnh_inhg", 29.92}, {"qfe_inhg", 28.21}, {"pressure_format", "hpa"}}}});
+
+        ON_CALL(mockApi, GetAllMetars).WillByDefault(testing::Return(data));
+
+        processor.PluginEventsSynced();
+
+        EXPECT_EQ(2, collection.Count());
+        EXPECT_NE(nullptr, collection.GetForAirfield("EGKK"));
+        EXPECT_EQ("foo", collection.GetForAirfield("EGKK")->Raw());
+        EXPECT_NE(nullptr, collection.GetForAirfield("EGLL"));
+        EXPECT_EQ("bar", collection.GetForAirfield("EGLL")->Raw());
+    }
+
+    TEST_F(MetarsUpdatedPushEventProcessorTest, ItHandlesApiExceptionFromEventSync)
+    {
+        ON_CALL(mockApi, GetAllMetars).WillByDefault(testing::Throw(ApiException("foo")));
+
+        EXPECT_NO_THROW(processor.PluginEventsSynced());
+        EXPECT_EQ(0, collection.Count());
     }
 } // namespace UKControllerPluginTest::Metar

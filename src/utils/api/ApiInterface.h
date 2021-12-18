@@ -82,6 +82,7 @@ namespace UKControllerPlugin::Api {
         virtual void AcknowledgePrenoteMessage(int messageId, int controllerId) const = 0;
         virtual void DeletePrenoteMessage(int messageId) const = 0;
         [[nodiscard]] virtual auto CreateMissedApproach(const std::string& callsign) const -> nlohmann::json = 0;
+        [[nodiscard]] virtual auto GetAllMetars() const -> nlohmann::json = 0;
 
         virtual void SetApiKey(std::string key) = 0;
         virtual void SetApiDomain(std::string domain) = 0;
