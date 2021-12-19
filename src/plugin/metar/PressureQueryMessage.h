@@ -10,8 +10,7 @@ namespace UKControllerPlugin::Metar {
     class PressureQueryMessage : public UKControllerPlugin::Message::MessageSerializableInterface
     {
         public:
-        PressureQueryMessage(
-            std::string airfield, const PressureComponent& pressure);
+        PressureQueryMessage(std::string airfield, const PressureComponent& pressure);
 
         // Inherited via MessageSerializableInterface
         [[nodiscard]] auto MessageHandler() const -> std::string override;
