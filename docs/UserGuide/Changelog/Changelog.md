@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [3.11.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.10.0...3.11.0) (2021-12-19)
+
+
+### Features
+
+* **srd:** Prepopulate SRD search from flightplan ([#375](https://github.com/VATSIM-UK/uk-controller-plugin/issues/375)) ([eb21611](https://github.com/VATSIM-UK/uk-controller-plugin/commit/eb216110899ea7545296d0b7444000a16d310856))
+
 # [3.10.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.9.0...3.10.0) (2021-12-12)
 
 
