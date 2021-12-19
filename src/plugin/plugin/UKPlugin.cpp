@@ -1,7 +1,5 @@
-#include "pch/pch.h"
-
-#include "plugin/UKPlugin.h"
-
+#include "FunctionCallEventHandler.h"
+#include "UKPlugin.h"
 #include "command/CommandHandlerCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "controller/HandoffEventHandlerCollection.h"
@@ -13,8 +11,6 @@
 #include "euroscope/EuroscopeSectorFileElementWrapper.h"
 #include "euroscope/RadarTargetEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
-#include "metar/MetarEventHandlerCollection.h"
-#include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/UKRadarScreen.h"
 #include "tag/TagData.h"
 #include "tag/TagItemCollection.h"
@@ -37,7 +33,6 @@ using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementWrapper;
 using UKControllerPlugin::Euroscope::RadarTargetEventHandlerCollection;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
-using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PluginVersion;
 using UKControllerPlugin::RadarScreen::RadarScreenFactory;
@@ -56,7 +51,6 @@ namespace UKControllerPlugin {
         const TimedEventCollection& timedEvents,
         const TagItemCollection& tagEvents,
         RadarScreenFactory radarScreenFactory,
-        const MetarEventHandlerCollection& metarHandlers,
         const FunctionCallEventHandler& functionCallHandler,
         const CommandHandlerCollection& commandHandlers,
         const RunwayDialogAwareCollection& runwayDialogHandlers,
@@ -69,7 +63,7 @@ namespace UKControllerPlugin {
               PluginVersion::copyright),
           radarTargetEventHandler(radarTargetEventHandler), flightplanEventHandler(flightplanEventHandler),
           statusEventHandler(statusEventHandler), timedEvents(timedEvents),
-          radarScreenFactory(std::move(radarScreenFactory)), tagEvents(tagEvents), metarHandlers(metarHandlers),
+          radarScreenFactory(std::move(radarScreenFactory)), tagEvents(tagEvents),
           functionCallHandler(functionCallHandler), commandHandlers(commandHandlers),
           runwayDialogHandlers(runwayDialogHandlers), controllerHandoffHandlers(controllerHandoffHandlers)
 
@@ -436,14 +430,6 @@ namespace UKControllerPlugin {
             flightplanWrapper, radarTargetWrapper, ItemCode, dataAvailable, sItemString, pColorCode, pRGB, pFontSize);
 
         this->tagEvents.TagItemUpdate(tagData);
-    }
-
-    /*
-        Called when EuroScope receives a new METAR.
-    */
-    void UKPlugin::OnNewMetarReceived(const char* sStation, const char* sFullMetar)
-    {
-        this->metarHandlers.NewMetarEvent(sStation, sFullMetar);
     }
 
     /*

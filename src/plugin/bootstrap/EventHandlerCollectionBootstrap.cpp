@@ -8,7 +8,6 @@
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "timedevent/TimedEventCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
-#include "metar/MetarEventHandlerCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "plugin/UKPlugin.h"
 #include "command/CommandHandlerCollection.h"
@@ -21,7 +20,6 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
-using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
@@ -41,7 +39,6 @@ namespace UKControllerPlugin {
             persistence.controllerHandler.reset(new ControllerStatusEventHandlerCollection);
             persistence.timedHandler.reset(new TimedEventCollection);
             persistence.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
-            persistence.metarEventHandler.reset(new MetarEventHandlerCollection);
             persistence.userSettingHandlers.reset(new UserSettingAwareCollection);
             persistence.commandHandlers.reset(new CommandHandlerCollection);
             persistence.runwayDialogEventHandlers.reset(new RunwayDialogAwareCollection);

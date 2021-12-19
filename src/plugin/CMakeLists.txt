@@ -451,15 +451,13 @@ set(src__metar
     "metar/MetarEventHandlerCollection.cpp"
     "metar/MetarEventHandlerCollection.h"
     "metar/MetarEventHandlerInterface.h"
-    "metar/MetarParsingFunctions.cpp"
-    "metar/MetarParsingFunctions.h"
     "metar/PressureChangeMessage.cpp"
     "metar/PressureChangeMessage.h"
     "metar/PressureMonitor.cpp"
     "metar/PressureMonitor.h"
     "metar/PressureMonitorBootstrap.cpp"
     "metar/PressureMonitorBootstrap.h"
-        metar/MetarEventHandlerInterface.cpp metar/ParsedMetar.cpp metar/ParsedMetar.h metar/PressureComponent.h metar/PressureUnit.h metar/PressureComponent.cpp metar/MetarComponents.h metar/ParsedMetarCollection.cpp metar/ParsedMetarCollection.h metar/MetarComponentsFactory.cpp metar/MetarComponentsFactory.h metar/MetarComponentFactoryInterface.h metar/PressureComponentFactory.cpp metar/PressureComponentFactory.h metar/MetarComponentsFactoryFactory.cpp metar/MetarComponentsFactoryFactory.h metar/MetarsUpdatedPushEventProcessor.cpp metar/MetarsUpdatedPushEventProcessor.h metar/ParsedMetarFactory.cpp metar/ParsedMetarFactory.h)
+        metar/MetarEventHandlerInterface.cpp metar/ParsedMetar.cpp metar/ParsedMetar.h metar/PressureComponent.h metar/PressureUnit.h metar/PressureComponent.cpp metar/MetarComponents.h metar/ParsedMetarCollection.cpp metar/ParsedMetarCollection.h metar/MetarComponentsFactory.cpp metar/MetarComponentsFactory.h metar/MetarComponentFactoryInterface.h metar/PressureComponentFactory.cpp metar/PressureComponentFactory.h metar/MetarComponentsFactoryFactory.cpp metar/MetarComponentsFactoryFactory.h metar/MetarsUpdatedPushEventProcessor.cpp metar/MetarsUpdatedPushEventProcessor.h metar/ParsedMetarFactory.cpp metar/ParsedMetarFactory.h metar/MetarModule.cpp metar/MetarModule.h)
 source_group("src\\metar" FILES ${src__metar})
 
 set(src__minstack

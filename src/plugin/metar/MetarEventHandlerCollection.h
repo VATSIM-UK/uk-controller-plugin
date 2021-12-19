@@ -1,15 +1,8 @@
 #pragma once
 
-// Forward declarations
-namespace UKControllerPlugin {
-    namespace Metar {
-        class MetarEventHandlerInterface;
-    }  // namespace Metar
-}  // namespace UKControllerPlugin
-// END
-
-namespace UKControllerPlugin {
-    namespace Metar {
+namespace UKControllerPlugin::Metar {
+    class MetarEventHandlerInterface;
+    class ParsedMetar;
 
         /*
             A class that stores pointers to classes that want to know
@@ -18,12 +11,11 @@ namespace UKControllerPlugin {
         class MetarEventHandlerCollection
         {
             public:
-                int CountHandlers(void) const;
-                void NewMetarEvent(std::string station, std::string metar) const;
+                [[nodiscard]] auto CountHandlers() const -> size_t;
+                void UpdatedMetarEvent(const ParsedMetar& metar) const;
                 void RegisterHandler(std::shared_ptr<UKControllerPlugin::Metar::MetarEventHandlerInterface> handler);
 
             private:
                 std::set<std::shared_ptr<UKControllerPlugin::Metar::MetarEventHandlerInterface>> handlers;
         };
-    }  // namespace Metar
 }  // namespace UKControllerPlugin
