@@ -6,6 +6,7 @@
 #include "api/ApiException.h"
 #include "datablock/DatablockFunctions.h"
 #include "srd/ContainsFreeRouteAirspace.h"
+#include "srd/SrdSearchParameters.h"
 
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Datablock::ConvertAltitudeToFlightLevel;
@@ -166,6 +167,10 @@ namespace UKControllerPlugin {
 
         void SrdSearchDialog::InitDialog(HWND hwnd, LPARAM lParam)
         {
+            // Prepopulate the search fields
+            this->PrepopulateSearch(hwnd, lParam);
+
+            // Setup the results list
             HWND resultsList = GetDlgItem(hwnd, IDC_SRD_RESULTS);
 
             // Make items highlight on row select
@@ -357,5 +362,23 @@ namespace UKControllerPlugin {
             }
         }
 
+        void SrdSearchDialog::PrepopulateSearch(HWND hwnd, LPARAM lParam)
+        {
+            auto defaultValues =
+                reinterpret_cast<SrdSearchParameters*>(reinterpret_cast<DialogCallArgument*>(lParam)->contextArgument);
+
+            if (defaultValues == NULL) {
+                return;
+            }
+
+            std::wstring wideOrigin = HelperFunctions::ConvertToWideString(defaultValues->origin);
+            SetDlgItemText(hwnd, IDC_SRD_ORIGIN, wideOrigin.c_str());
+
+            std::wstring wideDestination = HelperFunctions::ConvertToWideString(defaultValues->destination);
+            SetDlgItemText(hwnd, IDC_SRD_DESTINATION, wideDestination.c_str());
+
+            std::wstring wideCruise = std::to_wstring(defaultValues->requestedLevel);
+            SetDlgItemText(hwnd, IDC_SRD_CRUISE, wideCruise.c_str());
+        }
     } // namespace Srd
 } // namespace UKControllerPlugin

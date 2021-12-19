@@ -1,5 +1,7 @@
 #include "dialog/DialogManager.h"
+#include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "srd/SrdSearchHandler.h"
+#include "srd/SrdSearchParameters.h"
 
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
@@ -36,6 +38,14 @@ namespace UKControllerPlugin::Srd {
         const std::string& context,
         const POINT& mousePos)
     {
-        this->dialog.OpenDialog(IDD_SRD_SEARCH, NULL);
+        if (flightplan.GetOrigin() == "") {
+            dialog.OpenDialog(IDD_SRD_SEARCH, NULL);
+        } else {
+            this->lastSearchParameters = std::shared_ptr<SrdSearchParameters>(new SrdSearchParameters{
+                flightplan.GetOrigin(),
+                flightplan.GetDestination(),
+                static_cast<unsigned int>(flightplan.GetCruiseLevel())});
+            dialog.OpenDialog(IDD_SRD_SEARCH, reinterpret_cast<LPARAM>(this->lastSearchParameters.get()));
+        }
     }
 } // namespace UKControllerPlugin::Srd

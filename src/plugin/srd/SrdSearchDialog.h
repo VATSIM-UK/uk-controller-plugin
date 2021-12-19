@@ -21,6 +21,7 @@ namespace UKControllerPlugin {
             void StartSearch(HWND hwnd);
             void CopyRouteStringToClipboard(HWND hwnd);
             void SelectSearchResult(HWND hwnd, NMLISTVIEW* details);
+            void PrepopulateSearch(HWND hwnd, LPARAM lParam);
 
             // The API for making searches
             const UKControllerPlugin::Api::ApiInterface& api;

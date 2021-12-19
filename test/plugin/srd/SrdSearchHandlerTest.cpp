@@ -1,14 +1,18 @@
+#include "dialog/DialogCallArgument.h"
 #include "dialog/DialogManager.h"
 #include "srd/SrdSearchHandler.h"
+#include "srd/SrdSearchParameters.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Test;
+using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Srd::SrdSearchHandler;
+using UKControllerPlugin::Srd::SrdSearchParameters;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
@@ -36,7 +40,7 @@ namespace UKControllerPluginTest::Srd {
         this->handler.Configure(55, "", {});
     }
 
-    TEST_F(SrdSearchHandlerTest, TagFunctionCallsDialogOpen)
+    TEST_F(SrdSearchHandlerTest, TagFunctionCallsDialogOpenWithNoParameters)
     {
         EXPECT_CALL(this->dialogProvider, OpenDialog(this->srdSearchDialogData, _)).Times(1);
 
@@ -44,6 +48,29 @@ namespace UKControllerPluginTest::Srd {
         NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
 
         this->handler.TagFunction(flightplan, radarTarget, "", {});
+    }
+
+    TEST_F(SrdSearchHandlerTest, TagFunctionCallsDialogOpenWithParameters)
+    {
+        SrdSearchParameters expected{"EGKK", "EGLL", 360};
+        DialogCallArgument actualArg;
+
+        EXPECT_CALL(this->dialogProvider, OpenDialog(this->srdSearchDialogData, testing::_))
+            .Times(1)
+            .WillOnce(testing::SaveArgPointee<1>(&actualArg));
+
+        NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
+        NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+
+        ON_CALL(flightplan, GetOrigin).WillByDefault(testing::Return("EGKK"));
+
+        ON_CALL(flightplan, GetDestination).WillByDefault(testing::Return("EGLL"));
+
+        ON_CALL(flightplan, GetCruiseLevel).WillByDefault(testing::Return(360));
+
+        this->handler.TagFunction(flightplan, radarTarget, "", {});
+
+        EXPECT_EQ(expected, *reinterpret_cast<SrdSearchParameters*>(actualArg.contextArgument));
     }
 
     TEST_F(SrdSearchHandlerTest, ItReturnsAConfigurationMenuItem)

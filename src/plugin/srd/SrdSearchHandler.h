@@ -7,6 +7,8 @@ namespace UKControllerPlugin::Dialog {
 } // namespace UKControllerPlugin::Dialog
 
 namespace UKControllerPlugin::Srd {
+    struct SrdSearchParameters;
+
     /*
         A handler that triggers the SRD searching dialog
     */
@@ -33,5 +35,8 @@ namespace UKControllerPlugin::Srd {
         const int menuCallbackId;
 
         const std::string itemDescription = "Open SRD Search Dialog";
+
+        // The last search parameters used
+        std::shared_ptr<SrdSearchParameters> lastSearchParameters;
     };
 } // namespace UKControllerPlugin::Srd
