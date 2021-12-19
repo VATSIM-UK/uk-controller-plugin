@@ -38,6 +38,8 @@ namespace UKControllerPluginTest::Handoff {
                   1, "EGKK_DEL", 121.950, std::vector<std::string>{"EGKK"}, true, false)),
               position2(std::make_shared<ControllerPosition>(
                   2, "EGKK_GND", 121.800, std::vector<std::string>{"EGKK"}, true, false)),
+              position3(std::make_shared<ControllerPosition>(
+                  3, "EGKK_TWR", 124.220, std::vector<std::string>{"EGKK"}, true, false)),
               sidMapper(handoffs, sids), airfieldMapper(handoffs, airfields),
               resolver(sidMapper, airfieldMapper, callsigns)
         {
@@ -60,6 +62,7 @@ namespace UKControllerPluginTest::Handoff {
         std::shared_ptr<ControllerPositionHierarchy> hierarchy;
         std::shared_ptr<ControllerPosition> position1;
         std::shared_ptr<ControllerPosition> position2;
+        std::shared_ptr<ControllerPosition> position3;
         HandoffCollection handoffs;
         FlightplanSidHandoffMapper sidMapper;
         FlightplanAirfieldHandoffMapper airfieldMapper;
@@ -123,6 +126,25 @@ namespace UKControllerPluginTest::Handoff {
         EXPECT_NE(nullptr, resolved);
         EXPECT_EQ("BAW123", resolved->callsign);
         EXPECT_EQ(121.800, resolved->frequency);
+        EXPECT_EQ(hierarchy2, resolved->hierarchy);
+    }
+
+    TEST_F(DepartureHandoffResolverTest, ItResolvesToAirfieldHandoffIfSidResolvesToUnicom)
+    {
+        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
+
+        // For sake of argument, the SIDs handoff resolves to Unicom (as nobody online)
+        this->callsigns.AddCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *position3, false));
+
+        auto hierarchy2 = std::make_shared<ControllerPositionHierarchy>();
+        hierarchy2->AddPosition(position3);
+        handoffs.Add(std::make_shared<HandoffOrder>(2, hierarchy2));
+        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
+
+        const auto resolved = resolver.Resolve(mockFlightplan);
+        EXPECT_NE(nullptr, resolved);
+        EXPECT_EQ("BAW123", resolved->callsign);
+        EXPECT_EQ(124.220, resolved->frequency);
         EXPECT_EQ(hierarchy2, resolved->hierarchy);
     }
 } // namespace UKControllerPluginTest::Handoff
