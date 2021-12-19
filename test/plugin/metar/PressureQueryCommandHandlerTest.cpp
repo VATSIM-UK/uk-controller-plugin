@@ -99,7 +99,7 @@ namespace UKControllerPluginTest::Metar {
 
     TEST_F(PressureQueryCommandHandlerTest, ItSendsMessageWithPressureComponent)
     {
-        EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, "QHH at EGLL is 1013, QFE is 1011.", _, _, _, _, _))
+        EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, "QNH at EGLL is 1013, QFE is 1011.", _, _, _, _, _))
             .Times(1);
 
         handler.ProcessCommand(".ukcp pressure EGLL");
