@@ -33,7 +33,7 @@ namespace UKControllerPlugin::Metar {
         std::string airfield;
         const PressureComponent& pressureBefore;
         const PressureComponent& pressureNow;
-        
+
         static inline const int INHG_BUFFER_SIZE = 6;
     };
 } // namespace UKControllerPlugin::Metar

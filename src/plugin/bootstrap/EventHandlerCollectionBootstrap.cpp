@@ -1,48 +1,45 @@
-#include "pch/pch.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "tag/TagItemCollection.h"
-#include "euroscope/RadarTargetEventHandlerCollection.h"
-#include "euroscope/RunwayDialogAwareCollection.h"
-#include "flightplan/FlightPlanEventHandlerCollection.h"
-#include "controller/ControllerStatusEventHandlerCollection.h"
-#include "timedevent/TimedEventCollection.h"
-#include "plugin/FunctionCallEventHandler.h"
-#include "euroscope/UserSettingAwareCollection.h"
-#include "plugin/UKPlugin.h"
 #include "command/CommandHandlerCollection.h"
 #include "controller/HandoffEventHandlerCollection.h"
+#include "controller/ControllerStatusEventHandlerCollection.h"
+#include "euroscope/RadarTargetEventHandlerCollection.h"
+#include "euroscope/RunwayDialogAwareCollection.h"
+#include "euroscope/UserSettingAwareCollection.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "plugin/UKPlugin.h"
+#include "tag/TagItemCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Tag::TagItemCollection;
-using UKControllerPlugin::Euroscope::RadarTargetEventHandlerCollection;
-using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
-using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
-using UKControllerPlugin::TimedEvent::TimedEventCollection;
-using UKControllerPlugin::Plugin::FunctionCallEventHandler;
-using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
-using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
+using UKControllerPlugin::Euroscope::RadarTargetEventHandlerCollection;
+using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
+using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::Tag::TagItemCollection;
+using UKControllerPlugin::TimedEvent::TimedEventCollection;
 
-namespace UKControllerPlugin {
-    namespace Bootstrap {
+namespace UKControllerPlugin::Bootstrap {
 
-        /*
-            Set up all the event handler collections.
-        */
-        void EventHandlerCollectionBootstrap::BoostrapPlugin(PersistenceContainer & persistence)
-        {
-            persistence.tagHandler.reset(new TagItemCollection);
-            persistence.radarTargetHandler.reset(new RadarTargetEventHandlerCollection);
-            persistence.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-            persistence.controllerHandler.reset(new ControllerStatusEventHandlerCollection);
-            persistence.timedHandler.reset(new TimedEventCollection);
-            persistence.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
-            persistence.userSettingHandlers.reset(new UserSettingAwareCollection);
-            persistence.commandHandlers.reset(new CommandHandlerCollection);
-            persistence.runwayDialogEventHandlers.reset(new RunwayDialogAwareCollection);
-            persistence.controllerHandoffHandlers.reset(new HandoffEventHandlerCollection);
-        }
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    /*
+        Set up all the event handler collections.
+    */
+    void EventHandlerCollectionBootstrap::BoostrapPlugin(PersistenceContainer& persistence)
+    {
+        persistence.tagHandler = std::make_unique<TagItemCollection>();
+        persistence.radarTargetHandler = std::make_unique<RadarTargetEventHandlerCollection>();
+        persistence.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
+        persistence.controllerHandler = std::make_unique<ControllerStatusEventHandlerCollection>();
+        persistence.timedHandler = std::make_unique<TimedEventCollection>();
+        persistence.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
+        persistence.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
+        persistence.commandHandlers = std::make_unique<CommandHandlerCollection>();
+        persistence.runwayDialogEventHandlers = std::make_unique<RunwayDialogAwareCollection>();
+        persistence.controllerHandoffHandlers = std::make_unique<HandoffEventHandlerCollection>();
+    }
+} // namespace UKControllerPlugin::Bootstrap
