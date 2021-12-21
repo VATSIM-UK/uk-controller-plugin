@@ -116,7 +116,10 @@ set(test__handoff
     "handoff/HandoffEventHandlerTest.cpp"
     "handoff/HandoffFrequencyUpdatedEventTest.cpp"
     "handoff/HandoffModuleTest.cpp"
-        handoff/FlightplanSidHandoffMapperTest.cpp handoff/HandoffCacheTest.cpp handoff/DepartureHandoffResolverTest.cpp)
+    handoff/FlightplanSidHandoffMapperTest.cpp
+    handoff/FlightplanAirfieldHandoffMapperTest.cpp
+    handoff/HandoffCacheTest.cpp
+    handoff/DepartureHandoffResolverTest.cpp)
 source_group("test\\handoff" FILES ${test__handoff})
 
 set(test__headings

@@ -1,12 +1,12 @@
 #pragma once
 
 namespace UKControllerPlugin {
+    namespace Airfield {
+        class AirfieldCollection;
+    } // namespace Airfield
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
     } // namespace Euroscope
-    namespace Sid {
-        class SidCollection;
-    } // namespace Sid
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Handoff {
@@ -14,14 +14,13 @@ namespace UKControllerPlugin::Handoff {
     struct HandoffOrder;
 
     /**
-     * Given a flightplan, map it to its SID
-     * and in turn, to the appropriate handoff order.
+     * Given a flightplan, finds the handoff for its departure airfield
      */
-    class FlightplanSidHandoffMapper
+    class FlightplanAirfieldHandoffMapper
     {
         public:
-        FlightplanSidHandoffMapper(const HandoffCollection& handoffs, const Sid::SidCollection& sids);
-
+        FlightplanAirfieldHandoffMapper(
+            const HandoffCollection& handoffs, const Airfield::AirfieldCollection& airfields);
         [[nodiscard]] auto MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
             -> std::shared_ptr<HandoffOrder>;
 
@@ -29,7 +28,7 @@ namespace UKControllerPlugin::Handoff {
         // All the handoffs
         const HandoffCollection& handoffs;
 
-        // All the sids
-        const Sid::SidCollection& sids;
+        // The airfields
+        const Airfield::AirfieldCollection& airfields;
     };
 } // namespace UKControllerPlugin::Handoff

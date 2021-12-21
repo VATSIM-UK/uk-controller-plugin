@@ -6,8 +6,8 @@
 namespace UKControllerPlugin::Handoff {
 
     FlightplanSidHandoffMapper::FlightplanSidHandoffMapper(
-        std::shared_ptr<const HandoffCollection> handoffs, const Sid::SidCollection& sids)
-        : handoffs(std::move(handoffs)), sids(sids)
+        const HandoffCollection& handoffs, const Sid::SidCollection& sids)
+        : handoffs(handoffs), sids(sids)
     {
     }
 
@@ -20,6 +20,6 @@ namespace UKControllerPlugin::Handoff {
             return nullptr;
         }
 
-        return this->handoffs->Get(sid->HandoffId());
+        return this->handoffs.Get(sid->HandoffId());
     }
 } // namespace UKControllerPlugin::Handoff

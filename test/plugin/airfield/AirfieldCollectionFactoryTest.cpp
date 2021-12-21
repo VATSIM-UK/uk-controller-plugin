@@ -44,6 +44,21 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
+            {"pairing_prenotes",
+             nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
+
+        EXPECT_TRUE(AirfieldValid(airfield, factory));
+    }
+
+    TEST_F(AirfieldCollectionFactoryTest, AirfieldIsValidWhenHandoffIdNull)
+    {
+        nlohmann::json airfield{
+            {"id", 1},
+            {"identifier", "EGLL"},
+            {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", nlohmann::json::value_t::null},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -55,6 +70,7 @@ namespace UKControllerPluginTest::Airfield {
         nlohmann::json airfield{
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -67,6 +83,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", "abc"},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -78,6 +95,7 @@ namespace UKControllerPluginTest::Airfield {
         nlohmann::json airfield{
             {"id", 1},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -90,6 +108,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", 123},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -101,6 +120,7 @@ namespace UKControllerPluginTest::Airfield {
         nlohmann::json airfield{
             {"id", 1},
             {"identifier", "EGLL"},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -113,6 +133,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", 1},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -125,6 +146,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, "abc"})},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -136,6 +158,7 @@ namespace UKControllerPluginTest::Airfield {
         nlohmann::json airfield{
             {"id", 1},
             {"identifier", "EGLL"},
+            {"handoff_id", 1},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
             {"pairing_prenotes", nlohmann::json::array({{{"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -148,6 +171,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", "abc"}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
@@ -160,6 +184,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes", nlohmann::json::array({{{"airfield_id", 1}, {"prenote_id", 1}}})}};
 
         EXPECT_FALSE(AirfieldValid(airfield, factory));
@@ -171,6 +196,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", "abc"}, {"prenote_id", 1}}})}};
 
@@ -183,6 +209,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes", nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}}})}};
 
         EXPECT_FALSE(AirfieldValid(airfield, factory));
@@ -194,6 +221,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", "abc"}}})}};
 
@@ -206,6 +234,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes", nlohmann::json::array({nlohmann::json::array()})}};
 
         EXPECT_FALSE(AirfieldValid(airfield, factory));
@@ -217,7 +246,33 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes", nlohmann::json::object()}};
+
+        EXPECT_FALSE(AirfieldValid(airfield, factory));
+    }
+
+    TEST_F(AirfieldCollectionFactoryTest, AirfieldIsNotValidIfHandoffIdMissing)
+    {
+        nlohmann::json airfield{
+            {"id", 1},
+            {"identifier", "EGLL"},
+            {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"pairing_prenotes",
+             nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
+
+        EXPECT_FALSE(AirfieldValid(airfield, factory));
+    }
+
+    TEST_F(AirfieldCollectionFactoryTest, AirfieldIsNotValidIfHandoffIdInvalid)
+    {
+        nlohmann::json airfield{
+            {"id", 1},
+            {"identifier", "EGLL"},
+            {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", "abc"},
+            {"pairing_prenotes",
+             nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 1}}})}};
 
         EXPECT_FALSE(AirfieldValid(airfield, factory));
     }
@@ -234,6 +289,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 1},
             {"identifier", "EGLL"},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
+            {"handoff_id", 1},
             {"pairing_prenotes",
              nlohmann::json::array({{{"airfield_id", 1}, {"flight_rule_id", 2}, {"prenote_id", 3}}})}});
 
@@ -241,6 +297,7 @@ namespace UKControllerPluginTest::Airfield {
             {"id", 2},
             {"identifier", "EGKK"},
             {"top_down_controller_positions", nlohmann::json::array({})},
+            {"handoff_id", nlohmann::json::value_t::null},
             {"pairing_prenotes", nlohmann::json::array()}});
 
         const auto collection = CreateAirfieldCollection(airfields, factory);
@@ -250,6 +307,7 @@ namespace UKControllerPluginTest::Airfield {
         EXPECT_NE(nullptr, airfieldOne);
         EXPECT_EQ(1, airfieldOne->Id());
         EXPECT_EQ("EGLL", airfieldOne->Icao());
+        EXPECT_EQ(1, airfieldOne->DefaultHandoff());
         EXPECT_EQ(2, airfieldOne->TopDownOrder().CountPositions());
         EXPECT_EQ(1, airfieldOne->AirfieldPairingPrenotes().size());
         EXPECT_EQ(1, (*airfieldOne->AirfieldPairingPrenotes().cbegin())->targetAirfield);
@@ -260,6 +318,7 @@ namespace UKControllerPluginTest::Airfield {
         EXPECT_NE(nullptr, airfieldTwo);
         EXPECT_EQ(2, airfieldTwo->Id());
         EXPECT_EQ("EGKK", airfieldTwo->Icao());
+        EXPECT_FALSE(airfieldTwo->HasDefaultHandoff());
         EXPECT_EQ(0, airfieldTwo->TopDownOrder().CountPositions());
         EXPECT_EQ(0, airfieldTwo->AirfieldPairingPrenotes().size());
     }
@@ -270,12 +329,14 @@ namespace UKControllerPluginTest::Airfield {
         airfields.push_back(nlohmann::json{
             {"id", "abc"}, // Bad
             {"identifier", "EGLL"},
+            {"handoff_id", 1},
             {"top_down_controller_positions", nlohmann::json::array({1, 2})},
             {"pairing_prenotes", nlohmann::json::array()}});
 
         airfields.push_back(nlohmann::json{
             {"id", 2},
             {"identifier", 123}, // Bad
+            {"handoff_id", 1},
             {"top_down_controller_positions", nlohmann::json::array({1})},
             {"pairing_prenotes", nlohmann::json::array()}});
 
