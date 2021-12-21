@@ -38,4 +38,25 @@ namespace UKControllerPlugin::MissedApproach {
     {
         return this->createdByUser;
     }
+
+    void MissedApproach::Acknowledge(std::string acknowledgedBy, std::string remarks)
+    {
+        this->acknowledgedBy = acknowledgedBy;
+        this->remarks = remarks;
+    }
+
+    auto MissedApproach::IsAcknowledged() const -> bool
+    {
+        return this->acknowledgedBy != "";
+    }
+
+    auto MissedApproach::Remarks() const -> const std::string&
+    {
+        return this->remarks;
+    }
+
+    auto MissedApproach::AcknowledgedBy() const -> const std::string&
+    {
+        return this->acknowledgedBy;
+    }
 } // namespace UKControllerPlugin::MissedApproach

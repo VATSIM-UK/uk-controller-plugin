@@ -58,4 +58,37 @@ namespace UKControllerPluginTest::MissedApproach {
     {
         EXPECT_TRUE(missed.CreatedByUser());
     }
+
+    TEST_F(MissedApproachTest, ItStartsUnacknowledged)
+    {
+        EXPECT_FALSE(missed.IsAcknowledged());
+    }
+
+    TEST_F(MissedApproachTest, ItStartsWithNoRemarks)
+    {
+        EXPECT_TRUE(missed.Remarks().empty());
+    }
+
+    TEST_F(MissedApproachTest, ItStartsWithNoAcknowledgedBy)
+    {
+        EXPECT_TRUE(missed.AcknowledgedBy().empty());
+    }
+
+    TEST_F(MissedApproachTest, AcknowledgementSetsAcknowledged)
+    {
+        missed.Acknowledge("EGKK_APP", "Hi");
+        EXPECT_TRUE(missed.IsAcknowledged());
+    }
+
+    TEST_F(MissedApproachTest, AcknowledgementSetsAcknowledgedBy)
+    {
+        missed.Acknowledge("EGKK_APP", "Hi");
+        EXPECT_EQ("EGKK_APP", missed.AcknowledgedBy());
+    }
+
+    TEST_F(MissedApproachTest, AcknowledgementSetsRemarks)
+    {
+        missed.Acknowledge("EGKK_APP", "Hi");
+        EXPECT_EQ("Hi", missed.Remarks());
+    }
 } // namespace UKControllerPluginTest::MissedApproach
