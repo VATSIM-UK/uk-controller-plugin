@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+# [3.12.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.11.0...3.12.0) (2021-12-21)
+
+
+### Features
+
+* **handoff:** Default departure handoff frequencies for airfield if no sid matches ([#374](https://github.com/VATSIM-UK/uk-controller-plugin/issues/374)) ([9190c99](https://github.com/VATSIM-UK/uk-controller-plugin/commit/9190c99e74d7eb7bfbe53f39d8daa5f2dd37b251))
+* **missedapproach:** Allow missed approaches to be acknowledged ([#370](https://github.com/VATSIM-UK/uk-controller-plugin/issues/370)) ([d21e45b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d21e45b65192e47bf850a889d3c7f116b1cf6f86))
+
 # [3.11.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.10.0...3.11.0) (2021-12-19)
 
 
