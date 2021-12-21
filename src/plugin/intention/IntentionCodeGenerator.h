@@ -40,7 +40,10 @@ namespace UKControllerPlugin::IntentionCode {
         [[nodiscard]] static auto GetInvalidExitPointIndex() -> int;
 
         private:
-        auto FindFirExitPoint(UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route) -> int;
+        [[nodiscard]] auto FoundAllExitPoints(const std::pair<int, int>& indexes) const -> bool;
+        void SetExitIndexes(std::pair<int, int>& indexes, int index) const;
+        auto FindFirExitPoint(UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route)
+            -> std::pair<int, int>;
 
         std::string userControllerPosition;
 
@@ -55,6 +58,8 @@ namespace UKControllerPlugin::IntentionCode {
 
         // Used for the exit point index when its not a valid point on the route.
         static const int invalidExitPointIndex = -1;
+        
+        static constexpr std::pair<int, int> invalidExitPair = {invalidExitPointIndex, invalidExitPointIndex};
 
         // The value given to us by Euroscope if we try to find the time to a point that has been passed.
         const int exitPointPassed = -1;
