@@ -52,7 +52,7 @@ namespace UKControllerPluginTest::Srd {
 
     TEST_F(SrdSearchHandlerTest, TagFunctionCallsDialogOpenWithParameters)
     {
-        SrdSearchParameters expected{"EGKK", "EGLL", 360};
+        SrdSearchParameters expected{"EGKK", "EGLL", 360, "BAW123"};
         DialogCallArgument actualArg;
 
         EXPECT_CALL(this->dialogProvider, OpenDialog(this->srdSearchDialogData, testing::_))
@@ -67,6 +67,8 @@ namespace UKControllerPluginTest::Srd {
         ON_CALL(flightplan, GetDestination).WillByDefault(testing::Return("EGLL"));
 
         ON_CALL(flightplan, GetCruiseLevel).WillByDefault(testing::Return(360));
+
+        ON_CALL(flightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
 
         this->handler.TagFunction(flightplan, radarTarget, "", {});
 

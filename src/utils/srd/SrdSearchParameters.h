@@ -11,6 +11,8 @@ namespace UKControllerPlugin::Srd {
         std::string destination;
 
         unsigned int requestedLevel = 0;
+        
+        std::string callsign = "";
 
         [[nodiscard]] auto operator==(const SrdSearchParameters& compare) const -> bool
         {

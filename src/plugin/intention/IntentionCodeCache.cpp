@@ -9,7 +9,7 @@ namespace UKControllerPlugin::IntentionCode {
     /*
         Gets an intention code for a given aircraft.
     */
-    std::string IntentionCodeCache::GetIntentionCodeForAircraft(std::string callsign) const
+    std::string IntentionCodeCache::GetIntentionCodeForAircraft(const std::string& callsign) const
     {
         if (this->intentionCodeMap.count(callsign) == 0) {
             return "--";
@@ -21,7 +21,7 @@ namespace UKControllerPlugin::IntentionCode {
     /*
         Returns true or false depending on whether we have an intention code cached.
     */
-    bool IntentionCodeCache::HasIntentionCodeForAircraft(std::string callsign) const
+    bool IntentionCodeCache::HasIntentionCodeForAircraft(const std::string& callsign) const
     {
         return this->intentionCodeMap.count(callsign) > 0;
     }
@@ -34,7 +34,7 @@ namespace UKControllerPlugin::IntentionCode {
     /*
         Returns true if the intention code is still valid.
     */
-    bool IntentionCodeCache::IntentionCodeValid(std::string callsign, EuroscopeExtractedRouteInterface& route)
+    bool IntentionCodeCache::IntentionCodeValid(const std::string& callsign, EuroscopeExtractedRouteInterface& route)
     {
         if (!this->HasIntentionCodeForAircraft(callsign)) {
             return false;
@@ -58,7 +58,7 @@ namespace UKControllerPlugin::IntentionCode {
     /*
         Registers an aircraft with the cache.
     */
-    void IntentionCodeCache::RegisterAircraft(std::string callsign, IntentionCodeData intentionCode)
+    void IntentionCodeCache::RegisterAircraft(const std::string& callsign, IntentionCodeData intentionCode)
     {
         if (this->intentionCodeMap.count(callsign) != 0) {
             return;
@@ -78,12 +78,17 @@ namespace UKControllerPlugin::IntentionCode {
     /*
         Unregisters an aircraft with the intention code cache.
     */
-    void IntentionCodeCache::UnregisterAircraft(std::string callsign)
+    void IntentionCodeCache::UnregisterAircraft(const std::string& callsign)
     {
         if (this->intentionCodeMap.count(callsign) == 0) {
             return;
         }
 
         this->intentionCodeMap.erase(callsign);
+    }
+
+    auto IntentionCodeCache::GetDataForAircraft(const std::string& callsign) const -> IntentionCodeData
+    {
+        return this->intentionCodeMap.count(callsign) != 0 ? this->intentionCodeMap.at(callsign) : IntentionCodeData();
     }
 } // namespace UKControllerPlugin::IntentionCode

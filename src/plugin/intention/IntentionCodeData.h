@@ -10,13 +10,18 @@ namespace UKControllerPlugin::IntentionCode {
 
         IntentionCodeData()
             : intentionCode("--"), exitPointIndex(INVALID_EXIT_POINT), ukExitPointIndex(INVALID_EXIT_POINT),
-              exitPoint("")
+              exitPoint(""), ukExitPoint("")
         {
         }
 
-        IntentionCodeData(std::string intentionCode, int exitPointIndex, int ukExitPointIndex, std::string exitPoint)
+        IntentionCodeData(
+            std::string intentionCode,
+            int exitPointIndex,
+            int ukExitPointIndex,
+            std::string exitPoint,
+            std::string ukExitPoint)
             : intentionCode(intentionCode), exitPointIndex(exitPointIndex), ukExitPointIndex(ukExitPointIndex),
-              exitPoint(std::move(exitPoint)){};
+              exitPoint(std::move(exitPoint)), ukExitPoint(ukExitPoint){};
 
         // The code
         std::string intentionCode;
@@ -29,6 +34,9 @@ namespace UKControllerPlugin::IntentionCode {
 
         // The exit point itself
         std::string exitPoint;
+
+        // The UK exit point itself
+        std::string ukExitPoint;
 
         inline static const int INVALID_EXIT_POINT = -1;
     };

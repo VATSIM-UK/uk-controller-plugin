@@ -426,9 +426,9 @@ namespace UKControllerPluginTest {
             ASSERT_EQ(repo->outSouth, repo->GetSectorExitPoint("ETRAT").GetOutDirection());
 
             // VEULE
-            ASSERT_TRUE(repo->GetSectorExitPoint("VEULE").GetName().compare("VEULE") == 0);
-            ASSERT_TRUE(repo->GetSectorExitPoint("VEULE").GetIntentionCode(mockRoute, 0, 37000).compare("V") == 0);
-            ASSERT_EQ(repo->outSouth, repo->GetSectorExitPoint("VEULE").GetOutDirection());
+            ASSERT_TRUE(repo->GetSectorExitPoint("XAMAB").GetName().compare("XAMAB") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("XAMAB").GetIntentionCode(mockRoute, 0, 37000).compare("V") == 0);
+            ASSERT_EQ(repo->outSouth, repo->GetSectorExitPoint("XAMAB").GetOutDirection());
 
             // PETAX
             ASSERT_TRUE(repo->GetSectorExitPoint("PETAX").GetName().compare("PETAX") == 0);

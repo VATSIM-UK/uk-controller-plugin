@@ -34,12 +34,11 @@ namespace UKControllerPluginTest::IntentionCode {
         public:
         void SetUp() override
         {
-            auto cache = std::make_unique<IntentionCodeCache>();
-            cache->RegisterAircraft("BAW456", {"KK", false, -1, ""});
+            cache.RegisterAircraft("BAW456", {"KK", -1, -1, "", ""});
             PersistenceContainer container;
             this->repository = SectorExitRepositoryFactory::Create();
             this->handler = std::make_unique<IntentionCodeEventHandler>(
-                IntentionCodeFactory::Create(*this->repository), std::move(cache), mockIntegration);
+                IntentionCodeFactory::Create(*this->repository), cache, mockIntegration);
         };
 
         const double FONT_SIZE = 24.1;
@@ -47,6 +46,7 @@ namespace UKControllerPluginTest::IntentionCode {
         COLORREF tagColour = RGB(255, 255, 255);
         int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
         char itemString[16] = "Foooooo"; // NOLINT
+        IntentionCodeCache cache;
         NiceMock<MockOutboundIntegrationEventHandler> mockIntegration;
         std::unique_ptr<SectorExitRepository> repository;
         std::unique_ptr<IntentionCodeEventHandler> handler;
@@ -128,20 +128,11 @@ namespace UKControllerPluginTest::IntentionCode {
     }
 
     // These two tests proves that the cache drops a code if it becomes invalid.
-    TEST_F(IntentionCodeEventHandlerTest, FlightplanEventClearsCache)
+    TEST_F(IntentionCodeEventHandlerTest, FlightplanEventRefreshesCache)
     {
         NiceMock<MockEuroscopeExtractedRouteInterface> route;
         NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
         NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
-        TagData tagData(
-            flightplan,
-            radarTarget,
-            1,
-            EuroScopePlugIn::TAG_DATA_CORRELATED,
-            itemString,
-            &euroscopeColourCode,
-            &tagColour,
-            &fontSize);
 
         EXPECT_CALL(flightplan, GetExtractedRoute()).Times(2).WillRepeatedly(Return(ByRef(route)));
 
@@ -153,11 +144,10 @@ namespace UKControllerPluginTest::IntentionCode {
 
         EXPECT_CALL(flightplan, GetCruiseLevel()).Times(2).WillRepeatedly(Return(8000));
 
-        handler->SetTagItemData(tagData);
-        EXPECT_EQ("LL", tagData.GetItemString());
-        this->handler->FlightPlanEvent(flightplan, radarTarget);
-        handler->SetTagItemData(tagData);
-        EXPECT_EQ("SS", tagData.GetItemString());
+        handler->FlightPlanEvent(flightplan, radarTarget);
+        EXPECT_EQ("LL", cache.GetIntentionCodeForAircraft("BAW123"));
+        handler->FlightPlanEvent(flightplan, radarTarget);
+        EXPECT_EQ("SS", cache.GetIntentionCodeForAircraft("BAW123"));
     }
 
     TEST_F(IntentionCodeEventHandlerTest, FlightplanDisconnectEventClearsCache)

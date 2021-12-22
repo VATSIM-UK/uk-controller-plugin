@@ -211,8 +211,8 @@ namespace UKControllerPlugin {
         // Bootstrap the modules
         InitialAltitudeModule::BootstrapPlugin(*this->container);
         InitialHeading::BootstrapPlugin(*this->container);
-        Srd::BootstrapPlugin(*this->container);
         IntentionCodeModule::BootstrapPlugin(*this->container);
+        Srd::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(*this->container);
         MinStackModule::BootstrapPlugin(

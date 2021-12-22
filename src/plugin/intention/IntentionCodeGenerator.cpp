@@ -30,7 +30,7 @@ namespace UKControllerPlugin::IntentionCode {
         which may be the same, is the point at which the aircraft exits UK airspace and thus is useful for things
         like SRD searches.
     */
-    auto IntentionCodeGenerator::FindFirExitPoint(EuroscopeExtractedRouteInterface& route) -> std::pair<int, int>
+    auto IntentionCodeGenerator::FindFirExitPoint(EuroscopeExtractedRouteInterface& route) const -> std::pair<int, int>
     {
         int i = 0;
         std::pair<int, int> exitIndexes = invalidExitPair;
@@ -88,12 +88,16 @@ namespace UKControllerPlugin::IntentionCode {
         const std::string& source,
         const std::string& destination,
         EuroscopeExtractedRouteInterface& route,
-        int cruiseLevel) -> IntentionCodeData
+        int cruiseLevel) const -> IntentionCodeData
     {
         // No flightplan filed, so we'll kill this one here.
         if (source.empty()) {
             return {
-                this->invalidCode, IntentionCodeData::INVALID_EXIT_POINT, IntentionCodeData::INVALID_EXIT_POINT, ""};
+                this->invalidCode,
+                IntentionCodeData::INVALID_EXIT_POINT,
+                IntentionCodeData::INVALID_EXIT_POINT,
+                "",
+                ""};
         }
 
         // Go through the airfield groups, to see if we can find a match.
@@ -105,6 +109,7 @@ namespace UKControllerPlugin::IntentionCode {
                     (*group)->GetIntentionCodeForGroup(destination, route),
                     IntentionCodeData::INVALID_EXIT_POINT,
                     IntentionCodeData::INVALID_EXIT_POINT,
+                    "",
                     ""};
             }
         }
@@ -116,13 +121,15 @@ namespace UKControllerPlugin::IntentionCode {
             if (!this->exitPoints.HasSectorExitPoint(route.GetPointName(exitIndexes.first))) {
                 LogError("Discovered invalid first exit point " + std::string(route.GetPointName(exitIndexes.first)));
                 // Just return the ICAO code.
-                return {destination, IntentionCodeData::INVALID_EXIT_POINT, IntentionCodeData::INVALID_EXIT_POINT, ""};
+                return {
+                    destination, IntentionCodeData::INVALID_EXIT_POINT, IntentionCodeData::INVALID_EXIT_POINT, "", ""};
             }
 
             if (!this->exitPoints.HasSectorExitPoint(route.GetPointName(exitIndexes.second))) {
                 LogError("Discovered invalid second exit point " + std::string(route.GetPointName(exitIndexes.second)));
                 // Just return the ICAO code.
-                return {destination, IntentionCodeData::INVALID_EXIT_POINT, IntentionCodeData::INVALID_EXIT_POINT, ""};
+                return {
+                    destination, IntentionCodeData::INVALID_EXIT_POINT, IntentionCodeData::INVALID_EXIT_POINT, "", ""};
             }
 
             return {
@@ -130,11 +137,12 @@ namespace UKControllerPlugin::IntentionCode {
                     .GetIntentionCode(route, exitIndexes.first, cruiseLevel),
                 exitIndexes.first,
                 exitIndexes.second,
-                route.GetPointName(exitIndexes.first)};
+                route.GetPointName(exitIndexes.first),
+                route.GetPointName(exitIndexes.second)};
         }
 
         // No special cases, just return the ICAO code.
-        return {destination, IntentionCodeData::INVALID_EXIT_POINT, IntentionCodeData::INVALID_EXIT_POINT, ""};
+        return {destination, IntentionCodeData::INVALID_EXIT_POINT, IntentionCodeData::INVALID_EXIT_POINT, "", ""};
     }
 
     void IntentionCodeGenerator::SetUserControllerPosition(std::string position)

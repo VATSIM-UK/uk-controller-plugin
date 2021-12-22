@@ -44,7 +44,8 @@ namespace UKControllerPlugin::Srd {
             this->lastSearchParameters = std::shared_ptr<SrdSearchParameters>(new SrdSearchParameters{
                 flightplan.GetOrigin(),
                 flightplan.GetDestination(),
-                static_cast<unsigned int>(flightplan.GetCruiseLevel())});
+                static_cast<unsigned int>(flightplan.GetCruiseLevel()),
+                flightplan.GetCallsign()});
             dialog.OpenDialog(IDD_SRD_SEARCH, reinterpret_cast<LPARAM>(this->lastSearchParameters.get()));
         }
     }
