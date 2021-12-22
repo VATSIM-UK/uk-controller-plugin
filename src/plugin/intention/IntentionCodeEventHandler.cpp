@@ -51,7 +51,7 @@ namespace UKControllerPlugin::IntentionCode {
             flightPlan.GetDestination(),
             extractedRoute,
             flightPlan.GetCruiseLevel());
-        
+
         this->codeCache.RegisterAircraft(flightPlan.GetCallsign(), data);
     }
 

@@ -164,7 +164,7 @@ namespace UKControllerPluginTest::IntentionCode {
     TEST(IntentionCodeCache, ItReturnsDefaultDataForAircraftIfNotSet)
     {
         IntentionCodeCache cache;
-        
+
         cache.RegisterAircraft("BAW123", IntentionCodeData("C2", 5, 6, "REDFA", "SOMVA"));
         auto data = cache.GetDataForAircraft("BAW456");
         EXPECT_EQ(IntentionCodeData::INVALID_EXIT_POINT, data.exitPointIndex);
