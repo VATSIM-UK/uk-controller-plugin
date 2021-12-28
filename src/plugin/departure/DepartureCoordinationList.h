@@ -67,10 +67,11 @@ namespace UKControllerPlugin::Departure {
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
         // Drawing RECTs
-        const Gdiplus::Rect callsignColumnHeader{5, 5, 100, 25};
-        const Gdiplus::Rect controllerColumnHeader{115, 5, 100, 25};
-        const Gdiplus::Rect airportColumnHeader{225, 5, 40, 25};
-        const Gdiplus::Rect sidColumnHeader{275, 5, 65, 25};
+        const Gdiplus::Rect typeColumnHeader{5, 5, 30, 25};
+        const Gdiplus::Rect callsignColumnHeader{45, 5, 100, 25};
+        const Gdiplus::Rect controllerColumnHeader{155, 5, 100, 25};
+        const Gdiplus::Rect airportColumnHeader{265, 5, 40, 25};
+        const Gdiplus::Rect sidColumnHeader{315, 5, 65, 25};
 
         // Some colours
         const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(255, 255, 255);
@@ -93,15 +94,15 @@ namespace UKControllerPlugin::Departure {
         const int titleBarHeight = 20;
 
         // Width of title bar
-        const int titleBarWidth = 340;
+        const int titleBarWidth = 380;
 
         // Default X/Y of window
         static const int defaultPosition = 100;
 
         // Default RECT on reset position
         inline static const RECT defaultRect = {100, 100, 200, 200};
-        const Gdiplus::Rect closeButtonOffset = {325, 5, 10, 10};
-        const Gdiplus::Rect collapseButtonOffset = {310, 5, 10, 10};
+        const Gdiplus::Rect closeButtonOffset = {365, 5, 10, 10};
+        const Gdiplus::Rect collapseButtonOffset = {350, 5, 10, 10};
 
         // How high each line is
         static const int lineHeight = 25;

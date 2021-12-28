@@ -6,14 +6,14 @@
 #include "components/TitleBar.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
-#include "releases/DepartureReleaseEventHandler.h"
-#include "releases/DepartureReleaseRequest.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "helper/HelperFunctions.h"
+#include "releases/DepartureReleaseEventHandler.h"
+#include "releases/DepartureReleaseRequest.h"
 #include "tag/TagData.h"
 
 namespace UKControllerPlugin::Departure {
@@ -102,12 +102,14 @@ namespace UKControllerPlugin::Departure {
                 }
 
                 // Draw column headers
+                graphics.DrawString(L"Type", this->typeColumnHeader, this->textBrush);
                 graphics.DrawString(L"Callsign", this->callsignColumnHeader, this->textBrush);
                 graphics.DrawString(L"Controller", this->controllerColumnHeader, this->textBrush);
                 graphics.DrawString(L"Dept", this->airportColumnHeader, this->textBrush);
                 graphics.DrawString(L"SID", this->sidColumnHeader, this->textBrush);
 
                 // Draw each aircraft that we care about
+                Gdiplus::Rect typeColumn = this->typeColumnHeader;
                 Gdiplus::Rect callsignColumn = this->callsignColumnHeader;
                 Gdiplus::Rect controllerColumn = this->controllerColumnHeader;
                 Gdiplus::Rect airportColumn = this->airportColumnHeader;
@@ -116,10 +118,13 @@ namespace UKControllerPlugin::Departure {
                 // Draw each decision
                 for (const auto& decision : decisions) {
                     // Shift the cols
+                    typeColumn.Y += lineHeight;
                     callsignColumn.Y += lineHeight;
                     controllerColumn.Y += lineHeight;
                     airportColumn.Y += lineHeight;
                     sidColumn.Y += lineHeight;
+
+                    graphics.DrawString(HelperFunctions::ConvertToWideString("Rls"), typeColumnHeader, this->textBrush);
 
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(decision->Callsign()), callsignColumn, this->textBrush);
