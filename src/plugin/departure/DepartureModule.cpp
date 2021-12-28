@@ -22,6 +22,7 @@ namespace UKControllerPlugin::Departure {
         const int coordinationListRendererId = renderables.ReserveRendererIdentifier();
         auto coordinationList = std::make_shared<DepartureCoordinationList>(
             *container.departureReleaseHandler,
+            *container.prenotes,
             *container.plugin,
             *container.controllerPositions,
             renderables.ReserveScreenObjectIdentifier(coordinationListRendererId));

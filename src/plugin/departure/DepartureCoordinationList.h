@@ -15,6 +15,10 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
     } // namespace Euroscope
+    namespace Prenote {
+        class PrenoteMessage;
+        class PrenoteMessageCollection;
+    } // namespace Prenote
     namespace Releases {
         class DepartureReleaseRequest;
         class DepartureReleaseEventHandler;
@@ -33,6 +37,7 @@ namespace UKControllerPlugin::Departure {
         public:
         DepartureCoordinationList(
             Releases::DepartureReleaseEventHandler& handler,
+            Prenote::PrenoteMessageCollection& prenotes,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             const Controller::ControllerPositionCollection& controllers,
             int screenObjectId);
@@ -62,6 +67,9 @@ namespace UKControllerPlugin::Departure {
 
         // Handles events for departure releases
         Releases::DepartureReleaseEventHandler& handler;
+        
+        // Contains all the prenote messages
+        Prenote::PrenoteMessageCollection& prenotes;
 
         // Provides interface with the plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
@@ -72,6 +80,7 @@ namespace UKControllerPlugin::Departure {
         const Gdiplus::Rect controllerColumnHeader{160, 5, 100, 25};
         const Gdiplus::Rect airportColumnHeader{270, 5, 40, 25};
         const Gdiplus::Rect sidColumnHeader{320, 5, 65, 25};
+        const Gdiplus::Rect destColumnHeader{395, 5, 40, 25};
 
         // Some colours
         const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(255, 255, 255);
@@ -94,7 +103,7 @@ namespace UKControllerPlugin::Departure {
         const int titleBarHeight = 20;
 
         // Width of title bar
-        const int titleBarWidth = 385;
+        const int titleBarWidth = 435;
 
         // Default X/Y of window
         static const int defaultPosition = 100;
@@ -115,5 +124,9 @@ namespace UKControllerPlugin::Departure {
         std::shared_ptr<Components::Button> closeButton;
         std::shared_ptr<Components::Button> collapseButton;
         std::shared_ptr<Components::BrushSwitcher> brushSwitcher;
+        
+        // Some TAG function ids
+        inline static const int DEPARTURE_RELEASE_DECISION_TAG_FUNCTION_ID = 9013;
+        inline static const int ACKNOWLEDGE_PRENOTE_TAG_FUNCTION_ID = 9019;
     };
 } // namespace UKControllerPlugin::Departure

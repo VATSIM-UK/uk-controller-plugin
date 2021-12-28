@@ -4,11 +4,13 @@
 #include "departure/DepartureCoordinationList.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
+#include "prenote/PrenoteMessageCollection.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
 
 using testing::Test;
 using UKControllerPlugin::Departure::DepartureCoordinationList;
+using UKControllerPlugin::Prenote::PrenoteMessageCollection;
 
 namespace UKControllerPluginTest::Departure {
 
@@ -17,7 +19,7 @@ namespace UKControllerPluginTest::Departure {
         public:
         DepartureCoordinationListTest()
             : userSettings(mockAsrProvider),
-              list(std::make_shared<DepartureCoordinationList>(handler, mockPlugin, controllers, 3)),
+              list(std::make_shared<DepartureCoordinationList>(handler, prenotes, mockPlugin, controllers, 3)),
               handler(mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
               dialogManager(dialogProvider)
         {
@@ -41,6 +43,7 @@ namespace UKControllerPluginTest::Departure {
             this->activeCallsigns.AddUserCallsign(*controllerCallsign);
         }
 
+        PrenoteMessageCollection prenotes;
         testing::NiceMock<Euroscope::MockUserSettingProviderInterface> mockAsrProvider;
         UKControllerPlugin::Euroscope::UserSetting userSettings;
         std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>> pluginReturnedFlightplan;

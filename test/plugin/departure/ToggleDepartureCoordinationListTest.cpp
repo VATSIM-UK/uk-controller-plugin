@@ -3,11 +3,13 @@
 #include "departure/DepartureCoordinationList.h"
 #include "departure/ToggleDepartureCoordinationList.h"
 #include "dialog/DialogManager.h"
+#include "prenote/PrenoteMessageCollection.h"
 #include "releases/DepartureReleaseEventHandler.h"
 
 using testing::Test;
 using UKControllerPlugin::Departure::DepartureCoordinationList;
 using UKControllerPlugin::Departure::ToggleDepartureCoordinationList;
+using UKControllerPlugin::Prenote::PrenoteMessageCollection;
 
 namespace UKControllerPluginTest::Departure {
 
@@ -16,7 +18,7 @@ namespace UKControllerPluginTest::Departure {
         public:
         ToggleDepartureCoordinationListTest()
             : handler(mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
-              list(std::make_shared<DepartureCoordinationList>(handler, mockPlugin, controllers, 3)),
+              list(std::make_shared<DepartureCoordinationList>(handler, prenotes, mockPlugin, controllers, 3)),
               dialogManager(dialogProvider)
         {
         }
@@ -30,6 +32,7 @@ namespace UKControllerPluginTest::Departure {
             return ToggleDepartureCoordinationList(list, 2);
         }
 
+        PrenoteMessageCollection prenotes;
         UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
         std::shared_ptr<DepartureCoordinationList> list;
         UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;

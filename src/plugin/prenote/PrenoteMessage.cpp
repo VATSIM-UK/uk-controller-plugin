@@ -16,7 +16,7 @@ namespace UKControllerPlugin::Prenote {
         : id(id), callsign(std::move(callsign)), departureAirfield(std::move(departureAirfield)), sid(std::move(sid)),
           destinationAirfield(std::move(destinationAirfield)), sendingControllerId(sendingControllerId),
           targetControllerId(targetControllerId), expiresAt(expiresAt),
-          acknowledgedAt((std::chrono::system_clock::time_point::max)())
+          acknowledgedAt((std::chrono::system_clock::time_point::max)()), createdAt(Time::TimeNow())
     {
     }
 
@@ -73,5 +73,10 @@ namespace UKControllerPlugin::Prenote {
     auto PrenoteMessage::GetAcknowledgedAt() const -> const std::chrono::system_clock::time_point&
     {
         return this->acknowledgedAt;
+    }
+    
+    auto PrenoteMessage::GetCreatedAt() const -> const std::chrono::system_clock::time_point&
+    {
+        return this->createdAt;
     }
 } // namespace UKControllerPlugin::Prenote

@@ -5,6 +5,7 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "message/UserMessager.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "prenote/PrenoteMessageCollection.h"
 #include "prenote/PrenoteModule.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
@@ -133,6 +134,12 @@ namespace UKControllerPluginTest::Prenote {
     {
         PrenoteModule::BootstrapPlugin(container, dependency);
         EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9019));
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersPrenoteCollectionWithContainer)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(0, container.prenotes->Count());
     }
 
     TEST_F(PrenoteModuleTest, ItRegistersRenderables)

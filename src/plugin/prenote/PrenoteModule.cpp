@@ -58,7 +58,6 @@ namespace UKControllerPlugin::Prenote {
 
     const int MESSAGE_TIMEOUT_CHECK_INTERVAL = 10;
 
-    std::shared_ptr<PrenoteMessageCollection> messages;     // NOLINT
     std::shared_ptr<AcknowledgePrenoteMessage> acknowledge; // NOLINT
     std::unique_ptr<PublishedPrenoteCollection> prenotes;   // NOLINT
     std::unique_ptr<PublishedPrenoteMapper> mapper;         // NOLINT
@@ -81,24 +80,30 @@ namespace UKControllerPlugin::Prenote {
             *persistence.pluginUserSettingHandler));
 
         // Electronic prenote messages
-        messages = std::make_shared<PrenoteMessageCollection>();
+        persistence.prenotes = std::make_shared<PrenoteMessageCollection>();
 
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(
-            messages, *persistence.controllerPositions, *persistence.activeCallsigns, *persistence.windows));
-        persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteAcknowledgedPushEventHandler>(messages));
-        persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteDeletedPushEventHandler>(messages));
+            persistence.prenotes,
+            *persistence.controllerPositions,
+            *persistence.activeCallsigns,
+            *persistence.windows));
+        persistence.pushEventProcessors->AddProcessor(
+            std::make_shared<PrenoteAcknowledgedPushEventHandler>(persistence.prenotes));
+        persistence.pushEventProcessors->AddProcessor(
+            std::make_shared<PrenoteDeletedPushEventHandler>(persistence.prenotes));
         persistence.timedHandler->RegisterEvent(
-            std::make_shared<PrenoteMessageTimeout>(messages), MESSAGE_TIMEOUT_CHECK_INTERVAL);
+            std::make_shared<PrenoteMessageTimeout>(persistence.prenotes), MESSAGE_TIMEOUT_CHECK_INTERVAL);
 
         // Status indicator tag item
         persistence.tagHandler->RegisterTagItem(
-            MESSAGE_STATUS_INDICATOR_TAG_ITEM_ID, std::make_shared<PrenoteStatusIndicatorTagItem>(messages));
+            MESSAGE_STATUS_INDICATOR_TAG_ITEM_ID,
+            std::make_shared<PrenoteStatusIndicatorTagItem>(persistence.prenotes));
 
         // Cancelling prenote messages menu
         auto cancelCallback = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
         auto cancelMenu = std::make_shared<CancelPrenoteMessageMenu>(
-            messages,
+            persistence.prenotes,
             *persistence.controllerPositions,
             *persistence.activeCallsigns,
             *persistence.plugin,
@@ -125,7 +130,7 @@ namespace UKControllerPlugin::Prenote {
         // Send prenote messages menu
         auto sendCallback = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
         auto sendMenu = std::make_shared<SendPrenoteMenu>(
-            messages,
+            persistence.prenotes,
             *persistence.controllerPositions,
             *persistence.activeCallsigns,
             *persistence.plugin,
@@ -151,7 +156,7 @@ namespace UKControllerPlugin::Prenote {
 
         // Acknowledge message
         acknowledge = std::make_shared<AcknowledgePrenoteMessage>(
-            messages, *persistence.activeCallsigns, *persistence.taskRunner, *persistence.api);
+            persistence.prenotes, *persistence.activeCallsigns, *persistence.taskRunner, *persistence.api);
         auto acknowledgeForTagFunction = acknowledge;
 
         TagFunction acknowledgePrenoteMessage(
@@ -187,13 +192,13 @@ namespace UKControllerPlugin::Prenote {
         // Status view renderer
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(),
-            std::make_shared<PrenoteMessageStatusView>(messages, *persistence.controllerPositions),
+            std::make_shared<PrenoteMessageStatusView>(persistence.prenotes, *persistence.controllerPositions),
             RadarRenderableCollection::afterLists);
 
         // Pending list renderer
         auto listRendererId = radarRenderables.ReserveRendererIdentifier();
         auto listRenderer = std::make_shared<PendingPrenoteList>(
-            messages,
+            persistence.prenotes,
             acknowledge,
             *persistence.plugin,
             *persistence.controllerPositions,

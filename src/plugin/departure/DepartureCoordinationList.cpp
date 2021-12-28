@@ -12,6 +12,8 @@
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "helper/HelperFunctions.h"
+#include "prenote/PrenoteMessage.h"
+#include "prenote/PrenoteMessageCollection.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
 #include "tag/TagData.h"
@@ -20,10 +22,11 @@ namespace UKControllerPlugin::Departure {
 
     DepartureCoordinationList::DepartureCoordinationList(
         Releases::DepartureReleaseEventHandler& handler,
+        Prenote::PrenoteMessageCollection& prenotes,
         Euroscope::EuroscopePluginLoopbackInterface& plugin,
         const Controller::ControllerPositionCollection& controllers,
         const int screenObjectId)
-        : controllers(controllers), handler(handler), plugin(plugin), textBrush(OFF_WHITE_COLOUR),
+        : controllers(controllers), handler(handler), prenotes(prenotes), plugin(plugin), textBrush(OFF_WHITE_COLOUR),
           screenObjectId(screenObjectId), visible(false), contentCollapsed(false)
     {
         this->brushSwitcher = Components::BrushSwitcher::Create(
@@ -63,13 +66,12 @@ namespace UKControllerPlugin::Departure {
             return;
         }
 
-        auto fp = this->plugin.GetFlightplanForCallsign(objectDescription);
-        auto rt = this->plugin.GetRadarTargetForCallsign(objectDescription);
-        if (!fp || !rt) {
-            return;
-        }
-
-        this->handler.OpenDecisionMenu(*fp, *rt, "", mousePos);
+        const std::string callsign = objectDescription.substr(4);
+        objectDescription.substr(0, 3) == "rls"
+            ? radarScreen.TogglePluginTagFunction(
+                  callsign, DEPARTURE_RELEASE_DECISION_TAG_FUNCTION_ID, mousePos, itemArea)
+            : radarScreen.TogglePluginTagFunction(
+                  callsign, DEPARTURE_RELEASE_DECISION_TAG_FUNCTION_ID, mousePos, itemArea);
     }
 
     auto DepartureCoordinationList::IsVisible() const -> bool
@@ -86,7 +88,8 @@ namespace UKControllerPlugin::Departure {
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
         auto decisions = this->handler.GetReleasesRequiringUsersDecision();
-        if (decisions.empty()) {
+        std::vector<std::shared_ptr<Prenote::PrenoteMessage>> prenoteMessages;
+        if (decisions.empty() && prenoteMessages.empty()) {
             this->titleBar->WithBackgroundBrush(this->brushSwitcher->Base());
         } else {
             this->titleBar->WithBackgroundBrush(this->brushSwitcher->Next());
@@ -96,7 +99,7 @@ namespace UKControllerPlugin::Departure {
         graphics.Translated(
             this->position.X,
             this->position.Y + static_cast<float>(this->titleBarHeight),
-            [this, &graphics, &radarScreen, &decisions] {
+            [this, &graphics, &radarScreen, &decisions, &prenoteMessages] {
                 if (this->contentCollapsed) {
                     return;
                 }
@@ -107,6 +110,7 @@ namespace UKControllerPlugin::Departure {
                 graphics.DrawString(L"Controller", this->controllerColumnHeader, this->textBrush);
                 graphics.DrawString(L"Dept", this->airportColumnHeader, this->textBrush);
                 graphics.DrawString(L"SID", this->sidColumnHeader, this->textBrush);
+                graphics.DrawString(L"Dest", this->destColumnHeader, this->textBrush);
 
                 // Draw each aircraft that we care about
                 Gdiplus::Rect typeColumn = this->typeColumnHeader;
@@ -114,39 +118,89 @@ namespace UKControllerPlugin::Departure {
                 Gdiplus::Rect controllerColumn = this->controllerColumnHeader;
                 Gdiplus::Rect airportColumn = this->airportColumnHeader;
                 Gdiplus::Rect sidColumn = this->sidColumnHeader;
+                Gdiplus::Rect destColumn = this->destColumnHeader;
 
-                // Draw each decision
-                for (const auto& decision : decisions) {
+                auto nextRelease = decisions.cbegin();
+                auto nextPrenote = prenoteMessages.cbegin();
+                std::variant<
+                    std::shared_ptr<Releases::DepartureReleaseRequest>,
+                    std::shared_ptr<Prenote::PrenoteMessage>>
+                    listItem;
+
+                do {
+                    // Out of things to draw
+                    if (nextRelease == decisions.cend() && nextPrenote == prenoteMessages.cend()) {
+                        break;
+                    }
+
+                    // Chose the next item in the list - this is, broadly, ordered by created at time
+                    if (nextRelease == decisions.cend()) {
+                        listItem = std::variant<
+                            std::shared_ptr<Releases::DepartureReleaseRequest>,
+                            std::shared_ptr<Prenote::PrenoteMessage>>(*nextPrenote++);
+                    } else if (nextPrenote == prenoteMessages.cend()) {
+                        listItem = std::variant<
+                            std::shared_ptr<Releases::DepartureReleaseRequest>,
+                            std::shared_ptr<Prenote::PrenoteMessage>>(*nextRelease++);
+                    } else if ((*nextPrenote)->GetCreatedAt() < (*nextRelease)->CreatedAt()) {
+                        listItem = std::variant<
+                            std::shared_ptr<Releases::DepartureReleaseRequest>,
+                            std::shared_ptr<Prenote::PrenoteMessage>>(*nextPrenote++);
+                    } else {
+                        listItem = std::variant<
+                            std::shared_ptr<Releases::DepartureReleaseRequest>,
+                            std::shared_ptr<Prenote::PrenoteMessage>>(*nextRelease++);
+                    }
+
                     // Shift the cols
                     typeColumn.Y += lineHeight;
                     callsignColumn.Y += lineHeight;
                     controllerColumn.Y += lineHeight;
                     airportColumn.Y += lineHeight;
                     sidColumn.Y += lineHeight;
+                    destColumn.Y += lineHeight;
 
-                    graphics.DrawString(HelperFunctions::ConvertToWideString("Rls"), typeColumnHeader, this->textBrush);
-
+                    // Type column
+                    const std::string itemType = listItem.index() == 0 ? "Rls" : "Pre";
                     graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(decision->Callsign()), callsignColumn, this->textBrush);
+                        HelperFunctions::ConvertToWideString(itemType), typeColumnHeader, this->textBrush);
+
+                    // Callsign column
+                    const std::string callsign =
+                        listItem.index() == 0
+                            ? std::get<std::shared_ptr<Releases::DepartureReleaseRequest>>(listItem)->Callsign()
+                            : std::get<std::shared_ptr<Prenote::PrenoteMessage>>(listItem)->GetCallsign();
+                    graphics.DrawString(
+                        HelperFunctions::ConvertToWideString(callsign), callsignColumn, this->textBrush);
                     std::shared_ptr<Components::ClickableArea> callsignClickspot = Components::ClickableArea::Create(
-                        callsignColumn, this->screenObjectId, decision->Callsign(), false);
+                        callsignColumn, this->screenObjectId, itemType + "." + callsign, false);
                     callsignClickspot->Apply(graphics, radarScreen);
 
+                    // Controller column
+                    const int controllerId =
+                        listItem.index() == 0
+                            ? std::get<std::shared_ptr<Releases::DepartureReleaseRequest>>(listItem)
+                                  ->RequestingController()
+                            : std::get<std::shared_ptr<Prenote::PrenoteMessage>>(listItem)->GetSendingControllerId();
                     const std::wstring controller = HelperFunctions::ConvertToWideString(
-                        this->controllers.FetchPositionById(decision->RequestingController())->GetCallsign());
+                        this->controllers.FetchPositionById(controllerId)->GetCallsign());
                     graphics.DrawString(controller, controllerColumn, this->textBrush);
 
-                    auto fp = this->plugin.GetFlightplanForCallsign(decision->Callsign());
+                    auto fp = this->plugin.GetFlightplanForCallsign(callsign);
                     if (!fp) {
                         continue;
                     }
 
+                    // Remaining FP-driven columns
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(fp->GetOrigin()), airportColumn, this->textBrush);
 
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(fp->GetSidName()), sidColumn, this->textBrush);
-                }
+
+                    graphics.DrawString(
+                        HelperFunctions::ConvertToWideString(fp->GetDestination()), destColumn, this->textBrush);
+                } while (nextRelease != decisions.cend() || nextPrenote != prenoteMessages.cend());
             });
 
         // Translate to window position
