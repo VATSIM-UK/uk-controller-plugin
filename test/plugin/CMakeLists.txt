@@ -73,7 +73,7 @@ source_group("test\\datablock" FILES ${test__datablock})
 
 set(test__departure
         
-        departure/DepartureCoordinationListTest.cpp departure/ToggleDepartureCoordinationListTest.cpp)
+        departure/DepartureCoordinationListTest.cpp departure/ToggleDepartureCoordinationListTest.cpp departure/DepartureModuleTest.cpp)
 source_group("test\\departure" FILES ${test__departure})
 
 set(test__dependency

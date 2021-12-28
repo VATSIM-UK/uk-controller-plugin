@@ -17,13 +17,13 @@ namespace UKControllerPlugin::Departure {
     class ToggleDepartureCoordinationList : public RadarScreen::ConfigurableDisplayInterface
     {
         public:
-        ToggleDepartureCoordinationList(DepartureCoordinationList& list, int callbackId);
+        ToggleDepartureCoordinationList(std::shared_ptr<DepartureCoordinationList> list, int callbackId);
         void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
         Plugin::PopupMenuItem GetConfigurationMenuItem() const override;
 
         private:
         // The list
-        DepartureCoordinationList& list;
+        std::shared_ptr<DepartureCoordinationList> list;
 
         // Callback for the list
         const int callbackId;

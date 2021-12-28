@@ -16,21 +16,22 @@ namespace UKControllerPluginTest::Departure {
         public:
         ToggleDepartureCoordinationListTest()
             : handler(mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
-              list(handler, mockPlugin, controllers, 3), dialogManager(dialogProvider)
+              list(std::make_shared<DepartureCoordinationList>(handler, mockPlugin, controllers, 3)),
+              dialogManager(dialogProvider)
         {
         }
 
         ToggleDepartureCoordinationList GetList(bool alreadyToggled)
         {
             if (alreadyToggled) {
-                list.ToggleVisible();
+                list->ToggleVisible();
             }
 
             return ToggleDepartureCoordinationList(list, 2);
         }
 
         UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
-        DepartureCoordinationList list;
+        std::shared_ptr<DepartureCoordinationList> list;
         UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
         testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;
         testing::NiceMock<Api::MockApiInterface> api;
@@ -65,10 +66,10 @@ namespace UKControllerPluginTest::Departure {
     TEST_F(ToggleDepartureCoordinationListTest, ClickingTheItemTogglesTheList)
     {
         ToggleDepartureCoordinationList toggleList = GetList(true);
-        EXPECT_TRUE(list.IsVisible());
+        EXPECT_TRUE(list->IsVisible());
         toggleList.Configure(1, "", {});
-        EXPECT_FALSE(list.IsVisible());
+        EXPECT_FALSE(list->IsVisible());
         toggleList.Configure(1, "", {});
-        EXPECT_TRUE(list.IsVisible());
+        EXPECT_TRUE(list->IsVisible());
     }
 } // namespace UKControllerPluginTest::Departure

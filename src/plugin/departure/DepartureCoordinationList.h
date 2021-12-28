@@ -67,11 +67,11 @@ namespace UKControllerPlugin::Departure {
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
         // Drawing RECTs
-        const Gdiplus::Rect typeColumnHeader{5, 5, 30, 25};
-        const Gdiplus::Rect callsignColumnHeader{45, 5, 100, 25};
-        const Gdiplus::Rect controllerColumnHeader{155, 5, 100, 25};
-        const Gdiplus::Rect airportColumnHeader{265, 5, 40, 25};
-        const Gdiplus::Rect sidColumnHeader{315, 5, 65, 25};
+        const Gdiplus::Rect typeColumnHeader{5, 5, 40, 25};
+        const Gdiplus::Rect callsignColumnHeader{50, 5, 100, 25};
+        const Gdiplus::Rect controllerColumnHeader{160, 5, 100, 25};
+        const Gdiplus::Rect airportColumnHeader{270, 5, 40, 25};
+        const Gdiplus::Rect sidColumnHeader{320, 5, 65, 25};
 
         // Some colours
         const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(255, 255, 255);
@@ -94,7 +94,7 @@ namespace UKControllerPlugin::Departure {
         const int titleBarHeight = 20;
 
         // Width of title bar
-        const int titleBarWidth = 380;
+        const int titleBarWidth = 385;
 
         // Default X/Y of window
         static const int defaultPosition = 100;

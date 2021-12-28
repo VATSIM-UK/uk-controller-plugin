@@ -6,6 +6,7 @@
 #include "bootstrap/HelperBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "countdown/CountdownModule.h"
+#include "departure/DepartureModule.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "graphics/GdiGraphicsWrapper.h"
 #include "historytrail/HistoryTrailModule.h"
@@ -104,6 +105,7 @@ namespace UKControllerPlugin::RadarScreen {
         Notifications::BootstrapRadarScreen(this->persistence, configurableDisplays);
         Releases::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         PrenoteModule::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
+        Departure::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         MissedApproach::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
 
         // Register command for position resets
