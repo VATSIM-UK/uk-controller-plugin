@@ -24,8 +24,8 @@ namespace UKControllerPlugin {
 namespace UKControllerPlugin::Departure {
 
     /*
-     * Renders a list of departure releases requiring the users
-     * decision.
+     * Renders a list of departure releases and prenotes requiring the users
+     * attention.
      */
     class DepartureCoordinationList : public RadarScreen::RadarRenderableInterface,
                                       public Euroscope::AsrEventHandlerInterface

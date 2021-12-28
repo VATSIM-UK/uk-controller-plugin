@@ -127,7 +127,7 @@ set(src__datablock
 source_group("src\\datablock" FILES ${src__datablock})
 
 set(src__departure
-        departure/DepartureCoordinationList.cpp departure/DepartureCoordinationList.h)
+        departure/DepartureCoordinationList.cpp departure/DepartureCoordinationList.h departure/ToggleDepartureCoordinationList.cpp departure/ToggleDepartureCoordinationList.h)
 source_group("src\\departure" FILES ${src__departure})
 
 set(src__dependency
