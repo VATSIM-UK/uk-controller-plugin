@@ -126,6 +126,10 @@ set(src__datablock
 )
 source_group("src\\datablock" FILES ${src__datablock})
 
+set(src__departure
+        departure/DepartureCoordinationList.cpp departure/DepartureCoordinationList.h)
+source_group("src\\departure" FILES ${src__departure})
+
 set(src__dependency
     "dependency/DependencyLoader.cpp"
     "dependency/DependencyLoader.h"
@@ -857,6 +861,7 @@ set(ALL_FILES
     ${src__controller}
     ${src__countdown}
     ${src__datablock}
+    ${src__departure}
     ${src__dependency}
     ${src__euroscope}
     ${src__flightinformationservice}

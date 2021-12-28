@@ -71,6 +71,11 @@ set(test__datablock
 )
 source_group("test\\datablock" FILES ${test__datablock})
 
+set(test__departure
+        
+        departure/DepartureCoordinationListTest.cpp)
+source_group("test\\departure" FILES ${test__departure})
+
 set(test__dependency
     "dependency/DependencyLoaderTest.cpp"
     "dependency/UpdateDependenciesTest.cpp"
@@ -265,7 +270,7 @@ set(test__missedapproach
         missedapproach/MissedApproachAcknowledgedPushEventProcessorTest.cpp
         missedapproach/MissedApproachIndicatorTest.cpp
         missedapproach/AcknowledgeMissedApproachTagFunctionTest.cpp
-        missedapproach/MissedApproachTriggeredMessageTest.cpp 
+        missedapproach/MissedApproachTriggeredMessageTest.cpp
         missedapproach/TriggerMissedApproachMessageHandlerTest.cpp)
 
 source_group("test\\missedapproach" FILES ${test__missedapproach})
@@ -516,6 +521,7 @@ set(ALL_FILES
     ${test__controller}
     ${test__countdown}
     ${test__datablock}
+    ${test__departure}
     ${test__dependency}
     ${test__euroscope}
     ${test__flightinformationservice}
