@@ -4,9 +4,9 @@
 
 namespace UKControllerPlugin {
     namespace Controller {
+        class ActiveCallsignCollection;
         class ControllerPositionCollection;
     } // namespace Controller
-
     namespace Components {
         class BrushSwitcher;
         class TitleBar;
@@ -40,6 +40,7 @@ namespace UKControllerPlugin::Departure {
             Prenote::PrenoteMessageCollection& prenotes,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             const Controller::ControllerPositionCollection& controllers,
+            const Controller::ActiveCallsignCollection& activeCallsigns,
             int screenObjectId);
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
@@ -73,6 +74,9 @@ namespace UKControllerPlugin::Departure {
 
         // Provides interface with the plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
+        
+        // Who's actively online
+        const Controller::ActiveCallsignCollection& activeCallsigns;
 
         // Drawing RECTs
         const Gdiplus::Rect typeColumnHeader{5, 5, 40, 25};

@@ -4,6 +4,7 @@
 #include "components/ClickableArea.h"
 #include "components/StandardButtons.h"
 #include "components/TitleBar.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -25,9 +26,11 @@ namespace UKControllerPlugin::Departure {
         Prenote::PrenoteMessageCollection& prenotes,
         Euroscope::EuroscopePluginLoopbackInterface& plugin,
         const Controller::ControllerPositionCollection& controllers,
+        const Controller::ActiveCallsignCollection& activeCallsigns,
         const int screenObjectId)
-        : controllers(controllers), handler(handler), prenotes(prenotes), plugin(plugin), textBrush(OFF_WHITE_COLOUR),
-          screenObjectId(screenObjectId), visible(false), contentCollapsed(false)
+        : controllers(controllers), handler(handler), prenotes(prenotes), plugin(plugin),
+          activeCallsigns(activeCallsigns), textBrush(OFF_WHITE_COLOUR), screenObjectId(screenObjectId), visible(false),
+          contentCollapsed(false)
     {
         this->brushSwitcher = Components::BrushSwitcher::Create(
                                   std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_BASE_COLOUR), std::chrono::seconds(2))
@@ -88,7 +91,20 @@ namespace UKControllerPlugin::Departure {
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
         auto decisions = this->handler.GetReleasesRequiringUsersDecision();
+        auto userControllerId = this->activeCallsigns.UserHasCallsign()
+                                    ? this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId()
+                                    : -1;
+
         std::vector<std::shared_ptr<Prenote::PrenoteMessage>> prenoteMessages;
+        if (userControllerId != -1) {
+            this->prenotes.Iterate(
+                [&prenoteMessages, &userControllerId](const std::shared_ptr<Prenote::PrenoteMessage>& message) {
+                    if (message->GetTargetControllerId() == userControllerId && !message->IsAcknowledged()) {
+                        prenoteMessages.push_back(message);
+                    }
+                });
+        }
+
         if (decisions.empty() && prenoteMessages.empty()) {
             this->titleBar->WithBackgroundBrush(this->brushSwitcher->Base());
         } else {
