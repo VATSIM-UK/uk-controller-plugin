@@ -56,7 +56,7 @@ namespace UKControllerPlugin::Prenote {
 
         // What time the prenote expires
         std::chrono::system_clock::time_point acknowledgedAt;
-        
+
         // When was it created
         std::chrono::system_clock::time_point createdAt;
     };

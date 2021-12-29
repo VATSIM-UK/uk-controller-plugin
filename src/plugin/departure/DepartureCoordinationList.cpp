@@ -73,8 +73,7 @@ namespace UKControllerPlugin::Departure {
         objectDescription.substr(0, 3) == "Rls"
             ? radarScreen.TogglePluginTagFunction(
                   callsign, DEPARTURE_RELEASE_DECISION_TAG_FUNCTION_ID, mousePos, itemArea)
-            : radarScreen.TogglePluginTagFunction(
-                  callsign, ACKNOWLEDGE_PRENOTE_TAG_FUNCTION_ID, mousePos, itemArea);
+            : radarScreen.TogglePluginTagFunction(callsign, ACKNOWLEDGE_PRENOTE_TAG_FUNCTION_ID, mousePos, itemArea);
     }
 
     auto DepartureCoordinationList::IsVisible() const -> bool
@@ -178,8 +177,7 @@ namespace UKControllerPlugin::Departure {
 
                     // Type column
                     const std::string itemType = listItem.index() == 0 ? "Rls" : "Pre";
-                    graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(itemType), typeColumn, this->textBrush);
+                    graphics.DrawString(HelperFunctions::ConvertToWideString(itemType), typeColumn, this->textBrush);
 
                     // Callsign column
                     const std::string callsign =

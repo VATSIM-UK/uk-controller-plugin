@@ -74,7 +74,7 @@ namespace UKControllerPlugin::Prenote {
     {
         return this->acknowledgedAt;
     }
-    
+
     auto PrenoteMessage::GetCreatedAt() const -> const std::chrono::system_clock::time_point&
     {
         return this->createdAt;
