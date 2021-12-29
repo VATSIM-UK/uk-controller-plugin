@@ -18,7 +18,8 @@ namespace UKControllerPluginTest::Departure {
         public:
         ToggleDepartureCoordinationListTest()
             : handler(mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
-              list(std::make_shared<DepartureCoordinationList>(handler, prenotes, mockPlugin, controllers, 3)),
+              list(std::make_shared<DepartureCoordinationList>(
+                  handler, prenotes, mockPlugin, controllers, activeCallsigns, 3)),
               dialogManager(dialogProvider)
         {
         }

@@ -10,7 +10,7 @@ namespace UKControllerPlugin::Releases {
         int targetController,
         std::chrono::system_clock::time_point requestExpiresAt)
         : id(id), callsign(std::move(callsign)), requestingController(requestingController),
-          targetController(targetController), requestExpiresAt(requestExpiresAt)
+          targetController(targetController), requestExpiresAt(requestExpiresAt), createdAt(Time::TimeNow())
     {
     }
 

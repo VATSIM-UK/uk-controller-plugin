@@ -19,18 +19,10 @@ namespace UKControllerPluginTest::Departure {
         public:
         DepartureCoordinationListTest()
             : userSettings(mockAsrProvider), list(std::make_shared<DepartureCoordinationList>(
-                                                 handler, prenotes, mockPlugin, controllers, *activeCallsigns, 3)),
+                                                 handler, prenotes, mockPlugin, controllers, activeCallsigns, 3)),
               handler(mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
               dialogManager(dialogProvider)
         {
-            this->pluginReturnedFlightplan =
-                std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*this->pluginReturnedFlightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
-
-            this->pluginReturnedRadarTarget =
-                std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>();
-
             // Add positions and releases
             auto request = std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequest>(
                 1, "BAW123", 3, 2, std::chrono::system_clock::now() + std::chrono::minutes(5));
@@ -46,8 +38,6 @@ namespace UKControllerPluginTest::Departure {
         PrenoteMessageCollection prenotes;
         testing::NiceMock<Euroscope::MockUserSettingProviderInterface> mockAsrProvider;
         UKControllerPlugin::Euroscope::UserSetting userSettings;
-        std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>> pluginReturnedFlightplan;
-        std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>> pluginReturnedRadarTarget;
         std::shared_ptr<DepartureCoordinationList> list;
         UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
         UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
@@ -83,41 +73,22 @@ namespace UKControllerPluginTest::Departure {
         EXPECT_FALSE(this->list->IsVisible());
     }
 
-    TEST_F(DepartureCoordinationListTest, LeftClickACallsignTogglesDecisionMenu)
+    TEST_F(DepartureCoordinationListTest, LeftClickAReleaseTogglesDecisionMenuTagFunction)
     {
-        ON_CALL(this->mockPlugin, GetFlightplanForCallsign("BAW123"))
-            .WillByDefault(Return(this->pluginReturnedFlightplan));
+        EXPECT_CALL(
+            mockRadarScreen, TogglePluginTagFunction("BAW123", 9013, PointEq(POINT{1, 2}), RectEq(RECT{3, 4, 5, 6})))
+            .Times(1);
 
-        ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
-            .WillByDefault(Return(this->pluginReturnedRadarTarget));
-
-        EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, "Departure Release Decision", 1)).Times(1);
-
-        this->list->LeftClick(mockRadarScreen, 1, "BAW123", {}, {});
+        this->list->LeftClick(mockRadarScreen, 1, "Rls.BAW123", {1, 2}, {3, 4, 5, 6});
     }
 
-    TEST_F(DepartureCoordinationListTest, LeftClickACallsignDoesntToggleMenuIfNoFlightplan)
+    TEST_F(DepartureCoordinationListTest, LeftClickAPrenoteTogglesAcknowledgeTagFunction)
     {
-        ON_CALL(this->mockPlugin, GetFlightplanForCallsign("BAW123")).WillByDefault(testing::Return(nullptr));
+        EXPECT_CALL(
+            mockRadarScreen, TogglePluginTagFunction("BAW123", 9019, PointEq(POINT{1, 2}), RectEq(RECT{3, 4, 5, 6})))
+            .Times(1);
 
-        ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123"))
-            .WillByDefault(Return(this->pluginReturnedRadarTarget));
-
-        EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, "Departure Release Decision", 1)).Times(0);
-
-        this->list->LeftClick(mockRadarScreen, 1, "BAW123", {}, {});
-    }
-
-    TEST_F(DepartureCoordinationListTest, LeftClickACallsignDoesntToggleMenuIfNoRadarTarget)
-    {
-        ON_CALL(this->mockPlugin, GetFlightplanForCallsign("BAW123"))
-            .WillByDefault(Return(this->pluginReturnedFlightplan));
-
-        ON_CALL(this->mockPlugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(testing::Return(nullptr));
-
-        EXPECT_CALL(this->mockPlugin, TriggerPopupList(testing::_, "Departure Release Decision", 1)).Times(0);
-
-        this->list->LeftClick(mockRadarScreen, 1, "BAW123", {}, {});
+        this->list->LeftClick(mockRadarScreen, 1, "Pre.BAW123", {1, 2}, {3, 4, 5, 6});
     }
 
     TEST_F(DepartureCoordinationListTest, ItLoadsDefaultVisiblityFromAsr)
