@@ -114,8 +114,8 @@ namespace UKControllerPlugin::Departure {
 
         // Default RECT on reset position
         inline static const RECT defaultRect = {100, 100, 200, 200};
-        const Gdiplus::Rect closeButtonOffset = {365, 5, 10, 10};
-        const Gdiplus::Rect collapseButtonOffset = {350, 5, 10, 10};
+        const Gdiplus::Rect closeButtonOffset = {415, 5, 10, 10};
+        const Gdiplus::Rect collapseButtonOffset = {400, 5, 10, 10};
 
         // How high each line is
         static const int lineHeight = 25;
