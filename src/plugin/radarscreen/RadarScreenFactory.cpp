@@ -103,8 +103,8 @@ namespace UKControllerPlugin::RadarScreen {
 
         Srd::BootstrapRadarScreen(configurableDisplays);
         Notifications::BootstrapRadarScreen(this->persistence, configurableDisplays);
-        Releases::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
-        PrenoteModule::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
+        Releases::BootstrapRadarScreen(this->persistence, renderers);
+        PrenoteModule::BootstrapRadarScreen(this->persistence, renderers);
         Departure::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         MissedApproach::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
 

@@ -6,9 +6,7 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "dialog/DialogManager.h"
-#include "euroscope/AsrEventHandlerCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -18,7 +16,6 @@ using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Push::PushEventProcessorCollection;
-using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Releases::BootstrapPlugin;
 using UKControllerPlugin::Releases::BootstrapRadarScreen;
@@ -57,8 +54,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockDependencyLoader> dependencyLoader;
             PersistenceContainer container;
             RadarRenderableCollection renderables;
-            ConfigurableDisplayCollection configurables;
-            UKControllerPlugin::Euroscope::AsrEventHandlerCollection asr;
         };
 
         TEST_F(ReleaseModuleTest, ItRegistersForEnroutePushEvents)
@@ -166,21 +161,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(ReleaseModuleTest, RadarScreenAddsRenderable)
         {
-            BootstrapRadarScreen(this->container, renderables, configurables, asr);
-            EXPECT_EQ(2, renderables.CountRenderers());
-        }
-
-        TEST_F(ReleaseModuleTest, RadarScreenAddsToAsr)
-        {
-            BootstrapRadarScreen(this->container, renderables, configurables, asr);
-            EXPECT_EQ(1, asr.CountHandlers());
-        }
-
-        TEST_F(ReleaseModuleTest, RadarScreenAddsReleaseRequestShowOption)
-        {
-            BootstrapRadarScreen(this->container, renderables, configurables, asr);
-            EXPECT_EQ(1, configurables.CountDisplays());
-            EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
+            BootstrapRadarScreen(this->container, renderables);
+            EXPECT_EQ(1, renderables.CountRenderers());
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersTheCancelRequestFunctions)

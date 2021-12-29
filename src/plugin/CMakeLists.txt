@@ -627,8 +627,6 @@ set(src__prenote
     prenote/PrenoteMessageStatusView.cpp prenote/PrenoteMessageStatusView.h
     prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
     prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h
-    prenote/PendingPrenoteList.cpp prenote/PendingPrenoteList.h
-    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h
     prenote/PublishedPrenote.h prenote/PublishedPrenote.cpp
     prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h
     prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h
@@ -710,8 +708,6 @@ set(src__releases
     "releases/DepartureReleaseColours.h"
     "releases/DepartureReleaseCountdownColours.cpp"
     "releases/DepartureReleaseCountdownColours.h"
-    "releases/DepartureReleaseDecisionList.cpp"
-    "releases/DepartureReleaseDecisionList.h"
     "releases/DepartureReleaseEventHandler.cpp"
     "releases/DepartureReleaseEventHandler.h"
     "releases/DepartureReleaseRequest.cpp"
@@ -728,8 +724,6 @@ set(src__releases
     "releases/ReleaseModule.h"
     "releases/RequestDepartureReleaseDialog.cpp"
     "releases/RequestDepartureReleaseDialog.h"
-    "releases/ToggleDepartureReleaseDecisionList.cpp"
-    "releases/ToggleDepartureReleaseDecisionList.h"
         releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp)
 source_group("src\\releases" FILES ${src__releases})
 

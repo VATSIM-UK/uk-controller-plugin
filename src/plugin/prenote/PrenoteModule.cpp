@@ -1,7 +1,6 @@
 #include "AcknowledgePrenoteMessage.h"
 #include "CancelPrenoteMessageMenu.h"
 #include "NewPrenotePushEventHandler.h"
-#include "PendingPrenoteList.h"
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
@@ -15,7 +14,6 @@
 #include "PublishedPrenoteCollectionFactory.h"
 #include "PublishedPrenoteMapper.h"
 #include "SendPrenoteMenu.h"
-#include "TogglePendingPrenoteList.h"
 #include "TriggerPrenoteMessageStatusView.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "bootstrap/PersistenceContainer.h"
@@ -23,14 +21,12 @@
 #include "controller/ControllerPositionHierarchy.h"
 #include "controller/ControllerPositionHierarchyFactory.h"
 #include "dependency/DependencyLoaderInterface.h"
-#include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "message/UserMessager.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
@@ -184,42 +180,13 @@ namespace UKControllerPlugin::Prenote {
     }
 
     void PrenoteModule::BootstrapRadarScreen(
-        const PersistenceContainer& persistence,
-        RadarRenderableCollection& radarRenderables,
-        RadarScreen::ConfigurableDisplayCollection& configurables,
-        Euroscope::AsrEventHandlerCollection& asrHandlers)
+        const PersistenceContainer& persistence, RadarRenderableCollection& radarRenderables)
     {
         // Status view renderer
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(),
             std::make_shared<PrenoteMessageStatusView>(persistence.prenotes, *persistence.controllerPositions),
             RadarRenderableCollection::afterLists);
-
-        // Pending list renderer
-        auto listRendererId = radarRenderables.ReserveRendererIdentifier();
-        auto listRenderer = std::make_shared<PendingPrenoteList>(
-            persistence.prenotes,
-            acknowledge,
-            *persistence.plugin,
-            *persistence.controllerPositions,
-            *persistence.activeCallsigns,
-            radarRenderables.ReserveScreenObjectIdentifier(listRendererId));
-
-        radarRenderables.RegisterRenderer(listRendererId, listRenderer, RadarRenderableCollection::afterLists);
-        asrHandlers.RegisterHandler(listRenderer);
-
-        // Configuration menu toggle for pending list
-        auto toggleListCallbackId = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-        auto listToggle = std::make_shared<TogglePendingPrenoteList>(listRenderer, toggleListCallbackId);
-        configurables.RegisterDisplay(listToggle);
-
-        CallbackFunction showReleaseRequestListCallback(
-            toggleListCallbackId,
-            "Toggle Pending Prenote List",
-            [listToggle](int functionId, std::string subject, RECT screenObjectArea) {
-                listToggle->Configure(functionId, std::move(subject), screenObjectArea);
-            });
-        persistence.pluginFunctionHandlers->RegisterFunctionCall(showReleaseRequestListCallback);
     }
 
     auto PrenoteModule::GetDependencyKey() -> std::string
