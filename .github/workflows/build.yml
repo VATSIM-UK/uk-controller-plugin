@@ -177,7 +177,7 @@ jobs:
   release:
     name: Release
     runs-on: windows-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta')
     needs: [build, format]
     concurrency:
       group: ukcp-release
