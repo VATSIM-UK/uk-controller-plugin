@@ -20,7 +20,8 @@ bool CheckForUpdates(
     const UKControllerPlugin::Api::ApiInterface& api,
     UKControllerPlugin::Windows::WinApiInterface& windows,
     UKControllerPlugin::Curl::CurlInterface& curl,
-    bool duplicatePlugin
+    bool duplicatePlugin,
+    const std::string& updateChannel
 );
 bool UpdateRequired(UKControllerPlugin::Windows::WinApiInterface& windows, const nlohmann::json& versionDetails);
 void PerformUpdates(

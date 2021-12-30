@@ -21,6 +21,10 @@ namespace UKControllerPluginUtilsTest::Setting {
             .Times(1)
             .WillOnce(Return("{\"api-key\": \"testkey\"}"));
 
+        EXPECT_CALL(mockWinApi, FileExists(std::wstring(L"settings/release-channel.json")))
+            .Times(1)
+            .WillOnce(Return(true));
+
         EXPECT_CALL(mockWinApi, ReadFromFileMock(std::wstring(L"settings/release-channel.json"), true))
             .Times(1)
             .WillOnce(Return("{\"release_channel\": \"beta\"}"));

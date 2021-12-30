@@ -39,7 +39,13 @@ UKCP_UPDATER_API bool PerformUpdates()
 
     LogInfo("Updater build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
     UKControllerPlugin::Duplicate::DuplicatePlugin duplicatePlugin;
-    const bool updatePeformed = CheckForUpdates(*api, *windows, curl, duplicatePlugin.Duplicate());
+    const bool updatePeformed = CheckForUpdates(
+        *api,
+        *windows,
+        curl,
+        duplicatePlugin.Duplicate(),
+        settings->GetSetting("release_channel", "stable")
+    );
     ShutdownLogger();
     return updatePeformed;
 }
