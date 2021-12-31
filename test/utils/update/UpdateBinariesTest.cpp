@@ -246,6 +246,30 @@ namespace UKControllerPluginUtilsTest {
             EXPECT_FALSE(UKControllerPlugin::DownloadCoreLibrary(updateData, this->mockWindows, this->mockCurl));
         }
 
+        TEST_F(UpdateBinariesTest, ItHandlesEmptyResponseUpdatingTheCoreLibrary)
+        {
+            nlohmann::json updateData{
+                {"version", "3.0.1"},
+                {"updater_download_url", "foo"},
+                {"core_download_url", "bar"},
+                {"loader_download_url", "baz"},
+            };
+
+            CurlRequest expectedRequest("bar", CurlRequest::METHOD_GET);
+            expectedRequest.SetMaxRequestTime(0);
+
+            CurlResponse response("", false, 200);
+
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.core", true, true))
+                .Times(0);
+
+            EXPECT_FALSE(UKControllerPlugin::DownloadCoreLibrary(updateData, this->mockWindows, this->mockCurl));
+        }
+
         TEST_F(UpdateBinariesTest, ItUpdatesTheUpdaterLibrary)
         {
             nlohmann::json updateData{
@@ -313,6 +337,30 @@ namespace UKControllerPluginUtilsTest {
             expectedRequest.SetMaxRequestTime(0);
 
             CurlResponse response("3.0.1.updater", false, 500);
+
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true, true))
+                .Times(0);
+
+            EXPECT_FALSE(UKControllerPlugin::DownloadUpdater(updateData, this->mockWindows, this->mockCurl));
+        }
+
+        TEST_F(UpdateBinariesTest, ItHandlesEmptyResponsesUpdatingTheUpdaterLibrary)
+        {
+            nlohmann::json updateData{
+                {"version", "3.0.1"},
+                {"updater_download_url", "foo"},
+                {"core_download_url", "bar"},
+                {"loader_download_url", "baz"},
+            };
+
+            CurlRequest expectedRequest("foo", CurlRequest::METHOD_GET);
+            expectedRequest.SetMaxRequestTime(0);
+
+            CurlResponse response("", false, 200);
 
             EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
 
