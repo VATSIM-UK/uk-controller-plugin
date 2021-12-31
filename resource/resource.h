@@ -191,6 +191,9 @@
 #define IDC_MISSED_APPROACH_REMARKS     1137
 #define IDC_MISSED_APPROACH_STATICS     1138
 #define IDC_MISSED_APPROACH_STATIC      1138
+#define IDC_GEN_SETTINGS_EXPERIMENTAL   1139
+#define IDC_COMBO1                      1140
+#define IDC_RELEASE_CHANNEL             1140
 
 // Next default values for new objects
 // 
@@ -198,7 +201,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1139
+#define _APS_NEXT_CONTROL_VALUE         1141
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
