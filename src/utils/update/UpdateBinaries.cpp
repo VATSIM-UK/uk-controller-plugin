@@ -63,12 +63,12 @@ namespace UKControllerPlugin {
             LogError("Error when downloading binary");
             return false;
         }
-        
+
         if (response.GetResponse().empty()) {
             LogError("Error when downloading binary, was empty");
             return false;
         }
-        
+
         if (windows.FileExists(targetFile)) {
             windows.MoveFileToNewLocation(targetFile, GetOldFileExtension(targetFile));
         }

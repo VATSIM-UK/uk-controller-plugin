@@ -1,26 +1,20 @@
-#include "pch/pch.h"
-#include "updater/PerformUpdates.h"
-#include "helper/HelperFunctions.h"
+#include "PerformUpdates.h"
 #include "api/ApiInterface.h"
-#include "windows/WinApiInterface.h"
 #include "curl/CurlInterface.h"
-#include "update/UpdateBinaries.h"
 #include "data/PluginDataLocations.h"
+#include "helper/HelperFunctions.h"
 #include "update/LoadChangelog.h"
+#include "update/UpdateBinaries.h"
+#include "windows/WinApiInterface.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Api::ApiInterface;
-using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Curl::CurlInterface;
+using UKControllerPlugin::Windows::WinApiInterface;
 
-typedef const char* (CALLBACK* GETPLUGINVERSION)();
+typedef const char*(CALLBACK* GETPLUGINVERSION)();
 
-bool CheckForUpdates(
-    const ApiInterface& api,
-    WinApiInterface& windows,
-    CurlInterface& curl,
-    bool duplicatePlugin
-)
+bool CheckForUpdates(const ApiInterface& api, WinApiInterface& windows, CurlInterface& curl, bool duplicatePlugin)
 {
     if (duplicatePlugin) {
         LogInfo("Skipping updates as plugin is duplicate");
@@ -38,10 +32,7 @@ bool CheckForUpdates(
 
             LogInfo("Plugin update available, newest version " + version);
             PerformUpdates(curl, windows, versionDetails);
-            DisplayPostUpdateNotification(
-                windows,
-                wideVersion
-            );
+            DisplayPostUpdateNotification(windows, wideVersion);
         } else {
             LogInfo("Plugin is up to date at version " + version);
         }
@@ -50,24 +41,16 @@ bool CheckForUpdates(
         message += L"Plugin will attempt to load with previously downloaded version.";
         LogError("Exception when performing updates, message: " + std::string(exception.what()));
 
-        windows.OpenMessageBox(
-            message.c_str(),
-            L"UKCP Automatic Update Failed",
-            MB_OK | MB_ICONSTOP
-        );
+        windows.OpenMessageBox(message.c_str(), L"UKCP Automatic Update Failed", MB_OK | MB_ICONSTOP);
     }
 
     return true;
 }
 
-void PerformUpdates(
-    CurlInterface& curl,
-    WinApiInterface& windows,
-    const nlohmann::json& versionDetails
-)
+void PerformUpdates(CurlInterface& curl, WinApiInterface& windows, const nlohmann::json& versionDetails)
 {
     bool updatedSuccessfully = UKControllerPlugin::DownloadCoreLibrary(versionDetails, windows, curl) &&
-        UKControllerPlugin::DownloadUpdater(versionDetails, windows, curl);
+                               UKControllerPlugin::DownloadUpdater(versionDetails, windows, curl);
 
     if (!updatedSuccessfully) {
         LogError("Error when updating plugin binaries");
@@ -86,9 +69,8 @@ bool UpdateRequired(WinApiInterface& windows, const nlohmann::json& versionDetai
         return true;
     }
 
-    GETPLUGINVERSION PluginVersion = reinterpret_cast<GETPLUGINVERSION>(
-        windows.GetFunctionPointerFromLibrary(coreBinaryHandle, "GetPluginVersion")
-    );
+    GETPLUGINVERSION PluginVersion =
+        reinterpret_cast<GETPLUGINVERSION>(windows.GetFunctionPointerFromLibrary(coreBinaryHandle, "GetPluginVersion"));
 
     if (!PluginVersion) {
         windows.UnloadLibrary(coreBinaryHandle);
@@ -114,17 +96,13 @@ std::string GetVersionFromJson(const nlohmann::json& versionDetails)
 
 void DisplayPostUpdateNotification(WinApiInterface& windows, std::wstring version)
 {
-    std::wstring message = L"The UK Controller Plugin has been updated to version " + version +
-        L".\r\n\r\n";
+    std::wstring message = L"The UK Controller Plugin has been updated to version " + version + L".\r\n\r\n";
     message +=
         L"You can view the changelog at any time by opening the OP menu and selecting the relevant item.\r\n\r\n";
     message += L"Would you like to view the changelog now?";
 
-    int gotoChangelog = windows.OpenMessageBox(
-        message.c_str(),
-        L"UKCP Automatic Update Complete",
-        MB_YESNO | MB_ICONINFORMATION
-    );
+    int gotoChangelog =
+        windows.OpenMessageBox(message.c_str(), L"UKCP Automatic Update Complete", MB_YESNO | MB_ICONINFORMATION);
 
     if (gotoChangelog == IDYES) {
         UKControllerPlugin::Update::LoadChangelog(windows);
@@ -133,31 +111,23 @@ void DisplayPostUpdateNotification(WinApiInterface& windows, std::wstring versio
 
 bool DisplayPreUpdateConsentNotification(WinApiInterface& windows, std::wstring version)
 {
-    std::wstring message = L"A new version of the UK Controller Plugin, version " + version +
-        L", is available.\r\n\r\n";
+    std::wstring message =
+        L"A new version of the UK Controller Plugin, version " + version + L", is available.\r\n\r\n";
     message += L"Would you like to update now?";
 
-    int updateNow = windows.OpenMessageBox(
-        message.c_str(),
-        L"UKCP Automatic Update",
-        MB_YESNO | MB_ICONINFORMATION
-    ) == IDYES;
+    int updateNow =
+        windows.OpenMessageBox(message.c_str(), L"UKCP Automatic Update", MB_YESNO | MB_ICONINFORMATION) == IDYES;
 
     if (updateNow == IDOK) {
         return true;
     }
 
     std::wstring warning = L"In order to use the UK Controller Plugin, you must update to the latest version.\r\n\r\n";
-    warning +=
-        L"This is because old or buggy versions of the plugin can adversely affect the experience for users ";
+    warning += L"This is because old or buggy versions of the plugin can adversely affect the experience for users ";
     warning += L"of the VATSIM network.\r\n\r\n";
     warning += L"Select yes to update now, or no to disable the plugin.";
 
-    return windows.OpenMessageBox(
-        warning.c_str(),
-        L"UKCP Automatic Update",
-        MB_YESNO | MB_ICONEXCLAMATION
-    ) == IDYES;
+    return windows.OpenMessageBox(warning.c_str(), L"UKCP Automatic Update", MB_YESNO | MB_ICONEXCLAMATION) == IDYES;
 }
 
 std::wstring GetOldUpdaterLocation()
