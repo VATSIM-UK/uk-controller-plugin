@@ -92,19 +92,18 @@ namespace UKControllerPlugin::Releases {
                this->releaseRequests.find(data.at("id").get<int>()) != this->releaseRequests.cend();
     }
 
-    /*
-     * For now, rejecting a release only needs a valid id, so borrow the acknowledge method.
-     */
     auto DepartureReleaseEventHandler::DepartureReleaseRejectedMessageValid(const nlohmann::json& data) const -> bool
     {
-        return this->DepartureReleaseAcknowledgedMessageValid(data);
+        return data.is_object() && data.contains("id") && data.at("id").is_number_integer() &&
+               this->releaseRequests.find(data.at("id").get<int>()) != this->releaseRequests.cend() &&
+               data.contains("remarks") && data.at("remarks").is_string();
     }
 
     auto DepartureReleaseEventHandler::DepartureReleaseApprovedMessageValid(const nlohmann::json& data) const -> bool
     {
         return data.is_object() && data.contains("id") && data.at("id").is_number_integer() &&
                this->releaseRequests.find(data.at("id").get<int>()) != this->releaseRequests.cend() &&
-               data.contains("expires_at") &&
+               data.contains("remarks") && data.at("remarks").is_string() && data.contains("expires_at") &&
                (data.at("expires_at").is_null() ||
                 (data.at("expires_at").is_string() &&
                  Time::ParseTimeString(data.at("expires_at").get<std::string>()) != Time::invalidTime)) &&
@@ -587,7 +586,7 @@ namespace UKControllerPlugin::Releases {
         }
 
         auto release = this->releaseRequests.find(data.at("id").get<int>())->second;
-        release->Reject();
+        release->Reject(data.at("remarks").get<std::string>());
 
         // Play a sound to alert the controller if we requested it
         if (this->UserRequestedRelease(release)) {
@@ -608,11 +607,14 @@ namespace UKControllerPlugin::Releases {
 
         auto release = this->releaseRequests.find(data.at("id").get<int>())->second;
         if (data.at("expires_at").is_null()) {
-            release->Approve(Time::ParseTimeString(data.at("released_at").get<std::string>()));
+            release->Approve(
+                Time::ParseTimeString(data.at("released_at").get<std::string>()),
+                data.at("remarks").get<std::string>());
         } else {
             release->Approve(
                 Time::ParseTimeString(data.at("released_at").get<std::string>()),
-                Time::ParseTimeString(data.at("expires_at").get<std::string>()));
+                Time::ParseTimeString(data.at("expires_at").get<std::string>()),
+                data.at("remarks").get<std::string>());
         }
 
         // Play a sound to alert the controller if we requested it
@@ -742,15 +744,10 @@ namespace UKControllerPlugin::Releases {
 
         // Release has been rejected
         if (context == "Reject") {
-            this->taskRunner.QueueAsynchronousTask([this, release]() {
-                try {
-                    this->api.RejectDepartureReleaseRequest(release->Id(), release->TargetController());
-                    release->Reject();
-                    LogInfo("Rejected departure release id " + std::to_string(release->Id()));
-                } catch (Api::ApiException& apiException) {
-                    LogError("ApiException when rejecting departure release: " + std::string(apiException.what()));
-                }
-            });
+            this->dialogManager.OpenDialog(
+                IDD_DEPARTURE_RELEASE_REJECT,
+                reinterpret_cast<LPARAM>(&release) // NOLINT
+            );
             return;
         }
 
@@ -819,26 +816,44 @@ namespace UKControllerPlugin::Releases {
      * Given a release id, approve it.
      */
     void DepartureReleaseEventHandler::ApproveRelease(
-        int releaseId, std::chrono::system_clock::time_point releasedAt, int expiresInSeconds)
+        int releaseId, std::chrono::system_clock::time_point releasedAt, int expiresInSeconds, std::string remarks)
     {
         auto release = this->GetReleaseRequest(releaseId);
         if (!this->ControllerCanMakeReleaseDecision(release)) {
             return;
         }
 
-        this->taskRunner.QueueAsynchronousTask([this, release, releasedAt, expiresInSeconds]() {
+        this->taskRunner.QueueAsynchronousTask([this, release, releasedAt, expiresInSeconds, remarks]() {
             try {
                 this->api.ApproveDepartureReleaseRequest(
-                    release->Id(), release->TargetController(), releasedAt, expiresInSeconds);
+                    release->Id(), release->TargetController(), releasedAt, expiresInSeconds, remarks);
 
                 if (expiresInSeconds == -1) {
-                    release->Approve(releasedAt);
+                    release->Approve(releasedAt, remarks);
                 } else {
-                    release->Approve(releasedAt, releasedAt + std::chrono::seconds(expiresInSeconds));
+                    release->Approve(releasedAt, releasedAt + std::chrono::seconds(expiresInSeconds), remarks);
                 }
                 LogInfo("Approved departure release id " + std::to_string(release->Id()));
             } catch (Api::ApiException&) {
                 LogError("ApiException approving departure release " + std::to_string(release->Id()));
+            }
+        });
+    }
+
+    void DepartureReleaseEventHandler::RejectRelease(int releaseId, std::string remarks)
+    {
+        auto release = this->GetReleaseRequest(releaseId);
+        if (!this->ControllerCanMakeReleaseDecision(release)) {
+            return;
+        }
+
+        this->taskRunner.QueueAsynchronousTask([this, release, remarks]() {
+            try {
+                this->api.RejectDepartureReleaseRequest(release->Id(), release->TargetController(), remarks);
+                release->Reject(remarks);
+                LogInfo("Rejected departure release id " + std::to_string(release->Id()));
+            } catch (Api::ApiException& apiException) {
+                LogError("ApiException when rejecting departure release: " + std::string(apiException.what()));
             }
         });
     }

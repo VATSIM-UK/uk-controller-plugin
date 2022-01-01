@@ -68,7 +68,14 @@ namespace UKControllerPlugin {
                 const POINT& mousePos);
             void ReleaseDecisionMade(int functionId, const std::string& context, RECT);
             void RequestRelease(const std::string& callsign, int targetControllerId);
-            void ApproveRelease(int releaseId, std::chrono::system_clock::time_point releasedAt, int expiresInSeconds);
+            void RejectRelease(
+                int releaseId,
+                std::string remarks);
+            void ApproveRelease(
+                int releaseId,
+                std::chrono::system_clock::time_point releasedAt,
+                int expiresInSeconds,
+                std::string remarks);
             [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
             void SetTagItemData(Tag::TagData& tagData) override;
             void ShowStatusDisplay(

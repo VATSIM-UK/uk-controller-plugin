@@ -38,6 +38,8 @@ namespace UKControllerPlugin {
                     {300, L"5 Minutes"},
                     {600, L"10 Minutes"},
                 };
+                
+                inline static const int REMARKS_BUFFER_SIZE = 255;
         };
     } // namespace Releases
 }  // namespace UKControllerPlugin
