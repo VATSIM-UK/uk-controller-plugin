@@ -66,7 +66,6 @@ void PerformUpdates(
     const nlohmann::json& versionDetails
 )
 {
-    MoveOldUpdaterBinary(windows);
     bool updatedSuccessfully = UKControllerPlugin::DownloadCoreLibrary(versionDetails, windows, curl) &&
         UKControllerPlugin::DownloadUpdater(versionDetails, windows, curl);
 

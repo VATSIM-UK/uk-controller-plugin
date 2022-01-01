@@ -68,6 +68,10 @@ namespace UKControllerPlugin {
             LogError("Error when downloading binary, was empty");
             return false;
         }
+        
+        if (windows.FileExists(targetFile)) {
+            windows.MoveFileToNewLocation(targetFile, GetOldFileExtension(targetFile));
+        }
 
         windows.WriteToFile(std::move(targetFile), response.GetResponse(), true, true);
         LogInfo("Binary updated successfully");

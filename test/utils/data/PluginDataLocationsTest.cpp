@@ -52,6 +52,11 @@ namespace UKControllerPluginUtilsTest {
             EXPECT_EQ(L"bin/UKControllerPluginCore.dll.old", GetOldCoreBinaryRelativePath());
         }
 
+        TEST_F(PluginDataLocationsTest, TheHasAnOldExtension)
+        {
+            EXPECT_EQ(L"bin/test.dll.old", GetOldFileExtension(L"bin/test.dll"));
+        }
+
         TEST_F(PluginDataLocationsTest, ItHasAPluginDataRoot)
         {
             EXPECT_EQ(GetExpectedUkcpFolder(), GetFullPluginDataRoot());

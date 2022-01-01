@@ -194,6 +194,40 @@ namespace UKControllerPluginUtilsTest {
             EXPECT_TRUE(UKControllerPlugin::DownloadCoreLibrary(updateData, this->mockWindows, this->mockCurl));
         }
 
+        TEST_F(UpdateBinariesTest, ItMovesTheCoreLibraryToOldWhenUpdating)
+        {
+            nlohmann::json updateData{
+                {"version", "3.0.1"},
+                {"updater_download_url", "foo"},
+                {"core_download_url", "bar"},
+                {"loader_download_url", "baz"},
+            };
+
+            CurlRequest expectedRequest("bar", CurlRequest::METHOD_GET);
+            expectedRequest.SetMaxRequestTime(0);
+
+            CurlResponse response("3.0.1.updater", false, 200);
+
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
+
+            ON_CALL(mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+                .WillByDefault(testing::Return(true));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"bin/UKControllerPluginCore.dll"), "3.0.1.updater", true, true))
+                .Times(1);
+
+            EXPECT_CALL(
+                this->mockWindows,
+                MoveFileToNewLocation(
+                    std::wstring(L"bin/UKControllerPluginCore.dll"),
+                    std::wstring(L"bin/UKControllerPluginCore.dll.old")))
+                .Times(1);
+
+            EXPECT_TRUE(UKControllerPlugin::DownloadCoreLibrary(updateData, this->mockWindows, this->mockCurl));
+        }
+
         TEST_F(UpdateBinariesTest, ItHandlesCurlErrorsUpdatingTheCoreLibrary)
         {
             nlohmann::json updateData{
@@ -291,6 +325,40 @@ namespace UKControllerPluginUtilsTest {
             EXPECT_CALL(
                 this->mockWindows,
                 WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true))
+                .Times(1);
+
+            EXPECT_TRUE(UKControllerPlugin::DownloadUpdater(updateData, this->mockWindows, this->mockCurl));
+        }
+
+        TEST_F(UpdateBinariesTest, ItMovesTheUpdaterLibraryToOldWhenUpdating)
+        {
+            nlohmann::json updateData{
+                {"version", "3.0.1"},
+                {"updater_download_url", "foo"},
+                {"core_download_url", "bar"},
+                {"loader_download_url", "baz"},
+            };
+
+            CurlRequest expectedRequest("foo", CurlRequest::METHOD_GET);
+            expectedRequest.SetMaxRequestTime(0);
+
+            CurlResponse response("3.0.1.updater", false, 200);
+
+            EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
+
+            ON_CALL(mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+                .WillByDefault(testing::Return(true));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                WriteToFile(std::wstring(L"bin/UKControllerPluginUpdater.dll"), "3.0.1.updater", true, true))
+                .Times(1);
+
+            EXPECT_CALL(
+                this->mockWindows,
+                MoveFileToNewLocation(
+                    std::wstring(L"bin/UKControllerPluginUpdater.dll"),
+                    std::wstring(L"bin/UKControllerPluginUpdater.dll.old")))
                 .Times(1);
 
             EXPECT_TRUE(UKControllerPlugin::DownloadUpdater(updateData, this->mockWindows, this->mockCurl));
