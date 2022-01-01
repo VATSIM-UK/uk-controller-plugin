@@ -3,6 +3,7 @@
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "dialog/DialogManager.h"
+#include "message/UserMessager.h"
 #include "releases/DepartureReleaseColours.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
@@ -11,12 +12,14 @@
 #include "time/SystemClock.h"
 #include "tag/TagData.h"
 
+using testing::_;
 using testing::NiceMock;
 using testing::Test;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Dialog::DialogData;
+using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::Releases::CompareDepartureReleases;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
@@ -30,8 +33,9 @@ namespace UKControllerPluginTest::Releases {
     {
         public:
         DepartureReleaseEventHandlerTest()
-            : dialogManager(dialogProvider),
-              handler(api, mockTaskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 3, 4)
+            : dialogManager(dialogProvider), messager(mockPlugin),
+              handler(
+                  api, mockTaskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, messager, 3, 4)
         {
             request = std::make_shared<DepartureReleaseRequest>(
                 1, "BAW123", 3, 2, std::chrono::system_clock::now() + std::chrono::minutes(5));
@@ -103,6 +107,7 @@ namespace UKControllerPluginTest::Releases {
         UKControllerPlugin::Dialog::DialogManager dialogManager;
         ControllerPositionCollection controllers;
         std::shared_ptr<DepartureReleaseRequest> request;
+        UserMessager messager;
         DepartureReleaseEventHandler handler;
     };
 
@@ -222,6 +227,77 @@ namespace UKControllerPluginTest::Releases {
         PushEvent message{"departure_release.rejected", "private-departure-releases", data};
 
         EXPECT_CALL(this->windows, PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_REJ))).Times(1);
+
+        handler.ProcessPushEvent(message);
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItDoesntSendRemarksMessageToUserIfUserNotActive)
+    {
+        handler.AddReleaseRequest(request);
+        nlohmann::json data;
+        data["id"] = 1;
+        data["remarks"] = "Some remarks";
+
+        PushEvent message{"departure_release.rejected", "private-departure-releases", data};
+
+        EXPECT_CALL(this->mockPlugin, ChatAreaMessage).Times(0);
+
+        handler.ProcessPushEvent(message);
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItDoesntSendRemarksMessageToUserIfUserIsNotRequestingController)
+    {
+        activeCallsigns.AddUserCallsign(*controller1Callsign);
+        handler.AddReleaseRequest(request);
+        nlohmann::json data;
+        data["id"] = 1;
+        data["remarks"] = "Some remarks";
+
+        PushEvent message{"departure_release.rejected", "private-departure-releases", data};
+
+        EXPECT_CALL(this->mockPlugin, ChatAreaMessage).Times(0);
+
+        handler.ProcessPushEvent(message);
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItDoesntSendRemarksMessageToUserIfRemarksEmpty)
+    {
+        activeCallsigns.AddUserCallsign(*controller2Callsign);
+        handler.AddReleaseRequest(request);
+        nlohmann::json data;
+        data["id"] = 1;
+        data["remarks"] = "";
+
+        PushEvent message{"departure_release.rejected", "private-departure-releases", data};
+
+        EXPECT_CALL(this->mockPlugin, ChatAreaMessage).Times(0);
+
+        handler.ProcessPushEvent(message);
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItSendRemarksMessageToUserIfUserIsRequestingController)
+    {
+        activeCallsigns.AddUserCallsign(*controller2Callsign);
+        handler.AddReleaseRequest(request);
+        nlohmann::json data;
+        data["id"] = 1;
+        data["remarks"] = "Some remarks";
+
+        PushEvent message{"departure_release.rejected", "private-departure-releases", data};
+
+        EXPECT_CALL(
+            this->mockPlugin,
+            ChatAreaMessage(
+                _,
+                _,
+                "Departure release rejection remarks by EGFF_APP for "
+                "BAW123: Some remarks",
+                _,
+                _,
+                _,
+                _,
+                _))
+            .Times(1);
 
         handler.ProcessPushEvent(message);
     }
@@ -437,6 +513,77 @@ namespace UKControllerPluginTest::Releases {
         PushEvent message{"departure_release.approved", "private-departure-releases", data};
 
         EXPECT_CALL(this->windows, PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_ACCEPT))).Times(1);
+
+        handler.ProcessPushEvent(message);
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItDoesntSendRemarksMessageOnApprovalIfUserNotActive)
+    {
+        handler.AddReleaseRequest(request);
+        nlohmann::json data;
+        data["id"] = 1;
+        data["expires_at"] = "2021-05-12 20:00:00";
+        data["released_at"] = "2021-05-12 19:55:00";
+        data["remarks"] = "remarks";
+
+        PushEvent message{"departure_release.approved", "private-departure-releases", data};
+
+        EXPECT_CALL(this->mockPlugin, ChatAreaMessage).Times(0);
+
+        handler.ProcessPushEvent(message);
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItDoesntSendApprovalRemarksMessageIfUserNotRequestingController)
+    {
+        activeCallsigns.AddUserCallsign(*controller1Callsign);
+        handler.AddReleaseRequest(request);
+        nlohmann::json data;
+        data["id"] = 1;
+        data["expires_at"] = "2021-05-12 20:00:00";
+        data["released_at"] = "2021-05-12 19:55:00";
+        data["remarks"] = "remarks";
+
+        PushEvent message{"departure_release.approved", "private-departure-releases", data};
+
+        EXPECT_CALL(this->mockPlugin, ChatAreaMessage).Times(0);
+
+        handler.ProcessPushEvent(message);
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItDoesntSendApprovalRemarksMessageIfRemarksEmpty)
+    {
+        activeCallsigns.AddUserCallsign(*controller2Callsign);
+        handler.AddReleaseRequest(request);
+        nlohmann::json data;
+        data["id"] = 1;
+        data["expires_at"] = "2021-05-12 20:00:00";
+        data["released_at"] = "2021-05-12 19:55:00";
+        data["remarks"] = "";
+
+        PushEvent message{"departure_release.approved", "private-departure-releases", data};
+
+        EXPECT_CALL(this->mockPlugin, ChatAreaMessage).Times(0);
+
+        handler.ProcessPushEvent(message);
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItSendsApprovalMessageIfUserRequestingController)
+    {
+        activeCallsigns.AddUserCallsign(*controller2Callsign);
+        handler.AddReleaseRequest(request);
+        nlohmann::json data;
+        data["id"] = 1;
+        data["expires_at"] = "2021-05-12 20:00:00";
+        data["released_at"] = "2021-05-12 19:55:00";
+        data["remarks"] = "Some remarks";
+
+        PushEvent message{"departure_release.approved", "private-departure-releases", data};
+
+        EXPECT_CALL(
+            this->mockPlugin,
+            ChatAreaMessage(
+                _, _, "Departure release approval remarks by EGFF_APP for BAW123: Some remarks", _, _, _, _, _))
+            .Times(1);
 
         handler.ProcessPushEvent(message);
     }

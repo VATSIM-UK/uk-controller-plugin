@@ -126,6 +126,7 @@ namespace UKControllerPlugin::Releases {
             *container.activeCallsigns,
             *container.dialogManager,
             *container.windows,
+            *container.userMessager,
             releaseDecisionCallbackId,
             releaseCancellationCallbackId);
         container.departureReleaseHandler = departureHandler;

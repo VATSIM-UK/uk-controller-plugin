@@ -3,6 +3,8 @@
 #include "DepartureReleaseEventHandler.h"
 #include "DepartureReleaseRequest.h"
 #include "DepartureReleaseRequestView.h"
+#include "ReleaseApprovalRemarksUserMessage.h"
+#include "ReleaseRejectionRemarksUserMessage.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "controller/ActiveCallsignCollection.h"
@@ -11,6 +13,7 @@
 #include "dialog/DialogManager.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "message/UserMessager.h"
 #include "tag/TagData.h"
 #include "task/TaskRunnerInterface.h"
 #include "time/ParseTimeStrings.h"
@@ -28,12 +31,13 @@ namespace UKControllerPlugin::Releases {
         const Controller::ActiveCallsignCollection& activeCallsigns,
         const Dialog::DialogManager& dialogManager,
         Windows::WinApiInterface& windows,
+        Message::UserMessager& messager,
         const int releaseDecisionCallbackId,
         int releaseCancellationCallbackId)
         : releaseDecisionCallbackId(releaseDecisionCallbackId),
           releaseCancellationCallbackId(releaseCancellationCallbackId), controllers(controllers), plugin(plugin),
           dialogManager(dialogManager), api(api), taskRunner(taskRunner), activeCallsigns(activeCallsigns),
-          windows(windows)
+          windows(windows), messager(messager)
     {
     }
 
@@ -591,6 +595,11 @@ namespace UKControllerPlugin::Releases {
         // Play a sound to alert the controller if we requested it
         if (this->UserRequestedRelease(release)) {
             this->windows.PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_REJ)); // NOLINT
+            if (!data.at("remarks").get<std::string>().empty()) {
+                auto controller = this->controllers.FetchPositionById(release->TargetController())->GetCallsign();
+                this->messager.SendMessageToUser(ReleaseRejectionRemarksUserMessage(
+                    release->Callsign(), controller, data.at("remarks").get<std::string>()));
+            }
         }
     }
 
@@ -620,6 +629,11 @@ namespace UKControllerPlugin::Releases {
         // Play a sound to alert the controller if we requested it
         if (this->UserRequestedRelease(release)) {
             this->windows.PlayWave(MAKEINTRESOURCE(WAVE_DEP_RLS_ACCEPT)); // NOLINT
+            if (!data.at("remarks").get<std::string>().empty()) {
+                auto controller = this->controllers.FetchPositionById(release->TargetController())->GetCallsign();
+                this->messager.SendMessageToUser(ReleaseApprovalRemarksUserMessage(
+                    release->Callsign(), controller, data.at("remarks").get<std::string>()));
+            }
         }
     }
 

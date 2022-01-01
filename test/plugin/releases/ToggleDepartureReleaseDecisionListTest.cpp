@@ -1,11 +1,13 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPositionCollection.h"
 #include "dialog/DialogManager.h"
+#include "message/UserMessager.h"
 #include "releases/ToggleDepartureReleaseDecisionList.h"
 #include "releases/DepartureReleaseDecisionList.h"
 #include "releases/DepartureReleaseEventHandler.h"
 
 using testing::Test;
+using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Releases::ToggleDepartureReleaseDecisionList;
 
 namespace UKControllerPluginTest {
@@ -15,8 +17,17 @@ namespace UKControllerPluginTest {
         {
             public:
             ToggleDepartureReleaseDecisionListTest()
-                : handler(
-                      mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
+                : messager(mockPlugin), handler(
+                                            mockApi,
+                                            taskRunner,
+                                            mockPlugin,
+                                            controllers,
+                                            activeCallsigns,
+                                            dialogManager,
+                                            windows,
+                                            messager,
+                                            103,
+                                            104),
                   list(new UKControllerPlugin::Releases::DepartureReleaseDecisionList(
                       handler, mockPlugin, controllers, 3)),
                   dialogManager(dialogProvider)
@@ -32,6 +43,7 @@ namespace UKControllerPluginTest {
                 return ToggleDepartureReleaseDecisionList(list, 2);
             }
 
+            UserMessager messager;
             UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
             std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseDecisionList> list;
             UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;

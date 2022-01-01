@@ -3,11 +3,13 @@
 #include "controller/ControllerPositionCollection.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
+#include "message/UserMessager.h"
 #include "releases/DepartureReleaseDecisionList.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
 
 using testing::Test;
+using UKControllerPlugin::Message::UserMessager;
 
 namespace UKControllerPluginTest {
     namespace Releases {
@@ -16,10 +18,20 @@ namespace UKControllerPluginTest {
         {
             public:
             DepartureReleaseDecisionListTest()
-                : userSettings(mockAsrProvider), list(new UKControllerPlugin::Releases::DepartureReleaseDecisionList(
-                                                     handler, mockPlugin, controllers, 3)),
+                : messager(mockPlugin), userSettings(mockAsrProvider),
+                  list(new UKControllerPlugin::Releases::DepartureReleaseDecisionList(
+                      handler, mockPlugin, controllers, 3)),
                   handler(
-                      mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
+                      mockApi,
+                      taskRunner,
+                      mockPlugin,
+                      controllers,
+                      activeCallsigns,
+                      dialogManager,
+                      windows,
+                      messager,
+                      103,
+                      104),
                   dialogManager(dialogProvider)
             {
                 this->pluginReturnedFlightplan =
@@ -42,6 +54,7 @@ namespace UKControllerPluginTest {
                 this->activeCallsigns.AddUserCallsign(*controllerCallsign);
             }
 
+            UserMessager messager;
             testing::NiceMock<Euroscope::MockUserSettingProviderInterface> mockAsrProvider;
             UKControllerPlugin::Euroscope::UserSetting userSettings;
             std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>> pluginReturnedFlightplan;

@@ -726,7 +726,7 @@ set(src__releases
     "releases/RequestDepartureReleaseDialog.h"
     "releases/ToggleDepartureReleaseDecisionList.cpp"
     "releases/ToggleDepartureReleaseDecisionList.h"
-        releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp releases/RejectDepartureReleaseDialog.cpp releases/RejectDepartureReleaseDialog.h)
+        releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp releases/RejectDepartureReleaseDialog.cpp releases/RejectDepartureReleaseDialog.h releases/ReleaseApprovalRemarksUserMessage.cpp releases/ReleaseApprovalRemarksUserMessage.h releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
 source_group("src\\releases" FILES ${src__releases})
 
 set(src__sectorfile

@@ -27,6 +27,9 @@ namespace UKControllerPlugin {
     namespace Windows {
         class WinApiInterface;
     } // namespace Windows
+    namespace Message {
+        class UserMessager;
+    } //
 
     namespace Releases {
 
@@ -48,6 +51,7 @@ namespace UKControllerPlugin {
                 const Controller::ActiveCallsignCollection& activeCallsigns,
                 const Dialog::DialogManager& dialogManager,
                 Windows::WinApiInterface& windows,
+                Message::UserMessager& messager,
                 int releaseDecisionCallbackId,
                 int releaseCancellationCallbackId);
             void ProcessPushEvent(const Push::PushEvent& message) override;
@@ -160,6 +164,9 @@ namespace UKControllerPlugin {
 
             // Windows api interface for playing sounds
             Windows::WinApiInterface& windows;
+            
+            // Sends messages to the user
+            Message::UserMessager& messager;
         };
     } // namespace Releases
 } // namespace UKControllerPlugin
