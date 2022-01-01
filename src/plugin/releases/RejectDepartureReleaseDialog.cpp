@@ -87,7 +87,7 @@ namespace UKControllerPlugin {
             // Get the remarks
             TCHAR remarks[REMARKS_BUFFER_SIZE];
             SendDlgItemMessage(
-                hwnd, IDC_RELEASE_APPROVE_REMARKS, WM_GETTEXT, REMARKS_BUFFER_SIZE, reinterpret_cast<LPARAM>(remarks));
+                hwnd, IDC_RELEASE_REJECT_REMARKS, WM_GETTEXT, REMARKS_BUFFER_SIZE, reinterpret_cast<LPARAM>(remarks));
 
             // Reject the release
             eventHandler->RejectRelease(this->selectedRelease->Id(), HelperFunctions::ConvertToRegularString(remarks));
