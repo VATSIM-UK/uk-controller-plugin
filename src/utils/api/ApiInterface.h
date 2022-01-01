@@ -58,12 +58,14 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] virtual auto SyncPluginEvents() const -> nlohmann::json = 0;
         [[nodiscard]] virtual auto GetLatestPluginEvents(int lastEventId) const -> nlohmann::json = 0;
         virtual void AcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const = 0;
-        virtual void RejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const = 0;
+        virtual void
+        RejectDepartureReleaseRequest(int releaseId, int controllerPositionId, const std::string& remarks) const = 0;
         virtual void ApproveDepartureReleaseRequest(
             int releaseId,
             int controllerPositionId,
             std::chrono::system_clock::time_point releasedAt,
-            int expiresInSeconds) const = 0;
+            int expiresInSeconds,
+            const std::string& remarks) const = 0;
         [[nodiscard]] virtual auto RequestDepartureRelease(
             std::string callsign, int requestingControllerId, int targetControllerId, int expiresInSeconds) const
             -> nlohmann::json = 0;

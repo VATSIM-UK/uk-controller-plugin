@@ -691,6 +691,7 @@ namespace UKControllerPluginUtilsTest::Api {
         expectedData["controller_position_id"] = 2;
         expectedData["released_at"] = "2021-05-09 12:31:00";
         expectedData["expires_in_seconds"] = 120;
+        expectedData["remarks"] = "Some remarks";
 
         std::chrono::system_clock::time_point timePoint;
         std::istringstream inputStream("2021-05-09 12:31:00");
@@ -701,7 +702,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
-        this->helper.ApproveDepartureReleaseRequest(1, 2, timePoint, 120);
+        this->helper.ApproveDepartureReleaseRequest(1, 2, timePoint, 120, "Some remarks");
     }
 
     TEST_F(ApiHelperTest, RejectDepartureReleaseMakesRequest)
@@ -712,13 +713,14 @@ namespace UKControllerPluginUtilsTest::Api {
 
         nlohmann::json expectedData;
         expectedData["controller_position_id"] = 2;
+        expectedData["remarks"] = "Some remarks";
 
         CurlRequest expectedRequest(
             GetApiCurlRequest("/departure/release/request/1/reject", CurlRequest::METHOD_PATCH, expectedData));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
-        this->helper.RejectDepartureReleaseRequest(1, 2);
+        this->helper.RejectDepartureReleaseRequest(1, 2, "Some remarks");
     }
 
     TEST_F(ApiHelperTest, AcknowledgeDepartureReleaseMakesRequest)

@@ -396,6 +396,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
         nlohmann::json expectedData;
         expectedData["controller_position_id"] = 2;
+        expectedData["remarks"] = "Some remarks";
         expectedData["released_at"] = "2021-05-09 12:31:00";
         expectedData["expires_in_seconds"] = 120;
         expectedRequest.SetBody(expectedData.dump());
@@ -404,7 +405,8 @@ namespace UKControllerPluginUtilsTest::Api {
         std::istringstream inputStream("2021-05-09 12:31:00");
         inputStream >> date::parse("%Y-%m-%d %H:%M:%S", timePoint);
 
-        EXPECT_TRUE(expectedRequest == this->builder.BuildApproveDepartureReleaseRequest(1, 2, timePoint, 120));
+        EXPECT_TRUE(
+            expectedRequest == this->builder.BuildApproveDepartureReleaseRequest(1, 2, timePoint, 120, "Some remarks"));
     }
 
     TEST_F(ApiRequestBuilderTest, ItBuildsApproveDepartureReleaseRequestWithNoExpiry)
@@ -418,6 +420,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
         nlohmann::json expectedData;
         expectedData["controller_position_id"] = 2;
+        expectedData["remarks"] = "Some remarks";
         expectedData["released_at"] = "2021-05-09 12:31:00";
         expectedData["expires_in_seconds"] = nlohmann::json::value_t::null;
         expectedRequest.SetBody(expectedData.dump());
@@ -426,7 +429,8 @@ namespace UKControllerPluginUtilsTest::Api {
         std::istringstream inputStream("2021-05-09 12:31:00");
         inputStream >> date::parse("%Y-%m-%d %H:%M:%S", timePoint);
 
-        EXPECT_TRUE(expectedRequest == this->builder.BuildApproveDepartureReleaseRequest(1, 2, timePoint, -1));
+        EXPECT_TRUE(
+            expectedRequest == this->builder.BuildApproveDepartureReleaseRequest(1, 2, timePoint, -1, "Some remarks"));
     }
 
     TEST_F(ApiRequestBuilderTest, ItBuildsRejectDepartureReleaseRequest)
@@ -439,9 +443,10 @@ namespace UKControllerPluginUtilsTest::Api {
 
         nlohmann::json expectedData;
         expectedData["controller_position_id"] = 2;
+        expectedData["remarks"] = "Some remarks";
         expectedRequest.SetBody(expectedData.dump());
 
-        EXPECT_TRUE(expectedRequest == this->builder.BuildRejectDepartureReleaseRequest(1, 2));
+        EXPECT_TRUE(expectedRequest == this->builder.BuildRejectDepartureReleaseRequest(1, 2, "Some remarks"));
     }
 
     TEST_F(ApiRequestBuilderTest, ItBuildsAcknowledgeDepartureReleaseRequest)
