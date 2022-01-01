@@ -7,7 +7,7 @@ namespace UKControllerPlugin {
         class DepartureReleaseEventHandler;
 
         /*
-        *  Dialog for approving departure releases
+         *  Dialog for approving departure releases
          */
         class RejectDepartureReleaseDialog
         {
@@ -16,7 +16,6 @@ namespace UKControllerPlugin {
             static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             private:
-
             void InitDialog(HWND hwnd, LPARAM lParam);
             void RejectRelease(HWND hwnd);
             LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -26,8 +25,8 @@ namespace UKControllerPlugin {
 
             // Handles release events
             std::shared_ptr<DepartureReleaseEventHandler> eventHandler;
-            
+
             inline static const int REMARKS_BUFFER_SIZE = 255;
         };
     } // namespace Releases
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

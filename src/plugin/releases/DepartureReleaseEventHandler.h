@@ -29,7 +29,7 @@ namespace UKControllerPlugin {
     } // namespace Windows
     namespace Message {
         class UserMessager;
-    } //
+    } // namespace Message
 
     namespace Releases {
 
@@ -72,9 +72,7 @@ namespace UKControllerPlugin {
                 const POINT& mousePos);
             void ReleaseDecisionMade(int functionId, const std::string& context, RECT);
             void RequestRelease(const std::string& callsign, int targetControllerId);
-            void RejectRelease(
-                int releaseId,
-                std::string remarks);
+            void RejectRelease(int releaseId, std::string remarks);
             void ApproveRelease(
                 int releaseId,
                 std::chrono::system_clock::time_point releasedAt,
@@ -164,7 +162,7 @@ namespace UKControllerPlugin {
 
             // Windows api interface for playing sounds
             Windows::WinApiInterface& windows;
-            
+
             // Sends messages to the user
             Message::UserMessager& messager;
         };
