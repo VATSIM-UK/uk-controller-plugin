@@ -11,10 +11,10 @@ namespace UKControllerPlugin {
     namespace Releases {
 
         ApproveDepartureReleaseDialog::ApproveDepartureReleaseDialog(
-            std::shared_ptr<DepartureReleaseEventHandler> eventHandler
-        ): eventHandler(std::move(eventHandler)
-        )
-        { }
+            std::shared_ptr<DepartureReleaseEventHandler> eventHandler)
+            : eventHandler(std::move(eventHandler))
+        {
+        }
 
         /*
     Private dialog procedure for the dialog, should be used
@@ -23,32 +23,32 @@ namespace UKControllerPlugin {
         LRESULT ApproveDepartureReleaseDialog::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             switch (msg) {
-                // Initialise
-                case WM_INITDIALOG: {
-                    this->InitDialog(hwnd, lParam);
-                    return TRUE;
-                };
-                // Window closed
-                case WM_CLOSE: {
+            // Initialise
+            case WM_INITDIALOG: {
+                this->InitDialog(hwnd, lParam);
+                return TRUE;
+            };
+            // Window closed
+            case WM_CLOSE: {
+                EndDialog(hwnd, wParam);
+                return TRUE;
+            }
+            // Buttons pressed
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                case IDOK: {
+                    this->ApproveRelease(hwnd);
                     EndDialog(hwnd, wParam);
                     return TRUE;
                 }
-                // Buttons pressed
-                case WM_COMMAND: {
-                    switch (LOWORD(wParam)) {
-                        case IDOK: {
-                            this->ApproveRelease(hwnd);
-                            EndDialog(hwnd, wParam);
-                            return TRUE;
-                        }
-                        case IDCANCEL: {
-                            EndDialog(hwnd, wParam);
-                            return TRUE;
-                        }
-                        default:
-                            return FALSE;
-                    }
+                case IDCANCEL: {
+                    EndDialog(hwnd, wParam);
+                    return TRUE;
                 }
+                default:
+                    return FALSE;
+                }
+            }
             }
             return FALSE;
         }
@@ -61,18 +61,14 @@ namespace UKControllerPlugin {
             if (msg == WM_INITDIALOG) {
                 LogInfo("Approve departure releases dialog opened");
                 SetWindowLongPtr(
-                    hwnd,
-                    GWLP_USERDATA,
-                    reinterpret_cast<Dialog::DialogCallArgument *>(lParam)->dialogArgument
-                );
+                    hwnd, GWLP_USERDATA, reinterpret_cast<Dialog::DialogCallArgument*>(lParam)->dialogArgument);
             } else if (msg == WM_DESTROY) {
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
                 LogInfo("Approve departure releases dialog closed");
             }
 
-            ApproveDepartureReleaseDialog* dialog = reinterpret_cast<ApproveDepartureReleaseDialog*>(
-                GetWindowLongPtr(hwnd, GWLP_USERDATA)
-            );
+            ApproveDepartureReleaseDialog* dialog =
+                reinterpret_cast<ApproveDepartureReleaseDialog*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
             return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
         }
 
@@ -83,8 +79,7 @@ namespace UKControllerPlugin {
         {
             // Get the aircraft callsign from dialog argument
             this->selectedRelease = *reinterpret_cast<std::shared_ptr<DepartureReleaseRequest>*>(
-                reinterpret_cast<Dialog::DialogCallArgument*>(lParam)->contextArgument
-            );
+                reinterpret_cast<Dialog::DialogCallArgument*>(lParam)->contextArgument);
 
             // Set the aircraft callsign box
             std::wstring wideCallsign = HelperFunctions::ConvertToWideString(this->selectedRelease->Callsign());
@@ -94,8 +89,7 @@ namespace UKControllerPlugin {
                 IDC_DEPARTURE_RELEASE_APPROVE_CALLSIGN,
                 WM_SETTEXT,
                 NULL,
-                reinterpret_cast<LPARAM>(wideCallsign.c_str())
-            );
+                reinterpret_cast<LPARAM>(wideCallsign.c_str()));
 
             // Add the valid for options
             for (auto validForTime : this->releaseValidForTimes) {
@@ -107,24 +101,12 @@ namespace UKControllerPlugin {
                     IDC_DEPARTURE_RELEASE_APPROVE_VALIDFOR,
                     CB_ADDSTRING,
                     NULL,
-                    reinterpret_cast<LPARAM>(validForDisplayString.c_str())
-                );
+                    reinterpret_cast<LPARAM>(validForDisplayString.c_str()));
 
                 SendDlgItemMessage(
-                    hwnd,
-                    IDC_DEPARTURE_RELEASE_APPROVE_VALIDFOR,
-                    CB_SETITEMDATA,
-                    itemIndex,
-                    validForSeconds
-                );
+                    hwnd, IDC_DEPARTURE_RELEASE_APPROVE_VALIDFOR, CB_SETITEMDATA, itemIndex, validForSeconds);
             }
-            SendDlgItemMessage(
-                hwnd,
-                IDC_DEPARTURE_RELEASE_APPROVE_VALIDFOR,
-                CB_SETCURSEL,
-                0,
-                NULL
-            );
+            SendDlgItemMessage(hwnd, IDC_DEPARTURE_RELEASE_APPROVE_VALIDFOR, CB_SETCURSEL, 0, NULL);
 
             // Set released at format
             std::wstring format = L"HH':'mm";
@@ -133,8 +115,7 @@ namespace UKControllerPlugin {
                 IDC_DEPARTURE_RELEASE_APPROVE_RELEASED_AT,
                 DTM_SETFORMAT,
                 NULL,
-                reinterpret_cast<LPARAM>(format.c_str())
-            );
+                reinterpret_cast<LPARAM>(format.c_str()));
 
             // Set released at min/max
             SYSTEMTIME minMaxTimes[2];
@@ -161,15 +142,13 @@ namespace UKControllerPlugin {
                 IDC_DEPARTURE_RELEASE_APPROVE_RELEASED_AT,
                 DTM_SETSYSTEMTIME,
                 GDT_VALID,
-                reinterpret_cast<LPARAM>(&minTime)
-            );
+                reinterpret_cast<LPARAM>(&minTime));
 
             // Max time is 10 minutes from now
             auto timeInTenMinutes = Time::TimeNow() + std::chrono::minutes(10);
             auto dpTenMinutes = date::floor<date::days>(timeInTenMinutes);
-            auto timeTenMinutes = date::make_time(
-                std::chrono::duration_cast<std::chrono::minutes>(timeInTenMinutes - dpTenMinutes)
-            );
+            auto timeTenMinutes =
+                date::make_time(std::chrono::duration_cast<std::chrono::minutes>(timeInTenMinutes - dpTenMinutes));
             SYSTEMTIME maxTime;
             maxTime.wYear = static_cast<int>(ymd.year());
             maxTime.wMonth = static_cast<unsigned>(ymd.month());
@@ -187,20 +166,17 @@ namespace UKControllerPlugin {
                 IDC_DEPARTURE_RELEASE_APPROVE_RELEASED_AT,
                 DTM_SETRANGE,
                 GDTR_MIN | GDTR_MAX,
-                reinterpret_cast<LPARAM>(minMaxTimes)
-            );
+                reinterpret_cast<LPARAM>(minMaxTimes));
+
+            // Max length of the remarks field
+            SendDlgItemMessage(hwnd, IDC_RELEASE_APPROVE_REMARKS, EM_SETLIMITTEXT, REMARKS_BUFFER_SIZE - 1, NULL);
         }
 
         void ApproveDepartureReleaseDialog::ApproveRelease(HWND hwnd)
         {
             // Get the duration
-            int selectedDuration = SendDlgItemMessage(
-                hwnd,
-                IDC_DEPARTURE_RELEASE_APPROVE_VALIDFOR,
-                CB_GETCURSEL,
-                NULL,
-                NULL
-            );
+            int selectedDuration =
+                SendDlgItemMessage(hwnd, IDC_DEPARTURE_RELEASE_APPROVE_VALIDFOR, CB_GETCURSEL, NULL, NULL);
 
             if (selectedDuration == CB_ERR) {
                 return;
@@ -208,12 +184,7 @@ namespace UKControllerPlugin {
 
             // Get the duration
             int durationSeconds = SendDlgItemMessage(
-                hwnd,
-                IDC_DEPARTURE_RELEASE_APPROVE_VALIDFOR,
-                CB_GETITEMDATA,
-                selectedDuration,
-                NULL
-            );
+                hwnd, IDC_DEPARTURE_RELEASE_APPROVE_VALIDFOR, CB_GETITEMDATA, selectedDuration, NULL);
 
             SYSTEMTIME releasedAtTime;
             LRESULT releasedAtTimeValid = SendDlgItemMessage(
@@ -221,8 +192,7 @@ namespace UKControllerPlugin {
                 IDC_DEPARTURE_RELEASE_APPROVE_RELEASED_AT,
                 DTM_GETSYSTEMTIME,
                 NULL,
-                reinterpret_cast<LPARAM>(&releasedAtTime)
-            );
+                reinterpret_cast<LPARAM>(&releasedAtTime));
 
             if (releasedAtTimeValid != GDT_VALID) {
                 return;
@@ -239,6 +209,11 @@ namespace UKControllerPlugin {
             tm.tm_isdst = 0;
             const auto releasedAtTimepoint = std::chrono::system_clock::from_time_t(std::mktime(&tm));
 
+            // Get the remarks
+            TCHAR remarks[REMARKS_BUFFER_SIZE];
+            SendDlgItemMessage(
+                hwnd, IDC_RELEASE_APPROVE_REMARKS, WM_GETTEXT, REMARKS_BUFFER_SIZE, reinterpret_cast<LPARAM>(remarks));
+
             /*
              * Approve the request. If the released at time is prior to now,
              * then make the release time exactly now. This caters for people
@@ -247,11 +222,10 @@ namespace UKControllerPlugin {
              */
             eventHandler->ApproveRelease(
                 this->selectedRelease->Id(),
-                releasedAtTimepoint < std::chrono::system_clock::now()
-                    ? std::chrono::system_clock::now()
-                    : releasedAtTimepoint,
-                durationSeconds
-            );
+                releasedAtTimepoint < std::chrono::system_clock::now() ? std::chrono::system_clock::now()
+                                                                       : releasedAtTimepoint,
+                durationSeconds,
+                HelperFunctions::ConvertToRegularString(remarks));
         }
     } // namespace Releases
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

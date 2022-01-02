@@ -5,6 +5,7 @@
 #include "DepartureReleaseRequestView.h"
 #include "EnrouteReleaseEventHandler.h"
 #include "EnrouteReleaseTypesSerializer.h"
+#include "RejectDepartureReleaseDialog.h"
 #include "ReleaseModule.h"
 #include "RequestDepartureReleaseDialog.h"
 #include "ToggleDepartureReleaseDecisionList.h"
@@ -125,6 +126,7 @@ namespace UKControllerPlugin::Releases {
             *container.activeCallsigns,
             *container.dialogManager,
             *container.windows,
+            *container.userMessager,
             releaseDecisionCallbackId,
             releaseCancellationCallbackId);
         container.departureReleaseHandler = departureHandler;
@@ -216,6 +218,16 @@ namespace UKControllerPlugin::Releases {
              reinterpret_cast<DLGPROC>(approveDialog->WndProc), // NOLINT
              reinterpret_cast<LPARAM>(approveDialog.get()),     // NOLINT
              approveDialog});
+
+        // Dialog for rejecting departure releases
+        auto rejectDialog = std::make_shared<RejectDepartureReleaseDialog>(departureHandler);
+
+        container.dialogManager->AddDialog(
+            {IDD_DEPARTURE_RELEASE_REJECT,
+             "Reject Departure Releases",
+             reinterpret_cast<DLGPROC>(rejectDialog->WndProc), // NOLINT
+             reinterpret_cast<LPARAM>(rejectDialog.get()),     // NOLINT
+             rejectDialog});
 
         // Add to handlers
         container.timedHandler->RegisterEvent(departureHandler, departureReleaseEventFrequency);

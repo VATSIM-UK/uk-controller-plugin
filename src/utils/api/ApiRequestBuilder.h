@@ -63,13 +63,15 @@ namespace UKControllerPlugin::Api {
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildAcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const
             -> UKControllerPlugin::Curl::CurlRequest;
-        [[nodiscard]] auto BuildRejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const
+        [[nodiscard]] auto
+        BuildRejectDepartureReleaseRequest(int releaseId, int controllerPositionId, const std::string& remarks) const
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildApproveDepartureReleaseRequest(
             int releaseId,
             int controllerPositionId,
             std::chrono::system_clock::time_point releasedAt,
-            int expiresInSeconds) const -> UKControllerPlugin::Curl::CurlRequest;
+            int expiresInSeconds,
+            const std::string& remarks) const -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildDepartureReleaseRequest(
             const std::string& callsign, int requestingControllerId, int targetControllerId, int expiresInSeconds) const
             -> UKControllerPlugin::Curl::CurlRequest;

@@ -61,6 +61,11 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(request.Rejected());
         }
 
+        TEST_F(DepartureReleaseRequestTest, ItStarsWithNoRemarks)
+        {
+            EXPECT_TRUE(request.Remarks().empty());
+        }
+
         TEST_F(DepartureReleaseRequestTest, ItCanBeAcknowledged)
         {
             request.Acknowledge();
@@ -75,28 +80,36 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseRequestTest, ItCanBeRejected)
         {
-            request.Reject();
+            request.Reject("Remarks");
             EXPECT_TRUE(request.Rejected());
         }
 
         TEST_F(DepartureReleaseRequestTest, RejectingTheRequestSetsRejectTime)
         {
-            request.Reject();
+            request.Reject("Remarks");
             EXPECT_TRUE(std::chrono::system_clock::now() - request.RejectedAtTime() < std::chrono::seconds(5));
+        }
+
+        TEST_F(DepartureReleaseRequestTest, RejectingTheRequestSetsRemarks)
+        {
+            request.Reject("Remarks");
+            EXPECT_EQ("Remarks", request.Remarks());
         }
 
         TEST_F(DepartureReleaseRequestTest, ItCanBeApproved)
         {
-            request.Approve(std::chrono::system_clock::now(), std::chrono::system_clock::now());
+            request.Approve(std::chrono::system_clock::now(), std::chrono::system_clock::now(), "remarks");
             EXPECT_TRUE(request.Approved());
             EXPECT_FALSE(request.ApprovedWithNoExpiry());
+            EXPECT_EQ("remarks", request.Remarks());
         }
 
         TEST_F(DepartureReleaseRequestTest, ItCanBeApprovedWithNoExpiryTime)
         {
-            request.Approve(std::chrono::system_clock::now(), std::chrono::system_clock::now());
+            request.Approve(std::chrono::system_clock::now(), "remarks");
             EXPECT_TRUE(request.Approved());
-            EXPECT_FALSE(request.ApprovedWithNoExpiry());
+            EXPECT_TRUE(request.ApprovedWithNoExpiry());
+            EXPECT_EQ("remarks", request.Remarks());
         }
 
         TEST_F(DepartureReleaseRequestTest, ApprovingTheRequestSetsReleasedAtTime)
@@ -105,7 +118,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now() + std::chrono::minutes(1);
             std::chrono::system_clock::time_point releaseExpiresAt =
                 std::chrono::system_clock::now() + std::chrono::minutes(2);
-            request.Approve(releasedAt, releaseExpiresAt);
+            request.Approve(releasedAt, releaseExpiresAt, "remarks");
             EXPECT_EQ(releasedAt, request.ReleasedAtTime());
         }
 
@@ -115,7 +128,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now() + std::chrono::minutes(1);
             std::chrono::system_clock::time_point releaseExpiresAt =
                 std::chrono::system_clock::now() + std::chrono::minutes(2);
-            request.Approve(releasedAt, releaseExpiresAt);
+            request.Approve(releasedAt, releaseExpiresAt, "remarks");
             EXPECT_EQ(releaseExpiresAt, request.ReleaseExpiryTime());
         }
 
@@ -143,13 +156,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(DepartureReleaseRequestTest, RequestDoesNotRequireDecisionIfAlreadyApproved)
         {
-            request.Approve(std::chrono::system_clock::now(), std::chrono::system_clock::now());
+            request.Approve(std::chrono::system_clock::now(), std::chrono::system_clock::now(), "");
             EXPECT_FALSE(this->request.RequiresDecision());
         }
 
         TEST_F(DepartureReleaseRequestTest, RequestDoesNotRequireDecisionIfAlreadyRejected)
         {
-            request.Reject();
+            request.Reject("Remarks");
             EXPECT_FALSE(this->request.RequiresDecision());
         }
 
@@ -159,7 +172,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now() + std::chrono::minutes(1);
             std::chrono::system_clock::time_point releaseExpiresAt =
                 std::chrono::system_clock::now() + std::chrono::minutes(2);
-            request.Approve(releasedAt, releaseExpiresAt);
+            request.Approve(releasedAt, releaseExpiresAt, "");
             EXPECT_TRUE(this->request.AwaitingReleasedTime());
         }
 
@@ -169,7 +182,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now() - std::chrono::minutes(1);
             std::chrono::system_clock::time_point releaseExpiresAt =
                 std::chrono::system_clock::now() + std::chrono::minutes(2);
-            request.Approve(releasedAt, releaseExpiresAt);
+            request.Approve(releasedAt, releaseExpiresAt, "");
             EXPECT_FALSE(this->request.AwaitingReleasedTime());
         }
     } // namespace Releases

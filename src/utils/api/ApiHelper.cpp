@@ -289,20 +289,22 @@ namespace UKControllerPlugin::Api {
             this->requestBuilder.BuildAcknowledgeDepartureReleaseRequest(releaseId, controllerPositionId)));
     }
 
-    void ApiHelper::RejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const
+    void
+    ApiHelper::RejectDepartureReleaseRequest(int releaseId, int controllerPositionId, const std::string& remarks) const
     {
         static_cast<void>(this->MakeApiRequest(
-            this->requestBuilder.BuildRejectDepartureReleaseRequest(releaseId, controllerPositionId)));
+            this->requestBuilder.BuildRejectDepartureReleaseRequest(releaseId, controllerPositionId, remarks)));
     }
 
     void ApiHelper::ApproveDepartureReleaseRequest(
         int releaseId,
         int controllerPositionId,
         std::chrono::system_clock::time_point releasedAt,
-        int expiresInSeconds) const
+        int expiresInSeconds,
+        const std::string& remarks) const
     {
         static_cast<void>(this->MakeApiRequest(this->requestBuilder.BuildApproveDepartureReleaseRequest(
-            releaseId, controllerPositionId, releasedAt, expiresInSeconds)));
+            releaseId, controllerPositionId, releasedAt, expiresInSeconds, remarks)));
     }
 
     auto ApiHelper::RequestDepartureRelease(

@@ -280,11 +280,12 @@ namespace UKControllerPlugin::Api {
         return this->AddCommonHeaders(request);
     }
 
-    auto ApiRequestBuilder::BuildRejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const
-        -> CurlRequest
+    auto ApiRequestBuilder::BuildRejectDepartureReleaseRequest(
+        int releaseId, int controllerPositionId, const std::string& remarks) const -> CurlRequest
     {
         nlohmann::json body;
         body["controller_position_id"] = controllerPositionId;
+        body["remarks"] = remarks;
 
         CurlRequest request(
             this->apiDomain + "/departure/release/request/" + std::to_string(releaseId) + "/reject",
@@ -300,10 +301,12 @@ namespace UKControllerPlugin::Api {
         int releaseId,
         int controllerPositionId,
         std::chrono::system_clock::time_point releasedAt,
-        int expiresInSeconds) const -> CurlRequest
+        int expiresInSeconds,
+        const std::string& remarks) const -> CurlRequest
     {
         nlohmann::json body;
         body["controller_position_id"] = controllerPositionId;
+        body["remarks"] = remarks;
         body["released_at"] = date::format("%Y-%m-%d %H:%M:%S", date::floor<std::chrono::seconds>(releasedAt));
         if (expiresInSeconds == -1) {
             body["expires_in_seconds"] = nlohmann::json::value_t::null;
