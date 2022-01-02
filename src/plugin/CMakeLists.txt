@@ -242,7 +242,7 @@ set(src__handoff
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
     controller/HandoffEventHandler.cpp
-    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h)
+    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__headings headings/Heading.h headings/Heading.cpp)
@@ -506,7 +506,17 @@ set(src__missedapproach
         missedapproach/MissedApproachOptions.cpp missedapproach/MissedApproachOptions.h
         missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h
         missedapproach/MissedApproachUserSettingHandler.cpp missedapproach/MissedApproachUserSettingHandler.h
-        missedapproach/MissedApproachButton.cpp missedapproach/MissedApproachButton.h missedapproach/ToggleMissedApproachButton.cpp missedapproach/ToggleMissedApproachButton.h missedapproach/ConfigureMissedApproaches.cpp missedapproach/ConfigureMissedApproaches.h missedapproach/MissedApproachTriggeredMessage.cpp missedapproach/MissedApproachTriggeredMessage.h missedapproach/TriggerMissedApproachMessageHandler.cpp missedapproach/TriggerMissedApproachMessageHandler.h)
+        missedapproach/MissedApproachButton.cpp missedapproach/MissedApproachButton.h
+        missedapproach/ToggleMissedApproachButton.cpp missedapproach/ToggleMissedApproachButton.h
+        missedapproach/ConfigureMissedApproaches.cpp missedapproach/ConfigureMissedApproaches.h
+        missedapproach/MissedApproachTriggeredMessage.cpp missedapproach/MissedApproachTriggeredMessage.h
+        missedapproach/TriggerMissedApproachMessageHandler.cpp missedapproach/TriggerMissedApproachMessageHandler.h
+        missedapproach/MissedApproachAcknowledgedUserMessage.cpp missedapproach/MissedApproachAcknowledgedUserMessage.h
+        missedapproach/MissedApproachAcknowledgedPushEventProcessor.cpp missedapproach/MissedApproachAcknowledgedPushEventProcessor.h
+        missedapproach/MissedApproachIndicator.cpp missedapproach/MissedApproachIndicator.h
+        missedapproach/AcknowledgeMissedApproachTagFunction.cpp missedapproach/AcknowledgeMissedApproachTagFunction.h
+        missedapproach/AcknowledgeMissedApproachDialog.cpp missedapproach/AcknowledgeMissedApproachDialog.h)
+
 source_group("src\\missedapproach" FILES ${src__missedapproach})
 
 set(src__navaids
@@ -785,7 +795,7 @@ set(src__srd
     "srd/SrdSearchDialog.h"
     "srd/SrdSearchHandler.cpp"
     "srd/SrdSearchHandler.h"
-        srd/ContainsFreeRouteAirspace.cpp srd/ContainsFreeRouteAirspace.h)
+    srd/ContainsFreeRouteAirspace.cpp srd/ContainsFreeRouteAirspace.h)
 source_group("src\\srd" FILES ${src__srd})
 
 set(src__stands

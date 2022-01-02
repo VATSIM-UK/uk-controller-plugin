@@ -448,6 +448,18 @@ namespace UKControllerPlugin::Api {
         return this->AddCommonHeaders(request);
     }
 
+    auto ApiRequestBuilder::BuildMissedApproachAcknowledgeMessage(int id, const std::string& remarks) const
+        -> UKControllerPlugin::Curl::CurlRequest
+    {
+        CurlRequest request(this->apiDomain + "/missed-approaches/" + std::to_string(id), CurlRequest::METHOD_PATCH);
+        nlohmann::json data{
+            {"remarks", remarks},
+        };
+        request.SetBody(data.dump());
+
+        return this->AddCommonHeaders(request);
+    }
+
     auto ApiRequestBuilder::BuildGetAllMetarsRequest() const -> UKControllerPlugin::Curl::CurlRequest
     {
         return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/metar", CurlRequest::METHOD_GET));

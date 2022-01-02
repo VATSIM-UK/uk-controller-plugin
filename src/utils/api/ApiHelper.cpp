@@ -377,9 +377,16 @@ namespace UKControllerPlugin::Api {
     {
         return this->MakeApiRequest(this->requestBuilder.BuildMissedApproachMessage(callsign)).GetRawData();
     }
+    
+    void ApiHelper::AcknowledgeMissedApproach(int id, const std::string& remarks) const
+    {
+        static_cast<void>(
+            this->MakeApiRequest(this->requestBuilder.BuildMissedApproachAcknowledgeMessage(id, remarks)));
+    }
 
     auto ApiHelper::GetAllMetars() const -> nlohmann::json
     {
         return this->MakeApiRequest(this->requestBuilder.BuildGetAllMetarsRequest()).GetRawData();
+        
     }
 } // namespace UKControllerPlugin::Api

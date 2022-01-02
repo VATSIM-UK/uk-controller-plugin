@@ -87,7 +87,11 @@ namespace UKControllerPlugin::Api {
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildMissedApproachMessage(const std::string& callsign) const
             -> UKControllerPlugin::Curl::CurlRequest;
+        [[nodiscard]] auto BuildMissedApproachAcknowledgeMessage(int id, const std::string& remarks) const
+            -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildGetAllMetarsRequest() const -> UKControllerPlugin::Curl::CurlRequest;
+        [[nodiscard]] auto BuildMissedApproachAcknowledgeMessage(int id, const std::string& remarks) const
+            -> UKControllerPlugin::Curl::CurlRequest;
 
         [[nodiscard]] auto GetApiDomain() const -> std::string;
         [[nodiscard]] auto GetApiKey() const -> std::string;

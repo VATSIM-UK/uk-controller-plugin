@@ -21,3 +21,4 @@
 9018 - Trigger Prenote Message Status View
 9019 - Acknowledge Prenote Message
 9020 - Trigger Missed Approach
+9021 - Acknowledge Missed Approach

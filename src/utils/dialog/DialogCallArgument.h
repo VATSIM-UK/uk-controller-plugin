@@ -12,9 +12,9 @@ namespace UKControllerPlugin::Dialog {
     {
 
         // The argument that the dialog procedure needs - e.g. to defer to a class.
-        const LPARAM dialogArgument;
+        LPARAM dialogArgument;
 
         // An argument that provides the context in which the dialog is being loaded
-        const LPARAM contextArgument;
+        LPARAM contextArgument;
     };
 } // namespace UKControllerPlugin::Dialog

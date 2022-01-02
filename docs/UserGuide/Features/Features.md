@@ -18,7 +18,7 @@ dynamically to the plugin.
 - UK Wake Categories
 - [Pressure Monitor and Notifications](PressureMonitor.md)
 - Hold Manager, synced between controllers
-- Departure handoff indicator
+- [Departure Handoff Indicator](Handoffs.md)
 - Altimeter setting regions and regional pressures
 - SRD Search
 - Enroute releases

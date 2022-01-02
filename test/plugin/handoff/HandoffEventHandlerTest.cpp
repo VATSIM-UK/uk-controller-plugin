@@ -1,7 +1,9 @@
+#include "airfield/AirfieldCollection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionHierarchy.h"
 #include "handoff/DepartureHandoffResolver.h"
+#include "handoff/FlightplanAirfieldHandoffMapper.h"
 #include "handoff/FlightplanSidHandoffMapper.h"
 #include "handoff/HandoffCache.h"
 #include "handoff/HandoffCollection.h"
@@ -16,11 +18,13 @@
 using testing::NiceMock;
 using testing::Return;
 using testing::Test;
+using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 using UKControllerPlugin::Handoff::DepartureHandoffResolver;
+using UKControllerPlugin::Handoff::FlightplanAirfieldHandoffMapper;
 using UKControllerPlugin::Handoff::FlightplanSidHandoffMapper;
 using UKControllerPlugin::Handoff::HandoffCache;
 using UKControllerPlugin::Handoff::HandoffCollection;
@@ -54,9 +58,8 @@ namespace UKControllerPluginTest::Handoff {
                   &euroscopeColourCode,
                   &tagColour,
                   &fontSize),
-              handoffs(std::make_shared<HandoffCollection>()),
-              resolver(std::make_shared<DepartureHandoffResolver>(
-                  std::make_shared<FlightplanSidHandoffMapper>(handoffs, sids), activeCallsigns)),
+              handoffMapper(handoffs, sids), airfieldMapper(handoffs, airfields),
+              resolver(std::make_shared<DepartureHandoffResolver>(handoffMapper, airfieldMapper, activeCallsigns)),
               cache(std::make_shared<HandoffCache>()), handler(resolver, cache, mockIntegration)
         {
             ON_CALL(this->mockFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
@@ -76,7 +79,7 @@ namespace UKControllerPluginTest::Handoff {
         void AddHandoffOrders()
         {
             this->sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 1000, 300, 1));
-            this->handoffs->Add(std::make_shared<HandoffOrder>(1, this->hierarchy));
+            this->handoffs.Add(std::make_shared<HandoffOrder>(1, this->hierarchy));
         }
 
         double fontSize = 24.1;
@@ -90,10 +93,13 @@ namespace UKControllerPluginTest::Handoff {
         NiceMock<MockOutboundIntegrationEventHandler> mockIntegration;
         NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
         NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+        AirfieldCollection airfields;
         ActiveCallsignCollection activeCallsigns;
         SidCollection sids;
         TagData tagData;
-        std::shared_ptr<HandoffCollection> handoffs;
+        HandoffCollection handoffs;
+        FlightplanSidHandoffMapper handoffMapper;
+        FlightplanAirfieldHandoffMapper airfieldMapper;
         std::shared_ptr<DepartureHandoffResolver> resolver;
         std::shared_ptr<HandoffCache> cache;
         HandoffEventHandler handler;

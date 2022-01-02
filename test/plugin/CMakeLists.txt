@@ -116,7 +116,10 @@ set(test__handoff
     "handoff/HandoffEventHandlerTest.cpp"
     "handoff/HandoffFrequencyUpdatedEventTest.cpp"
     "handoff/HandoffModuleTest.cpp"
-        handoff/FlightplanSidHandoffMapperTest.cpp handoff/HandoffCacheTest.cpp handoff/DepartureHandoffResolverTest.cpp)
+    handoff/FlightplanSidHandoffMapperTest.cpp
+    handoff/FlightplanAirfieldHandoffMapperTest.cpp
+    handoff/HandoffCacheTest.cpp
+    handoff/DepartureHandoffResolverTest.cpp)
 source_group("test\\handoff" FILES ${test__handoff})
 
 set(test__headings
@@ -262,7 +265,18 @@ set(test__missedapproach
         missedapproach/MissedApproachOptionsTest.cpp
         missedapproach/MissedApproachAudioAlertTest.cpp
         missedapproach/MissedApproachUserSettingHandlerTest.cpp
-        missedapproach/MissedApproachButtonTest.cpp missedapproach/ToggleMissedApproachButtonTest.cpp missedapproach/ConfigureMissedApproachesTest.cpp missedapproach/MissedApproachTriggeredMessageTest.cpp missedapproach/TriggerMissedApproachMessageHandlerTest.cpp)
+        missedapproach/MissedApproachButtonTest.cpp
+        missedapproach/ToggleMissedApproachButtonTest.cpp
+        missedapproach/ConfigureMissedApproachesTest.cpp
+        missedapproach/MissedApproachTriggeredMessageTest.cpp
+        missedapproach/TriggerMissedApproachMessageHandlerTest.cpp
+        missedapproach/MissedApproachAcknowledgedUserMessageTest.cpp
+        missedapproach/MissedApproachAcknowledgedPushEventProcessorTest.cpp
+        missedapproach/MissedApproachIndicatorTest.cpp
+        missedapproach/AcknowledgeMissedApproachTagFunctionTest.cpp
+        missedapproach/MissedApproachTriggeredMessageTest.cpp 
+        missedapproach/TriggerMissedApproachMessageHandlerTest.cpp)
+
 source_group("test\\missedapproach" FILES ${test__missedapproach})
 
 set(test__mock
@@ -457,7 +471,7 @@ set(test__srd
     "srd/SrdModuleTest.cpp"
     "srd/SrdSearchDialogTest.cpp"
     "srd/SrdSearchHandlerTest.cpp"
-        srd/ContainsFreeRouteAirspaceTest.cpp)
+    srd/ContainsFreeRouteAirspaceTest.cpp)
 source_group("test\\srd" FILES ${test__srd})
 
 set(test__stands
