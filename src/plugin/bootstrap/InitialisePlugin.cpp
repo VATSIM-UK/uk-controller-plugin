@@ -26,6 +26,7 @@
 #include "log/LoggerBootstrap.h"
 #include "login/LoginModule.h"
 #include "message/UserMessagerBootstrap.h"
+#include "metar/MetarModule.h"
 #include "metar/PressureMonitorBootstrap.h"
 #include "minstack/MinStackModule.h"
 #include "missedapproach/MissedApproachModule.h"
@@ -209,6 +210,7 @@ namespace UKControllerPlugin {
             *this->container->userSettingHandlers);
 
         // Bootstrap the modules
+        Metar::BootstrapPlugin(*this->container);
         InitialAltitudeModule::BootstrapPlugin(*this->container);
         InitialHeading::BootstrapPlugin(*this->container);
         IntentionCodeModule::BootstrapPlugin(*this->container);

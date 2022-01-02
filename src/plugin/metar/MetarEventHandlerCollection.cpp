@@ -1,41 +1,35 @@
-#include "pch/pch.h"
-#include "metar/MetarEventHandlerCollection.h"
-#include "metar/MetarEventHandlerInterface.h"
+#include "MetarEventHandlerCollection.h"
+#include "MetarEventHandlerInterface.h"
 
 using UKControllerPlugin::Metar::MetarEventHandlerInterface;
 
-namespace UKControllerPlugin {
-    namespace Metar {
+namespace UKControllerPlugin::Metar {
 
+    /*
+        Returns the number of registered handlers.
+    */
+    auto MetarEventHandlerCollection::CountHandlers() const -> size_t
+    {
+        return this->handlers.size();
+    }
 
-        /*
-            Returns the number of registered handlers.
-        */
-        int MetarEventHandlerCollection::CountHandlers(void) const
-        {
-            return this->handlers.size();
+    /*
+        Loop through all the handlers and call their metar event.
+    */
+    void MetarEventHandlerCollection::UpdatedMetarEvent(const ParsedMetar& metar) const
+    {
+        for (const auto& handler : this->handlers) {
+            handler->MetarUpdated(metar);
         }
+    }
 
-        /*
-            Loop through all the handlers and call their metar event.
-        */
-        void MetarEventHandlerCollection::NewMetarEvent(std::string station, std::string metar) const
-        {
-            for (
-                std::set<std::shared_ptr<MetarEventHandlerInterface>>::const_iterator it = this->handlers.cbegin();
-                it != this->handlers.cend();
-                ++it
-            ) {
-                (*it)->NewMetar(station, metar);
-            }
+    /*
+        Add a handler to the collection.
+    */
+    void MetarEventHandlerCollection::RegisterHandler(std::shared_ptr<MetarEventHandlerInterface> handler)
+    {
+        if (!this->handlers.insert(handler).second) {
+            LogWarning("Duplicate metar handler added");
         }
-
-        /*
-            Add a handler to the collection.
-        */
-        void MetarEventHandlerCollection::RegisterHandler(std::shared_ptr<MetarEventHandlerInterface> handler)
-        {
-            this->handlers.insert(handler);
-        }
-    }  // namespace Metar
-}  // namespace UKControllerPlugin
+    }
+} // namespace UKControllerPlugin::Metar

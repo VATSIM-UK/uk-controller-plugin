@@ -18,6 +18,7 @@ namespace UKControllerPlugin::Airfield {
         auto operator=(const AirfieldCollection&) -> AirfieldCollection& = delete;
         auto operator=(AirfieldCollection&&) noexcept -> AirfieldCollection&;
         void AddAirfield(std::shared_ptr<UKControllerPlugin::Airfield::AirfieldModel> airfield);
+        [[nodiscard]] auto FetchById(int id) const -> std::shared_ptr<AirfieldModel>;
         [[nodiscard]] auto FetchAirfieldByIcao(const std::string& icao) const -> std::shared_ptr<AirfieldModel>;
         void ForEach(const std::function<void(const AirfieldModel& airfield)>& callback) const;
         [[nodiscard]] auto GetSize() const -> size_t;

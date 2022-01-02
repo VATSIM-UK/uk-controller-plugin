@@ -1,52 +1,49 @@
 #pragma once
-#include "metar/MetarEventHandlerInterface.h"
-#include "euroscope/UserSetting.h"
-#include "message/UserMessager.h"
-#include "euroscope/UserSettingAwareInterface.h"
+#include "MetarEventHandlerInterface.h"
 #include "controller/ActiveCallsignCollection.h"
+#include "euroscope/UserSetting.h"
+#include "euroscope/UserSettingAwareInterface.h"
+#include "message/UserMessager.h"
 
-namespace UKControllerPlugin {
-    namespace Metar {
+namespace UKControllerPlugin::Metar {
+    class PressureComponent;
 
-        /*
-            Monitors changing QNHs as reported by EuroScope
-            and notifies the user if the QNH has changed.
-        */
-        class PressureMonitor : public UKControllerPlugin::Metar::MetarEventHandlerInterface,
-            public UKControllerPlugin::Euroscope::UserSettingAwareInterface
-        {
-            public:
+    /*
+        Monitors changing QNHs as reported by EuroScope
+        and notifies the user if the QNH has changed.
+    */
+    class PressureMonitor : public UKControllerPlugin::Metar::MetarEventHandlerInterface,
+                            public UKControllerPlugin::Euroscope::UserSettingAwareInterface
+    {
+        public:
+        PressureMonitor(
+            UKControllerPlugin::Message::UserMessager& userMessager,
+            const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns);
+        [[nodiscard]] auto GetStoredPressure(const std::string& airfield) const -> std::shared_ptr<PressureComponent>;
+        bool NotificationsEnabled(void) const;
+        void SetNotficationsEnabled(bool enabled);
 
-                PressureMonitor(
-                    UKControllerPlugin::Message::UserMessager & userMessager,
-                    const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns
-                );
-                std::string GetStoredQnh(std::string station) const;
-                bool NotificationsEnabled(void) const;
-                void SetNotficationsEnabled(bool enabled);
+        // Inherited via MetarEventHandlerInterface
+        void MetarUpdated(const ParsedMetar& metar) override;
 
-                // Inherited via MetarEventHandlerInterface
-                void NewMetar(std::string station, std::string metar) override;
+        // Inherited via UserSettingAwareInterface
+        void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting& userSettings) override;
 
-                // Inherited via UserSettingAwareInterface
-                void UserSettingsUpdated(UKControllerPlugin::Euroscope::UserSetting & userSettings) override;
+        private:
+        [[nodiscard]] auto PressureHasUpdated(const std::string& airfield, const PressureComponent& pressure) const
+            -> bool;
+        void SendNotificationIfRequired(const std::string& airfield, const PressureComponent& pressure) const;
 
-                // String to return if no QNHn is stored
-                const std::string qnhNotStored = "NONE";
+        // Whether or not to send notifications.
+        bool notificationsEnabled = false;
 
-            private:
+        // A map of airfield -> last recorded QNH.
+        std::map<std::string, std::shared_ptr<PressureComponent>> pressures;
 
-                // Whether or not to send notifications.
-                bool notificationsEnabled = false;
+        // Interface with ES for sending messages to the user about pressure changes.
+        UKControllerPlugin::Message::UserMessager& userMessager;
 
-                // A map of airfield -> last recorded QNH.
-                std::map<std::string, std::string> qnhs;
-
-                // Interface with ES for sending messages to the user about pressure changes.
-                UKControllerPlugin::Message::UserMessager & userMessager;
-
-                // All the active controller callsigns
-                const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns;
-        };
-    }  // namespace Metar
-}  // namespace UKControllerPlugin
+        // All the active controller callsigns
+        const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns;
+    };
+} // namespace UKControllerPlugin::Metar

@@ -16,7 +16,7 @@ dynamically to the plugin.
 - Actual off-block times
 - Estimated departure times
 - UK Wake Categories
-- QNH change notifications
+- [Pressure Monitor and Notifications](PressureMonitor.md)
 - Hold Manager, synced between controllers
 - [Departure Handoff Indicator](Handoffs.md)
 - Altimeter setting regions and regional pressures
