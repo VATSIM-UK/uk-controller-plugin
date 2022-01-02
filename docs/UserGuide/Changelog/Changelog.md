@@ -1,5 +1,20 @@
 # UK Controller Plugin Changelog
 
+# [3.13.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.12.0...3.13.0) (2022-01-02)
+
+
+### Bug Fixes
+
+* **srd:** only prepopulate destination airfield into SRD search for EG and EI ([#381](https://github.com/VATSIM-UK/uk-controller-plugin/issues/381)) ([e2f3492](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e2f3492e429c78840148865127245da300431777)), closes [#380](https://github.com/VATSIM-UK/uk-controller-plugin/issues/380)
+
+
+### Features
+
+* **metar:** Add QFE to pressure monitor messages, QFE query command ([#376](https://github.com/VATSIM-UK/uk-controller-plugin/issues/376)) ([5d32b92](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5d32b925b807409b78e99dd7491f791458fdb436))
+* **release:** Allow the plugin to work on multiple update channels ([#387](https://github.com/VATSIM-UK/uk-controller-plugin/issues/387)) ([e2487ec](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e2487ecdb32e57d73aa0aef5a952b16f3f13d3cf))
+* **releases:** Allow remarks when approving and rejecting departure releases ([#389](https://github.com/VATSIM-UK/uk-controller-plugin/issues/389)) ([f039d9d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f039d9d7fc2cbd9d7967f89b40075c04c0825080))
+* **srd:** Prepopulate FIR exits in the SRD dialog ([#382](https://github.com/VATSIM-UK/uk-controller-plugin/issues/382)) ([a083cba](https://github.com/VATSIM-UK/uk-controller-plugin/commit/a083cba09a45293401605102cb664480c6cc3357)), closes [#380](https://github.com/VATSIM-UK/uk-controller-plugin/issues/380)
+
 # [3.12.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.11.0...3.12.0) (2021-12-21)
 
 
