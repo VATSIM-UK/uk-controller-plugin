@@ -258,7 +258,7 @@ namespace UKControllerPlugin::Api {
             aircraftCallsign, sendingController, targetController, releaseType, releasePoint)));
     }
 
-    auto ApiHelper::GetUpdateDetails(const std::string& release) const -> nlohmann::json
+    auto ApiHelper::GetUpdateDetails(const std::string& releaseChannel) const -> nlohmann::json
     {
         return this->MakeApiRequest(this->requestBuilder.BuildLatestGithubVersionRequest(releaseChannel)).GetRawData();
     }
