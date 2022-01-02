@@ -69,7 +69,6 @@ namespace UKControllerPlugin {
             const TimedEvent::TimedEventCollection& timedEvents,
             const Tag::TagItemCollection& tagEvents,
             RadarScreen::RadarScreenFactory radarScreenFactory,
-            const Metar::MetarEventHandlerCollection& metarHandlers,
             const Plugin::FunctionCallEventHandler& functionCallHandler,
             const Command::CommandHandlerCollection& commandHandlers,
             const Euroscope::RunwayDialogAwareCollection& runwayDialogHandlers,
@@ -109,7 +108,6 @@ namespace UKControllerPlugin {
             int* pColorCode,
             COLORREF* pRGB,
             double* pFontSize) override;
-        void OnNewMetarReceived(const char* sStation, const char* sFullMetar) override;
         void OnAirportRunwayActivityChanged() override;
         void OnTimer(int time) override;
         auto OnRadarScreenCreated(
@@ -173,9 +171,6 @@ namespace UKControllerPlugin {
 
         // Events involving tag items
         const Tag::TagItemCollection& tagEvents;
-
-        // Collection of handlers for METAR events
-        const Metar::MetarEventHandlerCollection& metarHandlers;
 
         // Handler for function calls
         const Plugin::FunctionCallEventHandler& functionCallHandler;

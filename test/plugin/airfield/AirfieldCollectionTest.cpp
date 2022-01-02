@@ -61,6 +61,20 @@ namespace UKControllerPluginTest::Airfield {
         EXPECT_EQ(nullptr, collection.FetchAirfieldByIcao("EGBB"));
     }
 
+    TEST_F(AirfieldCollectionTest, ItFetchesAirfieldById)
+    {
+        collection.AddAirfield(airfield1);
+        collection.AddAirfield(airfield2);
+        EXPECT_EQ(airfield1, collection.FetchById(1));
+    }
+
+    TEST_F(AirfieldCollectionTest, FetchAirfieldByIdReturnsNullPtrIfNotFound)
+    {
+        collection.AddAirfield(airfield1);
+        collection.AddAirfield(airfield2);
+        EXPECT_EQ(nullptr, collection.FetchById(3));
+    }
+
     TEST_F(AirfieldCollectionTest, ItIteratesTheCollection)
     {
         collection.AddAirfield(airfield1);

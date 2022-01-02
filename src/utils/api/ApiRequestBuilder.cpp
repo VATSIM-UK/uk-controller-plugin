@@ -459,4 +459,9 @@ namespace UKControllerPlugin::Api {
 
         return this->AddCommonHeaders(request);
     }
+
+    auto ApiRequestBuilder::BuildGetAllMetarsRequest() const -> UKControllerPlugin::Curl::CurlRequest
+    {
+        return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/metar", CurlRequest::METHOD_GET));
+    }
 } // namespace UKControllerPlugin::Api
