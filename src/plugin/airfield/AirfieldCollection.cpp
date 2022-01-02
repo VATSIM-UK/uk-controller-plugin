@@ -47,4 +47,9 @@ namespace UKControllerPlugin::Airfield {
             callback(*airfieldMapping.second);
         }
     }
+
+    auto AirfieldCollection::FetchById(int id) const -> std::shared_ptr<AirfieldModel>
+    {
+        return this->airfieldMap.count(id) != 0 ? this->airfieldMap.at(id) : nullptr;
+    }
 } // namespace UKControllerPlugin::Airfield

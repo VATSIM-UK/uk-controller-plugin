@@ -228,11 +228,20 @@ source_group("test\\message" FILES ${test__message})
 
 set(test__metar
     "metar/MetarEventHandlerCollectionTest.cpp"
-    "metar/MetarParsingFunctionsTest.cpp"
     "metar/PressureChangeMessageTest.cpp"
     "metar/PressureMonitorBootstrapTest.cpp"
     "metar/PressureMonitorTest.cpp"
-)
+    metar/PressureComponentTest.cpp
+    metar/ParsedMetarTest.cpp
+    metar/ParsedMetarCollectionTest.cpp
+    metar/PressureComponentFactoryTest.cpp
+    metar/MetarComponentsFactoryTest.cpp
+    metar/ParsedMetarFactoryTest.cpp
+    metar/MetarsUpdatedPushEventProcessorTest.cpp
+    metar/MetarModuleTest.cpp
+    metar/PressureQueryMessageTest.cpp
+    metar/PressureNotFoundMessageTest.cpp
+    metar/PressureQueryCommandHandlerTest.cpp)
 source_group("test\\metar" FILES ${test__metar})
 
 set(test__minstack
@@ -294,7 +303,6 @@ set(test__mock
     "mock/MockHistoryTrailDialog.h"
     "mock/MockHistoryTrailRepository.h"
     "mock/MockIntegrationActionProcessor.h"
-    "mock/MockMinStack.h"
     "mock/MockOutboundIntegrationEventHandler.h"
     "mock/MockPushEventConnection.h"
     "mock/MockPushEventProcessor.h"

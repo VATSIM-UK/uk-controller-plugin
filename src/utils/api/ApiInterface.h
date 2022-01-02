@@ -71,7 +71,7 @@ namespace UKControllerPlugin::Api {
             -> nlohmann::json = 0;
         virtual void CancelDepartureReleaseRequest(int releaseId) const = 0;
         virtual void ReadNotification(int id) const = 0;
-        [[nodiscard]] virtual auto GetUpdateDetails() const -> nlohmann::json = 0;
+        [[nodiscard]] virtual auto GetUpdateDetails(const std::string& releaseChannel) const -> nlohmann::json = 0;
 
         [[nodiscard]] virtual auto CreatePrenoteMessage(
             const std::string& callsign,
@@ -85,6 +85,7 @@ namespace UKControllerPlugin::Api {
         virtual void DeletePrenoteMessage(int messageId) const = 0;
         [[nodiscard]] virtual auto CreateMissedApproach(const std::string& callsign) const -> nlohmann::json = 0;
         virtual void AcknowledgeMissedApproach(int id, const std::string& remarks) const = 0;
+        [[nodiscard]] virtual auto GetAllMetars() const -> nlohmann::json = 0;
 
         virtual void SetApiKey(std::string key) = 0;
         virtual void SetApiDomain(std::string domain) = 0;

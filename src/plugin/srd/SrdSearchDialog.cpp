@@ -374,8 +374,11 @@ namespace UKControllerPlugin {
             std::wstring wideOrigin = HelperFunctions::ConvertToWideString(defaultValues->origin);
             SetDlgItemText(hwnd, IDC_SRD_ORIGIN, wideOrigin.c_str());
 
-            std::wstring wideDestination = HelperFunctions::ConvertToWideString(defaultValues->destination);
-            SetDlgItemText(hwnd, IDC_SRD_DESTINATION, wideDestination.c_str());
+            auto destination = defaultValues->destination;
+            if (destination.size() >= 2 && (destination.substr(0, 2) == "EG" || destination.substr(0, 2) == "EI")) {
+                std::wstring wideDestination = HelperFunctions::ConvertToWideString(destination);
+                SetDlgItemText(hwnd, IDC_SRD_DESTINATION, wideDestination.c_str());
+            }
 
             std::wstring wideCruise = std::to_wstring(defaultValues->requestedLevel);
             SetDlgItemText(hwnd, IDC_SRD_CRUISE, wideCruise.c_str());

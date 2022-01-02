@@ -336,13 +336,13 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsLatestVersionDetailsRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/version/latest", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/version/latest?channel=beta", CurlRequest::METHOD_GET);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
 
-        EXPECT_TRUE(expectedRequest == this->builder.BuildLatestGithubVersionRequest());
+        EXPECT_TRUE(expectedRequest == this->builder.BuildLatestGithubVersionRequest("beta"));
     }
 
     TEST_F(ApiRequestBuilderTest, ItBuildsPluginEventsSyncRequest)
@@ -564,10 +564,19 @@ namespace UKControllerPluginUtilsTest::Api {
         EXPECT_TRUE(expectedRequest == this->builder.BuildMissedApproachMessage("BAW123"));
     }
 
+    TEST_F(ApiRequestBuilderTest, ItBuildsGetAllMetarsMessage)
+    {
+        CurlRequest expectedRequest("http://testurl.com/metar", CurlRequest::METHOD_GET);
+        expectedRequest.AddHeader("Authorization", "Bearer apikey");
+        expectedRequest.AddHeader("Accept", "application/json");
+        expectedRequest.AddHeader("Content-Type", "application/json");
+
+        EXPECT_TRUE(expectedRequest == this->builder.BuildGetAllMetarsRequest());
+    }
+
     TEST_F(ApiRequestBuilderTest, ItBuildsMissedApproachAcknowledge)
     {
         CurlRequest expectedRequest("http://testurl.com/missed-approaches/1", CurlRequest::METHOD_PATCH);
-
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");

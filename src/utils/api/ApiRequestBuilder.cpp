@@ -249,9 +249,10 @@ namespace UKControllerPlugin::Api {
             CurlRequest(this->apiDomain + "/notifications/read/" + std::to_string(id), CurlRequest::METHOD_PUT));
     }
 
-    auto ApiRequestBuilder::BuildLatestGithubVersionRequest() const -> CurlRequest
+    auto ApiRequestBuilder::BuildLatestGithubVersionRequest(const std::string& releaseChannel) const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/version/latest", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(
+            CurlRequest(this->apiDomain + "/version/latest?channel=" + releaseChannel, CurlRequest::METHOD_GET));
     }
 
     auto ApiRequestBuilder::BuildPluginEventSyncRequest() const -> CurlRequest
@@ -461,5 +462,10 @@ namespace UKControllerPlugin::Api {
         request.SetBody(data.dump());
 
         return this->AddCommonHeaders(request);
+    }
+
+    auto ApiRequestBuilder::BuildGetAllMetarsRequest() const -> UKControllerPlugin::Curl::CurlRequest
+    {
+        return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/metar", CurlRequest::METHOD_GET));
     }
 } // namespace UKControllerPlugin::Api

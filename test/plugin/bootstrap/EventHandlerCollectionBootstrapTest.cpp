@@ -7,7 +7,6 @@
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
-#include "metar/MetarEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
@@ -58,11 +57,6 @@ namespace UKControllerPluginTest::Bootstrap {
     TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginCreatesFunctionHandler)
     {
         EXPECT_EQ(0, this->container.pluginFunctionHandlers->CountCallbacks());
-    }
-
-    TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginCreatesMetarEventHandler)
-    {
-        EXPECT_EQ(0, this->container.metarEventHandler->CountHandlers());
     }
 
     TEST_F(EventHandlerCollectionBootstrapTest, BootstrapPluginCreatesUserSettingAwareHandler)
