@@ -207,7 +207,8 @@ namespace UKControllerPlugin {
         GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
             *this->container->dialogManager,
             *this->container->pluginUserSettingHandler,
-            *this->container->userSettingHandlers);
+            *this->container->userSettingHandlers,
+            *this->container->settingsRepository);
 
         // Bootstrap the modules
         Metar::BootstrapPlugin(*this->container);

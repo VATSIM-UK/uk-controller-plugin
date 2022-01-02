@@ -654,11 +654,11 @@ namespace UKControllerPluginUtilsTest::Api {
         CurlResponse response(responseData.dump(), false, 200);
 
         CurlRequest expectedRequest(
-            GetApiGetUriCurlRequest("http://ukcp.test.com/version/latest", CurlRequest::METHOD_GET));
+            GetApiGetUriCurlRequest("http://ukcp.test.com/version/latest?channel=beta", CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
-        EXPECT_EQ(responseData, this->helper.GetUpdateDetails());
+        EXPECT_EQ(responseData, this->helper.GetUpdateDetails("beta"));
     }
 
     TEST_F(ApiHelperTest, RequestDepartureReleaseMakesRequest)

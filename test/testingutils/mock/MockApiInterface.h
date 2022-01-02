@@ -48,10 +48,10 @@ namespace UKControllerPluginTest::Api {
         MOCK_CONST_METHOD1(ReadNotification, void(int));
         MOCK_CONST_METHOD0(SyncPluginEvents, nlohmann::json(void));
         MOCK_CONST_METHOD1(GetLatestPluginEvents, nlohmann::json(int));
-        MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
+        MOCK_CONST_METHOD1(GetUpdateDetails, nlohmann::json(const std::string&));
         MOCK_METHOD1(SetApiDomain, void(std::string));
         MOCK_METHOD1(SetApiKey, void(std::string));
-        MOCK_CONST_METHOD0(GetUpdateDetails, nlohmann::json(void));
+        MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
         MOCK_CONST_METHOD2(AcknowledgeDepartureReleaseRequest, void(int releaseId, int controllerPositionId));
         MOCK_CONST_METHOD2(RejectDepartureReleaseRequest, void(int releaseId, int controllerPositionId));
         MOCK_CONST_METHOD4(

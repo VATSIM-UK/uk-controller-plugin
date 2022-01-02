@@ -33,6 +33,10 @@ namespace UKControllerPluginTest::Bootstrap {
 
     TEST_F(HelperBootstrapTest, BootstrapCreatesApiHelper)
     {
+        EXPECT_CALL(*this->mockWinApi, FileExists(std::wstring(L"settings/release-channel.json")))
+            .Times(1)
+            .WillOnce(Return(false));
+
         EXPECT_CALL(*this->mockWinApi, FileExists(std::wstring(L"settings/api-settings.json")))
             .Times(1)
             .WillOnce(Return(true));
@@ -48,6 +52,10 @@ namespace UKControllerPluginTest::Bootstrap {
 
     TEST_F(HelperBootstrapTest, BootstrapCreatesSettingsRepository)
     {
+        EXPECT_CALL(*this->mockWinApi, FileExists(std::wstring(L"settings/release-channel.json")))
+            .Times(1)
+            .WillOnce(Return(false));
+
         EXPECT_CALL(*this->mockWinApi, FileExists(std::wstring(L"settings/api-settings.json")))
             .Times(1)
             .WillOnce(Return(true));
@@ -58,11 +66,15 @@ namespace UKControllerPluginTest::Bootstrap {
         this->container.windows = std::move(this->mockWinApi);
 
         HelperBootstrap::Bootstrap(container);
-        EXPECT_NO_THROW(this->container.settingsRepository->GetSetting("foo"));
+        EXPECT_EQ("testkey", this->container.settingsRepository->GetSetting("api-key"));
     }
 
     TEST_F(HelperBootstrapTest, BootstrapCreatesTaskRunner)
     {
+        EXPECT_CALL(*this->mockWinApi, FileExists(std::wstring(L"settings/release-channel.json")))
+            .Times(1)
+            .WillOnce(Return(false));
+
         EXPECT_CALL(*this->mockWinApi, FileExists(std::wstring(L"settings/api-settings.json")))
             .Times(1)
             .WillOnce(Return(true));

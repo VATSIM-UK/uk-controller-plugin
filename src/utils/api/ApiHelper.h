@@ -55,7 +55,7 @@ namespace UKControllerPlugin::Api {
             std::string targetController,
             int releaseType,
             std::string releasePoint) const override;
-        [[nodiscard]] auto GetUpdateDetails() const -> nlohmann::json override;
+        [[nodiscard]] auto GetUpdateDetails(const std::string& releaseChannel) const -> nlohmann::json override;
         [[nodiscard]] auto GetAllNotifications() const -> nlohmann::json override;
         [[nodiscard]] auto GetUnreadNotifications() const -> nlohmann::json override;
         [[nodiscard]] auto SyncPluginEvents() const -> nlohmann::json override;
