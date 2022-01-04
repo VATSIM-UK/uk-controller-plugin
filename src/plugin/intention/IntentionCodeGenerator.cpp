@@ -58,6 +58,7 @@ namespace UKControllerPlugin::IntentionCode {
                         return exitIndexes;
                     }
 
+                    i++;
                     continue;
                 }
 
