@@ -312,7 +312,7 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,229,156,10
     CONTROL         "Draw line to missed approach aircraft",MISSED_APPROACH_LINE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,243,135,10
-    LTEXT           "Alert me to missed approaches at these airfields:",MISSED_APPROACH_AIRFIELDS,7,133,157,8
+    LTEXT           "Always alert me to missed approaches at these airfields:",MISSED_APPROACH_AIRFIELDS,7,133,181,8
     CONTROL         "",MISSED_APPROACH_AIRFIELD_LIST,"SysListView32",LVS_LIST | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,146,226,62
     EDITTEXT        MISSED_APPROACH_DRAW_DURATION,7,259,55,14,ES_AUTOHSCROLL | ES_NUMBER
     LTEXT           "Draw duration in seconds (1-9)",MISSED_APPROACH_DRAW_DURATION_TEXT,69,262,100,8

@@ -74,6 +74,15 @@ namespace UKControllerPluginTest::MissedApproach {
         alert.Play(Create(true));
     }
 
+    TEST_F(MissedApproachAudioAlertTest, ItPlaysAlertIfDestinationIsSetToAlwaysAlert)
+    {
+        this->options->SetServiceProvisions(ServiceType::Ground);
+        this->options->SetAirfields({"EGKK"});
+        EXPECT_CALL(mockWindows, PlayWave(MAKEINTRESOURCE(WAVE_MISSED_APPROACH))).Times(1);
+
+        alert.Play(Create(false));
+    }
+
     TEST_F(MissedApproachAudioAlertTest, ItDoesntPlayAudioAlertIfTurnedOff)
     {
         this->options->SetAudioAlert(false);
@@ -95,6 +104,16 @@ namespace UKControllerPluginTest::MissedApproach {
         std::vector<std::shared_ptr<ServiceProvision>> provisions;
         provisions.push_back(std::make_shared<ServiceProvision>(ServiceType::FinalApproach, userTowerCallsign));
         serviceProviders.SetProvidersForAirfield("EGKK", provisions);
+
+        EXPECT_CALL(mockWindows, PlayWave(MAKEINTRESOURCE(WAVE_MISSED_APPROACH))).Times(0);
+
+        alert.Play(Create(false));
+    }
+
+    TEST_F(MissedApproachAudioAlertTest, ItDoesntPlayAudioAlertIfIncorrectAirfieldIsOnAlwaysALert)
+    {
+        this->options->SetServiceProvisions(ServiceType::Ground);
+        this->options->SetAirfields({"EGLL"});
 
         EXPECT_CALL(mockWindows, PlayWave(MAKEINTRESOURCE(WAVE_MISSED_APPROACH))).Times(0);
 
