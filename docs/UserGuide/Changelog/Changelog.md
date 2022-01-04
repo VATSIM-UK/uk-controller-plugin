@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [3.13.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.0...3.13.1) (2022-01-04)
+
+
+### Bug Fixes
+
+* **intentioncode:** euroscope freezing when aircraft cleared beyond exit point ([#391](https://github.com/VATSIM-UK/uk-controller-plugin/issues/391)) ([5b17241](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5b17241abb7098e53b742b5a359b24090762fb45))
+
 # [3.13.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.12.0...3.13.0) (2022-01-02)
 
 
