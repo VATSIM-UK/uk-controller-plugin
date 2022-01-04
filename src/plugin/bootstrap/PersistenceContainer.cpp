@@ -28,6 +28,8 @@
 #include "hold/PublishedHoldCollection.h"
 #include "initialaltitude/InitialAltitudeEventHandler.h"
 #include "integration/ExternalMessageEventHandler.h"
+#include "intention/IntentionCodeCache.h"
+#include "intention/IntentionCodeGenerator.h"
 #include "intention/SectorExitRepository.h"
 #include "login/Login.h"
 #include "message/UserMessager.h"

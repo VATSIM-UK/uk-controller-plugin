@@ -27,6 +27,7 @@ namespace UKControllerPluginTest::Api {
         MOCK_METHOD(void, AcknowledgePrenoteMessage, (int, int), (const, override));
         MOCK_METHOD(void, DeletePrenoteMessage, (int), (const, override));
         MOCK_METHOD(nlohmann::json, CreateMissedApproach, (const std::string&), (const, override));
+        MOCK_METHOD(nlohmann::json, GetAllMetars, (), (const, override));
         MOCK_METHOD(void, AcknowledgeMissedApproach, (int, const std::string&), (const, override));
         MOCK_CONST_METHOD0(GetHoldDependency, nlohmann::json(void));
         MOCK_CONST_METHOD0(GetAssignedHolds, nlohmann::json(void));
@@ -47,19 +48,21 @@ namespace UKControllerPluginTest::Api {
         MOCK_CONST_METHOD1(ReadNotification, void(int));
         MOCK_CONST_METHOD0(SyncPluginEvents, nlohmann::json(void));
         MOCK_CONST_METHOD1(GetLatestPluginEvents, nlohmann::json(int));
-        MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
+        MOCK_CONST_METHOD1(GetUpdateDetails, nlohmann::json(const std::string&));
         MOCK_METHOD1(SetApiDomain, void(std::string));
         MOCK_METHOD1(SetApiKey, void(std::string));
-        MOCK_CONST_METHOD0(GetUpdateDetails, nlohmann::json(void));
+        MOCK_CONST_METHOD1(UpdateCheck, int(std::string));
         MOCK_CONST_METHOD2(AcknowledgeDepartureReleaseRequest, void(int releaseId, int controllerPositionId));
-        MOCK_CONST_METHOD2(RejectDepartureReleaseRequest, void(int releaseId, int controllerPositionId));
-        MOCK_CONST_METHOD4(
+        MOCK_CONST_METHOD3(
+            RejectDepartureReleaseRequest, void(int releaseId, int controllerPositionId, const std::string&));
+        MOCK_CONST_METHOD5(
             ApproveDepartureReleaseRequest,
             void(
                 int releaseId,
                 int controllerPositionId,
                 std::chrono::system_clock::time_point releasedAt,
-                int expiresInSeconds));
+                int expiresInSeconds,
+                const std::string&));
         MOCK_CONST_METHOD4(
             RequestDepartureRelease,
             nlohmann::json(

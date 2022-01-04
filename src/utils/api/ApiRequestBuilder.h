@@ -56,19 +56,22 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] auto BuildGetAllNotificationsRequest() const -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildGetUnreadNotificationsRequest() const -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildReadNotificationRequest(int id) const -> UKControllerPlugin::Curl::CurlRequest;
-        [[nodiscard]] auto BuildLatestGithubVersionRequest() const -> UKControllerPlugin::Curl::CurlRequest;
+        [[nodiscard]] auto BuildLatestGithubVersionRequest(const std::string& releaseChannel) const
+            -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildPluginEventSyncRequest() const -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildGetLatestPluginEventsRequest(int lastEventId) const
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildAcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const
             -> UKControllerPlugin::Curl::CurlRequest;
-        [[nodiscard]] auto BuildRejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const
+        [[nodiscard]] auto
+        BuildRejectDepartureReleaseRequest(int releaseId, int controllerPositionId, const std::string& remarks) const
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildApproveDepartureReleaseRequest(
             int releaseId,
             int controllerPositionId,
             std::chrono::system_clock::time_point releasedAt,
-            int expiresInSeconds) const -> UKControllerPlugin::Curl::CurlRequest;
+            int expiresInSeconds,
+            const std::string& remarks) const -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildDepartureReleaseRequest(
             const std::string& callsign, int requestingControllerId, int targetControllerId, int expiresInSeconds) const
             -> UKControllerPlugin::Curl::CurlRequest;
@@ -89,6 +92,7 @@ namespace UKControllerPlugin::Api {
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildMissedApproachAcknowledgeMessage(int id, const std::string& remarks) const
             -> UKControllerPlugin::Curl::CurlRequest;
+        [[nodiscard]] auto BuildGetAllMetarsRequest() const -> UKControllerPlugin::Curl::CurlRequest;
 
         [[nodiscard]] auto GetApiDomain() const -> std::string;
         [[nodiscard]] auto GetApiKey() const -> std::string;

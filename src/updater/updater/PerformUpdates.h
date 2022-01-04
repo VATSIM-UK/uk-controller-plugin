@@ -1,6 +1,5 @@
 #pragma once
 
-
 // Forward declarations
 namespace UKControllerPlugin {
     namespace Api {
@@ -20,14 +19,13 @@ bool CheckForUpdates(
     const UKControllerPlugin::Api::ApiInterface& api,
     UKControllerPlugin::Windows::WinApiInterface& windows,
     UKControllerPlugin::Curl::CurlInterface& curl,
-    bool duplicatePlugin
-);
+    bool duplicatePlugin,
+    const std::string& updateChannel);
 bool UpdateRequired(UKControllerPlugin::Windows::WinApiInterface& windows, const nlohmann::json& versionDetails);
 void PerformUpdates(
     UKControllerPlugin::Curl::CurlInterface& curl,
     UKControllerPlugin::Windows::WinApiInterface& windows,
-    const nlohmann::json& versionDetails
-);
+    const nlohmann::json& versionDetails);
 void MoveOldUpdaterBinary(UKControllerPlugin::Windows::WinApiInterface& windows);
 std::wstring GetOldUpdaterLocation();
 std::string GetVersionFromJson(const nlohmann::json& versionDetails);
