@@ -1,5 +1,19 @@
 # UK Controller Plugin Changelog
 
+# [4.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.1...4.0.0-beta.1) (2022-01-05)
+
+
+### Features
+
+* **missedapproach:** Allow airfields to always alert regardless of service provision ([#384](https://github.com/VATSIM-UK/uk-controller-plugin/issues/384)) ([5fe9fd7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5fe9fd797bfef1bea9fc47e1385ef999e8c6592b))
+* **misssedapproach:** Allow airfields to always alert regardless of service provision ([4398182](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4398182e685fc9f1c7ef9236aaeb6dc494aa28aa))
+
+
+### BREAKING CHANGES
+
+* **misssedapproach:** The airfield selector for Missed Approach configuration now acts as an override
+to the service provision options, rather than a filter for which airfields to use.
+
 ## [3.13.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.0...3.13.1) (2022-01-04)
 
 
