@@ -4,12 +4,14 @@
 #include "departure/DepartureCoordinationList.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
+#include "message/UserMessager.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
 
 using testing::Test;
 using UKControllerPlugin::Departure::DepartureCoordinationList;
+using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
 
 namespace UKControllerPluginTest::Departure {
@@ -18,9 +20,20 @@ namespace UKControllerPluginTest::Departure {
     {
         public:
         DepartureCoordinationListTest()
-            : userSettings(mockAsrProvider), list(std::make_shared<DepartureCoordinationList>(
-                                                 handler, prenotes, mockPlugin, controllers, activeCallsigns, 3)),
-              handler(mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
+            : userSettings(mockAsrProvider), messager(mockPlugin),
+              list(std::make_shared<DepartureCoordinationList>(
+                  handler, prenotes, mockPlugin, controllers, activeCallsigns, 3)),
+              handler(
+                  mockApi,
+                  taskRunner,
+                  mockPlugin,
+                  controllers,
+                  activeCallsigns,
+                  dialogManager,
+                  windows,
+                  messager,
+                  103,
+                  104),
               dialogManager(dialogProvider)
         {
             // Add positions and releases
@@ -35,10 +48,14 @@ namespace UKControllerPluginTest::Departure {
             this->activeCallsigns.AddUserCallsign(*controllerCallsign);
         }
 
+        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
+        testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
+        testing::NiceMock<Api::MockApiInterface> mockApi;
         PrenoteMessageCollection prenotes;
         testing::NiceMock<Euroscope::MockUserSettingProviderInterface> mockAsrProvider;
         UKControllerPlugin::Euroscope::UserSetting userSettings;
         std::shared_ptr<DepartureCoordinationList> list;
+        UserMessager messager;
         UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
         UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
         testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;
@@ -46,9 +63,6 @@ namespace UKControllerPluginTest::Departure {
         testing::NiceMock<Windows::MockWinApi> windows;
         UKControllerPlugin::Dialog::DialogManager dialogManager;
         UKControllerPlugin::Controller::ControllerPositionCollection controllers;
-        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
-        testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
-        testing::NiceMock<Api::MockApiInterface> mockApi;
         TaskManager::MockTaskRunnerInterface taskRunner;
     };
 
