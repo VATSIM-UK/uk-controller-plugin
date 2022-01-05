@@ -1,4 +1,4 @@
-#include "releases/DepartureReleaseRequest.h"
+#include "DepartureReleaseRequest.h"
 #include "time/SystemClock.h"
 
 namespace UKControllerPlugin::Releases {
@@ -10,7 +10,7 @@ namespace UKControllerPlugin::Releases {
         int targetController,
         std::chrono::system_clock::time_point requestExpiresAt)
         : id(id), callsign(std::move(callsign)), requestingController(requestingController),
-          targetController(targetController), requestExpiresAt(requestExpiresAt), createdAt(Time::TimeNow())
+          targetController(targetController), requestExpiresAt(requestExpiresAt)
     {
     }
 
@@ -19,21 +19,26 @@ namespace UKControllerPlugin::Releases {
         this->acknowledgedAtTime = Time::TimeNow();
     }
 
-    void DepartureReleaseRequest::Reject()
+    void DepartureReleaseRequest::Reject(std::string remarks)
     {
         this->rejectedAtTime = Time::TimeNow();
+        this->remarks = remarks;
     }
 
     void DepartureReleaseRequest::Approve(
-        std::chrono::system_clock::time_point releasedAtTime, std::chrono::system_clock::time_point releaseExpiresAt)
+        std::chrono::system_clock::time_point releasedAtTime,
+        std::chrono::system_clock::time_point releaseExpiresAt,
+        std::string remarks)
     {
         this->releasedAtTime = releasedAtTime;
         this->releaseExpiresAt = releaseExpiresAt;
+        this->remarks = remarks;
     }
 
-    void DepartureReleaseRequest::Approve(std::chrono::system_clock::time_point releasedAtTime)
+    void DepartureReleaseRequest::Approve(std::chrono::system_clock::time_point releasedAtTime, std::string remarks)
     {
         this->releasedAtTime = releasedAtTime;
+        this->remarks = remarks;
     }
 
     auto DepartureReleaseRequest::Id() const -> int
@@ -41,7 +46,7 @@ namespace UKControllerPlugin::Releases {
         return this->id;
     }
 
-    auto DepartureReleaseRequest::RequiresDecision() const -> bool
+    bool DepartureReleaseRequest::RequiresDecision() const
     {
         return !this->Rejected() && !this->RequestExpired() && !this->Approved();
     }
@@ -124,5 +129,10 @@ namespace UKControllerPlugin::Releases {
     auto DepartureReleaseRequest::CreatedAt() const -> std::chrono::system_clock::time_point
     {
         return this->createdAt;
+    }
+
+    auto DepartureReleaseRequest::Remarks() const -> const std::string&
+    {
+        return this->remarks;
     }
 } // namespace UKControllerPlugin::Releases

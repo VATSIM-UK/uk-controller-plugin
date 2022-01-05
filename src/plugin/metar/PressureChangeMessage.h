@@ -1,38 +1,39 @@
 #pragma once
 #include "message/MessageSerializableInterface.h"
 
-namespace UKControllerPlugin {
-    namespace Metar {
+namespace UKControllerPlugin::Metar {
+    class PressureComponent;
 
-        /*
-            A message to be used when the QNH
-            changes at an airfield.
-        */
-        class PressureChangeMessage : public UKControllerPlugin::Message::MessageSerializableInterface
-        {
-            public:
-                PressureChangeMessage(std::string station, std::string qnhBefore, std::string qnhAfter);
+    /*
+        A message to be used when the pressure at an airfield changes.
+    */
+    class PressureChangeMessage : public UKControllerPlugin::Message::MessageSerializableInterface
+    {
+        public:
+        PressureChangeMessage(
+            std::string airfield, const PressureComponent& pressureBefore, const PressureComponent& pressureNow);
 
-                // Inherited via MessageSerializableInterface
-                std::string MessageHandler(void) const override;
-                std::string MessageSender(void) const override;
-                std::string MessageString(void) const override;
-                bool MessageShowHandler(void) const override;
-                bool MessageMarkUnread(void) const override;
-                bool MessageOverrideBusy(void) const override;
-                bool MessageFlashHandler(void) const override;
-                bool MessageRequiresConfirm(void) const override;
+        // Inherited via MessageSerializableInterface
+        [[nodiscard]] auto MessageHandler() const -> std::string override;
+        [[nodiscard]] auto MessageSender() const -> std::string override;
+        [[nodiscard]] auto MessageString() const -> std::string override;
+        [[nodiscard]] auto MessageShowHandler() const -> bool override;
+        [[nodiscard]] auto MessageMarkUnread() const -> bool override;
+        [[nodiscard]] auto MessageOverrideBusy() const -> bool override;
+        [[nodiscard]] auto MessageFlashHandler() const -> bool override;
+        [[nodiscard]] auto MessageRequiresConfirm() const -> bool override;
 
-            private:
+        private:
+        [[nodiscard]] auto QnhBefore() const -> std::string;
+        [[nodiscard]] auto QnhAfter() const -> std::string;
+        [[nodiscard]] auto QfeBefore() const -> std::string;
+        [[nodiscard]] auto QfeAfter() const -> std::string;
+        [[nodiscard]] static auto FormatInHg(float pressure) -> std::string;
 
-                // The previous QNH stored
-                const std::string qnhBefore;
+        std::string airfield;
+        const PressureComponent& pressureBefore;
+        const PressureComponent& pressureNow;
 
-                // The new QNH that has come in.
-                const std::string qnhAfter;
-
-                // The station with which the QNH is associated.
-                const std::string station;
-        };
-    }  // namespace Metar
-}  // namespace UKControllerPlugin
+        static inline const int INHG_BUFFER_SIZE = 6;
+    };
+} // namespace UKControllerPlugin::Metar

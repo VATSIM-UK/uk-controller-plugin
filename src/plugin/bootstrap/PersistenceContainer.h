@@ -61,6 +61,8 @@ namespace UKControllerPlugin {
     } // namespace Integration
     namespace IntentionCode {
         class SectorExitRepository;
+        class IntentionCodeCache;
+        class IntentionCodeGenerator;
     } // namespace IntentionCode
     namespace InitialAltitude {
         class InitialAltitudeEventHandler;
@@ -213,6 +215,8 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchyFactory> controllerHierarchyFactory;
         std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
+        std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeCache> intentionCodeCache;
+        std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeGenerator> intentionCodeGenerator;
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;

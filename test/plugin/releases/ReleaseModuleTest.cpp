@@ -119,7 +119,8 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
             EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_DEPARTURE_RELEASE_APPROVE));
             EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_DEPARTURE_RELEASE_REQUEST));
-            EXPECT_EQ(2, this->container.dialogManager->CountDialogs());
+            EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_DEPARTURE_RELEASE_REJECT));
+            EXPECT_EQ(3, this->container.dialogManager->CountDialogs());
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersOpenRequestDialogTagFunction)

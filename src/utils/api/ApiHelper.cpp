@@ -258,9 +258,9 @@ namespace UKControllerPlugin::Api {
             aircraftCallsign, sendingController, targetController, releaseType, releasePoint)));
     }
 
-    auto ApiHelper::GetUpdateDetails() const -> nlohmann::json
+    auto ApiHelper::GetUpdateDetails(const std::string& releaseChannel) const -> nlohmann::json
     {
-        return this->MakeApiRequest(this->requestBuilder.BuildLatestGithubVersionRequest()).GetRawData();
+        return this->MakeApiRequest(this->requestBuilder.BuildLatestGithubVersionRequest(releaseChannel)).GetRawData();
     }
 
     auto ApiHelper::GetAllNotifications() const -> nlohmann::json
@@ -289,20 +289,22 @@ namespace UKControllerPlugin::Api {
             this->requestBuilder.BuildAcknowledgeDepartureReleaseRequest(releaseId, controllerPositionId)));
     }
 
-    void ApiHelper::RejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const
+    void
+    ApiHelper::RejectDepartureReleaseRequest(int releaseId, int controllerPositionId, const std::string& remarks) const
     {
         static_cast<void>(this->MakeApiRequest(
-            this->requestBuilder.BuildRejectDepartureReleaseRequest(releaseId, controllerPositionId)));
+            this->requestBuilder.BuildRejectDepartureReleaseRequest(releaseId, controllerPositionId, remarks)));
     }
 
     void ApiHelper::ApproveDepartureReleaseRequest(
         int releaseId,
         int controllerPositionId,
         std::chrono::system_clock::time_point releasedAt,
-        int expiresInSeconds) const
+        int expiresInSeconds,
+        const std::string& remarks) const
     {
         static_cast<void>(this->MakeApiRequest(this->requestBuilder.BuildApproveDepartureReleaseRequest(
-            releaseId, controllerPositionId, releasedAt, expiresInSeconds)));
+            releaseId, controllerPositionId, releasedAt, expiresInSeconds, remarks)));
     }
 
     auto ApiHelper::RequestDepartureRelease(
@@ -377,9 +379,15 @@ namespace UKControllerPlugin::Api {
     {
         return this->MakeApiRequest(this->requestBuilder.BuildMissedApproachMessage(callsign)).GetRawData();
     }
+
     void ApiHelper::AcknowledgeMissedApproach(int id, const std::string& remarks) const
     {
         static_cast<void>(
             this->MakeApiRequest(this->requestBuilder.BuildMissedApproachAcknowledgeMessage(id, remarks)));
+    }
+
+    auto ApiHelper::GetAllMetars() const -> nlohmann::json
+    {
+        return this->MakeApiRequest(this->requestBuilder.BuildGetAllMetarsRequest()).GetRawData();
     }
 } // namespace UKControllerPlugin::Api

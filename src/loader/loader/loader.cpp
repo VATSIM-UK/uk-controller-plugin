@@ -8,13 +8,11 @@
 #include "euroscope/EuroScopePlugIn.h"
 
 // Define the functions we need from the various libraries
-typedef bool (CALLBACK* PERFORMUPDATES)();
-typedef EuroScopePlugIn::CPlugIn* (CALLBACK* LOADPLUGINLIBRARY)();
-typedef void (CALLBACK* UNLOADPLUGINLIBRARY)();
+typedef bool(CALLBACK* PERFORMUPDATES)();
+typedef EuroScopePlugIn::CPlugIn*(CALLBACK* LOADPLUGINLIBRARY)();
+typedef void(CALLBACK* UNLOADPLUGINLIBRARY)();
 
-void RunUpdater(
-    UKControllerPlugin::Windows::WinApiInterface& windows
-)
+void RunUpdater(UKControllerPlugin::Windows::WinApiInterface& windows)
 {
     LogInfo("Loading updater library");
     HINSTANCE updaterHandle = windows.LoadLibraryRelative(GetUpdaterBinaryRelativePath());
@@ -28,9 +26,8 @@ void RunUpdater(
     }
 
     LogInfo("Performing updates, please refer to the updater log for more information");
-    PERFORMUPDATES PerformUpdates = reinterpret_cast<PERFORMUPDATES>(
-        windows.GetFunctionPointerFromLibrary(updaterHandle, "PerformUpdates")
-    );
+    PERFORMUPDATES PerformUpdates =
+        reinterpret_cast<PERFORMUPDATES>(windows.GetFunctionPointerFromLibrary(updaterHandle, "PerformUpdates"));
 
     /*
      * If the updater returns false, it means the user wouldn't let it update.
@@ -44,27 +41,22 @@ void RunUpdater(
     windows.UnloadLibrary(updaterHandle);
 }
 
-HINSTANCE LoadPluginLibrary(
-    UKControllerPlugin::Windows::WinApiInterface& windows
-)
+HINSTANCE LoadPluginLibrary(UKControllerPlugin::Windows::WinApiInterface& windows)
 {
     LogInfo("Loading core plugin library");
     return windows.LoadLibraryRelative(GetCoreBinaryRelativePath());
 }
 
-EuroScopePlugIn::CPlugIn* LoadPlugin(
-    HINSTANCE pluginLibraryHandle,
-    UKControllerPlugin::Windows::WinApiInterface& windows
-)
+EuroScopePlugIn::CPlugIn*
+LoadPlugin(HINSTANCE pluginLibraryHandle, UKControllerPlugin::Windows::WinApiInterface& windows)
 {
     if (pluginLibraryHandle == nullptr) {
         LogInfo("Not loading core plugin, library handle is null");
         return nullptr;
     }
 
-    LOADPLUGINLIBRARY LoadPlugin = reinterpret_cast<LOADPLUGINLIBRARY>(
-        windows.GetFunctionPointerFromLibrary(pluginLibraryHandle, "LoadPlugin")
-    );
+    LOADPLUGINLIBRARY LoadPlugin =
+        reinterpret_cast<LOADPLUGINLIBRARY>(windows.GetFunctionPointerFromLibrary(pluginLibraryHandle, "LoadPlugin"));
 
     if (!LoadPlugin) {
         LogError("Cannot find LoadPlugin function in Core binary");
@@ -74,15 +66,11 @@ EuroScopePlugIn::CPlugIn* LoadPlugin(
         return nullptr;
     }
 
-
     LogInfo("Performing core plugin load");
     return LoadPlugin();
 }
 
-void UnloadPlugin(
-    HINSTANCE pluginLibraryHandle,
-    UKControllerPlugin::Windows::WinApiInterface& windows
-)
+void UnloadPlugin(HINSTANCE pluginLibraryHandle, UKControllerPlugin::Windows::WinApiInterface& windows)
 {
     if (pluginLibraryHandle == nullptr) {
         LogInfo("Not unloading core plugin, library handle is null");
@@ -90,8 +78,7 @@ void UnloadPlugin(
     }
 
     UNLOADPLUGINLIBRARY UnloadPlugin = reinterpret_cast<UNLOADPLUGINLIBRARY>(
-        windows.GetFunctionPointerFromLibrary(pluginLibraryHandle, "UnloadPlugin")
-    );
+        windows.GetFunctionPointerFromLibrary(pluginLibraryHandle, "UnloadPlugin"));
 
     if (!UnloadPlugin) {
         LogError("Cannot find UnloadPlugin function in Core binary");
@@ -105,10 +92,7 @@ void UnloadPlugin(
     UnloadPlugin();
 }
 
-void UnloadPluginLibrary(
-    HINSTANCE instance,
-    UKControllerPlugin::Windows::WinApiInterface& windows
-)
+void UnloadPluginLibrary(HINSTANCE instance, UKControllerPlugin::Windows::WinApiInterface& windows)
 {
     if (instance == nullptr) {
         LogInfo("Not unloading core library, was never loaded");
@@ -122,8 +106,7 @@ void UnloadPluginLibrary(
 bool FirstTimeDownload(
     const UKControllerPlugin::Api::ApiInterface& api,
     UKControllerPlugin::Windows::WinApiInterface& windows,
-    UKControllerPlugin::Curl::CurlInterface& curl
-)
+    UKControllerPlugin::Curl::CurlInterface& curl)
 {
     if (windows.FileExists(GetUpdaterBinaryRelativePath())) {
         LogInfo("Updater binary exists in filesystem, skipping first time download");
@@ -138,7 +121,7 @@ bool FirstTimeDownload(
     LogInfo("Performing first time download of updater");
     nlohmann::json updateData;
     try {
-        updateData = UKControllerPlugin::GetUpdateData(api);
+        updateData = UKControllerPlugin::GetUpdateData(api, "stable");
     } catch (std::exception) {
         LogError("Failed to get first time update data");
         DisplayFirstTimeDownloadFailedMessage(windows);
@@ -161,7 +144,7 @@ bool DisplayFirstTimeDownloadMessage(UKControllerPlugin::Windows::WinApiInterfac
     message += L"to install the core plugin.\r\n\r\n";
     message += L"Select OK to continue.";
     return windows.OpenMessageBox(message.c_str(), L"UKCP First Time Download", MB_OKCANCEL | MB_ICONINFORMATION) ==
-        IDOK;
+           IDOK;
 }
 
 void DisplayFirstTimeDownloadFailedMessage(UKControllerPlugin::Windows::WinApiInterface& windows)

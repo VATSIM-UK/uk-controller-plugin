@@ -55,18 +55,20 @@ namespace UKControllerPlugin::Api {
             std::string targetController,
             int releaseType,
             std::string releasePoint) const override;
-        [[nodiscard]] auto GetUpdateDetails() const -> nlohmann::json override;
+        [[nodiscard]] auto GetUpdateDetails(const std::string& releaseChannel) const -> nlohmann::json override;
         [[nodiscard]] auto GetAllNotifications() const -> nlohmann::json override;
         [[nodiscard]] auto GetUnreadNotifications() const -> nlohmann::json override;
         [[nodiscard]] auto SyncPluginEvents() const -> nlohmann::json override;
         [[nodiscard]] auto GetLatestPluginEvents(int lastEventId) const -> nlohmann::json override;
         void AcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const override;
-        void RejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const override;
+        void RejectDepartureReleaseRequest(
+            int releaseId, int controllerPositionId, const std::string& remarks) const override;
         void ApproveDepartureReleaseRequest(
             int releaseId,
             int controllerPositionId,
             std::chrono::system_clock::time_point releasedAt,
-            int expiresInSeconds) const override;
+            int expiresInSeconds,
+            const std::string& remarks) const override;
         [[nodiscard]] auto RequestDepartureRelease(
             std::string callsign, int requestingControllerId, int targetControllerId, int expiresInSeconds) const
             -> nlohmann::json override;
@@ -86,6 +88,7 @@ namespace UKControllerPlugin::Api {
         void DeletePrenoteMessage(int messageId) const override;
         [[nodiscard]] auto CreateMissedApproach(const std::string& callsign) const -> nlohmann::json override;
         void AcknowledgeMissedApproach(int id, const std::string& remarks) const override;
+        [[nodiscard]] auto GetAllMetars() const -> nlohmann::json override;
 
         // The HTTP status codes that may be returned by the API
         static const uint64_t STATUS_OK = 200L;

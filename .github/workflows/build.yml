@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'main'
+      - 'alpha'
+      - 'beta'
   pull_request:
 
 jobs:
@@ -177,7 +179,7 @@ jobs:
   release:
     name: Release
     runs-on: windows-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/alpha')
     needs: [build, format]
     concurrency:
       group: ukcp-release

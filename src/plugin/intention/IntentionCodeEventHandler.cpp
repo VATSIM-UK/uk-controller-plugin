@@ -20,9 +20,9 @@ using UKControllerPlugin::Tag::TagData;
 namespace UKControllerPlugin::IntentionCode {
     IntentionCodeEventHandler::IntentionCodeEventHandler(
         std::unique_ptr<IntentionCodeGenerator> intention,
-        std::unique_ptr<IntentionCodeCache> codeCache,
+        IntentionCodeCache& codeCache,
         Integration::OutboundIntegrationEventHandler& outboundEvent)
-        : intention(std::move(intention)), codeCache(std::move(codeCache)), outboundEvent(outboundEvent)
+        : intention(std::move(intention)), codeCache(codeCache), outboundEvent(outboundEvent)
     {
     }
 
@@ -43,7 +43,16 @@ namespace UKControllerPlugin::IntentionCode {
     void IntentionCodeEventHandler::FlightPlanEvent(
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget)
     {
-        this->codeCache->UnregisterAircraft(flightPlan.GetCallsign());
+        this->codeCache.UnregisterAircraft(flightPlan.GetCallsign());
+        EuroscopeExtractedRouteInterface extractedRoute = flightPlan.GetExtractedRoute();
+        IntentionCodeData data = this->intention->GetIntentionCodeForFlightplan(
+            flightPlan.GetCallsign(),
+            flightPlan.GetOrigin(),
+            flightPlan.GetDestination(),
+            extractedRoute,
+            flightPlan.GetCruiseLevel());
+
+        this->codeCache.RegisterAircraft(flightPlan.GetCallsign(), data);
     }
 
     /*
@@ -51,7 +60,7 @@ namespace UKControllerPlugin::IntentionCode {
     */
     void IntentionCodeEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
     {
-        this->codeCache->UnregisterAircraft(flightPlan.GetCallsign());
+        this->codeCache.UnregisterAircraft(flightPlan.GetCallsign());
     }
 
     /*
@@ -70,9 +79,9 @@ namespace UKControllerPlugin::IntentionCode {
         // If we have it cached, then use the cached value
         const auto& flightplan = tagData.GetFlightplan();
         EuroscopeExtractedRouteInterface extractedRoute = flightplan.GetExtractedRoute();
-        if (this->codeCache->HasIntentionCodeForAircraft(flightplan.GetCallsign()) &&
-            this->codeCache->IntentionCodeValid(flightplan.GetCallsign(), extractedRoute)) {
-            tagData.SetItemString(this->codeCache->GetIntentionCodeForAircraft(flightplan.GetCallsign()));
+        if (this->codeCache.HasIntentionCodeForAircraft(flightplan.GetCallsign()) &&
+            this->codeCache.IntentionCodeValid(flightplan.GetCallsign(), extractedRoute)) {
+            tagData.SetItemString(this->codeCache.GetIntentionCodeForAircraft(flightplan.GetCallsign()));
             return;
         }
 
@@ -84,7 +93,7 @@ namespace UKControllerPlugin::IntentionCode {
             extractedRoute,
             flightplan.GetCruiseLevel());
 
-        this->codeCache->RegisterAircraft(flightplan.GetCallsign(), data);
+        this->codeCache.RegisterAircraft(flightplan.GetCallsign(), data);
         tagData.SetItemString(data.intentionCode);
         outboundEvent.SendEvent(std::make_shared<IntentionCodeUpdatedMessage>(
             flightplan.GetCallsign(), data.exitPoint, data.intentionCode));
@@ -97,7 +106,7 @@ namespace UKControllerPlugin::IntentionCode {
     {
         if (controller.IsCurrentUser() && controller.GetCallsign() != this->intention->GetUserControllerPosition()) {
             this->intention->SetUserControllerPosition(controller.GetCallsign());
-            this->codeCache->Clear();
+            this->codeCache.Clear();
         }
     }
 
@@ -111,7 +120,7 @@ namespace UKControllerPlugin::IntentionCode {
     */
     void IntentionCodeEventHandler::SelfDisconnectEvent()
     {
-        this->codeCache->Clear();
+        this->codeCache.Clear();
     }
 
     auto IntentionCodeEventHandler::GetGenerator() const -> const IntentionCodeGenerator&
@@ -121,6 +130,6 @@ namespace UKControllerPlugin::IntentionCode {
 
     auto IntentionCodeEventHandler::GetCache() const -> const IntentionCodeCache&
     {
-        return *this->codeCache;
+        return this->codeCache;
     }
 } // namespace UKControllerPlugin::IntentionCode

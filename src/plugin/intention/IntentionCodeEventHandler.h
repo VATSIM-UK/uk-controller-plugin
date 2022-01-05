@@ -26,7 +26,7 @@ namespace UKControllerPlugin::IntentionCode {
         public:
         IntentionCodeEventHandler(
             std::unique_ptr<IntentionCodeGenerator> intention,
-            std::unique_ptr<IntentionCodeCache> codeCache,
+            IntentionCodeCache& codeCache,
             Integration::OutboundIntegrationEventHandler& outboundEvent);
         ~IntentionCodeEventHandler() override;
         IntentionCodeEventHandler(const IntentionCodeEventHandler&) = delete;
@@ -54,7 +54,7 @@ namespace UKControllerPlugin::IntentionCode {
         std::unique_ptr<IntentionCodeGenerator> intention;
 
         // A cache for codes that have already been generated
-        std::unique_ptr<IntentionCodeCache> codeCache;
+        IntentionCodeCache& codeCache;
 
         // Allows us to send outbound events
         Integration::OutboundIntegrationEventHandler& outboundEvent;

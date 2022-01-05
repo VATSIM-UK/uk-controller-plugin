@@ -40,20 +40,18 @@ namespace UKControllerPlugin::MissedApproach {
     {
         const auto airfieldsProvidingServices =
             this->serviceProviders.GetAirfieldsWhereUserProvidingServices(this->options->ServiceProvisions());
-        const auto& renderFor = this->options->Airfields();
+        const auto& alwaysRenderFor = this->options->Airfields();
 
-        std::vector<std::string> relevantAirfields;
-        std::copy_if(
-            airfieldsProvidingServices.cbegin(),
-            airfieldsProvidingServices.cend(),
-            std::back_inserter(relevantAirfields),
-            [&renderFor](const std::string& airfield) -> bool {
-                return std::find(renderFor.cbegin(), renderFor.cend(), airfield) != renderFor.cend();
-            });
-
-        if (relevantAirfields.empty()) {
+        if (airfieldsProvidingServices.empty() && alwaysRenderFor.empty()) {
             return;
         }
+
+        // Combine the "always alerts" and the "service provision" alerts to get all relevant airfields
+        std::vector<std::string> relevantAirfields;
+        relevantAirfields.reserve(airfieldsProvidingServices.size() + alwaysRenderFor.size());
+        relevantAirfields.insert(
+            relevantAirfields.end(), airfieldsProvidingServices.begin(), airfieldsProvidingServices.end());
+        relevantAirfields.insert(relevantAirfields.end(), alwaysRenderFor.begin(), alwaysRenderFor.end());
 
         this->missedApproaches->ForEach([this, &relevantAirfields, &radarScreen, &graphics](
                                             const std::shared_ptr<class MissedApproach>& missed) {
