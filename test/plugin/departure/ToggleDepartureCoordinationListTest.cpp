@@ -3,12 +3,14 @@
 #include "departure/DepartureCoordinationList.h"
 #include "departure/ToggleDepartureCoordinationList.h"
 #include "dialog/DialogManager.h"
+#include "message/UserMessager.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "releases/DepartureReleaseEventHandler.h"
 
 using testing::Test;
 using UKControllerPlugin::Departure::DepartureCoordinationList;
 using UKControllerPlugin::Departure::ToggleDepartureCoordinationList;
+using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
 
 namespace UKControllerPluginTest::Departure {
@@ -17,7 +19,17 @@ namespace UKControllerPluginTest::Departure {
     {
         public:
         ToggleDepartureCoordinationListTest()
-            : handler(mockApi, taskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, 103, 104),
+            : messager(mockPlugin), handler(
+                                        mockApi,
+                                        taskRunner,
+                                        mockPlugin,
+                                        controllers,
+                                        activeCallsigns,
+                                        dialogManager,
+                                        windows,
+                                        messager,
+                                        103,
+                                        104),
               list(std::make_shared<DepartureCoordinationList>(
                   handler, prenotes, mockPlugin, controllers, activeCallsigns, 3)),
               dialogManager(dialogProvider)
@@ -33,6 +45,10 @@ namespace UKControllerPluginTest::Departure {
             return ToggleDepartureCoordinationList(list, 2);
         }
 
+        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
+        testing::NiceMock<Api::MockApiInterface> mockApi;
+        testing::NiceMock<Windows::MockWinApi> windows;
+        UserMessager messager;
         PrenoteMessageCollection prenotes;
         UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
         std::shared_ptr<DepartureCoordinationList> list;
@@ -41,9 +57,6 @@ namespace UKControllerPluginTest::Departure {
         testing::NiceMock<Api::MockApiInterface> api;
         UKControllerPlugin::Dialog::DialogManager dialogManager;
         UKControllerPlugin::Controller::ControllerPositionCollection controllers;
-        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
-        testing::NiceMock<Api::MockApiInterface> mockApi;
-        testing::NiceMock<Windows::MockWinApi> windows;
         TaskManager::MockTaskRunnerInterface taskRunner;
     };
 
