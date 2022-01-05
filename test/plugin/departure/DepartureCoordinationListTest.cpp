@@ -54,8 +54,8 @@ namespace UKControllerPluginTest::Departure {
         PrenoteMessageCollection prenotes;
         testing::NiceMock<Euroscope::MockUserSettingProviderInterface> mockAsrProvider;
         UKControllerPlugin::Euroscope::UserSetting userSettings;
-        std::shared_ptr<DepartureCoordinationList> list;
         UserMessager messager;
+        std::shared_ptr<DepartureCoordinationList> list;
         UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
         UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
         testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;
