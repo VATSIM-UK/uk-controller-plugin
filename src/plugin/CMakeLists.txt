@@ -126,6 +126,10 @@ set(src__datablock
 )
 source_group("src\\datablock" FILES ${src__datablock})
 
+set(src__departure
+        departure/DepartureCoordinationList.cpp departure/DepartureCoordinationList.h departure/ToggleDepartureCoordinationList.cpp departure/ToggleDepartureCoordinationList.h departure/DepartureModule.cpp departure/DepartureModule.h)
+source_group("src\\departure" FILES ${src__departure})
+
 set(src__dependency
     "dependency/DependencyLoader.cpp"
     "dependency/DependencyLoader.h"
@@ -636,8 +640,6 @@ set(src__prenote
     prenote/PrenoteMessageStatusView.cpp prenote/PrenoteMessageStatusView.h
     prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
     prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h
-    prenote/PendingPrenoteList.cpp prenote/PendingPrenoteList.h
-    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h
     prenote/PublishedPrenote.h prenote/PublishedPrenote.cpp
     prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h
     prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h
@@ -719,8 +721,6 @@ set(src__releases
     "releases/DepartureReleaseColours.h"
     "releases/DepartureReleaseCountdownColours.cpp"
     "releases/DepartureReleaseCountdownColours.h"
-    "releases/DepartureReleaseDecisionList.cpp"
-    "releases/DepartureReleaseDecisionList.h"
     "releases/DepartureReleaseEventHandler.cpp"
     "releases/DepartureReleaseEventHandler.h"
     "releases/DepartureReleaseRequest.cpp"
@@ -737,9 +737,10 @@ set(src__releases
     "releases/ReleaseModule.h"
     "releases/RequestDepartureReleaseDialog.cpp"
     "releases/RequestDepartureReleaseDialog.h"
-    "releases/ToggleDepartureReleaseDecisionList.cpp"
-    "releases/ToggleDepartureReleaseDecisionList.h"
-        releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp releases/RejectDepartureReleaseDialog.cpp releases/RejectDepartureReleaseDialog.h releases/ReleaseApprovalRemarksUserMessage.cpp releases/ReleaseApprovalRemarksUserMessage.h releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
+    releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp
+    releases/RejectDepartureReleaseDialog.cpp releases/RejectDepartureReleaseDialog.h
+    releases/ReleaseApprovalRemarksUserMessage.cpp releases/ReleaseApprovalRemarksUserMessage.h
+    releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
 source_group("src\\releases" FILES ${src__releases})
 
 set(src__sectorfile
@@ -870,6 +871,7 @@ set(ALL_FILES
     ${src__controller}
     ${src__countdown}
     ${src__datablock}
+    ${src__departure}
     ${src__dependency}
     ${src__euroscope}
     ${src__flightinformationservice}

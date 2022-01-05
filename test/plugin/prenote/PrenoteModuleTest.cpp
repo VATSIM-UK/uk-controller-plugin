@@ -5,6 +5,7 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "message/UserMessager.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "prenote/PrenoteMessageCollection.h"
 #include "prenote/PrenoteModule.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
@@ -135,29 +136,16 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_TRUE(container.pluginFunctionHandlers->HasTagFunction(9019));
     }
 
+    TEST_F(PrenoteModuleTest, ItRegistersPrenoteCollectionWithContainer)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(0, container.prenotes->Count());
+    }
+
     TEST_F(PrenoteModuleTest, ItRegistersRenderables)
     {
-        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays, asrHandlers);
-        EXPECT_EQ(2, radarRenderables.CountRenderers());
-        EXPECT_EQ(2, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
-    }
-
-    TEST_F(PrenoteModuleTest, ItRegistersRenderedScreenObjects)
-    {
-        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays, asrHandlers);
-        EXPECT_EQ(1, radarRenderables.CountScreenObjects());
-    }
-
-    TEST_F(PrenoteModuleTest, ItRegistersTogglePendingList)
-    {
-        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays, asrHandlers);
-        EXPECT_EQ(1, configurableDisplays.CountDisplays());
-        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle Pending Prenote List"));
-    }
-
-    TEST_F(PrenoteModuleTest, ItRegistersPendingListForAsrEvents)
-    {
-        PrenoteModule::BootstrapRadarScreen(container, radarRenderables, configurableDisplays, asrHandlers);
-        EXPECT_EQ(1, asrHandlers.CountHandlers());
+        PrenoteModule::BootstrapRadarScreen(container, radarRenderables);
+        EXPECT_EQ(1, radarRenderables.CountRenderers());
+        EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
     }
 } // namespace UKControllerPluginTest::Prenote

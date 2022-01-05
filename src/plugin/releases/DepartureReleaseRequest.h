@@ -1,81 +1,84 @@
 #pragma once
-namespace UKControllerPlugin {
-    namespace Releases {
 
-        class DepartureReleaseRequest
-        {
-            public:
-            DepartureReleaseRequest(
-                int id,
-                std::string callsign,
-                int requestingController,
-                int targetController,
-                std::chrono::system_clock::time_point requestExpiresAt);
+namespace UKControllerPlugin::Releases {
 
-            void Acknowledge();
-            void Reject(std::string remarks);
-            void Approve(
-                std::chrono::system_clock::time_point releasedAtTime,
-                std::chrono::system_clock::time_point releaseExpiresAt,
-                std::string remarks);
+    class DepartureReleaseRequest
+    {
+        public:
+        DepartureReleaseRequest(
+            int id,
+            std::string callsign,
+            int requestingController,
+            int targetController,
+            std::chrono::system_clock::time_point requestExpiresAt);
 
-            void Approve(std::chrono::system_clock::time_point releasedAtTime, std::string remarks);
+        void Acknowledge();
+        void Reject(std::string remarks);
+        void Approve(
+            std::chrono::system_clock::time_point releasedAtTime,
+            std::chrono::system_clock::time_point releaseExpiresAt,
+            std::string remarks);
 
-            int Id() const;
-            bool RequiresDecision() const;
-            std::string Callsign() const;
-            int RequestingController() const;
-            int TargetController() const;
-            bool Acknowledged() const;
-            bool Rejected() const;
-            bool Approved() const;
-            bool RequestExpired() const;
-            bool ApprovalExpired() const;
-            bool AwaitingReleasedTime() const;
-            bool ApprovedWithNoExpiry() const;
-            [[nodiscard]] auto Remarks() const -> const std::string&;
-            std::chrono::system_clock::time_point RequestExpiryTime() const;
-            std::chrono::system_clock::time_point ReleaseExpiryTime() const;
-            std::chrono::system_clock::time_point ReleasedAtTime() const;
-            std::chrono::system_clock::time_point RejectedAtTime() const;
-            std::chrono::system_clock::time_point AcknowledgedAtTime() const;
+        void Approve(std::chrono::system_clock::time_point releasedAtTime, std::string remarks);
 
-            private:
-            static inline const std::chrono::system_clock::time_point noTime =
-                (std::chrono::system_clock::time_point::min)();
+        int Id() const;
+        bool RequiresDecision() const;
+        std::string Callsign() const;
+        int RequestingController() const;
+        int TargetController() const;
+        bool Acknowledged() const;
+        bool Rejected() const;
+        bool Approved() const;
+        bool RequestExpired() const;
+        bool ApprovalExpired() const;
+        bool AwaitingReleasedTime() const;
+        bool ApprovedWithNoExpiry() const;
+        [[nodiscard]] auto Remarks() const -> const std::string&;
+        std::chrono::system_clock::time_point RequestExpiryTime() const;
+        std::chrono::system_clock::time_point ReleaseExpiryTime() const;
+        std::chrono::system_clock::time_point ReleasedAtTime() const;
+        std::chrono::system_clock::time_point RejectedAtTime() const;
+        std::chrono::system_clock::time_point AcknowledgedAtTime() const;
+        auto CreatedAt() const -> std::chrono::system_clock::time_point;
 
-            static inline const std::chrono::system_clock::time_point noTimeMax =
-                (std::chrono::system_clock::time_point::max)() - std::chrono::hours(500);
+        private:
+        static inline const std::chrono::system_clock::time_point noTime =
+            (std::chrono::system_clock::time_point::min)();
 
-            // The id of the request
-            int id;
+        static inline const std::chrono::system_clock::time_point noTimeMax =
+            (std::chrono::system_clock::time_point::max)() - std::chrono::hours(500);
 
-            // The callsign for the request
-            std::string callsign;
+        // The id of the request
+        int id;
 
-            // Who's requesting the release
-            int requestingController;
+        // The callsign for the request
+        std::string callsign;
 
-            // Who's the target of the release request
-            int targetController;
+        // Who's requesting the release
+        int requestingController;
 
-            // When the the request expires
-            std::chrono::system_clock::time_point requestExpiresAt;
+        // Who's the target of the release request
+        int targetController;
 
-            // What time the release was acknowledged
-            std::chrono::system_clock::time_point acknowledgedAtTime = noTime;
+        // When the the request expires
+        std::chrono::system_clock::time_point requestExpiresAt;
 
-            // What time the release was rejected
-            std::chrono::system_clock::time_point rejectedAtTime = noTime;
+        // What time the release was acknowledged
+        std::chrono::system_clock::time_point acknowledgedAtTime = noTime;
 
-            // The time the aircraft has been approved for release
-            std::chrono::system_clock::time_point releasedAtTime = noTime;
+        // What time the release was rejected
+        std::chrono::system_clock::time_point rejectedAtTime = noTime;
 
-            // The time that the release expires
-            std::chrono::system_clock::time_point releaseExpiresAt = noTimeMax;
+        // The time the aircraft has been approved for release
+        std::chrono::system_clock::time_point releasedAtTime = noTime;
 
-            // Remarks relating to the release being approved or rejected
-            std::string remarks;
-        };
-    } // namespace Releases
-} // namespace UKControllerPlugin
+        // The time that the release expires
+        std::chrono::system_clock::time_point releaseExpiresAt = noTimeMax;
+
+        // When the request was created
+        std::chrono::system_clock::time_point createdAt;
+
+        // Remarks relating to the release being approved or rejected
+        std::string remarks;
+    };
+} // namespace UKControllerPlugin::Releases
