@@ -1,8 +1,8 @@
 #include "pch/pch.h"
 #include "sectorfile/Runway.h"
 
-using UKControllerPlugin::SectorFile::Runway;
 using testing::Test;
+using UKControllerPlugin::SectorFile::Runway;
 
 namespace UKControllerPluginTest {
     namespace SectorFile {
@@ -10,12 +10,9 @@ namespace UKControllerPluginTest {
         class SectorfileRunwayTest : public Test
         {
             public:
-
-                SectorfileRunwayTest()
-                    : runway ("EGCC", "23L", 123, false, false)
-                {
-
-                }
+            SectorfileRunwayTest() : runway("EGCC", "23L", 123, false, false)
+            {
+            }
 
             Runway runway;
         };
@@ -52,5 +49,5 @@ namespace UKControllerPluginTest {
             this->runway.SetActiveForArrivals(true);
             EXPECT_TRUE(this->runway.Active());
         }
-    }  // namespace SectorFile
-}  // namespace UKControllerPluginTest
+    } // namespace SectorFile
+} // namespace UKControllerPluginTest
