@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [4.0.0-beta.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.2...4.0.0-beta.3) (2022-01-08)
+
+
+### Bug Fixes
+
+* **updater:** Handle empty binaries during updates ([#388](https://github.com/VATSIM-UK/uk-controller-plugin/issues/388)) ([dc988b0](https://github.com/VATSIM-UK/uk-controller-plugin/commit/dc988b07292838cd16f127f07da5d020c514aaee))
+
 # [4.0.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.1...4.0.0-beta.2) (2022-01-05)
 
 
