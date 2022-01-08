@@ -1,93 +1,96 @@
-#include "pch/pch.h"
-#include "metar/PressureMonitor.h"
-#include "metar/MetarParsingFunctions.h"
-#include "metar/PressureChangeMessage.h"
-#include "euroscope/GeneralSettingsEntries.h"
+#include "MetarComponents.h"
+#include "ParsedMetar.h"
+#include "PressureChangeMessage.h"
+#include "PressureComponent.h"
+#include "PressureMonitor.h"
 #include "controller/ControllerPosition.h"
+#include "euroscope/GeneralSettingsEntries.h"
 
-using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
+using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Metar::PressureChangeMessage;
-using UKControllerPlugin::Controller::ActiveCallsignCollection;
 
-namespace UKControllerPlugin {
-    namespace Metar {
+namespace UKControllerPlugin::Metar {
 
+    PressureMonitor::PressureMonitor(UserMessager& userMessager, const ActiveCallsignCollection& activeCallsigns)
+        : userMessager(userMessager), activeCallsigns(activeCallsigns)
+    {
+    }
 
-        PressureMonitor::PressureMonitor(UserMessager & userMessager, const ActiveCallsignCollection& activeCallsigns)
-            : userMessager(userMessager), activeCallsigns(activeCallsigns)
-        {
+    /*
+        Return the QNH stored for a station.
+    */
+    auto PressureMonitor::GetStoredPressure(const std::string& airfield) const -> std::shared_ptr<PressureComponent>
+    {
+        return this->pressures.count(airfield) != 0 ? this->pressures.at(airfield) : nullptr;
+    }
 
+    /*
+        Are notifications enabled
+    */
+    bool PressureMonitor::NotificationsEnabled(void) const
+    {
+        return this->notificationsEnabled;
+    }
+
+    /*
+        Turn notifications on or off
+    */
+    void PressureMonitor::SetNotficationsEnabled(bool enabled)
+    {
+        this->notificationsEnabled = enabled;
+    }
+
+    /*
+        Update the stored QNH with that of a new METAR. Notify the user if the
+        QNH has changed.
+    */
+    void PressureMonitor::MetarUpdated(const ParsedMetar& metar)
+    {
+        if (metar.Components().pressure == nullptr) {
+            return;
         }
 
-        /*
-            Return the QNH stored for a station.
-        */
-        std::string PressureMonitor::GetStoredQnh(std::string station) const
-        {
-            return this->qnhs.count(station) ? this->qnhs.at(station) : this->qnhNotStored;
+        const auto pressureComponent = metar.Components().pressure;
+        const auto airfield = metar.Airfield();
+        if (!this->PressureHasUpdated(airfield, *pressureComponent)) {
+            this->pressures[airfield] = pressureComponent;
+            return;
         }
 
-        /*
-            Are notifications enabled
-        */
-        bool PressureMonitor::NotificationsEnabled(void) const
-        {
-            return this->notificationsEnabled;
+        this->SendNotificationIfRequired(airfield, *pressureComponent);
+        this->pressures[airfield] = pressureComponent;
+    }
+
+    /*
+        User settings have been updated, update local variables from them.
+    */
+    void PressureMonitor::UserSettingsUpdated(UserSetting& userSettings)
+    {
+        this->notificationsEnabled =
+            userSettings.GetBooleanEntry(GeneralSettingsEntries::pressureMonitorSendMessageKey, false);
+    }
+
+    void
+    PressureMonitor::SendNotificationIfRequired(const std::string& airfield, const PressureComponent& pressure) const
+    {
+        if (!this->notificationsEnabled || !this->activeCallsigns.UserHasCallsign()) {
+            return;
         }
 
-        /*
-            Turn notifications on or off
-        */
-        void PressureMonitor::SetNotficationsEnabled(bool enabled)
-        {
-            this->notificationsEnabled = enabled;
+        if (!this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().HasTopdownAirfield(airfield)) {
+            return;
         }
 
-        /*
-            Update the stored QNH with that of a new METAR. Notify the user if the
-            QNH has changed.
-        */
-        void PressureMonitor::NewMetar(std::string station, std::string metar)
-        {
-            std::string newQnh = GetQnhString(metar);
+        this->userMessager.SendMessageToUser(PressureChangeMessage(airfield, *this->pressures.at(airfield), pressure));
+    }
 
-            // Couldn't find QNH in METAR
-            if (newQnh == noQnh) {
-                LogInfo("Unable to parse QNH from METAR for " + station + ": " + metar);
-                return;
-            }
-
-            if (!this->qnhs.count(station) || this->qnhs.at(station) == newQnh) {
-                this->qnhs[station] = newQnh;
-                return;
-            }
-
-            if (
-                this->notificationsEnabled &&
-                this->activeCallsigns.UserHasCallsign() &&
-                this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().HasTopdownAirfield(station)
-            ) {
-
-
-               // Send message
-                PressureChangeMessage message(station, this->qnhs.at(station), newQnh);
-                this->userMessager.SendMessageToUser(message);
-            }
-
-            this->qnhs[station] = newQnh;
-        }
-
-        /*
-            User settings have been updated, update local variables from them.
-        */
-        void PressureMonitor::UserSettingsUpdated(UserSetting & userSettings)
-        {
-            this->notificationsEnabled = userSettings.GetBooleanEntry(
-                GeneralSettingsEntries::pressureMonitorSendMessageKey,
-                false
-            );
-        }
-    }  // namespace Metar
-}  // namespace UKControllerPlugin
+    auto PressureMonitor::PressureHasUpdated(const std::string& airfield, const PressureComponent& pressure) const
+        -> bool
+    {
+        return this->pressures.count(airfield) != 0 &&
+               this->pressures.at(airfield)->QnhHectopascals() != pressure.QnhHectopascals();
+    }
+} // namespace UKControllerPlugin::Metar

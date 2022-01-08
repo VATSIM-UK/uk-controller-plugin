@@ -126,6 +126,10 @@ set(src__datablock
 )
 source_group("src\\datablock" FILES ${src__datablock})
 
+set(src__departure
+        departure/DepartureCoordinationList.cpp departure/DepartureCoordinationList.h departure/ToggleDepartureCoordinationList.cpp departure/ToggleDepartureCoordinationList.h departure/DepartureModule.cpp departure/DepartureModule.h)
+source_group("src\\departure" FILES ${src__departure})
+
 set(src__dependency
     "dependency/DependencyLoader.cpp"
     "dependency/DependencyLoader.h"
@@ -450,16 +454,29 @@ source_group("src\\message" FILES ${src__message})
 set(src__metar
     "metar/MetarEventHandlerCollection.cpp"
     "metar/MetarEventHandlerCollection.h"
+    metar/MetarEventHandlerInterface.cpp
     "metar/MetarEventHandlerInterface.h"
-    "metar/MetarParsingFunctions.cpp"
-    "metar/MetarParsingFunctions.h"
     "metar/PressureChangeMessage.cpp"
     "metar/PressureChangeMessage.h"
     "metar/PressureMonitor.cpp"
     "metar/PressureMonitor.h"
     "metar/PressureMonitorBootstrap.cpp"
     "metar/PressureMonitorBootstrap.h"
-        metar/MetarEventHandlerInterface.cpp)
+    metar/ParsedMetar.cpp metar/ParsedMetar.h
+    metar/PressureComponent.h metar/PressureComponent.cpp
+    metar/PressureUnit.h
+    metar/MetarComponents.h
+    metar/ParsedMetarCollection.cpp metar/ParsedMetarCollection.h
+    metar/MetarComponentsFactory.cpp metar/MetarComponentsFactory.h
+    metar/MetarComponentFactoryInterface.h
+    metar/PressureComponentFactory.cpp metar/PressureComponentFactory.h
+    metar/MetarComponentsFactoryFactory.cpp metar/MetarComponentsFactoryFactory.h
+    metar/MetarsUpdatedPushEventProcessor.cpp metar/MetarsUpdatedPushEventProcessor.h
+    metar/ParsedMetarFactory.cpp metar/ParsedMetarFactory.h
+    metar/MetarModule.cpp metar/MetarModule.h
+    metar/PressureQueryCommandHandler.cpp metar/PressureQueryCommandHandler.h
+    metar/PressureQueryMessage.cpp metar/PressureQueryMessage.h
+    metar/PressureNotFoundMessage.cpp metar/PressureNotFoundMessage.h)
 source_group("src\\metar" FILES ${src__metar})
 
 set(src__minstack
@@ -623,8 +640,6 @@ set(src__prenote
     prenote/PrenoteMessageStatusView.cpp prenote/PrenoteMessageStatusView.h
     prenote/TriggerPrenoteMessageStatusView.cpp prenote/TriggerPrenoteMessageStatusView.h
     prenote/AcknowledgePrenoteMessage.cpp prenote/AcknowledgePrenoteMessage.h
-    prenote/PendingPrenoteList.cpp prenote/PendingPrenoteList.h
-    prenote/TogglePendingPrenoteList.cpp prenote/TogglePendingPrenoteList.h
     prenote/PublishedPrenote.h prenote/PublishedPrenote.cpp
     prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h
     prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h
@@ -706,8 +721,6 @@ set(src__releases
     "releases/DepartureReleaseColours.h"
     "releases/DepartureReleaseCountdownColours.cpp"
     "releases/DepartureReleaseCountdownColours.h"
-    "releases/DepartureReleaseDecisionList.cpp"
-    "releases/DepartureReleaseDecisionList.h"
     "releases/DepartureReleaseEventHandler.cpp"
     "releases/DepartureReleaseEventHandler.h"
     "releases/DepartureReleaseRequest.cpp"
@@ -724,9 +737,10 @@ set(src__releases
     "releases/ReleaseModule.h"
     "releases/RequestDepartureReleaseDialog.cpp"
     "releases/RequestDepartureReleaseDialog.h"
-    "releases/ToggleDepartureReleaseDecisionList.cpp"
-    "releases/ToggleDepartureReleaseDecisionList.h"
-        releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp)
+    releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp
+    releases/RejectDepartureReleaseDialog.cpp releases/RejectDepartureReleaseDialog.h
+    releases/ReleaseApprovalRemarksUserMessage.cpp releases/ReleaseApprovalRemarksUserMessage.h
+    releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
 source_group("src\\releases" FILES ${src__releases})
 
 set(src__sectorfile
@@ -857,6 +871,7 @@ set(ALL_FILES
     ${src__controller}
     ${src__countdown}
     ${src__datablock}
+    ${src__departure}
     ${src__dependency}
     ${src__euroscope}
     ${src__flightinformationservice}

@@ -4,36 +4,43 @@
 
 namespace UKControllerPlugin {
     namespace Controller {
+        class ActiveCallsignCollection;
         class ControllerPositionCollection;
     } // namespace Controller
-
     namespace Components {
         class BrushSwitcher;
         class TitleBar;
         class Button;
     } // namespace Components
-
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
     } // namespace Euroscope
+    namespace Prenote {
+        class PrenoteMessage;
+        class PrenoteMessageCollection;
+    } // namespace Prenote
+    namespace Releases {
+        class DepartureReleaseRequest;
+        class DepartureReleaseEventHandler;
+    } // namespace Releases
 } // namespace UKControllerPlugin
 
-namespace UKControllerPlugin::Releases {
-    class DepartureReleaseRequest;
-    class DepartureReleaseEventHandler;
+namespace UKControllerPlugin::Departure {
 
     /*
-     * Renders a list of departure releases requiring the users
-     * decision.
+     * Renders a list of departure releases and prenotes requiring the users
+     * attention.
      */
-    class DepartureReleaseDecisionList : public RadarScreen::RadarRenderableInterface,
-                                         public Euroscope::AsrEventHandlerInterface
+    class DepartureCoordinationList : public RadarScreen::RadarRenderableInterface,
+                                      public Euroscope::AsrEventHandlerInterface
     {
         public:
-        DepartureReleaseDecisionList(
-            DepartureReleaseEventHandler& handler,
+        DepartureCoordinationList(
+            Releases::DepartureReleaseEventHandler& handler,
+            Prenote::PrenoteMessageCollection& prenotes,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             const Controller::ControllerPositionCollection& controllers,
+            const Controller::ActiveCallsignCollection& activeCallsigns,
             int screenObjectId);
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
@@ -60,16 +67,24 @@ namespace UKControllerPlugin::Releases {
         const Controller::ControllerPositionCollection& controllers;
 
         // Handles events for departure releases
-        DepartureReleaseEventHandler& handler;
+        Releases::DepartureReleaseEventHandler& handler;
+        
+        // Contains all the prenote messages
+        Prenote::PrenoteMessageCollection& prenotes;
 
         // Provides interface with the plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
+        
+        // Who's actively online
+        const Controller::ActiveCallsignCollection& activeCallsigns;
 
         // Drawing RECTs
-        const Gdiplus::Rect callsignColumnHeader{5, 5, 100, 25};
-        const Gdiplus::Rect controllerColumnHeader{115, 5, 100, 25};
-        const Gdiplus::Rect airportColumnHeader{225, 5, 40, 25};
-        const Gdiplus::Rect sidColumnHeader{275, 5, 65, 25};
+        const Gdiplus::Rect typeColumnHeader{5, 5, 40, 25};
+        const Gdiplus::Rect callsignColumnHeader{50, 5, 100, 25};
+        const Gdiplus::Rect controllerColumnHeader{160, 5, 100, 25};
+        const Gdiplus::Rect airportColumnHeader{270, 5, 40, 25};
+        const Gdiplus::Rect sidColumnHeader{320, 5, 65, 25};
+        const Gdiplus::Rect destColumnHeader{395, 5, 40, 25};
 
         // Some colours
         const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(255, 255, 255);
@@ -92,15 +107,15 @@ namespace UKControllerPlugin::Releases {
         const int titleBarHeight = 20;
 
         // Width of title bar
-        const int titleBarWidth = 340;
+        const int titleBarWidth = 435;
 
         // Default X/Y of window
         static const int defaultPosition = 100;
 
         // Default RECT on reset position
         inline static const RECT defaultRect = {100, 100, 200, 200};
-        const Gdiplus::Rect closeButtonOffset = {325, 5, 10, 10};
-        const Gdiplus::Rect collapseButtonOffset = {310, 5, 10, 10};
+        const Gdiplus::Rect closeButtonOffset = {415, 5, 10, 10};
+        const Gdiplus::Rect collapseButtonOffset = {400, 5, 10, 10};
 
         // How high each line is
         static const int lineHeight = 25;
@@ -113,5 +128,9 @@ namespace UKControllerPlugin::Releases {
         std::shared_ptr<Components::Button> closeButton;
         std::shared_ptr<Components::Button> collapseButton;
         std::shared_ptr<Components::BrushSwitcher> brushSwitcher;
+        
+        // Some TAG function ids
+        inline static const int DEPARTURE_RELEASE_DECISION_TAG_FUNCTION_ID = 9013;
+        inline static const int ACKNOWLEDGE_PRENOTE_TAG_FUNCTION_ID = 9019;
     };
-} // namespace UKControllerPlugin::Releases
+} // namespace UKControllerPlugin::Departure

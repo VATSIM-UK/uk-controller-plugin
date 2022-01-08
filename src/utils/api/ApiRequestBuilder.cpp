@@ -249,9 +249,10 @@ namespace UKControllerPlugin::Api {
             CurlRequest(this->apiDomain + "/notifications/read/" + std::to_string(id), CurlRequest::METHOD_PUT));
     }
 
-    auto ApiRequestBuilder::BuildLatestGithubVersionRequest() const -> CurlRequest
+    auto ApiRequestBuilder::BuildLatestGithubVersionRequest(const std::string& releaseChannel) const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/version/latest", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(
+            CurlRequest(this->apiDomain + "/version/latest?channel=" + releaseChannel, CurlRequest::METHOD_GET));
     }
 
     auto ApiRequestBuilder::BuildPluginEventSyncRequest() const -> CurlRequest
@@ -279,11 +280,12 @@ namespace UKControllerPlugin::Api {
         return this->AddCommonHeaders(request);
     }
 
-    auto ApiRequestBuilder::BuildRejectDepartureReleaseRequest(int releaseId, int controllerPositionId) const
-        -> CurlRequest
+    auto ApiRequestBuilder::BuildRejectDepartureReleaseRequest(
+        int releaseId, int controllerPositionId, const std::string& remarks) const -> CurlRequest
     {
         nlohmann::json body;
         body["controller_position_id"] = controllerPositionId;
+        body["remarks"] = remarks;
 
         CurlRequest request(
             this->apiDomain + "/departure/release/request/" + std::to_string(releaseId) + "/reject",
@@ -299,10 +301,12 @@ namespace UKControllerPlugin::Api {
         int releaseId,
         int controllerPositionId,
         std::chrono::system_clock::time_point releasedAt,
-        int expiresInSeconds) const -> CurlRequest
+        int expiresInSeconds,
+        const std::string& remarks) const -> CurlRequest
     {
         nlohmann::json body;
         body["controller_position_id"] = controllerPositionId;
+        body["remarks"] = remarks;
         body["released_at"] = date::format("%Y-%m-%d %H:%M:%S", date::floor<std::chrono::seconds>(releasedAt));
         if (expiresInSeconds == -1) {
             body["expires_in_seconds"] = nlohmann::json::value_t::null;
@@ -458,5 +462,10 @@ namespace UKControllerPlugin::Api {
         request.SetBody(data.dump());
 
         return this->AddCommonHeaders(request);
+    }
+
+    auto ApiRequestBuilder::BuildGetAllMetarsRequest() const -> UKControllerPlugin::Curl::CurlRequest
+    {
+        return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/metar", CurlRequest::METHOD_GET));
     }
 } // namespace UKControllerPlugin::Api

@@ -1,5 +1,55 @@
 # UK Controller Plugin Changelog
 
+# [4.0.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.1...4.0.0-beta.2) (2022-01-05)
+
+
+### Features
+
+* **departure:** Combine pending prenotes and departure releases lists into one ([91c0614](https://github.com/VATSIM-UK/uk-controller-plugin/commit/91c0614982e061a29e18db23e2d9c70c86449fcb))
+* **departure:** Combine pending prenotes and releases into one list ([#386](https://github.com/VATSIM-UK/uk-controller-plugin/issues/386)) ([531b687](https://github.com/VATSIM-UK/uk-controller-plugin/commit/531b6876f94a2e6284279efd4ce10c88f2bd92e3))
+
+
+### BREAKING CHANGES
+
+* **departure:** The old lists are replaced by a single list. New ASR settings
+are also used for this list.
+
+# [4.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.1...4.0.0-beta.1) (2022-01-05)
+
+
+### Features
+
+* **missedapproach:** Allow airfields to always alert regardless of service provision ([#384](https://github.com/VATSIM-UK/uk-controller-plugin/issues/384)) ([5fe9fd7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5fe9fd797bfef1bea9fc47e1385ef999e8c6592b))
+* **misssedapproach:** Allow airfields to always alert regardless of service provision ([4398182](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4398182e685fc9f1c7ef9236aaeb6dc494aa28aa))
+
+
+### BREAKING CHANGES
+
+* **misssedapproach:** The airfield selector for Missed Approach configuration now acts as an override
+to the service provision options, rather than a filter for which airfields to use.
+
+## [3.13.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.0...3.13.1) (2022-01-04)
+
+
+### Bug Fixes
+
+* **intentioncode:** euroscope freezing when aircraft cleared beyond exit point ([#391](https://github.com/VATSIM-UK/uk-controller-plugin/issues/391)) ([5b17241](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5b17241abb7098e53b742b5a359b24090762fb45))
+
+# [3.13.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.12.0...3.13.0) (2022-01-02)
+
+
+### Bug Fixes
+
+* **srd:** only prepopulate destination airfield into SRD search for EG and EI ([#381](https://github.com/VATSIM-UK/uk-controller-plugin/issues/381)) ([e2f3492](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e2f3492e429c78840148865127245da300431777)), closes [#380](https://github.com/VATSIM-UK/uk-controller-plugin/issues/380)
+
+
+### Features
+
+* **metar:** Add QFE to pressure monitor messages, QFE query command ([#376](https://github.com/VATSIM-UK/uk-controller-plugin/issues/376)) ([5d32b92](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5d32b925b807409b78e99dd7491f791458fdb436))
+* **release:** Allow the plugin to work on multiple update channels ([#387](https://github.com/VATSIM-UK/uk-controller-plugin/issues/387)) ([e2487ec](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e2487ecdb32e57d73aa0aef5a952b16f3f13d3cf))
+* **releases:** Allow remarks when approving and rejecting departure releases ([#389](https://github.com/VATSIM-UK/uk-controller-plugin/issues/389)) ([f039d9d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f039d9d7fc2cbd9d7967f89b40075c04c0825080))
+* **srd:** Prepopulate FIR exits in the SRD dialog ([#382](https://github.com/VATSIM-UK/uk-controller-plugin/issues/382)) ([a083cba](https://github.com/VATSIM-UK/uk-controller-plugin/commit/a083cba09a45293401605102cb664480c6cc3357)), closes [#380](https://github.com/VATSIM-UK/uk-controller-plugin/issues/380)
+
 # [3.12.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.11.0...3.12.0) (2021-12-21)
 
 

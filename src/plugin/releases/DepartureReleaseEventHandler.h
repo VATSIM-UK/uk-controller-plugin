@@ -27,6 +27,9 @@ namespace UKControllerPlugin {
     namespace Windows {
         class WinApiInterface;
     } // namespace Windows
+    namespace Message {
+        class UserMessager;
+    } // namespace Message
 
     namespace Releases {
 
@@ -48,6 +51,7 @@ namespace UKControllerPlugin {
                 const Controller::ActiveCallsignCollection& activeCallsigns,
                 const Dialog::DialogManager& dialogManager,
                 Windows::WinApiInterface& windows,
+                Message::UserMessager& messager,
                 int releaseDecisionCallbackId,
                 int releaseCancellationCallbackId);
             void ProcessPushEvent(const Push::PushEvent& message) override;
@@ -68,7 +72,12 @@ namespace UKControllerPlugin {
                 const POINT& mousePos);
             void ReleaseDecisionMade(int functionId, const std::string& context, RECT);
             void RequestRelease(const std::string& callsign, int targetControllerId);
-            void ApproveRelease(int releaseId, std::chrono::system_clock::time_point releasedAt, int expiresInSeconds);
+            void RejectRelease(int releaseId, std::string remarks);
+            void ApproveRelease(
+                int releaseId,
+                std::chrono::system_clock::time_point releasedAt,
+                int expiresInSeconds,
+                std::string remarks);
             [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
             void SetTagItemData(Tag::TagData& tagData) override;
             void ShowStatusDisplay(
@@ -153,6 +162,9 @@ namespace UKControllerPlugin {
 
             // Windows api interface for playing sounds
             Windows::WinApiInterface& windows;
+
+            // Sends messages to the user
+            Message::UserMessager& messager;
         };
     } // namespace Releases
 } // namespace UKControllerPlugin

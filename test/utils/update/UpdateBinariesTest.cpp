@@ -134,9 +134,9 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(updateData));
 
-            EXPECT_EQ(updateData, UKControllerPlugin::GetUpdateData(this->mockApi));
+            EXPECT_EQ(updateData, UKControllerPlugin::GetUpdateData(this->mockApi, "beta"));
         }
 
         TEST_F(UpdateBinariesTest, GetUpdateDataThrowsExceptionIfUpdateDataInvalid)
@@ -148,24 +148,18 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
+            ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(updateData));
 
-            EXPECT_THROW(UKControllerPlugin::GetUpdateData(this->mockApi), std::exception);
+            EXPECT_THROW(UKControllerPlugin::GetUpdateData(this->mockApi, "beta"), std::exception);
         }
 
         TEST_F(UpdateBinariesTest, GetUpdateDataThrowsApiExceptionIfThrownByApi)
         {
-            nlohmann::json updateData{
-                {"version", 1234}, // Invalid
-                {"updater_download_url", "foo"},
-                {"core_download_url", "bar"},
-                {"loader_download_url", "baz"},
-            };
-
-            ON_CALL(this->mockApi, GetUpdateDetails())
+            ON_CALL(this->mockApi, GetUpdateDetails("beta"))
                 .WillByDefault(testing::Throw(UKControllerPlugin::Api::ApiException("foo")));
 
-            EXPECT_THROW(UKControllerPlugin::GetUpdateData(this->mockApi), UKControllerPlugin::Api::ApiException);
+            EXPECT_THROW(
+                UKControllerPlugin::GetUpdateData(this->mockApi, "beta"), UKControllerPlugin::Api::ApiException);
         }
 
         TEST_F(UpdateBinariesTest, ItUpdatesTheCoreLibrary)
@@ -176,8 +170,6 @@ namespace UKControllerPluginUtilsTest {
                 {"core_download_url", "bar"},
                 {"loader_download_url", "baz"},
             };
-
-            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
             CurlRequest expectedRequest("bar", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
@@ -203,8 +195,6 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
-
             CurlRequest expectedRequest("bar", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
 
@@ -228,8 +218,6 @@ namespace UKControllerPluginUtilsTest {
                 {"core_download_url", "bar"},
                 {"loader_download_url", "baz"},
             };
-
-            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
             CurlRequest expectedRequest("bar", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
@@ -255,8 +243,6 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
-
             CurlRequest expectedRequest("foo", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
 
@@ -281,8 +267,6 @@ namespace UKControllerPluginUtilsTest {
                 {"loader_download_url", "baz"},
             };
 
-            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
-
             CurlRequest expectedRequest("foo", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
 
@@ -306,8 +290,6 @@ namespace UKControllerPluginUtilsTest {
                 {"core_download_url", "bar"},
                 {"loader_download_url", "baz"},
             };
-
-            ON_CALL(this->mockApi, GetUpdateDetails()).WillByDefault(testing::Return(updateData));
 
             CurlRequest expectedRequest("foo", CurlRequest::METHOD_GET);
             expectedRequest.SetMaxRequestTime(0);
