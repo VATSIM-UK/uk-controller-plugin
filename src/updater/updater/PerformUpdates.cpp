@@ -14,7 +14,12 @@ using UKControllerPlugin::Windows::WinApiInterface;
 
 typedef const char*(CALLBACK* GETPLUGINVERSION)();
 
-bool CheckForUpdates(const ApiInterface& api, WinApiInterface& windows, CurlInterface& curl, bool duplicatePlugin)
+bool CheckForUpdates(
+    const ApiInterface& api,
+    WinApiInterface& windows,
+    CurlInterface& curl,
+    bool duplicatePlugin,
+    const std::string& updateChannel)
 {
     if (duplicatePlugin) {
         LogInfo("Skipping updates as plugin is duplicate");
@@ -22,7 +27,7 @@ bool CheckForUpdates(const ApiInterface& api, WinApiInterface& windows, CurlInte
     }
 
     try {
-        const nlohmann::json versionDetails = UKControllerPlugin::GetUpdateData(api);
+        const nlohmann::json versionDetails = UKControllerPlugin::GetUpdateData(api, updateChannel);
         std::string version = GetVersionFromJson(versionDetails);
         std::wstring wideVersion = HelperFunctions::ConvertToWideString(version);
         if (UpdateRequired(windows, versionDetails)) {

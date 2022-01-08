@@ -5,6 +5,7 @@
 #include "euroscope/UserSetting.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "setting/SettingRepository.h"
 
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Dialog::DialogManager;
@@ -13,6 +14,7 @@ using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
+using UKControllerPlugin::Setting::SettingRepository;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 
@@ -26,7 +28,7 @@ namespace UKControllerPluginTest {
         {
             public:
             GeneralSettingsConfigurationBootstrapTest()
-                : userSettings(mockUserSettingProvider), dialogManager(mockDialogProvider)
+                : userSettings(mockUserSettingProvider), settings(mockWindows), dialogManager(mockDialogProvider)
             {
             }
 
@@ -37,6 +39,8 @@ namespace UKControllerPluginTest {
             UserSetting userSettings;
             NiceMock<MockDialogProvider> mockDialogProvider;
             NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
+            NiceMock<Windows::MockWinApi> mockWindows;
+            SettingRepository settings;
             DialogManager dialogManager;
         };
 
@@ -67,7 +71,7 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapPluginAddsDialogToDialogManager)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
-                this->dialogManager, this->userSettings, this->userSettingCollection);
+                this->dialogManager, this->userSettings, this->userSettingCollection, settings);
 
             EXPECT_EQ(1, this->dialogManager.CountDialogs());
             EXPECT_TRUE(this->dialogManager.HasDialog(IDD_GENERAL_SETTINGS));

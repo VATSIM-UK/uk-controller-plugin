@@ -1,42 +1,43 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace IntentionCode {
+namespace UKControllerPlugin::IntentionCode {
 
-        /*
-            Structure containing data about an intention code.
-        */
-        using IntentionCodeData = struct IntentionCodeData {
+    /*
+        Structure containing data about an intention code.
+    */
+    using IntentionCodeData = struct IntentionCodeData
+    {
 
-            IntentionCodeData(void)
-                : intentionCode("--"), exitPointValid(false), exitPointIndex(-1), exitPoint("")
-            {
+        IntentionCodeData()
+            : intentionCode("--"), exitPointIndex(INVALID_EXIT_POINT), ukExitPointIndex(INVALID_EXIT_POINT),
+              exitPoint(""), ukExitPoint("")
+        {
+        }
 
-            }
+        IntentionCodeData(
+            std::string intentionCode,
+            int exitPointIndex,
+            int ukExitPointIndex,
+            std::string exitPoint,
+            std::string ukExitPoint)
+            : intentionCode(intentionCode), exitPointIndex(exitPointIndex), ukExitPointIndex(ukExitPointIndex),
+              exitPoint(std::move(exitPoint)), ukExitPoint(ukExitPoint){};
 
-            IntentionCodeData(
-                std::string intentionCode,
-                bool exitPointValid,
-                int exitPointIndex,
-                std::string exitPoint
-            )
-                : intentionCode(intentionCode), exitPointValid(exitPointValid), exitPointIndex(exitPointIndex),
-                  exitPoint(std::move(exitPoint))
-            {
+        // The code
+        std::string intentionCode;
 
-            };
+        // The index on the extracted route at which the aircraft leaves the FIR
+        int exitPointIndex;
 
-            // The code
-            std::string intentionCode;
+        // The index on the extracted route at which the aircraft leaves the UK airspace
+        int ukExitPointIndex;
 
-            // Whether or not the exit point is a valid one
-            bool exitPointValid;
+        // The exit point itself
+        std::string exitPoint;
 
-            // The index on the extracted route at which the aircraft leaves the FIR
-            int exitPointIndex;
+        // The UK exit point itself
+        std::string ukExitPoint;
 
-            // The exit point itself
-            std::string exitPoint;
-        };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+        inline static const int INVALID_EXIT_POINT = -1;
+    };
+} // namespace UKControllerPlugin::IntentionCode

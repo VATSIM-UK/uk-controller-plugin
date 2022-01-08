@@ -44,7 +44,9 @@
   "release": {
     "repositoryUrl": "https://github.com/VATSIM-UK/uk-controller-plugin",
     "branches": [
-      "main"
+      "main",
+      {"name": "beta", "prerelease": true},
+      {"name": "alpha", "prerelease": true}
     ],
     "tagFormat": "${version}",
     "plugins": [

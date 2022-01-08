@@ -654,11 +654,11 @@ namespace UKControllerPluginUtilsTest::Api {
         CurlResponse response(responseData.dump(), false, 200);
 
         CurlRequest expectedRequest(
-            GetApiGetUriCurlRequest("http://ukcp.test.com/version/latest", CurlRequest::METHOD_GET));
+            GetApiGetUriCurlRequest("http://ukcp.test.com/version/latest?channel=beta", CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
-        EXPECT_EQ(responseData, this->helper.GetUpdateDetails());
+        EXPECT_EQ(responseData, this->helper.GetUpdateDetails("beta"));
     }
 
     TEST_F(ApiHelperTest, RequestDepartureReleaseMakesRequest)
@@ -691,6 +691,7 @@ namespace UKControllerPluginUtilsTest::Api {
         expectedData["controller_position_id"] = 2;
         expectedData["released_at"] = "2021-05-09 12:31:00";
         expectedData["expires_in_seconds"] = 120;
+        expectedData["remarks"] = "Some remarks";
 
         std::chrono::system_clock::time_point timePoint;
         std::istringstream inputStream("2021-05-09 12:31:00");
@@ -701,7 +702,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
-        this->helper.ApproveDepartureReleaseRequest(1, 2, timePoint, 120);
+        this->helper.ApproveDepartureReleaseRequest(1, 2, timePoint, 120, "Some remarks");
     }
 
     TEST_F(ApiHelperTest, RejectDepartureReleaseMakesRequest)
@@ -712,13 +713,14 @@ namespace UKControllerPluginUtilsTest::Api {
 
         nlohmann::json expectedData;
         expectedData["controller_position_id"] = 2;
+        expectedData["remarks"] = "Some remarks";
 
         CurlRequest expectedRequest(
             GetApiCurlRequest("/departure/release/request/1/reject", CurlRequest::METHOD_PATCH, expectedData));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
-        this->helper.RejectDepartureReleaseRequest(1, 2);
+        this->helper.RejectDepartureReleaseRequest(1, 2, "Some remarks");
     }
 
     TEST_F(ApiHelperTest, AcknowledgeDepartureReleaseMakesRequest)
@@ -817,6 +819,19 @@ namespace UKControllerPluginUtilsTest::Api {
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
         EXPECT_EQ(responseData, this->helper.CreateMissedApproach("BAW123"));
+    }
+
+    TEST_F(ApiHelperTest, GetAllMetarsMakesRequest)
+    {
+        nlohmann::json responseData;
+        responseData["bla"] = "bla";
+        CurlResponse response(responseData.dump(), false, 200);
+
+        CurlRequest expectedRequest(GetApiCurlRequest("/metar", CurlRequest::METHOD_GET));
+
+        EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
+
+        EXPECT_EQ(responseData, this->helper.GetAllMetars());
     }
 
     TEST_F(ApiHelperTest, AcknowledgeMissedApproachMakesRequest)

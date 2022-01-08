@@ -1,29 +1,29 @@
-#include "pch/pch.h"
-#include "euroscope/GeneralSettingsDialog.h"
-#include "euroscope/UserSetting.h"
-#include "euroscope/GeneralSettingsEntries.h"
-#include "euroscope/UserSettingAwareCollection.h"
+#include "GeneralSettingsDialog.h"
+#include "GeneralSettingsEntries.h"
+#include "UserSettingAwareCollection.h"
+#include "UserSetting.h"
 #include "dialog/DialogCallArgument.h"
+#include "setting/SettingRepository.h"
 
-using UKControllerPlugin::Euroscope::UserSetting;
-using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
-using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Dialog::DialogCallArgument;
+using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 
 namespace UKControllerPlugin {
     namespace Euroscope {
 
         GeneralSettingsDialog::GeneralSettingsDialog(
-            UserSetting & userSettings,
-            const UserSettingAwareCollection & userSettingsHandlers
-        )
-            : userSettings(userSettings), userSettingsHandlers(userSettingsHandlers)
+            UserSetting& userSettings,
+            const UserSettingAwareCollection& userSettingsHandlers,
+            Setting::SettingRepository& settings)
+            : userSettings(userSettings), userSettingsHandlers(userSettingsHandlers), settings(settings)
         {
-
         }
 
-        GeneralSettingsDialog::GeneralSettingsDialog(const GeneralSettingsDialog & newObject)
-            : userSettings(newObject.userSettings), userSettingsHandlers(newObject.userSettingsHandlers)
+        GeneralSettingsDialog::GeneralSettingsDialog(const GeneralSettingsDialog& newObject)
+            : userSettings(newObject.userSettings), userSettingsHandlers(newObject.userSettingsHandlers),
+              settings(newObject.settings)
         {
         }
 
@@ -32,38 +32,54 @@ namespace UKControllerPlugin {
             CheckDlgButton(
                 hwnd,
                 GS_DIALOG_PRENOTE_CHECK,
-                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::usePrenoteSettingsKey)
-            );
+                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::usePrenoteSettingsKey));
 
             CheckDlgButton(
                 hwnd,
                 GS_DIALOG_IA_CHECK,
-                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::initialAltitudeToggleSettingsKey)
-            );
+                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::initialAltitudeToggleSettingsKey));
 
             CheckDlgButton(
                 hwnd,
                 GS_DIALOG_IH_CHECK,
-                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::initialHeadingToggleSettingsKey)
-            );
+                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::initialHeadingToggleSettingsKey));
 
             CheckDlgButton(
                 hwnd,
                 GS_DIALOG_SQUAWK_CHECK,
-                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::squawkToggleSettingsKey)
-            );
+                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::squawkToggleSettingsKey));
 
             CheckDlgButton(
                 hwnd,
                 GS_DIALOG_QNH_CHECK,
-                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::pressureMonitorSendMessageKey)
-            );
+                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::pressureMonitorSendMessageKey));
 
             CheckDlgButton(
                 hwnd,
                 GS_TIME_FORMAT_CHECK,
-                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::unknownTimeFormatBlankKey)
-            );
+                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::unknownTimeFormatBlankKey));
+
+            auto selectedChannel = this->settings.GetSetting("release_channel", DEFAULT_RELEASE_CHANNEL);
+            if (this->releaseChannelMap.count(selectedChannel) == 0) {
+                selectedChannel = DEFAULT_RELEASE_CHANNEL;
+            }
+
+            for (const auto& releaseChannel : this->releaseChannelMap) {
+                const auto channel = releaseChannel.second.c_str();
+                int insertIndex = SendDlgItemMessage(
+                    hwnd, IDC_RELEASE_CHANNEL, CB_INSERTSTRING, NULL, reinterpret_cast<LPARAM>(channel));
+
+                SendDlgItemMessage(
+                    hwnd,
+                    IDC_RELEASE_CHANNEL,
+                    CB_SETITEMDATA,
+                    insertIndex,
+                    reinterpret_cast<LPARAM>(releaseChannel.first.c_str()));
+
+                if (releaseChannel.first == selectedChannel) {
+                    SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_SETCURSEL, insertIndex, NULL);
+                }
+            }
 
             return TRUE;
         }
@@ -76,43 +92,48 @@ namespace UKControllerPlugin {
             this->userSettings.Save(
                 GeneralSettingsEntries::usePrenoteSettingsKey,
                 GeneralSettingsEntries::usePrenoteSettingsDescription,
-                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_PRENOTE_CHECK)
-            );
+                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_PRENOTE_CHECK));
 
             // Initial Altitudes Toggle
             this->userSettings.Save(
                 GeneralSettingsEntries::initialAltitudeToggleSettingsKey,
                 GeneralSettingsEntries::initialAltitudeToggleSettingsDescription,
-                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_IA_CHECK)
-            );
+                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_IA_CHECK));
 
             // Initial Headings Toggle
             this->userSettings.Save(
                 GeneralSettingsEntries::initialHeadingToggleSettingsKey,
                 GeneralSettingsEntries::initialHeadingToggleSettingsDescription,
-                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_IH_CHECK)
-            );
+                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_IH_CHECK));
 
             // Squawk Toggle
             this->userSettings.Save(
                 GeneralSettingsEntries::squawkToggleSettingsKey,
                 GeneralSettingsEntries::squawkToggleSettingsDescription,
-                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_SQUAWK_CHECK)
-            );
+                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_SQUAWK_CHECK));
 
             // Pressure monitor
             this->userSettings.Save(
                 GeneralSettingsEntries::pressureMonitorSendMessageKey,
                 GeneralSettingsEntries::pressureMonitorSendMessageDescription,
-                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_QNH_CHECK)
-            );
+                this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_QNH_CHECK));
 
             // Time format
             this->userSettings.Save(
                 GeneralSettingsEntries::unknownTimeFormatBlankKey,
                 GeneralSettingsEntries::unknownTimeFormatBlankDescription,
-                this->GetSettingFromCheckboxState(hwnd, GS_TIME_FORMAT_CHECK)
-            );
+                this->GetSettingFromCheckboxState(hwnd, GS_TIME_FORMAT_CHECK));
+
+            const auto selectedReleaseChannelIndex = SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_GETCURSEL, 0, 0);
+
+            const std::string selectedChannel = reinterpret_cast<const char*>(
+                SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_GETITEMDATA, selectedReleaseChannelIndex, 0));
+
+            if (this->settings.HasSetting("release_channel")) {
+                this->settings.UpdateSetting("release_channel", selectedChannel);
+            } else {
+                this->settings.AddSettingValue({"release_channel", selectedChannel, "release-channel.json"});
+            }
 
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
         }
@@ -124,19 +145,14 @@ namespace UKControllerPlugin {
         {
             if (msg == WM_INITDIALOG) {
                 LogInfo("General settings dialog opened");
-                SetWindowLongPtr(
-                    hwnd,
-                    GWLP_USERDATA,
-                    reinterpret_cast<DialogCallArgument *>(lParam)->dialogArgument
-                );
+                SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<DialogCallArgument*>(lParam)->dialogArgument);
             } else if (msg == WM_DESTROY) {
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, NULL);
                 LogInfo("General settings dialog closed");
             }
 
-            GeneralSettingsDialog * dialog = reinterpret_cast<GeneralSettingsDialog*>(
-                GetWindowLongPtr(hwnd, GWLP_USERDATA)
-            );
+            GeneralSettingsDialog* dialog =
+                reinterpret_cast<GeneralSettingsDialog*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
             return dialog ? dialog->_WndProc(hwnd, msg, wParam, lParam) : FALSE;
         }
 
@@ -146,31 +162,31 @@ namespace UKControllerPlugin {
         LRESULT GeneralSettingsDialog::_WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             switch (msg) {
-                // Initialise
-                case WM_INITDIALOG: {
-                    this->InitDialog(hwnd);
-                    return TRUE;
-                };
-                // Window Closed
-                case WM_CLOSE: {
+            // Initialise
+            case WM_INITDIALOG: {
+                this->InitDialog(hwnd);
+                return TRUE;
+            };
+            // Window Closed
+            case WM_CLOSE: {
+                EndDialog(hwnd, wParam);
+                return TRUE;
+            }
+            // Buttons pressed
+            case WM_COMMAND: {
+                switch (LOWORD(wParam)) {
+                case IDCANCEL: {
                     EndDialog(hwnd, wParam);
                     return TRUE;
                 }
-                // Buttons pressed
-                case WM_COMMAND: {
-                    switch (LOWORD(wParam)) {
-                        case IDCANCEL: {
-                            EndDialog(hwnd, wParam);
-                            return TRUE;
-                        }
-                        case IDOK: {
-                            // OK clicked, close the window
-                            this->DestroyDialog(hwnd);
-                            EndDialog(hwnd, wParam);
-                            return TRUE;
-                        }
-                    }
+                case IDOK: {
+                    // OK clicked, close the window
+                    this->DestroyDialog(hwnd);
+                    EndDialog(hwnd, wParam);
+                    return TRUE;
                 }
+                }
+            }
             }
 
             return FALSE;
@@ -191,5 +207,5 @@ namespace UKControllerPlugin {
         {
             return IsDlgButtonChecked(hwnd, checkboxId) == BST_CHECKED;
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

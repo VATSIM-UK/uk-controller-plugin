@@ -224,7 +224,7 @@ namespace UKControllerPluginLoaderTest {
                 .Times(1)
                 .WillOnce(Return(IDCANCEL));
 
-            EXPECT_CALL(this->mockApi, GetUpdateDetails()).Times(0);
+            EXPECT_CALL(this->mockApi, GetUpdateDetails("stable")).Times(0);
 
             EXPECT_FALSE(FirstTimeDownload(this->mockApi, this->mockWindows, this->mockCurl));
         }
@@ -246,7 +246,7 @@ namespace UKControllerPluginLoaderTest {
                 {"loader_download_url", "baz"},
             };
 
-            EXPECT_CALL(this->mockApi, GetUpdateDetails()).Times(1).WillOnce(Return(apiData));
+            EXPECT_CALL(this->mockApi, GetUpdateDetails("stable")).Times(1).WillOnce(Return(apiData));
 
             // Updater request
             CurlRequest expectedUpdaterRequest("foo", CurlRequest::METHOD_GET);
@@ -283,7 +283,7 @@ namespace UKControllerPluginLoaderTest {
                 {"loader_download_url", "baz"},
             };
 
-            EXPECT_CALL(this->mockApi, GetUpdateDetails()).Times(1).WillOnce(Return(apiData));
+            EXPECT_CALL(this->mockApi, GetUpdateDetails("stable")).Times(1).WillOnce(Return(apiData));
 
             // Updater request
             CurlRequest expectedUpdaterRequest("foo", CurlRequest::METHOD_GET);
@@ -322,7 +322,7 @@ namespace UKControllerPluginLoaderTest {
                 {"loader_download_url", "baz"},
             };
 
-            EXPECT_CALL(this->mockApi, GetUpdateDetails()).Times(1).WillOnce(Return(apiData));
+            EXPECT_CALL(this->mockApi, GetUpdateDetails("stable")).Times(1).WillOnce(Return(apiData));
 
             EXPECT_CALL(this->mockCurl, MakeCurlRequest(testing::_)).Times(0);
 

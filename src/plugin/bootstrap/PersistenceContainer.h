@@ -61,6 +61,8 @@ namespace UKControllerPlugin {
     } // namespace Integration
     namespace IntentionCode {
         class SectorExitRepository;
+        class IntentionCodeCache;
+        class IntentionCodeGenerator;
     } // namespace IntentionCode
     namespace InitialAltitude {
         class InitialAltitudeEventHandler;
@@ -86,6 +88,9 @@ namespace UKControllerPlugin {
     namespace Plugin {
         class FunctionCallEventHandler;
     } // namespace Plugin
+    namespace Prenote {
+        class PrenoteMessageCollection;
+    } // namespace Prenote
     namespace Push {
         class PushEventProcessorCollection;
     } // namespace Push
@@ -159,6 +164,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
         std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;
         std::shared_ptr<UKControllerPlugin::Datablock::DisplayTime> timeFormatting;
+        std::shared_ptr<UKControllerPlugin::Prenote::PrenoteMessageCollection> prenotes;
 
         // Collections of event handlers
         std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;
@@ -209,6 +215,8 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchyFactory> controllerHierarchyFactory;
         std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
+        std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeCache> intentionCodeCache;
+        std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeGenerator> intentionCodeGenerator;
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;

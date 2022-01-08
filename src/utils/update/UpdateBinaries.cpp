@@ -38,10 +38,10 @@ namespace UKControllerPlugin {
         return UpdateBinary(curl, coreRequest, windows, GetCoreBinaryRelativePath());
     }
 
-    auto GetUpdateData(const Api::ApiInterface& api) -> nlohmann::json
+    auto GetUpdateData(const Api::ApiInterface& api, const std::string& updateChannel) -> nlohmann::json
     {
         try {
-            nlohmann::json updateData = api.GetUpdateDetails();
+            nlohmann::json updateData = api.GetUpdateDetails(updateChannel);
             if (!UpdateDataValid(updateData)) {
                 LogError("Unable to get update data, update data was invalid.");
                 throw std::exception("Update data response invalid");

@@ -4,6 +4,8 @@
 #include "integration/IntegrationPersistenceContainer.h"
 #include "integration/IntegrationServer.h"
 #include "intention/IntentionCodeModule.h"
+#include "intention/IntentionCodeCache.h"
+#include "intention/IntentionCodeGenerator.h"
 #include "tag/TagItemCollection.h"
 
 using ::testing::Test;
@@ -54,5 +56,19 @@ namespace UKControllerPluginTest::IntentionCode {
         IntentionCodeModule::BootstrapPlugin(this->container);
 
         EXPECT_EQ(1, this->container.controllerHandler->CountHandlers());
+    }
+
+    TEST_F(IntentionCodeModuleTest, BootstrapPluginSetsCacheOnContainer)
+    {
+        IntentionCodeModule::BootstrapPlugin(this->container);
+
+        EXPECT_EQ(0, container.intentionCodeCache->TotalCached());
+    }
+
+    TEST_F(IntentionCodeModuleTest, BootstrapPluginSetsGeneratorOnContainer)
+    {
+        IntentionCodeModule::BootstrapPlugin(this->container);
+
+        EXPECT_EQ(-1, container.intentionCodeGenerator->GetInvalidExitPointIndex());
     }
 } // namespace UKControllerPluginTest::IntentionCode

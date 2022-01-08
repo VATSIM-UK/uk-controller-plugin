@@ -143,28 +143,28 @@ namespace UKControllerPluginUpdaterTest::Updater {
     {
         EXPECT_CALL(this->mockApi, GetUpdateDetails).Times(0);
 
-        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, true));
+        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, true, "beta"));
     }
 
     TEST_F(PerformUpdatesTest, ItHandlesApiExceptionsWhenGettingUpdateDetails)
     {
-        ON_CALL(this->mockApi, GetUpdateDetails)
+        ON_CALL(this->mockApi, GetUpdateDetails("beta"))
             .WillByDefault(testing::Throw(UKControllerPlugin::Api::ApiException("foo")));
 
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)).Times(1);
 
-        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false, "beta"));
     }
 
     TEST_F(PerformUpdatesTest, ItHandlesInvalidApiDataWhenGettingUpdateDetails)
     {
         nlohmann::json apiData{{"foo", "bar"}};
 
-        ON_CALL(this->mockApi, GetUpdateDetails).WillByDefault(testing::Return(apiData));
+        ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)).Times(1);
 
-        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false, "beta"));
     }
 
     TEST_F(PerformUpdatesTest, ItDoesntDoUpdateIfNoUpdateRequired)
@@ -176,7 +176,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
             {"loader_download_url", "baz"},
         };
 
-        ON_CALL(this->mockApi, GetUpdateDetails).WillByDefault(testing::Return(apiData));
+        ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(true));
@@ -194,7 +194,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         EXPECT_CALL(this->mockWindows, MoveFileToNewLocation(testing::_, testing::_)).Times(0);
 
-        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false, "beta"));
     }
 
     TEST_F(PerformUpdatesTest, ItDoesntUpdateIfUserDoesntConsent)
@@ -206,7 +206,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
             {"loader_download_url", "baz"},
         };
 
-        ON_CALL(this->mockApi, GetUpdateDetails).WillByDefault(testing::Return(apiData));
+        ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(false));
@@ -221,7 +221,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         EXPECT_CALL(this->mockWindows, MoveFileToNewLocation(testing::_, testing::_)).Times(0);
 
-        EXPECT_FALSE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        EXPECT_FALSE(CheckForUpdates(mockApi, mockWindows, mockCurl, false, "beta"));
     }
 
     TEST_F(PerformUpdatesTest, ItPerformsUpdatesWithNoChangelog)
@@ -233,7 +233,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
             {"loader_download_url", "baz"},
         };
 
-        ON_CALL(this->mockApi, GetUpdateDetails).WillByDefault(testing::Return(apiData));
+        ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(false));
@@ -275,7 +275,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
         // Changelog
         EXPECT_CALL(this->mockWindows, OpenWebBrowser(testing::_)).Times(0);
 
-        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false, "beta"));
     }
 
     TEST_F(PerformUpdatesTest, ItPerformsUpdatesWithChangelog)
@@ -287,7 +287,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
             {"loader_download_url", "baz"},
         };
 
-        ON_CALL(this->mockApi, GetUpdateDetails).WillByDefault(testing::Return(apiData));
+        ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(false));
@@ -329,7 +329,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
         // View changelog
         EXPECT_CALL(this->mockWindows, OpenWebBrowser(UKControllerPlugin::Update::changelogUrl)).Times(1);
 
-        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false, "beta"));
     }
 
     TEST_F(PerformUpdatesTest, ItHandlesFailedUpdaterDownloads)
@@ -341,7 +341,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
             {"loader_download_url", "baz"},
         };
 
-        ON_CALL(this->mockApi, GetUpdateDetails).WillByDefault(testing::Return(apiData));
+        ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(false));
@@ -382,7 +382,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
         // Messagebox
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)).Times(1);
 
-        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false, "beta"));
     }
 
     TEST_F(PerformUpdatesTest, ItHandlesFailedCoreDownloads)
@@ -394,7 +394,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
             {"loader_download_url", "baz"},
         };
 
-        ON_CALL(this->mockApi, GetUpdateDetails).WillByDefault(testing::Return(apiData));
+        ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(false));
@@ -433,7 +433,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
         // Messagebox
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OK | MB_ICONSTOP)).Times(1);
 
-        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false, "beta"));
     }
 
     TEST_F(PerformUpdatesTest, ItPerformsUpdatesOnSecondPrompt)
@@ -445,7 +445,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
             {"loader_download_url", "baz"},
         };
 
-        ON_CALL(this->mockApi, GetUpdateDetails).WillByDefault(testing::Return(apiData));
+        ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(false));
@@ -501,6 +501,6 @@ namespace UKControllerPluginUpdaterTest::Updater {
         // Changelog
         EXPECT_CALL(this->mockWindows, OpenWebBrowser(testing::_)).Times(0);
 
-        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false));
+        EXPECT_TRUE(CheckForUpdates(mockApi, mockWindows, mockCurl, false, "beta"));
     }
 } // namespace UKControllerPluginUpdaterTest::Updater

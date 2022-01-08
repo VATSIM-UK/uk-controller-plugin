@@ -1,7 +1,7 @@
+#include "MetarEventHandlerCollection.h"
 #include "PressureMonitor.h"
 #include "PressureMonitorBootstrap.h"
 #include "euroscope/UserSettingAwareCollection.h"
-#include "metar/MetarEventHandlerCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Metar::PressureMonitor;
