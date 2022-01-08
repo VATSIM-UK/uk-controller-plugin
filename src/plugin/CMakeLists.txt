@@ -742,6 +742,10 @@ set(src__releases
         releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp releases/RejectDepartureReleaseDialog.cpp releases/RejectDepartureReleaseDialog.h releases/ReleaseApprovalRemarksUserMessage.cpp releases/ReleaseApprovalRemarksUserMessage.h releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
 source_group("src\\releases" FILES ${src__releases})
 
+set(src__runway
+        runway/Runway.cpp runway/Runway.h)
+source_group("src\\runway" FILES ${src__runway})
+
 set(src__sectorfile
     "sectorfile/Runway.cpp"
     "sectorfile/Runway.h"
@@ -900,6 +904,7 @@ set(ALL_FILES
     ${src__radarscreen}
     ${src__regional}
     ${src__releases}
+    ${src__runway}
     ${src__sectorfile}
     ${src__selcal}
     ${src__sid}

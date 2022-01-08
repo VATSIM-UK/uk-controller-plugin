@@ -436,6 +436,10 @@ set(test__releases
         releases/ReleaseApprovalRemarksUserMessageTest.cpp releases/ReleaseRejectionRemarksUserMessageTest.cpp)
 source_group("test\\releases" FILES ${test__releases})
 
+set(test__runway
+        runway/RunwayTest.cpp)
+source_group("test\\runway" FILES ${test__runway})
+
 set(test__sectorfile
     "sectorfile/RunwayCollectionTest.cpp"
     "sectorfile/RunwayTest.cpp"
@@ -554,6 +558,7 @@ set(ALL_FILES
     ${test__radarscreen}
     ${test__regional}
     ${test__releases}
+    ${test__runway}
     ${test__sectorfile}
     ${test__selcal}
     ${test__sid}
