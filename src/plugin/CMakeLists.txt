@@ -667,7 +667,7 @@ set(src__push
     "push/PushEventProxyWindow.h"
     "push/PushEventSubscription.cpp"
     "push/PushEventSubscription.h"
-        push/PushEvent.cpp push/PushEventConnectionInterface.cpp)
+        push/PushEvent.cpp push/PushEventConnectionInterface.cpp push/ProxyPushDataSync.cpp push/ProxyPushDataSync.h)
 source_group("src\\push" FILES ${src__push})
 
 set(src__radarscreen
