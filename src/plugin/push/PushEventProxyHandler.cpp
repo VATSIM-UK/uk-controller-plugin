@@ -1,7 +1,5 @@
-#include "pch/pch.h"
-
-#include "push/PushEventProxyHandler.h"
-#include "push/PushEventProxyWindow.h"
+#include "PushEventProxyHandler.h"
+#include "PushEventProxyWindow.h"
 
 namespace UKControllerPlugin::Push {
 
@@ -35,10 +33,12 @@ namespace UKControllerPlugin::Push {
     auto PushEventProxyHandler::EnumerateWindows(HWND hwnd, LPARAM lparam) -> BOOL
     {
         std::array<WCHAR, WINDOW_NAME_BUFFER_SIZE> windowName = {};
-        GetWindowText(hwnd, reinterpret_cast<LPWSTR>(&windowName), WINDOW_NAME_BUFFER_SIZE); // NOLINT
-        std::wstring windowNameWide(windowName.cbegin(), windowName.cend());
+        int nameLength = GetWindowText(hwnd, reinterpret_cast<LPWSTR>(&windowName), WINDOW_NAME_BUFFER_SIZE); // NOLINT
+        if (nameLength == 0) {
+            return TRUE;
+        }
 
-        if (windowNameWide == GetProxyWindowName()) {
+        if (std::wstring(windowName.cbegin(), windowName.cbegin() + nameLength) == GetProxyWindowName()) {
             SendMessage(hwnd, WM_COPYDATA, reinterpret_cast<WPARAM>(hwnd), lparam); // NOLINT
         }
 
