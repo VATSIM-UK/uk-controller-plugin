@@ -3,8 +3,7 @@
 #include "RunwayCollectionFactory.h"
 
 namespace UKControllerPlugin::Runway {
-    auto BuildRunwayCollection(const nlohmann::json& dependency)
-        -> std::unique_ptr<RunwayCollection>
+    auto BuildRunwayCollection(const nlohmann::json& dependency) -> std::unique_ptr<RunwayCollection>
     {
         auto collection = std::make_unique<RunwayCollection>();
         if (!dependency.is_array()) {
