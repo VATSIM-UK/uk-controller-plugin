@@ -232,8 +232,8 @@ namespace UKControllerPluginLoaderTest {
         TEST_F(LoaderTest, FirstTimeDownloadDownloadsTheUpdater)
         {
             EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
-                .Times(1)
-                .WillOnce(Return(false));
+                .Times(2)
+                .WillRepeatedly(Return(false));
 
             EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_OKCANCEL | MB_ICONINFORMATION))
                 .Times(1)

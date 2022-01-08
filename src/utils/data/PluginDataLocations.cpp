@@ -13,12 +13,12 @@ auto GetCoreBinaryRelativePath() -> std::wstring
 
 auto GetOldCoreBinaryRelativePath() -> std::wstring
 {
-    return GetCoreBinaryRelativePath() + L".old";
+    return GetOldFileExtension(GetCoreBinaryRelativePath());
 }
 
 auto GetOldUpdaterBinaryRelativePath() -> std::wstring
 {
-    return GetUpdaterBinaryRelativePath() + L".old";
+    return GetOldFileExtension(GetUpdaterBinaryRelativePath());
 }
 
 auto GetFullPluginDataRoot() -> std::wstring
@@ -55,4 +55,9 @@ void CreatePluginDataRoot(UKControllerPlugin::Windows::WinApiInterface& windows)
             MB_OK | MB_ICONSTOP);
         throw std::runtime_error("Unable to set permissions on the UKCP root folder");
     }
+}
+
+std::wstring GetOldFileExtension(const std::wstring& file)
+{
+    return file + L".old";
 }

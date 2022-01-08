@@ -1,5 +1,19 @@
 # UK Controller Plugin Changelog
 
+# [4.0.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.1...4.0.0-beta.2) (2022-01-05)
+
+
+### Features
+
+* **departure:** Combine pending prenotes and departure releases lists into one ([91c0614](https://github.com/VATSIM-UK/uk-controller-plugin/commit/91c0614982e061a29e18db23e2d9c70c86449fcb))
+* **departure:** Combine pending prenotes and releases into one list ([#386](https://github.com/VATSIM-UK/uk-controller-plugin/issues/386)) ([531b687](https://github.com/VATSIM-UK/uk-controller-plugin/commit/531b6876f94a2e6284279efd4ce10c88f2bd92e3))
+
+
+### BREAKING CHANGES
+
+* **departure:** The old lists are replaced by a single list. New ASR settings
+are also used for this list.
+
 # [4.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.1...4.0.0-beta.1) (2022-01-05)
 
 
