@@ -243,13 +243,6 @@ namespace UKControllerPluginUpdaterTest::Updater {
             .WillOnce(testing::Return(IDYES))
             .WillOnce(testing::Return(IDNO));
 
-        EXPECT_CALL(
-            this->mockWindows,
-            MoveFileToNewLocation(
-                std::wstring(L"bin/UKControllerPluginUpdater.dll"),
-                std::wstring(L"bin/UKControllerPluginUpdater.dll.old")))
-            .Times(1);
-
         // Core things
         CurlRequest expectedCoreRequest("bar", CurlRequest::METHOD_GET);
         expectedCoreRequest.SetMaxRequestTime(0);
@@ -304,13 +297,6 @@ namespace UKControllerPluginUpdaterTest::Updater {
             .WillOnce(testing::Return(IDYES))
             .WillOnce(testing::Return(IDYES));
 
-        EXPECT_CALL(
-            this->mockWindows,
-            MoveFileToNewLocation(
-                std::wstring(L"bin/UKControllerPluginUpdater.dll"),
-                std::wstring(L"bin/UKControllerPluginUpdater.dll.old")))
-            .Times(1);
-
         // Core things
         CurlRequest expectedCoreRequest("bar", CurlRequest::METHOD_GET);
         expectedCoreRequest.SetMaxRequestTime(0);
@@ -363,13 +349,6 @@ namespace UKControllerPluginUpdaterTest::Updater {
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION))
             .Times(1)
             .WillOnce(testing::Return(IDYES));
-
-        EXPECT_CALL(
-            this->mockWindows,
-            MoveFileToNewLocation(
-                std::wstring(L"bin/UKControllerPluginUpdater.dll"),
-                std::wstring(L"bin/UKControllerPluginUpdater.dll.old")))
-            .Times(1);
 
         // Core things
         CurlRequest expectedCoreRequest("bar", CurlRequest::METHOD_GET);
@@ -424,13 +403,6 @@ namespace UKControllerPluginUpdaterTest::Updater {
             .Times(1)
             .WillOnce(testing::Return(IDYES));
 
-        EXPECT_CALL(
-            this->mockWindows,
-            MoveFileToNewLocation(
-                std::wstring(L"bin/UKControllerPluginUpdater.dll"),
-                std::wstring(L"bin/UKControllerPluginUpdater.dll.old")))
-            .Times(1);
-
         // Core things
         CurlRequest expectedCoreRequest("bar", CurlRequest::METHOD_GET);
         expectedCoreRequest.SetMaxRequestTime(0);
@@ -477,6 +449,9 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(false));
+
+        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            .WillByDefault(testing::Return(true));
 
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION))
             .Times(2)
