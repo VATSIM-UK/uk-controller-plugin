@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RunwayCollectionFactory.h"
+
 namespace UKControllerPlugin::Runway {
     class Runway;
 

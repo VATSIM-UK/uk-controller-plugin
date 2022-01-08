@@ -101,6 +101,9 @@ namespace UKControllerPlugin {
     namespace Releases {
         class DepartureReleaseEventHandler;
     } // namespace Releases
+    namespace Runway {
+        class RunwayCollection;
+    } // namespace Runway
     namespace SectorFile {
         class RunwayCollection;
     } // namespace SectorFile
@@ -217,6 +220,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
         std::unique_ptr<UKControllerPlugin::FlightRules::FlightRuleCollection> flightRules;
+        std::unique_ptr<UKControllerPlugin::Runway::RunwayCollection> runwayCollection;
 
         // Push events
         std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;

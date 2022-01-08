@@ -45,6 +45,7 @@
 #include "radarscreen/RadarScreenFactory.h"
 #include "radarscreen/ScreenControls.h"
 #include "regional/RegionalPressureManager.h"
+#include "runway/RunwayCollection.h"
 #include "sectorfile/RunwayCollection.h"
 #include "setting/SettingRepository.h"
 #include "sid/SidCollection.h"
