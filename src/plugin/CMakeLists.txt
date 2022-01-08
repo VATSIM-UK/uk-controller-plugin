@@ -743,7 +743,7 @@ set(src__releases
 source_group("src\\releases" FILES ${src__releases})
 
 set(src__runway
-        runway/Runway.cpp runway/Runway.h)
+        runway/Runway.cpp runway/Runway.h runway/RunwayCollection.cpp runway/RunwayCollection.h)
 source_group("src\\runway" FILES ${src__runway})
 
 set(src__sectorfile

@@ -437,12 +437,12 @@ set(test__releases
 source_group("test\\releases" FILES ${test__releases})
 
 set(test__runway
-        runway/RunwayTest.cpp)
+        runway/RunwayTest.cpp runway/RunwayCollectionTest.cpp)
 source_group("test\\runway" FILES ${test__runway})
 
 set(test__sectorfile
-    "sectorfile/RunwayCollectionTest.cpp"
-    "sectorfile/RunwayTest.cpp"
+    "sectorfile/SectorfileRunwayCollectionTest.cpp"
+    "sectorfile/SectorfileRunwayTest.cpp"
     "sectorfile/SectorFileBootstrapTest.cpp"
     "sectorfile/SectorFileCoordinatesTest.cpp"
 )

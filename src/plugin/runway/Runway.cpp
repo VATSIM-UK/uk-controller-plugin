@@ -2,8 +2,8 @@
 
 namespace UKControllerPlugin::Runway {
 
-    Runway::Runway(int id, int airfieldId, int heading, EuroScopePlugIn::CPosition threshold)
-        : id(id), airfieldId(airfieldId), heading(heading), threshold(threshold)
+    Runway::Runway(int id, int airfieldId, std::string identifier, int heading, EuroScopePlugIn::CPosition threshold)
+        : id(id), airfieldId(airfieldId), identifier(std::move(identifier)), heading(heading), threshold(threshold)
     {
     }
 

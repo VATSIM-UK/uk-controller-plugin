@@ -7,11 +7,11 @@ using testing::Test;
 namespace UKControllerPluginTest {
     namespace SectorFile {
 
-        class RunwayTest : public Test
+        class SectorfileRunwayTest : public Test
         {
             public:
 
-                RunwayTest()
+                SectorfileRunwayTest()
                     : runway ("EGCC", "23L", 123, false, false)
                 {
 
@@ -20,7 +20,7 @@ namespace UKControllerPluginTest {
             Runway runway;
         };
 
-        TEST_F(RunwayTest, ItSetsBaseProperties)
+        TEST_F(SectorfileRunwayTest, ItSetsBaseProperties)
         {
             EXPECT_EQ("EGCC", this->runway.airfield);
             EXPECT_EQ("23L", this->runway.identifier);
@@ -29,25 +29,25 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->runway.ActiveForArrivals());
         }
 
-        TEST_F(RunwayTest, ItCanBeMadeActiveForDepartures)
+        TEST_F(SectorfileRunwayTest, ItCanBeMadeActiveForDepartures)
         {
             this->runway.SetActiveForDepartures(true);
             EXPECT_TRUE(this->runway.Active());
         }
 
-        TEST_F(RunwayTest, IsActiveIfActiveForDepartures)
+        TEST_F(SectorfileRunwayTest, IsActiveIfActiveForDepartures)
         {
             this->runway.SetActiveForDepartures(true);
             EXPECT_TRUE(this->runway.Active());
         }
 
-        TEST_F(RunwayTest, ItCanBeMadeActiveForArrivals)
+        TEST_F(SectorfileRunwayTest, ItCanBeMadeActiveForArrivals)
         {
             this->runway.SetActiveForArrivals(true);
             EXPECT_TRUE(this->runway.Active());
         }
 
-        TEST_F(RunwayTest, IsActiveIfActiveForArrivals)
+        TEST_F(SectorfileRunwayTest, IsActiveIfActiveForArrivals)
         {
             this->runway.SetActiveForArrivals(true);
             EXPECT_TRUE(this->runway.Active());
