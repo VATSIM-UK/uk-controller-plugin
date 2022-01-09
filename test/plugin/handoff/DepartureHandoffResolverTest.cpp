@@ -10,7 +10,6 @@
 #include "handoff/HandoffOrder.h"
 #include "handoff/ResolvedHandoff.h"
 #include "prenote/PairedAirfieldPrenote.h"
-#include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
@@ -26,7 +25,6 @@ using UKControllerPlugin::Handoff::HandoffCollection;
 using UKControllerPlugin::Handoff::HandoffOrder;
 using UKControllerPlugin::Handoff::ResolvedHandoff;
 using UKControllerPlugin::Prenote::PairedAirfieldPrenote;
-using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 
 namespace UKControllerPluginTest::Handoff {
@@ -40,7 +38,7 @@ namespace UKControllerPluginTest::Handoff {
                   2, "EGKK_GND", 121.800, std::vector<std::string>{"EGKK"}, true, false)),
               position3(std::make_shared<ControllerPosition>(
                   3, "EGKK_TWR", 124.220, std::vector<std::string>{"EGKK"}, true, false)),
-              sidMapper(handoffs, sids), airfieldMapper(handoffs, airfields),
+              sidMapper(handoffs, flightplanSidMapper), airfieldMapper(handoffs, airfields),
               resolver(sidMapper, airfieldMapper, callsigns)
         {
             ON_CALL(mockFlightplan, GetOrigin).WillByDefault(testing::Return("EGKK"));
@@ -48,17 +46,20 @@ namespace UKControllerPluginTest::Handoff {
 
             airfields.AddAirfield(std::make_shared<AirfieldModel>(
                 2, "EGKK", nullptr, std::vector<std::shared_ptr<PairedAirfieldPrenote>>{}, 2));
-            sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "CLN3X", 5000, 200, 1));
             hierarchy = std::make_shared<ControllerPositionHierarchy>();
             hierarchy->AddPosition(position1);
             hierarchy->AddPosition(position2);
             handoffs.Add(std::make_shared<HandoffOrder>(1, hierarchy));
+
+            ON_CALL(flightplanSidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+                .WillByDefault(
+                    testing::Return(std::make_shared<StandardInstrumentDeparture>(1, 2, "CLN3X", 5000, 200, 1)));
         }
 
+        testing::NiceMock<Sid::MockSidMapperInterface> flightplanSidMapper;
         testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;
         ActiveCallsignCollection callsigns;
         AirfieldCollection airfields;
-        SidCollection sids;
         std::shared_ptr<ControllerPositionHierarchy> hierarchy;
         std::shared_ptr<ControllerPosition> position1;
         std::shared_ptr<ControllerPosition> position2;
@@ -71,7 +72,8 @@ namespace UKControllerPluginTest::Handoff {
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsUnicomIfNoHandoffFound)
     {
-        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("LAM5M"));
+        ON_CALL(flightplanSidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+            .WillByDefault(testing::Return(std::make_shared<StandardInstrumentDeparture>(1, 2, "LAM5M", 5000, 200, 2)));
 
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_EQ(122.800, resolved->frequency);
@@ -80,8 +82,6 @@ namespace UKControllerPluginTest::Handoff {
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsUnicomIfNoPositionsActive)
     {
-        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
-
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_EQ(122.800, resolved->frequency);
         EXPECT_EQ(this->hierarchy, resolved->hierarchy);
@@ -91,8 +91,6 @@ namespace UKControllerPluginTest::Handoff {
     {
         this->callsigns.AddCallsign(ActiveCallsign("EGKK_DEL", "Testy McTest", *position1, true));
         this->callsigns.AddCallsign(ActiveCallsign("EGKK_GND", "Testy McTest", *position2, false));
-
-        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
 
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_EQ(122.800, resolved->frequency);
@@ -104,7 +102,6 @@ namespace UKControllerPluginTest::Handoff {
         this->callsigns.AddCallsign(ActiveCallsign("EGKK_DEL", "Testy McTest", *position1, false));
         this->callsigns.AddCallsign(ActiveCallsign("EGKK_GND", "Testy McTest", *position2, true));
 
-        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_NE(nullptr, resolved);
         EXPECT_EQ("BAW123", resolved->callsign);
@@ -114,13 +111,15 @@ namespace UKControllerPluginTest::Handoff {
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsResolvedAirfieldHandoffIfNoMatchingSid)
     {
+        ON_CALL(flightplanSidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+            .WillByDefault(testing::Return(nullptr));
+
         this->callsigns.AddCallsign(ActiveCallsign("EGKK_DEL", "Testy McTest", *position1, false));
         this->callsigns.AddCallsign(ActiveCallsign("EGKK_GND", "Testy McTest", *position2, false));
 
         auto hierarchy2 = std::make_shared<ControllerPositionHierarchy>();
         hierarchy2->AddPosition(position2);
         handoffs.Add(std::make_shared<HandoffOrder>(2, hierarchy2));
-        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return(""));
 
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_NE(nullptr, resolved);
@@ -131,15 +130,12 @@ namespace UKControllerPluginTest::Handoff {
 
     TEST_F(DepartureHandoffResolverTest, ItResolvesToAirfieldHandoffIfSidResolvesToUnicom)
     {
-        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
-
         // For sake of argument, the SIDs handoff resolves to Unicom (as nobody online)
         this->callsigns.AddCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *position3, false));
 
         auto hierarchy2 = std::make_shared<ControllerPositionHierarchy>();
         hierarchy2->AddPosition(position3);
         handoffs.Add(std::make_shared<HandoffOrder>(2, hierarchy2));
-        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
 
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_NE(nullptr, resolved);

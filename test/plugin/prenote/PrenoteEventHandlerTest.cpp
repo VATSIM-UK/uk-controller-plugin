@@ -8,7 +8,6 @@
 #include "message/UserMessager.h"
 #include "euroscope/GeneralSettingsEntries.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
-#include "sid/SidCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -24,7 +23,6 @@ using UKControllerPlugin::Prenote::PrenoteEventHandler;
 using UKControllerPlugin::Prenote::PrenoteService;
 using UKControllerPlugin::Prenote::PublishedPrenoteCollection;
 using UKControllerPlugin::Prenote::PublishedPrenoteMapper;
-using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -34,7 +32,7 @@ namespace UKControllerPluginTest::Prenote {
     class PrenoteEventHandlerTest : public Test
     {
         public:
-        PrenoteEventHandlerTest() : mapper(prenotes, airfields, sids, flightRules)
+        PrenoteEventHandlerTest() : mapper(prenotes, airfields, sidMapper, flightRules)
         {
             this->airfieldOwnership = std::make_unique<AirfieldServiceProviderCollection>();
 
@@ -55,7 +53,7 @@ namespace UKControllerPluginTest::Prenote {
         NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
         NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
         AirfieldCollection airfields;
-        SidCollection sids;
+        testing::NiceMock<Sid::MockSidMapperInterface> sidMapper;
         FlightRuleCollection flightRules;
         PublishedPrenoteCollection prenotes;
         PublishedPrenoteMapper mapper;

@@ -49,6 +49,7 @@
 #include "sectorfile/RunwayCollection.h"
 #include "setting/SettingRepository.h"
 #include "sid/SidCollection.h"
+#include "sid/SidMapperInterface.h"
 #include "squawk/SquawkAssignment.h"
 #include "squawk/SquawkEventHandler.h"
 #include "squawk/SquawkGenerator.h"

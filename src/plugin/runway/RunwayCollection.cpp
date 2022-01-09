@@ -23,7 +23,7 @@ namespace UKControllerPlugin::Runway {
         return runways.count(id) == 1 ? runways.at(id) : nullptr;
     }
 
-    auto RunwayCollection::GetByAirfieldAndIdentifier(int airfieldId, const std::string& identifier)
+    auto RunwayCollection::GetByAirfieldAndIdentifier(int airfieldId, const std::string& identifier) const
         -> std::shared_ptr<class Runway>
     {
         auto runway = std::find_if(

@@ -14,7 +14,7 @@ namespace UKControllerPlugin::Runway {
         void Add(std::shared_ptr<class Runway> runway);
         [[nodiscard]] auto Count() const -> size_t;
         [[nodiscard]] auto GetById(int id) const -> std::shared_ptr<class Runway>;
-        [[nodiscard]] auto GetByAirfieldAndIdentifier(int airfieldId, const std::string& identifier)
+        [[nodiscard]] auto GetByAirfieldAndIdentifier(int airfieldId, const std::string& identifier) const
             -> std::shared_ptr<class Runway>;
 
         private:

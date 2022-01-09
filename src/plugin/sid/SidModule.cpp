@@ -1,3 +1,4 @@
+#include "FlightplanSidMapper.h"
 #include "SidCollection.h"
 #include "SidCollectionFactory.h"
 #include "SidModule.h"
@@ -11,5 +12,7 @@ namespace UKControllerPlugin::Sid {
     {
         nlohmann::json sidData = dependencyProvider.LoadDependency("DEPENDENCY_SIDS", nlohmann::json::array());
         container.sids = MakeSidCollection(sidData);
+        container.sidMapper =
+            std::make_unique<FlightplanSidMapper>(*container.airfields, *container.runwayCollection, *container.sids);
     }
 } // namespace UKControllerPlugin::Sid

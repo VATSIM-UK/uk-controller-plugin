@@ -45,7 +45,7 @@ namespace UKControllerPluginTest {
                   userCallsign("LON_S_CTR", "Test", controller, true),
                   notUserCallsign("LON_S_CTR", "Test", controller, false),
                   login(plugin, ControllerStatusEventHandlerCollection()),
-                  handler(sids, callsigns, owners, login, plugin)
+                  handler(sidMapper, callsigns, owners, login, plugin)
             {
             }
 
@@ -54,14 +54,16 @@ namespace UKControllerPluginTest {
                 // Pretend we've been logged in a while
                 login.SetLoginStatus(EuroScopePlugIn::CONNECTION_TYPE_DIRECT);
                 login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::minutes(15));
-                sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 0, 1));
-                sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "CLN3X", 5000, 0, 1));
+                sid1 = std::make_shared<StandardInstrumentDeparture>(1, 2, "ADMAG2X", 6000, 0, 1);
+                sid2 = std::make_shared<StandardInstrumentDeparture>(2, 3, "CLN3X", 5000, 0, 1);
 
                 this->mockFlightplanPointer = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
                 this->mockRadarTargetPointer = std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
                 ON_CALL(mockFlightPlan, GetCallsign()).WillByDefault(Return("BAW123"));
 
                 ON_CALL(*mockFlightplanPointer, GetCallsign()).WillByDefault(Return("BAW123"));
+                ON_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightPlan)))
+                    .WillByDefault(testing::Return(sid1));
             }
 
             void SetServiceProvision(bool isUser)
@@ -80,6 +82,9 @@ namespace UKControllerPluginTest {
             ControllerPosition controller;
             ActiveCallsign userCallsign;
             ActiveCallsign notUserCallsign;
+            NiceMock<Sid::MockSidMapperInterface> sidMapper;
+            std::shared_ptr<StandardInstrumentDeparture> sid1;
+            std::shared_ptr<StandardInstrumentDeparture> sid2;
             std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> mockFlightplanPointer;
             std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> mockRadarTargetPointer;
             NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightPlan;
@@ -88,7 +93,6 @@ namespace UKControllerPluginTest {
             Login login;
             ActiveCallsignCollection callsigns;
             AirfieldServiceProviderCollection owners;
-            SidCollection sids;
             InitialAltitudeEventHandler handler;
         };
 
@@ -314,6 +318,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfSidNotFound)
         {
+            EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightPlan)))
+                .Times(1)
+                .WillOnce(testing::Return(nullptr));
+
             callsigns.AddUserCallsign(userCallsign);
 
             this->SetServiceProvision(true);
@@ -330,9 +338,7 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(mockFlightPlan, IsSimulated()).Times(1).WillOnce(Return(false));
 
-            EXPECT_CALL(mockFlightPlan, GetSidName()).Times(1).WillOnce(Return("ADMAG1X"));
-
-            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(2).WillRepeatedly(Return("EGKK"));
+            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(1).WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(mockRadarTarget, GetGroundSpeed()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_SPEED));
 
@@ -341,6 +347,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfAlreadyAssignedOnSameSid)
         {
+            EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightPlan)))
+                .Times(1)
+                .WillRepeatedly(testing::Return(sid1));
+
             callsigns.AddUserCallsign(userCallsign);
 
             this->SetServiceProvision(true);
@@ -357,9 +367,9 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(mockFlightPlan, IsSimulated()).Times(1).WillOnce(Return(false));
 
-            EXPECT_CALL(mockFlightPlan, GetSidName()).Times(3).WillRepeatedly(Return("ADMAG2X"));
+            EXPECT_CALL(mockFlightPlan, GetSidName()).Times(2).WillRepeatedly(Return("ADMAG2X"));
 
-            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(3).WillRepeatedly(Return("EGKK"));
+            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(2).WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(mockFlightPlan, GetCallsign()).Times(5).WillRepeatedly(Return("BAW123"));
 
@@ -375,6 +385,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventAssignsIfSidFound)
         {
+            EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightPlan)))
+                .Times(1)
+                .WillOnce(testing::Return(sid1));
+
             callsigns.AddUserCallsign(userCallsign);
 
             this->SetServiceProvision(true);
@@ -391,42 +405,9 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(mockFlightPlan, IsSimulated()).Times(1).WillOnce(Return(false));
 
-            EXPECT_CALL(mockFlightPlan, GetSidName()).Times(2).WillOnce(Return("ADMAG2X"));
+            EXPECT_CALL(mockFlightPlan, GetSidName()).Times(1).WillOnce(Return("ADMAG2X"));
 
-            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(3).WillRepeatedly(Return("EGKK"));
-
-            EXPECT_CALL(mockFlightPlan, GetCallsign()).Times(3).WillRepeatedly(Return("BAW123"));
-
-            EXPECT_CALL(mockFlightPlan, GetCruiseLevel()).Times(1).WillOnce(Return(6000));
-
-            EXPECT_CALL(mockFlightPlan, SetClearedAltitude(6000)).Times(1);
-
-            EXPECT_CALL(mockRadarTarget, GetGroundSpeed()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_SPEED));
-
-            handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
-        }
-
-        TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventAcceptsDeprecatedSids)
-        {
-            callsigns.AddUserCallsign(userCallsign);
-
-            this->SetServiceProvision(true);
-
-            EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
-                .Times(2)
-                .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
-
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
-
-            EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(1).WillOnce(Return(false));
-
-            EXPECT_CALL(mockFlightPlan, IsTracked()).Times(1).WillOnce(Return(false));
-
-            EXPECT_CALL(mockFlightPlan, IsSimulated()).Times(1).WillOnce(Return(false));
-
-            EXPECT_CALL(mockFlightPlan, GetSidName()).Times(2).WillRepeatedly(Return("#ADMAG2X"));
-
-            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(3).WillRepeatedly(Return("EGKK"));
+            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(2).WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(mockFlightPlan, GetCallsign()).Times(3).WillRepeatedly(Return("BAW123"));
 
@@ -441,6 +422,11 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesAssignIfDifferentSid)
         {
+            EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightPlan)))
+                .Times(2)
+                .WillOnce(testing::Return(sid1))
+                .WillOnce(testing::Return(sid2));
+
             callsigns.AddUserCallsign(userCallsign);
 
             this->SetServiceProvision(true);
@@ -458,14 +444,12 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(mockFlightPlan, IsSimulated()).Times(2).WillRepeatedly(Return(false));
 
             EXPECT_CALL(mockFlightPlan, GetSidName())
-                .Times(5)
+                .Times(3)
                 .WillOnce(Return("ADMAG2X"))
-                .WillOnce(Return("ADMAG2X"))
-                .WillOnce(Return("CLN3X"))
                 .WillOnce(Return("CLN3X"))
                 .WillOnce(Return("CLN3X"));
 
-            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(6).WillRepeatedly(Return("EGKK"));
+            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(4).WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(mockFlightPlan, GetCallsign()).Times(7).WillRepeatedly(Return("BAW123"));
 
@@ -483,6 +467,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesAssignAfterDisconnect)
         {
+            EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightPlan)))
+                .Times(2)
+                .WillRepeatedly(testing::Return(sid1));
+
             callsigns.AddUserCallsign(userCallsign);
 
             this->SetServiceProvision(true);
@@ -499,9 +487,9 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(mockFlightPlan, IsSimulated()).Times(2).WillRepeatedly(Return(false));
 
-            EXPECT_CALL(mockFlightPlan, GetSidName()).Times(4).WillRepeatedly(Return("ADMAG2X"));
+            EXPECT_CALL(mockFlightPlan, GetSidName()).Times(2).WillRepeatedly(Return("ADMAG2X"));
 
-            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(6).WillRepeatedly(Return("EGKK"));
+            EXPECT_CALL(mockFlightPlan, GetOrigin()).Times(4).WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(mockFlightPlan, GetCallsign()).Times(7).WillRepeatedly(Return("BAW123"));
 
@@ -593,6 +581,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, RecycleDoesNothingIfNoSidFound)
         {
+            EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightPlan)))
+                .Times(1)
+                .WillOnce(testing::Return(nullptr));
+
             ON_CALL(this->mockFlightPlan, GetSidName()).WillByDefault(Return("ADMAG3X"));
 
             ON_CALL(this->mockFlightPlan, GetOrigin()).WillByDefault(Return("EGKK"));
@@ -608,6 +600,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, NewActiveCallsignAssignsIfUserCallsign)
         {
+            EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(*mockFlightplanPointer)))
+                .Times(1)
+                .WillOnce(testing::Return(sid1));
+            
             callsigns.AddUserCallsign(userCallsign);
 
             this->SetServiceProvision(true);
@@ -627,9 +623,9 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*mockFlightplanPointer, IsSimulated()).Times(1).WillOnce(Return(false));
 
-            EXPECT_CALL(*mockFlightplanPointer, GetSidName()).Times(2).WillRepeatedly(Return("ADMAG2X"));
+            EXPECT_CALL(*mockFlightplanPointer, GetSidName()).Times(1).WillRepeatedly(Return("ADMAG2X"));
 
-            EXPECT_CALL(*mockFlightplanPointer, GetOrigin()).Times(3).WillRepeatedly(Return("EGKK"));
+            EXPECT_CALL(*mockFlightplanPointer, GetOrigin()).Times(2).WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(*mockFlightplanPointer, GetCallsign()).Times(3).WillRepeatedly(Return("BAW123"));
 
@@ -658,6 +654,10 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, TimedEventAssignsIfUserCallsign)
         {
+            EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(*mockFlightplanPointer)))
+                .Times(1)
+                .WillOnce(testing::Return(sid1));
+            
             callsigns.AddUserCallsign(userCallsign);
 
             this->SetServiceProvision(true);
@@ -677,9 +677,9 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*mockFlightplanPointer, IsSimulated()).Times(1).WillOnce(Return(false));
 
-            EXPECT_CALL(*mockFlightplanPointer, GetSidName()).Times(2).WillRepeatedly(Return("ADMAG2X"));
+            EXPECT_CALL(*mockFlightplanPointer, GetSidName()).Times(1).WillRepeatedly(Return("ADMAG2X"));
 
-            EXPECT_CALL(*mockFlightplanPointer, GetOrigin()).Times(3).WillRepeatedly(Return("EGKK"));
+            EXPECT_CALL(*mockFlightplanPointer, GetOrigin()).Times(2).WillRepeatedly(Return("EGKK"));
 
             EXPECT_CALL(*mockFlightplanPointer, GetCallsign()).Times(3).WillRepeatedly(Return("BAW123"));
 

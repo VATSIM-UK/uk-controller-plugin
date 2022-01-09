@@ -773,7 +773,7 @@ set(src__sid
     "sid/SidModule.h"
     "sid/StandardInstrumentDeparture.cpp"
     "sid/StandardInstrumentDeparture.h"
-)
+        sid/FlightplanSidMapper.cpp sid/FlightplanSidMapper.h sid/SidMapperInterface.h)
 source_group("src\\sid" FILES ${src__sid})
 
 set(src__squawk

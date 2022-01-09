@@ -458,7 +458,7 @@ set(test__sid
     "sid/SidCollectionTest.cpp"
     "sid/SidModuleTest.cpp"
     "sid/StandardInstrumentDepartureTest.cpp"
-)
+        sid/FlightplanSidMapperTest.cpp mock/MockSidMapperInterface.h)
 source_group("test\\sid" FILES ${test__sid})
 
 set(test__squawk

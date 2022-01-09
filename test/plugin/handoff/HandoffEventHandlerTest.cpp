@@ -11,7 +11,6 @@
 #include "handoff/HandoffFrequencyUpdatedMessage.h"
 #include "handoff/HandoffOrder.h"
 #include "handoff/ResolvedHandoff.h"
-#include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 #include "tag/TagData.h"
 
@@ -32,7 +31,6 @@ using UKControllerPlugin::Handoff::HandoffEventHandler;
 using UKControllerPlugin::Handoff::HandoffFrequencyUpdatedMessage;
 using UKControllerPlugin::Handoff::HandoffOrder;
 using UKControllerPlugin::Handoff::ResolvedHandoff;
-using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -58,15 +56,12 @@ namespace UKControllerPluginTest::Handoff {
                   &euroscopeColourCode,
                   &tagColour,
                   &fontSize),
-              handoffMapper(handoffs, sids), airfieldMapper(handoffs, airfields),
+              handoffMapper(handoffs, sidMapper), airfieldMapper(handoffs, airfields),
               resolver(std::make_shared<DepartureHandoffResolver>(handoffMapper, airfieldMapper, activeCallsigns)),
               cache(std::make_shared<HandoffCache>()), handler(resolver, cache, mockIntegration)
         {
             ON_CALL(this->mockFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
             ON_CALL(this->mockFlightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->mockFlightplan, GetSidName()).WillByDefault(Return("ADMAG2X"));
 
             this->hierarchy = std::make_shared<ControllerPositionHierarchy>();
             this->hierarchy->AddPosition(this->position1);
@@ -74,11 +69,16 @@ namespace UKControllerPluginTest::Handoff {
 
             this->hierarchy2 = std::make_shared<ControllerPositionHierarchy>();
             this->hierarchy2->AddPosition(this->position1);
+
+            ON_CALL(sidMapper, MapFlightplanToSid).WillByDefault(testing::Return(nullptr));
         }
 
         void AddHandoffOrders()
         {
-            this->sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 1000, 300, 1));
+            ON_CALL(sidMapper, MapFlightplanToSid)
+                .WillByDefault(
+                    testing::Return(std::make_shared<StandardInstrumentDeparture>(1, 2, "ADMAG2X", 1000, 300, 1)));
+
             this->handoffs.Add(std::make_shared<HandoffOrder>(1, this->hierarchy));
         }
 
@@ -86,6 +86,7 @@ namespace UKControllerPluginTest::Handoff {
         COLORREF tagColour = RGB(255, 255, 255);
         int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
         char itemString[16] = "Foooooo";
+        NiceMock<Sid::MockSidMapperInterface> sidMapper;
         std::shared_ptr<ControllerPosition> position1;
         std::shared_ptr<ControllerPosition> position2;
         std::shared_ptr<ControllerPositionHierarchy> hierarchy;
@@ -95,7 +96,6 @@ namespace UKControllerPluginTest::Handoff {
         NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
         AirfieldCollection airfields;
         ActiveCallsignCollection activeCallsigns;
-        SidCollection sids;
         TagData tagData;
         HandoffCollection handoffs;
         FlightplanSidHandoffMapper handoffMapper;

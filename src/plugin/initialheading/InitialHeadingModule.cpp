@@ -27,7 +27,7 @@ namespace UKControllerPlugin::InitialHeading {
     void BootstrapPlugin(PersistenceContainer& persistence)
     {
         std::shared_ptr<InitialHeadingEventHandler> handler(new InitialHeadingEventHandler(
-            *persistence.sids,
+            *persistence.sidMapper,
             *persistence.activeCallsigns,
             *persistence.airfieldOwnership,
             *persistence.login,

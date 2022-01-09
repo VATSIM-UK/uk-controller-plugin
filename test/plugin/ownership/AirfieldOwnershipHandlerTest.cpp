@@ -6,11 +6,8 @@
 #include "controller/ControllerPositionHierarchy.h"
 #include "ownership/AirfieldOwnershipManager.h"
 #include "flightplan/StoredFlightplanCollection.h"
-#include "initialaltitude/InitialAltitudeEventHandler.h"
 #include "message/UserMessager.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
-#include "sid/SidCollection.h"
-#include "sid/StandardInstrumentDeparture.h"
 #include "login/Login.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceProvision.h"
@@ -26,13 +23,10 @@ using UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection;
 using UKControllerPlugin::Controller::Login;
 using UKControllerPlugin::Flightplan::StoredFlightplan;
 using UKControllerPlugin::Flightplan::StoredFlightplanCollection;
-using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Ownership::AirfieldOwnershipHandler;
 using UKControllerPlugin::Ownership::AirfieldOwnershipManager;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
-using UKControllerPlugin::Sid::SidCollection;
-using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
@@ -51,8 +45,6 @@ namespace UKControllerPluginTest::Ownership {
         ControllerAirfieldOwnershipHandlerTest()
             : serviceProviders(std::make_shared<AirfieldServiceProviderCollection>()),
               ownership(serviceProviders, this->airfieldCollection, this->activeCallsigns),
-              initialAltitudes(new InitialAltitudeEventHandler(
-                  this->sids, this->activeCallsigns, *serviceProviders, this->login, this->plugin)),
               login(plugin, ControllerStatusEventHandlerCollection()), userMessager(this->plugin),
               handler(this->ownership, this->userMessager)
         {
@@ -91,7 +83,6 @@ namespace UKControllerPluginTest::Ownership {
             this->ownership.RefreshOwner("EGKK");
 
             // Create a dummy initial altitude
-            sids.AddSid(std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 6000, 0, 1));
             this->login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::minutes(15));
 
             // Add airfields to the collection
@@ -126,8 +117,6 @@ namespace UKControllerPluginTest::Ownership {
         std::shared_ptr<AirfieldServiceProviderCollection> serviceProviders;
         AirfieldOwnershipManager ownership;
         StoredFlightplanCollection flightplans;
-        SidCollection sids;
-        std::shared_ptr<InitialAltitudeEventHandler> initialAltitudes;
         NiceMock<MockEuroscopePluginLoopbackInterface> plugin;
         Login login;
         UserMessager userMessager;

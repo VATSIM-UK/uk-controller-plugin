@@ -112,6 +112,7 @@ namespace UKControllerPlugin {
     } // namespace Setting
     namespace Sid {
         class SidCollection;
+        class SidMapperInterface;
     } // namespace Sid
     namespace Squawk {
         class SquawkAssignment;
@@ -209,6 +210,7 @@ namespace UKControllerPlugin::Bootstrap {
 
         // Large collections that we don't want to go onto the stack
         std::unique_ptr<Sid::SidCollection> sids;
+        std::unique_ptr<Sid::SidMapperInterface> sidMapper;
         std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
         std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
