@@ -743,7 +743,10 @@ set(src__releases
 source_group("src\\releases" FILES ${src__releases})
 
 set(src__runway
-        runway/Runway.cpp runway/Runway.h runway/RunwayCollection.cpp runway/RunwayCollection.h runway/RunwayCollectionFactory.cpp runway/RunwayCollectionFactory.h runway/RunwayModule.cpp runway/RunwayModule.h)
+        runway/Runway.cpp runway/Runway.h
+        runway/RunwayCollection.cpp runway/RunwayCollection.h
+        runway/RunwayCollectionFactory.cpp runway/RunwayCollectionFactory.h
+        runway/RunwayModule.cpp runway/RunwayModule.h)
 source_group("src\\runway" FILES ${src__runway})
 
 set(src__sectorfile
@@ -773,7 +776,8 @@ set(src__sid
     "sid/SidModule.h"
     "sid/StandardInstrumentDeparture.cpp"
     "sid/StandardInstrumentDeparture.h"
-        sid/FlightplanSidMapper.cpp sid/FlightplanSidMapper.h sid/SidMapperInterface.h)
+    sid/FlightplanSidMapper.cpp sid/FlightplanSidMapper.h
+    sid/SidMapperInterface.h)
 source_group("src\\sid" FILES ${src__sid})
 
 set(src__squawk

@@ -437,7 +437,10 @@ set(test__releases
 source_group("test\\releases" FILES ${test__releases})
 
 set(test__runway
-        runway/RunwayTest.cpp runway/RunwayCollectionTest.cpp runway/RunwayCollectionFactoryTest.cpp runway/RunwayModuleTest.cpp)
+    runway/RunwayTest.cpp
+    runway/RunwayCollectionTest.cpp
+    runway/RunwayCollectionFactoryTest.cpp
+    runway/RunwayModuleTest.cpp)
 source_group("test\\runway" FILES ${test__runway})
 
 set(test__sectorfile
@@ -458,7 +461,8 @@ set(test__sid
     "sid/SidCollectionTest.cpp"
     "sid/SidModuleTest.cpp"
     "sid/StandardInstrumentDepartureTest.cpp"
-        sid/FlightplanSidMapperTest.cpp mock/MockSidMapperInterface.h)
+    sid/FlightplanSidMapperTest.cpp
+    mock/MockSidMapperInterface.h)
 source_group("test\\sid" FILES ${test__sid})
 
 set(test__squawk
