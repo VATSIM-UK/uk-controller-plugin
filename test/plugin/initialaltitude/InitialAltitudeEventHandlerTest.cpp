@@ -603,7 +603,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(*mockFlightplanPointer)))
                 .Times(1)
                 .WillOnce(testing::Return(sid1));
-            
+
             callsigns.AddUserCallsign(userCallsign);
 
             this->SetServiceProvision(true);
@@ -657,7 +657,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(*mockFlightplanPointer)))
                 .Times(1)
                 .WillOnce(testing::Return(sid1));
-            
+
             callsigns.AddUserCallsign(userCallsign);
 
             this->SetServiceProvision(true);

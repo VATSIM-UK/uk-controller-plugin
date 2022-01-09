@@ -12,16 +12,14 @@ namespace UKControllerPlugin::Sid {
     {
         return this->sids.size();
     }
-    
+
     auto SidCollection::GetById(int id) const -> std::shared_ptr<StandardInstrumentDeparture>
     {
         auto sid = std::find_if(
             this->sids.cbegin(),
             this->sids.cend(),
-            [&id](const std::shared_ptr<StandardInstrumentDeparture>& sid) -> bool {
-                return sid->Id() == id;
-            });
-        
+            [&id](const std::shared_ptr<StandardInstrumentDeparture>& sid) -> bool { return sid->Id() == id; });
+
         return sid == this->sids.cend() ? nullptr : *sid;
     }
 
