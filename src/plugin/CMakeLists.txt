@@ -321,7 +321,7 @@ set(src__hold
     "hold/PublishedHoldCollection.h"
     "hold/PublishedHoldCollectionFactory.cpp"
     "hold/PublishedHoldCollectionFactory.h"
-)
+        hold/AssignHoldCommand.cpp hold/AssignHoldCommand.h)
 source_group("src\\hold" FILES ${src__hold})
 
 set(src__initialaltitude

@@ -182,6 +182,12 @@ namespace UKControllerPluginTest::Hold {
         EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_HOLD_PARAMS));
     }
 
+    TEST_F(HoldModuleTest, ItRegistersAssignHoldCommand)
+    {
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
+        EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
+    }
+
     TEST_F(HoldModuleTest, ItLoadsHoldData)
     {
         BootstrapPlugin(this->mockDependencyProvider, this->container);

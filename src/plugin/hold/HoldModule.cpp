@@ -1,3 +1,4 @@
+#include "AssignHoldCommand.h"
 #include "HoldConfigurationDialog.h"
 #include "HoldDisplayConfigurationDialog.h"
 #include "HoldDisplayFactory.h"
@@ -125,6 +126,10 @@ namespace UKControllerPlugin::Hold {
             *container.navaids,
             *container.publishedHolds,
             *container.dialogManager);
+
+        // Command to assign holds
+        container.commandHandlers->RegisterHandler(
+            std::make_shared<AssignHoldCommand>(*container.holdManager, *container.plugin));
 
         // Start a task to load all the already assigned holds
         container.taskRunner->QueueAsynchronousTask([&container]() {
