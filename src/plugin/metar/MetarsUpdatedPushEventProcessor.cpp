@@ -16,7 +16,12 @@ namespace UKControllerPlugin::Metar {
 
     void MetarsUpdatedPushEventProcessor::ProcessPushEvent(const Push::PushEvent& message)
     {
-        this->ProcessMetarsUpdatedJson(message.data);
+        if (!message.data.is_object() || !message.data.contains("metars")) {
+            LogError("Invalid METAR push event message");
+            return;
+        }
+
+        this->ProcessMetarsUpdatedJson(message.data.at("metars"));
     }
 
     auto MetarsUpdatedPushEventProcessor::GetPushEventSubscriptions() const -> std::set<Push::PushEventSubscription>

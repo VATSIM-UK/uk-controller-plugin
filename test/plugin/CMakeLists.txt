@@ -407,7 +407,7 @@ set(test__push
     "push/PushEventProtocolHandlerTest.cpp"
     "push/PushEventProxyConnetionTest.cpp"
     "push/PushEventProxyHandlerTest.cpp"
-)
+    push/ProxyPushDataSyncTest.cpp)
 source_group("test\\push" FILES ${test__push})
 
 set(test__radarscreen

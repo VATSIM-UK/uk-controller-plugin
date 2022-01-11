@@ -59,7 +59,7 @@ namespace UKControllerPluginTest::Metar {
         EXPECT_EQ(expected, processor.GetPushEventSubscriptions());
     }
 
-    TEST_F(MetarsUpdatedPushEventProcessorTest, ItHandlesNonArrayData)
+    TEST_F(MetarsUpdatedPushEventProcessorTest, ItHandlesNonObjectData)
     {
         nlohmann::json data = {
             {"airfield_id", 1},
@@ -67,6 +67,19 @@ namespace UKControllerPluginTest::Metar {
             {"parsed",
              {{"qnh", 1013}, {"qfe", 1007}, {"qnh_inhg", 29.92}, {"qfe_inhg", 28.21}, {"pressure_format", "hpa"}}}};
         processor.ProcessPushEvent(MakePushEvent(data));
+
+        EXPECT_EQ(0, collection.Count());
+    }
+
+    TEST_F(MetarsUpdatedPushEventProcessorTest, ItHandlesObjectWithMissingMetarsKey)
+    {
+        nlohmann::json data = {
+            {"airfield_id", 1},
+            {"raw", "foo"},
+            {"parsed",
+             {{"qnh", 1013}, {"qfe", 1007}, {"qnh_inhg", 29.92}, {"qfe_inhg", 28.21}, {"pressure_format", "hpa"}}}};
+
+        processor.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"not_metars", data}})));
 
         EXPECT_EQ(0, collection.Count());
     }
@@ -85,7 +98,7 @@ namespace UKControllerPluginTest::Metar {
              {"parsed",
               {{"qnh", 1013}, {"qfe", 1007}, {"qnh_inhg", 29.92}, {"qfe_inhg", 28.21}, {"pressure_format", "hpa"}}}});
 
-        processor.ProcessPushEvent(MakePushEvent(data));
+        processor.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"metars", data}})));
 
         EXPECT_EQ(2, collection.Count());
         EXPECT_NE(nullptr, collection.GetForAirfield("EGKK"));
