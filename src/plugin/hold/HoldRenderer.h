@@ -28,6 +28,10 @@ namespace UKControllerPlugin::Hold {
             const std::string& objectDescription,
             POINT mousePos,
             RECT itemArea) override;
+        void RightClick(
+            int objectId,
+            const std::string& objectDescription,
+            UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
         void Move(RECT position, std::string objectDescription) override;
         void Render(
             UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,

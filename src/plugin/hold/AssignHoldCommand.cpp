@@ -20,6 +20,7 @@ namespace UKControllerPlugin::Hold {
                                         : plugin.GetSelectedFlightplan();
 
             if (!flightplan) {
+                LogInfo("Tried to remove aircraft from hold but flightplan not found");
                 return false;
             }
 
@@ -34,6 +35,7 @@ namespace UKControllerPlugin::Hold {
                                         : plugin.GetSelectedFlightplan();
 
             if (!flightplan) {
+                LogInfo("Tried to assign aircraft to hold but flightplan not found");
                 return false;
             }
 

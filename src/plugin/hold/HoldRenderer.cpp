@@ -86,6 +86,46 @@ namespace UKControllerPlugin::Hold {
         (*display)->ButtonClicked(GetButtonNameFromObjectDescription(objectDescription));
     }
 
+    /**
+     * Right-click handles adding a flightplan from a list.
+     */
+    void HoldRenderer::RightClick(
+        int objectId,
+        const std::string& objectDescription,
+        UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        std::string holdName = GetHoldNameFromObjectDescription(objectDescription);
+        auto display = std::find_if(
+            this->displays->cbegin(),
+            this->displays->cend(),
+            [&holdName](const std::unique_ptr<HoldDisplay>& hold) -> bool {
+                return hold->navaid.identifier == holdName;
+            });
+
+        if (display == this->displays->cend()) {
+            LogWarning("Tried to interact with invalid hold display");
+            return;
+        }
+
+        if (objectDescription.find("cleared") != std::string::npos ||
+            objectDescription.find("callsign") != std::string::npos) {
+            return;
+        }
+        
+        if (GetButtonNameFromObjectDescription(objectDescription) != "add") {
+            return;
+        }
+        
+        // Create TrackedAircraftListInterface  - has a public method called trigger? Maybe?
+        // Create generic "tracked aircraft list" class. Has a pure virtual method to be called when aircraft is
+        // selected.
+        // Create HoldAircraftSelector class that overrides above class and does the hold assignment.
+        // Actually, add an instance of the selector class to each display. The selector class has a property that
+        // sets the hold its for.
+        // Add a rightclick method for the display. Call selector there.
+        // Bingpot.
+    }
+
     /*
         Move a given hold display
     */
