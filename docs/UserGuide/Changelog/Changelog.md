@@ -1,5 +1,14 @@
 # UK Controller Plugin Changelog
 
+# [4.0.0-beta.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.3...4.0.0-beta.4) (2022-01-11)
+
+
+### Bug Fixes
+
+* **metars:** metars not updating when they should ([#396](https://github.com/VATSIM-UK/uk-controller-plugin/issues/396)) ([4048974](https://github.com/VATSIM-UK/uk-controller-plugin/commit/40489741a88a02ebaf34707cdebf85efd038c426)), closes [#395](https://github.com/VATSIM-UK/uk-controller-plugin/issues/395)
+* **push-events:** data not synchronising on second instance startup ([#400](https://github.com/VATSIM-UK/uk-controller-plugin/issues/400)) ([7953627](https://github.com/VATSIM-UK/uk-controller-plugin/commit/7953627c147902e7cf3d38e475b81e075b44100c)), closes [#399](https://github.com/VATSIM-UK/uk-controller-plugin/issues/399)
+* **push-events:** Push events not proxying to second EuroScope instance ([#398](https://github.com/VATSIM-UK/uk-controller-plugin/issues/398)) ([e1920fd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e1920fdf2421932b216df43445c713cfc8cc33f9)), closes [#397](https://github.com/VATSIM-UK/uk-controller-plugin/issues/397)
+
 # [4.0.0-beta.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.2...4.0.0-beta.3) (2022-01-08)
 
 
