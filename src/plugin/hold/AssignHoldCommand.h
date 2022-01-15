@@ -20,7 +20,7 @@ namespace UKControllerPlugin::Hold {
         private:
         // The hold manager
         HoldManager& holdManager;
-        
+
         // The plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 

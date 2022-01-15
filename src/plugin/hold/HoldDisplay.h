@@ -162,7 +162,7 @@ namespace UKControllerPlugin {
 
             // Has all the published holds
             const PublishedHoldCollection& publishedHoldCollection;
-            
+
             // For selecting aircraft to add to the hold
             std::shared_ptr<Aircraft::CallsignSelectionListInterface> addAircraftSelector;
 

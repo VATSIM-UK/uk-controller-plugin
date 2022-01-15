@@ -17,8 +17,7 @@ namespace UKControllerPlugin::Aircraft {
         CallsignSelectionList(
             std::shared_ptr<CallsignSelectionProviderInterface> callsignProvider,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
-            int callbackFunctionId
-        );
+            int callbackFunctionId);
         ~CallsignSelectionList() = default;
         void TriggerList(const POINT& location) override;
         void CallsignSelected(const std::string& callsign);
@@ -29,7 +28,7 @@ namespace UKControllerPlugin::Aircraft {
 
         // The plugin for triggering lists
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
-        
+
         // The callback function
         int callbackFunctionId;
     };

@@ -106,7 +106,7 @@ namespace UKControllerPlugin {
         {
             radarScreen.ToggleTemporaryAltitudePopupList(callsign, mousePos, area);
         }
-        
+
         void HoldDisplay::ButtonRightClicked(const std::string& button)
         {
             if (button == "add") {

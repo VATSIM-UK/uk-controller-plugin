@@ -21,8 +21,9 @@ namespace UKControllerPlugin::Hold {
     {
         public:
         AddToHoldCallsignProvider(
-            const Navaids::Navaid& navaid, HoldManager& holdManager, Euroscope::EuroscopePluginLoopbackInterface&
-                                                                        plugin);
+            const Navaids::Navaid& navaid,
+            HoldManager& holdManager,
+            Euroscope::EuroscopePluginLoopbackInterface& plugin);
         auto GetCallsigns() -> std::set<std::string> override;
         void CallsignSelected(const std::string& callsign) override;
 
