@@ -21,6 +21,7 @@
 #include "../mock/MockActiveCallsignEventHandler.h"
 #include "../mock/MockAirfieldGroup.h"
 #include "../mock/MockAsrEventHandlerInterface.h"
+#include "../mock/MockCallsignSelectionProvider.h"
 #include "../mock/MockConfigurableDisplay.h"
 #include "../mock/MockConnection.h"
 #include "../mock/MockControllerStatusEventHandlerInterface.h"

@@ -9,6 +9,10 @@ set(resource
 )
 source_group("resource" FILES ${resource})
 
+set(src__aircraft
+        aircraft/CallsignSelectionListInterface.h aircraft/CallsignSelectionProviderInterface.h aircraft/CallsignSelectionList.cpp aircraft/CallsignSelectionList.h aircraft/CallsignSelectionListFactory.cpp aircraft/CallsignSelectionListFactory.h)
+source_group("src\\aircraft" FILES ${src__aircraft})
+
 set(src__airfield
     "airfield/AirfieldCollection.cpp"
     "airfield/AirfieldCollection.h"
@@ -864,6 +868,7 @@ source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES
     ${resource}
+    ${src__aircraft}
     ${src__airfield}
     ${src__api}
     ${src__bootstrap}
@@ -912,8 +917,7 @@ set(ALL_FILES
     ${src__time}
     ${src__timedevent}
     ${src__timer}
-    ${src__wake}
-        missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h)
+    ${src__wake})
 
 ################################################################################
 # Target
