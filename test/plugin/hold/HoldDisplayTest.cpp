@@ -1,4 +1,6 @@
 #include "euroscope/UserSetting.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldDisplay.h"
 #include "navaids/Navaid.h"
 #include "hold/HoldManager.h"
@@ -8,7 +10,6 @@
 #include "hold/CompareHoldingAircraft.h"
 #include "hold/HoldingData.h"
 #include "hold/PublishedHoldCollection.h"
-#include "hold/DeemedSeparatedHold.h"
 
 using testing::_;
 using testing::NiceMock;

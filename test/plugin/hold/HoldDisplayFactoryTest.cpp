@@ -1,5 +1,7 @@
 #include "aircraft/CallsignSelectionListFactory.h"
 #include "dialog/DialogManager.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldManager.h"

@@ -23,6 +23,8 @@
 #include "graphics/GdiGraphicsWrapper.h"
 #include "graphics/GdiplusBrushes.h"
 #include "historytrail/HistoryTrailRepository.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldSelectionMenu.h"

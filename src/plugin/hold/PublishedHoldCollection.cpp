@@ -1,3 +1,5 @@
+#include "AbstractHoldLevelRestriction.h"
+#include "DeemedSeparatedHold.h"
 #include "PublishedHoldCollection.h"
 
 namespace UKControllerPlugin {

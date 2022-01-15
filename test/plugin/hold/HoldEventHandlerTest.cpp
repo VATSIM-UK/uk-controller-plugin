@@ -1,3 +1,6 @@
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
+#include "hold/HoldingAircraft.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldEventHandler.h"
 #include "plugin/PopupMenuItem.h"

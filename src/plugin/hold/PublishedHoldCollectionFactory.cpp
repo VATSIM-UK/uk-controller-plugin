@@ -1,6 +1,10 @@
-#include "PublishedHoldCollectionFactory.h"
+#include "AbstractHoldLevelRestriction.h"
+#include "DeemedSeparatedHold.h"
 #include "HoldingDataSerializer.h"
+#include "HoldManager.h"
 #include "PublishedHoldCollection.h"
+#include "PublishedHoldCollectionFactory.h"
+#include "bootstrap/PersistenceContainer.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 

@@ -1,3 +1,5 @@
+#include "HoldingAircraft.h"
+#include "HoldDisplay.h"
 #include "HoldDisplayManager.h"
 #include "HoldManager.h"
 #include "HoldSelectionMenu.h"

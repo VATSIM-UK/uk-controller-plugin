@@ -1,5 +1,7 @@
 #include "aircraft/CallsignSelectionListFactory.h"
 #include "euroscope/UserSetting.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldRenderer.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"

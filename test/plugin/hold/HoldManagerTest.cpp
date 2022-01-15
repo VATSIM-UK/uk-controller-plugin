@@ -1,3 +1,4 @@
+#include "hold/HoldingAircraft.h"
 #include "hold/HoldManager.h"
 #include "api/ApiException.h"
 

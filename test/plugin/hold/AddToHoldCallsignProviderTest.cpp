@@ -1,4 +1,5 @@
 #include "hold/AddToHoldCallsignProvider.h"
+#include "hold/HoldingAircraft.h"
 #include "hold/HoldManager.h"
 #include "navaids/Navaid.h"
 

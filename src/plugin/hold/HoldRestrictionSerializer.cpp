@@ -1,9 +1,9 @@
-#include "pch/pch.h"
-#include "hold/HoldRestrictionSerializer.h"
-#include "hold/BlockedHoldLevelRestrictionSerializer.h"
-#include "hold/BlockedHoldLevelRestriction.h"
-#include "hold/MinStackHoldLevelRestriction.h"
-#include "hold/MinStackHoldLevelRestrictionSerializer.h"
+#include "HoldRestrictionSerializer.h"
+#include "BlockedHoldLevelRestrictionSerializer.h"
+#include "BlockedHoldLevelRestriction.h"
+#include "MinStackHoldLevelRestriction.h"
+#include "MinStackHoldLevelRestrictionSerializer.h"
+#include "bootstrap/PersistenceContainer.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
@@ -15,10 +15,10 @@ namespace UKControllerPlugin {
         const std::string minimumLevelRestriction = "minimum-level";
 
         void hold_restriction_from_json(
-            const nlohmann::json & json,
-            std::set<std::unique_ptr<AbstractHoldLevelRestriction>> & restrictions,
-            const PersistenceContainer & container
-        ) {
+            const nlohmann::json& json,
+            std::set<std::unique_ptr<AbstractHoldLevelRestriction>>& restrictions,
+            const PersistenceContainer& container)
+        {
             for (nlohmann::json::const_iterator it = json.cbegin(); it != json.cend(); ++it) {
                 if (!ValidRestrictionData(*it)) {
                     continue;
@@ -26,7 +26,7 @@ namespace UKControllerPlugin {
 
                 std::unique_ptr<AbstractHoldLevelRestriction> restriction;
                 if (it->at("type") == levelBlockRestriction) {
-                   restriction = it->get<std::unique_ptr<BlockedHoldLevelRestriction>>();
+                    restriction = it->get<std::unique_ptr<BlockedHoldLevelRestriction>>();
                 }
 
                 // Not yet implemented
@@ -43,11 +43,10 @@ namespace UKControllerPlugin {
             }
         }
 
-        bool ValidRestrictionData(const nlohmann::json & json)
+        bool ValidRestrictionData(const nlohmann::json& json)
         {
-            return json.find("type") != json.cend() &&
-                json.at("type").is_string() &&
-                (json.at("type") == levelBlockRestriction || json.at("type") == minimumLevelRestriction);
+            return json.find("type") != json.cend() && json.at("type").is_string() &&
+                   (json.at("type") == levelBlockRestriction || json.at("type") == minimumLevelRestriction);
         }
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

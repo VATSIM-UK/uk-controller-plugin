@@ -1,4 +1,5 @@
-#include "pch/pch.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/PublishedHoldCollectionFactory.h"
 #include "hold/PublishedHoldCollection.h"
 #include "hold/HoldingData.h"
