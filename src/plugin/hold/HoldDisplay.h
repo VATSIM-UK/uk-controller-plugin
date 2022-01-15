@@ -2,6 +2,9 @@
 #include "hold/CompareHoldingAircraft.h"
 
 namespace UKControllerPlugin {
+    namespace Aircraft {
+        class CallsignSelectionListInterface;
+    } // namespace Aircraft
     namespace Dialog {
         class DialogManager;
     } // namespace Dialog
@@ -35,8 +38,10 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Hold::HoldManager& holdManager,
                 const Navaids::Navaid& navaid,
                 const PublishedHoldCollection& publishedHoldCollection,
-                const Dialog::DialogManager& dialogManager);
+                const Dialog::DialogManager& dialogManager,
+                std::shared_ptr<Aircraft::CallsignSelectionListInterface> addAircraftSelector);
             void ButtonClicked(std::string button);
+            void ButtonRightClicked(const std::string& button, const POINT& location);
             void CallsignClicked(
                 std::string callsign,
                 UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
@@ -157,6 +162,9 @@ namespace UKControllerPlugin {
 
             // Has all the published holds
             const PublishedHoldCollection& publishedHoldCollection;
+            
+            // For selecting aircraft to add to the hold
+            std::shared_ptr<Aircraft::CallsignSelectionListInterface> addAircraftSelector;
 
             // Brushes
             const Gdiplus::SolidBrush titleBarTextBrush;

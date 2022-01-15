@@ -4,9 +4,10 @@
 #include "HoldModule.h"
 #include "HoldingData.h"
 #include "PublishedHoldCollection.h"
+#include "aircraft/CallsignSelectionListInterface.h"
 #include "dialog/DialogManager.h"
-#include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
@@ -29,14 +30,15 @@ namespace UKControllerPlugin {
             HoldManager& holdManager,
             const Navaids::Navaid& navaid,
             const PublishedHoldCollection& publishedHoldCollection,
-            const DialogManager& dialogManager)
+            const DialogManager& dialogManager,
+            std::shared_ptr<Aircraft::CallsignSelectionListInterface> addAircraftSelector)
             : navaid(navaid), publishedHolds(publishedHoldCollection.GetForFix(navaid.identifier)),
               holdManager(holdManager), plugin(plugin), dialogManager(dialogManager),
-              publishedHoldCollection(publishedHoldCollection), titleBarTextBrush(Gdiplus::Color(227, 227, 227)),
-              titleBarBrush(Gdiplus::Color(197, 129, 214)), dataBrush(Gdiplus::Color(7, 237, 7)),
-              clearedLevelBrush(Gdiplus::Color(246, 181, 4)), blockedLevelBrush(Gdiplus::Color(123, 125, 123)),
-              borderPen(Gdiplus::Color(215, 215, 215), 1.5f), sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f),
-              verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f),
+              publishedHoldCollection(publishedHoldCollection), addAircraftSelector(addAircraftSelector),
+              titleBarTextBrush(Gdiplus::Color(227, 227, 227)), titleBarBrush(Gdiplus::Color(197, 129, 214)),
+              dataBrush(Gdiplus::Color(7, 237, 7)), clearedLevelBrush(Gdiplus::Color(246, 181, 4)),
+              blockedLevelBrush(Gdiplus::Color(123, 125, 123)), borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
+              sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f), verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f),
               verticalSpeedDescentPen(Gdiplus::Color(7, 237, 7), 2.5f), exitButtonBrush(Gdiplus::Color(0, 0, 0)),
               backgroundBrush(Gdiplus::Color(58, 57, 58)), fontFamily(L"EuroScope"),
               font(&fontFamily, 12, Gdiplus::FontStyleBold, Gdiplus::UnitPixel),
@@ -103,6 +105,13 @@ namespace UKControllerPlugin {
             std::string callsign, EuroscopeRadarLoopbackInterface& radarScreen, POINT mousePos, RECT area)
         {
             radarScreen.ToggleTemporaryAltitudePopupList(callsign, mousePos, area);
+        }
+        
+        void HoldDisplay::ButtonRightClicked(const std::string& button, const POINT& location)
+        {
+            if (button == "add") {
+                addAircraftSelector->TriggerList(location);
+            }
         }
 
         /*
