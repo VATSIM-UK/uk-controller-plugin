@@ -165,7 +165,7 @@ set(test__hold
     "hold/MinStackHoldLevelRestrictionTest.cpp"
     "hold/PublishedHoldCollectionFactoryTest.cpp"
     "hold/PublishedHoldCollectionTest.cpp"
-        hold/AssignHoldCommandTest.cpp)
+        hold/AssignHoldCommandTest.cpp hold/AddToHoldCallsignProviderTest.cpp)
 source_group("test\\hold" FILES ${test__hold})
 
 set(test__initialaltitude
