@@ -4,6 +4,9 @@
 namespace UKControllerPlugin {
     class UKPlugin;
 
+    namespace Aircraft {
+        class CallsignSelectionListFactory;
+    } // namespace Aircraft
     namespace Airfield {
         class AirfieldCollection;
     } // namespace Airfield
@@ -220,5 +223,8 @@ namespace UKControllerPlugin::Bootstrap {
 
         // Push events
         std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;
+
+        // Some factories
+        std::unique_ptr<Aircraft::CallsignSelectionListFactory> callsignSelectionListFactory;
     };
 } // namespace UKControllerPlugin::Bootstrap

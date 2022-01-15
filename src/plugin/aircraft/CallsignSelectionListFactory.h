@@ -12,10 +12,21 @@ namespace UKControllerPlugin {
 namespace UKControllerPlugin::Aircraft {
     class CallsignSelectionProviderInterface;
     class CallsignSelectionList;
-
-    [[nodiscard]] auto Create(
-        std::shared_ptr<CallsignSelectionProviderInterface> provider,
-        Plugin::FunctionCallEventHandler& functionHandler,
-        Euroscope::EuroscopePluginLoopbackInterface& plugin,
-        const std::string& description) -> std::shared_ptr<CallsignSelectionList>;
+    
+    class CallsignSelectionListFactory
+    {
+        public:
+        CallsignSelectionListFactory(Plugin::FunctionCallEventHandler& functionHandler, Euroscope::EuroscopePluginLoopbackInterface& plugin);
+        [[nodiscard]] auto Create(
+            std::shared_ptr<CallsignSelectionProviderInterface> provider,
+            const std::string& description) -> std::shared_ptr<CallsignSelectionList>;
+        
+        private:
+        
+        // For registering the callback function
+        Plugin::FunctionCallEventHandler& functionHandler;
+        
+        // To pass to the list
+        Euroscope::EuroscopePluginLoopbackInterface& plugin;
+    };
 } // namespace UKControllerPlugin::Aircraft

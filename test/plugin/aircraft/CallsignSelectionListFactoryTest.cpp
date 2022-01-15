@@ -1,10 +1,10 @@
 #include "aircraft/CallsignSelectionList.h"
 #include "aircraft/CallsignSelectionListFactory.h"
-#include "plugin/PopupMenuItem.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Aircraft::CallsignSelectionList;
-using UKControllerPlugin::Aircraft::Create;
+using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 
@@ -14,38 +14,37 @@ namespace UKControllerPluginTest::Aircraft {
         public:
         CallsignSelectionListFactoryTest()
             : callsignProvider(std::make_shared<testing::NiceMock<Aircraft::MockCallsignSelectionProvider>>()),
-              list(callsignProvider, plugin, 123)
+              factory(functionHandler, plugin)
         {
         }
 
         FunctionCallEventHandler functionHandler;
         std::shared_ptr<testing::NiceMock<Aircraft::MockCallsignSelectionProvider>> callsignProvider;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
-        CallsignSelectionList list;
+        CallsignSelectionListFactory factory;
     };
 
     TEST_F(CallsignSelectionListFactoryTest, ItRegistersWithFunctionHandler)
     {
-        static_cast<void>(Create(callsignProvider, functionHandler, plugin, "Some Function"));
+        static_cast<void>(factory.Create(callsignProvider, "Some Function"));
         EXPECT_TRUE(functionHandler.HasCallbackByDescription("Some Function"));
     }
 
     TEST_F(CallsignSelectionListFactoryTest, CallbackFunctionTriggersCallsignSelected)
     {
-        auto list = Create(callsignProvider, functionHandler, plugin, "Some Function");
+        auto list = factory.Create(callsignProvider, "Some Function");
 
         EXPECT_CALL(*callsignProvider, CallsignSelected("BAW123")).Times(1);
+
         list->CallsignSelected("BAW123");
     }
 
     TEST_F(CallsignSelectionListFactoryTest, ListIsTriggeredWithCorrectId)
     {
-        auto list = Create(callsignProvider, functionHandler, plugin, "Some Function");
+        auto list = factory.Create(callsignProvider, "Some Function");
 
-        EXPECT_CALL(*callsignProvider, GetCallsigns)
-            .Times(1)
-            .WillOnce(testing::Return(std::set<std::string>{"ABCD"}));
-        
+        EXPECT_CALL(*callsignProvider, GetCallsigns).Times(1).WillOnce(testing::Return(std::set<std::string>{"ABCD"}));
+
         EXPECT_CALL(plugin, TriggerPopupList(RectEq(RECT{1, 2, 51, 102}), "Select Aircraft", 1)).Times(1);
 
         PopupMenuItem expectedItem;

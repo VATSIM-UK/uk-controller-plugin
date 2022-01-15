@@ -7,17 +7,23 @@
 
 namespace UKControllerPlugin::Aircraft {
 
-    auto Create(
-        std::shared_ptr<CallsignSelectionProviderInterface> provider,
-        Plugin::FunctionCallEventHandler& functionHandler,
-        Euroscope::EuroscopePluginLoopbackInterface& plugin,
-        const std::string& description) -> std::shared_ptr<CallsignSelectionList>
+    CallsignSelectionListFactory::CallsignSelectionListFactory(
+        Plugin::FunctionCallEventHandler& functionHandler, Euroscope::EuroscopePluginLoopbackInterface& plugin)
+        : functionHandler(functionHandler), plugin(plugin)
+    {
+    }
+
+    auto CallsignSelectionListFactory::Create(
+        std::shared_ptr<CallsignSelectionProviderInterface> provider, const std::string& description)
+        -> std::shared_ptr<CallsignSelectionList>
     {
         int callbackId = functionHandler.ReserveNextDynamicFunctionId();
         auto selectionList = std::make_shared<CallsignSelectionList>(std::move(provider), plugin, callbackId);
 
         Euroscope::CallbackFunction callback(
-            callbackId, description, [selectionList](int functionId, std::string subject, RECT screenObjectArea) {
+            callbackId,
+            description,
+            [selectionList](int functionId, const std::string& subject, RECT screenObjectArea) {
                 selectionList->CallsignSelected(subject);
             });
         functionHandler.RegisterFunctionCall(callback);
