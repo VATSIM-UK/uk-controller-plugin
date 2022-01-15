@@ -35,7 +35,7 @@ namespace UKControllerPlugin {
             : navaid(navaid), publishedHolds(publishedHoldCollection.GetForFix(navaid.identifier)),
               holdManager(holdManager), plugin(plugin), dialogManager(dialogManager),
               publishedHoldCollection(publishedHoldCollection), addAircraftSelector(addAircraftSelector),
-              titleBarTextBrush(Gdiplus::Color(227, 227, 227)), titleBarBrush(Gdiplus::Color(197, 129, 214)),
+              titleBarTextBrush(Gdiplus::Color(227, 227, 227)), titleBarBrush(Gdiplus::Color(130, 50, 154)),
               dataBrush(Gdiplus::Color(7, 237, 7)), clearedLevelBrush(Gdiplus::Color(246, 181, 4)),
               blockedLevelBrush(Gdiplus::Color(123, 125, 123)), borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
               sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f), verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f),
