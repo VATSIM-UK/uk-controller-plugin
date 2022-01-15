@@ -1,4 +1,5 @@
 #include "AddToHoldCallsignProvider.h"
+#include "hold/HoldDisplay.h"
 #include "HoldDisplayFactory.h"
 #include "HoldManager.h"
 #include "PublishedHoldCollection.h"

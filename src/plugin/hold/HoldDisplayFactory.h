@@ -1,14 +1,12 @@
 #pragma once
-#include "hold/HoldDisplay.h"
 
 namespace UKControllerPlugin {
     namespace Aircraft {
         class CallsignSelectionListFactory;
     } // namespace Aircraft
-    namespace Hold {
-        class HoldManager;
-        class PublishedHoldCollection;
-    } // namespace Hold
+    namespace Dialog {
+        class DialogManager;
+    } // namespace Dialog
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
     } // namespace Euroscope
@@ -19,6 +17,9 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin {
     namespace Hold {
+        class HoldDisplay;
+        class HoldManager;
+        class PublishedHoldCollection;
 
         /*
             Creates HoldDisplay instances for use by the HoldRenderer
@@ -33,7 +34,8 @@ namespace UKControllerPlugin {
                 const UKControllerPlugin::Hold::PublishedHoldCollection& holds,
                 const UKControllerPlugin::Dialog::DialogManager& dialogManager,
                 const Aircraft::CallsignSelectionListFactory& addAircraftListFactory);
-            std::unique_ptr<UKControllerPlugin::Hold::HoldDisplay> Create(std::string navaid) const;
+            [[nodiscard]] auto Create(std::string navaid) const
+                -> std::unique_ptr<UKControllerPlugin::Hold::HoldDisplay>;
 
             private:
             // The plugin instance

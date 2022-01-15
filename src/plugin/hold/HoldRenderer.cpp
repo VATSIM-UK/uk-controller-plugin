@@ -1,3 +1,4 @@
+#include "HoldDisplay.h"
 #include "HoldDisplayFactory.h"
 #include "HoldManager.h"
 #include "HoldRenderer.h"
@@ -107,12 +108,12 @@ namespace UKControllerPlugin::Hold {
             LogWarning("Tried to interact with invalid hold display");
             return;
         }
-       
+
         const auto buttonName = GetButtonNameFromObjectDescription(objectDescription);
         if (buttonName != "add") {
             return;
         }
-        
+
         (*display)->ButtonRightClicked(buttonName);
     }
 
