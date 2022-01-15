@@ -8,6 +8,7 @@
 #include "HoldModule.h"
 #include "HoldRenderer.h"
 #include "HoldSelectionMenu.h"
+#include "PublishedHoldCollection.h"
 #include "PublishedHoldCollectionFactory.h"
 #include "api/ApiException.h"
 #include "bootstrap/BootstrapWarningMessage.h"
@@ -127,7 +128,8 @@ namespace UKControllerPlugin::Hold {
             *container.holdManager,
             *container.navaids,
             *container.publishedHolds,
-            *container.dialogManager);
+            *container.dialogManager,
+            *container.callsignSelectionListFactory);
 
         // Command to assign holds
         container.commandHandlers->RegisterHandler(

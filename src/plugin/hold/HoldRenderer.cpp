@@ -3,6 +3,7 @@
 #include "HoldRenderer.h"
 #include "euroscope/UserSetting.h"
 #include "helper/HelperFunctions.h"
+#include "navaids/Navaid.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
@@ -106,24 +107,13 @@ namespace UKControllerPlugin::Hold {
             LogWarning("Tried to interact with invalid hold display");
             return;
         }
-
-        if (objectDescription.find("cleared") != std::string::npos ||
-            objectDescription.find("callsign") != std::string::npos) {
+       
+        const auto buttonName = GetButtonNameFromObjectDescription(objectDescription);
+        if (buttonName != "add") {
             return;
         }
         
-        if (GetButtonNameFromObjectDescription(objectDescription) != "add") {
-            return;
-        }
-        
-        // Create TrackedAircraftListInterface  - has a public method called trigger? Maybe?
-        // Create generic "tracked aircraft list" class. Has a pure virtual method to be called when aircraft is
-        // selected.
-        // Create HoldAircraftSelector class that overrides above class and does the hold assignment.
-        // Actually, add an instance of the selector class to each display. The selector class has a property that
-        // sets the hold its for.
-        // Add a rightclick method for the display. Call selector there.
-        // Bingpot.
+        (*display)->ButtonRightClicked(buttonName);
     }
 
     /*
@@ -217,7 +207,7 @@ namespace UKControllerPlugin::Hold {
     */
     auto HoldRenderer::GetButtonNameFromObjectDescription(const std::string& objectDescription) -> std::string
     {
-        return objectDescription.substr(objectDescription.find('/') + 1);
+        return objectDescription.substr(objectDescription.find_last_of('/') + 1);
     }
 
     auto HoldRenderer::GetToggleCallbackId() const -> int

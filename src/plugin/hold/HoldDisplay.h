@@ -41,7 +41,7 @@ namespace UKControllerPlugin {
                 const Dialog::DialogManager& dialogManager,
                 std::shared_ptr<Aircraft::CallsignSelectionListInterface> addAircraftSelector);
             void ButtonClicked(std::string button);
-            void ButtonRightClicked(const std::string& button, const POINT& location);
+            void ButtonRightClicked(const std::string& button);
             void CallsignClicked(
                 std::string callsign,
                 UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,

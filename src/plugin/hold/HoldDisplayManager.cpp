@@ -1,6 +1,7 @@
 #include "HoldDisplayFactory.h"
 #include "HoldDisplayManager.h"
 #include "euroscope/UserSetting.h"
+#include "navaids/Navaid.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
 

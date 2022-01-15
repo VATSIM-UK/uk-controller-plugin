@@ -1012,14 +1012,14 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(*addAircraftList, TriggerList).Times(0);
 
-            display.ButtonRightClicked("notadd", POINT{1, 2});
+            display.ButtonRightClicked("notadd");
         }
 
         TEST_F(HoldDisplayTest, AddButtonRightClickTriggersTheList)
         {
-            EXPECT_CALL(*addAircraftList, TriggerList(PointEq(POINT{1, 2}))).Times(1);
+            EXPECT_CALL(*addAircraftList, TriggerList(PointEq(POINT{265, 118}))).Times(1);
 
-            display.ButtonRightClicked("add", POINT{1, 2});
+            display.ButtonRightClicked("add");
         }
     } // namespace Hold
 } // namespace UKControllerPluginTest

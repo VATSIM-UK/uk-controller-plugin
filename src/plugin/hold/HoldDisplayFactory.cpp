@@ -1,29 +1,32 @@
-#include "pch/pch.h"
-#include "hold/HoldDisplayFactory.h"
-#include "euroscope/EuroscopePluginLoopbackInterface.h"
-#include "hold/HoldManager.h"
+#include "AddToHoldCallsignProvider.h"
+#include "HoldDisplayFactory.h"
+#include "HoldManager.h"
+#include "PublishedHoldCollection.h"
+#include "aircraft/CallsignSelectionList.h"
+#include "aircraft/CallsignSelectionListFactory.h"
 #include "dialog/DialogManager.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "navaids/NavaidCollection.h"
 
-using UKControllerPlugin::Hold::HoldManager;
-using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Navaids::NavaidCollection;
-using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Navaids::Navaid;
+using UKControllerPlugin::Navaids::NavaidCollection;
 
 namespace UKControllerPlugin {
     namespace Hold {
 
         HoldDisplayFactory::HoldDisplayFactory(
-            EuroscopePluginLoopbackInterface & plugin,
-            HoldManager & holdManager,
+            EuroscopePluginLoopbackInterface& plugin,
+            HoldManager& holdManager,
             const NavaidCollection& navaids,
             const PublishedHoldCollection& holds,
-            const DialogManager& dialogManager
-        )
-            : plugin(plugin), holdManager(holdManager), navaids(navaids),
-            holds(holds), dialogManager(dialogManager)
+            const DialogManager& dialogManager,
+            const Aircraft::CallsignSelectionListFactory& addAircraftListFactory)
+            : plugin(plugin), holdManager(holdManager), navaids(navaids), holds(holds), dialogManager(dialogManager),
+              addAircraftListFactory(addAircraftListFactory)
         {
-
         }
 
         /*
@@ -42,8 +45,10 @@ namespace UKControllerPlugin {
                 holdManager,
                 navaidData,
                 holds,
-                dialogManager
-            );
+                dialogManager,
+                addAircraftListFactory.Create(
+                    std::make_shared<AddToHoldCallsignProvider>(navaidData, holdManager, plugin),
+                    "Add to hold " + navaidData.identifier));
         }
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

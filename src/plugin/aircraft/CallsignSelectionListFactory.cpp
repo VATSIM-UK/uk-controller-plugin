@@ -14,7 +14,7 @@ namespace UKControllerPlugin::Aircraft {
     }
 
     auto CallsignSelectionListFactory::Create(
-        std::shared_ptr<CallsignSelectionProviderInterface> provider, const std::string& description)
+        std::shared_ptr<CallsignSelectionProviderInterface> provider, const std::string& description) const
         -> std::shared_ptr<CallsignSelectionList>
     {
         int callbackId = functionHandler.ReserveNextDynamicFunctionId();
