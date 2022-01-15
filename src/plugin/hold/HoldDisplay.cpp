@@ -2,12 +2,16 @@
 #include "HoldDisplayFunctions.h"
 #include "HoldManager.h"
 #include "HoldModule.h"
+#include "HoldingData.h"
+#include "PublishedHoldCollection.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "navaids/Navaid.h"
 
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;

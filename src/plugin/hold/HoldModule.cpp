@@ -13,6 +13,8 @@
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "command/CommandHandlerCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
+#include "dialog/DialogData.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "message/UserMessager.h"

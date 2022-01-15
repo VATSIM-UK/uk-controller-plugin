@@ -1,3 +1,4 @@
+#include "dialog/DialogManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldDisplayFactory.h"

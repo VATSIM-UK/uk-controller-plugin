@@ -1,3 +1,4 @@
+#include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldDisplayManager.h"
