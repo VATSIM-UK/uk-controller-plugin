@@ -18,7 +18,7 @@ namespace UKControllerPlugin::Wake {
                 continue;
             }
 
-            wakeIntervals.push_back(wakeInterval);
+            wakeIntervals.push_back(std::move(wakeInterval));
         }
 
         return std::make_shared<WakeCategory>(

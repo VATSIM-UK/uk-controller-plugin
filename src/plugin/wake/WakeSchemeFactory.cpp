@@ -1,6 +1,7 @@
-#include "WakeSchemeFactory.h"
 #include "WakeCategory.h"
 #include "WakeCategoryFactory.h"
+#include "WakeScheme.h"
+#include "WakeSchemeFactory.h"
 
 namespace UKControllerPlugin::Wake {
 
@@ -13,14 +14,19 @@ namespace UKControllerPlugin::Wake {
 
         std::list<std::shared_ptr<WakeCategory>> categories;
         for (const auto& category : json.at("categories")) {
-            const auto wakeCategory = WakeCategoryFromJson(category);
+            auto wakeCategory = WakeCategoryFromJson(category);
             if (!wakeCategory) {
                 continue;
             }
 
             categories.push_back(std::move(wakeCategory));
         }
-        
+
+        return std::make_shared<WakeScheme>(
+            json.at("id").get<int>(),
+            json.at("key").get<std::string>(),
+            json.at("name").get<std::string>(),
+            std::move(categories));
     }
 
     auto SchemeValid(const nlohmann::json& json) -> bool
