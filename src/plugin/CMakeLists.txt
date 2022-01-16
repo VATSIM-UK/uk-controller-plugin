@@ -859,7 +859,7 @@ set(src__wake
     "wake/WakeCategoryMapper.h"
     "wake/WakeModule.cpp"
     "wake/WakeModule.h"
-)
+        wake/WakeScheme.cpp wake/WakeScheme.h wake/WakeCategory.cpp wake/WakeCategory.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES
