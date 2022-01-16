@@ -6,6 +6,7 @@ namespace UKControllerPlugin {
 
     namespace Aircraft {
         class AircraftTypeCollection;
+        class AircraftTypeMapperInterface;
         class CallsignSelectionListFactory;
     } // namespace Aircraft
     namespace Airfield {
@@ -214,6 +215,7 @@ namespace UKControllerPlugin::Bootstrap {
         // Large collections that we don't want to go onto the stack
         std::unique_ptr<Sid::SidCollection> sids;
         std::unique_ptr<const UKControllerPlugin::Aircraft::AircraftTypeCollection> aircraftTypes;
+        std::unique_ptr<UKControllerPlugin::Aircraft::AircraftTypeMapperInterface> aircraftTypeMapper;
         std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
         std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;

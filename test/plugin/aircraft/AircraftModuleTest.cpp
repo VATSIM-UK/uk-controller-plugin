@@ -23,4 +23,10 @@ namespace UKControllerPluginTest::Wake {
         BootstrapPlugin(container, dependencies);
         EXPECT_EQ(0, container.aircraftTypes->Count());
     }
+
+    TEST_F(AircraftModuleTest, ItCreatesAircraftTypeMapper)
+    {
+        BootstrapPlugin(container, dependencies);
+        EXPECT_NE(nullptr, container.aircraftTypeMapper);
+    }
 } // namespace UKControllerPluginTest::Wake

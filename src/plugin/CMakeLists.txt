@@ -10,7 +10,7 @@ set(resource
 source_group("resource" FILES ${resource})
 
 set(src__aircraft
-        aircraft/CallsignSelectionListInterface.h aircraft/CallsignSelectionProviderInterface.h aircraft/CallsignSelectionList.cpp aircraft/CallsignSelectionList.h aircraft/CallsignSelectionListFactory.cpp aircraft/CallsignSelectionListFactory.h aircraft/CallsignSelectionListFactoryBootstrap.cpp aircraft/CallsignSelectionListFactoryBootstrap.h aircraft/AircraftType.cpp aircraft/AircraftType.h aircraft/AircraftTypeCollection.cpp aircraft/AircraftTypeCollection.h aircraft/AircraftTypeCollectionFactory.cpp aircraft/AircraftTypeCollectionFactory.h aircraft/AircraftTypeFactory.cpp aircraft/AircraftTypeFactory.h aircraft/AircraftModule.cpp aircraft/AircraftModule.h)
+        aircraft/CallsignSelectionListInterface.h aircraft/CallsignSelectionProviderInterface.h aircraft/CallsignSelectionList.cpp aircraft/CallsignSelectionList.h aircraft/CallsignSelectionListFactory.cpp aircraft/CallsignSelectionListFactory.h aircraft/CallsignSelectionListFactoryBootstrap.cpp aircraft/CallsignSelectionListFactoryBootstrap.h aircraft/AircraftType.cpp aircraft/AircraftType.h aircraft/AircraftTypeCollection.cpp aircraft/AircraftTypeCollection.h aircraft/AircraftTypeCollectionFactory.cpp aircraft/AircraftTypeCollectionFactory.h aircraft/AircraftTypeFactory.cpp aircraft/AircraftTypeFactory.h aircraft/AircraftModule.cpp aircraft/AircraftModule.h aircraft/FlightplanAircraftTypeMapper.cpp aircraft/FlightplanAircraftTypeMapper.h aircraft/AircraftTypeMapperInterface.h)
 source_group("src\\aircraft" FILES ${src__aircraft})
 
 set(src__airfield

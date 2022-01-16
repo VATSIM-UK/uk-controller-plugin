@@ -1,7 +1,5 @@
 #pragma once
 
-#include "AircraftTypeCollectionFactory.h"
-
 namespace UKControllerPlugin::Aircraft {
     class AircraftType;
 
