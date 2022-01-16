@@ -106,8 +106,8 @@ namespace UKControllerPluginTest {
             ASSERT_TRUE(repo->GetSectorExitPoint("TINAC").GetName().compare("TINAC") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("TINAC").GetIntentionCode(mockRoute, 0, 37000).compare("K2") == 0);
             ASSERT_EQ(repo->outEast | repo->outNorthEast, repo->GetSectorExitPoint("TINAC").GetOutDirection());
-			
-			// GOREV
+
+            // GOREV
             ASSERT_TRUE(repo->GetSectorExitPoint("GOREV").GetName().compare("GOREV") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("GOREV").GetIntentionCode(mockRoute, 0, 37000).compare("K2") == 0);
             ASSERT_EQ(repo->outEast | repo->outNorthEast, repo->GetSectorExitPoint("GOREV").GetOutDirection());
