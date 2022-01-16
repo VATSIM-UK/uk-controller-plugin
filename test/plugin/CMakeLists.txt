@@ -4,7 +4,7 @@ set(PROJECT_NAME UKControllerPluginCoreTest)
 # Source groups
 ################################################################################
 set(test__aircraft
-        aircraft/CallsignSelectionListTest.cpp aircraft/CallsignSelectionListFactoryTest.cpp aircraft/CallsignSelectionListFactoryBootstrapTest.cpp)
+        aircraft/CallsignSelectionListTest.cpp aircraft/CallsignSelectionListFactoryTest.cpp aircraft/CallsignSelectionListFactoryBootstrapTest.cpp aircraft/AircraftTypeTest.cpp aircraft/AircraftTypeCollectionTest.cpp aircraft/AircraftTypeFactoryTest.cpp aircraft/AircraftTypeCollectionFactoryTest.cpp aircraft/AircraftModuleTest.cpp)
 source_group("test\\aircraft" FILES ${test__aircraft})
 
 set(test__airfield
