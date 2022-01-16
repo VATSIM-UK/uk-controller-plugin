@@ -45,6 +45,7 @@
 #include "radarscreen/RadarScreenFactory.h"
 #include "radarscreen/ScreenControls.h"
 #include "regional/RegionalPressureManager.h"
+#include "releases/DepartureReleaseEventHandler.h"
 #include "sectorfile/RunwayCollection.h"
 #include "setting/SettingRepository.h"
 #include "sid/SidCollection.h"
@@ -54,8 +55,8 @@
 #include "tag/TagItemCollection.h"
 #include "task/TaskRunnerInterface.h"
 #include "timedevent/TimedEventCollection.h"
+#include "wake/WakeSchemeCollection.h"
 #include "windows/WinApiInterface.h"
-#include "releases/DepartureReleaseEventHandler.h"
 
 namespace UKControllerPlugin::Bootstrap {
     PersistenceContainer::PersistenceContainer() = default;

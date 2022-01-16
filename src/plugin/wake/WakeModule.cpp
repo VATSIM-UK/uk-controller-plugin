@@ -1,6 +1,8 @@
 #include "CreateWakeMappings.h"
 #include "WakeCategoryEventHandler.h"
 #include "WakeModule.h"
+#include "WakeSchemeCollection.h"
+#include "WakeSchemeCollectionFactory.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
@@ -15,8 +17,12 @@ namespace UKControllerPlugin::Wake {
     /*
         Bootstrap everything
     */
-    void BootstrapPlugin(const PersistenceContainer& container, DependencyLoaderInterface& dependencies)
+    void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
     {
+        // Create the wake categories
+        container.wakeSchemes =
+            CollectionFromDependency(dependencies.LoadDependency("DEPENDENCY_WAKE_SCHEME", nlohmann::json::array()));
+
         // Create the data
         nlohmann::json data = dependencies.LoadDependency(GetWakeDependencyKey(), nlohmann::json::object());
         nlohmann::json recatData = dependencies.LoadDependency(GetRecatDependencyKey(), nlohmann::json::object());

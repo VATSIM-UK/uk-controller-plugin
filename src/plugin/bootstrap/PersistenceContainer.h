@@ -124,6 +124,9 @@ namespace UKControllerPlugin {
     namespace TimedEvent {
         class TimedEventCollection;
     } // namespace TimedEvent
+    namespace Wake {
+        class WakeSchemeCollection;
+    } // namespace Wake
     namespace Windows {
         struct GdiplusBrushes;
         class GdiGraphicsWrapper;
@@ -215,6 +218,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeGenerator> intentionCodeGenerator;
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
+        std::unique_ptr<UKControllerPlugin::Wake::WakeSchemeCollection> wakeSchemes;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
         std::unique_ptr<UKControllerPlugin::FlightRules::FlightRuleCollection> flightRules;
 

@@ -2,6 +2,7 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "tag/TagItemCollection.h"
 #include "wake/WakeModule.h"
+#include "wake/WakeSchemeCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -25,6 +26,21 @@ namespace UKControllerPluginTest::Wake {
         PersistenceContainer container;
         NiceMock<MockDependencyLoader> dependencies;
     };
+
+    TEST_F(WakeModuleTest, ItRegistersTheSchemeCollection)
+    {
+        EXPECT_CALL(dependencies, LoadDependency(testing::_, nlohmann::json::object()))
+            .Times(2)
+            .WillRepeatedly(testing::Return(nlohmann::json::object()));
+
+        EXPECT_CALL(dependencies, LoadDependency("DEPENDENCY_WAKE_SCHEME", nlohmann::json::array()))
+            .Times(1)
+            .WillOnce(testing::Return(nlohmann::json::array()));
+
+        BootstrapPlugin(this->container, this->dependencies);
+
+        EXPECT_EQ(0, this->container.wakeSchemes->Count());
+    }
 
     TEST_F(WakeModuleTest, ItAddsToFlightplanHandler)
     {
