@@ -1,6 +1,9 @@
 #include "hold/HoldModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "timedevent/TimedEventCollection.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
+#include "hold/HoldingAircraft.h"
 #include "hold/HoldingData.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "plugin/FunctionCallEventHandler.h"
@@ -180,6 +183,12 @@ namespace UKControllerPluginTest::Hold {
         BootstrapPlugin(this->mockDependencyProvider, this->container);
         EXPECT_EQ(2, this->container.dialogManager->CountDialogs());
         EXPECT_TRUE(this->container.dialogManager->HasDialog(IDD_HOLD_PARAMS));
+    }
+
+    TEST_F(HoldModuleTest, ItRegistersAssignHoldCommand)
+    {
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
+        EXPECT_EQ(1, this->container.commandHandlers->CountHandlers());
     }
 
     TEST_F(HoldModuleTest, ItLoadsHoldData)

@@ -1,3 +1,4 @@
+#include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
 #include "api/ApiAuthChecker.h"
 #include "bootstrap/CollectionBootstrap.h"
@@ -183,6 +184,7 @@ namespace UKControllerPlugin {
         }
 
         Integration::BootstrapPlugin(*this->container, duplicatePlugin->Duplicate(), winsockInitialised);
+        Aircraft::BootstrapPlugin(*this->container);
 
         // Boostrap all the modules at a plugin level
         Controller::BootstrapPlugin(*this->container, loader);

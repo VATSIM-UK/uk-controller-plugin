@@ -1,4 +1,8 @@
+#include "AbstractHoldLevelRestriction.h"
+#include "AssignHoldCommand.h"
+#include "DeemedSeparatedHold.h"
 #include "HoldConfigurationDialog.h"
+#include "HoldConfigurationMenuItem.h"
 #include "HoldDisplayConfigurationDialog.h"
 #include "HoldDisplayFactory.h"
 #include "HoldDisplayManager.h"
@@ -7,11 +11,16 @@
 #include "HoldModule.h"
 #include "HoldRenderer.h"
 #include "HoldSelectionMenu.h"
+#include "PublishedHoldCollection.h"
 #include "PublishedHoldCollectionFactory.h"
 #include "api/ApiException.h"
+#include "api/ApiInterface.h"
 #include "bootstrap/BootstrapWarningMessage.h"
+#include "bootstrap/PersistenceContainer.h"
 #include "command/CommandHandlerCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
+#include "dialog/DialogData.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "message/UserMessager.h"
@@ -19,6 +28,7 @@
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
+#include "task/TaskRunnerInterface.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 #include "windows/WinApiInterface.h"
@@ -124,7 +134,12 @@ namespace UKControllerPlugin::Hold {
             *container.holdManager,
             *container.navaids,
             *container.publishedHolds,
-            *container.dialogManager);
+            *container.dialogManager,
+            *container.callsignSelectionListFactory);
+
+        // Command to assign holds
+        container.commandHandlers->RegisterHandler(
+            std::make_shared<AssignHoldCommand>(*container.holdManager, *container.plugin));
 
         // Start a task to load all the already assigned holds
         container.taskRunner->QueueAsynchronousTask([&container]() {

@@ -1,8 +1,12 @@
+#include "aircraft/CallsignSelectionListFactory.h"
 #include "euroscope/UserSetting.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldRenderer.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
+#include "plugin/FunctionCallEventHandler.h"
 #include "plugin/PopupMenuItem.h"
 #include "navaids/NavaidCollection.h"
 #include "hold/PublishedHoldCollection.h"
@@ -11,6 +15,7 @@
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
+using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
@@ -19,6 +24,7 @@ using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::Hold::PublishedHoldCollection;
 using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
@@ -34,8 +40,9 @@ namespace UKControllerPluginTest {
         {
             public:
             HoldRendererTest()
-                : dialogManager(mockDialog), userSetting(mockUserSettingProvider), holdManager(mockApi, mockTaskRunner),
-                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager),
+                : callsignSelectionFactory(functionHandlers, mockPlugin), dialogManager(mockDialog),
+                  userSetting(mockUserSettingProvider), holdManager(mockApi, mockTaskRunner),
+                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, callsignSelectionFactory),
                   displayManager(new HoldDisplayManager(displayFactory)), renderer(displayManager, 1, 2)
             {
                 this->holds.Add({1, "WILLO", "WILLO", 8000, 15000, 209, "left", {}});
@@ -45,14 +52,25 @@ namespace UKControllerPluginTest {
 
                 displayManager->AsrLoadedEvent(this->userSetting);
                 displayManager->LoadSelectedHolds({"WILLO", "TIMBA"});
+
+                flightplan = std::make_shared<NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
+                ON_CALL(*flightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
+                ON_CALL(*flightplan, IsTrackedByUser).WillByDefault(testing::Return(true));
+
+                radarTarget = std::make_shared<NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>();
+                mockPlugin.AddAllFlightplansItem({flightplan, radarTarget});
             }
 
             NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+            FunctionCallEventHandler functionHandlers;
+            CallsignSelectionListFactory callsignSelectionFactory;
             NiceMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
             NiceMock<MockApiInterface> mockApi;
             NiceMock<MockTaskRunnerInterface> mockTaskRunner;
             NiceMock<MockDialogProvider> mockDialog;
+            std::shared_ptr<NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>> flightplan;
+            std::shared_ptr<NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>> radarTarget;
             DialogManager dialogManager;
             UserSetting userSetting;
             HoldManager holdManager;
@@ -173,6 +191,27 @@ namespace UKControllerPluginTest {
                 TogglePluginTagFunction("BAW123", 9003, PointEq(POINT({1, 2})), RectEq(RECT({1, 2, 3, 4}))))
                 .Times(1);
             this->renderer.LeftClick(this->mockRadarScreen, 1, "TIMBA/callsign/BAW123", {1, 2}, {1, 2, 3, 4});
+        }
+
+        TEST_F(HoldRendererTest, ItTriggersRightClicksOnHoldDisplays)
+        {
+            EXPECT_CALL(mockPlugin, TriggerPopupList).Times(1);
+
+            this->renderer.RightClick(1, "TIMBA/add", this->mockRadarScreen);
+        }
+
+        TEST_F(HoldRendererTest, ItHandlesUnknownNavaidOnRightClick)
+        {
+            EXPECT_CALL(mockPlugin, TriggerPopupList).Times(0);
+
+            this->renderer.RightClick(1, "BOOM/add", this->mockRadarScreen);
+        }
+
+        TEST_F(HoldRendererTest, ItHandlesUnknownButtonOnRightClick)
+        {
+            EXPECT_CALL(mockPlugin, TriggerPopupList).Times(0);
+
+            this->renderer.RightClick(1, "TIMBA/boom", this->mockRadarScreen);
         }
     } // namespace Hold
 } // namespace UKControllerPluginTest

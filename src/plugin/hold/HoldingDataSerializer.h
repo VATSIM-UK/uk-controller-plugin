@@ -1,8 +1,11 @@
 #pragma once
-#include "bootstrap/PersistenceContainer.h"
-#include "hold/HoldingData.h"
+
+namespace UKControllerPlugin::Bootstrap {
+    struct PersistenceContainer;
+} // namespace UKControllerPlugin::Bootstrap
 
 namespace UKControllerPlugin::Hold {
+    struct HoldingData;
 
     extern const HoldingData holdSerializerInvalid;
 
@@ -20,5 +23,4 @@ namespace UKControllerPlugin::Hold {
         Returns true if the holding data is valid
     */
     auto JsonValid(const nlohmann::json& data) -> bool;
-
 } // namespace UKControllerPlugin::Hold

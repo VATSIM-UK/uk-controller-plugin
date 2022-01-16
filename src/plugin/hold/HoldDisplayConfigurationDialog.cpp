@@ -1,10 +1,10 @@
-#include "hold/HoldDisplayConfigurationDialog.h"
-#include "hold/HoldDisplayFunctions.h"
+#include "HoldDisplay.h"
+#include "HoldDisplayConfigurationDialog.h"
+#include "HoldDisplayFunctions.h"
 #include "dialog/DialogCallArgument.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Hold::ConvertToTchar;
-using UKControllerPlugin::Navaids::NavaidCollection;
 
 namespace UKControllerPlugin {
     namespace Hold {

@@ -1,12 +1,21 @@
+#include "aircraft/CallsignSelectionListFactory.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
+#include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
+#include "hold/PublishedHoldCollection.h"
+#include "navaids/NavaidCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
 
 using testing::_;
 using testing::NiceMock;
 using testing::Return;
 using testing::Test;
+using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
@@ -16,6 +25,7 @@ using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::PublishedHoldCollection;
 using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -28,8 +38,10 @@ namespace UKControllerPluginTest::Hold {
     {
         public:
         HoldDisplayManagerTest()
-            : dialogManager(dialogProvider), userSetting(mockUserSettingProvider), holdManager(mockApi, taskRunner),
-              displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager), displayManager(displayFactory)
+            : listFactory(functionHandlers, mockPlugin), dialogManager(dialogProvider),
+              userSetting(mockUserSettingProvider), holdManager(mockApi, taskRunner),
+              displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory),
+              displayManager(displayFactory)
         {
             this->navaids.AddNavaid({1, "TIMBA", EuroScopePlugIn::CPosition()});
             this->navaids.AddNavaid({2, "WILLO", EuroScopePlugIn::CPosition()});
@@ -40,9 +52,11 @@ namespace UKControllerPluginTest::Hold {
         NiceMock<MockTaskRunnerInterface> taskRunner;
         NiceMock<MockApiInterface> mockApi;
         NiceMock<MockDialogProvider> dialogProvider;
-        DialogManager dialogManager;
         NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
         NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+        FunctionCallEventHandler functionHandlers;
+        CallsignSelectionListFactory listFactory;
+        DialogManager dialogManager;
         UserSetting userSetting;
         HoldingData holdData = {1, "TIMBA", "TIMBA TEST", 7000, 15000, 360, "left", {}};
         PublishedHoldCollection holds;
