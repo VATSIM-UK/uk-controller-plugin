@@ -12,7 +12,7 @@ namespace UKControllerPluginTest::Wake {
         public:
         WakeSchemeTest()
             : categories({std::make_shared<WakeCategory>(
-                  456, "LM", "Lower Medium", std::list<std::shared_ptr<DepartureWakeInterval>>{})}),
+                  456, "LM", "Lower Medium", 21, std::list<std::shared_ptr<DepartureWakeInterval>>{})}),
               scheme(123, "RECAT", "RECAT-EU", categories)
         {
         }

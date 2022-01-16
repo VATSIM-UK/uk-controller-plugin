@@ -10,7 +10,7 @@ namespace UKControllerPluginTest::Wake {
         public:
         WakeCategoryTest()
             : wakeIntervals({std::make_shared<DepartureWakeInterval>(3, 60, "nm", true)}),
-              category(123, "LM", "Lower Medium", wakeIntervals)
+              category(123, "LM", "Lower Medium", 20, wakeIntervals)
         {
         }
 
@@ -31,6 +31,11 @@ namespace UKControllerPluginTest::Wake {
     TEST_F(WakeCategoryTest, ItHasADescription)
     {
         EXPECT_EQ("Lower Medium", category.Description());
+    }
+
+    TEST_F(WakeCategoryTest, ItHasARelativeWeighting)
+    {
+        EXPECT_EQ(20, category.RelativeWeighting());
     }
 
     TEST_F(WakeCategoryTest, ItHasWakeIntervals)

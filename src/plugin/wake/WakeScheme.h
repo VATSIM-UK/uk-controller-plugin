@@ -2,6 +2,8 @@
 
 #include <string>
 #include <list>
+#include "WakeSchemeFactory.h"
+
 namespace UKControllerPlugin::Wake {
     class WakeCategory;
 

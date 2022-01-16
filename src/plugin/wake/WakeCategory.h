@@ -1,5 +1,7 @@
 #pragma once
 
+#include "WakeCategoryFactory.h"
+
 namespace UKControllerPlugin::Wake {
     struct DepartureWakeInterval;
 
@@ -13,11 +15,13 @@ namespace UKControllerPlugin::Wake {
             int id,
             std::string code,
             std::string description,
+            int relativeWeighting,
             std::list<std::shared_ptr<DepartureWakeInterval>> subsequentDepartureIntervals);
 
         [[nodiscard]] auto Id() const -> int;
         [[nodiscard]] auto Code() const -> const std::string&;
         [[nodiscard]] auto Description() const -> const std::string&;
+        [[nodiscard]] auto RelativeWeighting() const -> int;
         [[nodiscard]] auto SubsequentDepartureIntervals() const
             -> const std::list<std::shared_ptr<DepartureWakeInterval>>&;
 
@@ -30,6 +34,9 @@ namespace UKControllerPlugin::Wake {
 
         // Description
         std::string description;
+        
+        // The weighting of the category relative to others in the scheme
+        int relativeWeighting;
 
         // Subsequent departure intervals for wake
         std::list<std::shared_ptr<DepartureWakeInterval>> subsequentDepartureIntervals;

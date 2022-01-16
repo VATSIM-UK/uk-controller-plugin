@@ -512,7 +512,7 @@ set(test__wake
     "wake/WakeCategoryEventHandlerTest.cpp"
     "wake/WakeCategoryMapperTest.cpp"
     "wake/WakeModuleTest.cpp"
-        wake/WakeCategoryTest.cpp wake/WakeSchemeTest.cpp)
+        wake/WakeCategoryTest.cpp wake/WakeSchemeTest.cpp wake/DepartureWakeIntervalFactoryTest.cpp wake/WakeCategoryFactoryTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
