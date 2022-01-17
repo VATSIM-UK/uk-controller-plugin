@@ -34,7 +34,7 @@ namespace UKControllerPlugin::Wake {
 
         // Description
         std::string description;
-        
+
         // The weighting of the category relative to others in the scheme
         int relativeWeighting;
 

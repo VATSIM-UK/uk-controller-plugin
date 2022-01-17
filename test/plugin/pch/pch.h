@@ -54,3 +54,4 @@
 #include "mock/MockTaskRunnerInterface.h"
 #include "../mock/MockUserSettingAwareInterface.h"
 #include "../mock/MockUserSettingProviderInterface.h"
+#include "../mock/MockWakeCategoryMapper.h"

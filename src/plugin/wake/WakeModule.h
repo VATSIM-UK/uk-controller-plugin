@@ -14,7 +14,4 @@ namespace UKControllerPlugin::Wake {
     void BootstrapPlugin(
         UKControllerPlugin::Bootstrap::PersistenceContainer& container,
         UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies);
-
-    [[nodiscard]] auto GetWakeDependencyKey() -> std::string;
-    [[nodiscard]] auto GetRecatDependencyKey() -> std::string;
 } // namespace UKControllerPlugin::Wake

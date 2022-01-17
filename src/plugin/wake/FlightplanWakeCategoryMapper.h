@@ -11,7 +11,8 @@ namespace UKControllerPlugin::Wake {
     class FlightplanWakeCategoryMapper : public WakeCategoryMapperInterface
     {
         public:
-        FlightplanWakeCategoryMapper(const WakeScheme& scheme, const Aircraft::AircraftTypeMapperInterface& aircraftTypes);
+        FlightplanWakeCategoryMapper(
+            const WakeScheme& scheme, const Aircraft::AircraftTypeMapperInterface& aircraftTypes);
         auto MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
             -> std::shared_ptr<WakeCategory> override;
 

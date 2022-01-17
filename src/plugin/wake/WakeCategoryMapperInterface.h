@@ -10,7 +10,7 @@ namespace UKControllerPlugin::Wake {
     class WakeCategoryMapperInterface
     {
         public:
-        ~WakeCategoryMapperInterface() = default;
+        virtual ~WakeCategoryMapperInterface() = default;
         [[nodiscard]] virtual auto MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
             -> std::shared_ptr<WakeCategory> = 0;
     };

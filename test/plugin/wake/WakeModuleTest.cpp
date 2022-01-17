@@ -29,10 +29,6 @@ namespace UKControllerPluginTest::Wake {
 
     TEST_F(WakeModuleTest, ItRegistersTheSchemeCollection)
     {
-        EXPECT_CALL(dependencies, LoadDependency(testing::_, nlohmann::json::object()))
-            .Times(2)
-            .WillRepeatedly(testing::Return(nlohmann::json::object()));
-
         EXPECT_CALL(dependencies, LoadDependency("DEPENDENCY_WAKE_SCHEME", nlohmann::json::array()))
             .Times(1)
             .WillOnce(testing::Return(nlohmann::json::array()));

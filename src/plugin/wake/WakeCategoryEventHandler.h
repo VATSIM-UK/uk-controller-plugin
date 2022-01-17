@@ -1,11 +1,14 @@
 #pragma once
 #include "CacheItem.h"
-#include "WakeCategoryMapper.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
-#include "tag/TagData.h"
 #include "tag/TagItemInterface.h"
 
+namespace UKControllerPlugin::Tag {
+    class TagData;
+} // namespace UKControllerPlugin::Tag
+
 namespace UKControllerPlugin::Wake {
+    class WakeCategoryMapperInterface;
 
     /*
         Handles wake category events
@@ -15,17 +18,14 @@ namespace UKControllerPlugin::Wake {
     {
         public:
         explicit WakeCategoryEventHandler(
-            UKControllerPlugin::Wake::WakeCategoryMapper ukMapper,
-            UKControllerPlugin::Wake::WakeCategoryMapper recatMapper);
+            WakeCategoryMapperInterface& ukMapper, WakeCategoryMapperInterface& recatMapper);
         void FlightPlanEvent(
-            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
-            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) override;
-        void
-        FlightPlanDisconnectEvent(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan) override;
-        void ControllerFlightPlanDataEvent(
-            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
+            Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) override;
+        void FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan) override;
+        void ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
         [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
-        void SetTagItemData(UKControllerPlugin::Tag::TagData& tagData) override;
+        void SetTagItemData(Tag::TagData& tagData) override;
 
         // Tag item ids
         inline static const int tagItemIdAircraftTypeCategory = 105;
@@ -36,23 +36,17 @@ namespace UKControllerPlugin::Wake {
 
         private:
         [[nodiscard]] static auto GetMappedCategory(
-            const UKControllerPlugin::Wake::WakeCategoryMapper& mapper,
-            const std::string& aircraftType,
+            WakeCategoryMapperInterface& mapper,
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             const std::string& defaultValue) -> std::string;
-        [[nodiscard]] auto GetAircraftTypeUkCategoryTagItemData(UKControllerPlugin::Tag::TagData& tagData)
-            -> std::string;
-        ;
-        [[nodiscard]] auto GetAircraftTypeRecatCategoryTagItemData(UKControllerPlugin::Tag::TagData& tagData)
-            -> std::string;
-        ;
-        [[nodiscard]] auto GetStandaloneTagItemData(UKControllerPlugin::Tag::TagData& tagData) -> std::string;
-        ;
-        [[nodiscard]] auto GetRecatTagItemData(UKControllerPlugin::Tag::TagData& tagData) -> std::string;
-        ;
-        [[nodiscard]] auto GetUkRecatCombinedTagItemData(UKControllerPlugin::Tag::TagData& tagData) -> std::string;
+        [[nodiscard]] auto GetAircraftTypeUkCategoryTagItemData(Tag::TagData& tagData) -> std::string;
+        [[nodiscard]] auto GetAircraftTypeRecatCategoryTagItemData(Tag::TagData& tagData) -> std::string;
+        [[nodiscard]] auto GetStandaloneTagItemData(Tag::TagData& tagData) -> std::string;
+        [[nodiscard]] auto GetRecatTagItemData(Tag::TagData& tagData) -> std::string;
+        [[nodiscard]] auto GetUkRecatCombinedTagItemData(Tag::TagData& tagData) -> std::string;
         [[nodiscard]] auto GetAircraftTypeCategoryString(
-            const std::string& aircraftType,
-            const UKControllerPlugin::Wake::WakeCategoryMapper& mapper,
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            WakeCategoryMapperInterface& mapper,
             const std::string& defaultValue) const -> std::string;
         auto FirstOrNewCacheItem(const std::string& callsign) -> CacheItem&;
 
@@ -63,10 +57,10 @@ namespace UKControllerPlugin::Wake {
         std::map<std::string, CacheItem> cache;
 
         // Maps categories
-        const UKControllerPlugin::Wake::WakeCategoryMapper ukMapper;
+        WakeCategoryMapperInterface& ukMapper;
 
         // Maps recat categories
-        const UKControllerPlugin::Wake::WakeCategoryMapper recatMapper;
+        WakeCategoryMapperInterface& recatMapper;
 
         // What to display in unknown conditions
         const std::string unknownTagItemString = "?";
@@ -80,5 +74,4 @@ namespace UKControllerPlugin::Wake {
             {tagItemIdAircraftTypeRecat, "Aircraft Type / RECAT-EU Category"},
         };
     };
-
 } // namespace UKControllerPlugin::Wake
