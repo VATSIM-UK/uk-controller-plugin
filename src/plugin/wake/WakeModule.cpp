@@ -1,4 +1,3 @@
-#include "CreateWakeMappings.h"
 #include "FlightplanWakeCategoryMapper.h"
 #include "WakeCategoryEventHandler.h"
 #include "WakeModule.h"
@@ -12,7 +11,6 @@
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
-using UKControllerPlugin::Wake::CreateWakeMappings;
 using UKControllerPlugin::Wake::WakeCategoryEventHandler;
 
 namespace UKControllerPlugin::Wake {

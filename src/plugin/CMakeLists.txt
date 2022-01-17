@@ -10,7 +10,18 @@ set(resource
 source_group("resource" FILES ${resource})
 
 set(src__aircraft
-        aircraft/CallsignSelectionListInterface.h aircraft/CallsignSelectionProviderInterface.h aircraft/CallsignSelectionList.cpp aircraft/CallsignSelectionList.h aircraft/CallsignSelectionListFactory.cpp aircraft/CallsignSelectionListFactory.h aircraft/CallsignSelectionListFactoryBootstrap.cpp aircraft/CallsignSelectionListFactoryBootstrap.h aircraft/AircraftType.cpp aircraft/AircraftType.h aircraft/AircraftTypeCollection.cpp aircraft/AircraftTypeCollection.h aircraft/AircraftTypeCollectionFactory.cpp aircraft/AircraftTypeCollectionFactory.h aircraft/AircraftTypeFactory.cpp aircraft/AircraftTypeFactory.h aircraft/AircraftModule.cpp aircraft/AircraftModule.h aircraft/FlightplanAircraftTypeMapper.cpp aircraft/FlightplanAircraftTypeMapper.h aircraft/AircraftTypeMapperInterface.h)
+        aircraft/CallsignSelectionListInterface.h
+        aircraft/CallsignSelectionProviderInterface.h
+        aircraft/CallsignSelectionList.cpp aircraft/CallsignSelectionList.h
+        aircraft/CallsignSelectionListFactory.cpp aircraft/CallsignSelectionListFactory.h
+        aircraft/CallsignSelectionListFactoryBootstrap.cpp aircraft/CallsignSelectionListFactoryBootstrap.h
+        aircraft/AircraftType.cpp aircraft/AircraftType.h
+        aircraft/AircraftTypeCollection.cpp aircraft/AircraftTypeCollection.h
+        aircraft/AircraftTypeCollectionFactory.cpp aircraft/AircraftTypeCollectionFactory.h
+        aircraft/AircraftTypeFactory.cpp aircraft/AircraftTypeFactory.h
+        aircraft/AircraftModule.cpp aircraft/AircraftModule.h
+        aircraft/FlightplanAircraftTypeMapper.cpp aircraft/FlightplanAircraftTypeMapper.h
+        aircraft/AircraftTypeMapperInterface.h)
 source_group("src\\aircraft" FILES ${src__aircraft})
 
 set(src__airfield
@@ -855,12 +866,8 @@ source_group("src\\timer" FILES ${src__timer})
 
 set(src__wake
     "wake/CacheItem.h"
-    "wake/CreateWakeMappings.cpp"
-    "wake/CreateWakeMappings.h"
     "wake/WakeCategoryEventHandler.cpp"
     "wake/WakeCategoryEventHandler.h"
-    "wake/WakeCategoryMapper.cpp"
-    "wake/WakeCategoryMapper.h"
     "wake/WakeModule.cpp"
     "wake/WakeModule.h"
     wake/WakeScheme.cpp wake/WakeScheme.h
@@ -871,7 +878,9 @@ set(src__wake
     wake/WakeSchemeFactory.cpp wake/WakeSchemeFactory.h wake/WakeSchemeCollection.cpp
     wake/WakeSchemeCollection.h
     wake/WakeSchemeCollectionFactory.cpp
-    wake/WakeSchemeCollectionFactory.h wake/WakeCategoryMapperInterface.h wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h)
+    wake/WakeSchemeCollectionFactory.h
+    wake/WakeCategoryMapperInterface.h
+    wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES

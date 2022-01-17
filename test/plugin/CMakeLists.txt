@@ -4,7 +4,15 @@ set(PROJECT_NAME UKControllerPluginCoreTest)
 # Source groups
 ################################################################################
 set(test__aircraft
-        aircraft/CallsignSelectionListTest.cpp aircraft/CallsignSelectionListFactoryTest.cpp aircraft/CallsignSelectionListFactoryBootstrapTest.cpp aircraft/AircraftTypeTest.cpp aircraft/AircraftTypeCollectionTest.cpp aircraft/AircraftTypeFactoryTest.cpp aircraft/AircraftTypeCollectionFactoryTest.cpp aircraft/AircraftModuleTest.cpp aircraft/FlightplanAircraftTypeMapperTest.cpp)
+        aircraft/CallsignSelectionListTest.cpp
+        aircraft/CallsignSelectionListFactoryTest.cpp
+        aircraft/CallsignSelectionListFactoryBootstrapTest.cpp
+        aircraft/AircraftTypeTest.cpp
+        aircraft/AircraftTypeCollectionTest.cpp
+        aircraft/AircraftTypeFactoryTest.cpp
+        aircraft/AircraftTypeCollectionFactoryTest.cpp
+        aircraft/AircraftModuleTest.cpp
+        aircraft/FlightplanAircraftTypeMapperTest.cpp)
 source_group("test\\aircraft" FILES ${test__aircraft})
 
 set(test__airfield
@@ -317,7 +325,10 @@ set(test__mock
     "mock/MockSocket.h"
     "mock/MockUserSettingAwareInterface.h"
     "mock/MockUserSettingProviderInterface.h"
-        mock/MockCallsignSelectionProvider.h mock/MockCallsignSelectionList.h mock/MockAircraftTypeMapper.h mock/MockWakeCategoryMapper.h)
+    mock/MockCallsignSelectionProvider.h
+    mock/MockCallsignSelectionList.h
+    mock/MockAircraftTypeMapper.h
+    mock/MockWakeCategoryMapper.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -512,11 +523,16 @@ set(test__timer
 source_group("test\\timer" FILES ${test__timer})
 
 set(test__wake
-    "wake/CreateWakeMappingsTest.cpp"
     "wake/WakeCategoryEventHandlerTest.cpp"
-    "wake/WakeCategoryMapperTest.cpp"
     "wake/WakeModuleTest.cpp"
-        wake/WakeCategoryTest.cpp wake/WakeSchemeTest.cpp wake/DepartureWakeIntervalFactoryTest.cpp wake/WakeCategoryFactoryTest.cpp wake/WakeSchemeFactoryTest.cpp wake/WakeSchemeCollectionTest.cpp wake/WakeSchemeCollectionFactoryTest.cpp wake/FlightplanWakeCategoryMapperTest.cpp)
+    wake/WakeCategoryTest.cpp
+    wake/WakeSchemeTest.cpp
+    wake/DepartureWakeIntervalFactoryTest.cpp
+    wake/WakeCategoryFactoryTest.cpp
+    wake/WakeSchemeFactoryTest.cpp
+    wake/WakeSchemeCollectionTest.cpp
+    wake/WakeSchemeCollectionFactoryTest.cpp
+    wake/FlightplanWakeCategoryMapperTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
