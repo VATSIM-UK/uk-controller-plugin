@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [4.0.0-beta.5](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.4...4.0.0-beta.5) (2022-01-17)
+
+
+### Bug Fixes
+
+* **intentioncode:** add GOREV as exit fix for K2 intention code ([#406](https://github.com/VATSIM-UK/uk-controller-plugin/issues/406)) ([4135248](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4135248ffd6beb25c107477beee36c7ac72502d7))
+
 ## [3.13.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.2...3.13.3) (2022-01-16)
 
 
