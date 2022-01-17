@@ -9,7 +9,8 @@ namespace UKControllerPlugin::Aircraft {
     {
     }
 
-    auto FlightplanAircraftTypeMapper::MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+    auto
+    FlightplanAircraftTypeMapper::MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
         -> std::shared_ptr<AircraftType>
     {
         return collection.GetByIcaoCode(flightplan.GetAircraftType());

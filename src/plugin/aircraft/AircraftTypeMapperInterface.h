@@ -11,7 +11,7 @@ namespace UKControllerPlugin::Aircraft {
     {
         public:
         virtual ~AircraftTypeMapperInterface() = default;
-        [[nodiscard]] virtual auto MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+        [[nodiscard]] virtual auto MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
             -> std::shared_ptr<AircraftType> = 0;
     };
 } // namespace UKControllerPlugin::Aircraft

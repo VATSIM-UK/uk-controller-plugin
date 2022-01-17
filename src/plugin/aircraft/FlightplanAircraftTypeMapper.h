@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Aircraft {
     {
         public:
         FlightplanAircraftTypeMapper(const AircraftTypeCollection& collection);
-        [[nodiscard]] auto MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+        [[nodiscard]] auto MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
             -> std::shared_ptr<AircraftType> override;
 
         private:

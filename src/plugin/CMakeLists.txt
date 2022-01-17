@@ -871,7 +871,7 @@ set(src__wake
     wake/WakeSchemeFactory.cpp wake/WakeSchemeFactory.h wake/WakeSchemeCollection.cpp
     wake/WakeSchemeCollection.h
     wake/WakeSchemeCollectionFactory.cpp
-    wake/WakeSchemeCollectionFactory.h)
+    wake/WakeSchemeCollectionFactory.h wake/WakeCategoryMapperInterface.h wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES

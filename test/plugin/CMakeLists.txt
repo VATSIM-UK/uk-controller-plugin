@@ -317,7 +317,7 @@ set(test__mock
     "mock/MockSocket.h"
     "mock/MockUserSettingAwareInterface.h"
     "mock/MockUserSettingProviderInterface.h"
-        mock/MockCallsignSelectionProvider.h mock/MockCallsignSelectionList.h)
+        mock/MockCallsignSelectionProvider.h mock/MockCallsignSelectionList.h mock/MockAircraftTypeMapper.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -516,7 +516,7 @@ set(test__wake
     "wake/WakeCategoryEventHandlerTest.cpp"
     "wake/WakeCategoryMapperTest.cpp"
     "wake/WakeModuleTest.cpp"
-        wake/WakeCategoryTest.cpp wake/WakeSchemeTest.cpp wake/DepartureWakeIntervalFactoryTest.cpp wake/WakeCategoryFactoryTest.cpp wake/WakeSchemeFactoryTest.cpp wake/WakeSchemeCollectionTest.cpp wake/WakeSchemeCollectionFactoryTest.cpp)
+        wake/WakeCategoryTest.cpp wake/WakeSchemeTest.cpp wake/DepartureWakeIntervalFactoryTest.cpp wake/WakeCategoryFactoryTest.cpp wake/WakeSchemeFactoryTest.cpp wake/WakeSchemeCollectionTest.cpp wake/WakeSchemeCollectionFactoryTest.cpp wake/FlightplanWakeCategoryMapperTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
