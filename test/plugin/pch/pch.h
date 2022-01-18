@@ -40,6 +40,7 @@
 #include "../mock/MockHistoryTrailDialog.h"
 #include "../mock/MockHistoryTrailRepository.h"
 #include "../mock/MockIntegrationActionProcessor.h"
+#include "../mock/MockMetarEventHandler.h"
 #include "../mock/MockOutboundIntegrationEventHandler.h"
 #include "../mock/MockPushEventConnection.h"
 #include "../mock/MockPushEventProcessor.h"
