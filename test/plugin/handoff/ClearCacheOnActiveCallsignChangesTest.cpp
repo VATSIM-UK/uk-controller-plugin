@@ -26,12 +26,14 @@ namespace UKControllerPluginTest::Handoff {
               hierarchy1(std::make_shared<ControllerPositionHierarchy>()),
               hierarchy2(std::make_shared<ControllerPositionHierarchy>()),
               hierarchy3(std::make_shared<ControllerPositionHierarchy>()),
+              hierarchy4(std::make_shared<ControllerPositionHierarchy>()),
               callsign("LON_S_CTR", "Test", *position1, true), changes(cache)
         {
             hierarchy1->AddPosition(position1);
             hierarchy1->AddPosition(position2);
             hierarchy2->AddPosition(position2);
             hierarchy2->AddPosition(position1);
+            hierarchy4->AddPosition(position2);
         }
 
         std::shared_ptr<ControllerPosition> position1;
@@ -40,6 +42,7 @@ namespace UKControllerPluginTest::Handoff {
         std::shared_ptr<ControllerPositionHierarchy> hierarchy1;
         std::shared_ptr<ControllerPositionHierarchy> hierarchy2;
         std::shared_ptr<ControllerPositionHierarchy> hierarchy3;
+        std::shared_ptr<ControllerPositionHierarchy> hierarchy4;
         ActiveCallsign callsign;
         HandoffCache cache;
         ClearCacheOnActiveCallsignChanges changes;
@@ -85,6 +88,17 @@ namespace UKControllerPluginTest::Handoff {
     {
         // Resolve to LON_SC, LON_S comes on and preceeds in hierarchy
         cache.Add(std::make_shared<ResolvedHandoff>("BAW123", position2, hierarchy3, hierarchy1));
+        changes.ActiveCallsignAdded(callsign);
+        EXPECT_EQ(nullptr, cache.Get("BAW123"));
+    }
+
+    TEST_F(
+        ClearCacheOnActiveCallsignChangesTest,
+        CallsignLoggingOnClearsCacheIfResolvedControllerInAirfieldHierarchyButControllerLoggingOnIsInSidHierarchy)
+    {
+        // Resolve to LON_SC on the airfield hierarchy, LON_S comes on, is not in the airfield hierarchy but is
+        // in the SID one, should clear.
+        cache.Add(std::make_shared<ResolvedHandoff>("BAW123", position2, hierarchy1, hierarchy4));
         changes.ActiveCallsignAdded(callsign);
         EXPECT_EQ(nullptr, cache.Get("BAW123"));
     }

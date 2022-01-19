@@ -28,8 +28,16 @@ namespace UKControllerPlugin::Handoff {
             }
 
             /*
+             * If the resolved controller isn't int he SID hierarchy, but the controller logging on is, then
+             * this takes precedence.
+             */
+            if (handoff->sidHierarchy->PositionInHierarchy(callsign.GetNormalisedPosition())) {
+                return true;
+            }
+
+            /*
              * If the resolved controller is in the airfield fallback hierarchy, then the controller coming online must
-             * preceed it in that.
+             * preceed them in that.
              */
             if (handoff->airfieldHierarchy->PositionInHierarchy(*handoff->resolvedController)) {
                 return handoff->airfieldHierarchy->PositionPreceeds(
@@ -38,10 +46,10 @@ namespace UKControllerPlugin::Handoff {
 
             /*
              * Finally, if the resolved controller isn't from a hierarchy, it must be unicom.
-             * Therefore, we need to evict from cache if the controller coming online is in either hierarchy.
+             *
+             * The last check here is to see if the controller in question is in the airfield hierarchy.
              */
-            return handoff->sidHierarchy->PositionInHierarchy(callsign.GetNormalisedPosition()) ||
-                   handoff->airfieldHierarchy->PositionInHierarchy(callsign.GetNormalisedPosition());
+            return handoff->airfieldHierarchy->PositionInHierarchy(callsign.GetNormalisedPosition());
         });
     }
 
