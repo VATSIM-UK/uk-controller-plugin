@@ -3,7 +3,7 @@
 
 namespace UKControllerPlugin::Handoff {
     class HandoffCache;
-    
+
     class ClearCacheOnActiveCallsignChanges : public Controller::ActiveCallsignEventHandlerInterface
     {
         public:
@@ -13,8 +13,7 @@ namespace UKControllerPlugin::Handoff {
         void CallsignsFlushed() override;
 
         private:
-        
         // The cache to clear
         HandoffCache& cache;
     };
-} //
+} // namespace UKControllerPlugin::Handoff
