@@ -104,4 +104,37 @@ namespace UKControllerPluginTest::Controller {
         hierarchy2.AddPosition(position2);
         EXPECT_TRUE(hierarchy1 == hierarchy2);
     }
+
+    TEST_F(ControllerPositionHierarchyTest, PositionPreceedsReturnsTrueIfPositionComesBefore)
+    {
+        ControllerPositionHierarchy hierarchy;
+        hierarchy.AddPosition(position1);
+        hierarchy.AddPosition(position2);
+
+        EXPECT_TRUE(hierarchy.PositionPreceeds(*position1, *position2));
+    }
+
+    TEST_F(ControllerPositionHierarchyTest, PositionPreceedsReturnsTrueIfSamePositionAndInHierarchy)
+    {
+        ControllerPositionHierarchy hierarchy;
+        hierarchy.AddPosition(position1);
+        hierarchy.AddPosition(position2);
+
+        EXPECT_TRUE(hierarchy.PositionPreceeds(*position1, *position1));
+    }
+
+    TEST_F(ControllerPositionHierarchyTest, PositionPreceedsReturnsFalseIfPositionComesAfter)
+    {
+        ControllerPositionHierarchy hierarchy;
+        hierarchy.AddPosition(position2);
+        hierarchy.AddPosition(position1);
+
+        EXPECT_FALSE(hierarchy.PositionPreceeds(*position1, *position2));
+    }
+
+    TEST_F(ControllerPositionHierarchyTest, PositionPreceedsReturnsFalseIfPositionNotInHierarchy)
+    {
+        ControllerPositionHierarchy hierarchy;
+        EXPECT_FALSE(hierarchy.PositionPreceeds(*position1, *position2));
+    }
 } // namespace UKControllerPluginTest::Controller
