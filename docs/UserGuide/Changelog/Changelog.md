@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+# [4.0.0-beta.6](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.5...4.0.0-beta.6) (2022-01-20)
+
+
+### Bug Fixes
+
+* **handoffs:** Handoffs not repopulating when controllers log on ([#413](https://github.com/VATSIM-UK/uk-controller-plugin/issues/413)) ([d1d872e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d1d872e9fec27a166057a4832493d33d5436a420)), closes [#412](https://github.com/VATSIM-UK/uk-controller-plugin/issues/412)
+* **pressuremonitor:** Trigger pressure monitor updates correctly ([#411](https://github.com/VATSIM-UK/uk-controller-plugin/issues/411)) ([287d395](https://github.com/VATSIM-UK/uk-controller-plugin/commit/287d395fbb588e7809492fd9b83c1dca5b1856ea)), closes [#409](https://github.com/VATSIM-UK/uk-controller-plugin/issues/409)
+
 ## [3.13.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.3...3.13.4) (2022-01-20)
 
 ### Bug Fixes
