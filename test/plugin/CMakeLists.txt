@@ -241,7 +241,7 @@ set(test__metar
     metar/MetarModuleTest.cpp
     metar/PressureQueryMessageTest.cpp
     metar/PressureNotFoundMessageTest.cpp
-    metar/PressureQueryCommandHandlerTest.cpp)
+    metar/PressureQueryCommandHandlerTest.cpp mock/MockMetarEventHandler.h)
 source_group("test\\metar" FILES ${test__metar})
 
 set(test__minstack

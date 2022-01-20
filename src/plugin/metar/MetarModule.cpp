@@ -27,8 +27,8 @@ namespace UKControllerPlugin::Metar {
         container.metarEventHandler = std::make_unique<MetarEventHandlerCollection>();
 
         // Handle all the push events for METARs
-        container.pushEventProcessors->AddProcessor(
-            std::make_shared<MetarsUpdatedPushEventProcessor>(*parsedMetars, *parsedMetarFactory, *container.api));
+        container.pushEventProcessors->AddProcessor(std::make_shared<MetarsUpdatedPushEventProcessor>(
+            *parsedMetars, *parsedMetarFactory, *container.api, *container.metarEventHandler));
 
         // Handler for the pressure query command
         container.commandHandlers->RegisterHandler(
