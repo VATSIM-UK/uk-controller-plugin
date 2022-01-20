@@ -74,8 +74,9 @@ namespace UKControllerPluginTest::Handoff {
         ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("LAM5M"));
 
         const auto resolved = resolver.Resolve(mockFlightplan);
-        EXPECT_EQ(122.800, resolved->frequency);
-        EXPECT_EQ(0, resolved->hierarchy->CountPositions());
+        EXPECT_EQ(122.800, resolved->resolvedController->GetFrequency());
+        EXPECT_EQ(0, resolved->sidHierarchy->CountPositions());
+        EXPECT_EQ(0, resolved->airfieldHierarchy->CountPositions());
     }
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsUnicomIfNoPositionsActive)
@@ -83,8 +84,9 @@ namespace UKControllerPluginTest::Handoff {
         ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
 
         const auto resolved = resolver.Resolve(mockFlightplan);
-        EXPECT_EQ(122.800, resolved->frequency);
-        EXPECT_EQ(this->hierarchy, resolved->hierarchy);
+        EXPECT_EQ(122.800, resolved->resolvedController->GetFrequency());
+        EXPECT_EQ(this->hierarchy, resolved->sidHierarchy);
+        EXPECT_EQ(0, resolved->airfieldHierarchy->CountPositions());
     }
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsUnicomIfFirstPositionOnlineIsUser)
@@ -95,8 +97,9 @@ namespace UKControllerPluginTest::Handoff {
         ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("CLN3X"));
 
         const auto resolved = resolver.Resolve(mockFlightplan);
-        EXPECT_EQ(122.800, resolved->frequency);
-        EXPECT_EQ(this->hierarchy, resolved->hierarchy);
+        EXPECT_EQ(122.800, resolved->resolvedController->GetFrequency());
+        EXPECT_EQ(this->hierarchy, resolved->sidHierarchy);
+        EXPECT_EQ(0, resolved->airfieldHierarchy->CountPositions());
     }
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsResolvedHandoff)
@@ -108,8 +111,9 @@ namespace UKControllerPluginTest::Handoff {
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_NE(nullptr, resolved);
         EXPECT_EQ("BAW123", resolved->callsign);
-        EXPECT_EQ(121.950, resolved->frequency);
-        EXPECT_EQ(this->hierarchy, resolved->hierarchy);
+        EXPECT_EQ(121.950, resolved->resolvedController->GetFrequency());
+        EXPECT_EQ(this->hierarchy, resolved->sidHierarchy);
+        EXPECT_EQ(0, resolved->airfieldHierarchy->CountPositions());
     }
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsResolvedAirfieldHandoffIfNoMatchingSid)
@@ -125,8 +129,9 @@ namespace UKControllerPluginTest::Handoff {
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_NE(nullptr, resolved);
         EXPECT_EQ("BAW123", resolved->callsign);
-        EXPECT_EQ(121.800, resolved->frequency);
-        EXPECT_EQ(hierarchy2, resolved->hierarchy);
+        EXPECT_EQ(121.800, resolved->resolvedController->GetFrequency());
+        EXPECT_EQ(0, resolved->sidHierarchy->CountPositions());
+        EXPECT_EQ(hierarchy2, resolved->airfieldHierarchy);
     }
 
     TEST_F(DepartureHandoffResolverTest, ItResolvesToAirfieldHandoffIfSidResolvesToUnicom)
@@ -144,7 +149,8 @@ namespace UKControllerPluginTest::Handoff {
         const auto resolved = resolver.Resolve(mockFlightplan);
         EXPECT_NE(nullptr, resolved);
         EXPECT_EQ("BAW123", resolved->callsign);
-        EXPECT_EQ(124.220, resolved->frequency);
-        EXPECT_EQ(hierarchy2, resolved->hierarchy);
+        EXPECT_EQ(124.220, resolved->resolvedController->GetFrequency());
+        EXPECT_EQ(this->hierarchy, resolved->sidHierarchy);
+        EXPECT_EQ(hierarchy2, resolved->airfieldHierarchy);
     }
 } // namespace UKControllerPluginTest::Handoff

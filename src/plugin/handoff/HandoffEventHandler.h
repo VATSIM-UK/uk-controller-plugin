@@ -1,5 +1,4 @@
 #pragma once
-#include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "integration/OutboundIntegrationEventHandler.h"
 #include "tag/TagItemInterface.h"
@@ -22,9 +21,7 @@ namespace UKControllerPlugin::Handoff {
     /*
         Handles handoff events
     */
-    class HandoffEventHandler : public Tag::TagItemInterface,
-                                public Flightplan::FlightPlanEventHandlerInterface,
-                                public Controller::ActiveCallsignEventHandlerInterface
+    class HandoffEventHandler : public Tag::TagItemInterface, public Flightplan::FlightPlanEventHandlerInterface
     {
         public:
         HandoffEventHandler(
@@ -43,11 +40,6 @@ namespace UKControllerPlugin::Handoff {
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) override;
         void FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan) override;
         void ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
-
-        // Inherited via ActiveCallsignEventHandlerInterface
-        void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign) override;
-        void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign) override;
-        void CallsignsFlushed() override;
 
         private:
         void FireHandoffUpdatedEvent(const std::string& callsign);

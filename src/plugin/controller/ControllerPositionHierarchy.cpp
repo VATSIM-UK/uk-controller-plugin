@@ -7,7 +7,7 @@ namespace UKControllerPlugin::Controller {
     /*
         Adds a position to the hierarchy.
     */
-    void ControllerPositionHierarchy::AddPosition(const std::shared_ptr<const ControllerPosition>& position)
+    void ControllerPositionHierarchy::AddPosition(std::shared_ptr<ControllerPosition> position)
     {
         this->positions.push_back(position);
     }
@@ -54,5 +54,26 @@ namespace UKControllerPlugin::Controller {
         }
 
         return true;
+    }
+
+    /**
+     * Does the position in a given hierarchy preceed another.
+     *
+     * If the position is not in the hierarchy, then the answer is no, it does not.
+     */
+    auto ControllerPositionHierarchy::PositionPreceeds(
+        const ControllerPosition& position, const ControllerPosition& preceeds) const -> bool
+    {
+        for (const auto& hierarchyPosition : this->positions) {
+            if (*hierarchyPosition == position) {
+                return true;
+            }
+
+            if (*hierarchyPosition == preceeds) {
+                return false;
+            }
+        }
+
+        return false;
     }
 } // namespace UKControllerPlugin::Controller

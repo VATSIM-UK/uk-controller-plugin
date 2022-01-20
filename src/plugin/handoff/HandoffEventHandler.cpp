@@ -65,34 +65,6 @@ namespace UKControllerPlugin::Handoff {
         // No change required here.
     }
 
-    /*
-        If a new callsign comes along, we have to clear the cache.
-    */
-    void HandoffEventHandler::ActiveCallsignAdded(const ActiveCallsign& callsign)
-    {
-        this->cache->DeleteWhere([&callsign](const std::shared_ptr<ResolvedHandoff>& handoff) -> bool {
-            return handoff->hierarchy->PositionInHierarchy(callsign.GetNormalisedPosition());
-        });
-    }
-
-    /*
-        If a callsign is removed, clear the cache for anything they were involved in.
-    */
-    void HandoffEventHandler::ActiveCallsignRemoved(const ActiveCallsign& callsign)
-    {
-        this->cache->DeleteWhere([&callsign](const std::shared_ptr<ResolvedHandoff>& handoff) -> bool {
-            return handoff->hierarchy->PositionInHierarchy(callsign.GetNormalisedPosition());
-        });
-    }
-
-    /*
-        If the callsigns are flushed, no cached values are valid
-    */
-    void HandoffEventHandler::CallsignsFlushed()
-    {
-        this->cache->Clear();
-    }
-
     void HandoffEventHandler::FireHandoffUpdatedEvent(const std::string& callsign)
     {
         this->outboundEvent.SendEvent(
@@ -106,8 +78,8 @@ namespace UKControllerPlugin::Handoff {
 
     auto HandoffEventHandler::FormatFrequency(const std::shared_ptr<ResolvedHandoff>& handoff) -> std::string
     {
-        char frequencyString[FREQUENCY_BUFFER_LENGTH];          // NOLINT
-        sprintf_s(frequencyString, "%.3f", handoff->frequency); // NOLINT
-        return frequencyString;                                 // NOLINT
+        char frequencyString[FREQUENCY_BUFFER_LENGTH];                                   // NOLINT
+        sprintf_s(frequencyString, "%.3f", handoff->resolvedController->GetFrequency()); // NOLINT
+        return frequencyString;                                                          // NOLINT
     }
 } // namespace UKControllerPlugin::Handoff

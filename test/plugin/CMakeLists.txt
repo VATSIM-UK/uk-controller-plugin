@@ -124,7 +124,7 @@ set(test__handoff
     handoff/FlightplanSidHandoffMapperTest.cpp
     handoff/FlightplanAirfieldHandoffMapperTest.cpp
     handoff/HandoffCacheTest.cpp
-    handoff/DepartureHandoffResolverTest.cpp)
+    handoff/DepartureHandoffResolverTest.cpp handoff/ClearCacheOnActiveCallsignChangesTest.cpp)
 source_group("test\\handoff" FILES ${test__handoff})
 
 set(test__headings
@@ -246,7 +246,7 @@ set(test__metar
     metar/MetarModuleTest.cpp
     metar/PressureQueryMessageTest.cpp
     metar/PressureNotFoundMessageTest.cpp
-    metar/PressureQueryCommandHandlerTest.cpp)
+    metar/PressureQueryCommandHandlerTest.cpp mock/MockMetarEventHandler.h)
 source_group("test\\metar" FILES ${test__metar})
 
 set(test__minstack

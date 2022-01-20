@@ -1,6 +1,7 @@
 #pragma once
 
 namespace UKControllerPlugin::Controller {
+    class ControllerPosition;
     class ControllerPositionHierarchy;
 } // namespace UKControllerPlugin::Controller
 
@@ -14,16 +15,20 @@ namespace UKControllerPlugin::Handoff {
         public:
         ResolvedHandoff(
             std::string callsign,
-            double frequency,
-            const std::shared_ptr<Controller::ControllerPositionHierarchy>& hierarchy);
+            const std::shared_ptr<Controller::ControllerPosition> resolvedController,
+            const std::shared_ptr<Controller::ControllerPositionHierarchy> sidHierarchy,
+            const std::shared_ptr<Controller::ControllerPositionHierarchy> airfieldHierarchy);
 
         // The normalised callsign of the position that the handoff is to
         const std::string callsign;
 
-        // The frequency that the handoff is to
-        const double frequency;
+        // Which controller position this has resolved to
+        const std::shared_ptr<Controller::ControllerPosition> resolvedController;
 
-        // The hierarchy of controllers this handoff is resolved too
-        const std::shared_ptr<Controller::ControllerPositionHierarchy> hierarchy;
+        // The hierarchy of controllers that the SID-specific handoff resolves to
+        const std::shared_ptr<Controller::ControllerPositionHierarchy> sidHierarchy;
+
+        // The hierarchy of airfield controllers that this resolves to
+        const std::shared_ptr<Controller::ControllerPositionHierarchy> airfieldHierarchy;
     };
 } // namespace UKControllerPlugin::Handoff
