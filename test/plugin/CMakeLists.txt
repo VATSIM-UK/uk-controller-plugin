@@ -119,7 +119,7 @@ set(test__handoff
     handoff/FlightplanSidHandoffMapperTest.cpp
     handoff/FlightplanAirfieldHandoffMapperTest.cpp
     handoff/HandoffCacheTest.cpp
-    handoff/DepartureHandoffResolverTest.cpp)
+    handoff/DepartureHandoffResolverTest.cpp handoff/ClearCacheOnActiveCallsignChangesTest.cpp)
 source_group("test\\handoff" FILES ${test__handoff})
 
 set(test__headings
