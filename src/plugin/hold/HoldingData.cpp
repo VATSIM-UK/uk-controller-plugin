@@ -1,3 +1,5 @@
+#include "AbstractHoldLevelRestriction.h"
+#include "DeemedSeparatedHold.h"
 #include "HoldingData.h"
 
 namespace UKControllerPlugin::Hold {
@@ -12,6 +14,8 @@ namespace UKControllerPlugin::Hold {
           deemedSeparatedHolds(std::move(original.deemedSeparatedHolds))
     {
     }
+
+    HoldingData::~HoldingData() = default;
 
     /*
         Move assignment

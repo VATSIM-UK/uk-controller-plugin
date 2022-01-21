@@ -1,8 +1,11 @@
+#include "HoldingAircraft.h"
 #include "HoldManager.h"
 #include "api/ApiException.h"
+#include "api/ApiInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "task/TaskRunnerInterface.h"
 
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Api::ApiInterface;

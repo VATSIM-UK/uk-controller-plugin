@@ -1,12 +1,20 @@
+#include "aircraft/CallsignSelectionListFactory.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldConfigurationMenuItem.h"
 #include "dialog/DialogManager.h"
+#include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
+#include "hold/PublishedHoldCollection.h"
+#include "navaids/NavaidCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Test;
+using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
 using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Hold::HoldConfigurationMenuItem;
@@ -15,6 +23,7 @@ using UKControllerPlugin::Hold::HoldDisplayManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::PublishedHoldCollection;
 using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
@@ -28,8 +37,9 @@ namespace UKControllerPluginTest {
         {
             public:
             HoldConfigurationMenuItemTest()
-                : dialogManager(mockProvider), holdManager(mockApi, mockTaskRunner),
-                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager),
+                : listFactory(functionHandlers, mockPlugin), dialogManager(mockProvider),
+                  holdManager(mockApi, mockTaskRunner),
+                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory),
                   displayManager(new HoldDisplayManager(displayFactory)), menuItem(dialogManager, displayManager, 1)
             {
                 this->dialogManager.AddDialog(this->dialogData);
@@ -41,6 +51,8 @@ namespace UKControllerPluginTest {
             NiceMock<MockTaskRunnerInterface> mockTaskRunner;
             NiceMock<MockApiInterface> mockApi;
             NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+            FunctionCallEventHandler functionHandlers;
+            CallsignSelectionListFactory listFactory;
             NiceMock<MockDialogProvider> mockProvider;
             UKControllerPlugin::Dialog::DialogManager dialogManager;
             HoldManager holdManager;

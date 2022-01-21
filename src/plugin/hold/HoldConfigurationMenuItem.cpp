@@ -1,6 +1,7 @@
 #include "HoldConfigurationMenuItem.h"
 #include "HoldRenderer.h"
 #include "HoldSelectionMenu.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 

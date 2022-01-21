@@ -3,6 +3,10 @@ set(PROJECT_NAME UKControllerPluginCoreTest)
 ################################################################################
 # Source groups
 ################################################################################
+set(test__aircraft
+        aircraft/CallsignSelectionListTest.cpp aircraft/CallsignSelectionListFactoryTest.cpp aircraft/CallsignSelectionListFactoryBootstrapTest.cpp)
+source_group("test\\aircraft" FILES ${test__aircraft})
+
 set(test__airfield
     "airfield/AirfieldCollectionFactoryTest.cpp"
     "airfield/AirfieldCollectionTest.cpp"
@@ -161,7 +165,7 @@ set(test__hold
     "hold/MinStackHoldLevelRestrictionTest.cpp"
     "hold/PublishedHoldCollectionFactoryTest.cpp"
     "hold/PublishedHoldCollectionTest.cpp"
-)
+        hold/AssignHoldCommandTest.cpp hold/AddToHoldCallsignProviderTest.cpp)
 source_group("test\\hold" FILES ${test__hold})
 
 set(test__initialaltitude
@@ -313,7 +317,7 @@ set(test__mock
     "mock/MockSocket.h"
     "mock/MockUserSettingAwareInterface.h"
     "mock/MockUserSettingProviderInterface.h"
-)
+        mock/MockCallsignSelectionProvider.h mock/MockCallsignSelectionList.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -516,6 +520,7 @@ set(test__wake
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
+    ${test__aircraft}
     ${test__airfield}
     ${test__api}
     ${test__bootstrap}

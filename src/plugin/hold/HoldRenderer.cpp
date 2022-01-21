@@ -1,8 +1,10 @@
+#include "HoldDisplay.h"
 #include "HoldDisplayFactory.h"
 #include "HoldManager.h"
 #include "HoldRenderer.h"
 #include "euroscope/UserSetting.h"
 #include "helper/HelperFunctions.h"
+#include "navaids/Navaid.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
@@ -84,6 +86,35 @@ namespace UKControllerPlugin::Hold {
         }
 
         (*display)->ButtonClicked(GetButtonNameFromObjectDescription(objectDescription));
+    }
+
+    /**
+     * Right-click handles adding a flightplan from a list.
+     */
+    void HoldRenderer::RightClick(
+        int objectId,
+        const std::string& objectDescription,
+        UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        std::string holdName = GetHoldNameFromObjectDescription(objectDescription);
+        auto display = std::find_if(
+            this->displays->cbegin(),
+            this->displays->cend(),
+            [&holdName](const std::unique_ptr<HoldDisplay>& hold) -> bool {
+                return hold->navaid.identifier == holdName;
+            });
+
+        if (display == this->displays->cend()) {
+            LogWarning("Tried to interact with invalid hold display");
+            return;
+        }
+
+        const auto buttonName = GetButtonNameFromObjectDescription(objectDescription);
+        if (buttonName != "add") {
+            return;
+        }
+
+        (*display)->ButtonRightClicked(buttonName);
     }
 
     /*
@@ -177,7 +208,7 @@ namespace UKControllerPlugin::Hold {
     */
     auto HoldRenderer::GetButtonNameFromObjectDescription(const std::string& objectDescription) -> std::string
     {
-        return objectDescription.substr(objectDescription.find('/') + 1);
+        return objectDescription.substr(objectDescription.find_last_of('/') + 1);
     }
 
     auto HoldRenderer::GetToggleCallbackId() const -> int
