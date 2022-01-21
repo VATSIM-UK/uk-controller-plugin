@@ -7,7 +7,6 @@
 #include "prenote/PublishedPrenote.h"
 #include "prenote/PublishedPrenoteCollection.h"
 #include "prenote/PublishedPrenoteMapper.h"
-#include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
@@ -18,14 +17,13 @@ using UKControllerPlugin::Prenote::PairedAirfieldPrenote;
 using UKControllerPlugin::Prenote::PublishedPrenote;
 using UKControllerPlugin::Prenote::PublishedPrenoteCollection;
 using UKControllerPlugin::Prenote::PublishedPrenoteMapper;
-using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 
 namespace UKControllerPluginTest::Prenote {
     class PublishedPrenoteMapperTest : public testing::Test
     {
         public:
-        PublishedPrenoteMapperTest() : mapper(prenotes, airfields, sids, flightRules)
+        PublishedPrenoteMapperTest() : mapper(prenotes, airfields, sidMapper, flightRules)
         {
             ON_CALL(mockFlightplan, GetOrigin).WillByDefault(testing::Return("EGGD"));
             ON_CALL(mockFlightplan, GetDestination).WillByDefault(testing::Return("EGKK"));
@@ -39,9 +37,9 @@ namespace UKControllerPluginTest::Prenote {
             this->prenotes.Add(std::make_shared<PublishedPrenote>(3, "TEST3", nullptr));
         }
 
+        testing::NiceMock<Sid::MockSidMapperInterface> sidMapper;
         testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;
         AirfieldCollection airfields;
-        SidCollection sids;
         FlightRuleCollection flightRules;
         PublishedPrenoteCollection prenotes;
         PublishedPrenoteMapper mapper;
@@ -49,8 +47,10 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(PublishedPrenoteMapperTest, ItReturnsSidPrenotes)
     {
-        this->sids.AddSid(
-            std::make_shared<StandardInstrumentDeparture>("EGGD", "BADIM1X", 3000, 100, 1, std::set<int>({1, 2})));
+        EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+            .Times(1)
+            .WillOnce(testing::Return(
+                std::make_shared<StandardInstrumentDeparture>(1, 2, "BADIM1X", 3000, 100, 1, std::set<int>({1, 2}))));
 
         EXPECT_EQ(
             std::set<std::shared_ptr<PublishedPrenote>>({this->prenotes.Get(1), this->prenotes.Get(2)}),
@@ -59,8 +59,10 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(PublishedPrenoteMapperTest, ItIgnoresSidPrenotesThatDontExist)
     {
-        this->sids.AddSid(
-            std::make_shared<StandardInstrumentDeparture>("EGGD", "BADIM1X", 3000, 100, 1, std::set<int>({1, 4})));
+        EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+            .Times(1)
+            .WillOnce(testing::Return(
+                std::make_shared<StandardInstrumentDeparture>(1, 2, "BADIM1X", 3000, 100, 1, std::set<int>({1, 4}))));
 
         EXPECT_EQ(
             std::set<std::shared_ptr<PublishedPrenote>>({this->prenotes.Get(1)}),
@@ -69,8 +71,9 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(PublishedPrenoteMapperTest, ItIgnoresSidsThatDontExist)
     {
-        this->sids.AddSid(
-            std::make_shared<StandardInstrumentDeparture>("EGGD", "WOTAN1Z", 3000, 100, 1, std::set<int>({1, 2})));
+        EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+            .Times(1)
+            .WillOnce(testing::Return(nullptr));
 
         EXPECT_EQ(std::set<std::shared_ptr<PublishedPrenote>>({}), this->mapper.MapForFlightplan(this->mockFlightplan));
     }
@@ -194,8 +197,10 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(PublishedPrenoteMapperTest, ItRemovesDuplicatePrenotes)
     {
-        this->sids.AddSid(
-            std::make_shared<StandardInstrumentDeparture>("EGGD", "BADIM1X", 3000, 100, 1, std::set<int>({1, 2})));
+        EXPECT_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+            .Times(1)
+            .WillOnce(testing::Return(
+                std::make_shared<StandardInstrumentDeparture>(1, 2, "BADIM1X", 3000, 100, 1, std::set<int>({1, 2}))));
 
         this->airfields.AddAirfield(std::make_shared<AirfieldModel>(
             1,

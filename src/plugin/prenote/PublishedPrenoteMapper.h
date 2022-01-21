@@ -11,7 +11,7 @@ namespace UKControllerPlugin {
         class FlightRuleCollection;
     } // namespace FlightRules
     namespace Sid {
-        class SidCollection;
+        class SidMapperInterface;
     } // namespace Sid
 } // namespace UKControllerPlugin
 
@@ -27,7 +27,7 @@ namespace UKControllerPlugin::Prenote {
         PublishedPrenoteMapper(
             const PublishedPrenoteCollection& publishedPrenotes,
             const Airfield::AirfieldCollection& airfields,
-            const Sid::SidCollection& sids,
+            const Sid::SidMapperInterface& sidMapper,
             const FlightRules::FlightRuleCollection& flightRules);
 
         [[nodiscard]] auto MapForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
@@ -48,7 +48,7 @@ namespace UKControllerPlugin::Prenote {
         const Airfield::AirfieldCollection& airfields;
 
         // The sids for specific sid prenotes
-        const Sid::SidCollection& sids;
+        const Sid::SidMapperInterface& sidMapper;
 
         // For mapping flight rules
         const FlightRules::FlightRuleCollection& flightRules;

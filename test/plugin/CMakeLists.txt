@@ -131,7 +131,7 @@ set(test__handoff
     handoff/FlightplanSidHandoffMapperTest.cpp
     handoff/FlightplanAirfieldHandoffMapperTest.cpp
     handoff/HandoffCacheTest.cpp
-    handoff/DepartureHandoffResolverTest.cpp)
+    handoff/DepartureHandoffResolverTest.cpp handoff/ClearCacheOnActiveCallsignChangesTest.cpp)
 source_group("test\\handoff" FILES ${test__handoff})
 
 set(test__headings
@@ -253,7 +253,7 @@ set(test__metar
     metar/MetarModuleTest.cpp
     metar/PressureQueryMessageTest.cpp
     metar/PressureNotFoundMessageTest.cpp
-    metar/PressureQueryCommandHandlerTest.cpp)
+    metar/PressureQueryCommandHandlerTest.cpp mock/MockMetarEventHandler.h)
 source_group("test\\metar" FILES ${test__metar})
 
 set(test__minstack
@@ -451,9 +451,16 @@ set(test__releases
         releases/ReleaseApprovalRemarksUserMessageTest.cpp releases/ReleaseRejectionRemarksUserMessageTest.cpp)
 source_group("test\\releases" FILES ${test__releases})
 
+set(test__runway
+    runway/RunwayTest.cpp
+    runway/RunwayCollectionTest.cpp
+    runway/RunwayCollectionFactoryTest.cpp
+    runway/RunwayModuleTest.cpp)
+source_group("test\\runway" FILES ${test__runway})
+
 set(test__sectorfile
-    "sectorfile/RunwayCollectionTest.cpp"
-    "sectorfile/RunwayTest.cpp"
+    "sectorfile/SectorfileRunwayCollectionTest.cpp"
+    "sectorfile/SectorfileRunwayTest.cpp"
     "sectorfile/SectorFileBootstrapTest.cpp"
     "sectorfile/SectorFileCoordinatesTest.cpp"
 )
@@ -469,7 +476,8 @@ set(test__sid
     "sid/SidCollectionTest.cpp"
     "sid/SidModuleTest.cpp"
     "sid/StandardInstrumentDepartureTest.cpp"
-)
+    sid/FlightplanSidMapperTest.cpp
+    mock/MockSidMapperInterface.h)
 source_group("test\\sid" FILES ${test__sid})
 
 set(test__squawk
@@ -575,6 +583,7 @@ set(ALL_FILES
     ${test__radarscreen}
     ${test__regional}
     ${test__releases}
+    ${test__runway}
     ${test__sectorfile}
     ${test__selcal}
     ${test__sid}

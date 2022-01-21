@@ -1,3 +1,4 @@
+#include "ClearCacheOnActiveCallsignChanges.h"
 #include "DepartureHandoffResolver.h"
 #include "FlightplanAirfieldHandoffMapper.h"
 #include "FlightplanSidHandoffMapper.h"
@@ -21,23 +22,25 @@ namespace UKControllerPlugin::Handoff {
     std::shared_ptr<HandoffCollection> handoffs;                     // NOLINT
     std::shared_ptr<FlightplanSidHandoffMapper> sidMapper;           // NOLINT
     std::shared_ptr<FlightplanAirfieldHandoffMapper> airfieldMapper; // NOLINT
+    std::shared_ptr<HandoffCache> cache;                             // NOLINT
 
     void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependency)
     {
+        cache = std::make_shared<HandoffCache>();
         handoffs = Create(
             *container.controllerHierarchyFactory,
             dependency.LoadDependency(GetHandoffDependencyKey(), nlohmann::json::array()));
         airfieldMapper = std::make_shared<FlightplanAirfieldHandoffMapper>(*handoffs, *container.airfields);
-        sidMapper = std::make_shared<FlightplanSidHandoffMapper>(*handoffs, *container.sids);
+        sidMapper = std::make_shared<FlightplanSidHandoffMapper>(*handoffs, *container.sidMapper);
 
         std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
             std::make_shared<DepartureHandoffResolver>(*sidMapper, *airfieldMapper, *container.activeCallsigns),
-            std::make_shared<HandoffCache>(),
+            cache,
             *container.integrationModuleContainer->outboundMessageHandler);
 
         container.tagHandler->RegisterTagItem(handoffTagItem, handler);
         container.flightplanHandler->RegisterHandler(handler);
-        container.activeCallsigns->AddHandler(handler);
+        container.activeCallsigns->AddHandler(std::make_shared<ClearCacheOnActiveCallsignChanges>(*cache));
     }
 
     auto GetHandoffDependencyKey() -> std::string

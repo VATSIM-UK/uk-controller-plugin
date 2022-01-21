@@ -19,8 +19,7 @@ namespace UKControllerPlugin {
         class Login;
     } // namespace Controller
     namespace Sid {
-        class SidCollection;
-        class StandardInstrumentDeparture;
+        class SidMapperInterface;
     } // namespace Sid
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
@@ -39,7 +38,7 @@ namespace UKControllerPlugin::InitialAltitude {
     {
         public:
         InitialAltitudeEventHandler(
-            const Sid::SidCollection& sids,
+            const Sid::SidMapperInterface& sidMapper,
             const Controller::ActiveCallsignCollection& activeCallsigns,
             const Ownership::AirfieldServiceProviderCollection& airfieldOwnership,
             const Controller::Login& login,
@@ -72,11 +71,8 @@ namespace UKControllerPlugin::InitialAltitude {
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool;
 
-        auto GetSidForFlight(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
-            -> std::shared_ptr<Sid::StandardInstrumentDeparture>;
-
         // Used to generate initial altitudes.
-        const Sid::SidCollection& sids;
+        const Sid::SidMapperInterface& sidMapper;
 
         // Used to find out the users callsign.
         const Controller::ActiveCallsignCollection& activeCallsigns;

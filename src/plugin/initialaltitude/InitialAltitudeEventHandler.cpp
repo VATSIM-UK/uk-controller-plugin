@@ -7,7 +7,7 @@
 #include "euroscope/UserSetting.h"
 #include "login/Login.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
-#include "sid/SidCollection.h"
+#include "sid/SidMapperInterface.h"
 #include "sid/StandardInstrumentDeparture.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
@@ -18,18 +18,17 @@ using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
-using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 
 namespace UKControllerPlugin::InitialAltitude {
 
     InitialAltitudeEventHandler::InitialAltitudeEventHandler(
-        const SidCollection& sids,
+        const Sid::SidMapperInterface& sidMapper,
         const ActiveCallsignCollection& activeCallsigns,
         const AirfieldServiceProviderCollection& airfieldOwnership,
         const Login& login,
         EuroscopePluginLoopbackInterface& plugin)
-        : sids(sids), activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership), login(login),
+        : sidMapper(sidMapper), activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership), login(login),
           plugin(plugin)
     {
     }
@@ -65,7 +64,7 @@ namespace UKControllerPlugin::InitialAltitude {
         }
 
         // Make sure the SID exists.
-        std::shared_ptr<StandardInstrumentDeparture> matchedSid = this->GetSidForFlight(flightPlan);
+        std::shared_ptr<StandardInstrumentDeparture> matchedSid = sidMapper.MapFlightplanToSid(flightPlan);
 
         if (!matchedSid) {
             return;
@@ -115,7 +114,7 @@ namespace UKControllerPlugin::InitialAltitude {
         }
 
         // Make sure the SID exists.
-        std::shared_ptr<StandardInstrumentDeparture> matchedSid = this->GetSidForFlight(flightplan);
+        std::shared_ptr<StandardInstrumentDeparture> matchedSid = sidMapper.MapFlightplanToSid(flightplan);
 
         if (!matchedSid) {
             return;
@@ -174,12 +173,6 @@ namespace UKControllerPlugin::InitialAltitude {
         EuroScopeCFlightPlanInterface& flightplan, EuroScopeCRadarTargetInterface& radarTarget) -> bool
     {
         return !flightplan.IsTracked() || flightplan.IsTrackedByUser();
-    }
-
-    auto InitialAltitudeEventHandler::GetSidForFlight(EuroScopeCFlightPlanInterface& flightplan)
-        -> std::shared_ptr<StandardInstrumentDeparture>
-    {
-        return this->sids.GetByAirfieldAndIdentifier(flightplan.GetOrigin(), flightplan.GetSidName());
     }
 
     /*

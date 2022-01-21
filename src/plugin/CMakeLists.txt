@@ -257,7 +257,7 @@ set(src__handoff
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
     controller/HandoffEventHandler.cpp
-    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h)
+    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h handoff/ClearCacheOnActiveCallsignChanges.cpp handoff/ClearCacheOnActiveCallsignChanges.h)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__headings headings/Heading.h headings/Heading.cpp)
@@ -759,6 +759,13 @@ set(src__releases
         releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp releases/RejectDepartureReleaseDialog.cpp releases/RejectDepartureReleaseDialog.h releases/ReleaseApprovalRemarksUserMessage.cpp releases/ReleaseApprovalRemarksUserMessage.h releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
 source_group("src\\releases" FILES ${src__releases})
 
+set(src__runway
+        runway/Runway.cpp runway/Runway.h
+        runway/RunwayCollection.cpp runway/RunwayCollection.h
+        runway/RunwayCollectionFactory.cpp runway/RunwayCollectionFactory.h
+        runway/RunwayModule.cpp runway/RunwayModule.h)
+source_group("src\\runway" FILES ${src__runway})
+
 set(src__sectorfile
     "sectorfile/Runway.cpp"
     "sectorfile/Runway.h"
@@ -786,7 +793,8 @@ set(src__sid
     "sid/SidModule.h"
     "sid/StandardInstrumentDeparture.cpp"
     "sid/StandardInstrumentDeparture.h"
-)
+    sid/FlightplanSidMapper.cpp sid/FlightplanSidMapper.h
+    sid/SidMapperInterface.h)
 source_group("src\\sid" FILES ${src__sid})
 
 set(src__squawk
@@ -924,6 +932,7 @@ set(ALL_FILES
     ${src__radarscreen}
     ${src__regional}
     ${src__releases}
+    ${src__runway}
     ${src__sectorfile}
     ${src__selcal}
     ${src__sid}

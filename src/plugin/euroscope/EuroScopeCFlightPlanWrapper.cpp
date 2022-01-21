@@ -194,4 +194,9 @@ namespace UKControllerPlugin::Euroscope {
     {
         return this->originalData.GetFlightPlanData().GetRemarks();
     }
+
+    std::string EuroScopeCFlightPlanWrapper::GetDepartureRunway() const
+    {
+        return this->originalData.GetFlightPlanData().GetDepartureRwy();
+    }
 } // namespace UKControllerPlugin::Euroscope

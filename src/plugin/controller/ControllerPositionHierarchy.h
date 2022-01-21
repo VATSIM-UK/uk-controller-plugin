@@ -10,15 +10,18 @@ namespace UKControllerPlugin::Controller {
     {
         public:
         ControllerPositionHierarchy() = default;
-        void AddPosition(const std::shared_ptr<const ControllerPosition>& position);
+        void AddPosition(std::shared_ptr<ControllerPosition> position);
         [[nodiscard]] auto CountPositions() const -> size_t;
         [[nodiscard]] auto PositionInHierarchy(const UKControllerPlugin::Controller::ControllerPosition& position) const
             -> bool;
+        [[nodiscard]] auto PositionPreceeds(
+            const UKControllerPlugin::Controller::ControllerPosition& position,
+            const UKControllerPlugin::Controller::ControllerPosition& preceeds) const -> bool;
         [[nodiscard]] auto operator==(const UKControllerPlugin::Controller::ControllerPositionHierarchy& compare) const
             -> bool;
 
         // Public type definitions for a custom iterator over the class.
-        using PositionHierarchy = std::list<std::shared_ptr<const ControllerPosition>>;
+        using PositionHierarchy = std::list<std::shared_ptr<ControllerPosition>>;
         using const_iterator = PositionHierarchy::const_iterator;
         [[nodiscard]] const_iterator begin() const
         {

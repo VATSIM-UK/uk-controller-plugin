@@ -9,8 +9,8 @@ namespace UKControllerPluginTest::Handoff {
     {
         public:
         HandoffCacheTest()
-            : handoff1(std::make_shared<ResolvedHandoff>("BAW123", 122.800, nullptr)),
-              handoff2(std::make_shared<ResolvedHandoff>("BAW456", 122.800, nullptr))
+            : handoff1(std::make_shared<ResolvedHandoff>("BAW123", nullptr, nullptr, nullptr)),
+              handoff2(std::make_shared<ResolvedHandoff>("BAW456", nullptr, nullptr, nullptr))
         {
         }
 

@@ -1,6 +1,5 @@
 #include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
-#include "memory"
 
 using ::testing::Test;
 using UKControllerPlugin::Sid::SidCollection;
@@ -13,9 +12,9 @@ namespace UKControllerPluginTest::Sid {
         public:
         SidCollectionTest()
         {
-            this->sid1 = std::make_shared<StandardInstrumentDeparture>("EGLL", "TEST1A", 1, 2, 3);
-            this->sid2 = std::make_shared<StandardInstrumentDeparture>("EGLL", "TEST1B", 3, 4, 5);
-            this->sid3 = std::make_shared<StandardInstrumentDeparture>("EGBB", "TEST1A", 5, 6, 7);
+            this->sid1 = std::make_shared<StandardInstrumentDeparture>(1, 1, "TEST1A", 1, 2, 3);
+            this->sid2 = std::make_shared<StandardInstrumentDeparture>(2, 1, "TEST1B", 3, 4, 5);
+            this->sid3 = std::make_shared<StandardInstrumentDeparture>(3, 2, "TEST1A", 5, 6, 7);
         }
 
         std::shared_ptr<StandardInstrumentDeparture> sid1;
@@ -50,7 +49,7 @@ namespace UKControllerPluginTest::Sid {
         this->sids.AddSid(this->sid1);
         this->sids.AddSid(this->sid2);
         this->sids.AddSid(this->sid3);
-        EXPECT_EQ(nullptr, this->sids.GetByAirfieldAndIdentifier("EGLL", "TEST1X"));
+        EXPECT_EQ(nullptr, this->sids.GetByRunwayIdAndIdentifier(1, "TEST1X"));
     }
 
     TEST_F(SidCollectionTest, ItReturnsASid)
@@ -58,7 +57,7 @@ namespace UKControllerPluginTest::Sid {
         this->sids.AddSid(this->sid1);
         this->sids.AddSid(this->sid2);
         this->sids.AddSid(this->sid3);
-        EXPECT_EQ(this->sid2, this->sids.GetByAirfieldAndIdentifier("EGLL", "TEST1B"));
+        EXPECT_EQ(this->sid2, this->sids.GetByRunwayIdAndIdentifier(1, "TEST1B"));
     }
 
     TEST_F(SidCollectionTest, ItReturnsASidHandlingDeprecationsInTheSectorfile)
@@ -66,7 +65,7 @@ namespace UKControllerPluginTest::Sid {
         this->sids.AddSid(this->sid1);
         this->sids.AddSid(this->sid2);
         this->sids.AddSid(this->sid3);
-        EXPECT_EQ(this->sid2, this->sids.GetByAirfieldAndIdentifier("EGLL", "#TEST1B"));
+        EXPECT_EQ(this->sid2, this->sids.GetByRunwayIdAndIdentifier(1, "#TEST1B"));
     }
 
     TEST_F(SidCollectionTest, ItReturnsNullPtrIfNoEuroscopeSid)
@@ -74,34 +73,22 @@ namespace UKControllerPluginTest::Sid {
         this->sids.AddSid(this->sid1);
         this->sids.AddSid(this->sid2);
         this->sids.AddSid(this->sid3);
-        EXPECT_EQ(nullptr, this->sids.GetByAirfieldAndIdentifier("EGLL", ""));
+        EXPECT_EQ(nullptr, this->sids.GetByRunwayIdAndIdentifier(1, ""));
     }
 
-    TEST_F(SidCollectionTest, ItReturnsASidByFlightplan)
+    TEST_F(SidCollectionTest, ItReturnsASidById)
     {
-        testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;
-
-        ON_CALL(mockFlightplan, GetOrigin).WillByDefault(testing::Return("EGLL"));
-
-        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("TEST1B"));
-
         this->sids.AddSid(this->sid1);
         this->sids.AddSid(this->sid2);
         this->sids.AddSid(this->sid3);
-        EXPECT_EQ(this->sid2, this->sids.GetForFlightplan(mockFlightplan));
+        EXPECT_EQ(this->sid2, this->sids.GetById(2));
     }
 
-    TEST_F(SidCollectionTest, ItReturnsNullptrIfSidNotFoundByFlightplan)
+    TEST_F(SidCollectionTest, ItReturnsNullptrIfSidNotFoundById)
     {
-        testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> mockFlightplan;
-
-        ON_CALL(mockFlightplan, GetOrigin).WillByDefault(testing::Return("EGLL"));
-
-        ON_CALL(mockFlightplan, GetSidName).WillByDefault(testing::Return("TEST1Z"));
-
         this->sids.AddSid(this->sid1);
         this->sids.AddSid(this->sid2);
         this->sids.AddSid(this->sid3);
-        EXPECT_EQ(nullptr, this->sids.GetForFlightplan(mockFlightplan));
+        EXPECT_EQ(nullptr, this->sids.GetById(55));
     }
 } // namespace UKControllerPluginTest::Sid
