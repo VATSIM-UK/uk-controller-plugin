@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+# [3.14.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.4...3.14.0) (2022-01-21)
+
+
+### Features
+
+* **holds:** Hold Manager UX Improvements ([#404](https://github.com/VATSIM-UK/uk-controller-plugin/issues/404)) ([c0c999b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c0c999bcc9bd2a4014c1afcbb0ad3c0d1c6ec113))
+* **sid:** Allow duplicate SID identifiers when doing initial altitudes ([#402](https://github.com/VATSIM-UK/uk-controller-plugin/issues/402)) ([6aeacfc](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6aeacfcaaad773ef37faa9477586411cc3f785b9))
+
 ## [3.13.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.3...3.13.4) (2022-01-20)
 
 
