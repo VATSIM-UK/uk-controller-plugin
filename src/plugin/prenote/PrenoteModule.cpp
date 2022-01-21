@@ -71,7 +71,7 @@ namespace UKControllerPlugin::Prenote {
             *persistence.controllerHierarchyFactory);
 
         mapper = std::make_unique<PublishedPrenoteMapper>(
-            *prenotes, *persistence.airfields, *persistence.sids, *persistence.flightRules);
+            *prenotes, *persistence.airfields, *persistence.sidMapper, *persistence.flightRules);
 
         ControllerPositionHierarchyFactory hierarchyFactory(*persistence.controllerPositions);
 

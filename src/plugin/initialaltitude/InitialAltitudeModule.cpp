@@ -24,7 +24,7 @@ namespace UKControllerPlugin::InitialAltitude {
     void InitialAltitudeModule::BootstrapPlugin(PersistenceContainer& persistence)
     {
         std::shared_ptr<InitialAltitudeEventHandler> initialAltitudeEventHandler(new InitialAltitudeEventHandler(
-            *persistence.sids,
+            *persistence.sidMapper,
             *persistence.activeCallsigns,
             *persistence.airfieldOwnership,
             *persistence.login,

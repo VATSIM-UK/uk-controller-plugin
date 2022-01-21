@@ -16,10 +16,10 @@ using UKControllerPluginTest::SectorFile::MockSectorFileProviderInterface;
 namespace UKControllerPluginTest {
     namespace SectorFile {
 
-        class RunwayCollectionTest : public Test
+        class SectorfileRunwayCollectionTest : public Test
         {
             public:
-            RunwayCollectionTest() : userSetting(mockUserSettings), collection(mockSectorFile)
+            SectorfileRunwayCollectionTest() : userSetting(mockUserSettings), collection(mockSectorFile)
             {
                 element1.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);
                 element2.reset(new NiceMock<MockEuroscopeSectorFileElementInterface>);
@@ -114,19 +114,19 @@ namespace UKControllerPluginTest {
             RunwayCollection collection;
         };
 
-        TEST_F(RunwayCollectionTest, ItStartsEmpty)
+        TEST_F(SectorfileRunwayCollectionTest, ItStartsEmpty)
         {
             EXPECT_EQ(0, collection.Count());
         }
 
-        TEST_F(RunwayCollectionTest, ItAddsRunwaysOnAsrLoad)
+        TEST_F(SectorfileRunwayCollectionTest, ItAddsRunwaysOnAsrLoad)
         {
             this->SetUpDefaultElements();
             this->collection.AsrLoadedEvent(this->userSetting);
             EXPECT_EQ(4, collection.Count());
         }
 
-        TEST_F(RunwayCollectionTest, ItLoadsRunwayData)
+        TEST_F(SectorfileRunwayCollectionTest, ItLoadsRunwayData)
         {
             this->SetUpDefaultElements();
             this->collection.AsrLoadedEvent(this->userSetting);
@@ -160,14 +160,14 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(runway08L.ActiveForArrivals());
         }
 
-        TEST_F(RunwayCollectionTest, ItReturnsInvalidIfNotFoundByAirfield)
+        TEST_F(SectorfileRunwayCollectionTest, ItReturnsInvalidIfNotFoundByAirfield)
         {
             this->SetUpDefaultElements();
             this->collection.AsrLoadedEvent(this->userSetting);
             EXPECT_EQ(this->collection.invalidRunway, this->collection.FetchByIdentifierAndAirfield("27L", "EGKK"));
         }
 
-        TEST_F(RunwayCollectionTest, ItUpdatesRunwayActivity)
+        TEST_F(SectorfileRunwayCollectionTest, ItUpdatesRunwayActivity)
         {
             std::shared_ptr<NiceMock<MockEuroscopeSectorFileElementInterface>> element =
                 std::make_shared<NiceMock<MockEuroscopeSectorFileElementInterface>>();

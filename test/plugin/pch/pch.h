@@ -50,6 +50,7 @@
 #include "../mock/MockRadarTargetEventHandlerInterface.h"
 #include "../mock/MockRunwayDialogAwareInterface.h"
 #include "../mock/MockSectorFileProviderInterface.h"
+#include "../mock/MockSidMapperInterface.h"
 #include "../mock/MockSocket.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "../mock/MockUserSettingAwareInterface.h"

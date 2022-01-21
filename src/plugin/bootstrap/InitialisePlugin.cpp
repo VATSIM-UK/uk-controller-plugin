@@ -44,6 +44,7 @@
 #include "push/PushEventBootstrap.h"
 #include "regional/RegionalPressureModule.h"
 #include "releases/ReleaseModule.h"
+#include "runway/RunwayModule.h"
 #include "sectorfile/SectorFileBootstrap.h"
 #include "selcal/SelcalModule.h"
 #include "sid/SidModule.h"
@@ -189,6 +190,7 @@ namespace UKControllerPlugin {
         // Boostrap all the modules at a plugin level
         Controller::BootstrapPlugin(*this->container, loader);
         Airfield::BootstrapPlugin(*this->container, loader);
+        Runway::BootstrapPlugin(*this->container, loader);
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
         FlightRules::BootstrapPlugin(*this->container, loader);

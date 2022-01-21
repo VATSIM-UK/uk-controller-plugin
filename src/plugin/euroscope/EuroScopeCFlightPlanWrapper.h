@@ -29,6 +29,7 @@ namespace UKControllerPlugin::Euroscope {
         std::string GetOrigin() const override;
         std::string GetRawRouteString() const override;
         std::string GetSidName() const override;
+        std::string GetDepartureRunway() const override;
         bool HasAssignedSquawk() const override;
         bool HasControllerClearedAltitude() const override;
         bool HasControllerAssignedHeading() const override;

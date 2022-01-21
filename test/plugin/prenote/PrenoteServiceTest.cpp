@@ -8,7 +8,6 @@
 #include "prenote/PublishedPrenote.h"
 #include "controller/ControllerPositionHierarchy.h"
 #include "airfield/AirfieldModel.h"
-#include "sid/SidCollection.h"
 #include "sid/StandardInstrumentDeparture.h"
 #include "flightrule/FlightRuleCollection.h"
 #include "prenote/PublishedPrenoteMapper.h"
@@ -32,7 +31,6 @@ using UKControllerPlugin::Prenote::PrenoteService;
 using UKControllerPlugin::Prenote::PublishedPrenote;
 using UKControllerPlugin::Prenote::PublishedPrenoteCollection;
 using UKControllerPlugin::Prenote::PublishedPrenoteMapper;
-using UKControllerPlugin::Sid::SidCollection;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -44,7 +42,7 @@ namespace UKControllerPluginTest::Prenote {
         public:
         PrenoteServiceTest()
             : hierarchyPointer(std::make_unique<ControllerPositionHierarchy>()), hierarchy(*hierarchyPointer),
-              mapper(prenotes, airfields, sids, flightRules)
+              mapper(prenotes, airfields, sidMapper, flightRules)
         {
             // Add controllers
             this->controllerUser = std::shared_ptr<ControllerPosition>(
@@ -74,19 +72,17 @@ namespace UKControllerPluginTest::Prenote {
 
             this->prenotes.Add(std::make_shared<PublishedPrenote>(1, "test", std::move(this->hierarchyPointer)));
 
-            this->sids.AddSid(
-                std::make_shared<StandardInstrumentDeparture>("EGKK", "ADMAG2X", 1, 2, 3, std::set<int>{1}));
-            this->sids.AddSid(
-                std::make_shared<StandardInstrumentDeparture>("EGKK", "LAM4M", 1, 2, 3, std::set<int>{1, 2}));
-
             ON_CALL(this->mockFlightplan, GetOrigin).WillByDefault(Return("EGKK"));
             ON_CALL(this->mockFlightplan, GetCallsign).WillByDefault(Return("BAW123"));
             ON_CALL(this->mockFlightplan, GetSidName).WillByDefault(Return("ADMAG2X"));
+            ON_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+                .WillByDefault(testing::Return(
+                    std::make_shared<StandardInstrumentDeparture>(1, 2, "ADMAG2X", 1, 2, 3, std::set<int>{1})));
         }
 
         FlightRuleCollection flightRules;
         AirfieldCollection airfields;
-        SidCollection sids;
+        NiceMock<Sid::MockSidMapperInterface> sidMapper;
         AirfieldServiceProviderCollection airfieldOwnership;
         PublishedPrenoteCollection prenotes;
         std::unique_ptr<ControllerPositionHierarchy> hierarchyPointer;
@@ -208,11 +204,14 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(PrenoteServiceTest, SendPrenotesSendsMultipleApplicablePrenotes)
     {
+        ON_CALL(this->mockFlightplan, GetSidName).WillByDefault(Return("LAM4M"));
+        ON_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+            .WillByDefault(testing::Return(
+                std::make_shared<StandardInstrumentDeparture>(2, 3, "LAM4M", 1, 2, 3, std::set<int>{1, 2})));
+
         auto hierarchyTwo = std::make_unique<ControllerPositionHierarchy>();
         hierarchyTwo->AddPosition(this->controllerNoLondon);
         this->prenotes.Add(std::make_shared<PublishedPrenote>(2, "test", std::move(hierarchyTwo)));
-
-        ON_CALL(this->mockFlightplan, GetSidName).WillByDefault(Return("LAM4M"));
 
         EXPECT_CALL(
             mockPlugin,
@@ -254,7 +253,9 @@ namespace UKControllerPluginTest::Prenote {
         this->prenotes.Add(std::make_shared<PublishedPrenote>(2, "test", std::move(hierarchyTwo)));
 
         ON_CALL(this->mockFlightplan, GetSidName).WillByDefault(Return("LAM4M"));
-
+        ON_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))
+            .WillByDefault(testing::Return(
+                std::make_shared<StandardInstrumentDeparture>(2, 3, "LAM4M", 1, 2, 3, std::set<int>{1, 2})));
         EXPECT_CALL(
             mockPlugin,
             ChatAreaMessage(

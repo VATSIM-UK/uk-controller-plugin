@@ -7,7 +7,7 @@
 #include "euroscope/UserSetting.h"
 #include "login/Login.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
-#include "sid/SidCollection.h"
+#include "sid/SidMapperInterface.h"
 #include "sid/StandardInstrumentDeparture.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
@@ -18,18 +18,18 @@ using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Ownership::AirfieldServiceProviderCollection;
-using UKControllerPlugin::Sid::SidCollection;
+using UKControllerPlugin::Sid::SidMapperInterface;
 using UKControllerPlugin::Sid::StandardInstrumentDeparture;
 
 namespace UKControllerPlugin::InitialHeading {
 
     InitialHeadingEventHandler::InitialHeadingEventHandler(
-        const SidCollection& sids,
+        const SidMapperInterface& sidMapper,
         const ActiveCallsignCollection& activeCallsigns,
         const AirfieldServiceProviderCollection& airfieldOwnership,
         const Login& login,
         EuroscopePluginLoopbackInterface& plugin)
-        : sids(sids), activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership), login(login),
+        : sidMapper(sidMapper), activeCallsigns(activeCallsigns), airfieldOwnership(airfieldOwnership), login(login),
           plugin(plugin)
     {
     }
@@ -65,7 +65,7 @@ namespace UKControllerPlugin::InitialHeading {
         }
 
         // Make sure the SID exists.
-        std::shared_ptr<StandardInstrumentDeparture> matchedSid = this->GetSidForFlight(flightPlan);
+        auto matchedSid = sidMapper.MapFlightplanToSid(flightPlan);
 
         if (!matchedSid || matchedSid->InitialHeading() == 0) {
             return;
@@ -110,7 +110,7 @@ namespace UKControllerPlugin::InitialHeading {
         }
 
         // Make sure the SID exists.
-        std::shared_ptr<StandardInstrumentDeparture> matchedSid = this->GetSidForFlight(flightplan);
+        auto matchedSid = sidMapper.MapFlightplanToSid(flightplan);
 
         if (!matchedSid || matchedSid->InitialHeading() == 0) {
             return;
@@ -176,12 +176,6 @@ namespace UKControllerPlugin::InitialHeading {
         EuroScopeCFlightPlanInterface& flightplan, EuroScopeCRadarTargetInterface& radarTarget) -> bool
     {
         return !flightplan.IsTracked() || flightplan.IsTrackedByUser();
-    }
-
-    auto InitialHeadingEventHandler::GetSidForFlight(EuroScopeCFlightPlanInterface& flightplan)
-        -> std::shared_ptr<StandardInstrumentDeparture>
-    {
-        return this->sids.GetByAirfieldAndIdentifier(flightplan.GetOrigin(), flightplan.GetSidName());
     }
 
     /*

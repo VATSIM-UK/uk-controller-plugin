@@ -104,6 +104,9 @@ namespace UKControllerPlugin {
     namespace Releases {
         class DepartureReleaseEventHandler;
     } // namespace Releases
+    namespace Runway {
+        class RunwayCollection;
+    } // namespace Runway
     namespace SectorFile {
         class RunwayCollection;
     } // namespace SectorFile
@@ -112,6 +115,7 @@ namespace UKControllerPlugin {
     } // namespace Setting
     namespace Sid {
         class SidCollection;
+        class SidMapperInterface;
     } // namespace Sid
     namespace Squawk {
         class SquawkAssignment;
@@ -209,6 +213,7 @@ namespace UKControllerPlugin::Bootstrap {
 
         // Large collections that we don't want to go onto the stack
         std::unique_ptr<Sid::SidCollection> sids;
+        std::unique_ptr<Sid::SidMapperInterface> sidMapper;
         std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
         std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
@@ -220,6 +225,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
         std::unique_ptr<UKControllerPlugin::FlightRules::FlightRuleCollection> flightRules;
+        std::unique_ptr<UKControllerPlugin::Runway::RunwayCollection> runwayCollection;
 
         // Push events
         std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;

@@ -7,7 +7,7 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "flightrule/FlightRule.h"
 #include "flightrule/FlightRuleCollection.h"
-#include "sid/SidCollection.h"
+#include "sid/SidMapperInterface.h"
 #include "sid/StandardInstrumentDeparture.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
@@ -16,9 +16,9 @@ namespace UKControllerPlugin::Prenote {
     PublishedPrenoteMapper::PublishedPrenoteMapper(
         const PublishedPrenoteCollection& publishedPrenotes,
         const Airfield::AirfieldCollection& airfields,
-        const Sid::SidCollection& sids,
+        const Sid::SidMapperInterface& sidMapper,
         const FlightRules::FlightRuleCollection& flightRules)
-        : publishedPrenotes(publishedPrenotes), airfields(airfields), sids(sids), flightRules(flightRules)
+        : publishedPrenotes(publishedPrenotes), airfields(airfields), sidMapper(sidMapper), flightRules(flightRules)
     {
     }
 
@@ -64,7 +64,7 @@ namespace UKControllerPlugin::Prenote {
     void PublishedPrenoteMapper::MapSidPrenotes(
         const EuroScopeCFlightPlanInterface& flightplan, std::set<std::shared_ptr<PublishedPrenote>>& prenotes) const
     {
-        const auto sid = this->sids.GetForFlightplan(flightplan);
+        const auto sid = this->sidMapper.MapFlightplanToSid(flightplan);
         if (sid == nullptr) {
             return;
         }
