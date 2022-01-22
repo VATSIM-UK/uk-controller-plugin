@@ -3,24 +3,20 @@
 namespace UKControllerPlugin {
     namespace Windows {
 
-        GdiGraphicsWrapper::GdiGraphicsWrapper(void)
+        GdiGraphicsWrapper::GdiGraphicsWrapper()
         {
             this->stringFormat =
                 std::make_unique<Gdiplus::StringFormat>(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip);
             this->stringFormat->SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat->SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
-            this->font =
-                CreateFont(13, '\0', '\0', '\0', 400, '\0', '\0', '\0', '\x1', '\0', '\0', '\0', '\0', L"EuroScope");
+
+            this->euroscopeFontFamily = std::make_unique<Gdiplus::FontFamily>(L"EuroScope");
+            this->euroscopeFont = std::make_unique<Gdiplus::Font>(euroscopeFontFamily.get(), 9);
         }
 
         GdiGraphicsWrapper::GdiGraphicsWrapper(std::unique_ptr<Gdiplus::Graphics> graphics)
             : graphics(std::move(graphics))
         {
-        }
-
-        GdiGraphicsWrapper::~GdiGraphicsWrapper(void)
-        {
-            DeleteObject(this->font);
         }
 
         /*
@@ -172,8 +168,7 @@ namespace UKControllerPlugin {
         */
         void GdiGraphicsWrapper::SetDeviceHandle(HDC& handle)
         {
-            this->api.reset(new Gdiplus::Graphics(handle));
-            this->euroscopeFont.reset(new Gdiplus::Font(handle, font));
+            this->api.reset(Gdiplus::Graphics::FromHDC(handle));
         }
 
         void GdiGraphicsWrapper::Clipped(Gdiplus::Region& clipRegion, std::function<void()> drawFunction)
