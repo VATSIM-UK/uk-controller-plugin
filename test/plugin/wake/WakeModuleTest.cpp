@@ -1,5 +1,7 @@
 #include "bootstrap/PersistenceContainer.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "radarscreen/RadarRenderableCollection.h"
 #include "tag/TagItemCollection.h"
 #include "wake/WakeModule.h"
 #include "wake/WakeSchemeCollection.h"
@@ -7,9 +9,12 @@
 using ::testing::NiceMock;
 using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Wake::BootstrapPlugin;
+using UKControllerPlugin::Wake::BootstrapRadarScreen;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 
 namespace UKControllerPluginTest::Wake {
@@ -23,6 +28,8 @@ namespace UKControllerPluginTest::Wake {
             container.tagHandler = std::make_unique<TagItemCollection>();
         }
 
+        AsrEventHandlerCollection asrEventHandlers;
+        RadarRenderableCollection radarRenderables;
         PersistenceContainer container;
         NiceMock<MockDependencyLoader> dependencies;
     };
@@ -78,5 +85,18 @@ namespace UKControllerPluginTest::Wake {
     {
         BootstrapPlugin(this->container, this->dependencies);
         EXPECT_TRUE(this->container.tagHandler->HasHandlerForItemId(115));
+    }
+
+    TEST_F(WakeModuleTest, ItRegistersCalculatorForRenderers)
+    {
+        BootstrapRadarScreen(radarRenderables, asrEventHandlers);
+        EXPECT_EQ(1, radarRenderables.CountRenderers());
+        EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
+    }
+
+    TEST_F(WakeModuleTest, ItRegistersCalculatorForAsrEvents)
+    {
+        BootstrapRadarScreen(radarRenderables, asrEventHandlers);
+        EXPECT_EQ(1, asrEventHandlers.CountHandlers());
     }
 } // namespace UKControllerPluginTest::Wake

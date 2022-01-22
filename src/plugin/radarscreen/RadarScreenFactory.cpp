@@ -20,6 +20,7 @@
 #include "releases/ReleaseModule.h"
 #include "sectorfile/SectorFileBootstrap.h"
 #include "srd/SrdModule.h"
+#include "wake/WakeModule.h"
 
 using UKControllerPlugin::Bootstrap::HelperBootstrap;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -105,6 +106,7 @@ namespace UKControllerPlugin::RadarScreen {
         Releases::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         PrenoteModule::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         MissedApproach::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
+        Wake::BootstrapRadarScreen(renderers, userSettingHandlers);
 
         // Register command for position resets
         this->persistence.commandHandlers->RegisterHandler(std::make_shared<PositionResetCommand>(renderers));

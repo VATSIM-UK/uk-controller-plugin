@@ -1,4 +1,5 @@
 #include "FlightplanWakeCategoryMapper.h"
+#include "WakeCalculatorDisplay.h"
 #include "WakeCategoryEventHandler.h"
 #include "WakeModule.h"
 #include "WakeScheme.h"
@@ -6,7 +7,9 @@
 #include "WakeSchemeCollectionFactory.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyLoaderInterface.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "radarscreen/RadarRenderableCollection.h"
 #include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -48,5 +51,16 @@ namespace UKControllerPlugin::Wake {
         container.tagHandler->RegisterTagItem(handler->tagItemIdRecat, handler);
         container.tagHandler->RegisterTagItem(handler->tagItemIdUkRecatCombined, handler);
         container.tagHandler->RegisterTagItem(handler->tagItemIdAircraftTypeRecat, handler);
+    }
+
+    void BootstrapRadarScreen(
+        RadarScreen::RadarRenderableCollection& renderables, Euroscope::AsrEventHandlerCollection& asrHandlers)
+    {
+        const auto rendererId = renderables.ReserveRendererIdentifier();
+        const auto renderer =
+            std::make_shared<WakeCalculatorDisplay>(renderables.ReserveScreenObjectIdentifier(rendererId));
+
+        renderables.RegisterRenderer(rendererId, renderer, renderables.afterLists);
+        asrHandlers.RegisterHandler(renderer);
     }
 } // namespace UKControllerPlugin::Wake

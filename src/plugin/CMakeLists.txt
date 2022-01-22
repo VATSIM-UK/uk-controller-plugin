@@ -240,7 +240,7 @@ set(src__graphics
     "graphics/GdiGraphicsWrapper.cpp"
     "graphics/GdiGraphicsWrapper.h"
     "graphics/GdiplusBrushes.h"
-)
+        graphics/FontManager.cpp graphics/FontManager.h graphics/StringFormatManager.cpp graphics/StringFormatManager.h)
 source_group("src\\graphics" FILES ${src__graphics})
 
 set(src__handoff
@@ -888,7 +888,7 @@ set(src__wake
     wake/WakeSchemeCollectionFactory.cpp
     wake/WakeSchemeCollectionFactory.h
     wake/WakeCategoryMapperInterface.h
-    wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h)
+    wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h wake/WakeCalculatorDisplay.cpp wake/WakeCalculatorDisplay.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES
