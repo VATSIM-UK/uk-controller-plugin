@@ -13,6 +13,11 @@ namespace UKControllerPlugin::Graphics {
         return *instance;
     }
 
+    auto FontManager::GetDefault() -> const Gdiplus::Font&
+    {
+        return this->Get(9);
+    }
+
     auto FontManager::Get(int size) -> const Gdiplus::Font&
     {
         if (this->fonts.count(size) == 0) {
