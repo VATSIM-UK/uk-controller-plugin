@@ -17,7 +17,6 @@ namespace UKControllerPlugin {
         {
             public:
             GdiGraphicsWrapper();
-            explicit GdiGraphicsWrapper(std::unique_ptr<Gdiplus::Graphics> graphics);
             void DrawRect(const Gdiplus::RectF& area, const Gdiplus::Pen& pen) override;
             void DrawRect(const Gdiplus::Rect& area, const Gdiplus::Pen& pen) override;
             void DrawRect(const RECT& area, const Gdiplus::Pen& pen) override;
@@ -49,13 +48,10 @@ namespace UKControllerPlugin {
             std::unique_ptr<Gdiplus::Graphics> api;
 
             // The Gdiplus font
-            std::unique_ptr<Gdiplus::Font> euroscopeFont;
-            std::unique_ptr<Gdiplus::FontFamily> euroscopeFontFamily;
+            const Gdiplus::Font& euroscopeFont;
 
             // String format
             std::unique_ptr<Gdiplus::StringFormat> stringFormat;
-
-            std::unique_ptr<Gdiplus::Graphics> graphics;
         };
     } // namespace Windows
 } // namespace UKControllerPlugin

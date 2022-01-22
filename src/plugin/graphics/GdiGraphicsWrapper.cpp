@@ -1,22 +1,15 @@
+#include "FontManager.h"
 #include "GdiGraphicsWrapper.h"
 
 namespace UKControllerPlugin {
     namespace Windows {
 
-        GdiGraphicsWrapper::GdiGraphicsWrapper()
+        GdiGraphicsWrapper::GdiGraphicsWrapper() : euroscopeFont(Graphics::FontManager::Instance().Get(9))
         {
             this->stringFormat =
                 std::make_unique<Gdiplus::StringFormat>(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip);
             this->stringFormat->SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
             this->stringFormat->SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
-
-            this->euroscopeFontFamily = std::make_unique<Gdiplus::FontFamily>(L"EuroScope");
-            this->euroscopeFont = std::make_unique<Gdiplus::Font>(euroscopeFontFamily.get(), 9);
-        }
-
-        GdiGraphicsWrapper::GdiGraphicsWrapper(std::unique_ptr<Gdiplus::Graphics> graphics)
-            : graphics(std::move(graphics))
-        {
         }
 
         /*
@@ -96,8 +89,7 @@ namespace UKControllerPlugin {
         */
         void GdiGraphicsWrapper::DrawString(std::wstring text, const Gdiplus::RectF& area, const Gdiplus::Brush& brush)
         {
-            api->DrawString(
-                text.c_str(), text.size(), this->euroscopeFont.get(), area, this->stringFormat.get(), &brush);
+            api->DrawString(text.c_str(), text.size(), &this->euroscopeFont, area, this->stringFormat.get(), &brush);
         }
 
         /*
@@ -112,7 +104,7 @@ namespace UKControllerPlugin {
                 static_cast<Gdiplus::REAL>(area.Height)};
 
             api->DrawString(
-                text.c_str(), text.size(), this->euroscopeFont.get(), areaFloat, this->stringFormat.get(), &brush);
+                text.c_str(), text.size(), &this->euroscopeFont, areaFloat, this->stringFormat.get(), &brush);
         }
 
         /*
@@ -127,7 +119,7 @@ namespace UKControllerPlugin {
                 static_cast<Gdiplus::REAL>(area.bottom - area.top)};
 
             api->DrawString(
-                text.c_str(), text.size(), this->euroscopeFont.get(), areaFloat, this->stringFormat.get(), &brush);
+                text.c_str(), text.size(), &this->euroscopeFont, areaFloat, this->stringFormat.get(), &brush);
         }
 
         /*
