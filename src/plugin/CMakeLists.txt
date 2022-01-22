@@ -888,7 +888,7 @@ set(src__wake
     wake/WakeSchemeCollectionFactory.cpp
     wake/WakeSchemeCollectionFactory.h
     wake/WakeCategoryMapperInterface.h
-    wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h wake/WakeCalculatorDisplay.cpp wake/WakeCalculatorDisplay.h)
+    wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h wake/WakeCalculatorDisplay.cpp wake/WakeCalculatorDisplay.h wake/WakeCalculatorOptions.cpp wake/WakeCalculatorOptions.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES

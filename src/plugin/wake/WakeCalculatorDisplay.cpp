@@ -1,13 +1,25 @@
 #include "WakeCalculatorDisplay.h"
+#include "WakeCategory.h"
+#include "WakeCategoryMapperInterface.h"
+#include "WakeCalculatorOptions.h"
+#include "aircraft/CallsignSelectionListInterface.h"
 #include "components/TitleBar.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "graphics/FontManager.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/StringFormatManager.h"
+#include "helper/HelperFunctions.h"
 
 namespace UKControllerPlugin::Wake {
 
-    WakeCalculatorDisplay::WakeCalculatorDisplay(int screenObjectId)
-        : screenObjectId(screenObjectId),
+    WakeCalculatorDisplay::WakeCalculatorDisplay(
+        std::shared_ptr<WakeCalculatorOptions> options,
+        std::shared_ptr<Aircraft::CallsignSelectionListInterface> leadCallsignSelector,
+        std::shared_ptr<Aircraft::CallsignSelectionListInterface> followCallsignSelector,
+        Euroscope::EuroscopePluginLoopbackInterface& plugin,
+        int screenObjectId)
+        : options(std::move(options)), leadCallsignSelector(std::move(leadCallsignSelector)),
+          followCallsignSelector(std::move(followCallsignSelector)), plugin(plugin), screenObjectId(screenObjectId),
           titleBar(Components::TitleBar::Create(L"Wake Turbulence Calculator", TitleBarArea())
                        ->WithDrag(this->screenObjectId)
                        ->WithDefaultBackgroundBrush()
@@ -32,7 +44,24 @@ namespace UKControllerPlugin::Wake {
         POINT mousePos,
         RECT itemArea)
     {
-        RadarRenderableInterface::LeftClick(radarScreen, objectId, objectDescription, mousePos, itemArea);
+        if (objectDescription == "leadcallsign") {
+            leadCallsignSelector->TriggerList(mousePos);
+            return;
+        }
+
+        if (objectDescription == "followcallsign") {
+            followCallsignSelector->TriggerList(mousePos);
+            return;
+        }
+
+        if (objectDescription == "scheme") {
+            return;
+        }
+
+        if (objectDescription == "intermediate") {
+            options->Intermediate(!options->Intermediate());
+            return;
+        }
     }
 
     void WakeCalculatorDisplay::Move(RECT position, std::string objectDescription)
@@ -68,8 +97,7 @@ namespace UKControllerPlugin::Wake {
         this->comparisonTextArea = {TEXT_INSET, dividingLineEnd.Y + TEXT_INSET, WINDOW_WIDTH - (2 * TEXT_INSET), 20};
 
         // Calculation result
-        this->calculationResultArea = {
-            TEXT_INSET, comparisonTextArea.GetBottom(), WINDOW_WIDTH - (2 * TEXT_INSET), 60};
+        this->calculationResultArea = {TEXT_INSET, comparisonTextArea.GetBottom(), WINDOW_WIDTH - (2 * TEXT_INSET), 60};
     }
 
     void WakeCalculatorDisplay::Render(
@@ -82,7 +110,6 @@ namespace UKControllerPlugin::Wake {
             this->RenderLead(graphics, radarScreen);
             this->RenderFollowing(graphics, radarScreen);
             this->RenderDividingLine(graphics);
-            this->RenderComparison(graphics);
             this->RenderSeparationRequirement(graphics);
             titleBar->Draw(graphics, radarScreen);
         });
@@ -122,7 +149,7 @@ namespace UKControllerPlugin::Wake {
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         graphics.DrawString(
-            L"RECAT-EU",
+            HelperFunctions::ConvertToWideString(options->Scheme()),
             schemeTextArea,
             *textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
@@ -132,6 +159,7 @@ namespace UKControllerPlugin::Wake {
     void WakeCalculatorDisplay::RenderLead(
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
+        const auto lead = options->LeadAircraft();
         graphics.DrawString(
             L"Lead:",
             leadStaticArea,
@@ -139,7 +167,7 @@ namespace UKControllerPlugin::Wake {
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         graphics.DrawString(
-            L"EZY123456789",
+            HelperFunctions::ConvertToWideString(lead.empty() ? "--" : lead),
             leadTextArea,
             *textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
@@ -149,6 +177,7 @@ namespace UKControllerPlugin::Wake {
     void WakeCalculatorDisplay::RenderFollowing(
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
+        const auto following = options->FollowingAircraft();
         graphics.DrawString(
             L"Follow:",
             followingStaticArea,
@@ -156,7 +185,7 @@ namespace UKControllerPlugin::Wake {
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         graphics.DrawString(
-            L"EZY123456789",
+            HelperFunctions::ConvertToWideString(following.empty() ? "--" : following),
             followingTextArea,
             *textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
@@ -173,24 +202,49 @@ namespace UKControllerPlugin::Wake {
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         graphics.DrawString(
-            L"Yes",
+            options->Intermediate() ? L"Yes" : L"No",
             intermediateTextArea,
             *textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
     }
+
     void WakeCalculatorDisplay::RenderDividingLine(Windows::GdiGraphicsInterface& graphics)
     {
         graphics.DrawLine(*dividingLinePen, dividingLineStart, dividingLineEnd);
     }
 
-    void WakeCalculatorDisplay::RenderComparison(Windows::GdiGraphicsInterface& graphics)
-    {
-        graphics.DrawString(L"UM followed by LM (intermediate)", comparisonTextArea, *textBrush);
-    }
-
     void WakeCalculatorDisplay::RenderSeparationRequirement(Windows::GdiGraphicsInterface& graphics)
     {
+        // Check for the mapper and required flightplans
+        const auto mapper = options->SchemeMapper();
+        const auto leadFlightplan = plugin.GetFlightplanForCallsign(options->LeadAircraft());
+        const auto followingFlightplan = plugin.GetFlightplanForCallsign(options->LeadAircraft());
+        if (options->SchemeMapper() == nullptr || leadFlightplan == nullptr || followingFlightplan == nullptr) {
+            return;
+        }
+
+        // Check for the categories;
+        const auto leadCategory = mapper->MapForFlightplan(*leadFlightplan);
+        const auto followingCategory = mapper->MapForFlightplan(*followingFlightplan);
+        if (leadCategory == nullptr || followingCategory == nullptr) {
+            return;
+        }
+
+        // Summarise the WTC comparisons
+        const std::wstring categoryComparison = HelperFunctions::ConvertToWideString(leadCategory->Code()) +
+                                                L" followed by " +
+                                                HelperFunctions::ConvertToWideString(followingCategory->Code()) +
+                                                (options->Intermediate() ? L" (intermediate)" : L"");
+
+        graphics.DrawString(categoryComparison, comparisonTextArea, *textBrush);
+
+        // Check for intervals and display if present
+        const auto departureInterval = leadCategory->DepartureInterval(*followingCategory, options->Intermediate());
+        if (departureInterval == nullptr) {
+            return;
+        }
+
         graphics.DrawString(
             L"3 mins",
             calculationResultArea,

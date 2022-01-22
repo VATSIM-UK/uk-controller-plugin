@@ -3,17 +3,30 @@
 #include "radarscreen/RadarRenderableInterface.h"
 
 namespace UKControllerPlugin {
+    namespace Aircraft {
+        class CallsignSelectionListInterface;
+    } // namespace Aircraft
     namespace Components {
         class TitleBar;
     } // namespace Components
+    namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
+    } //
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Wake {
+    class WakeCalculatorOptions;
+
     class WakeCalculatorDisplay : public RadarScreen::RadarRenderableInterface,
                                   public Euroscope::AsrEventHandlerInterface
     {
         public:
-        WakeCalculatorDisplay(int screenObjectId);
+        WakeCalculatorDisplay(
+            std::shared_ptr<WakeCalculatorOptions> options,
+            std::shared_ptr<Aircraft::CallsignSelectionListInterface> leadCallsignSelector,
+            std::shared_ptr<Aircraft::CallsignSelectionListInterface> followCallsignSelector,
+            Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            int screenObjectId);
         auto IsVisible() const -> bool override;
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
@@ -39,12 +52,8 @@ namespace UKControllerPlugin::Wake {
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
         void RenderIntermediate(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
-        void RenderDividingLine(
-            Windows::GdiGraphicsInterface& graphics);
-        void RenderComparison(
-            Windows::GdiGraphicsInterface& graphics);
-        void RenderSeparationRequirement(
-            Windows::GdiGraphicsInterface& graphics);
+        void RenderDividingLine(Windows::GdiGraphicsInterface& graphics);
+        void RenderSeparationRequirement(Windows::GdiGraphicsInterface& graphics);
 
         // The coordinate of the top left of the window
         inline static const POINT DEFAULT_WINDOW_POSITION{200, 200};
@@ -54,6 +63,16 @@ namespace UKControllerPlugin::Wake {
         inline static const int TITLE_BAR_HEIGHT = 20;
         inline static const int CONTENT_HEIGHT = 125;
         inline static const int TEXT_INSET = 5;
+
+        // Some options
+        std::shared_ptr<WakeCalculatorOptions> options;
+
+        // For selecting callsigns
+        const std::shared_ptr<Aircraft::CallsignSelectionListInterface> leadCallsignSelector;
+        const std::shared_ptr<Aircraft::CallsignSelectionListInterface> followCallsignSelector;
+        
+        // For getting flightplans
+        Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
         // The screen object id for click
         const int screenObjectId;
