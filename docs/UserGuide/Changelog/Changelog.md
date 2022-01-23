@@ -1,5 +1,40 @@
 # UK Controller Plugin Changelog
 
+# [4.0.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.14.0...4.0.0) (2022-01-23)
+
+
+* 4.0.0 release (#407) ([3503511](https://github.com/VATSIM-UK/uk-controller-plugin/commit/35035110b1ed6313b9c892088d4e12c24987266b)), closes [#407](https://github.com/VATSIM-UK/uk-controller-plugin/issues/407) [#384](https://github.com/VATSIM-UK/uk-controller-plugin/issues/384) [#384](https://github.com/VATSIM-UK/uk-controller-plugin/issues/384) [#386](https://github.com/VATSIM-UK/uk-controller-plugin/issues/386) [#386](https://github.com/VATSIM-UK/uk-controller-plugin/issues/386) [#388](https://github.com/VATSIM-UK/uk-controller-plugin/issues/388) [#388](https://github.com/VATSIM-UK/uk-controller-plugin/issues/388) [#395](https://github.com/VATSIM-UK/uk-controller-plugin/issues/395) [#399](https://github.com/VATSIM-UK/uk-controller-plugin/issues/399) [#397](https://github.com/VATSIM-UK/uk-controller-plugin/issues/397) [#406](https://github.com/VATSIM-UK/uk-controller-plugin/issues/406) [#412](https://github.com/VATSIM-UK/uk-controller-plugin/issues/412) [#409](https://github.com/VATSIM-UK/uk-controller-plugin/issues/409) [#404](https://github.com/VATSIM-UK/uk-controller-plugin/issues/404) [#402](https://github.com/VATSIM-UK/uk-controller-plugin/issues/402)
+
+
+### BREAKING CHANGES
+
+* The airfield selector for Missed Approach configuration now acts as an override
+to the service provision options, rather than a filter for which airfields to use.
+
+* Semantic release for beta
+
+* Remove modifier
+
+* Dump semantic release
+
+* Branch detect
+
+* chore(release): 4.0.0-beta.1 [skip ci]
+
+# [4.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.1...4.0.0-beta.1) (2022-01-05)
+
+### Features
+* The old lists are replaced by a single list. New ASR settings
+are also used for this list.
+
+* chore(release): 4.0.0-beta.2 [skip ci]
+
+# [4.0.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.1...4.0.0-beta.2) (2022-01-05)
+
+### Features
+
+* **departure:** Combine pending prenotes and departure releases lists into one ([91c0614](https://github.com/VATSIM-UK/uk-controller-plugin/commit/91c0614982e061a29e18db23e2d9c70c86449fcb))
+
 # [4.0.0-beta.7](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.6...4.0.0-beta.7) (2022-01-23)
 
 
