@@ -54,7 +54,6 @@ bool CheckForUpdates(
 
 void PerformUpdates(CurlInterface& curl, WinApiInterface& windows, const nlohmann::json& versionDetails)
 {
-    MoveOldUpdaterBinary(windows);
     bool updatedSuccessfully = UKControllerPlugin::DownloadCoreLibrary(versionDetails, windows, curl) &&
                                UKControllerPlugin::DownloadUpdater(versionDetails, windows, curl);
 
