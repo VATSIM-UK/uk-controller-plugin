@@ -12,8 +12,8 @@ namespace UKControllerPlugin::Aircraft {
 
     auto CallsignSelectionListFactory::Create(
         std::shared_ptr<CallsignSelectionProviderInterface> provider, const std::string& description) const
-        -> std::shared_ptr<List::PopupList>
+        -> std::shared_ptr<List::PopupListInterface>
     {
-        return listFactory.Create(std::make_shared<CallsignSelectionList>(std::move(provider)), description);
+        return listFactory.Create(std::make_shared<CallsignSelectionList>(provider), description);
     }
 } // namespace UKControllerPlugin::Aircraft

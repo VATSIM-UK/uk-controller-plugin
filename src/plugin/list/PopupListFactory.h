@@ -10,7 +10,7 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::List {
-    class PopupList;
+    class PopupListInterface;
     class ListItemProviderInterface;
     
     /**
@@ -23,7 +23,7 @@ namespace UKControllerPlugin::List {
             Plugin::FunctionCallEventHandler& functionHandler, Euroscope::EuroscopePluginLoopbackInterface& plugin);
         [[nodiscard]] auto
         Create(std::shared_ptr<ListItemProviderInterface> provider, const std::string& description) const
-            -> std::shared_ptr<PopupList>;
+            -> std::shared_ptr<PopupListInterface>;
         
         private:
         // For registering the callback function

@@ -1,7 +1,7 @@
 #pragma once
 
 namespace UKControllerPlugin::List {
-    class PopupList;
+    class PopupListInterface;
     class PopupListFactory;
 } // namespace UKControllerPlugin::List
 
@@ -15,7 +15,7 @@ namespace UKControllerPlugin::Aircraft {
         CallsignSelectionListFactory(List::PopupListFactory& listFactory);
         [[nodiscard]] auto
         Create(std::shared_ptr<CallsignSelectionProviderInterface> provider, const std::string& description) const
-            -> std::shared_ptr<List::PopupList>;
+            -> std::shared_ptr<List::PopupListInterface>;
 
         private:
         // For creating lists

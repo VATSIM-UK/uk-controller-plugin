@@ -3,15 +3,16 @@
 #include "radarscreen/RadarRenderableInterface.h"
 
 namespace UKControllerPlugin {
-    namespace Aircraft {
-        class CallsignSelectionListInterface;
-    } // namespace Aircraft
     namespace Components {
+        class ClickableArea;
         class TitleBar;
     } // namespace Components
+    namespace List {
+        class PopupListInterface;
+    } // namespace List
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
-    } //
+    } // namespace Euroscope
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Wake {
@@ -23,8 +24,8 @@ namespace UKControllerPlugin::Wake {
         public:
         WakeCalculatorDisplay(
             std::shared_ptr<WakeCalculatorOptions> options,
-            std::shared_ptr<Aircraft::CallsignSelectionListInterface> leadCallsignSelector,
-            std::shared_ptr<Aircraft::CallsignSelectionListInterface> followCallsignSelector,
+            std::shared_ptr<List::PopupListInterface> leadCallsignSelector,
+            std::shared_ptr<List::PopupListInterface> followCallsignSelector,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             int screenObjectId);
         auto IsVisible() const -> bool override;
@@ -68,9 +69,9 @@ namespace UKControllerPlugin::Wake {
         std::shared_ptr<WakeCalculatorOptions> options;
 
         // For selecting callsigns
-        const std::shared_ptr<Aircraft::CallsignSelectionListInterface> leadCallsignSelector;
-        const std::shared_ptr<Aircraft::CallsignSelectionListInterface> followCallsignSelector;
-        
+        const std::shared_ptr<List::PopupListInterface> leadCallsignSelector;
+        const std::shared_ptr<List::PopupListInterface> followCallsignSelector;
+
         // For getting flightplans
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
@@ -103,5 +104,9 @@ namespace UKControllerPlugin::Wake {
         Gdiplus::Point dividingLineStart;
         Gdiplus::Point dividingLineEnd;
         Gdiplus::Rect calculationResultArea;
+        
+        // Clickspot rects
+        std::shared_ptr<Components::ClickableArea> leadClickspot;
+        std::shared_ptr<Components::ClickableArea> followingClickspot;
     };
 } // namespace UKControllerPlugin::Wake

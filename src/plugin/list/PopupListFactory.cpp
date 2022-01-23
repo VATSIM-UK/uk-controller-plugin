@@ -12,10 +12,10 @@ namespace UKControllerPlugin::List {
 
     auto
     PopupListFactory::Create(std::shared_ptr<ListItemProviderInterface> provider, const std::string& description) const
-        -> std::shared_ptr<PopupList>
+        -> std::shared_ptr<PopupListInterface>
     {
         const auto callbackId = functionHandler.ReserveNextDynamicFunctionId();
-        auto selectionList = std::make_shared<PopupList>(std::move(provider), plugin, callbackId);
+        auto selectionList = std::make_shared<PopupList>(provider, plugin, callbackId);
 
         Euroscope::CallbackFunction callback(
             callbackId, description, [provider](int functionId, const std::string& subject, RECT screenObjectArea) {

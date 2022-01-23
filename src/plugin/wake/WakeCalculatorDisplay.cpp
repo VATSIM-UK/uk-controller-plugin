@@ -2,20 +2,22 @@
 #include "WakeCategory.h"
 #include "WakeCategoryMapperInterface.h"
 #include "WakeCalculatorOptions.h"
-#include "aircraft/CallsignSelectionListInterface.h"
+#include "components/ClickableArea.h"
 #include "components/TitleBar.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/FontManager.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/StringFormatManager.h"
 #include "helper/HelperFunctions.h"
+#include "list/PopupListInterface.h"
 
 namespace UKControllerPlugin::Wake {
 
     WakeCalculatorDisplay::WakeCalculatorDisplay(
         std::shared_ptr<WakeCalculatorOptions> options,
-        std::shared_ptr<Aircraft::CallsignSelectionListInterface> leadCallsignSelector,
-        std::shared_ptr<Aircraft::CallsignSelectionListInterface> followCallsignSelector,
+        std::shared_ptr<List::PopupListInterface> leadCallsignSelector,
+        std::shared_ptr<List::PopupListInterface> followCallsignSelector,
         Euroscope::EuroscopePluginLoopbackInterface& plugin,
         int screenObjectId)
         : options(std::move(options)), leadCallsignSelector(std::move(leadCallsignSelector)),
@@ -27,7 +29,10 @@ namespace UKControllerPlugin::Wake {
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(BACKGROUND_COLOUR)),
           textBrush(std::make_shared<Gdiplus::SolidBrush>(TEXT_COLOUR)),
           resultBrush(std::make_shared<Gdiplus::SolidBrush>(RESULT_COLOUR)),
-          dividingLinePen(std::make_shared<Gdiplus::Pen>(TEXT_COLOUR))
+          dividingLinePen(std::make_shared<Gdiplus::Pen>(TEXT_COLOUR)),
+          leadClickspot(Components::ClickableArea::Create(leadTextArea, screenObjectId, "leadcallsign", false)),
+          followingClickspot(
+              Components::ClickableArea::Create(followingTextArea, screenObjectId, "followcallsign", false))
     {
         this->Move({DEFAULT_WINDOW_POSITION.x, DEFAULT_WINDOW_POSITION.y, 0, 0}, "");
     }
@@ -45,12 +50,12 @@ namespace UKControllerPlugin::Wake {
         RECT itemArea)
     {
         if (objectDescription == "leadcallsign") {
-            leadCallsignSelector->TriggerList(mousePos);
+            leadCallsignSelector->Trigger(mousePos);
             return;
         }
 
         if (objectDescription == "followcallsign") {
-            followCallsignSelector->TriggerList(mousePos);
+            followCallsignSelector->Trigger(mousePos);
             return;
         }
 
@@ -84,10 +89,12 @@ namespace UKControllerPlugin::Wake {
         this->leadStaticArea = {TEXT_INSET, schemeStaticArea.GetBottom() + TEXT_INSET, 45, 20};
         this->leadTextArea = {
             leadStaticArea.GetRight() + TEXT_INSET, schemeStaticArea.GetBottom() + TEXT_INSET, 110, 20};
+        this->leadClickspot->WithPosition(this->leadTextArea);
 
         // Following
         this->followingStaticArea = {leadTextArea.GetRight() + TEXT_INSET, leadStaticArea.GetTop(), 60, 20};
         this->followingTextArea = {followingStaticArea.GetRight() + TEXT_INSET, leadStaticArea.GetTop(), 110, 20};
+        this->followingClickspot->WithPosition(this->followingTextArea);
 
         // Dividing line
         this->dividingLineStart = Gdiplus::Point(0, followingTextArea.GetBottom() + TEXT_INSET);
@@ -172,6 +179,7 @@ namespace UKControllerPlugin::Wake {
             *textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
+        this->leadClickspot->Apply(graphics, radarScreen);
     }
 
     void WakeCalculatorDisplay::RenderFollowing(
@@ -190,6 +198,7 @@ namespace UKControllerPlugin::Wake {
             *textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
+        this->followingClickspot->Apply(graphics, radarScreen);
     }
 
     void WakeCalculatorDisplay::RenderIntermediate(

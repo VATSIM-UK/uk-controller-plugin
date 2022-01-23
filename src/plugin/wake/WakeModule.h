@@ -22,5 +22,7 @@ namespace UKControllerPlugin::Wake {
         UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies);
 
     void BootstrapRadarScreen(
-        RadarScreen::RadarRenderableCollection& renderables, Euroscope::AsrEventHandlerCollection& asrHandlers);
+        const UKControllerPlugin::Bootstrap::PersistenceContainer& container,
+        RadarScreen::RadarRenderableCollection& renderables,
+        Euroscope::AsrEventHandlerCollection& asrHandlers);
 } // namespace UKControllerPlugin::Wake
