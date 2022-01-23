@@ -330,10 +330,9 @@ set(test__mock
     "mock/MockUserSettingAwareInterface.h"
     "mock/MockUserSettingProviderInterface.h"
     mock/MockCallsignSelectionProvider.h
-    mock/MockCallsignSelectionList.h
     mock/MockAircraftTypeMapper.h
     mock/MockWakeCategoryMapper.h
-    mock/MockListItemProvider.h)
+    mock/MockListItemProvider.h mock/MockPopupList.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids

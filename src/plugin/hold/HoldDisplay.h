@@ -13,6 +13,9 @@ namespace UKControllerPlugin {
         class EuroscopeRadarLoopbackInterface;
         class UserSetting;
     } // namespace Euroscope
+    namespace List {
+        class PopupListInterface;
+    } // namespace List
     namespace Navaids {
         struct Navaid;
     } // namespace Navaids
@@ -39,7 +42,7 @@ namespace UKControllerPlugin {
                 const Navaids::Navaid& navaid,
                 const PublishedHoldCollection& publishedHoldCollection,
                 const Dialog::DialogManager& dialogManager,
-                std::shared_ptr<Aircraft::CallsignSelectionListInterface> addAircraftSelector);
+                std::shared_ptr<List::PopupListInterface> addAircraftSelector);
             void ButtonClicked(std::string button);
             void ButtonRightClicked(const std::string& button);
             void CallsignClicked(
@@ -164,7 +167,7 @@ namespace UKControllerPlugin {
             const PublishedHoldCollection& publishedHoldCollection;
 
             // For selecting aircraft to add to the hold
-            std::shared_ptr<Aircraft::CallsignSelectionListInterface> addAircraftSelector;
+            std::shared_ptr<List::PopupListInterface> addAircraftSelector;
 
             // Brushes
             const Gdiplus::SolidBrush titleBarTextBrush;

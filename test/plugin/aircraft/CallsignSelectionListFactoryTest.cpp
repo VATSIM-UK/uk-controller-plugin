@@ -1,10 +1,13 @@
 #include "aircraft/CallsignSelectionList.h"
 #include "aircraft/CallsignSelectionListFactory.h"
+#include "list/PopupList.h"
+#include "list/PopupListFactory.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Aircraft::CallsignSelectionList;
 using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
+using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 
@@ -14,13 +17,16 @@ namespace UKControllerPluginTest::Aircraft {
         public:
         CallsignSelectionListFactoryTest()
             : callsignProvider(std::make_shared<testing::NiceMock<Aircraft::MockCallsignSelectionProvider>>()),
-              factory(functionHandler, plugin)
+              listFactory(functionHandler, plugin), factory(listFactory)
         {
         }
 
         FunctionCallEventHandler functionHandler;
         std::shared_ptr<testing::NiceMock<Aircraft::MockCallsignSelectionProvider>> callsignProvider;
+        testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface> radarTarget;
+        testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> flightplan;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
+        PopupListFactory listFactory;
         CallsignSelectionListFactory factory;
     };
 
@@ -32,11 +38,9 @@ namespace UKControllerPluginTest::Aircraft {
 
     TEST_F(CallsignSelectionListFactoryTest, CallbackFunctionTriggersCallsignSelected)
     {
-        auto list = factory.Create(callsignProvider, "Some Function");
-
-        EXPECT_CALL(*callsignProvider, CallsignSelected("BAW123")).Times(1);
-
-        list->CallsignSelected("BAW123");
+        static_cast<void>(factory.Create(callsignProvider, "Some Function"));
+        functionHandler.CallFunction(
+            functionHandler.ReserveNextDynamicFunctionId() - 1, "foo", flightplan, radarTarget, {}, RECT{});
     }
 
     TEST_F(CallsignSelectionListFactoryTest, ListIsTriggeredWithCorrectId)
@@ -45,7 +49,7 @@ namespace UKControllerPluginTest::Aircraft {
 
         EXPECT_CALL(*callsignProvider, GetCallsigns).Times(1).WillOnce(testing::Return(std::set<std::string>{"ABCD"}));
 
-        EXPECT_CALL(plugin, TriggerPopupList(RectEq(RECT{1, 2, 51, 102}), "Select Aircraft", 1)).Times(1);
+        EXPECT_CALL(plugin, TriggerPopupList(RectEq(RECT{1, 2, 201, 402}), "Select Aircraft", 1)).Times(1);
 
         PopupMenuItem expectedItem;
         expectedItem.firstValue = "ABCD";
@@ -57,6 +61,6 @@ namespace UKControllerPluginTest::Aircraft {
 
         EXPECT_CALL(plugin, AddItemToPopupList(expectedItem)).Times(1);
 
-        list->TriggerList({1, 2});
+        list->Trigger({1, 2});
     }
 } // namespace UKControllerPluginTest::Aircraft

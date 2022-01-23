@@ -1,13 +1,9 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
-        class EuroscopePluginLoopbackInterface;
-    } // namespace Euroscope
-    namespace Plugin {
-        class FunctionCallEventHandler;
-    } // namespace Plugin
-} // namespace UKControllerPlugin
+namespace UKControllerPlugin::List {
+    class PopupList;
+    class PopupListFactory;
+} // namespace UKControllerPlugin::List
 
 namespace UKControllerPlugin::Aircraft {
     class CallsignSelectionProviderInterface;
@@ -16,17 +12,13 @@ namespace UKControllerPlugin::Aircraft {
     class CallsignSelectionListFactory
     {
         public:
-        CallsignSelectionListFactory(
-            Plugin::FunctionCallEventHandler& functionHandler, Euroscope::EuroscopePluginLoopbackInterface& plugin);
+        CallsignSelectionListFactory(List::PopupListFactory& listFactory);
         [[nodiscard]] auto
         Create(std::shared_ptr<CallsignSelectionProviderInterface> provider, const std::string& description) const
-            -> std::shared_ptr<CallsignSelectionList>;
+            -> std::shared_ptr<List::PopupList>;
 
         private:
-        // For registering the callback function
-        Plugin::FunctionCallEventHandler& functionHandler;
-
-        // To pass to the list
-        Euroscope::EuroscopePluginLoopbackInterface& plugin;
+        // For creating lists
+        List::PopupListFactory& listFactory;
     };
 } // namespace UKControllerPlugin::Aircraft

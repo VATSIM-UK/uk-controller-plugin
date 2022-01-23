@@ -10,7 +10,6 @@ set(resource
 source_group("resource" FILES ${resource})
 
 set(src__aircraft
-        aircraft/CallsignSelectionListInterface.h
         aircraft/CallsignSelectionProviderInterface.h
         aircraft/CallsignSelectionList.cpp aircraft/CallsignSelectionList.h
         aircraft/CallsignSelectionListFactory.cpp aircraft/CallsignSelectionListFactory.h
